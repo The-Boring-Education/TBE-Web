@@ -5,19 +5,19 @@ import {
   SectionHeaderContainer,
   WhatWeDoForYouCard,
 } from '@/components';
-import { WHAT_WE_DO_FOR_YOU_MICROCAMP } from '@/constant';
+import { WhatWeDoForYouProps } from '@/interfaces';
 
-const WhatWeDoForYou = () => {
+const WhatWeDoForYou = ({ offerings }: WhatWeDoForYouProps) => {
   return (
     <Section>
       <FlexContainer direction='col' itemCenter={true} justifyCenter={true}>
         <SectionHeaderContainer
-          heading='What we do for you'
+          heading='In The Program'
           focusText=''
           headingLevel={3}
         />
         <CardSectionContainer>
-          {WHAT_WE_DO_FOR_YOU_MICROCAMP.map((item) => {
+          {offerings.map((item) => {
             const { id } = item;
             return <WhatWeDoForYouCard key={id} {...item} />;
           })}

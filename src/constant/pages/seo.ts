@@ -1,4 +1,4 @@
-import { PageSlug } from '@/interfaces';
+import { GetSEOMetaResponseType, PageSlug } from '@/interfaces';
 import { routes } from '../routes';
 import { programs } from '..';
 
@@ -8,7 +8,7 @@ const commonMeta = {
   image: 'https://theboringeducation.com/images/large-og.png',
 };
 
-const getSEOMeta = function (basePath: PageSlug) {
+const getSEOMeta = (basePath: PageSlug): GetSEOMetaResponseType => {
   const meta = {
     '/': {
       title: 'The Boring Education',
@@ -36,6 +36,27 @@ const getSEOMeta = function (basePath: PageSlug) {
       siteName: programs.beBackendMaster.label,
       description: programs.beBackendMaster.description,
       url: routes.microCampLanding(programs.beBackendMaster.slug),
+      ...commonMeta,
+    },
+    [programs.twoHourDesign.slug]: {
+      title: `${programs.twoHourDesign.label} | The Boring Education`,
+      siteName: programs.twoHourDesign.label,
+      description: programs.twoHourDesign.description,
+      url: routes.workshopLanding(programs.twoHourDesign.slug),
+      ...commonMeta,
+    },
+    [programs.theNextWave.slug]: {
+      title: `${programs.theNextWave.label} | The Boring Education`,
+      siteName: programs.theNextWave.label,
+      description: programs.theNextWave.description,
+      url: routes.workshopLanding(programs.theNextWave.slug),
+      ...commonMeta,
+    },
+    '/contact': {
+      title: 'Contact | The Boring Education',
+      siteName: 'The Boring Education',
+      description: 'Contact The Boring Education',
+      url: routes.contactUs,
       ...commonMeta,
     },
     '/404': {

@@ -1,14 +1,16 @@
-import * as React from 'react';
 import { RiAlarmWarningFill } from 'react-icons/ri';
 
 import Layout from '@/components/layout/Section';
 import SEO from '@/components/layout/SEO';
 import { Link } from '@/components';
+import { getSEOMeta } from '@/constant';
 
-export default function NotFoundPage() {
+const NotFoundPage = () => {
+  const seoMeta = getSEOMeta('/404');
+
   return (
     <Layout>
-      <SEO slug='/404' />
+      <SEO seoMeta={seoMeta} />
 
       <main>
         <section className='bg-white'>
@@ -26,4 +28,6 @@ export default function NotFoundPage() {
       </main>
     </Layout>
   );
-}
+};
+
+export default NotFoundPage;

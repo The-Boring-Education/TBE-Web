@@ -13,8 +13,7 @@
     "test:watch": "jest --watch",
     "test": "jest",
     "format": "prettier -w .",
-    "format:check": "prettier -c .",
-    "postbuild": "next-sitemap --config next-sitemap.config.js"
+    "format:check": "prettier -c ."
   },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
@@ -49,7 +48,6 @@
     "jest": "^27.5.1",
     "lint-staged": "^12.5.0",
     "next-router-mock": "^0.7.5",
-    "next-sitemap": "^2.5.28",
     "postcss": "^8.4.21",
     "prettier": "^2.8.4",
     "prettier-plugin-tailwindcss": "^0.1.13",

@@ -1,13 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 /* Custom Classes */
 @layer components {
-
   body {
-    @apply font-primary scroll-smooth;
+    @apply scroll-smooth font-primary;
   }
 
   /* 1. Gradients */
@@ -41,43 +40,43 @@
 
   /* 2. Fonts */
   .heading-1 {
-    @apply text-header-1 text-white font-black;
+    @apply text-header-1 font-black text-contentLight;
   }
 
   .heading-2 {
-    @apply text-header-2 text-white font-bold;
+    @apply text-header-2 font-bold text-contentLight;
   }
 
   .heading-3 {
-    @apply text-header-3 text-white font-bold;
+    @apply text-header-3 font-bold text-contentLight;
   }
 
   .heading-4 {
-    @apply text-header-4 text-white font-semibold;
+    @apply text-header-4 font-semibold text-contentLight;
   }
 
   .heading-5 {
-    @apply text-header-5 text-white font-semibold;
+    @apply text-header-5 font-semibold text-contentLight;
   }
 
   .subtitle {
-    @apply text-subtitle text-white font-normal;
+    @apply text-subtitle font-normal text-contentLight;
   }
 
   .paragraph {
-    @apply text-paragraph text-white font-normal;
+    @apply text-paragraph font-normal text-contentLight;
   }
 
   .strong-text {
-    @apply text-strong-text text-white font-semibold;
+    @apply text-strong-text font-semibold text-contentLight;
   }
 
   .pre-title {
-    @apply text-pre-title text-white font-medium;
+    @apply text-pre-title font-medium text-contentLight;
   }
 
   .button-text {
-    @apply text-button-text text-white font-bold;
+    @apply text-button-text font-bold text-contentLight;
   }
 
   /* Image */
@@ -85,16 +84,15 @@
     object-fit: contain;
     width: 100% !important;
     position: relative !important;
-    height: unset !important;
   }
 
   /* Link */
   .link {
-    @apply text-button-text text-white font-bold;
+    @apply text-button-text font-bold text-contentLight;
   }
 
   .button {
-    @apply w-full text-button-text text-white font-bold rounded-1;
+    @apply w-full rounded-1 text-button-text font-bold text-contentLight;
   }
 
   .disabled {

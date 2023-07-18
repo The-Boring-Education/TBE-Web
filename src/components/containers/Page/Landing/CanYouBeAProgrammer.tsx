@@ -1,5 +1,5 @@
 import { FlexContainer, Image, LinkButton, Section, Text } from '@/components';
-import { LINKS } from '@/constant';
+import { LINKS, STATIC_FILE_PATH } from '@/constant';
 
 const CanYouBeAProgrammer = () => {
   return (
@@ -10,10 +10,14 @@ const CanYouBeAProgrammer = () => {
           className='w-full gap-4 rounded-2 bg-dark px-8 py-8 shadow-lg sm:px-8 sm:py-8 lg:px-4 lg:py-4'
         >
           <div className='max-w-md'>
-            <Image src='/svg/laptop.svg' alt='laptop' />
+            <Image src={`${STATIC_FILE_PATH.svg}/laptop.svg`} alt='laptop' />
           </div>
           <FlexContainer direction='col' itemCenter={true}>
-            <Text level='h3' className='heading-3' textCenter={true}>
+            <Text
+              level='h3'
+              className='heading-3 text-contentDark'
+              textCenter={true}
+            >
               Can you be a programmer?
             </Text>
             <Text

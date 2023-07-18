@@ -1,0 +1,5 @@
+Allow
+Crawl-delay: 
+Sitemap: https://www.theboringeducation.com/sitemap.xml
+User-agent: *
+Allow :/

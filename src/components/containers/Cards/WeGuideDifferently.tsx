@@ -11,7 +11,7 @@ const WeGuideDifferently = () => {
   return (
     <Section>
       <FlexContainer direction='col'>
-        <SectionHeaderContainer heading='We do' focusText='differently' />
+        <SectionHeaderContainer heading='What We Do' focusText='Differently' />
         <CardSectionContainer>
           {USP.map((item) => {
             const { id, image, imageAltText, title, content } = item;

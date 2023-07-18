@@ -8,11 +8,9 @@ const nextConfig = {
   swcMinify: true,
 
   // Uncoment to add domain whitelist
-  // images: {
-  //   domains: [
-  //     'res.cloudinary.com',
-  //   ],
-  // },
+  images: {
+    domains: ['lh3.googleusercontent.com', 'lh3.google.com', 'ik.imagekit.io'],
+  },
 
   // SVGR
   webpack(config) {

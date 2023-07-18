@@ -15,7 +15,7 @@ const TestimonialsCardContainer = () => {
           heading='Hear the words of'
           focusText='ex-learners'
         />
-        <CardSectionContainer>
+        <CardSectionContainer gap='gap-2'>
           {TESTIMONIALS.map((item) => {
             return <TestimonialCard {...item} key={item.id} />;
           })}

@@ -10,13 +10,13 @@ const ProgramCard = ({
   active,
 }: ProgramCardProps) => {
   return (
-    <CardGradientContainer className='max-w-sm border-borderColor1'>
+    <CardGradientContainer className='max-w-sm border-borderColor2'>
       <Image
         className='m-auto w-3/5 rounded-t-lg'
         src={`${image}`}
         alt={imageAltText}
       />
-      <div className='pt-4'>
+      <div className='mt-2'>
         <Text level='h5' className='heading-5'>
           {title}
         </Text>
@@ -32,6 +32,7 @@ const ProgramCard = ({
             active,
             className: `${!active && 'bg-secondary'}`,
           }}
+          target='BLANK'
           active={active}
         />
       </div>

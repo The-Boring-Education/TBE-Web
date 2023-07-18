@@ -8,7 +8,7 @@ import { SkillCardProps } from '@/interfaces';
 
 const SkillCard = ({ title, skilledDetails }: SkillCardProps) => {
   return (
-    <CardGradientContainer className='max-w-sm border-borderColor1'>
+    <CardGradientContainer className='max-w-sm border-borderColor4'>
       <FlexContainer itemCenter={true} className='w-full justify-evenly gap-4'>
         {skilledDetails.map((skilledDetail) => {
           const { id, name, image, imageAltText } = skilledDetail;

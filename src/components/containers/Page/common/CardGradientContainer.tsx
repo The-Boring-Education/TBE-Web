@@ -7,10 +7,12 @@ const CardGradientContainer = ({
   backgroundColor,
 }: CardGradientContainerProps) => {
   return (
-    <div className={`flex-auto rounded-2 border ${className}`}>
-      <div className={`rounded-2 ${backgroundColor ?? 'bg-dark'} p-4`}>
-        {children}
-      </div>
+    <div
+      className={`flex-auto rounded-2 border ${className} ${
+        backgroundColor ?? 'bg-white'
+      }`}
+    >
+      <div className='rounded-2 p-3'>{children}</div>
     </div>
   );
 };

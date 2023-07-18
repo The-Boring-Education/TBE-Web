@@ -10,10 +10,10 @@ const MicroCampFeatureCard = ({
       direction='col'
       className='gradient-5 rounded-2 px-2 py-2 md:px-4 md:py-4'
     >
-      <Text level='h3' className='heading-3 text-center'>
+      <Text level='h3' className='heading-3 text-center text-contentDark'>
         {title}
       </Text>
-      <Text level='p' className='paragraph text-center'>
+      <Text level='p' className='paragraph text-center text-contentDark'>
         {content}
       </Text>
     </FlexContainer>

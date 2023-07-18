@@ -11,7 +11,11 @@ const NotAnotherTechCourse = () => {
   return (
     <Section>
       <FlexContainer direction='col'>
-        <Text level='h2' className='heading-2 text-grey' textCenter={true}>
+        <Text
+          level='h2'
+          className='heading-2 text-contentLight'
+          textCenter={true}
+        >
           Not another Tech course
         </Text>
         <Text

@@ -1,4 +1,5 @@
 import { FlexContainer, Image, Section, Text } from '@/components';
+import { STATIC_FILE_PATH } from '@/constant';
 
 const ContextBasedLearning = () => {
   return (
@@ -15,9 +16,9 @@ const ContextBasedLearning = () => {
           className='gradient-4 w-full rounded-2 p-4 md:p-8'
         >
           <Image
-            src='/svg/context_based_learning.svg'
+            src={`${STATIC_FILE_PATH.image}/context_based_learning.svg`}
             alt='developer activities'
-            className='w-48'
+            className='w-32'
           />
           <FlexContainer direction='col' className='w-full pt-8'>
             <Text level='p' className='paragraph text-center text-contentLight'>

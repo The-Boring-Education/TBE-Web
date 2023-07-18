@@ -1,5 +1,11 @@
-import { MouseEventHandler } from 'react';
-import { PageSlug, SkillProps, SkillsProps } from '.';
+import { MouseEventHandler, ReactNode } from 'react';
+import {
+  GetSEOMetaResponseType,
+  MicrocampOfferingsProps,
+  PageSlug,
+  SkillProps,
+  SkillsProps,
+} from '.';
 
 export interface SectionProps {
   children: React.ReactNode;
@@ -33,6 +39,7 @@ export interface ImageContainerProps {
 
 export interface LogoProps {
   className?: string;
+  isDark?: boolean;
 }
 
 export interface LinkButtonProps extends LinkProps {
@@ -49,6 +56,63 @@ export interface ButtonProps {
   active?: boolean;
 }
 
+export interface WorkshopDataProps {
+  meta: WorkshopMetaDataProps;
+  aboutWorkshop: WorkshopAboutProps;
+}
+
+export interface WorkshopMetaDataProps {
+  slug: PageSlug | string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  image: string;
+  imageAltText: string;
+  instructor: WorkshopInstructorDataProps;
+  link: string;
+}
+
+export interface WorkshopInstructorDataProps {
+  name: string;
+  designation: string;
+  image: string;
+  imageAltText: string;
+  about: string[];
+}
+
+export interface WorkshopHeaderCountDownProps {
+  id: string;
+  heading: string;
+  timerList: string;
+}
+
+export interface WorkshopAboutProps {
+  // heading: string;
+  // schedule: WorkshopAboutScheduleProps;
+  descriptions: string[];
+  whatWillYouLearn: string[];
+}
+
+export interface WorkshopAboutScheduleProps {
+  date: string;
+  dateIcon: string;
+  dateIconAltText: string;
+  time: string;
+  timeIcon: string;
+  timeIconAltText: string;
+}
+
+export interface WorkshopWhatWillYouLearnProps {
+  id: string;
+  heading: string;
+  content: WorkshopWhatWillYouLearnContentProps[];
+}
+
+export interface WorkshopWhatWillYouLearnContentProps {
+  id: string;
+  paragraph: string;
+}
 export interface ProgramCardProps {
   image: string;
   imageAltText: string;
@@ -73,6 +137,7 @@ export interface CardSectionContainerProps {
   children: React.ReactNode;
   isWidthFull?: boolean;
   className?: string;
+  gap?: string;
 }
 
 export interface CardGradientContainerProps {
@@ -103,11 +168,16 @@ export interface NotAnotherTechCourseCardProps {
 }
 
 export interface FlexContainerProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   itemCenter?: boolean;
   justifyCenter?: boolean;
   className?: string;
   direction?: 'row' | 'col';
+}
+
+export interface WorkshopDescriptionProps {
+  paragraphs: string[];
+  flexProps: FlexContainerProps;
 }
 
 export interface TestimonialCardProps {
@@ -116,6 +186,7 @@ export interface TestimonialCardProps {
   imageAltText: string;
   title: string;
   content: string;
+  work: string;
 }
 
 export interface FooterLinkProps {
@@ -139,7 +210,7 @@ export interface MicroCampFeatureCardProps {
   content: string;
 }
 
-export interface MicroCampFeaturePricingCardProps {
+export interface MicroCampPricingCardProps {
   id: string;
   content: string;
 }
@@ -181,9 +252,83 @@ export type GenerateSectionPathProps = {
 };
 
 export interface SEOProps {
-  slug: PageSlug;
+  seoMeta: GetSEOMetaResponseType;
 }
 
 export interface SkillsContainerProps {
   skills: SkillsProps[];
+}
+
+export interface PillProps {
+  text: string;
+  variant: 'PRIMARY' | 'SECONDARY';
+  textStyleClasses?: string;
+  containerClasses?: string;
+}
+
+export interface CountdownTimerContainerProps {
+  date: string;
+}
+
+export interface TimerItemProps {
+  timer: string;
+}
+
+export interface IconPillProps {
+  iconPath: string;
+  iconAltText: string;
+  label: string;
+  className?: string;
+  backgroundColor?: string;
+  labelColor?: string;
+}
+
+export interface WorkshopAboutInstructorProps {
+  containerClasses?: string;
+  imagePath: string;
+  imageAltText: string;
+  name: string;
+  position: string;
+  linkedInURL?: string;
+}
+
+export interface WeTaughtAtCardProps {
+  image: string;
+  imageAltText: string;
+}
+
+export interface CountdownTimerProps {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+export interface AboutWorkshopContainerProps
+  extends WorkshopAboutProps,
+    WorkshopMetaDataProps {}
+
+export interface WorkshopRegisterContainerProps {
+  link: string;
+}
+
+export interface WhatWeDoForYouProps {
+  offerings: MicrocampOfferingsProps[];
+}
+
+export interface PopoverContainerProps {
+  label: string;
+  children: ReactNode;
+}
+
+export interface MicrocampInstructorProps {
+  name: string;
+  about: string;
+  imageLink: string;
+  linkedInProfile: string;
+}
+
+export interface ImageLinkProps {
+  linkProps: LinkProps;
+  imageProps: ImageContainerProps;
 }

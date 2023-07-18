@@ -3,7 +3,7 @@ import { PageLayoutProps } from '@/interfaces';
 
 const PageLayout = ({ children }: PageLayoutProps) => {
   return (
-    <main className='gradient-bg'>
+    <main className='bg-lightBG'>
       <Navbar />
       {children}
       <Footer />
