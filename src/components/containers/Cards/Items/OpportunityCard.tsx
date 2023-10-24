@@ -1,9 +1,9 @@
-import { CardGradientContainer, FlexContainer, Text } from '@/components/';
+import { GradientContainer, FlexContainer, Text } from '@/components/';
 import { OpportunityCardProps } from '@/interfaces';
 
 const OpportunityCard = ({ heading, title, content }: OpportunityCardProps) => {
   return (
-    <CardGradientContainer className='max-w-sm border-borderColor3 bg-dark'>
+    <GradientContainer className='max-w-sm border-borderColor3 bg-dark'>
       <FlexContainer
         className='items-baseline'
         direction='col'
@@ -25,7 +25,7 @@ const OpportunityCard = ({ heading, title, content }: OpportunityCardProps) => {
           {content}
         </Text>
       </FlexContainer>
-    </CardGradientContainer>
+    </GradientContainer>
   );
 };
 

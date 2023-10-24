@@ -1,4 +1,5 @@
-import { ProgramsDataProps } from '@/interfaces';
+import { ProgramsDataProps, AuthHOCConfigType } from '@/interfaces';
+import { routes } from './routes';
 
 // Paths
 const STATIC_FILE_PATH = {
@@ -99,6 +100,65 @@ const googleAnalyticsScript = `
           gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');
           `;
 
+const favicons: Array<React.ComponentPropsWithoutRef<'link'>> = [
+  {
+    rel: 'apple-touch-icon',
+    sizes: '180x180',
+    href: '/favicon/apple-touch-icon.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '32x32',
+    href: '/favicon/favicon-32x32.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '16x16',
+    href: '/favicon/favicon-16x16.png',
+  },
+  { rel: 'manifest', href: '/favicon/site.webmanifest' },
+  {
+    rel: 'mask-icon',
+    href: '/favicon/safari-pinned-tab.svg',
+    color: '#00e887',
+  },
+  { rel: 'shortcut icon', href: '/favicon/favicon.ico' },
+];
+
+// Local storage keys
+const localStorageKeys = {
+  USER: 'USER',
+};
+
+const authHOCConfig: AuthHOCConfigType = {
+  admin: {
+    userType: 'ADMIN',
+    loginUrl: routes.admin.base,
+  },
+  adminLogin: {
+    userType: 'ADMIN',
+    redirectTo: routes.admin.dashboard,
+  },
+};
+
+const apiUrls = {
+  validateAdminByEmail: (email: string) => `/admin?email=${email}`,
+  leadCohort: '/leads/cohort',
+};
+
+const apiStatusCodes = {
+  OKAY: 200,
+  RESOURCE_CREATED: 201,
+  SUCCESSFUL_WITHOUT_RESPONSE: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
+};
+
 export {
   imageMeta,
   programs,
@@ -106,4 +166,9 @@ export {
   gtag,
   googleAnalyticsScript,
   STATIC_FILE_PATH,
+  favicons,
+  localStorageKeys,
+  authHOCConfig,
+  apiStatusCodes,
+  apiUrls,
 };

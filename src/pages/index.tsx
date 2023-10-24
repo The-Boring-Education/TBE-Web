@@ -8,19 +8,21 @@ import {
   Testimonials,
   SEO,
   OurWorkshops,
+  ChooseTechCohort,
 } from '@/components';
 import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
-import { landingPageSkills } from '@/constant';
+import { landingPageSkills, routes } from '@/constant';
 
 const Home = ({ seoMeta }: PageProps) => {
   return (
     <React.Fragment>
       <SEO seoMeta={seoMeta} />
       <LandingPageHero />
+      <ChooseTechCohort id={routes.internals.microCampRegister} />
       <OurPrograms />
-      <Skills skills={landingPageSkills} />
       <OurWorkshops />
+      <Skills skills={landingPageSkills} />
       <WeGuideDifferently />
       <CanYouBeAProgrammer />
       <Testimonials />

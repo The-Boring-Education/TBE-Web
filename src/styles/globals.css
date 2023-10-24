@@ -3,6 +3,12 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+}
+
 /* Custom Classes */
 @layer components {
   body {

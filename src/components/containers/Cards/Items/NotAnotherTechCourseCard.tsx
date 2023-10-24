@@ -1,4 +1,4 @@
-import { CardGradientContainer, Image, Text } from '@/components';
+import { GradientContainer, Image, Text } from '@/components';
 import { NotAnotherTechCourseCardProps } from '@/interfaces';
 
 const NotAnotherTechCourseCard = ({
@@ -8,7 +8,7 @@ const NotAnotherTechCourseCard = ({
   content,
 }: NotAnotherTechCourseCardProps) => {
   return (
-    <CardGradientContainer className='max-w-sm border-borderColor4 bg-dark'>
+    <GradientContainer className='max-w-sm border-borderColor4 bg-dark'>
       <Image
         className='flex h-48'
         fullHeight={false}
@@ -22,7 +22,7 @@ const NotAnotherTechCourseCard = ({
       <Text level='p' className='paragraph pt-1 text-grey'>
         {content}
       </Text>
-    </CardGradientContainer>
+    </GradientContainer>
   );
 };
 

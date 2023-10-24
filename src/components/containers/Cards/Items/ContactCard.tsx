@@ -1,4 +1,5 @@
 import { FlexContainer, LinkButton, Section, Text } from '@/components';
+
 const ContactCard = () => {
   return (
     <Section>

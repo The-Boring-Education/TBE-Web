@@ -5,6 +5,7 @@ import { TOP_NAVIGATION } from '@/constant';
 import {
   Link,
   Logo,
+  LogoutButton,
   NavbarDropdownContainer,
   PopoverContainer,
   ScreenReader,
@@ -29,7 +30,7 @@ const Navbar = () => {
             <Bars3Icon className='h-6 w-6' aria-hidden='true' color='black' />
           </button>
         </div>
-        <div className='hidden lg:flex lg:gap-x-12'>
+        <div className='hidden items-center lg:flex lg:gap-x-4'>
           <PopoverContainer label='Our Cohorts'>
             <NavbarDropdownContainer />
           </PopoverContainer>
@@ -42,6 +43,7 @@ const Navbar = () => {
               {item.name}
             </Link>
           ))}
+          <LogoutButton />
         </div>
       </nav>
       <Dialog

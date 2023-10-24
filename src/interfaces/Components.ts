@@ -1,5 +1,9 @@
-import { MouseEventHandler, ReactNode } from 'react';
+import { HTMLInputTypeAttribute, MouseEventHandler, ReactNode } from 'react';
 import {
+  AddALeadRequestPayload,
+  AuthUserType,
+  CohortLeadStatus,
+  CohortNameType,
   GetSEOMetaResponseType,
   MicrocampOfferingsProps,
   PageSlug,
@@ -22,8 +26,9 @@ export interface LinkProps {
 }
 
 export interface TextProps {
-  level: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span';
+  level: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'label';
   children: React.ReactNode;
+  variant?: 'SUCCESS' | 'ERROR';
   className?: string;
   textCenter?: boolean;
 }
@@ -49,11 +54,12 @@ export interface LinkButtonProps extends LinkProps {
 }
 
 export interface ButtonProps {
-  variant: 'PRIMARY' | 'OUTLINE';
+  variant: 'PRIMARY' | 'OUTLINE' | 'GHOST';
   className?: string;
   text: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   active?: boolean;
+  isLoading?: boolean;
 }
 
 export interface WorkshopDataProps {
@@ -113,13 +119,30 @@ export interface WorkshopWhatWillYouLearnContentProps {
   id: string;
   paragraph: string;
 }
-export interface ProgramCardProps {
+
+export type BestSuitedForType =
+  | 'working-professional'
+  | 'college-student'
+  | 'student';
+
+export interface ChooseTechCohortItem extends RadioOptionProps {
+  id: BestSuitedForType;
+}
+
+export interface CohortCardProps {
+  id: string;
   image: string;
   imageAltText: string;
   title: string;
   content: string;
   href: string;
   active: boolean;
+  bestSuitedFor?: BestSuitedForType[];
+  isCohort?: boolean;
+}
+
+export interface ChooseTechCohortCardProps extends CohortCardProps {
+  onSelected: (cohortId: string) => void;
 }
 
 export interface PageLayoutProps {
@@ -140,10 +163,11 @@ export interface CardSectionContainerProps {
   gap?: string;
 }
 
-export interface CardGradientContainerProps {
+export interface GradientContainerProps {
   children: React.ReactNode;
   className?: string;
   backgroundColor?: string;
+  childrenClassName?: string;
 }
 
 export interface SkillCardProps {
@@ -173,6 +197,9 @@ export interface FlexContainerProps {
   justifyCenter?: boolean;
   className?: string;
   direction?: 'row' | 'col';
+  wrap?: boolean;
+  fullWidth?: boolean;
+  id?: string;
 }
 
 export interface WorkshopDescriptionProps {
@@ -331,4 +358,94 @@ export interface MicrocampInstructorProps {
 export interface ImageLinkProps {
   linkProps: LinkProps;
   imageProps: ImageContainerProps;
+}
+
+export interface UserTypeConfig {
+  userType: AuthUserType;
+  loginUrl?: string;
+  redirectTo?: string;
+}
+
+export interface CohortLeadCard {
+  _id: string;
+  name: string;
+  email?: string;
+  contactNo: string;
+  cohortName?: CohortNameType;
+  status: CohortLeadStatus;
+  profession?: BestSuitedForType;
+  school?: string;
+  college?: string;
+  workExperience?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SelectInputProps {
+  list: any[];
+  onChange: (value: string) => void;
+  selectedItem: string;
+}
+
+export interface RadioOptionProps {
+  id: string;
+  label: string;
+  description?: string;
+}
+
+export interface InputRadioContainerProps {
+  radioItems: RadioOptionProps[];
+  onChange: (itemId: string) => void;
+  selectedItemId?: string;
+  className?: string;
+}
+
+export interface RadioInputFieldProps extends RadioOptionProps {
+  onChange: (itemId: string) => void;
+  selected?: boolean;
+  className?: string;
+}
+
+export interface InputFieldContainerProps {
+  label: string;
+  type: HTMLInputTypeAttribute;
+  onChange: (value: string) => void;
+  className?: string;
+  value?: string;
+  isOptional?: boolean;
+}
+
+export interface ChooseTechCohortInitialFormDataType
+  extends AddALeadRequestPayload {
+  profession?: BestSuitedForType | '';
+}
+
+export type ChooseTechCohortFormFields =
+  | 'name'
+  | 'email'
+  | 'contactNo'
+  | 'profession'
+  | 'cohortName'
+  | 'school'
+  | 'college'
+  | 'workExperience'
+  | 'all';
+
+export type ChooseTechCohortActionType = {
+  type: 'UPDATE_FIELD' | 'RESET_FIELDS';
+  value?: string;
+  field: ChooseTechCohortFormFields;
+};
+
+export interface LoadingSpinnerProps {
+  height?: number;
+  width?: number;
+  marginClass?: string;
+  className?: string;
+}
+
+export interface ChooseTechCohortProps {
+  id?: string;
+  headerTitle?: string;
+  preSelectedCohortName?: CohortNameType;
 }

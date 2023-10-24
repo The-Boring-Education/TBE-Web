@@ -13,21 +13,9 @@ const OurPrograms = () => {
       <FlexContainer direction='col'>
         <SectionHeaderContainer heading='Our' focusText='Programs' />
         <CardSectionContainer>
-          {PROGRAMS.map((program) => {
-            const { image, imageAltText, title, href, content, active } =
-              program;
-            return (
-              <ProgramCard
-                key={title}
-                image={image}
-                imageAltText={imageAltText}
-                title={title}
-                href={href}
-                content={content}
-                active={active}
-              />
-            );
-          })}
+          {PROGRAMS.map((program, key) => (
+            <ProgramCard {...program} key={key} />
+          ))}
         </CardSectionContainer>
       </FlexContainer>
     </Section>

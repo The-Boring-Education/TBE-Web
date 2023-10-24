@@ -26,10 +26,10 @@ const MicrocampOpportunities = ({
               <FlexContainer
                 key={key}
                 direction='col'
-                className='items-start gap-3 rounded-2 bg-black p-5'
+                className='w-full items-center gap-3 rounded-2 bg-black p-5 sm:w-fit md:items-start'
                 itemCenter={false}
               >
-                <div className='flex flex-col items-start gap-1'>
+                <div className='flex flex-col items-center gap-1 md:items-start'>
                   <Text
                     level='p'
                     className='pre-title text-grey'

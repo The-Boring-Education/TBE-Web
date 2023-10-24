@@ -8,20 +8,23 @@ import {
   ContextBasedLearning,
   MicrocampPricing,
   WhatWeDoForYou,
-  WeTaughtAt,
+  WeAlreadyTaughtAt,
   SEO,
   MicrocampInstructor,
   MicrocampOpportunities,
+  ChooseTechCohort,
 } from '@/components';
-import { PageProps } from '@/interfaces';
+import { CohortNameType, PageProps } from '@/interfaces';
 import { getMicrocampPageData, getPreFetchProps } from '@/utils';
-
+// routes.internals.workshops;
 const MicroCampLanding = ({ slug, seoMeta }: PageProps) => {
   const microcampData = getMicrocampPageData(slug);
   if (!microcampData) return;
 
   const {
+    name,
     header,
+    chooseCohortHeaderTitle,
     instructor,
     inThisCohort,
     opportunities,
@@ -34,6 +37,11 @@ const MicroCampLanding = ({ slug, seoMeta }: PageProps) => {
     <React.Fragment>
       <SEO seoMeta={seoMeta} />
       <MicroCampLandingHeader {...header} />
+      <ChooseTechCohort
+        preSelectedCohortName={name as CohortNameType}
+        headerTitle={chooseCohortHeaderTitle}
+        id={header.cta.primary}
+      />
       <InThisCohortContainer {...inThisCohort} />
       <MicrocampInstructor {...instructor} />
       <Skills skills={skills} />
@@ -42,7 +50,7 @@ const MicroCampLanding = ({ slug, seoMeta }: PageProps) => {
       <NotAnotherTechCourse />
       <ContextBasedLearning />
       <MicrocampPricing {...pricing} />
-      <WeTaughtAt />
+      <WeAlreadyTaughtAt />
       <Testimonials />
     </React.Fragment>
   );

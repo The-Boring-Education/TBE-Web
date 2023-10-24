@@ -1,4 +1,4 @@
-import { CardGradientContainer, Image, Text } from '@/components';
+import { GradientContainer, Image, Text } from '@/components';
 import { TestimonialCardProps } from '@/interfaces';
 
 const TestimonialCard = ({
@@ -9,7 +9,7 @@ const TestimonialCard = ({
   work,
 }: TestimonialCardProps) => {
   return (
-    <CardGradientContainer className='max-w-sm border-borderColor3'>
+    <GradientContainer className='max-w-sm border-borderColor3'>
       <Image
         className='h-12 w-12 rounded-full border object-cover'
         fullWidth={false}
@@ -25,7 +25,7 @@ const TestimonialCard = ({
       <Text level='p' className='paragraph span mt-2 text-secondary'>
         {work}
       </Text>
-    </CardGradientContainer>
+    </GradientContainer>
   );
 };
 

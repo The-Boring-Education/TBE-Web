@@ -26,9 +26,9 @@ const nextConfig = {
           },
         },
       ],
-    })
+    });
 
-    return config
+    return config;
   },
   // async redirects() {
   //   return [
@@ -39,6 +39,6 @@ const nextConfig = {
   //     },
   //   ]
   // },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

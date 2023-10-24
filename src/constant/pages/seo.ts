@@ -8,6 +8,11 @@ const commonMeta = {
   image: 'https://theboringeducation.com/images/large-og.png',
 };
 
+const adminMeta = {
+  ...commonMeta,
+  robots: 'nofollow, noindex',
+};
+
 const getSEOMeta = (basePath: PageSlug): GetSEOMetaResponseType => {
   const meta = {
     '/': {
@@ -16,6 +21,13 @@ const getSEOMeta = (basePath: PageSlug): GetSEOMetaResponseType => {
       description: 'Tech Education for Everyone',
       url: routes.home,
       ...commonMeta,
+    },
+    '/admin': {
+      title: 'Admin | The Boring Education',
+      siteName: 'Admin | The Boring Education',
+      description: 'Tech Education for Everyone',
+      url: routes.admin.base,
+      ...adminMeta,
     },
     [programs.juniorInWebEngineering.slug]: {
       title: `${programs.juniorInWebEngineering.label} | The Boring Education`,
