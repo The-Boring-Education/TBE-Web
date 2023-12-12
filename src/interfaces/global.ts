@@ -43,7 +43,10 @@ export type PageSlug =
   | '/api-dev-with-postman'
   | '/getting-started-with-github'
   | '/intro-to-web3'
-  | '/admin';
+  | '/admin'
+  | '/shiksha'
+  | '/12th Board Crash Course'
+  | '/zero to Hero Web'
 
 export type GetSEOMetaResponseType = {
   title: string;
@@ -66,7 +69,9 @@ export type ProgramLabelType =
   | 'Head to Tailwind'
   | 'API Dev with Postman'
   | 'Getting started with GitHub'
-  | 'Intro to Web3';
+  | 'Intro to Web3'
+  | '12th Board Crash Course'
+  | 'Zero to Hero Web';
 
 export interface ProgramsDataProps {
   beFrontendMaster: {
@@ -134,6 +139,19 @@ export interface MicrocampHeaderProps {
   subheading: string;
   cta: {
     primary: string;
+  };
+}
+
+export interface ShikshaProgramsDataProps {
+  boardCrashCource: {
+    label: ProgramLabelType;
+    slug: PageSlug;
+    description: string;
+  };
+  zeroToHeroWeb: {
+    label: ProgramLabelType;
+    slug: PageSlug;
+    description: string;
   };
 }
 

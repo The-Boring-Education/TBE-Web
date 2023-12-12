@@ -15,8 +15,9 @@ import {
   AdminDashboardCardProps,
   CohortLeadStatus,
   ChooseTechCohortItem,
+  ShikshaCardProps,
 } from '@/interfaces';
-import { LINKS, programs, STATIC_FILE_PATH } from '../global';
+import { LINKS, programs, shikshaprograms, STATIC_FILE_PATH } from '../global';
 import { routes } from '../routes';
 import { v4 } from 'uuid';
 
@@ -154,6 +155,28 @@ const ADMIN_DASHBOARD_CARDS: AdminDashboardCardProps[] = [
     link: routes.admin.leads.programLeads,
   },
 ];
+
+const SHIKSHA_CARDS: ShikshaCardProps[] = [
+  {
+    id: '12BCC',
+    image: `${STATIC_FILE_PATH.svg}/intro_to_web3_banner.svg`,
+    imageAltText: shikshaprograms.boardCrashCource.label,
+    title: shikshaprograms.boardCrashCource.label,
+    content: shikshaprograms.boardCrashCource.description,
+    href:'',
+    active: true,
+  },
+  {
+    id: 'ZTH',
+    image: `${STATIC_FILE_PATH.svg}/intro_to_web3_banner.svg`,
+    imageAltText: shikshaprograms.zeroToHeroWeb.label,
+    title: shikshaprograms.zeroToHeroWeb.label,
+    content: shikshaprograms.zeroToHeroWeb.description,
+    href:'',
+    active: true,
+  },
+];
+
 
 const [
   HTML,
@@ -975,6 +998,7 @@ const chooseTechCohortItems: ChooseTechCohortItem[] = [
 export {
   FOOTER_NAVIGATION,
   PROGRAMS,
+  SHIKSHA_CARDS,
   juniorInWebEngineeringSkills,
   beFrontendMasterSkills,
   landingPageSkills,
