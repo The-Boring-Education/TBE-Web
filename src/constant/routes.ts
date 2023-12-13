@@ -4,6 +4,7 @@ const routes = {
   home: '/',
   microCamps: '/micro-camps',
   workshops: '/workshops',
+  shiksha: '/shiksha',
   contactUs: '/contact',
   admin: {
     base: '/admin',

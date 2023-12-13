@@ -46,7 +46,8 @@ export type PageSlug =
   | '/admin'
   | '/shiksha'
   | '/12th Board Crash Course'
-  | '/zero to Hero Web';
+  | '/zero to Hero Web'
+  | '/shiksha';
 
 export type GetSEOMetaResponseType = {
   title: string;
@@ -56,6 +57,7 @@ export type GetSEOMetaResponseType = {
   type: string;
   robots: string;
   image: string;
+  keywords?: string;
 };
 
 export type ProgramLabelType =
@@ -74,57 +76,7 @@ export type ProgramLabelType =
   | 'Zero to Hero Web';
 
 export interface ProgramsDataProps {
-  beFrontendMaster: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  beBackendMaster: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  juniorInWebEngineering: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  theBoringWorkshops: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  twoHourDesign: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  gettingStartedWithTypescipt: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  theNextWave: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  headToTailwind: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  apiDevWithPostman: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  gettingStartedWithGithub: {
-    label: ProgramLabelType;
-    slug: PageSlug;
-    description: string;
-  };
-  introToWeb3: {
+  [key: string]: {
     label: ProgramLabelType;
     slug: PageSlug;
     description: string;
