@@ -1,4 +1,8 @@
-import { ProgramsDataProps, AuthHOCConfigType, ShikshaProgramsDataProps } from '@/interfaces';
+import {
+  ProgramsDataProps,
+  AuthHOCConfigType,
+  ShikshaProgramsDataProps,
+} from '@/interfaces';
 import { routes } from './routes';
 
 // Paths
@@ -89,8 +93,8 @@ const shikshaprograms: ShikshaProgramsDataProps = {
     label: 'Zero to Hero Web',
     slug: '/zero to Hero Web',
     description:
-      'Learn Core of Front-end Engineering with Placement Assistance in 8 Weeks.',    
-  }
+      'Learn Core of Front-end Engineering with Placement Assistance in 8 Weeks.',
+  },
 };
 
 // Global links

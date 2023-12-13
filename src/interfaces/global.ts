@@ -46,7 +46,7 @@ export type PageSlug =
   | '/admin'
   | '/shiksha'
   | '/12th Board Crash Course'
-  | '/zero to Hero Web'
+  | '/zero to Hero Web';
 
 export type GetSEOMetaResponseType = {
   title: string;

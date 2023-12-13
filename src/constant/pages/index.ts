@@ -163,7 +163,7 @@ const SHIKSHA_CARDS: ShikshaCardProps[] = [
     imageAltText: shikshaprograms.boardCrashCource.label,
     title: shikshaprograms.boardCrashCource.label,
     content: shikshaprograms.boardCrashCource.description,
-    href:'',
+    href: '',
     active: true,
   },
   {
@@ -172,11 +172,10 @@ const SHIKSHA_CARDS: ShikshaCardProps[] = [
     imageAltText: shikshaprograms.zeroToHeroWeb.label,
     title: shikshaprograms.zeroToHeroWeb.label,
     content: shikshaprograms.zeroToHeroWeb.description,
-    href:'',
+    href: '',
     active: true,
   },
 ];
-
 
 const [
   HTML,

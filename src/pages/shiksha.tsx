@@ -1,16 +1,15 @@
-import { SEO } from "@/components";
-import { ShikshaLandingHero, ShikshaProgram } from "@/components/shiksha";
-import { PageProps } from "@/interfaces";
-import { getPreFetchProps } from "@/utils";
-import React from "react";
+import { SEO } from '@/components';
+import { ShikshaLandingHero, ShikshaProgram } from '@/components/shiksha';
+import { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
+import React from 'react';
 
 const ShikshaLanding = ({ seoMeta }: PageProps) => {
-
   return (
     <React.Fragment>
       <SEO seoMeta={seoMeta} />
-      <ShikshaLandingHero/>
-      <ShikshaProgram/>
+      <ShikshaLandingHero />
+      <ShikshaProgram />
     </React.Fragment>
   );
 };
