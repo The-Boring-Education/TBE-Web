@@ -1,5 +1,4 @@
-import { SEO } from '@/components';
-import { ShikshaLandingHero, ShikshaProgram } from '@/components/shiksha';
+import { SEO, ShikshaLandingHero } from '@/components';
 import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 import React from 'react';
@@ -9,7 +8,6 @@ const ShikshaLanding = ({ seoMeta }: PageProps) => {
     <React.Fragment>
       <SEO seoMeta={seoMeta} />
       <ShikshaLandingHero />
-      <ShikshaProgram />
     </React.Fragment>
   );
 };

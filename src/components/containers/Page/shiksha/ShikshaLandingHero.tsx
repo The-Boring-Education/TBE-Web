@@ -21,50 +21,32 @@ const ShikshaLandingHero = () => {
           className='wrap-reverse flex-col flex-col-reverse gap-6 lg:flex-row'
           wrap={false}
         >
-          <FlexContainer
-            direction='col'
-            className='justify-center lg:justify-start'
-          >
+          <FlexContainer direction='col'>
             <FlexContainer direction='col'>
               <SectionHeaderContainer
                 headingLevel={2}
-                heading='Tech Education for'
-                focusText='Everyone'
+                heading='Prepare 12th Computer'
+                focusText='For Boards'
               />
               <Text
                 level='p'
-                className='paragraph mt-2 w-full text-center text-grey lg:text-left'
+                className='paragraph mt-2 w-full text-center text-grey'
               >
-                Learn Tech Skills & Prepare yourself for a Tech Job.
+                Live Preparation for 12th Computer Science Board Exams
               </Text>
             </FlexContainer>
-            <FlexContainer className='mt-4 w-full justify-center gap-2 lg:justify-start'>
+            <FlexContainer className='mt-4 w-full gap-2'>
               <LinkButton
-                href=''
+                href='https://docs.google.com/forms/d/e/1FAIpQLSfKtAwaCN5sXxPRAmcD1ETa9NnZD2VjTVAG3byVbqds6J2OdQ/viewform?usp=sf_link'
                 className='w-full sm:w-fit'
+                target='BLANK'
                 buttonProps={{
                   variant: 'PRIMARY',
-                  text: 'Register',
-                  className: '',
-                }}
-              />
-              <LinkButton
-                href=''
-                className='w-full sm:w-fit'
-                buttonProps={{
-                  variant: 'OUTLINE',
-                  text: 'Course',
-                  className: '',
+                  text: 'Know More',
                 }}
               />
             </FlexContainer>
           </FlexContainer>
-          <Image
-            src='https://ik.imagekit.io/tbe/webapp/hero-image.svg'
-            className='w-64'
-            fullWidth={false}
-            alt='hihi'
-          />
         </FlexContainer>
       </FlexContainer>
     </Section>

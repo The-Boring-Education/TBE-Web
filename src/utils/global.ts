@@ -9,8 +9,8 @@ export const getPreFetchProps = async ({
 
   let slug = resolvedUrl;
 
-  if (microCamp) slug += microCamp;
-  else if (workshop) slug += workshop;
+  if (microCamp) slug = '/' + microCamp;
+  else if (workshop) slug = workshop;
 
   const seoMeta = getSEOMeta(slug as PageSlug);
 

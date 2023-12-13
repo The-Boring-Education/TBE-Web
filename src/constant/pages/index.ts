@@ -39,6 +39,12 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
   links: [
     {
       id: v4(),
+      name: 'Shiksha(Free Tech Education)',
+      href: routes.shiksha,
+      description: 'Learn Tech Education for Free',
+    },
+    {
+      id: v4(),
       name: 'Contact us',
       href: routes.contactUs,
       description: 'Talk to our co-founders directly.',
