@@ -20,6 +20,8 @@ const getSEOMeta = (basePath: PageSlug): GetSEOMetaResponseType => {
       siteName: 'The Boring Education',
       description: 'Tech Education for Everyone',
       url: routes.home,
+      keywords:
+        'the boring education, boring education, learn frontend engineering, learn webdev, web dev free resources',
       ...commonMeta,
     },
     '/admin': {
@@ -28,6 +30,15 @@ const getSEOMeta = (basePath: PageSlug): GetSEOMetaResponseType => {
       description: 'Tech Education for Everyone',
       url: routes.admin.base,
       ...adminMeta,
+    },
+    '/shiksha': {
+      title: 'Shiksha by The Boring Education',
+      siteName: 'Shiksha by The Boring Education',
+      description: 'Free Tech Education for Everyone',
+      url: routes.shiksha,
+      keywords:
+        'shiksha, tech shiksha, shiksha by the boring education, boring education, learn frontend engineering, learn webdev, web dev free resources',
+      ...commonMeta,
     },
     [programs.juniorInWebEngineering.slug]: {
       title: `${programs.juniorInWebEngineering.label} | The Boring Education`,

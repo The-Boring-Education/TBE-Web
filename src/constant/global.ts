@@ -1,4 +1,8 @@
-import { ProgramsDataProps, AuthHOCConfigType } from '@/interfaces';
+import {
+  ProgramsDataProps,
+  AuthHOCConfigType,
+  ShikshaProgramsDataProps,
+} from '@/interfaces';
 import { routes } from './routes';
 
 // Paths
@@ -75,6 +79,21 @@ const programs: ProgramsDataProps = {
     label: 'Intro to Web3',
     slug: '/intro-to-web3',
     description: 'Roadmap to transition from Web2 to Web3',
+  },
+};
+
+const shikshaprograms: ShikshaProgramsDataProps = {
+  boardCrashCource: {
+    label: '12th Board Crash Course',
+    slug: '/12th Board Crash Course',
+    description:
+      'Learn Core of Front-end Engineering with Placement Assistance in 8 Weeks.',
+  },
+  zeroToHeroWeb: {
+    label: 'Zero to Hero Web',
+    slug: '/zero to Hero Web',
+    description:
+      'Learn Core of Front-end Engineering with Placement Assistance in 8 Weeks.',
   },
 };
 
@@ -162,6 +181,7 @@ const apiStatusCodes = {
 export {
   imageMeta,
   programs,
+  shikshaprograms,
   LINKS,
   gtag,
   googleAnalyticsScript,

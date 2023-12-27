@@ -141,6 +141,17 @@ export interface CohortCardProps {
   isCohort?: boolean;
 }
 
+export interface ShikshaCardProps {
+  id: string;
+  image: string;
+  imageAltText: string;
+  title: string;
+  content: string;
+  href: string;
+  active: boolean;
+  bestSuitedFor?: BestSuitedForType[];
+  isCohort?: boolean;
+}
 export interface ChooseTechCohortCardProps extends CohortCardProps {
   onSelected: (cohortId: string) => void;
 }

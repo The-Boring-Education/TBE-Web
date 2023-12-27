@@ -73,6 +73,8 @@ import InputFieldContainer from './common/Form/InputFieldContainer';
 import InputRadioContainer from './containers/Forms/InputRadioContainer';
 import withAuth from './layout/Auth';
 import LoadingSpinner from './common/LoadingSpinner';
+import ShikshaLandingHero from './containers/Page/shiksha/ShikshaLandingHero';
+import ShikshaProgram from './containers/Page/shiksha/ShikshaProgram';
 
 export {
   Navbar,
@@ -150,4 +152,6 @@ export {
   ChooseTechCohortCard,
   InputFieldContainer,
   LoadingSpinner,
+  ShikshaLandingHero,
+  ShikshaProgram,
 };
