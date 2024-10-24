@@ -22,6 +22,12 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       description: products.shiksha.description,
       href: products.shiksha.slug,
     },
+    {
+      id: v4(),
+      name: products.interview.label,
+      description: products.interview.description,
+      href: products.interview.slug,
+    },
   ],
   links: [
     {
@@ -197,6 +203,30 @@ const TBP_FEATURES: PrimaryCardProps[] = [
   },
 ];
 
+const INTERVIEW_FEATURES: PrimaryCardProps[] = [
+  {
+    id: v4(),
+    title: `Crisp. No Bullshit Content`,
+    content: `Prep One Question at a Time. No Ads. No Course Selling. Only Prep.`,
+    image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
+    imageAltText: `No Bullshit Content`,
+  },
+  {
+    id: v4(),
+    title: `Prep. Apply. Prep More.`,
+    content: `Apply What You Learn, Right Away. One Question At A Time.`,
+    image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
+    imageAltText: `Prep Apply More`,
+  },
+  {
+    id: v4(),
+    title: `Ask Questions`,
+    content: `Ask Interview Prep Questions in Community. We're here to help.`,
+    image: `${STATIC_FILE_PATH.svg}/workshops.svg`,
+    imageAltText: `Ask Questions`,
+  },
+];
+
 const TESTIMONIALS: TestimonialCardProps[] = [
   {
     id: v4(),
@@ -297,4 +327,5 @@ export {
   MY_PREV_EXPERIENCE,
   TBP_PROJECTS,
   SHIKSHA_COURSES,
+  INTERVIEW_FEATURES,
 };
