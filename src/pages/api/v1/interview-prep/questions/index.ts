@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { apiStatusCodes } from '@/constant';
 import { sendAPIResponse } from '@/utils';
 import { connectDB } from '@/middlewares';
-import InterviewSheet from '@/database/models/InterviewPrep/Sheet';
+import { addInterviewSheetWithQuestionsToDB } from '@/database/query/interview-prep';
+import { AddInterviewQuestionRequestPayloadProps } from '@/interfaces';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
@@ -21,51 +22,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handleAddQuestion = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
-  try {
-    const {
-      name,
-      slug,
-      description,
-      coverImageURL,
-      liveOn,
-      questions,
-      roadmap,
-    } = req.body;
+const handleAddQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
+  const sheetPayload = req.body as AddInterviewQuestionRequestPayloadProps;
 
-    if (!name || !slug || !description || !coverImageURL || !liveOn || !questions || !roadmap) {
+  try {
+    const { data, error } = await addInterviewSheetWithQuestionsToDB(sheetPayload);
+
+    if (error) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'Missing required fields',
+          message: 'Failed while adding interview questions',
+          error,
         })
       );
     }
-
-    const newSheet = new InterviewSheet({
-      name,
-      slug,
-      description,
-      coverImageURL,
-      liveOn,
-      questions,
-      roadmap,
-    });
-
-    const savedSheet = await newSheet.save();
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json(
       sendAPIResponse({
         status: true,
         message: 'Question added successfully',
-        data: savedSheet,
+        data,
       })
     );
   } catch (error) {
-    console.error('Error adding question:', error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -77,4 +57,3 @@ const handleAddQuestion = async (
 };
 
 export default handler;
-

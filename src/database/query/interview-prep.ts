@@ -1,5 +1,6 @@
 import {
   AddInterviewSheetRequestPayloadProps,
+  AddInterviewQuestionRequestPayloadProps,
   DatabaseQueryResponseType,
 } from '@/interfaces';
 import { InterviewSheet } from '@/database';
@@ -50,8 +51,21 @@ const getInterviewSheetBySlugFromDB = async (
   }
 };
 
+const addInterviewSheetWithQuestionsToDB = async (
+  sheetPayload: AddInterviewQuestionRequestPayloadProps
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const sheet = new InterviewSheet(sheetPayload);
+    await sheet.save();
+    return { data: sheet };
+  } catch (error) {
+    return { error };
+  }
+};
+
 export {
   addAInterviewSheetToDB,
   getAllInterviewSheetsFromDB,
   getInterviewSheetBySlugFromDB,
+  addInterviewSheetWithQuestionsToDB,
 };
