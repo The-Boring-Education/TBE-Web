@@ -12,6 +12,9 @@ const routes = {
   },
   shiksha: '/shiksha',
   shikshaExplore: '/shiksha/explore',
+  shikshaMycu: '/shiksha/courses',
+  shikshaCourses: '/shiksha/my-courses',
+
   allCourses: {
     logicBuildingForEveryone: '/shiksha/logic-building-for-everyone',
     basicsOfProgrammingWithJS: '/shiksha/basics-of-programming-with-js',
@@ -25,6 +28,7 @@ const routes = {
   internals: {
     landing: {
       products: 'products',
+      shiksha_courses: 'shiksha_courses',
     },
   },
   404: '/404',

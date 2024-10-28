@@ -110,6 +110,39 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
   },
 ];
 
+const COURSES: PrimaryCardWithCTAProps[] = [
+  {
+    id: 'shiksha',
+    image: `${STATIC_FILE_PATH.svg}/shiksha.svg`,
+    imageAltText: products.shiksha.label,
+    title: products.shiksha.label,
+    content: products.shiksha.description,
+    href: products.shiksha.slug,
+    active: true,
+    ctaText: 'Explore Free Courses',
+  },
+  {
+    id: 'projects',
+    image: `${STATIC_FILE_PATH.svg}/projects.svg`,
+    imageAltText: products.projects.label,
+    title: products.projects.label,
+    content: products.projects.description,
+    href: products.projects.slug,
+    active: true,
+    ctaText: 'Explore Free Projects',
+  },
+  {
+    id: 'Interview Prep',
+    image: `${STATIC_FILE_PATH.svg}/projects.svg`,
+    imageAltText: products.interviewPrep.label,
+    title: products.interviewPrep.label,
+    content: products.interviewPrep.description,
+    href: products.interviewPrep.slug,
+    active: true,
+    ctaText: 'Explore Free Projects',
+  },
+];
+
 const TBP_PROJECTS: PrimaryCardWithCTAProps[] = [
   {
     id: 'pharmasift-i',
@@ -338,4 +371,5 @@ export {
   TBP_PROJECTS,
   SHIKSHA_COURSES,
   TBIP_FEATURES,
+
 };
