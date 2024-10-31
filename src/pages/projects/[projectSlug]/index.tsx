@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Accordion,
   AccordionLinkItem,
   FlexContainer,
   MDXRenderer,
   ProjectHeroContainer,
+  ProgressBar,
   SEO,
   Section,
   Text,
@@ -14,6 +15,20 @@ import { getProjectPageProps, getSelectedProjectChapterMeta } from '@/utils';
 
 const ProjectPage = ({ project, meta, seoMeta, slug }: ProjectPageProps) => {
   const [projectMeta, setProjectMeta] = useState<string>(meta);
+  const [completedChapters, setCompletedChapters] = useState(0);
+  const totalChapters = project.sections.reduce(
+    (total, section) => total + section.chapters.length,
+    0
+  );
+
+  useEffect(() => {
+    const completed = project.sections.reduce((count, section) => {
+      return (
+        count + section.chapters.filter((chapter) => chapter.isCompleted).length
+      );
+    }, 0);
+    setCompletedChapters(completed);
+  }, [project.sections]);
 
   const handleChapterClick = ({ sectionId, chapterId }: any) => {
     const selectedChapter = getSelectedProjectChapterMeta(
@@ -45,7 +60,14 @@ const ProjectPage = ({ project, meta, seoMeta, slug }: ProjectPageProps) => {
             <Text level='h5' className='heading-5'>
               Sections
             </Text>
-            <FlexContainer justifyCenter={false} className='gap-px'>
+
+            {/* ProgressBar */}
+            <ProgressBar
+              totalChapters={totalChapters}
+              completedChapters={completedChapters}
+            />
+
+            <FlexContainer justifyCenter={false} className='gap-px mt-4'>
               {project.sections.map(({ sectionId, sectionName, chapters }) => {
                 return (
                   <Accordion title={sectionName} key={sectionId}>
