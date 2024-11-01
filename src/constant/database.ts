@@ -1,5 +1,7 @@
 const databaseModels = {
   PROJECT: 'Project',
+  PROJECT_TASK: 'ProjectTask',
+  USER_PROJECT: 'UserProject',
   USER: 'User',
   COURSE: 'Course',
   COURSE_SECTION: 'CourseSection',

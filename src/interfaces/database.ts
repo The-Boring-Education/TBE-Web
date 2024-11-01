@@ -35,6 +35,20 @@ export interface ProjectDocumentModel extends Document {
   isActive: boolean;
 }
 
+export interface UserProjectTaskModel {
+  taskId: typeof Schema.Types.ObjectId;
+  isCompleted: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface UserProjectModel {
+  userId: typeof Schema.Types.ObjectId;
+  projectId: typeof Schema.Types.ObjectId;
+  project?: ProjectDocumentModel;
+  tasks: UserProjectTaskModel[];
+}
+
 export interface CourseModel extends Document {
   name: string;
   meta: string;
