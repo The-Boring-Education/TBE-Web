@@ -1,6 +1,6 @@
+import { UserProgressModel } from '@/interfaces';
 import { Model, Schema, model, models } from 'mongoose';
 import { databaseModels } from '@/constant';
-import { UserProgressModel } from '@/interfaces';
 
 const UserTaskSchema = new Schema(
   {
