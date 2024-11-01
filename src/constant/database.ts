@@ -1,7 +1,7 @@
 const databaseModels = {
   PROJECT: 'Project',
-  PROJECT_TASK: 'ProjectTask',
-  USER_PROJECT: 'UserProject',
+  PROGRESS_TASK: 'ProgressTask',
+  USER_PROGRESS: 'UserProgress',
   USER: 'User',
   COURSE: 'Course',
   COURSE_SECTION: 'CourseSection',
