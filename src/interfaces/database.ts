@@ -1,5 +1,10 @@
 import { Document, Schema } from 'mongoose';
-import { DifficultyType, RoadmapsType, SkillsType } from '.';
+import {
+  DifficultyType,
+  QuestionFrequencyType,
+  RoadmapsType,
+  SkillsType,
+} from '.';
 
 export interface UserModel {
   name: string;
@@ -35,6 +40,7 @@ export interface ProjectDocumentModel extends Document {
   isActive: boolean;
 }
 
+
 export interface UserProgressTaskModel {
   taskId: typeof Schema.Types.ObjectId;
   isCompleted: boolean;
@@ -47,6 +53,21 @@ export interface UserProgressModel {
   projectId: typeof Schema.Types.ObjectId;
   project?: ProjectDocumentModel;
   tasks: UserProgressTaskModel[];
+
+export interface UserProjectModel extends Document {
+  userId: typeof Schema.Types.ObjectId;
+  projectId: typeof Schema.Types.ObjectId;
+  sections: UserProjectSectionModel[];
+}
+
+export interface UserProjectSectionModel {
+  sectionId: string; 
+  chapters: UserProjectChapterModel[]; 
+}
+
+export interface UserProjectChapterModel {
+  chapterId: string;
+  isCompleted?: boolean;
 }
 
 export interface CourseModel extends Document {
@@ -59,6 +80,38 @@ export interface CourseModel extends Document {
   chapters: CourseChapterModel[];
   roadmap: RoadmapsType;
   difficultyLevel: DifficultyType;
+}
+
+export interface InterviewSheetModel extends Document {
+  name: string;
+  meta: string;
+  slug: string;
+  description: string;
+  coverImageURL: string;
+  liveOn: Date;
+  questions: InterviewSheetQuestionModel[];
+  roadmap: RoadmapsType;
+}
+
+export interface InterviewSheetQuestionModel {
+  _id: typeof Schema.Types.ObjectId;
+  title: string;
+  question: string;
+  answer: string;
+  frequency: QuestionFrequencyType;
+  toObject: () => UserCourseModel;
+}
+
+export interface UserSheetModel extends Document {
+  userId: typeof Schema.Types.ObjectId; 
+  sheetId: typeof Schema.Types.ObjectId;
+  sheet: InterviewSheetModel; 
+  questions: UserSheetQuestionModel[]; 
+}
+
+export interface UserSheetQuestionModel {
+  questionId: typeof Schema.Types.ObjectId;
+  isCompleted?: boolean;
 }
 
 export interface CourseChapterModel {

@@ -22,6 +22,12 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       description: products.shiksha.description,
       href: products.shiksha.slug,
     },
+    {
+      id: v4(),
+      name: products.interviewPrep.label,
+      description: products.interviewPrep.description,
+      href: products.interviewPrep.slug,
+    },
   ],
   links: [
     {
@@ -91,6 +97,16 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
     content: products.os.description,
     href: products.os.slug,
     active: false,
+  },
+   {
+    id: 'interview Prep',
+    image: `${STATIC_FILE_PATH.svg}/shiksha.svg`, 
+    imageAltText: products.interviewPrep.label,
+    title: products.interviewPrep.label,
+    content: products.interviewPrep.description,
+    href: products.interviewPrep.slug,
+    active: true,
+    ctaText: 'Explore Interview Prep',
   },
 ];
 
@@ -197,6 +213,30 @@ const TBP_FEATURES: PrimaryCardProps[] = [
   },
 ];
 
+const TBIP_FEATURES: PrimaryCardProps[] = [
+  {
+    id: v4(),
+    title: `Crisp. No Bullshit Content`,
+    content: `Prep One Question at a Time. No Ads. No Course Selling. Only Prep.`,
+    image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
+    imageAltText: `mentorship`,
+  },
+  {
+    id: v4(),
+    title: `Prep. Apply. Prep More.`,
+    content: `Apply What You Learn, Right Away. One Question At A Time.`,
+    image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
+    imageAltText: `peer learning`,
+  },
+  {
+    id: v4(),
+    title: `Ask Questions`,
+    content: `Ask Interview Prep Questions in Community. We’re here to help.`,
+    image: `${STATIC_FILE_PATH.svg}/workshops.svg`,
+    imageAltText: `doubt session`,
+  },
+];
+
 const TESTIMONIALS: TestimonialCardProps[] = [
   {
     id: v4(),
@@ -297,4 +337,5 @@ export {
   MY_PREV_EXPERIENCE,
   TBP_PROJECTS,
   SHIKSHA_COURSES,
+  TBIP_FEATURES,
 };

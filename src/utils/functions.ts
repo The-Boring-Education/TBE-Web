@@ -1,5 +1,6 @@
 import { envConfig } from '@/constant';
 import {
+  BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
   ProjectDocumentModel,
   ProjectPickedPageProps,
@@ -172,6 +173,56 @@ const mapCourseResponseToCard = (
   );
 };
 
+const mapInterviewSheetResponseToCard = (
+  sheetsData: BaseInterviewSheetResponseProps[]
+) => {
+  return sheetsData?.map(
+    ({
+      _id,
+      coverImageURL,
+      name,
+      description,
+      liveOn = new Date(),
+      slug,
+      isEnrolled,
+    }) => {
+      const isActive = isProgramActive(liveOn);
+
+      let ctaText = 'Coming Soon';
+      let luanchingOn = '';
+
+      if (isEnrolled) {
+        ctaText = 'Continue Learning';
+      }
+
+      if (isActive) {
+        ctaText = 'View Sheet';
+      } else {
+        const date = new Date(liveOn);
+        luanchingOn = `Launching on ${date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+        })}`;
+      }
+
+      return {
+        id: _id,
+        image: coverImageURL,
+        title: name,
+        imageAltText: name,
+        content: description,
+        href: `/shiksha/${slug}/?sheetId=${_id}`,
+        isEnrolled,
+        active: isActive,
+        ctaText,
+        luanchingOn,
+      };
+    }
+  );
+};
+
 export {
   formatDate,
   formatTime,
@@ -185,4 +236,5 @@ export {
   mapCourseResponseToCard,
   isUserAuthenticated,
   getSelectedCourseChapterMeta,
+  mapInterviewSheetResponseToCard,
 };

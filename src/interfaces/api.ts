@@ -1,4 +1,10 @@
-import { CourseChapterModel, CourseModel, ProjectChapter } from '.';
+import {
+  CourseChapterModel,
+  CourseModel,
+  InterviewSheetModel,
+  InterviewSheetQuestionModel,
+  ProjectChapter,
+} from '.';
 
 export type APIMethodTypes = 'GET' | 'POST' | 'PATCH';
 
@@ -110,7 +116,23 @@ export interface AddCourseRequestPayloadProps {
   slug: string;
   meta?: string;
   roadmap: RoadmapsType;
-  difficultyLevel: DifficultyType;
+}
+
+export interface AddInterviewSheetRequestPayloadProps {
+  title: string;
+  description: string;
+  coverImageURL: string;
+  liveOn: string;
+  slug: string;
+  meta?: string;
+  roadmap: RoadmapsType;
+}
+
+export interface AddInterviewQuestionRequestPayloadProps {
+  title: string;
+  question: string;
+  answer: string;
+  frequency: QuestionFrequencyType;
 }
 
 export interface UpdateCourseRequestPayloadProps {
@@ -152,6 +174,10 @@ export type SkillsType =
   | 'NextJS';
 
 export type RoadmapsType = 'Frontend' | 'Backend' | 'Fullstack' | 'Tech';
+export type QuestionFrequencyType =
+  | 'Most Asked'
+  | 'Asked Frequently'
+  | 'Asked Sometimes';
 
 export type DifficultyType = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -175,6 +201,11 @@ export interface UpdateUserChapterInCourseRequestProps {
   isCompleted: boolean;
 }
 
+export interface SheetEnrollmentRequestProps {
+  sheetId: string;
+  userId: string;
+}
+
 export interface ExtendedCourseChapterModel extends CourseChapterModel {
   isCompleted: boolean; // Add `isCompleted` flag
 }
@@ -182,4 +213,21 @@ export interface ExtendedCourseChapterModel extends CourseChapterModel {
 export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
   isEnrolled?: boolean;
   chapters?: ExtendedCourseChapterModel[];
+}
+
+export interface BaseInterviewSheetResponseProps
+  extends Partial<InterviewSheetModel> {
+  isEnrolled?: boolean;
+  questions?: InterviewSheetQuestionModel[];
+}
+
+export interface MarkQuestionCompletedRequestProps {
+  userId: string;
+  sheetId: string;
+  questionId: string;
+  isCompleted: boolean;
+}
+
+export interface GetAllQuestionsRequestProps {
+  userId: string;
 }
