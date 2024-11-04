@@ -1,4 +1,4 @@
-import { UserProgressModel } from '@/interfaces';
+import { UserProjectProgressModel } from '@/interfaces';
 import { Model, Schema, model, models } from 'mongoose';
 import { databaseModels } from '@/constant';
 
@@ -28,7 +28,7 @@ const UserTaskSchema = new Schema(
   }
 );
 
-const UserProjectSchema = new Schema<UserProgressModel>(
+const UserProjectSchema = new Schema<UserProjectProgressModel>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -71,8 +71,8 @@ UserProjectSchema.virtual('project', {
   justOne: true,
 });
 
-const UserProject: Model<UserProgressModel> =
+const UserProject: Model<UserProjectProgressModel> =
   models?.UserProject ||
-  model<UserProgressModel>(databaseModels.USER_PROGRESS, UserProjectSchema);
+  model<UserProjectProgressModel>(databaseModels.USER_PROGRESS, UserProjectSchema);
 
 export default UserProject;

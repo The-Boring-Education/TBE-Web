@@ -42,7 +42,7 @@ export interface UserProgressTaskModel {
   updatedAt?: Date;
 }
 
-export interface UserProgressModel {
+export interface UserProjectProgressModel {
   userId: typeof Schema.Types.ObjectId;
   projectId: typeof Schema.Types.ObjectId;
   project?: ProjectDocumentModel;
