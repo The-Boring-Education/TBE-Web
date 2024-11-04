@@ -6,7 +6,7 @@ const UserTaskSchema = new Schema(
   {
     taskId: {
       type: Schema.Types.ObjectId,
-      ref: databaseModels.PROGRESS_TASK,
+      ref: databaseModels.USER_PROJECT_PROGRESS,
       required: [true, 'Task id is required'],
     },
     isCompleted: {
