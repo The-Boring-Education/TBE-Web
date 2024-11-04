@@ -258,7 +258,6 @@ const updateUserCourseChapterInDB = async ({
 
     return { data: userCourse };
   } catch (error) {
-    console.error('Failed to update chapter in user course:', error);
     return { error: 'Failed to update chapter in user course' };
   }
 };
@@ -303,7 +302,6 @@ const getACourseForUserFromDB = async (userId: string, courseId: string) => {
       } as BaseShikshaCourseResponseProps,
     };
   } catch (error) {
-    console.error('Failed to fetch courses with chapter status:', error);
     return { error: 'Failed to fetch courses with chapter status' };
   }
 };

@@ -1,4 +1,5 @@
 import { ProductDataProps } from '@/interfaces';
+import { routes } from './routes';
 
 // Paths
 const STATIC_FILE_PATH = {
@@ -28,8 +29,14 @@ const products: ProductDataProps = {
   },
   shiksha: {
     label: 'Shiksha',
-    slug: '/shiksha',
+    slug: routes.shiksha,
     description: 'Learn Tech with Free Bite-sized Courses',
+  },
+  interviewPrep: {
+    label: 'Interview Prep',
+    slug: routes.interviewPrep,
+    description:
+      'Prepare for Upcoming Tech Interview with Most Asked Questions in Real Interviews.',
   },
   workshops: {
     label: 'The Boring Workshops',

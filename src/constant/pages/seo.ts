@@ -59,6 +59,13 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
       url: products.shiksha.slug,
       ...commonMeta,
     },
+    [`${routes.interviewPrep}`]: {
+      title: `${products.interviewPrep.label} | The Boring Education`,
+      siteName: products.interviewPrep.label,
+      description: products.interviewPrep.description,
+      url: products.interviewPrep.slug,
+      ...commonMeta,
+    },
     [`${routes.allCourses.logicBuildingForEveryone}`]: {
       title: `${SHIKSHA_COURSES[0].title} | The Boring Education`,
       siteName: SHIKSHA_COURSES[0].title,
@@ -99,6 +106,13 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
       siteName: 'Explore Courses at The Boring Education',
       description: 'Explore Courses at The Boring Education',
       url: routes.shikshaExplore,
+      ...commonMeta,
+    },
+    [`${routes.interviewPrepExplore}`]: {
+      title: 'Explore Sheets | The Boring Education',
+      siteName: 'Explore Sheets at The Boring Education',
+      description: 'Explore Sheets at The Boring Education',
+      url: routes.interviewPrepExplore,
       ...commonMeta,
     },
   };

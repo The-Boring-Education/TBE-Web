@@ -4,9 +4,11 @@ const databaseModels = {
   USER_PROGRESS: 'UserProgress',
   USER: 'User',
   COURSE: 'Course',
+  INTERVIEW_SHEET: 'InterviewSheet',
   COURSE_SECTION: 'CourseSection',
   COURSE_CHAPTER: 'CourseChapter',
   USER_COURSE: 'UserCourse',
+  USER_SHEET: 'UserSheet',
 };
 
 const modelSelectParams = {

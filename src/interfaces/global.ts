@@ -29,8 +29,10 @@ export type ProductLabelType =
   | 'Roadmaps'
   | 'The Boring Projects'
   | 'Shiksha'
+  | 'Interview Prep'
   | 'The Boring Workshops'
-  | 'The Boring Open Source';
+  | 'The Boring Open Source'
+  | 'Interview Prep';
 
 export interface ProductDataProps {
   [key: string]: {
