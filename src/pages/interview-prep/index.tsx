@@ -16,7 +16,7 @@ const Home = ({ seoMeta }: PageProps) => {
         heroText='Crack Tech Interview with Questions Asked in Real Interviews.'
         primaryButton={
           <LinkButton
-            href={routes.shikshaExplore}
+            href={routes.interviewPrepExplore}
             className='w-full sm:w-fit'
             buttonProps={{
               variant: 'PRIMARY',
