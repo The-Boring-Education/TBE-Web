@@ -122,3 +122,15 @@ export interface UserCourseChapterModel {
   chapterId: string;
   isCompleted?: boolean;
 }
+
+export interface PlaylistModel {
+  playlistId: string;
+  playlistUrl: string;
+  videos: Video[];
+}
+
+export interface Video {
+  title: string;
+  videoId: string;
+  thumbnail: string;
+}
