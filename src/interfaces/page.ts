@@ -2,7 +2,11 @@ import {
   BaseShikshaCourseResponseProps,
   BaseInterviewSheetResponseProps,
 } from '.';
-import { ProjectDocumentModel } from './database';
+import {
+  CertificateModel,
+  ProjectDocumentModel,
+  WebinarModel,
+} from './database';
 import { GetSEOMetaResponseType } from './global';
 
 export interface PageProps {
@@ -22,6 +26,7 @@ export type ProjectPickedPageProps = Pick<
   | 'requiredSkills'
 > & {
   isEnrolled?: boolean;
+  _id: string;
 };
 
 export interface ProjectPageProps extends PageProps {
@@ -40,4 +45,16 @@ export interface SheetPageProps extends PageProps {
   sheet: BaseInterviewSheetResponseProps;
   meta: string;
   currentQuestionId: string;
+}
+
+export interface WebinarCardProps extends WebinarModel {
+  isCompleted: boolean;
+}
+
+export interface WebinarsLandingPageProps extends PageProps {
+  webinars: WebinarCardProps[];
+}
+
+export interface CertificatePageProps extends PageProps {
+  certificate: CertificateModel;
 }

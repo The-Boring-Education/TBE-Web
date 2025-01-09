@@ -9,6 +9,8 @@ const databaseModels = {
   USER_COURSE: 'UserCourse',
   USER_SHEET: 'UserSheet',
   PLAYLIST: 'Playlist',
+  WEBINAR: 'Webinar',
+  CERTIFICATE: 'Certificate',
 };
 
 const modelSelectParams = {

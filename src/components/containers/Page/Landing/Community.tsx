@@ -1,4 +1,4 @@
-import { LINKS } from '@/constant';
+import { LINKS, STATIC_FILE_PATH } from '@/constant';
 import Link from 'next/link';
 import React from 'react';
 import FlexContainer from '../common/FlexContainer';
@@ -11,7 +11,7 @@ const Community = () => {
       <FlexContainer className='gradient-5 w-full p-4 flex-col  gap-4 rounded-2'>
         <FlexContainer className='w-full max-w-[98%] md:max-w-[50%]'>
           <Image
-            src='/images/Community-Section-Image.svg'
+            src={`${STATIC_FILE_PATH.svg}/community.svg`}
             fullHeight={true}
             fullWidth={true}
             alt='community'

@@ -7,10 +7,22 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
     html: true,
   });
 
+  // Extend renderer rules to handle aside tag
+  md.renderer.rules.html_block = (tokens: any[], idx: any) => {
+    let content = tokens[idx].content;
+    if (content.includes('<aside>')) {
+      content = content.replace(
+        /<aside>/g,
+        '<aside class="md-aside flex gap-1 bg-accent rounded p-2 mb-2">'
+      );
+    }
+    return content;
+  };
+
   // Add class names to specific tags
   md.renderer.rules.heading_open = (tokens: any[], idx: number) => {
     const { tag } = tokens[idx];
-    return `<${tag} class="md-1">`;
+    return `<${tag} class="md-1 mb-1">`;
   };
 
   md.renderer.rules.list_open = () => {
@@ -18,19 +30,29 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   };
 
   md.renderer.rules.paragraph_open = () => {
-    return '<p class="my-2">';
+    return '<p class="mb-2">';
   };
 
   md.renderer.rules.link_open = (tokens: any, idx: any) => {
     const token = tokens[idx];
     const href = token.attrGet('href');
     if (href.includes('youtube.com') || href.includes('youtu.be')) {
-      return `<iframe width="100%" height="315" class="rounded" src="${href}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+      if (href.includes('list=')) {
+        return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
+      } else {
+        let embedHref = href;
+        if (href.includes('watch')) {
+          const videoId = href.split('v=')[1].split('&')[0];
+          embedHref = `https://www.youtube.com/embed/${videoId}`;
+        }
+        return `<iframe width="100%" height="550" class="rounded" src="${embedHref}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+      }
     }
+
     return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
   };
 
-  md.renderer.rules.html_block = (tokens: any, idx: any) => {
+  md.renderer.rules.link_block = (tokens: any, idx: any) => {
     const token = tokens[idx];
     const href = token.attrGet('href');
 

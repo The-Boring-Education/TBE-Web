@@ -1,89 +1,47 @@
-# 15: Error Handling
+Now it's time to show off your Work on the Social Media -
 
-[https://www.youtube.com/embed/EXATEA5VHeo?si=4Jo1CtXKeRR46Ah1](https://www.youtube.com/embed/EXATEA5VHeo?si=4Jo1CtXKeRR46Ah1)
+Copy the message below and share it on LinkedIn & Twitter. Don’t forget to tag us.
 
-### 1. What is Error Handling?
+```
+"🎉 Excited to share that I’ve successfully completed the Shiksha Frontend Development Course by The Boring Education(TAG US) 🚀
 
-Error handling is the process of anticipating, detecting, and resolving errors in code. It helps maintain control of a program’s flow even when something goes wrong, ensuring a smooth user experience.
+This journey has been packed with learning HTML, CSS, JavaScript, React.js, Next.js and more. Grateful for the guidance and resources provided. 💻
+Can’t wait to apply these skills to real-world projects! 🌟
 
-### 2. Types of Errors in JavaScript
+Few things I learnt in this course - ADD YOUR LEARNINGS
+1.
 
-- **Syntax Errors**: Mistakes in the code's structure.
-- **Runtime Errors**: Errors that occur during execution, like trying to access a property of `undefined`.
-- **Logical Errors**: Code runs but produces incorrect results.
+ADD A THANK YOU NOTE FOR SACHIN(Not IMP But I'd be happy if you do :')
 
-### 3. `try...catch` Statement
-
-- Used to handle runtime errors in JavaScript.
-- **`try` block**: Contains the code that might throw an error.
-- **`catch` block**: Executes if an error occurs.
-
-**Example:**
-
-```jsx
-try {
-  let result = someFunction(); // If this function doesn't exist, an error will be thrown.
-} catch (error) {
-  console.log('An error occurred: ' + error.message);
-}
+#ShikshaByTheBoringEducation #ZeroToOneFrontendDeveCourse #Frontend #Reactjs
 ```
 
-### 4. `finally` Block
+### Our Handles -
 
-- The `finally` block executes whether or not an error was thrown in the `try` block.
-- It's useful for cleanup tasks, like closing resources.
+1. [LinkedIn](https://www.linkedin.com/company/theboringeducation)
+2. [Sachin’s LinkedIn](https://www.linkedin.com/in/imsks/)
+3. [Sachin’s Twitter](https://x.com/i_skrs)
 
-**Example:**
+## More from us
 
-```jsx
-try {
-  let data = fetchData();
-} catch (error) {
-  console.log('An error occurred: ' + error.message);
-} finally {
-  console.log('This will always run.');
-}
-```
+1. Unable to Understand How to Get Started With? Book a [Mentorship Session with me](https://topmate.io/imsks/)
 
-### 5. Throwing Errors Manually
+2. Want to Attend Live Workshops? [Visit The Boring Workshops](https://theboringeducation.com/webinar)
 
-You can manually throw errors when certain conditions aren’t met.
+3. Be Part of [The Boring Community](https://chat.whatsapp.com/EeB7LrPRg2p3RyMOicyIAC)
 
-**Example:**
+<aside>
+✅
 
-```jsx
-function validateAge(age) {
-  if (age < 18) {
-    throw new Error('User must be 18 or older.');
-  }
-  return true;
-}
+We’re Building An Open Source Tech Education Platform for 🇮🇳 and We’ll launch Projects like Shiksha & The Boring Projects. Keep an eye on website
 
-try {
-  validateAge(16);
-} catch (error) {
-  console.log(error.message); // "User must be 18 or older."
-}
-```
+</aside>
 
-### 6. Custom Error Classes
+<aside>
+🔥
 
-JavaScript allows you to create custom error classes to provide more context to errors.
+Thank you so much for being part of this course.
 
-**Example:**
+❤️ from Sachin.
 
-```jsx
-class ValidationError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'ValidationError';
-  }
-}
-
-try {
-  throw new ValidationError('This is a validation error.');
-} catch (error) {
-  console.log(error.name); // "ValidationError"
-  console.log(error.message); // "This is a validation error."
-}
-```
+</aside>

@@ -21,21 +21,20 @@ const ProjectHeroContainer = ({
   const { user, isAuth } = useUser();
   const { makeRequest, loading } = useApi('projects/enrollProject');
 
-  const enrollProject = () => {
-    makeRequest({
-      method: 'POST',
-      url: routes.api.enrollProject,
-      body: {
-        userId: user?.id,
-        projectId: id,
-      },
-    })
-      .then(() => {
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error('Failed to enroll in project', error);
+  const enrollProject = async () => {
+    try {
+      await makeRequest({
+        method: 'POST',
+        url: routes.api.enrollProject,
+        body: {
+          userId: user?.id,
+          projectId: id,
+        },
       });
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to enroll in project', error);
+    }
   };
 
   let headerActionButton;
@@ -69,7 +68,7 @@ const ProjectHeroContainer = ({
       >
         <LinkButton
           href={projectGroupWhatsapp}
-          target='BLANK'
+          target='_blank'
           buttonProps={{
             variant: 'OUTLINE',
             text: 'Ask Question',

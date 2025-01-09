@@ -1,4 +1,5 @@
 import {
+  CertificateType,
   DifficultyType,
   QuestionFrequencyType,
   RoadmapsType,
@@ -31,9 +32,12 @@ const DIFFICULTY_LEVEL: DifficultyType[] = [
   'Advanced',
 ];
 
+const CERTIFICATE_TYPE: CertificateType[] = ['WEBINAR', 'SHIKSHA'];
+
 export {
   PROJECT_SKILLS,
   ROADMAPS,
   DIFFICULTY_LEVEL,
   INTERVIEW_QUESTION_FREQUENCY,
+  CERTIFICATE_TYPE,
 };
