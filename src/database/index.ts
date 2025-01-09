@@ -6,6 +6,7 @@ import Course from './models/Shiksha/Course';
 import UserCourse from './models/Shiksha/UserCourse';
 import InterviewSheet from './models/InterviewPrep/Sheet';
 import UserSheet from './models/InterviewPrep/UserSheet';
+import Playlist from './models/Youfocus/Playlist';
 
 export {
   Project,
@@ -15,6 +16,7 @@ export {
   InterviewSheet,
   UserSheet,
   UserProject,
+  Playlist
 };
 
 // Query

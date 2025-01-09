@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
 import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import Playlist from '@/database/models/Youfocus/Playlist';
+import { Playlist } from '@/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
@@ -18,6 +17,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
   }
 };
+
+// Function to handle adding a new playlist
 const handleAddPlaylist = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { playlistUrl } = req.body;
@@ -39,12 +40,11 @@ const handleAddPlaylist = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Check if the playlist ID already exists in the database
-    const existingPlaylist = await Playlist.findOne({ playlistId });
+    const existingPlaylist = await Playlist.findOne({ playlistUrl });
     if (existingPlaylist) {
       return res.status(apiStatusCodes.OKAY).json({
         success: false,
         message: 'Playlist already exists in the database',
-        data: existingPlaylist,
       });
     }
 
@@ -61,16 +61,17 @@ const handleAddPlaylist = async (req: NextApiRequest, res: NextApiResponse) => {
     // Create and save the new playlist with video details
     const newPlaylist = await Playlist.create({
       playlistUrl,
+      playlistName: youtubeData.playlistName,
+      channelName: youtubeData.channelName,
+      description: youtubeData.description,
       videos: youtubeData.videos,
     });
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json({
       success: true,
       message: 'Playlist added successfully',
-      data: newPlaylist,
     });
   } catch (error) {
-    console.error('Error adding playlist:', error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: 'Failed to add playlist',
@@ -78,31 +79,64 @@ const handleAddPlaylist = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
+// Function to fetch playlist metadata
+const fetchPlaylistMetadata = async (playlistId: string) => {
+  try {
+    const metadataResponse: any = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${process.env.YOUTUBE_API_KEY}`
+    );
+    const metadata = await metadataResponse.json();
 
+    if (!metadataResponse.ok) {
+      throw new Error(`Failed to fetch playlist metadata: ${metadata.error.message}`);
+    }
+
+    if (!metadata.items || metadata.items.length === 0) {
+      throw new Error('No playlist metadata found.');
+    }
+
+    const playlistName = metadata.items[0].snippet.title;
+    const channelName = metadata.items[0].snippet.channelTitle;
+    const description = metadata.items[0].snippet.description;
+
+    return { playlistName, channelName, description };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to fetch playlist metadata",
+    };
+  }
+};
+
+// Function to extract playlist ID from a YouTube playlist URL
 const fetchPlaylistData = async (url: string) => {
   try {
     // Extract playlist ID from the URL
     const playlistId = extractPlaylistId(url);
     if (!playlistId) {
-      console.error('Invalid playlist ID');
       return null;
     }
 
+    // Fetch playlist metadata using the new function
+    const metadata = await fetchPlaylistMetadata(playlistId);
+    if (!metadata) {
+      return null;
+    }
+
+    const { playlistName, channelName, description } = metadata;
+
+    // Fetch all videos in the playlist
     let allVideos: { title: string, videoId: string, thumbnail: string }[] = [];
     let nextPageToken: string | undefined = '';
 
     // Loop to handle pagination and fetch all videos
     while (nextPageToken !== undefined) {
-      // Use the YouTube Data API to fetch playlist details with fetch
       const response: any = await fetch(
         `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&pageToken=${nextPageToken}&key=${process.env.YOUTUBE_API_KEY}`
       );
 
       // Log the response status and body for debugging
-      console.log('Response Status:', response.status);
       const data = await response.json();
-      console.log('Response Data:', data);
-
       if (!response.ok) {
         throw new Error(`Failed to fetch data from YouTube: ${data.error.message}`);
       }
@@ -124,16 +158,16 @@ const fetchPlaylistData = async (url: string) => {
       nextPageToken = data.nextPageToken;
     }
 
-    return { videos: allVideos };
+    return { playlistName, channelName, description, videos: allVideos };
   } catch (error) {
-    console.error('Error fetching YouTube playlist data:', error);
+
     return null;
   }
 };
 
 // Function to extract playlist ID from URL (e.g., https://www.youtube.com/playlist?list=...)
 const extractPlaylistId = (url: string) => {
-  const regex = /[?&]list=([^&]+)/; // Handles playlist URLs with parameters
+  const regex = /(?:list=|\/playlist\/)([a-zA-Z0-9_-]{10,})/; // Handles playlist URLs with parameters
   const match = url.match(regex);
   return match ? match[1] : null;
 };

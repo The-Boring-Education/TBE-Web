@@ -126,6 +126,9 @@ export interface UserCourseChapterModel {
 export interface PlaylistModel {
   playlistId: string;
   playlistUrl: string;
+  playlistName: string;
+  channelName: string;
+  description: string;
   videos: Video[];
 }
 
