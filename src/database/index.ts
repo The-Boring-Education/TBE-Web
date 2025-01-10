@@ -18,7 +18,7 @@ export {
   InterviewSheet,
   UserSheet,
   UserProject,
-  Playlist
+  Playlist,
   Webinar,
   Certificate,
 };
