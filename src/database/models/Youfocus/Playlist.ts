@@ -1,6 +1,6 @@
 import { Schema, model, models, Model } from 'mongoose';
-import {PlaylistModel,Video} from '@/interfaces';
-import {databaseModels} from '@/constant';
+import { PlaylistModel, Video } from '@/interfaces';
+import { databaseModels } from '@/constant';
 
 const VideoSchema = new Schema<Video>(
   {
@@ -14,22 +14,25 @@ const VideoSchema = new Schema<Video>(
 // Define the schema
 const PlaylistSchema = new Schema<PlaylistModel>(
   {
-    playlistUrl: {
+    playlistId: {
       type: String,
-      required: [true, 'Playlist URL is required'],
+      required: [true, 'Playlist ID is required'],
     },
-    playlistName:{
+    playlistName: {
       type: String,
       required: [true, 'Playlist Name is required'],
     },
-    channelName: { 
+    description: {
       type: String,
-      required: [true, 'Channel Name is required'],
-      },
-      description:{
-        type: String,
-      },
-      videos: [VideoSchema],
+    },
+    referrerBy: {
+      type: Number,
+      default: 0,
+    },
+    tags: {
+      type: [String],
+    },
+    videos: [VideoSchema],
   },
   { timestamps: true }
 );

@@ -129,6 +129,8 @@ export interface PlaylistModel {
   playlistName: string;
   channelName: string;
   description: string;
+  referrerBy: number;
+  tags: string[];
   videos: Video[];
 }
 
