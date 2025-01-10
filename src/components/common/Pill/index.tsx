@@ -4,8 +4,8 @@ import { PillProps } from '@/interfaces';
 const Pill = ({
   text,
   variant,
-  textStyleClasses,
-  containerClasses,
+  textStyleClasses = '',
+  containerClasses = '',
   widthFull = false,
 }: PillProps) => {
   let backgroundColor;

@@ -40,6 +40,14 @@
     @apply bg-gradient-to-b from-[#F0F3FF] to-[#FFA4C5];
   }
 
+  .gradient-7 {
+    @apply bg-gradient-to-b from-[#EEFFBF] to-[#04ADC4];
+  }
+
+  .gradient-8 {
+    @apply bg-gradient-to-b from-[#F0F3FF] to-[#FFCAA4];
+  }
+
   .gradient-bg {
     @apply bg-gradient-to-b from-[#070607] to-[#1B1B1B];
   }
@@ -89,7 +97,7 @@
   /* Image */
   .image {
     object-fit: contain;
-    width: 100% !important;
+    width: 100%;
     position: relative !important;
   }
 

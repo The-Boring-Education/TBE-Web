@@ -215,7 +215,7 @@ const getAllEnrolledCoursesFromDB = async (
     return {
       data: enrolledCourse.map(
         (course) => course.course
-      ) as BaseShikshaCourseResponseProps,
+      ) as unknown as BaseShikshaCourseResponseProps,
     };
   } catch (error) {
     return { error: 'Failed while fetching enrolled course' };
@@ -308,6 +308,8 @@ const getACourseForUserFromDB = async (userId: string, courseId: string) => {
     const updatedCourseResponse = {
       ...userCourse.course.toObject(),
       chapters: mappedChapters,
+      isCompleted: userCourse.isCompleted,
+      certificateId: userCourse.certificateId,
     };
 
     return {
@@ -318,6 +320,28 @@ const getACourseForUserFromDB = async (userId: string, courseId: string) => {
     };
   } catch (error) {
     return { error: 'Failed to fetch courses with chapter status' };
+  }
+};
+
+const updateCertificateToUserShikshaCourseDoc = async (
+  userId: string,
+  courseId: string,
+  certificateId: string
+) => {
+  try {
+    const userCourse = await UserCourse.findOneAndUpdate(
+      { userId, courseId },
+      { isCompleted: true, certificateId },
+      { new: true }
+    );
+
+    if (!userCourse) {
+      return { error: 'User course not found' };
+    }
+
+    return { data: userCourse };
+  } catch (error) {
+    return { error: 'Failed to update certificate status in user course' };
   }
 };
 
@@ -336,4 +360,5 @@ export {
   updateUserCourseChapterInDB,
   getACourseForUserFromDB,
   getAllCourseFromDB,
+  updateCertificateToUserShikshaCourseDoc,
 };

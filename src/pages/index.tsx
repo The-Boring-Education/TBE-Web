@@ -2,13 +2,13 @@ import React from 'react';
 import {
   LandingPageHero,
   CardContainerA,
-  CanYouBeAProgrammer,
   Testimonials,
   SEO,
   LinkButton,
   CardContainerB,
   Community,
   MentorshipPlans,
+  Banner,
 } from '@/components';
 import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
@@ -57,7 +57,7 @@ const Home = ({ seoMeta }: PageProps) => {
               text: 'Book Tech Session',
               className: 'w-full',
             }}
-            target='BLANK'
+            target='_blank'
           />
         }
         backgroundImageUrl={`${STATIC_FILE_PATH.svg}/hero-image.svg`}
@@ -70,7 +70,22 @@ const Home = ({ seoMeta }: PageProps) => {
         cards={PRODUCTS}
         borderColour={2}
       />
-      <CanYouBeAProgrammer />
+      <Banner
+        title='Feeling Stuck?'
+        description='Need a Resume Review or help with Learning Tech. We can help.'
+        buttonText='Book Free Session'
+        buttonLink='https://topmate.io/imsks'
+        imageSrc={`${STATIC_FILE_PATH.svg}/laptop.svg`}
+        variant='VARIANT_A'
+      />
+      <Banner
+        title='Become Our Brand Ambassador!'
+        description='Represent us at Your Campus by Joining us as Campus Ambassador.'
+        buttonText='Join us'
+        buttonLink={LINKS.joinCampusAmbassador}
+        imageSrc={`${STATIC_FILE_PATH.svg}/community.svg`}
+        variant='VARIANT_B'
+      />
       <Community />
       <MentorshipPlans />
       <CardContainerA

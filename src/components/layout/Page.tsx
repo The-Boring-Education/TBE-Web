@@ -20,9 +20,9 @@ const PageLayout = ({ children }: PageLayoutProps) => {
   }, [router.events]);
 
   return (
-    <main className='bg-lightBG'>
+    <main className='bg-lightBG flex flex-col min-h-screen'>
       <Navbar />
-      {children}
+      <div className='flex-1'>{children}</div>
       <Footer />
     </main>
   );

@@ -1,19 +1,9 @@
-import { FooterLinksContainerProps } from '.';
+import { FooterLinksContainerProps, WebinarModel } from '.';
 
 export interface FooterNavigationDataProps extends FooterLinksContainerProps {
   id: string;
   isShow: boolean;
 }
-
-export type PageSlug =
-  | '/'
-  | '/404'
-  | '/contact'
-  | '/roadmaps'
-  | '/projects'
-  | '/workshops'
-  | '/shiksha'
-  | '/os';
 
 export type GetSEOMetaResponseType = {
   title: string;
@@ -27,12 +17,13 @@ export type GetSEOMetaResponseType = {
 
 export type ProductLabelType =
   | 'Roadmaps'
-  | 'The Boring Projects'
+  | 'Projects'
   | 'Shiksha'
   | 'Interview Prep'
-  | 'The Boring Workshops'
-  | 'The Boring Open Source'
-  | 'Interview Prep';
+  | 'Webinar'
+  | 'Open Source'
+  | 'Interview Prep'
+  | 'Portfolio';
 
 export interface ProductDataProps {
   [key: string]: {
@@ -47,7 +38,7 @@ export interface TopNavbarLinkProps {
   name: string;
   href: string;
   description?: string;
-  target?: 'BLANK';
+  target?: '_blank';
   isDevelopment?: boolean;
 }
 
@@ -65,3 +56,20 @@ export interface ServerSessionProp {
   };
   expires: Date;
 }
+
+export interface WebinarPageProps extends WebinarModel {
+  bannerImageUrl: string;
+  seoMeta: GetSEOMetaResponseType;
+  date: string;
+  time: string;
+  isWebinarStarted: boolean;
+  webinarId: string;
+}
+
+export type CertificateType = 'WEBINAR' | 'SHIKSHA';
+
+export type FormatDateType = {
+  dateAndTime?: string;
+  dateFormat?: Intl.DateTimeFormatOptions;
+  timeFormat?: Intl.DateTimeFormatOptions;
+};

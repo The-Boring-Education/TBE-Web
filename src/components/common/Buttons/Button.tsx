@@ -22,8 +22,7 @@ const Button = ({
       'button bg-light-bg border-2 shadow-lg border-primary px-2 py-1 text-primary hover:scale-105 transition-all';
   else if (variant === 'GHOST')
     baseClasses =
-      'button bg-accent px-2 py-1 text-greyDark border-2 hover:border-black transition-all';
-  // Add a variant for Success
+      'button bg-accent px-2 py-1 text-contentLight border-2 hover:border-black transition-all';
   else if (variant === 'SUCCESS')
     baseClasses =
       'button bg-success px-2 py-1 text-white border-2 border-success hover:scale-105 transition-all';
@@ -35,7 +34,7 @@ const Button = ({
 
   return (
     <button
-      className={`${baseClasses} ${className} flex items-center justify-center gap-2`}
+      className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-2`}
       disabled={!active || isLoading}
       onClick={onClick}
     >

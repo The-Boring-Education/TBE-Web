@@ -11,7 +11,7 @@ const PrimaryCardWithCTA = ({
   ctaText,
   borderColour = 4,
   target,
-  luanchingOn,
+  launchingOn,
 }: PrimaryCardWithCTAProps) => {
   const border = `border-borderColor${borderColour}`;
 
@@ -32,9 +32,9 @@ const PrimaryCardWithCTA = ({
         <Text level='p' className='pre-title mt-1 text-grey'>
           {content}
         </Text>
-        {luanchingOn && (
+        {launchingOn && (
           <Text level='p' className='pre-title mt-1 text-primary'>
-            {luanchingOn}
+            {launchingOn}
           </Text>
         )}
         <LinkButton

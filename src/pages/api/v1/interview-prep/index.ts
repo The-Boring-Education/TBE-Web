@@ -98,11 +98,11 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Create a map of all sheets by their ID
     const sheetMap = new Map<string, BaseInterviewSheetResponseProps>(
-      allInterviewSheets.map((sheet: BaseInterviewSheetResponseProps) => {
-        const sheetDoc = sheet as unknown as mongoose.Document &
-          BaseInterviewSheetResponseProps;
-        return [sheetDoc._id.toString(), { ...sheetDoc.toObject() }];
-      })
+      allInterviewSheets.map(
+        (sheetDoc: mongoose.Document & BaseInterviewSheetResponseProps) => {
+          return [sheetDoc._id.toString(), { ...sheetDoc.toObject() }];
+        }
+      )
     );
 
     // If the user is logged in, fetch enrolled sheets and mark them in the map

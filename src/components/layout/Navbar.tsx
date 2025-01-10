@@ -141,10 +141,10 @@ const Navbar = () => {
                     justifyCenter={false}
                     className='gap-1'
                   >
-                    <Link href={LINKS.instagram} target='BLANK'>
+                    <Link href={LINKS.instagram} target='_blank'>
                       <FaInstagram color='black' size='2em' />
                     </Link>
-                    <Link href={LINKS.youtube} target='BLANK'>
+                    <Link href={LINKS.youtube} target='_blank'>
                       <FaYoutube color='black' size='2em' />
                     </Link>
                   </FlexContainer>

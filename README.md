@@ -15,7 +15,7 @@ To set up this project locally and start developing, follow these steps:
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/the-boring-education.git
+git clone https://github.com/your-userName/the-boring-education.git
 cd the-boring-education
 ```
 
