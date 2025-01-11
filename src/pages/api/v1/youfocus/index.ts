@@ -11,6 +11,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'POST':
       return handleAddPlaylist(req, res);
+    case 'GET':
+      return handleGetAllPlaylists(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json({
         success: false,
@@ -183,5 +185,21 @@ const extractPlaylistId = (url: string) => {
   const match = url.match(regex);
   return match ? match[1] : null;
 };
+
+const handleGetAllPlaylists = async (req: NextApiRequest, res: NextApiResponse) => {
+
+  try {
+    const playlists = await Playlist.find({});
+    return res.status(apiStatusCodes.OKAY).json({
+      success: true,
+      data: playlists,
+    });
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'Failed to fetch playlists',
+    });
+  }
+}
 
 export default handler;
