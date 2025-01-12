@@ -9,6 +9,7 @@ import UserSheet from './models/InterviewPrep/UserSheet';
 import Playlist from './models/Youfocus/Playlist';
 import Webinar from './models/Webinar';
 import Certificate from './models/Certificate';
+import Youfocus from './models/Youfocus/Playlist';
 
 export {
   Project,
@@ -21,6 +22,7 @@ export {
   Playlist,
   Webinar,
   Certificate,
+  Youfocus,
 };
 
 // Query
@@ -30,3 +32,4 @@ export * from './query/user';
 export * from './query/interview-prep';
 export * from './query/webinar';
 export * from './query/certificate';
+export * from './query/youfucos';
