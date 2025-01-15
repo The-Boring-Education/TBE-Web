@@ -47,6 +47,8 @@ export interface APIResponseType extends ClientAPIResponse {
 export type DatabaseQueryResponseType = {
   data?: any;
   error?: any;
+  exists?: boolean;
+  message?: string;
 };
 
 export interface AddProjectRequestPayloadProps {

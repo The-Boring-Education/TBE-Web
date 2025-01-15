@@ -2,7 +2,7 @@ import { apiStatusCodes } from "@/constant";
 import { NextApiRequest, NextApiResponse } from "next";
 import { sendAPIResponse } from "@/utils";
 import { connectDB } from "@/middlewares";
-import { getPlaylistVideoByIdFromDB } from "@/database";
+import { getPlaylistByIdFromDB } from "@/database";
 
 const handler = async ( req:NextApiRequest, res:NextApiResponse ) => {
     await connectDB();
@@ -37,7 +37,7 @@ const handleGetYoufocusById = async (
         );
       }
 
-      const { data, error } = await getPlaylistVideoByIdFromDB(playlistId);
+      const { data, error } = await  getPlaylistByIdFromDB(playlistId);
 
       if (error) {
       console.log("Error", error);

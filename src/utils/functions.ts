@@ -1,4 +1,4 @@
-import { envConfig, LINKS } from '@/constant';
+import { envConfig, LINKS, apiStatusCodes } from '@/constant';
 import {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
@@ -6,6 +6,7 @@ import {
   ProjectDocumentModel,
   ProjectPickedPageProps,
   User,
+  Video
 } from '@/interfaces';
 
 const fetchAPIData = async (url: string) => {
@@ -284,6 +285,82 @@ const generateShareTemplate = (
   return baseMessage;
 };
 
+
+
+ // Fetch metadata for a YouTube playlist using its ID.
+export const fetchPlaylistMetadata = async (playlistId: string) => {
+  try {
+    const metadataResponse: any = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${process.env.YOUTUBE_API_KEY}`
+    );
+    const metadata = await metadataResponse.json();
+
+    if (!metadataResponse.ok) {
+      throw new Error(`Failed to fetch playlist metadata: ${metadata.error.message}`);
+    }
+
+    if (!metadata.items || metadata.items.length === 0) {
+      throw new Error('No playlist metadata found.');
+    }
+
+    const playlistName = metadata.items[0].snippet.title;
+    const description = metadata.items[0].snippet.description;
+
+    return { playlistName, description };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Failed to fetch playlist metadata',
+    };
+  }
+};
+
+
+// Recursively fetch videos from a YouTube playlist.
+export const fetchPlaylistVideos = async (
+  playlistId: string,
+  pageToken: string = '',
+  accumulatedVideos: Video[] = []
+): Promise<Video[]> => {
+  try {
+    const response: any = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&pageToken=${pageToken}&key=${process.env.YOUTUBE_API_KEY}`
+    );
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data from YouTube: ${data.error.message}`);
+    }
+
+    const videos: Video[] = data.items.map((item: any) => {
+      const thumbnail = item.snippet.thumbnails?.default?.url || '';
+      return {
+        title: item.snippet.title,
+        videoId: item.snippet.resourceId.videoId,
+        thumbnail,
+      };
+    });
+
+    const allVideos = [...accumulatedVideos, ...videos];
+
+    if (data.nextPageToken) {
+      return fetchPlaylistVideos(playlistId, data.nextPageToken, allVideos);
+    }
+
+    return allVideos;
+  } catch (error) {
+    console.error(error);
+    return accumulatedVideos;
+  }
+};
+
+const extractPlaylistId = (url: string) => {
+  const regex = /(?:list=|\/playlist\/)([a-zA-Z0-9_-]{10,})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+};
+
+
 export {
   formatDate,
   formatTime,
@@ -303,4 +380,5 @@ export {
   generatePublicCertificateLink,
   fetchAPIData,
   generateShareTemplate,
+  extractPlaylistId
 };
