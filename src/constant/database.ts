@@ -8,6 +8,8 @@ const databaseModels = {
   COURSE_CHAPTER: 'CourseChapter',
   USER_COURSE: 'UserCourse',
   USER_SHEET: 'UserSheet',
+  PLAYLIST: 'Playlist',
+  USER_PLAYLIST: 'UserPlaylist',
 };
 
 const modelSelectParams = {
