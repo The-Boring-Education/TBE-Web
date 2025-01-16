@@ -4,18 +4,12 @@ import {
   TopNavbarContainerProps,
   PrimaryCardWithCTAProps,
 } from '@/interfaces';
-import { LINKS, products, STATIC_FILE_PATH, userSections } from '../global';
+import { LINKS, products, STATIC_FILE_PATH } from '../global';
 import { v4 } from 'uuid';
 import { routes } from '..';
 
 const TOP_NAVIGATION: TopNavbarContainerProps = {
   products: [
-    {
-      id: v4(),
-      name: products.projects.label,
-      description: products.projects.description,
-      href: products.projects.slug,
-    },
     {
       id: v4(),
       name: products.shiksha.label,
@@ -24,9 +18,27 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
     },
     {
       id: v4(),
+      name: products.webinar.label,
+      description: products.webinar.description,
+      href: products.webinar.slug,
+    },
+    {
+      id: v4(),
       name: products.interviewPrep.label,
       description: products.interviewPrep.description,
       href: products.interviewPrep.slug,
+    },
+    {
+      id: v4(),
+      name: products.portfolio.label,
+      description: products.portfolio.description,
+      href: products.portfolio.slug,
+    },
+    {
+      id: v4(),
+      name: products.projects.label,
+      description: products.projects.description,
+      href: products.projects.slug,
     },
   ],
   links: [
@@ -35,34 +47,38 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       name: 'Tech Mentorship',
       description: 'Get Book Tech Consultation',
       href: LINKS.bookTechConsultation,
-      target: 'BLANK',
+      target: '_blank',
     },
     {
       id: v4(),
       name: 'Join Community',
       description: 'Join our WhatsApp Community',
       href: LINKS.whatsappCommunity,
-      target: 'BLANK',
+      target: '_blank',
+    },
+    {
+      id: v4(),
+      name: 'Join Campus Ambassador',
+      description: 'Join our Campus Ambassador Program',
+      href: LINKS.joinCampusAmbassador,
+      target: '_blank',
     },
   ],
   user: [
     {
       id: v4(),
       name: 'My Courses',
-      href: userSections.myCourses,
-      target: 'BLANK',
+      href: routes.user.courses,
     },
     {
       id: v4(),
       name: 'My Projects',
-      href: userSections.myProjects,
-      target: 'BLANK',
+      href: routes.user.projects,
     },
     {
       id: v4(),
       name: 'My Sheets',
-      href: userSections.mySheets,
-      target: 'BLANK',
+      href: routes.user.sheets,
     },
   ],
 };
@@ -79,16 +95,6 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
     ctaText: 'Explore Free Courses',
   },
   {
-    id: 'projects',
-    image: `${STATIC_FILE_PATH.svg}/projects.svg`,
-    imageAltText: products.projects.label,
-    title: products.projects.label,
-    content: products.projects.description,
-    href: products.projects.slug,
-    active: true,
-    ctaText: 'Explore Free Projects',
-  },
-  {
     id: 'interview Prep',
     image: `${STATIC_FILE_PATH.svg}/shiksha.svg`,
     imageAltText: products.interviewPrep.label,
@@ -99,6 +105,36 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
     ctaText: 'Free Interview Prep',
   },
   {
+    id: 'webinar',
+    image: `${STATIC_FILE_PATH.svg}/workshops.svg`,
+    imageAltText: products.webinar.label,
+    title: products.webinar.label,
+    content: products.webinar.description,
+    href: routes.webinar,
+    active: true,
+    ctaText: 'Explore Workshops',
+  },
+  {
+    id: 'portfolio',
+    image: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-hero.svg`,
+    imageAltText: products.portfolio.label,
+    title: products.portfolio.label,
+    content: products.portfolio.description,
+    href: products.portfolio.slug,
+    active: true,
+    ctaText: 'Explore Portfolios',
+  },
+  {
+    id: 'projects',
+    image: `${STATIC_FILE_PATH.svg}/projects.svg`,
+    imageAltText: products.projects.label,
+    title: products.projects.label,
+    content: products.projects.description,
+    href: products.projects.slug,
+    active: true,
+    ctaText: 'Explore Free Projects',
+  },
+  {
     id: 'os',
     image: `${STATIC_FILE_PATH.svg}/open-source.svg`,
     imageAltText: products.os.label,
@@ -107,17 +143,6 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
     href: products.os.slug,
     ctaText: 'Start Contributing',
     active: true,
-  },
-  {
-    id: 'workshops',
-    image: `${STATIC_FILE_PATH.svg}/workshops.svg`,
-    imageAltText: products.workshops.label,
-    title: products.workshops.label,
-    content: products.workshops.description,
-    href: products.workshops.slug,
-    active: true,
-    ctaText: 'Explore Workshops',
-    target: 'BLANK',
   },
   {
     id: 'roadmaps',
@@ -272,7 +297,7 @@ const TBP_FEATURES: PrimaryCardProps[] = [
     id: v4(),
     title: `Book Tech Mentorship`,
     content: `Discuss Every issue you're facing in 1:1 Mentorship Sessions.`,
-    image: `${STATIC_FILE_PATH.svg}/workshops.svg`,
+    image: `${STATIC_FILE_PATH.svg}/webinar.svg`,
     imageAltText: `doubt session`,
   },
 ];
@@ -296,7 +321,7 @@ const TBIP_FEATURES: PrimaryCardProps[] = [
     id: v4(),
     title: `Ask Questions`,
     content: `Ask Interview Prep Questions in Community. We’re here to help.`,
-    image: `${STATIC_FILE_PATH.svg}/workshops.svg`,
+    image: `${STATIC_FILE_PATH.svg}/webinar.svg`,
     imageAltText: `doubt session`,
   },
 ];

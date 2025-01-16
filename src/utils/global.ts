@@ -1,8 +1,7 @@
-import { envConfig, getSEOMeta, routes } from '@/constant';
+import { getSEOMeta, routes, seoCommonMeta } from '@/constant';
 import {
   BaseShikshaCourseResponseProps,
   BaseInterviewSheetResponseProps,
-  PageSlug,
   ProjectPickedPageProps,
 } from '@/interfaces';
 import {
@@ -10,24 +9,22 @@ import {
   getSelectedSheetQuestionMeta,
   getSelectedProjectChapterMeta,
   isUserAuthenticated,
+  formatDate,
+  isProgramActive,
+  fetchAPIData,
 } from '.';
 
-const getPreFetchProps = async ({ query, resolvedUrl }: any) => {
-  const { projectSlug } = query;
-  let slug = '/';
+const getPreFetchProps = async ({ resolvedUrl }: any) => {
+  let slug = routes.home;
 
   if (resolvedUrl) {
     slug = resolvedUrl;
   }
 
-  if (projectSlug) {
-    slug = `/projects/${projectSlug}`;
-  }
-
-  const seoMeta = getSEOMeta(slug as PageSlug);
+  const seoMeta = getSEOMeta(slug);
 
   const redirect = !seoMeta && {
-    destination: '/404',
+    destination: routes.home,
   };
 
   return {
@@ -40,13 +37,13 @@ const getProjectPageProps = async (context: any) => {
   const { req, query } = context;
   const { projectSlug, projectId, sectionId, chapterId } = query;
 
-  let slug = '/';
+  let slug = routes.home;
 
   if (projectSlug) {
     slug = `/projects/${projectSlug}`;
   }
 
-  const seoMeta = getSEOMeta(slug as PageSlug);
+  const seoMeta = getSEOMeta(slug);
 
   if (projectId && seoMeta) {
     try {
@@ -58,11 +55,11 @@ const getProjectPageProps = async (context: any) => {
         routes.api.projectByIdWithUser(projectId, user?.id)
       );
 
-      // If the project data is not found, redirect to 404
+      // If the project data is not found, redirect to
       if (!status) {
         return {
           redirect: {
-            destination: routes[404],
+            destination: routes.home,
           },
           props: { slug },
         };
@@ -101,10 +98,10 @@ const getProjectPageProps = async (context: any) => {
     }
   }
 
-  // Redirect to 404 if projectId is missing or seoMeta is not set
+  // Redirect to  if projectId is missing or seoMeta is not set
   return {
     redirect: {
-      destination: routes[404],
+      destination: routes.home,
     },
     props: { slug },
   };
@@ -114,15 +111,13 @@ const getCoursePageProps = async (context: any) => {
   const { req, query } = context;
   const { courseSlug, courseId, chapterId } = query;
 
-  let slug = '/';
+  let slug = routes.home;
 
   if (courseSlug) {
     slug = '/shiksha/' + courseSlug;
   }
 
-  const seoMeta = getSEOMeta(slug as PageSlug);
-
-  if (courseId && seoMeta) {
+  if (courseId) {
     try {
       const user = await isUserAuthenticated(req);
 
@@ -130,17 +125,41 @@ const getCoursePageProps = async (context: any) => {
         routes.api.courseByIdWithUser(courseId, user?.id)
       );
 
-      // If the project data is not found, return the message
+      // If the course data is not found, return the message
       if (!status) {
         return {
           redirect: {
-            destination: '/404',
+            destination: routes.home,
           },
           props: { slug },
         };
       }
 
       const course: BaseShikshaCourseResponseProps = data;
+
+      const { name, description, liveOn } = course;
+
+      const isCourseLive = isProgramActive(liveOn as Date);
+
+      // If Course not LIVE, redirect to home
+      if (!isCourseLive) {
+        return {
+          redirect: {
+            destination: routes.home,
+          },
+        };
+      }
+
+      const seoMeta = {
+        title: `${name} | Shiksha | The Boring Education`,
+        siteName: 'Shiksha The Boring Education',
+        description,
+        url: `${routes.shiksha}/${slug}`,
+        keywords:
+          'Shiksha online courses, advanced programming tutorials, free tech education, career development for professionals, skill enhancement programs, coding bootcamps, tech webinars, online learning for college students, GitHub projects, tech career growth, free certifications, free courses',
+        ...seoCommonMeta,
+      };
+
       let { meta } = course;
       let currentChapterId = '';
 
@@ -171,7 +190,7 @@ const getCoursePageProps = async (context: any) => {
 
   return {
     redirect: {
-      destination: '/404',
+      destination: routes.home,
     },
     props: { slug },
   };
@@ -181,13 +200,13 @@ const getSheetPageProps = async (context: any) => {
   const { req, query } = context;
   const { sheetSlug, sheetId, questionId } = query;
 
-  let slug = '/';
+  let slug = routes.home;
 
   if (sheetSlug) {
     slug = '/interview-prep/' + sheetSlug;
   }
 
-  const seoMeta = getSEOMeta(slug as PageSlug);
+  const seoMeta = getSEOMeta(slug);
 
   if (sheetId && seoMeta) {
     try {
@@ -202,7 +221,7 @@ const getSheetPageProps = async (context: any) => {
       if (!status) {
         return {
           redirect: {
-            destination: '/404',
+            destination: routes.home,
           },
           props: { slug },
         };
@@ -240,16 +259,137 @@ const getSheetPageProps = async (context: any) => {
 
   return {
     redirect: {
-      destination: '/404',
+      destination: routes.home,
     },
     props: { slug },
   };
 };
 
-const fetchAPIData = async (url: string) => {
-  const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
+const getWebinarLandingPageProps = async ({ resolvedUrl }: any) => {
+  let slug = routes.home;
 
-  return await response.json();
+  if (resolvedUrl) {
+    slug = resolvedUrl;
+  }
+
+  const seoMeta = getSEOMeta(slug);
+
+  const { status, data: webinars } = await fetchAPIData(routes.api.webinar);
+
+  if (!status) {
+    return {
+      redirect: {
+        destination: routes.home,
+      },
+    };
+  }
+
+  return {
+    props: {
+      seoMeta,
+      webinars,
+    },
+  };
+};
+
+const getCertificatePageProps = async ({ query: { certificateId } }: any) => {
+  const { status, data: certificate } = await fetchAPIData(
+    routes.api.certificateById(certificateId)
+  );
+
+  if (!status) {
+    return {
+      redirect: {
+        destination: routes.home,
+      },
+    };
+  }
+
+  const seoMeta = {
+    title: `${certificate.programName} | Certificate | The Boring Education`,
+    siteName: 'The Boring Education',
+    description: 'Certificate',
+    url: `${routes.certificate}/${certificateId}`,
+    keywords:
+      'Certificate, The Boring Education, Tech Education, Online Learning',
+    ...seoCommonMeta,
+  };
+
+  return {
+    props: {
+      seoMeta,
+      certificate,
+    },
+  };
+};
+
+const getWebinarPageProps = async (context: any) => {
+  const { query } = context;
+  const { webinarSlug: slug } = query;
+
+  const { status, data: webinar } = await fetchAPIData(
+    routes.api.webinarBySlug(slug)
+  );
+
+  if (!status) {
+    return {
+      redirect: {
+        destination: routes.home,
+      },
+    };
+  }
+
+  const {
+    _id,
+    name,
+    description,
+    isFree,
+    whatYoullLearn,
+    about,
+    dateAndTime,
+    learnings,
+    registrationUrl,
+    host,
+    recordedVideoUrl = '',
+  } = webinar;
+
+  const { date, time } = formatDate({
+    dateAndTime,
+  });
+
+  const isWebinarStarted = isProgramActive(dateAndTime);
+
+  const seoMeta = {
+    title: `${name} | The Boring Webinars`,
+    siteName: 'The Boring Education',
+    description,
+    url: `${routes.webinar}/${slug}`,
+    keywords:
+      'Tech Education, Online Learning, Programming, Free Courses, Open Source, Webinars, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+    ...seoCommonMeta,
+  };
+
+  return {
+    props: {
+      seoMeta,
+      webinarId: _id,
+      name,
+      slug,
+      description,
+      whatYoullLearn,
+      learnings,
+      isFree,
+      about,
+      host,
+      date,
+      time,
+      isWebinarStarted,
+      registrationUrl,
+      recordedVideoUrl,
+      bannerImageUrl:
+        'https://wallpapers.com/images/hd/coding-background-9izlympnd0ovmpli.jpg',
+    },
+  };
 };
 
 export {
@@ -257,4 +397,7 @@ export {
   getProjectPageProps,
   getCoursePageProps,
   getSheetPageProps,
+  getWebinarPageProps,
+  getWebinarLandingPageProps,
+  getCertificatePageProps,
 };

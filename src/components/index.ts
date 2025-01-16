@@ -1,13 +1,20 @@
 import dynamic from 'next/dynamic';
+import ToggleButton from '@/components/common/Buttons/ToggleButton';
+const WebibarCard = dynamic(
+  () => import('@/components/containers/Cards/WebibarCard')
+);
+const Modal = dynamic(() => import('@/components/common/Modal'));
+const Banner = dynamic(() => import('@/components/common/Banner'));
+const AboutTBE = dynamic(
+  () => import('@/components/containers/Cards/AboutTBE')
+);
 const ProgressBar = dynamic(() => import('@/components/common/ProgressBar'));
 const CertificateBanner = dynamic(
-  () => import('@/components/common/CertificateBanner')
+  () => import('@/components/common/Certificate/CertificateBanner')
 );
-const CertificateModal = dynamic(
-  () => import('@/components/common/CertificateModal')
-);
-const  CertificateContent = dynamic(
-  () => import('@/components/common/CertificateContent')
+
+const CertificateContent = dynamic(
+  () => import('@/components/common/Certificate/CertificateContent')
 );
 const CourseHeroContainer = dynamic(
   () => import('@/components/containers/Page/Course/CourseHeroContainer')
@@ -56,9 +63,6 @@ const CardContainerA = dynamic(
 const FlexContainer = dynamic(
   () => import('@/components/containers/Page/common/FlexContainer')
 );
-const CanYouBeAProgrammer = dynamic(
-  () => import('@/components/containers/Page/Landing/CanYouBeAProgrammer')
-);
 const TestimonialCard = dynamic(
   () => import('@/components/containers/Cards/Items/TestimonialCard')
 );
@@ -77,6 +81,12 @@ const WeTaughtAtCard = dynamic(
 );
 const ContactCard = dynamic(
   () => import('./containers/Cards/Items/ContactCard')
+);
+const PortfolioCard = dynamic(
+  () => import('./containers/Cards/Items/PortfolioCard')
+);
+const PortfolioTemplate = dynamic(
+  () => import('./containers/Cards/Items/PortfolioTemplate')
 );
 const SEO = dynamic(() => import('./layout/SEO'));
 const Pill = dynamic(() => import('./common/Pill'));
@@ -111,7 +121,6 @@ const AccordionLinkItem = dynamic(
   () => import('./common/Accordion/AccordionLinkItem')
 );
 const MDXRenderer = dynamic(() => import('./common/MDXRenderer'));
-
 const UserAvatar = dynamic(() => import('./common/Images/UserAvatar'));
 const LoginWithGoogleButton = dynamic(
   () => import('./common/Buttons/LoginWithGoogleButton')
@@ -127,6 +136,12 @@ const ChapterLink = dynamic(
 );
 const QuestionLink = dynamic(
   () => import('@/components/common/Learning/QuestionLink')
+);
+const WebinarHeroContainer = dynamic(
+  () => import('@/components/containers/Page/Webinar/WebinarHeroContainer')
+);
+const BackgroundImage = dynamic(
+  () => import('@/components/common/Images/BackgroundImage')
 );
 
 export {
@@ -148,7 +163,6 @@ export {
   PrimaryCard,
   CardContainerA,
   FlexContainer,
-  CanYouBeAProgrammer,
   TestimonialCard,
   Testimonials,
   Footer,
@@ -157,6 +171,8 @@ export {
   WeTaughtAtCard,
   SEO,
   ContactCard,
+  PortfolioCard,
+  PortfolioTemplate,
   Pill,
   IconPill,
   ImageLink,
@@ -185,6 +201,12 @@ export {
   QuestionLink,
   SheetHeroContainer,
   CertificateBanner,
-  CertificateModal,
   CertificateContent,
+  WebinarHeroContainer,
+  BackgroundImage,
+  AboutTBE,
+  Banner,
+  Modal,
+  WebibarCard,
+  ToggleButton,
 };

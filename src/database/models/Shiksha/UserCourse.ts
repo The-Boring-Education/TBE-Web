@@ -24,7 +24,7 @@ const UserChapterSchema = new Schema(
   },
   {
     timestamps: true,
-    _id: false, // We don't need an _id field for each chapter
+    _id: false,
   }
 );
 
@@ -43,6 +43,14 @@ const UserCourseSchema = new Schema<UserCourseModel>(
       index: true,
     },
     chapters: [UserChapterSchema],
+    isCompleted: {
+      type: Boolean,
+      default: false,
+    },
+    certificateId: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

@@ -1,13 +1,10 @@
 import React from 'react';
 import { ContactCard, SEO } from '@/components';
 import { getPreFetchProps } from '@/utils';
-import { PageSlug } from '@/interfaces';
-import { getSEOMeta } from '@/constant';
+import { getSEOMeta, routes } from '@/constant';
 
 const Contact = () => {
-  const slug: PageSlug = '/contact';
-
-  const seoMeta = getSEOMeta(slug as PageSlug);
+  const seoMeta = getSEOMeta(routes.contactUs);
 
   return (
     <React.Fragment>

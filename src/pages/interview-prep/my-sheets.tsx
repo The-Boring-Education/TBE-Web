@@ -1,19 +1,20 @@
 import React, { Fragment } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { PrimaryCardWithCTAProps } from '@/interfaces';
+import { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
 import {
   CardContainerB,
   LoadingSpinner,
   FlexContainer,
   Text,
   LinkButton,
+  SEO,
 } from '@/components';
 import { useAPIResponseMapper, useApi, useUser } from '@/hooks';
-import { mapInterviewSheetResponseToCard } from '@/utils';
+import { getPreFetchProps, mapInterviewSheetResponseToCard } from '@/utils';
 import { routes } from '@/constant';
 
-const MySheets = () => {
+const MySheets = ({ seoMeta }: PageProps) => {
   const session = useSession();
   const router = useRouter();
 
@@ -56,6 +57,7 @@ const MySheets = () => {
 
   return (
     <Fragment>
+      <SEO seoMeta={seoMeta} />
       <CardContainerB
         heading='My'
         focusText='Sheets'
@@ -68,5 +70,7 @@ const MySheets = () => {
     </Fragment>
   );
 };
+
+export const getServerSideProps = getPreFetchProps;
 
 export default MySheets;

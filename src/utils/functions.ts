@@ -1,22 +1,38 @@
-import { envConfig } from '@/constant';
+import { envConfig, LINKS } from '@/constant';
 import {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
+  FormatDateType,
   ProjectDocumentModel,
   ProjectPickedPageProps,
   User,
 } from '@/interfaces';
 
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
+const fetchAPIData = async (url: string) => {
+  const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
+
+  return await response.json();
+};
+
+const formatDate = ({
+  dateAndTime = new Date().toISOString(),
+  dateFormat = {
     day: 'numeric',
-    weekday: 'short',
+    month: 'short',
+    weekday: 'long',
+  },
+  timeFormat = {
     hour: 'numeric',
     minute: 'numeric',
     hour12: true,
-  });
+    timeZone: 'UTC',
+  },
+}: FormatDateType) => {
+  const date = new Date(dateAndTime);
+  return {
+    date: date.toLocaleDateString('en-US', dateFormat),
+    time: date.toLocaleTimeString('en-US', timeFormat),
+  };
 };
 
 const formatTime = (time: number) => time.toString().padStart(2, '0');
@@ -134,7 +150,8 @@ const isUserAuthenticated = async (req: any): Promise<User | null> => {
   }
 };
 
-const isProgramActive = (liveOn: Date) => new Date(liveOn) <= new Date();
+const isProgramActive = (liveOn: Date | string) =>
+  new Date(liveOn) <= new Date();
 
 const mapCourseResponseToCard = (
   coursesData: BaseShikshaCourseResponseProps[]
@@ -152,7 +169,7 @@ const mapCourseResponseToCard = (
       const isActive = isProgramActive(liveOn);
 
       let ctaText = 'Coming Soon';
-      let luanchingOn = '';
+      let launchingOn = '';
 
       if (isEnrolled) {
         ctaText = 'Continue Learning';
@@ -162,12 +179,10 @@ const mapCourseResponseToCard = (
         ctaText = 'View Course';
       } else {
         const date = new Date(liveOn);
-        luanchingOn = `Launching on ${date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: 'numeric',
-        })}`;
+        const dateAndTime = formatDate({
+          dateAndTime: date.toString(),
+        });
+        launchingOn = `Launching on ${dateAndTime.date} at ${dateAndTime.time}`;
       }
 
       return {
@@ -180,7 +195,7 @@ const mapCourseResponseToCard = (
         isEnrolled,
         active: isActive,
         ctaText,
-        luanchingOn,
+        launchingOn,
       };
     }
   );
@@ -202,7 +217,7 @@ const mapInterviewSheetResponseToCard = (
       const isActive = isProgramActive(liveOn);
 
       let ctaText = 'Coming Soon';
-      let luanchingOn = '';
+      let launchingOn = '';
 
       if (isEnrolled) {
         ctaText = 'Continue Learning';
@@ -212,7 +227,7 @@ const mapInterviewSheetResponseToCard = (
         ctaText = 'View Sheet';
       } else {
         const date = new Date(liveOn);
-        luanchingOn = `Launching on ${date.toLocaleDateString('en-US', {
+        launchingOn = `Launching on ${date.toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
@@ -230,10 +245,43 @@ const mapInterviewSheetResponseToCard = (
         isEnrolled,
         active: isActive,
         ctaText,
-        luanchingOn,
+        launchingOn,
       };
     }
   );
+};
+
+const generatePublicCertificateLink = (host: string, certificateId: string) =>
+  `${host}/certificate/${certificateId}`;
+
+const generateShareTemplate = (
+  programName: string,
+  userName: string,
+  type: 'SHIKSHA' | 'WEBINAR'
+) => {
+  const keyLearnings = '[mention key learnings]';
+  const specificAreas = '[mention specific areas or topics]';
+  const likedAboutProgram = '[mention what you liked about the program]';
+  const howItHelped = '[mention how it has helped you or your career]';
+
+  const baseMessage = `
+    Hello LinkedIn Connections,
+
+    I am thrilled to announce that I have successfully completed the ${programName} in ${type} at The Boring Education!
+
+    During this Program, I have gained invaluable knowledge and skills in ${keyLearnings}. The comprehensive curriculum and hands-on projects have significantly enhanced my understanding of ${specificAreas}.
+
+    I particularly enjoyed ${likedAboutProgram}, which has been instrumental in ${howItHelped}.
+
+    I would like to extend my heartfelt gratitude to Sachin(Tag me - ${LINKS.sachinLinkedIn}) and The Boring Education(Tag us - ${LINKS.officialLinkedIn}) for their unwavering support and guidance throughout this journey.
+
+    Thank you for your support!
+
+    Best regards,
+    ${userName}
+    `;
+
+  return baseMessage;
 };
 
 export {
@@ -251,4 +299,8 @@ export {
   getSelectedCourseChapterMeta,
   getSelectedSheetQuestionMeta,
   mapInterviewSheetResponseToCard,
+  isProgramActive,
+  generatePublicCertificateLink,
+  fetchAPIData,
+  generateShareTemplate,
 };

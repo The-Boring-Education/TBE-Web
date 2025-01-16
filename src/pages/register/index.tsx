@@ -9,7 +9,7 @@ const Register = ({ seoMeta }: PageProps) => {
   return (
     <>
       <SEO seoMeta={seoMeta} />
-      <FlexContainer className='min-h-screen lg:h-full '>
+      <FlexContainer className='min-h-screen lg:h-full'>
         <FlexContainer className='flex-col border-[1px]  border-[#B0B0B0] rounded-[5px] p-[26px] mb-5 lg:h-full md:w-[750px] lg:w-[900px]  '>
           <Text level='h1' className='text-[20px] font-bold md:text-4xl '>
             Start Your Boring Journey

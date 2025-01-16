@@ -22,13 +22,7 @@ const generateMDXContent = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  return res.status(apiStatusCodes.OKAY).json(
-    sendAPIResponse({
-      status: true,
-      message: 'Here is Project MDX',
-      data: getMDXContent(),
-    })
-  );
+  return res.status(apiStatusCodes.OKAY).json(getMDXContent());
 };
 
 export default handler;

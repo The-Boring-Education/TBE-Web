@@ -105,7 +105,7 @@ const handleAllGetCourse = async (
     // Create a map of all courses by their ID
     const courseMap = new Map<string, BaseShikshaCourseResponseProps>(
       allCourses.map((course: BaseShikshaCourseResponseProps) => {
-        const courseDoc = course as unknown as mongoose.Document &
+        const courseDoc = course as mongoose.Document &
           BaseShikshaCourseResponseProps;
         return [courseDoc._id.toString(), { ...courseDoc.toObject() }];
       })
@@ -134,6 +134,7 @@ const handleAllGetCourse = async (
             courseMap.set(courseId, {
               ...courseMap.get(courseId),
               isEnrolled: true,
+              _id: courseId,
             });
           }
         }
