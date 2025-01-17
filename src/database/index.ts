@@ -8,7 +8,7 @@ import InterviewSheet from './models/InterviewPrep/Sheet';
 import UserSheet from './models/InterviewPrep/UserSheet';
 import Webinar from './models/Webinar';
 import Certificate from './models/Certificate';
-import Playlist from './models/Youfocuse/Playlist';
+import Playlist from './models/YouFocus/Playlist';
 
 export {
   Project,
