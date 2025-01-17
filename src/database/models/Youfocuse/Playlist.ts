@@ -30,6 +30,7 @@ const PlaylistSchema = new Schema<PlaylistModel>(
     },
     tags: {
       type: [String],
+      default:[],
     },
     videos: [VideoSchema],
   },

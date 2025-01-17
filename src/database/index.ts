@@ -8,6 +8,7 @@ import InterviewSheet from './models/InterviewPrep/Sheet';
 import UserSheet from './models/InterviewPrep/UserSheet';
 import Webinar from './models/Webinar';
 import Certificate from './models/Certificate';
+import { getPlaylistfromIDfromDB,addAplaylisttoDB } from './query/youfocus';
 
 export {
   Project,
@@ -19,6 +20,8 @@ export {
   UserProject,
   Webinar,
   Certificate,
+  getPlaylistfromIDfromDB,
+  addAplaylisttoDB
 };
 
 // Query
