@@ -6,6 +6,7 @@ const GOOGLE_AUTH_CLIENT_SECRET = process.env
   .GOOGLE_AUTH_CLIENT_SECRET as string;
 const ADMIN_SECRET = process.env.ADMIN_SECRET as string;
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string;
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY as string;
 
 const envConfig = {
   MONGODB_URI,
@@ -15,6 +16,7 @@ const envConfig = {
   ADMIN_SECRET,
   NEXTAUTH_SECRET,
   BASE_AUTH_API_URL,
+  YOUTUBE_API_KEY,
 };
 
 export { envConfig };

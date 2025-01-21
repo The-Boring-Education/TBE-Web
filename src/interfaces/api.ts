@@ -305,3 +305,15 @@ export interface AddCertificateRequestPayloadProps {
   programName: string;
   programId: string;
 }
+
+export type FetchPlaylistDataResultFromYoutube =
+| {
+    data: {
+      playlistId: string;
+      playlistName: string;
+      description: string;
+      videos: { title: string; videoId: string; thumbnail: string }[];
+    };
+    error?: never;
+  }
+| { error: string | unknown; data?: never };

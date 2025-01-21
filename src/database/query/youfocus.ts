@@ -1,18 +1,8 @@
 import { DatabaseQueryResponseType } from '@/interfaces';
-import Playlist from '../models/Youfocuse/Playlist';
+import Playlist from '../models/YouFocus/Playlist';
 import axios from 'axios';
-
-type FetchPlaylistDataResult =
-  | {
-      data: {
-        playlistId: string;
-        playlistName: string;
-        description: string;
-        videos: { title: string; videoId: string; thumbnail: string }[];
-      };
-      error?: never;
-    }
-  | { error: string | unknown; data?: never };
+import { FetchPlaylistDataResultFromYoutube } from '@/interfaces';
+import { envConfig } from '@/constant';
 
 const getPlaylistfromIDfromDB = async (
   playlistId: string
@@ -28,17 +18,14 @@ const getPlaylistfromIDfromDB = async (
 
 const fetchPlaylistData = async (
   playlistId: string
-): Promise<FetchPlaylistDataResult> => {
+): Promise<FetchPlaylistDataResultFromYoutube> => {
   try {
-    const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
-    if (!YOUTUBE_API_KEY) return { error: 'Youtube Api key is required' };
-
     const url = `https://www.googleapis.com/youtube/v3/playlistItems`;
     const params = {
       part: 'snippet',
       playlistId: playlistId,
       maxResults: 100,
-      key: YOUTUBE_API_KEY,
+      key: envConfig.YOUTUBE_API_KEY,
     };
 
     const response = await axios.get(url, { params });
@@ -55,7 +42,7 @@ const fetchPlaylistData = async (
     const playlistDetailsParams = {
       part: 'snippet',
       id: playlistId,
-      key: YOUTUBE_API_KEY,
+      key: envConfig.YOUTUBE_API_KEY,
     };
 
     const detailsResponse = await axios.get(playlistDetailsUrl, {
@@ -98,4 +85,4 @@ const addAplaylisttoDB = async (
   }
 };
 
-export { getPlaylistfromIDfromDB,addAplaylisttoDB };
+export { getPlaylistfromIDfromDB, addAplaylisttoDB };
