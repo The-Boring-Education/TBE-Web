@@ -2,6 +2,7 @@ import { Schema, model, models, Model } from 'mongoose';
 import { UserPlaylistModel } from '@/interfaces';
 import { databaseModels } from '@/constant';
 
+// Define UserPlaylist schema and model
 const UserPlaylistSchema = new Schema<UserPlaylistModel>(
   {
     userId: {

@@ -11,6 +11,7 @@ const VideoSchema = new Schema<Video>(
   { _id: false } // Disable the creation of _id for embedded documents
 );
 
+// Define the playlist schema
 const PlaylistSchema = new Schema<PlaylistModel>(
   {
     playlistId: {
