@@ -158,6 +158,8 @@ const PlaylistCantainerCard = dynamic(
 );
 const PlaylistVideoCard = dynamic(() => import('@/components/containers/Cards/Items/PlaylistVideoCard')
 );
+const PlaylistVideoTimeCard = dynamic(() => import('@/components/containers/Cards/Items/PlaylistVideoTimeCard')
+);
 
 export {
   Navbar,
@@ -229,4 +231,5 @@ export {
   PlaylistVideoCard,
   NotificationContainer,
   MentorshipCard,
+  PlaylistVideoTimeCard,
 };

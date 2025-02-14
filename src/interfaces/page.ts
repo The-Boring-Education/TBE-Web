@@ -93,3 +93,8 @@ export type PlaylistPickedPageProps = Pick<
   | 'referrerBy'
 >;
 
+export interface PlaylistVideoTimeCardProps {
+  usertime?: number;
+}
+
+

@@ -36,7 +36,7 @@ const getUserPlaylistById = async (
 ) => {
   
   const { data, error } = await getUserPlaylistByIDFromDB(playlistId, userId);
-
+  
   if (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
@@ -67,11 +67,11 @@ const getUserPlaylistById = async (
 const handleUpdateUserPlaylist = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  youfocusId: string,
+  playlistId: string,
   userId: string,
   updateData: any,
 ) => {
-  const { data, error } = await updateUserPlaylistData(userId, youfocusId, updateData);
+  const { data, error } = await updateUserPlaylistData(userId, playlistId, updateData);
 
   if (error) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(

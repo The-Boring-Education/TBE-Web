@@ -432,6 +432,8 @@ export interface PlaylistCardProps {
   description: string;
   thumbnail: string;
   route: string;
+  playlistVideoId: boolean;
+  videoId: string;
 }
 
 export interface PrimaryLongCardProps {
@@ -448,13 +450,26 @@ export interface PrimaryLongCardProps {
 interface Video {
   title: string;
   thumbnail: string;
+  videoId: string;
+}
+
+
+interface PlaylistIdObject {
+  _id: string;
+  playlistId: string;
+  playlistName: string;
+  description: string;
+  referrerBy: number;
+  videos: Video[];
 }
 
 interface PlaylistData {
-  playlistName: string;
-  description: string;
-  thumbnail: string;
-  videos?: Video[];
+  playlistId: PlaylistIdObject;
+  isPublic: boolean;
+  isRecommended: boolean;
+  learningTime: number;
+  userId: string;
+
 }
 
 export interface CardContainerCProps {

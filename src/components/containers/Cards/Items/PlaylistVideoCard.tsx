@@ -12,7 +12,7 @@ const PrimaryLongCard = ({
   return (
     <div className="flex border-gray-900 md:w-3/4 mb-1 hover:bg-slate-200 rounded-lg">
       {href ? (
-        <Link href={href} className="flex flex-row w-full items-center">
+       <button>
           {/* Image Section */}
           <div className=" w-1/2 justify-center  flex-shrink-0">
             <div className="relative p-1 items-center aspect-video">
@@ -32,7 +32,7 @@ const PrimaryLongCard = ({
               {title}
             </Text>
           </div>
-        </Link>
+          </button>
       ) : (
         <div className="w-full max-w-[100%] mx-auto flex flex-row ">
           {/* Fixed Width Image Container */}
