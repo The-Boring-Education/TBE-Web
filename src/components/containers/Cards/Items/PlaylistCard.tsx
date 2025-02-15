@@ -1,13 +1,8 @@
 import React from "react";
 import { Image, Text } from "@/components";
+import { PlaylistCardProps } from "@/interfaces";
 
-interface PlaylistCardProps {
-  title: string;
-  description: string;
-  thumbnail: string;
-  videoId: string;
-  playlistVideo: boolean;
-}
+
 
 const PlaylistCard = ({ title, description, thumbnail, playlistVideo, videoId }: PlaylistCardProps) => {
   return (

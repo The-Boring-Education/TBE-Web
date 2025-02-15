@@ -462,8 +462,7 @@ export interface  PlaylistVideoTimeCard {
   usertime: number;
 }
 
-interface PlaylistData {
-
+ export interface BasicPlaylistData {
   playlistName: string;
   description: string;
   referrerBy: number;
@@ -508,4 +507,14 @@ export interface PlaylistData{
     learningTime: number;
     userId: string;
   
+}
+
+export interface PlaylistCardProps {
+  title: string;
+  description: string;
+  thumbnail: string;
+  videoId: string;
+  playlistVideo?: boolean;
+  route: string;
+  playlistVideoId: boolean;
 }

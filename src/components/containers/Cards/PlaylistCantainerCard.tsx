@@ -40,6 +40,8 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
             thumbnail={selectedThumbnail}
             playlistVideo={playlistVideo}
             videoId={selectedVideoId}
+            route=""
+            playlistVideoId={selectedVideoId}
           />
 
         </div>
