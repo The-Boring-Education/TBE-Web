@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { PlaylistVideoTimeCardProps } from "@/interfaces"; // ✅ Named import
+import { PlaylistVideoTimeCardProps } from "@/interfaces"; 
+import { routes } from '@/constant';
+import { useRouter } from 'next/router';
+import { formatTimeUserLearning } from "@/utils"; 
 
-const PlaylistVideoTimeCard = ({ usertime = 0 }: PlaylistVideoTimeCardProps) => {
-  const [time, setTime] = useState(usertime * 60); // Convert minutes to seconds
+const PlaylistVideoTimeCard = ({ usertime = 0, playlistId }: PlaylistVideoTimeCardProps) => {
+  const router = useRouter();
+  const [time, setTime] = useState(usertime * 60);
   const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
@@ -10,7 +14,7 @@ const PlaylistVideoTimeCard = ({ usertime = 0 }: PlaylistVideoTimeCardProps) => 
   }, [usertime]);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | undefined;
+    let timer: ReturnType<typeof setInterval> | undefined;
 
     if (isRunning) {
       timer = setInterval(() => {
@@ -23,21 +27,21 @@ const PlaylistVideoTimeCard = ({ usertime = 0 }: PlaylistVideoTimeCardProps) => 
     };
   }, [isRunning]);
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  const handleBackPage = (playlistId: string) => {
+    const redirectUrl = `${routes.youfocusPlaylist}/${playlistId}`;
+   window.location.href = redirectUrl;;
   };
 
   return (
     <div className="flex items-center justify-between w-full max-w-sm p-4 bg-gray-900 text-white rounded-lg shadow-md">
       <button
         className="w-10 h-10 flex items-center justify-center bg-gray-700 text-white rounded-full hover:bg-gray-600"
+        onClick={() => handleBackPage(playlistId)}
       >
         <img className="w-5 h-5 p-1" src="/images/arrowback.svg" alt="Back" />
       </button>
 
-      <div className="text-lg font-bold">{formatTime(time)}</div>
+      <div className="text-lg font-bold">{formatTimeUserLearning(time)}</div>
 
       <button
         className="w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-700"

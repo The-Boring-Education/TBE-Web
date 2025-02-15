@@ -110,14 +110,12 @@ const getProjectPageProps = async (context: any) => {
 const getPlaylistPageProps = async (context: any) => {
   const {req, query } = context;
   const { playlistId } = query;
-console.log(playlistId);
 
   let slug = routes.home;
 
   if (playlistId) {
     slug = routes.youfocusPlaylist;
   }
-  console.log(slug);
   
   const seoMeta = getSEOMeta(slug);
  
@@ -138,11 +136,6 @@ console.log(playlistId);
     const { status, data } = await fetchAPIData(
       routes.api.youfocusUserPlaylistById(playlistId, user?.id ?? "")
     );
-    // console.log("THIS IS DATA", data);
-    // console.log( " THS IS Play List DATA",data.playlist.playlistId);
-    
-    console.log(status, data);
-    
     
     if (!status || !data) {
       return {

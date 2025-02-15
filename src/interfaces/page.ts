@@ -115,6 +115,7 @@ export type PlaylistPickedPageProps = Pick<
 
 export interface PlaylistVideoTimeCardProps {
   usertime?: number;
+  playlistId: string;
 }
 
 

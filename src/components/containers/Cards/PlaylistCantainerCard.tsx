@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Section,
   PlaylistVideoCard,
   PlaylistCard
 } from "@/components";
@@ -25,11 +24,12 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
   const togglePlaylistVideo = () => {
     setPlaylistVideo((prev) => !prev);
   };
+// console.log(playlistData);
 
   return (
     <div className=" w-full ">
       <div className=" flex justify-center p-2">
-        {playlistVideo ? <PlaylistVideoTimeCard /> : null}
+        {playlistVideo ? <PlaylistVideoTimeCard usertime={playlistData.learningTime} playlistId={actualPlaylist._id} /> : null}
       </div>
       <div className="flex flex-col md:items-center gap-2 md:gap-6 w-full md:max-w-[80%] mx-auto">
         <div  className=" md:max-w-[80%] md:border-4 md:rounded-md md:border-black">
