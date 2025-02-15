@@ -463,15 +463,6 @@ interface PlaylistIdObject {
   videos: Video[];
 }
 
-interface PlaylistData {
-  playlistId: PlaylistIdObject;
-  isPublic: boolean;
-  isRecommended: boolean;
-  learningTime: number;
-  userId: string;
-
-}
-
 export interface CardContainerCProps {
   playlist: PlaylistData;
 }
@@ -480,4 +471,34 @@ export interface MentorshipCardProps {
   heading: string;
   description: string;
   link: string;
+}
+
+export interface PlaylistVideoCardProps {
+  image: string;
+  imageAltText: string;
+  title: string;
+  onClick?: () => void;
+  playlistId?: string;
+  videro?: Video[];
+  isPublic?: boolean;
+  isRecommended?: boolean;
+  learningTime?: number;
+  userId?: string;
+}
+
+export interface PlaylistData{
+  
+    playlistId: {
+      _id: string;
+      playlistId: string;
+      playlistName: string;
+      description: string;
+      referrerBy: number;
+      videos: Video[];
+    };
+    isPublic: boolean;
+    isRecommended: boolean;
+    learningTime: number;
+    userId: string;
+  
 }

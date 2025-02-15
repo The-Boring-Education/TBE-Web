@@ -7,11 +7,11 @@ const PlaylistRecommend = () => {
         Recommend <span className="text-red-500">Playlist</span>
       </h2>
       <p className="text-gray-600 mt-1">Share it With Your Friend and Learn Together</p>
-      <div className="mt-4 flex justify-center gap-4">
-        <button className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600">
+      <div className=" mt-2  md:mt-4  flex justify-center gap-2">
+        <button className="bg-red-500  text-nowrap text-white px-4  py-1 md:py-2 rounded-lg shadow-md hover:bg-red-600">
           Recommend
         </button>
-        <button className="border border-red-500 text-red-500 px-4 py-2 rounded-lg shadow-md hover:bg-red-100">
+        <button className="border text-nowrap border-red-500 text-red-500 px-4 py-1 md:py-2 rounded-lg shadow-md hover:bg-red-100">
           Copy Link
         </button>
       </div>

@@ -2,15 +2,15 @@ import React from "react";
 import { PlaylistPageProps } from "@/interfaces";
 import { SEO, PlaylistCantainerCard } from "@/components";
 import { getPlaylistPageProps } from "@/utils";
-import Section from "@/components/layout/Section";
 
 const PlaylistPage = ({ playlist, seoMeta }: PlaylistPageProps) => {
   return (
     <>
       <SEO seoMeta={seoMeta} />
-      <Section className="p-2">
+       <div className="w=full flex flex-col items-start"
+       ></div>
         <PlaylistCantainerCard playlist={playlist} />
-      </Section>
+      
 
     </>
   );

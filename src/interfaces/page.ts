@@ -41,6 +41,7 @@ export interface PlaylistPageProps extends PageProps {
   PlaylistId: string;
 }
 
+
 export interface CoursePageProps extends PageProps {
   course: BaseShikshaCourseResponseProps;
   meta: string;
@@ -80,18 +81,37 @@ export interface CardContainerAProps {
   cards: CardItem[];
 }
 
+interface Video {
+  title: string;
+  thumbnail: string;
+  videoId: string;
+}
 
 export type PlaylistPickedPageProps = Pick<
-  PlaylistModel & { _id: string }, // Explicitly adding _id
+  PlaylistModel & { _id: string },
   | '_id' 
-  | 'playlistId' 
   | 'playlistName' 
   | 'description'
   | 'thumbnail' 
   | 'tags' 
   | 'videos' 
   | 'referrerBy'
->;
+> & {
+  playlistId: {
+    _id: string;
+    playlistId: string;
+    playlistName: string;
+    description: string;
+    referrerBy: number;
+    videos: Video[];
+  };
+  isPublic: boolean;
+  isRecommended: boolean;
+  learningTime: number;
+  userId: string;
+};
+
+
 
 export interface PlaylistVideoTimeCardProps {
   usertime?: number;

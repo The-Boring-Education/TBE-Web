@@ -1,57 +1,51 @@
 import React, { useState } from "react";
-import { 
+import {
   Section,
   PlaylistVideoCard,
-  PlaylistCard,
-  PlaylistVideoTimeCard,
+  PlaylistCard
 } from "@/components";
-import { CardContainerCProps, Video } from "@/interfaces"; // Ensure Video type is imported
+import { CardContainerCProps, Video } from "@/interfaces";
+import PlaylistVideoTimeCard from "./Items/PlaylistVideoTimeCard";
 import PlaylistRecommend from "./Items/PlaylistRecommend";
 
-const CardContainerC = ({ playlist }: CardContainerCProps) => {
-  // Ensure playlist is an array and extract the first item
+const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
   const playlistData = Array.isArray(playlist) ? playlist[0] : playlist;
-  console.log(playlistData.playlistId);
-  
-  // Check if playlistId exists
   if (!playlistData?.playlistId) {
     console.error("Error: playlistId is missing in playlist data", playlistData);
     return <p>Error loading playlist.</p>;
   }
 
-  // Extract actual playlist object
   const actualPlaylist = playlistData.playlistId;
+
+  // ✅ Store selected video details
+  const [selectedVideoId, setSelectedVideoId] = useState(actualPlaylist.videos?.[0]?.videoId || "");
+  const [selectedPlaylistName, setSelectedPlaylistName] = useState(actualPlaylist.playlistName || "Playlist");
+  const [selectedThumbnail, setSelectedThumbnail] = useState(actualPlaylist.thumbnail || "");
 
   const [playlistVideo, setPlaylistVideo] = useState(false);
   const togglePlaylistVideo = () => {
-    // if (status === "loading") return; 
-    // if (!session) {
-    //   router.push('/');
-    //   return;
-    // }
     setPlaylistVideo((prev) => !prev);
   };
+
   return (
-    <Section className="py-2 md:px-0">
-      <div className="flex flex-col gap-6 max-w-full md:max-w-[90%] mx-auto">
-      {playlistVideo && (
-          <div className="w-full flex justify-center">
-            <PlaylistVideoTimeCard usertime={0} />
-          </div>
-        )}
-        <div className="w-full">
+    <div className=" w-full ">
+      <div className=" flex justify-center p-2">
+        {playlistVideo ? <PlaylistVideoTimeCard /> : null}
+      </div>
+      <div className="flex flex-col md:items-center gap-2 md:gap-6 w-full md:max-w-[80%] mx-auto">
+        <div  className=" md:max-w-[80%] md:border-4 md:rounded-md md:border-black">
+        <div className="w-full  ">
           <PlaylistCard
-            title={actualPlaylist.playlistName}
+            title={selectedPlaylistName}
             description={actualPlaylist.description}
-            thumbnail={actualPlaylist.thumbnail}
-            playlistVideoId={playlistVideo}                        
-            videoId={actualPlaylist.videos?.[0]?.videoId}
-            route=""
+            thumbnail={selectedThumbnail}
+            playlistVideo={playlistVideo}
+            videoId={selectedVideoId}
           />
         </div>
 
         {!playlistVideo && (
-          <div className="w-full max-w-[25rem] py-2 m-auto">
+          <div className="w-full px-2 max-w-[25rem] py-2 m-auto">
             <button
               className="w-full sm:w-[25rem] px-6 py-1 shadow-lg text-white bg-primary border-2 rounded-md border-primary hover:scale-105 transition-all flex items-center justify-center gap-2"
               onClick={togglePlaylistVideo}
@@ -61,29 +55,44 @@ const CardContainerC = ({ playlist }: CardContainerCProps) => {
           </div>
         )}
 
-        {/* Ensure videos exist before mapping */}
-        {actualPlaylist.videos?.length > 0 ? (
-          actualPlaylist.videos.map((video: Video) => ( // ✅ Explicitly typing 'video'
+        {playlistVideo ? (
+          actualPlaylist.videos.map((video: Video) => (
             <PlaylistVideoCard
               key={video.videoId}
               title={video.title}
               image={video.thumbnail}
               imageAltText={video.title}
-              content=""
-              href={playlistVideo ? video.videoId : undefined}
+              onClick={() => {
+                setSelectedVideoId(video.videoId);
+                setSelectedThumbnail(video.thumbnail);
+                setSelectedPlaylistName(video.title);
+              }}
+              playlistId={actualPlaylist.playlistId}
+              videro={actualPlaylist.visero || []}
             />
           ))
         ) : (
-          <p>No videos available.</p>
+          actualPlaylist.videos.map((video: Video) => (
+            <PlaylistVideoCard
+              key={video.videoId}
+              title={video.title}
+              image={video.thumbnail}
+              imageAltText={video.title}
+            />
+          ))
         )}
+
+        
       </div>
-      {playlistVideo && (
-        <div className="w-full flex justify-center">
-          <PlaylistRecommend/>
+      </div>
+      <div className=" w-full px-2 flex justify-center items-center" >
+          {playlistVideo ?
+            <PlaylistRecommend />
+            : null}
         </div>
-      )}
-    </Section>
+    </div>
+
   );
 };
 
-export default CardContainerC;
+export default PlaylistContainerCard;
