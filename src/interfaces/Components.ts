@@ -453,10 +453,17 @@ interface Video {
   videoId: string;
 }
 
-
 interface PlaylistIdObject {
   _id: string;
   playlistId: string;
+}
+
+export interface  PlaylistVideoTimeCard {
+  usertime: number;
+}
+
+interface PlaylistData {
+
   playlistName: string;
   description: string;
   referrerBy: number;

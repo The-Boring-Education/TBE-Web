@@ -7,7 +7,7 @@ import { getUserPlaylistByIDFromDB, updateUserPlaylistData } from '@/database';
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
 
-  const { method ,query } = req;
+  const { method, query } = req;
   const { playlistId, userId } = query as {
     playlistId: string;
     userId: string;
@@ -16,8 +16,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       return getUserPlaylistById(req, res, playlistId, userId);
-    case 'PATCH':
-      return handleUpdateUserPlaylist(req, res, playlistId, userId, req.body );
+    case 'PATCH': {
+      const { isRecommended, learningTime } = req.body;
+      return handleUpdateUserPlaylist(req, res, playlistId, userId, isRecommended, learningTime);
+    }
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -34,7 +36,6 @@ const getUserPlaylistById = async (
   playlistId: string,
   userId: string
 ) => {
-  
   const { data, error } = await getUserPlaylistByIDFromDB(playlistId, userId);
   
   if (error) {
@@ -69,9 +70,12 @@ const handleUpdateUserPlaylist = async (
   res: NextApiResponse,
   playlistId: string,
   userId: string,
-  updateData: any,
+  isRecommended: boolean,
+  learningTime: number
 ) => {
-  const { data, error } = await updateUserPlaylistData(userId, playlistId, updateData);
+  
+  const { data, error } = await updateUserPlaylistData(userId, youfocusId, isRecommended, learningTime);
+
 
   if (error) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -85,7 +89,7 @@ const handleUpdateUserPlaylist = async (
   return res.status(apiStatusCodes.OKAY).json(
     sendAPIResponse({
       status: true,
-      message: 'Playlist recommended successfully',
+      message: 'Playlist updated successfully',
       data,
     })
   );

@@ -17,7 +17,6 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
 
   const actualPlaylist = playlistData.playlistId;
 
-  // ✅ Store selected video details
   const [selectedVideoId, setSelectedVideoId] = useState(actualPlaylist.videos?.[0]?.videoId || "");
   const [selectedPlaylistName, setSelectedPlaylistName] = useState(actualPlaylist.playlistName || "Playlist");
   const [selectedThumbnail, setSelectedThumbnail] = useState(actualPlaylist.thumbnail || "");
@@ -34,7 +33,7 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
       </div>
       <div className="flex flex-col md:items-center gap-2 md:gap-6 w-full md:max-w-[80%] mx-auto">
         <div  className=" md:max-w-[80%] md:border-4 md:rounded-md md:border-black">
-        <div className="w-full  ">
+        <div className="w-full">
           <PlaylistCard
             title={selectedPlaylistName}
             description={actualPlaylist.description}
@@ -42,8 +41,8 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
             playlistVideo={playlistVideo}
             videoId={selectedVideoId}
           />
-        </div>
 
+        </div>
         {!playlistVideo && (
           <div className="w-full px-2 max-w-[25rem] py-2 m-auto">
             <button
@@ -80,9 +79,7 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
               imageAltText={video.title}
             />
           ))
-        )}
-
-        
+        )}   
       </div>
       </div>
       <div className=" w-full px-2 flex justify-center items-center" >
