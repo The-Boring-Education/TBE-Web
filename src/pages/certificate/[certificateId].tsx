@@ -38,12 +38,13 @@ const Home = ({
             {programName}
           </Text>
         </FlexContainer>
-        <div ref={certificateRef} className='my-2'>
+        <div className='my-2'>
           <CertificateContent
             type={type}
             userName={userName}
             courseName={programName}
             date={formatDate({}).date}
+            certificateRef={certificateRef}
           />
           {isAuth && (
             <FlexContainer direction='col' className='gap-2'>

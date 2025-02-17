@@ -124,7 +124,7 @@ const getPlaylistPageProps = async (context: any) => {
     return {
       redirect: {
         destination: routes.home,
-        permanent: false
+        permanent: false,
       },
       props: { slug },
     };
@@ -141,21 +141,22 @@ const getPlaylistPageProps = async (context: any) => {
       return {
         redirect: {
           destination: routes.home,
-          permanent: false
+          permanent: false,
         },
       };
     }
     return {
       props: {
-        slug, seoMeta,
-        playlist: data
+        slug,
+        seoMeta,
+        playlist: data,
       },
     };
   } catch (error) {
     return {
       redirect: {
         destination: routes.home,
-        permanent: false
+        permanent: false,
       },
       props: { slug },
     };
@@ -445,7 +446,6 @@ const getWebinarPageProps = async (context: any) => {
         'https://wallpapers.com/images/hd/coding-background-9izlympnd0ovmpli.jpg',
     },
   };
-
 };
 
 export {
@@ -456,5 +456,5 @@ export {
   getWebinarPageProps,
   getWebinarLandingPageProps,
   getCertificatePageProps,
-  getPlaylistPageProps
+  getPlaylistPageProps,
 };

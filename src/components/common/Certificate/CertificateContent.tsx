@@ -6,6 +6,7 @@ const CertificateContent = ({
   userName,
   courseName,
   date,
+  certificateRef,
 }: CertificateContentProps) => {
   const backgroundImagePaths: Record<string, string> = {
     WEBINAR: 'url(/images/webinar_certificate.png)',
@@ -51,6 +52,7 @@ const CertificateContent = ({
   return (
     <div
       className='certificate-container relative rounded-lg shadow-lg'
+      ref={certificateRef}
       style={{
         width: '100%',
         height: '100%',

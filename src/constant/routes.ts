@@ -51,6 +51,10 @@ const routes = {
   youfocusAddPlaylist: '/youfocus/add',
   youfocusPlaylist: '/youfocus/playlist',
   explorePlaylist: '/youfocus/explore-playlist',
+  // Cohort
+  cohort: {
+    bringYourIdea: '/cohort/bring-your-idea',
+  },
   404: '/404',
   api: {
     base: '/api/v1',

@@ -1,4 +1,8 @@
-import { HTMLInputTypeAttribute, MouseEventHandler, ReactNode } from 'react';
+import React, {
+  HTMLInputTypeAttribute,
+  MouseEventHandler,
+  ReactNode,
+} from 'react';
 import {
   CertificateType,
   GetSEOMetaResponseType,
@@ -57,6 +61,7 @@ export interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   active?: boolean;
   isLoading?: boolean;
+  animationClasses?: string;
 }
 
 export interface PageLayoutProps {
@@ -388,6 +393,7 @@ export interface CertificateContentProps {
   courseName: string;
   date: string;
   type: CertificateType;
+  certificateRef: React.RefObject<HTMLDivElement>;
 }
 
 export interface BackgroundImageProps {
@@ -426,7 +432,6 @@ export interface ToggleButtonProps {
   textColors?: string[];
 }
 
-
 export interface PlaylistCardProps {
   title: string;
   description: string;
@@ -458,7 +463,7 @@ interface PlaylistIdObject {
   playlistId: string;
 }
 
-export interface  PlaylistVideoTimeCard {
+export interface PlaylistVideoTimeCard {
   usertime: number;
 }
 
@@ -478,7 +483,6 @@ export interface MentorshipCardProps {
   description: string;
   link: string;
 }
-
 export interface PlaylistVideoCardProps {
   image: string;
   imageAltText: string;
@@ -518,3 +522,4 @@ export interface PlaylistCardProps {
   route: string;
   playlistVideoId: boolean;
 }
+

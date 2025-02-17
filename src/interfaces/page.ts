@@ -81,6 +81,7 @@ export interface CardContainerAProps {
   cards: CardItem[];
 }
 
+
 interface Video {
   title: string;
   thumbnail: string;
@@ -89,12 +90,12 @@ interface Video {
 
 export type PlaylistPickedPageProps = Pick<
   PlaylistModel & { _id: string },
-  | '_id' 
-  | 'playlistName' 
+  | '_id'
+  | 'playlistName'
   | 'description'
-  | 'thumbnail' 
-  | 'tags' 
-  | 'videos' 
+  | 'thumbnail'
+  | 'tags'
+  | 'videos'
   | 'referrerBy'
 > & {
   playlistId: {
@@ -117,5 +118,3 @@ export interface PlaylistVideoTimeCardProps {
   usertime?: number;
   playlistId: string;
 }
-
-

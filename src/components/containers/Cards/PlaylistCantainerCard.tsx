@@ -27,9 +27,9 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
   const togglePlaylistVideo = () => {
     setPlaylistVideo((prev) => !prev);
   };
-  // console.log(playlistData);
 
   return (
+
     <div className=" w-full ">
       <div className=" flex justify-center p-2">
         {playlistVideo ? <PlaylistVideoTimeCard usertime={playlistData.learningTime} playlistId={actualPlaylist._id} /> : null}
@@ -95,7 +95,6 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
             : null}
         </div>
     </div>
-
   );
 };
 

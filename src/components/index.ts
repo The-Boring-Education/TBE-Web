@@ -1,4 +1,11 @@
 import dynamic from 'next/dynamic';
+const IconCard = dynamic(
+  () => import('@/components/containers/Cards/Items/IconCard')
+);
+const Carousel = dynamic(() => import('@/components/common/Carousel'));
+const HeaderLabel = dynamic(
+  () => import('@/components/containers/Page/common/HeaderLabel')
+);
 const MentorshipCard = dynamic(
   () => import('@/components/containers/Cards/MentorshipCard')
 );
@@ -151,14 +158,13 @@ const WebinarHeroContainer = dynamic(
 const BackgroundImage = dynamic(
   () => import('@/components/common/Images/BackgroundImage')
 );
-const PlaylistCard = dynamic(() => import('@/components/containers/Cards/Items/PlaylistCard')
+const PlaylistCard = dynamic(
+  () => import('@/components/containers/Cards/Items/PlaylistCard')
 );
 const PlaylistCantainerCard = dynamic(
   () => import('@/components/containers/Cards/PlaylistCantainerCard')
 );
 const PlaylistVideoCard = dynamic(() => import('@/components/containers/Cards/Items/PlaylistVideoCard')
-);
-const PlaylistVideoTimeCard = dynamic(() => import('@/components/containers/Cards/Items/PlaylistVideoTimeCard')
 );
 
 export {
@@ -231,5 +237,4 @@ export {
   PlaylistVideoCard,
   NotificationContainer,
   MentorshipCard,
-  PlaylistVideoTimeCard,
 };

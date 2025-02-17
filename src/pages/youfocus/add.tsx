@@ -47,10 +47,10 @@ const Home = ({ seoMeta }: PageProps) => {
         setSuccess('Playlist added successfully! Redirecting...');
         setPlaylistUrl('');
         setTimeout(() => {
-          const playlistId = response.data._id; 
-          const redirectUrl = `${routes.youfocusPlaylist}/${playlistId}`
+          const playlistId = response.data._id;
+          const redirectUrl = `${routes.youfocusPlaylist}/${playlistId}`;
           router.push(redirectUrl);
-      }, 2000);   
+        }, 2000);
       } else {
         setError(response.message || 'Failed to add playlist');
       }
@@ -77,7 +77,7 @@ const Home = ({ seoMeta }: PageProps) => {
               onChange={handleInputChange}
               className='md:w-1/2 md:px-5 text-black'
             />
-            
+
             <Button
               variant='PRIMARY'
               className=''
