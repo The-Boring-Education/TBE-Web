@@ -74,7 +74,7 @@ const handleUpdateUserPlaylist = async (
   learningTime: number
 ) => {
   
-  const { data, error } = await updateUserPlaylistData(userId, youfocusId, isRecommended, learningTime);
+  const { data, error } = await updateUserPlaylistData(userId, playlistId, isRecommended, learningTime);
 
 
   if (error) {

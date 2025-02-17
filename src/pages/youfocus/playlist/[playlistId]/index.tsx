@@ -7,11 +7,7 @@ const PlaylistPage = ({ playlist, seoMeta }: PlaylistPageProps) => {
   return (
     <>
       <SEO seoMeta={seoMeta} />
-       <div className="w=full flex flex-col items-start"
-       ></div>
         <PlaylistCantainerCard playlist={playlist} />
-      
-
     </>
   );
 };
