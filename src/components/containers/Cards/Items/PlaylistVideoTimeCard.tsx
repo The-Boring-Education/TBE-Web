@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PlaylistVideoTimeCardProps } from "@/interfaces"; 
 import { routes } from '@/constant';
 import { useRouter } from 'next/router';
-import { formatTimeUserLearning } from "@/utils"; 
+import { convertSecondsToMinutes } from "@/utils"; 
 
 const PlaylistVideoTimeCard = ({ usertime = 0, playlistId }: PlaylistVideoTimeCardProps) => {
   const router = useRouter();
@@ -41,7 +41,7 @@ const PlaylistVideoTimeCard = ({ usertime = 0, playlistId }: PlaylistVideoTimeCa
         <img className="w-5 h-5 p-1" src="/images/arrowback.svg" alt="Back" />
       </button>
 
-      <div className="text-lg font-bold">{formatTimeUserLearning(time)}</div>
+      <div className="text-lg font-bold">{convertSecondsToMinutes(time)}</div>
 
       <button
         className="w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-700"

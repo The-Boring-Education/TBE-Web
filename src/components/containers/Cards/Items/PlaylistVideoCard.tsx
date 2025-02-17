@@ -14,7 +14,7 @@ const PlaylistVideoCard = ({ image, imageAltText, title, onClick }: PlaylistVide
           <Image src={image} alt={imageAltText} className="object-cover w-full  rounded-md" />
         </div>
         <div className="flex-1 p-2">
-          <Text level="h6" className="heading-5 font-primary  text-[1rem] md:text-[1.1rem] line-clamp-2">
+          <Text level="h5" className="heading-5 font-primary  text-[1rem] md:text-[1.1rem] line-clamp-2">
             {title}
           </Text>
         </div>

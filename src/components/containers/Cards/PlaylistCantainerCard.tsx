@@ -17,15 +17,17 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
 
   const actualPlaylist = playlistData.playlistId;
 
-  const [selectedVideoId, setSelectedVideoId] = useState(actualPlaylist.videos?.[0]?.videoId || "");
-  const [selectedPlaylistName, setSelectedPlaylistName] = useState(actualPlaylist.playlistName || "Playlist");
-  const [selectedThumbnail, setSelectedThumbnail] = useState(actualPlaylist.thumbnail || "");
+  const [selectedVideo, setSelectedVideo] = useState({
+    id: actualPlaylist.videos?.[0]?.videoId || "",
+    name: actualPlaylist.playlistName || "Playlist",
+    thumbnail: actualPlaylist.thumbnail || ""
+  });
 
   const [playlistVideo, setPlaylistVideo] = useState(false);
   const togglePlaylistVideo = () => {
     setPlaylistVideo((prev) => !prev);
   };
-// console.log(playlistData);
+  // console.log(playlistData);
 
   return (
     <div className=" w-full ">
@@ -36,13 +38,13 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
         <div  className=" md:max-w-[80%] md:border-4 md:rounded-md md:border-black">
         <div className="w-full">
           <PlaylistCard
-            title={selectedPlaylistName}
+            title={selectedVideo.name}
             description={actualPlaylist.description}
-            thumbnail={selectedThumbnail}
+            thumbnail={selectedVideo.thumbnail}
             playlistVideo={playlistVideo}
-            videoId={selectedVideoId}
+            videoId={selectedVideo.id}
             route=""
-            playlistVideoId={selectedVideoId}
+            playlistVideoId={selectedVideo.id}
           />
 
         </div>
@@ -65,9 +67,11 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
               image={video.thumbnail}
               imageAltText={video.title}
               onClick={() => {
-                setSelectedVideoId(video.videoId);
-                setSelectedThumbnail(video.thumbnail);
-                setSelectedPlaylistName(video.title);
+                setSelectedVideo({
+                  id: video.videoId,
+                  name: video.title,
+                  thumbnail: video.thumbnail
+                });
               }}
               playlistId={actualPlaylist.playlistId}
               videro={actualPlaylist.visero || []}
