@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button, Text, SectionHeaderContainer } from "@/components";
 
 const PlaylistRecommend = () => {
   const [copied, setCopied] = useState(false);
@@ -15,20 +16,27 @@ const PlaylistRecommend = () => {
 
   return (
     <div className="w-full max-w-md p-4 bg-white shadow-lg rounded-lg text-center relative">
-      <h2 className="text-lg font-bold text-gray-900">
-        Recommend <span className="text-red-500">Playlist</span>
-      </h2>
-      <p className="text-gray-600 mt-1">Share it With Your Friend and Learn Together</p>
+
+      <SectionHeaderContainer
+        heading='Recommend'
+        focusText='Playlist'
+        headingLevel={4}
+        subtext='Share it With Your Friend and Learn Together'
+      />
+
       <div className="mt-2 md:mt-4 flex justify-center gap-2">
-        <button className="bg-red-500 text-nowrap text-white px-4 py-1 md:py-2 rounded-lg shadow-md hover:bg-red-600">
-          Recommend
-        </button>
-        <button
+        <Button
+          variant='PRIMARY'
+          className='="bg-red-500 text-nowrap text-white px-4 py-1 md:py-2 rounded-lg shadow-md hover:bg-red-600"'
+          text='Recommend'
+          onClick={""}
+        />
+        <Button
+          variant='OUTLINE'
+          className='="bg-red-500 text-nowrap px-4 py-1 md:py-2 rounded-lg shadow-md hover:bg-red-600"'
+          text='Copy Link'
           onClick={copyCurrentPageUrl}
-          className="border text-nowrap border-red-500 text-red-500 px-4 py-1 md:py-2 rounded-lg shadow-md hover:bg-red-100"
-        >
-          Copy Link
-        </button>
+        />
       </div>
 
       {/* Show popup when copied */}

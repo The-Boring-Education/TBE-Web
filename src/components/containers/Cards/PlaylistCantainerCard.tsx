@@ -6,6 +6,7 @@ import {
 import { CardContainerCProps, Video } from "@/interfaces";
 import PlaylistVideoTimeCard from "./Items/PlaylistVideoTimeCard";
 import PlaylistRecommend from "./Items/PlaylistRecommend";
+import {Button} from '@/components';
 
 const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
   const playlistData = Array.isArray(playlist) ? playlist[0] : playlist;
@@ -47,12 +48,12 @@ const PlaylistContainerCard = ({ playlist }: CardContainerCProps) => {
         </div>
         {!playlistVideo && (
           <div className="w-full px-2 max-w-[25rem] py-2 m-auto">
-            <button
-              className="w-full sm:w-[25rem] px-6 py-1 shadow-lg text-white bg-primary border-2 rounded-md border-primary hover:scale-105 transition-all flex items-center justify-center gap-2"
+             <Button
+              variant='PRIMARY'
+              className='w-full sm:w-[25rem] px-6 py-1 shadow-lg text-white border-2 rounded-md border-primary hover:scale-105 transition-all flex items-center justify-center gap-2'
+              text=' Start Learning'
               onClick={togglePlaylistVideo}
-            >
-              Start Learning
-            </button>
+            />
           </div>
         )}
 
