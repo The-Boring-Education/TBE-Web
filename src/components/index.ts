@@ -164,8 +164,7 @@ const PlaylistCard = dynamic(
 const PlaylistCantainerCard = dynamic(
   () => import('@/components/containers/Cards/PlaylistCantainerCard')
 );
-const PlaylistVideoCard = dynamic(
-  () => import('@/components/containers/Cards/Items/PlaylistVideoCard')
+const PlaylistVideoCard = dynamic(() => import('@/components/containers/Cards/Items/PlaylistVideoCard')
 );
 
 export {
@@ -238,7 +237,4 @@ export {
   PlaylistVideoCard,
   NotificationContainer,
   MentorshipCard,
-  Carousel,
-  IconCard,
-  HeaderLabel,
 };

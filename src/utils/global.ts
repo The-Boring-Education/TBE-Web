@@ -108,7 +108,7 @@ const getProjectPageProps = async (context: any) => {
 };
 
 const getPlaylistPageProps = async (context: any) => {
-  const { query } = context;
+  const {req, query } = context;
   const { playlistId } = query;
 
   let slug = routes.home;
@@ -116,9 +116,9 @@ const getPlaylistPageProps = async (context: any) => {
   if (playlistId) {
     slug = routes.youfocusPlaylist;
   }
-
+  
   const seoMeta = getSEOMeta(slug);
-
+ 
   // If we don’t have a playlistId or seoMeta, redirect to home.
   if (!playlistId || !seoMeta) {
     return {
@@ -131,9 +131,12 @@ const getPlaylistPageProps = async (context: any) => {
   }
 
   try {
+    const user = await isUserAuthenticated(req);
+
     const { status, data } = await fetchAPIData(
-      routes.api.youfocusPlaylistById(playlistId)
+      routes.api.youfocusUserPlaylistById(playlistId, user?.id ?? "")
     );
+    
     if (!status || !data) {
       return {
         redirect: {

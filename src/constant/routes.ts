@@ -99,7 +99,7 @@ const routes = {
     certificate: '/certificate',
     certificateById: (certificate: string) => `/certificate/${certificate}`,
     youfocusPlaylist: '/youfocus',
-    youfocusPlaylistById: (playlist: string) => `/youfocus/${playlist}`,
+    youfocusUserPlaylistById: (playlist: string, userId: string) => `/youfocus/${playlist}?userId=${userId}`,
     userDashboard: '/user/dashboard',
     notification: '/notification',
   },

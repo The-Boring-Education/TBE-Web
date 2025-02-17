@@ -369,6 +369,12 @@ const extractPlaylistId = (url: string) => {
   return match ? match[1] : null;
 };
 
+const convertSecondsToMinutes = (seconds: number) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+};
+
 export {
   formatDate,
   formatTime,
@@ -390,4 +396,5 @@ export {
   generateShareTemplate,
   fetchPlaylistData,
   extractPlaylistId,
+  convertSecondsToMinutes
 };

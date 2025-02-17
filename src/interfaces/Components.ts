@@ -437,6 +437,8 @@ export interface PlaylistCardProps {
   description: string;
   thumbnail: string;
   route: string;
+  playlistVideoId: boolean;
+  videoId: string;
 }
 
 export interface PrimaryLongCardProps {
@@ -453,17 +455,23 @@ export interface PrimaryLongCardProps {
 interface Video {
   title: string;
   thumbnail: string;
+  videoId: string;
+}
+
+interface PlaylistIdObject {
+  _id: string;
+  playlistId: string;
 }
 
 export interface PlaylistVideoTimeCard {
   usertime: number;
 }
 
-interface PlaylistData {
+ export interface BasicPlaylistData {
   playlistName: string;
   description: string;
-  thumbnail: string;
-  videos?: Video[];
+  referrerBy: number;
+  videos: Video[];
 }
 
 export interface CardContainerCProps {
@@ -475,22 +483,43 @@ export interface MentorshipCardProps {
   description: string;
   link: string;
 }
-
-export interface CarouselProps {
-  items: any[];
-  renderItem: (item: any) => React.ReactNode;
+export interface PlaylistVideoCardProps {
+  image: string;
+  imageAltText: string;
+  title: string;
+  onClick?: () => void;
+  playlistId?: string;
+  videro?: Video[];
+  isPublic?: boolean;
+  isRecommended?: boolean;
+  learningTime?: number;
+  userId?: string;
 }
 
-export interface IconCardProps {
-  icon: React.ReactNode;
+export interface PlaylistData{
+  
+    playlistId: {
+      _id: string;
+      playlistId: string;
+      playlistName: string;
+      description: string;
+      referrerBy: number;
+      videos: Video[];
+    };
+    isPublic: boolean;
+    isRecommended: boolean;
+    learningTime: number;
+    userId: string;
+  
+}
+
+export interface PlaylistCardProps {
   title: string;
   description: string;
-  className?: string;
-  bgColor?: string;
-  key: number;
+  thumbnail: string;
+  videoId: string;
+  playlistVideo?: boolean;
+  route: string;
+  playlistVideoId: boolean;
 }
 
-export interface HeaderLabelProps {
-  label: string;
-  className?: string;
-}

@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { PlaylistVideoTimeCard as PlaylistVideoTimeCardProps } from '@/interfaces';
+import React, { useState, useEffect } from "react";
+import { PlaylistVideoTimeCard as PlaylistVideoTimeCardProps } from "@/interfaces";
 
-const PlaylistVideoTimeCard = ({
-  usertime = 0,
-}: PlaylistVideoTimeCardProps) => {
+const PlaylistVideoTimeCard = ({ usertime = 0 }: PlaylistVideoTimeCardProps) => {
   const [time, setTime] = useState(usertime * 60); // Convert minutes to seconds
   const [isRunning, setIsRunning] = useState(false);
 
@@ -12,12 +10,14 @@ const PlaylistVideoTimeCard = ({
   }, [usertime]);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | undefined;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
     if (isRunning) {
       timer = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
       }, 1000);
     }
+
     return () => {
       if (timer) clearInterval(timer);
     };
@@ -26,18 +26,21 @@ const PlaylistVideoTimeCard = ({
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs
+    return `${mins.toString().padStart(2, "0")}:${secs
       .toString()
-      .padStart(2, '0')}`;
+      .padStart(2, "0")}`;
   };
 
   return (
-    <div className='flex items-center justify-between w-full max-w-sm p-4 bg-gray-900 text-white rounded-lg shadow-md'>
-      <button className='w-10 h-10 flex items-center justify-center bg-gray-700 text-white rounded-full hover:bg-gray-600'>
-        <img className='w-5 h-5 p-1' src='/images/arrowback.svg' alt='Back' />
-      </button>
+    <div className="flex items-center justify-between w-full max-w-sm p-4 bg-gray-900 text-white rounded-lg shadow-md">
+      <button
+        className="w-10 h-10 flex items-center justify-center bg-gray-700 text-white rounded-full hover:bg-gray-600"
+      >
+        <img className="w-5 h-5 p-1" src="/images/arrowback.svg" alt="Back" />
 
-      <div className='text-lg font-bold'>{formatTime(time)}</div>
+      </button>
+     
+      <div className="text-lg font-bold">{formatTime(time)}</div>
 
       <button
         className='w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-700'
