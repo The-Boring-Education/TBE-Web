@@ -4,11 +4,19 @@ import {
   TopNavbarContainerProps,
   PrimaryCardWithCTAProps,
 } from '@/interfaces';
-import { LINKS, products, STATIC_FILE_PATH } from '../global';
+import { cohorts, LINKS, products, STATIC_FILE_PATH } from '../global';
 import { v4 } from 'uuid';
 import { routes } from '..';
 
 const TOP_NAVIGATION: TopNavbarContainerProps = {
+  cohorts: [
+    {
+      id: v4(),
+      name: cohorts.bringYourIdea.label,
+      description: cohorts.bringYourIdea.description,
+      href: cohorts.bringYourIdea.slug,
+    },
+  ],
   products: [
     {
       id: v4(),

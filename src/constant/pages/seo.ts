@@ -278,7 +278,15 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'Focus,concentration, The Boring Education, Online Learning, Programming, College Students, Working professional, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
-    
+    [`${routes.cohort.bringYourIdea}`]: {
+      title: 'Bring Your Idea | The Boring Education',
+      siteName: 'Bring Your Idea at The Boring Education',
+      description: 'Bring your idea to The Boring Education.',
+      url: routes.cohort.bringYourIdea,
+      keywords:
+        'Bring Your Idea, Tech Idea, Cohort, The Boring Education, Online Learning, Programming, College Students, Working professional, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
     [`${routes.youfocusPlaylist}`]: {
       title: 'YouFocus - Playlist | The Boring Education',
       siteName: 'YouFocus Playlist at The Boring Education',

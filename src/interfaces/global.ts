@@ -25,9 +25,19 @@ export type ProductLabelType =
   | 'Interview Prep'
   | 'Portfolio';
 
+export type CohortLabelType = 'Bring Your Idea';
+
 export interface ProductDataProps {
   [key: string]: {
     label: ProductLabelType;
+    slug: string;
+    description: string;
+  };
+}
+
+export interface CohortDataProps {
+  [key: string]: {
+    label: CohortLabelType;
     slug: string;
     description: string;
   };
@@ -45,6 +55,7 @@ export interface TopNavbarLinkProps {
 export interface TopNavbarContainerProps {
   user: TopNavbarLinkProps[];
   products: TopNavbarLinkProps[];
+  cohorts: TopNavbarLinkProps[];
   links: TopNavbarLinkProps[];
 }
 

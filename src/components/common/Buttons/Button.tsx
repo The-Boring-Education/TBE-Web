@@ -1,5 +1,6 @@
 import { LoadingSpinner } from '@/components';
 import { ButtonProps } from '@/interfaces';
+import { motion } from 'framer-motion';
 
 const Button = ({
   variant,
@@ -8,6 +9,7 @@ const Button = ({
   active = true,
   isLoading = false,
   onClick,
+  animationClasses,
 }: ButtonProps) => {
   let baseClasses = 'button bg-light px-2 py-1 text-white';
   if (variant === 'PRIMARY')
@@ -33,14 +35,20 @@ const Button = ({
   );
 
   return (
-    <button
-      className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-2`}
-      disabled={!active || isLoading}
-      onClick={onClick}
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className={`${animationClasses} w-fit`}
     >
-      {loadingContainer}
-      {text}
-    </button>
+      <button
+        className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-2`}
+        disabled={!active || isLoading}
+        onClick={onClick}
+      >
+        {loadingContainer}
+        {text}
+      </button>
+    </motion.div>
   );
 };
 

@@ -50,13 +50,19 @@ const Navbar = () => {
         </div>
         <div className='hidden items-center lg:flex lg:gap-x-4'>
           <PopoverContainer
+            label='Cohorts'
+            isOpen={openPopover === 'cohorts'}
+            onToggle={() => handleSetOpen('cohorts')}
+          >
+            <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
+          </PopoverContainer>
+          <PopoverContainer
             label='Products'
             isOpen={openPopover === 'products'}
             onToggle={() => handleSetOpen('products')}
           >
             <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
           </PopoverContainer>
-
           <PopoverContainer
             label='Links'
             panelClasses='-left-6'
@@ -117,7 +123,12 @@ const Navbar = () => {
                   </FlexContainer>
                 )}
                 <MobileNavbarLinksContainer
-                  title='Our Products'
+                  title='Cohorts'
+                  links={TOP_NAVIGATION.cohorts}
+                  onLinkClick={handleCloseMobileMenu}
+                />
+                <MobileNavbarLinksContainer
+                  title='Products'
                   links={TOP_NAVIGATION.products}
                   onLinkClick={handleCloseMobileMenu}
                 />
