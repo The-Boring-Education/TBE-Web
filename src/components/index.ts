@@ -13,6 +13,11 @@ const MentorshipCard = dynamic(
 const ToggleButton = dynamic(
   () => import('@/components/common/Buttons/ToggleButton')
 );
+
+const SkillButton = dynamic(
+  () => import('@/components/common/Buttons/SkillButton')
+);
+
 const NotificationContainer = dynamic(
   () => import('@/components/containers/Cards/NotificationContainer')
 );
@@ -243,4 +248,5 @@ export {
   IconCard,
   HeaderLabel,
   Toast,
+  SkillButton,
 };

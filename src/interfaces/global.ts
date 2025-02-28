@@ -1,3 +1,4 @@
+import { Skills } from '@/constant';
 import { FooterLinksContainerProps, WebinarModel } from '.';
 
 export interface FooterNavigationDataProps extends FooterLinksContainerProps {
@@ -91,4 +92,8 @@ export type FormatDateType = {
   dateAndTime?: string;
   dateFormat?: Intl.DateTimeFormatOptions;
   timeFormat?: Intl.DateTimeFormatOptions;
+};
+
+export type Skills = {
+  Skills: string[];
 };
