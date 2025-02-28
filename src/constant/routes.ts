@@ -51,7 +51,7 @@ const routes = {
   youfocus: '/youfocus',
   youfocusAddPlaylist: '/youfocus/add',
   youfocusPlaylist: '/youfocus/playlist',
-  explorePlaylist: '/youfocus/explore-playlist',
+  explorePlaylist: '/youfocus/explore',
   // Cohort
   cohort: {
     bringYourIdea: '/cohort/bring-your-idea',

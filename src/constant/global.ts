@@ -274,6 +274,17 @@ const PORTFOLIO_TEMPLATES: PortfolioTemplateProps[] = [
   },
 ];
 
+//  For YouFocus Explore Page
+const Skills = [
+  'React.js',
+  'Node.js',
+  'AI',
+  'JavaScript',
+  'CSS',
+  'Three.js',
+  'Python',
+];
+
 export {
   imageMeta,
   products,
@@ -291,4 +302,5 @@ export {
   PORTFOLIO_CARDS,
   PORTFOLIO_TEMPLATES,
   cohorts,
+  Skills,
 };
