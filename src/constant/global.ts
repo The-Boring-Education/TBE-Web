@@ -286,8 +286,8 @@ const Skills = [
   'Html',
   'CSS',
   'C++',
-  'Data Science',
-  'Data Analysis',
+  'DataScience',
+  'DataAnalysis',
   'AI',
 ];
 
