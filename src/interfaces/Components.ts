@@ -66,7 +66,7 @@ export interface ButtonProps {
   animationClasses?: string;
 }
 
-interface SkillButtonProps {
+export interface SkillButtonProps {
   skill: string;
   isSelected: boolean;
   onClick: (skill: string) => void;

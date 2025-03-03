@@ -1,7 +1,7 @@
 import React from 'react';
 import { SkillButtonProps } from '@/interfaces';
 
-const SkillButton: SkillButtonProps = ({ skill, isSelected, onClick }) => {
+const SkillButton = ({ skill, isSelected, onClick }: SkillButtonProps) => {
   return (
     <div
       className={`px-4 py-1 text-black font-bold rounded-lg transition-all duration-300 cursor-pointer ${
