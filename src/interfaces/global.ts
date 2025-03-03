@@ -93,7 +93,6 @@ export type FormatDateType = {
   timeFormat?: Intl.DateTimeFormatOptions;
 };
 
-export interface Option {
+export interface RadioButtonOptionsProps {
   label: string;
-  value: string;
 }

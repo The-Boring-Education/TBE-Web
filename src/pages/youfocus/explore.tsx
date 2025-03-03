@@ -11,8 +11,8 @@ import { Skills } from '@/constant';
 const Home = () => {
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
 
-  const handleSkillClick = (value: string) => {
-    setSelectedSkill(value);
+  const handleSkillClick = (label: string) => {
+    setSelectedSkill(label);
   };
 
   const handleExploreClick = () => {

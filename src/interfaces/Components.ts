@@ -532,7 +532,6 @@ export interface ToastProps {
 
 interface Option {
   label: string;
-  value: string;
 }
 
 export interface RadioGroupProps {
@@ -543,7 +542,6 @@ export interface RadioGroupProps {
 
 export interface RadioButtonProps {
   label: string;
-  value: string;
   isSelected: boolean;
   onChange: (value: string) => void;
 }

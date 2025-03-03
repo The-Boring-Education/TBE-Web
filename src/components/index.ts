@@ -175,7 +175,7 @@ const PlaylistVideoCard = dynamic(
 );
 
 const RadioGroup = dynamic(
-  () => import('@/components/containers/Page/common/RadioGroup ')
+  () => import('@/components/containers/Page/common/RadioGroup')
 );
 export {
   Navbar,
