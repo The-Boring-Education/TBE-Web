@@ -278,11 +278,17 @@ const PORTFOLIO_TEMPLATES: PortfolioTemplateProps[] = [
 const Skills = [
   'React.js',
   'Node.js',
-  'AI',
-  'JavaScript',
-  'CSS',
-  'Three.js',
+  'Java',
+  'DSA',
   'Python',
+  'Flask',
+  'Django',
+  'Html',
+  'CSS',
+  'C++',
+  'Data Science',
+  'Data Analysis',
+  'AI',
 ];
 
 export {

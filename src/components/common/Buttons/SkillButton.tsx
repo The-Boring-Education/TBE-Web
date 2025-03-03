@@ -11,7 +11,7 @@ const SkillButton: SkillButtonProps = ({ skill, isSelected, onClick }) => {
       }`}
       onClick={() => onClick(skill)}
     >
-      {isSelected ? '✔ ' : ''}
+      {isSelected && '✔ '}
       {skill}
     </div>
   );
