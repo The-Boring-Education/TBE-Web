@@ -529,3 +529,21 @@ export interface ToastProps {
   duration?: number;
   onClose?: () => void;
 }
+
+interface Option {
+  label: string;
+  value: string;
+}
+
+export interface RadioGroupProps {
+  options: Option[];
+  selectedValue?: string;
+  onChange: (value: string) => void;
+}
+
+export interface RadioButtonProps {
+  label: string;
+  value: string;
+  isSelected: boolean;
+  onChange: (value: string) => void;
+}

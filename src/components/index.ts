@@ -14,8 +14,8 @@ const ToggleButton = dynamic(
   () => import('@/components/common/Buttons/ToggleButton')
 );
 
-const SkillButton = dynamic(
-  () => import('@/components/common/Buttons/SkillButton')
+const RadioButton = dynamic(
+  () => import('@/components/common/Form/RadioButton')
 );
 
 const NotificationContainer = dynamic(
@@ -174,6 +174,9 @@ const PlaylistVideoCard = dynamic(
   () => import('@/components/containers/Cards/Items/PlaylistVideoCard')
 );
 
+const RadioGroup = dynamic(
+  () => import('@/components/containers/Page/common/RadioGroup ')
+);
 export {
   Navbar,
   LinkText as Link,
@@ -248,5 +251,6 @@ export {
   IconCard,
   HeaderLabel,
   Toast,
-  SkillButton,
+  RadioButton,
+  RadioGroup,
 };

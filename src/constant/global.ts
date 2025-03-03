@@ -3,6 +3,7 @@ import {
   MentorshipCardProps,
   PortfolioTemplateProps,
   ProductDataProps,
+  Option,
 } from '@/interfaces';
 import { routes } from './routes';
 import { envConfig } from './envConfig';
@@ -274,21 +275,21 @@ const PORTFOLIO_TEMPLATES: PortfolioTemplateProps[] = [
   },
 ];
 
-//  For YouFocus Explore Page
-const Skills = [
-  'React.js',
-  'Node.js',
-  'Java',
-  'DSA',
-  'Python',
-  'Flask',
-  'Django',
-  'Html',
-  'CSS',
-  'C++',
-  'DataScience',
-  'DataAnalysis',
-  'AI',
+// src/constants.ts
+const Skills: Option[] = [
+  { label: 'React.js', value: 'react' },
+  { label: 'Node.js', value: 'node' },
+  { label: 'Java', value: 'java' },
+  { label: 'DSA', value: 'dsa' },
+  { label: 'Python', value: 'python' },
+  { label: 'Flask', value: 'flask' },
+  { label: 'Django', value: 'django' },
+  { label: 'HTML', value: 'html' },
+  { label: 'CSS', value: 'css' },
+  { label: 'C++', value: 'cpp' },
+  { label: 'Data Science', value: 'datascience' },
+  { label: 'Data Analysis', value: 'dataanalysis' },
+  { label: 'AI', value: 'ai' },
 ];
 
 export {

@@ -4,15 +4,15 @@ import {
   Button,
   Section,
   SectionHeaderContainer,
-  SkillButton,
+  RadioGroup,
 } from '@/components';
 import { Skills } from '@/constant';
 
 const Home = () => {
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
 
-  const handleSkillClick = (skill: string) => {
-    setSelectedSkill(skill);
+  const handleSkillClick = (value: string) => {
+    setSelectedSkill(value);
   };
 
   const handleExploreClick = () => {
@@ -34,16 +34,13 @@ const Home = () => {
           />
         </div>
 
-        {/* Skill Selection Buttons */}
+        {/* Skill Selection using RadioGroup */}
         <FlexContainer className='flex-wrap justify-center gap-1 md:gap-2 mx-auto max-w-lg py-5'>
-          {Skills.map((skill, index) => (
-            <SkillButton
-              key={index}
-              skill={skill}
-              isSelected={selectedSkill === skill}
-              onClick={handleSkillClick}
-            />
-          ))}
+          <RadioGroup
+            options={Skills}
+            selectedValue={selectedSkill}
+            onChange={handleSkillClick}
+          />
         </FlexContainer>
 
         {/* Explore Button */}
