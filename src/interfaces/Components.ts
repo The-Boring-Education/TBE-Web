@@ -278,20 +278,19 @@ export interface CardContainerBProps extends BaseCardContainerProps {
   sectionClassName?: string;
 }
 
-export interface RadioOptionProps {
-  id: string;
+export interface RadioButtonOptionsProps {
   label: string;
-  description?: string;
+  value: string;
 }
 
 export interface InputRadioContainerProps {
-  radioItems: RadioOptionProps[];
+  radioItems: RadioButtonOptionsProps[];
   onChange: (itemId: string) => void;
-  selectedItemId?: string;
+  selectedItemValue?: string;
   className?: string;
 }
 
-export interface RadioInputFieldProps extends RadioOptionProps {
+export interface RadioInputFieldProps extends RadioButtonOptionsProps {
   onChange: (itemId: string) => void;
   selected?: boolean;
   className?: string;
@@ -439,7 +438,7 @@ export interface PlaylistCardProps {
   title: string;
   description: string;
   thumbnail: string;
-  isPlaylistVideoVisible?: boolean;
+  isStartedLearningFromPlaylist?: boolean;
   videoId?: string;
 }
 
@@ -522,4 +521,39 @@ export interface ToastProps {
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   duration?: number;
   onClose?: () => void;
+}
+
+export interface RadioButtonProps {
+  label: string;
+  value: string;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+export interface RadioGroupProps {
+  options: RadioButtonOptionsProps[];
+  selectedValue: string | null;
+  onChange: (value: string) => void;
+}
+
+export interface PlaylistSkillCardProps {
+  _id: string;
+  thumbnail: string;
+  playlistName: string;
+  referrerBy: number;
+  videos?: Video[];
+  noOfVideos: number;
+}
+
+export interface ExploreCantainerCardProps {
+  heading: string;
+  focusText: string;
+  subtext: string;
+  isCenterAligned?: boolean;
+}
+
+export interface FloatingActionButtonProps {
+  icon: React.ReactNode;
+  onClick: () => void;
+  className?: string;
 }

@@ -32,20 +32,21 @@ const PlaylistRecommend = ({
   };
 
   const handleRecommendPlaylist = async () => {
-    if (isRecommended) return;
-
     try {
       await makeRequest({
         url: `${routes.api.youfocusUserPlaylistById(playlistId, userId)}`,
         method: 'PATCH',
-        body: JSON.stringify({ isRecommended: true }),
+        body: JSON.stringify({ isRecommended: !isRecommended }), // Toggle value
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      setIsRecommended(true);
-      setThankYouMessage(true);
+      setIsRecommended((prev) => !prev);
+      if (!isRecommended) {
+        setThankYouMessage(true);
+      }
+
       setTimeout(() => setThankYouMessage(false), 3000);
     } catch (error) {
       console.error('Error recommending playlist:', error);
@@ -65,12 +66,17 @@ const PlaylistRecommend = ({
 
       <div className='mt-2 md:mt-4 flex justify-center gap-2'>
         <Button
-          variant='PRIMARY'
-          className={`text-nowrap text-white rounded-s-md ${
-            isRecommended || loading ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-          text={loading ? 'Recommending...' : 'Recommend'}
-          active={!isRecommended}
+          variant={isRecommended ? 'GHOST' : 'PRIMARY'}
+          className={`text-nowrap rounded-s-md ${
+            loading ? 'opacity-50 cursor-not-allowed' : ''
+          } ${!isRecommended ? 'text-white' : 'text-black'}`}
+          text={
+            loading
+              ? 'Updating...'
+              : isRecommended
+              ? 'Unrecommend'
+              : 'Recommend'
+          }
           onClick={handleRecommendPlaylist}
         />
 
@@ -85,7 +91,6 @@ const PlaylistRecommend = ({
       {thankYouMessage && (
         <Toast message='✅ Thank you for your recommendation! 😊' />
       )}
-
       {copied && <Toast message='✅ Playlist URL copied!' />}
     </FlexContainer>
   );

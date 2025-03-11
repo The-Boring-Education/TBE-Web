@@ -6,13 +6,13 @@ const PlaylistCard = ({
   title,
   description,
   thumbnail,
-  isPlaylistVideoVisible,
+  isStartedLearningFromPlaylist,
   videoId,
 }: PlaylistCardProps) => {
   return (
     <FlexContainer direction='col' className='gap-4 w-full items-baseline'>
       <div className='w-full border-1 border-black rounded-md overflow-hidden'>
-        {!isPlaylistVideoVisible ? (
+        {!isStartedLearningFromPlaylist ? (
           <Image
             src={thumbnail}
             alt={title}

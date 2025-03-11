@@ -3,6 +3,7 @@ import {
   MentorshipCardProps,
   PortfolioTemplateProps,
   ProductDataProps,
+  RadioButtonOptionsProps,
 } from '@/interfaces';
 import { routes } from './routes';
 import { envConfig } from './envConfig';
@@ -274,6 +275,17 @@ const PORTFOLIO_TEMPLATES: PortfolioTemplateProps[] = [
   },
 ];
 
+const YOUFOCUS_SKILL_PLAYLISTS: RadioButtonOptionsProps[] = [
+  { label: 'React.js', value: 'reactjs' },
+  { label: 'Node.js', value: 'nodejs' },
+  { label: 'HTML', value: 'html' },
+  { label: 'CSS', value: 'css' },
+  { label: 'C++', value: 'cpp' },
+  { label: 'Java', value: 'java' },
+  { label: 'Python', value: 'python' },
+  { label: 'DSA', value: 'dsa' },
+];
+
 export {
   imageMeta,
   products,
@@ -291,4 +303,5 @@ export {
   PORTFOLIO_CARDS,
   PORTFOLIO_TEMPLATES,
   cohorts,
+  YOUFOCUS_SKILL_PLAYLISTS,
 };

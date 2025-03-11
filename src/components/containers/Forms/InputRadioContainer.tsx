@@ -4,20 +4,19 @@ import { InputRadioContainerProps } from '@/interfaces';
 const InputRadioContainer = ({
   radioItems,
   onChange,
-  selectedItemId,
+  selectedItemValue,
   className,
 }: InputRadioContainerProps) => {
   return (
     <FlexContainer className={`gap-2 ${className}`}>
-      {radioItems.map(({ id, label, description }) => {
+      {radioItems.map(({ label, value }) => {
         return (
           <RadioInputField
-            key={id}
-            id={id}
+            key={label}
             label={label}
-            description={description}
+            value={value}
             onChange={onChange}
-            selected={selectedItemId === id}
+            selected={selectedItemValue === value}
           />
         );
       })}

@@ -13,7 +13,7 @@ const Home = ({ seoMeta }: PageProps) => {
           heading: 'Learn From YouTube',
           focusText: 'without Distractions',
         }}
-        heroText='Just Add A YouTube Playlist and Start Learning'
+        heroText='Just Paste Your YouTube Playlist and Start Learning'
         primaryButton={
           <LinkButton
             href={routes.youfocusAddPlaylist}
@@ -21,6 +21,17 @@ const Home = ({ seoMeta }: PageProps) => {
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Add YouTube Playlist',
+              className: 'w-full',
+            }}
+          />
+        }
+        secondaryButton={
+          <LinkButton
+            href={routes.explorePlaylist}
+            className='w-full sm:w-fit'
+            buttonProps={{
+              variant: 'OUTLINE',
+              text: 'Explore Playlists',
               className: 'w-full',
             }}
           />

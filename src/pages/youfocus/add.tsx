@@ -4,11 +4,12 @@ import { useRouter } from 'next/router';
 import {
   Button,
   FlexContainer,
-  Section,
   SectionHeaderContainer,
   SEO,
   InputFieldContainer,
   Toast,
+  ExplorePlaylistContainer,
+  Section,
 } from '@/components';
 import { getPreFetchProps } from '@/utils';
 import { useApi, useUser } from '@/hooks';
@@ -19,7 +20,6 @@ const Home = ({ seoMeta }: PageProps) => {
   const userId = user?.id;
   const router = useRouter();
 
-  // TODO: Remove this -> https://www.youtube.com/watch?v=ohIAiuHMKMI&list=PLinedj3B30sDby4Al-i13hQJGQoRQDfPo
   const [playlistUrl, setPlaylistUrl] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -38,22 +38,20 @@ const Home = ({ seoMeta }: PageProps) => {
     }
 
     try {
-      const { status, data, message } = await makeRequest({
+      const response = await makeRequest({
         method: 'POST',
         url: `${routes.api.youfocusPlaylist}?userId=${userId}`,
         body: { playlistUrl },
       });
 
-      if (status) {
+      if (response?.status && response.data?._id) {
         setSuccessMessage('Playlist added successfully! Redirecting...');
         setPlaylistUrl('');
         setTimeout(() => {
-          const playlistId = data._id;
-          const redirectUrl = `${routes.youfocusPlaylist}/${playlistId}`;
-          router.push(redirectUrl);
+          router.push(`${routes.youfocusPlaylist}/${response.data._id}`);
         }, 2000);
       } else {
-        setErrorMessage(message || 'Failed to add playlist');
+        setErrorMessage(response?.message || 'Failed to add playlist');
       }
     } catch (error) {
       setErrorMessage('Failed to add playlist. Please try again later.');
@@ -64,39 +62,48 @@ const Home = ({ seoMeta }: PageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <Section>
-        <FlexContainer direction='col' className='md:gap-6 gap-4'>
-          <SectionHeaderContainer
-            heading='Add Your'
-            focusText='Playlist'
-            headingLevel={2}
-            subtext='Learn Undistracted with Youtube Playlist'
-          />
-          <FlexContainer className='gap-3 w-full ' direction='col'>
-            <InputFieldContainer
-              label='Paste YouTube Playlist Link'
-              type='text'
-              onChange={handleInputChange}
-              className='md:w-1/2 md:px-5 text-black'
-              value={playlistUrl}
+        <FlexContainer className='gap-4 items-baseline'>
+          <FlexContainer
+            direction='col'
+            className='gap-6 px-4 py-4 md:px-8 md:py-8 self-stretch border rounded-2'
+          >
+            <SectionHeaderContainer
+              heading='Add Your'
+              focusText='Playlist'
+              headingLevel={4}
+              subtext='Learn Undistracted with YouTube Playlist'
             />
-
-            <Button
-              variant='PRIMARY'
-              className='m-auto'
-              text='Add Playlist'
-              active={!!playlistUrl || !!errorMessage}
-              isLoading={loading}
-              onClick={handleAddPlaylist}
-            />
-            {errorMessage && <Toast message={errorMessage} type='error' />}
-            {successMessage && (
-              <Toast message={successMessage} type='success' />
-            )}
+            <FlexContainer className='gap-3 w-full' direction='col'>
+              <InputFieldContainer
+                label='Paste YouTube Playlist Link'
+                type='text'
+                onChange={handleInputChange}
+                value={playlistUrl}
+              />
+              <Button
+                variant='PRIMARY'
+                className='m-auto'
+                text='Add Playlist'
+                active={!!playlistUrl}
+                isLoading={loading}
+                onClick={handleAddPlaylist}
+              />
+              {errorMessage && <Toast message={errorMessage} type='error' />}
+              {successMessage && (
+                <Toast message={successMessage} type='success' />
+              )}
+            </FlexContainer>
           </FlexContainer>
+          <ExplorePlaylistContainer
+            heading='Don’t Have A'
+            focusText='Playlist?'
+            subtext='Select an Skill, We’ll Recommend Playlists'
+          />
         </FlexContainer>
       </Section>
     </Fragment>
   );
 };
+
 export const getServerSideProps = getPreFetchProps;
 export default Home;

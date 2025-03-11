@@ -1,4 +1,10 @@
 import dynamic from 'next/dynamic';
+const ScrollToTopBottomButton = dynamic(
+  () => import('@/components/common/Buttons/ScrollToTopBottomButton')
+);
+const FloatingActionButton = dynamic(
+  () => import('@/components/common/Buttons/FloatingActionButton')
+);
 const Toast = dynamic(() => import('@/components/common/Toast'));
 const IconCard = dynamic(
   () => import('@/components/containers/Cards/Items/IconCard')
@@ -162,11 +168,27 @@ const BackgroundImage = dynamic(
 const PlaylistCard = dynamic(
   () => import('@/components/containers/Cards/Items/PlaylistCard')
 );
-const PlaylistContainerCard = dynamic(
-  () => import('@/components/containers/Cards/PlaylistContainerCard')
+const PlaylistContainer = dynamic(
+  () => import('@/components/containers/Page/YouFocus/PlaylistContainer')
 );
 const PlaylistVideoCard = dynamic(
   () => import('@/components/containers/Cards/Items/PlaylistVideoCard')
+);
+
+const RadioButtonContainer = dynamic(
+  () => import('@/components/containers/Forms/RadioButtonContainer')
+);
+
+const RadioButton = dynamic(
+  () => import('@/components/common/Form/RadioButton')
+);
+
+const PlaylistSkillCard = dynamic(
+  () => import('@/components/containers/Cards/PlaylistSkillCard')
+);
+
+const ExplorePlaylistContainer = dynamic(
+  () => import('@/components/containers/Page/YouFocus/ExplorePlaylistContainer')
 );
 
 export {
@@ -234,7 +256,7 @@ export {
   Modal,
   WebibarCard,
   ToggleButton,
-  PlaylistContainerCard,
+  PlaylistContainer,
   PlaylistCard,
   PlaylistVideoCard,
   NotificationContainer,
@@ -243,4 +265,10 @@ export {
   IconCard,
   HeaderLabel,
   Toast,
+  RadioButton,
+  RadioButtonContainer,
+  PlaylistSkillCard,
+  ExplorePlaylistContainer,
+  FloatingActionButton,
+  ScrollToTopBottomButton,
 };

@@ -228,10 +228,8 @@ const CoursePage = ({
               />
             </div>
           </FlexContainer>
-
-          {/* Main Content Area */}
           <FlexContainer
-            className='border md:w-8/12 w-full p-2 rounded'
+            className='border md:w-8/12 p-2 rounded'
             justifyCenter={false}
             itemCenter={false}
             disabled={!course.isEnrolled}

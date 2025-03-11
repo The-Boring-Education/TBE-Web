@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Button, FlexContainer } from '@/components';
 import { PlaylistVideoCard, PlaylistCard } from '@/components';
 import { PlaylistCantainerCardProps } from '@/interfaces';
-import PlaylistVideoTimeCard from './Items/PlaylistVideoTimeCard';
-import PlaylistRecommend from './Items/PlaylistRecommend';
+import PlaylistVideoTimeCard from '../../Cards/Items/PlaylistVideoTimeCard';
+import PlaylistRecommend from '../../Cards/Items/PlaylistRecommend';
 import { useUser } from '@/hooks';
 import { signIn } from 'next-auth/react';
 
-const PlaylistContainerCard = ({
+const PlaylistContainer = ({
   id,
   playlistName,
   description,
@@ -16,22 +16,23 @@ const PlaylistContainerCard = ({
   learningTime = 0,
   isRecommended,
 }: PlaylistCantainerCardProps) => {
-  const [isPlaylistVideoVisible, setIsPlaylistVideoVisible] = useState(false);
+  const [isStartedLearningFromPlaylist, setIsStartedLearningFromPlaylist] =
+    useState(false);
   const [selectedVideo, setSelectedVideo] = useState({
-    videoId: videos?.[0]?.videoId || '',
-    title: videos?.[0]?.title || '',
+    videoId: videos?.[0]?.videoId,
+    title: videos?.[0]?.title,
   });
 
   const { user, isAuth, loading } = useUser();
   const userId = user?.id;
 
-  const togglePlaylistVideo = () => {
+  const handleStartLearning = () => {
     if (loading) return;
     if (!isAuth) {
       signIn('google');
       return;
     }
-    setIsPlaylistVideoVisible((prev) => !prev);
+    setIsStartedLearningFromPlaylist(true);
   };
 
   return (
@@ -41,7 +42,7 @@ const PlaylistContainerCard = ({
         itemCenter={false}
       >
         <FlexContainer className='flex-1 max-w-full gap-2 md:sticky md:top-2 z-10'>
-          {isPlaylistVideoVisible && userId && (
+          {isStartedLearningFromPlaylist && userId && (
             <div className='w-full flex justify-center'>
               <PlaylistVideoTimeCard
                 usertime={learningTime}
@@ -52,19 +53,19 @@ const PlaylistContainerCard = ({
           )}
 
           <PlaylistCard
-            title={playlistName || selectedVideo.title}
+            title={selectedVideo.title || playlistName}
             description={description}
             thumbnail={thumbnail}
             videoId={selectedVideo.videoId}
-            isPlaylistVideoVisible={isPlaylistVideoVisible}
+            isStartedLearningFromPlaylist={isStartedLearningFromPlaylist}
           />
 
-          {!isPlaylistVideoVisible && (
+          {!isStartedLearningFromPlaylist && (
             <Button
               variant='PRIMARY'
               className='w-full mx-auto'
               text='Start Learning'
-              onClick={togglePlaylistVideo}
+              onClick={handleStartLearning}
             />
           )}
         </FlexContainer>
@@ -78,18 +79,19 @@ const PlaylistContainerCard = ({
               href: videoId,
             };
 
-            return isPlaylistVideoVisible ? (
+            return (
               <PlaylistVideoCard
                 {...commonProps}
-                onClick={() =>
+                key={title}
+                onClick={() => {
+                  handleStartLearning();
+                  scrollTo(0, 0);
                   setSelectedVideo({
                     videoId: videoId,
                     title: title,
-                  })
-                }
+                  });
+                }}
               />
-            ) : (
-              <PlaylistVideoCard {...commonProps} />
             );
           })}
         </FlexContainer>
@@ -108,4 +110,4 @@ const PlaylistContainerCard = ({
   );
 };
 
-export default PlaylistContainerCard;
+export default PlaylistContainer;

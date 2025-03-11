@@ -267,6 +267,26 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'My Playlist, Hands-on Learning, The Boring Education, Personal Playlists, Learning Platform, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
+    [`${routes.explorePlaylist}`]: {
+      title: 'Explore Playlists | YouFocus | The Boring Education',
+      siteName: 'Explore Playlists at YouFocus',
+      description:
+        'Discover and explore various playlists to enhance your study experience without distractions.',
+      url: routes.explorePlaylist,
+      keywords:
+        'Explore Playlists, Focus, Study, Productivity, The Boring Education, Online Learning, Distraction-Free Learning, Study Tools, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
+    [`${routes.explorePlaylistSkill}`]: {
+      title: 'Explore Playlist | YouFocus | The Boring Education',
+      siteName: 'Explore Playlist at YouFocus',
+      description:
+        'Discover and explore various playlists to enhance your study experience without distractions.',
+      url: routes.explorePlaylistSkill,
+      keywords:
+        'Explore Playlists, Focus, Study, Productivity, The Boring Education, Online Learning, Distraction-Free Learning, Study Tools, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
   };
 
   return meta[basePath];

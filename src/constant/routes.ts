@@ -51,7 +51,10 @@ const routes = {
   youfocus: '/youfocus',
   youfocusAddPlaylist: '/youfocus/add',
   youfocusPlaylist: '/youfocus/playlist',
-  explorePlaylist: '/youfocus/explore-playlist',
+  explorePlaylist: '/youfocus/explore',
+  explorePlaylistSkill: '/youfocus/explore/skill',
+  youfocusPlaylistPageById: (playlistId: string) =>
+    `/youfocus/playlist/${playlistId}`,
   // Cohort
   cohort: {
     bringYourIdea: '/cohort/bring-your-idea',
@@ -101,6 +104,7 @@ const routes = {
     certificate: '/certificate',
     certificateById: (certificate: string) => `/certificate/${certificate}`,
     youfocusPlaylist: '/youfocus',
+    youfocusExplore: '/youfocus/explore',
     youfocusUserPlaylistById: (playlistId: string, userId?: string) => {
       let url = `/youfocus/${playlistId}`;
       if (userId) {
@@ -108,6 +112,7 @@ const routes = {
       }
       return url;
     },
+    playlistByQuery: (query: string) => `/youfocus/explore?q=${query}`,
     userDashboard: '/user/dashboard',
     notification: '/notification',
   },

@@ -98,7 +98,7 @@ const MyCourses = ({ seoMeta }: PageProps) => {
         <Banner
           title='Contribute at The Boring Education'
           description='We’re an Open Source Tech Ed Startup. Feel free to contribute to Building Tech Education for Everyone'
-          buttonText='See Open Issues'
+          buttonText='Start Contributing'
           buttonLink={LINKS.contributeOpenSource}
           imageSrc={`${STATIC_FILE_PATH.svg}/community.svg`}
           variant='VARIANT_B'

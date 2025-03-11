@@ -23,12 +23,12 @@ const PlaylistVideoCard = ({
               className='object-cover w-full h-full rounded-md'
             />
           </div>
-          <div className='flex-1 p-2'>
+          <div className='p-2'>
             <Text
-              level='h6'
+              level='h5'
               className='heading-5 font-primary text-[1rem] md:text-[1.1rem] line-clamp-2'
             >
-              {title}
+              {title.substring(0, 30)}
             </Text>
           </div>
         </div>

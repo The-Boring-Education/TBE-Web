@@ -72,7 +72,7 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   const mdxHTML = md.render(mdxSource);
 
   const actionContainer = actions && (
-    <div className='flex justify-end gap-2'>
+    <div className='flex justify-start gap-2'>
       {actions.map((action, index) => (
         <Fragment key={index}>{action}</Fragment>
       ))}

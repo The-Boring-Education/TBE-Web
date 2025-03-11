@@ -1,4 +1,10 @@
-import { envConfig, LINKS, routes, YOUTUBE_API_PATH } from '@/constant';
+import {
+  envConfig,
+  LINKS,
+  routes,
+  YOUFOCUS_SKILL_PLAYLISTS,
+  YOUTUBE_API_PATH,
+} from '@/constant';
 import {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
@@ -152,7 +158,7 @@ const getSelectedSheetQuestionMeta = (
 };
 
 const isUserAuthenticated = async (req: any): Promise<User | null> => {
-  const cookie = req.headers.cookie || req.headers?.get('cookie');
+  const cookie = req.headers.cookie;
 
   try {
     const response = await fetch(`${envConfig.BASE_AUTH_API_URL}/session`, {
@@ -321,7 +327,49 @@ const generateShareTemplate = (
   return baseMessage;
 };
 
-// fetches playlist data (metadata and videos)
+const fetchPlaylistName = async (
+  playlistId: string
+): Promise<{
+  playlistName?: string;
+  description?: string;
+  thumbnail?: string;
+}> => {
+  try {
+    const response = await fetch(
+      `${YOUTUBE_API_PATH}/playlists?part=snippet&id=${playlistId}&key=${process.env.YOUTUBE_API_KEY}`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch playlist metadata: ${data.error.message}`
+      );
+    }
+
+    if (data.items.length === 0) {
+      throw new Error('No playlist found with the given ID');
+    }
+
+    const playlist = data.items[0].snippet;
+
+    return {
+      playlistName: playlist.title || 'Unknown Playlist',
+      description: playlist.description || 'No Description Available',
+      thumbnail:
+        playlist.thumbnails?.maxres?.url ||
+        playlist.thumbnails?.standard?.url ||
+        playlist.thumbnails?.high?.url ||
+        playlist.thumbnails?.medium?.url ||
+        playlist.thumbnails?.default?.url ||
+        '',
+    };
+  } catch (error) {
+    console.error('Error fetching playlist name:', error);
+    return {};
+  }
+};
+
 const fetchPlaylistData = async (
   playlistId: string,
   pageToken = '',
@@ -331,54 +379,61 @@ const fetchPlaylistData = async (
     description?: string;
     thumbnail?: string;
   } = {}
-): Promise<PlaylistModel> => {
-  const response = await fetch(
-    `${YOUTUBE_API_PATH}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&pageToken=${pageToken}&key=${process.env.YOUTUBE_API_KEY}`
-  );
-  const data = await response.json();
+): Promise<PlaylistModel | undefined> => {
+  try {
+    if (!metadata.playlistName) {
+      const playlistMetadata = await fetchPlaylistName(playlistId);
+      metadata.playlistName =
+        playlistMetadata.playlistName || 'Unknown Playlist';
+      metadata.description =
+        playlistMetadata.description || 'No Description Available';
+      metadata.thumbnail = playlistMetadata.thumbnail || '';
+    }
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch playlist data: ${data.error.message}`);
-  }
-
-  // Extract playlist metadata if not already set
-  if (!metadata.playlistName && data.items.length > 0) {
-    metadata.playlistName = data.items[0].snippet.title || '';
-    metadata.description =
-      data.items[0].snippet.description || 'No Description Available';
-    metadata.thumbnail = data.items[0].snippet.thumbnails?.maxres?.url || '';
-  }
-
-  // Extract video details
-  const videos: Video[] = data.items.map((item: any) => ({
-    title: item.snippet.title,
-    videoId: item.snippet.resourceId.videoId,
-    thumbnail:
-      item.snippet.thumbnails?.default?.url ||
-      'https://via.placeholder.com/150',
-  }));
-
-  // Accumulate videos
-  const allVideos = [...accumulatedVideos, ...videos];
-
-  // Continue fetching if there's a nextPageToken
-  if (data.nextPageToken) {
-    return fetchPlaylistData(
-      playlistId,
-      data.nextPageToken,
-      allVideos,
-      metadata
+    // Fetch videos
+    const response = await fetch(
+      `${YOUTUBE_API_PATH}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&pageToken=${pageToken}&key=${process.env.YOUTUBE_API_KEY}`
     );
-  }
 
-  // Return the complete data when no more pages
-  return {
-    playlistId,
-    playlistName: metadata.playlistName || ' ',
-    description: metadata.description || '',
-    thumbnail: metadata.thumbnail || '',
-    videos: allVideos,
-  };
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch playlist data: ${data.error.message}`);
+    }
+
+    // Extract video details
+    const videos: Video[] = data.items.map((item: any) => ({
+      title: item.snippet.title,
+      videoId: item.snippet.resourceId.videoId,
+      thumbnail:
+        item.snippet.thumbnails?.default?.url ||
+        'https://via.placeholder.com/150',
+    }));
+
+    // Accumulate videos
+    const allVideos = [...accumulatedVideos, ...videos];
+
+    // Continue fetching if there's a nextPageToken
+    if (data.nextPageToken) {
+      return fetchPlaylistData(
+        playlistId,
+        data.nextPageToken,
+        allVideos,
+        metadata
+      );
+    }
+
+    // Return the complete data when no more pages
+    return {
+      playlistId,
+      playlistName: metadata.playlistName || '',
+      description: metadata.description || '',
+      thumbnail: metadata.thumbnail || '',
+      videos: allVideos,
+    };
+  } catch (error) {
+    console.error('Error fetching playlist data:', error);
+  }
 };
 
 const extractPlaylistId = (url: string) => {
@@ -428,6 +483,12 @@ const flattenRoutesForSitemap = (routesObj: Record<string, any>): string[] => {
   return urls;
 };
 
+const getYoufocusSkillName = (query?: string) => {
+  if (!query) return 'Explore';
+
+  return YOUFOCUS_SKILL_PLAYLISTS.find((skill) => skill.value === query)?.label;
+};
+
 export {
   formatDate,
   formatTime,
@@ -453,4 +514,5 @@ export {
   flattenRoutesForSitemap,
   generateSitemap,
   mapUserPlaylistResponseToCard,
+  getYoufocusSkillName,
 };

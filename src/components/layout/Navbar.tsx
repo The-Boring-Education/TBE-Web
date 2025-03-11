@@ -32,7 +32,7 @@ const Navbar = () => {
 
   return (
     <header>
-      <nav className='flex items-center justify-between p-2 lg:px-8'>
+      <nav className='flex items-center justify-between p-2 lg:px-8 border'>
         <div className='w-100 flex'>
           <Logo />
         </div>

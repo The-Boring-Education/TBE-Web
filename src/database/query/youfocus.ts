@@ -14,6 +14,23 @@ const addPlaylistToDB = async (
   }
 };
 
+const updateTagsInPlaylist = async (
+  playlistId: string,
+  tags: string[]
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const updatedPlaylist = await Playlist.findOneAndUpdate(
+      { _id: playlistId },
+      { $set: { tags } },
+      { new: true }
+    );
+
+    return { data: updatedPlaylist };
+  } catch (error) {
+    return { error };
+  }
+};
+
 const addUserPlaylistToDB = async (
   userId: string,
   playlistId: string
@@ -36,17 +53,18 @@ const addUserPlaylistToDB = async (
     await userPlaylist.save();
     return { data: userPlaylist };
   } catch (error) {
-    return { error: 'Failed to link playlist to user' };
+    return { error };
   }
 };
 
-const incrementReferredByInPlaylist = async (
-  playlistId: string
+const updateReferredByInPlaylist = async (
+  playlistId: string,
+  increment: boolean
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const updatedPlaylist = await Playlist.findOneAndUpdate(
-      { playlistId },
-      { $inc: { referrerBy: 1 } },
+      { _id: playlistId },
+      { $inc: { referrerBy: increment ? 1 : -1 } },
       { new: true }
     );
 
@@ -56,7 +74,7 @@ const incrementReferredByInPlaylist = async (
 
     return { data: updatedPlaylist };
   } catch (error) {
-    return { error };
+    return { error: `An error occurred: ${error}` };
   }
 };
 
@@ -153,7 +171,10 @@ const getUserPlaylistsFromDB = async (
     const userPlaylists = await UserPlaylist.find({ userId })
       .populate('playlistId')
       .lean()
-      .exec();
+      .exec()
+      .then((data) => {
+        return data.filter((item) => item.playlistId); // If Playlist ID doesn't exist -> Skip
+      });
 
     if (!userPlaylists.length) {
       return { error: 'User does not have any playlists' };
@@ -216,13 +237,34 @@ const updateUserPlaylistData = async (
     if (!updatedUserPlaylist) return { error: 'Failed to update UserPlaylist' };
 
     let updatedPlaylist = null;
-    if (isRecommended === true && userPlaylist.isRecommended === false) {
-      updatedPlaylist = await incrementReferredByInPlaylist(playlistId);
+    if (
+      isRecommended !== undefined &&
+      userPlaylist.isRecommended !== isRecommended
+    ) {
+      updatedPlaylist = await updateReferredByInPlaylist(
+        playlistId,
+        isRecommended
+      );
     }
-
     return { data: { updatedUserPlaylist, updatedPlaylist } };
   } catch (error) {
     return { error: `An error occurred: ${error}` };
+  }
+};
+
+const getPlaylistByTagFromDB = async (
+  tags: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const playlists = await Playlist.find({ tags: { $in: [tags] } });
+
+    if (!playlists || playlists.length === 0) {
+      return { error: 'No playlists found for the given skill.' };
+    }
+
+    return { data: playlists };
+  } catch (error) {
+    return { error: error };
   }
 };
 
@@ -235,5 +277,7 @@ export {
   getUserPlaylistsFromDB,
   deleteUserPlaylistFromDB,
   updateUserPlaylistData,
-  incrementReferredByInPlaylist,
+  updateReferredByInPlaylist,
+  getPlaylistByTagFromDB,
+  updateTagsInPlaylist,
 };

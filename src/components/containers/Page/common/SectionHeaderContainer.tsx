@@ -11,7 +11,7 @@ const SectionHeaderContainer = ({
 }: SectionHeaderProps) => {
   return (
     <FlexContainer
-      className={`w-full gap-1 ${className}`}
+      className={`gap-1 ${className}`}
       {...flexContainerProps}
       direction='col'
     >
@@ -30,11 +30,7 @@ const SectionHeaderContainer = ({
         </Text>
       </Text>
       {subtext && (
-        <Text
-          level='span'
-          className='strong-text text-greyDark'
-          textCenter={true}
-        >
+        <Text level='span' className='pre-text text-greyDark' textCenter={true}>
           {subtext}
         </Text>
       )}

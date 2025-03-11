@@ -3,18 +3,17 @@ import { STATIC_FILE_PATH } from '@/constant';
 import { RadioInputFieldProps } from '@/interfaces';
 
 const RadioInputField = ({
-  id,
   label,
-  description,
+  value,
   selected,
   onChange,
 }: RadioInputFieldProps) => {
   return (
     <label
-      key={id}
-      htmlFor={id}
+      key={value}
+      htmlFor={value}
       className='w-full cursor-pointer md:w-fit'
-      onClick={() => onChange(id)}
+      onClick={() => onChange(value)}
     >
       <input type='radio' name='custom-radio' className='hidden' />
       <FlexContainer
@@ -25,9 +24,6 @@ const RadioInputField = ({
         <FlexContainer direction='col'>
           <Text level='p' className='strong-text text-contentDark'>
             {label}
-          </Text>
-          <Text level='p' className='pre-title text-contentDark'>
-            {description}
           </Text>
         </FlexContainer>
         {selected && (

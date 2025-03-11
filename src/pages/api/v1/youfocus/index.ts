@@ -8,7 +8,8 @@ import {
   addPlaylistToDB,
   getPlaylistsFromDB,
   addUserPlaylistToDB,
-  incrementReferredByInPlaylist,
+  updateReferredByInPlaylist,
+  updateTagsInPlaylist,
 } from '@/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -34,7 +35,7 @@ const handleAddPlaylist = async (
   res: NextApiResponse,
   userId: string
 ) => {
-  const { playlistUrl } = req.body;
+  const { playlistUrl, tags } = req.body;
 
   const playlistId = extractPlaylistId(playlistUrl);
 
@@ -49,10 +50,23 @@ const handleAddPlaylist = async (
 
   if (existingPlaylist) {
     // 1. Add playlist to user
-    await addUserPlaylistToDB(userId, existingPlaylist._id);
+    if (userId) await addUserPlaylistToDB(userId, existingPlaylist._id);
 
     // 2. Increment referredBy in playlist
-    await incrementReferredByInPlaylist(existingPlaylist._id);
+    await updateReferredByInPlaylist(existingPlaylist._id, true);
+
+    // 3. If Tags exist, update tags in playlist
+    if (tags) {
+      const { data } = await updateTagsInPlaylist(existingPlaylist._id, tags);
+
+      return res.status(apiStatusCodes.RESOURCE_CREATED).json(
+        sendAPIResponse({
+          status: true,
+          message: 'Playlist already exists',
+          data,
+        })
+      );
+    }
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json(
       sendAPIResponse({
@@ -75,7 +89,10 @@ const handleAddPlaylist = async (
     }
 
     // Add playlist to the database
-    const { error, data: newPlaylist } = await addPlaylistToDB(playlistData);
+    const { error, data: playlist } = await addPlaylistToDB({
+      ...playlistData,
+      tags,
+    });
 
     if (error) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
@@ -87,24 +104,26 @@ const handleAddPlaylist = async (
       );
     }
 
-    const { error: userPlaylistError } = await addUserPlaylistToDB(
-      userId,
-      newPlaylist._id
-    );
+    if (userId) {
+      const { error: userPlaylistError } = await addUserPlaylistToDB(
+        userId,
+        playlist._id
+      );
 
-    if (userPlaylistError) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-        status: false,
-        message: 'Failed to link user and playlist',
-        error: userPlaylistError,
-      });
+      if (userPlaylistError) {
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
+          status: false,
+          message: 'Failed to link user and playlist',
+          error: userPlaylistError,
+        });
+      }
     }
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json(
       sendAPIResponse({
         status: true,
         message: 'Playlist added successfully!',
-        data: newPlaylist,
+        data: playlist,
       })
     );
   } catch (error) {

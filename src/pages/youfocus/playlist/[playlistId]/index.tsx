@@ -1,5 +1,10 @@
 import { PlaylistPageProps } from '@/interfaces';
-import { SEO, PlaylistContainerCard, Section } from '@/components';
+import {
+  SEO,
+  PlaylistContainer,
+  Section,
+  ScrollToTopBottomButton,
+} from '@/components';
 import { getPlaylistPageProps } from '@/utils';
 import { Fragment } from 'react';
 
@@ -19,7 +24,7 @@ const PlaylistPage = ({
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <Section className='p-2'>
-        <PlaylistContainerCard
+        <PlaylistContainer
           id={_id.toString()}
           playlistName={playlistName}
           description={description}
@@ -28,6 +33,7 @@ const PlaylistPage = ({
           learningTime={learningTime}
           isRecommended={isRecommended}
         />
+        <ScrollToTopBottomButton />
       </Section>
     </Fragment>
   );
