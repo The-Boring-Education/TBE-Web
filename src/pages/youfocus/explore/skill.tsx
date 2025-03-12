@@ -35,7 +35,7 @@ const Explore = ({ seoMeta }: PageProps) => {
             />
           </div>
 
-          {loading && <Toast type='error' message='Playlists Loading...' />}
+          {loading && <Toast message='Playlists Loading...' />}
           {errorMessage && <Toast type='error' message={errorMessage} />}
 
           <FlexContainer className='w-full md:gap-4 gap-2'>
