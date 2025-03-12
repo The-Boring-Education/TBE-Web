@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET':
       return getPlaylistById(req, res, playlistId, userId);
     case 'DELETE':
-      return deletePlaylistById(req, res, playlistId);
+      return handleDeletePlaylistById(req, res, playlistId);
     case 'PATCH': {
       const { isRecommended, learningTime } = req.body;
       return handleUpdateUserPlaylist(
@@ -111,7 +111,7 @@ const handleUpdateUserPlaylist = async (
   );
 };
 
-const deletePlaylistById = async (
+const handleDeletePlaylistById = async (
   req: NextApiRequest,
   res: NextApiResponse,
   playlistId: string
