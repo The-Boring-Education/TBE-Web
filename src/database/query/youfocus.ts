@@ -268,6 +268,39 @@ const getPlaylistByTagFromDB = async (
   }
 };
 
+const DeletePlaylistFromDB = async (
+  playlistsId: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const playlist = await Playlist.findOneAndDelete({ _id: playlistsId });
+
+    if (!playlist) {
+      return { error: 'Playlist does not exist' };
+    }
+
+    return { data: playlist };
+  } catch (error) {
+    return { error: error };
+  }
+};
+
+const DeletePlaylistByTagFromDB = async (
+  tag: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const playlists = await Playlist.deleteMany({ tags: tag });
+
+    if (!playlists) {
+      return { error: 'No playlists found for the given skill.' };
+    }
+    return {
+      data: playlists,
+    };
+  } catch (error) {
+    return { error: error };
+  }
+};
+
 export {
   addPlaylistToDB,
   checkPlaylistExistsByID,
@@ -280,4 +313,6 @@ export {
   updateReferredByInPlaylist,
   getPlaylistByTagFromDB,
   updateTagsInPlaylist,
+  DeletePlaylistFromDB,
+  DeletePlaylistByTagFromDB,
 };
