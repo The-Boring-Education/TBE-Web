@@ -1,3 +1,4 @@
+import path from 'path';
 import {
   CertificateType,
   DifficultyType,
@@ -37,11 +38,11 @@ const DIFFICULTY_LEVEL: DifficultyType[] = [
 const CERTIFICATE_TYPE: CertificateType[] = ['WEBINAR', 'SHIKSHA'];
 
 const USER_POINTS_ACTION: UserPointsActionType[] = [
-  'enroll',
-  'complete_chapter',
-  'complete_course',
-  'streak',
-  'refer',
+  'ENROLL',
+  'COMPLETE_CHAPTER',
+  'COMPLETE_COURSE',
+  'STREAK',
+  'REFER',
 ];
 
 const NOTIFICATION_TYPE: NotificationType[] = [
@@ -54,6 +55,8 @@ const NOTIFICATION_TYPE: NotificationType[] = [
 
 const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
 
+const UNSKILL_DATA_FILE = path.resolve('src/data/unskilled.json');
+
 export {
   PROJECT_SKILLS,
   ROADMAPS,
@@ -63,4 +66,5 @@ export {
   YOUTUBE_API_PATH,
   NOTIFICATION_TYPE,
   USER_POINTS_ACTION,
+  UNSKILL_DATA_FILE,
 };

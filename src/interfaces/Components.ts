@@ -64,6 +64,7 @@ export interface ButtonProps {
   active?: boolean;
   isLoading?: boolean;
   animationClasses?: string;
+  icon?: React.ReactNode;
 }
 
 export interface PageLayoutProps {
@@ -281,14 +282,6 @@ export interface CardContainerBProps extends BaseCardContainerProps {
 export interface RadioButtonOptionsProps {
   label: string;
   value: string;
-}
-
-export interface PointsRulesProps {
-  enroll: number;
-  complete_chapter: number;
-  complete_course: number;
-  streak: number;
-  refer: number;
 }
 
 export interface InputRadioContainerProps {
@@ -574,4 +567,9 @@ export interface FloatingActionButtonProps {
   icon: React.ReactNode;
   onClick: () => void;
   className?: string;
+}
+
+export interface TabProps {
+  tabLabels: string[];
+  tabPanels: React.ReactNode[];
 }

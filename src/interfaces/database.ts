@@ -6,7 +6,6 @@ import {
   RoadmapsType,
   SkillsType,
   WebinarEnrolledUsersProps,
-  UserPointsActionType,
 } from '.';
 
 export interface UserModel {
@@ -229,7 +228,7 @@ export interface JobModel extends Document {
   platform: string;
 }
 export interface UserPointsAction extends Document {
-  actionType: UserPointsActionType;
+  actionType: string;
   pointsEarned: number;
   timestamp: Date;
 }

@@ -1,0 +1,129 @@
+{
+  "lastUpdated": "2025-03-13",
+  "trendingSkills": [
+    {
+      "name": "Java",
+      "count": 2576
+    },
+    {
+      "name": "Python",
+      "count": 2286
+    },
+    {
+      "name": "React.js",
+      "count": 1504
+    },
+    {
+      "name": "JavaScript",
+      "count": 1434
+    },
+    {
+      "name": "AWS",
+      "count": 1293
+    },
+    {
+      "name": "Node.js",
+      "count": 961
+    },
+    {
+      "name": "SQL",
+      "count": 899
+    },
+    {
+      "name": "Data Structures",
+      "count": 793
+    },
+    {
+      "name": "Golang",
+      "count": 693
+    },
+    {
+      "name": "Spring",
+      "count": 622
+    }
+  ],
+  "topLocations": [
+    {
+      "name": "Bangalore",
+      "count": 4486
+    },
+    {
+      "name": "Work From Home",
+      "count": 758
+    },
+    {
+      "name": "Hyderabad",
+      "count": 700
+    },
+    {
+      "name": "Gurgaon",
+      "count": 555
+    },
+    {
+      "name": "Mumbai",
+      "count": 490
+    },
+    {
+      "name": "Pune",
+      "count": 370
+    },
+    {
+      "name": "Chennai",
+      "count": 316
+    },
+    {
+      "name": "Noida",
+      "count": 168
+    },
+    {
+      "name": "Delhi",
+      "count": 125
+    },
+    {
+      "name": "Bangalore,Hyderabad",
+      "count": 64
+    }
+  ],
+  "jobDomains": [
+    {
+      "name": "Backend Development",
+      "count": 3580
+    },
+    {
+      "name": "Full-Stack Development",
+      "count": 1727
+    },
+    {
+      "name": "Frontend Development",
+      "count": 1174
+    },
+    {
+      "name": "Other Software Development",
+      "count": 661
+    },
+    {
+      "name": "QA / SDET",
+      "count": 556
+    },
+    {
+      "name": "Data Science / Machine Learning",
+      "count": 550
+    },
+    {
+      "name": "DevOps / Cloud",
+      "count": 519
+    },
+    {
+      "name": "Big Data / DWH / ETL",
+      "count": 467
+    },
+    {
+      "name": "Engineering Management",
+      "count": 353
+    },
+    {
+      "name": "Mobile Development",
+      "count": 345
+    }
+  ]
+}

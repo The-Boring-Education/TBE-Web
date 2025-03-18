@@ -4,7 +4,7 @@ import {
   PortfolioTemplateProps,
   ProductDataProps,
   RadioButtonOptionsProps,
-  PointsRulesProps,
+  UserPointsActionType,
 } from '@/interfaces';
 import { routes } from './routes';
 import { envConfig } from './envConfig';
@@ -287,12 +287,12 @@ const YOUFOCUS_SKILL_PLAYLISTS: RadioButtonOptionsProps[] = [
   { label: 'DSA', value: 'dsa' },
 ];
 
-const POINTS_RULES: PointsRulesProps = {
-  enroll: 10,
-  complete_chapter: 5,
-  complete_course: 50,
-  streak: 3,
-  refer: 20,
+const POINTS_RULES: Record<UserPointsActionType, number> = {
+  ENROLL: 10,
+  COMPLETE_CHAPTER: 5,
+  COMPLETE_COURSE: 50,
+  STREAK: 3,
+  REFER: 20,
 };
 
 export {

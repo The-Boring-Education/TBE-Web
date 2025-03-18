@@ -80,12 +80,15 @@ export interface WebinarPageProps extends WebinarModel {
 
 export type CertificateType = 'WEBINAR' | 'SHIKSHA';
 
-export type UserPointsActionType =
-  | 'enroll'
-  | 'complete_chapter'
-  | 'complete_course'
-  | 'streak'
-  | 'refer';
+const UserPointsActionType = [
+  'ENROLL',
+  'COMPLETE_CHAPTER',
+  'COMPLETE_COURSE',
+  'STREAK',
+  'REFER',
+] as const;
+
+export type UserPointsActionType = (typeof UserPointsActionType)[number];
 
 export type NotificationType =
   | 'WEBINAR'

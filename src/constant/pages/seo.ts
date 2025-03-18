@@ -287,6 +287,16 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'Explore Playlists, Focus, Study, Productivity, The Boring Education, Online Learning, Distraction-Free Learning, Study Tools, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
+    [`${routes.unskilled}`]: {
+      title: 'UnSkilled | The Boring Education',
+      siteName: 'UnSkilled at The Boring Education',
+      description:
+        'UnSkilled is a platform to help Job Seekers find the Missing Skills. It provides insights into the most in-demand skills, job roles, and tech hubs.',
+      url: routes.unskilled,
+      keywords:
+        'UnSkilled, Job Seekers, Missing Skills, In-demand Skills, Job Roles, Tech Hubs, The Boring Education, Online Learning, Programming, College Students, Working professional, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
   };
 
   return meta[basePath];

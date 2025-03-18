@@ -11,6 +11,7 @@ import {
   PopoverContainer,
   Text,
   UserAvatar,
+  UserPointButton,
 } from '..';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
@@ -19,7 +20,6 @@ import { LINKS, TOP_NAVIGATION } from '@/constant';
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const session = useSession();
-
   const [openPopover, setOpenPopover] = useState<string | null>(null);
 
   const handleSetOpen = (popoverName: string) => {
@@ -42,6 +42,7 @@ const Navbar = () => {
             className='-m-2.5 flex gap-2 items-center justify-center rounded-md p-2.5 text-black'
             onClick={() => setMobileMenuOpen(true)}
           >
+            <UserPointButton />
             <UserAvatar />
             <Bars3Icon className='h-6 w-6' aria-hidden='true' color='black' />
           </button>
@@ -69,6 +70,8 @@ const Navbar = () => {
           >
             <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
           </PopoverContainer>
+
+          <UserPointButton />
           <LoginWithGoogleButton text='Login' />
           <UserAvatar />
         </div>

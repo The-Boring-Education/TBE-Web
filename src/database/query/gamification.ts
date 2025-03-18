@@ -6,18 +6,20 @@ import {
   DatabaseQueryResponseType,
 } from '@/interfaces';
 
-const updateGamificationRecord = async (
-  userId: string,
-  actionType: UserPointsActionType
-) => {
+const updateGamificationRecord = async (userId: string, actionType: string) => {
   try {
+    console.log('Received ActionType:', actionType);
+
     let gamification = await Gamification.findOne({ userId });
 
     if (!gamification) {
       gamification = new Gamification({ userId, points: 0, actions: [] });
     }
 
-    const pointsEarned = POINTS_RULES[actionType] || 0;
+    const pointsEarned =
+      POINTS_RULES[actionType.toUpperCase() as UserPointsActionType] || 0;
+    console.log(pointsEarned);
+
     const action: UserPointsAction = {
       actionType,
       pointsEarned,
@@ -29,8 +31,8 @@ const updateGamificationRecord = async (
 
     return { success: true, points: gamification.points };
   } catch (error) {
-    console.error(error);
-    return { success: false, message: 'Error updating gamification record' };
+    console.error('Gamification Error:', error);
+    return { success: false, message: error };
   }
 };
 

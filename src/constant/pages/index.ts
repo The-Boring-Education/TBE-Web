@@ -420,6 +420,7 @@ const YOUFOCUS_FEATURES: PrimaryCardProps[] = [
     imageAltText: `Recommendation`,
   },
 ];
+
 export {
   PRODUCTS,
   TESTIMONIALS,
