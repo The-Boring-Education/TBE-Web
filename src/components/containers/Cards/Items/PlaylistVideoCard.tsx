@@ -24,11 +24,8 @@ const PlaylistVideoCard = ({
             />
           </div>
           <div className='p-2'>
-            <Text
-              level='h5'
-              className='heading-5 font-primary text-[1rem] md:text-[1.1rem] line-clamp-2'
-            >
-              {title.substring(0, 30)}
+            <Text level='p' className='paragraph line-clamp-2'>
+              {title}
             </Text>
           </div>
         </div>

@@ -64,6 +64,7 @@ export interface ButtonProps {
   active?: boolean;
   isLoading?: boolean;
   animationClasses?: string;
+  icon?: React.ReactNode;
 }
 
 export interface PageLayoutProps {
@@ -283,6 +284,13 @@ export interface RadioButtonOptionsProps {
   value: string;
 }
 
+export interface UserLevel {
+  name: string;
+  value: string;
+  minPoints: number;
+  level: number;
+}
+
 export interface InputRadioContainerProps {
   radioItems: RadioButtonOptionsProps[];
   onChange: (itemId: string) => void;
@@ -310,6 +318,12 @@ export interface ProjectHeroContainerProps {
   isEnrolled?: boolean;
 }
 
+export interface LevelInfoProps {
+  level: number;
+  pointsNeeded: number;
+  currentLevel: string;
+  nextLevel: string;
+}
 export interface CourseHeroContainerProps {
   name: string;
   isEnrolled?: boolean;
@@ -333,6 +347,7 @@ export interface AccordionLinkItemProps {
   href: string;
   className?: string;
   isCompleted?: boolean;
+  isActive: boolean;
   onClick?: MouseEventHandler<HTMLDivElement>;
 }
 
@@ -410,6 +425,15 @@ export interface BannerProps {
   buttonLink: string;
   imageSrc: string;
   variant?: 'VARIANT_A' | 'VARIANT_B';
+}
+
+export interface ActionBannerProps {
+  backgroundColor: string;
+  heading: string;
+  subtext: string;
+  icon: React.ElementType;
+  isLocked: boolean;
+  onClick: () => void;
 }
 
 export interface ModalProps {
@@ -556,4 +580,23 @@ export interface FloatingActionButtonProps {
   icon: React.ReactNode;
   onClick: () => void;
   className?: string;
+}
+
+export interface TabProps {
+  tabLabels: string[];
+  tabPanels: React.ReactNode[];
+}
+
+export interface ProgressRingProps {
+  progress: number;
+  point: number;
+}
+
+export interface LevelProgressCardProps {
+  points: number;
+  currentLevel: number;
+  currentLevelName: string;
+  nextLevelName?: string;
+  pointsLeftToNextLevel: number;
+  percentageProgress: number;
 }

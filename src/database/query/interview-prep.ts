@@ -6,7 +6,7 @@ import {
   BaseInterviewSheetResponseProps,
   UpdateInterviewSheetRequestPayloadProps,
 } from '@/interfaces';
-import { InterviewSheet, UserSheet } from '@/database';
+import { InterviewSheet, UserSheet, updateUserPointsInDB } from '@/database';
 import { modelSelectParams } from '@/constant';
 
 const addAInterviewSheetToDB = async (
@@ -178,6 +178,9 @@ const enrollInASheet = async ({
       sheetId,
       questions,
     });
+
+    // Enrollment Sheet was successful add Points
+    await updateUserPointsInDB(userId, 'ENROLL_SHEET');
 
     return { data: userSheet };
   } catch (error) {

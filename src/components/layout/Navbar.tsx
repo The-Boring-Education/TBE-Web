@@ -11,15 +11,16 @@ import {
   PopoverContainer,
   Text,
   UserAvatar,
+  UserPointButton,
 } from '..';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { LINKS, TOP_NAVIGATION } from '@/constant';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const session = useSession();
-
   const [openPopover, setOpenPopover] = useState<string | null>(null);
 
   const handleSetOpen = (popoverName: string) => {
@@ -42,6 +43,7 @@ const Navbar = () => {
             className='-m-2.5 flex gap-2 items-center justify-center rounded-md p-2.5 text-black'
             onClick={() => setMobileMenuOpen(true)}
           >
+            <UserPointButton />
             <UserAvatar />
             <Bars3Icon className='h-6 w-6' aria-hidden='true' color='black' />
           </button>
@@ -69,6 +71,8 @@ const Navbar = () => {
           >
             <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
           </PopoverContainer>
+
+          <UserPointButton />
           <LoginWithGoogleButton text='Login' />
           <UserAvatar />
         </div>
@@ -91,77 +95,87 @@ const Navbar = () => {
               <XMarkIcon className='h-6 w-6' aria-hidden='true' />
             </button>
           </div>
-          <div className='mt-6 flow-root'>
-            <div className='divide-white-500/10 -my-6 divide-y'>
-              <FlexContainer
-                className='gap-2 space-y-2 py-6'
-                direction='col'
-                itemCenter={false}
-              >
-                {session.status === 'unauthenticated' && (
+          <AnimatePresence>
+            <motion.div
+              key='cohorts-popover'
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className='mt-6 flow-root'>
+                <div className='divide-white-500/10 -my-6 divide-y'>
                   <FlexContainer
-                    itemCenter={false}
-                    justifyCenter={false}
+                    className='gap-2 space-y-2 py-6'
                     direction='col'
-                    className='gap-1'
+                    itemCenter={false}
                   >
-                    <Text level='span' className='pre-title text-greyDark'>
-                      Get Started
-                    </Text>
+                    {session.status === 'unauthenticated' && (
+                      <FlexContainer
+                        itemCenter={false}
+                        justifyCenter={false}
+                        direction='col'
+                        className='gap-1'
+                      >
+                        <Text level='span' className='pre-title text-greyDark'>
+                          Get Started
+                        </Text>
+                        <FlexContainer
+                          itemCenter={false}
+                          justifyCenter={false}
+                          direction='col'
+                          className='gap-1'
+                        >
+                          <LoginWithGoogleButton text='Login' />
+                        </FlexContainer>
+                      </FlexContainer>
+                    )}
+                    <MobileNavbarLinksContainer
+                      title='Cohorts'
+                      links={TOP_NAVIGATION.cohorts}
+                      onLinkClick={handleCloseMobileMenu}
+                    />
+                    <MobileNavbarLinksContainer
+                      title='Products'
+                      links={TOP_NAVIGATION.products}
+                      onLinkClick={handleCloseMobileMenu}
+                    />
+                    <MobileNavbarLinksContainer
+                      title='Links'
+                      links={TOP_NAVIGATION.links}
+                      onLinkClick={handleCloseMobileMenu}
+                    />
+
                     <FlexContainer
                       itemCenter={false}
                       justifyCenter={false}
                       direction='col'
                       className='gap-1'
                     >
-                      <LoginWithGoogleButton text='Login' />
+                      <Text level='span' className='pre-title text-greyDark'>
+                        Connect with us
+                      </Text>
+                      <FlexContainer
+                        itemCenter={false}
+                        justifyCenter={false}
+                        className='gap-1'
+                      >
+                        <Link href={LINKS.instagram} target='_blank'>
+                          <FaInstagram color='black' size='2em' />
+                        </Link>
+                        <Link href={LINKS.youtube} target='_blank'>
+                          <FaYoutube color='black' size='2em' />
+                        </Link>
+                        <Link href={LINKS.officialLinkedIn} target='_blank'>
+                          <FaLinkedin color='black' size='2em' />
+                        </Link>
+                      </FlexContainer>
                     </FlexContainer>
                   </FlexContainer>
-                )}
-                <MobileNavbarLinksContainer
-                  title='Cohorts'
-                  links={TOP_NAVIGATION.cohorts}
-                  onLinkClick={handleCloseMobileMenu}
-                />
-                <MobileNavbarLinksContainer
-                  title='Products'
-                  links={TOP_NAVIGATION.products}
-                  onLinkClick={handleCloseMobileMenu}
-                />
-                <MobileNavbarLinksContainer
-                  title='Links'
-                  links={TOP_NAVIGATION.links}
-                  onLinkClick={handleCloseMobileMenu}
-                />
-
-                <FlexContainer
-                  itemCenter={false}
-                  justifyCenter={false}
-                  direction='col'
-                  className='gap-1'
-                >
-                  <Text level='span' className='pre-title text-greyDark'>
-                    Connect with us
-                  </Text>
-                  <FlexContainer
-                    itemCenter={false}
-                    justifyCenter={false}
-                    className='gap-1'
-                  >
-                    <Link href={LINKS.instagram} target='_blank'>
-                      <FaInstagram color='black' size='2em' />
-                    </Link>
-                    <Link href={LINKS.youtube} target='_blank'>
-                      <FaYoutube color='black' size='2em' />
-                    </Link>
-                    <Link href={LINKS.officialLinkedIn} target='_blank'>
-                      <FaLinkedin color='black' size='2em' />
-                    </Link>
-                  </FlexContainer>
-                </FlexContainer>
-              </FlexContainer>
-            </div>
-          </div>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </Dialog.Panel>
       </Dialog>
     </header>

@@ -35,6 +35,7 @@ const Button = ({
   isLoading = false,
   onClick,
   animationClasses = '',
+  icon,
 }: ButtonProps) => {
   let baseClasses = 'button px-2 py-1';
   baseClasses = getButtonClasses(baseClasses, variant, active);
@@ -56,6 +57,7 @@ const Button = ({
       >
         {loadingContainer}
         {text}
+        {icon && <span>{icon}</span>}
       </button>
     </motion.div>
   );

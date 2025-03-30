@@ -2,7 +2,11 @@ import { apiStatusCodes } from '@/constant';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { sendAPIResponse } from '@/utils';
 import { connectDB } from '@/middlewares';
-import { markQuestionCompletedByUser, getAllQuestionsByUser } from '@/database';
+import {
+  markQuestionCompletedByUser,
+  getAllQuestionsByUser,
+  handleGamificationPoints,
+} from '@/database';
 import {
   MarkQuestionCompletedRequestProps,
   GetAllQuestionsRequestProps,
@@ -61,6 +65,8 @@ const handleMarkQuestionCompleted = async (
         })
       );
     }
+
+    await handleGamificationPoints(isCompleted, userId, 'COMPLETE_QUESTION');
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({

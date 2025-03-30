@@ -73,7 +73,7 @@ const PlaylistContainer = ({
           {videos?.map(({ videoId, title, thumbnail }) => {
             const commonProps = {
               key: videoId,
-              title: title,
+              title,
               image: thumbnail,
               imageAltText: `${title} thumbnail | ${playlistName} | YouFocus`,
               href: videoId,

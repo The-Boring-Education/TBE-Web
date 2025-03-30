@@ -32,15 +32,21 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
     },
     {
       id: v4(),
-      name: products.webinar.label,
-      description: products.webinar.description,
-      href: products.webinar.slug,
-    },
-    {
-      id: v4(),
       name: products.youfocus.label,
       description: products.youfocus.description,
       href: products.youfocus.slug,
+    },
+    {
+      id: v4(),
+      name: products.unskilled.label,
+      description: products.unskilled.description,
+      href: products.unskilled.slug,
+    },
+    {
+      id: v4(),
+      name: products.webinar.label,
+      description: products.webinar.description,
+      href: products.webinar.slug,
     },
     {
       id: v4(),
@@ -127,6 +133,16 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
     href: routes.youfocus,
     active: true,
     ctaText: 'Explore YouFocus',
+  },
+  {
+    id: 'unskilled',
+    image: `${STATIC_FILE_PATH.svg}/unskilled.svg`,
+    imageAltText: products.unskilled.label,
+    title: products.unskilled.label,
+    content: products.unskilled.description,
+    href: routes.unskilled,
+    active: true,
+    ctaText: 'Explore Unskilled',
   },
   {
     id: 'portfolio',
@@ -420,6 +436,7 @@ const YOUFOCUS_FEATURES: PrimaryCardProps[] = [
     imageAltText: `Recommendation`,
   },
 ];
+
 export {
   PRODUCTS,
   TESTIMONIALS,

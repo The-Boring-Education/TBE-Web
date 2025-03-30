@@ -2,7 +2,11 @@ import { apiStatusCodes } from '@/constant';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { sendAPIResponse } from '@/utils';
 import { connectDB } from '@/middlewares';
-import { updateUserPlaylistData, getPlaylistByIdFromDB } from '@/database';
+import {
+  updateUserPlaylistData,
+  getPlaylistByIdFromDB,
+  deletePlaylistFromDB,
+} from '@/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
@@ -16,6 +20,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       return getPlaylistById(req, res, playlistId, userId);
+    case 'DELETE':
+      return handleDeletePlaylistById(req, res, playlistId);
     case 'PATCH': {
       const { isRecommended, learningTime } = req.body;
       return handleUpdateUserPlaylist(
@@ -101,6 +107,37 @@ const handleUpdateUserPlaylist = async (
       status: true,
       message: 'Playlist updated successfully',
       data,
+    })
+  );
+};
+
+const handleDeletePlaylistById = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  playlistId: string
+) => {
+  const { data, error } = await deletePlaylistFromDB(playlistId);
+  if (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Error deleting playlist',
+        error: error,
+      })
+    );
+  }
+  if (!data) {
+    return res.status(apiStatusCodes.NOT_FOUND).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Playlist not found',
+      })
+    );
+  }
+  return res.status(apiStatusCodes.OKAY).json(
+    sendAPIResponse({
+      status: true,
+      message: 'Playlist deleted successfully',
     })
   );
 };

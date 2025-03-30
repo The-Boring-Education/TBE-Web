@@ -3,6 +3,7 @@ import { envConfig } from '@/constant';
 import { PageLayoutProps } from '@/interfaces';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const PageLayout = ({ children }: PageLayoutProps) => {
   const router = useRouter();
@@ -27,7 +28,15 @@ const PageLayout = ({ children }: PageLayoutProps) => {
   return (
     <main className='bg-lightBG flex flex-col min-h-screen'>
       <Navbar />
-      <div className='flex-1'>{children}</div>
+      <motion.div
+        className='flex-1'
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        transition={{ duration: 0.6, ease: 'easeInOut' }}
+      >
+        {children}
+      </motion.div>
       <Footer />
     </main>
   );

@@ -24,7 +24,8 @@ export type ProductLabelType =
   | 'Open Source'
   | 'Interview Prep'
   | 'Portfolio'
-  | 'YouFocus';
+  | 'YouFocus'
+  | 'UnSkilled';
 
 export type CohortLabelType = 'Bring Your Idea';
 
@@ -80,6 +81,20 @@ export interface WebinarPageProps extends WebinarModel {
 
 export type CertificateType = 'WEBINAR' | 'SHIKSHA';
 
+const UserPointsActionType = [
+  'ENROLL_COURSE',
+  'ENROLL_SHEET',
+  'ENROLL_PROJECT',
+  'COMPLETE_COURSE_CHAPTER',
+  'COMPLETE_PROJECT_CHAPTER',
+  'COMPLETE_QUESTION',
+  'COMPLETE_COURSE_CERTIFICATE',
+  'STREAK',
+  'REFER',
+] as const;
+
+export type UserPointsActionType = (typeof UserPointsActionType)[number];
+
 export type NotificationType =
   | 'WEBINAR'
   | 'SHIKSHA'
@@ -92,3 +107,7 @@ export type FormatDateType = {
   dateFormat?: Intl.DateTimeFormatOptions;
   timeFormat?: Intl.DateTimeFormatOptions;
 };
+
+export interface UpdateGamificationRecordBody {
+  gamificationRecordId: UserPointsActionType;
+}

@@ -1,4 +1,8 @@
 import dynamic from 'next/dynamic';
+const TabComponent = dynamic(() => import('@/components/common/Tab'));
+const OutlineCard = dynamic(
+  () => import('@/components/containers/Cards/Items/OutlineCard')
+);
 const ScrollToTopBottomButton = dynamic(
   () => import('@/components/common/Buttons/ScrollToTopBottomButton')
 );
@@ -144,6 +148,9 @@ const AccordionLinkItem = dynamic(
 );
 const MDXRenderer = dynamic(() => import('./common/MDXRenderer'));
 const UserAvatar = dynamic(() => import('./common/Images/UserAvatar'));
+const UserPointButton = dynamic(
+  () => import('./common/Buttons/UserPointButton')
+);
 const LoginWithGoogleButton = dynamic(
   () => import('./common/Buttons/LoginWithGoogleButton')
 );
@@ -189,6 +196,18 @@ const PlaylistSkillCard = dynamic(
 
 const ExplorePlaylistContainer = dynamic(
   () => import('@/components/containers/Page/YouFocus/ExplorePlaylistContainer')
+);
+
+const UserLevelProgressContainer = dynamic(
+  () => import('@/components/containers/Cards/UserLevelProgressContainer')
+);
+
+const ProgressRing = dynamic(
+  () => import('@/components/containers/Cards/Items/ProgressRing')
+);
+
+const ActionBanner = dynamic(
+  () => import('@/components/common/Banner/ActionBanner')
 );
 
 export {
@@ -271,4 +290,10 @@ export {
   ExplorePlaylistContainer,
   FloatingActionButton,
   ScrollToTopBottomButton,
+  UserLevelProgressContainer,
+  UserPointButton,
+  ProgressRing,
+  ActionBanner,
+  OutlineCard,
+  TabComponent,
 };

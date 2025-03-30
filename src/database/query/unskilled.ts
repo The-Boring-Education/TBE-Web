@@ -68,4 +68,76 @@ const getJobByJobIdFromDB = async (
   }
 };
 
-export { addJobToDB, getAllJobsFromDB, getJobByJobIdFromDB };
+const getJobsAggregationFromDB =
+  async (): Promise<DatabaseQueryResponseType> => {
+    try {
+      const trendingSkills = await Job.aggregate([
+        { $unwind: '$skills' },
+        { $group: { _id: '$skills', totalJobs: { $sum: 1 } } },
+        { $project: { name: '$_id', count: '$totalJobs', _id: 0 } },
+        { $sort: { count: -1 } },
+        { $limit: 20 },
+      ]);
+
+      const topLocations = await Job.aggregate([
+        // Exclude null or empty location arrays
+        { $match: { location: { $exists: true, $not: { $size: 0 } } } },
+
+        // Flatten the array: one document per location entry
+        { $unwind: '$location' },
+
+        // Clean location strings (optional: trim)
+        {
+          $project: {
+            location: { $trim: { input: '$location' } },
+          },
+        },
+
+        // Group by cleaned location name
+        {
+          $group: {
+            _id: '$location',
+            count: { $sum: 1 },
+          },
+        },
+
+        // Rename fields
+        {
+          $project: {
+            name: '$_id',
+            count: 1,
+            _id: 0,
+          },
+        },
+
+        // Sort and limit
+        { $sort: { count: -1 } },
+        { $limit: 20 },
+      ]);
+
+      const jobDomains = await Job.aggregate([
+        { $unwind: '$role' },
+        { $group: { _id: '$role', totalJobs: { $sum: 1 } } },
+        { $project: { name: '$_id', count: '$totalJobs', _id: 0 } },
+        { $sort: { count: -1 } },
+        { $limit: 20 },
+      ]);
+
+      return {
+        data: {
+          trendingSkills,
+          topLocations,
+          jobDomains,
+        },
+      };
+    } catch (error) {
+      return { error };
+    }
+  };
+
+export {
+  addJobToDB,
+  getAllJobsFromDB,
+  getJobByJobIdFromDB,
+  getJobsAggregationFromDB,
+};

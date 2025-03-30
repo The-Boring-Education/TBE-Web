@@ -15,7 +15,7 @@ const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => {
             <FlexContainer direction='col' itemCenter={false}>
               <Link
                 href={href}
-                className='text-base font-semibold text-black'
+                className='text-base font-semibold text-black hover:text-primary'
                 target={target}
               >
                 {name}{' '}

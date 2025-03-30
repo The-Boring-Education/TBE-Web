@@ -9,15 +9,22 @@ const AccordionLinkItem = ({
   href,
   className,
   isCompleted,
+  isActive,
   onClick,
 }: AccordionLinkItemProps) => {
   const iconColor = isCompleted ? 'text-green-500' : 'text-greyDark';
+
+  const additionalClasses = isActive
+    ? isCompleted
+      ? 'text-dark font-semibold bg-green-200'
+      : 'text-dark font-semibold bg-gray-200'
+    : '';
 
   return (
     <Link href={href} className='w-full'>
       <Disclosure.Panel
         onClick={onClick}
-        className={`${className} flex items-center gap-1 p-2 rounded text-left pre-title text-greyDark hover:bg-gray-200 hover:text-primary`}
+        className={`${className} flex items-center gap-1 p-2 rounded text-left pre-title text-greyDark hover:bg-gray-200 hover:text-primary ${additionalClasses}`}
       >
         <div className='flex-shrink-0'>
           {isCompleted ? (

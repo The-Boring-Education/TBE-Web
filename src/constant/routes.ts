@@ -45,6 +45,7 @@ const routes = {
       products: 'products',
       portfolio: 'portfolio',
       webinar: 'webinar',
+      explore: 'explore',
     },
   },
   // YouFocus
@@ -59,6 +60,7 @@ const routes = {
   cohort: {
     bringYourIdea: '/cohort/bring-your-idea',
   },
+  unskilled: '/unskilled',
   404: '/404',
   api: {
     base: '/api/v1',
@@ -100,6 +102,7 @@ const routes = {
       }
       return url;
     },
+    gamification: '/gamification',
     webinarBySlug: (webinar: string) => `/webinar/${webinar}`,
     certificate: '/certificate',
     certificateById: (certificate: string) => `/certificate/${certificate}`,

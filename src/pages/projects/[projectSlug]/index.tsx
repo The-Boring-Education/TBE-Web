@@ -179,17 +179,22 @@ const ProjectPage = ({
             <FlexContainer justifyCenter={false} className='gap-px'>
               {sections.map(({ sectionId, sectionName, chapters }) => (
                 <Accordion title={sectionName} key={sectionId}>
-                  {chapters.map(({ chapterId, chapterName, isCompleted }) => (
-                    <AccordionLinkItem
-                      key={chapterId}
-                      label={chapterName}
-                      isCompleted={isCompleted}
-                      href={`${slug}?projectId=${project._id}&sectionId=${sectionId}&chapterId=${chapterId}`}
-                      onClick={() =>
-                        handleChapterClick({ sectionId, chapterId })
-                      }
-                    />
-                  ))}
+                  {chapters.map(({ chapterId, chapterName, isCompleted }) => {
+                    const isActive = chapterId === currentChapterId;
+
+                    return (
+                      <AccordionLinkItem
+                        key={chapterId}
+                        isActive={isActive}
+                        label={chapterName}
+                        isCompleted={isCompleted}
+                        href={`${slug}?projectId=${project._id}&sectionId=${sectionId}&chapterId=${chapterId}`}
+                        onClick={() =>
+                          handleChapterClick({ sectionId, chapterId })
+                        }
+                      />
+                    );
+                  })}
                 </Accordion>
               ))}
             </FlexContainer>

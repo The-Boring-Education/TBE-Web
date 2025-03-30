@@ -67,8 +67,8 @@ const MyCourses = ({ seoMeta }: PageProps) => {
     !projects.length &&
     !interviewSheets.length &&
     !userPlaylist.length && (
-      <FlexContainer className='w-screen h-screen flex-col justify-center items-center'>
-        <Text level='h1' className='heading-4 mb-3'>
+      <FlexContainer className='w-screen flex-col justify-center items-center'>
+        <Text level='h5' className='heading-5 mb-3'>
           Oops! No Courses, Projects, Interview Sheet or Playlists found.
         </Text>
         <LinkButton

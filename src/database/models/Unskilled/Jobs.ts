@@ -14,14 +14,14 @@ const JobSchema: Schema<JobModel> = new Schema(
       location: { type: String },
       linkedIn: { type: String },
       website: { type: String },
-      description: { type: String, required: true },
+      description: { type: String },
       logo: { type: String },
       emp_count: { type: Number },
       company_founded: { type: Number },
     },
     skills: [{ type: String, required: true }],
     role: [{ type: String, required: true }],
-    location: { type: String, required: true },
+    location: [{ type: String, required: true }],
     experience: {
       min: { type: Number },
       max: { type: Number },
@@ -33,6 +33,7 @@ const JobSchema: Schema<JobModel> = new Schema(
     },
     isInternship: { type: Boolean, default: false },
     platform: { type: String, required: true },
+    postedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

@@ -1,0 +1,249 @@
+{
+  "lastUpdated": "2025-03-30",
+  "trendingSkills": [
+    {
+      "name": "Java",
+      "count": 3095
+    },
+    {
+      "name": "Python",
+      "count": 2899
+    },
+    {
+      "name": "React.js",
+      "count": 1802
+    },
+    {
+      "name": "JavaScript",
+      "count": 1727
+    },
+    {
+      "name": "AWS",
+      "count": 1622
+    },
+    {
+      "name": "Node.js",
+      "count": 1135
+    },
+    {
+      "name": "SQL",
+      "count": 1130
+    },
+    {
+      "name": "Data Structures",
+      "count": 897
+    },
+    {
+      "name": "Golang",
+      "count": 818
+    },
+    {
+      "name": "Spring",
+      "count": 735
+    },
+    {
+      "name": "Machine Learning",
+      "count": 699
+    },
+    {
+      "name": "Angular",
+      "count": 670
+    },
+    {
+      "name": "HTML",
+      "count": 649
+    },
+    {
+      "name": "Microservices",
+      "count": 645
+    },
+    {
+      "name": "Spring Boot",
+      "count": 595
+    },
+    {
+      "name": "CSS",
+      "count": 566
+    },
+    {
+      "name": "Kubernetes",
+      "count": 551
+    },
+    {
+      "name": "Algorithms",
+      "count": 545
+    },
+    {
+      "name": "Automation Testing",
+      "count": 543
+    },
+    {
+      "name": "CI - CD",
+      "count": 495
+    }
+  ],
+  "topLocations": [
+    {
+      "count": 5927,
+      "name": "Bangalore"
+    },
+    {
+      "count": 1032,
+      "name": "Work From Home"
+    },
+    {
+      "count": 1007,
+      "name": "Hyderabad"
+    },
+    {
+      "count": 814,
+      "name": "Gurgaon"
+    },
+    {
+      "count": 647,
+      "name": "Mumbai"
+    },
+    {
+      "count": 519,
+      "name": "Pune"
+    },
+    {
+      "count": 445,
+      "name": "Chennai"
+    },
+    {
+      "count": 274,
+      "name": "Noida"
+    },
+    {
+      "count": 170,
+      "name": "Delhi"
+    },
+    {
+      "count": 52,
+      "name": "Jaipur"
+    },
+    {
+      "count": 51,
+      "name": "Ahmedabad"
+    },
+    {
+      "count": 26,
+      "name": "Kochi"
+    },
+    {
+      "count": 22,
+      "name": "Indore"
+    },
+    {
+      "count": 21,
+      "name": "Navi Mumbai"
+    },
+    {
+      "count": 18,
+      "name": "Chandigarh"
+    },
+    {
+      "count": 18,
+      "name": "Coimbatore"
+    },
+    {
+      "count": 16,
+      "name": "Kolkata"
+    },
+    {
+      "count": 14,
+      "name": "Mohali"
+    },
+    {
+      "count": 9,
+      "name": "Greater Noida"
+    },
+    {
+      "count": 8,
+      "name": "Dubai"
+    }
+  ],
+  "jobDomains": [
+    {
+      "name": "Backend Development",
+      "count": 4178
+    },
+    {
+      "name": "Full-Stack Development",
+      "count": 2002
+    },
+    {
+      "name": "Frontend Development",
+      "count": 1402
+    },
+    {
+      "name": "Other Software Development",
+      "count": 844
+    },
+    {
+      "name": "QA / SDET",
+      "count": 779
+    },
+    {
+      "name": "Data Science / Machine Learning",
+      "count": 777
+    },
+    {
+      "name": "DevOps / Cloud",
+      "count": 739
+    },
+    {
+      "name": "Big Data / DWH / ETL",
+      "count": 612
+    },
+    {
+      "name": "Mobile Development",
+      "count": 460
+    },
+    {
+      "name": "Engineering Management",
+      "count": 446
+    },
+    {
+      "name": "Data Analysis / Business Intelligence",
+      "count": 445
+    },
+    {
+      "name": "Product Management",
+      "count": 380
+    },
+    {
+      "name": "IT Security",
+      "count": 182
+    },
+    {
+      "name": "Database Admin / Development",
+      "count": 175
+    },
+    {
+      "name": "UX / Visual Design",
+      "count": 158
+    },
+    {
+      "name": "IT Management / IT Support",
+      "count": 152
+    },
+    {
+      "name": "Functional / Technical Consulting",
+      "count": 118
+    },
+    {
+      "name": "Technical / Production Support",
+      "count": 109
+    },
+    {
+      "name": "Project Management",
+      "count": 65
+    },
+    {
+      "name": "Other Design",
+      "count": 58
+    }
+  ]
+}

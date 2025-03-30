@@ -8,6 +8,7 @@ import {
   Community,
   Banner,
   NotificationContainer,
+  WeAlreadyTaughtAt,
 } from '@/components';
 import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
@@ -94,6 +95,7 @@ const Home = ({ seoMeta }: PageProps) => {
         cards={USP}
       />
       <Testimonials />
+      <WeAlreadyTaughtAt />
     </Fragment>
   );
 };

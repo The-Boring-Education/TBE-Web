@@ -6,6 +6,7 @@ import {
   addACertificateToDB,
   checkCertificateExistForAProgram,
   updateCertificateToUserShikshaCourseDoc,
+  updateUserPointsInDB,
 } from '@/database';
 import {
   AddCertificateRequestPayloadProps,
@@ -68,6 +69,11 @@ const handleAddACertificate = async (
         certificatePayload.userId,
         certificatePayload.programId,
         addedCertificate._id.toString()
+      );
+      // Course was Completed successful add Points
+      await updateUserPointsInDB(
+        certificatePayload.userId,
+        'COMPLETE_COURSE_CERTIFICATE'
       );
     }
 

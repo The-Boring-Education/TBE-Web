@@ -12,7 +12,7 @@ import {
   ProjectPickedPageProps,
 } from '@/interfaces';
 
-import { Project, UserProject } from '@/database';
+import { Project, UserProject, updateUserPointsInDB } from '@/database';
 import { modelSelectParams } from '@/constant';
 
 const addAProjectToDB = async ({
@@ -493,6 +493,9 @@ const enrollInAProject = async ({
       projectId,
       sections,
     });
+
+    // Enrollment Project was successful add Points
+    await updateUserPointsInDB(userId, 'ENROLL_PROJECT');
 
     return { data: userProject };
   } catch (error) {

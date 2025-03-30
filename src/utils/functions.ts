@@ -4,6 +4,8 @@ import {
   routes,
   YOUFOCUS_SKILL_PLAYLISTS,
   YOUTUBE_API_PATH,
+  POINTS_RULES,
+  USER_LEVELS,
 } from '@/constant';
 import {
   BaseInterviewSheetResponseProps,
@@ -15,6 +17,7 @@ import {
   Video,
   UserPlaylistResponseProps,
   PlaylistModel,
+  UserPointsActionType,
 } from '@/interfaces';
 
 const fetchAPIData = async (url: string) => {
@@ -489,6 +492,53 @@ const getYoufocusSkillName = (query?: string) => {
   return YOUFOCUS_SKILL_PLAYLISTS.find((skill) => skill.value === query)?.label;
 };
 
+const calculateUserPointsForAction = (actionType: UserPointsActionType) => {
+  const points = POINTS_RULES[actionType as UserPointsActionType] || 0;
+  return points;
+};
+
+const getUserGamificationLevel = (userPoints: number) => {
+  let currentLevel = USER_LEVELS[0];
+  let nextLevel = null;
+
+  for (let i = 0; i < USER_LEVELS.length; i++) {
+    if (userPoints >= USER_LEVELS[i].minPoints) {
+      currentLevel = USER_LEVELS[i];
+      nextLevel = USER_LEVELS[i + 1] || null;
+    } else {
+      break;
+    }
+  }
+  const pointsLeftToNextLevel = nextLevel
+    ? nextLevel.minPoints - userPoints
+    : 0;
+
+  const nextMinPoints = nextLevel?.minPoints || 0;
+
+  const percentageProgress = calculateProgressPercentage(
+    userPoints,
+    nextMinPoints
+  );
+
+  return {
+    currentLevel: currentLevel.level,
+    currentLevelName: currentLevel.name,
+    pointsLeftToNextLevel,
+    nextLevelName: nextLevel?.name,
+    percentageProgress: Math.min(percentageProgress, 100),
+  };
+};
+
+const calculateProgressPercentage = (
+  progress: number,
+  nextMinPoints: number
+): number => {
+  if (nextMinPoints === 0) {
+    return 100;
+  }
+  return (progress / nextMinPoints) * 100;
+};
+
 export {
   formatDate,
   formatTime,
@@ -515,4 +565,7 @@ export {
   generateSitemap,
   mapUserPlaylistResponseToCard,
   getYoufocusSkillName,
+  calculateUserPointsForAction,
+  getUserGamificationLevel,
+  calculateProgressPercentage,
 };

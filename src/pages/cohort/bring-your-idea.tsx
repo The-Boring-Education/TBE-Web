@@ -142,6 +142,17 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                     className: 'w-full sm:w-auto',
                   }}
                   target='_blank'
+                  className='w-full sm:w-auto'
+                />
+                <LinkButton
+                  href={LINKS.demoBYICohort}
+                  buttonProps={{
+                    text: 'Book Free Demo',
+                    variant: 'GHOST',
+                    className: 'w-full sm:w-auto',
+                  }}
+                  target='_blank'
+                  className='w-full sm:w-auto'
                 />
               </FlexContainer>
             </motion.div>
@@ -193,6 +204,93 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
               />
             ))}
           </div>
+        </div>
+      </Section>
+
+      <Section className='py-12 md:py-20 bg-white'>
+        <div className='mx-auto md:px-4 px-2'>
+          <motion.h2
+            className='text-2xl md:text-3xl font-bold text-center mb-4 md:mb-6'
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <SectionHeaderContainer
+              heading='Your 2-Month'
+              focusText='Builder Journey'
+              headingLevel={3}
+            />
+          </motion.h2>
+          <ol className='relative border-l border-gray-300 ml-4 space-y-8'>
+            {[
+              {
+                week: 'Week 1',
+                title: 'Idea Validation & Team Formation',
+                description:
+                  'Identify your project idea, validate the problem, and form your team.',
+              },
+              {
+                week: 'Week 2',
+                title: 'User Research & Wireframing',
+                description:
+                  'Conduct user research, gather feedback, and design wireframes.',
+              },
+              {
+                week: 'Week 3',
+                title: 'Tech Stack Finalization & Setup',
+                description:
+                  'Choose the right tech stack and set up the development environment.',
+              },
+              {
+                week: 'Week 4',
+                title: 'Build MVP - Phase 1',
+                description:
+                  'Start developing the MVP and implement core features.',
+              },
+              {
+                week: 'Week 5',
+                title: 'Build MVP - Phase 2',
+                description:
+                  'Continue building and refine product features based on feedback.',
+              },
+              {
+                week: 'Week 6',
+                title: 'Product Polishing & Testing',
+                description:
+                  'Polish UI/UX, fix bugs, and perform usability testing.',
+              },
+              {
+                week: 'Week 7',
+                title: 'Marketing & Pre-launch Strategy',
+                description:
+                  'Craft your go-to-market plan and set up launch pages and waitlists.',
+              },
+              {
+                week: 'Week 8',
+                title: 'Launch & Demo Day',
+                description:
+                  'Launch your product publicly and present during demo day!',
+              },
+            ].map((item, index) => (
+              <motion.li
+                key={index}
+                className='mb-8 ml-4'
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div className='absolute w-3 h-3 bg-primary rounded-full -left-1.5 border border-white' />
+                <time className='mb-1 text-sm font-medium text-primary'>
+                  {item.week}
+                </time>
+                <h3 className='text-lg font-semibold text-gray-900'>
+                  {item.title}
+                </h3>
+                <p className='text-gray-600'>{item.description}</p>
+              </motion.li>
+            ))}
+          </ol>
         </div>
       </Section>
 

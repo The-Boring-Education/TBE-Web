@@ -4,6 +4,8 @@ import {
   PortfolioTemplateProps,
   ProductDataProps,
   RadioButtonOptionsProps,
+  UserPointsActionType,
+  UserLevel,
 } from '@/interfaces';
 import { routes } from './routes';
 import { envConfig } from './envConfig';
@@ -65,6 +67,11 @@ const products: ProductDataProps = {
     slug: routes.youfocus,
     description: 'Learn Tech From YouTube with 0 Distractions',
   },
+  unskilled: {
+    label: 'UnSkilled',
+    slug: routes.unskilled,
+    description: 'Find Your Next Tech Job with Insights',
+  },
 };
 
 const cohorts: CohortDataProps = {
@@ -91,6 +98,7 @@ const LINKS = {
     'https://theboringeducation.notion.site/Contribute-The-Boring-Education-8171f19257fd4ef99b7287555eb5062b',
   applyBYICohort:
     'https://docs.google.com/forms/d/e/1FAIpQLScvm2cajYfHkg-j6EBfJv-oRYZkPqVn9_qpmggvgCNeHY2cMw/viewform',
+  demoBYICohort: 'https://topmate.io/imsks/1482966',
   postmanDocs: 'https://documenter.getpostman.com/view/10360102/2sAYdcsYK3',
 };
 
@@ -286,6 +294,31 @@ const YOUFOCUS_SKILL_PLAYLISTS: RadioButtonOptionsProps[] = [
   { label: 'DSA', value: 'dsa' },
 ];
 
+const POINTS_RULES: Record<UserPointsActionType, number> = {
+  ENROLL_COURSE: 50,
+  ENROLL_SHEET: 50,
+  ENROLL_PROJECT: 50,
+  COMPLETE_COURSE_CHAPTER: 20,
+  COMPLETE_PROJECT_CHAPTER: 30,
+  COMPLETE_COURSE_CERTIFICATE: 50,
+  COMPLETE_QUESTION: 10,
+  STREAK: 3,
+  REFER: 20,
+};
+
+const USER_LEVELS: UserLevel[] = [
+  { name: 'Noob', value: 'NOOB', minPoints: 0, level: 1 },
+  { name: 'Coder', value: 'CODER', minPoints: 500, level: 2 },
+  { name: 'Debugger', value: 'DEBUGGER', minPoints: 1000, level: 3 },
+  { name: 'Ninja', value: 'NINJA', minPoints: 2000, level: 4 },
+  { name: 'Squasher', value: 'SQUASHER', minPoints: 3000, level: 5 },
+  { name: 'Hacker', value: 'HACKER', minPoints: 4500, level: 6 },
+  { name: 'Wizard', value: 'WIZARD', minPoints: 6000, level: 7 },
+  { name: 'Guru', value: 'GURU', minPoints: 7500, level: 8 },
+  { name: 'Architect', value: 'ARCHITECT', minPoints: 9000, level: 9 },
+  { name: 'Legend', value: 'LEGEND', minPoints: 10000, level: 10 },
+];
+
 export {
   imageMeta,
   products,
@@ -304,4 +337,6 @@ export {
   PORTFOLIO_TEMPLATES,
   cohorts,
   YOUFOCUS_SKILL_PLAYLISTS,
+  POINTS_RULES,
+  USER_LEVELS,
 };
