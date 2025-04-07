@@ -23,7 +23,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.4.0",
     "dotenv": "^16.4.7",
-    "framer-motion": "^12.4.2",
+    "framer-motion": "^12.6.3",
     "html-to-image": "^1.11.11",
     "markdown-it": "^14.1.0",
     "mongoose": "^7.4.1",

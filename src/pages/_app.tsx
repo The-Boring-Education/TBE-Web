@@ -7,28 +7,38 @@ import { googleAnalyticsScript, gtag } from '@/constant';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { SessionProvider } from 'next-auth/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import useUser from '@/hooks/useUser';
+import { useOnboardingRedirect } from '@/hooks/useOnboardingRedirect';
 
-// Create a client
 const queryClient = new QueryClient();
 
+const SessionWrapper = ({ Component, pageProps }: any) => {
+    const { user } = useUser();
+    useOnboardingRedirect(user);
+
+    return <Component {...pageProps} />;
+};
+
 const TheBoringEducation = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppProps) => {
-  return (
-    <>
-      <Script async strategy='afterInteractive' src={gtag}></Script>
-      <Script id='google-analytics'>{googleAnalyticsScript}</Script>
-      <SessionProvider session={session}>
-        <QueryClientProvider client={queryClient}>
-          <PageLayout>
-            <Component {...pageProps} />
-          </PageLayout>
-        </QueryClientProvider>
-      </SessionProvider>
-      <SpeedInsights />
-    </>
-  );
+                                Component,
+                                pageProps: { session, ...pageProps },
+                            }: AppProps) => {
+    return (
+        <>
+            <Script async strategy="afterInteractive" src={gtag}></Script>
+            <Script id="google-analytics">{googleAnalyticsScript}</Script>
+
+            <SessionProvider session={session}>
+                <QueryClientProvider client={queryClient}>
+                    <PageLayout>
+                        <SessionWrapper Component={Component} pageProps={pageProps} />
+                    </PageLayout>
+                </QueryClientProvider>
+            </SessionProvider>
+
+            <SpeedInsights />
+        </>
+    );
 };
 
 export default TheBoringEducation;
