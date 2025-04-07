@@ -8,6 +8,7 @@ import useUser from './useUser';
 import useSkillPlaylist from './useSkillPlaylist';
 import useScrollPosition from './useScrollPosition';
 import useGamification from './useGamification';
+import useOnboardingRedirect from './useOnboardingRedirect';
 
 export {
   useApi,
@@ -20,4 +21,5 @@ export {
   useSkillPlaylist,
   useScrollPosition,
   useGamification,
+  useOnboardingRedirect,
 };

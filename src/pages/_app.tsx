@@ -7,14 +7,13 @@ import { googleAnalyticsScript, gtag } from '@/constant';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { SessionProvider } from 'next-auth/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import useUser from '@/hooks/useUser';
-import { useOnboardingRedirect } from '@/hooks/useOnboardingRedirect';
+import { useOnboardingRedirect } from '@/hooks';
 
 const queryClient = new QueryClient();
 
 const SessionWrapper = ({ Component, pageProps }: any) => {
-    const { user } = useUser();
-    useOnboardingRedirect(user);
+
+    useOnboardingRedirect();
 
     return <Component {...pageProps} />;
 };

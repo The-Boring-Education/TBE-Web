@@ -1,13 +1,19 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+// src/hooks/useOnboardingRedirect.ts
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import useUser from './useUser';
+import { UserResponse } from '@/interfaces';
 
-export function useOnboardingRedirect(user: any) {
+const useOnboardingRedirect = () => {
     const router = useRouter();
+    const { user, loading }: { user: UserResponse | null; loading: boolean } = useUser();
 
     useEffect(() => {
-        if (user && !user.isOnboarded) {
+        if (!loading && user && user.isOnboarded === false) {
             const next = router.asPath;
             router.push(`/onboarding?redirectTo=${encodeURIComponent(next)}`);
         }
-    }, [user, router]);
-}
+    }, [user, loading, router]);
+};
+
+export default useOnboardingRedirect;
