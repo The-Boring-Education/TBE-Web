@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
-import { isAdmin, isUserAuthenticated, sendAPIResponse } from './utils';
+import { isAdmin, isUserAuthenticated, sendAPIResponse, getUserOnboardingStatus } from './utils';
 import { routes } from './constant';
 
 const protectedAPIRoutes: {
@@ -16,6 +16,33 @@ const protectedUIRoutes: {
 }[] = [
   {
     path: /^\/shiksha\/(?:\/|$)/,
+  },
+  {
+    path: /^\/user\/dashboard(?:\/|$)/,
+  },
+  {
+    path: /^\/projects\/(?:\/|$)/,
+  },
+  {
+    path: /^\/interview-prep\/(?:\/|$)/,
+  },
+  {
+    path: /^\/youfocus\/(?:\/|$)/,
+  },
+];
+
+// Routes that don't require onboarding
+const onboardingExemptRoutes: {
+  path: RegExp;
+}[] = [
+  {
+    path: /^\/onboarding(?:\/|$)/,
+  },
+  {
+    path: /^\/api\/v1\/user\/onboarding(?:\/|$)/,
+  },
+  {
+    path: /^\/api\/v1\/user\/validate-username(?:\/|$)/,
   },
 ];
 
@@ -52,6 +79,22 @@ const middleware = async (req: NextRequest) => {
       return NextResponse.redirect(new URL(routes.home, req.url));
     }
   } else {
+    // Check if the user has completed onboarding
+    const isExemptFromOnboarding = onboardingExemptRoutes.find((route) =>
+      route.path.test(currentUrl)
+    );
+
+    if (!isExemptFromOnboarding) {
+      const isOnboarded = await getUserOnboardingStatus(req);
+      
+      if (!isOnboarded) {
+        // Redirect to onboarding with the original URL as a query parameter
+        const onboardingUrl = new URL(routes.onboarding, req.url);
+        onboardingUrl.searchParams.set('redirectTo', encodeURIComponent(currentUrl));
+        return NextResponse.redirect(onboardingUrl);
+      }
+    }
+    
     return NextResponse.next();
   }
 

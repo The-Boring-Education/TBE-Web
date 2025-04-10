@@ -1,0 +1,17 @@
+export const COUNTRY_CODES = [
+  { code: '+91', country: 'India' },
+  { code: '+1', country: 'United States' },
+  { code: '+44', country: 'United Kingdom' },
+  { code: '+61', country: 'Australia' },
+  { code: '+86', country: 'China' },
+  { code: '+81', country: 'Japan' },
+  { code: '+49', country: 'Germany' },
+  { code: '+33', country: 'France' },
+  { code: '+7', country: 'Russia' },
+  { code: '+65', country: 'Singapore' },
+  { code: '+971', country: 'UAE' },
+  { code: '+92', country: 'Pakistan' },
+  { code: '+880', country: 'Bangladesh' },
+  { code: '+94', country: 'Sri Lanka' },
+  { code: '+977', country: 'Nepal' },
+];

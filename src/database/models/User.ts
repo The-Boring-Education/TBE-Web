@@ -23,6 +23,28 @@ const UserSchema: Schema<UserModel> = new Schema(
     providerAccountId: {
       type: String,
     },
+    // New fields for onboarding
+    username: {
+      type: String,
+      unique: true,
+      sparse: true, // Allows null values and only enforces uniqueness on non-null values
+    },
+    profession: {
+      type: String,
+    },
+    platformUsage: {
+      type: String,
+    },
+    contactNumber: {
+      type: String,
+    },
+    countryCode: {
+      type: String,
+    },
+    isOnboarded: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

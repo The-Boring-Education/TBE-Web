@@ -40,6 +40,7 @@ const routes = {
     playlists: 'youfocus/my-playlist',
   },
   register: '/register',
+  onboarding: '/onboarding',
   internals: {
     landing: {
       products: 'products',

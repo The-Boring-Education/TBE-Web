@@ -15,6 +15,13 @@ export interface UserModel {
   image?: string;
   provider: string;
   providerAccountId?: string;
+  // Onboarding fields
+  username?: string;
+  profession?: string;
+  platformUsage?: string;
+  contactNumber?: string;
+  countryCode?: string;
+  isOnboarded?: boolean;
 }
 
 export interface ProjectChapter {
