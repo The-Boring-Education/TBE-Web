@@ -110,4 +110,8 @@ export interface CohortUserCategoryProps {
   label: string;
   data: CohortRoadmapProps[];
   duration: string;
+  price: number;
+  discount: number;
+  slashedPrice: number;
+  features: string[];
 }

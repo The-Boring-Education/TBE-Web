@@ -575,24 +575,61 @@ const BYI_SKILLED_ROADMAP: CohortRoadmapProps[] = [
   },
 ];
 
+const BYI_COHORT_COMMON_FEATURES = [
+  'Weekly 1:1 Live Mentorship',
+  'Join with Your Friends(Max 4 people)',
+  'Access to Builder Community',
+  'Access to Free Resources',
+  'Lifetime Alumni Network',
+  '24x7 QnA with Mentor',
+  '7 Days Money Back Guarantee',
+  '50% Cashback on Project Completion',
+  'Free Project Completion Certificate',
+];
+
 const BYI_USER_CATEGORIES: CohortUserCategoryProps[] = [
   {
     key: 'beginner',
-    label: '🚀 Beginner',
+    label: '🚀 Pure Beginner',
     data: BYI_BEGINNER_ROADMAP,
     duration: '4-5 Months',
+    price: 5999,
+    discount: 50,
+    slashedPrice: 11999,
+    features: [
+      '4-5 Months Intensive Program',
+      'Personalised Roadmap for All Members',
+      'Resume Building & Interview Prep',
+      ...BYI_COHORT_COMMON_FEATURES,
+    ],
   },
   {
     key: 'confused',
     label: '🤔 Confused Learner',
     data: BYI_INTERMEDIATE_ROADMAP,
     duration: '2-3 Months',
+    price: 4999,
+    discount: 50,
+    slashedPrice: 9999,
+    features: [
+      '3-4 Months Intensive Program',
+      'Resume Building & Interview Prep',
+      ...BYI_COHORT_COMMON_FEATURES,
+    ],
   },
   {
     key: 'mentorship',
     label: '🧠 Seeking Mentorship',
     data: BYI_SKILLED_ROADMAP,
-    duration: '1-2 Months',
+    duration: '2-3 Months',
+    price: 3999,
+    discount: 50,
+    slashedPrice: 7999,
+    features: [
+      '2-3 Months Intensive Program',
+      'Interview Prep Support',
+      ...BYI_COHORT_COMMON_FEATURES,
+    ],
   },
 ];
 

@@ -10,10 +10,15 @@ const Pill = ({
 }: PillProps) => {
   let backgroundColor;
   let className = '';
-  if (variant === 'PRIMARY') backgroundColor = 'bg-primary';
-  else if (variant === 'SECONDARY') backgroundColor = 'bg-secondary';
-  else if (variant === 'GHOST') {
+  if (variant === 'PRIMARY') {
+    backgroundColor = 'bg-primary/10 px-2 py-1 rounded';
+    textStyleClasses = 'text-primary';
+  } else if (variant === 'SECONDARY') {
+    backgroundColor = 'bg-secondary/10 text-secondary';
+    textStyleClasses = 'text-secondary';
+  } else if (variant === 'GHOST') {
     className = 'bg-white strong-text';
+    backgroundColor = 'bg-white';
   }
 
   return (

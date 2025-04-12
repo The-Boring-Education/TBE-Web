@@ -29,6 +29,7 @@ import {
   Banner,
   CohortJourneyContainer,
   Button,
+  Pill,
 } from '@/components';
 import {
   BYI_USER_CATEGORIES,
@@ -112,10 +113,16 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   const [selectedUserCategory, setSelectedUserCategory] =
     useState<CohortUserCategoryProps>(BYI_USER_CATEGORIES[0]);
   const [teamSize, setTeamSize] = useState(1);
+  const [perTeamMemberPrice, setPerTeamMemberPrice] = useState(
+    selectedUserCategory.price / teamSize
+  );
 
   const handleTeamSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     setTeamSize(value);
+
+    const newPrice = Math.round(selectedUserCategory.price / value);
+    setPerTeamMemberPrice(newPrice);
   };
 
   const handleSelectUserCategory = (key: string) => {
@@ -125,8 +132,26 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
 
     if (selectedCategory) {
       setSelectedUserCategory(selectedCategory);
+
+      setPerTeamMemberPrice(Math.round(selectedCategory.price / teamSize));
     }
   };
+
+  const userCategoryContainer = BYI_USER_CATEGORIES.map(({ label, key }) => {
+    return (
+      <Button
+        key={key}
+        onClick={() => handleSelectUserCategory(key)}
+        className={`md:px-4 md:py-2 px-2 py-1 md:w-fit border-lightGray rounded-full transition-all ${
+          selectedUserCategory.key === key
+            ? 'bg-primary text-white'
+            : 'bg-white text-primary'
+        }`}
+        text={label}
+        variant='GHOST'
+      />
+    );
+  });
 
   return (
     <Fragment>
@@ -248,21 +273,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
             Where Are You in Your Tech Journey?
           </Text>
           <FlexContainer className='justify-center gap-2 flex-wrap'>
-            {BYI_USER_CATEGORIES.map(({ label, key }) => {
-              return (
-                <Button
-                  key={key}
-                  onClick={() => handleSelectUserCategory(key)}
-                  className={`md:px-4 md:py-2 px-2 py-1 w-full md:w-fit rounded-full transition-all ${
-                    selectedUserCategory.key === key
-                      ? 'bg-primary text-white'
-                      : 'bg-white text-primary'
-                  }`}
-                  text={label}
-                  variant='GHOST'
-                />
-              );
-            })}
+            {userCategoryContainer}
           </FlexContainer>
           <motion.h2
             className='text-2xl md:text-3xl font-bold text-center'
@@ -311,53 +322,29 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
         variant='VARIANT_A'
       />
 
-      <Section className='py-12 md:py-20'>
-        <div className='md:px-4 px-2'>
-          <motion.h2
-            className='text-2xl md:text-3xl font-bold text-center mb-4 md:mb-6'
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <SectionHeaderContainer
-              heading='Investment in'
-              focusText='Your Career'
-            />
-          </motion.h2>
-          <motion.div
-            className='md:px-10 md:py-8 py-4 px-2 w-fit bg-white mx-auto rounded-lg'
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <FlexContainer direction='col' className='gap-3'>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-              >
-                <FlexContainer
-                  className='justify-center gap-2 flex-wrap'
-                  direction='col'
-                >
-                  {BYI_USER_CATEGORIES.map(({ label, key }) => {
-                    return (
-                      <Button
-                        key={key}
-                        onClick={() => handleSelectUserCategory(key)}
-                        className={`w-full md:w-fit rounded-full transition-all ${
-                          selectedUserCategory.key === key
-                            ? 'bg-primary text-white'
-                            : 'bg-white text-primary'
-                        }`}
-                        text={label}
-                        variant='GHOST'
-                      />
-                    );
-                  })}
-                  <FlexContainer direction='col' className='gap-2'>
-                    <Text level='p' className='paragraph'>
-                      Select Number of Team Members
+      <Section className='py-6 md:py-20 px-2'>
+        <motion.div
+          className='md:px-10 md:py-8 py-4 px-2 md:w-3/5 w-full bg-white mx-auto rounded-lg'
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+        >
+          <FlexContainer direction='col' className='md:gap-8 gap-4'>
+            <FlexContainer direction='col' className=''>
+              <SectionHeaderContainer
+                heading='Invest in'
+                focusText='Your Career'
+              />
+            </FlexContainer>
+            <FlexContainer direction='col' className=''>
+              <FlexContainer direction='col' className='gap-4'>
+                <FlexContainer className='gap-4 flex-wrap'>
+                  <FlexContainer className='gap-2 flex-wrap'>
+                    {userCategoryContainer}
+                  </FlexContainer>
+                  <FlexContainer className='gap-2'>
+                    <Text level='label' className='label'>
+                      Number of Members
                     </Text>
                     <input
                       type='range'
@@ -367,74 +354,86 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                       onChange={handleTeamSizeChange}
                       className='w-full accent-primary'
                     />
+                    <Text level='h5' className='heading-5 text-primary'>
+                      {teamSize}
+                    </Text>
                   </FlexContainer>
                 </FlexContainer>
-              </motion.div>
-              <FlexContainer direction='col' className='gap-1'>
-                <Text
-                  level='h5'
-                  className='heading-5 line-through text-gray-400'
-                >
-                  ₹ 9999
-                </Text>
-                <FlexContainer direction='col' className='gap-1'>
-                  <Text level='h3' className='heading-3 text-primary'>
-                    ₹ 4999
-                  </Text>
-                  <span className='bg-primary/10 text-primary px-2 py-1 rounded text-sm font-medium'>
-                    50% OFF
-                  </span>
+                <FlexContainer direction='col' className='gap-4'>
+                  <FlexContainer direction='col' className='gap-1'>
+                    <FlexContainer
+                      className='gap-1 items-end'
+                      itemCenter={false}
+                    >
+                      <Text level='h3' className='heading-3 text-primary'>
+                        ₹ {perTeamMemberPrice}
+                      </Text>
+                      <Text level='span' className='pre-title text-greyDark'>
+                        / Member
+                      </Text>
+                    </FlexContainer>
+                  </FlexContainer>
+                  <FlexContainer className='gap-2' direction='col'>
+                    <FlexContainer className='gap-2'>
+                      <Text
+                        level='h5'
+                        className='heading-5 line-through text-gray-400'
+                      >
+                        ₹ {selectedUserCategory.slashedPrice}
+                      </Text>
+                      <Text level='h5' className='heading-5 text-primary'>
+                        ₹ {selectedUserCategory.price}
+                      </Text>
+                      <Text level='span' className='pre-title text-greyDark'>
+                        Total
+                      </Text>
+                    </FlexContainer>
+                    <Pill
+                      text={`${selectedUserCategory.discount}% OFF`}
+                      variant='PRIMARY'
+                    />
+                  </FlexContainer>
                 </FlexContainer>
               </FlexContainer>
-            </FlexContainer>
-            <ul className='space-y-2 md:space-y-4 my-4'>
-              {[
-                '2 Months Intensive Program',
-                'Weekly 1:1 Live Mentorship',
-                'Join with Your Friends(Max 4 people)',
-                'Access to Builder Community',
-                'Access to Free Resources',
-                'Lifetime Alumni Network',
-                '24x7 QnA with Mentors',
-                '7 Days Money Back Guarantee',
-              ].map((feature, index) => (
-                <motion.li
-                  key={index}
-                  className='flex items-center'
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <CheckCircleIcon className='w-5 h-5 text-primary mr-2 flex-shrink-0' />
-                  <Text level='span' className='span'>
-                    {feature}
-                  </Text>
-                </motion.li>
-              ))}
-            </ul>
-            <LinkButton
-              href={LINKS.applyBYICohort}
-              buttonProps={{
-                text: 'Register Now',
-                variant: 'PRIMARY',
-                animationClasses: 'w-full sm:w-auto',
-                className: 'm-auto',
-              }}
-              target='_blank'
-            />
-          </motion.div>
-        </div>
-      </Section>
+              <ul className='space-y-2 md:space-y-4 my-4'>
+                {selectedUserCategory.features.map((feature, index) => (
+                  <motion.li
+                    key={index}
+                    className='flex items-center'
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <CheckCircleIcon className='w-5 h-5 text-primary mr-2 flex-shrink-0' />
+                    <Text level='span' className='span'>
+                      {feature}
+                    </Text>
+                  </motion.li>
+                ))}
+              </ul>
 
-      <ModernPricing />
+              <LinkButton
+                href={LINKS.applyBYICohort}
+                buttonProps={{
+                  text: 'Register Now',
+                  variant: 'PRIMARY',
+                  animationClasses: 'w-full sm:w-auto',
+                  className: 'm-auto',
+                }}
+                target='_blank'
+              />
+            </FlexContainer>
+          </FlexContainer>
+        </motion.div>
+      </Section>
 
       <Banner
         title='We Offer 7 Days Money Back Guarantee'
         description='If you are not satisfied with the program, we will refund your money within 7 days. No questions asked.'
         buttonText='Register Now'
         buttonLink={LINKS.applyBYICohort}
-        imageSrc={`${STATIC_FILE_PATH.svg}/community.svg`}
+        imageSrc={`${STATIC_FILE_PATH.svg}/webinar-hero.svg`}
         variant='VARIANT_B'
       />
 
@@ -490,138 +489,3 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
 export const getServerSideProps = getPreFetchProps;
 
 export default BrinYourIdeaLandingPage;
-
-import { CheckIcon } from '@heroicons/react/24/solid';
-
-const plans = [
-  {
-    name: 'Beginner',
-    price: 6000,
-    monthly: true,
-    description: 'The essentials to provide your best work for clients.',
-    features: [
-      '5 products',
-      'Up to 1,000 subscribers',
-      'Basic analytics',
-      '48-hour support response time',
-    ],
-  },
-  {
-    name: 'Startup',
-    price: 29,
-    monthly: true,
-    isPopular: true,
-    description: 'A plan that scales with your rapidly growing business.',
-    features: [
-      '25 products',
-      'Up to 10,000 subscribers',
-      'Advanced analytics',
-      '24-hour support response time',
-      'Marketing automations',
-    ],
-  },
-  {
-    name: 'Enterprise',
-    price: 59,
-    monthly: true,
-    description: 'Dedicated support and infrastructure for your company.',
-    features: [
-      'Unlimited products',
-      'Unlimited subscribers',
-      'Advanced analytics',
-      '1-hour, dedicated support response time',
-      'Marketing automations',
-      'Custom reporting tools',
-    ],
-  },
-];
-
-const ModernPricing = () => {
-  const [billing, setBilling] = useState<'monthly' | 'annually'>('monthly');
-
-  return (
-    <section className='bg-[#0f172a] text-white py-16'>
-      <div className='max-w-5xl mx-auto text-center px-4'>
-        <p className='text-indigo-400 font-semibold mb-2'>Pricing</p>
-        <h2 className='text-4xl font-bold mb-4'>Investment in Your Career</h2>
-        <p className='text-gray-400 max-w-xl mx-auto mb-8'>
-          Choose an affordable plan that’s packed with the best features for
-          engaging your audience, creating customer loyalty, and driving sales.
-        </p>
-        <div className='flex justify-center gap-4 mb-12'>
-          <button
-            onClick={() => setBilling('monthly')}
-            className={`px-4 py-1 rounded-full border ${
-              billing === 'monthly'
-                ? 'bg-indigo-600 text-white'
-                : 'text-gray-300 border-gray-500'
-            }`}
-          >
-            Monthly
-          </button>
-          <button
-            onClick={() => setBilling('annually')}
-            className={`px-4 py-1 rounded-full border ${
-              billing === 'annually'
-                ? 'bg-indigo-600 text-white'
-                : 'text-gray-300 border-gray-500'
-            }`}
-          >
-            Annually
-          </button>
-        </div>
-        <div className='grid md:grid-cols-3 gap-6'>
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`rounded-2xl border ${
-                plan.isPopular
-                  ? 'border-indigo-500 bg-[#1e293b]'
-                  : 'border-gray-700 bg-[#0f172a]'
-              } p-6 text-left flex flex-col justify-between`}
-            >
-              <div>
-                <h3 className='text-lg font-semibold mb-1 text-white'>
-                  {plan.name}
-                </h3>
-                <p className='text-sm text-gray-400 mb-4'>{plan.description}</p>
-
-                <div className='flex items-center text-white text-4xl font-bold'>
-                  ${plan.price}
-                  <span className='text-base text-gray-400 font-normal ml-1'>
-                    / Per Member
-                  </span>
-                </div>
-
-                <button
-                  className={`mt-4 w-full rounded-md px-4 py-2 text-sm font-medium ${
-                    plan.isPopular
-                      ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                      : 'bg-gray-700 text-white hover:bg-gray-600'
-                  } transition`}
-                >
-                  Buy plan
-                </button>
-
-                {plan.isPopular && (
-                  <div className='mt-2 text-xs bg-indigo-500 text-white px-2 py-1 rounded-full w-fit'>
-                    Most popular
-                  </div>
-                )}
-              </div>
-
-              <ul className='mt-6 space-y-2 text-sm text-gray-200'>
-                {plan.features.map((feature, idx) => (
-                  <li key={idx} className='flex items-start gap-2'>
-                    <CheckIcon className='w-4 h-4 text-indigo-400 mt-1' />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
