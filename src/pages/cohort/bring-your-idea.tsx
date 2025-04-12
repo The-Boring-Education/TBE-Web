@@ -41,22 +41,22 @@ import {
 const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   const projectIdeas = [
     {
-      title: 'AI-Powered Resume Analyzer',
+      title: 'AI Agent for Stock Market Suggestions',
       description:
-        'Build an AI tool that analyzes resumes and provides personalized feedback',
+        'Build an AI agent that provides stock market suggestions based on user preferences',
       icon: <SparklesIcon className='w-8 h-8 text-primary' />,
     },
     {
-      title: 'NFT Marketplace for Digital Art',
+      title: "Analyse Politicians' Speaches vs Their Actions with ML Models",
       description:
-        'Create a decentralized marketplace for artists to sell their digital creations',
-      icon: <RocketLaunchIcon className='w-8 h-8 text-primary' />,
+        "Build a platform that uses ML models to analyze politicians' speeches and actions",
+      icon: <AcademicCapIcon className='w-8 h-8 text-primary' />,
     },
     {
-      title: 'Full Stack Social Learning Platform',
+      title: 'Full-stack App for Stray Dog Adoption',
       description:
-        'Build a platform where developers can share knowledge and collaborate on projects',
-      icon: <UserGroupIcon className='w-8 h-8 text-primary' />,
+        'Build a full-stack application that connects stray dogs with potential adopters',
+      icon: <RocketLaunchIcon className='w-8 h-8 text-primary' />,
     },
   ];
 
@@ -70,6 +70,32 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
       title: 'Join with Your Friends',
       description: 'Bring up to 4 friends and Build together as a Team',
       icon: <RocketLaunchIcon className='w-8 h-8 text-primary' />,
+    },
+    {
+      title: 'Implement Gen AI in Your Projects',
+      description: 'Learn to implement Gen AI in your projects',
+      icon: <LightBulbIcon className='w-8 h-8 text-primary' />,
+    },
+    {
+      title: 'Personalised Interview Preparation',
+      description: 'Get Personalised Interview Preparation and Mock Interviews',
+      icon: <AcademicCapIcon className='w-8 h-8 text-primary' />,
+    },
+    {
+      title: 'Resume Building with AI',
+      description: 'Get AI-powered resume building and review',
+      icon: <RocketLaunchIcon className='w-8 h-8 text-primary' />,
+    },
+    {
+      title: '7 Days Money Back Guarantee',
+      description: '7-day money back guarantee - no questions asked.',
+      icon: <CheckCircleIcon className='w-8 h-8 text-primary' />,
+    },
+    {
+      title: '50% Cashback on Completion',
+      description:
+        'Complete the program and get 50% cashback on your investment',
+      icon: <CheckCircleIcon className='w-8 h-8 text-primary' />,
     },
     {
       title: 'Learn & Build with Hands-on Learning',
@@ -89,24 +115,13 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
     },
     {
       title: 'Free Resources',
-      description: 'Get free resources to help you build your projects',
+      description: 'Get free resources to help you build the project',
       icon: <LightBulbIcon className='w-8 h-8 text-primary' />,
     },
     {
-      title: '24x7 QnA with Mentors',
-      description: 'Get help with your idea anytime you need',
+      title: '24x7 QnA with us',
+      description: "Ping us anytime on WhatsApp and we'll be there to help you",
       icon: <AcademicCapIcon className='w-8 h-8 text-primary' />,
-    },
-    {
-      title: '7 Days Money Back Guarantee',
-      description: '7-day money back guarantee - no questions asked.',
-      icon: <CheckCircleIcon className='w-8 h-8 text-primary' />,
-    },
-    {
-      title: '50% Cashback on Completion',
-      description:
-        'Complete the program and get 50% cashback on your investment',
-      icon: <CheckCircleIcon className='w-8 h-8 text-primary' />,
     },
   ];
 
@@ -176,15 +191,14 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                   level='h1'
                   className='heading-1 text-contentDark leading-tight md:text-left text-center'
                 >
-                  Build Your First Tech Startup in 2 Months
+                  Ever thought of building your own Tech Startup?
                 </Text>
                 <Text
                   level='p'
                   className='text-contentDark md:text-left text-center'
                 >
                   Join our cohort program and get the mentorship, resources, and
-                  community you need to build your first tech startup in 2
-                  months.
+                  community you need to build your first Tech Startup.
                 </Text>
               </FlexContainer>
               <FlexContainer
@@ -237,33 +251,6 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
         </div>
       </Section>
 
-      <Section className='py-12 md:py-20 bg-gray-50'>
-        <div className='mx-auto md:px-4 px-2'>
-          <motion.h2
-            className='text-2xl md:text-3xl font-bold text-center mb-6 md:mb-12'
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <SectionHeaderContainer
-              heading='What You Can'
-              focusText='Build'
-              headingLevel={3}
-            />
-          </motion.h2>
-          <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4'>
-            {projectIdeas.map((idea, index) => (
-              <IconCard
-                key={index}
-                icon={idea.icon}
-                title={idea.title}
-                description={idea.description}
-              />
-            ))}
-          </div>
-        </div>
-      </Section>
-
       <Section className='bg-white py-8'>
         <FlexContainer
           className='justify-center gap-8 flex-wrap'
@@ -275,46 +262,32 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
           <FlexContainer className='justify-center gap-2 flex-wrap'>
             {userCategoryContainer}
           </FlexContainer>
-          <motion.h2
-            className='text-2xl md:text-3xl font-bold text-center'
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <SectionHeaderContainer
-              heading='Your Roadmap'
-              focusText={`in Cohort | ${selectedUserCategory.duration}`}
-              headingLevel={5}
-            />
-          </motion.h2>
+          <SectionHeaderContainer
+            heading='Your Roadmap'
+            focusText={`in Cohort | ${selectedUserCategory.duration}`}
+            headingLevel={5}
+          />
           <CohortJourneyContainer weeks={selectedUserCategory.data} />
         </FlexContainer>
       </Section>
 
-      <Section className='py-12 md:py-20'>
-        <div className='mx-auto md:px-4 px-2'>
-          <motion.h2
-            className='text-2xl md:text-3xl font-bold text-center mb-6 md:mb-12'
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <SectionHeaderContainer
-              heading='Why Choose'
-              focusText='Us'
-              headingLevel={3}
-            />
-          </motion.h2>
+      <Section>
+        <FlexContainer direction='col' className='md:gap-6 gap-3'>
+          <SectionHeaderContainer
+            heading='Why Choose'
+            focusText='Us'
+            headingLevel={3}
+          />
           <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4'>
             {whyUs.map((item, index) => {
               return <IconCard key={index} {...item} />;
             })}
           </div>
-        </div>
+        </FlexContainer>
       </Section>
 
       <Banner
-        title='Take Back 50% Cashback on Completion'
+        title='Take Back 50% Cashback on Project Completion'
         description='Complete the program and get 50% cashback on your investment.'
         buttonText='Register Now'
         buttonLink={LINKS.applyBYICohort}
@@ -323,109 +296,96 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
       />
 
       <Section className='py-6 md:py-20 px-2'>
-        <motion.div
-          className='md:px-10 md:py-8 py-4 px-2 md:w-3/5 w-full bg-white mx-auto rounded-lg'
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-        >
-          <FlexContainer direction='col' className='md:gap-8 gap-4'>
-            <FlexContainer direction='col' className=''>
-              <SectionHeaderContainer
-                heading='Invest in'
-                focusText='Your Career'
-              />
-            </FlexContainer>
-            <FlexContainer direction='col' className=''>
-              <FlexContainer direction='col' className='gap-4'>
-                <FlexContainer className='gap-4 flex-wrap'>
-                  <FlexContainer className='gap-2 flex-wrap'>
-                    {userCategoryContainer}
-                  </FlexContainer>
-                  <FlexContainer className='gap-2'>
-                    <Text level='label' className='label'>
-                      Number of Members
-                    </Text>
-                    <input
-                      type='range'
-                      min={1}
-                      max={4}
-                      value={teamSize}
-                      onChange={handleTeamSizeChange}
-                      className='w-full accent-primary'
-                    />
-                    <Text level='h5' className='heading-5 text-primary'>
-                      {teamSize}
-                    </Text>
-                  </FlexContainer>
+        <FlexContainer direction='col' className='md:gap-8 gap-4'>
+          <FlexContainer direction='col' className=''>
+            <SectionHeaderContainer
+              heading='Invest in'
+              focusText='Your Career'
+            />
+          </FlexContainer>
+          <FlexContainer direction='col' className=''>
+            <FlexContainer direction='col' className='gap-4'>
+              <FlexContainer className='gap-4 flex-wrap' direction='col'>
+                <FlexContainer className='gap-2 flex-wrap'>
+                  {userCategoryContainer}
                 </FlexContainer>
-                <FlexContainer direction='col' className='gap-4'>
-                  <FlexContainer direction='col' className='gap-1'>
-                    <FlexContainer
-                      className='gap-1 items-end'
-                      itemCenter={false}
-                    >
-                      <Text level='h3' className='heading-3 text-primary'>
-                        ₹ {perTeamMemberPrice}
-                      </Text>
-                      <Text level='span' className='pre-title text-greyDark'>
-                        / Member
-                      </Text>
-                    </FlexContainer>
-                  </FlexContainer>
-                  <FlexContainer className='gap-2' direction='col'>
-                    <FlexContainer className='gap-2'>
-                      <Text
-                        level='h5'
-                        className='heading-5 line-through text-gray-400'
-                      >
-                        ₹ {selectedUserCategory.slashedPrice}
-                      </Text>
-                      <Text level='h5' className='heading-5 text-primary'>
-                        ₹ {selectedUserCategory.price}
-                      </Text>
-                      <Text level='span' className='pre-title text-greyDark'>
-                        Total
-                      </Text>
-                    </FlexContainer>
-                    <Pill
-                      text={`${selectedUserCategory.discount}% OFF`}
-                      variant='PRIMARY'
-                    />
-                  </FlexContainer>
+                <FlexContainer className='gap-2'>
+                  <Text level='label' className='label'>
+                    Number of Members
+                  </Text>
+                  <input
+                    type='range'
+                    min={1}
+                    max={4}
+                    value={teamSize}
+                    onChange={handleTeamSizeChange}
+                    className='w-full accent-primary'
+                  />
+                  <Text level='h5' className='heading-5 text-primary'>
+                    {teamSize}
+                  </Text>
                 </FlexContainer>
               </FlexContainer>
-              <ul className='space-y-2 md:space-y-4 my-4'>
-                {selectedUserCategory.features.map((feature, index) => (
-                  <motion.li
-                    key={index}
-                    className='flex items-center'
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <CheckCircleIcon className='w-5 h-5 text-primary mr-2 flex-shrink-0' />
-                    <Text level='span' className='span'>
-                      {feature}
+              <FlexContainer direction='col' className='gap-4'>
+                <FlexContainer direction='col' className='gap-1'>
+                  <FlexContainer className='gap-1 items-end' itemCenter={false}>
+                    <Text level='h3' className='heading-3 text-primary'>
+                      ₹ {perTeamMemberPrice}
                     </Text>
-                  </motion.li>
-                ))}
-              </ul>
-
-              <LinkButton
-                href={LINKS.applyBYICohort}
-                buttonProps={{
-                  text: 'Register Now',
-                  variant: 'PRIMARY',
-                  animationClasses: 'w-full sm:w-auto',
-                  className: 'm-auto',
-                }}
-                target='_blank'
-              />
+                    <Text level='span' className='pre-title text-greyDark'>
+                      / Member
+                    </Text>
+                  </FlexContainer>
+                </FlexContainer>
+                <FlexContainer className='gap-2' direction='col'>
+                  <FlexContainer className='gap-2'>
+                    <Text
+                      level='h5'
+                      className='heading-5 line-through text-gray-400'
+                    >
+                      ₹ {selectedUserCategory.slashedPrice}
+                    </Text>
+                    <Text level='h5' className='heading-5 text-primary'>
+                      ₹ {selectedUserCategory.price}
+                    </Text>
+                    <Text level='span' className='pre-title text-greyDark'>
+                      Total
+                    </Text>
+                  </FlexContainer>
+                  <Pill
+                    text={`${selectedUserCategory.discount}% OFF`}
+                    variant='PRIMARY'
+                  />
+                </FlexContainer>
+              </FlexContainer>
             </FlexContainer>
+            <ul className='space-y-2 md:space-y-4 my-4'>
+              {selectedUserCategory.features.map((feature, index) => (
+                <FlexContainer
+                  key={index}
+                  className='gap-2 justify-left'
+                  justifyCenter={false}
+                >
+                  <CheckCircleIcon className='w-5 h-5 text-primary' />
+                  <Text level='span' className='span'>
+                    {feature}
+                  </Text>
+                </FlexContainer>
+              ))}
+            </ul>
+
+            <LinkButton
+              href={LINKS.applyBYICohort}
+              buttonProps={{
+                text: 'Register Now',
+                variant: 'PRIMARY',
+                animationClasses: 'w-full sm:w-auto',
+                className: 'm-auto',
+              }}
+              target='_blank'
+            />
           </FlexContainer>
-        </motion.div>
+        </FlexContainer>
       </Section>
 
       <Banner
@@ -438,19 +398,12 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
       />
 
       <Section className='py-12 md:py-20 bg-gray-50'>
-        <div className='mx-auto md:px-4 px-2'>
-          <motion.h2
-            className='text-2xl md:text-3xl font-bold text-center mb-4 md:mb-6'
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <SectionHeaderContainer
-              heading='What Our'
-              focusText='Alumni Say'
-              headingLevel={3}
-            />
-          </motion.h2>
+        <FlexContainer className='md:gap-6 gap-3' direction='col'>
+          <SectionHeaderContainer
+            heading='What Our'
+            focusText='Alumni Say'
+            headingLevel={3}
+          />
           <Carousel
             items={TESTIMONIALS}
             renderItem={(item: TestimonialCardProps) => {
@@ -480,7 +433,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
               );
             }}
           />
-        </div>
+        </FlexContainer>
       </Section>
     </Fragment>
   );

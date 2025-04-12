@@ -449,142 +449,192 @@ const UNSKILLED_LANDING_GRAPH_TAB_PARAMS = [
 const BYI_BEGINNER_ROADMAP: CohortRoadmapProps[] = [
   {
     week: 'Week 1',
-    title: 'Introduction to Tech & Tools',
-    description: 'Understand basic tools and workflows.',
+    title: 'Introduction to Cohort + Idea Selection + Roadmap Creation',
+    description:
+      'Understand the cohort structure, select a project idea, and create a personalized roadmap.',
   },
   {
-    week: 'Week 2',
-    title: 'Project Ideation',
-    description: 'Brainstorm and choose beginner-friendly project ideas.',
-  },
-  {
-    week: 'Week 3',
-    title: 'Team Formation & Basics',
-    description: 'Collaborate, review HTML, CSS, and Git basics.',
+    week: 'Week 2-3',
+    title: 'Learning Basics + GitHub + Project Features Brainstorming',
+    description:
+      'Learning Skills, Setting up GitHub and brainstorming project ideas.',
   },
   {
     week: 'Week 4',
-    title: 'Frontend Foundations',
-    description: 'Learn and build with React or similar.',
+    title: 'Basic Impelmentation in Project',
+    description: 'Implement basic features in your project.',
   },
   {
-    week: 'Week 5',
-    title: 'Backend Basics',
-    description: 'Start backend with Express or Firebase.',
-  },
-  {
-    week: 'Week 6',
-    title: 'MVP Build',
-    description: 'Build core functionality of your product.',
+    week: 'Week 5-6',
+    title: 'Learning Phase II + Project Implementation',
+    description: 'Learn advanced skills and implement them in your project.',
   },
   {
     week: 'Week 7',
-    title: 'UI Polish',
-    description: 'Refine design and fix bugs.',
+    title: 'Launching Landing Page + Marketing',
+    description: 'Create a landing page and plan marketing strategies.',
   },
   {
-    week: 'Week 8',
-    title: 'Demo Day',
-    description: 'Launch and pitch your project.',
+    week: 'Week 8-10',
+    title: 'Learning Phase III + Project Implementation',
+    description: 'Learn advanced skills and implement them in your project.',
+  },
+  {
+    week: 'Week 11',
+    title: 'Final Touches + Beta Product Launch',
+    description: 'Make final improvements and launch the beta version.',
+  },
+  {
+    week: 'Week 12-14',
+    title: 'Learning Phase IV + Project Implementation',
+    description: 'Learn advanced skills and implement them in your project.',
+  },
+  {
+    week: 'Week 15',
+    title: 'Implementing AI in Project',
+    description: 'Implement AI features in your project.',
+  },
+  {
+    week: 'Week 16',
+    title: 'Launch V1 + Demo',
+    description: 'Launch the final version and demo it to the community.',
+  },
+  {
+    week: 'Week 17',
+    title: 'Interview Prep Roadmap Creation',
+    description: 'Create a roadmap for interview preparation.',
+  },
+  {
+    week: 'Week 18-19',
+    title: 'Mock Interview + Resume Building',
+    description: 'Prepare for interviews and build your resume.',
+  },
+  {
+    week: 'Week 20',
+    title: 'Wrap Up + Feedback',
+    description: 'Wrap up the cohort and provide feedback.',
   },
 ];
 
 const BYI_INTERMEDIATE_ROADMAP: CohortRoadmapProps[] = [
   {
     week: 'Week 1',
-    title: 'Clarity & Goal Setting',
-    description: 'Define your direction and project scope.',
+    title: 'Introduction to Cohort + Idea Selection + Roadmap Creation',
+    description:
+      'Understand the cohort structure, select a project idea, and create a personalized roadmap.',
   },
   {
-    week: 'Week 2',
-    title: 'Wireframing',
-    description: 'Design user flow and wireframes.',
-  },
-  {
-    week: 'Week 3',
-    title: 'Team Sync & Setup',
-    description: 'Organize team, finalize tech stack.',
+    week: 'Week 2-3',
+    title: 'Learning Phase I + GitHub + Project Features Brainstorming',
+    description:
+      'Learning Skills, Setting up GitHub and brainstorming project ideas.',
   },
   {
     week: 'Week 4',
-    title: 'Frontend Mastery',
-    description: 'Deep dive into components and state.',
+    title: 'Launching Landing Page + Marketing',
+    description: 'Create a landing page and plan marketing strategies.',
   },
   {
-    week: 'Week 5',
-    title: 'API + DB Integration',
-    description: 'Build backend, connect APIs.',
-  },
-  {
-    week: 'Week 6',
-    title: 'Feedback Loop',
-    description: 'Test with users and mentors.',
+    week: 'Week 5-6',
+    title: 'Learning Phase II + Project Implementation',
+    description: 'Learn advanced skills and implement them in your project.',
   },
   {
     week: 'Week 7',
-    title: 'Marketing Strategy',
-    description: 'Plan your product launch.',
+    title: 'Final Touches + Beta Product Launch',
+    description: 'Make final improvements and launch the beta version.',
   },
   {
-    week: 'Week 8',
-    title: 'Launch + Demo',
-    description: 'Showcase final version to all.',
+    week: 'Week 8-9',
+    title: 'Learning Phase III + Project Final Touches',
+    description: 'Learn advanced skills and implement them in your project.',
+  },
+  {
+    week: 'Week 10',
+    title: 'Launch V1 + Demo',
+    description: 'Launch the final version and demo it to the community.',
+  },
+  {
+    week: 'Week 11',
+    title: 'Interview Prep Roadmap Creation',
+    description: 'Create a roadmap for interview preparation.',
+  },
+  {
+    week: 'Week 12-13',
+    title: 'Mock Interview + Resume Building',
+    description: 'Prepare for interviews and build your resume.',
+  },
+  {
+    week: 'Week 14',
+    title: 'Wrap Up + Feedback',
+    description: 'Wrap up the cohort and provide feedback.',
   },
 ];
 
 const BYI_SKILLED_ROADMAP: CohortRoadmapProps[] = [
   {
     week: 'Week 1',
-    title: 'Tech Audit & Goals',
-    description: 'Audit your skills, pick a real problem.',
+    title: 'Introduction to Cohort + Idea Selection + Roadmap Creation',
+    description:
+      'Understand the cohort structure, select a project idea, and create a personalized roadmap.',
   },
   {
     week: 'Week 2',
-    title: 'Advanced Architecture',
-    description: 'Design scalable, production-grade setup.',
+    title: 'Launching Landing Page + Marketing',
+    description: 'Create a landing page and plan marketing strategies.',
   },
   {
     week: 'Week 3',
-    title: 'Phase 1 Development',
-    description: 'Build advanced features with best practices.',
+    title: 'Learning Advanced Skills + Project Implementation',
+    description: 'Learn advanced skills and implement them in your project.',
   },
   {
     week: 'Week 4',
-    title: 'CI/CD & Deployment',
-    description: 'Write tests, automate deploys.',
+    title: 'Final Touches + Beta Product Launch',
+    description: 'Make final improvements and launch the beta version.',
   },
   {
     week: 'Week 5',
-    title: 'Refinements',
-    description: 'Optimize code, improve UX.',
+    title: 'Learning Phase II + Project Implementation',
+    description: 'Learn advanced skills and implement them in your project.',
   },
   {
     week: 'Week 6',
-    title: 'Mentor Reviews',
-    description: 'Detailed feedback & improvements.',
+    title: 'Launch V1 + Demo',
+    description: 'Launch the final version and demo it to the community.',
   },
   {
     week: 'Week 7',
-    title: 'Go-to-Market Strategy',
-    description: 'Craft strong launch plan.',
+    title: 'Interview Prep Roadmap Creation',
+    description: 'Create a roadmap for interview preparation.',
   },
   {
-    week: 'Week 8',
-    title: 'Public Launch',
-    description: 'Launch & present your project.',
+    week: 'Week 8-9',
+    title: 'Mock Interview + Resume Building',
+    description: 'Prepare for interviews and build your resume.',
+  },
+  {
+    week: 'Week 10',
+    title: 'Wrap Up + Feedback',
+    description: 'Wrap up the cohort and provide feedback.',
   },
 ];
 
 const BYI_COHORT_COMMON_FEATURES = [
   'Weekly 1:1 Live Mentorship',
   'Join with Your Friends(Max 4 people)',
+  'Implement Gen AI in Project',
+  'Personalised Interview Preparation',
+  'Resume Building with AI',
+  '7 Days Money Back Guarantee',
+  '50% Cashback on Project Completion',
+  'Free Project Completion Certificate',
+  'Open Source Contributions',
+  'Weekly Code Reviews',
   'Access to Builder Community',
   'Access to Free Resources',
   'Lifetime Alumni Network',
   '24x7 QnA with Mentor',
-  '7 Days Money Back Guarantee',
-  '50% Cashback on Project Completion',
-  'Free Project Completion Certificate',
 ];
 
 const BYI_USER_CATEGORIES: CohortUserCategoryProps[] = [
@@ -607,7 +657,7 @@ const BYI_USER_CATEGORIES: CohortUserCategoryProps[] = [
     key: 'confused',
     label: '🤔 Confused Learner',
     data: BYI_INTERMEDIATE_ROADMAP,
-    duration: '2-3 Months',
+    duration: '3-4 Months',
     price: 4999,
     discount: 50,
     slashedPrice: 9999,
