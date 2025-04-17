@@ -297,6 +297,16 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'UnSkilled, Job Seekers, Missing Skills, In-demand Skills, Job Roles, Tech Hubs, The Boring Education, Online Learning, Programming, College Students, Working professional, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
+    [`${routes.onboarding}`]: {
+      title: 'Onboarding | The Boring Education',
+      siteName: 'Onboarding at The Boring Education',
+      description:
+        'Complete your onboarding process and start your learning journey with The Boring Education.',
+      url: routes.onboarding,
+      keywords:
+        'Onboarding, Online Learning, The Boring Education, User Onboarding, Learning Platform, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
   };
 
   return meta[basePath];

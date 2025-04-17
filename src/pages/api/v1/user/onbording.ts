@@ -56,7 +56,6 @@ const getUserByUsername = async (
       );
     }
 
-    // Username is available
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
@@ -68,7 +67,7 @@ const getUserByUsername = async (
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Error while checking username',
+        message: 'Error while checking userName',
         error,
       })
     );

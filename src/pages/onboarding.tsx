@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import {
   OnboardingLayout,
   StepUsername,
@@ -8,19 +8,23 @@ import {
   OnboardingProgressBar,
   StepNavigation,
   Toast,
+  SEO,
 } from '@/components';
 import { useApi, useUser } from '@/hooks';
 import { routes } from '@/constant';
+import { getPreFetchProps } from '@/utils';
+import { PageProps } from '@/interfaces';
+import { useRouter } from 'next/router';
 
 const steps = [StepUsername, StepOccupation, StepUsage, StepPhoneNumber];
 
-const OnboardingPage = () => {
+const OnboardingPage = ({ seoMeta }: PageProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
-    username: '',
-    occupation: '',
-    usage: [] as string[],
-    phone: '+91',
+    userName: '',
+    profession: '',
+    purpose: [] as string[],
+    contactNo: '+91',
   });
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<
     boolean | null
@@ -31,8 +35,9 @@ const OnboardingPage = () => {
   } | null>(null);
 
   const { user } = useUser();
-  const { makeRequest, loading: submitting } = useApi('onboarding');
-  const { username, occupation, usage, phone } = formData;
+  const router = useRouter();
+  const { makeRequest } = useApi('onboarding');
+  const { userName, profession, purpose, contactNo } = formData;
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -51,11 +56,11 @@ const OnboardingPage = () => {
 
     try {
       const payload = {
-        userName: formData.username,
+        userName: formData.userName,
         isOnboarded: true,
-        profession: formData.occupation,
-        purpose: formData.usage,
-        contactNo: formData.phone,
+        profession: formData.profession,
+        purpose: formData.purpose,
+        contactNo: formData.contactNo,
       };
 
       await makeRequest({
@@ -68,6 +73,16 @@ const OnboardingPage = () => {
         message: 'Onboarding completed successfully!',
         type: 'success',
       });
+
+      // redirect to ?redirectTo=
+      const redirectTo = new URL(window.location.href).searchParams.get(
+        'redirectTo'
+      );
+      if (redirectTo) {
+        router.push(redirectTo);
+      } else {
+        router.push(routes.user.dashboard);
+      }
     } catch {
       setToast({
         message: 'Something went wrong. Please try again.',
@@ -79,13 +94,13 @@ const OnboardingPage = () => {
   const isStepValid = () => {
     switch (currentStep) {
       case 0:
-        return username.length > 2 && isUsernameAvailable === false;
+        return userName.length > 2 && isUsernameAvailable === true;
       case 1:
-        return occupation !== '';
+        return profession !== '';
       case 2:
-        return usage.length > 0;
+        return purpose.length > 0;
       case 3: {
-        const [code, number] = phone.split(' ');
+        const [code, number] = contactNo.split(' ');
         return (
           code.startsWith('+') && number?.replace(/[^0-9]/g, '').length >= 10
         );
@@ -100,9 +115,9 @@ const OnboardingPage = () => {
       case 0:
         return (
           <StepUsername
-            username={username}
+            userName={userName}
             onChange={(value) =>
-              setFormData((prev) => ({ ...prev, username: value }))
+              setFormData((prev) => ({ ...prev, userName: value }))
             }
             setIsAvailable={setIsUsernameAvailable}
           />
@@ -110,36 +125,36 @@ const OnboardingPage = () => {
       case 1:
         return (
           <StepOccupation
-            value={occupation}
+            value={profession}
             onChange={(value) =>
-              setFormData((prev) => ({ ...prev, occupation: value }))
+              setFormData((prev) => ({ ...prev, profession: value }))
             }
           />
         );
       case 2:
         return (
           <StepUsage
-            selected={usage}
+            selected={purpose}
             onChange={(value) =>
-              setFormData((prev) => ({ ...prev, usage: value }))
+              setFormData((prev) => ({ ...prev, purpose: value }))
             }
           />
         );
       case 3:
         return (
           <StepPhoneNumber
-            countryCode={phone.split(' ')[0]}
-            phoneNumber={phone.split(' ')[1] || ''}
+            countryCode={contactNo.split(' ')[0]}
+            phoneNumber={contactNo.split(' ')[1] || ''}
             onChangeCode={(code) =>
               setFormData((prev) => ({
                 ...prev,
-                phone: `${code} ${prev.phone.split(' ')[1] || ''}`,
+                contactNo: `${code} ${prev.contactNo.split(' ')[1] || ''}`,
               }))
             }
             onChangeNumber={(number) =>
               setFormData((prev) => ({
                 ...prev,
-                phone: `${prev.phone.split(' ')[0]} ${number}`,
+                contactNo: `${prev.contactNo.split(' ')[0]} ${number}`,
               }))
             }
           />
@@ -150,7 +165,8 @@ const OnboardingPage = () => {
   };
 
   return (
-    <>
+    <Fragment>
+      <SEO seoMeta={seoMeta} />
       <OnboardingLayout
         currentStep={currentStep}
         totalSteps={steps.length}
@@ -167,7 +183,6 @@ const OnboardingPage = () => {
           isLastStep={currentStep === steps.length - 1}
           onNext={handleNext}
           onSubmit={handleSubmit}
-          isSubmitting={submitting}
         />
       </OnboardingLayout>
 
@@ -178,8 +193,10 @@ const OnboardingPage = () => {
           onClose={() => setToast(null)}
         />
       )}
-    </>
+    </Fragment>
   );
 };
+
+export const getServerSideProps = getPreFetchProps;
 
 export default OnboardingPage;

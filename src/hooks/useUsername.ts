@@ -1,46 +1,53 @@
-import { useEffect, useState } from 'react';
-import useApi from './useApi';
+import { useEffect, useRef, useState } from 'react';
+import { useApi } from '@/hooks';
 import { APIMakeRquestProps } from '@/interfaces';
 import { routes } from '@/constant';
 
-const useUsername = (username: string) => {
-  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+const useUsername = (userName: string) => {
+  const [message, setMessage] = useState<string>();
+  const [isUsernameAvailable, setIsUsernameAvailable] =
+    useState<boolean>(false);
+  const [isChecking, setIsChecking] = useState<boolean>(false);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const {
-    response,
-    loading: isChecking,
-    error,
-    makeRequest,
-  } = useApi('check-username', undefined, { enabled: false });
+  const { response, error, makeRequest } = useApi('check-userName', undefined, {
+    enabled: false,
+  });
 
   useEffect(() => {
-    if (!username || username.length <= 2) {
-      setIsAvailable(null);
-      return;
+    if (!userName) return;
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
     }
 
-    const timer = setTimeout(() => {
+    setIsChecking(true);
+    setMessage('Checking availability...');
+
+    typingTimeoutRef.current = setTimeout(() => {
       const params: APIMakeRquestProps = {
-        url: `${routes.api.onboard}?userName=${username}`,
+        url: `${routes.api.onboard}?userName=${userName}`,
         method: 'GET',
       };
       makeRequest(params);
-    }, 1000);
+    }, 1500);
 
-    return () => clearTimeout(timer);
-  }, [username]);
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, [userName]);
 
   useEffect(() => {
     if (!response) return;
 
-    if (response.status === true && response.data) {
-      setIsAvailable(false);
-    } else {
-      setIsAvailable(true);
-    }
+    setIsUsernameAvailable(!!response.data);
+    setMessage(response.message);
+    setIsChecking(false);
   }, [response]);
 
-  return { isAvailable, isChecking, error };
+  return { message, isUsernameAvailable, isChecking, error };
 };
 
 export default useUsername;

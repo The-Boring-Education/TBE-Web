@@ -27,7 +27,7 @@ const CertificateContent = ({
         position: 'relative',
       }}
     >
-      <div className='absolute certificate-username'>{userName}</div>
+      <div className='absolute certificate-userName'>{userName}</div>
       <div className='absolute certificate-coursename'>{courseName}</div>
       <div className='absolute certificate-date'>{date}</div>
     </div>

@@ -130,7 +130,7 @@
     color: #ecf1f4;
   }
 
-  .certificate-username {
+  .certificate-userName {
     @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[160%] font-bold capitalize whitespace-nowrap overflow-hidden text-ellipsis text-[0.8rem] text-[0.6rem] md:text-[2rem] lg:text-[2.5rem];
   }
 

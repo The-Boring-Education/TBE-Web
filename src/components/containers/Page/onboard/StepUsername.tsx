@@ -1,66 +1,35 @@
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { InputFieldContainer, Text } from '@/components';
+import { FlexContainer, InputFieldContainer, Text } from '@/components';
 import { useUsername } from '@/hooks';
 import { StepUsernameProps } from '@/interfaces';
 
 const StepUsername = ({
-  username,
+  userName,
   onChange,
   setIsAvailable,
 }: StepUsernameProps) => {
-  const { isAvailable, isChecking } = useUsername(username);
+  const { message, isUsernameAvailable } = useUsername(userName);
 
   useEffect(() => {
-    setIsAvailable?.(isAvailable);
-  }, [isAvailable]);
+    setIsAvailable?.(isUsernameAvailable);
+  }, [isUsernameAvailable]);
 
   return (
-    <div className='space-y-4'>
-      <Text level='h4' className='heading-4'>
+    <FlexContainer className='gap-2'>
+      <Text level='p' className='paragraph'>
         1. Choose Your Username
       </Text>
-
-      <div className='relative'>
-        <InputFieldContainer
-          label='Username'
-          type='text'
-          value={username}
-          onChange={onChange}
-          className='w-full'
-        />
-
-        {isChecking && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className='absolute right-3 top-9 text-sm text-gray-500'
-          >
-            Checking...
-          </motion.div>
-        )}
-
-        {!isChecking && isAvailable === true && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className='absolute  py-1 text-sm text-red-500'
-          >
-            UserName Not available.
-          </motion.div>
-        )}
-
-        {!isChecking && isAvailable === false && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className='absolute  py-1 text-sm text-green-500'
-          >
-            UserName Available
-          </motion.div>
-        )}
-      </div>
-    </div>
+      <InputFieldContainer
+        label='Username'
+        type='text'
+        value={userName}
+        onChange={onChange}
+        className='w-full'
+      />
+      <Text level='span' className='pre-title'>
+        {message}
+      </Text>
+    </FlexContainer>
   );
 };
 

@@ -1,11 +1,11 @@
-import { CheckboxButtonContainer } from '@/components';
+import { CheckboxButtonContainer, FlexContainer } from '@/components';
 import { StepUsageProps } from '@/interfaces';
 import { usageOptions } from '@/constant';
 import { Text } from '@/components';
 
 const StepUsage = ({ selected, onChange }: StepUsageProps) => (
-  <>
-    <Text level='h4' className='heading-4 p-1 mb-2'>
+  <FlexContainer className='gap-4'>
+    <Text level='p' className='paragraph'>
       3. How would You use the Platform?
     </Text>
     <CheckboxButtonContainer
@@ -13,7 +13,7 @@ const StepUsage = ({ selected, onChange }: StepUsageProps) => (
       selectedValues={selected}
       onChange={onChange}
     />
-  </>
+  </FlexContainer>
 );
 
 export default StepUsage;

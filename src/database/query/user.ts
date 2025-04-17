@@ -59,9 +59,9 @@ const getUserByUserNameFromDB = async (
       return { error: 'Username already taken' };
     }
 
-    return { data: 'Username is available' };
+    return { data: true };
   } catch (error) {
-    return { error: 'An error occurred while checking the username' };
+    return { error: 'An error occurred while checking the userName' };
   }
 };
 

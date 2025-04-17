@@ -17,8 +17,8 @@ const StepPhoneNumber = ({
   const codeList = COUNTRY_CODES.map((c) => c.code);
 
   return (
-    <Section className='w-full'>
-      <Text level='h4' className='heading-4 p-1 mb-2'>
+    <FlexContainer className='gap-2' direction='col'>
+      <Text level='p' className='paragraph'>
         3. Your Contact No?
       </Text>
 
@@ -41,7 +41,7 @@ const StepPhoneNumber = ({
           isOptional={true}
         />
       </FlexContainer>
-    </Section>
+    </FlexContainer>
   );
 };
 

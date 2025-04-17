@@ -665,7 +665,7 @@ export type UsageOption = {
 };
 
 export type StepUsernameProps = {
-  username: string;
+  userName: string;
   onChange: (value: string) => void;
   setIsAvailable?: (value: boolean | null) => void;
 };
