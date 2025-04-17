@@ -4,7 +4,6 @@ import {
   FlexContainer,
   InputFieldContainer,
   Text,
-  Section,
 } from '@/components';
 import { StepPhoneNumberProps } from '@/interfaces';
 
