@@ -1,6 +1,5 @@
 import { Button, FlexContainer } from '@/components';
 import { StepNavigationProps } from '@/interfaces';
-import { Fragment } from 'react';
 
 const StepNavigation = ({
   isValid,

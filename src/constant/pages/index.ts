@@ -5,7 +5,6 @@ import {
   PrimaryCardWithCTAProps,
   CohortRoadmapProps,
   CohortUserCategoryProps,
-  UserRoleType,
 } from '@/interfaces';
 import { cohorts, LINKS, products, STATIC_FILE_PATH } from '../global';
 import { v4 } from 'uuid';
