@@ -6,7 +6,8 @@ import {
   RadioButtonOptionsProps,
   UserPointsActionType,
   UserLevel,
-  UsageOption,
+  UserRoleType,
+  PlatformUsageType,
 } from '@/interfaces';
 import { routes } from './routes';
 import { envConfig } from './envConfig';
@@ -320,11 +321,17 @@ const USER_LEVELS: UserLevel[] = [
   { name: 'Legend', value: 'LEGEND', minPoints: 10000, level: 10 },
 ];
 
-const usageOptions: UsageOption[] = [
-  { id: 'tech', label: 'Learning Tech' },
-  { id: 'projects', label: 'Building Projects' },
-  { id: 'interview', label: 'Interview Prep' },
-  { id: 'job', label: 'Job Search' },
+const USER_ROLE_OPTIONS: { label: string; value: UserRoleType }[] = [
+  { label: 'Tech Student', value: 'TECH_STUDENT' },
+  { label: 'Non-Tech Student', value: 'NON_TECH_STUDENT' },
+  { label: 'Working Professional', value: 'WORKING_PROFESSIONAL' },
+];
+
+const USER_USAGE_OPTIONS: { label: string; value: PlatformUsageType }[] = [
+  { label: 'Learning Tech', value: 'LEARNING_TECH' },
+  { label: 'Building Projects', value: 'BUILDING_PROJECTS' },
+  { label: 'Interview Prep', value: 'INTERVIEW_PREP' },
+  { label: 'Job Search', value: 'JOB_SEARCH' },
 ];
 
 const COUNTRY_CODES = [
@@ -365,6 +372,7 @@ export {
   YOUFOCUS_SKILL_PLAYLISTS,
   POINTS_RULES,
   USER_LEVELS,
-  usageOptions,
+  USER_USAGE_OPTIONS,
   COUNTRY_CODES,
+  USER_ROLE_OPTIONS,
 };

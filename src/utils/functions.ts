@@ -539,6 +539,14 @@ const calculateProgressPercentage = (
   return (progress / nextMinPoints) * 100;
 };
 
+const getRedirectUrl = (url?: string) => {
+  const redirectTo =
+    new URL(url || window.location.href).searchParams.get('redirectTo') ||
+    routes.user.dashboard;
+
+  return redirectTo;
+};
+
 export {
   formatDate,
   formatTime,
@@ -568,4 +576,5 @@ export {
   calculateUserPointsForAction,
   getUserGamificationLevel,
   calculateProgressPercentage,
+  getRedirectUrl,
 };

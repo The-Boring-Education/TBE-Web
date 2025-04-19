@@ -141,4 +141,9 @@
   .certificate-date {
     @apply absolute top-[62%] left-1/2 transform -translate-x-1/2 font-bold text-[0.6rem] sm:text-[1.5rem] md:text-[2rem];
   }
+
+  .checkbox,
+  .radio {
+    @apply flex items-center gap-2 px-3 py-2 border label rounded-full transition-all duration-150 cursor-pointer shadow-md
+  }
 }

@@ -58,7 +58,11 @@ const NOTIFICATION_TYPE: NotificationType[] = [
   'UPDATE',
 ];
 
-const USER_ROLE: UserRoleType[] = ['STUDENT', 'WORKING_PROFESSIONAL'];
+const USER_ROLE: UserRoleType[] = [
+  'TECH_STUDENT',
+  'NON_TECH_STUDENT',
+  'WORKING_PROFESSIONAL',
+];
 
 const PLATFORM_USAGE: PlatformUsageType[] = [
   'LEARNING_TECH',

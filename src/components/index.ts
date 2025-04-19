@@ -230,29 +230,29 @@ const CheckboxButtonContainer = dynamic(
 );
 
 const OnboardingProgressBar = dynamic(
-  () => import('@/components/containers/Page/onboard/OnboardingProgressBar')
+  () => import('@/components/containers/Page/Onboarding/OnboardingProgressBar')
 );
 
 const OnboardingLayout = dynamic(
-  () => import('@/components/containers/Page/onboard/OnboardingLayout')
+  () => import('@/components/containers/Page/Onboarding/OnboardingLayout')
 );
 
 const StepUsername = dynamic(
-  () => import('@/components/containers/Page/onboard/StepUsername')
+  () => import('@/components/containers/Page/Onboarding/StepUsername')
 );
 const StepOccupation = dynamic(
-  () => import('@/components/containers/Page/onboard/StepOccupation')
+  () => import('@/components/containers/Page/Onboarding/StepOccupation')
 );
 
 const StepUsage = dynamic(
-  () => import('@/components/containers/Page/onboard/StepUsage')
+  () => import('@/components/containers/Page/Onboarding/StepUsage')
 );
 const StepPhoneNumber = dynamic(
-  () => import('@/components/containers/Page/onboard/StepPhoneNumber')
+  () => import('@/components/containers/Page/Onboarding/StepPhoneNumber')
 );
 
 const StepNavigation = dynamic(
-  () => import('@/components/containers/Page/onboard/StepNavigation')
+  () => import('@/components/containers/Page/Onboarding/StepNavigation')
 );
 
 export {

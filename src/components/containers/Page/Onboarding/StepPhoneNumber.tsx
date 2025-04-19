@@ -18,7 +18,7 @@ const StepPhoneNumber = ({
   return (
     <FlexContainer className='gap-2' direction='col'>
       <Text level='p' className='paragraph'>
-        3. Your Contact No?
+        Your Contact No
       </Text>
 
       <FlexContainer className='gap-2 w-full items-center flex-nowrap'>
@@ -26,7 +26,7 @@ const StepPhoneNumber = ({
           list={codeList}
           selectedItem={countryCode}
           onChange={onChangeCode}
-          className='w-24 sm:w-32 '
+          className=''
           aria-label='Country Code'
         />
 

@@ -68,7 +68,7 @@ const getUserByUserNameFromDB = async (
 const onboardUserToDB = async (
   userId: string,
   userName: string,
-  profession: UserRoleType,
+  occupation: UserRoleType,
   purpose: PlatformUsageType[],
   contactNo: string
 ): Promise<DatabaseQueryResponseType> => {
@@ -77,7 +77,7 @@ const onboardUserToDB = async (
       userId,
       {
         userName,
-        profession,
+        occupation,
         purpose,
         contactNo,
         isOnboarded: true,

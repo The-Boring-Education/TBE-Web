@@ -9,59 +9,48 @@ import {
   StepNavigation,
   Toast,
   SEO,
+  SectionHeaderContainer,
 } from '@/components';
 import { useApi, useUser } from '@/hooks';
 import { routes } from '@/constant';
-import { getPreFetchProps } from '@/utils';
+import { getPreFetchProps, getRedirectUrl } from '@/utils';
 import { PageProps } from '@/interfaces';
 import { useRouter } from 'next/router';
+import FlexContainer from '@/components/containers/Page/common/FlexContainer';
 
 const steps = [StepUsername, StepOccupation, StepUsage, StepPhoneNumber];
 
 const OnboardingPage = ({ seoMeta }: PageProps) => {
+  const router = useRouter();
+  const { user } = useUser();
+  const { makeRequest } = useApi('onboarding');
+
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     userName: '',
-    profession: '',
+    occupation: '',
     purpose: [] as string[],
     contactNo: '+91',
   });
-  const [isUsernameAvailable, setIsUsernameAvailable] = useState<
-    boolean | null
-  >(null);
+  const [isUsernameAvailable, setIsUsernameAvailable] =
+    useState<boolean>(false);
   const [toast, setToast] = useState<{
     message: string;
-    type?: 'success' | 'error' | 'info' | 'warning';
+    type?: 'success' | 'error';
   } | null>(null);
 
-  const { user } = useUser();
-  const router = useRouter();
-  const { makeRequest } = useApi('onboarding');
-  const { userName, profession, purpose, contactNo } = formData;
+  const { userName, occupation, purpose, contactNo } = form;
 
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep((prev) => prev + 1);
-    }
-  };
+  const handleNext = () =>
+    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
 
-  const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
-    }
-  };
+  const handleBack = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   const handleSubmit = async () => {
     if (!user?.id) return;
 
     try {
-      const payload = {
-        userName: formData.userName,
-        isOnboarded: true,
-        profession: formData.profession,
-        purpose: formData.purpose,
-        contactNo: formData.contactNo,
-      };
+      const payload = { ...form, isOnboarded: true };
 
       await makeRequest({
         url: `${routes.api.onboard}?userId=${user.id}`,
@@ -74,15 +63,8 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
         type: 'success',
       });
 
-      // redirect to ?redirectTo=
-      const redirectTo = new URL(window.location.href).searchParams.get(
-        'redirectTo'
-      );
-      if (redirectTo) {
-        router.push(redirectTo);
-      } else {
-        router.push(routes.user.dashboard);
-      }
+      const redirectTo = getRedirectUrl();
+      router.push(redirectTo);
     } catch {
       setToast({
         message: 'Something went wrong. Please try again.',
@@ -91,12 +73,12 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
     }
   };
 
-  const isStepValid = () => {
+  const isValidStep = (): boolean => {
     switch (currentStep) {
       case 0:
-        return userName.length > 2 && isUsernameAvailable === true;
+        return userName.length > 2 && isUsernameAvailable;
       case 1:
-        return profession !== '';
+        return occupation.trim().length > 0;
       case 2:
         return purpose.length > 0;
       case 3: {
@@ -111,54 +93,43 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
   };
 
   const renderStep = () => {
+    const updateForm = (key: keyof typeof form, value: any) =>
+      setForm((prev) => ({ ...prev, [key]: value }));
+
     switch (currentStep) {
       case 0:
         return (
           <StepUsername
             userName={userName}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, userName: value }))
-            }
-            setIsAvailable={setIsUsernameAvailable}
+            onChange={(val) => updateForm('userName', val)}
+            setIsUsernameAvailable={setIsUsernameAvailable}
           />
         );
       case 1:
         return (
           <StepOccupation
-            value={profession}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, profession: value }))
-            }
+            value={occupation}
+            onChange={(val) => updateForm('occupation', val)}
           />
         );
       case 2:
         return (
           <StepUsage
             selected={purpose}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, purpose: value }))
-            }
+            onChange={(val) => updateForm('purpose', val)}
           />
         );
-      case 3:
+      case 3: {
+        const [code = '+91', number = ''] = contactNo.split(' ');
         return (
           <StepPhoneNumber
-            countryCode={contactNo.split(' ')[0]}
-            phoneNumber={contactNo.split(' ')[1] || ''}
-            onChangeCode={(code) =>
-              setFormData((prev) => ({
-                ...prev,
-                contactNo: `${code} ${prev.contactNo.split(' ')[1] || ''}`,
-              }))
-            }
-            onChangeNumber={(number) =>
-              setFormData((prev) => ({
-                ...prev,
-                contactNo: `${prev.contactNo.split(' ')[0]} ${number}`,
-              }))
-            }
+            countryCode={code}
+            phoneNumber={number}
+            onChangeCode={(val) => updateForm('contactNo', `${val} ${number}`)}
+            onChangeNumber={(val) => updateForm('contactNo', `${code} ${val}`)}
           />
         );
+      }
       default:
         return null;
     }
@@ -167,23 +138,30 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <OnboardingLayout
-        currentStep={currentStep}
-        totalSteps={steps.length}
-        onBack={handleBack}
-      >
-        <OnboardingProgressBar
-          currentStep={currentStep}
-          totalSteps={steps.length}
-        />
-        {renderStep()}
-        <StepNavigation
-          currentStep={currentStep}
-          isValid={isStepValid()}
-          isLastStep={currentStep === steps.length - 1}
-          onNext={handleNext}
-          onSubmit={handleSubmit}
-        />
+      <OnboardingLayout>
+        <FlexContainer className='gap-6' fullWidth={true} direction='col'>
+          <FlexContainer className='gap-3' direction='col'>
+            <SectionHeaderContainer
+              heading="Let's Start "
+              focusText='Your Tech Journey'
+              headingLevel={4}
+              subtext="Let's get to know you better"
+            />
+            <OnboardingProgressBar
+              currentStep={currentStep}
+              totalSteps={steps.length}
+            />
+          </FlexContainer>
+          {renderStep()}
+          <StepNavigation
+            currentStep={currentStep}
+            isValid={isValidStep()}
+            isLastStep={currentStep === steps.length - 1}
+            onNext={handleNext}
+            onBack={handleBack}
+            onSubmit={handleSubmit}
+          />
+        </FlexContainer>
       </OnboardingLayout>
 
       {toast && (

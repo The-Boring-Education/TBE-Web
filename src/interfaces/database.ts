@@ -19,7 +19,7 @@ export interface UserModel {
   image?: string;
   provider: string;
   providerAccountId?: string;
-  profession?: UserRoleType;
+  occupation?: UserRoleType;
   purpose?: PlatformUsageType[];
   contactNo?: string;
   isOnboarded?: boolean;

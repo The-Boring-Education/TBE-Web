@@ -80,10 +80,10 @@ const handleUserOnboarding = async (
   userId: string
 ) => {
   try {
-    const { userName, profession, purpose, contactNo } =
+    const { userName, occupation, purpose, contactNo } =
       req.body as AddOnboardingPayloadProps;
 
-    if (!userId || !userName || !profession || !purpose || !contactNo) {
+    if (!userId || !userName || !occupation || !purpose || !contactNo) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
@@ -96,7 +96,7 @@ const handleUserOnboarding = async (
     const { data, error: updateUserError } = await onboardUserToDB(
       userId,
       userName,
-      profession,
+      occupation,
       purpose,
       contactNo
     );

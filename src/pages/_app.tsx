@@ -10,6 +10,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@/hooks';
+import { getRedirectUrl } from '@/utils';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -22,15 +23,18 @@ const AppContent = ({
   const { isOnboarded, isAuth, loading } = useUser();
 
   useEffect(() => {
-    if (
-      !loading &&
-      isAuth &&
-      !isOnboarded &&
-      router.pathname !== routes.onboarding
-    ) {
+    if (loading) return;
+
+    // Redirect to onboarding if not onboarded and authenticated
+    if (!isOnboarded && isAuth) {
       router.push(routes.onboarding);
     }
-  }, [isAuth, isOnboarded, loading, router]);
+    // Redirect to dashboard if onboarded and authenticated
+    else if (isOnboarded && router.pathname === routes.onboarding) {
+      const redirectTo = getRedirectUrl();
+      router.push(redirectTo);
+    }
+  }, [isAuth, isOnboarded, loading]);
 
   return (
     <QueryClientProvider client={queryClient}>

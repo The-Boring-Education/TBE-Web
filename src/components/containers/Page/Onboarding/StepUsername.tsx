@@ -6,16 +6,16 @@ import { StepUsernameProps } from '@/interfaces';
 const StepUsername = ({
   userName,
   onChange,
-  setIsAvailable,
+  setIsUsernameAvailable,
 }: StepUsernameProps) => {
   const { message, isUsernameAvailable } = useUsername(userName);
 
   useEffect(() => {
-    setIsAvailable?.(isUsernameAvailable);
+    setIsUsernameAvailable(isUsernameAvailable);
   }, [isUsernameAvailable]);
 
   return (
-    <FlexContainer className='gap-2'>
+    <FlexContainer className='gap-2 md:w-1/2 w-full m-auto' direction='col'>
       <Text level='p' className='paragraph'>
         1. Choose Your Username
       </Text>
@@ -24,9 +24,14 @@ const StepUsername = ({
         type='text'
         value={userName}
         onChange={onChange}
-        className='w-full'
+        className=''
       />
-      <Text level='span' className='pre-title'>
+      <Text
+        level='span'
+        className={`span ${
+          isUsernameAvailable ? 'text-success' : 'text-primary'
+        }`}
+      >
         {message}
       </Text>
     </FlexContainer>

@@ -15,7 +15,10 @@ const useUsername = (userName: string) => {
   });
 
   useEffect(() => {
-    if (!userName) return;
+    if (!userName) {
+      setMessage('');
+      return;
+    }
 
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);

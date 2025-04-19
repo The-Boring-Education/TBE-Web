@@ -102,7 +102,10 @@ export type NotificationType =
   | 'INTERVIEW PREP'
   | 'UPDATE';
 
-export type UserRoleType = 'STUDENT' | 'WORKING_PROFESSIONAL';
+export type UserRoleType =
+  | 'TECH_STUDENT'
+  | 'WORKING_PROFESSIONAL'
+  | 'NON_TECH_STUDENT';
 
 export type PlatformUsageType =
   | 'LEARNING_TECH'

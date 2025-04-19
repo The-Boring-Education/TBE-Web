@@ -210,7 +210,7 @@ export interface CreateUserRequestPayloadProps {
 export interface AddOnboardingPayloadProps {
   userId: string;
   userName: string;
-  profession: UserRoleType;
+  occupation: UserRoleType;
   purpose: PlatformUsageType[];
   contactNo: string;
 }

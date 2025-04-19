@@ -29,7 +29,7 @@ const UserSchema: Schema<UserModel> = new Schema(
       type: Boolean,
       default: false,
     },
-    profession: {
+    occupation: {
       type: String,
       enum: USER_ROLE,
     },

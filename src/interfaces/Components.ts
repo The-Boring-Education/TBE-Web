@@ -624,9 +624,6 @@ export interface LoginRedirectButtonProps {
 
 export interface OnboardingLayoutProps {
   children: ReactNode;
-  currentStep: number;
-  totalSteps: number;
-  onBack: () => void;
 }
 
 export interface OnboardingProgressBarProps {
@@ -640,6 +637,7 @@ export interface StepNavigationProps {
   isLastStep: boolean;
   onNext: () => void;
   onSubmit: () => void;
+  onBack: () => void;
 }
 
 export interface StepOccupationProps {
@@ -659,15 +657,10 @@ export interface StepUsageProps {
   onChange: (updated: string[]) => void;
 }
 
-export type UsageOption = {
-  id: string;
-  label: string;
-};
-
 export type StepUsernameProps = {
   userName: string;
   onChange: (value: string) => void;
-  setIsAvailable?: (value: boolean | null) => void;
+  setIsUsernameAvailable: (value: boolean) => void;
 };
 
 export interface CohortJourneySectionProps {

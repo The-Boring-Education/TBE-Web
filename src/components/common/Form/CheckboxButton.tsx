@@ -9,10 +9,8 @@ const CheckboxButton = ({
 }: CheckboxButtonProps) => {
   return (
     <label
-      className={`flex items-center gap-2 px-3 py-1 font-semibold rounded transition-all duration-150 cursor-pointer shadow-md 
-        ${
-          isSelected ? 'bg-primary text-white' : 'bg-gray-200 hover:bg-gray-300'
-        }
+      className={`checkbox 
+        ${isSelected ? 'bg-primary text-white' : 'bg-accent hover:bg-greyLight'}
       `}
       htmlFor={`checkbox-${value}`}
     >

@@ -1,6 +1,6 @@
 import { CheckboxButtonContainer, FlexContainer } from '@/components';
 import { StepUsageProps } from '@/interfaces';
-import { usageOptions } from '@/constant';
+import { USER_USAGE_OPTIONS } from '@/constant';
 import { Text } from '@/components';
 
 const StepUsage = ({ selected, onChange }: StepUsageProps) => (
@@ -9,7 +9,10 @@ const StepUsage = ({ selected, onChange }: StepUsageProps) => (
       3. How would You use the Platform?
     </Text>
     <CheckboxButtonContainer
-      options={usageOptions.map((opt) => ({ label: opt.label, value: opt.id }))}
+      options={USER_USAGE_OPTIONS.map(({ label, value }) => ({
+        label,
+        value,
+      }))}
       selectedValues={selected}
       onChange={onChange}
     />

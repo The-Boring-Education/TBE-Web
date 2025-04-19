@@ -1,26 +1,31 @@
 import { motion } from 'framer-motion';
 import { OnboardingProgressBarProps } from '@/interfaces';
+import { FlexContainer, Text } from '@/components';
 
 const OnboardingProgressBar = ({
   currentStep,
   totalSteps,
 }: OnboardingProgressBarProps) => {
-  const progressPercent = ((currentStep + 1) / totalSteps) * 100;
+  const progressPercent = (currentStep / totalSteps) * 100;
 
   return (
-    <div className='mb-6 pt-4'>
-      <div className='h-2 w-full bg-gray-200 rounded-full overflow-hidden'>
+    <FlexContainer fullWidth={true} className='gap-2'>
+      <FlexContainer
+        fullWidth={true}
+        justifyCenter={false}
+        className='h-2 bg-gray-200 rounded-full overflow-hidden'
+      >
         <motion.div
-          className='h-full bg-primary rounded-full'
+          className='h-full bg-success rounded-full'
           initial={{ width: 0 }}
           animate={{ width: `${progressPercent}%` }}
           transition={{ duration: 0.4, ease: 'easeInOut' }}
         />
-      </div>
-      <div className='mt-2 text-sm text-muted-foreground text-right'>
+      </FlexContainer>
+      <Text level='span' className='pre-title'>
         Step {currentStep + 1} of {totalSteps}
-      </div>
-    </div>
+      </Text>
+    </FlexContainer>
   );
 };
 
