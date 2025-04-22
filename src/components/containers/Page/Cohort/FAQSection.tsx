@@ -9,7 +9,7 @@ interface FAQItem {
 
 const FAQ_LIST: FAQItem[] = [
   {
-    question: 'What is Bring Your Idea (Bring Your Idea) Cohort?',
+    question: 'What is Bring Your Idea Cohort?',
     answer:
       'It’s a 2-phase mentorship-driven program where you launch a product in the first phase and prepare for interviews in the second.',
   },
