@@ -3,8 +3,12 @@ import { SEOProps } from '@/interfaces';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-export default function SEO({ seoMeta }: SEOProps) {
+const DOMAIN = 'https://theboringeducation.com';
+
+const SEO = ({ seoMeta }: SEOProps) => {
   const router = useRouter();
+
+  const canonicalUrl = `${DOMAIN}${router.asPath === '/' ? '' : router.asPath}`;
 
   return (
     <Head>
@@ -12,7 +16,7 @@ export default function SEO({ seoMeta }: SEOProps) {
       <meta name='robots' content={seoMeta.robots} />
       <meta content={seoMeta.description} name='description' />
       <meta property='og:url' content={`${seoMeta.url}${router.asPath}`} />
-      <link rel='canonical' href={`${seoMeta.url}${router.asPath}`} />
+      <link rel='canonical' href={canonicalUrl} />
       {/* Open Graph */}
       <meta property='og:type' content={seoMeta.type} />
       <meta property='og:site_name' content={seoMeta.siteName} />
@@ -34,4 +38,6 @@ export default function SEO({ seoMeta }: SEOProps) {
       <meta name='theme-color' content='#ff5757' />
     </Head>
   );
-}
+};
+
+export default SEO;

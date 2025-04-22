@@ -7,6 +7,7 @@ import {
 } from 'react';
 import {
   CertificateType,
+  CohortRoadmapProps,
   GetSEOMetaResponseType,
   QuestionFrequencyType,
   TopNavbarLinkProps,
@@ -65,6 +66,7 @@ export interface ButtonProps {
   isLoading?: boolean;
   animationClasses?: string;
   icon?: React.ReactNode;
+  isFullWidth?: boolean;
 }
 
 export interface PageLayoutProps {
@@ -209,6 +211,7 @@ export interface SelectInputProps {
   list: any[];
   onChange: (value: string) => void;
   selectedItem: string;
+  className?: string;
 }
 
 export interface InputFieldContainerProps {
@@ -296,6 +299,12 @@ export interface InputRadioContainerProps {
   onChange: (itemId: string) => void;
   selectedItemValue?: string;
   className?: string;
+}
+
+export interface CheckboxGroupProps {
+  options: { label: string; value: string }[];
+  selectedValues: string[];
+  onChange: (values: string[]) => void;
 }
 
 export interface RadioInputFieldProps extends RadioButtonOptionsProps {
@@ -554,6 +563,13 @@ export interface RadioButtonProps {
   onClick: () => void;
 }
 
+export interface CheckboxButtonProps {
+  label: string;
+  value: string;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
 export interface RadioGroupProps {
   options: RadioButtonOptionsProps[];
   selectedValue: string | null;
@@ -599,4 +615,54 @@ export interface LevelProgressCardProps {
   nextLevelName?: string;
   pointsLeftToNextLevel: number;
   percentageProgress: number;
+}
+
+export interface LoginRedirectButtonProps {
+  text?: string;
+  className?: string;
+}
+
+export interface OnboardingLayoutProps {
+  children: ReactNode;
+}
+
+export interface OnboardingProgressBarProps {
+  currentStep: number;
+  totalSteps: number;
+}
+
+export interface StepNavigationProps {
+  currentStep: number;
+  isValid: boolean;
+  isLastStep: boolean;
+  onNext: () => void;
+  onSubmit: () => void;
+  onBack: () => void;
+}
+
+export interface StepOccupationProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export interface StepPhoneNumberProps {
+  countryCode: string;
+  phoneNumber: string;
+  onChangeCode: (code: string) => void;
+  onChangeNumber: (number: string) => void;
+}
+
+export interface StepUsageProps {
+  selected: string[];
+  onChange: (updated: string[]) => void;
+}
+
+export type StepUsernameProps = {
+  userName: string;
+  onChange: (value: string) => void;
+  setIsUsernameAvailable: (value: boolean) => void;
+};
+
+export interface CohortJourneySectionProps {
+  weeks: CohortRoadmapProps[];
 }

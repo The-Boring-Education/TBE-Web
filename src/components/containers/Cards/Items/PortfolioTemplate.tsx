@@ -3,7 +3,7 @@ import {
   Image,
   FlexContainer,
   LinkButton,
-  LoginWithGoogleButton,
+  LoginRedirectButton,
 } from '@/components';
 import { PortfolioTemplateProps } from '@/interfaces';
 import { useUser } from '@/hooks';
@@ -33,9 +33,7 @@ const PortfolioTemplate = ({
     />
   );
 
-  const loginButton = !isAuth && (
-    <LoginWithGoogleButton text='Login to Start' />
-  );
+  const loginButton = !isAuth && <LoginRedirectButton />;
 
   return (
     <FlexContainer className='w-full md:w-[48%] lg:w-[31%] border-2 border-gray-300 rounded-xl gap-2'>

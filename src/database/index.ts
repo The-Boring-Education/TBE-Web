@@ -13,6 +13,7 @@ import UserPlaylist from './models/YouFocus/UserPlaylist';
 import Notification from './models/Notification';
 import Job from './models/Unskilled/Jobs';
 import Gamification from './models/Gamification';
+import JobAggregate from './models/Unskilled/JobAggregate';
 
 export {
   Project,
@@ -29,6 +30,7 @@ export {
   Notification,
   Job,
   Gamification,
+  JobAggregate,
 };
 
 // Query

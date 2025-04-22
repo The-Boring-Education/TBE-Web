@@ -9,9 +9,9 @@ const BannerVariantB = ({
   imageSrc,
 }: BannerProps) => {
   return (
-    <Section className='md:px-8 py-4 px-2'>
+    <Section className='md:px-8 md:py-4 px-2 py-4'>
       <FlexContainer justifyCenter={false}>
-        <FlexContainer className='gap-4 rounded-2 m-auto gradient-7 px-2 py-4 shadow-lg sm:px-8 sm:py-8 lg:px-4 lg:py-4'>
+        <FlexContainer className='w-full gap-4 rounded-2 gradient-7 md:px-8 md:py-8 px-2 py-4 shadow-lg sm:px-8 sm:py-8 lg:px-4 lg:py-4'>
           <Image
             src={imageSrc}
             alt='banner image'

@@ -1,4 +1,19 @@
 import dynamic from 'next/dynamic';
+const FAQSection = dynamic(
+  () => import('@/components/containers/Page/Cohort/FAQSection')
+);
+const InterviewPrepSection = dynamic(
+  () => import('@/components/containers/Page/Cohort/InterviewPrepSection')
+);
+const PrevCohortProjects = dynamic(
+  () => import('@/components/containers/Page/Cohort/PrevCohortProjects')
+);
+const SessionDetailsSection = dynamic(
+  () => import('@/components/containers/Page/Cohort/SessionDetailsSection')
+);
+const CohortJourneyContainer = dynamic(
+  () => import('@/components/containers/Page/Cohort/CohortJourneyContainer')
+);
 const TabComponent = dynamic(() => import('@/components/common/Tab'));
 const OutlineCard = dynamic(
   () => import('@/components/containers/Cards/Items/OutlineCard')
@@ -210,6 +225,48 @@ const ActionBanner = dynamic(
   () => import('@/components/common/Banner/ActionBanner')
 );
 
+const LoginRedirectButton = dynamic(
+  () => import('@/components/common/Buttons/LoginRedirectButton')
+);
+
+const LoginCard = dynamic(
+  () => import('@/components/containers/Cards/LoginCard')
+);
+
+const CheckboxButton = dynamic(
+  () => import('@/components/common/Form/CheckboxButton')
+);
+
+const CheckboxButtonContainer = dynamic(
+  () => import('@/components/containers/Forms/CheckboxButtonContainer')
+);
+
+const OnboardingProgressBar = dynamic(
+  () => import('@/components/containers/Page/Onboarding/OnboardingProgressBar')
+);
+
+const OnboardingLayout = dynamic(
+  () => import('@/components/containers/Page/Onboarding/OnboardingLayout')
+);
+
+const StepUsername = dynamic(
+  () => import('@/components/containers/Page/Onboarding/StepUsername')
+);
+const StepOccupation = dynamic(
+  () => import('@/components/containers/Page/Onboarding/StepOccupation')
+);
+
+const StepUsage = dynamic(
+  () => import('@/components/containers/Page/Onboarding/StepUsage')
+);
+const StepPhoneNumber = dynamic(
+  () => import('@/components/containers/Page/Onboarding/StepPhoneNumber')
+);
+
+const StepNavigation = dynamic(
+  () => import('@/components/containers/Page/Onboarding/StepNavigation')
+);
+
 export {
   Navbar,
   LinkText as Link,
@@ -296,4 +353,20 @@ export {
   ActionBanner,
   OutlineCard,
   TabComponent,
+  LoginRedirectButton,
+  LoginCard,
+  CheckboxButton,
+  CheckboxButtonContainer,
+  OnboardingProgressBar,
+  StepUsername,
+  StepOccupation,
+  StepUsage,
+  StepPhoneNumber,
+  OnboardingLayout,
+  StepNavigation,
+  CohortJourneyContainer,
+  SessionDetailsSection,
+  PrevCohortProjects,
+  InterviewPrepSection,
+  FAQSection,
 };
