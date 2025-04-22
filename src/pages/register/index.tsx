@@ -28,5 +28,10 @@ const Register = ({ seoMeta }: PageProps) => {
     </>
   );
 };
-export const getServerSideProps = getPreFetchProps;
+export const getStaticProps = async (context: any) => {
+  return {
+    ...(await getPreFetchProps(context)),
+    revalidate: 60,
+  };
+};
 export default Register;
