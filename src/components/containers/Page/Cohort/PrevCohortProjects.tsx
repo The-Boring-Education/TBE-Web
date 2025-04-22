@@ -32,7 +32,7 @@ const prevProjects: Project[] = [
   {
     title: 'Twacha',
     description: 'Twacha helps you Build Your Personal Skin Care Routine.',
-    student: 'Anurag Tiwari ',
+    student: 'Anurag Tiwari',
   },
   {
     title: 'GrupMate',
