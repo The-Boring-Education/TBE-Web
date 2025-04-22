@@ -6,7 +6,6 @@ import Script from 'next/script';
 import { googleAnalyticsScript, gtag, routes } from '@/constant';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { SessionProvider } from 'next-auth/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@/hooks';
@@ -59,7 +58,6 @@ const TheBoringEducation = ({
       <SessionProvider session={session}>
         <AppContent Component={Component} pageProps={pageProps} />
       </SessionProvider>
-      <SpeedInsights />
     </>
   );
 };
