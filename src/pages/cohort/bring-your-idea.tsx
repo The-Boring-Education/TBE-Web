@@ -195,14 +195,15 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                   level='h1'
                   className='heading-1 text-contentDark leading-tight md:text-left text-center'
                 >
-                  Ever thought of building your own Tech Startup?
+                  Build Your First Startup in College w Interview Prep
                 </Text>
                 <Text
                   level='p'
                   className='text-contentDark md:text-left text-center'
                 >
                   Join our cohort program and get the mentorship, resources, and
-                  community you need to build your first Tech Startup.
+                  community you need to build your first Tech Startup. Including
+                  Interview Prep
                 </Text>
               </FlexContainer>
               <FlexContainer
