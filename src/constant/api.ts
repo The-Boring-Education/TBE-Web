@@ -73,6 +73,158 @@ const PLATFORM_USAGE: PlatformUsageType[] = [
 
 const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
 
+const JOB_SKILL_NORMALIZER = [
+  {
+    label: ['react.js', 'React.js', 'react', 'React.JS'],
+    value: 'React.js',
+  },
+  {
+    label: ['NodeJS', 'node.js'],
+    value: 'Node.js',
+  },
+  {
+    label: ['Javascript', 'JS', 'JavaScript'],
+    value: 'JavaScript',
+  },
+  {
+    label: ['Front end', 'Front End', 'Frontend'],
+    value: 'Frontend',
+  },
+];
+
+const JOB_LOCATION_NORMALIZER = [
+  {
+    label: ['Bengaluru', 'Bangalore'],
+    value: 'Bangalore',
+  },
+  {
+    label: ['Delhi NCR', 'Delhi', 'New Delhi'],
+    value: 'Delhi',
+  },
+  {
+    label: ['Bombay', 'Mumbai', 'Mumbai (All Areas)'],
+    value: 'Mumbai',
+  },
+  {
+    label: ['Hybrid - Hyderabad'],
+    value: 'Hyderabad',
+  },
+  {
+    label: ['Remote', 'Work From Home'],
+    value: 'Remote',
+  },
+];
+
+const JOB_DOMAIN_NORMALIZER = [
+  {
+    label: [
+      'Full Stack Developer',
+      'Full Stack Development',
+      'Full-Stack Development',
+      'Fullstack',
+      'Full Stack',
+      'Full Stack Developer (Frontend)',
+      'Full Stack Developer (Backend)',
+      'Full Stack Developer (Mobile)',
+      'Full Stack Developer (Web)',
+      'Full Stack Developer (Web Development)',
+    ],
+    value: 'Full Stack Development',
+  },
+  {
+    label: ['Backend Developer', 'Backend Development', 'Backend', 'Back End'],
+    value: 'Backend Development',
+  },
+  {
+    label: [
+      'Frontend Developer',
+      'Frontend Development',
+      'Frontend',
+      'Front End',
+      'Front-End',
+    ],
+    value: 'Frontend Development',
+  },
+  {
+    label: [
+      'Data Science',
+      'Data Scientist',
+      'Data Science / Machine Learning',
+      'Data Science / AI',
+      'Data Science / Data Analyst',
+      'Data Science / Data Engineer',
+      'Data Science / Data Science',
+      'Data Science / Data Science / Machine Learning',
+    ],
+    value: 'Data Science',
+  },
+  {
+    label: ['Machine Learning', 'ML', 'Data Science / Machine Learning'],
+    value: 'Machine Learning',
+  },
+  {
+    label: ['Web Development', 'Web Developer', 'Web Development (Frontend)'],
+    value: 'Web Development',
+  },
+  {
+    label: [
+      'Software Engineer',
+      'Software Development',
+      'Software Engineering',
+      'Senior Software Engineer',
+      'Software Development Engineer',
+      'Other Software Development',
+    ],
+    value: 'Software Development',
+  },
+  {
+    label: ['DevOps Engineer', 'DevOps', 'DevOps Development'],
+    value: 'DevOps',
+  },
+  {
+    label: ['Data Analyst', 'Data Analytics', 'Data Analysis'],
+    value: 'Data Analysis',
+  },
+  {
+    label: [
+      'Mobile Development',
+      'Mobile Developer',
+      'Android Developer',
+      'Full Stack Developer (Mobile)',
+      'Mobile App Development',
+      'Mobile Application Development',
+      'Mobile Application Developer',
+      'Mobile App Developer',
+    ],
+    value: 'Mobile Development',
+  },
+  {
+    label: ['Cloud Computing', 'Cloud Engineer', 'Cloud Developer', 'Cloud'],
+    value: 'Cloud Computing',
+  },
+  {
+    label: ['Java Developer', 'Java Development', 'Java', 'Java 8', 'Java 11'],
+    value: 'Java Development',
+  },
+  {
+    label: [
+      'QA / SDET',
+      'Quality Assurance',
+      'QA Engineer',
+      'Quality Engineer',
+      'Quality Analyst',
+      'Quality Assurance Engineer',
+      'Quality Assurance Analyst',
+      'Quality Analyst Engineer',
+      'Quality Assurance Tester',
+      'Quality Assurance Automation Engineer',
+      'Quality Assurance Automation Tester',
+      'Quality Assurance Automation Analyst',
+    ],
+    value: 'QA Engineering',
+  },
+];
+
 export {
   PROJECT_SKILLS,
   ROADMAPS,
@@ -84,4 +236,7 @@ export {
   USER_POINTS_ACTION,
   USER_ROLE,
   PLATFORM_USAGE,
+  JOB_LOCATION_NORMALIZER,
+  JOB_SKILL_NORMALIZER,
+  JOB_DOMAIN_NORMALIZER,
 };

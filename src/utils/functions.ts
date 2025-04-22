@@ -547,6 +547,27 @@ const getRedirectUrl = (url?: string) => {
   return redirectTo;
 };
 
+const normalizeAPIPayload = (
+  value: string | string[],
+  normalizerArray: { label: string[]; value: string }[]
+): string | string[] => {
+  const findNormalized = (input: string): string => {
+    const key = input.trim().toLowerCase();
+    for (const item of normalizerArray) {
+      if (item.label.some((label) => label.toLowerCase() === key)) {
+        return item.value;
+      }
+    }
+    return input;
+  };
+
+  if (Array.isArray(value)) {
+    return value.map(findNormalized);
+  }
+
+  return findNormalized(value);
+};
+
 export {
   formatDate,
   formatTime,
@@ -577,4 +598,5 @@ export {
   getUserGamificationLevel,
   calculateProgressPercentage,
   getRedirectUrl,
+  normalizeAPIPayload,
 };

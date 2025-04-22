@@ -337,7 +337,7 @@ export interface AddJobRequestPayloadProps {
   company: CompanyDetails;
   skills: string[];
   role: string[];
-  location: string;
+  location: string[];
   experience?: {
     min: number;
     max: number;
