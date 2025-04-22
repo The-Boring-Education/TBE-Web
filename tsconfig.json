@@ -22,5 +22,11 @@
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
-  "moduleResolution": ["node_modules", ".next", "node"]
+  "moduleResolution": ["node_modules", ".next", "node"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    },
+    "require": ["tsconfig-paths/register"]
+  }
 }

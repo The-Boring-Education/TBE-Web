@@ -3,6 +3,12 @@ import {
   DatabaseQueryResponseType,
 } from '@/interfaces';
 import { Job, JobAggregate } from '@/database';
+import { normalizeAPIPayload } from '@/utils';
+import {
+  JOB_DOMAIN_NORMALIZER,
+  JOB_LOCATION_NORMALIZER,
+  JOB_SKILL_NORMALIZER,
+} from '@/constant';
 
 // Add A Job
 const addJobToDB = async (

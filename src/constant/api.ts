@@ -90,6 +90,94 @@ const JOB_SKILL_NORMALIZER = [
     label: ['Front end', 'Front End', 'Frontend'],
     value: 'Frontend',
   },
+  {
+    label: ['spring boot', 'Spring Boot', 'Spring'],
+    value: 'Spring Boot',
+  },
+  {
+    label: ['Java', 'Java 8', 'Java 11'],
+    value: 'Java',
+  },
+  {
+    label: ['Python', 'python'],
+    value: 'Python',
+  },
+  {
+    label: ['C++', 'c++'],
+    value: 'C++',
+  },
+  {
+    label: ['C#', 'c#'],
+    value: 'C#',
+  },
+  {
+    label: ['PHP', 'php'],
+    value: 'PHP',
+  },
+  {
+    label: ['HTML', 'html'],
+    value: 'HTML',
+  },
+  {
+    label: ['CSS', 'css'],
+    value: 'CSS',
+  },
+  {
+    label: ['MongoDB', 'mongodb'],
+    value: 'MongoDB',
+  },
+  {
+    label: ['MySQL', 'mysql'],
+    value: 'MySQL',
+  },
+  {
+    label: ['PostgreSQL', 'postgresql'],
+    value: 'PostgreSQL',
+  },
+  {
+    label: ['Oracle', 'oracle'],
+    value: 'Oracle',
+  },
+  {
+    label: ['AWS', 'aws'],
+    value: 'AWS',
+  },
+  {
+    label: ['Azure', 'azure'],
+    value: 'Azure',
+  },
+  {
+    label: ['GCP', 'gcp'],
+    value: 'GCP',
+  },
+  {
+    label: ['Vue.Js', 'vue.js', 'VueJS', 'Vue'],
+    value: 'Vue.js',
+  },
+  {
+    label: ['Angular', 'angular'],
+    value: 'Angular',
+  },
+  {
+    label: ['Django', 'django'],
+    value: 'Django',
+  },
+  {
+    label: ['Flask', 'flask'],
+    value: 'Flask',
+  },
+  {
+    label: ['Ruby on Rails', 'Ruby'],
+    value: 'Ruby on Rails',
+  },
+  {
+    label: ['Swift', 'swift'],
+    value: 'Swift',
+  },
+  {
+    label: ['Kotlin', 'kotlin'],
+    value: 'Kotlin',
+  },
 ];
 
 const JOB_LOCATION_NORMALIZER = [
@@ -98,7 +186,7 @@ const JOB_LOCATION_NORMALIZER = [
     value: 'Bangalore',
   },
   {
-    label: ['Delhi NCR', 'Delhi', 'New Delhi'],
+    label: ['Delhi NCR', 'Delhi', 'New Delhi', 'Delhi / NCR'],
     value: 'Delhi',
   },
   {
@@ -121,6 +209,7 @@ const JOB_DOMAIN_NORMALIZER = [
       'Full Stack Developer',
       'Full Stack Development',
       'Full-Stack Development',
+      'Full-Stack Developer',
       'Fullstack',
       'Full Stack',
       'Full Stack Developer (Frontend)',
@@ -128,6 +217,8 @@ const JOB_DOMAIN_NORMALIZER = [
       'Full Stack Developer (Mobile)',
       'Full Stack Developer (Web)',
       'Full Stack Developer (Web Development)',
+      'Java Full Stack Developer',
+      'Full Stack Application Development',
     ],
     value: 'Full Stack Development',
   },
@@ -174,6 +265,8 @@ const JOB_DOMAIN_NORMALIZER = [
       'Senior Software Engineer',
       'Software Development Engineer',
       'Other Software Development',
+      'Computer science',
+      'Debugging',
     ],
     value: 'Software Development',
   },
@@ -195,6 +288,7 @@ const JOB_DOMAIN_NORMALIZER = [
       'Mobile Application Development',
       'Mobile Application Developer',
       'Mobile App Developer',
+      'Flutter Developer',
     ],
     value: 'Mobile Development',
   },
