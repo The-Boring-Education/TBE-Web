@@ -30,6 +30,7 @@ import {
   CohortJourneyContainer,
   Button,
   Pill,
+  PrevCohortProjects,
 } from '@/components';
 import {
   BYI_USER_CATEGORIES,
@@ -37,6 +38,7 @@ import {
   STATIC_FILE_PATH,
   TESTIMONIALS,
 } from '@/constant';
+import SessionDetailsSection from '@/components/containers/Page/Cohort/SessionDetailsSection';
 
 const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   const projectIdeas = [
@@ -286,14 +288,9 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
         </FlexContainer>
       </Section>
 
-      <Banner
-        title='Take Back 50% Cashback on Project Completion'
-        description='Complete the program and get 50% cashback on your investment.'
-        buttonText='Register Now'
-        buttonLink={LINKS.applyBYICohort}
-        imageSrc={`${STATIC_FILE_PATH.svg}/community.svg`}
-        variant='VARIANT_A'
-      />
+      <SessionDetailsSection />
+
+      <PrevCohortProjects />
 
       <Section className='py-6 md:py-20 px-2'>
         <FlexContainer direction='col' className='md:gap-8 gap-4'>
@@ -387,6 +384,15 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
           </FlexContainer>
         </FlexContainer>
       </Section>
+
+      <Banner
+        title='Take Back 50% Cashback on Project Completion'
+        description='Complete the program and get 50% cashback on your investment.'
+        buttonText='Register Now'
+        buttonLink={LINKS.applyBYICohort}
+        imageSrc={`${STATIC_FILE_PATH.svg}/community.svg`}
+        variant='VARIANT_A'
+      />
 
       <Banner
         title='We Offer 7 Days Money Back Guarantee'

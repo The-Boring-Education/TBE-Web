@@ -454,7 +454,13 @@ const BYI_BEGINNER_ROADMAP: CohortRoadmapProps[] = [
       'Understand the cohort structure, select a project idea, and create a personalized roadmap.',
   },
   {
-    week: 'Week 2-3',
+    week: 'Week 2',
+    title: 'Landing Page Creation + Join Waitlist Launch',
+    description:
+      'Create a landing page and launch the waitlist for your project.',
+  },
+  {
+    week: 'Week 3',
     title: 'Learning Basics + GitHub + Project Features Brainstorming',
     description:
       'Learning Skills, Setting up GitHub and brainstorming project ideas.',
@@ -524,7 +530,13 @@ const BYI_INTERMEDIATE_ROADMAP: CohortRoadmapProps[] = [
       'Understand the cohort structure, select a project idea, and create a personalized roadmap.',
   },
   {
-    week: 'Week 2-3',
+    week: 'Week 2',
+    title: 'Landing Page Creation + Join Waitlist Launch',
+    description:
+      'Create a landing page and launch the waitlist for your project.',
+  },
+  {
+    week: 'Week 3',
     title: 'Learning Phase I + GitHub + Project Features Brainstorming',
     description:
       'Learning Skills, Setting up GitHub and brainstorming project ideas.',
@@ -580,7 +592,7 @@ const BYI_SKILLED_ROADMAP: CohortRoadmapProps[] = [
   },
   {
     week: 'Week 2',
-    title: 'Launching Landing Page + Marketing',
+    title: 'Launching Landing Page + Join Waitlist Launch',
     description: 'Create a landing page and plan marketing strategies.',
   },
   {
