@@ -1,26 +1,19 @@
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { LoginCard } from '@/components';
+import { LoginCard, SEO } from '@/components';
+import { getPreFetchProps } from '@/utils';
+import { PageProps } from '@/interfaces';
 
-const Login = () => {
-  const { status } = useSession();
-  const router = useRouter();
-  const redirectPath = router.query.redirect
-    ? String(router.query.redirect)
-    : '/';
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      router.replace(redirectPath);
-    }
-  }, [status, router, redirectPath]);
-
+const Login = ({ seoMeta }: PageProps) => {
   return (
-    <div className='flex h-screen items-center justify-center bg-gray-100 p-4'>
+    <Fragment>
+      <SEO seoMeta={seoMeta} />
       <LoginCard />
-    </div>
+    </Fragment>
   );
 };
+
+export const getServerSideProps = getPreFetchProps;
 
 export default Login;

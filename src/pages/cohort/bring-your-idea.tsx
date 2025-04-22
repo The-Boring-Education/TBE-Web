@@ -452,11 +452,6 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getStaticProps = async (context: any) => {
-  return {
-    ...(await getPreFetchProps(context)),
-    revalidate: 60,
-  };
-};
+export const getServerSideProps = getPreFetchProps;
 
 export default BrinYourIdeaLandingPage;

@@ -25,6 +25,16 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'Tech Education, Online Learning, Programming, Free Courses, Open Source, Webinars, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
+    [`${routes.login}`]: {
+      title: 'Login | The Boring Education',
+      siteName: 'The Boring Education',
+      description:
+        'The Boring Education offers tech education for everyone with online courses, interview prep, open source projects, and webinars.',
+      url: routes.login,
+      keywords:
+        'Tech Education, Online Learning, Programming, Free Courses, Open Source, Webinars, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
     [`${routes.roadmaps}`]: {
       title: `${products.roadmaps.label} | The Boring Education`,
       siteName: products.roadmaps.label,
