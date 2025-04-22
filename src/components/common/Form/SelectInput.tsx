@@ -30,7 +30,7 @@ const SelectInput = ({
                   'cursor-pointer select-none px-2 py-1 text-sm',
                   active && !selected && 'bg-grey/10',
                   selected &&
-                    'bg-primary px-2 rounded-md border border-1 font-semibold text-white',
+                    'bg-primary px-2 rounded-md border font-semibold text-white',
                   !selected && 'text-black'
                 )
               }
