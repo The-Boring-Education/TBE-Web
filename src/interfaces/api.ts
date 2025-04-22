@@ -8,6 +8,8 @@ import {
   NotificationType,
   PlaylistModel,
   ProjectChapter,
+  UserRoleType,
+  PlatformUsageType,
 } from '.';
 
 export type APIMethodTypes = 'GET' | 'POST' | 'PATCH';
@@ -205,7 +207,13 @@ export interface CreateUserRequestPayloadProps {
   provider: string;
   providerAccountId?: string;
 }
-
+export interface AddOnboardingPayloadProps {
+  userId: string;
+  userName: string;
+  occupation: UserRoleType;
+  purpose: PlatformUsageType[];
+  contactNo: string;
+}
 export interface CourseEnrollmentRequestProps {
   courseId: string;
   userId: string;
@@ -329,7 +337,7 @@ export interface AddJobRequestPayloadProps {
   company: CompanyDetails;
   skills: string[];
   role: string[];
-  location: string;
+  location: string[];
   experience?: {
     min: number;
     max: number;

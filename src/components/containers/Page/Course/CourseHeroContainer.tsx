@@ -2,7 +2,7 @@ import {
   FlexContainer,
   Text,
   PageHeroMetaContainer,
-  LoginWithGoogleButton,
+  LoginRedirectButton,
   Button,
   LinkButton,
 } from '@/components';
@@ -53,7 +53,7 @@ const CourseHeroContainer = ({
   if (!isAuth) {
     headerActionButton = (
       <FlexContainer>
-        <LoginWithGoogleButton text='Login to Get Started' />
+        <LoginRedirectButton text='Login to Get Started' />
       </FlexContainer>
     );
   } else if (isAuth && !isEnrolled) {

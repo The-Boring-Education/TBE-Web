@@ -23,45 +23,10 @@ import {
   TabComponent,
   Text,
 } from '@/components';
-import JobData from '@/data/unskilled.json';
 import { Fragment } from 'react';
-import { getPreFetchProps } from '@/utils';
-import { OutlineCardProps, PageProps } from '@/interfaces';
-import { routes } from '@/constant';
-
-const tabLabels = ['Skills', 'Locations', 'Domains'];
-
-const jobMarketPanels = [
-  <ResponsiveContainer key={0} width='100%' height={400}>
-    <BarChart data={JobData.trendingSkills} layout='horizontal'>
-      <CartesianGrid strokeDasharray='3 3' />
-      <YAxis type='number' />
-      <XAxis dataKey='name' type='category' width={100} />
-      <Tooltip />
-      <Bar dataKey='count' fill='bg-primary' />
-    </BarChart>
-  </ResponsiveContainer>,
-
-  <ResponsiveContainer key={1} width='100%' height={400}>
-    <BarChart data={JobData.topLocations} layout='horizontal'>
-      <CartesianGrid strokeDasharray='3 3' />
-      <YAxis type='number' />
-      <XAxis dataKey='name' type='category' width={100} />
-      <Tooltip />
-      <Bar dataKey='count' fill='hsl(var(--chart-1))' />
-    </BarChart>
-  </ResponsiveContainer>,
-
-  <ResponsiveContainer key={2} width='100%' height={400}>
-    <BarChart data={JobData.jobDomains} layout='horizontal'>
-      <CartesianGrid strokeDasharray='3 3' />
-      <YAxis type='number' />
-      <XAxis dataKey='name' type='category' width={100} />
-      <Tooltip />
-      <Bar dataKey='count' fill='hsl(var(--chart-1))' />
-    </BarChart>
-  </ResponsiveContainer>,
-];
+import { getUnskilledLandingPageProps } from '@/utils';
+import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
+import { routes, UNSKILLED_LANDING_GRAPH_TAB_PARAMS } from '@/constant';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
   {
@@ -84,7 +49,65 @@ const UNSKILLED_FEATURES: OutlineCardProps[] = [
   },
 ];
 
-const UnskilledLandingPage = ({ seoMeta }: PageProps) => {
+const UnskilledLandingPage = ({
+  seoMeta,
+  jobData,
+}: UnskilledLandingPageProps) => {
+  const jobMarketPanels = jobData && [
+    <ResponsiveContainer key={0} width='100%' height={400}>
+      <BarChart data={jobData.jobDomains} layout='horizontal'>
+        <CartesianGrid strokeDasharray='3 3' />
+        <YAxis type='number' />
+        <XAxis dataKey='name' type='category' width={100} />
+        <Tooltip />
+        <Bar dataKey='count' fill='bg-primary' />
+      </BarChart>
+    </ResponsiveContainer>,
+
+    <ResponsiveContainer key={1} width='100%' height={400}>
+      <BarChart data={jobData.trendingSkills} layout='horizontal'>
+        <CartesianGrid strokeDasharray='3 3' />
+        <YAxis type='number' />
+        <XAxis dataKey='name' type='category' width={100} />
+        <Tooltip />
+        <Bar dataKey='count' fill='hsl(var(--chart-1))' />
+      </BarChart>
+    </ResponsiveContainer>,
+
+    <ResponsiveContainer key={3} width='100%' height={400}>
+      <BarChart data={jobData.companyTypes} layout='horizontal'>
+        <CartesianGrid strokeDasharray='3 3' />
+        <YAxis type='number' />
+        <XAxis dataKey='name' type='category' width={100} />
+        <Tooltip />
+        <Bar dataKey='count' fill='hsl(var(--chart-1))' />
+      </BarChart>
+    </ResponsiveContainer>,
+
+    <ResponsiveContainer key={4} width='100%' height={400}>
+      <BarChart data={jobData.topLocations} layout='horizontal'>
+        <CartesianGrid strokeDasharray='3 3' />
+        <YAxis type='number' />
+        <XAxis dataKey='name' type='category' width={100} />
+        <Tooltip />
+        <Bar dataKey='count' fill='hsl(var(--chart-1))' />
+      </BarChart>
+    </ResponsiveContainer>,
+  ];
+
+  const jobGraphContainer = jobMarketPanels ? (
+    <TabComponent
+      tabLabels={UNSKILLED_LANDING_GRAPH_TAB_PARAMS}
+      tabPanels={jobMarketPanels}
+    />
+  ) : (
+    <FlexContainer>
+      <Text level='p' className='text-gray-500'>
+        No data available
+      </Text>
+    </FlexContainer>
+  );
+
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
@@ -112,7 +135,7 @@ const UnskilledLandingPage = ({ seoMeta }: PageProps) => {
               href={`#${routes.internals.landing.explore}`}
               buttonProps={{
                 variant: 'PRIMARY',
-                text: 'Explore Trending Jobs',
+                text: 'Explore Trending Skills',
                 icon: <ArrowRightIcon className='h-5 w-5' />,
               }}
             />
@@ -141,7 +164,7 @@ const UnskilledLandingPage = ({ seoMeta }: PageProps) => {
             Job Market Insights
           </Text>
 
-          <TabComponent tabLabels={tabLabels} tabPanels={jobMarketPanels} />
+          {jobGraphContainer}
 
           <Text level='p' className='text-gray-500 text-sm text-center'>
             Data aggregated from multiple leading job portals and updated daily
@@ -152,6 +175,6 @@ const UnskilledLandingPage = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getServerSideProps = getPreFetchProps;
+export const getServerSideProps = getUnskilledLandingPageProps;
 
 export default UnskilledLandingPage;

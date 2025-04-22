@@ -1,12 +1,12 @@
 import React from 'react';
 import { RadioButtonProps } from '@/interfaces';
 
-const RadioButton: React.FC<RadioButtonProps> = ({
+const RadioButton = ({
   label,
   value,
   isSelected,
   onClick,
-}) => {
+}: RadioButtonProps) => {
   const handleChange = () => {
     if (!isSelected) {
       onClick();
@@ -15,11 +15,9 @@ const RadioButton: React.FC<RadioButtonProps> = ({
 
   return (
     <label
-      className={`flex items-center gap-2 px-3 py-1 font-semibold rounded transition-all duration-150 cursor-pointer shadow-md 
-        ${
-          isSelected ? 'bg-primary text-white' : 'bg-gray-200 hover:bg-gray-300'
-        }
-      `}
+      className={`radio ${
+        isSelected ? 'bg-primary text-white' : 'bg-accent hover:bg-greyLight'
+      }`}
       htmlFor={`radio-${value}`}
     >
       <input

@@ -5,12 +5,14 @@ export interface User {
   name: string;
   email: string;
   image: string;
+  isOnboarded: boolean;
 }
 
 export interface UseUserReturnType {
   user: User | null;
   isAuth: boolean;
   loading: boolean;
+  isOnboarded: boolean;
 }
 
 type ActionTypes =

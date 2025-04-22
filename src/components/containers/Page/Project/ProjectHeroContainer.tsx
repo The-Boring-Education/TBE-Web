@@ -4,7 +4,7 @@ import {
   PageHeroMetaContainer,
   Text,
   Button,
-  LoginWithGoogleButton,
+  LoginRedirectButton,
 } from '@/components';
 import { projectGroupWhatsapp, routes } from '@/constant';
 import { useAnalytics, useUser } from '@/hooks';
@@ -54,7 +54,7 @@ const ProjectHeroContainer = ({
   if (!isAuth) {
     headerActionButton = (
       <FlexContainer>
-        <LoginWithGoogleButton text='Login to Get Started' />
+        <LoginRedirectButton text='Login to Get Started' />
       </FlexContainer>
     );
   } else if (isAuth && !isEnrolled) {

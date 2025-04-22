@@ -50,7 +50,7 @@ module.exports = {
         primary: '#FF5757',
         secondary: '#E0B034',
         dark: '#040505',
-        success: '#31D0AA',
+        success: '#31ad6b',
         contentLight: '#19191B',
         contentDark: '#FDFDFD',
         grey: '#B0B0B0',

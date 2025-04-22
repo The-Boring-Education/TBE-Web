@@ -19,7 +19,7 @@ const getPreFetchProps = async ({ resolvedUrl }: any) => {
   let slug = routes.home;
 
   if (resolvedUrl) {
-    slug = resolvedUrl;
+    slug = resolvedUrl.split('?')[0];
   }
 
   const seoMeta = getSEOMeta(slug);
@@ -27,6 +27,8 @@ const getPreFetchProps = async ({ resolvedUrl }: any) => {
   const redirect = !seoMeta && {
     destination: routes.home,
   };
+
+  console.log('HERE', slug);
 
   return {
     props: { slug, seoMeta },
@@ -347,6 +349,33 @@ const getWebinarLandingPageProps = async ({ resolvedUrl }: any) => {
   };
 };
 
+const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
+  let slug = routes.home;
+
+  if (resolvedUrl) {
+    slug = resolvedUrl;
+  }
+
+  const seoMeta = getSEOMeta(slug);
+
+  const { status, data: jobData } = await fetchAPIData(routes.api.unskilled);
+
+  if (!status) {
+    return {
+      redirect: {
+        destination: routes.home,
+      },
+    };
+  }
+
+  return {
+    props: {
+      seoMeta,
+      jobData,
+    },
+  };
+};
+
 const getCertificatePageProps = async ({ query: { certificateId } }: any) => {
   const { status, data: certificate } = await fetchAPIData(
     routes.api.certificateById(certificateId)
@@ -495,4 +524,5 @@ export {
   getCertificatePageProps,
   getPlaylistPageProps,
   getSkillPlaylistPageProps,
+  getUnskilledLandingPageProps,
 };

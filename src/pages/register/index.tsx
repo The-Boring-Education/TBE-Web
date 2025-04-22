@@ -1,5 +1,5 @@
 import { FlexContainer, SEO, Text } from '@/components';
-import LoginWithGoogleButton from '@/components/common/Buttons/LoginWithGoogleButton';
+import { LoginRedirectButton } from '@/components';
 import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 import Image from 'next/image';
@@ -22,7 +22,7 @@ const Register = ({ seoMeta }: PageProps) => {
               className='w-full'
             />
           </FlexContainer>
-          <LoginWithGoogleButton text='Login With Google' />
+          <LoginRedirectButton text='Login With Google' />
         </FlexContainer>
       </FlexContainer>
     </>

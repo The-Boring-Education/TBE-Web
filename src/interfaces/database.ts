@@ -7,14 +7,22 @@ import {
   SkillsType,
   WebinarEnrolledUsersProps,
   UserPointsActionType,
+  UserRoleType,
+  PlatformUsageType,
+  UnskilledLandingGraphDataProps,
 } from '.';
 
 export interface UserModel {
   name: string;
+  userName?: string;
   email: string;
   image?: string;
   provider: string;
   providerAccountId?: string;
+  occupation?: UserRoleType;
+  purpose?: PlatformUsageType[];
+  contactNo?: string;
+  isOnboarded?: boolean;
 }
 
 export interface ProjectChapter {
@@ -235,7 +243,14 @@ export interface UserPointsAction {
 }
 
 export interface GamificationModel {
-  userId: Schema.Types.ObjectId; // Reference to User
+  userId: Schema.Types.ObjectId;
   points: number;
   actions: UserPointsAction[];
+}
+
+export interface JobAggregateModel extends Document {
+  trendingSkills: UnskilledLandingGraphDataProps[];
+  topLocations: UnskilledLandingGraphDataProps[];
+  jobDomains: UnskilledLandingGraphDataProps[];
+  companyTypes: UnskilledLandingGraphDataProps[];
 }

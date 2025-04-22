@@ -6,6 +6,8 @@ import {
   RadioButtonOptionsProps,
   UserPointsActionType,
   UserLevel,
+  UserRoleType,
+  PlatformUsageType,
 } from '@/interfaces';
 import { routes } from './routes';
 import { envConfig } from './envConfig';
@@ -98,7 +100,7 @@ const LINKS = {
     'https://theboringeducation.notion.site/Contribute-The-Boring-Education-8171f19257fd4ef99b7287555eb5062b',
   applyBYICohort:
     'https://docs.google.com/forms/d/e/1FAIpQLScvm2cajYfHkg-j6EBfJv-oRYZkPqVn9_qpmggvgCNeHY2cMw/viewform',
-  demoBYICohort: 'https://topmate.io/imsks/1482966',
+  demoBYICohort: 'https://bit.ly/TBE-BYI-Cohort',
   postmanDocs: 'https://documenter.getpostman.com/view/10360102/2sAYdcsYK3',
 };
 
@@ -319,6 +321,37 @@ const USER_LEVELS: UserLevel[] = [
   { name: 'Legend', value: 'LEGEND', minPoints: 10000, level: 10 },
 ];
 
+const USER_ROLE_OPTIONS: { label: string; value: UserRoleType }[] = [
+  { label: 'Tech Student', value: 'TECH_STUDENT' },
+  { label: 'Non-Tech Student', value: 'NON_TECH_STUDENT' },
+  { label: 'Working Professional', value: 'WORKING_PROFESSIONAL' },
+];
+
+const USER_USAGE_OPTIONS: { label: string; value: PlatformUsageType }[] = [
+  { label: 'Learning Tech', value: 'LEARNING_TECH' },
+  { label: 'Building Projects', value: 'BUILDING_PROJECTS' },
+  { label: 'Interview Prep', value: 'INTERVIEW_PREP' },
+  { label: 'Job Search', value: 'JOB_SEARCH' },
+];
+
+const COUNTRY_CODES = [
+  { code: '+91', country: 'INDIA' },
+  { code: '+1', country: 'UNITED STATES' },
+  { code: '+44', country: 'UNITED KINGDOM' },
+  { code: '+81', country: 'JAPAN' },
+  { code: '+49', country: 'GERMANY' },
+  { code: '+33', country: 'FRANCE' },
+  { code: '+61', country: 'AUSTRALIA' },
+  { code: '+86', country: 'CHINA' },
+  { code: '+39', country: 'ITALY' },
+  { code: '+7', country: 'RUSSIA' },
+  { code: '+34', country: 'SPAIN' },
+  { code: '+82', country: 'SOUTH KOREA' },
+  { code: '+31', country: 'NETHERLANDS' },
+  { code: '+47', country: 'NORWAY' },
+  { code: '+46', country: 'SWEDEN' },
+];
+
 export {
   imageMeta,
   products,
@@ -339,4 +372,7 @@ export {
   YOUFOCUS_SKILL_PLAYLISTS,
   POINTS_RULES,
   USER_LEVELS,
+  USER_USAGE_OPTIONS,
+  COUNTRY_CODES,
+  USER_ROLE_OPTIONS,
 };

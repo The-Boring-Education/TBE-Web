@@ -2,6 +2,8 @@ import { GenerateSectionPathProps } from '@/interfaces';
 
 const routes = {
   home: '/',
+  login: '/login',
+  onboarding: '/onboarding',
   // Shiksha
   shiksha: '/shiksha',
   shikshaExplore: '/shiksha/explore',
@@ -68,6 +70,7 @@ const routes = {
     webinar: '/webinar',
     project: (project: string) => `/projects/${project}`,
     shiksha: '/shiksha',
+    onboard: '/user/onbording',
     myCourses: '/user/shiksha',
     myProjects: '/user/projects',
     mySheets: '/user/interview-prep',
@@ -118,6 +121,7 @@ const routes = {
     playlistByQuery: (query: string) => `/youfocus/explore?q=${query}`,
     userDashboard: '/user/dashboard',
     notification: '/notification',
+    unskilled: '/unskilled',
   },
 };
 
