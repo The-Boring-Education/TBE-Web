@@ -1,6 +1,4 @@
-import { Fragment, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { Fragment } from 'react';
 import { LoginCard, SEO } from '@/components';
 import { getPreFetchProps } from '@/utils';
 import { PageProps } from '@/interfaces';
