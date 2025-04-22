@@ -135,7 +135,7 @@ const UnskilledLandingPage = ({
               href={`#${routes.internals.landing.explore}`}
               buttonProps={{
                 variant: 'PRIMARY',
-                text: 'Explore Trending Jobs',
+                text: 'Explore Trending Skills',
                 icon: <ArrowRightIcon className='h-5 w-5' />,
               }}
             />

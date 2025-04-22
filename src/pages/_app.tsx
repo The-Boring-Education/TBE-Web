@@ -18,7 +18,10 @@ const queryClient = new QueryClient();
 const AppContent = ({
   Component,
   pageProps,
-}: Omit<AppProps, 'pageProps'> & { pageProps: any }) => {
+}: {
+  Component: AppProps['Component'];
+  pageProps: any;
+}) => {
   const router = useRouter();
   const { isOnboarded, isAuth, loading } = useUser();
 
