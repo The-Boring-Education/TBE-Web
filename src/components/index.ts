@@ -1,4 +1,10 @@
 import dynamic from 'next/dynamic';
+const FAQSection = dynamic(
+  () => import('@/components/containers/Page/Cohort/FAQSection')
+);
+const InterviewPrepSection = dynamic(
+  () => import('@/components/containers/Page/Cohort/InterviewPrepSection')
+);
 const PrevCohortProjects = dynamic(
   () => import('@/components/containers/Page/Cohort/PrevCohortProjects')
 );
@@ -361,4 +367,6 @@ export {
   CohortJourneyContainer,
   SessionDetailsSection,
   PrevCohortProjects,
+  InterviewPrepSection,
+  FAQSection,
 };

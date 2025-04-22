@@ -31,6 +31,9 @@ import {
   Button,
   Pill,
   PrevCohortProjects,
+  InterviewPrepSection,
+  SessionDetailsSection,
+  FAQSection,
 } from '@/components';
 import {
   BYI_USER_CATEGORIES,
@@ -38,7 +41,6 @@ import {
   STATIC_FILE_PATH,
   TESTIMONIALS,
 } from '@/constant';
-import SessionDetailsSection from '@/components/containers/Page/Cohort/SessionDetailsSection';
 
 const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   const projectIdeas = [
@@ -253,6 +255,8 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
         </div>
       </Section>
 
+      <SessionDetailsSection />
+
       <Section className='bg-white py-8'>
         <FlexContainer
           className='justify-center gap-8 flex-wrap'
@@ -273,6 +277,8 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
         </FlexContainer>
       </Section>
 
+      <InterviewPrepSection />
+
       <Section>
         <FlexContainer direction='col' className='md:gap-6 gap-3'>
           <SectionHeaderContainer
@@ -287,10 +293,6 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
           </div>
         </FlexContainer>
       </Section>
-
-      <SessionDetailsSection />
-
-      <PrevCohortProjects />
 
       <Section className='py-6 md:py-20 px-2'>
         <FlexContainer direction='col' className='md:gap-8 gap-4'>
@@ -385,6 +387,8 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
         </FlexContainer>
       </Section>
 
+      <PrevCohortProjects />
+
       <Banner
         title='Take Back 50% Cashback on Project Completion'
         description='Complete the program and get 50% cashback on your investment.'
@@ -441,6 +445,8 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
           />
         </FlexContainer>
       </Section>
+
+      <FAQSection />
     </Fragment>
   );
 };

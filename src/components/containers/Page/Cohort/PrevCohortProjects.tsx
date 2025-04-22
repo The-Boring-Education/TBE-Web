@@ -29,6 +29,16 @@ const prevProjects: Project[] = [
     description: 'An app that allows to make better voting choices.',
     student: 'Karan Dixit',
   },
+  {
+    title: 'Twacha',
+    description: 'Twacha helps you Build Your Personal Skin Care Routine.',
+    student: 'Anurag Tiwari ',
+  },
+  {
+    title: 'GrupMate',
+    description: 'A Discussion Forum for College Students',
+    student: 'Alok Kumar Singh',
+  },
 ];
 
 const PrevCohortProjects = () => {
@@ -43,7 +53,7 @@ const PrevCohortProjects = () => {
           journey.
         </p>
 
-        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-3'>
           {prevProjects.map((project, idx) => (
             <div
               key={idx}

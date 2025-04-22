@@ -63,10 +63,11 @@ const SessionDetailsSection = () => {
     <section className='bg-gradient-to-b from-gray-950 to-black text-white py-20 px-4'>
       <div className='max-w-6xl mx-auto'>
         <h2 className='text-4xl font-bold text-center mb-4 bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 bg-clip-text text-transparent'>
-          Our Live Sessions
+          Cohort Phases
         </h2>
         <p className='text-center text-gray-300 mb-12'>
-          Here’s everything you’ll receive during the cohort.
+          Cohort is designed to help you build your product and prepare for
+          interviews.
         </p>
         <div className='grid md:grid-cols-2 gap-10'>
           {sessions.map((phase, index) => (
