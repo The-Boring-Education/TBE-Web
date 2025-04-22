@@ -1,7 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
+import {
+  apiStatusCodes,
+  JOB_DOMAIN_NORMALIZER,
+  JOB_LOCATION_NORMALIZER,
+  JOB_SKILL_NORMALIZER,
+} from '@/constant';
+import { normalizeAPIPayload, sendAPIResponse } from '@/utils';
 import { addJobToDB, getAllJobsFromDB, getJobByJobIdFromDB } from '@/database';
 import { AddJobRequestPayloadProps } from '@/interfaces';
 
@@ -62,14 +67,22 @@ const handleAddJob = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
 
+    // Normalize the skills array
+    const cleanedSkills = normalizeAPIPayload(skills, JOB_SKILL_NORMALIZER);
+    const cleanedLocations = normalizeAPIPayload(
+      location,
+      JOB_LOCATION_NORMALIZER
+    );
+    const cleanedRole = normalizeAPIPayload(role, JOB_DOMAIN_NORMALIZER);
+
     const { error, data: newJob } = await addJobToDB({
       job_id,
       job_title,
       job_description,
       company,
-      skills,
-      role,
-      location,
+      skills: cleanedSkills as string[],
+      role: cleanedRole as string[],
+      location: cleanedLocations as string[],
       experience,
       jobUrl,
       salary,

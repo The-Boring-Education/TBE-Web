@@ -9,7 +9,10 @@ import {
   UserPlaylistModel,
   PlaylistModel,
 } from './database';
-import { GetSEOMetaResponseType } from './global';
+import {
+  GetSEOMetaResponseType,
+  UnskilledLandingGraphDataProps,
+} from './global';
 
 export interface PageProps {
   slug: any;
@@ -66,6 +69,15 @@ export interface CertificatePageProps extends PageProps {
   certificate: CertificateModel;
 }
 
+export interface UnskilledLandingPageProps extends PageProps {
+  jobData: {
+    jobDomains: UnskilledLandingGraphDataProps[];
+    trendingSkills: UnskilledLandingGraphDataProps[];
+    companyTypes: UnskilledLandingGraphDataProps[];
+    topLocations: UnskilledLandingGraphDataProps[];
+  };
+}
+
 export interface CardItem {
   id: string;
   title: string;
@@ -86,3 +98,20 @@ export type PlaylistPickedPageProps = Pick<
     | 'videos'
     | 'referrerBy'
   >;
+
+export interface CohortRoadmapProps {
+  week: string;
+  title: string;
+  description: string;
+}
+
+export interface CohortUserCategoryProps {
+  key: string;
+  label: string;
+  data: CohortRoadmapProps[];
+  duration: string;
+  price: number;
+  discount: number;
+  slashedPrice: number;
+  features: string[];
+}

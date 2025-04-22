@@ -15,6 +15,7 @@ const IconCard = ({
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ delay: key * 0.2 }}
+    className='h-full'
   >
     <div
       className={`${bgColor} rounded-xl shadow-lg overflow-hidden ${className}`}

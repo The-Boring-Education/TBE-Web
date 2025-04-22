@@ -6,6 +6,7 @@ const useUser = (): UseUserReturnType => {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<User>(session?.user as User);
   const [isAuth, setIsAuth] = useState(false);
+  const [isOnboarded, setIsOnboarded] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,14 +17,16 @@ const useUser = (): UseUserReturnType => {
     }
 
     if (session?.user) {
-      setUser(session?.user as User);
+      const user = session?.user as User;
+      setUser(user);
+      setIsOnboarded(user.isOnboarded);
       setIsAuth(true);
     } else {
       setIsAuth(false);
     }
   }, [session, status]);
 
-  return { user, isAuth, loading };
+  return { user, isAuth, loading, isOnboarded };
 };
 
 export default useUser;

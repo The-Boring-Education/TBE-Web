@@ -15,6 +15,7 @@ const DATABASE_MODELS = {
   NOTIFICATION: 'Notification',
   GAMIFICATION: 'Gamification',
   JOB: 'Job',
+  JOB_AGGREGATE: 'JobAggregate',
 };
 
 const modelSelectParams = {

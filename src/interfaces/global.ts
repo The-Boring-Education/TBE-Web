@@ -102,6 +102,17 @@ export type NotificationType =
   | 'INTERVIEW PREP'
   | 'UPDATE';
 
+export type UserRoleType =
+  | 'TECH_STUDENT'
+  | 'WORKING_PROFESSIONAL'
+  | 'NON_TECH_STUDENT';
+
+export type PlatformUsageType =
+  | 'LEARNING_TECH'
+  | 'BUILDING_PROJECTS'
+  | 'INTERVIEW_PREP'
+  | 'JOB_SEARCH';
+
 export type FormatDateType = {
   dateAndTime?: string;
   dateFormat?: Intl.DateTimeFormatOptions;
@@ -110,4 +121,9 @@ export type FormatDateType = {
 
 export interface UpdateGamificationRecordBody {
   gamificationRecordId: UserPointsActionType;
+}
+
+export interface UnskilledLandingGraphDataProps {
+  name: string;
+  count: number;
 }

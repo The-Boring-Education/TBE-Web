@@ -1,4 +1,4 @@
-import { FlexContainer, Text, LoginWithGoogleButton } from '@/components';
+import { FlexContainer, Text, LoginRedirectButton } from '@/components';
 
 const WebinarHeroContainer = () => {
   return (
@@ -14,7 +14,7 @@ const WebinarHeroContainer = () => {
         </FlexContainer>
 
         <FlexContainer>
-          <LoginWithGoogleButton text='Login to Generate' />
+          <LoginRedirectButton text='Login to Generate' />
         </FlexContainer>
       </FlexContainer>
     </FlexContainer>

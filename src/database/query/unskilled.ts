@@ -2,7 +2,7 @@ import {
   AddJobRequestPayloadProps,
   DatabaseQueryResponseType,
 } from '@/interfaces';
-import { Job } from '@/database';
+import { Job, JobAggregate } from '@/database';
 
 // Add A Job
 const addJobToDB = async (
@@ -68,7 +68,7 @@ const getJobByJobIdFromDB = async (
   }
 };
 
-const getJobsAggregationFromDB =
+const fetchJobsAggregationFromDB =
   async (): Promise<DatabaseQueryResponseType> => {
     try {
       const trendingSkills = await Job.aggregate([
@@ -123,11 +123,45 @@ const getJobsAggregationFromDB =
         { $limit: 20 },
       ]);
 
+      const companyTypes = await Job.aggregate([
+        {
+          $group: {
+            _id: {
+              $switch: {
+                branches: [
+                  {
+                    case: { $lte: ['$company.emp_count', 50] },
+                    then: 'Startup',
+                  },
+                  {
+                    case: {
+                      $and: [
+                        { $gt: ['$company.emp_count', 50] },
+                        { $lte: ['$company.emp_count', 250] },
+                      ],
+                    },
+                    then: 'Mid-Size',
+                  },
+                  {
+                    case: { $gt: ['$company.emp_count', 250] },
+                    then: 'MNC',
+                  },
+                ],
+                default: 'Unknown',
+              },
+            },
+            totalCompanies: { $sum: 1 },
+          },
+        },
+        { $project: { name: '$_id', count: '$totalCompanies', _id: 0 } },
+      ]);
+
       return {
         data: {
           trendingSkills,
           topLocations,
           jobDomains,
+          companyTypes,
         },
       };
     } catch (error) {
@@ -135,9 +169,54 @@ const getJobsAggregationFromDB =
     }
   };
 
+const saveDailyJobsAggregationToDB =
+  async (): Promise<DatabaseQueryResponseType> => {
+    try {
+      // Step 1: Get Aggregated Data
+      const { data, error } = await fetchJobsAggregationFromDB();
+
+      if (error || !data) {
+        return { error: 'Failed to generate job aggregation data' };
+      }
+
+      // Step 2: Create a new JobAggregate document
+      const newAggregation = new JobAggregate({
+        trendingSkills: data.trendingSkills,
+        topLocations: data.topLocations,
+        jobDomains: data.jobDomains,
+        companyTypes: data.companyTypes,
+      });
+
+      await newAggregation.save();
+
+      return { data: newAggregation };
+    } catch (error) {
+      return { error: 'Failed to save job aggregation to DB' };
+    }
+  };
+
+const getLatestJobAggregationFromDB =
+  async (): Promise<DatabaseQueryResponseType> => {
+    try {
+      const latestAggregation = await JobAggregate.findOne()
+        .sort({ createdAt: -1 })
+        .lean();
+
+      if (!latestAggregation) {
+        return { data: null };
+      }
+
+      return { data: latestAggregation };
+    } catch (error) {
+      return { error: 'Failed to fetch latest job aggregation data' };
+    }
+  };
+
 export {
   addJobToDB,
   getAllJobsFromDB,
   getJobByJobIdFromDB,
-  getJobsAggregationFromDB,
+  fetchJobsAggregationFromDB,
+  saveDailyJobsAggregationToDB,
+  getLatestJobAggregationFromDB,
 };

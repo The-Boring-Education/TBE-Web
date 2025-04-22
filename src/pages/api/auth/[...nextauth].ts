@@ -29,7 +29,7 @@ const authOptions = {
         if (!existingUser) {
           // Create a new user in MongoDB if not found
 
-          const { data: result, error } = await createUserInDB({
+          const { data: result } = await createUserInDB({
             name,
             email,
             image: user.image,
@@ -54,7 +54,15 @@ const authOptions = {
     async session({ session, token }: any) {
       // Attach the MongoDB user ID to the session object
       session.user.id = token.sub; // `sub` was set in the jwt callback
-      return session;
+
+      const { data: existingUser } = await getUserByEmailFromDB(
+        session.user.email
+      );
+      if (existingUser) {
+        session.user.isOnboarded = existingUser.isOnboarded;
+
+        return session;
+      }
     },
 
     async jwt({ token, user }: any) {
