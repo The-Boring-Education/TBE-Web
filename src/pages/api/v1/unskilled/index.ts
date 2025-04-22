@@ -23,6 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
+// This API is for UI ONLY
 const handleGetDailyJobAggregation = async (
   req: NextApiRequest,
   res: NextApiResponse
@@ -47,6 +48,7 @@ const handleGetDailyJobAggregation = async (
   }
 };
 
+// This API will be used to aggregate job data and CRON will call it
 const handleAggregateJobData = async (
   _req: NextApiRequest,
   res: NextApiResponse
