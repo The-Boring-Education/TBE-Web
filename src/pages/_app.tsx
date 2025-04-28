@@ -53,8 +53,8 @@ const TheBoringEducation = ({
 }: AppProps) => {
   return (
     <Fragment>
-      <Script async strategy="lazyOnload" src={gtag}></Script>
-      <Script id="google-analytics" strategy="lazyOnload">
+      <Script async strategy='lazyOnload' src={gtag}></Script>
+      <Script id='google-analytics' strategy='lazyOnload'>
         {googleAnalyticsScript}
       </Script>
       <SessionProvider session={session}>
