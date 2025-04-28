@@ -35,6 +35,7 @@ const routes = {
   certificate: '/certificate',
   contactUs: '/contact',
   user: {
+    profile: '/user/profile',
     dashboard: '/user/dashboard',
     courses: '/shiksha/my-courses',
     projects: '/projects/my-projects',
@@ -71,6 +72,7 @@ const routes = {
     project: (project: string) => `/projects/${project}`,
     shiksha: '/shiksha',
     onboard: '/user/onbording',
+    user: '/user',
     myCourses: '/user/shiksha',
     myProjects: '/user/projects',
     mySheets: '/user/interview-prep',

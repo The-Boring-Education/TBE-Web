@@ -28,8 +28,6 @@ const getPreFetchProps = async ({ resolvedUrl }: any) => {
     destination: routes.home,
   };
 
-  console.log('HERE', slug);
-
   return {
     props: { slug, seoMeta },
     redirect,
