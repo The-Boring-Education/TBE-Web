@@ -136,7 +136,7 @@ const Portfolio = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.portfolio })),
-    revalidate: 60,
+    revalidate: 1000,
   };
 };
 

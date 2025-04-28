@@ -37,7 +37,7 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.projectsExplore })),
-    revalidate: 60,
+    revalidate: 1000,
   };
 };
 
