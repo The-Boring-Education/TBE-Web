@@ -38,6 +38,7 @@ import {
 import {
   BYI_USER_CATEGORIES,
   LINKS,
+  routes,
   STATIC_FILE_PATH,
   TESTIMONIALS,
 } from '@/constant';
@@ -452,6 +453,11 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getServerSideProps = getPreFetchProps;
+export const getStaticProps = async () => {
+  return {
+    ...(await getPreFetchProps({ slug: routes.cohort.bringYourIdea })),
+    revalidate: 60,
+  };
+};
 
 export default BrinYourIdeaLandingPage;

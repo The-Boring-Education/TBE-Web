@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { LoginCard, SEO } from '@/components';
 import { getPreFetchProps } from '@/utils';
 import { PageProps } from '@/interfaces';
+import { routes } from '@/constant';
 
 const Login = ({ seoMeta }: PageProps) => {
   return (
@@ -12,6 +13,11 @@ const Login = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getServerSideProps = getPreFetchProps;
+export const getStaticProps = async () => {
+  return {
+    ...(await getPreFetchProps({ slug: routes.login })),
+    revalidate: 60,
+  };
+};
 
 export default Login;

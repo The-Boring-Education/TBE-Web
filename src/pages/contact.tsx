@@ -14,6 +14,11 @@ const Contact = () => {
   );
 };
 
-export const getServerSideProps = getPreFetchProps;
+export const getStaticProps = async () => {
+  return {
+    ...(await getPreFetchProps({ slug: routes.contactUs })),
+    revalidate: 60,
+  };
+};
 
 export default Contact;
