@@ -78,24 +78,12 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: LINKS.whatsappCommunity,
       target: '_blank',
     },
-    {
-      id: v4(),
-      name: 'Join as DevRel Advocate',
-      description: 'Join our DevRel Advocate',
-      href: LINKS.joinDevRelAdvocate,
-      target: '_blank',
-    },
   ],
   user: [
     {
       id: v4(),
       name: 'Dashboard',
       href: routes.user.dashboard,
-    },
-    {
-      id: v4(),
-      name: 'Profile',
-      href: routes.user.profile,
     },
   ],
 };

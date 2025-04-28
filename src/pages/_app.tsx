@@ -6,7 +6,7 @@ import Script from 'next/script';
 import { googleAnalyticsScript, gtag, routes } from '@/constant';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { SessionProvider } from 'next-auth/react';
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@/hooks';
 import { getRedirectUrl } from '@/utils';
@@ -52,13 +52,15 @@ const TheBoringEducation = ({
   pageProps: { session, ...pageProps },
 }: AppProps) => {
   return (
-    <>
-      <Script async strategy='afterInteractive' src={gtag}></Script>
-      <Script id='google-analytics'>{googleAnalyticsScript}</Script>
+    <Fragment>
+      <Script async strategy="lazyOnload" src={gtag}></Script>
+      <Script id="google-analytics" strategy="lazyOnload">
+        {googleAnalyticsScript}
+      </Script>
       <SessionProvider session={session}>
         <AppContent Component={Component} pageProps={pageProps} />
       </SessionProvider>
-    </>
+    </Fragment>
   );
 };
 
