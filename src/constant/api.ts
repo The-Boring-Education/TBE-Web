@@ -319,6 +319,74 @@ const JOB_DOMAIN_NORMALIZER = [
   },
 ];
 
+const JOB_DOMAIN_MAPPER = [
+  {
+    skills: [
+      'React.js',
+      'Frontend',
+      'HTML',
+      'CSS',
+      'Vue.js',
+      'Angular',
+      'Tailwind',
+      'Bootstrap',
+    ],
+    domain: ['Frontend Development'],
+  },
+  {
+    skills: [
+      'NodeJS',
+      'Spring Boot',
+      'PHP',
+      'MongoDB',
+      'MySQL',
+      'PostgreSQL',
+      'Django',
+      'Ruby on Rails',
+      'Flask',
+      'ExpressJS',
+    ],
+    domain: ['Backend Development'],
+  },
+  {
+    skills: ['Java', 'Java 8', 'Java 11'],
+    domain: ['Java Development', 'Backend Development'],
+  },
+  {
+    skills: ['Python', 'Django', 'Flask'],
+    domain: ['Python Development', 'Backend Development'],
+  },
+  {
+    skills: ['Swift', 'Kotlin'],
+    domain: ['Mobile Development'],
+  },
+  {
+    skills: [
+      'Software Engineer',
+      'Software Development',
+      'Software Engineering',
+      'Senior Software Engineer',
+      'Software Development Engineer',
+      'Other Software Development',
+      'Computer science',
+      'Debugging',
+    ],
+    domain: ['Software Development'],
+  },
+  {
+    skills: ['DevOps', 'Cloud Computing', 'Oracle', 'AWS', 'Azure', 'GCP'],
+    domain: ['DevOps'],
+  },
+  {
+    skills: ['Data Science', 'Machine Learning', 'Data Analysis'],
+    domain: ['Data Science'],
+  },
+  {
+    skills: ['QA / SDET', 'Quality Assurance', 'QA Engineer'],
+    domain: ['QA Engineering'],
+  },
+];
+
 export {
   PROJECT_SKILLS,
   ROADMAPS,
@@ -333,4 +401,5 @@ export {
   JOB_LOCATION_NORMALIZER,
   JOB_SKILL_NORMALIZER,
   JOB_DOMAIN_NORMALIZER,
+  JOB_DOMAIN_MAPPER,
 };
