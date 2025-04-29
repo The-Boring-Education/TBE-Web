@@ -23,36 +23,31 @@ const UserPointButton = () => {
 
   return (
     <Popover className='relative'>
-      {() => (
-        <>
-          <PopoverButton className='flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary outline-none font-bold'>
-            <span className='w-full h-full flex text-xs items-center justify-center'>
-              {points}
-            </span>
-          </PopoverButton>
-
-          <Transition
-            as={Fragment}
-            enter='transition ease-out duration-200'
-            enterFrom='opacity-0 translate-y-1'
-            enterTo='opacity-100 translate-y-0'
-            leave='transition ease-in duration-150'
-            leaveFrom='opacity-100 translate-y-0'
-            leaveTo='opacity-0 translate-y-1'
-          >
-            <PopoverPanel className='absolute z-10 mt-1 flex w-screen max-w-max md:-translate-x-2/3 -translate-x-2/4'>
-              <UserLevelProgressContainer
-                points={points}
-                currentLevel={currentLevel}
-                currentLevelName={currentLevelName}
-                nextLevelName={nextLevelName}
-                pointsLeftToNextLevel={pointsLeftToNextLevel}
-                percentageProgress={percentageProgress}
-              />
-            </PopoverPanel>
-          </Transition>
-        </>
-      )}
+      <PopoverButton className='flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary outline-none font-bold'>
+        <span className='w-full h-full flex text-xs items-center justify-center'>
+          {points}
+        </span>
+      </PopoverButton>
+      <Transition
+        as={Fragment}
+        enter='transition ease-out duration-200'
+        enterFrom='opacity-0 translate-y-1'
+        enterTo='opacity-100 translate-y-0'
+        leave='transition ease-in duration-150'
+        leaveFrom='opacity-100 translate-y-0'
+        leaveTo='opacity-0 translate-y-1'
+      >
+        <PopoverPanel className='absolute z-10 mt-1 flex w-screen max-w-max md:-translate-x-2/3 -translate-x-2/4'>
+          <UserLevelProgressContainer
+            points={points}
+            currentLevel={currentLevel}
+            currentLevelName={currentLevelName}
+            nextLevelName={nextLevelName}
+            pointsLeftToNextLevel={pointsLeftToNextLevel}
+            percentageProgress={percentageProgress}
+          />
+        </PopoverPanel>
+      </Transition>
     </Popover>
   );
 };
