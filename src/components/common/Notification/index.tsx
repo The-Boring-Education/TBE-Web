@@ -5,12 +5,7 @@ import {
   PopoverPanel,
   Transition,
 } from '@headlessui/react';
-import {
-  FlexContainer,
-  Link,
-  Text,
-  UserLevelProgressContainer,
-} from '@/components';
+import { FlexContainer, Link, Text } from '@/components';
 import { BellIcon, LinkIcon } from '@heroicons/react/20/solid';
 import { useNotifications } from '@/hooks';
 
