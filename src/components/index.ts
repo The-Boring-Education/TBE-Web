@@ -1,4 +1,7 @@
 import dynamic from 'next/dynamic';
+const NotificationPopover = dynamic(
+  () => import('@/components/common/Notification')
+);
 const FAQSection = dynamic(
   () => import('@/components/containers/Page/Cohort/FAQSection')
 );
@@ -369,4 +372,5 @@ export {
   PrevCohortProjects,
   InterviewPrepSection,
   FAQSection,
+  NotificationPopover,
 };
