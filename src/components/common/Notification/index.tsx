@@ -49,8 +49,11 @@ const NotificationPopover = () => {
                         <Text level='span' className='strong-text text-primary'>
                           {type}
                         </Text>
-                        {isExternalLink && link && (
-                          <Link href={link} target='_blank'>
+                        {link && (
+                          <Link
+                            href={link}
+                            target={`${isExternalLink ? '_blank' : ''}`}
+                          >
                             <LinkIcon className='w-2 text-primary' />
                           </Link>
                         )}

@@ -56,6 +56,7 @@ const NOTIFICATION_TYPE: NotificationType[] = [
   'PROJECT',
   'INTERVIEW PREP',
   'UPDATE',
+  'COHORT',
 ];
 
 const USER_ROLE: UserRoleType[] = [
