@@ -155,6 +155,7 @@ const apiStatusCodes = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
+  METHOD_NOT_ALLOWED: 405,
 };
 
 const MENTORSHIP_CARDS: MentorshipCardProps[] = [
