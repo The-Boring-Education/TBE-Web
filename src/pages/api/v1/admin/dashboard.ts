@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
+import { apiStatusCodes, envConfig } from '@/constant';
+import { applyCorsHeaders, sendAPIResponse } from '@/utils';
 import {
   User,
   UserCourse,
@@ -15,37 +15,69 @@ import {
 } from '@/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  applyCorsHeaders(res, envConfig.ADMIN_BASE_URL);
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   await connectDB();
+
   const { method, query } = req;
   const { type = 'overview', page = '1', limit = '20' } = query;
 
-  switch (method) {
-    case 'GET':
-      return handleAdminDashboard(
-        req,
-        res,
-        type as string,
-        parseInt(page as string),
-        parseInt(limit as string)
-      );
-    default:
-      return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
-        sendAPIResponse({
-          status: false,
-          message: `Method ${method} not allowed`,
-        })
-      );
+  if (method !== 'GET') {
+    return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
+      sendAPIResponse({
+        status: false,
+        message: `Method ${method} not allowed`,
+      })
+    );
   }
+
+  return handleAdminDashboard(
+    res,
+    type as string,
+    parseInt(page as string),
+    parseInt(limit as string)
+  );
 };
 
 const handleAdminDashboard = async (
-  req: NextApiRequest,
   res: NextApiResponse,
   type: string,
   page: number,
   limit: number
 ) => {
   try {
+    const fetchAndRespond = async (
+      model: any,
+      populateOptions?: any,
+      errorMessage?: string
+    ) => {
+      const { data, error } = await getAllDocumentsFromModel(
+        model,
+        page,
+        limit,
+        populateOptions
+      );
+
+      if (error) {
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+          sendAPIResponse({
+            status: false,
+            error,
+            message: errorMessage || 'Failed to fetch data',
+          })
+        );
+      }
+
+      return res
+        .status(apiStatusCodes.OKAY)
+        .json(sendAPIResponse({ status: true, data }));
+    };
+
     switch (type) {
       case 'overview': {
         const [
@@ -82,97 +114,35 @@ const handleAdminDashboard = async (
         );
       }
 
-      case 'users': {
-        const { data, error } = await getAllDocumentsFromModel(
-          User,
-          page,
-          limit
-        );
-        if (error) {
-          return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-            sendAPIResponse({
-              status: false,
-              error,
-              message: 'Failed to fetch users',
-            })
-          );
-        }
-        return res
-          .status(apiStatusCodes.OKAY)
-          .json(sendAPIResponse({ status: true, data }));
-      }
+      case 'users':
+        return fetchAndRespond(User, null, 'Failed to fetch users');
 
-      case 'user-courses': {
-        const { data, error } = await getAllDocumentsFromModel(
+      case 'user-courses':
+        return fetchAndRespond(
           UserCourse,
-          page,
-          limit,
-          {
-            path: 'courseId',
-            select: 'name slug coverImageURL',
-          }
+          { path: 'courseId', select: 'name slug coverImageURL' },
+          'Failed to fetch user courses'
         );
-        if (error) {
-          return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-            sendAPIResponse({
-              status: false,
-              error,
-              message: 'Failed to fetch user courses',
-            })
-          );
-        }
-        return res
-          .status(apiStatusCodes.OKAY)
-          .json(sendAPIResponse({ status: true, data }));
-      }
 
-      case 'user-projects': {
-        const { data, error } = await getAllDocumentsFromModel(
+      case 'user-projects':
+        return fetchAndRespond(
           UserProject,
-          page,
-          limit,
           {
             path: 'projectId',
             select: 'name slug coverImageURL roadmap difficultyLevel',
-          }
+          },
+          'Failed to fetch user projects'
         );
-        if (error) {
-          return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-            sendAPIResponse({
-              status: false,
-              error,
-              message: 'Failed to fetch user projects',
-            })
-          );
-        }
-        return res
-          .status(apiStatusCodes.OKAY)
-          .json(sendAPIResponse({ status: true, data }));
-      }
 
-      case 'user-sheets': {
-        const { data, error } = await getAllDocumentsFromModel(
+      case 'user-sheets':
+        return fetchAndRespond(
           UserSheet,
-          page,
-          limit,
           {
             path: 'sheetId',
             select: 'title slug coverImageURL roadmap difficultyLevel',
-          }
+          },
+          'Failed to fetch user sheets'
         );
-        if (error) {
-          return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-            sendAPIResponse({
-              status: false,
-              error,
-              message: 'Failed to fetch user sheets',
-            })
-          );
-        }
-        return res
-          .status(apiStatusCodes.OKAY)
-          .json(sendAPIResponse({ status: true, data }));
-      }
 
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
