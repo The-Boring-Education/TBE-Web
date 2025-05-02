@@ -7,6 +7,9 @@ import {
   UserCourse,
   UserProject,
   UserSheet,
+  Course,
+  Project,
+  InterviewSheet,
   getTotalCountFromModel,
   getAllDocumentsFromModel,
 } from '@/database';
@@ -14,7 +17,7 @@ import {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
   const { method, query } = req;
-  const { type = 'overview', page = '1', limit = '100' } = query;
+  const { type = 'overview', page = '1', limit = '20' } = query;
 
   switch (method) {
     case 'GET':
@@ -45,10 +48,21 @@ const handleAdminDashboard = async (
   try {
     switch (type) {
       case 'overview': {
-        const [users, courses, projects, sheets] = await Promise.all([
+        const [
+          totalUsers,
+          totalCourses,
+          coursesEnrolled,
+          totalProjects,
+          projectsEnrolled,
+          totalSheets,
+          sheetsEnrolled,
+        ] = await Promise.all([
           getTotalCountFromModel(User),
+          getTotalCountFromModel(Course),
           getTotalCountFromModel(UserCourse),
+          getTotalCountFromModel(Project),
           getTotalCountFromModel(UserProject),
+          getTotalCountFromModel(InterviewSheet),
           getTotalCountFromModel(UserSheet),
         ]);
 
@@ -56,10 +70,13 @@ const handleAdminDashboard = async (
           sendAPIResponse({
             status: true,
             data: {
-              totalUsers: users.data || 0,
-              totalCourses: courses.data || 0,
-              totalProjects: projects.data || 0,
-              totalSheets: sheets.data || 0,
+              totalUsers: totalUsers.data || 0,
+              totalCourses: totalCourses.data || 0,
+              coursesEnrolled: coursesEnrolled.data || 0,
+              totalProjects: totalProjects.data || 0,
+              projectsEnrolled: projectsEnrolled.data || 0,
+              totalSheets: totalSheets.data || 0,
+              sheetsEnrolled: sheetsEnrolled.data || 0,
             },
           })
         );
