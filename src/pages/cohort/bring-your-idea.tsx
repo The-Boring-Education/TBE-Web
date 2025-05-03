@@ -44,27 +44,6 @@ import {
 } from '@/constant';
 
 const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
-  const projectIdeas = [
-    {
-      title: 'AI Agent for Stock Market Suggestions',
-      description:
-        'Build an AI agent that provides stock market suggestions based on user preferences',
-      icon: <SparklesIcon className='w-8 h-8 text-primary' />,
-    },
-    {
-      title: "Analyse Politicians' Speaches vs Their Actions with ML Models",
-      description:
-        "Build a platform that uses ML models to analyze politicians' speeches and actions",
-      icon: <AcademicCapIcon className='w-8 h-8 text-primary' />,
-    },
-    {
-      title: 'Full-stack App for Stray Dog Adoption',
-      description:
-        'Build a full-stack application that connects stray dogs with potential adopters',
-      icon: <RocketLaunchIcon className='w-8 h-8 text-primary' />,
-    },
-  ];
-
   const whyUs = [
     {
       title: 'Live Mentorship Every Week',
@@ -222,9 +201,9 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                   className='w-full sm:w-auto'
                 />
                 <LinkButton
-                  href={LINKS.demoBYICohort}
+                  href={LINKS.bookProjectSession}
                   buttonProps={{
-                    text: 'Book A Call',
+                    text: 'Book Free Call',
                     variant: 'GHOST',
                     className: 'w-full sm:w-auto',
                   }}
