@@ -26,7 +26,11 @@ import {
 import { Fragment } from 'react';
 import { getUnskilledLandingPageProps } from '@/utils';
 import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
-import { routes, UNSKILLED_LANDING_GRAPH_TAB_PARAMS } from '@/constant';
+import {
+  routes,
+  STATIC_FILE_PATH,
+  UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
+} from '@/constant';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
   {
@@ -112,7 +116,7 @@ const UnskilledLandingPage = ({
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <Section>
-        <FlexContainer className='mx-auto gap-12'>
+        <FlexContainer className='mx-auto gap-12 md:flex-row flex-col-reverse'>
           <FlexContainer className='gap-4' direction='col' itemCenter={false}>
             <FlexContainer className='gap-2' direction='col' itemCenter={false}>
               <Text level='h3' className='heading-3'>
@@ -140,11 +144,11 @@ const UnskilledLandingPage = ({
               }}
             />
           </FlexContainer>
-          <FlexContainer className='w-full max-w-md'>
+          <FlexContainer className='max-w-md'>
             <Image
-              src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80'
-              alt='Developer workspace'
-              className='rounded-2xl shadow-xl w-full object-cover'
+              src={`${STATIC_FILE_PATH.svg}/unskilled-hero.svg`}
+              alt='unskilled-img'
+              className='rounded-2xl object-cover'
             />
           </FlexContainer>
         </FlexContainer>

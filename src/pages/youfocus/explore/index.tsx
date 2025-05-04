@@ -1,4 +1,5 @@
 import { ExplorePlaylistContainer, Section, SEO } from '@/components';
+import { routes } from '@/constant';
 import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 import { Fragment } from 'react';
@@ -19,5 +20,11 @@ const Home = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getServerSideProps = getPreFetchProps;
+export const getStaticProps = async () => {
+  return {
+    ...(await getPreFetchProps({ slug: routes.explorePlaylist })),
+    revalidate: 1000,
+  };
+};
+
 export default Home;

@@ -55,7 +55,7 @@ const Home = ({ seoMeta }: PageProps) => {
             className='w-full sm:w-fit'
             buttonProps={{
               variant: 'OUTLINE',
-              text: 'Book Tech Session',
+              text: 'Book Free Session',
               className: 'w-full',
             }}
             target='_blank'
@@ -80,14 +80,6 @@ const Home = ({ seoMeta }: PageProps) => {
         imageSrc={`${STATIC_FILE_PATH.svg}/laptop.svg`}
         variant='VARIANT_A'
       />
-      <Banner
-        title='Join as DevRel Advocate'
-        description='Join our Community as a DevRel Advocate and help us grow.'
-        buttonText='Apply as DevRel Advocate'
-        buttonLink={LINKS.joinDevRelAdvocate}
-        imageSrc={`${STATIC_FILE_PATH.svg}/community.svg`}
-        variant='VARIANT_B'
-      />
       <Community />
       <CardContainerA
         heading='What We Do'
@@ -100,6 +92,11 @@ const Home = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getServerSideProps = getPreFetchProps;
+export const getStaticProps = async () => {
+  return {
+    ...(await getPreFetchProps({ slug: routes.home })),
+    revalidate: 1000,
+  };
+};
 
 export default Home;

@@ -175,6 +175,11 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getServerSideProps = getPreFetchProps;
+export const getStaticProps = async () => {
+  return {
+    ...(await getPreFetchProps({ slug: routes.onboarding })),
+    revalidate: 1000,
+  };
+};
 
 export default OnboardingPage;

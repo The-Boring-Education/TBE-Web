@@ -100,7 +100,8 @@ export type NotificationType =
   | 'SHIKSHA'
   | 'PROJECT'
   | 'INTERVIEW PREP'
-  | 'UPDATE';
+  | 'UPDATE'
+  | 'COHORT';
 
 export type UserRoleType =
   | 'TECH_STUDENT'

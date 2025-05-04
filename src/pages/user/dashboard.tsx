@@ -22,7 +22,7 @@ import {
 } from '@/utils';
 import { LINKS, routes, STATIC_FILE_PATH } from '@/constant';
 
-const MyCourses = ({ seoMeta }: PageProps) => {
+const UserDashboard = ({ seoMeta }: PageProps) => {
   const router = useRouter();
   const { user, isAuth, loading: loadingUser } = useUser();
 
@@ -108,6 +108,11 @@ const MyCourses = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getServerSideProps = getPreFetchProps;
+export const getStaticProps = async () => {
+  return {
+    ...(await getPreFetchProps({ slug: routes.user.dashboard })),
+    revalidate: 1000,
+  };
+};
 
-export default MyCourses;
+export default UserDashboard;

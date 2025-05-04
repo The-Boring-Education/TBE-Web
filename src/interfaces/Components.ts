@@ -23,7 +23,7 @@ export interface LinkProps {
   children?: ReactNode;
   className?: string;
   href: string;
-  target?: '_blank';
+  target?: '_blank' | '';
   active?: boolean;
   scroll?: boolean;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
