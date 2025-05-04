@@ -13,6 +13,7 @@ import {
   UserAvatar,
   UserPointButton,
   LoginRedirectButton,
+  NotificationPopover,
 } from '..';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
@@ -45,6 +46,7 @@ const Navbar = () => {
             className='-m-2.5 flex gap-2 items-center justify-center rounded-md p-2.5 text-black'
             onClick={() => setMobileMenuOpen(true)}
           >
+            <NotificationPopover />
             <UserPointButton />
             <UserAvatar />
             <Bars3Icon className='h-6 w-6' aria-hidden='true' color='black' />
@@ -59,7 +61,7 @@ const Navbar = () => {
             <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
           </PopoverContainer>
           <PopoverContainer
-            label='Products'
+            label='Learn'
             isOpen={openPopover === 'products'}
             onToggle={() => handleSetOpen('products')}
           >
@@ -74,10 +76,9 @@ const Navbar = () => {
             <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
           </PopoverContainer>
 
+          <NotificationPopover />
           <UserPointButton />
-
           <LoginRedirectButton text='Login' />
-
           <UserAvatar />
         </div>
       </nav>

@@ -186,6 +186,16 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'Dashboard, Online Learning, The Boring Education, User Dashboard, Learning Platform, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
+    [`${routes.user.profile}`]: {
+      title: 'Your Profile | The Boring Education',
+      siteName: 'Your Profile at The Boring Education',
+      description:
+        'Access your courses, projects, and interview preparation sheets at The Boring Education.',
+      url: routes.user.profile,
+      keywords:
+        'Dashboard, Online Learning, The Boring Education, User Dashboard, Learning Platform, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
     [`${routes.user.courses}`]: {
       title: 'My Courses | The Boring Education',
       siteName: 'My Courses at The Boring Education',

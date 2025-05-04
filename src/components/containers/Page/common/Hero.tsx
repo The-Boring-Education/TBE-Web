@@ -54,6 +54,7 @@ const LandingPageHero = ({
             className='w-64'
             fullWidth={false}
             alt='landing-page-hero-image'
+            loading='eager'
           />
         </FlexContainer>
       </FlexContainer>

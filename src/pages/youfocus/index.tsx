@@ -47,5 +47,12 @@ const Home = ({ seoMeta }: PageProps) => {
     </Fragment>
   );
 };
-export const getServerSideProps = getPreFetchProps;
+
+export const getStaticProps = async () => {
+  return {
+    ...(await getPreFetchProps({ slug: routes.youfocus })),
+    revalidate: 1000,
+  };
+};
+
 export default Home;
