@@ -55,7 +55,7 @@ const Home = ({ seoMeta }: PageProps) => {
             className='w-full sm:w-fit'
             buttonProps={{
               variant: 'OUTLINE',
-              text: 'Book Tech Session',
+              text: 'Book Free Session',
               className: 'w-full',
             }}
             target='_blank'

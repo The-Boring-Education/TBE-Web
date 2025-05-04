@@ -15,14 +15,14 @@ import {
   getYoufocusSkillName,
 } from '.';
 
-const getPreFetchProps = async ({ resolvedUrl }: any) => {
-  let slug = routes.home;
+const getPreFetchProps = async ({ slug }: any) => {
+  let baseSlug = routes.home;
 
-  if (resolvedUrl) {
-    slug = resolvedUrl.split('?')[0];
+  if (slug) {
+    baseSlug = slug.split('?')[0];
   }
 
-  const seoMeta = getSEOMeta(slug);
+  const seoMeta = getSEOMeta(baseSlug);
 
   const redirect = !seoMeta && {
     destination: routes.home,

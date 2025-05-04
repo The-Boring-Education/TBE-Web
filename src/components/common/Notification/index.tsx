@@ -12,7 +12,7 @@ import { useNotifications } from '@/hooks';
 const NotificationPopover = () => {
   const { notifications } = useNotifications();
 
-  if (!notifications.length) return;
+  if (!notifications.length) return <></>;
 
   return (
     <Popover className='relative'>
@@ -46,7 +46,7 @@ const NotificationPopover = () => {
                         className='gap-1 w-full'
                         justifyCenter={false}
                       >
-                        <Text level='span' className='strong-text text-primary'>
+                        <Text level='span' className='pre-title text-primary'>
                           {type}
                         </Text>
                         {link && (
