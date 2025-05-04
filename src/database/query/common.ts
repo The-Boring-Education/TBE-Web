@@ -23,11 +23,12 @@ const getAllDocumentsFromModel = async (
   model: Model<any>,
   page = 1,
   limit = 100,
-  populateOptions: any = null
+  populateOptions: any = null,
+  sortOptions: Record<string, 1 | -1> = { createdAt: -1 }
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const skip = (page - 1) * limit;
-    const query = model.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+    const query = model.find().sort(sortOptions).skip(skip).limit(limit);
     if (populateOptions) query.populate(populateOptions);
     const docs = await query.exec();
 
