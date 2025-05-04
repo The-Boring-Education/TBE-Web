@@ -36,7 +36,7 @@ const PlaylistRecommend = ({
       await makeRequest({
         url: `${routes.api.youfocusUserPlaylistById(playlistId, userId)}`,
         method: 'PATCH',
-        body: JSON.stringify({ isRecommended: !isRecommended }), // Toggle value
+        body: JSON.stringify({ isRecommended: !isRecommended }),
         headers: {
           'Content-Type': 'application/json',
         },

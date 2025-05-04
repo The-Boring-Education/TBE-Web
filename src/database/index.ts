@@ -44,3 +44,4 @@ export * from './query/youfocus';
 export * from './query/notification';
 export * from './query/unskilled';
 export * from './query/gamification';
+export * from './query/common';

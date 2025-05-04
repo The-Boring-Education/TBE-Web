@@ -37,6 +37,11 @@ const Home = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getServerSideProps = getPreFetchProps;
+export const getStaticProps = async () => {
+  return {
+    ...(await getPreFetchProps({ slug: routes.interviewPrep })),
+    revalidate: 1000,
+  };
+};
 
 export default Home;

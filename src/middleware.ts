@@ -3,44 +3,53 @@ import { NextRequest } from 'next/server';
 import { isAdmin, isUserAuthenticated, sendAPIResponse } from './utils';
 import { routes } from './constant';
 
-const protectedAPIRoutes: {
-  path: RegExp;
-}[] = [
+const protectedAPIRoutes = [
   {
     path: /^\/api\/v1\/shiksha(?:\/|$)/,
+    restrictMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
+  },
+  {
+    path: /^\/api\/v1\/admin(?:\/|$)/,
+    restrictMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   },
 ];
 
-const protectedUIRoutes: {
-  path: RegExp;
-}[] = [
-  {
-    path: /^\/shiksha\/(?:\/|$)/,
-  },
-];
+const protectedUIRoutes = [{ path: /^\/shiksha\/(?:\/|$)/ }];
 
 const middleware = async (req: NextRequest) => {
-  // console.log('path matched : ', req.url);
-
   const currentUrl = req.nextUrl.pathname;
+  const method = req.method;
+  const adminHeader = req.headers.get('x-admin-secret') || '';
 
-  const isProtectedAPIRoute = protectedAPIRoutes.find((route) =>
-    route.path.test(currentUrl)
-  );
+  // Block all DELETE requests unless admin
+  if (method === 'DELETE' && !isAdmin(adminHeader)) {
+    return NextResponse.json(
+      sendAPIResponse({
+        status: false,
+        message: 'Unauthorized - Admin header required for DELETE',
+      }),
+      { status: 401 }
+    );
+  }
 
-  if (isProtectedAPIRoute) {
-    const adminHeader = req.headers.get('x-admin-secret') || '';
+  // Check API restrictions
+  for (const route of protectedAPIRoutes) {
+    if (route.path.test(currentUrl)) {
+      const isAdminRequest = isAdmin(adminHeader);
 
-    if (!isAdmin(adminHeader) && req.method !== 'GET') {
-      return NextResponse.json(
-        sendAPIResponse({
-          status: false,
-          message: 'Unauthorized',
-        })
-      );
+      if (route.restrictMethods.includes(method) && !isAdminRequest) {
+        return NextResponse.json(
+          sendAPIResponse({
+            status: false,
+            message: 'Unauthorized',
+          }),
+          { status: 401 }
+        );
+      }
     }
   }
 
+  // Check UI restrictions (auth based)
   const isAuthenticated = await isUserAuthenticated(req);
 
   if (!isAuthenticated) {
@@ -51,15 +60,19 @@ const middleware = async (req: NextRequest) => {
     if (isProtectedUIRoute) {
       return NextResponse.redirect(new URL(routes.home, req.url));
     }
-  } else {
-    return NextResponse.next();
   }
 
   return NextResponse.next();
 };
 
 export const config = {
-  matcher: ['/register', '/shiksha/:courseSlug*', '/api/v1/course/:courseId*'],
+  matcher: [
+    '/register',
+    '/shiksha/:courseSlug*',
+    '/api/v1/course/:courseId*',
+    '/api/v1/shiksha/:path*',
+    '/api/v1/admin/:path*',
+  ],
 };
 
 export { middleware };
