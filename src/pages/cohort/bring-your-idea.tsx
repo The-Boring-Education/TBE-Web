@@ -175,15 +175,15 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                   level='h1'
                   className='heading-1 text-contentDark leading-tight md:text-left text-center'
                 >
-                  Build Your First Startup in College w Interview Prep
+                  Crack Interviews while Building Real Life Projects
                 </Text>
                 <Text
                   level='p'
                   className='text-contentDark md:text-left text-center'
                 >
-                  Join our cohort program and get the mentorship, resources, and
-                  community you need to build your first Tech Startup. Including
-                  Interview Prep
+                  Join our cohort and build your idea with a team of up to 4
+                  friends. Get mentorship from industry experts and learn to
+                  implement Gen AI in your projects.
                 </Text>
               </FlexContainer>
               <FlexContainer
