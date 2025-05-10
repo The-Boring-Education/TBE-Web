@@ -98,7 +98,7 @@ const LINKS = {
   officialLinkedIn: 'https://www.linkedin.com/company/theboringeducation',
   contributeOpenSource:
     'https://theboringeducation.notion.site/Contribute-The-Boring-Education-8171f19257fd4ef99b7287555eb5062b',
-  applyBYICohort: 'bit.ly/byi-tbe-apply',
+  applyBYICohort: 'https://tally.so/r/wakbx9',
   bookProjectSession: 'https://topmate.io/imsks/1527401',
   postmanDocs: 'https://documenter.getpostman.com/view/10360102/2sAYdcsYK3',
 };
