@@ -239,6 +239,23 @@ const JOB_DOMAIN_NORMALIZER = [
   },
   {
     label: [
+      'Software Engineer',
+      'Software Development',
+      'Software Engineering',
+      'Senior Software Engineer',
+      'Software Development Engineer',
+      'Other Software Development',
+      'Computer science',
+      'Debugging',
+    ],
+    value: 'Software Development',
+  },
+  {
+    label: ['Data Analyst', 'Data Analytics', 'Data Analysis'],
+    value: 'Data Analysis',
+  },
+  {
+    label: [
       'Data Science',
       'Data Scientist',
       'Data Science / Machine Learning',
@@ -253,23 +270,6 @@ const JOB_DOMAIN_NORMALIZER = [
   {
     label: ['Machine Learning', 'ML', 'Data Science / Machine Learning'],
     value: 'Machine Learning',
-  },
-  {
-    label: ['Web Development', 'Web Developer', 'Web Development (Frontend)'],
-    value: 'Web Development',
-  },
-  {
-    label: [
-      'Software Engineer',
-      'Software Development',
-      'Software Engineering',
-      'Senior Software Engineer',
-      'Software Development Engineer',
-      'Other Software Development',
-      'Computer science',
-      'Debugging',
-    ],
-    value: 'Software Development',
   },
   {
     label: ['DevOps Engineer', 'DevOps', 'DevOps Development'],
@@ -317,6 +317,10 @@ const JOB_DOMAIN_NORMALIZER = [
       'Quality Assurance Automation Analyst',
     ],
     value: 'QA Engineering',
+  },
+  {
+    label: ['Web Development', 'Web Developer', 'Web Development (Frontend)'],
+    value: 'Web Development',
   },
 ];
 

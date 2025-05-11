@@ -14,6 +14,8 @@ import {
   CodeBracketIcon,
 } from '@heroicons/react/20/solid';
 import {
+  Button,
+  CheckboxButtonContainer,
   FlexContainer,
   Image,
   LinkButton,
@@ -23,7 +25,7 @@ import {
   TabComponent,
   Text,
 } from '@/components';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { motion } from 'framer-motion';
 import { getUnskilledLandingPageProps } from '@/utils';
 import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
@@ -31,6 +33,7 @@ import {
   routes,
   STATIC_FILE_PATH,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
+  JOB_DOMAINS,
 } from '@/constant';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
@@ -58,6 +61,12 @@ const UnskilledLandingPage = ({
   seoMeta,
   jobData,
 }: UnskilledLandingPageProps) => {
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+
+  const onChangeSkills = (value: string[]) => {
+    setSelectedSkills(value);
+  };
+
   const jobMarketPanels = jobData && [
     <ResponsiveContainer key={0} width='100%' height={400}>
       <BarChart data={jobData.jobDomains} layout='horizontal'>
@@ -135,15 +144,30 @@ const UnskilledLandingPage = ({
                 supercharge your career.
               </Text>
             </FlexContainer>
-            <LinkButton
-              className='w-fit'
-              href={`#${routes.internals.landing.explore}`}
-              buttonProps={{
-                variant: 'PRIMARY',
-                text: 'Explore Trending Skills',
-                icon: <ArrowRightIcon className='h-5 w-5' />,
-              }}
-            />
+            <FlexContainer
+              direction='col'
+              className='sm:flex-row gap-2 justify-center lg:justify-start'
+            >
+              <LinkButton
+                className='w-fit'
+                href={`#${routes.internals.landing.upload}`}
+                buttonProps={{
+                  variant: 'PRIMARY',
+                  text: 'Explore Trending Skills',
+                  icon: <ArrowRightIcon className='h-2 w-2' />,
+                }}
+              />
+              <LinkButton
+                href={`#${routes.internals.landing.explore}`}
+                buttonProps={{
+                  text: 'Book Free Call',
+                  variant: 'GHOST',
+                  className: 'w-full sm:w-auto',
+                }}
+                target='_blank'
+                className='w-full sm:w-auto'
+              />
+            </FlexContainer>
           </FlexContainer>
           <FlexContainer className='max-w-md'>
             <Image
@@ -155,113 +179,147 @@ const UnskilledLandingPage = ({
         </FlexContainer>
       </Section>
 
-      <Section className='relative overflow-hidden bg-gradient-to-r from-indigo-50 via-white to-pink-50 py-20'>
+      <Section
+        id={`${routes.internals.landing.upload}`}
+        className='relative overflow-hidden bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20'
+      >
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className='relative z-10'
+          className='relative max-w-5xl mx-auto'
         >
-          <FlexContainer
-            direction='col'
-            className='gap-6 items-center text-center'
-          >
-            <Text level='h2' className='text-4xl font-extrabold text-gray-900'>
-              What’s Missing in Your Resume?{' '}
-              <span role='img' aria-label='search'>
-                🔍
-              </span>
-            </Text>
-            <Text level='p' className='text-lg max-w-2xl text-gray-700'>
-              Upload your resume and uncover the in-demand skills you’re missing
-              for your dream tech role.
-            </Text>
-
-            <label className='border-dashed border-2 border-primary px-6 py-8 rounded-md w-full max-w-lg text-center cursor-pointer hover:bg-primary/10 transition-all shadow-md hover:shadow-lg bg-white'>
-              <input
-                type='file'
-                accept='.pdf'
-                className='hidden'
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    console.log('Uploaded:', file.name);
-                  }
-                }}
-              />
-              <Text level='p' className='text-gray-500'>
-                📄 Click or drag your resume here to upload (PDF only)
-              </Text>
-            </label>
-
-            <FlexContainer
-              direction='col'
-              className='gap-4 w-full max-w-xl text-left mt-6'
-            >
-              <Text level='h4' className='text-xl font-semibold text-red-600'>
-                🚫 Skills Missing from Your Resume
-              </Text>
-              <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-                {['Tailwind CSS', 'TypeScript', 'Redux'].map((skill) => (
-                  <motion.div
-                    key={skill}
-                    whileHover={{ scale: 1.05 }}
-                    className='bg-red-50 border border-red-300 text-red-800 px-4 py-2 rounded-md shadow-sm text-center text-sm font-medium transition'
-                  >
-                    {skill}
-                  </motion.div>
-                ))}
-              </div>
+          <FlexContainer direction='col' className='gap-8'>
+            <FlexContainer direction='col' className='gap-6'>
+              <FlexContainer direction='col' className='gap-2'>
+                <Text level='h3' className='heading-3'>
+                  Evaluate Your Resume <span role='img'>🔍</span>
+                </Text>
+                <Text
+                  level='p'
+                  className='max-w-2xl paragraph'
+                  textCenter={true}
+                >
+                  Upload your resume and let us analyze thousands of job
+                  listings to highlight missing skills and suggest tailored
+                  resources.
+                </Text>
+              </FlexContainer>
+              <label className='border-2 border-dashed border-primary px-8 py-10 rounded-lg w-full max-w-xl text-center cursor-pointer bg-white hover:bg-primary/5 transition-all'>
+                <input
+                  type='file'
+                  accept='.pdf'
+                  className='hidden'
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      console.log('Uploaded:', file.name);
+                    }
+                  }}
+                />
+                <Text level='p' className='paragraph text-gray-500'>
+                  📄 Click or drag your resume here to upload (PDF only)
+                </Text>
+              </label>
             </FlexContainer>
+            <FlexContainer direction='col' className='gap-6'>
+              <CheckboxButtonContainer
+                options={JOB_DOMAINS.map(({ label, value }) => ({
+                  label,
+                  value,
+                }))}
+                selectedValues={selectedSkills}
+                onChange={onChangeSkills}
+              />
 
-            <FlexContainer
-              direction='col'
-              className='gap-4 w-full max-w-xl text-left mt-4'
-            >
-              <Text level='h4' className='text-xl font-semibold text-blue-600'>
-                📚 Recommended Resources
-              </Text>
-              <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-                {[
-                  {
-                    title: 'Tailwind CSS',
-                    link: 'https://tailwindcss.com/docs',
-                    label: 'Official Docs',
-                  },
-                  {
-                    title: 'TypeScript',
-                    link: 'https://www.youtube.com/watch?v=BCg4U1FzODs',
-                    label: 'YouTube Video',
-                  },
-                  {
-                    title: 'Redux Essentials',
-                    link: 'https://redux.js.org/tutorials/essentials/part-1-overview-concepts',
-                    label: 'Redux Docs',
-                  },
-                ].map((resource) => (
-                  <motion.div
-                    key={resource.title}
-                    whileHover={{ scale: 1.05 }}
-                    className='bg-white border border-blue-200 px-4 py-3 rounded-md shadow-sm text-sm transition'
-                  >
-                    <div className='font-semibold mb-1 text-blue-700'>
-                      {resource.title}
-                    </div>
-                    <a
-                      href={resource.link}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='text-blue-500 underline'
-                    >
-                      {resource.label}
-                    </a>
-                  </motion.div>
-                ))}
-              </div>
+              <Button
+                text='Start Evaluation'
+                variant='PRIMARY'
+                icon={<ArrowRightIcon className='h-2 w-2' />}
+              />
             </FlexContainer>
           </FlexContainer>
+
+          <div className='mt-20 text-center'>
+            <Text level='h3' className='text-2xl font-semibold text-gray-800'>
+              🔍 What's Missing in Your Resume
+            </Text>
+            <Text level='p' className='text-sm text-gray-600 mt-1'>
+              After scanning 3,500+ job listings for your role
+            </Text>
+
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8'>
+              {[
+                {
+                  skill: 'TypeScript',
+                  percentage: '82%',
+                  resources: [
+                    {
+                      title: 'TypeScript Docs',
+                      link: 'https://www.typescriptlang.org/docs/',
+                    },
+                    {
+                      title: 'Crash Course (YouTube)',
+                      link: 'https://www.youtube.com/watch?v=30LWjhZzg50',
+                    },
+                  ],
+                },
+                {
+                  skill: 'Tailwind CSS',
+                  percentage: '74%',
+                  resources: [
+                    {
+                      title: 'Tailwind Docs',
+                      link: 'https://tailwindcss.com/docs',
+                    },
+                    {
+                      title: 'Net Ninja Course',
+                      link: 'https://www.youtube.com/watch?v=ft30zcMlFao',
+                    },
+                  ],
+                },
+                {
+                  skill: 'Redux',
+                  percentage: '65%',
+                  resources: [
+                    {
+                      title: 'Redux Essentials',
+                      link: 'https://redux.js.org/tutorials/essentials/part-1-overview-concepts',
+                    },
+                  ],
+                },
+              ].map(({ skill, percentage, resources }) => (
+                <div
+                  key={skill}
+                  className='bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition'
+                >
+                  <div className='text-xl font-semibold text-primary mb-1'>
+                    {skill}
+                  </div>
+                  <div className='text-sm text-gray-500 mb-2'>
+                    Appears in {percentage} of listings
+                  </div>
+                  <ul className='text-sm text-blue-600 space-y-1'>
+                    {resources.map((r) => (
+                      <li key={r.link}>
+                        <a
+                          href={r.link}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='hover:underline'
+                        >
+                          📘 {r.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
         </motion.div>
-        <div className='absolute inset-0 z-0 bg-gradient-to-br from-indigo-100 via-transparent to-pink-100 opacity-30 animate-pulse' />
+
+        <div className='absolute inset-0 bg-gradient-to-br from-indigo-100 via-transparent to-pink-100 opacity-20 pointer-events-none' />
       </Section>
 
       <Section>

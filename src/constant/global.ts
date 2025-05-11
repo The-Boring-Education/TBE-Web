@@ -12,6 +12,7 @@ import {
 import { routes } from './routes';
 import { envConfig } from './envConfig';
 import { ComponentPropsWithoutRef } from 'react';
+import { JOB_DOMAIN_NORMALIZER } from './api';
 
 // Paths
 const STATIC_FILE_PATH = {
@@ -352,6 +353,13 @@ const COUNTRY_CODES = [
   { code: '+46', country: 'SWEDEN' },
 ];
 
+const JOB_DOMAINS = JOB_DOMAIN_NORMALIZER.map(({ value }) => {
+  return {
+    label: value,
+    value: value,
+  };
+}).splice(0, 10);
+
 export {
   imageMeta,
   products,
@@ -375,4 +383,5 @@ export {
   USER_USAGE_OPTIONS,
   COUNTRY_CODES,
   USER_ROLE_OPTIONS,
+  JOB_DOMAINS,
 };

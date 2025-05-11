@@ -48,6 +48,7 @@ const routes = {
       products: 'products',
       portfolio: 'portfolio',
       webinar: 'webinar',
+      upload: 'upload',
       explore: 'explore',
     },
   },
