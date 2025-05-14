@@ -20,6 +20,7 @@ import {
   Image,
   LinkButton,
   OutlineCard,
+  RadioButtonContainer,
   Section,
   SEO,
   TabComponent,
@@ -34,6 +35,7 @@ import {
   STATIC_FILE_PATH,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
   JOB_DOMAINS,
+  JOB_EXPERIENCE_LEVEL,
 } from '@/constant';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
@@ -62,9 +64,14 @@ const UnskilledLandingPage = ({
   jobData,
 }: UnskilledLandingPageProps) => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedExperience, setSelectedExperience] = useState<string>('');
 
-  const onChangeSkills = (value: string[]) => {
+  const onSelectSkills = (value: string[]) => {
     setSelectedSkills(value);
+  };
+
+  const onSelectExperience = (value: string) => {
+    setSelectedExperience(value);
   };
 
   const jobMarketPanels = jobData && [
@@ -153,18 +160,17 @@ const UnskilledLandingPage = ({
                 href={`#${routes.internals.landing.upload}`}
                 buttonProps={{
                   variant: 'PRIMARY',
-                  text: 'Explore Trending Skills',
+                  text: 'Evaluate My Resume',
                   icon: <ArrowRightIcon className='h-2 w-2' />,
                 }}
               />
               <LinkButton
                 href={`#${routes.internals.landing.explore}`}
                 buttonProps={{
-                  text: 'Book Free Call',
+                  text: 'Explore Trending Skills',
                   variant: 'GHOST',
                   className: 'w-full sm:w-auto',
                 }}
-                target='_blank'
                 className='w-full sm:w-auto'
               />
             </FlexContainer>
@@ -181,7 +187,7 @@ const UnskilledLandingPage = ({
 
       <Section
         id={`${routes.internals.landing.upload}`}
-        className='relative overflow-hidden bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20'
+        className='bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20 md:px-10 px-4'
       >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -193,7 +199,9 @@ const UnskilledLandingPage = ({
             <FlexContainer direction='col' className='gap-6'>
               <FlexContainer direction='col' className='gap-2'>
                 <Text level='h3' className='heading-3'>
-                  Evaluate Your Resume <span role='img'>🔍</span>
+                  Evaluate Your
+                  <span className='heading-3 text-primary'> Resume </span>
+                  <span role='img'>🔍</span>
                 </Text>
                 <Text
                   level='p'
@@ -223,14 +231,41 @@ const UnskilledLandingPage = ({
               </label>
             </FlexContainer>
             <FlexContainer direction='col' className='gap-6'>
-              <CheckboxButtonContainer
-                options={JOB_DOMAINS.map(({ label, value }) => ({
-                  label,
-                  value,
-                }))}
-                selectedValues={selectedSkills}
-                onChange={onChangeSkills}
-              />
+              <FlexContainer direction='col' className='gap-6'>
+                <FlexContainer direction='col' className='gap-2'>
+                  <Text level='h4' className='heading-4'>
+                    Choose Your
+                    <span className='heading-4 text-primary'> Skills </span>
+                  </Text>
+                  <Text level='p' className='pre-title'>
+                    Select the Domains You're Interested(2 Preffered)
+                  </Text>
+                </FlexContainer>
+                <CheckboxButtonContainer
+                  options={JOB_DOMAINS.map(({ label, value }) => ({
+                    label,
+                    value,
+                  }))}
+                  selectedValues={selectedSkills}
+                  onChange={onSelectSkills}
+                />
+              </FlexContainer>
+              <FlexContainer direction='col' className='gap-6'>
+                <FlexContainer direction='col' className='gap-2'>
+                  <Text level='h4' className='heading-4'>
+                    Experience
+                    <span className='heading-4 text-primary'> Level </span>
+                  </Text>
+                </FlexContainer>
+                <RadioButtonContainer
+                  options={JOB_EXPERIENCE_LEVEL.map(({ label, value }) => ({
+                    label,
+                    value,
+                  }))}
+                  selectedValue={selectedExperience}
+                  onChange={onSelectExperience}
+                />
+              </FlexContainer>
 
               <Button
                 text='Start Evaluation'

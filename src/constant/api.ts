@@ -276,10 +276,6 @@ const JOB_DOMAIN_NORMALIZER = [
     value: 'DevOps',
   },
   {
-    label: ['Data Analyst', 'Data Analytics', 'Data Analysis'],
-    value: 'Data Analysis',
-  },
-  {
     label: [
       'Mobile Development',
       'Mobile Developer',
