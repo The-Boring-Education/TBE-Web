@@ -37,7 +37,6 @@ import {
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
-  JOB_SKILL_NORMALIZER,
 } from '@/constant';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
