@@ -234,8 +234,8 @@ const UnskilledLandingPage = ({
               <FlexContainer direction='col' className='gap-6'>
                 <FlexContainer direction='col' className='gap-2'>
                   <Text level='h4' className='heading-4'>
-                    Choose Your
-                    <span className='heading-4 text-primary'> Skills </span>
+                    Pick Your
+                    <span className='heading-4 text-primary'> Domains </span>
                   </Text>
                   <Text level='p' className='pre-title'>
                     Select the Domains You're Interested(2 Preffered)
