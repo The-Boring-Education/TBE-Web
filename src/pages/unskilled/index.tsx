@@ -1,3 +1,4 @@
+import * as pdfjsLib from 'pdfjs-dist';
 import {
   BarChart,
   Bar,
@@ -36,6 +37,7 @@ import {
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
+  JOB_SKILL_NORMALIZER,
 } from '@/constant';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
@@ -65,6 +67,34 @@ const UnskilledLandingPage = ({
 }: UnskilledLandingPageProps) => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedExperience, setSelectedExperience] = useState<string>('');
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+
+  // Utility to extract text from PDF
+  const extractTextFromPDF = async (file: File): Promise<string> => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const text = content.items.map((item: any) => item.str).join(' ');
+      fullText += ' ' + text;
+    }
+    return fullText;
+  };
+
+  // Utility to extract skills from text using JOB_SKILL_NORMALIZER
+  const extractSkillsFromText = (text: string): string[] => {
+    const lowerText = text.toLowerCase();
+    const matchedSkills = new Set<string>();
+    JOB_SKILL_NORMALIZER.forEach(({ label, value }) => {
+      if (label.some((alt: string) => lowerText.includes(alt.toLowerCase()))) {
+        matchedSkills.add(value);
+      }
+    });
+    return Array.from(matchedSkills);
+  };
 
   const onSelectSkills = (value: string[]) => {
     setSelectedSkills(value);
@@ -72,6 +102,35 @@ const UnskilledLandingPage = ({
 
   const onSelectExperience = (value: string) => {
     setSelectedExperience(value);
+  };
+
+  const handleResumeEvaluation = async () => {
+    if (!resumeFile || selectedSkills.length === 0 || !selectedExperience) {
+      alert('Please upload resume, select domain and experience');
+      return;
+    }
+    setIsEvaluating(true);
+    const text = await extractTextFromPDF(resumeFile);
+    console.log('HERE', text);
+    const extractedSkills = extractSkillsFromText(text);
+    console.log('HERE', extractedSkills);
+
+    // const response = await fetch('/api/v1/unskilled/evaluate', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'x-app-token':
+    //       process.env.NEXT_PUBLIC_UNSKILLED_SECRET || '',
+    //   },
+    //   body: JSON.stringify({
+    //     extractedSkills,
+    //     selectedDomains: selectedSkills,
+    //     experienceLevel: selectedExperience,
+    //   }),
+    // });
+    // const result = await response.json();
+    // console.log('Evaluation Result:', result);
+    // setIsEvaluating(false);
   };
 
   const jobMarketPanels = jobData && [
@@ -218,10 +277,11 @@ const UnskilledLandingPage = ({
                   type='file'
                   accept='.pdf'
                   className='hidden'
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (file) {
                       console.log('Uploaded:', file.name);
+                      setResumeFile(file);
                     }
                   }}
                 />
@@ -268,9 +328,10 @@ const UnskilledLandingPage = ({
               </FlexContainer>
 
               <Button
-                text='Start Evaluation'
+                text={isEvaluating ? 'Evaluating...' : 'Start Evaluation'}
                 variant='PRIMARY'
                 icon={<ArrowRightIcon className='h-2 w-2' />}
+                onClick={handleResumeEvaluation}
               />
             </FlexContainer>
           </FlexContainer>
