@@ -6,6 +6,7 @@ import {
   YOUTUBE_API_PATH,
   POINTS_RULES,
   USER_LEVELS,
+  JOB_SKILL_NORMALIZER,
 } from '@/constant';
 import {
   BaseInterviewSheetResponseProps,
@@ -568,6 +569,17 @@ const normalizeAPIPayload = (
   return findNormalized(value);
 };
 
+const extractSkillsFromText = (text: string): string[] => {
+  const lowerText = text.toLowerCase();
+  const matchedSkills = new Set<string>();
+  JOB_SKILL_NORMALIZER.forEach(({ label, value }) => {
+    if (label.some((alt: string) => lowerText.includes(alt.toLowerCase()))) {
+      matchedSkills.add(value);
+    }
+  });
+  return Array.from(matchedSkills);
+};
+
 export {
   formatDate,
   formatTime,
@@ -599,4 +611,5 @@ export {
   calculateProgressPercentage,
   getRedirectUrl,
   normalizeAPIPayload,
+  extractSkillsFromText,
 };

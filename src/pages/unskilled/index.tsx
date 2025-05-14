@@ -1,4 +1,4 @@
-import * as pdfjsLib from 'pdfjs-dist';
+import pdfToText from 'react-pdftotext';
 import {
   BarChart,
   Bar,
@@ -29,7 +29,7 @@ import {
 } from '@/components';
 import { Fragment, useState } from 'react';
 import { motion } from 'framer-motion';
-import { getUnskilledLandingPageProps } from '@/utils';
+import { extractSkillsFromText, getUnskilledLandingPageProps } from '@/utils';
 import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
 import {
   routes,
@@ -65,39 +65,25 @@ const UnskilledLandingPage = ({
   seoMeta,
   jobData,
 }: UnskilledLandingPageProps) => {
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [selectedExperience, setSelectedExperience] = useState<string>('');
+  const [extractedSkills, setExtractedSkills] = useState<string[]>([]);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [isEvaluating, setIsEvaluating] = useState(false);
 
-  // Utility to extract text from PDF
-  const extractTextFromPDF = async (file: File): Promise<string> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    let fullText = '';
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      const text = content.items.map((item: any) => item.str).join(' ');
-      fullText += ' ' + text;
-    }
-    return fullText;
-  };
-
-  // Utility to extract skills from text using JOB_SKILL_NORMALIZER
-  const extractSkillsFromText = (text: string): string[] => {
-    const lowerText = text.toLowerCase();
-    const matchedSkills = new Set<string>();
-    JOB_SKILL_NORMALIZER.forEach(({ label, value }) => {
-      if (label.some((alt: string) => lowerText.includes(alt.toLowerCase()))) {
-        matchedSkills.add(value);
-      }
-    });
-    return Array.from(matchedSkills);
+  const extractTextFromPDF = async (file: File) => {
+    pdfToText(file)
+      .then((text) => {
+        const extractedSkills = extractSkillsFromText(text);
+        setExtractedSkills(extractedSkills);
+      })
+      .catch((error) =>
+        console.error('Failed to extract text from pdf', error)
+      );
   };
 
   const onSelectSkills = (value: string[]) => {
-    setSelectedSkills(value);
+    setSelectedDomains(value);
   };
 
   const onSelectExperience = (value: string) => {
@@ -105,15 +91,11 @@ const UnskilledLandingPage = ({
   };
 
   const handleResumeEvaluation = async () => {
-    if (!resumeFile || selectedSkills.length === 0 || !selectedExperience) {
+    if (!resumeFile || selectedDomains.length === 0 || !selectedExperience) {
       alert('Please upload resume, select domain and experience');
       return;
     }
     setIsEvaluating(true);
-    const text = await extractTextFromPDF(resumeFile);
-    console.log('HERE', text);
-    const extractedSkills = extractSkillsFromText(text);
-    console.log('HERE', extractedSkills);
 
     // const response = await fetch('/api/v1/unskilled/evaluate', {
     //   method: 'POST',
@@ -124,13 +106,21 @@ const UnskilledLandingPage = ({
     //   },
     //   body: JSON.stringify({
     //     extractedSkills,
-    //     selectedDomains: selectedSkills,
+    //     selectedDomains: selectedDomains,
     //     experienceLevel: selectedExperience,
     //   }),
     // });
     // const result = await response.json();
     // console.log('Evaluation Result:', result);
     // setIsEvaluating(false);
+  };
+
+  const handleResumeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setResumeFile(file);
+      extractTextFromPDF(file);
+    }
   };
 
   const jobMarketPanels = jobData && [
@@ -277,13 +267,7 @@ const UnskilledLandingPage = ({
                   type='file'
                   accept='.pdf'
                   className='hidden'
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      console.log('Uploaded:', file.name);
-                      setResumeFile(file);
-                    }
-                  }}
+                  onChange={handleResumeUpload}
                 />
                 <Text level='p' className='paragraph text-gray-500'>
                   📄 Click or drag your resume here to upload (PDF only)
@@ -293,12 +277,12 @@ const UnskilledLandingPage = ({
             <FlexContainer direction='col' className='gap-6'>
               <FlexContainer direction='col' className='gap-6'>
                 <FlexContainer direction='col' className='gap-2'>
-                  <Text level='h4' className='heading-4'>
+                  <Text level='h5' className='heading-5'>
                     Pick Your
-                    <span className='heading-4 text-primary'> Domains </span>
+                    <span className='heading-5 text-primary'> Domains </span>
                   </Text>
                   <Text level='p' className='pre-title'>
-                    Select the Domains You're Interested(2 Preffered)
+                    Select the Domains You're Interested(Max 2 Preferred)
                   </Text>
                 </FlexContainer>
                 <CheckboxButtonContainer
@@ -306,15 +290,15 @@ const UnskilledLandingPage = ({
                     label,
                     value,
                   }))}
-                  selectedValues={selectedSkills}
+                  selectedValues={selectedDomains}
                   onChange={onSelectSkills}
                 />
               </FlexContainer>
               <FlexContainer direction='col' className='gap-6'>
                 <FlexContainer direction='col' className='gap-2'>
-                  <Text level='h4' className='heading-4'>
-                    Experience
-                    <span className='heading-4 text-primary'> Level </span>
+                  <Text level='h5' className='heading-5'>
+                    Select Experience
+                    <span className='heading-5 text-primary'> Level </span>
                   </Text>
                 </FlexContainer>
                 <RadioButtonContainer
