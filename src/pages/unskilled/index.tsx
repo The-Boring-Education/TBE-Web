@@ -1,4 +1,3 @@
-import pdfToText from 'react-pdftotext';
 import {
   BarChart,
   Bar,
@@ -29,7 +28,7 @@ import {
 } from '@/components';
 import { Fragment, useState } from 'react';
 import { motion } from 'framer-motion';
-import { extractSkillsFromText, getUnskilledLandingPageProps } from '@/utils';
+import { getUnskilledLandingPageProps } from '@/utils';
 import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
 import {
   routes,
@@ -38,6 +37,7 @@ import {
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
 } from '@/constant';
+import { usePDFFile } from '@/hooks';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
   {
@@ -66,20 +66,8 @@ const UnskilledLandingPage = ({
 }: UnskilledLandingPageProps) => {
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [selectedExperience, setSelectedExperience] = useState<string>('');
-  const [extractedSkills, setExtractedSkills] = useState<string[]>([]);
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [isEvaluating, setIsEvaluating] = useState(false);
-
-  const extractTextFromPDF = async (file: File) => {
-    pdfToText(file)
-      .then((text) => {
-        const extractedSkills = extractSkillsFromText(text);
-        setExtractedSkills(extractedSkills);
-      })
-      .catch((error) =>
-        console.error('Failed to extract text from pdf', error)
-      );
-  };
+  const { extractedSkills, file, handleFileUpload } = usePDFFile();
 
   const onSelectSkills = (value: string[]) => {
     setSelectedDomains(value);
@@ -89,8 +77,10 @@ const UnskilledLandingPage = ({
     setSelectedExperience(value);
   };
 
+  console.log(extractedSkills);
+
   const handleResumeEvaluation = async () => {
-    if (!resumeFile || selectedDomains.length === 0 || !selectedExperience) {
+    if (!file || selectedDomains.length === 0 || !selectedExperience) {
       alert('Please upload resume, select domain and experience');
       return;
     }
@@ -112,14 +102,6 @@ const UnskilledLandingPage = ({
     // const result = await response.json();
     // console.log('Evaluation Result:', result);
     // setIsEvaluating(false);
-  };
-
-  const handleResumeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setResumeFile(file);
-      extractTextFromPDF(file);
-    }
   };
 
   const jobMarketPanels = jobData && [
@@ -266,7 +248,7 @@ const UnskilledLandingPage = ({
                   type='file'
                   accept='.pdf'
                   className='hidden'
-                  onChange={handleResumeUpload}
+                  onChange={handleFileUpload}
                 />
                 <Text level='p' className='paragraph text-gray-500'>
                   📄 Click or drag your resume here to upload (PDF only)

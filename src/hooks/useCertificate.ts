@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import { toPng } from 'html-to-image';
 import useUser from './useUser';
-import { useAnalytics } from './useAnalytics';
+import { useAnalytics } from '@/hooks';
 
-export const useCertificate = () => {
+const useCertificate = () => {
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
 
@@ -39,3 +39,5 @@ export const useCertificate = () => {
     handleDownload,
   };
 };
+
+export default useCertificate;
