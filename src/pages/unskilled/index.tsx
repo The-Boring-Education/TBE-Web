@@ -69,6 +69,8 @@ const UnskilledLandingPage = ({
   const [isEvaluating, setIsEvaluating] = useState(false);
   const { extractedSkills, file, handleFileUpload } = usePDFFile();
 
+  console.log(selectedDomains, extractedSkills);
+
   const onSelectSkills = (value: string[]) => {
     setSelectedDomains(value);
   };
@@ -76,8 +78,6 @@ const UnskilledLandingPage = ({
   const onSelectExperience = (value: string) => {
     setSelectedExperience(value);
   };
-
-  console.log(extractedSkills);
 
   const handleResumeEvaluation = async () => {
     if (!file || selectedDomains.length === 0 || !selectedExperience) {

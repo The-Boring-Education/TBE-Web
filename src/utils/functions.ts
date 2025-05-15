@@ -580,6 +580,15 @@ const extractSkillsFromText = (text: string): string[] => {
   return Array.from(matchedSkills);
 };
 
+// Constrains a number to be within a minimum and maximum boundary
+const constrainNumberToRange = (
+  value: number,
+  min: number,
+  max: number
+): number => {
+  return Math.min(Math.max(value, min), max);
+};
+
 export {
   formatDate,
   formatTime,
@@ -612,4 +621,5 @@ export {
   getRedirectUrl,
   normalizeAPIPayload,
   extractSkillsFromText,
+  constrainNumberToRange,
 };

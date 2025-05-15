@@ -358,3 +358,12 @@ export interface UserPlaylistResponseProps extends PlaylistModel {
   isRecommended: boolean;
   learningTime: number;
 }
+
+export interface UnSkilledEvaluationRequestBody {
+  skills: string[];
+  domains: string[];
+  experience: {
+    min: number;
+    max: number;
+  };
+}
