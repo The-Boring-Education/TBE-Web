@@ -28,6 +28,55 @@ import {
   UploadFileInput,
 } from '@/components';
 import { Fragment, useState } from 'react';
+// Circular Progress Component
+const CircularProgress = ({
+  percentage,
+  color = '#6366f1', // default to indigo
+  size = 56,
+  strokeWidth = 6,
+  children,
+  bg = '#e5e7eb',
+  className = '',
+}) => {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percentage / 100) * circumference;
+  return (
+    <div
+      style={{ width: size, height: size }}
+      className={`relative inline-block ${className}`}
+    >
+      <svg width={size} height={size}>
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={bg}
+          strokeWidth={strokeWidth}
+          fill='none'
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={color}
+          strokeWidth={strokeWidth}
+          fill='none'
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap='round'
+          style={{ transition: 'stroke-dashoffset 0.5s' }}
+        />
+      </svg>
+      <div
+        className='absolute inset-0 flex items-center justify-center'
+        style={{ pointerEvents: 'none' }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
 import { motion } from 'framer-motion';
 import { getUnskilledLandingPageProps } from '@/utils';
 import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
@@ -303,87 +352,155 @@ const UnskilledLandingPage = ({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className='mt-12 space-y-10'
+                  className='mt-12 bg-white shadow-md rounded-xl border border-gray-100 p-8 flex flex-col gap-8'
                 >
-                  {/* Summary */}
-                  <div className='bg-white shadow-sm p-6 rounded-xl border border-gray-100'>
-                    <Text level='h4' className='text-xl font-semibold mb-2'>
+                  {/* Resume Summary */}
+                  <div className='mb-6'>
+                    <Text level='h4' className='text-2xl font-semibold mb-4'>
                       🧾 Resume Summary
                     </Text>
-                    <p>
-                      Total Jobs Analyzed: {evaluationData.totalJobsAnalyzed}
-                    </p>
-                    <p>Resume Score: {evaluationData.resumeScore}%</p>
-                    <p>Skills Matched: {evaluationData.matchedSkills.length}</p>
-                    <p>Skills Missing: {evaluationData.missingSkills.length}</p>
+                    <div className='flex gap-6 flex-wrap'>
+                      <div className='text-center'>
+                        <div className='text-4xl font-bold text-primary'>
+                          {evaluationData.totalJobsAnalyzed}
+                        </div>
+                        <div className='text-sm text-gray-600'>
+                          Jobs Analyzed
+                        </div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='text-4xl font-bold text-indigo-600'>
+                          {evaluationData.resumeScore}%
+                        </div>
+                        <div className='text-sm text-gray-600'>
+                          Resume Score
+                        </div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='text-4xl font-bold text-green-600'>
+                          {evaluationData.matchedSkills.length}
+                        </div>
+                        <div className='text-sm text-gray-600'>
+                          Skills Matched
+                        </div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='text-4xl font-bold text-red-600'>
+                          {evaluationData.missingSkills.length}
+                        </div>
+                        <div className='text-sm text-gray-600'>
+                          Skills Missing
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Matched Skills */}
-                  {evaluationData.matchedSkills.length > 0 && (
-                    <div className='bg-white shadow-sm p-6 rounded-xl border border-gray-100'>
-                      <Text level='h4' className='text-xl font-semibold mb-4'>
-                        ✅ What’s Good in Your Resume
-                      </Text>
-                      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
-                        {evaluationData.matchedSkills.map((skill: any) => (
-                          <div
-                            key={skill.skill}
-                            className='p-4 border rounded-lg bg-green-50'
+                  {/* Matching Skills */}
+                  <div className='mb-6'>
+                    <Text level='h4' className='text-lg font-semibold mb-2'>
+                      ✅ Matching Skills
+                    </Text>
+                    <div className='flex flex-wrap gap-4'>
+                      {evaluationData.matchedSkills.map((skill: any) => (
+                        <div
+                          key={skill.skill}
+                          className='flex items-center gap-3'
+                        >
+                          <CircularProgress
+                            percentage={skill.percentage}
+                            color='#16a34a'
+                            bg='#d1fae5'
+                            size={40}
+                            strokeWidth={5}
                           >
-                            <p className='font-medium capitalize text-green-800'>
+                            <span className='text-xs font-bold text-green-700'>
+                              {skill.percentage}%
+                            </span>
+                          </CircularProgress>
+                          <div>
+                            <div className='font-medium text-green-800 capitalize'>
                               {skill.skill}
-                            </p>
-                            <p className='text-sm text-gray-600'>
-                              Found in {skill.percentage}% of jobs
-                            </p>
+                            </div>
+                            <div className='text-xs text-gray-400'>
+                              Seen in {skill.frequency} jobs
+                            </div>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
-                  )}
+                  </div>
 
                   {/* Missing Skills */}
-                  {evaluationData.missingSkills.length > 0 && (
-                    <div className='bg-white shadow-sm p-6 rounded-xl border border-gray-100'>
-                      <Text level='h4' className='text-xl font-semibold mb-4'>
-                        ❌ Missing Skills in Your Resume
-                      </Text>
-                      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
-                        {evaluationData.missingSkills.map((skill: any) => (
-                          <div
-                            key={skill.skill}
-                            className='p-4 border rounded-lg bg-red-50'
+                  <div className='mb-6'>
+                    <Text level='h4' className='text-lg font-semibold mb-2'>
+                      ❌ Missing Skills
+                    </Text>
+                    <div className='flex flex-wrap gap-4'>
+                      {evaluationData.missingSkills.map((skill: any) => (
+                        <div
+                          key={skill.skill}
+                          className='flex items-center gap-3'
+                        >
+                          <CircularProgress
+                            percentage={skill.percentage}
+                            color='#ef4444'
+                            bg='#fee2e2'
+                            size={40}
+                            strokeWidth={5}
                           >
-                            <p className='font-medium capitalize text-red-800'>
+                            <span className='text-xs font-bold text-red-600'>
+                              {skill.percentage}%
+                            </span>
+                          </CircularProgress>
+                          <div>
+                            <div className='font-medium text-red-800 capitalize'>
                               {skill.skill}
-                            </p>
-                            <p className='text-sm text-gray-600'>
-                              Found in {skill.percentage}% of jobs
-                            </p>
+                            </div>
+                            <div className='text-xs text-gray-400'>
+                              Seen in {skill.frequency} jobs
+                            </div>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
-                  )}
+                  </div>
 
-                  {/* Company Type Distribution */}
-                  {evaluationData.companyTypeDistribution.length > 0 && (
-                    <div className='bg-white shadow-sm p-6 rounded-xl border border-gray-100'>
-                      <Text level='h4' className='text-xl font-semibold mb-4'>
-                        🏢 Companies Hiring for this Role
-                      </Text>
-                      <ul className='space-y-2'>
-                        {evaluationData.companyTypeDistribution.map(
-                          (type: any) => (
-                            <li key={type.name}>
-                              <span className='font-medium'>{type.name}</span> -{' '}
-                              {type.percentage}% of jobs
-                            </li>
-                          )
-                        )}
-                      </ul>
+                  {/* Companies Hiring */}
+                  <div>
+                    <Text level='h4' className='text-lg font-semibold mb-2'>
+                      🏢 Companies Hiring
+                    </Text>
+                    <div className='flex flex-wrap gap-4'>
+                      {evaluationData.companyTypeDistribution.map(
+                        (type: any) => (
+                          <div
+                            key={type.name}
+                            className='flex items-center gap-3'
+                          >
+                            <CircularProgress
+                              percentage={type.percentage}
+                              color='#6366f1'
+                              bg='#e0e7ff'
+                              size={40}
+                              strokeWidth={5}
+                            >
+                              <span className='text-xs font-bold text-indigo-600'>
+                                {type.percentage}%
+                              </span>
+                            </CircularProgress>
+                            <div>
+                              <div className='font-medium text-gray-700'>
+                                {type.name}
+                              </div>
+                              <div className='text-xs text-gray-400'>
+                                Seen in {type.count} jobs
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      )}
                     </div>
-                  )}
+                  </div>
                 </motion.div>
               )}
             </FlexContainer>
