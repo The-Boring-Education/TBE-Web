@@ -16,6 +16,7 @@ import {
 import {
   Button,
   CheckboxButtonContainer,
+  CircularProgressBar,
   FlexContainer,
   Image,
   LinkButton,
@@ -28,55 +29,6 @@ import {
   UploadFileInput,
 } from '@/components';
 import { Fragment, useState } from 'react';
-// Circular Progress Component
-const CircularProgress = ({
-  percentage,
-  color = '#6366f1', // default to indigo
-  size = 56,
-  strokeWidth = 6,
-  children,
-  bg = '#e5e7eb',
-  className = '',
-}) => {
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (percentage / 100) * circumference;
-  return (
-    <div
-      style={{ width: size, height: size }}
-      className={`relative inline-block ${className}`}
-    >
-      <svg width={size} height={size}>
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke={bg}
-          strokeWidth={strokeWidth}
-          fill='none'
-        />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke={color}
-          strokeWidth={strokeWidth}
-          fill='none'
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap='round'
-          style={{ transition: 'stroke-dashoffset 0.5s' }}
-        />
-      </svg>
-      <div
-        className='absolute inset-0 flex items-center justify-center'
-        style={{ pointerEvents: 'none' }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-};
 import { motion } from 'framer-motion';
 import { getUnskilledLandingPageProps } from '@/utils';
 import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
@@ -406,7 +358,7 @@ const UnskilledLandingPage = ({
                           key={skill.skill}
                           className='flex items-center gap-3'
                         >
-                          <CircularProgress
+                          <CircularProgressBar
                             percentage={skill.percentage}
                             color='#16a34a'
                             bg='#d1fae5'
@@ -416,7 +368,7 @@ const UnskilledLandingPage = ({
                             <span className='text-xs font-bold text-green-700'>
                               {skill.percentage}%
                             </span>
-                          </CircularProgress>
+                          </CircularProgressBar>
                           <div>
                             <div className='font-medium text-green-800 capitalize'>
                               {skill.skill}
@@ -441,7 +393,7 @@ const UnskilledLandingPage = ({
                           key={skill.skill}
                           className='flex items-center gap-3'
                         >
-                          <CircularProgress
+                          <CircularProgressBar
                             percentage={skill.percentage}
                             color='#ef4444'
                             bg='#fee2e2'
@@ -451,7 +403,7 @@ const UnskilledLandingPage = ({
                             <span className='text-xs font-bold text-red-600'>
                               {skill.percentage}%
                             </span>
-                          </CircularProgress>
+                          </CircularProgressBar>
                           <div>
                             <div className='font-medium text-red-800 capitalize'>
                               {skill.skill}
@@ -477,7 +429,7 @@ const UnskilledLandingPage = ({
                             key={type.name}
                             className='flex items-center gap-3'
                           >
-                            <CircularProgress
+                            <CircularProgressBar
                               percentage={type.percentage}
                               color='#6366f1'
                               bg='#e0e7ff'
@@ -487,7 +439,7 @@ const UnskilledLandingPage = ({
                               <span className='text-xs font-bold text-indigo-600'>
                                 {type.percentage}%
                               </span>
-                            </CircularProgress>
+                            </CircularProgressBar>
                             <div>
                               <div className='font-medium text-gray-700'>
                                 {type.name}

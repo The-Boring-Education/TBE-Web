@@ -1,4 +1,7 @@
 import dynamic from 'next/dynamic';
+const CircularProgressBar = dynamic(
+  () => import('@/components/common/ProgressBar/CircularProgressBar')
+);
 const UploadFileInput = dynamic(
   () => import('@/components/containers/Forms/UploadFileInput')
 );
@@ -55,7 +58,9 @@ const Banner = dynamic(() => import('@/components/common/Banner'));
 const AboutTBE = dynamic(
   () => import('@/components/containers/Cards/AboutTBE')
 );
-const ProgressBar = dynamic(() => import('@/components/common/ProgressBar'));
+const LinerProgressBar = dynamic(
+  () => import('@/components/common/ProgressBar/LinerProgressBar')
+);
 const CertificateBanner = dynamic(
   () => import('@/components/common/Certificate/CertificateBanner')
 );
@@ -326,7 +331,7 @@ export {
   MentorshipPlans,
   CourseHeroContainer,
   ChapterLink,
-  ProgressBar,
+  LinerProgressBar,
   QuestionLink,
   SheetHeroContainer,
   CertificateBanner,
@@ -377,4 +382,5 @@ export {
   FAQSection,
   NotificationPopover,
   UploadFileInput,
+  CircularProgressBar,
 };

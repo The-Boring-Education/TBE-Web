@@ -401,7 +401,7 @@ export interface AlertProps {
   className?: string;
 }
 
-export interface ProgressBarProps {
+export interface LinerProgressBarProps {
   totalChapters: number;
   completedChapters: number;
 }
@@ -675,4 +675,14 @@ export interface UploadFileInputProps {
   accept?: '*' | 'pdf';
   className?: string;
   placeholder?: string;
+}
+
+export interface CircularProgressBarProps {
+  percentage: number;
+  color?: string;
+  size?: number;
+  strokeWidth?: number;
+  children?: React.ReactNode;
+  bg?: string;
+  className?: string;
 }

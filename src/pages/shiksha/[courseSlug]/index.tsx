@@ -7,7 +7,7 @@ import {
   CourseHeroContainer,
   FlexContainer,
   MDXRenderer,
-  ProgressBar,
+  LinerProgressBar,
   Section,
   SEO,
   Text,
@@ -178,8 +178,8 @@ const CoursePage = ({
                 Chapters
               </Text>
 
-              {/* ProgressBar */}
-              <ProgressBar
+              {/* LinerProgressBar */}
+              <LinerProgressBar
                 totalChapters={totalChapters}
                 completedChapters={completedChapters}
               />
