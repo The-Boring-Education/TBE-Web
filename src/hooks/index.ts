@@ -10,6 +10,7 @@ import useScrollPosition from './useScrollPosition';
 import useGamification from './useGamification';
 import useUsername from './useUsername';
 import usePDFFile from './usePDFFile';
+import useResumeEvaluation from './useResumeEvaluation';
 
 export {
   useApi,
@@ -24,4 +25,5 @@ export {
   useGamification,
   useUsername,
   usePDFFile,
+  useResumeEvaluation,
 };

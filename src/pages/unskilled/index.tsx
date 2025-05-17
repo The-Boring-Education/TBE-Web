@@ -39,7 +39,7 @@ import {
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
 } from '@/constant';
-import { usePDFFile } from '@/hooks';
+import { usePDFFile, useResumeEvaluation } from '@/hooks';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
   {
@@ -66,11 +66,17 @@ const UnskilledLandingPage = ({
   seoMeta,
   jobData,
 }: UnskilledLandingPageProps) => {
-  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
-  const [selectedExperience, setSelectedExperience] = useState<string>('');
-  const [isEvaluating, setIsEvaluating] = useState(false);
-  const [evaluationData, setEvaluationData] = useState<any>(null);
-  const { extractedSkills, file, handleFileUpload } = usePDFFile();
+  const {
+    file,
+    handleFileUpload,
+    selectedDomains,
+    setSelectedDomains,
+    selectedExperience,
+    setSelectedExperience,
+    isEvaluating,
+    evaluationData,
+    handleResumeEvaluation,
+  } = useResumeEvaluation();
 
   const onSelectSkills = (value: string[]) => {
     setSelectedDomains(value);
@@ -78,37 +84,6 @@ const UnskilledLandingPage = ({
 
   const onSelectExperience = (value: string) => {
     setSelectedExperience(value);
-  };
-
-  const handleResumeEvaluation = async () => {
-    if (!file || selectedDomains.length === 0 || !selectedExperience) {
-      alert('Please upload resume, select domain and experience');
-      return;
-    }
-    setIsEvaluating(true);
-
-    try {
-      const response = await fetch('/api/v1/unskilled/evaluation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-app-token': process.env.NEXT_PUBLIC_UNSKILLED_SECRET || '',
-        },
-        body: JSON.stringify({
-          skills: extractedSkills,
-          domains: selectedDomains,
-          experience: { min: 0, max: parseInt(selectedExperience) || 2 },
-        }),
-      });
-
-      const result = await response.json();
-      setEvaluationData(result.data);
-    } catch (err) {
-      console.error('Evaluation failed:', err);
-      alert('Evaluation failed. Please try again.');
-    } finally {
-      setIsEvaluating(false);
-    }
   };
 
   const jobMarketPanels = jobData && [
@@ -307,152 +282,81 @@ const UnskilledLandingPage = ({
                   className='mt-12 bg-white shadow-md rounded-xl border border-gray-100 p-8 flex flex-col gap-8'
                 >
                   {/* Resume Summary */}
-                  <div className='mb-6'>
+                  <FlexContainer className='mb-6' direction='col'>
                     <Text level='h4' className='text-2xl font-semibold mb-4'>
                       🧾 Resume Summary
                     </Text>
-                    <div className='flex gap-6 flex-wrap'>
-                      <div className='text-center'>
+                    <FlexContainer className='gap-6' wrap>
+                      <FlexContainer
+                        className='text-center'
+                        direction='col'
+                        itemCenter
+                        justifyCenter
+                      >
                         <div className='text-4xl font-bold text-primary'>
                           {evaluationData.totalJobsAnalyzed}
                         </div>
                         <div className='text-sm text-gray-600'>
                           Jobs Analyzed
                         </div>
-                      </div>
-                      <div className='text-center'>
+                      </FlexContainer>
+                      <FlexContainer
+                        className='text-center'
+                        direction='col'
+                        itemCenter
+                        justifyCenter
+                      >
                         <div className='text-4xl font-bold text-indigo-600'>
                           {evaluationData.resumeScore}%
                         </div>
                         <div className='text-sm text-gray-600'>
                           Resume Score
                         </div>
-                      </div>
-                      <div className='text-center'>
+                      </FlexContainer>
+                      <FlexContainer
+                        className='text-center'
+                        direction='col'
+                        itemCenter
+                        justifyCenter
+                      >
                         <div className='text-4xl font-bold text-green-600'>
                           {evaluationData.matchedSkills.length}
                         </div>
                         <div className='text-sm text-gray-600'>
                           Skills Matched
                         </div>
-                      </div>
-                      <div className='text-center'>
+                      </FlexContainer>
+                      <FlexContainer
+                        className='text-center'
+                        direction='col'
+                        itemCenter
+                        justifyCenter
+                      >
                         <div className='text-4xl font-bold text-red-600'>
                           {evaluationData.missingSkills.length}
                         </div>
                         <div className='text-sm text-gray-600'>
                           Skills Missing
                         </div>
-                      </div>
-                    </div>
-                  </div>
+                      </FlexContainer>
+                    </FlexContainer>
+                  </FlexContainer>
 
-                  {/* Matching Skills */}
-                  <div className='mb-6'>
-                    <Text level='h4' className='text-lg font-semibold mb-2'>
-                      ✅ Matching Skills
-                    </Text>
-                    <div className='flex flex-wrap gap-4'>
-                      {evaluationData.matchedSkills.map((skill: any) => (
-                        <div
-                          key={skill.skill}
-                          className='flex items-center gap-3'
-                        >
-                          <CircularProgressBar
-                            percentage={skill.percentage}
-                            color='#16a34a'
-                            bg='#d1fae5'
-                            size={40}
-                            strokeWidth={5}
-                          >
-                            <span className='text-xs font-bold text-green-700'>
-                              {skill.percentage}%
-                            </span>
-                          </CircularProgressBar>
-                          <div>
-                            <div className='font-medium text-green-800 capitalize'>
-                              {skill.skill}
-                            </div>
-                            <div className='text-xs text-gray-400'>
-                              Seen in {skill.frequency} jobs
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Missing Skills */}
-                  <div className='mb-6'>
-                    <Text level='h4' className='text-lg font-semibold mb-2'>
-                      ❌ Missing Skills
-                    </Text>
-                    <div className='flex flex-wrap gap-4'>
-                      {evaluationData.missingSkills.map((skill: any) => (
-                        <div
-                          key={skill.skill}
-                          className='flex items-center gap-3'
-                        >
-                          <CircularProgressBar
-                            percentage={skill.percentage}
-                            color='#ef4444'
-                            bg='#fee2e2'
-                            size={40}
-                            strokeWidth={5}
-                          >
-                            <span className='text-xs font-bold text-red-600'>
-                              {skill.percentage}%
-                            </span>
-                          </CircularProgressBar>
-                          <div>
-                            <div className='font-medium text-red-800 capitalize'>
-                              {skill.skill}
-                            </div>
-                            <div className='text-xs text-gray-400'>
-                              Seen in {skill.frequency} jobs
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Companies Hiring */}
-                  <div>
-                    <Text level='h4' className='text-lg font-semibold mb-2'>
-                      🏢 Companies Hiring
-                    </Text>
-                    <div className='flex flex-wrap gap-4'>
-                      {evaluationData.companyTypeDistribution.map(
-                        (type: any) => (
-                          <div
-                            key={type.name}
-                            className='flex items-center gap-3'
-                          >
-                            <CircularProgressBar
-                              percentage={type.percentage}
-                              color='#6366f1'
-                              bg='#e0e7ff'
-                              size={40}
-                              strokeWidth={5}
-                            >
-                              <span className='text-xs font-bold text-indigo-600'>
-                                {type.percentage}%
-                              </span>
-                            </CircularProgressBar>
-                            <div>
-                              <div className='font-medium text-gray-700'>
-                                {type.name}
-                              </div>
-                              <div className='text-xs text-gray-400'>
-                                Seen in {type.count} jobs
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </div>
+                  <EvaluationSection
+                    title='✅ Matching Skills'
+                    type='match'
+                    items={evaluationData.matchedSkills}
+                  />
+                  <EvaluationSection
+                    title='❌ Missing Skills'
+                    type='missing'
+                    items={evaluationData.missingSkills}
+                  />
+                  <EvaluationSection
+                    title='🏢 Companies Hiring'
+                    type='company'
+                    items={evaluationData.companyTypeDistribution}
+                  />
                 </motion.div>
               )}
             </FlexContainer>
@@ -490,3 +394,82 @@ const UnskilledLandingPage = ({
 export const getServerSideProps = getUnskilledLandingPageProps;
 
 export default UnskilledLandingPage;
+
+const EvaluationSection = ({
+  title,
+  type,
+  items,
+}: {
+  title: string;
+  type: 'match' | 'missing' | 'company';
+  items: any[];
+}) => {
+  const colorMap = {
+    match: {
+      text: 'text-green-800',
+      ring: '#16a34a',
+      bg: '#d1fae5',
+    },
+    missing: {
+      text: 'text-red-800',
+      ring: '#ef4444',
+      bg: '#fee2e2',
+    },
+    company: {
+      text: 'text-gray-700',
+      ring: '#6366f1',
+      bg: '#e0e7ff',
+    },
+  };
+
+  const getTextColor = () => colorMap[type].text;
+  const getBgColor = () => colorMap[type].bg;
+  const getRingColor = () => colorMap[type].ring;
+
+  return (
+    <FlexContainer direction='col' className='mb-6'>
+      <Text level='h4' className='text-lg font-semibold mb-2'>
+        {title}
+      </Text>
+      <FlexContainer className='gap-4' wrap>
+        {items.map((item: any) => (
+          <FlexContainer
+            key={item.skill || item.name}
+            className='gap-3'
+            itemCenter
+          >
+            <CircularProgressBar
+              percentage={item.percentage}
+              color={getRingColor()}
+              bg={getBgColor()}
+              size={50}
+              strokeWidth={5}
+            >
+              <Text
+                level='span'
+                className={`text-xs font-bold ${getTextColor()}`}
+              >
+                {item.percentage}%
+              </Text>
+            </CircularProgressBar>
+            <FlexContainer
+              direction='col'
+              className='gap-0.5 justify-start'
+              itemCenter={false}
+            >
+              <Text
+                level='span'
+                className={`strong-text capitalize ${getTextColor()}`}
+              >
+                {item.skill || item.name}
+              </Text>
+              <Text level='span' className='pre-title text-gray-500'>
+                Seen in {item.frequency || item.count} jobs
+              </Text>
+            </FlexContainer>
+          </FlexContainer>
+        ))}
+      </FlexContainer>
+    </FlexContainer>
+  );
+};
