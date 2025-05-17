@@ -9,7 +9,6 @@ import {
   UserRoleType,
   PlatformUsageType,
 } from '@/interfaces';
-import { Label } from 'recharts';
 
 const PROJECT_SKILLS: SkillsType[] = [
   'HTML',
