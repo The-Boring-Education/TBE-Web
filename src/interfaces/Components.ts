@@ -686,3 +686,19 @@ export interface CircularProgressBarProps {
   bg?: string;
   className?: string;
 }
+
+export interface ResumeEvaluationSectionProps {
+  title: string;
+  items: {
+    skill?: string;
+    name?: string;
+    percentage: number;
+    frequency?: number;
+    count?: number;
+  }[];
+  colorScheme: {
+    text: string;
+    ring: string;
+    bg: string;
+  };
+}

@@ -1,4 +1,7 @@
 import dynamic from 'next/dynamic';
+const ResumeEvaluationSection = dynamic(
+  () => import('@/components/containers/Page/UnSkilled/ResumeEvaluationSection')
+);
 const CircularProgressBar = dynamic(
   () => import('@/components/common/ProgressBar/CircularProgressBar')
 );
@@ -383,4 +386,5 @@ export {
   NotificationPopover,
   UploadFileInput,
   CircularProgressBar,
+  ResumeEvaluationSection,
 };

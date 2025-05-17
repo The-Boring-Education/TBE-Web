@@ -22,13 +22,14 @@ import {
   LinkButton,
   OutlineCard,
   RadioButtonContainer,
+  ResumeEvaluationSection,
   Section,
   SEO,
   TabComponent,
   Text,
   UploadFileInput,
 } from '@/components';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { motion } from 'framer-motion';
 import { getUnskilledLandingPageProps } from '@/utils';
 import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
@@ -39,7 +40,7 @@ import {
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
 } from '@/constant';
-import { usePDFFile, useResumeEvaluation } from '@/hooks';
+import { useResumeEvaluation } from '@/hooks';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
   {
@@ -140,6 +141,25 @@ const UnskilledLandingPage = ({
       </Text>
     </FlexContainer>
   );
+
+  // Define color schemes for the evaluation sections
+  const colorSchemes = {
+    match: {
+      text: 'text-green-800',
+      ring: '#16a34a',
+      bg: '#d1fae5',
+    },
+    missing: {
+      text: 'text-red-800',
+      ring: '#ef4444',
+      bg: '#fee2e2',
+    },
+    company: {
+      text: 'text-gray-700',
+      ring: '#6366f1',
+      bg: '#e0e7ff',
+    },
+  };
 
   return (
     <Fragment>
@@ -281,81 +301,92 @@ const UnskilledLandingPage = ({
                   transition={{ duration: 0.5 }}
                   className='mt-12 bg-white shadow-md rounded-xl border border-gray-100 p-8 flex flex-col gap-8'
                 >
-                  {/* Resume Summary */}
-                  <FlexContainer className='mb-6' direction='col'>
-                    <Text level='h4' className='text-2xl font-semibold mb-4'>
+                  <FlexContainer className='gap-4' direction='col'>
+                    <Text level='h5' className='heading-5'>
                       🧾 Resume Summary
                     </Text>
                     <FlexContainer className='gap-6' wrap>
                       <FlexContainer
-                        className='text-center'
+                        className='gap-1'
                         direction='col'
                         itemCenter
                         justifyCenter
                       >
-                        <div className='text-4xl font-bold text-primary'>
+                        <Text level='h4' className='heading-4 text-primary'>
                           {evaluationData.totalJobsAnalyzed}
-                        </div>
-                        <div className='text-sm text-gray-600'>
+                        </Text>
+                        <Text
+                          level='span'
+                          className='strong-text text-gray-600'
+                        >
                           Jobs Analyzed
-                        </div>
+                        </Text>
                       </FlexContainer>
                       <FlexContainer
-                        className='text-center'
+                        className='gap-1'
                         direction='col'
                         itemCenter
                         justifyCenter
                       >
-                        <div className='text-4xl font-bold text-indigo-600'>
+                        <Text level='h4' className='heading-4 text-indigo-600'>
                           {evaluationData.resumeScore}%
-                        </div>
-                        <div className='text-sm text-gray-600'>
+                        </Text>
+                        <Text
+                          level='span'
+                          className='strong-text text-gray-600'
+                        >
                           Resume Score
-                        </div>
+                        </Text>
                       </FlexContainer>
                       <FlexContainer
-                        className='text-center'
+                        className='gap-1'
                         direction='col'
                         itemCenter
                         justifyCenter
                       >
-                        <div className='text-4xl font-bold text-green-600'>
+                        <Text level='h4' className='heading-4 text-green-600'>
                           {evaluationData.matchedSkills.length}
-                        </div>
-                        <div className='text-sm text-gray-600'>
+                        </Text>
+                        <Text
+                          level='span'
+                          className='strong-text text-gray-600'
+                        >
                           Skills Matched
-                        </div>
+                        </Text>
                       </FlexContainer>
                       <FlexContainer
-                        className='text-center'
+                        className='gap-1'
                         direction='col'
                         itemCenter
                         justifyCenter
                       >
-                        <div className='text-4xl font-bold text-red-600'>
+                        <Text level='h4' className='heading-4 text-red-600'>
                           {evaluationData.missingSkills.length}
-                        </div>
-                        <div className='text-sm text-gray-600'>
+                        </Text>
+                        <Text
+                          level='span'
+                          className='strong-text text-gray-600'
+                        >
                           Skills Missing
-                        </div>
+                        </Text>
                       </FlexContainer>
                     </FlexContainer>
                   </FlexContainer>
 
-                  <EvaluationSection
+                  <ResumeEvaluationSection
                     title='✅ Matching Skills'
-                    type='match'
                     items={evaluationData.matchedSkills}
+                    colorScheme={colorSchemes.match}
                   />
-                  <EvaluationSection
+                  <ResumeEvaluationSection
                     title='❌ Missing Skills'
-                    type='missing'
                     items={evaluationData.missingSkills}
+                    colorScheme={colorSchemes.missing}
                   />
-                  <EvaluationSection
+                  <ResumeEvaluationSection
                     title='🏢 Companies Hiring'
-                    type='company'
                     items={evaluationData.companyTypeDistribution}
+                    colorScheme={colorSchemes.company}
                   />
                 </motion.div>
               )}
@@ -394,82 +425,3 @@ const UnskilledLandingPage = ({
 export const getServerSideProps = getUnskilledLandingPageProps;
 
 export default UnskilledLandingPage;
-
-const EvaluationSection = ({
-  title,
-  type,
-  items,
-}: {
-  title: string;
-  type: 'match' | 'missing' | 'company';
-  items: any[];
-}) => {
-  const colorMap = {
-    match: {
-      text: 'text-green-800',
-      ring: '#16a34a',
-      bg: '#d1fae5',
-    },
-    missing: {
-      text: 'text-red-800',
-      ring: '#ef4444',
-      bg: '#fee2e2',
-    },
-    company: {
-      text: 'text-gray-700',
-      ring: '#6366f1',
-      bg: '#e0e7ff',
-    },
-  };
-
-  const getTextColor = () => colorMap[type].text;
-  const getBgColor = () => colorMap[type].bg;
-  const getRingColor = () => colorMap[type].ring;
-
-  return (
-    <FlexContainer direction='col' className='mb-6'>
-      <Text level='h4' className='text-lg font-semibold mb-2'>
-        {title}
-      </Text>
-      <FlexContainer className='gap-4' wrap>
-        {items.map((item: any) => (
-          <FlexContainer
-            key={item.skill || item.name}
-            className='gap-3'
-            itemCenter
-          >
-            <CircularProgressBar
-              percentage={item.percentage}
-              color={getRingColor()}
-              bg={getBgColor()}
-              size={50}
-              strokeWidth={5}
-            >
-              <Text
-                level='span'
-                className={`text-xs font-bold ${getTextColor()}`}
-              >
-                {item.percentage}%
-              </Text>
-            </CircularProgressBar>
-            <FlexContainer
-              direction='col'
-              className='gap-0.5 justify-start'
-              itemCenter={false}
-            >
-              <Text
-                level='span'
-                className={`strong-text capitalize ${getTextColor()}`}
-              >
-                {item.skill || item.name}
-              </Text>
-              <Text level='span' className='pre-title text-gray-500'>
-                Seen in {item.frequency || item.count} jobs
-              </Text>
-            </FlexContainer>
-          </FlexContainer>
-        ))}
-      </FlexContainer>
-    </FlexContainer>
-  );
-};
