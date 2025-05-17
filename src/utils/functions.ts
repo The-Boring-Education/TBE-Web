@@ -7,6 +7,7 @@ import {
   POINTS_RULES,
   USER_LEVELS,
   JOB_SKILL_NORMALIZER,
+  SKILL_BLACKLIST,
 } from '@/constant';
 import {
   BaseInterviewSheetResponseProps,
@@ -589,6 +590,18 @@ const constrainNumberToRange = (
   return Math.min(Math.max(value, min), max);
 };
 
+const cleanJobSkillsData = (skills: string[]): string[] => {
+  return skills
+    .map((s) => s.trim().toLowerCase())
+    .filter((s) => !SKILL_BLACKLIST.includes(s))
+    .map((s) => {
+      const normalized = JOB_SKILL_NORMALIZER.find(({ label }) =>
+        label.includes(s)
+      );
+      return normalized ? normalized.value : s;
+    });
+};
+
 export {
   formatDate,
   formatTime,
@@ -622,4 +635,5 @@ export {
   normalizeAPIPayload,
   extractSkillsFromText,
   constrainNumberToRange,
+  cleanJobSkillsData,
 };

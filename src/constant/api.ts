@@ -9,6 +9,7 @@ import {
   UserRoleType,
   PlatformUsageType,
 } from '@/interfaces';
+import { Label } from 'recharts';
 
 const PROJECT_SKILLS: SkillsType[] = [
   'HTML',
@@ -84,7 +85,7 @@ const JOB_SKILL_NORMALIZER = [
     value: 'Node.js',
   },
   {
-    label: ['Javascript', 'JS', 'JavaScript'],
+    label: ['Javascript', 'JS', 'JavaScript', 'javascript'],
     value: 'JavaScript',
   },
   {
@@ -96,7 +97,7 @@ const JOB_SKILL_NORMALIZER = [
     value: 'Spring Boot',
   },
   {
-    label: ['Java', 'Java 8', 'Java 11'],
+    label: ['Java', 'Java 8', 'Java 11', 'java', 'jsp'],
     value: 'Java',
   },
   {
@@ -116,7 +117,7 @@ const JOB_SKILL_NORMALIZER = [
     value: 'PHP',
   },
   {
-    label: ['HTML', 'html'],
+    label: ['HTML', 'html', 'html5'],
     value: 'HTML',
   },
   {
@@ -128,8 +129,16 @@ const JOB_SKILL_NORMALIZER = [
     value: 'MongoDB',
   },
   {
-    label: ['MySQL', 'mysql'],
+    label: ['MySQL', 'mysql', 'sql'],
     value: 'MySQL',
+  },
+  {
+    Label: ['git', 'Git'],
+    value: 'Git',
+  },
+  {
+    label: ['jquery', 'JQuery'],
+    value: 'JQuery',
   },
   {
     label: ['PostgreSQL', 'postgresql'],
@@ -178,6 +187,122 @@ const JOB_SKILL_NORMALIZER = [
   {
     label: ['Kotlin', 'kotlin'],
     value: 'Kotlin',
+  },
+  {
+    label: [
+      'data structures',
+      'Data Structures',
+      'Data Structures and Algorithms',
+      'DSA',
+      'algorithms',
+      'Data Structures & Algorithms',
+      'Data Structures & Algorithms (DSA)',
+      'Data Structures and Algorithms (DSA)',
+      'Data Structures and Algorithms (DS)',
+    ],
+    value: 'DSA',
+  },
+  {
+    label: ['microservices', 'Microservices'],
+    value: 'Microservices',
+  },
+  {
+    label: ['PostgreSQL', 'postgresql'],
+    value: 'Postgres',
+  },
+  {
+    label: ['docker', 'Docker'],
+    value: 'Docker',
+  },
+  {
+    label: ['ci/cd', 'CI/CD'],
+    value: 'CI/CD',
+  },
+  {
+    label: ['open source', 'Open Source'],
+    value: 'Open Source',
+  },
+  {
+    label: ['typescript', 'TypeScript'],
+    value: 'TypeScript',
+  },
+  {
+    label: ['golang', 'Golang'],
+    value: 'Golang',
+  },
+  {
+    label: ['kafka', 'Kafka'],
+    value: 'Kafka',
+  },
+  {
+    label: ['system design', 'System Design'],
+    value: 'System Design',
+  },
+  {
+    label: ['jenkins', 'Jenkins'],
+    value: 'Jenkins',
+  },
+  {
+    label: ['redux', 'Redux'],
+    value: 'Redux',
+  },
+  {
+    label: ['salesforce', 'Salesforce'],
+    value: 'Salesforce',
+  },
+  {
+    label: ['apache', 'Apache'],
+    value: 'Apache',
+  },
+  {
+    label: ['ruby on rails', 'Ruby on Rails'],
+    value: 'Ruby on Rails',
+  },
+  {
+    label: ['flutter', 'Flutter'],
+    value: 'Flutter',
+  },
+  {
+    label: ['power bi', 'Power BI'],
+    value: 'Power BI',
+  },
+  {
+    label: ['scala', 'Scala'],
+    value: 'Scala',
+  },
+  {
+    label: ['pyspark', 'PySpark'],
+    value: 'PySpark',
+  },
+  {
+    label: ['tableau', 'Tableau'],
+    value: 'Tableau',
+  },
+  {
+    label: ['terraform', 'Terraform'],
+    value: 'Terraform',
+  },
+  {
+    label: ['react native', 'React Native'],
+    value: 'React Native',
+  },
+  {
+    label: ['cyber security', 'Cyber Security'],
+    value: 'Cyber Security',
+  },
+  {
+    label: [
+      'functional testing',
+      'Functional Testing',
+      'api testing',
+      'regression testing',
+      'software testing',
+      'unit testing',
+      'performance testing',
+      'manual testing',
+      'system testing',
+    ],
+    value: 'Testing',
   },
 ];
 
@@ -388,6 +513,22 @@ const JOB_DOMAIN_MAPPER = [
   },
 ];
 
+const SKILL_BLACKLIST = [
+  'frontend',
+  'backend',
+  'coding',
+  'front',
+  'senior',
+  'manager',
+  'software',
+  'development',
+  'engineering',
+  'dev',
+  'tech',
+  'developer',
+  'programming',
+];
+
 export {
   PROJECT_SKILLS,
   ROADMAPS,
@@ -403,4 +544,5 @@ export {
   JOB_SKILL_NORMALIZER,
   JOB_DOMAIN_NORMALIZER,
   JOB_DOMAIN_MAPPER,
+  SKILL_BLACKLIST,
 };

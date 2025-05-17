@@ -16,7 +16,6 @@ import {
 import {
   Button,
   CheckboxButtonContainer,
-  CircularProgressBar,
   FlexContainer,
   Image,
   LinkButton,
