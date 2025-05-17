@@ -25,6 +25,7 @@ import {
   SEO,
   TabComponent,
   Text,
+  UploadFileInput,
 } from '@/components';
 import { Fragment, useState } from 'react';
 import { motion } from 'framer-motion';
@@ -67,9 +68,8 @@ const UnskilledLandingPage = ({
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [selectedExperience, setSelectedExperience] = useState<string>('');
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [evaluationData, setEvaluationData] = useState<any>(null);
   const { extractedSkills, file, handleFileUpload } = usePDFFile();
-
-  console.log(selectedDomains, extractedSkills);
 
   const onSelectSkills = (value: string[]) => {
     setSelectedDomains(value);
@@ -86,22 +86,28 @@ const UnskilledLandingPage = ({
     }
     setIsEvaluating(true);
 
-    // const response = await fetch('/api/v1/unskilled/evaluate', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'x-app-token':
-    //       process.env.NEXT_PUBLIC_UNSKILLED_SECRET || '',
-    //   },
-    //   body: JSON.stringify({
-    //     extractedSkills,
-    //     selectedDomains: selectedDomains,
-    //     experienceLevel: selectedExperience,
-    //   }),
-    // });
-    // const result = await response.json();
-    // console.log('Evaluation Result:', result);
-    // setIsEvaluating(false);
+    try {
+      const response = await fetch('/api/v1/unskilled/evaluation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-app-token': process.env.NEXT_PUBLIC_UNSKILLED_SECRET || '',
+        },
+        body: JSON.stringify({
+          skills: extractedSkills,
+          domains: selectedDomains,
+          experience: { min: 0, max: parseInt(selectedExperience) || 2 },
+        }),
+      });
+
+      const result = await response.json();
+      setEvaluationData(result.data);
+    } catch (err) {
+      console.error('Evaluation failed:', err);
+      alert('Evaluation failed. Please try again.');
+    } finally {
+      setIsEvaluating(false);
+    }
   };
 
   const jobMarketPanels = jobData && [
@@ -243,17 +249,11 @@ const UnskilledLandingPage = ({
                   resources.
                 </Text>
               </FlexContainer>
-              <label className='border-2 border-dashed border-primary px-8 py-10 rounded-lg w-full max-w-xl text-center cursor-pointer bg-white hover:bg-primary/5 transition-all'>
-                <input
-                  type='file'
-                  accept='.pdf'
-                  className='hidden'
-                  onChange={handleFileUpload}
-                />
-                <Text level='p' className='paragraph text-gray-500'>
-                  📄 Click or drag your resume here to upload (PDF only)
-                </Text>
-              </label>
+              <UploadFileInput
+                onChange={handleFileUpload}
+                file={file}
+                accept='pdf'
+              />
             </FlexContainer>
             <FlexContainer direction='col' className='gap-6'>
               <FlexContainer direction='col' className='gap-6'>
@@ -298,86 +298,96 @@ const UnskilledLandingPage = ({
                 icon={<ArrowRightIcon className='h-2 w-2' />}
                 onClick={handleResumeEvaluation}
               />
+              {evaluationData && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className='mt-12 space-y-10'
+                >
+                  {/* Summary */}
+                  <div className='bg-white shadow-sm p-6 rounded-xl border border-gray-100'>
+                    <Text level='h4' className='text-xl font-semibold mb-2'>
+                      🧾 Resume Summary
+                    </Text>
+                    <p>
+                      Total Jobs Analyzed: {evaluationData.totalJobsAnalyzed}
+                    </p>
+                    <p>Resume Score: {evaluationData.resumeScore}%</p>
+                    <p>Skills Matched: {evaluationData.matchedSkills.length}</p>
+                    <p>Skills Missing: {evaluationData.missingSkills.length}</p>
+                  </div>
+
+                  {/* Matched Skills */}
+                  {evaluationData.matchedSkills.length > 0 && (
+                    <div className='bg-white shadow-sm p-6 rounded-xl border border-gray-100'>
+                      <Text level='h4' className='text-xl font-semibold mb-4'>
+                        ✅ What’s Good in Your Resume
+                      </Text>
+                      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
+                        {evaluationData.matchedSkills.map((skill: any) => (
+                          <div
+                            key={skill.skill}
+                            className='p-4 border rounded-lg bg-green-50'
+                          >
+                            <p className='font-medium capitalize text-green-800'>
+                              {skill.skill}
+                            </p>
+                            <p className='text-sm text-gray-600'>
+                              Found in {skill.percentage}% of jobs
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Missing Skills */}
+                  {evaluationData.missingSkills.length > 0 && (
+                    <div className='bg-white shadow-sm p-6 rounded-xl border border-gray-100'>
+                      <Text level='h4' className='text-xl font-semibold mb-4'>
+                        ❌ Missing Skills in Your Resume
+                      </Text>
+                      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
+                        {evaluationData.missingSkills.map((skill: any) => (
+                          <div
+                            key={skill.skill}
+                            className='p-4 border rounded-lg bg-red-50'
+                          >
+                            <p className='font-medium capitalize text-red-800'>
+                              {skill.skill}
+                            </p>
+                            <p className='text-sm text-gray-600'>
+                              Found in {skill.percentage}% of jobs
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Company Type Distribution */}
+                  {evaluationData.companyTypeDistribution.length > 0 && (
+                    <div className='bg-white shadow-sm p-6 rounded-xl border border-gray-100'>
+                      <Text level='h4' className='text-xl font-semibold mb-4'>
+                        🏢 Companies Hiring for this Role
+                      </Text>
+                      <ul className='space-y-2'>
+                        {evaluationData.companyTypeDistribution.map(
+                          (type: any) => (
+                            <li key={type.name}>
+                              <span className='font-medium'>{type.name}</span> -{' '}
+                              {type.percentage}% of jobs
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+                  )}
+                </motion.div>
+              )}
             </FlexContainer>
           </FlexContainer>
-
-          <div className='mt-20 text-center'>
-            <Text level='h3' className='text-2xl font-semibold text-gray-800'>
-              🔍 What's Missing in Your Resume
-            </Text>
-            <Text level='p' className='text-sm text-gray-600 mt-1'>
-              After scanning 3,500+ job listings for your role
-            </Text>
-
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8'>
-              {[
-                {
-                  skill: 'TypeScript',
-                  percentage: '82%',
-                  resources: [
-                    {
-                      title: 'TypeScript Docs',
-                      link: 'https://www.typescriptlang.org/docs/',
-                    },
-                    {
-                      title: 'Crash Course (YouTube)',
-                      link: 'https://www.youtube.com/watch?v=30LWjhZzg50',
-                    },
-                  ],
-                },
-                {
-                  skill: 'Tailwind CSS',
-                  percentage: '74%',
-                  resources: [
-                    {
-                      title: 'Tailwind Docs',
-                      link: 'https://tailwindcss.com/docs',
-                    },
-                    {
-                      title: 'Net Ninja Course',
-                      link: 'https://www.youtube.com/watch?v=ft30zcMlFao',
-                    },
-                  ],
-                },
-                {
-                  skill: 'Redux',
-                  percentage: '65%',
-                  resources: [
-                    {
-                      title: 'Redux Essentials',
-                      link: 'https://redux.js.org/tutorials/essentials/part-1-overview-concepts',
-                    },
-                  ],
-                },
-              ].map(({ skill, percentage, resources }) => (
-                <div
-                  key={skill}
-                  className='bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition'
-                >
-                  <div className='text-xl font-semibold text-primary mb-1'>
-                    {skill}
-                  </div>
-                  <div className='text-sm text-gray-500 mb-2'>
-                    Appears in {percentage} of listings
-                  </div>
-                  <ul className='text-sm text-blue-600 space-y-1'>
-                    {resources.map((r) => (
-                      <li key={r.link}>
-                        <a
-                          href={r.link}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          className='hover:underline'
-                        >
-                          📘 {r.title}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
         </motion.div>
 
         <div className='absolute inset-0 bg-gradient-to-br from-indigo-100 via-transparent to-pink-100 opacity-20 pointer-events-none' />

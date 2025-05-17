@@ -1,4 +1,5 @@
 import {
+  ChangeEvent,
   ElementType,
   HTMLInputTypeAttribute,
   MouseEventHandler,
@@ -665,4 +666,13 @@ export type StepUsernameProps = {
 
 export interface CohortJourneySectionProps {
   weeks: CohortRoadmapProps[];
+}
+
+export interface UploadFileInputProps {
+  label?: string;
+  file?: File | null;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  accept?: '*' | 'pdf';
+  className?: string;
+  placeholder?: string;
 }

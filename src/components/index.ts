@@ -1,4 +1,7 @@
 import dynamic from 'next/dynamic';
+const UploadFileInput = dynamic(
+  () => import('@/components/containers/Forms/UploadFileInput')
+);
 const NotificationPopover = dynamic(
   () => import('@/components/common/Notification')
 );
@@ -373,4 +376,5 @@ export {
   InterviewPrepSection,
   FAQSection,
   NotificationPopover,
+  UploadFileInput,
 };
