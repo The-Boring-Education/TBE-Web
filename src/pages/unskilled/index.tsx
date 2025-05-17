@@ -16,6 +16,7 @@ import {
 import {
   Button,
   CheckboxButtonContainer,
+  CircularProgressBar,
   FlexContainer,
   Image,
   LinkButton,
@@ -301,9 +302,17 @@ const UnskilledLandingPage = ({
                   className='mt-12 bg-white shadow-md rounded-xl border border-gray-100 p-8 flex flex-col gap-8'
                 >
                   <FlexContainer className='gap-4' direction='col'>
-                    <Text level='h5' className='heading-5'>
-                      🧾 Resume Summary
-                    </Text>
+                    <FlexContainer className='gap-0.5' direction='col'>
+                      <Text level='h5' className='heading-5'>
+                        🧾 Your Resume Summary
+                      </Text>
+                      <Text
+                        level='p'
+                        className='paragraph text-sm text-gray-500 text-center mt-2'
+                      >
+                        {evaluationData.totalJobsAnalyzed} Jobs Analyzed
+                      </Text>
+                    </FlexContainer>
                     <FlexContainer className='gap-6' wrap>
                       <FlexContainer
                         className='gap-1'
@@ -311,28 +320,12 @@ const UnskilledLandingPage = ({
                         itemCenter
                         justifyCenter
                       >
-                        <Text level='h4' className='heading-4 text-primary'>
-                          {evaluationData.totalJobsAnalyzed}
-                        </Text>
-                        <Text
-                          level='span'
-                          className='strong-text text-gray-600'
-                        >
-                          Jobs Analyzed
-                        </Text>
-                      </FlexContainer>
-                      <FlexContainer
-                        className='gap-1'
-                        direction='col'
-                        itemCenter
-                        justifyCenter
-                      >
-                        <Text level='h4' className='heading-4 text-indigo-600'>
+                        <Text level='h4' className='heading-4 text-green-500'>
                           {evaluationData.resumeScore}%
                         </Text>
                         <Text
                           level='span'
-                          className='strong-text text-gray-600'
+                          className='strong-text text-gray-500'
                         >
                           Resume Score
                         </Text>
@@ -348,7 +341,7 @@ const UnskilledLandingPage = ({
                         </Text>
                         <Text
                           level='span'
-                          className='strong-text text-gray-600'
+                          className='strong-text text-gray-500'
                         >
                           Skills Matched
                         </Text>
@@ -364,9 +357,25 @@ const UnskilledLandingPage = ({
                         </Text>
                         <Text
                           level='span'
-                          className='strong-text text-gray-600'
+                          className='strong-text text-gray-500'
                         >
                           Skills Missing
+                        </Text>
+                      </FlexContainer>
+                      <FlexContainer
+                        className='gap-1'
+                        direction='col'
+                        itemCenter
+                        justifyCenter
+                      >
+                        <Text level='h4' className='heading-4 text-blue-500'>
+                          {evaluationData.remoteJobs}
+                        </Text>
+                        <Text
+                          level='span'
+                          className='strong-text text-gray-500'
+                        >
+                          Remote Jobs
                         </Text>
                       </FlexContainer>
                     </FlexContainer>
