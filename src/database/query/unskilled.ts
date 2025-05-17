@@ -230,12 +230,21 @@ const getResumeEvaluationResultsFromDB = async ({
     const skillFrequencyMap: Record<string, number> = {};
     const totalJobs = matchedJobs.length;
 
-    // Step 2: Count skill frequencies
+    let remoteJobCount = 0;
+
+    // Step 2: Count skill frequencies and remote jobs
     matchedJobs.forEach((job) => {
       job.skills.forEach((skill) => {
         const key = skill.trim().toLowerCase();
         skillFrequencyMap[key] = (skillFrequencyMap[key] || 0) + 1;
       });
+
+      if (
+        Array.isArray(job.location) &&
+        job.location.some((loc) => loc.toLowerCase() === 'remote')
+      ) {
+        remoteJobCount += 1;
+      }
     });
 
     const sortedSkills = Object.entries(skillFrequencyMap)
@@ -264,8 +273,20 @@ const getResumeEvaluationResultsFromDB = async ({
       normalizedUserSkills.includes(s.skill)
     );
 
+    // Calculate resume score based on skill match strength
+    const totalSkillWeight = sortedSkills.reduce(
+      (sum, skill) => sum + skill.percentage,
+      0
+    );
+
+    const matchedSkillWeight = matchedSkills.reduce(
+      (sum, skill) => sum + skill.percentage,
+      0
+    );
+
+    // Resume score is the proportion of matched weight vs total weight
     const resumeScore = constrainNumberToRange(
-      matchedSkills.reduce((sum, item) => sum + item.percentage, 0),
+      Math.round((matchedSkillWeight / (totalSkillWeight || 1)) * 100),
       0,
       100
     );
@@ -338,6 +359,7 @@ const getResumeEvaluationResultsFromDB = async ({
       resumeScore,
       totalJobsAnalyzed: totalJobs,
       companyTypeDistribution,
+      remoteJobs: remoteJobCount,
     };
 
     return { data: response };
