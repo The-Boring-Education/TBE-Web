@@ -289,7 +289,7 @@ const init = async () => {
   // await jobNormalizer.getAllJobSkills();
   // await jobNormalizer.deduplicateAllJobFields();
   // await jobNormalizer.cleanJobSkills();
-  // await jobNormalizer.removeSkillsWithLowercaseStart();
+  await jobNormalizer.removeSkillsWithLowercaseStart();
 };
 
 init();
