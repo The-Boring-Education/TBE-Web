@@ -22,6 +22,7 @@ import {
 } from '@/constant';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
+import FeedbackPopup from '@/components/containers/Cards/FeedbackCard';
 
 const Home = ({ seoMeta }: PageProps) => {
   const router = useRouter();
@@ -88,6 +89,7 @@ const Home = ({ seoMeta }: PageProps) => {
       />
       <Testimonials />
       <WeAlreadyTaughtAt />
+      <FeedbackPopup type="GENERAL" />
     </Fragment>
   );
 };

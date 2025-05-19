@@ -14,6 +14,7 @@ import { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
 import { useAnalytics, useApi, useUser } from '@/hooks';
 import { routes } from '@/constant';
+import FeedbackPopup from '@/components/containers/Cards/FeedbackCard';
 
 const SheetPage = ({
   sheet,
@@ -28,6 +29,8 @@ const SheetPage = ({
     questions.find((question) => question._id.toString() === currentQuestionId)
       ?.isCompleted
   );
+  const [showFeedback, setShowFeedback] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
   // Calculate total and completed questions for the progress bar
@@ -36,17 +39,22 @@ const SheetPage = ({
     (question) => question.isCompleted
   ).length;
 
-  useEffect(() => {
-    const currentQuestion = questions.find(
-      (question) => question._id.toString() === currentQuestionId
-    );
-    setIsQuestionCompleted(currentQuestion?.isCompleted);
+useEffect(() => {
+  const currentQuestion = questions.find(
+    (question) => question._id.toString() === currentQuestionId
+  );
+  setIsQuestionCompleted(currentQuestion?.isCompleted);
 
-    if (currentQuestion) {
-      const updatedMeta = `${currentQuestion.question}\n\n${currentQuestion.answer}`;
-      setSheetMeta(updatedMeta);
-    }
-  }, [currentQuestionId, questions]);
+  if (currentQuestion) {
+    const updatedMeta = `${currentQuestion.question}\n\n${currentQuestion.answer}`;
+    setSheetMeta(updatedMeta);
+  }
+
+  // Show feedback popup if all questions are completed
+  const allCompleted = questions.length > 0 && questions.every(q => q.isCompleted);
+  setShowFeedback(allCompleted);
+}, [currentQuestionId, questions]);
+
 
   const { makeRequest } = useApi(`interview-prep/${sheet}`);
   const { user } = useUser();
@@ -210,7 +218,15 @@ const SheetPage = ({
             />
           </FlexContainer>
         </FlexContainer>
+
       </Section>
+      {showFeedback && (
+  <FeedbackPopup
+    type="INTERVIEW_QUESTION"
+    refId={sheet._id}
+  />
+)}
+
     </Fragment>
   );
 };

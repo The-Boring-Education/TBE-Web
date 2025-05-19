@@ -98,7 +98,7 @@ export interface GradientContainerProps {
 
 export interface PrimaryCardProps {
   id?: string;
-  image: string;
+  image?: string;
   imageAltText: string;
   title: string;
   content: string;

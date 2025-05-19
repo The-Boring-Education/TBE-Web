@@ -15,7 +15,8 @@ import {
 } from '@/utils';
 import { useCertificate, useUser } from '@/hooks';
 import { routes, STATIC_FILE_PATH } from '@/constant';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
+import FeedbackPopup from '@/components/containers/Cards/FeedbackCard';
 
 const Home = ({
   seoMeta,
@@ -23,6 +24,8 @@ const Home = ({
 }: CertificatePageProps) => {
   const { isAuth } = useUser();
   const { certificateRef, handleDownload } = useCertificate();
+  const [showFeedback, setShowFeedback] = useState(false);
+
 
   const socialShareContent = generateShareTemplate(programName, userName, type);
 
@@ -51,7 +54,11 @@ const Home = ({
               <Button
                 variant='PRIMARY'
                 text='Download'
-                onClick={() => handleDownload(programName)}
+                onClick={() => {
+                  handleDownload(programName)
+                  setShowFeedback(true)
+                }
+                }
                 animationClasses='w-fit'
               />
               <Button
@@ -97,6 +104,10 @@ const Home = ({
           )}
         </div>
       </Section>
+      {showFeedback&&(
+        <FeedbackPopup
+        type='CERTIFICATE' />
+      )}
     </Fragment>
   );
 };

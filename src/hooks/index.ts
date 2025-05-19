@@ -9,6 +9,7 @@ import useSkillPlaylist from './useSkillPlaylist';
 import useScrollPosition from './useScrollPosition';
 import useGamification from './useGamification';
 import useUsername from './useUsername';
+import useFeedback from './useFeedback';
 
 export {
   useApi,
@@ -22,4 +23,5 @@ export {
   useScrollPosition,
   useGamification,
   useUsername,
+  useFeedback
 };

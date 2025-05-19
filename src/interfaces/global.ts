@@ -128,3 +128,10 @@ export interface UnskilledLandingGraphDataProps {
   name: string;
   count: number;
 }
+
+
+export interface FeedbackProps {
+  type: "GENERAL" | "SHIKSHA_CHAPTER" | "SHIKSHA_COURSE" | "INTERVIEW_QUESTION"| "CERTIFICATE";
+  refId?: string;
+  position?: "bottom-right" | "bottom-center";
+}

@@ -11,6 +11,7 @@ import {
   PlatformUsageType,
   UnskilledLandingGraphDataProps,
 } from '.';
+import { FeedbackType } from '@/constant';
 
 export interface UserModel {
   name: string;
@@ -253,4 +254,17 @@ export interface JobAggregateModel extends Document {
   topLocations: UnskilledLandingGraphDataProps[];
   jobDomains: UnskilledLandingGraphDataProps[];
   companyTypes: UnskilledLandingGraphDataProps[];
+}
+
+
+
+export interface FeedbackModel extends Document {
+  _id: typeof Schema.Types.ObjectId;
+  rating: number;
+  feedback?: string;
+  type: FeedbackType;
+  ref?: typeof Schema.Types.ObjectId;
+  user: typeof Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
