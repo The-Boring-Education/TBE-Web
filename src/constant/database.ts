@@ -15,7 +15,14 @@ const DATABASE_MODELS = {
   NOTIFICATION: 'Notification',
   GAMIFICATION: 'Gamification',
   JOB: 'Job',
+  FEEDBACK:'Feedback'
 };
+
+export type FeedbackType = 
+  | 'GENERAL'
+  | 'SHIKSHA_CHAPTER'
+  | 'SHIKSHA_COURSE'
+  | 'INTERVIEW_QUESTION';
 
 const modelSelectParams = {
   coursePreview: '_id name slug coverImageURL description liveOn',

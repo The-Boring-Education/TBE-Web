@@ -96,7 +96,7 @@ export interface GradientContainerProps {
 
 export interface PrimaryCardProps {
   id?: string;
-  image: string;
+  image?: string;
   imageAltText: string;
   title: string;
   content: string;
@@ -599,4 +599,10 @@ export interface LevelProgressCardProps {
   nextLevelName?: string;
   pointsLeftToNextLevel: number;
   percentageProgress: number;
+}
+
+export interface FeedbackProps {
+  type: "GENERAL" | "SHIKSHA_CHAPTER" | "SHIKSHA_COURSE" | "INTERVIEW_QUESTION"| "CERTIFICATE";
+  refId?: string;
+  position?: "bottom-right" | "bottom-center";
 }

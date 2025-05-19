@@ -22,6 +22,7 @@ import { formatDate, getCoursePageProps } from '@/utils';
 import { useAnalytics, useApi, useMediaQuery, useUser } from '@/hooks';
 import { routes, SCREEN_BREAKPOINTS } from '@/constant';
 import router from 'next/router';
+import FeedbackPopup from '@/components/containers/Cards/FeedbackCard';
 
 const CoursePage = ({
   course,
@@ -42,6 +43,13 @@ const CoursePage = ({
   );
   const [certificateId, setCertificateId] = useState(course.certificateId);
   const isSmallScreen = useMediaQuery(SCREEN_BREAKPOINTS.SM);
+
+  const [showChapterFeedback, setShowChapterFeedback] = useState(false);
+const [showCourseFeedback, setShowCourseFeedback] = useState(false);
+
+
+
+
 
   // Calculate the total chapters and completed chapters
   const totalChapters = chapters.length;
@@ -66,86 +74,89 @@ const CoursePage = ({
     setCourseMeta(chapterMeta);
   };
 
-  const toggleCompletion = async () => {
-    setIsLoading(true);
-    try {
-      const newCompletionStatus = !isChapterCompleted;
+ const toggleCompletion = async () => {
+  setIsLoading(true);
+  const newCompletionStatus = !isChapterCompleted;
 
-      await makeRequest({
-        method: 'PATCH',
-        url: routes.api.markCourseChapterAsCompleted,
-        body: {
-          userId: user?.id,
-          courseId: course._id,
-          chapterId: currentChapterId,
-          isCompleted: newCompletionStatus,
-        },
-      });
+  try {
+    await makeRequest({
+      method: 'PATCH',
+      url: routes.api.markCourseChapterAsCompleted,
+      body: {
+        userId: user?.id,
+        courseId: course._id,
+        chapterId: currentChapterId,
+        isCompleted: newCompletionStatus,
+      },
+    });
 
-      trackEvent({
-        action: newCompletionStatus ? 'COURSE_COMPLETE' : 'COURSE_PROGRESS',
-        category: 'Course',
-        label: newCompletionStatus ? 'Course Completed' : 'Course Progress',
-        value: {
-          userId: user?.id,
-          courseId: course._id,
-        },
-      });
+    trackEvent({
+      action: newCompletionStatus ? 'COURSE_COMPLETE' : 'COURSE_PROGRESS',
+      category: 'Course',
+      label: newCompletionStatus ? 'Course Completed' : 'Course Progress',
+      value: {
+        userId: user?.id,
+        courseId: course._id,
+      },
+    });
 
-      setChapters((prevChapters) =>
-        prevChapters.map((chapter) =>
-          chapter._id.toString() === currentChapterId
-            ? { ...chapter, isCompleted: newCompletionStatus }
-            : chapter
-        )
+    setChapters((prevChapters) =>
+      prevChapters.map((chapter) =>
+        chapter._id.toString() === currentChapterId
+          ? { ...chapter, isCompleted: newCompletionStatus }
+          : chapter
+      )
+    );
+
+    if (newCompletionStatus) {
+      setShowChapterFeedback(true); // ✅ safely accessed
+
+      const currentIndex = chapters.findIndex(
+        (chapter) => chapter._id.toString() === currentChapterId
       );
 
-      if (newCompletionStatus) {
-        const currentIndex = chapters.findIndex(
-          (chapter) => chapter._id.toString() === currentChapterId
-        );
+      const nextIncompleteChapter = chapters
+        .slice(currentIndex + 1)
+        .find((chapter) => !chapter.isCompleted);
 
-        const nextIncompleteChapter = chapters
-          .slice(currentIndex + 1)
-          .find((chapter) => !chapter.isCompleted);
+      if (nextIncompleteChapter) {
+        const nextChapterId = nextIncompleteChapter._id.toString();
+        window.location.href = `${slug}?courseId=${course._id}&chapterId=${nextChapterId}`;
+      } else {
+        const { status, data } = await makeRequest({
+          method: 'POST',
+          url: routes.api.certificate,
+          body: {
+            type: 'SHIKSHA',
+            userId: user?.id,
+            userName: user?.name,
+            programId: course._id,
+            programName: course.name,
+            date: formatDate({
+              dateFormat: {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              },
+            }).date,
+          } as AddCertificateRequestPayloadProps,
+        });
 
-        if (nextIncompleteChapter) {
-          const nextChapterId = nextIncompleteChapter._id.toString();
-          window.location.href = `${slug}?courseId=${course._id}&chapterId=${nextChapterId}`;
-        } else {
-          const { status, data } = await makeRequest({
-            method: 'POST',
-            url: routes.api.certificate,
-            body: {
-              type: 'SHIKSHA',
-              userId: user?.id,
-              userName: user?.name,
-              programId: course._id,
-              programName: course.name,
-              date: formatDate({
-                dateFormat: {
-                  day: 'numeric',
-                  month: 'short',
-                  year: 'numeric',
-                },
-              }).date,
-            } as AddCertificateRequestPayloadProps,
-          });
-
-          if (status) {
-            setIsCourseCompleted(true);
-            setCertificateId(data._id);
-          }
+        if (status && data?._id) {
+          setIsCourseCompleted(true);
+          setCertificateId(data._id); // ✅ now data is in scope
+          setShowCourseFeedback(true); // ✅ feedback for course
         }
       }
-
-      setIsChapterCompleted(newCompletionStatus);
-    } catch (error) {
-      console.error('Error toggling chapter completion:', error);
-    } finally {
-      setIsLoading(false);
     }
-  };
+
+    setIsChapterCompleted(newCompletionStatus);
+  } catch (error) {
+    console.error('Error toggling chapter completion:', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const alertContainer = isSmallScreen && (
     <Alert
@@ -279,6 +290,21 @@ const CoursePage = ({
           </FlexContainer>
         </FlexContainer>
       </Section>
+
+        {showChapterFeedback && (
+        <FeedbackPopup
+          type="SHIKSHA_CHAPTER"
+          refId={currentChapterId}
+        />
+      )}
+
+      {showCourseFeedback && (
+        <FeedbackPopup
+          type="SHIKSHA_COURSE"
+          refId={course._id}
+        />
+      )}
+
     </Fragment>
   );
 };

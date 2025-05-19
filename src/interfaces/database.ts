@@ -8,6 +8,7 @@ import {
   WebinarEnrolledUsersProps,
   UserPointsActionType,
 } from '.';
+import { FeedbackType } from '@/constant';
 
 export interface UserModel {
   name: string;
@@ -238,4 +239,17 @@ export interface GamificationModel {
   userId: Schema.Types.ObjectId; // Reference to User
   points: number;
   actions: UserPointsAction[];
+}
+
+
+
+export interface FeedbackModel extends Document {
+  _id: typeof Schema.Types.ObjectId;
+  rating: number;
+  feedback?: string;
+  type: FeedbackType;
+  ref?: typeof Schema.Types.ObjectId;
+  user: typeof Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
