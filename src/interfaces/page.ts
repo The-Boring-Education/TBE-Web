@@ -75,6 +75,7 @@ export interface UnskilledLandingPageProps extends PageProps {
     trendingSkills: UnskilledLandingGraphDataProps[];
     companyTypes: UnskilledLandingGraphDataProps[];
     topLocations: UnskilledLandingGraphDataProps[];
+    updatedAt: string;
   };
 }
 

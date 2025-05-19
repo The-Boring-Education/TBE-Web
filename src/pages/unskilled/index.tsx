@@ -30,7 +30,7 @@ import {
 } from '@/components';
 import { Fragment } from 'react';
 import { motion } from 'framer-motion';
-import { getUnskilledLandingPageProps } from '@/utils';
+import { formatDate, getUnskilledLandingPageProps } from '@/utils';
 import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
 import {
   routes,
@@ -77,6 +77,8 @@ const UnskilledLandingPage = ({
     evaluationData,
     handleResumeEvaluation,
   } = useResumeEvaluation();
+
+  console.log('HERE', jobData);
 
   const onSelectSkills = (value: string[]) => {
     setSelectedDomains(value);
@@ -159,6 +161,10 @@ const UnskilledLandingPage = ({
       bg: '#e0e7ff',
     },
   };
+
+  const dateAndTime = formatDate({
+    dateAndTime: jobData?.updatedAt,
+  });
 
   return (
     <Fragment>
@@ -382,16 +388,19 @@ const UnskilledLandingPage = ({
 
                   <ResumeEvaluationSection
                     title='✅ Matching Skills'
+                    subtitle='Skills that Match with Your Resume'
                     items={evaluationData.matchedSkills}
                     colorScheme={colorSchemes.match}
                   />
                   <ResumeEvaluationSection
                     title='❌ Missing Skills'
+                    subtitle='Some Skills maybe not relevant to your profile. You can skip them'
                     items={evaluationData.missingSkills}
                     colorScheme={colorSchemes.missing}
                   />
                   <ResumeEvaluationSection
                     title='🏢 Companies Hiring'
+                    subtitle='You should focus on applying at these companies'
                     items={evaluationData.companyTypeDistribution}
                     colorScheme={colorSchemes.company}
                   />
@@ -414,14 +423,19 @@ const UnskilledLandingPage = ({
 
       <Section id={`${routes.internals.landing.explore}`}>
         <FlexContainer className='gap-6' direction='col'>
-          <Text level='h3' className='heading-3'>
-            Job Market Insights
-          </Text>
+          <FlexContainer className='gap-2' direction='col'>
+            <Text level='h3' className='heading-3'>
+              Job Market Insights
+            </Text>
+            <Text level='p' className='pre-title text-gray-500'>
+              Last Updated on: {dateAndTime.date} at {dateAndTime.time}
+            </Text>
+          </FlexContainer>
 
           {jobGraphContainer}
 
-          <Text level='p' className='text-gray-500 text-sm text-center'>
-            Data aggregated from multiple leading job portals and updated daily
+          <Text level='p' className='pre-title text-gray-500'>
+            Data from 1000+ job listings across various platforms. <br />
           </Text>
         </FlexContainer>
       </Section>

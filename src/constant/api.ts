@@ -642,10 +642,6 @@ const JOB_DOMAIN_NORMALIZER = [
     value: 'Data Science',
   },
   {
-    label: ['Machine Learning', 'ML', 'Data Science / Machine Learning'],
-    value: 'Machine Learning',
-  },
-  {
     label: ['DevOps Engineer', 'DevOps', 'DevOps Development'],
     value: 'DevOps',
   },
@@ -663,10 +659,7 @@ const JOB_DOMAIN_NORMALIZER = [
     ],
     value: 'Mobile Development',
   },
-  {
-    label: ['Cloud Computing', 'Cloud Engineer', 'Cloud Developer', 'Cloud'],
-    value: 'Cloud Computing',
-  },
+
   {
     label: ['Java Developer', 'Java Development', 'Java', 'Java 8', 'Java 11'],
     value: 'Java Development',
@@ -691,6 +684,14 @@ const JOB_DOMAIN_NORMALIZER = [
   {
     label: ['Web Development', 'Web Developer', 'Web Development (Frontend)'],
     value: 'Web Development',
+  },
+  {
+    label: ['Cloud Computing', 'Cloud Engineer', 'Cloud Developer', 'Cloud'],
+    value: 'Cloud Computing',
+  },
+  {
+    label: ['Machine Learning', 'ML', 'Data Science / Machine Learning'],
+    value: 'Machine Learning',
   },
 ];
 

@@ -689,6 +689,7 @@ export interface CircularProgressBarProps {
 
 export interface ResumeEvaluationSectionProps {
   title: string;
+  subtitle?: string;
   items: {
     skill?: string;
     name?: string;

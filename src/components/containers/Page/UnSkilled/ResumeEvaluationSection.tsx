@@ -3,14 +3,20 @@ import { ResumeEvaluationSectionProps } from '@/interfaces';
 
 const ResumeEvaluationSection = ({
   title,
+  subtitle,
   items,
   colorScheme,
 }: ResumeEvaluationSectionProps) => {
   return (
     <FlexContainer direction='col' className='gap-4'>
-      <Text level='h5' className='heading-5'>
-        {title}
-      </Text>
+      <FlexContainer direction='col' className='gap-1'>
+        <Text level='h5' className='heading-5'>
+          {title}
+        </Text>
+        <Text level='p' className='pre-title'>
+          {subtitle}
+        </Text>
+      </FlexContainer>
       <FlexContainer className='gap-4' wrap>
         {items.map((item: any) => (
           <FlexContainer
