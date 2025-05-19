@@ -65,6 +65,7 @@ const UNSKILLED_FEATURES: OutlineCardProps[] = [
 const UnskilledLandingPage = ({
   seoMeta,
   jobData,
+  isDev,
 }: UnskilledLandingPageProps) => {
   const {
     file,
@@ -77,8 +78,6 @@ const UnskilledLandingPage = ({
     evaluationData,
     handleResumeEvaluation,
   } = useResumeEvaluation();
-
-  console.log('HERE', jobData);
 
   const onSelectSkills = (value: string[]) => {
     setSelectedDomains(value);
@@ -193,23 +192,24 @@ const UnskilledLandingPage = ({
               className='sm:flex-row gap-2 justify-center lg:justify-start'
             >
               <LinkButton
-                className='w-fit'
-                href={`#${routes.internals.landing.upload}`}
-                buttonProps={{
-                  variant: 'PRIMARY',
-                  text: 'Evaluate My Resume',
-                  icon: <ArrowRightIcon className='h-2 w-2' />,
-                }}
-              />
-              <LinkButton
                 href={`#${routes.internals.landing.explore}`}
                 buttonProps={{
                   text: 'Explore Trending Skills',
-                  variant: 'GHOST',
+                  variant: 'PRIMARY',
                   className: 'w-full sm:w-auto',
+                  icon: <ArrowRightIcon className='h-2 w-2' />,
                 }}
                 className='w-full sm:w-auto'
               />
+              {/* <LinkButton
+                className='w-fit'
+                href={`#${routes.internals.landing.upload}`}
+                buttonProps={{
+                  variant: 'GHOST',
+                  text: 'Evaluate My Resume',
+                  icon: <ArrowRightIcon className='h-2 w-2' />,
+                }}
+              /> */}
             </FlexContainer>
           </FlexContainer>
           <FlexContainer className='max-w-md'>
@@ -225,6 +225,7 @@ const UnskilledLandingPage = ({
       <Section
         id={`${routes.internals.landing.upload}`}
         className='bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20 md:px-10 px-4'
+        isDev={isDev}
       >
         <motion.div
           initial={{ opacity: 0, y: 30 }}

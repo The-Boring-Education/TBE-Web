@@ -1,4 +1,4 @@
-import { getSEOMeta, routes, seoCommonMeta } from '@/constant';
+import { getSEOMeta, IN_DEV_PAGES, routes, seoCommonMeta } from '@/constant';
 import {
   BaseShikshaCourseResponseProps,
   BaseInterviewSheetResponseProps,
@@ -366,10 +366,13 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
     };
   }
 
+  const isDev = IN_DEV_PAGES.some((page) => page === slug);
+
   return {
     props: {
       seoMeta,
       jobData,
+      isDev,
     },
   };
 };

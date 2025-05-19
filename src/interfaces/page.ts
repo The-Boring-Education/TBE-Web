@@ -16,6 +16,7 @@ import {
 
 export interface PageProps {
   slug: any;
+  isDev?: boolean;
   seoMeta: GetSEOMetaResponseType;
   resolvedUrl?: string;
 }
