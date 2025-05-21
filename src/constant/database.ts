@@ -23,7 +23,8 @@ export type FeedbackType =
   | 'GENERAL'
   | 'SHIKSHA_CHAPTER'
   | 'SHIKSHA_COURSE'
-  | 'INTERVIEW_SHEET';
+  | 'INTERVIEW_SHEET'
+  | 'CERTIFICATE';
 
 const modelSelectParams = {
   coursePreview: '_id name slug coverImageURL description liveOn',

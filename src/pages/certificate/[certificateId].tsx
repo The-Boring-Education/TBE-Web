@@ -106,7 +106,8 @@ const Home = ({
       </Section>
       {showFeedback&&(
         <FeedbackPopup
-        type='CERTIFICATE' />
+        type='CERTIFICATE'
+         />
       )}
     </Fragment>
   );

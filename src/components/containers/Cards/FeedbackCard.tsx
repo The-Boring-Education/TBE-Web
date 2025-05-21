@@ -5,11 +5,11 @@ import  useFeedback  from "@/hooks/useFeedback";
 import Modal from "@/components/common/Modal";
 import StarRating from "./Items/StarRatingCard";
 import { Button, Toast } from "../..";
-import { FeedbackProps } from "@/interfaces";
+import { FeedbackPopupProps } from "@/interfaces";
 
 
 
-const FeedbackPopup: React.FC<FeedbackProps> = ({ type, refId, position = "bottom-right" }) => {
+const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ type, refId, position = "bottom-right" }) => {
   const {
     rating,
     hoverRating,

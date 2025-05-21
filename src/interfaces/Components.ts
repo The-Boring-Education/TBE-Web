@@ -674,3 +674,9 @@ export interface StarRatingProps {
   onMouseLeave: () => void
   onClick: (value: number) => void
 }
+
+export interface FeedbackPopupProps {
+  type: "GENERAL" | "SHIKSHA_CHAPTER" | "SHIKSHA_COURSE" | "INTERVIEW_SHEET"| "CERTIFICATE";
+  refId?: string;
+  position?: "bottom-right" | "bottom-center";
+}
