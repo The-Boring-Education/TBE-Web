@@ -1,16 +1,14 @@
 import React from "react"
-import { Star } from "lucide-react"
-import { StarRatingProps } from "@/interfaces"
+import { FaStar } from "react-icons/fa" 
+import { StarRatingCardProps } from "@/interfaces"
 
-
-
-const StarRating: React.FC<StarRatingProps> = ({
+const StarRatingCard= ({
   rating,
   hoverRating,
   onMouseEnter,
   onMouseLeave,
   onClick,
-}) => {
+}:StarRatingCardProps) => {
   return (
     <div className="flex mb-2">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -21,9 +19,9 @@ const StarRating: React.FC<StarRatingProps> = ({
           onMouseLeave={onMouseLeave}
           className="focus:outline-none"
         >
-          <Star
+          <FaStar
             className={`w-4 h-4 ${
-              (hoverRating || rating) >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+              (hoverRating || rating) >= star ? "text-yellow-400" : "text-gray-300"
             }`}
           />
         </button>
@@ -32,4 +30,4 @@ const StarRating: React.FC<StarRatingProps> = ({
   )
 }
 
-export default StarRating
+export default StarRatingCard

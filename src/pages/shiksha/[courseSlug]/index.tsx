@@ -13,6 +13,7 @@ import {
   Text,
   CertificateBanner,
   ActionBanner,
+  FeedbackPopup
 } from '@/components';
 import {
   AddCertificateRequestPayloadProps,
@@ -22,7 +23,6 @@ import { formatDate, getCoursePageProps } from '@/utils';
 import { useAnalytics, useApi, useMediaQuery, useUser } from '@/hooks';
 import { routes, SCREEN_BREAKPOINTS } from '@/constant';
 import router from 'next/router';
-import FeedbackPopup from '@/components/containers/Cards/FeedbackCard';
 
 const CoursePage = ({
   course,
@@ -109,8 +109,7 @@ const [showCourseFeedback, setShowCourseFeedback] = useState(false);
     );
 
     if (newCompletionStatus) {
-      setShowChapterFeedback(true); // ✅ safely accessed
-
+      setShowChapterFeedback(true); 
       const currentIndex = chapters.findIndex(
         (chapter) => chapter._id.toString() === currentChapterId
       );
@@ -144,8 +143,8 @@ const [showCourseFeedback, setShowCourseFeedback] = useState(false);
 
         if (status && data?._id) {
           setIsCourseCompleted(true);
-          setCertificateId(data._id); // ✅ now data is in scope
-          setShowCourseFeedback(true); // ✅ feedback for course
+          setCertificateId(data._id); 
+          setShowCourseFeedback(true); 
         }
       }
     }

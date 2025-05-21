@@ -1,95 +1,79 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { FeedbackProps } from "@/interfaces";
+import { useState } from "react";
+import { useFeedbackProps } from "@/interfaces";
+import { useUser, useApi } from "@/hooks";
 
+const useFeedback = ({ type, refId }: useFeedbackProps) => {
+  const { user } = useUser();
 
-
-const useFeedback = ({ type, refId }: FeedbackProps) => {
-  const [rating, setRating] = useState<number>(0);
-  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackId, setFeedbackId] = useState<string | null>(null);
-  const [showRatingModal, setShowRatingModal] = useState(true);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
 
-  useEffect(() => {
-  // Only start timer if rating modal is shown and no rating given yet
-    if (showRatingModal && rating === 0) {
-      const timer = setTimeout(() => {
-        setShowRatingModal(false);
-      }, 5000);
+  const [modals, setModals] = useState({
+    rating: true,
+    feedback: false,
+    success: false,
+  });
 
-      // Cleanup timer if rating changes or modal closes
-      return () => clearTimeout(timer);
-    }
-  }, [showRatingModal, rating]);
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+  });
 
-  const handleStarClick = async (selectedRating: number) => {
-    setRating(selectedRating);
-    try {
-      const res = await axios.post("/api/v1/feedback", {
-        rating: selectedRating,
-        type,
-        ref: refId,
-      });
+  const submitRatingApi = useApi("submit-feedback");
+  const updateFeedbackApi = useApi("update-feedback");
 
-      const id = res.data?.data?.feedbackId;
-      setFeedbackId(id);
-      setShowSuccessMessage(true);
+  const handleStarClick = async (value: number) => {
+    setRating(value);
 
-      if (!showFeedbackModal) {
-        setTimeout(() => {
-          setShowSuccessMessage(false);
-          setShowRatingModal(false);
-        }, 3000);
-      }
-    } catch (err) {
-      setToastMessage("Failed to submit rating");
+    const response = await submitRatingApi.makeRequest({
+      url: "/feedback",
+      method: "POST",
+      body: { rating: value, type, ref: refId, userId: user?.id },
+    });
+
+    const isSuccess = response?.data?.feedbackId;
+
+    if (isSuccess) {
+      setFeedbackId(response.data.feedbackId);
+      setModals((prev) => ({ ...prev, success: true }));
     }
   };
 
   const handleFeedbackSubmit = async () => {
-    if (!feedbackText || !feedbackId) return;
+    if (!feedbackId || !feedbackText.trim()) return;
 
-    try {
-      await axios.put("/api/v1/feedback", {
-        feedbackId,
-        feedback: feedbackText,
-      });
+    const response = await updateFeedbackApi.makeRequest({
+      url: "/feedback",
+      method: "PUT",
+      body: { feedbackId, feedback: feedbackText, userId: user?.id },
+    });
 
-      setShowFeedbackModal(false);
-      setShowRatingModal(false);
-      setToastMessage("Thank you for your feedback!");
-    } catch (err) {
-      setToastMessage("Failed to submit feedback.");
+    setToast({
+      show: true,
+      message: response ? "Thanks for your feedback!" : "Failed to submit detailed feedback.",
+    });
+
+    if (response) {
+      setModals({ rating: false, feedback: false, success: true });
     }
   };
-
-  useEffect(() => {
-    if (showFeedbackModal) {
-      setShowSuccessMessage(false);
-    }
-  }, [showFeedbackModal]);
 
   return {
     rating,
     hoverRating,
     feedbackText,
-    showRatingModal,
-    showFeedbackModal,
-    showSuccessMessage,
-    toastMessage,
+    modals,
+    toast,
+    setRating,
     setHoverRating,
     setFeedbackText,
-    setShowFeedbackModal,
-    setShowRatingModal,
-    setToastMessage,
+    setModals,
+    setToast,
     handleStarClick,
     handleFeedbackSubmit,
   };
 };
-
 
 export default useFeedback;

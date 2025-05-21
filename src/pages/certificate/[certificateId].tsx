@@ -6,6 +6,7 @@ import {
   Section,
   SEO,
   Text,
+  FeedbackPopup
 } from '@/components';
 import { CertificatePageProps } from '@/interfaces';
 import {
@@ -16,7 +17,6 @@ import {
 import { useCertificate, useUser } from '@/hooks';
 import { routes, STATIC_FILE_PATH } from '@/constant';
 import { Fragment, useState } from 'react';
-import FeedbackPopup from '@/components/containers/Cards/FeedbackCard';
 
 const Home = ({
   seoMeta,

@@ -9,12 +9,12 @@ import {
   Section,
   SEO,
   Text,
+  FeedbackPopup
 } from '@/components';
 import { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
 import { useAnalytics, useApi, useUser } from '@/hooks';
 import { routes } from '@/constant';
-import FeedbackPopup from '@/components/containers/Cards/FeedbackCard';
 
 const SheetPage = ({
   sheet,
@@ -221,11 +221,11 @@ useEffect(() => {
 
       </Section>
       {showFeedback && (
-  <FeedbackPopup
-    type="INTERVIEW_SHEET"
-    refId={sheet._id}
-  />
-)}
+        <FeedbackPopup
+          type="INTERVIEW_SHEET"
+          refId={sheet._id}
+        />
+      )}
 
     </Fragment>
   );

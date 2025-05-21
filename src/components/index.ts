@@ -271,8 +271,12 @@ const StepNavigation = dynamic(
   () => import('@/components/containers/Page/Onboarding/StepNavigation')
 );
 
-const StartRating = dynamic(
+const StartRatingCard = dynamic(
   ()=>import("@/components/containers/Cards/Items/StarRatingCard")
+)
+
+const FeedbackPopup = dynamic(
+  ()=>import("@/components/containers/Cards/FeedbackPopup")
 )
 
 export {
@@ -378,5 +382,6 @@ export {
   InterviewPrepSection,
   FAQSection,
   NotificationPopover,
-  StartRating
+  StartRatingCard,
+  FeedbackPopup
 };

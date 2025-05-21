@@ -2,39 +2,22 @@ import { apiStatusCodes } from '@/constant';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { sendAPIResponse } from '@/utils';
 import { connectDB } from '@/middlewares';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../auth/[...nextauth]';
-
-import { createFeedback, updateFeedbackText } from '@/database';
+import { addFeedbackToDB, updateFeedbackTextInDB } from '@/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await connectDB();
 
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session?.user?.id) {
-      return res.status(apiStatusCodes.UNAUTHORIZED).json(
-        sendAPIResponse({
-          status: false,
-          message: 'Unauthorized',
-        })
-      );
-    }
-
-    const userId = session.user.id;
-    const { method } = req;
-
-    switch (method) {
+    switch (req.method) {
       case 'POST':
-        return handlePostFeedback(req, res, userId);
+        return await handlePostFeedback(req, res);
       case 'PUT':
-        return handleUpdateDetailedFeedback(req, res, userId);
+        return await handleUpdateFeedback(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
             status: false,
-            message: `Method ${method} Not Allowed`,
+            message: `Method ${req.method} Not Allowed`,
           })
         );
     }
@@ -49,33 +32,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handlePostFeedback = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
-  userId: string
-) => {
-  try {
-    const { rating, type, ref } = req.body;
+const handlePostFeedback = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { rating, type, ref, userId } = req.body;
 
-    if (!rating || !type) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json(
-        sendAPIResponse({
-          status: false,
-          message: 'Rating and type are required',
-        })
-      );
-    }
-
-    const newFeedback = await createFeedback({ rating, type, ref, userId });
-
-    return res.status(apiStatusCodes.OKAY).json(
+  if (!rating || !type || !userId) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
-        status: true,
-        message: 'Star rating submitted. You can add detailed feedback later.',
-        data: { feedbackId: newFeedback._id },
+        status: false,
+        message: 'Rating, type, and userId are required',
       })
     );
-  } catch (error) {
+  }
+
+  const { data, error } = await addFeedbackToDB({ rating, type, ref, userId });
+
+  if (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -84,52 +55,46 @@ const handlePostFeedback = async (
       })
     );
   }
+
+  return res.status(apiStatusCodes.OKAY).json(
+    sendAPIResponse({
+      status: true,
+      message: 'Star rating submitted. You can add detailed feedback later.',
+      data: { feedbackId: data?._id },
+    })
+  );
 };
 
-const handleUpdateDetailedFeedback = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
-  userId: string
-) => {
-  try {
-    const { feedbackId, feedback } = req.body;
+const handleUpdateFeedback = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { feedbackId, feedback, userId } = req.body;
 
-    if (!feedbackId || !feedback) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json(
-        sendAPIResponse({
-          status: false,
-          message: 'feedbackId and feedback are required',
-        })
-      );
-    }
-
-    const updatedFeedback = await updateFeedbackText({ feedbackId, userId, feedback });
-
-    if (!updatedFeedback) {
-      return res.status(apiStatusCodes.NOT_FOUND).json(
-        sendAPIResponse({
-          status: false,
-          message: 'Feedback not found or you do not have permission to update it',
-        })
-      );
-    }
-
-    return res.status(apiStatusCodes.OKAY).json(
-      sendAPIResponse({
-        status: true,
-        message: 'Detailed feedback updated successfully',
-        data: updatedFeedback,
-      })
-    );
-  } catch (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+  if (!feedbackId || !feedback || !userId) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: false,
-        message: 'Failed to update detailed feedback',
-        error,
+        message: 'feedbackId, feedback, and userId are required',
       })
     );
   }
+
+  const { data, error } = await updateFeedbackTextInDB({ feedbackId, userId, feedback });
+
+  if (error) {
+    return res.status(apiStatusCodes.NOT_FOUND).json(
+      sendAPIResponse({
+        status: false,
+        message: error,
+      })
+    );
+  }
+
+  return res.status(apiStatusCodes.OKAY).json(
+    sendAPIResponse({
+      status: true,
+      message: 'Detailed feedback updated successfully',
+      data,
+    })
+  );
 };
 
 export default handler;

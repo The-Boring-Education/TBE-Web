@@ -12,6 +12,7 @@ import {
   QuestionFrequencyType,
   TopNavbarLinkProps,
 } from '.';
+import { FeedbackType } from '@/constant';
 
 export interface SectionProps {
   children: ReactNode;
@@ -667,7 +668,7 @@ export interface CohortJourneySectionProps {
   weeks: CohortRoadmapProps[];
 }
 
-export interface StarRatingProps {
+export interface StarRatingCardProps {
   rating: number
   hoverRating: number
   onMouseEnter: (value: number) => void
@@ -676,7 +677,7 @@ export interface StarRatingProps {
 }
 
 export interface FeedbackPopupProps {
-  type: "GENERAL" | "SHIKSHA_CHAPTER" | "SHIKSHA_COURSE" | "INTERVIEW_SHEET"| "CERTIFICATE";
+  type:FeedbackType;
   refId?: string;
   position?: "bottom-right" | "bottom-center";
 }
