@@ -258,7 +258,7 @@ const [showCourseFeedback, setShowCourseFeedback] = useState(false);
             className='border md:w-8/12 p-2 rounded'
             justifyCenter={false}
             itemCenter={false}
-            disabled={course.isEnrolled}
+            disabled={!course.isEnrolled}
           >
             <MDXRenderer
               mdxSource={courseMeta}
