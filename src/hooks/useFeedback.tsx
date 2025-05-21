@@ -14,17 +14,17 @@ const useFeedback = ({ type, refId }: FeedbackProps) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-        useEffect(() => {
+  useEffect(() => {
   // Only start timer if rating modal is shown and no rating given yet
-  if (showRatingModal && rating === 0) {
-    const timer = setTimeout(() => {
-      setShowRatingModal(false);
-    }, 5000);
+    if (showRatingModal && rating === 0) {
+      const timer = setTimeout(() => {
+        setShowRatingModal(false);
+      }, 5000);
 
-    // Cleanup timer if rating changes or modal closes
-    return () => clearTimeout(timer);
-  }
-}, [showRatingModal, rating]);
+      // Cleanup timer if rating changes or modal closes
+      return () => clearTimeout(timer);
+    }
+  }, [showRatingModal, rating]);
 
   const handleStarClick = async (selectedRating: number) => {
     setRating(selectedRating);

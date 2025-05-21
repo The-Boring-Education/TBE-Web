@@ -19,7 +19,7 @@ const FeedbackSchema: Schema<FeedbackModel> = new Schema(
         'GENERAL',
         'SHIKSHA_CHAPTER', 
         'SHIKSHA_COURSE',
-        'INTERVIEW_QUESTION',
+        'INTERVIEW_SHEET',
         'CERTIFICATE'
       ],
       default: 'GENERAL'

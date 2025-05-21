@@ -98,7 +98,7 @@ export interface GradientContainerProps {
 
 export interface PrimaryCardProps {
   id?: string;
-  image?: string;
+  image: string;
   imageAltText: string;
   title: string;
   content: string;
@@ -665,4 +665,12 @@ export type StepUsernameProps = {
 
 export interface CohortJourneySectionProps {
   weeks: CohortRoadmapProps[];
+}
+
+export interface StarRatingProps {
+  rating: number
+  hoverRating: number
+  onMouseEnter: (value: number) => void
+  onMouseLeave: () => void
+  onClick: (value: number) => void
 }

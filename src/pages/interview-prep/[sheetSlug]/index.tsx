@@ -222,7 +222,7 @@ useEffect(() => {
       </Section>
       {showFeedback && (
   <FeedbackPopup
-    type="INTERVIEW_QUESTION"
+    type="INTERVIEW_SHEET"
     refId={sheet._id}
   />
 )}

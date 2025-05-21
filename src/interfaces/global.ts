@@ -131,7 +131,7 @@ export interface UnskilledLandingGraphDataProps {
 
 
 export interface FeedbackProps {
-  type: "GENERAL" | "SHIKSHA_CHAPTER" | "SHIKSHA_COURSE" | "INTERVIEW_QUESTION"| "CERTIFICATE";
+  type: "GENERAL" | "SHIKSHA_CHAPTER" | "SHIKSHA_COURSE" | "INTERVIEW_SHEET"| "CERTIFICATE";
   refId?: string;
   position?: "bottom-right" | "bottom-center";
 }

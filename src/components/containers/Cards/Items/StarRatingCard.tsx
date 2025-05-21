@@ -1,13 +1,8 @@
 import React from "react"
 import { Star } from "lucide-react"
+import { StarRatingProps } from "@/interfaces"
 
-interface StarRatingProps {
-  rating: number
-  hoverRating: number
-  onMouseEnter: (value: number) => void
-  onMouseLeave: () => void
-  onClick: (value: number) => void
-}
+
 
 const StarRating: React.FC<StarRatingProps> = ({
   rating,
