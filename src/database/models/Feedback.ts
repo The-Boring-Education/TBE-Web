@@ -1,6 +1,6 @@
 import { Schema, model, models, Model } from 'mongoose';
 import { FeedbackModel } from '@/interfaces';
-import { DATABASE_MODELS } from '@/constant';
+import { DATABASE_MODELS, FEEDBACK_TYPES } from '@/constant';
 
 const FeedbackSchema: Schema<FeedbackModel> = new Schema(
   {
@@ -18,12 +18,7 @@ const FeedbackSchema: Schema<FeedbackModel> = new Schema(
     type: {
       type: String,
       required: [true, 'Feedback type is required'],
-      enum:[
-          'GENERAL',
-          'SHIKSHA_CHAPTER', 
-          'SHIKSHA_COURSE',
-          'INTERVIEW_SHEET',
-          'CERTIFICATE'],
+      enum:FEEDBACK_TYPES,
       default: 'GENERAL',
     },
 

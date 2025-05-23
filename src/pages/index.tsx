@@ -8,8 +8,7 @@ import {
   Community,
   Banner,
   NotificationContainer,
-  WeAlreadyTaughtAt,
-  FeedbackPopup
+  WeAlreadyTaughtAt
 } from '@/components';
 import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
@@ -89,7 +88,6 @@ const Home = ({ seoMeta }: PageProps) => {
       />
       <Testimonials />
       <WeAlreadyTaughtAt />
-      <FeedbackPopup type="GENERAL" />
     </Fragment>
   );
 };

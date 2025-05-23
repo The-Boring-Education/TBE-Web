@@ -26,8 +26,12 @@ const Home = ({
   const { certificateRef, handleDownload } = useCertificate();
   const [showFeedback, setShowFeedback] = useState(false);
 
-
   const socialShareContent = generateShareTemplate(programName, userName, type);
+
+    const handleDownloadClick = () =>{
+    handleDownload(programName)
+    setShowFeedback(true)
+  }
 
   return (
     <Fragment>
@@ -54,11 +58,7 @@ const Home = ({
               <Button
                 variant='PRIMARY'
                 text='Download'
-                onClick={() => {
-                  handleDownload(programName)
-                  setShowFeedback(true)
-                }
-                }
+                onClick={handleDownloadClick}
                 animationClasses='w-fit'
               />
               <Button

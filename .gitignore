@@ -41,5 +41,3 @@ next-env.d.ts
 # next-sitemap
 sitemap-*.xml
 .gitignore
-
-.vscode/

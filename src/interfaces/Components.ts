@@ -670,9 +670,6 @@ export interface CohortJourneySectionProps {
 
 export interface StarRatingCardProps {
   rating: number
-  hoverRating: number
-  onMouseEnter: (value: number) => void
-  onMouseLeave: () => void
   onClick: (value: number) => void
 }
 

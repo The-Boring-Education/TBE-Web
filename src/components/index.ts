@@ -82,7 +82,6 @@ const LandingPageHero = dynamic(
   () => import('@/components/containers/Page/common/Hero')
 );
 const Section = dynamic(() => import('@/components/layout/Section'));
-
 const CardContainerB = dynamic(
   () => import('@/components/containers/Cards/CardContainerB')
 );

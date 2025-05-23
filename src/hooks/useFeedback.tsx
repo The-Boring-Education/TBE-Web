@@ -6,11 +6,10 @@ const useFeedback = ({ type, refId }: useFeedbackProps) => {
   const { user } = useUser();
 
   const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackId, setFeedbackId] = useState<string | null>(null);
 
-  const [modals, setModals] = useState({
+  const [feedbackModal, setFeedbackModal] = useState({
     rating: true,
     feedback: false,
     success: false,
@@ -37,7 +36,7 @@ const useFeedback = ({ type, refId }: useFeedbackProps) => {
 
     if (isSuccess) {
       setFeedbackId(response.data.feedbackId);
-      setModals((prev) => ({ ...prev, success: true }));
+      setFeedbackModal((prev) => ({ ...prev, success: true }));
     }
   };
 
@@ -50,26 +49,31 @@ const useFeedback = ({ type, refId }: useFeedbackProps) => {
       body: { feedbackId, feedback: feedbackText, userId: user?.id },
     });
 
-    setToast({
-      show: true,
-      message: response ? "Thanks for your feedback!" : "Failed to submit detailed feedback.",
-    });
+    
 
     if (response) {
-      setModals({ rating: false, feedback: false, success: true });
+      setToast({
+      show: true,
+      message:"Thanks for your feedback!",
+    });
+      setFeedbackModal({ rating: false, feedback: false, success: true });
+    }
+    else{
+      setToast({
+      show: true,
+      message: "Failed to submit detailed feedback.",
+    });
     }
   };
 
   return {
     rating,
-    hoverRating,
     feedbackText,
-    modals,
+    feedbackModal,
     toast,
     setRating,
-    setHoverRating,
     setFeedbackText,
-    setModals,
+    setFeedbackModal,
     setToast,
     handleStarClick,
     handleFeedbackSubmit,
