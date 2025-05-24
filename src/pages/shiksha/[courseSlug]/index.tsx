@@ -45,12 +45,8 @@ const CoursePage = ({
   const isSmallScreen = useMediaQuery(SCREEN_BREAKPOINTS.SM);
 
   const [showChapterFeedback, setShowChapterFeedback] = useState(false);
-const [showCourseFeedback, setShowCourseFeedback] = useState(false);
-
-
-
-
-
+  const [showCourseFeedback, setShowCourseFeedback] = useState(false);
+  
   // Calculate the total chapters and completed chapters
   const totalChapters = chapters.length;
   const completedChapters = chapters.filter(
@@ -294,7 +290,7 @@ const [showCourseFeedback, setShowCourseFeedback] = useState(false);
         <FeedbackPopup
           type="SHIKSHA_CHAPTER"
           refId={currentChapterId}
-        />
+        />         
       )}
 
       {showCourseFeedback && (

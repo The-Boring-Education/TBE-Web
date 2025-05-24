@@ -256,8 +256,6 @@ export interface JobAggregateModel extends Document {
   companyTypes: UnskilledLandingGraphDataProps[];
 }
 
-
-
 export interface FeedbackModel extends Document {
   _id: typeof Schema.Types.ObjectId;
   rating: number;

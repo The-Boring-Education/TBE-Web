@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useFeedbackProps } from "@/interfaces";
 import { useUser, useApi } from "@/hooks";
+import { routes } from "@/constant";
 
 const useFeedback = ({ type, refId }: useFeedbackProps) => {
   const { user } = useUser();
@@ -27,7 +28,7 @@ const useFeedback = ({ type, refId }: useFeedbackProps) => {
     setRating(value);
 
     const response = await submitRatingApi.makeRequest({
-      url: "/feedback",
+      url: routes.api.submitUserFeedback,
       method: "POST",
       body: { rating: value, type, ref: refId, userId: user?.id },
     });
@@ -44,12 +45,10 @@ const useFeedback = ({ type, refId }: useFeedbackProps) => {
     if (!feedbackId || !feedbackText.trim()) return;
 
     const response = await updateFeedbackApi.makeRequest({
-      url: "/feedback",
+      url: routes.api.submitUserFeedback,
       method: "PUT",
       body: { feedbackId, feedback: feedbackText, userId: user?.id },
     });
-
-    
 
     if (response) {
       setToast({

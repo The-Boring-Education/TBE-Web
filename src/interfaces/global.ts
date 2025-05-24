@@ -128,5 +128,3 @@ export interface UnskilledLandingGraphDataProps {
   name: string;
   count: number;
 }
-
-
