@@ -1,6 +1,7 @@
 import MarkdownIt from 'markdown-it';
 import { MDXRendererProps } from '@/interfaces';
 import { Fragment } from 'react';
+import { useEffect, useRef } from 'react'
 
 const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   const md = new MarkdownIt({
@@ -58,18 +59,68 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
 
     return `<a href=${href} target="_blank">${href}</a>`;
   };
+  
+    md.renderer.rules.fence = (tokens, idx) => {
+    const token = tokens[idx]
+    const lang = token.info.trim()
+    const code = token.content
 
-  md.renderer.rules.fence = (tokens, idx) => {
-    const token = tokens[idx];
-    const lang = token.info.trim();
-    const code = token.content;
-
-    return `<pre class="bg-accent overflow-x-auto hover:bg-greyLight transition border px-2 py-1 rounded"><code class="language-${lang}">${md.utils.escapeHtml(
-      code
-    )}</code></pre>`;
-  };
+    return (
+      `<div class="relative mb-4">` +
+      `<pre class="bg-accent overflow-x-auto hover:bg-greyLight transition border px-2 py-1 rounded">` +
+      `<code class="language-${lang}">${md.utils.escapeHtml(code)}</code>` +
+      `</pre>` +
+      `</div>`
+    )
+  }
 
   const mdxHTML = md.render(mdxSource);
+
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // useEffect: once the HTML is in the DOM, append a “Copy” button to each code block
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    // Select every <pre><code>…</code></pre> inside our rendered HTML
+    const codeBlocks = containerRef.current.querySelectorAll('pre code')
+
+    codeBlocks.forEach((codeElem) => {
+      const parentPre = codeElem.parentElement    // <pre>
+      if (!parentPre) return
+      const wrapperDiv = parentPre.parentElement  // <div class="relative">
+      if (!wrapperDiv) return
+
+      // Avoid adding more than one button if this runs again
+      if (wrapperDiv.querySelector('.copy-button')) return
+
+      // Create the button
+      const btn = document.createElement('button')
+      btn.innerText = 'Copy'
+      btn.type = 'button'
+
+
+
+      btn.className =
+        'copy-button absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded hover:scale-105 transition-all transition'
+
+      // When clicked: copy the code’s text, show “Copied!” briefly
+      btn.onclick = () => {
+        const textToCopy = codeElem.textContent || ''
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          btn.innerText = 'Copied!'
+          setTimeout(() => {
+            btn.innerText = 'Copy'
+          }, 1500)
+        })
+      }
+
+      // Append button into the wrapper <div>
+      wrapperDiv.appendChild(btn)
+    })
+  }, [mdxHTML])
+
+
 
   const actionContainer = actions && (
     <div className='flex justify-start gap-2'>
@@ -80,10 +131,18 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   );
 
   return (
-    <div className='w-full flex flex-col justify-between'>
+    // <div className='w-full flex flex-col justify-between'>
+    //   <div
+    //     dangerouslySetInnerHTML={{ __html: mdxHTML }}
+    //     className='break-all'
+    //   />
+    //   {actionContainer}
+    // </div>
+    <div className="w-full flex flex-col justify-between">
       <div
+        ref={containerRef}
+        className="break-all"
         dangerouslySetInnerHTML={{ __html: mdxHTML }}
-        className='break-all'
       />
       {actionContainer}
     </div>
