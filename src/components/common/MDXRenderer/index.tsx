@@ -131,18 +131,11 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   );
 
   return (
-    // <div className='w-full flex flex-col justify-between'>
-    //   <div
-    //     dangerouslySetInnerHTML={{ __html: mdxHTML }}
-    //     className='break-all'
-    //   />
-    //   {actionContainer}
-    // </div>
     <div className="w-full flex flex-col justify-between">
       <div
         ref={containerRef}
-        className="break-all"
         dangerouslySetInnerHTML={{ __html: mdxHTML }}
+        className="break-all"
       />
       {actionContainer}
     </div>
