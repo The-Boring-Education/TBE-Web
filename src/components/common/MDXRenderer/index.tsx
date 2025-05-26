@@ -78,23 +78,21 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // useEffect: once the HTML is in the DOM, append a “Copy” button to each code block
+  
   useEffect(() => {
     if (!containerRef.current) return
 
-    // Select every <pre><code>…</code></pre> inside our rendered HTML
     const codeBlocks = containerRef.current.querySelectorAll('pre code')
 
     codeBlocks.forEach((codeElem) => {
-      const parentPre = codeElem.parentElement    // <pre>
+      const parentPre = codeElem.parentElement    
       if (!parentPre) return
-      const wrapperDiv = parentPre.parentElement  // <div class="relative">
+      const wrapperDiv = parentPre.parentElement  
       if (!wrapperDiv) return
 
-      // Avoid adding more than one button if this runs again
+      
       if (wrapperDiv.querySelector('.copy-button')) return
 
-      // Create the button
       const btn = document.createElement('button')
       btn.innerText = 'Copy'
       btn.type = 'button'
@@ -104,7 +102,7 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
       btn.className =
         'copy-button absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded hover:scale-105 transition-all transition'
 
-      // When clicked: copy the code’s text, show “Copied!” briefly
+      
       btn.onclick = () => {
         const textToCopy = codeElem.textContent || ''
         navigator.clipboard.writeText(textToCopy).then(() => {
@@ -115,7 +113,7 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
         })
       }
 
-      // Append button into the wrapper <div>
+   
       wrapperDiv.appendChild(btn)
     })
   }, [mdxHTML])
