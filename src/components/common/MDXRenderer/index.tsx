@@ -78,10 +78,11 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  
+ 
   useEffect(() => {
     if (!containerRef.current) return
 
+    
     const codeBlocks = containerRef.current.querySelectorAll('pre code')
 
     codeBlocks.forEach((codeElem) => {
@@ -93,16 +94,14 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
       
       if (wrapperDiv.querySelector('.copy-button')) return
 
+    
       const btn = document.createElement('button')
       btn.innerText = 'Copy'
       btn.type = 'button'
 
-
-
       btn.className =
         'copy-button absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded hover:scale-105 transition-all transition'
 
-      
       btn.onclick = () => {
         const textToCopy = codeElem.textContent || ''
         navigator.clipboard.writeText(textToCopy).then(() => {
@@ -113,7 +112,7 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
         })
       }
 
-   
+     
       wrapperDiv.appendChild(btn)
     })
   }, [mdxHTML])
