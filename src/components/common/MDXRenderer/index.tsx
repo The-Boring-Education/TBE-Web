@@ -1,7 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import { MDXRendererProps } from '@/interfaces';
-import { Fragment } from 'react';
-import { useEffect, useRef } from 'react'
+import { Fragment,useEffect, useRef } from 'react';
 
 const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   const md = new MarkdownIt({
@@ -78,27 +77,18 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
- 
   useEffect(() => {
     if (!containerRef.current) return
-
-    
     const codeBlocks = containerRef.current.querySelectorAll('pre code')
-
     codeBlocks.forEach((codeElem) => {
       const parentPre = codeElem.parentElement    
       if (!parentPre) return
       const wrapperDiv = parentPre.parentElement  
       if (!wrapperDiv) return
-
-      
       if (wrapperDiv.querySelector('.copy-button')) return
-
-    
       const btn = document.createElement('button')
       btn.innerText = 'Copy'
       btn.type = 'button'
-
       btn.className =
         'copy-button absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded hover:scale-105 transition-all transition'
 
@@ -111,13 +101,9 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
           }, 1500)
         })
       }
-
-     
       wrapperDiv.appendChild(btn)
     })
   }, [mdxHTML])
-
-
 
   const actionContainer = actions && (
     <div className='flex justify-start gap-2'>
