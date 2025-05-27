@@ -12,6 +12,7 @@ import {
   QuestionFrequencyType,
   TopNavbarLinkProps,
 } from '.';
+import { FeedbackType } from '@/constant';
 
 export interface SectionProps {
   children: ReactNode;
@@ -665,4 +666,15 @@ export type StepUsernameProps = {
 
 export interface CohortJourneySectionProps {
   weeks: CohortRoadmapProps[];
+}
+
+export interface StarRatingCardProps {
+  rating: number
+  onClick: (value: number) => void
+}
+
+export interface FeedbackPopupProps {
+  type:FeedbackType;
+  refId?: string;
+  position?: "bottom-right" | "bottom-center";
 }

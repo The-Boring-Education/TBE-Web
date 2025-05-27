@@ -8,7 +8,7 @@ import {
   Community,
   Banner,
   NotificationContainer,
-  WeAlreadyTaughtAt,
+  WeAlreadyTaughtAt
 } from '@/components';
 import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';

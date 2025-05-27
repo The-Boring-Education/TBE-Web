@@ -270,6 +270,14 @@ const StepNavigation = dynamic(
   () => import('@/components/containers/Page/Onboarding/StepNavigation')
 );
 
+const StartRatingCard = dynamic(
+  ()=>import("@/components/containers/Cards/Items/StarRatingCard")
+)
+
+const FeedbackPopup = dynamic(
+  ()=>import("@/components/containers/Cards/FeedbackPopup")
+)
+
 export {
   Navbar,
   LinkText as Link,
@@ -373,4 +381,6 @@ export {
   InterviewPrepSection,
   FAQSection,
   NotificationPopover,
+  StartRatingCard,
+  FeedbackPopup
 };
