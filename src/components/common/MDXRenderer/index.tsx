@@ -66,7 +66,7 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
 
     return (
       `<div class="relative mb-4">` +
-      `<pre class="bg-accent overflow-x-auto hover:bg-greyLight transition border px-4 py-6 rounded">` +
+      `<pre class="bg-accent overflow-x-auto whitespace-pre hover:bg-greyLight transition border px-4 py-6 rounded">` +
       `<code class="language-${lang}">${md.utils.escapeHtml(code)}</code>` +
       `</pre>` +
       `</div>`
