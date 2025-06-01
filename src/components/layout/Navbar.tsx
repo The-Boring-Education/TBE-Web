@@ -1,6 +1,6 @@
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   FlexContainer,
@@ -19,11 +19,15 @@ import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { LINKS, TOP_NAVIGATION } from '@/constant';
 import { AnimatePresence, motion } from 'framer-motion';
+import useScrollDirection from '@/hooks/useScrollDirection';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { status } = useSession();
   const [openPopover, setOpenPopover] = useState<string | null>(null);
+  const [isTop, setIsTop] = useState<boolean>(true);
+  const scrollDirection = useScrollDirection();
+
   const router = useRouter();
 
   const handleSetOpen = (popoverName: string) => {
@@ -34,146 +38,164 @@ const Navbar = () => {
     setMobileMenuOpen(false);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsTop(window.scrollY < 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header>
-      <nav className='flex items-center justify-between p-2 lg:px-8 border'>
-        <div className='w-100 flex'>
-          <Logo />
-        </div>
-        <div className='flex lg:hidden'>
-          <button
-            type='button'
-            className='-m-2.5 flex gap-2 items-center justify-center rounded-md p-2.5 text-black'
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <NotificationPopover />
-            <UserPointButton />
-            <UserAvatar />
-            <Bars3Icon className='h-6 w-6' aria-hidden='true' color='black' />
-          </button>
-        </div>
-        <div className='hidden items-center lg:flex lg:gap-x-4'>
-          <PopoverContainer
-            label='Cohorts'
-            isOpen={openPopover === 'cohorts'}
-            onToggle={() => handleSetOpen('cohorts')}
-          >
-            <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
-          </PopoverContainer>
-          <PopoverContainer
-            label='Learn'
-            isOpen={openPopover === 'products'}
-            onToggle={() => handleSetOpen('products')}
-          >
-            <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
-          </PopoverContainer>
-          <PopoverContainer
-            label='Links'
-            panelClasses='-left-6'
-            isOpen={openPopover === 'links'}
-            onToggle={() => handleSetOpen('links')}
-          >
-            <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
-          </PopoverContainer>
-
-          <NotificationPopover />
-          <UserPointButton />
-          <LoginRedirectButton text='Login' />
-          <UserAvatar />
-        </div>
-      </nav>
-
-      {/* Mobile Navigation */}
-      <Dialog
-        as='div'
-        className='lg:hidden'
-        open={mobileMenuOpen}
-        onClose={setMobileMenuOpen}
+    <>
+      <header
+        className={`fixed w-full transform transition-all duration-300 top-0 z-[999] ${
+          scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
+        } ${!isTop ? 'bg-lightBG' : 'bg-transparent'}`}
       >
-        <div className='fixed inset-0 z-50' />
-        <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-2 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
-          <div className='flex items-center justify-between'>
+        <nav
+          className={`flex items-center justify-between p-2 lg:px-8 border `}
+        >
+          <div className='w-100 flex'>
             <Logo />
+          </div>
+          <div className='flex lg:hidden'>
             <button
               type='button'
-              className='-m-2.5 rounded-md p-2.5 text-black'
-              onClick={() => setMobileMenuOpen(false)}
+              className='-m-2.5 flex gap-2 items-center justify-center rounded-md p-2.5 text-black'
+              onClick={() => setMobileMenuOpen(true)}
             >
-              <XMarkIcon className='h-6 w-6' aria-hidden='true' />
+              <NotificationPopover />
+              <UserPointButton />
+              <UserAvatar />
+              <Bars3Icon className='h-6 w-6' aria-hidden='true' color='black' />
             </button>
           </div>
-          <AnimatePresence>
-            <motion.div
-              key='cohorts-popover'
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+          <div className='hidden items-center lg:flex lg:gap-x-4'>
+            <PopoverContainer
+              label='Cohorts'
+              isOpen={openPopover === 'cohorts'}
+              onToggle={() => handleSetOpen('cohorts')}
             >
-              <div className='mt-6 flow-root'>
-                <div className='divide-white-500/10 -my-6 divide-y'>
-                  <FlexContainer
-                    className='gap-2 space-y-2 py-6'
-                    direction='col'
-                    itemCenter={false}
-                  >
-                    <FlexContainer
-                      itemCenter={false}
-                      justifyCenter={false}
-                      direction='col'
-                      className='gap-1'
-                    >
-                      <LoginRedirectButton text='Login' />
-                    </FlexContainer>
+              <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
+            </PopoverContainer>
+            <PopoverContainer
+              label='Learn'
+              isOpen={openPopover === 'products'}
+              onToggle={() => handleSetOpen('products')}
+            >
+              <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
+            </PopoverContainer>
+            <PopoverContainer
+              label='Links'
+              panelClasses='-left-6'
+              isOpen={openPopover === 'links'}
+              onToggle={() => handleSetOpen('links')}
+            >
+              <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
+            </PopoverContainer>
 
-                    <MobileNavbarLinksContainer
-                      title='Cohorts'
-                      links={TOP_NAVIGATION.cohorts}
-                      onLinkClick={handleCloseMobileMenu}
-                    />
-                    <MobileNavbarLinksContainer
-                      title='Products'
-                      links={TOP_NAVIGATION.products}
-                      onLinkClick={handleCloseMobileMenu}
-                    />
-                    <MobileNavbarLinksContainer
-                      title='Links'
-                      links={TOP_NAVIGATION.links}
-                      onLinkClick={handleCloseMobileMenu}
-                    />
+            <NotificationPopover />
+            <UserPointButton />
+            <LoginRedirectButton text='Login' />
+            <UserAvatar />
+          </div>
+        </nav>
+
+        {/* Mobile Navigation */}
+        <Dialog
+          as='div'
+          className='lg:hidden'
+          open={mobileMenuOpen}
+          onClose={setMobileMenuOpen}
+        >
+          <div className='fixed inset-0 z-50' />
+          <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-2 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
+            <div className='flex items-center justify-between'>
+              <Logo />
+              <button
+                type='button'
+                className='-m-2.5 rounded-md p-2.5 text-black'
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <XMarkIcon className='h-6 w-6' aria-hidden='true' />
+              </button>
+            </div>
+            <AnimatePresence>
+              <motion.div
+                key='cohorts-popover'
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className='mt-6 flow-root'>
+                  <div className='divide-white-500/10 -my-6 divide-y'>
                     <FlexContainer
-                      itemCenter={false}
-                      justifyCenter={false}
+                      className='gap-2 space-y-2 py-6'
                       direction='col'
-                      className='gap-1'
+                      itemCenter={false}
                     >
-                      <Text level='span' className='pre-title text-greyDark'>
-                        Connect with us
-                      </Text>
                       <FlexContainer
                         itemCenter={false}
                         justifyCenter={false}
+                        direction='col'
                         className='gap-1'
                       >
-                        <Link href={LINKS.instagram} target='_blank'>
-                          <FaInstagram color='black' size='2em' />
-                        </Link>
-                        <Link href={LINKS.youtube} target='_blank'>
-                          <FaYoutube color='black' size='2em' />
-                        </Link>
-                        <Link href={LINKS.officialLinkedIn} target='_blank'>
-                          <FaLinkedin color='black' size='2em' />
-                        </Link>
+                        <LoginRedirectButton text='Login' />
+                      </FlexContainer>
+
+                      <MobileNavbarLinksContainer
+                        title='Cohorts'
+                        links={TOP_NAVIGATION.cohorts}
+                        onLinkClick={handleCloseMobileMenu}
+                      />
+                      <MobileNavbarLinksContainer
+                        title='Products'
+                        links={TOP_NAVIGATION.products}
+                        onLinkClick={handleCloseMobileMenu}
+                      />
+                      <MobileNavbarLinksContainer
+                        title='Links'
+                        links={TOP_NAVIGATION.links}
+                        onLinkClick={handleCloseMobileMenu}
+                      />
+                      <FlexContainer
+                        itemCenter={false}
+                        justifyCenter={false}
+                        direction='col'
+                        className='gap-1'
+                      >
+                        <Text level='span' className='pre-title text-greyDark'>
+                          Connect with us
+                        </Text>
+                        <FlexContainer
+                          itemCenter={false}
+                          justifyCenter={false}
+                          className='gap-1'
+                        >
+                          <Link href={LINKS.instagram} target='_blank'>
+                            <FaInstagram color='black' size='2em' />
+                          </Link>
+                          <Link href={LINKS.youtube} target='_blank'>
+                            <FaYoutube color='black' size='2em' />
+                          </Link>
+                          <Link href={LINKS.officialLinkedIn} target='_blank'>
+                            <FaLinkedin color='black' size='2em' />
+                          </Link>
+                        </FlexContainer>
                       </FlexContainer>
                     </FlexContainer>
-                  </FlexContainer>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </Dialog.Panel>
-      </Dialog>
-    </header>
+              </motion.div>
+            </AnimatePresence>
+          </Dialog.Panel>
+        </Dialog>
+      </header>
+
+      <div className='h-[85px]'></div>
+    </>
   );
 };
 
