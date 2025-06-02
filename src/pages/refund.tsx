@@ -1,16 +1,15 @@
-import { SEO, ContactUsPage } from '@/components';
+import { RefundPolicyCard, SEO } from '@/components';
 import { getPreFetchProps } from '@/utils';
 import { getSEOMeta, routes } from '@/constant';
 import { Fragment } from 'react';
-import {} from '@/components';
 
-const Contact = () => {
-  const seoMeta = getSEOMeta(routes.contactUs);
+const RefundAndCancellationPage = () => {
+  const seoMeta = getSEOMeta(routes.refundPolicy);
 
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <ContactUsPage />
+      <RefundPolicyCard />
     </Fragment>
   );
 };
@@ -22,4 +21,4 @@ export const getStaticProps = async () => {
   };
 };
 
-export default Contact;
+export default RefundAndCancellationPage;
