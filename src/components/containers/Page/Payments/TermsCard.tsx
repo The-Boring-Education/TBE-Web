@@ -1,5 +1,5 @@
 import { Section, Text } from "@/components";
-import { TermsAndConditionContent } from "@/constant";
+import { TERMS_CONDITION_CONTENT } from "@/constant";
 
 const TermsAndConditionsCard = () => {
   return (
@@ -23,7 +23,7 @@ const TermsAndConditionsCard = () => {
 
       <br />
 
-      {TermsAndConditionContent.map((item) => (
+      {TERMS_CONDITION_CONTENT.map((item) => (
         <Section key={item.id} className="mb-6 mx-auto max-w-3xl">
           <Text
             level="p"

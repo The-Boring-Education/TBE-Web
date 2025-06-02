@@ -688,7 +688,7 @@ const BYI_USER_CATEGORIES: CohortUserCategoryProps[] = [
   },
 ];
 
- const TermsAndConditionContent = [
+ const TERMS_CONDITION_CONTENT = [
   {
     id: 1,
     description:
@@ -779,5 +779,5 @@ export {
   BYI_INTERMEDIATE_ROADMAP,
   BYI_SKILLED_ROADMAP,
   BYI_USER_CATEGORIES,
-  TermsAndConditionContent
+  TERMS_CONDITION_CONTENT
 };
