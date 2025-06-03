@@ -1,10 +1,10 @@
 import { Section, SEO, Text } from '@/components';
-import { getSEOMeta, routes } from '@/constant';
+import { routes } from '@/constant';
+import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 import { Fragment } from 'react';
 
-const RefundAndCancellationPage = () => {
-  const seoMeta = getSEOMeta(routes.refund);
+const RefundAndCancellationPage = ({seoMeta}:PageProps) => {
 
   return (
     <Fragment>
