@@ -1,7 +1,6 @@
 import { FlexContainer, Link, Text } from '@/components';
-import { LINKS } from '@/constant';
+import { LINKS, routes } from '@/constant';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
-import { routes } from '@/constant';
 
 const Footer = () => {
   return (
@@ -15,7 +14,7 @@ const Footer = () => {
         </Text>
 
         <FlexContainer className='gap-2'>
-          <Link href={routes.refundPolicy} target='_blank'>
+          <Link href={routes.refund} target='_blank'>
             <Text level='span' className='pre-title text-white'>
              Refund Policy
             </Text>
