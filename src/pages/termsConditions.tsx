@@ -1,7 +1,8 @@
 import { Fragment } from "react";
 import { SEO, Section, Text } from "@/components";
-import { getSEOMeta, routes } from "@/constant";
+import { routes } from "@/constant";
 import { getPreFetchProps } from "@/utils";
+import { PageProps } from "@/interfaces";
 
 const TERMS_CONDITION_CONTENT = [
   {
@@ -37,8 +38,7 @@ const TERMS_CONDITION_CONTENT = [
   },
 ];
 
-const TermsAndCondition = () => {
-  const seoMeta = getSEOMeta(routes.termsConditions);
+const TermsAndCondition = ({ seoMeta }:PageProps) => {
 
   return (
     <Fragment>
