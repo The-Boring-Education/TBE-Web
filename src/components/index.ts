@@ -402,9 +402,9 @@ export {
   NotificationPopover,
   StartRatingCard,
   FeedbackPopup,
+  ContactUsPage,
+  ContactUsForm,
   UploadFileInput,
   CircularProgressBar,
   ResumeEvaluationSection,
-  ContactUsForm,
-  ContactUsPage
 };
