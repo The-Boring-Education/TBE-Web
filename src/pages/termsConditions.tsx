@@ -90,8 +90,7 @@ const TermsAndCondition = () => {
 
 export const getStaticProps = async () => {
   return {
-    ...(await getPreFetchProps({ slug: routes.termsConditions })),
-    revalidate: 1000,
+    ...(await getPreFetchProps({ slug: routes.termsConditions }))
   };
 };
 
