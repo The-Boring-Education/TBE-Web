@@ -289,14 +289,6 @@ const FeedbackPopup = dynamic(
   () => import('@/components/containers/Cards/FeedbackPopup')
 );
 
-const ContactUsForm = dynamic(
-  ()=>import("@/components/containers/Page/Payments/ContactForm")
-)
-
-const ContactUsPage = dynamic(
-  ()=>import("@/components/containers/Page/Payments/ContactUsPage")
-) 
-
 export {
   Navbar,
   LinkText as Link,
@@ -402,8 +394,6 @@ export {
   NotificationPopover,
   StartRatingCard,
   FeedbackPopup,
-  ContactUsPage,
-  ContactUsForm,
   UploadFileInput,
   CircularProgressBar,
   ResumeEvaluationSection,
