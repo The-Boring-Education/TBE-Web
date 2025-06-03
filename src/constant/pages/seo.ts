@@ -145,6 +145,16 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'Refund Policy, The Boring Education, Customer Service, Help Desk, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
+    [`${routes.termsnCondition}`]: {
+      title: 'Terms and Conditions | The Boring Education',
+      siteName: 'The Boring Education',
+      description:
+        'Terms and Conditions for The Boring Education',
+      url: routes.refundPolicy,
+      keywords:
+        'Terms and Conditions, The Boring Education, Customer Service, Help Desk, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
     [`${routes[404]}`]: {
       title: 'Lost in Boring Space | The Boring Education',
       siteName: 'Lost in Boring Space',

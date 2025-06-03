@@ -1,4 +1,4 @@
-import { Button, InputFieldContainer, Section, SectionHeaderContainer } from "@/components"
+import { Button, InputFieldContainer, Section, SectionHeaderContainer } from "@/components";
 import { useState } from "react";
 
 const ContactForm =()=>{

@@ -290,15 +290,19 @@ const FeedbackPopup = dynamic(
 );
 
 const ContactUsForm = dynamic(
-  ()=>import("@/components/containers/Page/Payment/ContactForm")
+  ()=>import("@/components/containers/Page/Payments/ContactForm")
 )
 
 const ContactUsPage = dynamic(
-  ()=>import("@/components/containers/Page/Payment/ContactUsPage")
+  ()=>import("@/components/containers/Page/Payments/ContactUsPage")
 ) 
 
 const RefundPolicyCard = dynamic(
   ()=>import("@/components/containers/Page/Payments/RefundCard")
+)
+
+const TermsAndConditionCard = dynamic(
+  ()=>import("@/components/containers/Page/Payments/TermsCard")
 )
 
 export {
@@ -411,5 +415,6 @@ export {
   UploadFileInput,
   CircularProgressBar,
   ResumeEvaluationSection,
-  RefundPolicyCard
+  RefundPolicyCard,
+  TermsAndConditionCard
 };

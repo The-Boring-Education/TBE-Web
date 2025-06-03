@@ -1,4 +1,4 @@
-import { Section, Text } from "@/components"
+import { Section, Text } from "@/components";
 
 const RefundPolicyCard = () =>{
     return (
