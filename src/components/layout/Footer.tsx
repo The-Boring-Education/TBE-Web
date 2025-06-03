@@ -20,6 +20,11 @@ const Footer = () => {
               Contact Us
             </Text>
           </Link>
+          <Link href={routes.refund} target='_blank'>
+            <Text level='span' className='pre-title text-white'>
+             Refund Policy
+            </Text>
+          </Link>
         </FlexContainer>
         <FlexContainer className='gap-1'>
           <Link href={LINKS.instagram} target='_blank'>

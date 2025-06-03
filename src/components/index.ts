@@ -297,6 +297,10 @@ const ContactUsPage = dynamic(
   ()=>import("@/components/containers/Page/Payments/ContactUsPage")
 ) 
 
+const RefundPolicyCard = dynamic(
+  ()=>import("@/components/containers/Page/Payments/RefundCard")
+)
+
 export {
   Navbar,
   LinkText as Link,
@@ -407,4 +411,5 @@ export {
   UploadFileInput,
   CircularProgressBar,
   ResumeEvaluationSection,
+  RefundPolicyCard
 };

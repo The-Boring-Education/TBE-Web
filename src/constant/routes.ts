@@ -34,6 +34,7 @@ const routes = {
   },
   certificate: '/certificate',
   contactUs: '/contact',
+  refund:'/refund',
   user: {
     profile: '/user/profile',
     dashboard: '/user/dashboard',
