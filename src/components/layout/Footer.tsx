@@ -1,5 +1,5 @@
 import { FlexContainer, Link, Text } from '@/components';
-import { LINKS, routes } from '@/constant';
+import { LINKS } from '@/constant';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 const Footer = () => {
@@ -12,13 +12,6 @@ const Footer = () => {
         <Text level='p' className='pre-title text-contentDark'>
           Built with ❤️ in 🇮🇳
         </Text>
-        <FlexContainer className='gap-2'>
-          <Link href={routes.refund} target='_blank'>
-            <Text level='span' className='pre-title text-white'>
-             Refund Policy
-            </Text>
-          </Link>
-        </FlexContainer>
         <FlexContainer className='gap-1'>
           <Link href={LINKS.instagram} target='_blank'>
             <FaInstagram color='white' size='2em' />
