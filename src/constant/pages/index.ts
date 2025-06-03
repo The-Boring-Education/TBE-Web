@@ -19,6 +19,14 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: cohorts.bringYourIdea.slug,
     },
   ],
+  tools: [
+    {
+      id: v4(),
+      name: products.unskilled.label,
+      description: products.unskilled.description,
+      href: products.unskilled.slug,
+    },
+  ],
   products: [
     {
       id: v4(),
@@ -37,12 +45,6 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       name: products.youfocus.label,
       description: products.youfocus.description,
       href: products.youfocus.slug,
-    },
-    {
-      id: v4(),
-      name: products.unskilled.label,
-      description: products.unskilled.description,
-      href: products.unskilled.slug,
     },
     {
       id: v4(),
@@ -73,7 +75,14 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
     },
     {
       id: v4(),
-      name: 'Join Community',
+      name: 'Follow us on Instagram',
+      description: 'Follow us on Instagram',
+      href: LINKS.followUsOnInstagram,
+      target: '_blank',
+    },
+    {
+      id: v4(),
+      name: 'Join Our Community',
       description: 'Join our WhatsApp Community',
       href: LINKS.whatsappCommunity,
       target: '_blank',

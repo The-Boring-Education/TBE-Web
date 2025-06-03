@@ -88,6 +88,7 @@ const cohorts: CohortDataProps = {
 // Global links
 const LINKS = {
   bookTechConsultation: 'https://topmate.io/imsks',
+  followUsOnInstagram: 'https://www.instagram.com/theboringeducation',
   whatsappCommunity: 'https://chat.whatsapp.com/EeB7LrPRg2p3RyMOicyIAC',
   instagram: 'https://www.instagram.com/theboringeducation',
   youtube: 'https://www.youtube.com/@TheBoringEducation',
