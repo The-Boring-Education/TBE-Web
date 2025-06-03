@@ -16,8 +16,7 @@ const Contact = () => {
 
 export const getStaticProps = async () => {
   return {
-    ...(await getPreFetchProps({ slug: routes.contactUs })),
-    revalidate: 1000,
+    ...(await getPreFetchProps({ slug: routes.contactUs }))
   };
 };
 
