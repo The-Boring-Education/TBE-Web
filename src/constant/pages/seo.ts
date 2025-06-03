@@ -125,11 +125,21 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'Database, Interview Preparation, Coding Sheet, Database Interview Questions, Tech Interviews, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
+    [`${routes.contactUs}`]: {
+      title: 'Contact | The Boring Education',
+      siteName: 'The Boring Education',
+      description:
+        'Get in touch with The Boring Education for support and inquiries.',
+      url: routes.contactUs,
+      keywords:
+        'Contact, Support, The Boring Education, Customer Service, Help Desk, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
     [`${routes.refund}`]: {
       title: 'Refund | The Boring Education',
       siteName: 'The Boring Education',
       description:
-        'Refund Policies for purchases made on The Boring Education.',
+        'Refund Policies for purchases made on The Boring Education',
       url: routes.refund,
       keywords:
         'Refund Policy, The Boring Education, Customer Service, Help Desk, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
