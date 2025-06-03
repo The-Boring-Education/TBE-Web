@@ -289,6 +289,10 @@ const FeedbackPopup = dynamic(
   () => import('@/components/containers/Cards/FeedbackPopup')
 );
 
+const TermsAndConditionCard = dynamic(
+  ()=>import("@/components/containers/Page/Payments/TermsCard")
+)
+
 export {
   Navbar,
   LinkText as Link,
@@ -397,4 +401,5 @@ export {
   UploadFileInput,
   CircularProgressBar,
   ResumeEvaluationSection,
+  TermsAndConditionCard
 };
