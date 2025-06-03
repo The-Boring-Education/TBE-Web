@@ -34,6 +34,8 @@ const routes = {
   },
   certificate: '/certificate',
   contactUs: '/contact',
+  termsnCondition:"/tnc",
+  refundPolicy:"/refund",
   user: {
     profile: '/user/profile',
     dashboard: '/user/dashboard',
