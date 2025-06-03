@@ -12,7 +12,6 @@ const Footer = () => {
         <Text level='p' className='pre-title text-contentDark'>
           Built with ❤️ in 🇮🇳
         </Text>
-
         <FlexContainer className='gap-2'>
           <Link href={routes.refund} target='_blank'>
             <Text level='span' className='pre-title text-white'>

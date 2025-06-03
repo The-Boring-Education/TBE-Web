@@ -289,11 +289,6 @@ const FeedbackPopup = dynamic(
   () => import('@/components/containers/Cards/FeedbackPopup')
 );
 
-const RefundPolicyCard = dynamic(
-  ()=>import("@/components/containers/Page/Payments/RefundCard")
-)
-
-
 export {
   Navbar,
   LinkText as Link,
@@ -402,5 +397,4 @@ export {
   UploadFileInput,
   CircularProgressBar,
   ResumeEvaluationSection,
-  RefundPolicyCard,
 };
