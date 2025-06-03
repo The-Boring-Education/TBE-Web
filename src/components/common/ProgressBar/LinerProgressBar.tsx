@@ -1,9 +1,9 @@
-import { ProgressBarProps } from '@/interfaces';
+import { LinerProgressBarProps } from '@/interfaces';
 
-const ProgressBar = ({
+const LinerProgressBar = ({
   totalChapters,
   completedChapters,
-}: ProgressBarProps) => {
+}: LinerProgressBarProps) => {
   const completionPercentage =
     totalChapters > 0
       ? Math.floor((completedChapters / totalChapters) * 100)
@@ -25,4 +25,4 @@ const ProgressBar = ({
   );
 };
 
-export default ProgressBar;
+export default LinerProgressBar;

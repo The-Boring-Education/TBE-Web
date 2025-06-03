@@ -8,7 +8,7 @@ import {
   SEO,
   Section,
   Text,
-  ProgressBar,
+  LinerProgressBar,
   Button,
 } from '@/components';
 import { ProjectPageProps } from '@/interfaces';
@@ -169,8 +169,8 @@ const ProjectPage = ({
                 Sections
               </Text>
 
-              {/* ProgressBar */}
-              <ProgressBar
+              {/* LinerProgressBar */}
+              <LinerProgressBar
                 totalChapters={totalChapters}
                 completedChapters={completedChapters}
               />

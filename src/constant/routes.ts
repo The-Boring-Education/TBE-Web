@@ -126,6 +126,7 @@ const routes = {
     userDashboard: '/user/dashboard',
     notification: '/notification',
     unskilled: '/unskilled',
+    unskilledEvaluation: '/unskilled/evaluation',
   },
 };
 

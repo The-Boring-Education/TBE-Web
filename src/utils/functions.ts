@@ -6,6 +6,8 @@ import {
   YOUTUBE_API_PATH,
   POINTS_RULES,
   USER_LEVELS,
+  JOB_SKILL_NORMALIZER,
+  SKILL_BLACKLIST,
 } from '@/constant';
 import {
   BaseInterviewSheetResponseProps,
@@ -568,6 +570,38 @@ const normalizeAPIPayload = (
   return findNormalized(value);
 };
 
+const extractSkillsFromText = (text: string): string[] => {
+  const lowerText = text.toLowerCase();
+  const matchedSkills = new Set<string>();
+  JOB_SKILL_NORMALIZER.forEach(({ label, value }) => {
+    if (label.some((alt: string) => lowerText.includes(alt.toLowerCase()))) {
+      matchedSkills.add(value);
+    }
+  });
+  return Array.from(matchedSkills);
+};
+
+// Constrains a number to be within a minimum and maximum boundary
+const constrainNumberToRange = (
+  value: number,
+  min: number,
+  max: number
+): number => {
+  return Math.min(Math.max(value, min), max);
+};
+
+const cleanJobSkillsData = (skills: string[]): string[] => {
+  return skills
+    .map((s) => s.trim().toLowerCase())
+    .filter((s) => !SKILL_BLACKLIST.includes(s))
+    .map((s) => {
+      const normalized = JOB_SKILL_NORMALIZER.find(({ label }) =>
+        label.includes(s)
+      );
+      return normalized ? normalized.value : s;
+    });
+};
+
 export {
   formatDate,
   formatTime,
@@ -599,4 +633,7 @@ export {
   calculateProgressPercentage,
   getRedirectUrl,
   normalizeAPIPayload,
+  extractSkillsFromText,
+  constrainNumberToRange,
+  cleanJobSkillsData,
 };

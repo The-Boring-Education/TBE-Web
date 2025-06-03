@@ -172,7 +172,7 @@ const MENTORSHIP_CARDS: MentorshipCardProps[] = [
   },
 ];
 
-const IN_DEV_PAGES = ['/projects'];
+const IN_DEV_PAGES = ['/unskilled'];
 const projectGroupWhatsapp = 'https://chat.whatsapp.com/D1ko12SykD1LfvJwmNQ48A';
 
 const SCREEN_BREAKPOINTS = {

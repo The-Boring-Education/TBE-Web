@@ -5,7 +5,7 @@ import {
   SheetHeroContainer,
   FlexContainer,
   MDXRenderer,
-  ProgressBar,
+  LinerProgressBar,
   Section,
   SEO,
   Text,
@@ -152,8 +152,8 @@ useEffect(() => {
                 Questions
               </Text>
 
-              {/* ProgressBar */}
-              <ProgressBar
+              {/* LinerProgressBar */}
+              <LinerProgressBar
                 totalChapters={totalQuestions}
                 completedChapters={completedQuestions}
               />
