@@ -13,7 +13,7 @@ import {
   Text,
   CertificateBanner,
   ActionBanner,
-  FeedbackPopup
+  FeedbackPopup,
 } from '@/components';
 import {
   AddCertificateRequestPayloadProps,
@@ -46,7 +46,7 @@ const CoursePage = ({
 
   const [showChapterFeedback, setShowChapterFeedback] = useState(false);
   const [showCourseFeedback, setShowCourseFeedback] = useState(false);
-  
+
   // Calculate the total chapters and completed chapters
   const totalChapters = chapters.length;
   const completedChapters = chapters.filter(
@@ -70,88 +70,88 @@ const CoursePage = ({
     setCourseMeta(chapterMeta);
   };
 
- const toggleCompletion = async () => {
-  setIsLoading(true);
-  const newCompletionStatus = !isChapterCompleted;
+  const toggleCompletion = async () => {
+    setIsLoading(true);
+    const newCompletionStatus = !isChapterCompleted;
 
-  try {
-    await makeRequest({
-      method: 'PATCH',
-      url: routes.api.markCourseChapterAsCompleted,
-      body: {
-        userId: user?.id,
-        courseId: course._id,
-        chapterId: currentChapterId,
-        isCompleted: newCompletionStatus,
-      },
-    });
+    try {
+      await makeRequest({
+        method: 'PATCH',
+        url: routes.api.markCourseChapterAsCompleted,
+        body: {
+          userId: user?.id,
+          courseId: course._id,
+          chapterId: currentChapterId,
+          isCompleted: newCompletionStatus,
+        },
+      });
 
-    trackEvent({
-      action: newCompletionStatus ? 'COURSE_COMPLETE' : 'COURSE_PROGRESS',
-      category: 'Course',
-      label: newCompletionStatus ? 'Course Completed' : 'Course Progress',
-      value: {
-        userId: user?.id,
-        courseId: course._id,
-      },
-    });
+      trackEvent({
+        action: newCompletionStatus ? 'COURSE_COMPLETE' : 'COURSE_PROGRESS',
+        category: 'Course',
+        label: newCompletionStatus ? 'Course Completed' : 'Course Progress',
+        value: {
+          userId: user?.id,
+          courseId: course._id,
+        },
+      });
 
-    setChapters((prevChapters) =>
-      prevChapters.map((chapter) =>
-        chapter._id.toString() === currentChapterId
-          ? { ...chapter, isCompleted: newCompletionStatus }
-          : chapter
-      )
-    );
-
-    if (newCompletionStatus) {
-      setShowChapterFeedback(true); 
-      const currentIndex = chapters.findIndex(
-        (chapter) => chapter._id.toString() === currentChapterId
+      setChapters((prevChapters) =>
+        prevChapters.map((chapter) =>
+          chapter._id.toString() === currentChapterId
+            ? { ...chapter, isCompleted: newCompletionStatus }
+            : chapter
+        )
       );
 
-      const nextIncompleteChapter = chapters
-        .slice(currentIndex + 1)
-        .find((chapter) => !chapter.isCompleted);
+      if (newCompletionStatus) {
+        setShowChapterFeedback(true);
+        const currentIndex = chapters.findIndex(
+          (chapter) => chapter._id.toString() === currentChapterId
+        );
 
-      if (nextIncompleteChapter) {
-        const nextChapterId = nextIncompleteChapter._id.toString();
-        window.location.href = `${slug}?courseId=${course._id}&chapterId=${nextChapterId}`;
-      } else {
-        const { status, data } = await makeRequest({
-          method: 'POST',
-          url: routes.api.certificate,
-          body: {
-            type: 'SHIKSHA',
-            userId: user?.id,
-            userName: user?.name,
-            programId: course._id,
-            programName: course.name,
-            date: formatDate({
-              dateFormat: {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              },
-            }).date,
-          } as AddCertificateRequestPayloadProps,
-        });
+        const nextIncompleteChapter = chapters
+          .slice(currentIndex + 1)
+          .find((chapter) => !chapter.isCompleted);
 
-        if (status && data?._id) {
-          setIsCourseCompleted(true);
-          setCertificateId(data._id); 
-          setShowCourseFeedback(true); 
+        if (nextIncompleteChapter) {
+          const nextChapterId = nextIncompleteChapter._id.toString();
+          window.location.href = `${slug}?courseId=${course._id}&chapterId=${nextChapterId}`;
+        } else {
+          const { status, data } = await makeRequest({
+            method: 'POST',
+            url: routes.api.certificate,
+            body: {
+              type: 'SHIKSHA',
+              userId: user?.id,
+              userName: user?.name,
+              programId: course._id,
+              programName: course.name,
+              date: formatDate({
+                dateFormat: {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                },
+              }).date,
+            } as AddCertificateRequestPayloadProps,
+          });
+
+          if (status && data?._id) {
+            setIsCourseCompleted(true);
+            setCertificateId(data._id);
+            setShowCourseFeedback(true);
+          }
         }
       }
-    }
 
-    setIsChapterCompleted(newCompletionStatus);
-  } catch (error) {
-    console.error('Error toggling chapter completion:', error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      setIsChapterCompleted(newCompletionStatus);
+    } catch (error) {
+      console.error('Error toggling chapter completion:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const alertContainer = isSmallScreen && (
     <Alert
@@ -286,20 +286,13 @@ const CoursePage = ({
         </FlexContainer>
       </Section>
 
-        {showChapterFeedback && (
-        <FeedbackPopup
-          type="SHIKSHA_CHAPTER"
-          refId={currentChapterId}
-        />         
+      {showChapterFeedback && (
+        <FeedbackPopup type='SHIKSHA_CHAPTER' refId={currentChapterId} />
       )}
 
       {showCourseFeedback && (
-        <FeedbackPopup
-          type="SHIKSHA_COURSE"
-          refId={course._id}
-        />
+        <FeedbackPopup type='SHIKSHA_COURSE' refId={course._id} />
       )}
-
     </Fragment>
   );
 };

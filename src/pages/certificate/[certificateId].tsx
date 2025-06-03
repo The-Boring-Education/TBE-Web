@@ -6,7 +6,7 @@ import {
   Section,
   SEO,
   Text,
-  FeedbackPopup
+  FeedbackPopup,
 } from '@/components';
 import { CertificatePageProps } from '@/interfaces';
 import {
@@ -28,10 +28,10 @@ const Home = ({
 
   const socialShareContent = generateShareTemplate(programName, userName, type);
 
-    const handleDownloadClick = () =>{
-    handleDownload(programName)
-    setShowFeedback(true)
-  }
+  const handleDownloadClick = () => {
+    handleDownload(programName);
+    setShowFeedback(true);
+  };
 
   return (
     <Fragment>
@@ -104,11 +104,7 @@ const Home = ({
           )}
         </div>
       </Section>
-      {showFeedback&&(
-        <FeedbackPopup
-        type='CERTIFICATE'
-         />
-      )}
+      {showFeedback && <FeedbackPopup type='CERTIFICATE' />}
     </Fragment>
   );
 };

@@ -32,7 +32,7 @@ export {
   Job,
   Gamification,
   JobAggregate,
-  Feedback
+  Feedback,
 };
 
 // Query

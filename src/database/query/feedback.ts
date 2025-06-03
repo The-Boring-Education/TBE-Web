@@ -1,12 +1,16 @@
 import { Feedback } from '@/database';
-import { DatabaseQueryResponseType,AddFeedbackRequestProps, UpdateFeedbackRequestProps } from '@/interfaces';
+import {
+  DatabaseQueryResponseType,
+  AddFeedbackRequestProps,
+  UpdateFeedbackRequestProps,
+} from '@/interfaces';
 
 const addFeedbackToDB = async ({
   rating,
   type,
   ref,
   userId,
-}:AddFeedbackRequestProps): Promise<DatabaseQueryResponseType> => {
+}: AddFeedbackRequestProps): Promise<DatabaseQueryResponseType> => {
   try {
     const newFeedback = new Feedback({
       rating,
@@ -27,7 +31,7 @@ const updateFeedbackTextInDB = async ({
   feedbackId,
   userId,
   feedback,
-}:UpdateFeedbackRequestProps): Promise<DatabaseQueryResponseType> => {
+}: UpdateFeedbackRequestProps): Promise<DatabaseQueryResponseType> => {
   try {
     const existingFeedback = await Feedback.findOne({
       _id: feedbackId,
@@ -46,7 +50,4 @@ const updateFeedbackTextInDB = async ({
   }
 };
 
-export {
-  addFeedbackToDB,
-  updateFeedbackTextInDB,
-};
+export { addFeedbackToDB, updateFeedbackTextInDB };

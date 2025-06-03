@@ -18,7 +18,7 @@ const FeedbackSchema: Schema<FeedbackModel> = new Schema(
     type: {
       type: String,
       required: [true, 'Feedback type is required'],
-      enum:FEEDBACK_TYPES,
+      enum: FEEDBACK_TYPES,
       default: 'GENERAL',
     },
 
@@ -39,6 +39,7 @@ const FeedbackSchema: Schema<FeedbackModel> = new Schema(
 );
 
 const Feedback: Model<FeedbackModel> =
-  models?.Feedback || model<FeedbackModel>(DATABASE_MODELS.FEEDBACK, FeedbackSchema);
+  models?.Feedback ||
+  model<FeedbackModel>(DATABASE_MODELS.FEEDBACK, FeedbackSchema);
 
 export default Feedback;

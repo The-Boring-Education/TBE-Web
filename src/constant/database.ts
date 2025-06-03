@@ -15,10 +15,9 @@ const DATABASE_MODELS = {
   NOTIFICATION: 'Notification',
   GAMIFICATION: 'Gamification',
   JOB: 'Job',
-  FEEDBACK:'Feedback',
+  FEEDBACK: 'Feedback',
   JOB_AGGREGATE: 'JobAggregate',
 };
-
 
 export const FEEDBACK_TYPES = [
   'GENERAL',
@@ -28,7 +27,7 @@ export const FEEDBACK_TYPES = [
   'CERTIFICATE',
 ] as const;
 
-export type FeedbackType = typeof FEEDBACK_TYPES[number];
+export type FeedbackType = (typeof FEEDBACK_TYPES)[number];
 
 const modelSelectParams = {
   coursePreview: '_id name slug coverImageURL description liveOn',

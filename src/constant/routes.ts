@@ -85,7 +85,7 @@ const routes = {
     markCourseChapterAsCompleted: '/user/shiksha/course',
     markProjectChapterAsCompleted: '/user/projects/project',
     markSheetQuestionAsCompleted: '/user/interview-prep/sheet',
-    submitUserFeedback:'/feedback',
+    submitUserFeedback: '/feedback',
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {
       let url = `/shiksha/${course}`;

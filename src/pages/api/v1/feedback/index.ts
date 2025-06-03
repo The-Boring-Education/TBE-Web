@@ -32,7 +32,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handlePostFeedback = async (req: NextApiRequest, res: NextApiResponse) => {
+const handlePostFeedback = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   const { rating, type, ref, userId } = req.body;
 
   if (!rating || !type || !userId) {
@@ -65,7 +68,10 @@ const handlePostFeedback = async (req: NextApiRequest, res: NextApiResponse) => 
   );
 };
 
-const handleUpdateFeedback = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleUpdateFeedback = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   const { feedbackId, feedback, userId } = req.body;
 
   if (!feedbackId || !feedback || !userId) {
@@ -77,7 +83,11 @@ const handleUpdateFeedback = async (req: NextApiRequest, res: NextApiResponse) =
     );
   }
 
-  const { data, error } = await updateFeedbackTextInDB({ feedbackId, userId, feedback });
+  const { data, error } = await updateFeedbackTextInDB({
+    feedbackId,
+    userId,
+    feedback,
+  });
 
   if (error) {
     return res.status(apiStatusCodes.NOT_FOUND).json(
