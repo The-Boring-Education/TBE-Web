@@ -14,6 +14,7 @@ import { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 import {
   LINKS,
+  PAGE_REFRESH_TIMEOUT,
   PRODUCTS,
   STATIC_FILE_PATH,
   USP,
@@ -95,7 +96,7 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.home })),
-    revalidate: 1000,
+    revalidate: PAGE_REFRESH_TIMEOUT.medium,
   };
 };
 
