@@ -1,5 +1,5 @@
 import { Schema, model, models, type Model } from 'mongoose';
-import { DATABASE_MODELS } from '@/constant';
+import { DATABASE_MODELS, PAYMENT_STATUS, PRODUCT_TYPE } from '@/constant';
 import type { PaymentModel } from '@/interfaces';
 
 const PaymentSchema: Schema<PaymentModel> = new Schema(
@@ -9,32 +9,40 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
       ref: DATABASE_MODELS.USER,
       required: [true, 'User ref is required'],
     },
-
-    interviewSheetId: {
-      type: Schema.Types.ObjectId,
-      ref:DATABASE_MODELS.INTERVIEW_SHEET,
-      required: [true, 'Interview Sheet ID is required'],
+    item: {
+      itemId: {
+        type: Schema.Types.ObjectId,
+        required: [true, 'Item ID is required'],
+      },
+      itemType: {
+        type: String,
+        enum: PRODUCT_TYPE,
+        required: [true, 'Item type is required'],
+      },
     },
     amount: {
       type: Number,
-      required: [true, 'Amount is required'],
-      min: [1, 'Amount must be greater than 0'],
+      required:true,
     },
-    cashfreeOrderId: {
+
+    orderId: {
       type: String,
-      required: [true, 'Cashfree Order ID is required'],
+      required: true,
       unique: true,
     },
-    cashfreePaymentId: {
+
+    paymentId: {
       type: String,
     },
+
     paymentLink: {
       type: String,
-      required: [true, 'Payment link is required'],
+      required: true,
     },
+
     status: {
       type: String,
-      enum: ['PENDING', 'SUCCESS', 'FAILED'],
+      enum: PAYMENT_STATUS,
       default: 'PENDING',
     },
   },

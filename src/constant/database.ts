@@ -38,6 +38,15 @@ export const PAYMENT_STATUS =[
 
 export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
 
+export const PRODUCT_TYPE = [
+  'INTERVIEW_SHEET',
+  'SHIKSHA', 
+  'PROJECTS', 
+  'PREPYATRA', 
+  'GENERAL'
+]
+export type ProductType = (typeof PRODUCT_TYPE)[number]
+
 const modelSelectParams = {
   coursePreview: '_id name slug coverImageURL description liveOn',
   projectPreview: '_id name slug coverImageURL description isActive',
