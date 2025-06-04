@@ -1,4 +1,7 @@
-import {
+import { Course, updateUserPointsInDB, UserCourse } from '@/database';
+
+import { modelSelectParams } from '@/constant';
+import type {
   AddChapterToCourseRequestProps,
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,
@@ -8,8 +11,6 @@ import {
   UpdateCourseRequestPayloadProps,
   UpdateUserChapterInCourseRequestProps,
 } from '@/interfaces';
-import { Course, UserCourse, updateUserPointsInDB } from '@/database';
-import { modelSelectParams } from '@/constant';
 
 const addACourseToDB = async (
   courseDetails: AddCourseRequestPayloadProps
@@ -353,18 +354,18 @@ const updateCertificateToUserShikshaCourseDoc = async (
 
 export {
   addACourseToDB,
-  updateACourseInDB,
+  addChapterToCourseInDB,
   deleteACourseFromDBById,
-  getACourseFromDBById,
+  deleteCourseChapterByIdFromDB,
   enrollInACourse,
-  getEnrolledCourseFromDB,
+  getACourseForUserFromDB,
+  getACourseFromDBById,
+  getAllCourseFromDB,
   getAllEnrolledCoursesFromDB,
   getCourseBySlugFromDB,
-  addChapterToCourseInDB,
-  updateCourseChapterInDB,
-  deleteCourseChapterByIdFromDB,
-  updateUserCourseChapterInDB,
-  getACourseForUserFromDB,
-  getAllCourseFromDB,
+  getEnrolledCourseFromDB,
+  updateACourseInDB,
   updateCertificateToUserShikshaCourseDoc,
+  updateCourseChapterInDB,
+  updateUserCourseChapterInDB,
 };

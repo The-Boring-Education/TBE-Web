@@ -1,6 +1,7 @@
-import { GetSEOMetaResponseType } from '@/interfaces';
+import type { GetSEOMetaResponseType } from '@/interfaces';
+
+import { INTERVIEW_PREP_SHEETS, products, TBP_PROJECTS } from '..';
 import { routes } from '../routes';
-import { TBP_PROJECTS, products, INTERVIEW_PREP_SHEETS } from '..';
 
 export const seoCommonMeta = {
   type: 'website',
@@ -133,6 +134,25 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
       url: routes.contactUs,
       keywords:
         'Contact, Support, The Boring Education, Customer Service, Help Desk, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
+    [`${routes.refund}`]: {
+      title: 'Refund | The Boring Education',
+      siteName: 'The Boring Education',
+      description: 'Refund Policies for purchases made on The Boring Education',
+      url: routes.refund,
+      keywords:
+        'Refund Policy, The Boring Education, Customer Service, Help Desk, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
+    [`${routes.termsAndConditions}`]: {
+      title: 'Terms and Conditions | The Boring Education',
+      siteName: 'The Boring Education',
+      description:
+        'Terms and Conditions Policies for purchases made on The Boring Education',
+      url: routes.termsAndConditions,
+      keywords:
+        'Terms and Conditions Policy, The Boring Education, Customer Service, Help Desk, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
     [`${routes[404]}`]: {

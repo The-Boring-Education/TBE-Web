@@ -1,5 +1,6 @@
 import { FlexContainer } from '@/components';
-import { CardSectionContainerProps } from '@/interfaces';
+
+import type { CardSectionContainerProps } from '@/interfaces';
 
 const CardSectionContainer = ({
   children,
@@ -9,8 +10,8 @@ const CardSectionContainer = ({
 }: CardSectionContainerProps) => {
   return (
     <FlexContainer
-      itemCenter={false}
       className={`${isWidthFull && 'w-full'} ${gap ?? 'gap-4'} ${className}`}
+      itemCenter={false}
     >
       {children}
     </FlexContainer>

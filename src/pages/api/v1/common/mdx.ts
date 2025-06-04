@@ -1,5 +1,6 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { sendAPIResponse } from '@/utils';
 import { getMDXContent } from '@/utils/mdx';
 

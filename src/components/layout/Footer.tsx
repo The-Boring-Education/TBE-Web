@@ -1,6 +1,8 @@
-import { FlexContainer, Link, Text } from '@/components';
-import { LINKS } from '@/constant';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+
+import { FlexContainer, Link, Text } from '@/components';
+
+import { LINKS } from '@/constant';
 
 const Footer = () => {
   return (
@@ -9,7 +11,7 @@ const Footer = () => {
         className='mx-4 justify-between py-1'
         justifyCenter={false}
       >
-        <Text level='p' className='pre-title text-contentDark'>
+        <Text className='pre-title text-contentDark' level='p'>
           Built with ❤️ in 🇮🇳
         </Text>
         <FlexContainer className='gap-1'>

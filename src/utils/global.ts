@@ -1,18 +1,19 @@
-import { getSEOMeta, routes, seoCommonMeta } from '@/constant';
-import {
-  BaseShikshaCourseResponseProps,
+import { getSEOMeta, IN_DEV_PAGES, routes, seoCommonMeta } from '@/constant';
+import type {
   BaseInterviewSheetResponseProps,
+  BaseShikshaCourseResponseProps,
   ProjectPickedPageProps,
 } from '@/interfaces';
+
 import {
-  getSelectedCourseChapterMeta,
-  getSelectedSheetQuestionMeta,
-  getSelectedProjectChapterMeta,
-  isUserAuthenticated,
-  formatDate,
-  isProgramActive,
   fetchAPIData,
+  formatDate,
+  getSelectedCourseChapterMeta,
+  getSelectedProjectChapterMeta,
+  getSelectedSheetQuestionMeta,
   getYoufocusSkillName,
+  isProgramActive,
+  isUserAuthenticated,
 } from '.';
 
 const getPreFetchProps = async ({ slug }: any) => {
@@ -366,10 +367,13 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
     };
   }
 
+  const isDev = IN_DEV_PAGES.some((page) => page === slug);
+
   return {
     props: {
       seoMeta,
       jobData,
+      isDev,
     },
   };
 };
@@ -513,14 +517,14 @@ const getSkillPlaylistPageProps = async (context: any) => {
 };
 
 export {
+  getCertificatePageProps,
+  getCoursePageProps,
+  getPlaylistPageProps,
   getPreFetchProps,
   getProjectPageProps,
-  getCoursePageProps,
   getSheetPageProps,
-  getWebinarPageProps,
-  getWebinarLandingPageProps,
-  getCertificatePageProps,
-  getPlaylistPageProps,
   getSkillPlaylistPageProps,
   getUnskilledLandingPageProps,
+  getWebinarLandingPageProps,
+  getWebinarPageProps,
 };

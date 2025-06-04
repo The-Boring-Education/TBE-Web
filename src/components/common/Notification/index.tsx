@@ -1,13 +1,15 @@
-import { Fragment } from 'react';
 import {
   Popover,
   PopoverButton,
   PopoverPanel,
   Transition,
 } from '@headlessui/react';
-import { FlexContainer, Link, Text } from '@/components';
 import { BellIcon, LinkIcon } from '@heroicons/react/20/solid';
+import { Fragment } from 'react';
+
 import { useNotifications } from '@/hooks';
+
+import { FlexContainer, Link, Text } from '@/components';
 
 const NotificationPopover = () => {
   const { notifications } = useNotifications();
@@ -17,7 +19,7 @@ const NotificationPopover = () => {
   return (
     <Popover className='relative'>
       <PopoverButton className='flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary outline-none font-bold'>
-        <BellIcon className='h-6 w-6' aria-hidden='true' color='primary' />
+        <BellIcon aria-hidden='true' className='h-6 w-6' color='primary' />
       </PopoverButton>
 
       <Transition
@@ -31,22 +33,22 @@ const NotificationPopover = () => {
       >
         <PopoverPanel className='absolute z-10 mt-1 flex w-screen max-w-max md:-translate-x-2/3 -translate-x-2/4 shadow-md rounded-2'>
           {notifications && (
-            <FlexContainer direction='col' className='gap-1'>
+            <FlexContainer className='gap-1' direction='col'>
               {notifications.map((notification, index) => {
                 const { type, text, isExternalLink, link } = notification;
 
                 return (
                   <FlexContainer
                     key={index}
-                    direction='col'
                     className='p-2 w-full bg-lightBG rounded-2 border border-secondary gap-2.5'
+                    direction='col'
                   >
-                    <FlexContainer direction='col' className='gap-0.5'>
+                    <FlexContainer className='gap-0.5' direction='col'>
                       <FlexContainer
                         className='gap-1 w-full'
                         justifyCenter={false}
                       >
-                        <Text level='span' className='pre-title text-primary'>
+                        <Text className='pre-title text-primary' level='span'>
                           {type}
                         </Text>
                         {link && (
@@ -58,7 +60,7 @@ const NotificationPopover = () => {
                           </Link>
                         )}
                       </FlexContainer>
-                      <Text level='p' className='pre-title'>
+                      <Text className='pre-title' level='p'>
                         {text}
                       </Text>
                     </FlexContainer>

@@ -1,18 +1,20 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
-import { apiStatusCodes, envConfig } from '@/constant';
-import { applyCorsHeaders, sendAPIResponse } from '@/utils';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
+  Course,
+  getAllDocumentsFromModel,
+  getTotalCountFromModel,
+  InterviewSheet,
+  Project,
   User,
   UserCourse,
   UserProject,
   UserSheet,
-  Course,
-  Project,
-  InterviewSheet,
-  getTotalCountFromModel,
-  getAllDocumentsFromModel,
 } from '@/database';
+
+import { apiStatusCodes, envConfig } from '@/constant';
+import { connectDB } from '@/middlewares';
+import { applyCorsHeaders, sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   applyCorsHeaders(res, envConfig.ADMIN_BASE_URL);

@@ -1,4 +1,4 @@
-import { LinkButtonProps } from '@/interfaces';
+import type { LinkButtonProps } from '@/interfaces';
 
 import { Button, Link } from '../..';
 
@@ -10,7 +10,7 @@ const LinkButton = ({
   active = true,
 }: LinkButtonProps) => {
   return (
-    <Link href={href} className={className} target={target} active={active}>
+    <Link active={active} className={className} href={href} target={target}>
       <Button {...buttonProps} />
     </Link>
   );

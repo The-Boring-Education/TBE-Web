@@ -1,15 +1,18 @@
-import { Document, Schema } from 'mongoose';
-import {
+import type { Document, Schema } from 'mongoose';
+
+import type { FeedbackType } from '@/constant';
+
+import type {
   CertificateType,
   DifficultyType,
+  PlatformUsageType,
   QuestionFrequencyType,
   RoadmapsType,
   SkillsType,
-  WebinarEnrolledUsersProps,
+  UnskilledLandingGraphDataProps,
   UserPointsActionType,
   UserRoleType,
-  PlatformUsageType,
-  UnskilledLandingGraphDataProps,
+  WebinarEnrolledUsersProps,
 } from '.';
 
 export interface UserModel {
@@ -253,4 +256,15 @@ export interface JobAggregateModel extends Document {
   topLocations: UnskilledLandingGraphDataProps[];
   jobDomains: UnskilledLandingGraphDataProps[];
   companyTypes: UnskilledLandingGraphDataProps[];
+}
+
+export interface FeedbackModel extends Document {
+  _id: typeof Schema.Types.ObjectId;
+  rating: number;
+  feedback?: string;
+  type: FeedbackType;
+  ref?: typeof Schema.Types.ObjectId;
+  user: typeof Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }

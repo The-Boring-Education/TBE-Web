@@ -1,4 +1,4 @@
-import { NotificationModel } from '.';
+import type { NotificationModel } from '.';
 
 export interface User {
   id: string;
@@ -60,5 +60,10 @@ export type TrackEventProps = {
   label?: EventLabelTypes;
   value?: any;
 };
+
+export interface useFeedbackProps {
+  type: string;
+  refId?: string;
+}
 
 export type NotificationItemProps = Partial<NotificationModel>;

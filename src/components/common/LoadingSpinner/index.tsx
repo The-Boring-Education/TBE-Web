@@ -1,4 +1,4 @@
-import { LoadingSpinnerProps } from '@/interfaces';
+import type { LoadingSpinnerProps } from '@/interfaces';
 
 const LoadingSpinner = ({
   className,

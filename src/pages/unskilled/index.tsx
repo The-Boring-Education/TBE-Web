@@ -1,36 +1,48 @@
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
-import {
   ArrowRightIcon,
   ArrowTrendingUpIcon,
-  MapPinIcon,
   CodeBracketIcon,
+  MapPinIcon,
 } from '@heroicons/react/20/solid';
+import { motion } from 'framer-motion';
+import { Fragment } from 'react';
 import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+
+import { useResumeEvaluation } from '@/hooks';
+
+import {
+  Button,
+  CheckboxButtonContainer,
   FlexContainer,
   Image,
   LinkButton,
   OutlineCard,
+  RadioButtonContainer,
+  ResumeEvaluationSection,
   Section,
   SEO,
   TabComponent,
   Text,
+  UploadFileInput,
 } from '@/components';
-import { Fragment } from 'react';
-import { getUnskilledLandingPageProps } from '@/utils';
-import { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
+
 import {
+  JOB_DOMAINS,
+  JOB_EXPERIENCE_LEVEL,
   routes,
   STATIC_FILE_PATH,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
 } from '@/constant';
+import type { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
+import { formatDate, getUnskilledLandingPageProps } from '@/utils';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
   {
@@ -56,9 +68,30 @@ const UNSKILLED_FEATURES: OutlineCardProps[] = [
 const UnskilledLandingPage = ({
   seoMeta,
   jobData,
+  isDev,
 }: UnskilledLandingPageProps) => {
+  const {
+    file,
+    handleFileUpload,
+    selectedDomains,
+    setSelectedDomains,
+    selectedExperience,
+    setSelectedExperience,
+    isEvaluating,
+    evaluationData,
+    handleResumeEvaluation,
+  } = useResumeEvaluation();
+
+  const onSelectSkills = (value: string[]) => {
+    setSelectedDomains(value);
+  };
+
+  const onSelectExperience = (value: string) => {
+    setSelectedExperience(value);
+  };
+
   const jobMarketPanels = jobData && [
-    <ResponsiveContainer key={0} width='100%' height={400}>
+    <ResponsiveContainer key={0} height={400} width='100%'>
       <BarChart data={jobData.jobDomains} layout='horizontal'>
         <CartesianGrid strokeDasharray='3 3' />
         <YAxis type='number' />
@@ -68,7 +101,7 @@ const UnskilledLandingPage = ({
       </BarChart>
     </ResponsiveContainer>,
 
-    <ResponsiveContainer key={1} width='100%' height={400}>
+    <ResponsiveContainer key={1} height={400} width='100%'>
       <BarChart data={jobData.trendingSkills} layout='horizontal'>
         <CartesianGrid strokeDasharray='3 3' />
         <YAxis type='number' />
@@ -78,7 +111,7 @@ const UnskilledLandingPage = ({
       </BarChart>
     </ResponsiveContainer>,
 
-    <ResponsiveContainer key={3} width='100%' height={400}>
+    <ResponsiveContainer key={3} height={400} width='100%'>
       <BarChart data={jobData.companyTypes} layout='horizontal'>
         <CartesianGrid strokeDasharray='3 3' />
         <YAxis type='number' />
@@ -88,7 +121,7 @@ const UnskilledLandingPage = ({
       </BarChart>
     </ResponsiveContainer>,
 
-    <ResponsiveContainer key={4} width='100%' height={400}>
+    <ResponsiveContainer key={4} height={400} width='100%'>
       <BarChart data={jobData.topLocations} layout='horizontal'>
         <CartesianGrid strokeDasharray='3 3' />
         <YAxis type='number' />
@@ -106,11 +139,34 @@ const UnskilledLandingPage = ({
     />
   ) : (
     <FlexContainer>
-      <Text level='p' className='text-gray-500'>
+      <Text className='text-gray-500' level='p'>
         No data available
       </Text>
     </FlexContainer>
   );
+
+  // Define color schemes for the evaluation sections
+  const colorSchemes = {
+    match: {
+      text: 'text-green-800',
+      ring: '#16a34a',
+      bg: '#d1fae5',
+    },
+    missing: {
+      text: 'text-red-800',
+      ring: '#ef4444',
+      bg: '#fee2e2',
+    },
+    company: {
+      text: 'text-gray-700',
+      ring: '#6366f1',
+      bg: '#e0e7ff',
+    },
+  };
+
+  const dateAndTime = formatDate({
+    dateAndTime: jobData?.updatedAt,
+  });
 
   return (
     <Fragment>
@@ -119,39 +175,246 @@ const UnskilledLandingPage = ({
         <FlexContainer className='mx-auto gap-12 md:flex-row flex-col-reverse'>
           <FlexContainer className='gap-4' direction='col' itemCenter={false}>
             <FlexContainer className='gap-2' direction='col' itemCenter={false}>
-              <Text level='h3' className='heading-3'>
+              <Text className='heading-3' level='h3'>
                 What's Missing in Your{' '}
-                <Text level='span' className='heading-3 text-primary'>
+                <Text className='heading-3 text-primary' level='span'>
                   Resume?
                 </Text>{' '}
                 🚀 <br /> Find and Crack Your Next{' '}
-                <Text level='span' className='heading-3 text-primary'>
+                <Text className='heading-3 text-primary' level='span'>
                   Tech Job
                 </Text>
               </Text>
-              <Text level='p' className='paragraph max-w-md leading-relaxed'>
+              <Text className='paragraph max-w-md leading-relaxed' level='p'>
                 Discover in-demand skills & tech roles. Get insights to
                 supercharge your career.
               </Text>
             </FlexContainer>
-            <LinkButton
-              className='w-fit'
-              href={`#${routes.internals.landing.explore}`}
-              buttonProps={{
-                variant: 'PRIMARY',
-                text: 'Explore Trending Skills',
-                icon: <ArrowRightIcon className='h-5 w-5' />,
-              }}
-            />
+            <FlexContainer
+              className='sm:flex-row gap-2 justify-center lg:justify-start'
+              direction='col'
+            >
+              <LinkButton
+                buttonProps={{
+                  text: 'Explore Trending Skills',
+                  variant: 'PRIMARY',
+                  className: 'w-full sm:w-auto',
+                  icon: <ArrowRightIcon className='h-2 w-2' />,
+                }}
+                className='w-full sm:w-auto'
+                href={`#${routes.internals.landing.explore}`}
+              />
+              {/* <LinkButton
+                className='w-fit'
+                href={`#${routes.internals.landing.upload}`}
+                buttonProps={{
+                  variant: 'GHOST',
+                  text: 'Evaluate My Resume',
+                  icon: <ArrowRightIcon className='h-2 w-2' />,
+                }}
+              /> */}
+            </FlexContainer>
           </FlexContainer>
           <FlexContainer className='max-w-md'>
             <Image
-              src={`${STATIC_FILE_PATH.svg}/unskilled-hero.svg`}
               alt='unskilled-img'
               className='rounded-2xl object-cover'
+              src={`${STATIC_FILE_PATH.svg}/unskilled-hero.svg`}
             />
           </FlexContainer>
         </FlexContainer>
+      </Section>
+
+      <Section
+        className='bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20 md:px-10 px-4'
+        id={`${routes.internals.landing.upload}`}
+        isDev={isDev}
+      >
+        <motion.div
+          className='relative max-w-5xl mx-auto'
+          initial={{ opacity: 0, y: 30 }}
+          transition={{ duration: 0.6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <FlexContainer className='gap-8' direction='col'>
+            <FlexContainer className='gap-6' direction='col'>
+              <FlexContainer className='gap-2' direction='col'>
+                <Text className='heading-3' level='h3'>
+                  Evaluate Your
+                  <span className='heading-3 text-primary'> Resume </span>
+                  <span role='img'>🔍</span>
+                </Text>
+                <Text
+                  className='max-w-2xl paragraph'
+                  level='p'
+                  textCenter={true}
+                >
+                  Upload your resume and let us analyze thousands of job
+                  listings to highlight missing skills and suggest tailored
+                  resources.
+                </Text>
+              </FlexContainer>
+              <UploadFileInput
+                accept='pdf'
+                file={file}
+                onChange={handleFileUpload}
+              />
+            </FlexContainer>
+            <FlexContainer className='gap-6' direction='col'>
+              <FlexContainer className='gap-6' direction='col'>
+                <FlexContainer className='gap-2' direction='col'>
+                  <Text className='heading-5' level='h5'>
+                    Pick Your
+                    <span className='heading-5 text-primary'> Domains </span>
+                  </Text>
+                  <Text className='pre-title' level='p'>
+                    Select the Domains You're Interested(Max 2 Preferred)
+                  </Text>
+                </FlexContainer>
+                <CheckboxButtonContainer
+                  options={JOB_DOMAINS.map(({ label, value }) => ({
+                    label,
+                    value,
+                  }))}
+                  selectedValues={selectedDomains}
+                  onChange={onSelectSkills}
+                />
+              </FlexContainer>
+              <FlexContainer className='gap-6' direction='col'>
+                <FlexContainer className='gap-2' direction='col'>
+                  <Text className='heading-5' level='h5'>
+                    Select Experience
+                    <span className='heading-5 text-primary'> Level </span>
+                  </Text>
+                </FlexContainer>
+                <RadioButtonContainer
+                  options={JOB_EXPERIENCE_LEVEL.map(({ label, value }) => ({
+                    label,
+                    value,
+                  }))}
+                  selectedValue={selectedExperience}
+                  onChange={onSelectExperience}
+                />
+              </FlexContainer>
+
+              <Button
+                icon={<ArrowRightIcon className='h-2 w-2' />}
+                text={isEvaluating ? 'Evaluating...' : 'Start Evaluation'}
+                variant='PRIMARY'
+                onClick={handleResumeEvaluation}
+              />
+              {evaluationData && (
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className='mt-12 bg-white shadow-md rounded-xl border border-gray-100 p-8 flex flex-col gap-8'
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <FlexContainer className='gap-4' direction='col'>
+                    <FlexContainer className='gap-0.5' direction='col'>
+                      <Text className='heading-5' level='h5'>
+                        🧾 Your Resume Summary
+                      </Text>
+                      <Text
+                        className='paragraph text-sm text-gray-500 text-center mt-2'
+                        level='p'
+                      >
+                        {evaluationData.totalJobsAnalyzed} Jobs Analyzed
+                      </Text>
+                    </FlexContainer>
+                    <FlexContainer wrap className='gap-6'>
+                      <FlexContainer
+                        itemCenter
+                        justifyCenter
+                        className='gap-1'
+                        direction='col'
+                      >
+                        <Text className='heading-4 text-green-500' level='h4'>
+                          {evaluationData.resumeScore}%
+                        </Text>
+                        <Text
+                          className='strong-text text-gray-500'
+                          level='span'
+                        >
+                          Resume Score
+                        </Text>
+                      </FlexContainer>
+                      <FlexContainer
+                        itemCenter
+                        justifyCenter
+                        className='gap-1'
+                        direction='col'
+                      >
+                        <Text className='heading-4 text-green-600' level='h4'>
+                          {evaluationData.matchedSkills.length}
+                        </Text>
+                        <Text
+                          className='strong-text text-gray-500'
+                          level='span'
+                        >
+                          Skills Matched
+                        </Text>
+                      </FlexContainer>
+                      <FlexContainer
+                        itemCenter
+                        justifyCenter
+                        className='gap-1'
+                        direction='col'
+                      >
+                        <Text className='heading-4 text-red-600' level='h4'>
+                          {evaluationData.missingSkills.length}
+                        </Text>
+                        <Text
+                          className='strong-text text-gray-500'
+                          level='span'
+                        >
+                          Skills Missing
+                        </Text>
+                      </FlexContainer>
+                      <FlexContainer
+                        itemCenter
+                        justifyCenter
+                        className='gap-1'
+                        direction='col'
+                      >
+                        <Text className='heading-4 text-blue-500' level='h4'>
+                          {evaluationData.remoteJobs}
+                        </Text>
+                        <Text
+                          className='strong-text text-gray-500'
+                          level='span'
+                        >
+                          Remote Jobs
+                        </Text>
+                      </FlexContainer>
+                    </FlexContainer>
+                  </FlexContainer>
+
+                  <ResumeEvaluationSection
+                    colorScheme={colorSchemes.match}
+                    items={evaluationData.matchedSkills}
+                    subtitle='Skills that Match with Your Resume'
+                    title='✅ Matching Skills'
+                  />
+                  <ResumeEvaluationSection
+                    colorScheme={colorSchemes.missing}
+                    items={evaluationData.missingSkills}
+                    subtitle='Some Skills maybe not relevant to your profile. You can skip them'
+                    title='❌ Missing Skills'
+                  />
+                  <ResumeEvaluationSection
+                    colorScheme={colorSchemes.company}
+                    items={evaluationData.companyTypeDistribution}
+                    subtitle='You should focus on applying at these companies'
+                    title='🏢 Companies Hiring'
+                  />
+                </motion.div>
+              )}
+            </FlexContainer>
+          </FlexContainer>
+        </motion.div>
+
+        <div className='absolute inset-0 bg-gradient-to-br from-indigo-100 via-transparent to-pink-100 opacity-20 pointer-events-none' />
       </Section>
 
       <Section>
@@ -164,14 +427,19 @@ const UnskilledLandingPage = ({
 
       <Section id={`${routes.internals.landing.explore}`}>
         <FlexContainer className='gap-6' direction='col'>
-          <Text level='h3' className='heading-3'>
-            Job Market Insights
-          </Text>
+          <FlexContainer className='gap-2' direction='col'>
+            <Text className='heading-3' level='h3'>
+              Job Market Insights
+            </Text>
+            <Text className='pre-title text-gray-500' level='p'>
+              Last Updated on: {dateAndTime.date} at {dateAndTime.time}
+            </Text>
+          </FlexContainer>
 
           {jobGraphContainer}
 
-          <Text level='p' className='text-gray-500 text-sm text-center'>
-            Data aggregated from multiple leading job portals and updated daily
+          <Text className='pre-title text-gray-500' level='p'>
+            Data from 1000+ job listings across various platforms. <br />
           </Text>
         </FlexContainer>
       </Section>

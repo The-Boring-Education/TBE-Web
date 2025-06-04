@@ -1,5 +1,6 @@
 import { FlexContainer, Text } from '@/components';
-import { InputFieldContainerProps } from '@/interfaces';
+
+import type { InputFieldContainerProps } from '@/interfaces';
 
 const InputFieldContainer = ({
   label,
@@ -12,18 +13,18 @@ const InputFieldContainer = ({
 }: InputFieldContainerProps) => {
   return (
     <FlexContainer
-      direction='col'
       className={`w-full gap-1 ${className}`}
+      direction='col'
       itemCenter={false}
     >
-      <Text level='label' className={`label ${labelClass}`}>
+      <Text className={`label ${labelClass}`} level='label'>
         {label}
         {!isOptional && <span>*</span>}
       </Text>
       <input
+        className='w-full rounded strong-text border border-grey focus:outline-none focus:border-none focus:ring focus:ring-grey'
         type={type}
         value={value}
-        className='w-full rounded strong-text border border-grey focus:outline-none focus:border-none focus:ring focus:ring-grey'
         onChange={(e) => onChange(e.target.value)}
       />
     </FlexContainer>

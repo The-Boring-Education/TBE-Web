@@ -1,5 +1,5 @@
-import React from 'react';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import React from 'react';
 
 type Project = {
   title: string;
@@ -68,10 +68,10 @@ const PrevCohortProjects = () => {
               </p>
               {project.link && (
                 <a
-                  href={project.link}
-                  target='_blank'
-                  rel='noopener noreferrer'
                   className='absolute top-4 right-4 text-white hover:text-indigo-400'
+                  href={project.link}
+                  rel='noopener noreferrer'
+                  target='_blank'
                 >
                   <ArrowTopRightOnSquareIcon className='w-5 h-5' />
                 </a>

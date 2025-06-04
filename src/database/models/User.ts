@@ -1,6 +1,8 @@
-import { DATABASE_MODELS, USER_ROLE, PLATFORM_USAGE } from '@/constant';
-import { UserModel } from '@/interfaces';
-import { Model, Schema, model, models } from 'mongoose';
+import type { Model } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
+
+import { DATABASE_MODELS, PLATFORM_USAGE, USER_ROLE } from '@/constant';
+import type { UserModel } from '@/interfaces';
 
 const UserSchema: Schema<UserModel> = new Schema(
   {

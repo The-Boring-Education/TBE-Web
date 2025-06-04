@@ -1,5 +1,6 @@
 import { GradientContainer, Image, LinkButton, Text } from '@/components';
-import { PrimaryCardWithCTAProps } from '@/interfaces';
+
+import type { PrimaryCardWithCTAProps } from '@/interfaces';
 
 const PrimaryCardWithCTA = ({
   image,
@@ -17,39 +18,39 @@ const PrimaryCardWithCTA = ({
 
   return (
     <GradientContainer
-      className={`md:w-[45%] lg:w-[30%] max-w-md ${border} flex-1`}
       childrenClassName='p-2 h-full flex flex-col'
+      className={`md:w-[45%] lg:w-[30%] max-w-md ${border} flex-1`}
     >
       {image && (
         <Image
+          alt={imageAltText}
           className='m-auto w-4/5 rounded-t-lg object-cover'
           src={`${image}`}
-          alt={imageAltText}
         />
       )}
       <div className='mt-2'>
-        <Text level='h5' className='heading-5 truncate'>
+        <Text className='heading-5 truncate' level='h5'>
           {title}
         </Text>
-        <Text level='p' className='pre-title mt-1 text-grey line-clamp-1'>
+        <Text className='pre-title mt-1 text-grey line-clamp-1' level='p'>
           {content}
         </Text>
         {launchingOn && (
-          <Text level='p' className='pre-title mt-1 text-primary'>
+          <Text className='pre-title mt-1 text-primary' level='p'>
             {launchingOn}
           </Text>
         )}
         <LinkButton
-          href={href}
-          className='mt-3 block'
+          active={active}
           buttonProps={{
             variant: 'PRIMARY',
             text: active && ctaText ? ctaText : 'Coming soon',
             active,
             className: `${!active && 'bg-secondary'} w-full`,
           }}
+          className='mt-3 block'
+          href={href}
           target={target}
-          active={active}
         />
       </div>
     </GradientContainer>

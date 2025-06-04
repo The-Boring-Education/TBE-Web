@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+
 import { useApi, useUser } from '@/hooks';
+
 import { routes } from '@/constant';
 import { getUserGamificationLevel } from '@/utils';
 

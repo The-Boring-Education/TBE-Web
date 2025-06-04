@@ -1,6 +1,8 @@
-import { Schema, model, models, Model } from 'mongoose';
+import type { Model } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS } from '@/constant';
-import { WebinarModel } from '@/interfaces';
+import type { WebinarModel } from '@/interfaces';
 
 const WebinarSchema = new Schema<WebinarModel>(
   {

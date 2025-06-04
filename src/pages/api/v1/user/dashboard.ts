@@ -1,7 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
   getAllEnrolledCoursesFromDB,
   getAllEnrolledProjectsFromDB,
@@ -9,6 +7,10 @@ import {
   getUserByIdFromDB,
   getUserPlaylistsFromDB,
 } from '@/database';
+
+import { apiStatusCodes } from '@/constant';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { TrackEventProps } from '@/interfaces';
-import { envConfig } from '@/constant';
+import { useEffect } from 'react';
 
-export const useAnalytics = () => {
+import { envConfig } from '@/constant';
+import type { TrackEventProps } from '@/interfaces';
+
+const useAnalytics = () => {
   const router = useRouter();
 
   // Handle Route Changes (For Page Views)
@@ -33,3 +34,5 @@ export const useAnalytics = () => {
 
   return { trackEvent };
 };
+
+export default useAnalytics;

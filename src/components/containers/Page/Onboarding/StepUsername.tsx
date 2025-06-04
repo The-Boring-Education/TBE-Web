@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
-import { FlexContainer, InputFieldContainer, Text } from '@/components';
+
 import { useUsername } from '@/hooks';
-import { StepUsernameProps } from '@/interfaces';
+
+import { FlexContainer, InputFieldContainer, Text } from '@/components';
+
+import type { StepUsernameProps } from '@/interfaces';
 
 const StepUsername = ({
   userName,
@@ -16,21 +19,21 @@ const StepUsername = ({
 
   return (
     <FlexContainer className='gap-2 md:w-1/2 w-full m-auto' direction='col'>
-      <Text level='p' className='paragraph'>
+      <Text className='paragraph' level='p'>
         1. Choose Your Username
       </Text>
       <InputFieldContainer
+        className=''
         label='Username'
         type='text'
         value={userName}
         onChange={onChange}
-        className=''
       />
       <Text
-        level='span'
         className={`span ${
           isUsernameAvailable ? 'text-success' : 'text-primary'
         }`}
+        level='span'
       >
         {message}
       </Text>

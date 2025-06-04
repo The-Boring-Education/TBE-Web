@@ -1,14 +1,16 @@
-import {
-  TestimonialCardProps,
-  PrimaryCardProps,
-  TopNavbarContainerProps,
-  PrimaryCardWithCTAProps,
+import { v4 } from 'uuid';
+
+import type {
   CohortRoadmapProps,
   CohortUserCategoryProps,
+  PrimaryCardProps,
+  PrimaryCardWithCTAProps,
+  TestimonialCardProps,
+  TopNavbarContainerProps,
 } from '@/interfaces';
-import { cohorts, LINKS, products, STATIC_FILE_PATH } from '../global';
-import { v4 } from 'uuid';
+
 import { routes } from '..';
+import { cohorts, LINKS, products, STATIC_FILE_PATH } from '../global';
 
 const TOP_NAVIGATION: TopNavbarContainerProps = {
   cohorts: [
@@ -17,6 +19,14 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       name: cohorts.bringYourIdea.label,
       description: cohorts.bringYourIdea.description,
       href: cohorts.bringYourIdea.slug,
+    },
+  ],
+  tools: [
+    {
+      id: v4(),
+      name: products.unskilled.label,
+      description: products.unskilled.description,
+      href: products.unskilled.slug,
     },
   ],
   products: [
@@ -37,12 +47,6 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       name: products.youfocus.label,
       description: products.youfocus.description,
       href: products.youfocus.slug,
-    },
-    {
-      id: v4(),
-      name: products.unskilled.label,
-      description: products.unskilled.description,
-      href: products.unskilled.slug,
     },
     {
       id: v4(),
@@ -73,7 +77,14 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
     },
     {
       id: v4(),
-      name: 'Join Community',
+      name: 'Follow us on Instagram',
+      description: 'Follow us on Instagram',
+      href: LINKS.followUsOnInstagram,
+      target: '_blank',
+    },
+    {
+      id: v4(),
+      name: 'Join Our Community',
       description: 'Join our WhatsApp Community',
       href: LINKS.whatsappCommunity,
       target: '_blank',
@@ -689,19 +700,19 @@ const BYI_USER_CATEGORIES: CohortUserCategoryProps[] = [
 ];
 
 export {
-  PRODUCTS,
-  TESTIMONIALS,
-  TOP_NAVIGATION,
-  USP,
-  TBP_FEATURES,
-  MY_PREV_EXPERIENCE,
-  TBP_PROJECTS,
-  INTERVIEW_PREP_SHEETS,
-  TBIP_FEATURES,
-  YOUFOCUS_FEATURES,
-  UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
   BYI_BEGINNER_ROADMAP,
   BYI_INTERMEDIATE_ROADMAP,
   BYI_SKILLED_ROADMAP,
   BYI_USER_CATEGORIES,
+  INTERVIEW_PREP_SHEETS,
+  MY_PREV_EXPERIENCE,
+  PRODUCTS,
+  TBIP_FEATURES,
+  TBP_FEATURES,
+  TBP_PROJECTS,
+  TESTIMONIALS,
+  TOP_NAVIGATION,
+  UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
+  USP,
+  YOUFOCUS_FEATURES,
 };
