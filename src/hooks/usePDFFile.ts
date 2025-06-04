@@ -1,4 +1,3 @@
-import { extractSkillsFromText } from '@/utils';
 import { useState } from 'react';
 // import pdfToText from 'react-pdftotext';
 
