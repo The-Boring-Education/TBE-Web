@@ -1,9 +1,11 @@
-import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { enrollInAProject, getEnrolledProjectFromDB } from '@/database';
-import { ProjectEnrollmentRequestProps } from '@/interfaces';
+
+import { apiStatusCodes } from '@/constant';
+import type { ProjectEnrollmentRequestProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

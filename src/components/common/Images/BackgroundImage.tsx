@@ -1,4 +1,4 @@
-import { BackgroundImageProps } from '@/interfaces';
+import type { BackgroundImageProps } from '@/interfaces';
 
 const BackgroundImage = ({
   bannerImageUrl,

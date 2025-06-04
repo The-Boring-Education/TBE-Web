@@ -1,6 +1,8 @@
-import { Schema, model, models, Model } from 'mongoose';
-import { FeedbackModel } from '@/interfaces';
+import type { Model } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS, FEEDBACK_TYPES } from '@/constant';
+import type { FeedbackModel } from '@/interfaces';
 
 const FeedbackSchema: Schema<FeedbackModel> = new Schema(
   {

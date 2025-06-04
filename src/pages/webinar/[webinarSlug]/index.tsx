@@ -1,30 +1,33 @@
+import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
+import { FiCalendar } from 'react-icons/fi';
+import { LuClock3 } from 'react-icons/lu';
+import { SiLinkedin } from 'react-icons/si';
+
+import { useAnalytics, useApi, useUser } from '@/hooks';
+
 import {
-  FlexContainer,
-  Section,
-  Text,
-  Image,
-  WebinarHeroContainer,
-  LinkButton,
-  SEO,
-  CardSectionContainer,
-  TestimonialCard,
-  BackgroundImage,
-  Pill,
   AboutTBE,
+  BackgroundImage,
   Button,
+  CardSectionContainer,
+  FlexContainer,
+  Image,
+  LinkButton,
+  Pill,
+  Section,
+  SEO,
+  TestimonialCard,
+  Text,
+  WebinarHeroContainer,
 } from '@/components';
-import {
+
+import { routes, TESTIMONIALS } from '@/constant';
+import type {
   AddCertificateRequestPayloadProps,
   WebinarPageProps,
 } from '@/interfaces';
 import { formatDate, getWebinarPageProps } from '@/utils';
-import { useAnalytics, useApi, useUser } from '@/hooks';
-import { routes, TESTIMONIALS } from '@/constant';
-import { FiCalendar } from 'react-icons/fi';
-import { LuClock3 } from 'react-icons/lu';
-import { SiLinkedin } from 'react-icons/si';
-import { useRouter } from 'next/router';
 
 const WebinarPage = ({
   seoMeta,
@@ -124,8 +127,8 @@ const WebinarPage = ({
   if (recordedVideoUrl) {
     recordingVideoContainer = (
       <Section className='gradient-6 py-4 m-auto mt-2 mb-4 md:max-w-screen-lg rounded-2'>
-        <FlexContainer direction='col' className='gap-2'>
-          <Text level='h4' className='heading-4' textCenter={true}>
+        <FlexContainer className='gap-2' direction='col'>
+          <Text className='heading-4' level='h4' textCenter={true}>
             Missed the webinar?
           </Text>
           <LinkButton
@@ -149,50 +152,50 @@ const WebinarPage = ({
   } else {
     certificateContainer = (
       <FlexContainer
-        direction='col'
         className='w-full max-w-screen-lg gradient-8 py-4 m-auto my-4 rounded-2 gap-6'
+        direction='col'
       >
-        <Text level='h1' textCenter className='heading-5'>
+        <Text textCenter className='heading-5' level='h1'>
           Generate Your Certificate
         </Text>
 
         <FlexContainer
-          fullWidth={true}
-          direction='col'
           className='gap-4 md:px-0 px-4'
+          direction='col'
+          fullWidth={true}
         >
           <FlexContainer className='gap-4'>
             <FlexContainer className='gap-4 items-start'>
               <FlexContainer
-                direction='col'
                 className='md:w-fit w-full'
+                direction='col'
                 itemCenter={false}
               >
-                <Text level='label' className='pre-title'>
+                <Text className='pre-title' level='label'>
                   Your Name
                 </Text>
-                <Text level='p' className='w-full strong-text'>
+                <Text className='w-full strong-text' level='p'>
                   {userName}
                 </Text>
               </FlexContainer>
               <FlexContainer
-                direction='col'
                 className='md:w-fit w-full'
+                direction='col'
                 itemCenter={false}
               >
-                <Text level='label' className='pre-title'>
+                <Text className='pre-title' level='label'>
                   Your Email
                 </Text>
-                <Text level='p' className='w-full strong-text'>
+                <Text className='w-full strong-text' level='p'>
                   {userEmail}
                 </Text>
               </FlexContainer>
             </FlexContainer>
             <Button
-              text='Generate Certificate'
-              onClick={onGenerateCertificate}
-              variant='SUCCESS'
               animationClasses='w-fit'
+              text='Generate Certificate'
+              variant='SUCCESS'
+              onClick={onGenerateCertificate}
             />
           </FlexContainer>
 
@@ -210,36 +213,36 @@ const WebinarPage = ({
 
   const registerationContainer = !isWebinarStarted && (
     <FlexContainer
+      className='p-3 gradient-1 rounded-2 md:w-1/2 w-full m-auto my-4'
       direction='col'
       fullWidth={true}
       justifyCenter={true}
-      className='p-3 gradient-1 rounded-2 md:w-1/2 w-full m-auto my-4'
     >
       <FlexContainer
-        direction='col'
         className='justify-start items-center gap-2'
+        direction='col'
       >
         <FlexContainer
-          direction='col'
           className='justify-start items-center gap-2'
+          direction='col'
           fullWidth={true}
         >
-          <Text level='p' className='heading-5'>
+          <Text className='heading-5' level='p'>
             Register Now
           </Text>
           <LinkButton
-            href={registrationUrl}
-            target='_blank'
-            className='w-full'
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Register Now',
               className: 'w-full',
             }}
+            className='w-full'
+            href={registrationUrl}
+            target='_blank'
           />
         </FlexContainer>
 
-        <Text level='p' className='pre-title'>
+        <Text className='pre-title' level='p'>
           25 Slots only. Few seats left.
         </Text>
       </FlexContainer>
@@ -261,10 +264,10 @@ const WebinarPage = ({
               {!isFree && <Pill text='Paid Webinar' variant='SECONDARY' />}
 
               <FlexContainer className='gap-1' direction='col'>
-                <Text level='h2' textCenter className='heading-2'>
+                <Text textCenter className='heading-2' level='h2'>
                   {name}
                 </Text>
-                <Text level='p' textCenter className='paragraph'>
+                <Text textCenter className='paragraph' level='p'>
                   {description}
                 </Text>
               </FlexContainer>
@@ -273,20 +276,20 @@ const WebinarPage = ({
             <FlexContainer className='gap-2'>
               <Image
                 alt={host.name}
-                src={host.imageUrl}
+                className='rounded-full w-16 h-16 bg-contain border border-dark'
                 fullHeight={false}
                 fullWidth={false}
-                className='rounded-full w-16 h-16 bg-contain border border-dark'
+                src={host.imageUrl}
               />
               <FlexContainer
+                className='md:items-start items-center'
                 direction='col'
                 itemCenter={false}
-                className='md:items-start items-center'
               >
-                <Text level='h4' className='heading-4'>
+                <Text className='heading-4' level='h4'>
                   {host.name}
                 </Text>
-                <Text level='p' className='paragraph text-center'>
+                <Text className='paragraph text-center' level='p'>
                   {host.role}
                 </Text>
               </FlexContainer>
@@ -295,16 +298,16 @@ const WebinarPage = ({
             <FlexContainer className='h-6 items-start gap-2 md:gap-4'>
               <FlexContainer className='justify-start gap-2.5'>
                 <FiCalendar className='w-4 h-4' />
-                <Text level='p' className='strong-text'>
+                <Text className='strong-text' level='p'>
                   {date}
                 </Text>
               </FlexContainer>
               <FlexContainer
-                itemCenter={true}
                 className='justify-start gap-2.5'
+                itemCenter={true}
               >
                 <LuClock3 className='w-4 h-4' />
-                <Text level='p' className='strong-text'>
+                <Text className='strong-text' level='p'>
                   {time}
                 </Text>
               </FlexContainer>
@@ -316,29 +319,29 @@ const WebinarPage = ({
         {certificateContainer}
         {recordingVideoContainer}
 
-        <FlexContainer direction='col' className='m-auto'>
+        <FlexContainer className='m-auto' direction='col'>
           <FlexContainer
-            direction='col'
             className='justify-start rounded-lg md:w-1/2 w-full gap-6'
+            direction='col'
           >
-            <FlexContainer direction='col' className='justify-start gap-4'>
-              <FlexContainer direction='col' className='gap-4'>
-                <Text level='h4' className='heading-4'>
+            <FlexContainer className='justify-start gap-4' direction='col'>
+              <FlexContainer className='gap-4' direction='col'>
+                <Text className='heading-4' level='h4'>
                   About webinar
                 </Text>
                 <FlexContainer className='gap-1 md:gap-2'>
                   <FlexContainer
-                    justifyCenter={true}
                     className='px-1 py-1 bg-black rounded gap-1'
+                    justifyCenter={true}
                   >
                     <FiCalendar className='w-3 h-3 text-white' />
-                    <Text level='p' className='strong-text text-white'>
+                    <Text className='strong-text text-white' level='p'>
                       {date}
                     </Text>
                   </FlexContainer>
                   <FlexContainer className='px-1 py-1 bg-black rounded gap-1'>
                     <LuClock3 className='w-3 h-3 text-white' />
-                    <Text level='p' className='strong-text text-white'>
+                    <Text className='strong-text text-white' level='p'>
                       {time}
                     </Text>
                   </FlexContainer>
@@ -346,17 +349,17 @@ const WebinarPage = ({
               </FlexContainer>
 
               <FlexContainer
-                direction='col'
                 className='gap-1'
+                direction='col'
                 itemCenter={false}
               >
                 {about.map((item, index) => {
                   return (
                     <Text
-                      level='p'
                       key={index}
-                      textCenter={false}
                       className='paragraph'
+                      level='p'
+                      textCenter={false}
                     >
                       {item}
                     </Text>
@@ -364,57 +367,57 @@ const WebinarPage = ({
                 })}
               </FlexContainer>
             </FlexContainer>
-            <FlexContainer direction='col' fullWidth={true} className='gap-3'>
-              <Text level='h4' className='heading-4'>
+            <FlexContainer className='gap-3' direction='col' fullWidth={true}>
+              <Text className='heading-4' level='h4'>
                 What will you learn
               </Text>
               <ol className='list-decimal w-full flex flex-col gap-1 ml-2'>
                 {whatYoullLearn?.map((item, index) => (
                   <li key={index}>
-                    <Text level='p' className='paragraph'>
+                    <Text className='paragraph' level='p'>
                       {item}
                     </Text>
                   </li>
                 ))}
               </ol>
             </FlexContainer>
-            <FlexContainer direction='col' fullWidth={true} className='gap-4'>
-              <Text level='h4' className='heading-4'>
+            <FlexContainer className='gap-4' direction='col' fullWidth={true}>
+              <Text className='heading-4' level='h4'>
                 Meet your instructor
               </Text>
 
               <FlexContainer
+                className='justify-start items-start gap-4 w-full'
                 direction='col'
                 itemCenter={false}
                 justifyCenter={false}
-                className='justify-start items-start gap-4 w-full'
               >
                 <FlexContainer
-                  justifyCenter={false}
                   className='justify-start items-start gap-2 w-full'
+                  justifyCenter={false}
                 >
                   <FlexContainer
-                    justifyCenter={false}
                     className='md:gap-3 gap-1 w-full justify-center md:justify-start items-start'
+                    justifyCenter={false}
                   >
                     <Image
-                      src={host.imageUrl}
                       alt={host.name}
+                      className='rounded-full w-16 h-16 bg-contain border border-dark'
                       fullHeight={false}
                       fullWidth={false}
-                      className='rounded-full w-16 h-16 bg-contain border border-dark'
+                      src={host.imageUrl}
                     />
 
                     <FlexContainer
+                      className='md:items-start items-center'
                       direction='col'
                       itemCenter={false}
                       justifyCenter={false}
-                      className='md:items-start items-center'
                     >
-                      <Text level='h5' className='heading-5'>
+                      <Text className='heading-5' level='h5'>
                         {host.name}
                       </Text>
-                      <Text level='p' className='paragraph'>
+                      <Text className='paragraph' level='p'>
                         {host.role}
                       </Text>
                     </FlexContainer>
@@ -427,7 +430,7 @@ const WebinarPage = ({
                 <ol className='list-decimal flex flex-col gap-1'>
                   {host.about?.map((item, index) => (
                     <li key={index} className='pl- ml-2'>
-                      <Text level='p' className='paragraph'>
+                      <Text className='paragraph' level='p'>
                         {item}
                       </Text>
                     </li>
@@ -440,16 +443,16 @@ const WebinarPage = ({
         </FlexContainer>
 
         <FlexContainer
+          className='md:max-w-screen-lg py-4 m-auto mt-2 gap-3'
           direction='col'
           fullWidth={true}
-          className='md:max-w-screen-lg py-4 m-auto mt-2 gap-3'
         >
-          <Text level='h4' className='heading-4' textCenter={true}>
+          <Text className='heading-4' level='h4' textCenter={true}>
             What are <span className='text-primary'>students</span> saying ?
           </Text>
           <CardSectionContainer
-            gap='gap-2'
             className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+            gap='gap-2'
           >
             {TESTIMONIALS.map((item) => {
               return <TestimonialCard {...item} key={item.id} />;

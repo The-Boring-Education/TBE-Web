@@ -1,4 +1,4 @@
-import { FooterLinksContainerProps, WebinarModel } from '.';
+import type { FooterLinksContainerProps, WebinarModel } from '.';
 
 export interface FooterNavigationDataProps extends FooterLinksContainerProps {
   id: string;

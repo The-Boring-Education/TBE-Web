@@ -1,19 +1,22 @@
-import { Fragment, useState } from 'react';
-import { PageProps } from '@/interfaces';
 import { useRouter } from 'next/router';
+import { Fragment, useState } from 'react';
+
+import { useApi, useUser } from '@/hooks';
+
 import {
   Button,
+  ExplorePlaylistContainer,
   FlexContainer,
+  InputFieldContainer,
+  Section,
   SectionHeaderContainer,
   SEO,
-  InputFieldContainer,
   Toast,
-  ExplorePlaylistContainer,
-  Section,
 } from '@/components';
-import { getPreFetchProps } from '@/utils';
-import { useApi, useUser } from '@/hooks';
+
 import { routes } from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { user } = useUser();
@@ -64,12 +67,12 @@ const Home = ({ seoMeta }: PageProps) => {
       <Section>
         <FlexContainer className='gap-4 items-baseline'>
           <FlexContainer
-            direction='col'
             className='gap-6 px-4 py-4 md:px-8 md:py-8 self-stretch border rounded-2'
+            direction='col'
           >
             <SectionHeaderContainer
-              heading='Add Your'
               focusText='Playlist'
+              heading='Add Your'
               headingLevel={4}
               subtext='Learn Undistracted with YouTube Playlist'
             />
@@ -77,15 +80,15 @@ const Home = ({ seoMeta }: PageProps) => {
               <InputFieldContainer
                 label='Paste YouTube Playlist Link'
                 type='text'
-                onChange={handleInputChange}
                 value={playlistUrl}
+                onChange={handleInputChange}
               />
               <Button
-                variant='PRIMARY'
-                className='m-auto'
-                text='Add Playlist'
                 active={!!playlistUrl}
+                className='m-auto'
                 isLoading={loading}
+                text='Add Playlist'
+                variant='PRIMARY'
                 onClick={handleAddPlaylist}
               />
               {errorMessage && <Toast message={errorMessage} type='error' />}
@@ -95,8 +98,8 @@ const Home = ({ seoMeta }: PageProps) => {
             </FlexContainer>
           </FlexContainer>
           <ExplorePlaylistContainer
-            heading='Don’t Have A'
             focusText='Playlist?'
+            heading='Don’t Have A'
             subtext='Select an Skill, We’ll Recommend Playlists'
           />
         </FlexContainer>

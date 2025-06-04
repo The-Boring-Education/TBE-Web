@@ -1,12 +1,14 @@
-import { FlexContainer, Link, Section, Text } from '@/components';
-import { useNotifications } from '@/hooks';
 import { LinkIcon } from '@heroicons/react/20/solid';
+
+import { useNotifications } from '@/hooks';
+
+import { FlexContainer, Link, Section, Text } from '@/components';
 
 const NotificationContainer = () => {
   const { notifications } = useNotifications();
 
   const noNotificationContainer = notifications.length === 0 && (
-    <Text level='p' className='text-center'>
+    <Text className='text-center' level='p'>
       We're Building Something Exciting For You. Stay tuned!
     </Text>
   );
@@ -14,36 +16,36 @@ const NotificationContainer = () => {
   return (
     <Section>
       <FlexContainer
-        direction='col'
         className='px-2 py-4 m-auto gradient-6 md:w-1/3 w-full rounded-2 border gap-4'
+        direction='col'
       >
-        <FlexContainer direction='col' className='gap-4'>
-          <FlexContainer direction='col' className='gap-1.5'>
-            <Text level='span' className='pre-title text-greyDark'>
+        <FlexContainer className='gap-4' direction='col'>
+          <FlexContainer className='gap-1.5' direction='col'>
+            <Text className='pre-title text-greyDark' level='span'>
               What’s Happening at
             </Text>
-            <Text level='h5' className='heading-5 text-light'>
+            <Text className='heading-5 text-light' level='h5'>
               The Boring Education
             </Text>
           </FlexContainer>
           {noNotificationContainer}
           {notifications && (
-            <FlexContainer direction='col' className='gap-1'>
+            <FlexContainer className='gap-1' direction='col'>
               {notifications.map((notification, index) => {
                 const { type, text, isExternalLink, link } = notification;
 
                 return (
                   <FlexContainer
                     key={index}
-                    direction='col'
                     className='p-2 w-full bg-lightBG rounded-2 border border-secondary gap-2.5'
+                    direction='col'
                   >
-                    <FlexContainer direction='col' className='gap-0.5'>
+                    <FlexContainer className='gap-0.5' direction='col'>
                       <FlexContainer
                         className='gap-1 w-full'
                         justifyCenter={false}
                       >
-                        <Text level='span' className='strong-text text-primary'>
+                        <Text className='strong-text text-primary' level='span'>
                           {type}
                         </Text>
                         {isExternalLink && link && (
@@ -52,7 +54,7 @@ const NotificationContainer = () => {
                           </Link>
                         )}
                       </FlexContainer>
-                      <Text level='p' className='pre-title'>
+                      <Text className='pre-title' level='p'>
                         {text}
                       </Text>
                     </FlexContainer>

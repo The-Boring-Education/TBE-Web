@@ -1,14 +1,16 @@
 // Add Chapter API
-import { NextApiRequest, NextApiResponse } from 'next';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
   deleteChapterFromSectionInDB,
   getChapterFromSectionInDB,
   updateChapterInSectionInDB,
 } from '@/database';
-import { UpdateChapterRequestPayloadProps } from '@/interfaces';
+
+import { apiStatusCodes } from '@/constant';
+import type { UpdateChapterRequestPayloadProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

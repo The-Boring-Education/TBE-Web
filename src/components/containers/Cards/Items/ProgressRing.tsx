@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { Text } from '@/components';
-import { ProgressRingProps } from '@/interfaces';
+
+import type { ProgressRingProps } from '@/interfaces';
 
 const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
   const radius = 42;
@@ -20,23 +22,23 @@ const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
         <circle
           cx='50'
           cy='50'
+          fill='transparent'
           r={radius}
           stroke='#E0E0E0'
           strokeWidth='8'
-          fill='transparent'
         />
         {/* Progress Circle */}
         <circle
+          className='transition-all duration-300 ease-in-out'
           cx='50'
           cy='50'
+          fill='transparent'
           r={radius}
           stroke='#FF4A4A'
-          strokeWidth='8'
-          fill='transparent'
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           strokeLinecap='round'
-          className='transition-all duration-300 ease-in-out'
+          strokeWidth='8'
         />
       </svg>
       {/* Display Progress Percentage */}

@@ -1,4 +1,5 @@
-import { BannerProps } from '@/interfaces';
+import type { BannerProps } from '@/interfaces';
+
 import BannerVariantA from './BannerVariantA';
 import BannerVariantB from './BannerVariantB';
 

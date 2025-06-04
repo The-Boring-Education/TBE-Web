@@ -1,4 +1,4 @@
-import { NotificationModel } from '.';
+import type { NotificationModel } from '.';
 
 export interface User {
   id: string;

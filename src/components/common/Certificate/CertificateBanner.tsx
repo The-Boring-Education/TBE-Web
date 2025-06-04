@@ -1,5 +1,6 @@
-import { CertificateBannerProps } from '@/interfaces';
 import { createElement } from 'react';
+
+import type { CertificateBannerProps } from '@/interfaces';
 
 const CertificateBanner = ({
   backgroundColor,

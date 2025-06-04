@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { LinkProps } from '@/interfaces';
+
+import type { LinkProps } from '@/interfaces';
 
 const LinkText = ({
   href,
@@ -14,8 +15,8 @@ const LinkText = ({
     <Link
       className={`${className} link ${!active && 'disabled'}`}
       href={href}
-      target={target}
       scroll={scroll}
+      target={target}
       onClick={onClick}
     >
       {children}

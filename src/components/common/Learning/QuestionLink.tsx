@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { IoIosCheckmarkCircle } from 'react-icons/io';
 import { FaRegCircle } from 'react-icons/fa';
-import { QuestionLinkProps } from '@/interfaces';
+import { IoIosCheckmarkCircle } from 'react-icons/io';
+
+import type { QuestionLinkProps } from '@/interfaces';
 
 const QuestionLink = ({
   href,
@@ -32,16 +33,16 @@ const QuestionLink = ({
 
   return (
     <Link
-      href={href}
       key={questionId}
-      onClick={() => handleQuestionClick(question)}
       className={`flex items-center gap-1 w-full p-2 mb-1 rounded text-left pre-title hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`}
+      href={href}
+      onClick={() => handleQuestionClick(question)}
     >
       <div className='flex-shrink-0'>
         {isCompleted ? (
-          <IoIosCheckmarkCircle size={24} className={iconColor} />
+          <IoIosCheckmarkCircle className={iconColor} size={24} />
         ) : (
-          <FaRegCircle size={24} className={iconColor} />
+          <FaRegCircle className={iconColor} size={24} />
         )}
       </div>
       {title}

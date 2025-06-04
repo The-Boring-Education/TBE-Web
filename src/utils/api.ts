@@ -1,6 +1,8 @@
-import { APIMakeRquestProps, APIResponseType } from '@/interfaces';
-import axios, { AxiosRequestConfig } from 'axios';
-import { NextApiResponse } from 'next';
+import type { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
+import type { NextApiResponse } from 'next';
+
+import type { APIMakeRquestProps, APIResponseType } from '@/interfaces';
 
 const apiInstance = axios.create();
 
@@ -45,4 +47,4 @@ const applyCorsHeaders = (res: NextApiResponse, url: string) => {
   );
 };
 
-export { sendRequest, sendAPIResponse, applyCorsHeaders };
+export { applyCorsHeaders, sendAPIResponse, sendRequest };

@@ -1,17 +1,19 @@
-import { Document, Schema } from 'mongoose';
-import {
+import type { Document, Schema } from 'mongoose';
+
+import type { FeedbackType } from '@/constant';
+
+import type {
   CertificateType,
   DifficultyType,
+  PlatformUsageType,
   QuestionFrequencyType,
   RoadmapsType,
   SkillsType,
-  WebinarEnrolledUsersProps,
+  UnskilledLandingGraphDataProps,
   UserPointsActionType,
   UserRoleType,
-  PlatformUsageType,
-  UnskilledLandingGraphDataProps,
+  WebinarEnrolledUsersProps,
 } from '.';
-import { FeedbackType } from '@/constant';
 
 export interface UserModel {
   name: string;

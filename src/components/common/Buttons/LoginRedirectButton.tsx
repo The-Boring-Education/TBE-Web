@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router';
-import { Button } from '@/components';
-import { LoginRedirectButtonProps } from '@/interfaces';
 import { useSession } from 'next-auth/react';
+
+import { Button } from '@/components';
+
+import type { LoginRedirectButtonProps } from '@/interfaces';
 
 const LoginRedirectButton = ({
   text = 'Login to Start',
@@ -22,10 +24,10 @@ const LoginRedirectButton = ({
 
   return (
     <Button
-      variant='PRIMARY'
-      text={text}
-      onClick={handleLoginRedirect}
       className={className}
+      text={text}
+      variant='PRIMARY'
+      onClick={handleLoginRedirect}
     />
   );
 };

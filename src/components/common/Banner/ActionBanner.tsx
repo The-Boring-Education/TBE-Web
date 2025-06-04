@@ -1,5 +1,6 @@
 import React, { createElement } from 'react';
-import { ActionBannerProps } from '@/interfaces';
+
+import type { ActionBannerProps } from '@/interfaces';
 
 const ActionBanner = ({
   backgroundColor,

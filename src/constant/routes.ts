@@ -1,4 +1,4 @@
-import { GenerateSectionPathProps } from '@/interfaces';
+import type { GenerateSectionPathProps } from '@/interfaces';
 
 const routes = {
   home: '/',
@@ -139,4 +139,4 @@ const generateSectionPath = ({
   return basePath + '#' + sectionID;
 };
 
-export { routes, generateSectionPath };
+export { generateSectionPath, routes };

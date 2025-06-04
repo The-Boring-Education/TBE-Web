@@ -1,5 +1,6 @@
 import { FlexContainer, Link } from '@/components';
-import { NavbarDropdownContainerProps } from '@/interfaces';
+
+import type { NavbarDropdownContainerProps } from '@/interfaces';
 
 const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => {
   return (
@@ -8,14 +9,14 @@ const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => {
         return (
           <FlexContainer
             key={name}
+            className='relative rounded-lg p-2 hover:bg-gray-100 max-w-sm'
             direction='col'
             itemCenter={false}
-            className='relative rounded-lg p-2 hover:bg-gray-100 max-w-sm'
           >
             <FlexContainer direction='col' itemCenter={false}>
               <Link
-                href={href}
                 className='text-base font-semibold text-black hover:text-primary'
+                href={href}
                 target={target}
               >
                 {name}{' '}

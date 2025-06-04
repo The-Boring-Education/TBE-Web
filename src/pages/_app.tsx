@@ -1,14 +1,18 @@
-import '@/styles/globals.css';
-import '@/styles/colors.css';
-import { AppProps } from 'next/app';
-import { PageLayout } from '@/components';
+import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
-import { googleAnalyticsScript, gtag, routes } from '@/constant';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+import '@/styles/globals.css';
+import '@/styles/colors.css';
+
 import { useUser } from '@/hooks';
+
+import { PageLayout } from '@/components';
+
+import { googleAnalyticsScript, gtag, routes } from '@/constant';
 import { getRedirectUrl } from '@/utils';
 
 // Create a client
@@ -53,7 +57,7 @@ const TheBoringEducation = ({
 }: AppProps) => {
   return (
     <Fragment>
-      <Script async strategy='lazyOnload' src={gtag}></Script>
+      <Script async src={gtag} strategy='lazyOnload'></Script>
       <Script id='google-analytics' strategy='lazyOnload'>
         {googleAnalyticsScript}
       </Script>

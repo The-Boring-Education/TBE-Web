@@ -1,5 +1,6 @@
-import { IconCardProps } from '@/interfaces';
 import { motion } from 'framer-motion';
+
+import type { IconCardProps } from '@/interfaces';
 
 const IconCard = ({
   key,
@@ -11,11 +12,11 @@ const IconCard = ({
 }: IconCardProps) => (
   <motion.div
     key={key}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: key * 0.2 }}
     className='h-full'
+    initial={{ opacity: 0, y: 20 }}
+    transition={{ delay: key * 0.2 }}
+    viewport={{ once: true }}
+    whileInView={{ opacity: 1, y: 0 }}
   >
     <div
       className={`${bgColor} rounded-xl shadow-lg overflow-hidden ${className}`}

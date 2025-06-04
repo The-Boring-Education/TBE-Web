@@ -1,8 +1,10 @@
 import { Fragment } from 'react';
+
 import { LoginCard, SEO } from '@/components';
-import { getPreFetchProps } from '@/utils';
-import { PageProps } from '@/interfaces';
+
 import { routes } from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
 const Login = ({ seoMeta }: PageProps) => {
   return (

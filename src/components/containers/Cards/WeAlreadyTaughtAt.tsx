@@ -1,11 +1,12 @@
-import { Section, Text, Image, FlexContainer } from '@/components';
+import { FlexContainer, Image, Section, Text } from '@/components';
+
 import { MY_PREV_EXPERIENCE } from '@/constant';
 
 const WeAlreadyTaughtAt = () => {
   return (
     <Section>
-      <FlexContainer direction='col' className='gap-4'>
-        <Text level='h4' className='heading-4'>
+      <FlexContainer className='gap-4' direction='col'>
+        <Text className='heading-4' level='h4'>
           We already <span className=' text-primary'>taught</span> at
         </Text>
         <FlexContainer>
@@ -16,9 +17,9 @@ const WeAlreadyTaughtAt = () => {
               justifyCenter={false}
             >
               <Image
-                src={item.image}
-                fullWidth={true}
                 alt={item.imageAltText}
+                fullWidth={true}
+                src={item.image}
               />
             </FlexContainer>
           ))}

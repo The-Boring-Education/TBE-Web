@@ -1,5 +1,6 @@
 import { FlexContainer, Text } from '@/components';
-import { SectionHeaderProps } from '@/interfaces';
+
+import type { SectionHeaderProps } from '@/interfaces';
 
 const SectionHeaderContainer = ({
   heading,
@@ -16,21 +17,21 @@ const SectionHeaderContainer = ({
       direction='col'
     >
       <Text
-        level={`h${headingLevel}`}
         className={`heading-${headingLevel}`}
+        level={`h${headingLevel}`}
         textCenter={true}
       >
         {heading}
         <Text
-          level='span'
           className={`heading-${headingLevel} text-primary`}
+          level='span'
           textCenter={true}
         >
           &nbsp;{focusText}
         </Text>
       </Text>
       {subtext && (
-        <Text level='span' className='pre-text text-greyDark' textCenter={true}>
+        <Text className='pre-text text-greyDark' level='span' textCenter={true}>
           {subtext}
         </Text>
       )}

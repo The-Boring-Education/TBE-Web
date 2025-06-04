@@ -1,6 +1,7 @@
 import MarkdownIt from 'markdown-it';
-import { MDXRendererProps } from '@/interfaces';
 import { Fragment, useEffect, useRef } from 'react';
+
+import type { MDXRendererProps } from '@/interfaces';
 
 const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   const md = new MarkdownIt({
@@ -114,8 +115,8 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   return (
     <div className='w-full flex flex-col justify-between'>
       <div
-        ref={containerRef}
         dangerouslySetInnerHTML={{ __html: mdxHTML }}
+        ref={containerRef}
         className='break-all'
       />
       {actionContainer}

@@ -1,6 +1,7 @@
 import { FlexContainer, Image, Text } from '@/components';
+
 import { STATIC_FILE_PATH } from '@/constant';
-import { RadioInputFieldProps } from '@/interfaces';
+import type { RadioInputFieldProps } from '@/interfaces';
 
 const RadioInputField = ({
   label,
@@ -11,28 +12,28 @@ const RadioInputField = ({
   return (
     <label
       key={value}
-      htmlFor={value}
       className='w-full cursor-pointer md:w-fit'
+      htmlFor={value}
       onClick={() => onChange(value)}
     >
-      <input type='radio' name='custom-radio' className='hidden' />
+      <input className='hidden' name='custom-radio' type='radio' />
       <FlexContainer
         className={`justify-between gap-2 rounded-full border-2 border-white p-2 shadow-md ${
           selected && 'bg-primary'
         }`}
       >
         <FlexContainer direction='col'>
-          <Text level='p' className='strong-text text-contentDark'>
+          <Text className='strong-text text-contentDark' level='p'>
             {label}
           </Text>
         </FlexContainer>
         {selected && (
           <Image
-            src={`${STATIC_FILE_PATH.svg}/select-radio.svg`}
             alt='developer activities'
             className='w-4'
-            fullWidth={false}
             fullHeight={false}
+            fullWidth={false}
+            src={`${STATIC_FILE_PATH.svg}/select-radio.svg`}
           />
         )}
       </FlexContainer>

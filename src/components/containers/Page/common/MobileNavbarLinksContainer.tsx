@@ -1,5 +1,6 @@
 import { FlexContainer, Link, Text } from '@/components';
-import { MobileNavbarLinksContainerProps } from '@/interfaces';
+
+import type { MobileNavbarLinksContainerProps } from '@/interfaces';
 
 const MobileNavbarLinksContainer = ({
   title,
@@ -8,34 +9,34 @@ const MobileNavbarLinksContainer = ({
 }: MobileNavbarLinksContainerProps) => {
   return (
     <FlexContainer
+      className='gap-2'
+      direction='col'
       itemCenter={false}
       justifyCenter={false}
-      direction='col'
-      className='gap-2'
     >
-      <Text level='span' className='pre-title text-primary'>
+      <Text className='pre-title text-primary' level='span'>
         {title.toLocaleUpperCase()}
       </Text>
       <FlexContainer
+        className='gap-2'
+        direction='col'
         itemCenter={false}
         justifyCenter={false}
-        direction='col'
-        className='gap-2'
       >
         {links.map(({ name, href, target, description }, index) => {
           return (
             <Link
               key={index}
-              href={href}
               className='text-base font-semibold text-black'
+              href={href}
               target={target}
               onClick={onLinkClick}
             >
-              <Text level='span' className='strong-text'>
+              <Text className='strong-text' level='span'>
                 {name}
               </Text>
               <br />
-              <Text level='span' className='pre-title text-greyDark'>
+              <Text className='pre-title text-greyDark' level='span'>
                 {description}
               </Text>
             </Link>

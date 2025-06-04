@@ -1,4 +1,4 @@
-import {
+import type {
   ChangeEvent,
   ElementType,
   HTMLInputTypeAttribute,
@@ -6,14 +6,16 @@ import {
   ReactNode,
   RefObject,
 } from 'react';
-import {
+
+import type { FeedbackType } from '@/constant';
+
+import type {
   CertificateType,
   CohortRoadmapProps,
   GetSEOMetaResponseType,
   QuestionFrequencyType,
   TopNavbarLinkProps,
 } from '.';
-import { FeedbackType } from '@/constant';
 
 export interface SectionProps {
   children: ReactNode;

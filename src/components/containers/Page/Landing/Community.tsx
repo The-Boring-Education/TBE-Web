@@ -1,35 +1,35 @@
-import { LINKS, STATIC_FILE_PATH } from '@/constant';
-
-import { Image, Pill, Section, FlexContainer, LinkButton } from '@/components';
+import { FlexContainer, Image, LinkButton, Pill, Section } from '@/components';
 import { Text } from '@/components';
+
+import { LINKS, STATIC_FILE_PATH } from '@/constant';
 
 const Community = () => {
   return (
     <Section>
       <FlexContainer className='gradient-5 w-full p-4 flex-col  gap-4 rounded-2'>
         <Image
-          src={`${STATIC_FILE_PATH.svg}/community.svg`}
+          alt='community'
           fullHeight={false}
           fullWidth={false}
-          alt='community'
+          src={`${STATIC_FILE_PATH.svg}/community.svg`}
         />
         <FlexContainer className='gap-1' direction='col'>
           <Text
-            level='h3'
             className='heading-3 text-contentDark'
+            level='h3'
             textCenter={true}
           >
             Community For Everyone
           </Text>
-          <Text level='p' textCenter={true} className='text-contentDark'>
+          <Text className='text-contentDark' level='p' textCenter={true}>
             You excel where you’re supported. Connect with like-minded peers who
             share the same goal as you.
           </Text>
         </FlexContainer>
-        <FlexContainer direction='col' className='gap-2'>
+        <FlexContainer className='gap-2' direction='col'>
           <Text
-            level='h5'
             className='heading-5 text-contentDark'
+            level='h5'
             textCenter={true}
           >
             In Community, You'll
@@ -47,12 +47,12 @@ const Community = () => {
             ))}
           </FlexContainer>
           <LinkButton
-            href={LINKS.whatsappCommunity}
-            className='pt-3'
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Join Community',
             }}
+            className='pt-3'
+            href={LINKS.whatsappCommunity}
             target='_blank'
           />
         </FlexContainer>

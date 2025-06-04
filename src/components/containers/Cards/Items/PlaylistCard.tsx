@@ -1,6 +1,8 @@
 import React from 'react';
-import { Image, Text, FlexContainer } from '@/components';
-import { PlaylistCardProps } from '@/interfaces';
+
+import { FlexContainer, Image, Text } from '@/components';
+
+import type { PlaylistCardProps } from '@/interfaces';
 
 const PlaylistCard = ({
   title,
@@ -10,32 +12,32 @@ const PlaylistCard = ({
   videoId,
 }: PlaylistCardProps) => {
   return (
-    <FlexContainer direction='col' className='gap-4 w-full items-baseline'>
+    <FlexContainer className='gap-4 w-full items-baseline' direction='col'>
       <div className='w-full border-1 border-black rounded-md overflow-hidden'>
         {!isStartedLearningFromPlaylist ? (
           <Image
-            src={thumbnail}
             alt={title}
+            className='aspect-image rounded-sm'
             fullHeight={false}
             fullWidth={false}
-            className='aspect-image rounded-sm'
+            src={thumbnail}
           />
         ) : (
           <iframe
+            allowFullScreen
+            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
             className='w-full aspect-video rounded-sm'
+            frame-Border='0'
             src={`https://www.youtube.com/embed/${videoId}`}
             title='YouTube Video'
-            frame-Border='0'
-            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-            allowFullScreen
           ></iframe>
         )}
       </div>
-      <FlexContainer direction='col' className='w-full gap-1 items-baseline'>
-        <Text level='h4' className='heading-4 font-bold'>
+      <FlexContainer className='w-full gap-1 items-baseline' direction='col'>
+        <Text className='heading-4 font-bold' level='h4'>
           {title}
         </Text>
-        <Text level='p' className=' w-full line-clamp-2 text-grey'>
+        <Text className=' w-full line-clamp-2 text-grey' level='p'>
           {description}
         </Text>
       </FlexContainer>

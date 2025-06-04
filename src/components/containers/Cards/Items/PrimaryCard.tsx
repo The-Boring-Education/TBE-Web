@@ -1,5 +1,6 @@
 import { GradientContainer, Image, Text } from '@/components';
-import { PrimaryCardProps } from '@/interfaces';
+
+import type { PrimaryCardProps } from '@/interfaces';
 
 const PrimaryCard = ({
   image,
@@ -13,17 +14,17 @@ const PrimaryCard = ({
   return (
     <GradientContainer className={`max-w-sm ${border}`}>
       <Image
+        alt={imageAltText}
         className='h-40 w-48'
-        src={`${image}`}
         fullHeight={false}
         fullWidth={false}
-        alt={imageAltText}
+        src={`${image}`}
       />
-      <Text level='h5' className='heading-5 mt-4'>
+      <Text className='heading-5 mt-4' level='h5'>
         {title}
       </Text>
 
-      <Text level='p' className='paragraph mt-1 text-greyDark'>
+      <Text className='paragraph mt-1 text-greyDark' level='p'>
         {content}
       </Text>
     </GradientContainer>

@@ -1,6 +1,8 @@
-import { Model, Schema, model, models } from 'mongoose';
-import { CertificateModel } from '@/interfaces';
+import type { Model } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
+
 import { CERTIFICATE_TYPE, DATABASE_MODELS } from '@/constant';
+import type { CertificateModel } from '@/interfaces';
 
 const CertificateSchema = new Schema<CertificateModel>(
   {

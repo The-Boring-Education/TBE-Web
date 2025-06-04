@@ -1,9 +1,10 @@
-import {
+import { Job, JobAggregate } from '@/database';
+
+import type {
   AddJobRequestPayloadProps,
   DatabaseQueryResponseType,
   UnSkilledEvaluationRequestBody,
 } from '@/interfaces';
-import { Job, JobAggregate } from '@/database';
 import { constrainNumberToRange } from '@/utils';
 
 // Add A Job
@@ -370,10 +371,10 @@ const getResumeEvaluationResultsFromDB = async ({
 
 export {
   addJobToDB,
+  fetchJobsAggregationFromDB,
   getAllJobsFromDB,
   getJobByJobIdFromDB,
-  fetchJobsAggregationFromDB,
-  saveDailyJobsAggregationToDB,
   getLatestJobAggregationFromDB,
   getResumeEvaluationResultsFromDB,
+  saveDailyJobsAggregationToDB,
 };

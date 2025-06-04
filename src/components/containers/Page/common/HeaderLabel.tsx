@@ -1,5 +1,6 @@
-import { HeaderLabelProps } from '@/interfaces';
 import { motion } from 'framer-motion';
+
+import type { HeaderLabelProps } from '@/interfaces';
 
 const HeaderLabel = ({
   label,
@@ -7,16 +8,16 @@ const HeaderLabel = ({
 }: HeaderLabelProps) => {
   return (
     <motion.div
-      className={` p-2 text-center text-primary ${className}`}
-      initial='initial'
       animate='animate'
+      className={` p-2 text-center text-primary ${className}`}
       exit='exit'
+      initial='initial'
+      transition={{ duration: 0.5, ease: 'easeOut' }}
       variants={{
         initial: { x: -1000 },
         animate: { x: 0 },
         exit: { x: 1000 },
       }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
     >
       {label}
     </motion.div>

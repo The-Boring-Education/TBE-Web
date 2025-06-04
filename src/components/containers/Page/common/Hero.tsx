@@ -5,7 +5,8 @@ import {
   SectionHeaderContainer,
   Text,
 } from '@/components';
-import { LandingPageHeroProps } from '@/interfaces';
+
+import type { LandingPageHeroProps } from '@/interfaces';
 const LandingPageHero = ({
   sectionHeaderProps,
   primaryButton,
@@ -17,29 +18,29 @@ const LandingPageHero = ({
   return (
     <Section>
       <FlexContainer
-        justifyCenter={true}
         className='py-2 sm:py-6'
         direction='col'
+        justifyCenter={true}
       >
         <FlexContainer
-          justifyCenter={true}
-          itemCenter={true}
           className='wrap-reverse flex-col-reverse gap-6 lg:flex-row'
+          itemCenter={true}
+          justifyCenter={true}
           wrap={false}
         >
           <FlexContainer
-            direction='col'
             className='justify-center lg:justify-start'
+            direction='col'
           >
             <FlexContainer direction='col'>
               <SectionHeaderContainer
-                headingLevel={3}
-                heading={heading}
                 focusText={focusText}
+                heading={heading}
+                headingLevel={3}
               />
               <Text
-                level='p'
                 className='paragraph mt-1 w-full text-center text-grey lg:text-left'
+                level='p'
               >
                 {heroText}
               </Text>
@@ -50,11 +51,11 @@ const LandingPageHero = ({
             </FlexContainer>
           </FlexContainer>
           <Image
-            src={backgroundImageUrl}
+            alt='landing-page-hero-image'
             className='w-64'
             fullWidth={false}
-            alt='landing-page-hero-image'
             loading='eager'
+            src={backgroundImageUrl}
           />
         </FlexContainer>
       </FlexContainer>

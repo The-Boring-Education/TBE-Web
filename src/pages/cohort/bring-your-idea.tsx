@@ -1,40 +1,36 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
 import {
   AcademicCapIcon,
-  RocketLaunchIcon,
-  UserGroupIcon,
-  SparklesIcon,
-  LightBulbIcon,
   CheckCircleIcon,
+  LightBulbIcon,
+  RocketLaunchIcon,
+  SparklesIcon,
+  UserGroupIcon,
 } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { Fragment } from 'react';
-import { getPreFetchProps } from '@/utils';
+
 import {
-  CohortUserCategoryProps,
-  PageProps,
-  TestimonialCardProps,
-} from '@/interfaces';
-import {
-  SEO,
-  Image,
-  Carousel,
-  Section,
-  Text,
-  FlexContainer,
-  SectionHeaderContainer,
-  LinkButton,
-  IconCard,
-  HeaderLabel,
   Banner,
-  CohortJourneyContainer,
   Button,
+  Carousel,
+  CohortJourneyContainer,
+  FAQSection,
+  FlexContainer,
+  HeaderLabel,
+  IconCard,
+  Image,
+  InterviewPrepSection,
+  LinkButton,
   Pill,
   PrevCohortProjects,
-  InterviewPrepSection,
+  Section,
+  SectionHeaderContainer,
+  SEO,
   SessionDetailsSection,
-  FAQSection,
+  Text,
 } from '@/components';
+
 import {
   BYI_USER_CATEGORIES,
   LINKS,
@@ -42,6 +38,12 @@ import {
   STATIC_FILE_PATH,
   TESTIMONIALS,
 } from '@/constant';
+import type {
+  CohortUserCategoryProps,
+  PageProps,
+  TestimonialCardProps,
+} from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
 const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   const whyUs = [
@@ -140,7 +142,6 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
     return (
       <Button
         key={key}
-        onClick={() => handleSelectUserCategory(key)}
         className={`md:px-4 md:py-2 px-2 py-1 md:w-fit border-lightGray rounded-full transition-all ${
           selectedUserCategory.key === key
             ? 'bg-primary text-white'
@@ -148,6 +149,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
         }`}
         text={label}
         variant='GHOST'
+        onClick={() => handleSelectUserCategory(key)}
       />
     );
   });
@@ -165,21 +167,21 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
         <div className='container mx-auto md:px-8 px-2'>
           <FlexContainer className='relative md:flex-row flex-col-reverse gap-4 lg:gap-8 items-center'>
             <motion.div
+              animate={{ opacity: 1, y: 0 }}
               className='flex flex-col flex-1 gap-4'
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <FlexContainer direction='col' className='gap-2'>
+              <FlexContainer className='gap-2' direction='col'>
                 <Text
-                  level='h1'
                   className='heading-1 text-contentDark leading-tight md:text-left text-center'
+                  level='h1'
                 >
                   Crack Interviews while Building Real Life Projects
                 </Text>
                 <Text
-                  level='p'
                   className='text-contentDark md:text-left text-center'
+                  level='p'
                 >
                   Join our cohort and build your idea with a team of up to 4
                   friends. Get mentorship from industry experts and learn to
@@ -187,41 +189,41 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                 </Text>
               </FlexContainer>
               <FlexContainer
-                direction='col'
                 className='sm:flex-row gap-2 justify-center lg:justify-start'
+                direction='col'
               >
                 <LinkButton
-                  href={LINKS.applyBYICohort}
                   buttonProps={{
                     text: 'Apply Now',
                     variant: 'PRIMARY',
                     className: 'w-full sm:w-auto',
                   }}
-                  target='_blank'
                   className='w-full sm:w-auto'
+                  href={LINKS.applyBYICohort}
+                  target='_blank'
                 />
                 <LinkButton
-                  href={LINKS.bookProjectSession}
                   buttonProps={{
                     text: 'Book Free Call',
                     variant: 'GHOST',
                     className: 'w-full sm:w-auto',
                   }}
-                  target='_blank'
                   className='w-full sm:w-auto'
+                  href={LINKS.bookProjectSession}
+                  target='_blank'
                 />
               </FlexContainer>
             </motion.div>
             <motion.div
+              animate={{ opacity: 1, x: 0 }}
               className='relative flex-1 w-full'
               initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <Image
-                src='https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&q=80'
                 alt='Team collaboration'
                 className='rounded-2xl shadow-2xl w-full object-cover'
+                src='https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&q=80'
               />
               <div className='absolute -bottom-6 -right-6 bg-white p-4 rounded-lg shadow-xl hidden md:block'>
                 <div className='flex items-center gap-2'>
@@ -243,15 +245,15 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
           className='justify-center gap-8 flex-wrap'
           direction='col'
         >
-          <Text level='h4' className='heading-4' textCenter={true}>
+          <Text className='heading-4' level='h4' textCenter={true}>
             Where Are You in Your Tech Journey?
           </Text>
           <FlexContainer className='justify-center gap-2 flex-wrap'>
             {userCategoryContainer}
           </FlexContainer>
           <SectionHeaderContainer
-            heading='Your Roadmap'
             focusText={`in Cohort | ${selectedUserCategory.duration}`}
+            heading='Your Roadmap'
             headingLevel={5}
           />
           <CohortJourneyContainer weeks={selectedUserCategory.data} />
@@ -261,10 +263,10 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
       <InterviewPrepSection />
 
       <Section>
-        <FlexContainer direction='col' className='md:gap-6 gap-3'>
+        <FlexContainer className='md:gap-6 gap-3' direction='col'>
           <SectionHeaderContainer
-            heading='Why Choose'
             focusText='Us'
+            heading='Why Choose'
             headingLevel={3}
           />
           <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4'>
@@ -276,43 +278,43 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
       </Section>
 
       <Section className='py-6 md:py-20 px-2'>
-        <FlexContainer direction='col' className='md:gap-8 gap-4'>
-          <FlexContainer direction='col' className=''>
+        <FlexContainer className='md:gap-8 gap-4' direction='col'>
+          <FlexContainer className='' direction='col'>
             <SectionHeaderContainer
-              heading='Invest in'
               focusText='Your Career'
+              heading='Invest in'
             />
           </FlexContainer>
-          <FlexContainer direction='col' className=''>
-            <FlexContainer direction='col' className='gap-4'>
+          <FlexContainer className='' direction='col'>
+            <FlexContainer className='gap-4' direction='col'>
               <FlexContainer className='gap-4 flex-wrap' direction='col'>
                 <FlexContainer className='gap-2 flex-wrap'>
                   {userCategoryContainer}
                 </FlexContainer>
                 <FlexContainer className='gap-2'>
-                  <Text level='label' className='label'>
+                  <Text className='label' level='label'>
                     Number of Members
                   </Text>
                   <input
-                    type='range'
-                    min={1}
+                    className='w-full accent-primary'
                     max={4}
+                    min={1}
+                    type='range'
                     value={teamSize}
                     onChange={handleTeamSizeChange}
-                    className='w-full accent-primary'
                   />
-                  <Text level='h5' className='heading-5 text-primary'>
+                  <Text className='heading-5 text-primary' level='h5'>
                     {teamSize}
                   </Text>
                 </FlexContainer>
               </FlexContainer>
-              <FlexContainer direction='col' className='gap-4'>
-                <FlexContainer direction='col' className='gap-1'>
+              <FlexContainer className='gap-4' direction='col'>
+                <FlexContainer className='gap-1' direction='col'>
                   <FlexContainer className='gap-1 items-end' itemCenter={false}>
-                    <Text level='h3' className='heading-3 text-primary'>
+                    <Text className='heading-3 text-primary' level='h3'>
                       ₹ {perTeamMemberPrice}
                     </Text>
-                    <Text level='span' className='pre-title text-greyDark'>
+                    <Text className='pre-title text-greyDark' level='span'>
                       / Member
                     </Text>
                   </FlexContainer>
@@ -320,15 +322,15 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                 <FlexContainer className='gap-2' direction='col'>
                   <FlexContainer className='gap-2'>
                     <Text
-                      level='h5'
                       className='heading-5 line-through text-gray-400'
+                      level='h5'
                     >
                       ₹ {selectedUserCategory.slashedPrice}
                     </Text>
-                    <Text level='h5' className='heading-5 text-primary'>
+                    <Text className='heading-5 text-primary' level='h5'>
                       ₹ {selectedUserCategory.price}
                     </Text>
-                    <Text level='span' className='pre-title text-greyDark'>
+                    <Text className='pre-title text-greyDark' level='span'>
                       Total
                     </Text>
                   </FlexContainer>
@@ -347,7 +349,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                   justifyCenter={false}
                 >
                   <CheckCircleIcon className='w-5 h-5 text-primary' />
-                  <Text level='span' className='span'>
+                  <Text className='span' level='span'>
                     {feature}
                   </Text>
                 </FlexContainer>
@@ -355,13 +357,13 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
             </ul>
 
             <LinkButton
-              href={LINKS.applyBYICohort}
               buttonProps={{
                 text: 'Register Now',
                 variant: 'PRIMARY',
                 animationClasses: 'w-full sm:w-auto',
                 className: 'm-auto',
               }}
+              href={LINKS.applyBYICohort}
               target='_blank'
             />
           </FlexContainer>
@@ -371,28 +373,28 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
       <PrevCohortProjects />
 
       <Banner
-        title='Take Back 50% Cashback on Project Completion'
-        description='Complete the program and get 50% cashback on your investment.'
-        buttonText='Register Now'
         buttonLink={LINKS.applyBYICohort}
+        buttonText='Register Now'
+        description='Complete the program and get 50% cashback on your investment.'
         imageSrc={`${STATIC_FILE_PATH.svg}/community.svg`}
+        title='Take Back 50% Cashback on Project Completion'
         variant='VARIANT_A'
       />
 
       <Banner
-        title='We Offer 7 Days Money Back Guarantee'
-        description='If you are not satisfied with the program, we will refund your money within 7 days. No questions asked.'
-        buttonText='Register Now'
         buttonLink={LINKS.applyBYICohort}
+        buttonText='Register Now'
+        description='If you are not satisfied with the program, we will refund your money within 7 days. No questions asked.'
         imageSrc={`${STATIC_FILE_PATH.svg}/webinar-hero.svg`}
+        title='We Offer 7 Days Money Back Guarantee'
         variant='VARIANT_B'
       />
 
       <Section className='py-12 md:py-20 bg-gray-50'>
         <FlexContainer className='md:gap-6 gap-3' direction='col'>
           <SectionHeaderContainer
-            heading='What Our'
             focusText='Alumni Say'
+            heading='What Our'
             headingLevel={3}
           />
           <Carousel
@@ -404,11 +406,11 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
                 <div className='md:px-10 md:py-8 py-4 px-2 w-fit bg-white mx-auto rounded-lg'>
                   <div className='flex flex-col md:flex-row items-center gap-6'>
                     <Image
-                      src={image}
                       alt={title}
                       className='w-24 h-24 rounded-full object-cover'
-                      fullWidth={false}
                       fullHeight={false}
+                      fullWidth={false}
+                      src={image}
                     />
                     <div className='flex-1 text-center md:text-left'>
                       <p className='text-lg md:text-xl italic mb-4'>

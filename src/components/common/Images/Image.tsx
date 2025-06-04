@@ -1,5 +1,6 @@
-import { ImageContainerProps } from '@/interfaces';
 import Image from 'next/image';
+
+import type { ImageContainerProps } from '@/interfaces';
 
 const ImageContainer = ({
   src,
@@ -16,11 +17,11 @@ const ImageContainer = ({
       }`}
     >
       <Image
-        src={src}
         alt={alt}
+        className={`${className} image`}
         fill={true}
         loading={loading}
-        className={`${className} image`}
+        src={src}
       />
     </div>
   );
