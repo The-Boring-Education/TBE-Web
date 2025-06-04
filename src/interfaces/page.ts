@@ -1,21 +1,22 @@
-import {
-  BaseShikshaCourseResponseProps,
+import type {
   BaseInterviewSheetResponseProps,
+  BaseShikshaCourseResponseProps,
 } from '.';
-import {
+import type {
   CertificateModel,
-  ProjectDocumentModel,
-  WebinarModel,
-  UserPlaylistModel,
   PlaylistModel,
+  ProjectDocumentModel,
+  UserPlaylistModel,
+  WebinarModel,
 } from './database';
-import {
+import type {
   GetSEOMetaResponseType,
   UnskilledLandingGraphDataProps,
 } from './global';
 
 export interface PageProps {
   slug: any;
+  isDev?: boolean;
   seoMeta: GetSEOMetaResponseType;
   resolvedUrl?: string;
 }
@@ -75,6 +76,7 @@ export interface UnskilledLandingPageProps extends PageProps {
     trendingSkills: UnskilledLandingGraphDataProps[];
     companyTypes: UnskilledLandingGraphDataProps[];
     topLocations: UnskilledLandingGraphDataProps[];
+    updatedAt: string;
   };
 }
 

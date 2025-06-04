@@ -1,17 +1,20 @@
-import {
+import type { ComponentPropsWithoutRef } from 'react';
+
+import type {
   CohortDataProps,
   MentorshipCardProps,
+  PlatformUsageType,
   PortfolioTemplateProps,
   ProductDataProps,
   RadioButtonOptionsProps,
-  UserPointsActionType,
   UserLevel,
+  UserPointsActionType,
   UserRoleType,
-  PlatformUsageType,
 } from '@/interfaces';
-import { routes } from './routes';
+
+import { JOB_DOMAIN_NORMALIZER } from './api';
 import { envConfig } from './envConfig';
-import { ComponentPropsWithoutRef } from 'react';
+import { routes } from './routes';
 
 // Paths
 const STATIC_FILE_PATH = {
@@ -87,6 +90,7 @@ const cohorts: CohortDataProps = {
 // Global links
 const LINKS = {
   bookTechConsultation: 'https://topmate.io/imsks',
+  followUsOnInstagram: 'https://www.instagram.com/theboringeducation',
   whatsappCommunity: 'https://chat.whatsapp.com/EeB7LrPRg2p3RyMOicyIAC',
   instagram: 'https://www.instagram.com/theboringeducation',
   youtube: 'https://www.youtube.com/@TheBoringEducation',
@@ -98,7 +102,7 @@ const LINKS = {
   officialLinkedIn: 'https://www.linkedin.com/company/theboringeducation',
   contributeOpenSource:
     'https://theboringeducation.notion.site/Contribute-The-Boring-Education-8171f19257fd4ef99b7287555eb5062b',
-  applyBYICohort: 'bit.ly/byi-tbe-apply',
+  applyBYICohort: 'https://tally.so/r/wakbx9',
   bookProjectSession: 'https://topmate.io/imsks/1527401',
   postmanDocs: 'https://documenter.getpostman.com/view/10360102/2sAYdcsYK3',
 };
@@ -171,7 +175,7 @@ const MENTORSHIP_CARDS: MentorshipCardProps[] = [
   },
 ];
 
-const IN_DEV_PAGES = ['/projects'];
+const IN_DEV_PAGES = ['/unskilled'];
 const projectGroupWhatsapp = 'https://chat.whatsapp.com/D1ko12SykD1LfvJwmNQ48A';
 
 const SCREEN_BREAKPOINTS = {
@@ -352,27 +356,63 @@ const COUNTRY_CODES = [
   { code: '+46', country: 'SWEDEN' },
 ];
 
+const JOB_DOMAINS = JOB_DOMAIN_NORMALIZER.map(({ value }) => {
+  return {
+    label: value,
+    value: value,
+  };
+}).splice(0, 10);
+
+const JOB_EXPERIENCE_LEVEL: {
+  label: string;
+  value: string;
+  min: number;
+  max: number;
+}[] = [
+  { label: 'Fresher (0 yrs)', value: 'FRESHER', min: 0, max: 1 },
+  { label: 'Early Career (1–2 yrs)', value: 'EARLY_CAREER', min: 1, max: 2 },
+  { label: 'Mid-Level (2–4 yrs)', value: 'MID_LEVEL', min: 2, max: 4 },
+  { label: 'Senior (4–7 yrs)', value: 'SENIOR', min: 4, max: 7 },
+  { label: 'Staff Engineer (7–10 yrs)', value: 'STAFF', min: 7, max: 10 },
+  {
+    label: 'Principal Engineer (10+ yrs)',
+    value: 'PRINCIPAL',
+    min: 10,
+    max: 100,
+  },
+];
+
+const PAGE_REFRESH_TIMEOUT = {
+  short: 10, // 10 seconds
+  medium: 60 * 60 * 24, // 1 day in seconds
+  long: 60 * 60 * 24 * 5, // 5 days in seconds
+  veryLong: 60 * 60 * 24 * 15, // 15 days in seconds
+};
+
 export {
-  imageMeta,
-  products,
-  LINKS,
-  gtag,
-  googleAnalyticsScript,
-  STATIC_FILE_PATH,
-  favicons,
-  localStorageKeys,
   apiStatusCodes,
+  cohorts,
+  COUNTRY_CODES,
+  favicons,
+  googleAnalyticsScript,
+  gtag,
+  imageMeta,
   IN_DEV_PAGES,
-  projectGroupWhatsapp,
+  JOB_DOMAINS,
+  JOB_EXPERIENCE_LEVEL,
+  LINKS,
+  localStorageKeys,
   MENTORSHIP_CARDS,
-  SCREEN_BREAKPOINTS,
+  PAGE_REFRESH_TIMEOUT,
+  POINTS_RULES,
   PORTFOLIO_CARDS,
   PORTFOLIO_TEMPLATES,
-  cohorts,
-  YOUFOCUS_SKILL_PLAYLISTS,
-  POINTS_RULES,
+  products,
+  projectGroupWhatsapp,
+  SCREEN_BREAKPOINTS,
+  STATIC_FILE_PATH,
   USER_LEVELS,
-  USER_USAGE_OPTIONS,
-  COUNTRY_CODES,
   USER_ROLE_OPTIONS,
+  USER_USAGE_OPTIONS,
+  YOUFOCUS_SKILL_PLAYLISTS,
 };

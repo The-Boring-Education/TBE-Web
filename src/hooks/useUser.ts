@@ -1,6 +1,7 @@
-import { User, UseUserReturnType } from '@/interfaces';
 import { useSession } from 'next-auth/react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+import type { User, UseUserReturnType } from '@/interfaces';
 
 const useUser = (): UseUserReturnType => {
   const { data: session, status } = useSession();

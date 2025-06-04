@@ -1,7 +1,8 @@
 import { Gamification } from '@/database';
-import {
-  UserPointsAction,
+
+import type {
   DatabaseQueryResponseType,
+  UserPointsAction,
   UserPointsActionType,
 } from '@/interfaces';
 import { calculateUserPointsForAction } from '@/utils';
@@ -120,8 +121,8 @@ const handleGamificationPoints = async (
 };
 
 export {
-  updateUserPointsInDB,
+  addGamificationDocInDB,
   getUserPointsFromDB,
   handleGamificationPoints,
-  addGamificationDocInDB,
+  updateUserPointsInDB,
 };

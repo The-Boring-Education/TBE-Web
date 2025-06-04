@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import { Button, FlexContainer } from '@/components';
-import { PlaylistVideoCard, PlaylistCard } from '@/components';
-import { PlaylistCantainerCardProps } from '@/interfaces';
-import PlaylistVideoTimeCard from '../../Cards/Items/PlaylistVideoTimeCard';
-import PlaylistRecommend from '../../Cards/Items/PlaylistRecommend';
-import { useUser } from '@/hooks';
 import { signIn } from 'next-auth/react';
+import React, { useState } from 'react';
+
+import { useUser } from '@/hooks';
+
+import { Button, FlexContainer } from '@/components';
+import { PlaylistCard, PlaylistVideoCard } from '@/components';
+
+import type { PlaylistCantainerCardProps } from '@/interfaces';
+
+import PlaylistRecommend from '../../Cards/Items/PlaylistRecommend';
+import PlaylistVideoTimeCard from '../../Cards/Items/PlaylistVideoTimeCard';
 
 const PlaylistContainer = ({
   id,
@@ -45,31 +49,31 @@ const PlaylistContainer = ({
           {isStartedLearningFromPlaylist && userId && (
             <div className='w-full flex justify-center'>
               <PlaylistVideoTimeCard
-                usertime={learningTime}
-                userId={userId}
                 playlistId={id}
+                userId={userId}
+                usertime={learningTime}
               />
             </div>
           )}
 
           <PlaylistCard
-            title={selectedVideo.title || playlistName}
             description={description}
-            thumbnail={thumbnail}
-            videoId={selectedVideo.videoId}
             isStartedLearningFromPlaylist={isStartedLearningFromPlaylist}
+            thumbnail={thumbnail}
+            title={selectedVideo.title || playlistName}
+            videoId={selectedVideo.videoId}
           />
 
           {!isStartedLearningFromPlaylist && (
             <Button
-              variant='PRIMARY'
               className='w-full mx-auto'
               text='Start Learning'
+              variant='PRIMARY'
               onClick={handleStartLearning}
             />
           )}
         </FlexContainer>
-        <FlexContainer direction='col' className='flex-1 max-w-full gap-2'>
+        <FlexContainer className='flex-1 max-w-full gap-2' direction='col'>
           {videos?.map(({ videoId, title, thumbnail }) => {
             const commonProps = {
               key: videoId,
@@ -100,9 +104,9 @@ const PlaylistContainer = ({
       {userId && (
         <div className='w-full flex justify-center'>
           <PlaylistRecommend
-            userId={userId}
             playlistId={id}
             recommend={isRecommended}
+            userId={userId}
           />
         </div>
       )}

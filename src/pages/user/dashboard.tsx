@@ -1,18 +1,27 @@
-import { Fragment } from 'react';
 import { useRouter } from 'next/router';
-import { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
+import { Fragment } from 'react';
+
+import { useApi, useAPIResponseMapper, useUser } from '@/hooks';
+
 import {
-  CardContainerB,
-  LoadingSpinner,
-  FlexContainer,
-  Text,
-  LinkButton,
-  SEO,
-  Section,
   Banner,
+  CardContainerB,
+  FlexContainer,
+  LinkButton,
+  LoadingSpinner,
   NotificationContainer,
+  Section,
+  SEO,
+  Text,
 } from '@/components';
-import { useAPIResponseMapper, useApi, useUser } from '@/hooks';
+
+import {
+  LINKS,
+  PAGE_REFRESH_TIMEOUT,
+  routes,
+  STATIC_FILE_PATH,
+} from '@/constant';
+import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
 import {
   getPreFetchProps,
   mapCourseResponseToCard,
@@ -20,7 +29,6 @@ import {
   mapProjectResponseToCard,
   mapUserPlaylistResponseToCard,
 } from '@/utils';
-import { LINKS, routes, STATIC_FILE_PATH } from '@/constant';
 
 const UserDashboard = ({ seoMeta }: PageProps) => {
   const router = useRouter();
@@ -68,7 +76,7 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
     !interviewSheets.length &&
     !userPlaylist.length && (
       <FlexContainer className='w-screen flex-col justify-center items-center'>
-        <Text level='h5' className='heading-5 mb-3'>
+        <Text className='heading-5 mb-3' level='h5'>
           Oops! No Courses, Projects, Interview Sheet or Playlists found.
         </Text>
         <LinkButton
@@ -83,24 +91,24 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
       <SEO seoMeta={seoMeta} />
       <Section className='md:py-4 px-2'>
         <CardContainerB
-          heading='Your'
-          focusText='Learning Space'
+          borderColour={2}
           cards={courses
             .concat(projects)
             .concat(interviewSheets)
             .concat(userPlaylist)}
-          borderColour={2}
-          subtext='Continue Learning From Where You Left'
+          focusText='Learning Space'
+          heading='Your'
           sectionClassName='md:px-2 px-0 py-4'
+          subtext='Continue Learning From Where You Left'
         />
         {noCourseFoundUI}
         <NotificationContainer />
         <Banner
-          title='Contribute at The Boring Education'
-          description='We’re an Open Source Tech Ed Startup. Feel free to contribute to Building Tech Education for Everyone'
-          buttonText='Start Contributing'
           buttonLink={LINKS.contributeOpenSource}
+          buttonText='Start Contributing'
+          description='We’re an Open Source Tech Ed Startup. Feel free to contribute to Building Tech Education for Everyone'
           imageSrc={`${STATIC_FILE_PATH.svg}/community.svg`}
+          title='Contribute at The Boring Education'
           variant='VARIANT_B'
         />
       </Section>
@@ -111,7 +119,7 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.user.dashboard })),
-    revalidate: 1000,
+    revalidate: PAGE_REFRESH_TIMEOUT.short,
   };
 };
 

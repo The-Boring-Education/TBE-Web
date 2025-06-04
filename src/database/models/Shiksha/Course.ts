@@ -1,6 +1,8 @@
+import type { Model } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from '@/constant';
-import { CourseChapterModel, CourseModel } from '@/interfaces';
-import { Model, Schema, model, models } from 'mongoose';
+import type { CourseChapterModel, CourseModel } from '@/interfaces';
 
 const chapterSchema = new Schema<CourseChapterModel>(
   {

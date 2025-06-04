@@ -1,6 +1,8 @@
-import { LoadingSpinner } from '@/components';
-import { ButtonProps } from '@/interfaces';
 import { motion } from 'framer-motion';
+
+import { LoadingSpinner } from '@/components';
+
+import type { ButtonProps } from '@/interfaces';
 
 const getButtonClasses = (
   baseClasses: string,
@@ -42,14 +44,14 @@ const Button = ({
   baseClasses = getButtonClasses(baseClasses, variant, active);
 
   const loadingContainer = isLoading && (
-    <LoadingSpinner height={3} width={3} borderColour='white' />
+    <LoadingSpinner borderColour='white' height={3} width={3} />
   );
 
   return (
     <motion.div
+      className={`${animationClasses} ${isFullWidth ? 'w-full' : ''}`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className={`${animationClasses} ${isFullWidth ? 'w-full' : ''}`}
     >
       <button
         className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-2`}

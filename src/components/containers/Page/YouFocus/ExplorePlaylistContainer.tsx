@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+
 import {
-  FlexContainer,
   Button,
-  SectionHeaderContainer,
+  FlexContainer,
   RadioButtonContainer,
+  SectionHeaderContainer,
 } from '@/components';
-import { ExploreCantainerCardProps } from '@/interfaces';
-import { YOUFOCUS_SKILL_PLAYLISTS, routes } from '@/constant';
+
+import { routes, YOUFOCUS_SKILL_PLAYLISTS } from '@/constant';
+import type { ExploreCantainerCardProps } from '@/interfaces';
 
 const ExplorePlaylistContainer = ({
   heading,
@@ -38,12 +40,12 @@ const ExplorePlaylistContainer = ({
       direction='col'
     >
       <SectionHeaderContainer
-        heading={heading}
         focusText={focusText}
+        heading={heading}
         headingLevel={4}
         subtext={subtext}
       />
-      <FlexContainer direction='col' className='gap-4'>
+      <FlexContainer className='gap-4' direction='col'>
         <FlexContainer className='gap-1 mx-auto max-w-lg'>
           <RadioButtonContainer
             options={YOUFOCUS_SKILL_PLAYLISTS}
@@ -53,11 +55,11 @@ const ExplorePlaylistContainer = ({
         </FlexContainer>
         <div className='max-w-md'>
           <Button
-            variant='PRIMARY'
+            active={!!selectedSkill}
             className='mx-auto'
             text='Explore Playlists'
+            variant='PRIMARY'
             onClick={handleExploreClick}
-            active={!!selectedSkill}
           />
         </div>
       </FlexContainer>

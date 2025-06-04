@@ -1,20 +1,23 @@
 import { Fragment, useState } from 'react';
+
+import { useAnalytics, useApi, useUser } from '@/hooks';
+
 import {
   Accordion,
   AccordionLinkItem,
+  Button,
   FlexContainer,
+  LinerProgressBar,
   MDXRenderer,
   ProjectHeroContainer,
-  SEO,
   Section,
+  SEO,
   Text,
-  ProgressBar,
-  Button,
 } from '@/components';
-import { ProjectPageProps } from '@/interfaces';
-import { getProjectPageProps, getSelectedProjectChapterMeta } from '@/utils';
-import { useAnalytics, useApi, useUser } from '@/hooks';
+
 import { routes } from '@/constant';
+import type { ProjectPageProps } from '@/interfaces';
+import { getProjectPageProps, getSelectedProjectChapterMeta } from '@/utils';
 
 const ProjectPage = ({
   project,
@@ -150,11 +153,11 @@ const ProjectPage = ({
       <SEO seoMeta={seoMeta} />
       <Section className='p-2 lg:px-8'>
         <ProjectHeroContainer
+          difficultyLevel={project.difficultyLevel}
           id={project._id}
+          isEnrolled={project.isEnrolled}
           name={project.name}
           roadmap={project.roadmap}
-          difficultyLevel={project.difficultyLevel}
-          isEnrolled={project.isEnrolled}
         />
       </Section>
       <Section className='p-2'>
@@ -165,30 +168,30 @@ const ProjectPage = ({
             itemCenter={false}
           >
             <div className='w-full sticky top-0 bg-inherit py-2'>
-              <Text level='h5' className='heading-5'>
+              <Text className='heading-5' level='h5'>
                 Sections
               </Text>
 
-              {/* ProgressBar */}
-              <ProgressBar
-                totalChapters={totalChapters}
+              {/* LinerProgressBar */}
+              <LinerProgressBar
                 completedChapters={completedChapters}
+                totalChapters={totalChapters}
               />
             </div>
 
-            <FlexContainer justifyCenter={false} className='gap-px'>
+            <FlexContainer className='gap-px' justifyCenter={false}>
               {sections.map(({ sectionId, sectionName, chapters }) => (
-                <Accordion title={sectionName} key={sectionId}>
+                <Accordion key={sectionId} title={sectionName}>
                   {chapters.map(({ chapterId, chapterName, isCompleted }) => {
                     const isActive = chapterId === currentChapterId;
 
                     return (
                       <AccordionLinkItem
                         key={chapterId}
-                        isActive={isActive}
-                        label={chapterName}
-                        isCompleted={isCompleted}
                         href={`${slug}?projectId=${project._id}&sectionId=${sectionId}&chapterId=${chapterId}`}
+                        isActive={isActive}
+                        isCompleted={isCompleted}
+                        label={chapterName}
                         onClick={() =>
                           handleChapterClick({ sectionId, chapterId })
                         }
@@ -203,23 +206,17 @@ const ProjectPage = ({
           {/* Main Content Area */}
           <FlexContainer
             className='border md:w-8/12 w-full p-2 rounded'
-            justifyCenter={false}
-            itemCenter={false}
             disabled={!project.isEnrolled}
+            itemCenter={false}
+            justifyCenter={false}
           >
             <MDXRenderer
-              mdxSource={projectMeta}
               actions={[
                 currentChapterId && (
                   <Button
                     key='enroll'
-                    variant={
-                      isChapterCompleted
-                        ? 'SUCCESS'
-                        : isLoading
-                        ? 'SECONDARY'
-                        : 'PRIMARY'
-                    }
+                    className='w-fit'
+                    isLoading={isLoading}
                     text={
                       isLoading
                         ? 'Marking...'
@@ -227,12 +224,18 @@ const ProjectPage = ({
                         ? 'Completed'
                         : 'Mark As Completed'
                     }
-                    className='w-fit'
+                    variant={
+                      isChapterCompleted
+                        ? 'SUCCESS'
+                        : isLoading
+                        ? 'SECONDARY'
+                        : 'PRIMARY'
+                    }
                     onClick={toggleCompletion}
-                    isLoading={isLoading}
                   />
                 ),
               ]}
+              mdxSource={projectMeta}
             />
           </FlexContainer>
         </FlexContainer>

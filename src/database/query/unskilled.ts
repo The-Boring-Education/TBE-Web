@@ -1,8 +1,11 @@
-import {
+import { Job, JobAggregate } from '@/database';
+
+import type {
   AddJobRequestPayloadProps,
   DatabaseQueryResponseType,
+  UnSkilledEvaluationRequestBody,
 } from '@/interfaces';
-import { Job, JobAggregate } from '@/database';
+import { constrainNumberToRange } from '@/utils';
 
 // Add A Job
 const addJobToDB = async (
@@ -212,11 +215,166 @@ const getLatestJobAggregationFromDB =
     }
   };
 
+const getResumeEvaluationResultsFromDB = async ({
+  skills,
+  domains,
+  experience,
+}: UnSkilledEvaluationRequestBody): Promise<DatabaseQueryResponseType> => {
+  try {
+    // Step 1: Filter jobs by domains
+    const matchedJobs = await Job.find({
+      role: { $in: domains },
+      'experience.min': { $lte: experience.max },
+      'experience.max': { $gte: experience.min },
+    });
+
+    const skillFrequencyMap: Record<string, number> = {};
+    const totalJobs = matchedJobs.length;
+
+    let remoteJobCount = 0;
+
+    // Step 2: Count skill frequencies and remote jobs
+    matchedJobs.forEach((job) => {
+      job.skills.forEach((skill) => {
+        const key = skill.trim().toLowerCase();
+        skillFrequencyMap[key] = (skillFrequencyMap[key] || 0) + 1;
+      });
+
+      if (
+        Array.isArray(job.location) &&
+        job.location.some((loc) => loc.toLowerCase() === 'remote')
+      ) {
+        remoteJobCount += 1;
+      }
+    });
+
+    const sortedSkills = Object.entries(skillFrequencyMap)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 15)
+      .map(([skill, count]) => {
+        const percentage = constrainNumberToRange(
+          Math.round((count / totalJobs) * 100),
+          0,
+          100
+        );
+        return {
+          skill,
+          frequency: count,
+          percentage,
+        };
+      });
+
+    const normalizedUserSkills = skills.map((s) => s.trim().toLowerCase());
+
+    const missingSkills = sortedSkills.filter(
+      (s) => !normalizedUserSkills.includes(s.skill)
+    );
+
+    const matchedSkills = sortedSkills.filter((s) =>
+      normalizedUserSkills.includes(s.skill)
+    );
+
+    // Calculate resume score based on skill match strength
+    const totalSkillWeight = sortedSkills.reduce(
+      (sum, skill) => sum + skill.percentage,
+      0
+    );
+
+    const matchedSkillWeight = matchedSkills.reduce(
+      (sum, skill) => sum + skill.percentage,
+      0
+    );
+
+    // Resume score is the proportion of matched weight vs total weight
+    const resumeScore = constrainNumberToRange(
+      Math.round((matchedSkillWeight / (totalSkillWeight || 1)) * 100),
+      0,
+      100
+    );
+
+    // Step 4: Company type breakdown by domain
+    const companyTypesAgg = await Job.aggregate([
+      {
+        $match: {
+          role: { $in: domains },
+          'experience.min': { $lte: experience.max },
+          'experience.max': { $gte: experience.min },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $switch: {
+              branches: [
+                {
+                  case: { $lte: ['$company.emp_count', 50] },
+                  then: 'Startup',
+                },
+                {
+                  case: {
+                    $and: [
+                      { $gt: ['$company.emp_count', 50] },
+                      { $lte: ['$company.emp_count', 250] },
+                    ],
+                  },
+                  then: 'Mid-Size',
+                },
+                {
+                  case: { $gt: ['$company.emp_count', 250] },
+                  then: 'MNC',
+                },
+              ],
+              default: 'Unknown',
+            },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          name: '$_id',
+          count: 1,
+          _id: 0,
+        },
+      },
+    ]);
+
+    const totalCompanies = companyTypesAgg.reduce(
+      (acc, ct) => acc + ct.count,
+      0
+    );
+
+    const companyTypeDistribution = companyTypesAgg.map((type) => ({
+      name: type.name,
+      count: type.count,
+      percentage: constrainNumberToRange(
+        Math.round((type.count / totalCompanies) * 100),
+        0,
+        100
+      ),
+    }));
+
+    const response = {
+      matchedSkills,
+      missingSkills,
+      resumeScore,
+      totalJobsAnalyzed: totalJobs,
+      companyTypeDistribution,
+      remoteJobs: remoteJobCount,
+    };
+
+    return { data: response };
+  } catch (error) {
+    return { error: 'Failed to fetch latest job aggregation data' };
+  }
+};
+
 export {
   addJobToDB,
+  fetchJobsAggregationFromDB,
   getAllJobsFromDB,
   getJobByJobIdFromDB,
-  fetchJobsAggregationFromDB,
-  saveDailyJobsAggregationToDB,
   getLatestJobAggregationFromDB,
+  getResumeEvaluationResultsFromDB,
+  saveDailyJobsAggregationToDB,
 };

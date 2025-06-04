@@ -1,7 +1,8 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { CarouselProps } from '@/interfaces';
+
+import type { CarouselProps } from '@/interfaces';
 
 const Carousel = ({ items, renderItem }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -39,21 +40,22 @@ const Carousel = ({ items, renderItem }: CarouselProps) => {
   return (
     <div className='relative w-full max-w-4xl mx-auto md:px-4 px-2'>
       <div className='relative md:h-[300px] h-[520px] overflow-hidden'>
-        <AnimatePresence initial={false} custom={direction}>
+        <AnimatePresence custom={direction} initial={false}>
           <motion.div
             key={currentIndex}
-            custom={direction}
-            variants={slideVariants}
-            initial='enter'
             animate='center'
+            className='absolute w-full'
+            custom={direction}
+            drag='x'
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={1}
             exit='exit'
+            initial='enter'
             transition={{
               x: { type: 'spring', stiffness: 300, damping: 30 },
               opacity: { duration: 0.2 },
             }}
-            drag='x'
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
+            variants={slideVariants}
             onDragEnd={(e, { offset, velocity }) => {
               const swipe = swipePower(offset.x, velocity.x);
 
@@ -63,7 +65,6 @@ const Carousel = ({ items, renderItem }: CarouselProps) => {
                 paginate(-1);
               }
             }}
-            className='absolute w-full'
           >
             {renderItem(items[currentIndex])}
           </motion.div>
@@ -72,18 +73,18 @@ const Carousel = ({ items, renderItem }: CarouselProps) => {
 
       <div className='flex justify-center gap-4 mt-6'>
         <motion.button
+          className='p-2 rounded-full bg-primary/10 hover:bg-primary/20'
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => paginate(-1)}
-          className='p-2 rounded-full bg-primary/10 hover:bg-primary/20'
         >
           <ChevronLeftIcon className='w-6 h-6 text-primary' />
         </motion.button>
         <motion.button
+          className='p-2 rounded-full bg-primary/10 hover:bg-primary/20'
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => paginate(1)}
-          className='p-2 rounded-full bg-primary/10 hover:bg-primary/20'
         >
           <ChevronRightIcon className='w-6 h-6 text-primary' />
         </motion.button>

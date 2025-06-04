@@ -1,8 +1,10 @@
-import { Link } from '@/components';
-import { AccordionLinkItemProps } from '@/interfaces';
 import { Disclosure } from '@headlessui/react';
-import { IoIosCheckmarkCircle } from 'react-icons/io';
 import { FaRegCircle } from 'react-icons/fa';
+import { IoIosCheckmarkCircle } from 'react-icons/io';
+
+import { Link } from '@/components';
+
+import type { AccordionLinkItemProps } from '@/interfaces';
 
 const AccordionLinkItem = ({
   label,
@@ -21,16 +23,16 @@ const AccordionLinkItem = ({
     : '';
 
   return (
-    <Link href={href} className='w-full'>
+    <Link className='w-full' href={href}>
       <Disclosure.Panel
-        onClick={onClick}
         className={`${className} flex items-center gap-1 p-2 rounded text-left pre-title text-greyDark hover:bg-gray-200 hover:text-primary ${additionalClasses}`}
+        onClick={onClick}
       >
         <div className='flex-shrink-0'>
           {isCompleted ? (
-            <IoIosCheckmarkCircle size={24} className={iconColor} />
+            <IoIosCheckmarkCircle className={iconColor} size={24} />
           ) : (
-            <FaRegCircle size={24} className={iconColor} />
+            <FaRegCircle className={iconColor} size={24} />
           )}
         </div>
         {label}

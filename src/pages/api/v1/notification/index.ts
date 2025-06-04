@@ -1,17 +1,19 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
   addANotificationToDB,
   deleteANotificationsFromDB,
   getAllNotificationsFromDB,
   updateANotificationInDB,
 } from '@/database';
-import {
+
+import { apiStatusCodes } from '@/constant';
+import type {
   AddNotificationRequestPayloadProps,
   UpdateNotificationRequestPayloadProps,
 } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

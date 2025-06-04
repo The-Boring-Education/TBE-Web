@@ -5,15 +5,16 @@ import {
   SectionHeaderContainer,
   TestimonialCard,
 } from '@/components';
+
 import { TESTIMONIALS } from '@/constant';
 
 const Testimonials = () => {
   return (
     <Section>
-      <FlexContainer direction='col' className='gap-2'>
+      <FlexContainer className='gap-2' direction='col'>
         <SectionHeaderContainer
-          heading='Hear the words of'
           focusText='ex-learners'
+          heading='Hear the words of'
         />
         <CardSectionContainer gap='gap-2'>
           {TESTIMONIALS.map((item) => {

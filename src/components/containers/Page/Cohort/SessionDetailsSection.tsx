@@ -1,13 +1,14 @@
 // TODO: Refactor this component to use a more generic approach for session details
-import { FlexContainer, Text } from '@/components';
 import {
-  SparklesIcon,
   ChatBubbleBottomCenterTextIcon,
   ClipboardDocumentCheckIcon,
-  UsersIcon,
-  UserGroupIcon,
   DocumentTextIcon,
+  SparklesIcon,
+  UserGroupIcon,
+  UsersIcon,
 } from '@heroicons/react/24/solid';
+
+import { FlexContainer, Text } from '@/components';
 
 const sessions = [
   {
@@ -65,13 +66,13 @@ const SessionDetailsSection = () => {
       <FlexContainer className='max-w-6xl mx-auto gap-8'>
         <FlexContainer className='md:gap-3 gap-2' direction='col'>
           <Text
+            className='heading-2 bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 bg-clip-text text-transparent'
             level='h2'
             textCenter={true}
-            className='heading-2 bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 bg-clip-text text-transparent'
           >
             Cohort Roadmap
           </Text>
-          <Text level='p' textCenter={true} className='text-gray-300'>
+          <Text className='text-gray-300' level='p' textCenter={true}>
             Cohort is designed to help you build your product and prepare for
             interviews.
           </Text>
@@ -88,12 +89,12 @@ const SessionDetailsSection = () => {
                   className='gap-0.5 md:justify-center'
                   justifyCenter={false}
                 >
-                  <Text level='h5' className='heading-5 text-white'>
+                  <Text className='heading-5 text-white' level='h5'>
                     {phase.title}
                   </Text>
                   <Text
-                    level='p'
                     className='paragraph text-white/90 md:text-center'
+                    level='p'
                   >
                     {phase.description}
                   </Text>
@@ -104,10 +105,10 @@ const SessionDetailsSection = () => {
                   <li key={i} className='flex items-start flex-wrap gap-3'>
                     <div>{item.icon}</div>
                     <FlexContainer className='gap-0.5' justifyCenter={false}>
-                      <Text level='h5' className='heading-5 text-white'>
+                      <Text className='heading-5 text-white' level='h5'>
                         {item.title}
                       </Text>
-                      <Text level='p' className='paragraph text-white/80'>
+                      <Text className='paragraph text-white/80' level='p'>
                         {item.desc}
                       </Text>
                     </FlexContainer>

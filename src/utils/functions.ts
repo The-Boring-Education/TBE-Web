@@ -1,23 +1,25 @@
 import {
   envConfig,
+  JOB_SKILL_NORMALIZER,
   LINKS,
+  POINTS_RULES,
   routes,
+  SKILL_BLACKLIST,
+  USER_LEVELS,
   YOUFOCUS_SKILL_PLAYLISTS,
   YOUTUBE_API_PATH,
-  POINTS_RULES,
-  USER_LEVELS,
 } from '@/constant';
-import {
+import type {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
   FormatDateType,
+  PlaylistModel,
   ProjectDocumentModel,
   ProjectPickedPageProps,
   User,
-  Video,
   UserPlaylistResponseProps,
-  PlaylistModel,
   UserPointsActionType,
+  Video,
 } from '@/interfaces';
 
 const fetchAPIData = async (url: string) => {
@@ -568,35 +570,70 @@ const normalizeAPIPayload = (
   return findNormalized(value);
 };
 
+const extractSkillsFromText = (text: string): string[] => {
+  const lowerText = text.toLowerCase();
+  const matchedSkills = new Set<string>();
+  JOB_SKILL_NORMALIZER.forEach(({ label, value }) => {
+    if (label.some((alt: string) => lowerText.includes(alt.toLowerCase()))) {
+      matchedSkills.add(value);
+    }
+  });
+  return Array.from(matchedSkills);
+};
+
+// Constrains a number to be within a minimum and maximum boundary
+const constrainNumberToRange = (
+  value: number,
+  min: number,
+  max: number
+): number => {
+  return Math.min(Math.max(value, min), max);
+};
+
+const cleanJobSkillsData = (skills: string[]): string[] => {
+  return skills
+    .map((s) => s.trim().toLowerCase())
+    .filter((s) => !SKILL_BLACKLIST.includes(s))
+    .map((s) => {
+      const normalized = JOB_SKILL_NORMALIZER.find(({ label }) =>
+        label.includes(s)
+      );
+      return normalized ? normalized.value : s;
+    });
+};
+
 export {
+  calculateProgressPercentage,
+  calculateUserPointsForAction,
+  cleanJobSkillsData,
+  constrainNumberToRange,
+  convertSecondsToMinutes,
+  extractPlaylistId,
+  extractSkillsFromText,
+  fetchAPIData,
+  fetchPlaylistData,
+  flattenRoutesForSitemap,
   formatDate,
   formatTime,
-  getDiscountPercentage,
-  setLocalStorageItem,
-  getLocalStorageItem,
-  removeLocalStorageItem,
-  mapProjectResponseToCard,
-  getSelectedProjectChapterMeta,
-  isAdmin,
-  mapCourseResponseToCard,
-  isUserAuthenticated,
-  getSelectedCourseChapterMeta,
-  getSelectedSheetQuestionMeta,
-  mapInterviewSheetResponseToCard,
-  isProgramActive,
   generatePublicCertificateLink,
-  fetchAPIData,
   generateShareTemplate,
-  fetchPlaylistData,
-  extractPlaylistId,
-  convertSecondsToMinutes,
-  flattenRoutesForSitemap,
   generateSitemap,
-  mapUserPlaylistResponseToCard,
-  getYoufocusSkillName,
-  calculateUserPointsForAction,
-  getUserGamificationLevel,
-  calculateProgressPercentage,
+  getDiscountPercentage,
+  getLocalStorageItem,
   getRedirectUrl,
+  getSelectedCourseChapterMeta,
+  getSelectedProjectChapterMeta,
+  getSelectedSheetQuestionMeta,
+  getUserGamificationLevel,
+  getYoufocusSkillName,
+  isAdmin,
+  isProgramActive,
+  isUserAuthenticated,
+  mapCourseResponseToCard,
+  mapInterviewSheetResponseToCard,
+  mapProjectResponseToCard,
+  mapUserPlaylistResponseToCard,
   normalizeAPIPayload,
+  removeLocalStorageItem,
+  setLocalStorageItem,
 };

@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { IoIosCheckmarkCircle } from 'react-icons/io';
 import { FaRegCircle } from 'react-icons/fa';
-import { ChapterLinkProps } from '@/interfaces';
+import { IoIosCheckmarkCircle } from 'react-icons/io';
+
+import type { ChapterLinkProps } from '@/interfaces';
 
 const ChapterLink = ({
   href,
@@ -23,15 +24,15 @@ const ChapterLink = ({
 
   return (
     <Link
-      href={href}
       key={chapterId}
-      onClick={() => handleChapterClick(content)}
       className={`flex items-center gap-1 w-full p-2 rounded text-left pre-title hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`}
+      href={href}
+      onClick={() => handleChapterClick(content)}
     >
       {isCompleted ? (
-        <IoIosCheckmarkCircle size={24} className={iconColor} />
+        <IoIosCheckmarkCircle className={iconColor} size={24} />
       ) : (
-        <FaRegCircle size={24} className={iconColor} />
+        <FaRegCircle className={iconColor} size={24} />
       )}
       {name}
     </Link>

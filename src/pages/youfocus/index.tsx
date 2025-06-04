@@ -1,48 +1,50 @@
-import { PageProps } from '@/interfaces';
-import { CardContainerA, LandingPageHero, LinkButton, SEO } from '@/components';
-import { getPreFetchProps } from '@/utils';
-import { routes, STATIC_FILE_PATH, YOUFOCUS_FEATURES } from '@/constant';
 import { Fragment } from 'react';
+
+import { CardContainerA, LandingPageHero, LinkButton, SEO } from '@/components';
+
+import { routes, STATIC_FILE_PATH, YOUFOCUS_FEATURES } from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <LandingPageHero
-        sectionHeaderProps={{
-          heading: 'Learn From YouTube',
-          focusText: 'without Distractions',
-        }}
+        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/youfocus.svg`}
         heroText='Just Paste Your YouTube Playlist and Start Learning'
         primaryButton={
           <LinkButton
-            href={routes.youfocusAddPlaylist}
-            className='w-full sm:w-fit'
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Add YouTube Playlist',
               className: 'w-full',
             }}
+            className='w-full sm:w-fit'
+            href={routes.youfocusAddPlaylist}
           />
         }
         secondaryButton={
           <LinkButton
-            href={routes.explorePlaylist}
-            className='w-full sm:w-fit'
             buttonProps={{
               variant: 'OUTLINE',
               text: 'Explore Playlists',
               className: 'w-full',
             }}
+            className='w-full sm:w-fit'
+            href={routes.explorePlaylist}
           />
         }
-        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/youfocus.svg`}
+        sectionHeaderProps={{
+          heading: 'Learn From YouTube',
+          focusText: 'without Distractions',
+        }}
       />
       <CardContainerA
-        heading='What We Do'
-        focusText='Differently?'
-        cards={YOUFOCUS_FEATURES}
         borderColour={4}
+        cards={YOUFOCUS_FEATURES}
+        focusText='Differently?'
+        heading='What We Do'
       />
     </Fragment>
   );
@@ -51,7 +53,6 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.youfocus })),
-    revalidate: 1000,
   };
 };
 

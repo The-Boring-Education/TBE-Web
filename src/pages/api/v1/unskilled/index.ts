@@ -1,10 +1,12 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
-import { apiStatusCodes } from '@/constant';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
   getLatestJobAggregationFromDB,
   saveDailyJobsAggregationToDB,
 } from '@/database';
+
+import { apiStatusCodes } from '@/constant';
+import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

@@ -1,5 +1,7 @@
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/24/solid';
+
 import { useScrollPosition } from '@/hooks';
+
 import { FloatingActionButton } from '@/components';
 
 const ScrollToTopBottomButton = () => {

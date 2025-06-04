@@ -1,5 +1,6 @@
 import { FlexContainer, RadioInputField } from '@/components';
-import { InputRadioContainerProps } from '@/interfaces';
+
+import type { InputRadioContainerProps } from '@/interfaces';
 
 const InputRadioContainer = ({
   radioItems,
@@ -14,9 +15,9 @@ const InputRadioContainer = ({
           <RadioInputField
             key={label}
             label={label}
+            selected={selectedItemValue === value}
             value={value}
             onChange={onChange}
-            selected={selectedItemValue === value}
           />
         );
       })}

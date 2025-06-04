@@ -5,7 +5,8 @@ import {
   Section,
   SectionHeaderContainer,
 } from '@/components';
-import { CardContainerBProps } from '@/interfaces';
+
+import type { CardContainerBProps } from '@/interfaces';
 
 const CardContainerB = ({
   heading,
@@ -17,11 +18,11 @@ const CardContainerB = ({
   sectionClassName,
 }: CardContainerBProps) => {
   return (
-    <Section id={id} className={sectionClassName}>
-      <FlexContainer direction='col' className='gap-4'>
+    <Section className={sectionClassName} id={id}>
+      <FlexContainer className='gap-4' direction='col'>
         <SectionHeaderContainer
-          heading={heading}
           focusText={focusText}
+          heading={heading}
           subtext={subtext}
         />
         <CardSectionContainer>

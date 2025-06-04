@@ -1,12 +1,14 @@
-import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
-  updateUserCourseChapterInDB,
   handleGamificationPoints,
+  updateUserCourseChapterInDB,
 } from '@/database';
-import { UpdateUserChapterInCourseRequestProps } from '@/interfaces';
+
+import { apiStatusCodes } from '@/constant';
+import type { UpdateUserChapterInCourseRequestProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

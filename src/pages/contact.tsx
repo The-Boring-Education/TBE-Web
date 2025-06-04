@@ -1,7 +1,9 @@
-import { ContactCard, SEO } from '@/components';
-import { getPreFetchProps } from '@/utils';
-import { getSEOMeta, routes } from '@/constant';
 import { Fragment } from 'react';
+
+import { ContactCard, SEO } from '@/components';
+
+import { getSEOMeta, routes } from '@/constant';
+import { getPreFetchProps } from '@/utils';
 
 const Contact = () => {
   const seoMeta = getSEOMeta(routes.contactUs);
@@ -17,7 +19,6 @@ const Contact = () => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.contactUs })),
-    revalidate: 1000,
   };
 };
 

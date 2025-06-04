@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 interface FAQItem {
   question: string;
@@ -60,8 +60,8 @@ const FAQSection = () => {
               className='border border-gray-200 rounded-xl overflow-hidden shadow-sm bg-white'
             >
               <button
-                onClick={() => toggleFAQ(index)}
                 className='w-full flex justify-between items-center px-5 py-2 text-left focus:outline-none'
+                onClick={() => toggleFAQ(index)}
               >
                 <span className='font-medium text-lg text-gray-800'>
                   {faq.question}
@@ -75,10 +75,10 @@ const FAQSection = () => {
               </button>
               {openIndex === index && (
                 <motion.div
-                  className='px-5 pb-2 text-gray-700 text-sm'
-                  initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
+                  className='px-5 pb-2 text-gray-700 text-sm'
                   exit={{ opacity: 0, height: 0 }}
+                  initial={{ opacity: 0, height: 0 }}
                 >
                   {faq.answer}
                 </motion.div>

@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react';
+
 import { routes } from '@/constant';
+import type { NotificationItemProps } from '@/interfaces';
+
 import useApi from './useApi';
-import { useState, useEffect } from 'react';
-import { NotificationItemProps } from '@/interfaces';
 
 const useNotifications = () => {
   const [notifications, setNotifications] = useState<NotificationItemProps[]>(

@@ -1,12 +1,13 @@
-import { ModalProps } from '@/interfaces';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+
+import type { ModalProps } from '@/interfaces';
 
 const Modal = ({ isOpen, closeModal, title, children }: ModalProps) => {
   return (
     <Dialog
-      open={isOpen}
       as='div'
       className='relative z-10'
+      open={isOpen}
       onClose={closeModal}
     >
       <div className='fixed inset-0 bg-black bg-opacity-30' />
@@ -14,7 +15,7 @@ const Modal = ({ isOpen, closeModal, title, children }: ModalProps) => {
         <DialogPanel className='w-full max-w-lg rounded-lg bg-white shadow-lg p-2'>
           <div className='flex justify-between items-center mb-2'>
             <DialogTitle className='text-md font-semibold'>{title}</DialogTitle>
-            <button onClick={closeModal} className='text-md'>
+            <button className='text-md' onClick={closeModal}>
               ✖
             </button>
           </div>

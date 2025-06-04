@@ -1,5 +1,6 @@
-import { FlexContainer, CheckboxButton } from '@/components';
-import { CheckboxGroupProps } from '@/interfaces';
+import { CheckboxButton, FlexContainer } from '@/components';
+
+import type { CheckboxGroupProps } from '@/interfaces';
 
 const CheckboxButtonContainer = ({
   options,
@@ -19,9 +20,9 @@ const CheckboxButtonContainer = ({
       {options.map((option, index) => (
         <CheckboxButton
           key={index}
+          isSelected={selectedValues.includes(option.value)}
           label={option.label}
           value={option.value}
-          isSelected={selectedValues.includes(option.value)}
           onClick={() => handleClick(option.value)}
         />
       ))}

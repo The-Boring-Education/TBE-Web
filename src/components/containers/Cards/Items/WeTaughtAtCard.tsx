@@ -1,14 +1,15 @@
 import { Image } from '@/components';
-import { WeTaughtAtCardProps } from '@/interfaces';
+
+import type { WeTaughtAtCardProps } from '@/interfaces';
 
 const WeTaughtAtCard = ({ image, imageAltText }: WeTaughtAtCardProps) => {
   return (
     <div className='flex'>
       <Image
-        src={image}
+        alt={imageAltText}
         className='w-24 md:w-48'
         fullWidth={false}
-        alt={imageAltText}
+        src={image}
       />
     </div>
   );

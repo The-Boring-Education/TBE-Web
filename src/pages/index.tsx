@@ -1,27 +1,30 @@
-import {
-  LandingPageHero,
-  CardContainerA,
-  Testimonials,
-  SEO,
-  LinkButton,
-  CardContainerB,
-  Community,
-  Banner,
-  NotificationContainer,
-  WeAlreadyTaughtAt,
-} from '@/components';
-import { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
-import {
-  LINKS,
-  PRODUCTS,
-  STATIC_FILE_PATH,
-  USP,
-  generateSectionPath,
-  routes,
-} from '@/constant';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
+
+import {
+  Banner,
+  CardContainerA,
+  CardContainerB,
+  Community,
+  LandingPageHero,
+  LinkButton,
+  NotificationContainer,
+  SEO,
+  Testimonials,
+  WeAlreadyTaughtAt,
+} from '@/components';
+
+import {
+  generateSectionPath,
+  LINKS,
+  PAGE_REFRESH_TIMEOUT,
+  PRODUCTS,
+  routes,
+  STATIC_FILE_PATH,
+  USP,
+} from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   const router = useRouter();
@@ -30,61 +33,61 @@ const Home = ({ seoMeta }: PageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <LandingPageHero
-        sectionHeaderProps={{
-          heading: 'Tech Education for',
-          focusText: 'Everyone',
-        }}
+        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/hero-image.svg`}
         heroText='Learn Tech Skills & Prepare yourself for a Tech Job.'
         primaryButton={
           <LinkButton
-            href={generateSectionPath({
-              basePath: router.basePath,
-              sectionID: routes.internals.landing.products,
-            })}
-            className='w-full sm:w-fit'
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Get Started',
               className: 'w-full',
             }}
+            className='w-full sm:w-fit'
+            href={generateSectionPath({
+              basePath: router.basePath,
+              sectionID: routes.internals.landing.products,
+            })}
           />
         }
         secondaryButton={
           <LinkButton
-            href={LINKS.bookTechConsultation}
-            className='w-full sm:w-fit'
             buttonProps={{
               variant: 'OUTLINE',
               text: 'Book Free Session',
               className: 'w-full',
             }}
+            className='w-full sm:w-fit'
+            href={LINKS.bookTechConsultation}
             target='_blank'
           />
         }
-        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/hero-image.svg`}
+        sectionHeaderProps={{
+          heading: 'Tech Education for',
+          focusText: 'Everyone',
+        }}
       />
 
       <CardContainerB
-        id={routes.internals.landing.products}
-        heading='Our'
-        focusText='Products'
-        cards={PRODUCTS}
         borderColour={2}
+        cards={PRODUCTS}
+        focusText='Products'
+        heading='Our'
+        id={routes.internals.landing.products}
       />
       <NotificationContainer />
       <Banner
-        title='Bring Your Idea Cohort 2 Starts Soon'
-        description='Join our Cohort and learn how to Build Tech Products.'
-        buttonText='Register Now'
         buttonLink={routes.cohort.bringYourIdea}
+        buttonText='Register Now'
+        description='Join our Cohort and learn how to Build Tech Products.'
         imageSrc={`${STATIC_FILE_PATH.svg}/laptop.svg`}
+        title='Bring Your Idea Cohort 2 Starts Soon'
         variant='VARIANT_A'
       />
       <Community />
       <CardContainerA
-        heading='What We Do'
-        focusText='Differently'
         cards={USP}
+        focusText='Differently'
+        heading='What We Do'
       />
       <Testimonials />
       <WeAlreadyTaughtAt />
@@ -95,7 +98,7 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.home })),
-    revalidate: 1000,
+    revalidate: PAGE_REFRESH_TIMEOUT.medium,
   };
 };
 

@@ -1,17 +1,19 @@
+import { Fragment, useState } from 'react';
+
 import {
+  FlexContainer,
   LandingPageHero,
-  SEO,
   LinkButton,
   Section,
+  SEO,
   Text,
-  FlexContainer,
-  WebibarCard,
   ToggleButton,
+  WebibarCard,
 } from '@/components';
-import { WebinarsLandingPageProps } from '@/interfaces';
+
+import { routes, STATIC_FILE_PATH } from '@/constant';
+import type { WebinarsLandingPageProps } from '@/interfaces';
 import { getWebinarLandingPageProps } from '@/utils';
-import { STATIC_FILE_PATH, routes } from '@/constant';
-import { Fragment, useState } from 'react';
 
 const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
   const [filteredWebinars, setFilteredWebinars] = useState(webinars);
@@ -30,33 +32,33 @@ const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <LandingPageHero
-        sectionHeaderProps={{
-          heading: 'Learn Industry Skills',
-          focusText: 'with Live Workshops',
-        }}
+        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/webinar-hero.svg`}
         heroText='Missing Trending Tech Skills? Join our Weekend Workshops and learn in 2 Hours.'
         primaryButton={
           <LinkButton
-            href={`#${routes.internals.landing.webinar}`}
-            className='w-full sm:w-fit'
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Explore Workshops',
               className: 'w-full',
             }}
+            className='w-full sm:w-fit'
+            href={`#${routes.internals.landing.webinar}`}
           />
         }
-        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/webinar-hero.svg`}
+        sectionHeaderProps={{
+          heading: 'Learn Industry Skills',
+          focusText: 'with Live Workshops',
+        }}
       />
       <Section id={routes.internals.landing.webinar}>
-        <FlexContainer direction='col' className='gap-4 md:gap-6'>
-          <Text level='h4' className='heading-4' textCenter={true}>
+        <FlexContainer className='gap-4 md:gap-6' direction='col'>
+          <Text className='heading-4' level='h4' textCenter={true}>
             Our Workshops
           </Text>
           <ToggleButton
-            options={['All', 'Upcoming', 'Past']}
             activeColor='gradient-4'
             inactiveColor='bg-accent'
+            options={['All', 'Upcoming', 'Past']}
             onToggle={handleToggle}
           />
           <FlexContainer className='gap-2'>
@@ -65,7 +67,7 @@ const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
                 return <WebibarCard key={index} {...webinar} />;
               })
             ) : (
-              <Text level='span' className='text-center strong-text'>
+              <Text className='text-center strong-text' level='span'>
                 No webinars available.
               </Text>
             )}

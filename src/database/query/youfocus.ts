@@ -1,5 +1,6 @@
 import { Playlist, UserPlaylist } from '@/database';
-import { DatabaseQueryResponseType, PlaylistModel } from '@/interfaces';
+
+import type { DatabaseQueryResponseType, PlaylistModel } from '@/interfaces';
 
 // Add a playlist to the database
 const addPlaylistToDB = async (
@@ -303,16 +304,16 @@ const deletePlaylistByTagFromDB = async (
 
 export {
   addPlaylistToDB,
-  checkPlaylistExistsByID,
   addUserPlaylistToDB,
-  getPlaylistsFromDB,
-  getPlaylistByIdFromDB,
-  getUserPlaylistsFromDB,
-  deleteUserPlaylistFromDB,
-  updateUserPlaylistData,
-  updateReferredByInPlaylist,
-  getPlaylistByTagFromDB,
-  updateTagsInPlaylist,
-  deletePlaylistFromDB,
+  checkPlaylistExistsByID,
   deletePlaylistByTagFromDB,
+  deletePlaylistFromDB,
+  deleteUserPlaylistFromDB,
+  getPlaylistByIdFromDB,
+  getPlaylistByTagFromDB,
+  getPlaylistsFromDB,
+  getUserPlaylistsFromDB,
+  updateReferredByInPlaylist,
+  updateTagsInPlaylist,
+  updateUserPlaylistData,
 };

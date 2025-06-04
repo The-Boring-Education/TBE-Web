@@ -1,4 +1,4 @@
-import { GenerateSectionPathProps } from '@/interfaces';
+import type { GenerateSectionPathProps } from '@/interfaces';
 
 const routes = {
   home: '/',
@@ -34,6 +34,8 @@ const routes = {
   },
   certificate: '/certificate',
   contactUs: '/contact',
+  refund: '/refund',
+  termsAndConditions: '/terms-and-conditions',
   user: {
     profile: '/user/profile',
     dashboard: '/user/dashboard',
@@ -48,6 +50,7 @@ const routes = {
       products: 'products',
       portfolio: 'portfolio',
       webinar: 'webinar',
+      upload: 'upload',
       explore: 'explore',
     },
   },
@@ -84,6 +87,7 @@ const routes = {
     markCourseChapterAsCompleted: '/user/shiksha/course',
     markProjectChapterAsCompleted: '/user/projects/project',
     markSheetQuestionAsCompleted: '/user/interview-prep/sheet',
+    submitUserFeedback: '/feedback',
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {
       let url = `/shiksha/${course}`;
@@ -124,6 +128,7 @@ const routes = {
     userDashboard: '/user/dashboard',
     notification: '/notification',
     unskilled: '/unskilled',
+    unskilledEvaluation: '/unskilled/evaluation',
   },
 };
 
@@ -134,4 +139,4 @@ const generateSectionPath = ({
   return basePath + '#' + sectionID;
 };
 
-export { routes, generateSectionPath };
+export { generateSectionPath, routes };
