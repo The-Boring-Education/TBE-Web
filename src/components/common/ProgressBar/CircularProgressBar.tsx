@@ -1,4 +1,4 @@
-import { CircularProgressBarProps } from '@/interfaces';
+import type { CircularProgressBarProps } from '@/interfaces';
 
 const CircularProgressBar = ({
   percentage,
@@ -14,28 +14,28 @@ const CircularProgressBar = ({
   const offset = circumference - (percentage / 100) * circumference;
   return (
     <div
-      style={{ width: size, height: size }}
       className={`relative inline-block ${className}`}
+      style={{ width: size, height: size }}
     >
-      <svg width={size} height={size}>
+      <svg height={size} width={size}>
         <circle
           cx={size / 2}
           cy={size / 2}
+          fill='none'
           r={radius}
           stroke={bg}
           strokeWidth={strokeWidth}
-          fill='none'
         />
         <circle
           cx={size / 2}
           cy={size / 2}
+          fill='none'
           r={radius}
           stroke={color}
-          strokeWidth={strokeWidth}
-          fill='none'
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap='round'
+          strokeWidth={strokeWidth}
           style={{ transition: 'stroke-dashoffset 0.5s' }}
         />
       </svg>

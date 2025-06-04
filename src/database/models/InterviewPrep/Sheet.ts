@@ -1,10 +1,15 @@
+import type { Model } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
+
 import {
   DATABASE_MODELS,
   INTERVIEW_QUESTION_FREQUENCY,
   ROADMAPS,
 } from '@/constant';
-import { InterviewSheetQuestionModel, InterviewSheetModel } from '@/interfaces';
-import { Model, Schema, model, models } from 'mongoose';
+import type {
+  InterviewSheetModel,
+  InterviewSheetQuestionModel,
+} from '@/interfaces';
 
 const questionSchema = new Schema<InterviewSheetQuestionModel>(
   {

@@ -1,37 +1,39 @@
-import { LandingPageHero, CardContainerA, SEO, LinkButton } from '@/components';
-import { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
-import { STATIC_FILE_PATH, TBP_FEATURES, routes } from '@/constant';
 import { Fragment } from 'react';
+
+import { CardContainerA, LandingPageHero, LinkButton, SEO } from '@/components';
+
+import { routes, STATIC_FILE_PATH, TBP_FEATURES } from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <LandingPageHero
-        sectionHeaderProps={{
-          heading: 'Learn Tech with',
-          focusText: 'Mini Courses',
-        }}
+        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/shiksha.svg`}
         heroText='Learn Tech with Free Bite-sized Courses'
         primaryButton={
           <LinkButton
-            href={routes.shikshaExplore}
-            className='w-full sm:w-fit'
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Explore Courses',
               className: 'w-full',
             }}
+            className='w-full sm:w-fit'
+            href={routes.shikshaExplore}
           />
         }
-        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/shiksha.svg`}
+        sectionHeaderProps={{
+          heading: 'Learn Tech with',
+          focusText: 'Mini Courses',
+        }}
       />
       <CardContainerA
-        heading='What We Do'
-        focusText='Differently'
-        cards={TBP_FEATURES}
         borderColour={4}
+        cards={TBP_FEATURES}
+        focusText='Differently'
+        heading='What We Do'
       />
     </Fragment>
   );
@@ -40,7 +42,6 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.shiksha })),
-    revalidate: 1000,
   };
 };
 

@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { ToastProps } from '@/interfaces';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect } from 'react';
+
+import type { ToastProps } from '@/interfaces';
 
 const Toast = ({
   message,
@@ -35,11 +36,11 @@ const Toast = ({
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, y: 20 }} // Start with fade-in + slide-in effect
         animate={{ opacity: 1, y: 0 }} // Animate to visible position
-        exit={{ opacity: 0, y: 20 }} // Fade-out and slide-out on exit
-        transition={{ duration: 0.3 }}
         className={`fixed z-50 px-4 py-2 rounded-md shadow-md flex items-center space-x-3 ${typeClasses[type]} ${positionClasses[position]}`}
+        exit={{ opacity: 0, y: 20 }} // Fade-out and slide-out on exit
+        initial={{ opacity: 0, y: 20 }} // Start with fade-in + slide-in effect
+        transition={{ duration: 0.3 }}
       >
         <span>{message}</span>
         <button onClick={onClose}>

@@ -1,15 +1,15 @@
-import {
-  BaseShikshaCourseResponseProps,
+import type {
   BaseInterviewSheetResponseProps,
+  BaseShikshaCourseResponseProps,
 } from '.';
-import {
+import type {
   CertificateModel,
-  ProjectDocumentModel,
-  WebinarModel,
-  UserPlaylistModel,
   PlaylistModel,
+  ProjectDocumentModel,
+  UserPlaylistModel,
+  WebinarModel,
 } from './database';
-import {
+import type {
   GetSEOMetaResponseType,
   UnskilledLandingGraphDataProps,
 } from './global';

@@ -1,19 +1,19 @@
-import {
+import { Project, updateUserPointsInDB, UserProject } from '@/database';
+
+import { modelSelectParams } from '@/constant';
+import type {
   AddChapterRequestPayloadProps,
   AddProjectRequestPayloadProps,
   AddSectionRequestPayloadProps,
   DatabaseQueryResponseType,
   DeleteSectionRequestPayloadProps,
+  EnrollProjectInDBRequestProps,
+  ProjectPickedPageProps,
   UpateSectionRequestPayloadProps,
   UpdateChapterDBRequestProps,
   UpdateProjectRequestPayloadProps,
   UpdateUserChapterInProjectRequestProps,
-  EnrollProjectInDBRequestProps,
-  ProjectPickedPageProps,
 } from '@/interfaces';
-
-import { Project, UserProject, updateUserPointsInDB } from '@/database';
-import { modelSelectParams } from '@/constant';
 
 const addAProjectToDB = async ({
   name,
@@ -597,23 +597,23 @@ const getAProjectForUserFromDB = async (userId: string, projectId: string) => {
 
 export {
   addAProjectToDB,
-  getProjectsFromDB,
-  getProjectBySlugFromDB,
-  updateProjectInDB,
-  deleteProjectFromDB,
-  getProjectByIDFromDB,
-  addSectionToProjectInDB,
-  getSectionsFromProjectInDB,
-  updateSectionInProjectInDB,
-  deleteSectionFromProjectInDB,
   addChapterToSectionInDB,
-  getChaptersFromSectionInDB,
-  updateChapterInSectionInDB,
+  addSectionToProjectInDB,
   deleteChapterFromSectionInDB,
-  getChapterFromSectionInDB,
-  updateUserProjectChapterInDB,
+  deleteProjectFromDB,
+  deleteSectionFromProjectInDB,
   enrollInAProject,
-  getEnrolledProjectFromDB,
   getAllEnrolledProjectsFromDB,
   getAProjectForUserFromDB,
+  getChapterFromSectionInDB,
+  getChaptersFromSectionInDB,
+  getEnrolledProjectFromDB,
+  getProjectByIDFromDB,
+  getProjectBySlugFromDB,
+  getProjectsFromDB,
+  getSectionsFromProjectInDB,
+  updateChapterInSectionInDB,
+  updateProjectInDB,
+  updateSectionInProjectInDB,
+  updateUserProjectChapterInDB,
 };

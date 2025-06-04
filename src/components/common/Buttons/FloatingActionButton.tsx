@@ -1,4 +1,4 @@
-import { FloatingActionButtonProps } from '@/interfaces';
+import type { FloatingActionButtonProps } from '@/interfaces';
 
 const FloatingActionButton = ({
   icon,
@@ -7,9 +7,9 @@ const FloatingActionButton = ({
 }: FloatingActionButtonProps) => {
   return (
     <button
+      aria-label='Floating Action Button'
       className={`fixed bottom-2 right-2 md:bottom-4 md:right-4 z-[99999] p-2 md:p-3 rounded-full shadow-lg bg-primary text-white transition-all pointer-events-auto ${className}`}
       onClick={onClick}
-      aria-label='Floating Action Button'
     >
       {icon}
     </button>

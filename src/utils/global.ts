@@ -1,18 +1,19 @@
 import { getSEOMeta, IN_DEV_PAGES, routes, seoCommonMeta } from '@/constant';
-import {
-  BaseShikshaCourseResponseProps,
+import type {
   BaseInterviewSheetResponseProps,
+  BaseShikshaCourseResponseProps,
   ProjectPickedPageProps,
 } from '@/interfaces';
+
 import {
-  getSelectedCourseChapterMeta,
-  getSelectedSheetQuestionMeta,
-  getSelectedProjectChapterMeta,
-  isUserAuthenticated,
-  formatDate,
-  isProgramActive,
   fetchAPIData,
+  formatDate,
+  getSelectedCourseChapterMeta,
+  getSelectedProjectChapterMeta,
+  getSelectedSheetQuestionMeta,
   getYoufocusSkillName,
+  isProgramActive,
+  isUserAuthenticated,
 } from '.';
 
 const getPreFetchProps = async ({ slug }: any) => {
@@ -516,14 +517,14 @@ const getSkillPlaylistPageProps = async (context: any) => {
 };
 
 export {
+  getCertificatePageProps,
+  getCoursePageProps,
+  getPlaylistPageProps,
   getPreFetchProps,
   getProjectPageProps,
-  getCoursePageProps,
   getSheetPageProps,
-  getWebinarPageProps,
-  getWebinarLandingPageProps,
-  getCertificatePageProps,
-  getPlaylistPageProps,
   getSkillPlaylistPageProps,
   getUnskilledLandingPageProps,
+  getWebinarLandingPageProps,
+  getWebinarPageProps,
 };

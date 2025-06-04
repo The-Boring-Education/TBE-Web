@@ -1,9 +1,11 @@
-import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
-import { AddChapterToCourseRequestProps } from '@/interfaces';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { addChapterToCourseInDB } from '@/database';
+
+import { apiStatusCodes } from '@/constant';
+import type { AddChapterToCourseRequestProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

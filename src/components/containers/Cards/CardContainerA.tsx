@@ -1,11 +1,12 @@
 import {
   CardSectionContainer,
   FlexContainer,
+  PrimaryCard,
   Section,
   SectionHeaderContainer,
-  PrimaryCard,
 } from '@/components';
-import { CardContainerAProps } from '@/interfaces';
+
+import type { CardContainerAProps } from '@/interfaces';
 
 const CardContainerA = ({
   heading,
@@ -16,10 +17,10 @@ const CardContainerA = ({
 }: CardContainerAProps) => {
   return (
     <Section>
-      <FlexContainer direction='col' className='gap-4'>
+      <FlexContainer className='gap-4' direction='col'>
         <SectionHeaderContainer
-          heading={heading}
           focusText={focusText}
+          heading={heading}
           subtext={subtext}
         />
         <CardSectionContainer>

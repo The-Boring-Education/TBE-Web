@@ -1,7 +1,8 @@
-import { favicons } from '@/constant';
-import { SEOProps } from '@/interfaces';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+
+import { favicons } from '@/constant';
+import type { SEOProps } from '@/interfaces';
 
 const DOMAIN = 'https://theboringeducation.com';
 
@@ -13,16 +14,16 @@ const SEO = ({ seoMeta }: SEOProps) => {
   return (
     <Head>
       <title>{seoMeta.title}</title>
-      <meta name='robots' content={seoMeta.robots} />
+      <meta content={seoMeta.robots} name='robots' />
       <meta content={seoMeta.description} name='description' />
-      <meta property='og:url' content={`${seoMeta.url}${router.asPath}`} />
-      <link rel='canonical' href={canonicalUrl} />
+      <meta content={`${seoMeta.url}${router.asPath}`} property='og:url' />
+      <link href={canonicalUrl} rel='canonical' />
       {/* Open Graph */}
-      <meta property='og:type' content={seoMeta.type} />
-      <meta property='og:site_name' content={seoMeta.siteName} />
-      <meta property='og:description' content={seoMeta.description} />
-      <meta property='og:title' content={seoMeta.title} />
-      <meta name='image' property='og:image' content={seoMeta.image} />
+      <meta content={seoMeta.type} property='og:type' />
+      <meta content={seoMeta.siteName} property='og:site_name' />
+      <meta content={seoMeta.description} property='og:description' />
+      <meta content={seoMeta.title} property='og:title' />
+      <meta content={seoMeta.image} name='image' property='og:image' />
       {/* Twitter */}
       {/* <meta name='twitter:card' content='summary_large_image' />
       <meta name='twitter:site' content='@' />
@@ -33,9 +34,9 @@ const SEO = ({ seoMeta }: SEOProps) => {
       {favicons.map((linkProps) => (
         <link key={linkProps.href} {...linkProps} />
       ))}
-      <meta name='msapplication-TileColor' content='#ffffff' />
-      <meta name='msapplication-config' content='/favicon/browserconfig.xml' />
-      <meta name='theme-color' content='#ff5757' />
+      <meta content='#ffffff' name='msapplication-TileColor' />
+      <meta content='/favicon/browserconfig.xml' name='msapplication-config' />
+      <meta content='#ff5757' name='theme-color' />
     </Head>
   );
 };

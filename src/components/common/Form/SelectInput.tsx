@@ -1,8 +1,10 @@
 import { Listbox } from '@headlessui/react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
+
 import { Text } from '@/components';
-import { SelectInputProps } from '@/interfaces';
+
+import type { SelectInputProps } from '@/interfaces';
 
 const SelectInput = ({
   list,
@@ -14,7 +16,7 @@ const SelectInput = ({
     <Listbox value={selectedItem} onChange={onChange}>
       <div className={`relative w-32 ${className}`}>
         <Listbox.Button className='flex w-full items-center justify-between rounded-lg border border-grey px-2 py-1 text-sm text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-grey'>
-          <Text level='span' className='truncate'>
+          <Text className='truncate' level='span'>
             {selectedItem || 'Select'}
           </Text>
           <ChevronUpDownIcon className='h-3 w-4 text-grey' />
@@ -24,7 +26,6 @@ const SelectInput = ({
           {list.map((item, idx) => (
             <Listbox.Option
               key={idx}
-              value={item}
               className={({ active, selected }) =>
                 clsx(
                   'cursor-pointer select-none px-2 py-1 text-sm',
@@ -34,8 +35,9 @@ const SelectInput = ({
                   !selected && 'text-black'
                 )
               }
+              value={item}
             >
-              <Text level='span' className='truncate'>
+              <Text className='truncate' level='span'>
                 {item}
               </Text>
             </Listbox.Option>

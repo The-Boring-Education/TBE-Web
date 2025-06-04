@@ -1,4 +1,4 @@
-import {
+import type {
   CertificateType,
   CompanyDetails,
   CourseChapterModel,
@@ -6,10 +6,10 @@ import {
   InterviewSheetModel,
   InterviewSheetQuestionModel,
   NotificationType,
+  PlatformUsageType,
   PlaylistModel,
   ProjectChapter,
   UserRoleType,
-  PlatformUsageType,
 } from '.';
 
 export type APIMethodTypes = 'GET' | 'POST' | 'PATCH' | 'PUT';

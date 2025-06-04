@@ -1,16 +1,19 @@
 import { Fragment } from 'react';
-import { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
+
+import { useApi, useAPIResponseMapper } from '@/hooks';
+
 import {
-  SEO,
   CardContainerB,
-  LoadingSpinner,
   FlexContainer,
-  Text,
   LinkButton,
+  LoadingSpinner,
+  SEO,
+  Text,
 } from '@/components';
-import { useAPIResponseMapper, useApi } from '@/hooks';
+
+import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
+import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
 import { getPreFetchProps, mapInterviewSheetResponseToCard } from '@/utils';
-import { routes } from '@/constant';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('interview-prep', {
@@ -28,10 +31,10 @@ const Home = ({ seoMeta }: PageProps) => {
 
   const noSheetFoundUI = (!sheets || sheets.length === 0) && (
     <FlexContainer
-      justifyCenter={true}
       className='w-screen h-screen item-center justify-center flex-col'
+      justifyCenter={true}
     >
-      <Text level='h1' className='heading-4 mb-3'>
+      <Text className='heading-4 mb-3' level='h1'>
         Oops! No Sheets found.
       </Text>
       <LinkButton
@@ -48,12 +51,12 @@ const Home = ({ seoMeta }: PageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <CardContainerB
-        heading='Explore'
-        focusText='Sheets'
-        cards={sheets}
         borderColour={2}
-        subtext='Pick A Sheet and Start Preparing'
+        cards={sheets}
+        focusText='Sheets'
+        heading='Explore'
         sectionClassName='px-2 py-4'
+        subtext='Pick A Sheet and Start Preparing'
       />
       {noSheetFoundUI}
     </Fragment>
@@ -63,7 +66,7 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.interviewPrepExplore })),
-    revalidate: 1000,
+    revalidate: PAGE_REFRESH_TIMEOUT.long,
   };
 };
 

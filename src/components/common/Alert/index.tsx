@@ -1,4 +1,4 @@
-import { AlertProps } from '@/interfaces';
+import type { AlertProps } from '@/interfaces';
 
 const Alert = ({ message, type = 'INFO', className = '' }: AlertProps) => {
   const typeClasses = {
@@ -9,8 +9,8 @@ const Alert = ({ message, type = 'INFO', className = '' }: AlertProps) => {
       icon: (
         <svg
           className='flex-none fill-current h-4 w-4 text-green-500'
-          xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 20 20'
+          xmlns='http://www.w3.org/2000/svg'
         >
           <path d='M10 0C4.486 0 0 4.485 0 10s4.486 10 10 10 10-4.485 10-10S15.514 0 10 0zm5 7l-6 6-3-3 1.414-1.414L9 10.172l4.586-4.586L15 7z' />
         </svg>
@@ -23,8 +23,8 @@ const Alert = ({ message, type = 'INFO', className = '' }: AlertProps) => {
       icon: (
         <svg
           className='flex-none fill-current h-4 w-4 text-red-500'
-          xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 20 20'
+          xmlns='http://www.w3.org/2000/svg'
         >
           <path d='M10 0C4.485 0 0 4.485 0 10s4.485 10 10 10 10-4.485 10-10S15.515 0 10 0zm3.707 13.293l-1.414 1.414L10 11.414l-2.293 2.293-1.414-1.414L8.586 10 6.293 7.707l1.414-1.414L10 8.586l2.293-2.293 1.414 1.414L11.414 10l2.293 2.293z' />
         </svg>
@@ -37,8 +37,8 @@ const Alert = ({ message, type = 'INFO', className = '' }: AlertProps) => {
       icon: (
         <svg
           className='flex-none fill-current h-4 w-4 text-yellow-500'
-          xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 20 20'
+          xmlns='http://www.w3.org/2000/svg'
         >
           <path d='M9 12h2v2H9v-2zm0-8h2v6H9V4zm1-4C4.486 0 0 4.485 0 10s4.486 10 10 10 10-4.485 10-10S15.514 0 10 0z' />
         </svg>
@@ -51,8 +51,8 @@ const Alert = ({ message, type = 'INFO', className = '' }: AlertProps) => {
       icon: (
         <svg
           className='flex-none fill-current h-4 w-4 text-blue-500'
-          xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 20 20'
+          xmlns='http://www.w3.org/2000/svg'
         >
           <path d='M9 12h2v2H9v-2zm0-8h2v6H9V4zm1-4C4.486 0 0 4.485 0 10s4.486 10 10 10 10-4.485 10-10S15.514 0 10 0z' />
         </svg>

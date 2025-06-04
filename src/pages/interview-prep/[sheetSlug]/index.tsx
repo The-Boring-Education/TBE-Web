@@ -1,20 +1,23 @@
 import { Fragment, useEffect, useState } from 'react';
+
+import { useAnalytics, useApi, useUser } from '@/hooks';
+
 import {
   Button,
-  QuestionLink,
-  SheetHeroContainer,
+  FeedbackPopup,
   FlexContainer,
-  MDXRenderer,
   LinerProgressBar,
+  MDXRenderer,
+  QuestionLink,
   Section,
   SEO,
+  SheetHeroContainer,
   Text,
-  FeedbackPopup,
 } from '@/components';
-import { SheetPageProps } from '@/interfaces';
-import { getSheetPageProps } from '@/utils';
-import { useAnalytics, useApi, useUser } from '@/hooks';
+
 import { routes } from '@/constant';
+import type { SheetPageProps } from '@/interfaces';
+import { getSheetPageProps } from '@/utils';
 
 const SheetPage = ({
   sheet,
@@ -136,8 +139,8 @@ const SheetPage = ({
       <Section className='md:p-2 p-2'>
         <SheetHeroContainer
           id={sheet._id ?? ''}
-          name={sheet.name ?? ''}
           isEnrolled={sheet.isEnrolled}
+          name={sheet.name ?? ''}
         />
       </Section>
       <Section className='md:p-2 p-2'>
@@ -148,18 +151,18 @@ const SheetPage = ({
             itemCenter={false}
           >
             <div className='w-full sticky top-0 bg-inherit py-2'>
-              <Text level='h5' className='heading-5'>
+              <Text className='heading-5' level='h5'>
                 Questions
               </Text>
 
               {/* LinerProgressBar */}
               <LinerProgressBar
-                totalChapters={totalQuestions}
                 completedChapters={completedQuestions}
+                totalChapters={totalQuestions}
               />
             </div>
 
-            <FlexContainer justifyCenter={false} className='gap-px flex-grow'>
+            <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
               {questions?.map(
                 ({ _id, title, question, answer, isCompleted, frequency }) => {
                   const questionId = _id?.toString();
@@ -167,14 +170,14 @@ const SheetPage = ({
                   return (
                     <QuestionLink
                       key={questionId}
+                      currentQuestionId={currentQuestionId}
+                      frequency={frequency}
+                      handleQuestionClick={handleQuestionClick}
                       href={`${slug}?sheetId=${sheet._id}&questionId=${questionId}`}
+                      isCompleted={isCompleted}
+                      question={question + '\n\n' + answer}
                       questionId={questionId}
                       title={title}
-                      question={question + '\n\n' + answer}
-                      isCompleted={isCompleted}
-                      currentQuestionId={currentQuestionId}
-                      handleQuestionClick={handleQuestionClick}
-                      frequency={frequency}
                     />
                   );
                 }
@@ -185,23 +188,17 @@ const SheetPage = ({
           {/* Main Content Area */}
           <FlexContainer
             className='border md:w-8/12 w-full p-2 rounded'
-            justifyCenter={false}
-            itemCenter={false}
             disabled={!sheet.isEnrolled}
+            itemCenter={false}
+            justifyCenter={false}
           >
             <MDXRenderer
-              mdxSource={sheetMeta}
               actions={[
                 currentQuestionId && (
                   <Button
                     key='complete'
-                    variant={
-                      isQuestionCompleted
-                        ? 'SUCCESS'
-                        : isLoading
-                        ? 'SECONDARY'
-                        : 'PRIMARY'
-                    }
+                    className='w-fit mt-2'
+                    isLoading={isLoading}
                     text={
                       isLoading
                         ? 'Marking...'
@@ -209,18 +206,24 @@ const SheetPage = ({
                         ? 'Completed'
                         : 'Mark As Completed'
                     }
-                    className='w-fit mt-2'
+                    variant={
+                      isQuestionCompleted
+                        ? 'SUCCESS'
+                        : isLoading
+                        ? 'SECONDARY'
+                        : 'PRIMARY'
+                    }
                     onClick={toggleCompletion}
-                    isLoading={isLoading}
                   />
                 ),
               ]}
+              mdxSource={sheetMeta}
             />
           </FlexContainer>
         </FlexContainer>
       </Section>
       {showFeedback && (
-        <FeedbackPopup type='INTERVIEW_SHEET' refId={sheet._id} />
+        <FeedbackPopup refId={sheet._id} type='INTERVIEW_SHEET' />
       )}
     </Fragment>
   );

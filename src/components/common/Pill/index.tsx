@@ -1,5 +1,6 @@
 import { Text } from '@/components';
-import { PillProps } from '@/interfaces';
+
+import type { PillProps } from '@/interfaces';
 
 const Pill = ({
   text,
@@ -28,8 +29,8 @@ const Pill = ({
       } ${className}`}
     >
       <Text
-        level='p'
         className={`strong-text ${textStyleClasses}`}
+        level='p'
         textCenter={true}
       >
         {text}

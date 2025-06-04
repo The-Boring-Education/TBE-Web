@@ -1,37 +1,39 @@
-import { LandingPageHero, CardContainerA, SEO, LinkButton } from '@/components';
-import { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
-import { STATIC_FILE_PATH, TBIP_FEATURES, routes } from '@/constant';
 import { Fragment } from 'react';
+
+import { CardContainerA, LandingPageHero, LinkButton, SEO } from '@/components';
+
+import { routes, STATIC_FILE_PATH, TBIP_FEATURES } from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <LandingPageHero
-        sectionHeaderProps={{
-          heading: 'Preparing for',
-          focusText: 'Tech Interviews??',
-        }}
+        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/interview.svg`}
         heroText='Crack Tech Interview with Questions Asked in Real Interviews.'
         primaryButton={
           <LinkButton
-            href={routes.interviewPrepExplore}
-            className='w-full sm:w-fit'
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Explore Sheets',
               className: 'w-full',
             }}
+            className='w-full sm:w-fit'
+            href={routes.interviewPrepExplore}
           />
         }
-        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/interview.svg`}
+        sectionHeaderProps={{
+          heading: 'Preparing for',
+          focusText: 'Tech Interviews??',
+        }}
       />
       <CardContainerA
-        heading='What We Do'
-        focusText='Differently'
-        cards={TBIP_FEATURES}
         borderColour={4}
+        cards={TBIP_FEATURES}
+        focusText='Differently'
+        heading='What We Do'
       />
     </Fragment>
   );
@@ -40,7 +42,6 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.interviewPrep })),
-    revalidate: 1000,
   };
 };
 

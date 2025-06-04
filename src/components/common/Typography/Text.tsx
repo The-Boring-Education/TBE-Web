@@ -1,4 +1,4 @@
-import { TextProps } from '@/interfaces';
+import type { TextProps } from '@/interfaces';
 
 const Text = ({
   level,

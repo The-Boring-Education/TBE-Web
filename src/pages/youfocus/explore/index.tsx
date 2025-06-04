@@ -1,8 +1,10 @@
-import { ExplorePlaylistContainer, Section, SEO } from '@/components';
-import { routes } from '@/constant';
-import { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
 import { Fragment } from 'react';
+
+import { ExplorePlaylistContainer, Section, SEO } from '@/components';
+
+import { routes } from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   return (
@@ -10,10 +12,10 @@ const Home = ({ seoMeta }: PageProps) => {
       <SEO seoMeta={seoMeta} />
       <Section>
         <ExplorePlaylistContainer
-          heading='Pick An'
           focusText='Skill'
-          subtext='What Do You Want to Learn?'
+          heading='Pick An'
           isCenterAligned={true}
+          subtext='What Do You Want to Learn?'
         />
       </Section>
     </Fragment>
@@ -23,7 +25,6 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.explorePlaylist })),
-    revalidate: 1000,
   };
 };
 

@@ -1,7 +1,9 @@
-import { useRef } from 'react';
 import { toPng } from 'html-to-image';
-import useUser from './useUser';
+import { useRef } from 'react';
+
 import { useAnalytics } from '@/hooks';
+
+import useUser from './useUser';
 
 const useCertificate = () => {
   const { user } = useUser();

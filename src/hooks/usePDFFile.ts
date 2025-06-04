@@ -1,6 +1,7 @@
-import { extractSkillsFromText } from '@/utils';
 import { useState } from 'react';
 import pdfToText from 'react-pdftotext';
+
+import { extractSkillsFromText } from '@/utils';
 
 const usePDFFile = () => {
   const [extractedSkills, setExtractedSkills] = useState<string[]>([]);

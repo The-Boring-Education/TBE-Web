@@ -1,6 +1,8 @@
 // hooks/useResumeEvaluation.ts
 import { useState } from 'react';
-import { usePDFFile, useApi } from '@/hooks';
+
+import { useApi, usePDFFile } from '@/hooks';
+
 import { routes } from '@/constant';
 
 // FIXME: REFACTOR

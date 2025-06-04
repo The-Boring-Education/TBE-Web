@@ -1,5 +1,6 @@
 import React from 'react';
-import { RadioButtonProps } from '@/interfaces';
+
+import type { RadioButtonProps } from '@/interfaces';
 
 const RadioButton = ({
   label,
@@ -21,13 +22,13 @@ const RadioButton = ({
       htmlFor={`radio-${value}`}
     >
       <input
-        type='radio'
+        checked={isSelected}
+        className='hidden'
         id={`radio-${value}`}
         name='radio-group'
+        type='radio'
         value={value}
-        checked={isSelected}
         onChange={handleChange}
-        className='hidden'
       />
       {label}
     </label>

@@ -1,15 +1,17 @@
-import {
-  FlexContainer,
-  Text,
-  PageHeroMetaContainer,
-  LoginRedirectButton,
-  Button,
-  LinkButton,
-} from '@/components';
-import { routes } from '@/constant';
 import { useAnalytics, useUser } from '@/hooks';
 import { useApi } from '@/hooks';
-import { SheetHeroContainerProps } from '@/interfaces';
+
+import {
+  Button,
+  FlexContainer,
+  LinkButton,
+  LoginRedirectButton,
+  PageHeroMetaContainer,
+  Text,
+} from '@/components';
+
+import { routes } from '@/constant';
+import type { SheetHeroContainerProps } from '@/interfaces';
 
 const SheetHeroContainer = ({
   id,
@@ -60,8 +62,8 @@ const SheetHeroContainer = ({
     headerActionButton = (
       <FlexContainer>
         <Button
-          variant='PRIMARY'
           text='Enroll in Sheet'
+          variant='PRIMARY'
           onClick={enrollSheet}
         />
       </FlexContainer>
@@ -70,7 +72,7 @@ const SheetHeroContainer = ({
 
   if (loading) {
     headerActionButton = (
-      <Button variant='PRIMARY' text='Enrolling...' isLoading={true} />
+      <Button isLoading={true} text='Enrolling...' variant='PRIMARY' />
     );
   }
 
@@ -79,31 +81,31 @@ const SheetHeroContainer = ({
       <FlexContainer className='border md:w-4/5 gap-4 w-full p-2 justify-between rounded'>
         {/* Back Button */}
         <LinkButton
-          href={routes.user.sheets}
           buttonProps={{
             variant: 'GHOST',
             text: 'Back',
           }}
+          href={routes.user.sheets}
         />
 
         {/* Heading and Subheading */}
         <FlexContainer
-          itemCenter={false}
-          direction='col'
           className='items-start gap-1'
+          direction='col'
+          itemCenter={false}
         >
-          <Text level='h4' className='heading-4'>
+          <Text className='heading-4' level='h4'>
             Hello {user?.name ?? 'there'}!
           </Text>
-          <Text level='p' className='paragraph text-greyDark'>
+          <Text className='paragraph text-greyDark' level='p'>
             Ready to prepare for interviews?
           </Text>
         </FlexContainer>
 
         <FlexContainer
-          justifyCenter={false}
-          itemCenter={false}
           className='justify-start items-start gap-3'
+          itemCenter={false}
+          justifyCenter={false}
         >
           <PageHeroMetaContainer subtitle="YOU'RE PRACTICING" title={name} />
         </FlexContainer>

@@ -1,5 +1,6 @@
-import { TabProps } from '@/interfaces';
 import { Tab } from '@headlessui/react';
+
+import type { TabProps } from '@/interfaces';
 
 const TabComponent = ({ tabLabels, tabPanels }: TabProps) => {
   return (

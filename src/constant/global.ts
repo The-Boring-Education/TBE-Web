@@ -1,18 +1,20 @@
-import {
+import type { ComponentPropsWithoutRef } from 'react';
+
+import type {
   CohortDataProps,
   MentorshipCardProps,
+  PlatformUsageType,
   PortfolioTemplateProps,
   ProductDataProps,
   RadioButtonOptionsProps,
-  UserPointsActionType,
   UserLevel,
+  UserPointsActionType,
   UserRoleType,
-  PlatformUsageType,
 } from '@/interfaces';
-import { routes } from './routes';
-import { envConfig } from './envConfig';
-import { ComponentPropsWithoutRef } from 'react';
+
 import { JOB_DOMAIN_NORMALIZER } from './api';
+import { envConfig } from './envConfig';
+import { routes } from './routes';
 
 // Paths
 const STATIC_FILE_PATH = {
@@ -381,36 +383,36 @@ const JOB_EXPERIENCE_LEVEL: {
 ];
 
 const PAGE_REFRESH_TIMEOUT = {
-  short: 60 * 5, // 5 minutes in seconds
+  short: 10, // 10 seconds
   medium: 60 * 60 * 24, // 1 day in seconds
   long: 60 * 60 * 24 * 5, // 5 days in seconds
   veryLong: 60 * 60 * 24 * 15, // 15 days in seconds
 };
 
 export {
-  imageMeta,
-  products,
-  LINKS,
-  gtag,
-  googleAnalyticsScript,
-  STATIC_FILE_PATH,
-  favicons,
-  localStorageKeys,
   apiStatusCodes,
-  IN_DEV_PAGES,
-  projectGroupWhatsapp,
-  MENTORSHIP_CARDS,
-  SCREEN_BREAKPOINTS,
-  PORTFOLIO_CARDS,
-  PORTFOLIO_TEMPLATES,
   cohorts,
-  YOUFOCUS_SKILL_PLAYLISTS,
-  POINTS_RULES,
-  USER_LEVELS,
-  USER_USAGE_OPTIONS,
   COUNTRY_CODES,
-  USER_ROLE_OPTIONS,
+  favicons,
+  googleAnalyticsScript,
+  gtag,
+  imageMeta,
+  IN_DEV_PAGES,
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
+  LINKS,
+  localStorageKeys,
+  MENTORSHIP_CARDS,
   PAGE_REFRESH_TIMEOUT,
+  POINTS_RULES,
+  PORTFOLIO_CARDS,
+  PORTFOLIO_TEMPLATES,
+  products,
+  projectGroupWhatsapp,
+  SCREEN_BREAKPOINTS,
+  STATIC_FILE_PATH,
+  USER_LEVELS,
+  USER_ROLE_OPTIONS,
+  USER_USAGE_OPTIONS,
+  YOUFOCUS_SKILL_PLAYLISTS,
 };

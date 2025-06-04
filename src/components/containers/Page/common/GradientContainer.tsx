@@ -1,4 +1,4 @@
-import { GradientContainerProps } from '@/interfaces';
+import type { GradientContainerProps } from '@/interfaces';
 
 // To Put Border Color => border-borderColor${variant}
 const GradientContainer = ({

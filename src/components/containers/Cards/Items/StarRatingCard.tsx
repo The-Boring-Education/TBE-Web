@@ -1,8 +1,10 @@
+import { Button } from '@headlessui/react';
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
-import { StarRatingCardProps } from '@/interfaces';
+
 import { FlexContainer } from '@/components';
-import { Button } from '@headlessui/react';
+
+import type { StarRatingCardProps } from '@/interfaces';
 
 const StarRatingCard = ({ rating, onClick }: StarRatingCardProps) => {
   return (
@@ -10,8 +12,8 @@ const StarRatingCard = ({ rating, onClick }: StarRatingCardProps) => {
       {[1, 2, 3, 4, 5].map((star) => (
         <Button
           key={star}
-          onClick={() => onClick(star)}
           className='focus:outline-none'
+          onClick={() => onClick(star)}
         >
           <FaStar
             className={`w-4 h-4 ${

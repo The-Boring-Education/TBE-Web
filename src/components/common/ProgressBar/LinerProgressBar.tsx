@@ -1,4 +1,4 @@
-import { LinerProgressBarProps } from '@/interfaces';
+import type { LinerProgressBarProps } from '@/interfaces';
 
 const LinerProgressBar = ({
   totalChapters,

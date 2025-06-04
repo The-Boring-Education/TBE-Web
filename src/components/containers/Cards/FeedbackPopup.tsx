@@ -1,15 +1,18 @@
 'use client';
 
 import React, { Fragment } from 'react';
+
 import { useFeedback } from '@/hooks';
+
 import {
-  Modal,
   Button,
-  Toast,
-  StartRatingCard,
   FlexContainer,
+  Modal,
+  StartRatingCard,
+  Toast,
 } from '@/components';
-import { FeedbackPopupProps } from '@/interfaces';
+
+import type { FeedbackPopupProps } from '@/interfaces';
 
 const FeedbackPopup = ({
   type,
@@ -45,10 +48,10 @@ const FeedbackPopup = ({
             justifyCenter={false}
           >
             <button
+              className='ml-auto text-gray-400 hover:text-black text-sm'
               onClick={() =>
                 setFeedbackModal((prev) => ({ ...prev, rating: false }))
               }
-              className='ml-auto text-gray-400 hover:text-black text-sm'
             >
               ✕
             </button>
@@ -68,9 +71,9 @@ const FeedbackPopup = ({
 
           {rating > 0 && (
             <Button
+              className='mt-2 p-2 w-30 h-10'
               text='Provide More Feedback'
               variant='PRIMARY'
-              className='mt-2 p-2 w-30 h-10'
               onClick={() =>
                 setFeedbackModal((prev) => ({ ...prev, feedback: true }))
               }
@@ -80,25 +83,25 @@ const FeedbackPopup = ({
       )}
 
       <Modal
-        isOpen={feedbackModal.feedback}
         closeModal={() =>
           setFeedbackModal((prev) => ({ ...prev, feedback: false }))
         }
+        isOpen={feedbackModal.feedback}
         title='Your Feedback'
       >
         <FlexContainer className='p-4 bg-white space-y-4'>
           <textarea
-            rows={4}
             className='w-full border rounded-xl p-3 resize-none text-sm focus:outline-none focus:ring-2 focus:ring-primary'
             placeholder='Tell us more about your experience...'
+            rows={4}
             value={feedbackText}
             onChange={(e) => setFeedbackText(e.target.value)}
           />
 
           <FlexContainer
             className='w-full justify-end gap-4'
-            justifyCenter={false}
             itemCenter={false}
+            justifyCenter={false}
           >
             <Button
               text='Cancel'
@@ -118,10 +121,10 @@ const FeedbackPopup = ({
 
       {toast.message && (
         <Toast
-          message={toast.message}
-          type='success'
-          position='top-right'
           duration={3000}
+          message={toast.message}
+          position='top-right'
+          type='success'
           onClose={() => setToast((prev) => ({ ...prev, show: false }))}
         />
       )}

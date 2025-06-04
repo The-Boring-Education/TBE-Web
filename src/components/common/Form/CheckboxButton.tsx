@@ -1,5 +1,6 @@
 import React from 'react';
-import { CheckboxButtonProps } from '@/interfaces';
+
+import type { CheckboxButtonProps } from '@/interfaces';
 
 const CheckboxButton = ({
   label,
@@ -15,12 +16,12 @@ const CheckboxButton = ({
       htmlFor={`checkbox-${value}`}
     >
       <input
-        type='checkbox'
-        id={`checkbox-${value}`}
-        value={value}
         checked={isSelected}
-        onChange={onClick}
         className='hidden'
+        id={`checkbox-${value}`}
+        type='checkbox'
+        value={value}
+        onChange={onClick}
       />
       {label}
     </label>

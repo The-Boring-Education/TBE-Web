@@ -1,16 +1,18 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { extractPlaylistId, fetchPlaylistData } from '@/utils';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
-  checkPlaylistExistsByID,
   addPlaylistToDB,
-  getPlaylistsFromDB,
   addUserPlaylistToDB,
+  checkPlaylistExistsByID,
+  getPlaylistsFromDB,
   updateReferredByInPlaylist,
   updateTagsInPlaylist,
 } from '@/database';
+
+import { apiStatusCodes } from '@/constant';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
+import { extractPlaylistId, fetchPlaylistData } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

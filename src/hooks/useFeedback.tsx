@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { useFeedbackProps } from '@/interfaces';
-import { useUser, useApi } from '@/hooks';
+
+import { useApi, useUser } from '@/hooks';
+
 import { routes } from '@/constant';
+import type { useFeedbackProps } from '@/interfaces';
 
 const useFeedback = ({ type, refId }: useFeedbackProps) => {
   const { user } = useUser();

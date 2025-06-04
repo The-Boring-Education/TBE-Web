@@ -1,7 +1,8 @@
+import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { NextRequest } from 'next/server';
-import { isAdmin, isUserAuthenticated, sendAPIResponse } from './utils';
+
 import { routes } from './constant';
+import { isAdmin, isUserAuthenticated, sendAPIResponse } from './utils';
 
 const protectedAPIRoutes = [
   {

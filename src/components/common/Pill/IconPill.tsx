@@ -1,5 +1,6 @@
 import { FlexContainer, Image, Text } from '@/components';
-import { IconPillProps } from '@/interfaces';
+
+import type { IconPillProps } from '@/interfaces';
 
 const IconPill = ({
   iconPath,
@@ -14,12 +15,12 @@ const IconPill = ({
       className={`gap-2 rounded-1 ${backgroundColor} p-2 ${className}`}
     >
       <Image
-        src={iconPath}
+        alt={iconAltText}
         className='w-4'
         fullWidth={false}
-        alt={iconAltText}
+        src={iconPath}
       />
-      <Text level='p' className={`strong-text ${labelColor}`}>
+      <Text className={`strong-text ${labelColor}`} level='p'>
         {label}
       </Text>
     </FlexContainer>

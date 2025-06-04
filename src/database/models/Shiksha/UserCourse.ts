@@ -1,6 +1,8 @@
-import { UserCourseModel } from '@/interfaces';
-import { Model, Schema, model, models } from 'mongoose';
+import type { Model } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS } from '@/constant';
+import type { UserCourseModel } from '@/interfaces';
 
 const UserChapterSchema = new Schema(
   {

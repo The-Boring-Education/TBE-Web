@@ -1,22 +1,24 @@
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
+import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+
+import { LINKS, TOP_NAVIGATION } from '@/constant';
+
 import {
   FlexContainer,
   Link,
+  LoginRedirectButton,
   Logo,
   MobileNavbarLinksContainer,
   NavbarDropdownContainer,
+  NotificationPopover,
   PopoverContainer,
   Text,
   UserAvatar,
   UserPointButton,
-  LoginRedirectButton,
-  NotificationPopover,
 } from '..';
-import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
-import { LINKS, TOP_NAVIGATION } from '@/constant';
-import { AnimatePresence, motion } from 'framer-motion';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -38,42 +40,42 @@ const Navbar = () => {
         </div>
         <div className='flex lg:hidden'>
           <button
-            type='button'
             className='-m-2.5 flex gap-2 items-center justify-center rounded-md p-2.5 text-black'
+            type='button'
             onClick={() => setMobileMenuOpen(true)}
           >
             <NotificationPopover />
             <UserPointButton />
             <UserAvatar />
-            <Bars3Icon className='h-6 w-6' aria-hidden='true' color='black' />
+            <Bars3Icon aria-hidden='true' className='h-6 w-6' color='black' />
           </button>
         </div>
         <div className='hidden items-center lg:flex lg:gap-x-4'>
           <PopoverContainer
-            label='Cohorts'
             isOpen={openPopover === 'cohorts'}
+            label='Cohorts'
             onToggle={() => handleSetOpen('cohorts')}
           >
             <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
           </PopoverContainer>
           <PopoverContainer
-            label='Learn'
             isOpen={openPopover === 'products'}
+            label='Learn'
             onToggle={() => handleSetOpen('products')}
           >
             <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
           </PopoverContainer>
           <PopoverContainer
-            label='Tools'
             isOpen={openPopover === 'tools'}
+            label='Tools'
             onToggle={() => handleSetOpen('tools')}
           >
             <NavbarDropdownContainer links={TOP_NAVIGATION.tools} />
           </PopoverContainer>
           <PopoverContainer
+            isOpen={openPopover === 'links'}
             label='Links'
             panelClasses='-left-6'
-            isOpen={openPopover === 'links'}
             onToggle={() => handleSetOpen('links')}
           >
             <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
@@ -98,19 +100,19 @@ const Navbar = () => {
           <div className='flex items-center justify-between'>
             <Logo />
             <button
-              type='button'
               className='-m-2.5 rounded-md p-2.5 text-black'
+              type='button'
               onClick={() => setMobileMenuOpen(false)}
             >
-              <XMarkIcon className='h-6 w-6' aria-hidden='true' />
+              <XMarkIcon aria-hidden='true' className='h-6 w-6' />
             </button>
           </div>
           <AnimatePresence>
             <motion.div
               key='cohorts-popover'
-              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
               <div className='mt-6 flow-root'>
@@ -121,47 +123,47 @@ const Navbar = () => {
                     itemCenter={false}
                   >
                     <FlexContainer
+                      className='gap-1'
+                      direction='col'
                       itemCenter={false}
                       justifyCenter={false}
-                      direction='col'
-                      className='gap-1'
                     >
                       <LoginRedirectButton text='Login' />
                     </FlexContainer>
 
                     <MobileNavbarLinksContainer
-                      title='Cohorts'
                       links={TOP_NAVIGATION.cohorts}
+                      title='Cohorts'
                       onLinkClick={handleCloseMobileMenu}
                     />
                     <MobileNavbarLinksContainer
-                      title='Learn'
                       links={TOP_NAVIGATION.products}
+                      title='Learn'
                       onLinkClick={handleCloseMobileMenu}
                     />
                     <MobileNavbarLinksContainer
-                      title='Tools'
                       links={TOP_NAVIGATION.tools}
+                      title='Tools'
                       onLinkClick={handleCloseMobileMenu}
                     />
                     <MobileNavbarLinksContainer
-                      title='Links'
                       links={TOP_NAVIGATION.links}
+                      title='Links'
                       onLinkClick={handleCloseMobileMenu}
                     />
                     <FlexContainer
+                      className='gap-1'
+                      direction='col'
                       itemCenter={false}
                       justifyCenter={false}
-                      direction='col'
-                      className='gap-1'
                     >
-                      <Text level='span' className='pre-title text-greyDark'>
+                      <Text className='pre-title text-greyDark' level='span'>
                         Connect with us
                       </Text>
                       <FlexContainer
+                        className='gap-1'
                         itemCenter={false}
                         justifyCenter={false}
-                        className='gap-1'
                       >
                         <Link href={LINKS.instagram} target='_blank'>
                           <FaInstagram color='black' size='2em' />

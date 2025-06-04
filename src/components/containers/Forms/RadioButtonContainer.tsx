@@ -1,5 +1,6 @@
 import { FlexContainer, RadioButton } from '@/components';
-import { RadioGroupProps } from '@/interfaces';
+
+import type { RadioGroupProps } from '@/interfaces';
 
 const RadioButtonContainer = ({
   options,
@@ -15,9 +16,9 @@ const RadioButtonContainer = ({
       {options.map((option, index) => (
         <RadioButton
           key={index}
+          isSelected={selectedValue === option.value}
           label={option.label}
           value={option.value}
-          isSelected={selectedValue === option.value}
           onClick={() => handleClick(option.value)}
         />
       ))}

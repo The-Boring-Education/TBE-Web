@@ -1,18 +1,20 @@
-import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
+import type mongoose from 'mongoose';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
   addACourseToDB,
   getAllCourseFromDB,
   getAllEnrolledCoursesFromDB,
   getCourseBySlugFromDB,
 } from '@/database';
-import {
+
+import { apiStatusCodes } from '@/constant';
+import type {
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,
 } from '@/interfaces';
-import mongoose from 'mongoose';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

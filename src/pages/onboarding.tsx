@@ -1,22 +1,25 @@
+import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
+
+import { useApi, useUser } from '@/hooks';
+
 import {
   OnboardingLayout,
-  StepUsername,
-  StepOccupation,
-  StepUsage,
-  StepPhoneNumber,
   OnboardingProgressBar,
-  StepNavigation,
-  Toast,
-  SEO,
   SectionHeaderContainer,
+  SEO,
+  StepNavigation,
+  StepOccupation,
+  StepPhoneNumber,
+  StepUsage,
+  StepUsername,
+  Toast,
 } from '@/components';
-import { useApi, useUser } from '@/hooks';
-import { routes } from '@/constant';
-import { getPreFetchProps, getRedirectUrl } from '@/utils';
-import { PageProps } from '@/interfaces';
-import { useRouter } from 'next/router';
 import FlexContainer from '@/components/containers/Page/common/FlexContainer';
+
+import { routes } from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps, getRedirectUrl } from '@/utils';
 
 const steps = [StepUsername, StepOccupation, StepUsage, StepPhoneNumber];
 
@@ -100,9 +103,9 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
       case 0:
         return (
           <StepUsername
+            setIsUsernameAvailable={setIsUsernameAvailable}
             userName={userName}
             onChange={(val) => updateForm('userName', val)}
-            setIsUsernameAvailable={setIsUsernameAvailable}
           />
         );
       case 1:
@@ -139,11 +142,11 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <OnboardingLayout>
-        <FlexContainer className='gap-6' fullWidth={true} direction='col'>
+        <FlexContainer className='gap-6' direction='col' fullWidth={true}>
           <FlexContainer className='gap-3' direction='col'>
             <SectionHeaderContainer
-              heading="Let's Start "
               focusText='Your Tech Journey'
+              heading="Let's Start "
               headingLevel={4}
               subtext="Let's get to know you better"
             />
@@ -155,10 +158,10 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
           {renderStep()}
           <StepNavigation
             currentStep={currentStep}
-            isValid={isValidStep()}
             isLastStep={currentStep === steps.length - 1}
-            onNext={handleNext}
+            isValid={isValidStep()}
             onBack={handleBack}
+            onNext={handleNext}
             onSubmit={handleSubmit}
           />
         </FlexContainer>
@@ -178,7 +181,6 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.onboarding })),
-    revalidate: 1000,
   };
 };
 
