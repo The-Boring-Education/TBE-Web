@@ -14,6 +14,7 @@ import {
   PORTFOLIO_TEMPLATES,
   routes,
   LINKS,
+  PAGE_REFRESH_TIMEOUT,
 } from '@/constant';
 import { getPreFetchProps } from '@/utils';
 import { PageProps } from '@/interfaces';
@@ -136,7 +137,7 @@ const Portfolio = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.portfolio })),
-    revalidate: 1000,
+    revalidate: PAGE_REFRESH_TIMEOUT.long,
   };
 };
 

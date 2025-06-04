@@ -3,7 +3,7 @@ import { CardContainerB, LoadingSpinner, SEO } from '@/components';
 import { PageProps } from '@/interfaces';
 import { getPreFetchProps, mapProjectResponseToCard } from '@/utils';
 import { useAPIResponseMapper, useApi } from '@/hooks';
-import { routes } from '@/constant';
+import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('projects', {
@@ -37,7 +37,7 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.projectsExplore })),
-    revalidate: 1000,
+    revalidate: PAGE_REFRESH_TIMEOUT.long,
   };
 };
 

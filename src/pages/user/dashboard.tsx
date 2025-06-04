@@ -20,7 +20,12 @@ import {
   mapProjectResponseToCard,
   mapUserPlaylistResponseToCard,
 } from '@/utils';
-import { LINKS, routes, STATIC_FILE_PATH } from '@/constant';
+import {
+  LINKS,
+  PAGE_REFRESH_TIMEOUT,
+  routes,
+  STATIC_FILE_PATH,
+} from '@/constant';
 
 const UserDashboard = ({ seoMeta }: PageProps) => {
   const router = useRouter();
@@ -111,7 +116,7 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.user.dashboard })),
-    revalidate: 1000,
+    revalidate: PAGE_REFRESH_TIMEOUT.short,
   };
 };
 

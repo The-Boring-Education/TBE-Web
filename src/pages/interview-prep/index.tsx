@@ -40,7 +40,6 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.interviewPrep })),
-    revalidate: 1000,
   };
 };
 

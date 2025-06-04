@@ -435,7 +435,6 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.cohort.bringYourIdea })),
-    revalidate: 1000,
   };
 };
 

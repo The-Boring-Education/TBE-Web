@@ -16,7 +16,6 @@ const Login = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.login })),
-    revalidate: 1000,
   };
 };
 

@@ -381,7 +381,7 @@ const JOB_EXPERIENCE_LEVEL: {
 ];
 
 const PAGE_REFRESH_TIMEOUT = {
-  short: 60 * 5, // 5 minutes in seconds
+  short: 10, // 10 seconds
   medium: 60 * 60 * 24, // 1 day in seconds
   long: 60 * 60 * 24 * 5, // 5 days in seconds
   veryLong: 60 * 60 * 24 * 15, // 15 days in seconds

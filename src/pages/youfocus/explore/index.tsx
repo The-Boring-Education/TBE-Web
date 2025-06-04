@@ -23,7 +23,6 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.explorePlaylist })),
-    revalidate: 1000,
   };
 };
 

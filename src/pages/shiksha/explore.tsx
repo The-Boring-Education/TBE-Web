@@ -10,7 +10,7 @@ import {
 } from '@/components';
 import { useAPIResponseMapper, useApi } from '@/hooks';
 import { getPreFetchProps, mapCourseResponseToCard } from '@/utils';
-import { routes } from '@/constant';
+import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('shiksha', {
@@ -63,7 +63,7 @@ const Home = ({ seoMeta }: PageProps) => {
 export const getStaticProps = async () => {
   return {
     ...(await getPreFetchProps({ slug: routes.shikshaExplore })),
-    revalidate: 1000,
+    revalidate: PAGE_REFRESH_TIMEOUT.long,
   };
 };
 
