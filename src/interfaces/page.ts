@@ -16,6 +16,7 @@ import {
 
 export interface PageProps {
   slug: any;
+  isDev?: boolean;
   seoMeta: GetSEOMetaResponseType;
   resolvedUrl?: string;
 }
@@ -75,6 +76,7 @@ export interface UnskilledLandingPageProps extends PageProps {
     trendingSkills: UnskilledLandingGraphDataProps[];
     companyTypes: UnskilledLandingGraphDataProps[];
     topLocations: UnskilledLandingGraphDataProps[];
+    updatedAt: string;
   };
 }
 

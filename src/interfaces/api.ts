@@ -12,7 +12,7 @@ import {
   PlatformUsageType,
 } from '.';
 
-export type APIMethodTypes = 'GET' | 'POST' | 'PATCH';
+export type APIMethodTypes = 'GET' | 'POST' | 'PATCH' | 'PUT';
 
 export interface APIMakeRquestProps {
   method?: APIMethodTypes;
@@ -357,4 +357,26 @@ export interface UserPlaylistResponseProps extends PlaylistModel {
   isPublic: boolean;
   isRecommended: boolean;
   learningTime: number;
+}
+
+export interface AddFeedbackRequestProps {
+  rating: number;
+  type: string;
+  ref: string;
+  userId: string;
+}
+
+export interface UpdateFeedbackRequestProps {
+  feedbackId: string;
+  userId: string;
+  feedback: string;
+}
+
+export interface UnSkilledEvaluationRequestBody {
+  skills: string[];
+  domains: string[];
+  experience: {
+    min: number;
+    max: number;
+  };
 }

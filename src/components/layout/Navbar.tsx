@@ -1,7 +1,6 @@
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import {
   FlexContainer,
   Link,
@@ -16,15 +15,12 @@ import {
   NotificationPopover,
 } from '..';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
-import { useSession } from 'next-auth/react';
 import { LINKS, TOP_NAVIGATION } from '@/constant';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { status } = useSession();
   const [openPopover, setOpenPopover] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleSetOpen = (popoverName: string) => {
     setOpenPopover(openPopover === popoverName ? null : popoverName);
@@ -66,6 +62,13 @@ const Navbar = () => {
             onToggle={() => handleSetOpen('products')}
           >
             <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
+          </PopoverContainer>
+          <PopoverContainer
+            label='Tools'
+            isOpen={openPopover === 'tools'}
+            onToggle={() => handleSetOpen('tools')}
+          >
+            <NavbarDropdownContainer links={TOP_NAVIGATION.tools} />
           </PopoverContainer>
           <PopoverContainer
             label='Links'
@@ -132,8 +135,13 @@ const Navbar = () => {
                       onLinkClick={handleCloseMobileMenu}
                     />
                     <MobileNavbarLinksContainer
-                      title='Products'
+                      title='Learn'
                       links={TOP_NAVIGATION.products}
+                      onLinkClick={handleCloseMobileMenu}
+                    />
+                    <MobileNavbarLinksContainer
+                      title='Tools'
+                      links={TOP_NAVIGATION.tools}
                       onLinkClick={handleCloseMobileMenu}
                     />
                     <MobileNavbarLinksContainer

@@ -58,6 +58,7 @@ export interface TopNavbarContainerProps {
   user: TopNavbarLinkProps[];
   products: TopNavbarLinkProps[];
   cohorts: TopNavbarLinkProps[];
+  tools: TopNavbarLinkProps[];
   links: TopNavbarLinkProps[];
 }
 

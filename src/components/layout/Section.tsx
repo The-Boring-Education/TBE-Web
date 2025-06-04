@@ -1,22 +1,37 @@
 import { SectionProps } from '@/interfaces';
 import { motion } from 'framer-motion';
+import { Fragment } from 'react';
+import { FlexContainer, Text } from '..';
 
 const Section = ({
   children,
   className = 'md:px-8 md:py-8 px-2 py-4',
   id = '',
+  isDev = false,
 }: SectionProps) => {
+  const isDevContainer = isDev && (
+    <FlexContainer className='py-1 bg-secondary'>
+      <Text level='span' className='pre-title'>
+        Currently in Development. Launching Soon
+      </Text>
+    </FlexContainer>
+  );
   return (
-    <motion.section
-      className={className}
-      id={id}
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.6, ease: 'easeInOut' }}
-    >
-      {children}
-    </motion.section>
+    <Fragment>
+      {isDevContainer}
+      <motion.section
+        className={`${className} ${
+          isDev && 'pointer-events-none opacity-50 grayscale'
+        }`}
+        id={id}
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        transition={{ duration: 0.6, ease: 'easeInOut' }}
+      >
+        {children}
+      </motion.section>
+    </Fragment>
   );
 };
 

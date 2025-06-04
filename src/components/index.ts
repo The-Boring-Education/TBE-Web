@@ -1,4 +1,13 @@
 import dynamic from 'next/dynamic';
+const ResumeEvaluationSection = dynamic(
+  () => import('@/components/containers/Page/UnSkilled/ResumeEvaluationSection')
+);
+const CircularProgressBar = dynamic(
+  () => import('@/components/common/ProgressBar/CircularProgressBar')
+);
+const UploadFileInput = dynamic(
+  () => import('@/components/containers/Forms/UploadFileInput')
+);
 const NotificationPopover = dynamic(
   () => import('@/components/common/Notification')
 );
@@ -52,7 +61,9 @@ const Banner = dynamic(() => import('@/components/common/Banner'));
 const AboutTBE = dynamic(
   () => import('@/components/containers/Cards/AboutTBE')
 );
-const ProgressBar = dynamic(() => import('@/components/common/ProgressBar'));
+const LinerProgressBar = dynamic(
+  () => import('@/components/common/ProgressBar/LinerProgressBar')
+);
 const CertificateBanner = dynamic(
   () => import('@/components/common/Certificate/CertificateBanner')
 );
@@ -270,6 +281,14 @@ const StepNavigation = dynamic(
   () => import('@/components/containers/Page/Onboarding/StepNavigation')
 );
 
+const StartRatingCard = dynamic(
+  () => import('@/components/containers/Cards/Items/StarRatingCard')
+);
+
+const FeedbackPopup = dynamic(
+  () => import('@/components/containers/Cards/FeedbackPopup')
+);
+
 export {
   Navbar,
   LinkText as Link,
@@ -323,7 +342,7 @@ export {
   MentorshipPlans,
   CourseHeroContainer,
   ChapterLink,
-  ProgressBar,
+  LinerProgressBar,
   QuestionLink,
   SheetHeroContainer,
   CertificateBanner,
@@ -373,4 +392,9 @@ export {
   InterviewPrepSection,
   FAQSection,
   NotificationPopover,
+  StartRatingCard,
+  FeedbackPopup,
+  UploadFileInput,
+  CircularProgressBar,
+  ResumeEvaluationSection,
 };

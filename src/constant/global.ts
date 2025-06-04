@@ -12,6 +12,7 @@ import {
 import { routes } from './routes';
 import { envConfig } from './envConfig';
 import { ComponentPropsWithoutRef } from 'react';
+import { JOB_DOMAIN_NORMALIZER } from './api';
 
 // Paths
 const STATIC_FILE_PATH = {
@@ -87,6 +88,7 @@ const cohorts: CohortDataProps = {
 // Global links
 const LINKS = {
   bookTechConsultation: 'https://topmate.io/imsks',
+  followUsOnInstagram: 'https://www.instagram.com/theboringeducation',
   whatsappCommunity: 'https://chat.whatsapp.com/EeB7LrPRg2p3RyMOicyIAC',
   instagram: 'https://www.instagram.com/theboringeducation',
   youtube: 'https://www.youtube.com/@TheBoringEducation',
@@ -171,7 +173,7 @@ const MENTORSHIP_CARDS: MentorshipCardProps[] = [
   },
 ];
 
-const IN_DEV_PAGES = ['/projects'];
+const IN_DEV_PAGES = ['/unskilled'];
 const projectGroupWhatsapp = 'https://chat.whatsapp.com/D1ko12SykD1LfvJwmNQ48A';
 
 const SCREEN_BREAKPOINTS = {
@@ -352,6 +354,32 @@ const COUNTRY_CODES = [
   { code: '+46', country: 'SWEDEN' },
 ];
 
+const JOB_DOMAINS = JOB_DOMAIN_NORMALIZER.map(({ value }) => {
+  return {
+    label: value,
+    value: value,
+  };
+}).splice(0, 10);
+
+const JOB_EXPERIENCE_LEVEL: {
+  label: string;
+  value: string;
+  min: number;
+  max: number;
+}[] = [
+  { label: 'Fresher (0 yrs)', value: 'FRESHER', min: 0, max: 1 },
+  { label: 'Early Career (1–2 yrs)', value: 'EARLY_CAREER', min: 1, max: 2 },
+  { label: 'Mid-Level (2–4 yrs)', value: 'MID_LEVEL', min: 2, max: 4 },
+  { label: 'Senior (4–7 yrs)', value: 'SENIOR', min: 4, max: 7 },
+  { label: 'Staff Engineer (7–10 yrs)', value: 'STAFF', min: 7, max: 10 },
+  {
+    label: 'Principal Engineer (10+ yrs)',
+    value: 'PRINCIPAL',
+    min: 10,
+    max: 100,
+  },
+];
+
 export {
   imageMeta,
   products,
@@ -375,4 +403,6 @@ export {
   USER_USAGE_OPTIONS,
   COUNTRY_CODES,
   USER_ROLE_OPTIONS,
+  JOB_DOMAINS,
+  JOB_EXPERIENCE_LEVEL,
 };

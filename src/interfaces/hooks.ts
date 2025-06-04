@@ -61,4 +61,9 @@ export type TrackEventProps = {
   value?: any;
 };
 
+export interface useFeedbackProps {
+  type: string;
+  refId?: string;
+}
+
 export type NotificationItemProps = Partial<NotificationModel>;

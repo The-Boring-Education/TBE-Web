@@ -14,6 +14,7 @@ import Notification from './models/Notification';
 import Job from './models/Unskilled/Jobs';
 import Gamification from './models/Gamification';
 import JobAggregate from './models/Unskilled/JobAggregate';
+import Feedback from './models/Feedback';
 
 export {
   Project,
@@ -31,6 +32,7 @@ export {
   Job,
   Gamification,
   JobAggregate,
+  Feedback,
 };
 
 // Query
@@ -45,3 +47,4 @@ export * from './query/notification';
 export * from './query/unskilled';
 export * from './query/gamification';
 export * from './query/common';
+export * from './query/feedback';

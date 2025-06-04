@@ -1,4 +1,5 @@
 import {
+  ChangeEvent,
   ElementType,
   HTMLInputTypeAttribute,
   MouseEventHandler,
@@ -12,11 +13,13 @@ import {
   QuestionFrequencyType,
   TopNavbarLinkProps,
 } from '.';
+import { FeedbackType } from '@/constant';
 
 export interface SectionProps {
   children: ReactNode;
   className?: string;
   id?: string;
+  isDev?: boolean;
 }
 
 export interface LinkProps {
@@ -400,7 +403,7 @@ export interface AlertProps {
   className?: string;
 }
 
-export interface ProgressBarProps {
+export interface LinerProgressBarProps {
   totalChapters: number;
   completedChapters: number;
 }
@@ -665,4 +668,50 @@ export type StepUsernameProps = {
 
 export interface CohortJourneySectionProps {
   weeks: CohortRoadmapProps[];
+}
+
+export interface StarRatingCardProps {
+  rating: number;
+  onClick: (value: number) => void;
+}
+
+export interface FeedbackPopupProps {
+  type: FeedbackType;
+  refId?: string;
+  position?: 'bottom-right' | 'bottom-center';
+}
+export interface UploadFileInputProps {
+  label?: string;
+  file?: File | null;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  accept?: '*' | 'pdf';
+  className?: string;
+  placeholder?: string;
+}
+
+export interface CircularProgressBarProps {
+  percentage: number;
+  color?: string;
+  size?: number;
+  strokeWidth?: number;
+  children?: React.ReactNode;
+  bg?: string;
+  className?: string;
+}
+
+export interface ResumeEvaluationSectionProps {
+  title: string;
+  subtitle?: string;
+  items: {
+    skill?: string;
+    name?: string;
+    percentage: number;
+    frequency?: number;
+    count?: number;
+  }[];
+  colorScheme: {
+    text: string;
+    ring: string;
+    bg: string;
+  };
 }

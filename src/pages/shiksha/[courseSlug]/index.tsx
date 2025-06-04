@@ -7,12 +7,13 @@ import {
   CourseHeroContainer,
   FlexContainer,
   MDXRenderer,
-  ProgressBar,
+  LinerProgressBar,
   Section,
   SEO,
   Text,
   CertificateBanner,
   ActionBanner,
+  FeedbackPopup,
 } from '@/components';
 import {
   AddCertificateRequestPayloadProps,
@@ -43,6 +44,9 @@ const CoursePage = ({
   const [certificateId, setCertificateId] = useState(course.certificateId);
   const isSmallScreen = useMediaQuery(SCREEN_BREAKPOINTS.SM);
 
+  const [showChapterFeedback, setShowChapterFeedback] = useState(false);
+  const [showCourseFeedback, setShowCourseFeedback] = useState(false);
+
   // Calculate the total chapters and completed chapters
   const totalChapters = chapters.length;
   const completedChapters = chapters.filter(
@@ -68,9 +72,9 @@ const CoursePage = ({
 
   const toggleCompletion = async () => {
     setIsLoading(true);
-    try {
-      const newCompletionStatus = !isChapterCompleted;
+    const newCompletionStatus = !isChapterCompleted;
 
+    try {
       await makeRequest({
         method: 'PATCH',
         url: routes.api.markCourseChapterAsCompleted,
@@ -101,6 +105,7 @@ const CoursePage = ({
       );
 
       if (newCompletionStatus) {
+        setShowChapterFeedback(true);
         const currentIndex = chapters.findIndex(
           (chapter) => chapter._id.toString() === currentChapterId
         );
@@ -132,9 +137,10 @@ const CoursePage = ({
             } as AddCertificateRequestPayloadProps,
           });
 
-          if (status) {
+          if (status && data?._id) {
             setIsCourseCompleted(true);
             setCertificateId(data._id);
+            setShowCourseFeedback(true);
           }
         }
       }
@@ -178,8 +184,8 @@ const CoursePage = ({
                 Chapters
               </Text>
 
-              {/* ProgressBar */}
-              <ProgressBar
+              {/* LinerProgressBar */}
+              <LinerProgressBar
                 totalChapters={totalChapters}
                 completedChapters={completedChapters}
               />
@@ -279,6 +285,14 @@ const CoursePage = ({
           </FlexContainer>
         </FlexContainer>
       </Section>
+
+      {showChapterFeedback && (
+        <FeedbackPopup type='SHIKSHA_CHAPTER' refId={currentChapterId} />
+      )}
+
+      {showCourseFeedback && (
+        <FeedbackPopup type='SHIKSHA_COURSE' refId={course._id} />
+      )}
     </Fragment>
   );
 };
