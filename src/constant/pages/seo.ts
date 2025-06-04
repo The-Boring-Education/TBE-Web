@@ -138,11 +138,20 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
     [`${routes.refund}`]: {
       title: 'Refund | The Boring Education',
       siteName: 'The Boring Education',
-      description:
-        'Refund Policies for purchases made on The Boring Education',
+      description: 'Refund Policies for purchases made on The Boring Education',
       url: routes.refund,
       keywords:
         'Refund Policy, The Boring Education, Customer Service, Help Desk, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
+    [`${routes.termsAndConditions}`]: {
+      title: 'Terms and Conditions | The Boring Education',
+      siteName: 'The Boring Education',
+      description:
+        'Terms and Conditions Policies for purchases made on The Boring Education',
+      url: routes.termsAndConditions,
+      keywords:
+        'Terms and Conditions Policy, The Boring Education, Customer Service, Help Desk, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
     [`${routes[404]}`]: {
