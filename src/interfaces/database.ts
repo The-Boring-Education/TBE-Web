@@ -1,6 +1,5 @@
 import type { Document, Schema } from 'mongoose';
-
-import type { FeedbackType, PaymentStatus, ProductType } from '@/constant';
+import type { FeedbackType, ProductType } from '@/constant';
 
 import type {
   CertificateType,
@@ -273,12 +272,10 @@ export interface PaymentModel extends Document {
   _id: typeof Schema.Types.ObjectId;
   user: typeof Schema.Types.ObjectId;
   amount: number;
-  item: {
-    itemId: typeof Schema.Types.ObjectId;
-    itemType: ProductType;
-  };
+  productId: typeof Schema.Types.ObjectId;
+  productType: ProductType;
   orderId: string;           
   paymentId?: string;       
   paymentLink: string;
-  status: PaymentStatus; 
+  isPaid:boolean; 
 }

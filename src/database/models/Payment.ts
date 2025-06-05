@@ -1,5 +1,5 @@
 import { Schema, model, models, type Model } from 'mongoose';
-import { DATABASE_MODELS, PAYMENT_STATUS, PRODUCT_TYPE } from '@/constant';
+import { DATABASE_MODELS, PRODUCT_TYPE } from '@/constant';
 import type { PaymentModel } from '@/interfaces';
 
 const PaymentSchema: Schema<PaymentModel> = new Schema(
@@ -9,41 +9,34 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
       ref: DATABASE_MODELS.USER,
       required: [true, 'User ref is required'],
     },
-    item: {
-      itemId: {
+    productId: {
         type: Schema.Types.ObjectId,
-        required: [true, 'Item ID is required'],
-      },
-      itemType: {
+        required: [true, 'Product ID is required'],
+    },
+    productType: {
         type: String,
         enum: PRODUCT_TYPE,
-        required: [true, 'Item type is required'],
-      },
+        required: [true, 'Product type is required'],
     },
     amount: {
       type: Number,
       required:true,
     },
-
     orderId: {
       type: String,
       required: true,
       unique: true,
     },
-
     paymentId: {
       type: String,
     },
-
     paymentLink: {
       type: String,
       required: true,
     },
-
-    status: {
-      type: String,
-      enum: PAYMENT_STATUS,
-      default: 'PENDING',
+    isPaid: {
+      type: Boolean,
+      default: false,
     },
   },
   {

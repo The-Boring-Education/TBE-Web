@@ -30,14 +30,6 @@ export const FEEDBACK_TYPES = [
 
 export type FeedbackType = (typeof FEEDBACK_TYPES)[number];
 
-export const PAYMENT_STATUS =[
-  'PENDING',
-  'FAILED',
-  'SUCCESS'
-]
-
-export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
-
 export const PRODUCT_TYPE = [
   'INTERVIEW_SHEET',
   'SHIKSHA', 
