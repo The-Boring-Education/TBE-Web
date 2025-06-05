@@ -380,3 +380,21 @@ export interface UnSkilledEvaluationRequestBody {
     max: number;
   };
 }
+
+export interface AddPaymentToDBRequestPayloadProps {
+  userId: string;
+  productId: string;
+  productType: string;
+  amount: number;
+  orderId: string;
+  paymentLink: string;
+}
+
+export interface BuildOrderPayloadProps {
+  orderId: string;
+  amount: number;
+  userId: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+}
