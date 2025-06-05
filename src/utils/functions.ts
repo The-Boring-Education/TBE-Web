@@ -629,6 +629,25 @@ const buildOrderPayload = ({
   },
 });
 
+const createCashfreeOrder = async (
+  orderPayload: ReturnType<typeof buildOrderPayload>
+): Promise<{ data: any; ok: boolean }> => {
+  const response = await fetch(`${process.env.CASHFREE_BASE_URL}/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-client-id': process.env.CASHFREE_CLIENT_ID!,
+      'x-client-secret': process.env.CASHFREE_SECRET_KEY!,
+      'x-api-version': '2022-09-01',
+    },
+    body: JSON.stringify(orderPayload),
+  });
+
+  const data = await response.json();
+
+  return { data, ok: response.ok };
+};
+
 export {
   calculateProgressPercentage,
   calculateUserPointsForAction,
@@ -665,4 +684,5 @@ export {
   setLocalStorageItem,
   generatePaymentOrderId,
   buildOrderPayload,
+  createCashfreeOrder,
 };

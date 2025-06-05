@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
 import { addPaymentToDB } from '@/database';
 import { apiStatusCodes } from '@/constant';
-import { buildOrderPayload, generatePaymentOrderId, sendAPIResponse } from '@/utils';
+import { buildOrderPayload, createCashfreeOrder, generatePaymentOrderId, sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -29,6 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 };
+
 const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     userId,
@@ -49,8 +50,6 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  console.log(process.env.CASHFREE_BASE_URL);
-
   const orderId = generatePaymentOrderId();
 
   const orderPayload = buildOrderPayload({
@@ -62,23 +61,9 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     customerPhone,
   });
 
-const response = await fetch(`${process.env.CASHFREE_BASE_URL}/orders`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'x-client-id': process.env.CASHFREE_CLIENT_ID!,
-    'x-client-secret': process.env.CASHFREE_SECRET_KEY!,
-    'x-api-version': '2022-09-01',
-  },
-  body: JSON.stringify(orderPayload),
-});
+const {data, ok} = await createCashfreeOrder(orderPayload)
 
-
-const data = await response.json();
-
-console.log(data)
-
-if (!response.ok || !data.payment_session_id) {
+if (!ok || !data.payment_session_id) {
   return res.status(apiStatusCodes.BAD_REQUEST).json(
     sendAPIResponse({
       status: false,
@@ -88,9 +73,7 @@ if (!response.ok || !data.payment_session_id) {
   );
 }
 
-const paymentLink = `https://sandbox.cashfree.com/pg/checkout?paymentSessionId=${data.payment_session_id}`;
-
-
+const paymentLink = `${process.env.CASHFREE_BASE_URL}/checkout?paymentSessionId=${data.payment_session_id}`;
 
   const { error } = await addPaymentToDB({
     userId,
