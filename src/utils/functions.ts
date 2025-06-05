@@ -20,6 +20,7 @@ import type {
   UserPlaylistResponseProps,
   UserPointsActionType,
   Video,
+  BuildOrderPayloadProps,
 } from '@/interfaces';
 
 const fetchAPIData = async (url: string) => {
@@ -602,6 +603,32 @@ const cleanJobSkillsData = (skills: string[]): string[] => {
     });
 };
 
+const generatePaymentOrderId = (): string =>{
+  return `order_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+}
+
+const buildOrderPayload = ({
+  orderId,
+  amount,
+  userId,
+  customerName,
+  customerEmail,
+  customerPhone,
+}: BuildOrderPayloadProps) => ({
+  order_id: orderId,
+  order_amount: amount,
+  order_currency: 'INR',
+  customer_details: {
+    customer_id: userId,
+    customer_name: customerName,
+    customer_email: customerEmail,
+    customer_phone: customerPhone,
+  },
+  order_meta: {
+    return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/status?order_id=${orderId}`,
+  },
+});
+
 export {
   calculateProgressPercentage,
   calculateUserPointsForAction,
@@ -636,4 +663,6 @@ export {
   normalizeAPIPayload,
   removeLocalStorageItem,
   setLocalStorageItem,
+  generatePaymentOrderId,
+  buildOrderPayload,
 };
