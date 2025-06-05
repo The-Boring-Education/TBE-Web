@@ -49,6 +49,8 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
+  console.log(process.env.CASHFREE_BASE_URL);
+
   const orderId = generatePaymentOrderId();
 
   const orderPayload = buildOrderPayload({
@@ -60,30 +62,35 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     customerPhone,
   });
 
-  const response = await fetch(`${process.env.CASHFREE_BASE_URL}/orders`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-client-id': process.env.CASHFREE_CLIENT_ID!,
-      'x-client-secret': process.env.CASHFREE_SECRET_KEY!,
-      'x-api-version': '2022-09-01',
-    },
-    body: JSON.stringify(orderPayload),
-  });
+const response = await fetch(`${process.env.CASHFREE_BASE_URL}/orders`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-client-id': process.env.CASHFREE_CLIENT_ID!,
+    'x-client-secret': process.env.CASHFREE_SECRET_KEY!,
+    'x-api-version': '2022-09-01',
+  },
+  body: JSON.stringify(orderPayload),
+});
 
-  const data = await response.json();
 
-  if (!response.ok || !data.payment_session_id) {
-    return res.status(apiStatusCodes.BAD_REQUEST).json(
-      sendAPIResponse({
-        status: false,
-        message: 'Failed to create order with payment gateway',
-        error: data,
-      })
-    );
-  }
+const data = await response.json();
 
-  const paymentLink = `https://payments.cashfree.com/pg/ui/checkout?paymentSessionId=${data.payment_session_id}`;
+console.log(data)
+
+if (!response.ok || !data.payment_session_id) {
+  return res.status(apiStatusCodes.BAD_REQUEST).json(
+    sendAPIResponse({
+      status: false,
+      message: 'Failed to create order with payment gateway',
+      error: data,
+    })
+  );
+}
+
+const paymentLink = `https://sandbox.cashfree.com/pg/checkout?paymentSessionId=${data.payment_session_id}`;
+
+
 
   const { error } = await addPaymentToDB({
     userId,
