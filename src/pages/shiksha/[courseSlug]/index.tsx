@@ -45,6 +45,7 @@ const CoursePage = ({
     course.isCompleted ?? false
   );
   const [certificateId, setCertificateId] = useState(course.certificateId);
+  const [nextChapterUrl, setNextChapterUrl] = useState<string>('');
   const isSmallScreen = useMediaQuery(SCREEN_BREAKPOINTS.SM);
 
   const [showChapterFeedback, setShowChapterFeedback] = useState(false);
@@ -71,6 +72,13 @@ const CoursePage = ({
 
   const handleChapterClick = (chapterMeta: string) => {
     setCourseMeta(chapterMeta);
+  };
+
+  const handleFeedbackComplete = () => {
+    if (nextChapterUrl) {
+      window.location.href = nextChapterUrl;
+    }
+    setShowChapterFeedback(false);
   };
 
   const toggleCompletion = async () => {
@@ -108,7 +116,6 @@ const CoursePage = ({
       );
 
       if (newCompletionStatus) {
-        setShowChapterFeedback(true);
         const currentIndex = chapters.findIndex(
           (chapter) => chapter._id.toString() === currentChapterId
         );
@@ -119,7 +126,7 @@ const CoursePage = ({
 
         if (nextIncompleteChapter) {
           const nextChapterId = nextIncompleteChapter._id.toString();
-          window.location.href = `${slug}?courseId=${course._id}&chapterId=${nextChapterId}`;
+          setNextChapterUrl(`${slug}?courseId=${course._id}&chapterId=${nextChapterId}`);
         } else {
           const { status, data } = await makeRequest({
             method: 'POST',
@@ -146,6 +153,7 @@ const CoursePage = ({
             setShowCourseFeedback(true);
           }
         }
+        setShowChapterFeedback(true);
       }
 
       setIsChapterCompleted(newCompletionStatus);
@@ -290,7 +298,11 @@ const CoursePage = ({
       </Section>
 
       {showChapterFeedback && (
-        <FeedbackPopup refId={currentChapterId} type='SHIKSHA_CHAPTER' />
+        <FeedbackPopup 
+          refId={currentChapterId} 
+          type='SHIKSHA_CHAPTER' 
+          onSubmit={handleFeedbackComplete}
+        />
       )}
 
       {showCourseFeedback && (
