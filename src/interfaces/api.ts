@@ -398,3 +398,9 @@ export interface BuildOrderPayloadProps {
   customerEmail: string;
   customerPhone: string;
 }
+
+export interface UpdatePaymentStatusPayloadProps {
+  orderId: string,
+  paymentId: string | undefined,
+  status: 'SUCCESS' | 'FAILED'
+}

@@ -279,3 +279,10 @@ export interface PaymentModel extends Document {
   paymentLink: string;
   isPaid:boolean; 
 }
+
+export interface WebhookEvent {
+  order_id: string;
+  payment_id?: string;
+  isPaid: boolean;
+  payment_status: 'SUCCESS' | 'FAILED';
+}

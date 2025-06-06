@@ -21,7 +21,9 @@ import type {
   UserPointsActionType,
   Video,
   BuildOrderPayloadProps,
+  WebhookEvent,
 } from '@/interfaces';
+import crypto from 'crypto';
 
 const fetchAPIData = async (url: string) => {
   const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
@@ -648,6 +650,39 @@ const createCashfreeOrder = async (
   return { data, ok: response.ok };
 };
 
+const verifyWebhookSignature = (
+  payloadString: string,
+  signature: string | undefined,
+  webhookSecret: string
+): { isValid: boolean; error?: string } => {
+  if (!signature) {
+    return { isValid: false, error: 'Missing webhook signature' };
+  }
+
+  const generatedSignature = crypto
+    .createHmac('sha256', webhookSecret)
+    .update(payloadString)
+    .digest('base64');
+
+  return { isValid: signature === generatedSignature };
+};
+
+const validateWebhookEvent = (event: any): { isValid: boolean; error?: string; data?: WebhookEvent } => {
+  const { order_id, isPaid } = event;
+
+  if (!order_id || typeof isPaid !== 'boolean') {
+    return {
+      isValid: false,
+      error: 'Missing order_id or invalid isPaid status in webhook payload'
+    };
+  }
+
+  return {
+    isValid: true,
+    data: event as WebhookEvent
+  };
+};
+
 export {
   calculateProgressPercentage,
   calculateUserPointsForAction,
@@ -685,4 +720,7 @@ export {
   generatePaymentOrderId,
   buildOrderPayload,
   createCashfreeOrder,
+  verifyWebhookSignature,
+  validateWebhookEvent,
+  type WebhookEvent
 };
