@@ -21,7 +21,10 @@ import type {
   UserPointsActionType,
   Video,
   BuildOrderPayloadProps,
+  WebhookEvent,
 } from '@/interfaces';
+
+import crypto from 'crypto';
 
 const fetchAPIData = async (url: string) => {
   const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
@@ -632,20 +635,57 @@ const buildOrderPayload = ({
 const createCashfreeOrder = async (
   orderPayload: ReturnType<typeof buildOrderPayload>
 ): Promise<{ data: any; ok: boolean }> => {
-  const response = await fetch(`${process.env.CASHFREE_BASE_URL}/orders`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-client-id': process.env.CASHFREE_CLIENT_ID!,
-      'x-client-secret': process.env.CASHFREE_SECRET_KEY!,
-      'x-api-version': '2022-09-01',
-    },
-    body: JSON.stringify(orderPayload),
-  });
+  try {
+    const response = await fetch(`${process.env.CASHFREE_BASE_URL}/pg/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-client-id': process.env.CASHFREE_CLIENT_ID!,
+        'x-client-secret': process.env.CASHFREE_SECRET_KEY!,
+        'x-api-version': '2022-09-01',
+      },
+      body: JSON.stringify(orderPayload),
+    });
 
-  const data = await response.json();
+    const data = await response.json();
+    return { data, ok: response.ok };
+  } catch (error) {
+    console.error('Error creating Cashfree order:', error);
+    return { data: error, ok: false };
+  }
+};
 
-  return { data, ok: response.ok };
+const verifyWebhookSignature = (
+  payloadString: string,
+  signature: string | undefined,
+  webhookSecret: string
+): { isValid: boolean; error?: string } => {
+  if (!signature) {
+    return { isValid: false, error: 'Missing webhook signature' };
+  }
+
+  const generatedSignature = crypto
+    .createHmac('sha256', webhookSecret)
+    .update(payloadString)
+    .digest('base64');
+
+  return { isValid: signature === generatedSignature };
+};
+
+const validateWebhookEvent = (event: any): { isValid: boolean; error?: string; data?: WebhookEvent } => {
+  const { order_id, isPaid } = event;
+
+  if (!order_id || typeof isPaid !== 'boolean') {
+    return {
+      isValid: false,
+      error: 'Missing order_id or invalid isPaid status in webhook payload'
+    };
+  }
+
+  return {
+    isValid: true,
+    data: event as WebhookEvent
+  };
 };
 
 export {
@@ -685,4 +725,7 @@ export {
   generatePaymentOrderId,
   buildOrderPayload,
   createCashfreeOrder,
+  verifyWebhookSignature,
+  validateWebhookEvent,
+  type WebhookEvent
 };

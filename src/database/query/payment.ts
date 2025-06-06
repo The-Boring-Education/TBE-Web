@@ -1,5 +1,5 @@
 import { Payment } from '@/database';
-import type { AddPaymentToDBRequestPayloadProps, DatabaseQueryResponseType } from '@/interfaces';
+import type { AddPaymentToDBRequestPayloadProps, DatabaseQueryResponseType, UpdatePaymentStatusPayloadProps } from '@/interfaces';
 
 const addPaymentToDB = async ({
   userId,
@@ -27,4 +27,43 @@ const addPaymentToDB = async ({
   }
 };
 
-export { addPaymentToDB };
+const getPaymentByOrderIdFromDB = async (orderId: string): Promise<DatabaseQueryResponseType> => {
+  try {
+    const payment = await Payment.findOne({ orderId });
+    if (!payment) {
+      return { error: 'Payment not found' };
+    }
+    return { data: payment };
+  } catch (error) {
+    return { error: 'Failed to find payment' };
+  }
+};
+
+
+const updatePaymentStatusToDB = async ({
+  orderId,
+  paymentId,
+  status,
+}: UpdatePaymentStatusPayloadProps): Promise<DatabaseQueryResponseType> => {
+  try {
+    const payment = await Payment.findOne({ orderId });
+    if (!payment) {
+      return { error: 'Payment not found' };
+    }
+
+    payment.isPaid = status === 'SUCCESS';
+    if (paymentId) {
+      payment.paymentId = paymentId;
+    }
+
+    await payment.save();
+    return { data: payment };
+  } catch (error: any) {
+    return { error: `Failed to update payment status: ${error.message}` };
+  }
+};
+
+export { addPaymentToDB,
+         getPaymentByOrderIdFromDB, 
+         updatePaymentStatusToDB
+         };
