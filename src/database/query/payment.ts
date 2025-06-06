@@ -39,7 +39,6 @@ const getPaymentByOrderIdFromDB = async (orderId: string): Promise<DatabaseQuery
   }
 };
 
-
 const updatePaymentStatusToDB = async ({
   orderId,
   paymentId,
