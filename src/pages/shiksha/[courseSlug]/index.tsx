@@ -1,5 +1,5 @@
 import router from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useRef } from 'react';
 import { FaLock, FaTrophy } from 'react-icons/fa';
 
 import { useAnalytics, useApi, useMediaQuery, useUser } from '@/hooks';
@@ -18,6 +18,7 @@ import {
   Section,
   SEO,
   Text,
+  PaymentCard
 } from '@/components';
 
 import { routes, SCREEN_BREAKPOINTS } from '@/constant';
@@ -35,6 +36,11 @@ const CoursePage = ({
   currentChapterId,
 }: CoursePageProps) => {
   const [courseMeta, setCourseMeta] = useState<string>(meta || '');
+  const isPremium = course.isPremium;
+  const isLocked = isPremium && !course.isEnrolled;
+  const [showPayment, setShowPayment] = useState(false);
+  const paymentSectionRef = useRef<HTMLDivElement>(null);
+
   const [chapters, setChapters] = useState(course.chapters || []);
   const [isChapterCompleted, setIsChapterCompleted] = useState(
     chapters.find((chapter) => chapter._id.toString() === currentChapterId)
@@ -71,7 +77,9 @@ const CoursePage = ({
   if (!course) return null;
 
   const handleChapterClick = (chapterMeta: string) => {
-    setCourseMeta(chapterMeta);
+    if (!isLocked) {
+      setCourseMeta(chapterMeta);
+    }
   };
 
   const handleFeedbackComplete = () => {
@@ -164,6 +172,13 @@ const CoursePage = ({
     }
   };
 
+  const handleShowPayment = () => {
+    setShowPayment(true);
+    setTimeout(() => {
+      paymentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
   const alertContainer = isSmallScreen && (
     <Alert
       className='my-2'
@@ -180,9 +195,11 @@ const CoursePage = ({
         <CourseHeroContainer
           id={course._id ?? ''}
           isEnrolled={course.isEnrolled}
+          isPremium={course.isPremium}
           name={course.name ?? ''}
         />
       </Section>
+
       <Section className='md:p-2 p-2'>
         <FlexContainer className='w-full gap-4' itemCenter={false}>
           {/* Left Sidebar (Chapters) */}
@@ -194,12 +211,12 @@ const CoursePage = ({
               <Text className='heading-5' level='h5'>
                 Chapters
               </Text>
-
-              {/* LinerProgressBar */}
-              <LinerProgressBar
-                completedChapters={completedChapters}
-                totalChapters={totalChapters}
-              />
+              {!isLocked && (
+                <LinerProgressBar
+                  completedChapters={completedChapters}
+                  totalChapters={totalChapters}
+                />
+              )}
             </div>
 
             <FlexContainer
@@ -216,83 +233,124 @@ const CoursePage = ({
                     content={content}
                     currentChapterId={currentChapterId}
                     handleChapterClick={handleChapterClick}
-                    href={`${slug}?courseId=${course._id}&chapterId=${chapterId}`}
+                    href={isLocked ? '#' : `${slug}?courseId=${course._id}&chapterId=${chapterId}`}
                     isCompleted={isCompleted}
                     name={name}
+                    isLocked={isLocked}
                   />
                 );
               })}
             </FlexContainer>
-            <div className='w-full sticky bottom-0 bg-inherit py-2'>
-              <CertificateBanner
-                backgroundColor={
-                  isCourseCompleted ? 'bg-purple-600' : 'bg-purple-400'
-                }
-                heading={
-                  isCourseCompleted ? 'View Certificate' : 'Certificate Locked'
-                }
-                icon={isCourseCompleted ? FaTrophy : FaLock}
-                isLocked={!isCourseCompleted}
-                subtext={
-                  isCourseCompleted
-                    ? 'Click below to download your certificate.'
-                    : 'Complete All to Get Your Certificate.'
-                }
-                onClick={() => {
-                  if (isCourseCompleted) {
-                    router.push(`/certificate/${certificateId}`);
-                  }
-                }}
-              />
 
-              {/* New Banner for Interview Prep */}
-              {isCourseCompleted && (
-                <ActionBanner
-                  backgroundColor='bg-blue-400'
-                  heading='Start Interview Prep'
-                  icon={FaTrophy}
-                  isLocked={false}
-                  subtext='Take one more step and start preparing for Coding Interviews'
-                  onClick={() => {
-                    router.push(routes.interviewPrep);
-                  }}
-                />
+            <div className='w-full sticky bottom-0 bg-inherit py-2'>
+              {!isLocked && (
+                <div>
+                  <CertificateBanner
+                    backgroundColor={
+                      isCourseCompleted ? 'bg-purple-600' : 'bg-purple-400'
+                    }
+                    heading={isCourseCompleted ? 'View Certificate' : 'Certificate Locked'}
+                    icon={isCourseCompleted ? FaTrophy : FaLock}
+                    isLocked={!isCourseCompleted}
+                    subtext={
+                      isCourseCompleted
+                        ? 'Click below to download your certificate.'
+                        : 'Complete All to Get Your Certificate.'
+                    }
+                    onClick={() => {
+                      if (isCourseCompleted) {
+                        router.push(`/certificate/${certificateId}`);
+                      }
+                    }}
+                  />
+
+                  {isCourseCompleted && (
+                    <ActionBanner
+                      backgroundColor='bg-blue-400'
+                      heading='Start Interview Prep'
+                      icon={FaTrophy}
+                      isLocked={false}
+                      subtext='Take one more step and start preparing for Coding Interviews'
+                      onClick={() => {
+                        router.push(routes.interviewPrep);
+                      }}
+                    />
+                  )}
+                </div>
               )}
             </div>
           </FlexContainer>
+
+          {/* Main Content */}
           <FlexContainer
-            className='border md:w-8/12 p-2 rounded'
-            disabled={!course.isEnrolled}
+            className='border md:w-8/12 w-full p-2 rounded'
             itemCenter={false}
             justifyCenter={false}
           >
-            <MDXRenderer
-              actions={[
-                currentChapterId && (
-                  <Button
-                    key='enroll'
-                    className='w-fit'
-                    isLoading={isLoading}
-                    text={
-                      isLoading
-                        ? 'Marking...'
-                        : isChapterCompleted
-                        ? 'Completed'
-                        : 'Mark As Completed'
-                    }
-                    variant={
-                      isChapterCompleted
-                        ? 'SUCCESS'
-                        : isLoading
-                        ? 'SECONDARY'
-                        : 'PRIMARY'
-                    }
-                    onClick={toggleCompletion}
-                  />
-                ),
-              ]}
-              mdxSource={courseMeta}
-            />
+            {isLocked ? (
+              <div className="w-full">
+                <Text level="h2" className="heading-4 mb-4">
+                  Course Overview
+                </Text>
+                <MDXRenderer
+                  mdxSource={course.meta || ''}
+                />
+                <div className="mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm">
+                  <Text level="h4" className="mb-2 flex items-center gap-2">
+                    🚀 This is a Premium Course
+                  </Text>
+                  <Text level="p" className="mb-4">
+                    To access the course content, please complete the payment. Once payment is confirmed, all chapters will be unlocked.
+                  </Text>
+                  {!showPayment && (
+                    <Button
+                      text="Pay Now to Unlock"
+                      variant="PRIMARY"
+                      className="w-fit"
+                      onClick={handleShowPayment}
+                    />
+                  )}
+                </div>
+                {showPayment && (
+                  <div ref={paymentSectionRef}>
+                    <PaymentCard 
+                      course={course} 
+                      onClose={() => setShowPayment(false)} 
+                    />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <MDXRenderer
+                mdxSource={courseMeta}
+                actions={
+                  currentChapterId
+                    ? [
+                        <Button
+                          key='enroll'
+                          className='w-fit'
+                          isLoading={isLoading}
+                          text={
+                            isLoading
+                              ? 'Marking...'
+                              : isChapterCompleted
+                              ? 'Completed'
+                              : 'Mark As Completed'
+                          }
+                          variant={
+                            isChapterCompleted
+                              ? 'SUCCESS'
+                              : isLoading
+                              ? 'SECONDARY'
+                              : 'PRIMARY'
+                          }
+                          onClick={toggleCompletion}
+                        />,
+                      ]
+                    : []
+                }
+              />
+            )}
           </FlexContainer>
         </FlexContainer>
       </Section>

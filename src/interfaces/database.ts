@@ -77,6 +77,8 @@ export interface CourseModel extends Document {
   meta: string;
   slug: string;
   description: string;
+  isPremium:boolean
+  price:number;
   coverImageURL: string;
   liveOn: Date;
   chapters: CourseChapterModel[];

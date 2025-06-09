@@ -256,6 +256,7 @@ export interface ExtendedInterviewSheetQuestionModel
 export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
   isEnrolled?: boolean;
   chapters?: ExtendedCourseChapterModel[];
+  isPremium:boolean
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;

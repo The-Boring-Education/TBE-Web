@@ -17,6 +17,7 @@ const CourseHeroContainer = ({
   id,
   name,
   isEnrolled,
+  isPremium,
 }: CourseHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -58,7 +59,7 @@ const CourseHeroContainer = ({
         <LoginRedirectButton text='Login to Get Started' />
       </FlexContainer>
     );
-  } else if (isAuth && !isEnrolled) {
+  } else if (isAuth && !isEnrolled && !isPremium) {
     headerActionButton = (
       <FlexContainer>
         <Button
