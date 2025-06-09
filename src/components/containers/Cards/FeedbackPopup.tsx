@@ -18,6 +18,7 @@ const FeedbackPopup = ({
   type,
   refId,
   position = 'bottom-right',
+  onSubmit,
 }: FeedbackPopupProps) => {
   const {
     rating,
@@ -27,9 +28,26 @@ const FeedbackPopup = ({
     setFeedbackText,
     setFeedbackModal,
     setToast,
-    handleStarClick,
-    handleFeedbackSubmit,
+    handleStarClick: baseHandleStarClick,
+    handleFeedbackSubmit: handleSubmit,
   } = useFeedback({ type, refId });
+
+  const handleStarClick = async (value: number) => {
+    await baseHandleStarClick(value);
+  };
+
+  const handleFeedbackSubmit = async () => {
+    await handleSubmit();
+    if (onSubmit) {
+      onSubmit();
+    }
+  };
+
+  const handleModalClose = () => {
+    if (onSubmit) {
+      onSubmit();
+    }
+  };
 
   const positionClasses =
     position === 'bottom-center'
@@ -49,9 +67,10 @@ const FeedbackPopup = ({
           >
             <button
               className='ml-auto text-gray-400 hover:text-black text-sm'
-              onClick={() =>
-                setFeedbackModal((prev) => ({ ...prev, rating: false }))
-              }
+              onClick={() => {
+                setFeedbackModal((prev) => ({ ...prev, rating: false }));
+                handleModalClose();
+              }}
             >
               ✕
             </button>
@@ -83,9 +102,10 @@ const FeedbackPopup = ({
       )}
 
       <Modal
-        closeModal={() =>
-          setFeedbackModal((prev) => ({ ...prev, feedback: false }))
-        }
+        closeModal={() => {
+          setFeedbackModal((prev) => ({ ...prev, feedback: false }));
+          handleModalClose();
+        }}
         isOpen={feedbackModal.feedback}
         title='Your Feedback'
       >
@@ -106,9 +126,10 @@ const FeedbackPopup = ({
             <Button
               text='Cancel'
               variant='GHOST'
-              onClick={() =>
-                setFeedbackModal((prev) => ({ ...prev, feedback: false }))
-              }
+              onClick={() => {
+                setFeedbackModal((prev) => ({ ...prev, feedback: false }));
+                handleModalClose();
+              }}
             />
             <Button
               text='Submit'

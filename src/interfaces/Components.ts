@@ -681,6 +681,7 @@ export interface FeedbackPopupProps {
   type: FeedbackType;
   refId?: string;
   position?: 'bottom-right' | 'bottom-center';
+  onSubmit?: () => void;
 }
 export interface UploadFileInputProps {
   label?: string;
