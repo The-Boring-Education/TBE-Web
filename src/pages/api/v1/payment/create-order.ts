@@ -5,23 +5,34 @@ import { apiStatusCodes } from '@/constant';
 import { buildOrderPayload, createCashfreeOrder, generatePaymentOrderId, sendAPIResponse } from '@/utils';
 import { Types } from 'mongoose';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
 
-  switch (req.method) {
-    case 'POST':
-      return handleCreatePaymentOrder(req, res);
-    default:
-      return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
-        sendAPIResponse({
-          status: false,
-          message: `Method ${req.method} Not Allowed`,
-        })
-      );
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    await connectDB();
+
+    switch (req.method) {
+      case 'POST':
+        return await handleCreateOrder(req, res);
+      default:
+        return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
+          sendAPIResponse({
+            status: false,
+            message: `Method ${req.method} Not Allowed`,
+          })
+        );
+    }
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal Server Error',
+        error,
+      })
+    );
   }
 };
 
-const handleCreatePaymentOrder = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const {
       userId,

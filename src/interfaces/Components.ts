@@ -684,7 +684,6 @@ export interface FeedbackPopupProps {
   refId?: string;
   position?: 'bottom-right' | 'bottom-center';
   onSubmit?: () => void;
-  onComplete?: () => void;
 }
 export interface UploadFileInputProps {
   label?: string;
