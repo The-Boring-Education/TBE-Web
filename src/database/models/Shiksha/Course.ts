@@ -46,11 +46,9 @@ const CourseSchema = new Schema<CourseModel>(
     isPremium: {
       type: Boolean,
       default: false,
-      required: true,
     },
     price:{
       type: Number,
-      required:true,
     },
     chapters: [chapterSchema],
     roadmap: { type: String, enum: ROADMAPS, required: true },

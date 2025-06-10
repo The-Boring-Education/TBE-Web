@@ -12,6 +12,7 @@ import useScrollPosition from './useScrollPosition';
 import useSkillPlaylist from './useSkillPlaylist';
 import useUser from './useUser';
 import useUsername from './useUsername';
+import useCashfreePayment  from './useCashfreePayment';
 
 export {
   useAnalytics,
@@ -28,4 +29,5 @@ export {
   useSkillPlaylist,
   useUser,
   useUsername,
+  useCashfreePayment,
 };

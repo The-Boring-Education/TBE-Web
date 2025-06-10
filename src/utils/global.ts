@@ -209,7 +209,7 @@ const getCoursePageProps = async (context: any) => {
       const seoMeta = {
         title: `${name} | Shiksha | The Boring Education`,
         siteName: 'Shiksha The Boring Education',
-        description,
+        description:description ?? null,
         url: `${routes.shiksha}/${slug}`,
         keywords:
           'Shiksha online courses, advanced programming tutorials, free tech education, career development for professionals, skill enhancement programs, coding bootcamps, tech webinars, online learning for college students, GitHub projects, tech career growth, free certifications, free courses',

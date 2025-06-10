@@ -615,7 +615,6 @@ const buildOrderPayload = ({
   userId,
   customerName,
   customerEmail,
-  customerPhone,
 }: BuildOrderPayloadProps) => ({
   order_id: orderId,
   order_amount: amount,
@@ -624,7 +623,7 @@ const buildOrderPayload = ({
     customer_id: userId,
     customer_name: customerName,
     customer_email: customerEmail,
-    customer_phone: customerPhone,
+    customer_phone: '0000000000',
   },
   order_meta: {
     return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/status?order_id=${orderId}`,

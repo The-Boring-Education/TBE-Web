@@ -36,6 +36,7 @@ const CoursePage = ({
   currentChapterId,
 }: CoursePageProps) => {
   const [courseMeta, setCourseMeta] = useState<string>(meta || '');
+  const { user } = useUser();
   const isPremium = course.isPremium;
   const isLocked = isPremium && !course.isEnrolled;
   const [showPayment, setShowPayment] = useState(false);
@@ -71,7 +72,6 @@ const CoursePage = ({
   }, [currentChapterId, chapters]);
 
   const { makeRequest } = useApi(`shiksha/${course}`);
-  const { user } = useUser();
   const { trackEvent } = useAnalytics();
 
   if (!course) return null;

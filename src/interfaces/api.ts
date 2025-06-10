@@ -11,6 +11,7 @@ import type {
   ProjectChapter,
   UserRoleType,
 } from '.';
+import { Types } from 'mongoose';
 
 export type APIMethodTypes = 'GET' | 'POST' | 'PATCH' | 'PUT';
 
@@ -47,11 +48,13 @@ export interface ClientAPIResponse {
 export interface APIResponseType extends ClientAPIResponse {
   message?: string;
   error?: any;
+  details?: any;
 }
 
 export type DatabaseQueryResponseType = {
   data?: any;
   error?: any;
+  details?: any;
 };
 
 export interface AddProjectRequestPayloadProps {
@@ -383,8 +386,8 @@ export interface UnSkilledEvaluationRequestBody {
 }
 
 export interface AddPaymentToDBRequestPayloadProps {
-  userId: string;
-  productId: string;
+  userId: Types.ObjectId;
+  productId: Types.ObjectId;
   productType: string;
   amount: number;
   orderId: string;
@@ -397,7 +400,6 @@ export interface BuildOrderPayloadProps {
   userId: string;
   customerName: string;
   customerEmail: string;
-  customerPhone: string;
 }
 
 export interface UpdatePaymentStatusPayloadProps {

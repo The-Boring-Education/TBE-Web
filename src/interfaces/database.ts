@@ -1,4 +1,4 @@
-import type { Document, Schema } from 'mongoose';
+import type { Document, Schema, Types } from 'mongoose';
 import type { FeedbackType, ProductType } from '@/constant';
 
 import type {
@@ -271,10 +271,10 @@ export interface FeedbackModel extends Document {
 }
 
 export interface PaymentModel extends Document {
-  _id: typeof Schema.Types.ObjectId;
-  user: typeof Schema.Types.ObjectId;
+  _id: Types.ObjectId;
+  user: Types.ObjectId;
   amount: number;
-  productId: typeof Schema.Types.ObjectId;
+  productId: Types.ObjectId;
   productType: ProductType;
   orderId: string;           
   paymentId?: string;       
