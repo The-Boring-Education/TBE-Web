@@ -27,6 +27,7 @@ import type {
   CoursePageProps,
 } from '@/interfaces';
 import { formatDate, getCoursePageProps } from '@/utils';
+import { usePaymentStatus } from '@/hooks';
 
 const CoursePage = ({
   course,
@@ -36,12 +37,6 @@ const CoursePage = ({
   currentChapterId,
 }: CoursePageProps) => {
   const [courseMeta, setCourseMeta] = useState<string>(meta || '');
-  const { user } = useUser();
-  const isPremium = course.isPremium;
-  const isLocked = isPremium && !course.isEnrolled;
-  const [showPayment, setShowPayment] = useState(false);
-  const paymentSectionRef = useRef<HTMLDivElement>(null);
-
   const [chapters, setChapters] = useState(course.chapters || []);
   const [isChapterCompleted, setIsChapterCompleted] = useState(
     chapters.find((chapter) => chapter._id.toString() === currentChapterId)
@@ -57,6 +52,15 @@ const CoursePage = ({
 
   const [showChapterFeedback, setShowChapterFeedback] = useState(false);
   const [showCourseFeedback, setShowCourseFeedback] = useState(false);
+
+  const { user } = useUser();
+  const { isLocked } = usePaymentStatus({
+    userId: user?.id,
+    productId: course?._id,
+    isPremium: course?.isPremium,
+  });
+  const [showPayment, setShowPayment] = useState(false);
+  const paymentSectionRef = useRef<HTMLDivElement>(null);
 
   // Calculate the total chapters and completed chapters
   const totalChapters = chapters.length;
@@ -316,6 +320,7 @@ const CoursePage = ({
                     <PaymentCard 
                       course={course} 
                       onClose={() => setShowPayment(false)} 
+                      productType='SHIKSHA'
                     />
                   </div>
                 )}

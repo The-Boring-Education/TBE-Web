@@ -13,6 +13,7 @@ import useSkillPlaylist from './useSkillPlaylist';
 import useUser from './useUser';
 import useUsername from './useUsername';
 import useCashfreePayment  from './useCashfreePayment';
+import usePaymentStatus  from './usePaymentStatus';
 
 export {
   useAnalytics,
@@ -30,4 +31,5 @@ export {
   useUser,
   useUsername,
   useCashfreePayment,
+  usePaymentStatus,
 };

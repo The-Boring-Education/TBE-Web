@@ -724,4 +724,5 @@ export interface ResumeEvaluationSectionProps {
 export interface PaymentCardProps {
   course: BaseShikshaCourseResponseProps;
   onClose: () => void;
+  productType:string;
 }

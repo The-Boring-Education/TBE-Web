@@ -57,6 +57,11 @@ const CourseSchema = new Schema<CourseModel>(
       enum: DIFFICULTY_LEVEL,
       required: true,
     },
+    features: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,

@@ -84,6 +84,7 @@ export interface CourseModel extends Document {
   chapters: CourseChapterModel[];
   roadmap: RoadmapsType;
   difficultyLevel: DifficultyType;
+  features: string[];
 }
 
 export interface InterviewSheetModel extends Document {

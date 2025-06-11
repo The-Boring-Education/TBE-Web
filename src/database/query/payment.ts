@@ -62,7 +62,26 @@ const updatePaymentStatusToDB = async ({
   }
 };
 
+const checkPaymentStatusFromDB = async (userId: string, productId: string): Promise<DatabaseQueryResponseType> => {
+  try {
+    const payment = await Payment.findOne({ user: userId, productId });
+
+    if (!payment) {
+      return { data: { purchased: false }, error: 'No payment record found' };
+    }
+
+    if (payment.isPaid) {
+      return { data: { purchased: true } };
+    } else {
+      return { data: { purchased: false }, error: 'Payment not completed' };
+    }
+  } catch (error) {
+    return { error: 'Error checking payment status' };
+  }
+};
+
 export { addPaymentToDB,
          getPaymentByOrderIdFromDB, 
-         updatePaymentStatusToDB
+         updatePaymentStatusToDB,
+         checkPaymentStatusFromDB
          };
