@@ -9,7 +9,7 @@ import type {
   TopNavbarContainerProps,
 } from '@/interfaces';
 
-import { routes } from '..';
+import { routes } from '../routes';
 import { cohorts, LINKS, products, STATIC_FILE_PATH } from '../global';
 
 const TOP_NAVIGATION: TopNavbarContainerProps = {

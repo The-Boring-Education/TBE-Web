@@ -43,6 +43,13 @@ const CourseSchema = new Schema<CourseModel>(
       type: Date,
       required: [true, 'Live on is required'],
     },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
+    price:{
+      type: Number,
+    },
     chapters: [chapterSchema],
     roadmap: { type: String, enum: ROADMAPS, required: true },
     difficultyLevel: {
@@ -50,6 +57,11 @@ const CourseSchema = new Schema<CourseModel>(
       enum: DIFFICULTY_LEVEL,
       required: true,
     },
+    features: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,

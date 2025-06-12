@@ -88,6 +88,8 @@ const routes = {
     markProjectChapterAsCompleted: '/user/projects/project',
     markSheetQuestionAsCompleted: '/user/interview-prep/sheet',
     submitUserFeedback: '/feedback',
+    createOrder: '/payment/create-order',
+    checkStatus:'/payment/checkstatus',
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {
       let url = `/shiksha/${course}`;

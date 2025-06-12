@@ -66,4 +66,10 @@ export interface useFeedbackProps {
   refId?: string;
 }
 
+export interface usePaymentStatusProps{
+  userId: string |undefined,
+  productId: string,
+   isPremium: boolean,
+}
+
 export type NotificationItemProps = Partial<NotificationModel>;

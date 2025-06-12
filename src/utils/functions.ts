@@ -615,7 +615,6 @@ const buildOrderPayload = ({
   userId,
   customerName,
   customerEmail,
-  customerPhone,
 }: BuildOrderPayloadProps) => ({
   order_id: orderId,
   order_amount: amount,
@@ -624,7 +623,7 @@ const buildOrderPayload = ({
     customer_id: userId,
     customer_name: customerName,
     customer_email: customerEmail,
-    customer_phone: customerPhone,
+    customer_phone: '0000000000',
   },
   order_meta: {
     return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/status?order_id=${orderId}`,
@@ -668,9 +667,9 @@ const verifyWebhookSignature = (
 };
 
 const validateWebhookEvent = (event: any): { isValid: boolean; error?: string; data?: WebhookEvent } => {
-  const { order_id, isPaid } = event;
+  const { order_id, payment_status } = event;
 
-  if (!order_id || typeof isPaid !== 'boolean') {
+  if (!order_id || typeof payment_status !== 'string') {
     return {
       isValid: false,
       error: 'Missing order_id or invalid isPaid status in webhook payload'

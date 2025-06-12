@@ -2509,6 +2509,15 @@ const SKILL_BLACKLIST = [
   'production planning',
 ];
 
+const ALLOWED_IPS = [
+  '52.66.101.190',
+  '3.109.102.144',
+  '3.111.60.173',
+  '18.60.134.245',
+  '18.60.183.142',
+];
+
+
 export {
   CERTIFICATE_TYPE,
   DIFFICULTY_LEVEL,
@@ -2525,4 +2534,5 @@ export {
   USER_POINTS_ACTION,
   USER_ROLE,
   YOUTUBE_API_PATH,
+  ALLOWED_IPS
 };

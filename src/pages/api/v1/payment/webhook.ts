@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import getRawBody from 'raw-body';
 import { connectDB } from '@/middlewares';
-import { getPaymentByOrderIdFromDB, updatePaymentStatusToDB } from '@/database'
+import { getPaymentByOrderIdFromDB, updatePaymentStatusToDB } from '@/database';
 import { verifyWebhookSignature, validateWebhookEvent, sendAPIResponse } from '@/utils';
-import { apiStatusCodes } from '@/constant';
+import { ALLOWED_IPS, apiStatusCodes } from '@/constant';
 
 const WEBHOOK_SECRET = process.env.CASHFREE_SECRET_KEY!;
 
@@ -14,24 +14,53 @@ export const config = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    await connectDB();
+  await connectDB();
 
-    if (req.method !== 'POST') {
+  switch (req.method) {
+    case 'POST':
+      return handleWebhook(req, res);
+    default:
       return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
         })
       );
+  }
+};
+
+const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    if (process.env.NODE_ENV === 'production') {
+      const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      const ipAddress = Array.isArray(clientIp) ? clientIp[0] : clientIp?.split(',')[0];
+
+      if (!ipAddress || !ALLOWED_IPS.includes(ipAddress)) {
+        return res.status(apiStatusCodes.UNAUTHORIZED).json(
+          sendAPIResponse({
+            status: false,
+            message: 'Unauthorized IP address',
+          })
+        );
+      }
     }
 
     const rawBody = await getRawBody(req);
     const payloadString = rawBody.toString('utf8');
 
+    const webhookSignature = req.headers['x-webhook-signature'];
+    if (!webhookSignature || typeof webhookSignature !== 'string') {
+      return res.status(apiStatusCodes.UNAUTHORIZED).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Missing webhook signature',
+        })
+      );
+    }
+
     const { isValid: isSignatureValid, error: signatureError } = verifyWebhookSignature(
       payloadString,
-      req.headers['x-webhook-signature'] as string,
+      webhookSignature,
       WEBHOOK_SECRET
     );
 
@@ -88,7 +117,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       sendAPIResponse({
         status: false,
         message: 'Webhook processing failed',
-        error,
+        error: process.env.NODE_ENV === 'development' ? error : undefined,
       })
     );
   }

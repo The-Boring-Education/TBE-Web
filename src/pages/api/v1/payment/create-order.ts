@@ -4,6 +4,7 @@ import { addPaymentToDB } from '@/database';
 import { apiStatusCodes } from '@/constant';
 import { buildOrderPayload, createCashfreeOrder, generatePaymentOrderId, sendAPIResponse } from '@/utils';
 
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await connectDB();
@@ -31,58 +32,57 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
-  const {
-    userId,
-    productId,
-    productType,
-    amount,
-    customerName,
-    customerEmail,
-    customerPhone,
-  } = req.body;
+  try {
+    const {
+      userId,
+      productId,
+      productType,
+      amount,
+      customerName,
+      customerEmail,
+    } = req.body;
 
-  if (!userId || !productId || !productType || !amount || !customerName) {
-    return res.status(apiStatusCodes.BAD_REQUEST).json(
-      sendAPIResponse({
-        status: false,
-        message: 'Missing required fields',
-      })
-    );
-  }
+    if (!userId || !productId || !productType || !amount || !customerName || !customerEmail) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Missing required fields',
+        })
+      );
+    }
 
-  const orderId = generatePaymentOrderId();
+    const orderId = generatePaymentOrderId();
 
-  const orderPayload = buildOrderPayload({
-    orderId,
-    amount,
-    userId,
-    customerName,
-    customerEmail,
-    customerPhone,
-  });
+    const orderPayload = buildOrderPayload({
+      orderId,
+      amount: amount,
+      userId,
+      customerName,
+      customerEmail,
+    });
 
-const {data, ok} = await createCashfreeOrder(orderPayload)
+    const { data, ok } = await createCashfreeOrder(orderPayload);
 
-if (!ok || !data.payment_session_id) {
-  return res.status(apiStatusCodes.BAD_REQUEST).json(
-    sendAPIResponse({
-      status: false,
-      message: 'Failed to create order with payment gateway',
-      error: data,
-    })
-  );
-}
+    if (!ok || !data.payment_session_id) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Failed to create order with payment gateway',
+          error: process.env.NODE_ENV === 'development' ? data : undefined,
+        })
+      );
+    }
 
-const paymentLink = `${process.env.CASHFREE_BASE_URL}/checkout?paymentSessionId=${data.payment_session_id}`;
+      const paymentLink = `${process.env.CASHFREE_BASE_URL}/checkout?paymentSessionId=${data.payment_session_id}`;
 
-  const { error } = await addPaymentToDB({
-    userId,
-    productId,
-    productType,
-    amount,
-    orderId,
-    paymentLink,
-  });
+    const { error } = await addPaymentToDB({
+      userId: userId,
+      productId: productId,
+      productType,
+      amount: amount,
+      orderId,
+      paymentLink,
+    });
 
   if (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
@@ -93,16 +93,27 @@ const paymentLink = `${process.env.CASHFREE_BASE_URL}/checkout?paymentSessionId=
     );
   }
 
-  return res.status(apiStatusCodes.OKAY).json(
-    sendAPIResponse({
-      status: true,
-      message: 'Order created successfully',
-      data: {
-        orderId,
-        paymentLink,
-      },
-    })
-  );
+    // 13. Send success response
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Order created successfully',
+        data: {
+          orderId,
+          paymentLink,
+          paymentSessionId: data.payment_session_id,
+        },
+      })
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal Server Error',
+        error: process.env.NODE_ENV === 'development' ? error : undefined,
+      })
+    );
+  }
 };
 
 export default handler;
