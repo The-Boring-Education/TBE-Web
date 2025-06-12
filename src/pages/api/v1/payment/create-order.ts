@@ -3,7 +3,6 @@ import { connectDB } from '@/middlewares';
 import { addPaymentToDB } from '@/database';
 import { apiStatusCodes } from '@/constant';
 import { buildOrderPayload, createCashfreeOrder, generatePaymentOrderId, sendAPIResponse } from '@/utils';
-import { Types } from 'mongoose';
 
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -76,9 +75,9 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const paymentLink = `${process.env.CASHFREE_BASE_URL}/checkout?paymentSessionId=${data.payment_session_id}`;
 
-    const { error, details } = await addPaymentToDB({
-      userId: new Types.ObjectId(userId),
-      productId: new Types.ObjectId(productId),
+    const { error } = await addPaymentToDB({
+      userId: userId,
+      productId: productId,
       productType,
       amount: amount,
       orderId,

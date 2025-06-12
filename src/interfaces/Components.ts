@@ -6,7 +6,7 @@ import type {
   ReactNode,
   RefObject,
 } from 'react';
-import type { BaseShikshaCourseResponseProps } from '@/interfaces';
+import type { BaseShikshaCourseResponseProps,  } from '@/interfaces';
 import type { FeedbackType } from '@/constant';
 
 import type {

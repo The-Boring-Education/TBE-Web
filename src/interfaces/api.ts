@@ -386,8 +386,8 @@ export interface UnSkilledEvaluationRequestBody {
 }
 
 export interface AddPaymentToDBRequestPayloadProps {
-  userId: Types.ObjectId;
-  productId: Types.ObjectId;
+  userId: string;
+  productId: string;
   productType: string;
   amount: number;
   orderId: string;

@@ -667,9 +667,9 @@ const verifyWebhookSignature = (
 };
 
 const validateWebhookEvent = (event: any): { isValid: boolean; error?: string; data?: WebhookEvent } => {
-  const { order_id, isPaid } = event;
+  const { order_id, payment_status } = event;
 
-  if (!order_id || typeof isPaid !== 'boolean') {
+  if (!order_id || typeof payment_status !== 'string') {
     return {
       isValid: false,
       error: 'Missing order_id or invalid isPaid status in webhook payload'

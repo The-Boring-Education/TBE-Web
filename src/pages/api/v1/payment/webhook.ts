@@ -3,16 +3,9 @@ import getRawBody from 'raw-body';
 import { connectDB } from '@/middlewares';
 import { getPaymentByOrderIdFromDB, updatePaymentStatusToDB } from '@/database';
 import { verifyWebhookSignature, validateWebhookEvent, sendAPIResponse } from '@/utils';
-import { apiStatusCodes } from '@/constant';
+import { ALLOWED_IPS, apiStatusCodes } from '@/constant';
 
 const WEBHOOK_SECRET = process.env.CASHFREE_SECRET_KEY!;
-const ALLOWED_IPS = [
-  '52.66.101.190',
-  '3.109.102.144',
-  '3.111.60.173',
-  '18.60.134.245',
-  '18.60.183.142',
-];
 
 export const config = {
   api: {
