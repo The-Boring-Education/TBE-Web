@@ -1,3 +1,4 @@
+import { isProductionEnv } from '@/constant';
 import { useState, useEffect, useCallback } from 'react';
 
 declare global {
@@ -22,7 +23,9 @@ const useCashfreePayment = () => {
       if (window.Cashfree || window.CFPaymentSDK) {
         setIsCashfreeLoaded(true);
       } else {
-        setError('Payment gateway initialization failed. Please refresh the page.');
+        setError(
+          'Payment gateway initialization failed. Please refresh the page.'
+        );
       }
     };
 
@@ -36,7 +39,9 @@ const useCashfreePayment = () => {
   }, []);
 
   const cleanupCashfreeSDK = () => {
-    const script = document.querySelector(`script[src="${CASHFREE_SCRIPT_URL}"]`);
+    const script = document.querySelector(
+      `script[src="${CASHFREE_SCRIPT_URL}"]`
+    );
     if (script) {
       document.body.removeChild(script);
     }
@@ -60,11 +65,18 @@ const useCashfreePayment = () => {
   ) => {
     const PaymentSDK = window.Cashfree || window.CFPaymentSDK;
     if (!PaymentSDK) {
-      throw new Error('Payment gateway is not available. Please refresh the page and try again.');
+      throw new Error(
+        'Payment gateway is not available. Please refresh the page and try again.'
+      );
+    }
+
+    let mode = 'sandbox';
+    if (isProductionEnv) {
+      mode = 'production';
     }
 
     const cashfree = new PaymentSDK({
-      mode: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox',
+      mode,
     });
 
     await cashfree.checkout({

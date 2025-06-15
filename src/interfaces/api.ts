@@ -259,7 +259,7 @@ export interface ExtendedInterviewSheetQuestionModel
 export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
   isEnrolled?: boolean;
   chapters?: ExtendedCourseChapterModel[];
-  isPremium:boolean
+  isPremium?: boolean;
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;
@@ -403,7 +403,7 @@ export interface BuildOrderPayloadProps {
 }
 
 export interface UpdatePaymentStatusPayloadProps {
-  orderId: string,
-  paymentId: string | undefined,
-  status: 'SUCCESS' | 'FAILED'
+  orderId: string;
+  paymentId: string | undefined;
+  status: 'SUCCESS' | 'FAILED';
 }

@@ -344,7 +344,7 @@ const fetchPlaylistName = async (
 }> => {
   try {
     const response = await fetch(
-      `${YOUTUBE_API_PATH}/playlists?part=snippet&id=${playlistId}&key=${process.env.YOUTUBE_API_KEY}`
+      `${YOUTUBE_API_PATH}/playlists?part=snippet&id=${playlistId}&key=${envConfig.YOUTUBE_API_KEY}`
     );
 
     const data = await response.json();
@@ -400,7 +400,7 @@ const fetchPlaylistData = async (
 
     // Fetch videos
     const response = await fetch(
-      `${YOUTUBE_API_PATH}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&pageToken=${pageToken}&key=${process.env.YOUTUBE_API_KEY}`
+      `${YOUTUBE_API_PATH}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&pageToken=${pageToken}&key=${envConfig.YOUTUBE_API_KEY}`
     );
 
     const data = await response.json();
@@ -605,9 +605,9 @@ const cleanJobSkillsData = (skills: string[]): string[] => {
     });
 };
 
-const generatePaymentOrderId = (): string =>{
+const generatePaymentOrderId = (): string => {
   return `order_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-}
+};
 
 const buildOrderPayload = ({
   orderId,
@@ -626,19 +626,19 @@ const buildOrderPayload = ({
     customer_phone: '0000000000',
   },
   order_meta: {
-    return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/status?order_id=${orderId}`,
+    return_url: `${envConfig.NEXT_PUBLIC_BASE_URL}/payment/status?order_id=${orderId}`,
   },
 });
 
 const createCashfreeOrder = async (
   orderPayload: ReturnType<typeof buildOrderPayload>
 ): Promise<{ data: any; ok: boolean }> => {
-  const response = await fetch(`${process.env.CASHFREE_BASE_URL}/orders`, {
+  const response = await fetch(`${envConfig.CASHFREE_BASE_URL}/orders`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-client-id': process.env.CASHFREE_CLIENT_ID!,
-      'x-client-secret': process.env.CASHFREE_SECRET_KEY!,
+      'x-client-id': envConfig.CASHFREE_CLIENT_ID!,
+      'x-client-secret': envConfig.CASHFREE_SECRET_KEY!,
       'x-api-version': '2022-09-01',
     },
     body: JSON.stringify(orderPayload),
@@ -666,19 +666,21 @@ const verifyWebhookSignature = (
   return { isValid: signature === generatedSignature };
 };
 
-const validateWebhookEvent = (event: any): { isValid: boolean; error?: string; data?: WebhookEvent } => {
+const validateWebhookEvent = (
+  event: any
+): { isValid: boolean; error?: string; data?: WebhookEvent } => {
   const { order_id, payment_status } = event;
 
   if (!order_id || typeof payment_status !== 'string') {
     return {
       isValid: false,
-      error: 'Missing order_id or invalid isPaid status in webhook payload'
+      error: 'Missing order_id or invalid isPaid status in webhook payload',
     };
   }
 
   return {
     isValid: true,
-    data: event as WebhookEvent
+    data: event as WebhookEvent,
   };
 };
 
@@ -721,5 +723,5 @@ export {
   createCashfreeOrder,
   verifyWebhookSignature,
   validateWebhookEvent,
-  type WebhookEvent
+  type WebhookEvent,
 };

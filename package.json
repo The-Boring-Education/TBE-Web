@@ -40,6 +40,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/markdown-it": "^14.0.1",
+    "@types/raw-body": "^2.1.4",
     "@types/react": "^18.0.28",
     "@types/recharts": "^1.8.29",
     "@types/uuid": "^9.0.1",

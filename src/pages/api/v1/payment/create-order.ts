@@ -1,9 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
 import { addPaymentToDB } from '@/database';
-import { apiStatusCodes } from '@/constant';
-import { buildOrderPayload, createCashfreeOrder, generatePaymentOrderId, sendAPIResponse } from '@/utils';
-
+import { apiStatusCodes, envConfig, isDevelopmentEnv } from '@/constant';
+import {
+  buildOrderPayload,
+  createCashfreeOrder,
+  generatePaymentOrderId,
+  sendAPIResponse,
+} from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -42,7 +46,14 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       customerEmail,
     } = req.body;
 
-    if (!userId || !productId || !productType || !amount || !customerName || !customerEmail) {
+    if (
+      !userId ||
+      !productId ||
+      !productType ||
+      !amount ||
+      !customerName ||
+      !customerEmail
+    ) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
@@ -68,12 +79,12 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: 'Failed to create order with payment gateway',
-          error: process.env.NODE_ENV === 'development' ? data : undefined,
+          error: isDevelopmentEnv && data,
         })
       );
     }
 
-      const paymentLink = `${process.env.CASHFREE_BASE_URL}/checkout?paymentSessionId=${data.payment_session_id}`;
+    const paymentLink = `${envConfig.CASHFREE_BASE_URL}/checkout?paymentSessionId=${data.payment_session_id}`;
 
     const { error } = await addPaymentToDB({
       userId: userId,
@@ -84,14 +95,14 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       paymentLink,
     });
 
-  if (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-      sendAPIResponse({
-        status: false,
-        message: error,
-      })
-    );
-  }
+    if (error) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: error,
+        })
+      );
+    }
 
     // 13. Send success response
     return res.status(apiStatusCodes.OKAY).json(
@@ -110,7 +121,7 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       sendAPIResponse({
         status: false,
         message: 'Internal Server Error',
-        error: process.env.NODE_ENV === 'development' ? error : undefined,
+        error: isDevelopmentEnv && error,
       })
     );
   }

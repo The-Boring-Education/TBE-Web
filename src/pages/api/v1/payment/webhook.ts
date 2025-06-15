@@ -2,10 +2,20 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import getRawBody from 'raw-body';
 import { connectDB } from '@/middlewares';
 import { getPaymentByOrderIdFromDB, updatePaymentStatusToDB } from '@/database';
-import { verifyWebhookSignature, validateWebhookEvent, sendAPIResponse } from '@/utils';
-import { ALLOWED_IPS, apiStatusCodes } from '@/constant';
+import {
+  verifyWebhookSignature,
+  validateWebhookEvent,
+  sendAPIResponse,
+} from '@/utils';
+import {
+  ALLOWED_IPS,
+  apiStatusCodes,
+  envConfig,
+  isDevelopmentEnv,
+  isProductionEnv,
+} from '@/constant';
 
-const WEBHOOK_SECRET = process.env.CASHFREE_SECRET_KEY!;
+const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY!;
 
 export const config = {
   api: {
@@ -31,9 +41,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    if (process.env.NODE_ENV === 'production') {
-      const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-      const ipAddress = Array.isArray(clientIp) ? clientIp[0] : clientIp?.split(',')[0];
+    if (isProductionEnv) {
+      const clientIp =
+        req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      const ipAddress = Array.isArray(clientIp)
+        ? clientIp[0]
+        : clientIp?.split(',')[0];
 
       if (!ipAddress || !ALLOWED_IPS.includes(ipAddress)) {
         return res.status(apiStatusCodes.UNAUTHORIZED).json(
@@ -58,11 +71,8 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const { isValid: isSignatureValid, error: signatureError } = verifyWebhookSignature(
-      payloadString,
-      webhookSignature,
-      WEBHOOK_SECRET
-    );
+    const { isValid: isSignatureValid, error: signatureError } =
+      verifyWebhookSignature(payloadString, webhookSignature, WEBHOOK_SECRET);
 
     if (!isSignatureValid) {
       return res.status(apiStatusCodes.UNAUTHORIZED).json(
@@ -74,7 +84,11 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const event = JSON.parse(payloadString);
-    const { isValid: isEventValid, error: eventError, data: webhookEvent } = validateWebhookEvent(event);
+    const {
+      isValid: isEventValid,
+      error: eventError,
+      data: webhookEvent,
+    } = validateWebhookEvent(event);
 
     if (!isEventValid || !webhookEvent) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -85,7 +99,9 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const { data: payment, error: findError } = await getPaymentByOrderIdFromDB(webhookEvent.order_id);
+    const { data: payment, error: findError } = await getPaymentByOrderIdFromDB(
+      webhookEvent.order_id
+    );
 
     if (findError) {
       return res.status(apiStatusCodes.NOT_FOUND).json(
@@ -117,7 +133,7 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
       sendAPIResponse({
         status: false,
         message: 'Webhook processing failed',
-        error: process.env.NODE_ENV === 'development' ? error : undefined,
+        error: isDevelopmentEnv && error,
       })
     );
   }

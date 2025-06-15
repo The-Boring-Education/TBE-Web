@@ -389,6 +389,9 @@ const PAGE_REFRESH_TIMEOUT = {
   veryLong: 60 * 60 * 24 * 15, // 15 days in seconds
 };
 
+const isProductionEnv = envConfig.NODE_ENV === 'production';
+const isDevelopmentEnv = envConfig.NODE_ENV === 'development';
+
 export {
   apiStatusCodes,
   cohorts,
@@ -415,4 +418,6 @@ export {
   USER_ROLE_OPTIONS,
   USER_USAGE_OPTIONS,
   YOUFOCUS_SKILL_PLAYLISTS,
+  isProductionEnv,
+  isDevelopmentEnv,
 };
