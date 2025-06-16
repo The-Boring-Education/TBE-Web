@@ -1,6 +1,6 @@
 {
   "name": "tbe-webapp",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -24,6 +24,7 @@
     "next": "^13.2.4",
     "next-auth": "^4.24.7",
     "openai": "^4.85.2",
+    "raw-body": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
@@ -39,6 +40,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/markdown-it": "^14.0.1",
+    "@types/raw-body": "^2.1.4",
     "@types/react": "^18.0.28",
     "@types/recharts": "^1.8.29",
     "@types/uuid": "^9.0.1",

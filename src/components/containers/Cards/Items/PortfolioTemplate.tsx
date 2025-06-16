@@ -1,5 +1,3 @@
-import { useUser } from '@/hooks';
-
 import {
   FlexContainer,
   Image,
@@ -8,7 +6,7 @@ import {
   Text,
 } from '@/components';
 import LinkText from '@/components/common/Typography/Link';
-
+import { useUser } from '@/hooks';
 import type { PortfolioTemplateProps } from '@/interfaces';
 
 const PortfolioTemplate = ({
@@ -43,7 +41,7 @@ const PortfolioTemplate = ({
       <FlexContainer
         className='px-3 pb-3 gap-1'
         direction='col'
-        fullWidth={true}
+        fullWidth
         itemCenter={false}
       >
         <Text className='heading-4 text-white' level='h2'>

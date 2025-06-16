@@ -1,5 +1,4 @@
-import type { Model } from 'mongoose';
-import { model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS, PLATFORM_USAGE, USER_ROLE } from '@/constant';
 import type { UserModel } from '@/interfaces';

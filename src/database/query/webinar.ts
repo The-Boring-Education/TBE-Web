@@ -1,5 +1,4 @@
 import { Webinar } from '@/database';
-
 import type {
   AddWebinarRequestPayloadProps,
   UpdateEnrolledUsersRequestPayloadProps,

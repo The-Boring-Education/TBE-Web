@@ -1,13 +1,12 @@
 import type mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addAInterviewSheetToDB,
   getAllInterviewSheetsFromDB,
   getInterviewSheetBySlugFromDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type {
   AddInterviewSheetRequestPayloadProps,
   BaseInterviewSheetResponseProps,
@@ -101,9 +100,10 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
     // Create a map of all sheets by their ID
     const sheetMap = new Map<string, BaseInterviewSheetResponseProps>(
       allInterviewSheets.map(
-        (sheetDoc: mongoose.Document & BaseInterviewSheetResponseProps) => {
-          return [sheetDoc._id.toString(), { ...sheetDoc.toObject() }];
-        }
+        (sheetDoc: mongoose.Document & BaseInterviewSheetResponseProps) => [
+          sheetDoc._id.toString(),
+          { ...sheetDoc.toObject() },
+        ]
       )
     );
 

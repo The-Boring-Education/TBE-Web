@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { enrollInASheet, getEnrolledSheetFromDB } from '@/database';
-
 import { apiStatusCodes } from '@/constant';
+import { enrollInASheet, getEnrolledSheetFromDB } from '@/database';
 import type { SheetEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
@@ -81,7 +80,7 @@ const handleSheetEnrollment = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while enrolling in sheet',
-        error: error,
+        error,
       })
     );
   }

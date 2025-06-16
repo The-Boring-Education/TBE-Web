@@ -1,14 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v4 } from 'uuid';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addSectionToProjectInDB,
   deleteSectionFromProjectInDB,
   getSectionsFromProjectInDB,
   updateSectionInProjectInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type {
   AddSectionRequestPayloadProps,
   DeleteSectionRequestPayloadProps,

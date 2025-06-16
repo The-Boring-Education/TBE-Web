@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addAWebinarToDB,
   getAllWebinarsFromDB,
   getWebinarBySlugFromDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type { AddWebinarRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

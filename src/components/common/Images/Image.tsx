@@ -9,22 +9,20 @@ const ImageContainer = ({
   loading = 'lazy',
   fullWidth = true,
   fullHeight = true,
-}: ImageContainerProps) => {
-  return (
-    <div
-      className={`${className} ${fullWidth && 'w-full'} ${
-        fullHeight && 'h-full'
-      }`}
-    >
-      <Image
-        alt={alt}
-        className={`${className} image`}
-        fill={true}
-        loading={loading}
-        src={src}
-      />
-    </div>
-  );
-};
+}: ImageContainerProps) => (
+  <div
+    className={`${className} ${fullWidth && 'w-full'} ${
+      fullHeight && 'h-full'
+    }`}
+  >
+    <Image
+      alt={alt}
+      className={`${className} image`}
+      fill
+      loading={loading}
+      src={src}
+    />
+  </div>
+);
 
 export default ImageContainer;

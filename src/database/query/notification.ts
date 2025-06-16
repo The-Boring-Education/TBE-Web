@@ -1,5 +1,4 @@
 import { Notification } from '@/database';
-
 import type {
   AddNotificationRequestPayloadProps,
   UpdateNotificationRequestPayloadProps,

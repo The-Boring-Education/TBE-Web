@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addGamificationDocInDB,
   getUserPointsFromDB,
   updateUserPointsInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type { UserPointsActionType } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 

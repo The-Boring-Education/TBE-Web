@@ -6,9 +6,8 @@ import {
 } from '@headlessui/react';
 import { Fragment } from 'react';
 
-import { useGamification, useUser } from '@/hooks';
-
 import { UserLevelProgressContainer } from '@/components';
+import { useGamification, useUser } from '@/hooks';
 
 const UserPointButton = () => {
   const { isAuth, loading } = useUser();

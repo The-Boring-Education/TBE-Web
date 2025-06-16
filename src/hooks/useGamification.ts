@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { useApi, useUser } from '@/hooks';
-
 import { routes } from '@/constant';
+import { useApi, useUser } from '@/hooks';
 import { getUserGamificationLevel } from '@/utils';
 
 const useGamification = () => {

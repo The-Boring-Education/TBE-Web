@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   getLatestJobAggregationFromDB,
   saveDailyJobsAggregationToDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 

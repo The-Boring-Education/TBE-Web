@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { addJobToDB, getAllJobsFromDB, getJobByJobIdFromDB } from '@/database';
-
 import {
   apiStatusCodes,
   JOB_DOMAIN_NORMALIZER,
   JOB_LOCATION_NORMALIZER,
   JOB_SKILL_NORMALIZER,
 } from '@/constant';
+import { addJobToDB, getAllJobsFromDB, getJobByJobIdFromDB } from '@/database';
 import type { AddJobRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import {

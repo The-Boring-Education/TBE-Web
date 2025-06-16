@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { Button, FlexContainer } from '@/components';
-
 import type { ToggleButtonProps } from '@/interfaces';
 
 const ToggleButton = ({

@@ -1,6 +1,5 @@
-import { Project, updateUserPointsInDB, UserProject } from '@/database';
-
 import { modelSelectParams } from '@/constant';
+import { Project, updateUserPointsInDB, UserProject } from '@/database';
 import type {
   AddChapterRequestPayloadProps,
   AddProjectRequestPayloadProps,
@@ -451,8 +450,8 @@ const updateUserProjectChapterInDB = async ({
     if (chapterIndex === -1) {
       // If chapter is not found, add it with the given status
       userProject.sections[sectionIndex].chapters.push({
-        chapterId: chapterId,
-        isCompleted: isCompleted,
+        chapterId,
+        isCompleted,
       });
     } else {
       // If chapter is found, update the isCompleted status and update timestamp

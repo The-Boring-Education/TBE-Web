@@ -11,7 +11,6 @@ import {
   SEO,
   Text,
 } from '@/components';
-
 import {
   LINKS,
   PAGE_REFRESH_TIMEOUT,
@@ -32,7 +31,7 @@ const Portfolio = ({ seoMeta }: PageProps) => {
       <Section>
         <FlexContainer
           className='max-w-screen-xl flex-col md:flex-row md:justify-around gradient-6 p-2 md:p-4 py-4 md:py-6 rounded-2 gap-4 md:gap-4'
-          fullWidth={true}
+          fullWidth
           wrap={false}
         >
           <Image
@@ -42,10 +41,10 @@ const Portfolio = ({ seoMeta }: PageProps) => {
           />
           <FlexContainer className='gap-1' direction='col'>
             <FlexContainer className='gap-1' direction='col'>
-              <Text className='heading-3' level='h1' textCenter={true}>
+              <Text className='heading-3' level='h1' textCenter>
                 Don't Just Have A Resume Own a Portfolio.
               </Text>
-              <Text level='p' textCenter={true}>
+              <Text level='p' textCenter>
                 Create Your Portfolio Websites in Minutes and Show your skills
                 and projects to the world.
               </Text>
@@ -63,16 +62,13 @@ const Portfolio = ({ seoMeta }: PageProps) => {
         </FlexContainer>
       </Section>
       <Section className='flex flex-col items-center p-2 gap-3 my-4'>
-        <Text className='heading-3' level='h2' textCenter={true}>
+        <Text className='heading-3' level='h2' textCenter>
           Why Own A{' '}
           <Text className='text-primary' level='span'>
             Portfolio?
           </Text>
         </Text>
-        <FlexContainer
-          className='max-w-screen-xl gap-3 md:flex-row'
-          fullWidth={true}
-        >
+        <FlexContainer className='max-w-screen-xl gap-3 md:flex-row' fullWidth>
           {PORTFOLIO_CARDS.map((card) => (
             <PortfolioCard
               key={card.id}
@@ -88,15 +84,11 @@ const Portfolio = ({ seoMeta }: PageProps) => {
         className='flex flex-col items-center bg-black p-2'
         id={routes.internals.landing.portfolio}
       >
-        <FlexContainer
-          className='py-4 gap-1 md:py-6'
-          direction='col'
-          fullWidth={true}
-        >
-          <Text className='heading-4 text-white' level='h3' textCenter={true}>
+        <FlexContainer className='py-4 gap-1 md:py-6' direction='col' fullWidth>
+          <Text className='heading-4 text-white' level='h3' textCenter>
             Pick Your Portfolio Template
           </Text>
-          <Text className='text-white' level='p' textCenter={true}>
+          <Text className='text-white' level='p' textCenter>
             Start quickly with templates and customize it as per your needs.
           </Text>
           <FlexContainer className='w-full max-w-screen-xl gap-2 md:flex-row mt-5'>
@@ -107,14 +99,10 @@ const Portfolio = ({ seoMeta }: PageProps) => {
           <Section className='gradient-5 p-4 rounded-2 mt-6'>
             <FlexContainer className='items-center' direction='col'>
               <FlexContainer className='items-center gap-1' direction='col'>
-                <Text
-                  className='heading-4 text-white'
-                  level='h3'
-                  textCenter={true}
-                >
+                <Text className='heading-4 text-white' level='h3' textCenter>
                   Want to Showcase Your Portfolio?
                 </Text>
-                <Text className='text-white' level='p' textCenter={true}>
+                <Text className='text-white' level='p' textCenter>
                   Submit your portfolio and get featured on our website.
                 </Text>
               </FlexContainer>
@@ -136,11 +124,9 @@ const Portfolio = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.portfolio })),
-    revalidate: PAGE_REFRESH_TIMEOUT.long,
-  };
-};
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.portfolio })),
+  revalidate: PAGE_REFRESH_TIMEOUT.long,
+});
 
 export default Portfolio;

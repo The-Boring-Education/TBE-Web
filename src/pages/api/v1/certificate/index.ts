@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addACertificateToDB,
   checkCertificateExistForAProgram,
   updateCertificateToUserShikshaCourseDoc,
   updateUserPointsInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type {
   AddCertificateRequestPayloadProps,
   CertificateType,

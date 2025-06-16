@@ -7,9 +7,8 @@ import {
 import { BellIcon, LinkIcon } from '@heroicons/react/20/solid';
 import { Fragment } from 'react';
 
-import { useNotifications } from '@/hooks';
-
 import { FlexContainer, Link, Text } from '@/components';
+import { useNotifications } from '@/hooks';
 
 const NotificationPopover = () => {
   const { notifications } = useNotifications();

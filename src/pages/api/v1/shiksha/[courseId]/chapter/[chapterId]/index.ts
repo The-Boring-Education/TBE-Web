@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   deleteCourseChapterByIdFromDB,
   getACourseFromDBById,
   updateCourseChapterInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type { UpdateChapterInCourseRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

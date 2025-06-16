@@ -18,7 +18,7 @@ const LoadingSpinner = ({
     <div className='flex items-center justify-center'>
       <div
         className={`inline-block ${additionalClasses} ${marginClass} animate-spin rounded-full border-2 border-solid ${borderColourClass} border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]`}
-      ></div>
+      />
     </div>
   );
 };

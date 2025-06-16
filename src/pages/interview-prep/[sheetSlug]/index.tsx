@@ -1,7 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
 
-import { useAnalytics, useApi, useUser } from '@/hooks';
-
 import {
   Button,
   FeedbackPopup,
@@ -14,8 +12,8 @@ import {
   SheetHeroContainer,
   Text,
 } from '@/components';
-
 import { routes } from '@/constant';
+import { useAnalytics, useApi, useUser } from '@/hooks';
 import type { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
 
@@ -175,7 +173,7 @@ const SheetPage = ({
                       handleQuestionClick={handleQuestionClick}
                       href={`${slug}?sheetId=${sheet._id}&questionId=${questionId}`}
                       isCompleted={isCompleted}
-                      question={question + '\n\n' + answer}
+                      question={`${question}\n\n${answer}`}
                       questionId={questionId}
                       title={title}
                     />

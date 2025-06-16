@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   createUserInDB,
   getUserByEmailFromDB,
   getUserByIdFromDB,
 } from '@/database/query/user';
-
-import { apiStatusCodes } from '@/constant';
 import type { CreateUserRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

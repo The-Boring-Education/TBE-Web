@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 
-import { useApi, useAPIResponseMapper, useUser } from '@/hooks';
-
 import {
   Banner,
   CardContainerB,
@@ -14,13 +12,13 @@ import {
   SEO,
   Text,
 } from '@/components';
-
 import {
   LINKS,
   PAGE_REFRESH_TIMEOUT,
   routes,
   STATIC_FILE_PATH,
 } from '@/constant';
+import { useApi, useAPIResponseMapper, useUser } from '@/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
 import {
   getPreFetchProps,
@@ -116,11 +114,9 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.user.dashboard })),
-    revalidate: PAGE_REFRESH_TIMEOUT.short,
-  };
-};
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.user.dashboard })),
+  revalidate: PAGE_REFRESH_TIMEOUT.short,
+});
 
 export default UserDashboard;

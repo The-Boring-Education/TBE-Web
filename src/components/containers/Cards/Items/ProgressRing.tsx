@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Text } from '@/components';
-
 import type { ProgressRingProps } from '@/interfaces';
 
 const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {

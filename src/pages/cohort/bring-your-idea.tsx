@@ -7,8 +7,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 
 import {
   Banner,
@@ -30,7 +29,6 @@ import {
   SessionDetailsSection,
   Text,
 } from '@/components';
-
 import {
   BYI_USER_CATEGORIES,
   LINKS,
@@ -138,21 +136,19 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
     }
   };
 
-  const userCategoryContainer = BYI_USER_CATEGORIES.map(({ label, key }) => {
-    return (
-      <Button
-        key={key}
-        className={`md:px-4 md:py-2 px-2 py-1 md:w-fit border-lightGray rounded-full transition-all ${
-          selectedUserCategory.key === key
-            ? 'bg-primary text-white'
-            : 'bg-white text-primary'
-        }`}
-        text={label}
-        variant='GHOST'
-        onClick={() => handleSelectUserCategory(key)}
-      />
-    );
-  });
+  const userCategoryContainer = BYI_USER_CATEGORIES.map(({ label, key }) => (
+    <Button
+      key={key}
+      className={`md:px-4 md:py-2 px-2 py-1 md:w-fit border-lightGray rounded-full transition-all ${
+        selectedUserCategory.key === key
+          ? 'bg-primary text-white'
+          : 'bg-white text-primary'
+      }`}
+      text={label}
+      variant='GHOST'
+      onClick={() => handleSelectUserCategory(key)}
+    />
+  ));
 
   return (
     <Fragment>
@@ -245,7 +241,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
           className='justify-center gap-8 flex-wrap'
           direction='col'
         >
-          <Text className='heading-4' level='h4' textCenter={true}>
+          <Text className='heading-4' level='h4' textCenter>
             Where Are You in Your Tech Journey?
           </Text>
           <FlexContainer className='justify-center gap-2 flex-wrap'>
@@ -270,9 +266,9 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
             headingLevel={3}
           />
           <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4'>
-            {whyUs.map((item, index) => {
-              return <IconCard key={index} {...item} />;
-            })}
+            {whyUs.map((item, index) => (
+              <IconCard key={index} {...item} />
+            ))}
           </div>
         </FlexContainer>
       </Section>
@@ -434,10 +430,8 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.cohort.bringYourIdea })),
-  };
-};
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.cohort.bringYourIdea })),
+});
 
 export default BrinYourIdeaLandingPage;

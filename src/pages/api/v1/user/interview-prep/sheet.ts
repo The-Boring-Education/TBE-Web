@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   getAllQuestionsByUser,
   handleGamificationPoints,
   markQuestionCompletedByUser,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type {
   GetAllQuestionsRequestProps,
   MarkQuestionCompletedRequestProps,
