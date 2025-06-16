@@ -11,7 +11,6 @@ import type {
   ProjectChapter,
   UserRoleType,
 } from '.';
-import { Types } from 'mongoose';
 
 export type APIMethodTypes = 'GET' | 'POST' | 'PATCH' | 'PUT';
 

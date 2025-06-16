@@ -40,6 +40,10 @@ const usePaymentStatus = ({
 
   const isLocked = isPremium && isPurchased === false;
 
+  if (!userId || !productId) {
+    return { isLocked: true };
+  }
+
   return { isPurchased, isLocked };
 };
 

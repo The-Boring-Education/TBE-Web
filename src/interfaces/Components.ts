@@ -6,7 +6,7 @@ import type {
   ReactNode,
   RefObject,
 } from 'react';
-import type { BaseShikshaCourseResponseProps,  } from '@/interfaces';
+import type { BaseShikshaCourseResponseProps } from '@/interfaces';
 import type { FeedbackType } from '@/constant';
 
 import type {
@@ -342,7 +342,7 @@ export interface CourseHeroContainerProps {
   name: string;
   isEnrolled?: boolean;
   id: string;
-  isPremium:boolean
+  isPremium?: boolean;
 }
 
 export interface SheetHeroContainerProps {
@@ -724,5 +724,5 @@ export interface ResumeEvaluationSectionProps {
 export interface PaymentCardProps {
   course: BaseShikshaCourseResponseProps;
   onClose: () => void;
-  productType:string;
+  productType: string;
 }

@@ -18,7 +18,7 @@ import {
   Section,
   SEO,
   Text,
-  PaymentCard
+  PaymentCard,
 } from '@/components';
 
 import { routes, SCREEN_BREAKPOINTS } from '@/constant';
@@ -138,7 +138,9 @@ const CoursePage = ({
 
         if (nextIncompleteChapter) {
           const nextChapterId = nextIncompleteChapter._id.toString();
-          setNextChapterUrl(`${slug}?courseId=${course._id}&chapterId=${nextChapterId}`);
+          setNextChapterUrl(
+            `${slug}?courseId=${course._id}&chapterId=${nextChapterId}`
+          );
         } else {
           const { status, data } = await makeRequest({
             method: 'POST',
@@ -237,7 +239,11 @@ const CoursePage = ({
                     content={content}
                     currentChapterId={currentChapterId}
                     handleChapterClick={handleChapterClick}
-                    href={isLocked ? '#' : `${slug}?courseId=${course._id}&chapterId=${chapterId}`}
+                    href={
+                      isLocked
+                        ? '#'
+                        : `${slug}?courseId=${course._id}&chapterId=${chapterId}`
+                    }
                     isCompleted={isCompleted}
                     name={name}
                     isLocked={isLocked}
@@ -253,7 +259,11 @@ const CoursePage = ({
                     backgroundColor={
                       isCourseCompleted ? 'bg-purple-600' : 'bg-purple-400'
                     }
-                    heading={isCourseCompleted ? 'View Certificate' : 'Certificate Locked'}
+                    heading={
+                      isCourseCompleted
+                        ? 'View Certificate'
+                        : 'Certificate Locked'
+                    }
                     icon={isCourseCompleted ? FaTrophy : FaLock}
                     isLocked={!isCourseCompleted}
                     subtext={
@@ -292,34 +302,33 @@ const CoursePage = ({
             justifyCenter={false}
           >
             {isLocked ? (
-              <div className="w-full">
-                <Text level="h2" className="heading-4 mb-4">
+              <div className='w-full'>
+                <Text level='h2' className='heading-4 mb-4'>
                   Course Overview
                 </Text>
-                <MDXRenderer
-                  mdxSource={course.meta || ''}
-                />
-                <div className="mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm">
-                  <Text level="h4" className="mb-2 flex items-center gap-2">
+                <MDXRenderer mdxSource={course.meta || ''} />
+                <div className='mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm'>
+                  <Text level='h4' className='mb-2 flex items-center gap-2'>
                     🚀 This is a Premium Course
                   </Text>
-                  <Text level="p" className="mb-4">
-                    To access the course content, please complete the payment. Once payment is confirmed, all chapters will be unlocked.
+                  <Text level='p' className='mb-4'>
+                    To access the course content, please complete the payment.
+                    Once payment is confirmed, all chapters will be unlocked.
                   </Text>
                   {!showPayment && (
                     <Button
-                      text="Pay Now to Unlock"
-                      variant="PRIMARY"
-                      className="w-fit"
+                      text='Pay Now to Unlock'
+                      variant='PRIMARY'
+                      className='w-fit'
                       onClick={handleShowPayment}
                     />
                   )}
                 </div>
                 {showPayment && (
                   <div ref={paymentSectionRef}>
-                    <PaymentCard 
-                      course={course} 
-                      onClose={() => setShowPayment(false)} 
+                    <PaymentCard
+                      course={course}
+                      onClose={() => setShowPayment(false)}
                       productType='SHIKSHA'
                     />
                   </div>
@@ -361,9 +370,9 @@ const CoursePage = ({
       </Section>
 
       {showChapterFeedback && (
-        <FeedbackPopup 
-          refId={currentChapterId} 
-          type='SHIKSHA_CHAPTER' 
+        <FeedbackPopup
+          refId={currentChapterId}
+          type='SHIKSHA_CHAPTER'
           onSubmit={handleFeedbackComplete}
         />
       )}
