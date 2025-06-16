@@ -38,7 +38,7 @@ const AppContent = ({
       const redirectTo = getRedirectUrl();
       router.push(redirectTo);
     }
-  }, [isAuth, isOnboarded, loading]);
+  }, [isAuth, isOnboarded, loading, router]);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -16,7 +16,7 @@ import {
   verifyWebhookSignature,
 } from '@/utils';
 
-const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY!;
+const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY;
 
 export const config = {
   api: {
@@ -26,6 +26,15 @@ export const config = {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
+
+  if (!WEBHOOK_SECRET) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Webhook secret configuration missing',
+      })
+    );
+  }
 
   switch (req.method) {
     case 'POST':
@@ -100,7 +109,7 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const { data: payment, error: findError } = await getPaymentByOrderIdFromDB(
+    const { data: _payment, error: findError } = await getPaymentByOrderIdFromDB(
       webhookEvent.order_id
     );
 

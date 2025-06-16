@@ -3,10 +3,10 @@ import { useState } from 'react';
 
 // FIXME: Uncomment the pdfToText import when the library is installed and configured correctly
 const usePDFFile = () => {
-  const [extractedSkills, setExtractedSkills] = useState<string[]>([]);
+  const [_extractedSkills, _setExtractedSkills] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
 
-  const extractTextFromPDF = async (file: File) => 
+  const extractTextFromPDF = async (_file: File) => 
     // pdfToText(file)
     //   .then((text) => {
     //     const extractedSkills = extractSkillsFromText(text);
@@ -26,7 +26,7 @@ const usePDFFile = () => {
     }
   };
 
-  return { extractedSkills, file, handleFileUpload };
+  return { extractedSkills: _extractedSkills, file, handleFileUpload };
 };
 
 export default usePDFFile;

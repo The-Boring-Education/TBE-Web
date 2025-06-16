@@ -1,5 +1,4 @@
-import type { Model } from 'mongoose';
-import { model, models, Schema } from 'mongoose';
+import { type Model,model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from '@/constant';
 import type { CourseChapterModel, CourseModel } from '@/interfaces';

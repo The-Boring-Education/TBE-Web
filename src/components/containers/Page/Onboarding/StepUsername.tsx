@@ -13,7 +13,7 @@ const StepUsername = ({
 
   useEffect(() => {
     setIsUsernameAvailable(isUsernameAvailable);
-  }, [isUsernameAvailable]);
+  }, [isUsernameAvailable, setIsUsernameAvailable]);
 
   return (
     <FlexContainer className='gap-2 md:w-1/2 w-full m-auto' direction='col'>

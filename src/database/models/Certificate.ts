@@ -1,5 +1,4 @@
-import type { Model } from 'mongoose';
-import { model, models, Schema } from 'mongoose';
+import { type Model,model, models, Schema } from 'mongoose';
 
 import { CERTIFICATE_TYPE, DATABASE_MODELS } from '@/constant';
 import type { CertificateModel } from '@/interfaces';

@@ -50,24 +50,20 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
     try {
       const paymentSessionId = await createPaymentOrder();
       await launchPayment(paymentSessionId,
-        (successData) => {
-          console.log('Payment success:', successData);
+        (_successData) => {
           setTimeout(() => {
             window.location.reload();
           }, 2000);
         },
-        (failureData) => {
-          console.error('Payment failed:', failureData);
+        (_failureData) => {
           setError('Payment failed. Please try again.');
           setIsProcessing(false);
         },
         () => {
-          console.log('Checkout closed');
           setIsProcessing(false);
         }
       );
     } catch (err) {
-      console.error('Payment error:', err);
       setError(err instanceof Error ? err.message : 'Something went wrong');
       setIsProcessing(false);
     }
