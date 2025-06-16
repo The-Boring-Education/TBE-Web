@@ -1,5 +1,4 @@
 import { Text } from '@/components';
-
 import type { PillProps } from '@/interfaces';
 
 const Pill = ({

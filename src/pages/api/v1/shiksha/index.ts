@@ -1,14 +1,13 @@
 import type mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addACourseToDB,
   getAllCourseFromDB,
   getAllEnrolledCoursesFromDB,
   getCourseBySlugFromDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type {
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,

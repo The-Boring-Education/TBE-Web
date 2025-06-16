@@ -1,5 +1,4 @@
 import { FlexContainer, Image, Section, Text } from '@/components';
-
 import { MY_PREV_EXPERIENCE } from '@/constant';
 
 const WeAlreadyTaughtAt = () => {

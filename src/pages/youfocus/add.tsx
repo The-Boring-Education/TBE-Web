@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 
-import { useApi, useUser } from '@/hooks';
-
 import {
   Button,
   ExplorePlaylistContainer,
@@ -13,8 +11,8 @@ import {
   SEO,
   Toast,
 } from '@/components';
-
 import { routes } from '@/constant';
+import { useApi, useUser } from '@/hooks';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 

@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 
 import { Section } from '@/components';
-
 import type { CohortJourneySectionProps } from '@/interfaces';
 
 const CohortJourneyContainer = ({ weeks }: CohortJourneySectionProps) => (

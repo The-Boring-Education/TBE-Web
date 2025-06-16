@@ -5,7 +5,6 @@ import {
   Section,
   SectionHeaderContainer,
 } from '@/components';
-
 import type { CardContainerBProps } from '@/interfaces';
 
 const CardContainerB = ({

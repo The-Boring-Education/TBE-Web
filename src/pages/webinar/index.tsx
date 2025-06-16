@@ -10,7 +10,6 @@ import {
   ToggleButton,
   WebibarCard,
 } from '@/components';
-
 import { routes, STATIC_FILE_PATH } from '@/constant';
 import type { WebinarsLandingPageProps } from '@/interfaces';
 import { getWebinarLandingPageProps } from '@/utils';

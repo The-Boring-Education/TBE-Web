@@ -1,4 +1,5 @@
-import { Schema, model, models, type Model } from 'mongoose';
+import { type Model,model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS, PRODUCT_TYPE } from '@/constant';
 import type { PaymentModel } from '@/interfaces';
 

@@ -1,7 +1,6 @@
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 import { FlexContainer, Link, Text } from '@/components';
-
 import { LINKS } from '@/constant';
 
 const Footer = () => {

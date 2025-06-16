@@ -1,7 +1,6 @@
 import { Fragment } from 'react';
 
 import { ContactCard, SEO } from '@/components';
-
 import { getSEOMeta, routes } from '@/constant';
 import { getPreFetchProps } from '@/utils';
 

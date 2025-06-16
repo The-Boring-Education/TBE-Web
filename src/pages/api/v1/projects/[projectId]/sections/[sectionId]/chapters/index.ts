@@ -2,12 +2,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v4 } from 'uuid';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addChapterToSectionInDB,
   getChaptersFromSectionInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type { AddChapterRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

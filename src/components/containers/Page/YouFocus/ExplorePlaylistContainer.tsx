@@ -7,7 +7,6 @@ import {
   RadioButtonContainer,
   SectionHeaderContainer,
 } from '@/components';
-
 import { routes, YOUFOCUS_SKILL_PLAYLISTS } from '@/constant';
 import type { ExploreCantainerCardProps } from '@/interfaces';
 

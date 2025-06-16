@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { addChapterToCourseInDB } from '@/database';
-
 import { apiStatusCodes } from '@/constant';
+import { addChapterToCourseInDB } from '@/database';
 import type { AddChapterToCourseRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

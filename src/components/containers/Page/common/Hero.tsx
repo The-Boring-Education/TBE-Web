@@ -5,7 +5,6 @@ import {
   SectionHeaderContainer,
   Text,
 } from '@/components';
-
 import type { LandingPageHeroProps } from '@/interfaces';
 const LandingPageHero = ({
   sectionHeaderProps,

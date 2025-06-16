@@ -5,7 +5,6 @@ import {
   SectionHeaderContainer,
   TestimonialCard,
 } from '@/components';
-
 import { TESTIMONIALS } from '@/constant';
 
 const Testimonials = () => {

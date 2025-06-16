@@ -1,13 +1,12 @@
 import type mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addAInterviewSheetToDB,
   getAllInterviewSheetsFromDB,
   getInterviewSheetBySlugFromDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type {
   AddInterviewSheetRequestPayloadProps,
   BaseInterviewSheetResponseProps,

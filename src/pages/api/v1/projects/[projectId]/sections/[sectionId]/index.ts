@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   deleteSectionFromProjectInDB,
   updateSectionInProjectInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type { UpateSectionRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

@@ -3,7 +3,6 @@ import React from 'react';
 import { FaStar } from 'react-icons/fa';
 
 import { FlexContainer } from '@/components';
-
 import type { StarRatingCardProps } from '@/interfaces';
 
 const StarRatingCard = ({ rating, onClick }: StarRatingCardProps) => {

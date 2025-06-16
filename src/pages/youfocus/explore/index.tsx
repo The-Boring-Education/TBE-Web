@@ -1,7 +1,6 @@
 import { Fragment } from 'react';
 
 import { ExplorePlaylistContainer, Section, SEO } from '@/components';
-
 import { routes } from '@/constant';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';

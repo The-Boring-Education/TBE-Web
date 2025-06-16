@@ -1,8 +1,6 @@
 import router from 'next/router';
-import { Fragment, useEffect, useState, useRef } from 'react';
+import { Fragment, useEffect, useRef,useState } from 'react';
 import { FaLock, FaTrophy } from 'react-icons/fa';
-
-import { useAnalytics, useApi, useMediaQuery, useUser } from '@/hooks';
 
 import {
   ActionBanner,
@@ -15,19 +13,19 @@ import {
   FlexContainer,
   LinerProgressBar,
   MDXRenderer,
+  PaymentCard,
   Section,
   SEO,
   Text,
-  PaymentCard,
 } from '@/components';
-
 import { routes, SCREEN_BREAKPOINTS } from '@/constant';
+import { useAnalytics, useApi, useMediaQuery, useUser } from '@/hooks';
+import { usePaymentStatus } from '@/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,
 } from '@/interfaces';
 import { formatDate, getCoursePageProps } from '@/utils';
-import { usePaymentStatus } from '@/hooks';
 
 const CoursePage = ({
   course,

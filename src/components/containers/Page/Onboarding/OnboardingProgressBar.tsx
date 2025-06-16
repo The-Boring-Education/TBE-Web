@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 
 import { FlexContainer, Text } from '@/components';
-
 import type { OnboardingProgressBarProps } from '@/interfaces';
 
 const OnboardingProgressBar = ({

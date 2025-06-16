@@ -2,7 +2,6 @@ import React from 'react';
 
 import { FlexContainer, Text } from '@/components';
 import { ProgressRing } from '@/components';
-
 import type { LevelProgressCardProps } from '@/interfaces';
 
 const UserLevelProgressContainer = ({

@@ -2,8 +2,6 @@
 
 import React, { Fragment } from 'react';
 
-import { useFeedback } from '@/hooks';
-
 import {
   Button,
   FlexContainer,
@@ -11,7 +9,7 @@ import {
   StartRatingCard,
   Toast,
 } from '@/components';
-
+import { useFeedback } from '@/hooks';
 import type { FeedbackPopupProps } from '@/interfaces';
 
 const FeedbackPopup = ({

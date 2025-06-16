@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FaRegCircle, FaLock } from 'react-icons/fa';
+import { FaLock,FaRegCircle } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 import type { ChapterLinkProps } from '@/interfaces';

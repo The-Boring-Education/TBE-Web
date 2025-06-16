@@ -1,9 +1,8 @@
 // hooks/useResumeEvaluation.ts
 import { useState } from 'react';
 
-import { useApi, usePDFFile } from '@/hooks';
-
 import { routes } from '@/constant';
+import { useApi, usePDFFile } from '@/hooks';
 
 // FIXME: REFACTOR
 const DUMMY_EVALUATION_DATA = {

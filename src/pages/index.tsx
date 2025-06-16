@@ -13,7 +13,6 @@ import {
   Testimonials,
   WeAlreadyTaughtAt,
 } from '@/components';
-
 import {
   generateSectionPath,
   LINKS,

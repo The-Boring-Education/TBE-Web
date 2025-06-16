@@ -1,5 +1,4 @@
 import { FlexContainer, Image, LinkButton, Section, Text } from '@/components';
-
 import type { BannerProps } from '@/interfaces';
 
 const BannerVariantB = ({

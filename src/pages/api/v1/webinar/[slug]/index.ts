@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   checkUserRegistrationInWebinarDB,
   deleteAWebinarFromDB,
   getWebinarDetailsFromDB,
   updateWebinarInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type { UpdateEnrolledUsersRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

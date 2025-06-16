@@ -1,6 +1,5 @@
-import { Course, updateUserPointsInDB, UserCourse } from '@/database';
-
 import { modelSelectParams } from '@/constant';
+import { Course, updateUserPointsInDB, UserCourse } from '@/database';
 import type {
   AddChapterToCourseRequestProps,
   AddCourseRequestPayloadProps,

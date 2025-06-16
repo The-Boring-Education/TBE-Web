@@ -1,5 +1,3 @@
-import { useUser } from '@/hooks';
-
 import {
   FlexContainer,
   Image,
@@ -8,7 +6,7 @@ import {
   Text,
 } from '@/components';
 import LinkText from '@/components/common/Typography/Link';
-
+import { useUser } from '@/hooks';
 import type { PortfolioTemplateProps } from '@/interfaces';
 
 const PortfolioTemplate = ({

@@ -16,8 +16,6 @@ import {
   YAxis,
 } from 'recharts';
 
-import { useResumeEvaluation } from '@/hooks';
-
 import {
   Button,
   CheckboxButtonContainer,
@@ -33,7 +31,6 @@ import {
   Text,
   UploadFileInput,
 } from '@/components';
-
 import {
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
@@ -41,6 +38,7 @@ import {
   STATIC_FILE_PATH,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
 } from '@/constant';
+import { useResumeEvaluation } from '@/hooks';
 import type { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
 import { formatDate, getUnskilledLandingPageProps } from '@/utils';
 

@@ -30,7 +30,6 @@ import {
   SessionDetailsSection,
   Text,
 } from '@/components';
-
 import {
   BYI_USER_CATEGORIES,
   LINKS,

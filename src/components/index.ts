@@ -356,6 +356,7 @@ export {
   OutlineCard,
   PageHeroMetaContainer,
   PageLayout,
+  PaymentCard,
   Pill,
   PlaylistCard,
   PlaylistContainer,
@@ -401,5 +402,4 @@ export {
   WebibarCard,
   WebinarHeroContainer,
   WeTaughtAtCard,
-  PaymentCard,
 };

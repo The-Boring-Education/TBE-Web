@@ -1,5 +1,4 @@
 import { FlexContainer, Image, LinkButton, Text } from '@/components';
-
 import type { WebinarCardProps } from '@/interfaces';
 import { formatDate } from '@/utils';
 

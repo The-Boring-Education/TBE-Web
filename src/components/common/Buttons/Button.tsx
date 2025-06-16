@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 
 import { LoadingSpinner } from '@/components';
-
 import type { ButtonProps } from '@/interfaces';
 
 const getButtonClasses = (

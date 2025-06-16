@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { deleteUserPlaylistFromDB, getUserPlaylistsFromDB } from '@/database';
-
 import { apiStatusCodes } from '@/constant';
+import { deleteUserPlaylistFromDB, getUserPlaylistsFromDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 

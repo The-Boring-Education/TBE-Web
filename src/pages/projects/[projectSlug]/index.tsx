@@ -1,7 +1,5 @@
 import { Fragment, useState } from 'react';
 
-import { useAnalytics, useApi, useUser } from '@/hooks';
-
 import {
   Accordion,
   AccordionLinkItem,
@@ -14,8 +12,8 @@ import {
   SEO,
   Text,
 } from '@/components';
-
 import { routes } from '@/constant';
+import { useAnalytics, useApi, useUser } from '@/hooks';
 import type { ProjectPageProps } from '@/interfaces';
 import { getProjectPageProps, getSelectedProjectChapterMeta } from '@/utils';
 

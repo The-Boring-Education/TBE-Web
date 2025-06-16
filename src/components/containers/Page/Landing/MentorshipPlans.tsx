@@ -4,7 +4,6 @@ import {
   Section,
   SectionHeaderContainer,
 } from '@/components';
-
 import { MENTORSHIP_CARDS } from '@/constant';
 
 const MentorshipPlans = () => {

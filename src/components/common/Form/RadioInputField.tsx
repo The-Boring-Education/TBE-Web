@@ -1,5 +1,4 @@
 import { FlexContainer, Image, Text } from '@/components';
-
 import { STATIC_FILE_PATH } from '@/constant';
 import type { RadioInputFieldProps } from '@/interfaces';
 

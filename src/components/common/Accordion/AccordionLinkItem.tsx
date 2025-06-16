@@ -3,7 +3,6 @@ import { FaRegCircle } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 import { Link } from '@/components';
-
 import type { AccordionLinkItemProps } from '@/interfaces';
 
 const AccordionLinkItem = ({

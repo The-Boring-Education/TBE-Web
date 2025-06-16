@@ -1,7 +1,5 @@
 import { Fragment, useState } from 'react';
 
-import { useCertificate, useUser } from '@/hooks';
-
 import {
   Banner,
   Button,
@@ -12,8 +10,8 @@ import {
   SEO,
   Text,
 } from '@/components';
-
 import { routes, STATIC_FILE_PATH } from '@/constant';
+import { useCertificate, useUser } from '@/hooks';
 import type { CertificatePageProps } from '@/interfaces';
 import {
   formatDate,

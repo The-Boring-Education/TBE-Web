@@ -1,6 +1,5 @@
 import { FlexContainer, Image, LinkButton, Pill, Section } from '@/components';
 import { Text } from '@/components';
-
 import { LINKS, STATIC_FILE_PATH } from '@/constant';
 
 const Community = () => {

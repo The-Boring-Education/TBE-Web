@@ -1,5 +1,4 @@
 import { Playlist, UserPlaylist } from '@/database';
-
 import type { DatabaseQueryResponseType, PlaylistModel } from '@/interfaces';
 
 // Add a playlist to the database

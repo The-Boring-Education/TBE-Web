@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { FlexContainer, Image, Text } from '@/components';
-
 import type { PlaylistCardProps } from '@/interfaces';
 
 const PlaylistCard = ({

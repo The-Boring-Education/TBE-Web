@@ -401,6 +401,8 @@ export {
   gtag,
   imageMeta,
   IN_DEV_PAGES,
+  isDevelopmentEnv,
+  isProductionEnv,
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
   LINKS,
@@ -418,6 +420,4 @@ export {
   USER_ROLE_OPTIONS,
   USER_USAGE_OPTIONS,
   YOUFOCUS_SKILL_PLAYLISTS,
-  isProductionEnv,
-  isDevelopmentEnv,
 };

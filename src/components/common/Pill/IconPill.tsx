@@ -1,5 +1,4 @@
 import { FlexContainer, Image, Text } from '@/components';
-
 import type { IconPillProps } from '@/interfaces';
 
 const IconPill = ({

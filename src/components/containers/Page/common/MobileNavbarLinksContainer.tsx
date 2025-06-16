@@ -1,5 +1,4 @@
 import { FlexContainer, Link, Text } from '@/components';
-
 import type { MobileNavbarLinksContainerProps } from '@/interfaces';
 
 const MobileNavbarLinksContainer = ({

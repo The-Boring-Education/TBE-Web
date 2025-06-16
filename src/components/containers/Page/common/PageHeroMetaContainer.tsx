@@ -1,5 +1,4 @@
 import { FlexContainer, Text } from '@/components';
-
 import type { ProjectHeroMetaContainerProps } from '@/interfaces';
 
 const PageHeroMetaContainer = ({

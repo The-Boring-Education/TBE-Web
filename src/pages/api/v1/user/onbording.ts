@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { getUserByUserNameFromDB, onboardUserToDB } from '@/database';
-
 import { apiStatusCodes } from '@/constant';
+import { getUserByUserNameFromDB, onboardUserToDB } from '@/database';
 import type { AddOnboardingPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

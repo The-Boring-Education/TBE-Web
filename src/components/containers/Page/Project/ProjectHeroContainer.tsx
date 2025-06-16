@@ -1,6 +1,3 @@
-import { useAnalytics, useUser } from '@/hooks';
-import { useApi } from '@/hooks';
-
 import {
   Button,
   FlexContainer,
@@ -9,8 +6,9 @@ import {
   PageHeroMetaContainer,
   Text,
 } from '@/components';
-
 import { projectGroupWhatsapp, routes } from '@/constant';
+import { useAnalytics, useUser } from '@/hooks';
+import { useApi } from '@/hooks';
 import type { ProjectHeroContainerProps } from '@/interfaces';
 
 const ProjectHeroContainer = ({

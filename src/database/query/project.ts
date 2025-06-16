@@ -1,6 +1,5 @@
-import { Project, updateUserPointsInDB, UserProject } from '@/database';
-
 import { modelSelectParams } from '@/constant';
+import { Project, updateUserPointsInDB, UserProject } from '@/database';
 import type {
   AddChapterRequestPayloadProps,
   AddProjectRequestPayloadProps,

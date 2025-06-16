@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes, envConfig } from '@/constant';
 import {
   Course,
   getAllDocumentsFromModel,
@@ -11,8 +12,6 @@ import {
   UserProject,
   UserSheet,
 } from '@/database';
-
-import { apiStatusCodes, envConfig } from '@/constant';
 import { connectDB } from '@/middlewares';
 import { applyCorsHeaders, sendAPIResponse } from '@/utils';
 

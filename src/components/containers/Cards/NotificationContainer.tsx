@@ -1,8 +1,7 @@
 import { LinkIcon } from '@heroicons/react/20/solid';
 
-import { useNotifications } from '@/hooks';
-
 import { FlexContainer, Link, Section, Text } from '@/components';
+import { useNotifications } from '@/hooks';
 
 const NotificationContainer = () => {
   const { notifications } = useNotifications();

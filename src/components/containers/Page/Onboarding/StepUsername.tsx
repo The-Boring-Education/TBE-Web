@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 
-import { useUsername } from '@/hooks';
-
 import { FlexContainer, InputFieldContainer, Text } from '@/components';
-
+import { useUsername } from '@/hooks';
 import type { StepUsernameProps } from '@/interfaces';
 
 const StepUsername = ({

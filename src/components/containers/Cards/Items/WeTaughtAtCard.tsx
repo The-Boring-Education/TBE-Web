@@ -1,5 +1,4 @@
 import { Image } from '@/components';
-
 import type { WeTaughtAtCardProps } from '@/interfaces';
 
 const WeTaughtAtCard = ({ image, imageAltText }: WeTaughtAtCardProps) => {

@@ -1,5 +1,4 @@
 import { FlexContainer, Image, Text } from '@/components';
-
 import type { PortfolioCardProps } from '@/interfaces';
 
 const PortfolioCard = ({

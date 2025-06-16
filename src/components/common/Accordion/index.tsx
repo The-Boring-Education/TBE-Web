@@ -3,7 +3,6 @@ import { ChevronUpIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
 import { FlexContainer, Text } from '@/components';
-
 import type { AccordionProps } from '@/interfaces';
 
 const Accordion = ({ title, children, open = false }: AccordionProps) => {

@@ -3,7 +3,6 @@ import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
 
 import { Text } from '@/components';
-
 import type { SelectInputProps } from '@/interfaces';
 
 const SelectInput = ({

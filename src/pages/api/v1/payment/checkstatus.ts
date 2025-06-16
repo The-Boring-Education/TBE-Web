@@ -1,8 +1,9 @@
+import { NextApiRequest, NextApiResponse } from "next";
+
 import { apiStatusCodes } from "@/constant";
+import { checkPaymentStatusFromDB } from "@/database"; 
 import { connectDB } from "@/middlewares";
 import { sendAPIResponse } from "@/utils";
-import { checkPaymentStatusFromDB } from "@/database"; 
-import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

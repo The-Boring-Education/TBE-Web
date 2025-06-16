@@ -10,22 +10,14 @@ module.exports = {
     'next',
     'next/core-web-vitals',
     'plugin:@typescript-eslint/recommended',
-    'prettier',
+    'prettier', // Prettier disables conflicting formatting rules
   ],
   rules: {
-    'no-unused-vars': 'warn',
-    'no-console': 'warn',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    'react/no-unescaped-entities': 'off',
+    //#region 🔧 Auto-fixable Code Cleanliness
 
-    'react/display-name': 'off',
-    'react/jsx-curly-brace-presence': [
-      'warn',
-      { props: 'never', children: 'never' },
-    ],
-
-    //#region  //*=========== Unused Import ===========
-    '@typescript-eslint/no-unused-vars': 'off',
+    'no-console': 'warn', // warn on console.log
+    'no-unused-vars': 'off', // disable in favor of plugin below
+    '@typescript-eslint/no-unused-vars': 'off', // disable in favor of unused-imports
     'unused-imports/no-unused-imports': 'warn',
     'unused-imports/no-unused-vars': [
       'warn',
@@ -37,46 +29,22 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-explicit-any': 'off',
-    //#endregion  //*======== Unused Import ===========
 
-    // //#region  //*=========== Import Sort ===========
-    // 'simple-import-sort/exports': 'warn',
-    // 'simple-import-sort/imports': [
-    //   'warn',
-    //   {
-    //     groups: [
-    //       // ext library & side effect imports
-    //       ['^@?\\w', '^\\u0000'],
-    //       // {s}css files
-    //       ['^.+\\.s?css$'],
-    //       // Lib and hooks
-    //       ['^@/lib', '^@/hooks'],
-    //       // static data
-    //       ['^@/data'],
-    //       // components
-    //       ['^@/components', '^@/container'],
-    //       // zustand store
-    //       ['^@/store'],
-    //       // Other imports
-    //       ['^@/'],
-    //       // relative paths up until 3 level
-    //       [
-    //         '^\\./?$',
-    //         '^\\.(?!/?$)',
-    //         '^\\.\\./?$',
-    //         '^\\.\\.(?!/?$)',
-    //         '^\\.\\./\\.\\./?$',
-    //         '^\\.\\./\\.\\.(?!/?$)',
-    //         '^\\.\\./\\.\\./\\.\\./?$',
-    //         '^\\.\\./\\.\\./\\.\\.(?!/?$)',
-    //       ],
-    //       ['^@/types'],
-    //       // other that didnt fit in
-    //       ['^'],
-    //     ],
-    //   },
-    // ],
-    // //#endregion  //*======== Import Sort ===========
+    //#endregion
+
+    //#region ✨ Auto-fixable JSX Consistency
+    'react/display-name': 'off',
+    'react/jsx-curly-brace-presence': [
+      'warn',
+      { props: 'never', children: 'never' },
+    ],
+    'react/no-unescaped-entities': 'off',
+    //#endregion
+
+    //#region 🎯 Auto-fixable Import Sort
+    'simple-import-sort/exports': 'warn',
+    'simple-import-sort/imports': 'warn',
+    //#endregion
   },
   globals: {
     React: true,

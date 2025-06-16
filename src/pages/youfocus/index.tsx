@@ -1,7 +1,6 @@
 import { Fragment } from 'react';
 
 import { CardContainerA, LandingPageHero, LinkButton, SEO } from '@/components';
-
 import { routes, STATIC_FILE_PATH, YOUFOCUS_FEATURES } from '@/constant';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';

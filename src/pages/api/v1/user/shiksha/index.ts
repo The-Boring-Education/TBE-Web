@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { getAllEnrolledCoursesFromDB } from '@/database';
-
 import { apiStatusCodes } from '@/constant';
+import { getAllEnrolledCoursesFromDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 

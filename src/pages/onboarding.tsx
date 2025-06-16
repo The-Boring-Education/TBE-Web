@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 
-import { useApi, useUser } from '@/hooks';
-
 import {
   OnboardingLayout,
   OnboardingProgressBar,
@@ -16,8 +14,8 @@ import {
   Toast,
 } from '@/components';
 import FlexContainer from '@/components/containers/Page/common/FlexContainer';
-
 import { routes } from '@/constant';
+import { useApi, useUser } from '@/hooks';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps, getRedirectUrl } from '@/utils';
 

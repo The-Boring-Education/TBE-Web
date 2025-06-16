@@ -1,8 +1,9 @@
 import { Fragment } from 'react';
-import { SEO, Section, Text } from '@/components';
+
+import { Section, SEO, Text } from '@/components';
 import { routes } from '@/constant';
-import { getPreFetchProps } from '@/utils';
 import { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
 const TERMS_CONDITION_CONTENT = [
   {

@@ -4,8 +4,6 @@ import { FiCalendar } from 'react-icons/fi';
 import { LuClock3 } from 'react-icons/lu';
 import { SiLinkedin } from 'react-icons/si';
 
-import { useAnalytics, useApi, useUser } from '@/hooks';
-
 import {
   AboutTBE,
   BackgroundImage,
@@ -21,8 +19,8 @@ import {
   Text,
   WebinarHeroContainer,
 } from '@/components';
-
 import { routes, TESTIMONIALS } from '@/constant';
+import { useAnalytics, useApi, useUser } from '@/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   WebinarPageProps,

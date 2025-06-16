@@ -1,5 +1,4 @@
 import { GradientContainer, Image, Text } from '@/components';
-
 import type { TestimonialCardProps } from '@/interfaces';
 
 const TestimonialCard = ({

@@ -1,3 +1,6 @@
+import '@/styles/globals.css';
+import '@/styles/colors.css';
+
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -5,14 +8,9 @@ import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import '@/styles/globals.css';
-import '@/styles/colors.css';
-
-import { useUser } from '@/hooks';
-
 import { PageLayout } from '@/components';
-
 import { googleAnalyticsScript, gtag, routes } from '@/constant';
+import { useUser } from '@/hooks';
 import { getRedirectUrl } from '@/utils';
 
 // Create a client

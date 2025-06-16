@@ -1,5 +1,4 @@
 import { CircularProgressBar, FlexContainer, Text } from '@/components';
-
 import type { ResumeEvaluationSectionProps } from '@/interfaces';
 
 const ResumeEvaluationSection = ({

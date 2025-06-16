@@ -1,5 +1,4 @@
 import { FlexContainer, Link } from '@/components';
-
 import type { NavbarDropdownContainerProps } from '@/interfaces';
 
 const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => {

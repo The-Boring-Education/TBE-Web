@@ -4,7 +4,6 @@ import {
   SelectInput,
   Text,
 } from '@/components';
-
 import { COUNTRY_CODES } from '@/constant';
 import type { StepPhoneNumberProps } from '@/interfaces';
 

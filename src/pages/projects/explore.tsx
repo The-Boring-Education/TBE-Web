@@ -1,10 +1,8 @@
 import { Fragment } from 'react';
 
-import { useApi, useAPIResponseMapper } from '@/hooks';
-
 import { CardContainerB, LoadingSpinner, SEO } from '@/components';
-
 import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
+import { useApi, useAPIResponseMapper } from '@/hooks';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps, mapProjectResponseToCard } from '@/utils';
 

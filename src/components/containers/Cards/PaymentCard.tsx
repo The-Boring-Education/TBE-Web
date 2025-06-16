@@ -1,9 +1,10 @@
-import { useUser, useCashfreePayment } from '@/hooks';
-import { Button, FlexContainer, Section, Text } from '@/components';
-import type { PaymentCardProps } from '@/interfaces';
-import { useState } from 'react';
 import { BanknotesIcon, BookOpenIcon, ShieldCheckIcon, UserIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { useState } from 'react';
+
+import { Button, FlexContainer, Section, Text } from '@/components';
 import { routes } from '@/constant';
+import { useCashfreePayment,useUser } from '@/hooks';
+import type { PaymentCardProps } from '@/interfaces';
 
 const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
   const { user } = useUser();

@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   deleteQuestionFromSheetInDB,
   updateInterviewQuestionInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type { AddInterviewQuestionRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

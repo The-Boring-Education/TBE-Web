@@ -1,5 +1,4 @@
 import { FlexContainer, Section } from '@/components';
-
 import type { OnboardingLayoutProps } from '@/interfaces';
 
 const OnboardingLayout = ({ children }: OnboardingLayoutProps) => {

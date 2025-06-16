@@ -11,7 +11,6 @@ import {
   SEO,
   Text,
 } from '@/components';
-
 import {
   LINKS,
   PAGE_REFRESH_TIMEOUT,

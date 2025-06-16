@@ -6,7 +6,6 @@ import {
   Section,
   SEO,
 } from '@/components';
-
 import type { PlaylistPageProps } from '@/interfaces';
 import { getPlaylistPageProps } from '@/utils';
 

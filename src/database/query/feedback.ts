@@ -1,5 +1,4 @@
 import { Feedback } from '@/database';
-
 import type {
   AddFeedbackRequestProps,
   DatabaseQueryResponseType,

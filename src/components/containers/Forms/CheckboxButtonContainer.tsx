@@ -1,5 +1,4 @@
 import { CheckboxButton, FlexContainer } from '@/components';
-
 import type { CheckboxGroupProps } from '@/interfaces';
 
 const CheckboxButtonContainer = ({

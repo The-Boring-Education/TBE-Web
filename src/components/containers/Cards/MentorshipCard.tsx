@@ -1,5 +1,4 @@
 import { FlexContainer, LinkButton, Text } from '@/components';
-
 import type { MentorshipCardProps } from '@/interfaces';
 
 const MentorshipCard = ({
