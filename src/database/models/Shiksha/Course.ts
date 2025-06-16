@@ -1,4 +1,4 @@
-import { type Model,model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from '@/constant';
 import type { CourseChapterModel, CourseModel } from '@/interfaces';
@@ -46,7 +46,7 @@ const CourseSchema = new Schema<CourseModel>(
       type: Boolean,
       default: false,
     },
-    price:{
+    price: {
       type: Number,
     },
     chapters: [chapterSchema],

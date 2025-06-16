@@ -1,4 +1,4 @@
-import { signIn , useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 import { useAnalytics } from '@/hooks';
 import type { LoginWithGoogleBtnProps } from '@/interfaces';

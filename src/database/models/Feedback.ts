@@ -1,4 +1,4 @@
-import { type Model,model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS, FEEDBACK_TYPES } from '@/constant';
 import type { FeedbackModel } from '@/interfaces';

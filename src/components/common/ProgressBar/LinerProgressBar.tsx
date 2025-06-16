@@ -15,7 +15,7 @@ const LinerProgressBar = ({
         <div
           className='bg-success h-full rounded-full'
           style={{ width: `${completionPercentage}%` }}
-         />
+        />
       </div>
       <div className='text-sm mt-1'>
         {completedChapters} / {totalChapters} Chapters Completed (

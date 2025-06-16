@@ -21,10 +21,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const generateMDXContent = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => res.status(apiStatusCodes.OKAY).json(getMDXContent());
+const generateMDXContent = async (req: NextApiRequest, res: NextApiResponse) =>
+  res.status(apiStatusCodes.OKAY).json(getMDXContent());
 
 const generateBulkMDXContent = async (
   req: NextApiRequest,

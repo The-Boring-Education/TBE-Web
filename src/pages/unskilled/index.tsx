@@ -242,11 +242,7 @@ const UnskilledLandingPage = ({
                   <span className='heading-3 text-primary'> Resume </span>
                   <span role='img'>🔍</span>
                 </Text>
-                <Text
-                  className='max-w-2xl paragraph'
-                  level='p'
-                  textCenter
-                >
+                <Text className='max-w-2xl paragraph' level='p' textCenter>
                   Upload your resume and let us analyze thousands of job
                   listings to highlight missing skills and suggest tailored
                   resources.

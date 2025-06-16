@@ -107,7 +107,7 @@ const Home = ({ seoMeta }: PageProps) => {
 };
 
 export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({ slug: routes.youfocusAddPlaylist })),
-  });
+  ...(await getPreFetchProps({ slug: routes.youfocusAddPlaylist })),
+});
 
 export default Home;

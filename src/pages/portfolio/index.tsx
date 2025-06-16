@@ -68,10 +68,7 @@ const Portfolio = ({ seoMeta }: PageProps) => {
             Portfolio?
           </Text>
         </Text>
-        <FlexContainer
-          className='max-w-screen-xl gap-3 md:flex-row'
-          fullWidth
-        >
+        <FlexContainer className='max-w-screen-xl gap-3 md:flex-row' fullWidth>
           {PORTFOLIO_CARDS.map((card) => (
             <PortfolioCard
               key={card.id}
@@ -87,11 +84,7 @@ const Portfolio = ({ seoMeta }: PageProps) => {
         className='flex flex-col items-center bg-black p-2'
         id={routes.internals.landing.portfolio}
       >
-        <FlexContainer
-          className='py-4 gap-1 md:py-6'
-          direction='col'
-          fullWidth
-        >
+        <FlexContainer className='py-4 gap-1 md:py-6' direction='col' fullWidth>
           <Text className='heading-4 text-white' level='h3' textCenter>
             Pick Your Portfolio Template
           </Text>
@@ -106,11 +99,7 @@ const Portfolio = ({ seoMeta }: PageProps) => {
           <Section className='gradient-5 p-4 rounded-2 mt-6'>
             <FlexContainer className='items-center' direction='col'>
               <FlexContainer className='items-center gap-1' direction='col'>
-                <Text
-                  className='heading-4 text-white'
-                  level='h3'
-                  textCenter
-                >
+                <Text className='heading-4 text-white' level='h3' textCenter>
                   Want to Showcase Your Portfolio?
                 </Text>
                 <Text className='text-white' level='p' textCenter>
@@ -136,8 +125,8 @@ const Portfolio = ({ seoMeta }: PageProps) => {
 };
 
 export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({ slug: routes.portfolio })),
-    revalidate: PAGE_REFRESH_TIMEOUT.long,
-  });
+  ...(await getPreFetchProps({ slug: routes.portfolio })),
+  revalidate: PAGE_REFRESH_TIMEOUT.long,
+});
 
 export default Portfolio;

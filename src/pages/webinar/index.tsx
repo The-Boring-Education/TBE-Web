@@ -62,7 +62,9 @@ const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
           />
           <FlexContainer className='gap-2'>
             {filteredWebinars.length > 0 ? (
-              filteredWebinars.map((webinar, index) => <WebibarCard key={index} {...webinar} />)
+              filteredWebinars.map((webinar, index) => (
+                <WebibarCard key={index} {...webinar} />
+              ))
             ) : (
               <Text className='text-center strong-text' level='span'>
                 No webinars available.

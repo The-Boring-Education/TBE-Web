@@ -7,7 +7,7 @@ import {
   Text,
 } from '@/components';
 import { projectGroupWhatsapp, routes } from '@/constant';
-import { useAnalytics, useApi,useUser } from '@/hooks';
+import { useAnalytics, useApi, useUser } from '@/hooks';
 import type { ProjectHeroContainerProps } from '@/interfaces';
 
 const ProjectHeroContainer = ({

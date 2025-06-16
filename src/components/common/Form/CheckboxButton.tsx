@@ -8,22 +8,22 @@ const CheckboxButton = ({
   isSelected,
   onClick,
 }: CheckboxButtonProps) => (
-    <label
-      className={`checkbox 
+  <label
+    className={`checkbox 
         ${isSelected ? 'bg-primary text-white' : 'bg-accent hover:bg-greyLight'}
       `}
-      htmlFor={`checkbox-${value}`}
-    >
-      <input
-        checked={isSelected}
-        className='hidden'
-        id={`checkbox-${value}`}
-        type='checkbox'
-        value={value}
-        onChange={onClick}
-      />
-      {label}
-    </label>
-  );
+    htmlFor={`checkbox-${value}`}
+  >
+    <input
+      checked={isSelected}
+      className='hidden'
+      id={`checkbox-${value}`}
+      type='checkbox'
+      value={value}
+      onChange={onClick}
+    />
+    {label}
+  </label>
+);
 
 export default CheckboxButton;

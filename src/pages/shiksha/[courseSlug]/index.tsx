@@ -1,5 +1,5 @@
 import router from 'next/router';
-import { Fragment, useEffect, useRef,useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { FaLock, FaTrophy } from 'react-icons/fa';
 
 import {
@@ -19,7 +19,13 @@ import {
   Text,
 } from '@/components';
 import { routes, SCREEN_BREAKPOINTS } from '@/constant';
-import { useAnalytics, useApi, useMediaQuery, usePaymentStatus,useUser } from '@/hooks';
+import {
+  useAnalytics,
+  useApi,
+  useMediaQuery,
+  usePaymentStatus,
+  useUser,
+} from '@/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,

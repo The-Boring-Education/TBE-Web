@@ -1,5 +1,9 @@
 import { Payment } from '@/database';
-import type { AddPaymentToDBRequestPayloadProps, DatabaseQueryResponseType, UpdatePaymentStatusPayloadProps } from '@/interfaces';
+import type {
+  AddPaymentToDBRequestPayloadProps,
+  DatabaseQueryResponseType,
+  UpdatePaymentStatusPayloadProps,
+} from '@/interfaces';
 
 const addPaymentToDB = async ({
   userId,
@@ -27,7 +31,9 @@ const addPaymentToDB = async ({
   }
 };
 
-const getPaymentByOrderIdFromDB = async (orderId: string): Promise<DatabaseQueryResponseType> => {
+const getPaymentByOrderIdFromDB = async (
+  orderId: string
+): Promise<DatabaseQueryResponseType> => {
   try {
     const payment = await Payment.findOne({ orderId });
     if (!payment) {
@@ -62,7 +68,10 @@ const updatePaymentStatusToDB = async ({
   }
 };
 
-const checkPaymentStatusFromDB = async (userId: string, productId: string): Promise<DatabaseQueryResponseType> => {
+const checkPaymentStatusFromDB = async (
+  userId: string,
+  productId: string
+): Promise<DatabaseQueryResponseType> => {
   try {
     const payment = await Payment.findOne({ user: userId, productId });
 
@@ -80,7 +89,9 @@ const checkPaymentStatusFromDB = async (userId: string, productId: string): Prom
   }
 };
 
-export { addPaymentToDB,
-         checkPaymentStatusFromDB,
-         getPaymentByOrderIdFromDB, 
-         updatePaymentStatusToDB };
+export {
+  addPaymentToDB,
+  checkPaymentStatusFromDB,
+  getPaymentByOrderIdFromDB,
+  updatePaymentStatusToDB,
+};

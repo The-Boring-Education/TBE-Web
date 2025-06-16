@@ -55,7 +55,8 @@ const handleAdminDashboard = async (
     const mapUserLearningProgress = (
       items: any[],
       type: 'course' | 'project' | 'sheet'
-    ) => items.map((item: any) => {
+    ) =>
+      items.map((item: any) => {
         const completedChapters =
           type === 'course'
             ? item.chapters?.filter((c: any) => c.isCompleted).length || 0

@@ -14,20 +14,20 @@ const CardContainerA = ({
   borderColour,
   subtext,
 }: CardContainerAProps) => (
-    <Section>
-      <FlexContainer className='gap-4' direction='col'>
-        <SectionHeaderContainer
-          focusText={focusText}
-          heading={heading}
-          subtext={subtext}
-        />
-        <CardSectionContainer>
-          {cards.map((item) => (
-            <PrimaryCard key={item.id} {...item} borderColour={borderColour} />
-          ))}
-        </CardSectionContainer>
-      </FlexContainer>
-    </Section>
-  );
+  <Section>
+    <FlexContainer className='gap-4' direction='col'>
+      <SectionHeaderContainer
+        focusText={focusText}
+        heading={heading}
+        subtext={subtext}
+      />
+      <CardSectionContainer>
+        {cards.map((item) => (
+          <PrimaryCard key={item.id} {...item} borderColour={borderColour} />
+        ))}
+      </CardSectionContainer>
+    </FlexContainer>
+  </Section>
+);
 
 export default CardContainerA;

@@ -149,7 +149,8 @@ const getSelectedCourseChapterMeta = (
   return selectedChapter?.content ?? '';
 };
 
-const isAdmin = (adminSecret: string): boolean => envConfig.ADMIN_SECRET == adminSecret;
+const isAdmin = (adminSecret: string): boolean =>
+  envConfig.ADMIN_SECRET == adminSecret;
 
 const getSelectedSheetQuestionMeta = (
   sheet: BaseInterviewSheetResponseProps,
@@ -188,7 +189,8 @@ const isProgramActive = (liveOn: Date | string) =>
 
 const mapCourseResponseToCard = (
   coursesData: BaseShikshaCourseResponseProps[]
-) => coursesData?.map(
+) =>
+  coursesData?.map(
     ({
       _id,
       coverImageURL,
@@ -234,7 +236,8 @@ const mapCourseResponseToCard = (
 
 const mapInterviewSheetResponseToCard = (
   sheetsData: BaseInterviewSheetResponseProps[]
-) => sheetsData?.map(
+) =>
+  sheetsData?.map(
     ({
       _id,
       coverImageURL,
@@ -282,16 +285,17 @@ const mapInterviewSheetResponseToCard = (
 
 const mapUserPlaylistResponseToCard = (
   playlists: UserPlaylistResponseProps[]
-) => playlists?.map(({ _id, playlistName, description, thumbnail }) => ({
-      id: _id,
-      title: playlistName,
-      image: thumbnail,
-      imageAltText: playlistName,
-      content: description,
-      ctaText: 'Continue Learning',
-      active: true,
-      href: `/youfocus/playlist/${_id}`,
-    }));
+) =>
+  playlists?.map(({ _id, playlistName, description, thumbnail }) => ({
+    id: _id,
+    title: playlistName,
+    image: thumbnail,
+    imageAltText: playlistName,
+    content: description,
+    ctaText: 'Continue Learning',
+    active: true,
+    href: `/youfocus/playlist/${_id}`,
+  }));
 
 const generatePublicCertificateLink = (host: string, certificateId: string) =>
   `${host}/certificate/${certificateId}`;
@@ -582,7 +586,8 @@ const constrainNumberToRange = (
   max: number
 ): number => Math.min(Math.max(value, min), max);
 
-const cleanJobSkillsData = (skills: string[]): string[] => skills
+const cleanJobSkillsData = (skills: string[]): string[] =>
+  skills
     .map((s) => s.trim().toLowerCase())
     .filter((s) => !SKILL_BLACKLIST.includes(s))
     .map((s) => {
@@ -592,7 +597,8 @@ const cleanJobSkillsData = (skills: string[]): string[] => skills
       return normalized ? normalized.value : s;
     });
 
-const generatePaymentOrderId = (): string => `order_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+const generatePaymentOrderId = (): string =>
+  `order_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
 
 const buildOrderPayload = ({
   orderId,
@@ -620,7 +626,7 @@ const createCashfreeOrder = async (
 ): Promise<{ data: any; ok: boolean }> => {
   const clientId = envConfig.CASHFREE_CLIENT_ID;
   const secretKey = envConfig.CASHFREE_SECRET_KEY;
-  
+
   if (!clientId || !secretKey) {
     throw new Error('Cashfree credentials not configured');
   }

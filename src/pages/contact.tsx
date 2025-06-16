@@ -16,7 +16,7 @@ const Contact = () => {
 };
 
 export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({ slug: routes.contactUs })),
-  });
+  ...(await getPreFetchProps({ slug: routes.contactUs })),
+});
 
 export default Contact;

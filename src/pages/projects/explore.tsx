@@ -36,8 +36,8 @@ const Home = ({ seoMeta }: PageProps) => {
 };
 
 export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({ slug: routes.projectsExplore })),
-    revalidate: PAGE_REFRESH_TIMEOUT.long,
-  });
+  ...(await getPreFetchProps({ slug: routes.projectsExplore })),
+  revalidate: PAGE_REFRESH_TIMEOUT.long,
+});
 
 export default Home;

@@ -11,15 +11,15 @@ const LinkText = ({
   scroll = false,
   onClick,
 }: LinkProps) => (
-    <Link
-      className={`${className} link ${!active && 'disabled'}`}
-      href={href}
-      scroll={scroll}
-      target={target}
-      onClick={onClick}
-    >
-      {children}
-    </Link>
-  );
+  <Link
+    className={`${className} link ${!active && 'disabled'}`}
+    href={href}
+    scroll={scroll}
+    target={target}
+    onClick={onClick}
+  >
+    {children}
+  </Link>
+);
 
 export default LinkText;

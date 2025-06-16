@@ -172,8 +172,8 @@ const getUserPlaylistsFromDB = async (
       .populate('playlistId')
       .lean()
       .exec()
-      .then((data) => 
-         data.filter((item) => item.playlistId) // If Playlist ID doesn't exist -> Skip
+      .then(
+        (data) => data.filter((item) => item.playlistId) // If Playlist ID doesn't exist -> Skip
       );
 
     if (!userPlaylists.length) {

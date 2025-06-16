@@ -9,7 +9,7 @@ const BackgroundImage = ({
     style={{
       backgroundImage: `url(${bannerImageUrl})`,
     }}
-   />
+  />
 );
 
 export default BackgroundImage;

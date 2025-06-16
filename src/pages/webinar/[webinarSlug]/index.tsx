@@ -157,11 +157,7 @@ const WebinarPage = ({
           Generate Your Certificate
         </Text>
 
-        <FlexContainer
-          className='gap-4 md:px-0 px-4'
-          direction='col'
-          fullWidth
-        >
+        <FlexContainer className='gap-4 md:px-0 px-4' direction='col' fullWidth>
           <FlexContainer className='gap-4'>
             <FlexContainer className='gap-4 items-start'>
               <FlexContainer
@@ -300,10 +296,7 @@ const WebinarPage = ({
                   {date}
                 </Text>
               </FlexContainer>
-              <FlexContainer
-                className='justify-start gap-2.5'
-                itemCenter
-              >
+              <FlexContainer className='justify-start gap-2.5' itemCenter>
                 <LuClock3 className='w-4 h-4' />
                 <Text className='strong-text' level='p'>
                   {time}
@@ -352,15 +345,15 @@ const WebinarPage = ({
                 itemCenter={false}
               >
                 {about.map((item, index) => (
-                    <Text
-                      key={index}
-                      className='paragraph'
-                      level='p'
-                      textCenter={false}
-                    >
-                      {item}
-                    </Text>
-                  ))}
+                  <Text
+                    key={index}
+                    className='paragraph'
+                    level='p'
+                    textCenter={false}
+                  >
+                    {item}
+                  </Text>
+                ))}
               </FlexContainer>
             </FlexContainer>
             <FlexContainer className='gap-3' direction='col' fullWidth>
@@ -450,7 +443,9 @@ const WebinarPage = ({
             className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
             gap='gap-2'
           >
-            {TESTIMONIALS.map((item) => <TestimonialCard {...item} key={item.id} />)}
+            {TESTIMONIALS.map((item) => (
+              <TestimonialCard {...item} key={item.id} />
+            ))}
           </CardSectionContainer>
         </FlexContainer>
       </Section>

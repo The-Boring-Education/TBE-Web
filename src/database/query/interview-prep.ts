@@ -213,9 +213,9 @@ const getAllEnrolledSheetsFromDB = async (
 
     return {
       data: enrolledSheets.map((sheet) => ({
-          ...sheet.sheet.toObject(),
-          isEnrolled: true,
-        })),
+        ...sheet.sheet.toObject(),
+        isEnrolled: true,
+      })),
     };
   } catch (error) {
     return { error: 'Failed while fetching enrolled sheets' };

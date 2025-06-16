@@ -78,8 +78,8 @@ export interface CourseModel extends Document {
   meta: string;
   slug: string;
   description: string;
-  isPremium:boolean
-  price:number;
+  isPremium: boolean;
+  price: number;
   coverImageURL: string;
   liveOn: Date;
   chapters: CourseChapterModel[];
@@ -278,10 +278,10 @@ export interface PaymentModel extends Document {
   amount: number;
   productId: Types.ObjectId;
   productType: ProductType;
-  orderId: string;           
-  paymentId?: string;       
+  orderId: string;
+  paymentId?: string;
   paymentLink: string;
-  isPaid:boolean; 
+  isPaid: boolean;
 }
 
 export interface WebhookEvent {

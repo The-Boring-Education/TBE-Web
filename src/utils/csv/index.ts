@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const getCSVContent = (): Promise<Array<{ name: string; email: string }>> => new Promise((resolve, reject) => {
+const getCSVContent = (): Promise<Array<{ name: string; email: string }>> =>
+  new Promise((resolve, reject) => {
     const csvFilePath = path.join(
       process.cwd(),
       'src',

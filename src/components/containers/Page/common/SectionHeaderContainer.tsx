@@ -9,31 +9,31 @@ const SectionHeaderContainer = ({
   flexContainerProps,
   subtext,
 }: SectionHeaderProps) => (
-    <FlexContainer
-      className={`gap-1 ${className}`}
-      {...flexContainerProps}
-      direction='col'
+  <FlexContainer
+    className={`gap-1 ${className}`}
+    {...flexContainerProps}
+    direction='col'
+  >
+    <Text
+      className={`heading-${headingLevel}`}
+      level={`h${headingLevel}`}
+      textCenter
     >
+      {heading}
       <Text
-        className={`heading-${headingLevel}`}
-        level={`h${headingLevel}`}
+        className={`heading-${headingLevel} text-primary`}
+        level='span'
         textCenter
       >
-        {heading}
-        <Text
-          className={`heading-${headingLevel} text-primary`}
-          level='span'
-          textCenter
-        >
-          &nbsp;{focusText}
-        </Text>
+        &nbsp;{focusText}
       </Text>
-      {subtext && (
-        <Text className='pre-text text-greyDark' level='span' textCenter>
-          {subtext}
-        </Text>
-      )}
-    </FlexContainer>
-  );
+    </Text>
+    {subtext && (
+      <Text className='pre-text text-greyDark' level='span' textCenter>
+        {subtext}
+      </Text>
+    )}
+  </FlexContainer>
+);
 
 export default SectionHeaderContainer;

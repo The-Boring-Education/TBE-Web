@@ -7,7 +7,7 @@ import {
   Text,
 } from '@/components';
 import { routes } from '@/constant';
-import { useAnalytics, useApi,useUser } from '@/hooks';
+import { useAnalytics, useApi, useUser } from '@/hooks';
 import type { SheetHeroContainerProps } from '@/interfaces';
 
 const SheetHeroContainer = ({

@@ -41,7 +41,7 @@ const Home = ({ seoMeta }: PageProps) => {
           text: 'Go Back To Home',
         }}
         href={routes.shiksha}
-       />
+      />
     </FlexContainer>
   );
 
@@ -62,8 +62,8 @@ const Home = ({ seoMeta }: PageProps) => {
 };
 
 export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({ slug: routes.shikshaExplore })),
-    revalidate: PAGE_REFRESH_TIMEOUT.long,
-  });
+  ...(await getPreFetchProps({ slug: routes.shikshaExplore })),
+  revalidate: PAGE_REFRESH_TIMEOUT.long,
+});
 
 export default Home;

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FaLock,FaRegCircle } from 'react-icons/fa';
+import { FaLock, FaRegCircle } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 import type { ChapterLinkProps } from '@/interfaces';
@@ -27,8 +27,8 @@ const ChapterLink = ({
     <Link
       key={chapterId}
       className={`flex items-center gap-1 w-full p-2 rounded text-left pre-title ${
-        isLocked 
-          ? 'text-gray-700 cursor-not-allowed' 
+        isLocked
+          ? 'text-gray-700 cursor-not-allowed'
           : `hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`
       }`}
       href={href}
@@ -41,7 +41,7 @@ const ChapterLink = ({
       }}
     >
       {isLocked ? (
-        <FaLock className="text-gray-400" size={20} />
+        <FaLock className='text-gray-400' size={20} />
       ) : isCompleted ? (
         <IoIosCheckmarkCircle className={iconColor} size={24} />
       ) : (

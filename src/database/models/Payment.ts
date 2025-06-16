@@ -1,4 +1,4 @@
-import { type Model,model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS, PRODUCT_TYPE } from '@/constant';
 import type { PaymentModel } from '@/interfaces';
@@ -11,17 +11,17 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
       required: [true, 'User ref is required'],
     },
     productId: {
-        type: Schema.Types.ObjectId,
-        required: [true, 'Product ID is required'],
+      type: Schema.Types.ObjectId,
+      required: [true, 'Product ID is required'],
     },
     productType: {
-        type: String,
-        enum: PRODUCT_TYPE,
-        required: [true, 'Product type is required'],
+      type: String,
+      enum: PRODUCT_TYPE,
+      required: [true, 'Product type is required'],
     },
     amount: {
       type: Number,
-      required:true,
+      required: true,
     },
     orderId: {
       type: String,
@@ -46,6 +46,7 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
 );
 
 const Payment: Model<PaymentModel> =
-  models?.Payment || model<PaymentModel>(DATABASE_MODELS.PAYMENT, PaymentSchema);
+  models?.Payment ||
+  model<PaymentModel>(DATABASE_MODELS.PAYMENT, PaymentSchema);
 
 export default Payment;

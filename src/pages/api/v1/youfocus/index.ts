@@ -10,7 +10,7 @@ import {
   updateTagsInPlaylist,
 } from '@/database';
 import { connectDB } from '@/middlewares';
-import { extractPlaylistId, fetchPlaylistData,sendAPIResponse } from '@/utils';
+import { extractPlaylistId, fetchPlaylistData, sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

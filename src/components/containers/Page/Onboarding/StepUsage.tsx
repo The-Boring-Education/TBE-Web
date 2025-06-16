@@ -1,4 +1,4 @@
-import { CheckboxButtonContainer, FlexContainer , Text } from '@/components';
+import { CheckboxButtonContainer, FlexContainer, Text } from '@/components';
 import { USER_USAGE_OPTIONS } from '@/constant';
 import type { StepUsageProps } from '@/interfaces';
 

@@ -16,11 +16,7 @@ const LandingPageHero = ({
   const { heading, focusText } = sectionHeaderProps;
   return (
     <Section>
-      <FlexContainer
-        className='py-2 sm:py-6'
-        direction='col'
-        justifyCenter
-      >
+      <FlexContainer className='py-2 sm:py-6' direction='col' justifyCenter>
         <FlexContainer
           className='wrap-reverse flex-col-reverse gap-6 lg:flex-row'
           itemCenter

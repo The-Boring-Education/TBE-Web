@@ -53,15 +53,15 @@ const TheBoringEducation = ({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) => (
-    <Fragment>
-      <Script async src={gtag} strategy='lazyOnload' />
-      <Script id='google-analytics' strategy='lazyOnload'>
-        {googleAnalyticsScript}
-      </Script>
-      <SessionProvider session={session}>
-        <AppContent Component={Component} pageProps={pageProps} />
-      </SessionProvider>
-    </Fragment>
-  );
+  <Fragment>
+    <Script async src={gtag} strategy='lazyOnload' />
+    <Script id='google-analytics' strategy='lazyOnload'>
+      {googleAnalyticsScript}
+    </Script>
+    <SessionProvider session={session}>
+      <AppContent Component={Component} pageProps={pageProps} />
+    </SessionProvider>
+  </Fragment>
+);
 
 export default TheBoringEducation;

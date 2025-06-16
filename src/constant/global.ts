@@ -357,9 +357,9 @@ const COUNTRY_CODES = [
 ];
 
 const JOB_DOMAINS = JOB_DOMAIN_NORMALIZER.map(({ value }) => ({
-    label: value,
-    value,
-  })).splice(0, 10);
+  label: value,
+  value,
+})).splice(0, 10);
 
 const JOB_EXPERIENCE_LEVEL: {
   label: string;

@@ -41,54 +41,54 @@ const TERMS_CONDITION_CONTENT = [
 ];
 
 const TermsAndCondition = ({ seoMeta }: PageProps) => (
-    <Fragment>
-      <SEO seoMeta={seoMeta} />
+  <Fragment>
+    <SEO seoMeta={seoMeta} />
 
-      <Section>
-        <Text
-          level='h1'
-          className='mx-auto mb-8 w-full text-4xl font-bold text-primary md:mb-12 md:text-5xl'
-          textCenter
-        >
-          Terms & Conditions
-        </Text>
+    <Section>
+      <Text
+        level='h1'
+        className='mx-auto mb-8 w-full text-4xl font-bold text-primary md:mb-12 md:text-5xl'
+        textCenter
+      >
+        Terms & Conditions
+      </Text>
 
-        <Text
-          level='p'
-          className='mx-auto text-lg font-medium text-foreground/70'
-          textCenter
-        >
-          Last Updated At: <span className='text-primary'>June 2, 2025</span>
-        </Text>
+      <Text
+        level='p'
+        className='mx-auto text-lg font-medium text-foreground/70'
+        textCenter
+      >
+        Last Updated At: <span className='text-primary'>June 2, 2025</span>
+      </Text>
 
-        <br />
+      <br />
 
-        {TERMS_CONDITION_CONTENT.map((item) => (
-          <Section key={item.id} className='mb-6 mx-auto max-w-3xl'>
+      {TERMS_CONDITION_CONTENT.map((item) => (
+        <Section key={item.id} className='mb-6 mx-auto max-w-3xl'>
+          <Text
+            level='p'
+            className='mb-2 text-lg font-medium text-foreground/80'
+          >
+            {item.description}
+          </Text>
+
+          {item.points?.map((point) => (
             <Text
+              key={point.id}
               level='p'
-              className='mb-2 text-lg font-medium text-foreground/80'
+              className='ml-4 mt-2 text-base text-foreground/70'
             >
-              {item.description}
+              {point.id}. {point.description}
             </Text>
-
-            {item.points?.map((point) => (
-              <Text
-                key={point.id}
-                level='p'
-                className='ml-4 mt-2 text-base text-foreground/70'
-              >
-                {point.id}. {point.description}
-              </Text>
-            ))}
-          </Section>
-        ))}
-      </Section>
-    </Fragment>
-  );
+          ))}
+        </Section>
+      ))}
+    </Section>
+  </Fragment>
+);
 
 export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({ slug: routes.termsAndConditions })),
-  });
+  ...(await getPreFetchProps({ slug: routes.termsAndConditions })),
+});
 
 export default TermsAndCondition;

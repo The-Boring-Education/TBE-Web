@@ -121,7 +121,7 @@ const useResumeEvaluation = () => {
 
   const handleResumeEvaluation = async () => {
     setError('');
-    
+
     if (!file || selectedDomains.length === 0 || !selectedExperience) {
       setError('Please upload resume, select domain and experience');
       return;

@@ -17,7 +17,7 @@ const DATABASE_MODELS = {
   JOB: 'Job',
   FEEDBACK: 'Feedback',
   JOB_AGGREGATE: 'JobAggregate',
-  PAYMENT:"Payment"
+  PAYMENT: 'Payment',
 };
 
 export const FEEDBACK_TYPES = [
@@ -32,12 +32,12 @@ export type FeedbackType = (typeof FEEDBACK_TYPES)[number];
 
 export const PRODUCT_TYPE = [
   'INTERVIEW_SHEET',
-  'SHIKSHA', 
-  'PROJECTS', 
-  'PREPYATRA', 
-  'GENERAL'
-]
-export type ProductType = (typeof PRODUCT_TYPE)[number]
+  'SHIKSHA',
+  'PROJECTS',
+  'PREPYATRA',
+  'GENERAL',
+];
+export type ProductType = (typeof PRODUCT_TYPE)[number];
 
 const modelSelectParams = {
   coursePreview: '_id name slug coverImageURL description liveOn',

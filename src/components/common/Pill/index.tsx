@@ -27,11 +27,7 @@ const Pill = ({
         widthFull && 'w-full'
       } ${className}`}
     >
-      <Text
-        className={`strong-text ${textStyleClasses}`}
-        level='p'
-        textCenter
-      >
+      <Text className={`strong-text ${textStyleClasses}`} level='p' textCenter>
         {text}
       </Text>
     </div>

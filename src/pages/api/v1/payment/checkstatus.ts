@@ -1,9 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from "@/constant";
-import { checkPaymentStatusFromDB } from "@/database"; 
-import { connectDB } from "@/middlewares";
-import { sendAPIResponse } from "@/utils";
+import { apiStatusCodes } from '@/constant';
+import { checkPaymentStatusFromDB } from '@/database';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -30,7 +30,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const checkPaymentStatus = async (req: NextApiRequest, res: NextApiResponse) => {
+const checkPaymentStatus = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   const { userId, productId } = req.query;
 
   if (!userId || !productId) {
@@ -42,13 +45,18 @@ const checkPaymentStatus = async (req: NextApiRequest, res: NextApiResponse) => 
     );
   }
 
-  const { data, error } = await checkPaymentStatusFromDB(userId as string, productId as string);
+  const { data, error } = await checkPaymentStatusFromDB(
+    userId as string,
+    productId as string
+  );
 
   return res.status(apiStatusCodes.OKAY).json(
     sendAPIResponse({
       status: data?.purchased || false,
       data,
-      message: error || (data?.purchased ? 'Payment completed' : 'Payment not completed'),
+      message:
+        error ||
+        (data?.purchased ? 'Payment completed' : 'Payment not completed'),
     })
   );
 };

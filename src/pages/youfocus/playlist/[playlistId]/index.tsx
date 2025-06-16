@@ -21,22 +21,22 @@ const PlaylistPage = ({
   },
   seoMeta,
 }: PlaylistPageProps) => (
-    <Fragment>
-      <SEO seoMeta={seoMeta} />
-      <Section className='p-2'>
-        <PlaylistContainer
-          description={description}
-          id={_id.toString()}
-          isRecommended={isRecommended}
-          learningTime={learningTime}
-          playlistName={playlistName}
-          thumbnail={thumbnail}
-          videos={videos}
-        />
-        <ScrollToTopBottomButton />
-      </Section>
-    </Fragment>
-  );
+  <Fragment>
+    <SEO seoMeta={seoMeta} />
+    <Section className='p-2'>
+      <PlaylistContainer
+        description={description}
+        id={_id.toString()}
+        isRecommended={isRecommended}
+        learningTime={learningTime}
+        playlistName={playlistName}
+        thumbnail={thumbnail}
+        videos={videos}
+      />
+      <ScrollToTopBottomButton />
+    </Section>
+  </Fragment>
+);
 
 export const getServerSideProps = getPlaylistPageProps;
 export default PlaylistPage;

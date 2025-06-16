@@ -115,8 +115,8 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
 };
 
 export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({ slug: routes.user.dashboard })),
-    revalidate: PAGE_REFRESH_TIMEOUT.short,
-  });
+  ...(await getPreFetchProps({ slug: routes.user.dashboard })),
+  revalidate: PAGE_REFRESH_TIMEOUT.short,
+});
 
 export default UserDashboard;

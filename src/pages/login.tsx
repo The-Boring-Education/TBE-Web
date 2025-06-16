@@ -6,14 +6,14 @@ import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 
 const Login = ({ seoMeta }: PageProps) => (
-    <Fragment>
-      <SEO seoMeta={seoMeta} />
-      <LoginCard />
-    </Fragment>
-  );
+  <Fragment>
+    <SEO seoMeta={seoMeta} />
+    <LoginCard />
+  </Fragment>
+);
 
 export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({ slug: routes.login })),
-  });
+  ...(await getPreFetchProps({ slug: routes.login })),
+});
 
 export default Login;

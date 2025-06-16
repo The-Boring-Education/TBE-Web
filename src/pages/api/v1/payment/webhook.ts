@@ -109,9 +109,8 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const { data: _payment, error: findError } = await getPaymentByOrderIdFromDB(
-      webhookEvent.order_id
-    );
+    const { data: _payment, error: findError } =
+      await getPaymentByOrderIdFromDB(webhookEvent.order_id);
 
     if (findError) {
       return res.status(apiStatusCodes.NOT_FOUND).json(
