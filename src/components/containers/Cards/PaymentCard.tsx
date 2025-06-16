@@ -22,7 +22,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
       body: JSON.stringify({
         userId: user?.id,
         productId: course._id,
-        productType: productType,
+        productType,
         amount: course.price,
         customerName: user?.name,
         customerEmail: user?.email,

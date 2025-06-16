@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/constant";
 import { checkPaymentStatusFromDB } from "@/database"; 

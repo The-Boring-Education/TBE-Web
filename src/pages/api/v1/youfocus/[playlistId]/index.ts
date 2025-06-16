@@ -123,7 +123,7 @@ const handleDeletePlaylistById = async (
       sendAPIResponse({
         status: false,
         message: 'Error deleting playlist',
-        error: error,
+        error,
       })
     );
   }

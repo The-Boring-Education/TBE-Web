@@ -62,7 +62,7 @@ const handleGetAllUserCourses = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while fetching enrolled courses',
-        error: error,
+        error,
       })
     );
   }

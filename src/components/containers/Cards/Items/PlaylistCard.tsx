@@ -9,8 +9,7 @@ const PlaylistCard = ({
   thumbnail,
   isStartedLearningFromPlaylist,
   videoId,
-}: PlaylistCardProps) => {
-  return (
+}: PlaylistCardProps) => (
     <FlexContainer className='gap-4 w-full items-baseline' direction='col'>
       <div className='w-full border-1 border-black rounded-md overflow-hidden'>
         {!isStartedLearningFromPlaylist ? (
@@ -29,7 +28,7 @@ const PlaylistCard = ({
             frame-Border='0'
             src={`https://www.youtube.com/embed/${videoId}`}
             title='YouTube Video'
-          ></iframe>
+           />
         )}
       </div>
       <FlexContainer className='w-full gap-1 items-baseline' direction='col'>
@@ -42,6 +41,5 @@ const PlaylistCard = ({
       </FlexContainer>
     </FlexContainer>
   );
-};
 
 export default PlaylistCard;

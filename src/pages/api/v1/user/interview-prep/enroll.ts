@@ -80,7 +80,7 @@ const handleSheetEnrollment = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while enrolling in sheet',
-        error: error,
+        error,
       })
     );
   }

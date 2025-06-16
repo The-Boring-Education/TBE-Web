@@ -83,4 +83,4 @@ const checkPaymentStatusFromDB = async (userId: string, productId: string): Prom
 export { addPaymentToDB,
          checkPaymentStatusFromDB,
          getPaymentByOrderIdFromDB, 
-         updatePaymentStatusToDB         };
+         updatePaymentStatusToDB };

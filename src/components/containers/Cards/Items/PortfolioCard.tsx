@@ -6,8 +6,7 @@ const PortfolioCard = ({
   imageUrl,
   title,
   description,
-}: PortfolioCardProps) => {
-  return (
+}: PortfolioCardProps) => (
     <FlexContainer
       className='w-full md:w-[48%] lg:w-[31%] border border-gray-300 p-3 gap-1 rounded-1'
       direction='col'
@@ -35,6 +34,5 @@ const PortfolioCard = ({
       </FlexContainer>
     </FlexContainer>
   );
-};
 
 export default PortfolioCard;

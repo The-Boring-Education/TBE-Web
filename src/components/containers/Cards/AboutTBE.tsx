@@ -1,18 +1,17 @@
 import { FlexContainer, LinkButton, Text } from '@/components';
 import { routes } from '@/constant';
 
-const AboutTBE = () => {
-  return (
+const AboutTBE = () => (
     <FlexContainer
       className='gradient-6 py-4 gap-2.5'
       direction='col'
-      fullWidth={true}
+      fullWidth
     >
       <Text textCenter className='heading-5' level='h5'>
         About the Boring Education
       </Text>
-      <FlexContainer className='px-4 gap-2' direction='col' fullWidth={true}>
-        <Text className='pre-title' level='p' textCenter={true}>
+      <FlexContainer className='px-4 gap-2' direction='col' fullWidth>
+        <Text className='pre-title' level='p' textCenter>
           We at TBE, building An Open Source Tech Education platform to make
           learning faster with Hands-on Experience.
         </Text>
@@ -28,6 +27,5 @@ const AboutTBE = () => {
       </FlexContainer>
     </FlexContainer>
   );
-};
 
 export default AboutTBE;

@@ -245,7 +245,7 @@ const UnskilledLandingPage = ({
                 <Text
                   className='max-w-2xl paragraph'
                   level='p'
-                  textCenter={true}
+                  textCenter
                 >
                   Upload your resume and let us analyze thousands of job
                   listings to highlight missing skills and suggest tailored

@@ -19,8 +19,7 @@ import {
   Text,
 } from '@/components';
 import { routes, SCREEN_BREAKPOINTS } from '@/constant';
-import { useAnalytics, useApi, useMediaQuery, useUser } from '@/hooks';
-import { usePaymentStatus } from '@/hooks';
+import { useAnalytics, useApi, useMediaQuery, usePaymentStatus,useUser } from '@/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,

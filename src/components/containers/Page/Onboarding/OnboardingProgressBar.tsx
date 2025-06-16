@@ -10,10 +10,10 @@ const OnboardingProgressBar = ({
   const progressPercent = (currentStep / totalSteps) * 100;
 
   return (
-    <FlexContainer className='gap-2' fullWidth={true}>
+    <FlexContainer className='gap-2' fullWidth>
       <FlexContainer
         className='h-2 bg-gray-200 rounded-full overflow-hidden'
-        fullWidth={true}
+        fullWidth
         justifyCenter={false}
       >
         <motion.div

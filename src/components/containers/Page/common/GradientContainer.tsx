@@ -6,8 +6,7 @@ const GradientContainer = ({
   className = '',
   backgroundColor,
   childrenClassName = 'p-3',
-}: GradientContainerProps) => {
-  return (
+}: GradientContainerProps) => (
     <div
       className={`flex-auto rounded-2 border ${className} ${
         backgroundColor ?? 'bg-white'
@@ -16,6 +15,5 @@ const GradientContainer = ({
       <div className={`rounded-2 ${childrenClassName}`}>{children}</div>
     </div>
   );
-};
 
 export default GradientContainer;

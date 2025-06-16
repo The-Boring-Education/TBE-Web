@@ -1,8 +1,7 @@
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 
-import { Button, FlexContainer } from '@/components';
-import { PlaylistCard, PlaylistVideoCard } from '@/components';
+import { Button, FlexContainer , PlaylistCard, PlaylistVideoCard } from '@/components';
 import { useUser } from '@/hooks';
 import type { PlaylistCantainerCardProps } from '@/interfaces';
 
@@ -89,8 +88,8 @@ const PlaylistContainer = ({
                   handleStartLearning();
                   scrollTo(0, 0);
                   setSelectedVideo({
-                    videoId: videoId,
-                    title: title,
+                    videoId,
+                    title,
                   });
                 }}
               />

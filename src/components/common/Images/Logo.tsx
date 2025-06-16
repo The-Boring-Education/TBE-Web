@@ -3,8 +3,7 @@ import type { LogoProps } from '@/interfaces';
 
 import { Image, Link } from '../..';
 
-const Logo = ({ className, isDark }: LogoProps) => {
-  return (
+const Logo = ({ className, isDark }: LogoProps) => (
     <Link className={className} href='/'>
       <span className='sr-only'>The Boring Education</span>
       <Image
@@ -14,6 +13,5 @@ const Logo = ({ className, isDark }: LogoProps) => {
       />
     </Link>
   );
-};
 
 export default Logo;

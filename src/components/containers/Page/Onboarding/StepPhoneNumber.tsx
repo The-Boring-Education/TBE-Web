@@ -32,7 +32,7 @@ const StepPhoneNumber = ({
 
         <InputFieldContainer
           className='w-full'
-          isOptional={true}
+          isOptional
           label='Phone Number'
           labelClass='sr-only'
           type='tel'

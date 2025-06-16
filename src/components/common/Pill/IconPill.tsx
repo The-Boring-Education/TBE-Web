@@ -8,8 +8,7 @@ const IconPill = ({
   className,
   backgroundColor = 'bg-dark',
   labelColor,
-}: IconPillProps) => {
-  return (
+}: IconPillProps) => (
     <FlexContainer
       className={`gap-2 rounded-1 ${backgroundColor} p-2 ${className}`}
     >
@@ -24,6 +23,5 @@ const IconPill = ({
       </Text>
     </FlexContainer>
   );
-};
 
 export default IconPill;

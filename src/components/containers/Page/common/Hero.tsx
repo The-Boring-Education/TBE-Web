@@ -19,12 +19,12 @@ const LandingPageHero = ({
       <FlexContainer
         className='py-2 sm:py-6'
         direction='col'
-        justifyCenter={true}
+        justifyCenter
       >
         <FlexContainer
           className='wrap-reverse flex-col-reverse gap-6 lg:flex-row'
-          itemCenter={true}
-          justifyCenter={true}
+          itemCenter
+          justifyCenter
           wrap={false}
         >
           <FlexContainer

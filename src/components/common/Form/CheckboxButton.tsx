@@ -7,8 +7,7 @@ const CheckboxButton = ({
   value,
   isSelected,
   onClick,
-}: CheckboxButtonProps) => {
-  return (
+}: CheckboxButtonProps) => (
     <label
       className={`checkbox 
         ${isSelected ? 'bg-primary text-white' : 'bg-accent hover:bg-greyLight'}
@@ -26,6 +25,5 @@ const CheckboxButton = ({
       {label}
     </label>
   );
-};
 
 export default CheckboxButton;

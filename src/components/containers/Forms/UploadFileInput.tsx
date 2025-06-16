@@ -8,8 +8,7 @@ const UploadFileInput = ({
   accept = '*',
   className = '',
   placeholder = '📄 Click or drag your file here to upload',
-}: UploadFileInputProps) => {
-  return (
+}: UploadFileInputProps) => (
     <label
       className={`border-2 border-dashed border-primary px-8 py-10 rounded-lg w-full max-w-xl text-center cursor-pointer bg-white hover:bg-primary/5 transition-all ${className}`}
     >
@@ -24,6 +23,5 @@ const UploadFileInput = ({
       </Text>
     </label>
   );
-};
 
 export default UploadFileInput;

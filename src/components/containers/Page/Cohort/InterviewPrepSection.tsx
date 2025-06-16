@@ -29,8 +29,7 @@ const INTERVIEW_SESSIONS = [
   },
 ];
 
-const InterviewPrepSection = () => {
-  return (
+const InterviewPrepSection = () => (
     <section className='bg-gradient-to-b from-black to-gray-900 text-white py-20 px-6'>
       <div className='max-w-6xl mx-auto text-center'>
         <h2 className='text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent'>
@@ -64,6 +63,5 @@ const InterviewPrepSection = () => {
       </div>
     </section>
   );
-};
 
 export default InterviewPrepSection;

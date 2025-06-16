@@ -2,8 +2,7 @@ import { Tab } from '@headlessui/react';
 
 import type { TabProps } from '@/interfaces';
 
-const TabComponent = ({ tabLabels, tabPanels }: TabProps) => {
-  return (
+const TabComponent = ({ tabLabels, tabPanels }: TabProps) => (
     <Tab.Group className='w-full'>
       <Tab.List className='flex justify-center flex-wrap gap-2'>
         {tabLabels.map((tab, index) => (
@@ -31,6 +30,5 @@ const TabComponent = ({ tabLabels, tabPanels }: TabProps) => {
       </div>
     </Tab.Group>
   );
-};
 
 export default TabComponent;

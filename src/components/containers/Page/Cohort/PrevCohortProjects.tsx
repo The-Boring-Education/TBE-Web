@@ -41,8 +41,7 @@ const prevProjects: Project[] = [
   },
 ];
 
-const PrevCohortProjects = () => {
-  return (
+const PrevCohortProjects = () => (
     <section className='bg-gradient-to-br from-gray-900 to-black py-20 px-6 text-white'>
       <div className='max-w-6xl mx-auto text-center'>
         <h2 className='text-4xl sm:text-5xl font-extrabold mb-4 bg-gradient-to-r from-fuchsia-500 via-purple-400 to-indigo-500 bg-clip-text text-transparent'>
@@ -82,6 +81,5 @@ const PrevCohortProjects = () => {
       </div>
     </section>
   );
-};
 
 export default PrevCohortProjects;

@@ -20,8 +20,7 @@ const PlaylistPage = ({
     isRecommended,
   },
   seoMeta,
-}: PlaylistPageProps) => {
-  return (
+}: PlaylistPageProps) => (
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <Section className='p-2'>
@@ -38,7 +37,6 @@ const PlaylistPage = ({
       </Section>
     </Fragment>
   );
-};
 
 export const getServerSideProps = getPlaylistPageProps;
 export default PlaylistPage;

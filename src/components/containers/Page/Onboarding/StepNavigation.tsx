@@ -8,8 +8,7 @@ const StepNavigation = ({
   onNext,
   onBack,
   onSubmit,
-}: StepNavigationProps) => {
-  return (
+}: StepNavigationProps) => (
     <FlexContainer className='gap-2'>
       {currentStep > 0 && (
         <Button className='' text='Back' variant='OUTLINE' onClick={onBack} />
@@ -23,5 +22,4 @@ const StepNavigation = ({
       />
     </FlexContainer>
   );
-};
 export default StepNavigation;

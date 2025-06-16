@@ -62,7 +62,7 @@ const handleGetAllUserSheets = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while fetching enrolled sheets',
-        error: error,
+        error,
       })
     );
   }

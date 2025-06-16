@@ -8,8 +8,7 @@ const WebibarCard = ({
   coverImageURL,
   dateAndTime,
   slug,
-}: WebinarCardProps) => {
-  return (
+}: WebinarCardProps) => (
     <FlexContainer
       className='p-3 max-w-md bg-dark rounded-lg shadow-lg gap-2'
       direction='col'
@@ -26,9 +25,9 @@ const WebibarCard = ({
             </Text>
           </FlexContainer>
           <Text className='strong-text text-secondary' level='span'>
-            {formatDate({ dateAndTime }).date +
-              ', ' +
-              formatDate({ dateAndTime }).time}
+            {`${formatDate({ dateAndTime }).date 
+              }, ${ 
+              formatDate({ dateAndTime }).time}`}
           </Text>
         </FlexContainer>
         <LinkButton
@@ -43,6 +42,5 @@ const WebibarCard = ({
       </FlexContainer>
     </FlexContainer>
   );
-};
 
 export default WebibarCard;

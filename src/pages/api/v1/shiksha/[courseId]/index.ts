@@ -46,7 +46,7 @@ const handleDeleteCourse = async (
         sendAPIResponse({
           status: false,
           message: 'Failed while deleting course',
-          error: error,
+          error,
         })
       );
 
@@ -61,7 +61,7 @@ const handleDeleteCourse = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while deleting course',
-        error: error,
+        error,
       })
     );
   }

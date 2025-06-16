@@ -42,7 +42,7 @@ const Home = ({
           <Text className='pre-title' level='span'>
             View Your Certificate for {type}
           </Text>
-          <Text className='heading-4 text-primary' level='h4' textCenter={true}>
+          <Text className='heading-4 text-primary' level='h4' textCenter>
             {programName}
           </Text>
         </FlexContainer>
@@ -75,7 +75,7 @@ const Home = ({
               className='gap-2 mt-4 md:w-1/2 w-full m-auto'
               direction='col'
             >
-              <Text className='heading-5' level='h5' textCenter={true}>
+              <Text className='heading-5' level='h5' textCenter>
                 Share your achievement on social media:
               </Text>
               <FlexContainer className='gap-2 w-full' direction='col'>

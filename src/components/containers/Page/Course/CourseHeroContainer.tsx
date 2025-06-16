@@ -7,8 +7,7 @@ import {
   Text,
 } from '@/components';
 import { routes } from '@/constant';
-import { useAnalytics, useUser } from '@/hooks';
-import { useApi } from '@/hooks';
+import { useAnalytics, useApi,useUser } from '@/hooks';
 import type { CourseHeroContainerProps } from '@/interfaces';
 
 const CourseHeroContainer = ({
@@ -71,7 +70,7 @@ const CourseHeroContainer = ({
 
   if (loading) {
     headerActionButton = (
-      <Button isLoading={true} text='Enrolling...' variant='PRIMARY' />
+      <Button isLoading text='Enrolling...' variant='PRIMARY' />
     );
   }
 

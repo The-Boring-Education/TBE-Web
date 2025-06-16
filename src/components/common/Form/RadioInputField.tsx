@@ -7,8 +7,7 @@ const RadioInputField = ({
   value,
   selected,
   onChange,
-}: RadioInputFieldProps) => {
-  return (
+}: RadioInputFieldProps) => (
     <label
       key={value}
       className='w-full cursor-pointer md:w-fit'
@@ -38,6 +37,5 @@ const RadioInputField = ({
       </FlexContainer>
     </label>
   );
-};
 
 export default RadioInputField;

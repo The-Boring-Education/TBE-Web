@@ -5,8 +5,7 @@ const PageHeroMetaContainer = ({
   subtitle,
   title,
   titleClassName = 'gradient-3',
-}: ProjectHeroMetaContainerProps) => {
-  return (
+}: ProjectHeroMetaContainerProps) => (
     <FlexContainer className='gap-1' direction='col' itemCenter={false}>
       <Text className='pre-title text-greyDark' level='span'>
         {subtitle}
@@ -18,6 +17,5 @@ const PageHeroMetaContainer = ({
       </FlexContainer>
     </FlexContainer>
   );
-};
 
 export default PageHeroMetaContainer;

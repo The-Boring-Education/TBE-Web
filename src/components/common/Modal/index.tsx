@@ -2,8 +2,7 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 
 import type { ModalProps } from '@/interfaces';
 
-const Modal = ({ isOpen, closeModal, title, children }: ModalProps) => {
-  return (
+const Modal = ({ isOpen, closeModal, title, children }: ModalProps) => (
     <Dialog
       as='div'
       className='relative z-10'
@@ -24,6 +23,5 @@ const Modal = ({ isOpen, closeModal, title, children }: ModalProps) => {
       </div>
     </Dialog>
   );
-};
 
 export default Modal;

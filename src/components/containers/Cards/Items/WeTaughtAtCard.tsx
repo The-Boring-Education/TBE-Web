@@ -1,8 +1,7 @@
 import { Image } from '@/components';
 import type { WeTaughtAtCardProps } from '@/interfaces';
 
-const WeTaughtAtCard = ({ image, imageAltText }: WeTaughtAtCardProps) => {
-  return (
+const WeTaughtAtCard = ({ image, imageAltText }: WeTaughtAtCardProps) => (
     <div className='flex'>
       <Image
         alt={imageAltText}
@@ -12,6 +11,5 @@ const WeTaughtAtCard = ({ image, imageAltText }: WeTaughtAtCardProps) => {
       />
     </div>
   );
-};
 
 export default WeTaughtAtCard;

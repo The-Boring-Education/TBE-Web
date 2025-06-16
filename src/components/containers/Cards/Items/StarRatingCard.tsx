@@ -5,8 +5,7 @@ import { FaStar } from 'react-icons/fa';
 import { FlexContainer } from '@/components';
 import type { StarRatingCardProps } from '@/interfaces';
 
-const StarRatingCard = ({ rating, onClick }: StarRatingCardProps) => {
-  return (
+const StarRatingCard = ({ rating, onClick }: StarRatingCardProps) => (
     <FlexContainer className='mb-2'>
       {[1, 2, 3, 4, 5].map((star) => (
         <Button
@@ -23,6 +22,5 @@ const StarRatingCard = ({ rating, onClick }: StarRatingCardProps) => {
       ))}
     </FlexContainer>
   );
-};
 
 export default StarRatingCard;

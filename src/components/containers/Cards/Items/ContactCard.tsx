@@ -1,9 +1,8 @@
 import { FlexContainer, LinkButton, Section, Text } from '@/components';
 
-const ContactCard = () => {
-  return (
+const ContactCard = () => (
     <Section>
-      <FlexContainer itemCenter={true}>
+      <FlexContainer itemCenter>
         <FlexContainer
           className='gradient-5 mx-auto w-full overflow-hidden rounded-2 py-6 px-4 sm:w-2/3 sm:px-6 sm:py-6 lg:w-2/5'
           direction='col'
@@ -12,14 +11,14 @@ const ContactCard = () => {
           <Text
             className='heading-4 text-contentDark'
             level='h4'
-            textCenter={true}
+            textCenter
           >
             Get In Touch With Us
           </Text>
           <FlexContainer
             className='mt-2 w-full justify-start gap-2'
-            itemCenter={true}
-            justifyCenter={true}
+            itemCenter
+            justifyCenter
           >
             <LinkButton
               buttonProps={{
@@ -27,19 +26,18 @@ const ContactCard = () => {
                 text: 'Email',
               }}
               href='mailto:theboringeducation@gmail.com'
-            ></LinkButton>
+             />
             <LinkButton
               buttonProps={{
                 variant: 'PRIMARY',
                 text: 'Call',
               }}
               href='tel:+91-8884966267'
-            ></LinkButton>
+             />
           </FlexContainer>
         </FlexContainer>
       </FlexContainer>
     </Section>
   );
-};
 
 export default ContactCard;

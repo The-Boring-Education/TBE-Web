@@ -173,7 +173,7 @@ const SheetPage = ({
                       handleQuestionClick={handleQuestionClick}
                       href={`${slug}?sheetId=${sheet._id}&questionId=${questionId}`}
                       isCompleted={isCompleted}
-                      question={question + '\n\n' + answer}
+                      question={`${question}\n\n${answer}`}
                       questionId={questionId}
                       title={title}
                     />

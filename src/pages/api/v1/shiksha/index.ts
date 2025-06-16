@@ -75,7 +75,7 @@ const handleAddACourse = async (req: NextApiRequest, res: NextApiResponse) => {
       sendAPIResponse({
         status: false,
         message: 'Failed while adding course',
-        error: error,
+        error,
       })
     );
   }

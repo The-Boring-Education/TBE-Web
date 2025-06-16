@@ -8,15 +8,14 @@ import type {
 } from 'react';
 
 import type { FeedbackType } from '@/constant';
-import type { BaseShikshaCourseResponseProps } from '@/interfaces';
-
-import type {
+import type { BaseShikshaCourseResponseProps ,
   CertificateType,
   CohortRoadmapProps,
   GetSEOMetaResponseType,
   QuestionFrequencyType,
   TopNavbarLinkProps,
-} from '.';
+} from '@/interfaces';
+
 
 export interface SectionProps {
   children: ReactNode;

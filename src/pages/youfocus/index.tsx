@@ -5,8 +5,7 @@ import { routes, STATIC_FILE_PATH, YOUFOCUS_FEATURES } from '@/constant';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 
-const Home = ({ seoMeta }: PageProps) => {
-  return (
+const Home = ({ seoMeta }: PageProps) => (
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <LandingPageHero
@@ -47,12 +46,9 @@ const Home = ({ seoMeta }: PageProps) => {
       />
     </Fragment>
   );
-};
 
-export const getStaticProps = async () => {
-  return {
+export const getStaticProps = async () => ({
     ...(await getPreFetchProps({ slug: routes.youfocus })),
-  };
-};
+  });
 
 export default Home;

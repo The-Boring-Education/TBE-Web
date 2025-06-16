@@ -41,7 +41,7 @@ const PortfolioTemplate = ({
       <FlexContainer
         className='px-3 pb-3 gap-1'
         direction='col'
-        fullWidth={true}
+        fullWidth
         itemCenter={false}
       >
         <Text className='heading-4 text-white' level='h2'>

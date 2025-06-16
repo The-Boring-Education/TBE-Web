@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { FlexContainer, Text } from '@/components';
-import { ProgressRing } from '@/components';
+import { FlexContainer, ProgressRing,Text } from '@/components';
 import type { LevelProgressCardProps } from '@/interfaces';
 
 const UserLevelProgressContainer = ({
@@ -11,8 +10,7 @@ const UserLevelProgressContainer = ({
   nextLevelName,
   pointsLeftToNextLevel,
   percentageProgress,
-}: LevelProgressCardProps) => {
-  return (
+}: LevelProgressCardProps) => (
     <div className='bg-white px-2 py-2 rounded-2xl  shadow-md border relative w-full min-w-[200px] max-w-[320px]'>
       <FlexContainer className='flex-col flex-nowrap sm:flex-row gap-2'>
         <ProgressRing point={points} progress={percentageProgress} />
@@ -40,6 +38,5 @@ const UserLevelProgressContainer = ({
       </FlexContainer>
     </div>
   );
-};
 
 export default UserLevelProgressContainer;

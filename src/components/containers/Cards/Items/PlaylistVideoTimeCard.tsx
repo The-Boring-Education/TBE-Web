@@ -29,9 +29,7 @@ const PlaylistVideoTimeCard = ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ learningTime: minutes }),
-    }).catch((error) => {
-      return error;
-    });
+    }).catch((error) => error);
   }, [time, makeRequest, playlistId, userId]);
 
   useEffect(() => {

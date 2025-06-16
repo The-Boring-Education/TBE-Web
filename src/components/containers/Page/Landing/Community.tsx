@@ -1,9 +1,7 @@
-import { FlexContainer, Image, LinkButton, Pill, Section } from '@/components';
-import { Text } from '@/components';
+import { FlexContainer, Image, LinkButton, Pill, Section , Text } from '@/components';
 import { LINKS, STATIC_FILE_PATH } from '@/constant';
 
-const Community = () => {
-  return (
+const Community = () => (
     <Section>
       <FlexContainer className='gradient-5 w-full p-4 flex-col  gap-4 rounded-2'>
         <Image
@@ -16,11 +14,11 @@ const Community = () => {
           <Text
             className='heading-3 text-contentDark'
             level='h3'
-            textCenter={true}
+            textCenter
           >
             Community For Everyone
           </Text>
-          <Text className='text-contentDark' level='p' textCenter={true}>
+          <Text className='text-contentDark' level='p' textCenter>
             You excel where you’re supported. Connect with like-minded peers who
             share the same goal as you.
           </Text>
@@ -29,7 +27,7 @@ const Community = () => {
           <Text
             className='heading-5 text-contentDark'
             level='h5'
-            textCenter={true}
+            textCenter
           >
             In Community, You'll
           </Text>
@@ -41,7 +39,7 @@ const Community = () => {
               'Find accountability parter',
             ].map((goal, index) => (
               <FlexContainer key={index} className='w-full md:w-[35%]'>
-                <Pill text={goal} variant='GHOST' widthFull={true} />
+                <Pill text={goal} variant='GHOST' widthFull />
               </FlexContainer>
             ))}
           </FlexContainer>
@@ -58,6 +56,5 @@ const Community = () => {
       </FlexContainer>
     </Section>
   );
-};
 
 export default Community;

@@ -5,8 +5,7 @@ const MentorshipCard = ({
   heading,
   description,
   link,
-}: MentorshipCardProps) => {
-  return (
+}: MentorshipCardProps) => (
     <FlexContainer
       className='max-w-sm min-h-60 p-4 border rounded shadow gap-4'
       justifyCenter={false}
@@ -33,6 +32,5 @@ const MentorshipCard = ({
       </FlexContainer>
     </FlexContainer>
   );
-};
 
 export default MentorshipCard;

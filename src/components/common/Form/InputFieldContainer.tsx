@@ -9,8 +9,7 @@ const InputFieldContainer = ({
   onChange,
   labelClass,
   isOptional = false,
-}: InputFieldContainerProps) => {
-  return (
+}: InputFieldContainerProps) => (
     <FlexContainer
       className={`w-full gap-1 ${className}`}
       direction='col'
@@ -28,6 +27,5 @@ const InputFieldContainer = ({
       />
     </FlexContainer>
   );
-};
 
 export default InputFieldContainer;

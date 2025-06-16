@@ -9,8 +9,7 @@ const ActionBanner = ({
   icon,
   isLocked,
   onClick,
-}: ActionBannerProps) => {
-  return (
+}: ActionBannerProps) => (
     <div
       className={`${backgroundColor} text-white rounded-lg py-2 px-4 mt-2 shadow-lg flex items-center justify-between ${
         isLocked ? 'cursor-not-allowed' : 'cursor-pointer'
@@ -24,6 +23,5 @@ const ActionBanner = ({
       <div className='text-2xl'>{icon && createElement(icon)}</div>
     </div>
   );
-};
 
 export default ActionBanner;

@@ -67,7 +67,7 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const orderPayload = buildOrderPayload({
       orderId,
-      amount: amount,
+      amount,
       userId,
       customerName,
       customerEmail,
@@ -88,10 +88,10 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     const paymentLink = `${envConfig.CASHFREE_BASE_URL}/checkout?paymentSessionId=${data.payment_session_id}`;
 
     const { error } = await addPaymentToDB({
-      userId: userId,
-      productId: productId,
+      userId,
+      productId,
       productType,
-      amount: amount,
+      amount,
       orderId,
       paymentLink,
     });

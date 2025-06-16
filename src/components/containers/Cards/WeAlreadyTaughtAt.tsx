@@ -1,8 +1,7 @@
 import { FlexContainer, Image, Section, Text } from '@/components';
 import { MY_PREV_EXPERIENCE } from '@/constant';
 
-const WeAlreadyTaughtAt = () => {
-  return (
+const WeAlreadyTaughtAt = () => (
     <Section>
       <FlexContainer className='gap-4' direction='col'>
         <Text className='heading-4' level='h4'>
@@ -17,7 +16,7 @@ const WeAlreadyTaughtAt = () => {
             >
               <Image
                 alt={item.imageAltText}
-                fullWidth={true}
+                fullWidth
                 src={item.image}
               />
             </FlexContainer>
@@ -26,6 +25,5 @@ const WeAlreadyTaughtAt = () => {
       </FlexContainer>
     </Section>
   );
-};
 
 export default WeAlreadyTaughtAt;

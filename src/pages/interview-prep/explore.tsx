@@ -30,7 +30,7 @@ const Home = ({ seoMeta }: PageProps) => {
   const noSheetFoundUI = (!sheets || sheets.length === 0) && (
     <FlexContainer
       className='w-screen h-screen item-center justify-center flex-col'
-      justifyCenter={true}
+      justifyCenter
     >
       <Text className='heading-4 mb-3' level='h1'>
         Oops! No Sheets found.
@@ -41,7 +41,7 @@ const Home = ({ seoMeta }: PageProps) => {
           text: 'Go Back To Home',
         }}
         href={routes.interviewPrep}
-      ></LinkButton>
+       />
     </FlexContainer>
   );
 
@@ -61,11 +61,9 @@ const Home = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getStaticProps = async () => {
-  return {
+export const getStaticProps = async () => ({
     ...(await getPreFetchProps({ slug: routes.interviewPrepExplore })),
     revalidate: PAGE_REFRESH_TIMEOUT.long,
-  };
-};
+  });
 
 export default Home;

@@ -2,8 +2,7 @@ import { motion } from 'framer-motion';
 
 import type { OutlineCardProps } from '@/interfaces';
 
-const OutlineCard = ({ icon, title, description }: OutlineCardProps) => {
-  return (
+const OutlineCard = ({ icon, title, description }: OutlineCardProps) => (
     <motion.div
       className='bg-gradient-to-br from-card to-card/50 p-8 rounded-xl shadow-md border border-primary/10 hover:border-primary/30 transition-all'
       initial={{ opacity: 0, y: 20 }}
@@ -19,6 +18,5 @@ const OutlineCard = ({ icon, title, description }: OutlineCardProps) => {
       <p className='text-muted-foreground'>{description}</p>
     </motion.div>
   );
-};
 
 export default OutlineCard;

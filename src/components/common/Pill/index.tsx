@@ -30,7 +30,7 @@ const Pill = ({
       <Text
         className={`strong-text ${textStyleClasses}`}
         level='p'
-        textCenter={true}
+        textCenter
       >
         {text}
       </Text>

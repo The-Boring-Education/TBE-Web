@@ -11,8 +11,7 @@ const WINDOW_SIZE_IN_MS = 60 * 1000; // 1 minute
 // Rate limiter middleware function that wraps a handler
 const rateLimiter = (
   handler: (req: NextApiRequest, res: NextApiResponse) => void
-) => {
-  return (req: NextApiRequest, res: NextApiResponse) => {
+) => (req: NextApiRequest, res: NextApiResponse) => {
     const ip =
       req.headers['x-forwarded-for']?.toString() ||
       req.socket.remoteAddress ||
@@ -44,6 +43,5 @@ const rateLimiter = (
     // Calling the original handler
     handler(req, res);
   };
-};
 
 export default rateLimiter;

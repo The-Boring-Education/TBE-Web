@@ -9,8 +9,7 @@ const PlaylistVideoCard = ({
   imageAltText,
   href,
   onClick,
-}: PlaylistVideoCardProps) => {
-  return (
+}: PlaylistVideoCardProps) => (
     <FlexContainer
       className='w-full hover:bg-slate-200 rounded-md'
       direction='row'
@@ -55,6 +54,5 @@ const PlaylistVideoCard = ({
       )}
     </FlexContainer>
   );
-};
 
 export default PlaylistVideoCard;

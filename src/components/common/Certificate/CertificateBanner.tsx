@@ -9,8 +9,7 @@ const CertificateBanner = ({
   icon,
   isLocked,
   onClick,
-}: CertificateBannerProps) => {
-  return (
+}: CertificateBannerProps) => (
     <div
       className={`${backgroundColor} text-white rounded-lg py-2 px-4 mt-2 shadow-lg flex items-center justify-between ${
         isLocked ? 'cursor-not-allowed' : 'cursor-pointer'
@@ -24,6 +23,5 @@ const CertificateBanner = ({
       <div className='text-2xl'>{icon && createElement(icon)} </div>
     </div>
   );
-};
 
 export default CertificateBanner;

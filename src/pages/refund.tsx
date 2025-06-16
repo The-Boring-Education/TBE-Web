@@ -5,8 +5,7 @@ import { routes } from '@/constant';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 
-const RefundAndCancellationPage = ({ seoMeta }: PageProps) => {
-  return (
+const RefundAndCancellationPage = ({ seoMeta }: PageProps) => (
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <Section>
@@ -30,12 +29,9 @@ const RefundAndCancellationPage = ({ seoMeta }: PageProps) => {
       </Section>
     </Fragment>
   );
-};
 
-export const getStaticProps = async () => {
-  return {
+export const getStaticProps = async () => ({
     ...(await getPreFetchProps({ slug: routes.refund })),
-  };
-};
+  });
 
 export default RefundAndCancellationPage;

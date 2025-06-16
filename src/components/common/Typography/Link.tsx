@@ -10,8 +10,7 @@ const LinkText = ({
   active = true,
   scroll = false,
   onClick,
-}: LinkProps) => {
-  return (
+}: LinkProps) => (
     <Link
       className={`${className} link ${!active && 'disabled'}`}
       href={href}
@@ -22,6 +21,5 @@ const LinkText = ({
       {children}
     </Link>
   );
-};
 
 export default LinkText;

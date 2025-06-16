@@ -79,7 +79,7 @@ const handleCourseEnrollment = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while enrolling course',
-        error: error,
+        error,
       })
     );
   }

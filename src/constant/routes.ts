@@ -137,8 +137,6 @@ const routes = {
 const generateSectionPath = ({
   basePath,
   sectionID,
-}: GenerateSectionPathProps) => {
-  return basePath + '#' + sectionID;
-};
+}: GenerateSectionPathProps) => `${basePath}#${sectionID}`;
 
 export { generateSectionPath, routes };

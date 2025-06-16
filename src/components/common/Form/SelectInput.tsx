@@ -10,8 +10,7 @@ const SelectInput = ({
   selectedItem,
   onChange,
   className = '',
-}: SelectInputProps) => {
-  return (
+}: SelectInputProps) => (
     <Listbox value={selectedItem} onChange={onChange}>
       <div className={`relative w-32 ${className}`}>
         <Listbox.Button className='flex w-full items-center justify-between rounded-lg border border-grey px-2 py-1 text-sm text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-grey'>
@@ -45,6 +44,5 @@ const SelectInput = ({
       </div>
     </Listbox>
   );
-};
 
 export default SelectInput;

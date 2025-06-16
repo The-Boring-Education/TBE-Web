@@ -60,19 +60,18 @@ const sessions = [
   },
 ];
 
-const SessionDetailsSection = () => {
-  return (
+const SessionDetailsSection = () => (
     <section className='bg-gradient-to-b from-gray-950 to-black text-white py-20 px-4'>
       <FlexContainer className='max-w-6xl mx-auto gap-8'>
         <FlexContainer className='md:gap-3 gap-2' direction='col'>
           <Text
             className='heading-2 bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 bg-clip-text text-transparent'
             level='h2'
-            textCenter={true}
+            textCenter
           >
             Cohort Roadmap
           </Text>
-          <Text className='text-gray-300' level='p' textCenter={true}>
+          <Text className='text-gray-300' level='p' textCenter>
             Cohort is designed to help you build your product and prepare for
             interviews.
           </Text>
@@ -121,6 +120,5 @@ const SessionDetailsSection = () => {
       </FlexContainer>
     </section>
   );
-};
 
 export default SessionDetailsSection;

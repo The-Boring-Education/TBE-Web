@@ -149,9 +149,7 @@ const getSelectedCourseChapterMeta = (
   return selectedChapter?.content ?? '';
 };
 
-const isAdmin = (adminSecret: string): boolean => {
-  return envConfig.ADMIN_SECRET == adminSecret;
-};
+const isAdmin = (adminSecret: string): boolean => envConfig.ADMIN_SECRET == adminSecret;
 
 const getSelectedSheetQuestionMeta = (
   sheet: BaseInterviewSheetResponseProps,
@@ -190,8 +188,7 @@ const isProgramActive = (liveOn: Date | string) =>
 
 const mapCourseResponseToCard = (
   coursesData: BaseShikshaCourseResponseProps[]
-) => {
-  return coursesData?.map(
+) => coursesData?.map(
     ({
       _id,
       coverImageURL,
@@ -234,12 +231,10 @@ const mapCourseResponseToCard = (
       };
     }
   );
-};
 
 const mapInterviewSheetResponseToCard = (
   sheetsData: BaseInterviewSheetResponseProps[]
-) => {
-  return sheetsData?.map(
+) => sheetsData?.map(
     ({
       _id,
       coverImageURL,
@@ -284,13 +279,10 @@ const mapInterviewSheetResponseToCard = (
       };
     }
   );
-};
 
 const mapUserPlaylistResponseToCard = (
   playlists: UserPlaylistResponseProps[]
-) => {
-  return playlists?.map(({ _id, playlistName, description, thumbnail }) => {
-    return {
+) => playlists?.map(({ _id, playlistName, description, thumbnail }) => ({
       id: _id,
       title: playlistName,
       image: thumbnail,
@@ -299,9 +291,7 @@ const mapUserPlaylistResponseToCard = (
       ctaText: 'Continue Learning',
       active: true,
       href: `/youfocus/playlist/${_id}`,
-    };
-  });
-};
+    }));
 
 const generatePublicCertificateLink = (host: string, certificateId: string) =>
   `${host}/certificate/${certificateId}`;
@@ -590,12 +580,9 @@ const constrainNumberToRange = (
   value: number,
   min: number,
   max: number
-): number => {
-  return Math.min(Math.max(value, min), max);
-};
+): number => Math.min(Math.max(value, min), max);
 
-const cleanJobSkillsData = (skills: string[]): string[] => {
-  return skills
+const cleanJobSkillsData = (skills: string[]): string[] => skills
     .map((s) => s.trim().toLowerCase())
     .filter((s) => !SKILL_BLACKLIST.includes(s))
     .map((s) => {
@@ -604,11 +591,8 @@ const cleanJobSkillsData = (skills: string[]): string[] => {
       );
       return normalized ? normalized.value : s;
     });
-};
 
-const generatePaymentOrderId = (): string => {
-  return `order_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-};
+const generatePaymentOrderId = (): string => `order_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
 
 const buildOrderPayload = ({
   orderId,

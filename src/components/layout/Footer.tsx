@@ -3,8 +3,7 @@ import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { FlexContainer, Link, Text } from '@/components';
 import { LINKS } from '@/constant';
 
-const Footer = () => {
-  return (
+const Footer = () => (
     <footer className='bg-dark w-full'>
       <FlexContainer
         className='mx-4 justify-between py-1'
@@ -27,6 +26,5 @@ const Footer = () => {
       </FlexContainer>
     </footer>
   );
-};
 
 export default Footer;

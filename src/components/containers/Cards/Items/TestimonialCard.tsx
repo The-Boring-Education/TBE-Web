@@ -7,8 +7,7 @@ const TestimonialCard = ({
   title,
   content,
   work,
-}: TestimonialCardProps) => {
-  return (
+}: TestimonialCardProps) => (
     <GradientContainer className='max-w-sm border-borderColor3'>
       <Image
         alt={imageAltText}
@@ -27,6 +26,5 @@ const TestimonialCard = ({
       </Text>
     </GradientContainer>
   );
-};
 
 export default TestimonialCard;

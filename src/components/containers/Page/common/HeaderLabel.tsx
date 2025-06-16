@@ -5,8 +5,7 @@ import type { HeaderLabelProps } from '@/interfaces';
 const HeaderLabel = ({
   label,
   className = 'bg-gradient-to-r from-primary/20 to-primary/10',
-}: HeaderLabelProps) => {
-  return (
+}: HeaderLabelProps) => (
     <motion.div
       animate='animate'
       className={` p-2 text-center text-primary ${className}`}
@@ -22,6 +21,5 @@ const HeaderLabel = ({
       {label}
     </motion.div>
   );
-};
 
 export default HeaderLabel;

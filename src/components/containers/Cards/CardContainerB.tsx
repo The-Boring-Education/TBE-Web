@@ -15,8 +15,7 @@ const CardContainerB = ({
   subtext,
   id,
   sectionClassName,
-}: CardContainerBProps) => {
-  return (
+}: CardContainerBProps) => (
     <Section className={sectionClassName} id={id}>
       <FlexContainer className='gap-4' direction='col'>
         <SectionHeaderContainer
@@ -36,6 +35,5 @@ const CardContainerB = ({
       </FlexContainer>
     </Section>
   );
-};
 
 export default CardContainerB;

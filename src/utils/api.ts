@@ -30,9 +30,7 @@ const sendRequest = async ({
   }
 };
 
-const sendAPIResponse = ({ status, error, message, data }: APIResponseType) => {
-  return { status, error, message, data };
-};
+const sendAPIResponse = ({ status, error, message, data }: APIResponseType) => ({ status, error, message, data });
 
 const applyCorsHeaders = (res: NextApiResponse, url: string) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');

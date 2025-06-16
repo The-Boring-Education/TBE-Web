@@ -13,8 +13,7 @@ const CardContainerA = ({
   cards,
   borderColour,
   subtext,
-}: CardContainerAProps) => {
-  return (
+}: CardContainerAProps) => (
     <Section>
       <FlexContainer className='gap-4' direction='col'>
         <SectionHeaderContainer
@@ -30,6 +29,5 @@ const CardContainerA = ({
       </FlexContainer>
     </Section>
   );
-};
 
 export default CardContainerA;

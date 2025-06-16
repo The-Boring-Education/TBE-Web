@@ -80,7 +80,7 @@ const handleProjectEnrollment = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while enrolling in project',
-        error: error,
+        error,
       })
     );
   }

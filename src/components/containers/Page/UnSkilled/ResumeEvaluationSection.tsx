@@ -6,8 +6,7 @@ const ResumeEvaluationSection = ({
   subtitle,
   items,
   colorScheme,
-}: ResumeEvaluationSectionProps) => {
-  return (
+}: ResumeEvaluationSectionProps) => (
     <FlexContainer className='gap-4' direction='col'>
       <FlexContainer className='gap-1' direction='col'>
         <Text className='heading-5' level='h5'>
@@ -58,6 +57,5 @@ const ResumeEvaluationSection = ({
       </FlexContainer>
     </FlexContainer>
   );
-};
 
 export default ResumeEvaluationSection;

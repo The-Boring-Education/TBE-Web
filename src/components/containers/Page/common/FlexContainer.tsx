@@ -12,8 +12,7 @@ const FlexContainer = ({
   fullWidth = false,
   id = '',
   disabled = false,
-}: FlexContainerProps) => {
-  return (
+}: FlexContainerProps) => (
     <motion.div
       animate={{ opacity: 1, scale: 1 }}
       aria-disabled={disabled} // For accessibility
@@ -30,6 +29,5 @@ const FlexContainer = ({
       {children}
     </motion.div>
   );
-};
 
 export default FlexContainer;

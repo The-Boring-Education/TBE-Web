@@ -8,8 +8,7 @@ const SectionHeaderContainer = ({
   className = '',
   flexContainerProps,
   subtext,
-}: SectionHeaderProps) => {
-  return (
+}: SectionHeaderProps) => (
     <FlexContainer
       className={`gap-1 ${className}`}
       {...flexContainerProps}
@@ -18,24 +17,23 @@ const SectionHeaderContainer = ({
       <Text
         className={`heading-${headingLevel}`}
         level={`h${headingLevel}`}
-        textCenter={true}
+        textCenter
       >
         {heading}
         <Text
           className={`heading-${headingLevel} text-primary`}
           level='span'
-          textCenter={true}
+          textCenter
         >
           &nbsp;{focusText}
         </Text>
       </Text>
       {subtext && (
-        <Text className='pre-text text-greyDark' level='span' textCenter={true}>
+        <Text className='pre-text text-greyDark' level='span' textCenter>
           {subtext}
         </Text>
       )}
     </FlexContainer>
   );
-};
 
 export default SectionHeaderContainer;

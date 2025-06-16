@@ -5,26 +5,22 @@ import { routes } from '@/constant';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 
-const Home = ({ seoMeta }: PageProps) => {
-  return (
+const Home = ({ seoMeta }: PageProps) => (
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <Section>
         <ExplorePlaylistContainer
           focusText='Skill'
           heading='Pick An'
-          isCenterAligned={true}
+          isCenterAligned
           subtext='What Do You Want to Learn?'
         />
       </Section>
     </Fragment>
   );
-};
 
-export const getStaticProps = async () => {
-  return {
+export const getStaticProps = async () => ({
     ...(await getPreFetchProps({ slug: routes.explorePlaylist })),
-  };
-};
+  });
 
 export default Home;

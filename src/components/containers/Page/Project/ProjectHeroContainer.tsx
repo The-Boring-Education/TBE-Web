@@ -7,8 +7,7 @@ import {
   Text,
 } from '@/components';
 import { projectGroupWhatsapp, routes } from '@/constant';
-import { useAnalytics, useUser } from '@/hooks';
-import { useApi } from '@/hooks';
+import { useAnalytics, useApi,useUser } from '@/hooks';
 import type { ProjectHeroContainerProps } from '@/interfaces';
 
 const ProjectHeroContainer = ({
@@ -69,7 +68,7 @@ const ProjectHeroContainer = ({
     );
   } else if (loading) {
     headerActionButton = (
-      <Button isLoading={true} text='Enrolling...' variant='PRIMARY' />
+      <Button isLoading text='Enrolling...' variant='PRIMARY' />
     );
   } else {
     headerActionButton = (

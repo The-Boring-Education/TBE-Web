@@ -6,11 +6,9 @@ const InputRadioContainer = ({
   onChange,
   selectedItemValue,
   className,
-}: InputRadioContainerProps) => {
-  return (
+}: InputRadioContainerProps) => (
     <FlexContainer className={`gap-2 ${className}`}>
-      {radioItems.map(({ label, value }) => {
-        return (
+      {radioItems.map(({ label, value }) => (
           <RadioInputField
             key={label}
             label={label}
@@ -18,10 +16,8 @@ const InputRadioContainer = ({
             value={value}
             onChange={onChange}
           />
-        );
-      })}
+        ))}
     </FlexContainer>
   );
-};
 
 export default InputRadioContainer;

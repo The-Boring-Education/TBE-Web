@@ -216,12 +216,10 @@ const getAllEnrolledCoursesFromDB = async (
       .exec();
 
     return {
-      data: enrolledCourse.map((course) => {
-        return {
+      data: enrolledCourse.map((course) => ({
           ...course.course.toObject(),
           isEnrolled: true,
-        };
-      }) as unknown as BaseShikshaCourseResponseProps,
+        })) as unknown as BaseShikshaCourseResponseProps,
     };
   } catch (error) {
     return { error: 'Failed while fetching enrolled course' };
@@ -266,8 +264,8 @@ const updateUserCourseChapterInDB = async ({
     if (chapterIndex === -1) {
       // If chapter is not found in the array, add it with the given status
       userCourse.chapters.push({
-        chapterId: chapterId,
-        isCompleted: isCompleted,
+        chapterId,
+        isCompleted,
       });
     } else {
       // If chapter is found, update the isCompleted status

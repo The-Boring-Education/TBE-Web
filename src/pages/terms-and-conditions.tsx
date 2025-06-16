@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 
 import { Section, SEO, Text } from '@/components';
 import { routes } from '@/constant';
-import { PageProps } from '@/interfaces';
+import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 
 const TERMS_CONDITION_CONTENT = [
@@ -40,8 +40,7 @@ const TERMS_CONDITION_CONTENT = [
   },
 ];
 
-const TermsAndCondition = ({ seoMeta }: PageProps) => {
-  return (
+const TermsAndCondition = ({ seoMeta }: PageProps) => (
     <Fragment>
       <SEO seoMeta={seoMeta} />
 
@@ -87,12 +86,9 @@ const TermsAndCondition = ({ seoMeta }: PageProps) => {
       </Section>
     </Fragment>
   );
-};
 
-export const getStaticProps = async () => {
-  return {
+export const getStaticProps = async () => ({
     ...(await getPreFetchProps({ slug: routes.termsAndConditions })),
-  };
-};
+  });
 
 export default TermsAndCondition;

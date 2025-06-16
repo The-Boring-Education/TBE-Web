@@ -7,8 +7,7 @@ const BannerVariantB = ({
   buttonText,
   buttonLink,
   imageSrc,
-}: BannerProps) => {
-  return (
+}: BannerProps) => (
     <Section className='md:px-8 md:py-4 px-2 py-4'>
       <FlexContainer justifyCenter={false}>
         <FlexContainer className='w-full gap-4 rounded-2 gradient-7 md:px-8 md:py-8 px-2 py-4 shadow-lg sm:px-8 sm:py-8 lg:px-4 lg:py-4'>
@@ -18,18 +17,18 @@ const BannerVariantB = ({
             fullWidth={false}
             src={imageSrc}
           />
-          <FlexContainer direction='col' itemCenter={true}>
+          <FlexContainer direction='col' itemCenter>
             <Text
               className='heading-3 text-contentLight'
               level='h3'
-              textCenter={true}
+              textCenter
             >
               {title}
             </Text>
             <Text
               className='paragraph pt-1 text-contentLight'
               level='p'
-              textCenter={true}
+              textCenter
             >
               {description}
             </Text>
@@ -47,6 +46,5 @@ const BannerVariantB = ({
       </FlexContainer>
     </Section>
   );
-};
 
 export default BannerVariantB;

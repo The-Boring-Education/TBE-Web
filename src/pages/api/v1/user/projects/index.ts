@@ -63,7 +63,7 @@ const handleGetAllUserProjects = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while fetching enrolled projects',
-        error: error,
+        error,
       })
     );
   }

@@ -170,7 +170,7 @@ const getCoursePageProps = async (context: any) => {
   let slug = routes.home;
 
   if (courseSlug) {
-    slug = '/shiksha/' + courseSlug;
+    slug = `/shiksha/${courseSlug}`;
   }
 
   if (courseId) {
@@ -259,7 +259,7 @@ const getSheetPageProps = async (context: any) => {
   let slug = routes.home;
 
   if (sheetSlug) {
-    slug = '/interview-prep/' + sheetSlug;
+    slug = `/interview-prep/${sheetSlug}`;
   }
 
   const seoMeta = getSEOMeta(slug);

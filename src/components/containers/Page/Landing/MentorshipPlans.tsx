@@ -6,8 +6,7 @@ import {
 } from '@/components';
 import { MENTORSHIP_CARDS } from '@/constant';
 
-const MentorshipPlans = () => {
-  return (
+const MentorshipPlans = () => (
     <Section className='md:p-5 px-2 py-4'>
       <FlexContainer className='gap-4' direction='col'>
         <SectionHeaderContainer
@@ -28,6 +27,5 @@ const MentorshipPlans = () => {
       </FlexContainer>
     </Section>
   );
-};
 
 export default MentorshipPlans;
