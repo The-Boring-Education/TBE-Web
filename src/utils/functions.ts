@@ -618,12 +618,19 @@ const buildOrderPayload = ({
 const createCashfreeOrder = async (
   orderPayload: ReturnType<typeof buildOrderPayload>
 ): Promise<{ data: any; ok: boolean }> => {
+  const clientId = envConfig.CASHFREE_CLIENT_ID;
+  const secretKey = envConfig.CASHFREE_SECRET_KEY;
+  
+  if (!clientId || !secretKey) {
+    throw new Error('Cashfree credentials not configured');
+  }
+
   const response = await fetch(`${envConfig.CASHFREE_BASE_URL}/orders`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-client-id': envConfig.CASHFREE_CLIENT_ID!,
-      'x-client-secret': envConfig.CASHFREE_SECRET_KEY!,
+      'x-client-id': clientId,
+      'x-client-secret': secretKey,
       'x-api-version': '2022-09-01',
     },
     body: JSON.stringify(orderPayload),

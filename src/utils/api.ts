@@ -1,5 +1,4 @@
-import type { AxiosRequestConfig } from 'axios';
-import axios from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import type { NextApiResponse } from 'next';
 
 import type { APIMakeRquestProps, APIResponseType } from '@/interfaces';

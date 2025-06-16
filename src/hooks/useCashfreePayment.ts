@@ -30,8 +30,7 @@ const useCashfreePayment = () => {
       }
     };
 
-    script.onerror = (error) => {
-      console.error('Failed to load Cashfree SDK:', error);
+    script.onerror = () => {
       setError('Failed to load payment gateway. Please try again.');
       setIsCashfreeLoaded(false);
     };

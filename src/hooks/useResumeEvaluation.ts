@@ -113,14 +113,17 @@ const useResumeEvaluation = () => {
   const [evaluationData, setEvaluationData] = useState<any>(
     DUMMY_EVALUATION_DATA
   );
+  const [error, setError] = useState<string>('');
 
   const { extractedSkills, file, handleFileUpload } = usePDFFile();
 
   const { makeRequest, loading: isEvaluating } = useApi('evaluateResume');
 
   const handleResumeEvaluation = async () => {
+    setError('');
+    
     if (!file || selectedDomains.length === 0 || !selectedExperience) {
-      alert('Please upload resume, select domain and experience');
+      setError('Please upload resume, select domain and experience');
       return;
     }
 
@@ -137,8 +140,7 @@ const useResumeEvaluation = () => {
 
       setEvaluationData(response.data);
     } catch (err) {
-      console.error('Evaluation failed:', err);
-      alert('Evaluation failed. Please try again.');
+      setError('Evaluation failed. Please try again.');
     }
   };
 
@@ -152,6 +154,7 @@ const useResumeEvaluation = () => {
     isEvaluating,
     evaluationData,
     handleResumeEvaluation,
+    error,
   };
 };
 
