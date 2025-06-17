@@ -160,9 +160,9 @@ export interface UpdateCourseRequestPayloadProps {
     description?: string;
     coverImageURL?: string;
     meta?: string;
-    price?:number;
-    isPremium?:boolean;
-    features?:string[]
+    price?: number;
+    isPremium?: boolean;
+    features?: string[];
   };
   courseId: string;
 }

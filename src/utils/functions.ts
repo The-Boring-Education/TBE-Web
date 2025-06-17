@@ -682,7 +682,7 @@ const validateWebhookEvent = (
   };
 };
 
- const checkUserCourseEnrollment = async (
+const checkUserCourseEnrollment = async (
   courseId: string,
   userId?: string
 ): Promise<boolean> => {

@@ -57,13 +57,13 @@ const CoursePage = ({
   const [showCourseFeedback, setShowCourseFeedback] = useState(false);
 
   const { user } = useUser();
- const { isPurchased } = usePaymentStatus({
-  userId: user?.id,
-  productId: course?._id,
-  isPremium: course?.isPremium,
-});
-const isLocked =
-  course?.isPremium && !course?.isEnrolled && isPurchased === false;
+  const { isPurchased } = usePaymentStatus({
+    userId: user?.id,
+    productId: course?._id,
+    isPremium: course?.isPremium,
+  });
+  const isLocked =
+    course?.isPremium && !course?.isEnrolled && isPurchased === false;
 
   const [showPayment, setShowPayment] = useState(false);
   const paymentSectionRef = useRef<HTMLDivElement>(null);
