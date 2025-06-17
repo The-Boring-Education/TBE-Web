@@ -6,6 +6,7 @@ import {
   JOB_LOCATION_NORMALIZER,
   JOB_DOMAIN_NORMALIZER,
   JOB_DOMAIN_MAPPER,
+  envConfig,
 } from '../src/constant';
 import {
   cleanJobSkillsData,
@@ -23,7 +24,7 @@ class JobNormalizer {
 
   async connectDB() {
     try {
-      await mongoose.connect(process.env.MONGODB_URI as string);
+      await mongoose.connect(envConfig.MONGODB_URI as string);
       console.log('Connected to MongoDB');
     } catch (error) {
       console.error('Error connecting to MongoDB:', error);

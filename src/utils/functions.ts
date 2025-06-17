@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 import {
   envConfig,
   JOB_SKILL_NORMALIZER,
@@ -12,6 +14,7 @@ import {
 import type {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
+  BuildOrderPayloadProps,
   FormatDateType,
   PlaylistModel,
   ProjectDocumentModel,
@@ -20,6 +23,7 @@ import type {
   UserPlaylistResponseProps,
   UserPointsActionType,
   Video,
+  WebhookEvent,
 } from '@/interfaces';
 
 const fetchAPIData = async (url: string) => {
@@ -145,9 +149,8 @@ const getSelectedCourseChapterMeta = (
   return selectedChapter?.content ?? '';
 };
 
-const isAdmin = (adminSecret: string): boolean => {
-  return envConfig.ADMIN_SECRET == adminSecret;
-};
+const isAdmin = (adminSecret: string): boolean =>
+  envConfig.ADMIN_SECRET == adminSecret;
 
 const getSelectedSheetQuestionMeta = (
   sheet: BaseInterviewSheetResponseProps,
@@ -186,8 +189,8 @@ const isProgramActive = (liveOn: Date | string) =>
 
 const mapCourseResponseToCard = (
   coursesData: BaseShikshaCourseResponseProps[]
-) => {
-  return coursesData?.map(
+) =>
+  coursesData?.map(
     ({
       _id,
       coverImageURL,
@@ -230,12 +233,11 @@ const mapCourseResponseToCard = (
       };
     }
   );
-};
 
 const mapInterviewSheetResponseToCard = (
   sheetsData: BaseInterviewSheetResponseProps[]
-) => {
-  return sheetsData?.map(
+) =>
+  sheetsData?.map(
     ({
       _id,
       coverImageURL,
@@ -280,24 +282,20 @@ const mapInterviewSheetResponseToCard = (
       };
     }
   );
-};
 
 const mapUserPlaylistResponseToCard = (
   playlists: UserPlaylistResponseProps[]
-) => {
-  return playlists?.map(({ _id, playlistName, description, thumbnail }) => {
-    return {
-      id: _id,
-      title: playlistName,
-      image: thumbnail,
-      imageAltText: playlistName,
-      content: description,
-      ctaText: 'Continue Learning',
-      active: true,
-      href: `/youfocus/playlist/${_id}`,
-    };
-  });
-};
+) =>
+  playlists?.map(({ _id, playlistName, description, thumbnail }) => ({
+    id: _id,
+    title: playlistName,
+    image: thumbnail,
+    imageAltText: playlistName,
+    content: description,
+    ctaText: 'Continue Learning',
+    active: true,
+    href: `/youfocus/playlist/${_id}`,
+  }));
 
 const generatePublicCertificateLink = (host: string, certificateId: string) =>
   `${host}/certificate/${certificateId}`;
@@ -341,7 +339,7 @@ const fetchPlaylistName = async (
 }> => {
   try {
     const response = await fetch(
-      `${YOUTUBE_API_PATH}/playlists?part=snippet&id=${playlistId}&key=${process.env.YOUTUBE_API_KEY}`
+      `${YOUTUBE_API_PATH}/playlists?part=snippet&id=${playlistId}&key=${envConfig.YOUTUBE_API_KEY}`
     );
 
     const data = await response.json();
@@ -397,7 +395,7 @@ const fetchPlaylistData = async (
 
     // Fetch videos
     const response = await fetch(
-      `${YOUTUBE_API_PATH}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&pageToken=${pageToken}&key=${process.env.YOUTUBE_API_KEY}`
+      `${YOUTUBE_API_PATH}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&pageToken=${pageToken}&key=${envConfig.YOUTUBE_API_KEY}`
     );
 
     const data = await response.json();
@@ -586,12 +584,10 @@ const constrainNumberToRange = (
   value: number,
   min: number,
   max: number
-): number => {
-  return Math.min(Math.max(value, min), max);
-};
+): number => Math.min(Math.max(value, min), max);
 
-const cleanJobSkillsData = (skills: string[]): string[] => {
-  return skills
+const cleanJobSkillsData = (skills: string[]): string[] =>
+  skills
     .map((s) => s.trim().toLowerCase())
     .filter((s) => !SKILL_BLACKLIST.includes(s))
     .map((s) => {
@@ -600,14 +596,122 @@ const cleanJobSkillsData = (skills: string[]): string[] => {
       );
       return normalized ? normalized.value : s;
     });
+
+const generatePaymentOrderId = (): string =>
+  `order_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+
+const buildOrderPayload = ({
+  orderId,
+  amount,
+  userId,
+  customerName,
+  customerEmail,
+}: BuildOrderPayloadProps) => ({
+  order_id: orderId,
+  order_amount: amount,
+  order_currency: 'INR',
+  customer_details: {
+    customer_id: userId,
+    customer_name: customerName,
+    customer_email: customerEmail,
+    customer_phone: '0000000000',
+  },
+  order_meta: {
+    return_url: `${envConfig.NEXT_PUBLIC_BASE_URL}/payment/status?order_id=${orderId}`,
+  },
+});
+
+const createCashfreeOrder = async (
+  orderPayload: ReturnType<typeof buildOrderPayload>
+): Promise<{ data: any; ok: boolean }> => {
+  const clientId = envConfig.CASHFREE_CLIENT_ID;
+  const secretKey = envConfig.CASHFREE_SECRET_KEY;
+
+  if (!clientId || !secretKey) {
+    throw new Error('Cashfree credentials not configured');
+  }
+
+  const response = await fetch(`${envConfig.CASHFREE_BASE_URL}/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-client-id': clientId,
+      'x-client-secret': secretKey,
+      'x-api-version': '2022-09-01',
+    },
+    body: JSON.stringify(orderPayload),
+  });
+
+  const data = await response.json();
+
+  return { data, ok: response.ok };
+};
+
+const verifyWebhookSignature = (
+  payloadString: string,
+  signature: string | undefined,
+  webhookSecret: string
+): { isValid: boolean; error?: string } => {
+  if (!signature) {
+    return { isValid: false, error: 'Missing webhook signature' };
+  }
+
+  const generatedSignature = crypto
+    .createHmac('sha256', webhookSecret)
+    .update(payloadString)
+    .digest('base64');
+
+  return { isValid: signature === generatedSignature };
+};
+
+const validateWebhookEvent = (
+  event: any
+): { isValid: boolean; error?: string; data?: WebhookEvent } => {
+  const { order_id, payment_status } = event;
+
+  if (!order_id || typeof payment_status !== 'string') {
+    return {
+      isValid: false,
+      error: 'Missing order_id or invalid isPaid status in webhook payload',
+    };
+  }
+
+  return {
+    isValid: true,
+    data: event as WebhookEvent,
+  };
+};
+
+const checkUserCourseEnrollment = async (
+  courseId: string,
+  userId?: string
+): Promise<boolean> => {
+  if (!courseId || !userId) return false;
+
+  try {
+    const { status, data } = await fetchAPIData(
+      routes.api.courseByIdWithUser(courseId, userId)
+    );
+
+    if (!status || !data) return false;
+
+    return !!data.isEnrolled;
+  } catch (error) {
+    console.error('Enrollment check failed:', error);
+    return false;
+  }
 };
 
 export {
+  type WebhookEvent,
+  buildOrderPayload,
   calculateProgressPercentage,
   calculateUserPointsForAction,
+  checkUserCourseEnrollment,
   cleanJobSkillsData,
   constrainNumberToRange,
   convertSecondsToMinutes,
+  createCashfreeOrder,
   extractPlaylistId,
   extractSkillsFromText,
   fetchAPIData,
@@ -615,6 +719,7 @@ export {
   flattenRoutesForSitemap,
   formatDate,
   formatTime,
+  generatePaymentOrderId,
   generatePublicCertificateLink,
   generateShareTemplate,
   generateSitemap,
@@ -636,4 +741,6 @@ export {
   normalizeAPIPayload,
   removeLocalStorageItem,
   setLocalStorageItem,
+  validateWebhookEvent,
+  verifyWebhookSignature,
 };

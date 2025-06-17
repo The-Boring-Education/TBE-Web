@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addPlaylistToDB,
   addUserPlaylistToDB,
@@ -7,11 +8,8 @@ import {
   updateReferredByInPlaylist,
   updateTagsInPlaylist,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { extractPlaylistId, fetchPlaylistData } from '@/utils';
+import { extractPlaylistId, fetchPlaylistData, sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

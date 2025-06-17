@@ -4,7 +4,6 @@ import {
   SelectInput,
   Text,
 } from '@/components';
-
 import { COUNTRY_CODES } from '@/constant';
 import type { StepPhoneNumberProps } from '@/interfaces';
 
@@ -33,7 +32,7 @@ const StepPhoneNumber = ({
 
         <InputFieldContainer
           className='w-full'
-          isOptional={true}
+          isOptional
           label='Phone Number'
           labelClass='sr-only'
           type='tel'

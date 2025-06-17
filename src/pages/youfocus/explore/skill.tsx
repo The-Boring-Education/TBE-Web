@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { Fragment } from 'react';
 
-import { useSkillPlaylist } from '@/hooks';
-
 import {
   FlexContainer,
   PlaylistSkillCard,
@@ -11,7 +9,7 @@ import {
   SEO,
   Toast,
 } from '@/components';
-
+import { useSkillPlaylist } from '@/hooks';
 import type { PageProps } from '@/interfaces';
 import { getSkillPlaylistPageProps, getYoufocusSkillName } from '@/utils';
 

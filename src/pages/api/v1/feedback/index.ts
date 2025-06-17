@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { addFeedbackToDB, updateFeedbackTextInDB } from '@/database';
-
 import { apiStatusCodes } from '@/constant';
+import { addFeedbackToDB, updateFeedbackTextInDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 

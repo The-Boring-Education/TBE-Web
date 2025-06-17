@@ -5,7 +5,6 @@ import {
   SectionHeaderContainer,
   Text,
 } from '@/components';
-
 import type { LandingPageHeroProps } from '@/interfaces';
 const LandingPageHero = ({
   sectionHeaderProps,
@@ -17,15 +16,11 @@ const LandingPageHero = ({
   const { heading, focusText } = sectionHeaderProps;
   return (
     <Section>
-      <FlexContainer
-        className='py-2 sm:py-6'
-        direction='col'
-        justifyCenter={true}
-      >
+      <FlexContainer className='py-2 sm:py-6' direction='col' justifyCenter>
         <FlexContainer
           className='wrap-reverse flex-col-reverse gap-6 lg:flex-row'
-          itemCenter={true}
-          justifyCenter={true}
+          itemCenter
+          justifyCenter
           wrap={false}
         >
           <FlexContainer

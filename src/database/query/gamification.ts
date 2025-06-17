@@ -1,5 +1,4 @@
 import { Gamification } from '@/database';
-
 import type {
   DatabaseQueryResponseType,
   UserPointsAction,

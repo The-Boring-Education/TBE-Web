@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 
-import { useApi, useUser } from '@/hooks';
-
 import {
   OnboardingLayout,
   OnboardingProgressBar,
@@ -16,8 +14,8 @@ import {
   Toast,
 } from '@/components';
 import FlexContainer from '@/components/containers/Page/common/FlexContainer';
-
 import { routes } from '@/constant';
+import { useApi, useUser } from '@/hooks';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps, getRedirectUrl } from '@/utils';
 
@@ -142,7 +140,7 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <OnboardingLayout>
-        <FlexContainer className='gap-6' direction='col' fullWidth={true}>
+        <FlexContainer className='gap-6' direction='col' fullWidth>
           <FlexContainer className='gap-3' direction='col'>
             <SectionHeaderContainer
               focusText='Your Tech Journey'
@@ -178,10 +176,8 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.onboarding })),
-  };
-};
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.onboarding })),
+});
 
 export default OnboardingPage;

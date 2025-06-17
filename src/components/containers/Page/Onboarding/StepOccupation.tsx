@@ -1,5 +1,4 @@
 import { FlexContainer, RadioButtonContainer, Text } from '@/components';
-
 import { USER_ROLE_OPTIONS } from '@/constant';
 import type { StepOccupationProps } from '@/interfaces';
 

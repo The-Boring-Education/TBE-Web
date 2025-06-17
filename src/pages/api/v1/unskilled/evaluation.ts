@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { getResumeEvaluationResultsFromDB } from '@/database';
-
 import { apiStatusCodes } from '@/constant';
+import { getResumeEvaluationResultsFromDB } from '@/database';
 import type { UnSkilledEvaluationRequestBody } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

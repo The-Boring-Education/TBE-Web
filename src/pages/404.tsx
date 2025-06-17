@@ -3,7 +3,6 @@ import { RiAlarmWarningFill } from 'react-icons/ri';
 import { Link } from '@/components';
 import Layout from '@/components/layout/Section';
 import SEO from '@/components/layout/SEO';
-
 import { getSEOMeta } from '@/constant';
 
 const NotFoundPage = () => {

@@ -8,14 +8,14 @@ import type {
 } from 'react';
 
 import type { FeedbackType } from '@/constant';
-
 import type {
+  BaseShikshaCourseResponseProps,
   CertificateType,
   CohortRoadmapProps,
   GetSEOMetaResponseType,
   QuestionFrequencyType,
   TopNavbarLinkProps,
-} from '.';
+} from '@/interfaces';
 
 export interface SectionProps {
   children: ReactNode;
@@ -342,6 +342,7 @@ export interface CourseHeroContainerProps {
   name: string;
   isEnrolled?: boolean;
   id: string;
+  isPremium?: boolean;
 }
 
 export interface SheetHeroContainerProps {
@@ -381,6 +382,7 @@ export interface ChapterLinkProps {
   isCompleted: boolean;
   currentChapterId: string;
   handleChapterClick: (content: string) => void;
+  isLocked?: boolean;
 }
 
 export interface QuestionLinkProps {
@@ -681,6 +683,7 @@ export interface FeedbackPopupProps {
   type: FeedbackType;
   refId?: string;
   position?: 'bottom-right' | 'bottom-center';
+  onSubmit?: () => void;
 }
 export interface UploadFileInputProps {
   label?: string;
@@ -716,4 +719,10 @@ export interface ResumeEvaluationSectionProps {
     ring: string;
     bg: string;
   };
+}
+
+export interface PaymentCardProps {
+  course: BaseShikshaCourseResponseProps;
+  onClose: () => void;
+  productType: string;
 }

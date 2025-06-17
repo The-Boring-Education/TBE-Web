@@ -1,11 +1,13 @@
 import useAnalytics from './useAnalytics';
 import useApi from './useApi';
 import useAPIResponseMapper from './useAPIResponseMapper';
+import useCashfreePayment from './useCashfreePayment';
 import useCertificate from './useCertificate';
 import useFeedback from './useFeedback';
 import useGamification from './useGamification';
 import useMediaQuery from './useMediaQuery';
 import useNotifications from './useNotifications';
+import usePaymentStatus from './usePaymentStatus';
 import usePDFFile from './usePDFFile';
 import useResumeEvaluation from './useResumeEvaluation';
 import useScrollPosition from './useScrollPosition';
@@ -17,11 +19,13 @@ export {
   useAnalytics,
   useApi,
   useAPIResponseMapper,
+  useCashfreePayment,
   useCertificate,
   useFeedback,
   useGamification,
   useMediaQuery,
   useNotifications,
+  usePaymentStatus,
   usePDFFile,
   useResumeEvaluation,
   useScrollPosition,

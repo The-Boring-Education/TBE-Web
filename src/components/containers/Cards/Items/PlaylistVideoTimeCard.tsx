@@ -2,11 +2,9 @@ import { ArrowLeftIcon, PauseIcon, PlayIcon } from '@heroicons/react/20/solid';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { useApi } from '@/hooks';
-
 import { FlexContainer, Text } from '@/components';
-
 import { routes } from '@/constant';
+import { useApi } from '@/hooks';
 import type { PlaylistVideoTimeCard as PlaylistVideoTimeCardProps } from '@/interfaces';
 import { convertSecondsToMinutes } from '@/utils';
 
@@ -31,9 +29,7 @@ const PlaylistVideoTimeCard = ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ learningTime: minutes }),
-    }).catch((error) => {
-      return error;
-    });
+    }).catch((error) => error);
   }, [time, makeRequest, playlistId, userId]);
 
   useEffect(() => {

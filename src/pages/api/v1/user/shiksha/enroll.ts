@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { enrollInACourse, getEnrolledCourseFromDB } from '@/database';
-
 import { apiStatusCodes } from '@/constant';
+import { enrollInACourse, getEnrolledCourseFromDB } from '@/database';
 import type { CourseEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
@@ -80,7 +79,7 @@ const handleCourseEnrollment = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while enrolling course',
-        error: error,
+        error,
       })
     );
   }

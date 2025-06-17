@@ -1,5 +1,4 @@
 import { Text } from '@/components';
-
 import type { PillProps } from '@/interfaces';
 
 const Pill = ({
@@ -28,11 +27,7 @@ const Pill = ({
         widthFull && 'w-full'
       } ${className}`}
     >
-      <Text
-        className={`strong-text ${textStyleClasses}`}
-        level='p'
-        textCenter={true}
-      >
+      <Text className={`strong-text ${textStyleClasses}`} level='p' textCenter>
         {text}
       </Text>
     </div>

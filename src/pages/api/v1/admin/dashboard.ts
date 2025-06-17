@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes, envConfig } from '@/constant';
 import {
   Course,
   getAllDocumentsFromModel,
@@ -11,8 +12,6 @@ import {
   UserProject,
   UserSheet,
 } from '@/database';
-
-import { apiStatusCodes, envConfig } from '@/constant';
 import { connectDB } from '@/middlewares';
 import { applyCorsHeaders, sendAPIResponse } from '@/utils';
 
@@ -56,8 +55,8 @@ const handleAdminDashboard = async (
     const mapUserLearningProgress = (
       items: any[],
       type: 'course' | 'project' | 'sheet'
-    ) => {
-      return items.map((item: any) => {
+    ) =>
+      items.map((item: any) => {
         const completedChapters =
           type === 'course'
             ? item.chapters?.filter((c: any) => c.isCompleted).length || 0
@@ -98,7 +97,6 @@ const handleAdminDashboard = async (
           )} | ${readableTime}`,
         };
       });
-    };
 
     switch (type) {
       case 'overview': {

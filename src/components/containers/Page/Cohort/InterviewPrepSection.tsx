@@ -29,41 +29,39 @@ const INTERVIEW_SESSIONS = [
   },
 ];
 
-const InterviewPrepSection = () => {
-  return (
-    <section className='bg-gradient-to-b from-black to-gray-900 text-white py-20 px-6'>
-      <div className='max-w-6xl mx-auto text-center'>
-        <h2 className='text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent'>
-          Interview Prep Phase
-        </h2>
-        <p className='text-gray-400 max-w-xl mx-auto mb-12'>
-          Learn how to crack interviews with expert-designed prep content, mock
-          sessions, and AI-powered tools.
-        </p>
+const InterviewPrepSection = () => (
+  <section className='bg-gradient-to-b from-black to-gray-900 text-white py-20 px-6'>
+    <div className='max-w-6xl mx-auto text-center'>
+      <h2 className='text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent'>
+        Interview Prep Phase
+      </h2>
+      <p className='text-gray-400 max-w-xl mx-auto mb-12'>
+        Learn how to crack interviews with expert-designed prep content, mock
+        sessions, and AI-powered tools.
+      </p>
 
-        <div className='grid md:grid-cols-3 gap-8'>
-          {INTERVIEW_SESSIONS.map((session, index) => (
-            <motion.div
-              key={index}
-              className={`bg-gradient-to-tr ${session.color} p-6 rounded-2xl shadow-xl transition-all`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className='flex items-center justify-center mb-4'>
-                <session.icon className='w-10 h-10 text-white' />
-              </div>
-              <h3 className='text-xl font-bold mb-2 text-white'>
-                {session.title}
-              </h3>
-              <p className='text-sm text-white/90 leading-relaxed'>
-                {session.description}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+      <div className='grid md:grid-cols-3 gap-8'>
+        {INTERVIEW_SESSIONS.map((session, index) => (
+          <motion.div
+            key={index}
+            className={`bg-gradient-to-tr ${session.color} p-6 rounded-2xl shadow-xl transition-all`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className='flex items-center justify-center mb-4'>
+              <session.icon className='w-10 h-10 text-white' />
+            </div>
+            <h3 className='text-xl font-bold mb-2 text-white'>
+              {session.title}
+            </h3>
+            <p className='text-sm text-white/90 leading-relaxed'>
+              {session.description}
+            </p>
+          </motion.div>
+        ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default InterviewPrepSection;

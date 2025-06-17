@@ -356,12 +356,10 @@ const COUNTRY_CODES = [
   { code: '+46', country: 'SWEDEN' },
 ];
 
-const JOB_DOMAINS = JOB_DOMAIN_NORMALIZER.map(({ value }) => {
-  return {
-    label: value,
-    value: value,
-  };
-}).splice(0, 10);
+const JOB_DOMAINS = JOB_DOMAIN_NORMALIZER.map(({ value }) => ({
+  label: value,
+  value,
+})).splice(0, 10);
 
 const JOB_EXPERIENCE_LEVEL: {
   label: string;
@@ -389,6 +387,9 @@ const PAGE_REFRESH_TIMEOUT = {
   veryLong: 60 * 60 * 24 * 15, // 15 days in seconds
 };
 
+const isProductionEnv = envConfig.NODE_ENV === 'production';
+const isDevelopmentEnv = envConfig.NODE_ENV === 'development';
+
 export {
   apiStatusCodes,
   cohorts,
@@ -398,6 +399,8 @@ export {
   gtag,
   imageMeta,
   IN_DEV_PAGES,
+  isDevelopmentEnv,
+  isProductionEnv,
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
   LINKS,

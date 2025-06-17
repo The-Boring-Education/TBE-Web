@@ -1,5 +1,4 @@
 import { User } from '@/database';
-
 import type {
   CreateUserRequestPayloadProps,
   DatabaseQueryResponseType,

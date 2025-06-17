@@ -47,11 +47,13 @@ export interface ClientAPIResponse {
 export interface APIResponseType extends ClientAPIResponse {
   message?: string;
   error?: any;
+  details?: any;
 }
 
 export type DatabaseQueryResponseType = {
   data?: any;
   error?: any;
+  details?: any;
 };
 
 export interface AddProjectRequestPayloadProps {
@@ -125,6 +127,9 @@ export interface AddCourseRequestPayloadProps {
   slug: string;
   meta?: string;
   roadmap: RoadmapsType;
+  isPremium?: boolean;
+  price?: number;
+  features?: string[];
 }
 
 export interface AddInterviewSheetRequestPayloadProps {
@@ -155,6 +160,9 @@ export interface UpdateCourseRequestPayloadProps {
     description?: string;
     coverImageURL?: string;
     meta?: string;
+    price?: number;
+    isPremium?: boolean;
+    features?: string[];
   };
   courseId: string;
 }
@@ -256,6 +264,7 @@ export interface ExtendedInterviewSheetQuestionModel
 export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
   isEnrolled?: boolean;
   chapters?: ExtendedCourseChapterModel[];
+  isPremium?: boolean;
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;
@@ -379,4 +388,27 @@ export interface UnSkilledEvaluationRequestBody {
     min: number;
     max: number;
   };
+}
+
+export interface AddPaymentToDBRequestPayloadProps {
+  userId: string;
+  productId: string;
+  productType: string;
+  amount: number;
+  orderId: string;
+  paymentLink: string;
+}
+
+export interface BuildOrderPayloadProps {
+  orderId: string;
+  amount: number;
+  userId: string;
+  customerName: string;
+  customerEmail: string;
+}
+
+export interface UpdatePaymentStatusPayloadProps {
+  orderId: string;
+  paymentId: string | undefined;
+  status: 'SUCCESS' | 'FAILED';
 }
