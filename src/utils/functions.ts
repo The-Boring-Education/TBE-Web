@@ -682,11 +682,32 @@ const validateWebhookEvent = (
   };
 };
 
+ const checkUserCourseEnrollment = async (
+  courseId: string,
+  userId?: string
+): Promise<boolean> => {
+  if (!courseId || !userId) return false;
+
+  try {
+    const { status, data } = await fetchAPIData(
+      routes.api.courseByIdWithUser(courseId, userId)
+    );
+
+    if (!status || !data) return false;
+
+    return !!data.isEnrolled;
+  } catch (error) {
+    console.error('Enrollment check failed:', error);
+    return false;
+  }
+};
+
 export {
   type WebhookEvent,
   buildOrderPayload,
   calculateProgressPercentage,
   calculateUserPointsForAction,
+  checkUserCourseEnrollment,
   cleanJobSkillsData,
   constrainNumberToRange,
   convertSecondsToMinutes,
