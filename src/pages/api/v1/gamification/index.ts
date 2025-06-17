@@ -1,12 +1,13 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
 import {
-  updateUserPointsInDB,
-  getUserPointsFromDB,
   addGamificationDocInDB,
+  getUserPointsFromDB,
+  updateUserPointsInDB,
 } from '@/database';
-import { UserPointsActionType } from '@/interfaces';
+import type { UserPointsActionType } from '@/interfaces';
+import { connectDB } from '@/middlewares';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

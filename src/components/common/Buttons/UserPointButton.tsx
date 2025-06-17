@@ -1,12 +1,13 @@
-import { Fragment } from 'react';
 import {
   Popover,
   PopoverButton,
   PopoverPanel,
   Transition,
 } from '@headlessui/react';
+import { Fragment } from 'react';
+
 import { UserLevelProgressContainer } from '@/components';
-import { useUser, useGamification } from '@/hooks';
+import { useGamification, useUser } from '@/hooks';
 
 const UserPointButton = () => {
   const { isAuth, loading } = useUser();
@@ -39,12 +40,12 @@ const UserPointButton = () => {
       >
         <PopoverPanel className='absolute z-10 mt-1 flex w-screen max-w-max md:-translate-x-2/3 -translate-x-2/4'>
           <UserLevelProgressContainer
-            points={points}
             currentLevel={currentLevel}
             currentLevelName={currentLevelName}
             nextLevelName={nextLevelName}
-            pointsLeftToNextLevel={pointsLeftToNextLevel}
             percentageProgress={percentageProgress}
+            points={points}
+            pointsLeftToNextLevel={pointsLeftToNextLevel}
           />
         </PopoverPanel>
       </Transition>

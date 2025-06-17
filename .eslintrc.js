@@ -10,22 +10,29 @@ module.exports = {
     'next',
     'next/core-web-vitals',
     'plugin:@typescript-eslint/recommended',
-    'prettier',
+    'prettier', // Prettier disables conflicting formatting rules
   ],
   rules: {
-    'no-unused-vars': 'warn',
+    //#region 🔧 Auto-fixable Code Cleanliness
+
     'no-console': 'warn',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    'react/no-unescaped-entities': 'off',
+    'no-debugger': 'warn',
+    'no-alert': 'warn',
+    'no-duplicate-imports': 'warn',
+    'prefer-const': 'warn',
+    'no-var': 'warn',
+    'object-shorthand': ['warn', 'always'],
+    'arrow-body-style': ['warn', 'as-needed'],
+    'prefer-template': 'warn',
+    'template-curly-spacing': ['warn', 'never'],
+    'no-multi-spaces': 'warn',
 
-    'react/display-name': 'off',
-    'react/jsx-curly-brace-presence': [
-      'warn',
-      { props: 'never', children: 'never' },
-    ],
+    //#endregion
 
-    //#region  //*=========== Unused Import ===========
-    '@typescript-eslint/no-unused-vars': 'off',
+    //#region 📦 Import Sorting and Management
+    'simple-import-sort/exports': 'warn',
+    'simple-import-sort/imports': 'warn',
+    'import/no-duplicates': 'warn',
     'unused-imports/no-unused-imports': 'warn',
     'unused-imports/no-unused-vars': [
       'warn',
@@ -36,47 +43,25 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
-    '@typescript-eslint/no-explicit-any': 'off',
-    //#endregion  //*======== Unused Import ===========
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    //#endregion
 
-    // //#region  //*=========== Import Sort ===========
-    // 'simple-import-sort/exports': 'warn',
-    // 'simple-import-sort/imports': [
-    //   'warn',
-    //   {
-    //     groups: [
-    //       // ext library & side effect imports
-    //       ['^@?\\w', '^\\u0000'],
-    //       // {s}css files
-    //       ['^.+\\.s?css$'],
-    //       // Lib and hooks
-    //       ['^@/lib', '^@/hooks'],
-    //       // static data
-    //       ['^@/data'],
-    //       // components
-    //       ['^@/components', '^@/container'],
-    //       // zustand store
-    //       ['^@/store'],
-    //       // Other imports
-    //       ['^@/'],
-    //       // relative paths up until 3 level
-    //       [
-    //         '^\\./?$',
-    //         '^\\.(?!/?$)',
-    //         '^\\.\\./?$',
-    //         '^\\.\\.(?!/?$)',
-    //         '^\\.\\./\\.\\./?$',
-    //         '^\\.\\./\\.\\.(?!/?$)',
-    //         '^\\.\\./\\.\\./\\.\\./?$',
-    //         '^\\.\\./\\.\\./\\.\\.(?!/?$)',
-    //       ],
-    //       ['^@/types'],
-    //       // other that didnt fit in
-    //       ['^'],
-    //     ],
-    //   },
-    // ],
-    // //#endregion  //*======== Import Sort ===========
+    //#region ⚛️ JSX and React Practices
+    'react/display-name': 'off',
+    'react/jsx-curly-brace-presence': [
+      'warn',
+      { props: 'never', children: 'never' },
+    ],
+    'react/no-unescaped-entities': 'off',
+    'react/jsx-boolean-value': ['warn', 'never'],
+    'react/self-closing-comp': 'warn',
+    //#endregion
+
+    //#region 🧼 TypeScript Enhancements
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/consistent-type-imports': 'warn',
+    //#endregion
   },
   globals: {
     React: true,

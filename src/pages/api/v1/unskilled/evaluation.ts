@@ -1,9 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
 import { getResumeEvaluationResultsFromDB } from '@/database';
+import type { UnSkilledEvaluationRequestBody } from '@/interfaces';
+import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
-import { UnSkilledEvaluationRequestBody } from '@/interfaces';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

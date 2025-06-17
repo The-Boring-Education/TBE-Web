@@ -1,10 +1,10 @@
-import {
+import { User } from '@/database';
+import type {
   CreateUserRequestPayloadProps,
   DatabaseQueryResponseType,
   PlatformUsageType,
   UserRoleType,
 } from '@/interfaces';
-import { User } from '@/database';
 
 const getUserByIdFromDB = async (
   id: string
@@ -94,9 +94,9 @@ const onboardUserToDB = async (
 };
 
 export {
-  getUserByIdFromDB,
-  getUserByEmailFromDB,
   createUserInDB,
-  onboardUserToDB,
+  getUserByEmailFromDB,
+  getUserByIdFromDB,
   getUserByUserNameFromDB,
+  onboardUserToDB,
 };

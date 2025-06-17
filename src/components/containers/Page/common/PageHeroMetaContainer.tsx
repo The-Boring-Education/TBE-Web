@@ -1,23 +1,21 @@
 import { FlexContainer, Text } from '@/components';
-import { ProjectHeroMetaContainerProps } from '@/interfaces';
+import type { ProjectHeroMetaContainerProps } from '@/interfaces';
 
 const PageHeroMetaContainer = ({
   subtitle,
   title,
   titleClassName = 'gradient-3',
-}: ProjectHeroMetaContainerProps) => {
-  return (
-    <FlexContainer direction='col' itemCenter={false} className='gap-1'>
-      <Text level='span' className='pre-title text-greyDark'>
-        {subtitle}
+}: ProjectHeroMetaContainerProps) => (
+  <FlexContainer className='gap-1' direction='col' itemCenter={false}>
+    <Text className='pre-title text-greyDark' level='span'>
+      {subtitle}
+    </Text>
+    <FlexContainer className={`${titleClassName} px-2 py-1 rounded`}>
+      <Text className='strong-text' level='p'>
+        {title}
       </Text>
-      <FlexContainer className={`${titleClassName} px-2 py-1 rounded`}>
-        <Text level='p' className='strong-text'>
-          {title}
-        </Text>
-      </FlexContainer>
     </FlexContainer>
-  );
-};
+  </FlexContainer>
+);
 
 export default PageHeroMetaContainer;

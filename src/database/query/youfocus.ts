@@ -1,5 +1,5 @@
 import { Playlist, UserPlaylist } from '@/database';
-import { DatabaseQueryResponseType, PlaylistModel } from '@/interfaces';
+import type { DatabaseQueryResponseType, PlaylistModel } from '@/interfaces';
 
 // Add a playlist to the database
 const addPlaylistToDB = async (
@@ -172,9 +172,9 @@ const getUserPlaylistsFromDB = async (
       .populate('playlistId')
       .lean()
       .exec()
-      .then((data) => {
-        return data.filter((item) => item.playlistId); // If Playlist ID doesn't exist -> Skip
-      });
+      .then(
+        (data) => data.filter((item) => item.playlistId) // If Playlist ID doesn't exist -> Skip
+      );
 
     if (!userPlaylists.length) {
       return { error: 'User does not have any playlists' };
@@ -264,7 +264,7 @@ const getPlaylistByTagFromDB = async (
 
     return { data: playlists };
   } catch (error) {
-    return { error: error };
+    return { error };
   }
 };
 
@@ -280,7 +280,7 @@ const deletePlaylistFromDB = async (
 
     return { data: playlist };
   } catch (error) {
-    return { error: error };
+    return { error };
   }
 };
 
@@ -297,22 +297,22 @@ const deletePlaylistByTagFromDB = async (
       data: playlists,
     };
   } catch (error) {
-    return { error: error };
+    return { error };
   }
 };
 
 export {
   addPlaylistToDB,
-  checkPlaylistExistsByID,
   addUserPlaylistToDB,
-  getPlaylistsFromDB,
-  getPlaylistByIdFromDB,
-  getUserPlaylistsFromDB,
-  deleteUserPlaylistFromDB,
-  updateUserPlaylistData,
-  updateReferredByInPlaylist,
-  getPlaylistByTagFromDB,
-  updateTagsInPlaylist,
-  deletePlaylistFromDB,
+  checkPlaylistExistsByID,
   deletePlaylistByTagFromDB,
+  deletePlaylistFromDB,
+  deleteUserPlaylistFromDB,
+  getPlaylistByIdFromDB,
+  getPlaylistByTagFromDB,
+  getPlaylistsFromDB,
+  getUserPlaylistsFromDB,
+  updateReferredByInPlaylist,
+  updateTagsInPlaylist,
+  updateUserPlaylistData,
 };

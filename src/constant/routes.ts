@@ -1,4 +1,4 @@
-import { GenerateSectionPathProps } from '@/interfaces';
+import type { GenerateSectionPathProps } from '@/interfaces';
 
 const routes = {
   home: '/',
@@ -88,6 +88,8 @@ const routes = {
     markProjectChapterAsCompleted: '/user/projects/project',
     markSheetQuestionAsCompleted: '/user/interview-prep/sheet',
     submitUserFeedback: '/feedback',
+    createOrder: '/payment/create-order',
+    checkStatus: '/payment/checkstatus',
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {
       let url = `/shiksha/${course}`;
@@ -135,8 +137,6 @@ const routes = {
 const generateSectionPath = ({
   basePath,
   sectionID,
-}: GenerateSectionPathProps) => {
-  return basePath + '#' + sectionID;
-};
+}: GenerateSectionPathProps) => `${basePath}#${sectionID}`;
 
-export { routes, generateSectionPath };
+export { generateSectionPath, routes };

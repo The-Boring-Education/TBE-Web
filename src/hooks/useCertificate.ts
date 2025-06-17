@@ -1,7 +1,9 @@
-import { useRef } from 'react';
 import { toPng } from 'html-to-image';
-import useUser from './useUser';
+import { useRef } from 'react';
+
 import { useAnalytics } from '@/hooks';
+
+import useUser from './useUser';
 
 const useCertificate = () => {
   const { user } = useUser();
@@ -29,7 +31,8 @@ const useCertificate = () => {
         link.download = `${user.name}-${label}-certificate.png`;
         link.click();
       } catch (error) {
-        console.error('Error generating certificate image:', error);
+        // Certificate generation failed - could be improved with user notification
+        throw new Error('Failed to generate certificate. Please try again.');
       }
     }
   };

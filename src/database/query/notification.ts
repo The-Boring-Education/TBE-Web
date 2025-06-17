@@ -1,5 +1,5 @@
 import { Notification } from '@/database';
-import {
+import type {
   AddNotificationRequestPayloadProps,
   UpdateNotificationRequestPayloadProps,
 } from '@/interfaces';
@@ -62,7 +62,7 @@ const deleteANotificationsFromDB = async (notificationId: string) => {
 
 export {
   addANotificationToDB,
+  deleteANotificationsFromDB,
   getAllNotificationsFromDB,
   updateANotificationInDB,
-  deleteANotificationsFromDB,
 };

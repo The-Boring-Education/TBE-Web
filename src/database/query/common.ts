@@ -1,5 +1,6 @@
-import { DatabaseQueryResponseType } from '@/interfaces';
-import { Model } from 'mongoose';
+import type { Model } from 'mongoose';
+
+import type { DatabaseQueryResponseType } from '@/interfaces';
 
 /**
  * General utility to get total count of documents for any Mongoose model.
@@ -46,4 +47,4 @@ const getAllDocumentsFromModel = async (
   }
 };
 
-export { getTotalCountFromModel, getAllDocumentsFromModel };
+export { getAllDocumentsFromModel, getTotalCountFromModel };

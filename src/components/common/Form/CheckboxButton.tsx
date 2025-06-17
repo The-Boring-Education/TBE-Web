@@ -1,30 +1,29 @@
 import React from 'react';
-import { CheckboxButtonProps } from '@/interfaces';
+
+import type { CheckboxButtonProps } from '@/interfaces';
 
 const CheckboxButton = ({
   label,
   value,
   isSelected,
   onClick,
-}: CheckboxButtonProps) => {
-  return (
-    <label
-      className={`checkbox 
+}: CheckboxButtonProps) => (
+  <label
+    className={`checkbox 
         ${isSelected ? 'bg-primary text-white' : 'bg-accent hover:bg-greyLight'}
       `}
-      htmlFor={`checkbox-${value}`}
-    >
-      <input
-        type='checkbox'
-        id={`checkbox-${value}`}
-        value={value}
-        checked={isSelected}
-        onChange={onClick}
-        className='hidden'
-      />
-      {label}
-    </label>
-  );
-};
+    htmlFor={`checkbox-${value}`}
+  >
+    <input
+      checked={isSelected}
+      className='hidden'
+      id={`checkbox-${value}`}
+      type='checkbox'
+      value={value}
+      onChange={onClick}
+    />
+    {label}
+  </label>
+);
 
 export default CheckboxButton;

@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react';
 import { useRouter } from 'next/router';
+import React, { Fragment } from 'react';
+
 import {
   FlexContainer,
   PlaylistSkillCard,
@@ -9,8 +10,8 @@ import {
   Toast,
 } from '@/components';
 import { useSkillPlaylist } from '@/hooks';
+import type { PageProps } from '@/interfaces';
 import { getSkillPlaylistPageProps, getYoufocusSkillName } from '@/utils';
-import { PageProps } from '@/interfaces';
 
 const Explore = ({ seoMeta }: PageProps) => {
   const router = useRouter();
@@ -23,20 +24,20 @@ const Explore = ({ seoMeta }: PageProps) => {
       <SEO seoMeta={seoMeta} />
       <Section>
         <FlexContainer
-          direction='col'
           className='w-full justify-center items-center md:gap-8 gap-4'
+          direction='col'
         >
           <div className='w-full max-w-md'>
             <SectionHeaderContainer
-              heading={`${getYoufocusSkillName(q as string)}`}
               focusText='Playlist'
+              heading={`${getYoufocusSkillName(q as string)}`}
               headingLevel={3}
               subtext='Pick A Playlist and Start Learning'
             />
           </div>
 
           {loading && <Toast message='Playlists Loading...' />}
-          {errorMessage && <Toast type='error' message={errorMessage} />}
+          {errorMessage && <Toast message={errorMessage} type='error' />}
 
           <FlexContainer className='w-full md:gap-4 gap-2'>
             {playlists.length > 0 &&
@@ -48,10 +49,10 @@ const Explore = ({ seoMeta }: PageProps) => {
                   <PlaylistSkillCard
                     key={key}
                     _id={_id}
-                    playlistName={playlistName}
-                    thumbnail={thumbnail}
-                    referrerBy={referrerBy}
                     noOfVideos={videos ? videos.length : 0}
+                    playlistName={playlistName}
+                    referrerBy={referrerBy}
+                    thumbnail={thumbnail}
                   />
                 );
               })}

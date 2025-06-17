@@ -1,7 +1,7 @@
 import { Feedback } from '@/database';
-import {
-  DatabaseQueryResponseType,
+import type {
   AddFeedbackRequestProps,
+  DatabaseQueryResponseType,
   UpdateFeedbackRequestProps,
 } from '@/interfaces';
 

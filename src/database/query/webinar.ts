@@ -1,5 +1,5 @@
 import { Webinar } from '@/database';
-import {
+import type {
   AddWebinarRequestPayloadProps,
   UpdateEnrolledUsersRequestPayloadProps,
 } from '@/interfaces';
@@ -146,11 +146,11 @@ const deleteAWebinarFromDB = async (slug: string) => {
 };
 
 export {
-  getAllWebinarsFromDB,
-  updateWebinarInDB,
-  checkUserRegistrationInWebinarDB,
-  getWebinarDetailsFromDB,
-  getWebinarBySlugFromDB,
   addAWebinarToDB,
+  checkUserRegistrationInWebinarDB,
   deleteAWebinarFromDB,
+  getAllWebinarsFromDB,
+  getWebinarBySlugFromDB,
+  getWebinarDetailsFromDB,
+  updateWebinarInDB,
 };

@@ -1,6 +1,7 @@
+import { type Model, model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from '@/constant';
-import { CourseChapterModel, CourseModel } from '@/interfaces';
-import { Model, Schema, model, models } from 'mongoose';
+import type { CourseChapterModel, CourseModel } from '@/interfaces';
 
 const chapterSchema = new Schema<CourseChapterModel>(
   {
@@ -41,6 +42,13 @@ const CourseSchema = new Schema<CourseModel>(
       type: Date,
       required: [true, 'Live on is required'],
     },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
+    price: {
+      type: Number,
+    },
     chapters: [chapterSchema],
     roadmap: { type: String, enum: ROADMAPS, required: true },
     difficultyLevel: {
@@ -48,6 +56,11 @@ const CourseSchema = new Schema<CourseModel>(
       enum: DIFFICULTY_LEVEL,
       required: true,
     },
+    features: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,

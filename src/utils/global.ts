@@ -1,18 +1,20 @@
 import { getSEOMeta, IN_DEV_PAGES, routes, seoCommonMeta } from '@/constant';
-import {
-  BaseShikshaCourseResponseProps,
+import type {
   BaseInterviewSheetResponseProps,
+  BaseShikshaCourseResponseProps,
   ProjectPickedPageProps,
 } from '@/interfaces';
+
 import {
-  getSelectedCourseChapterMeta,
-  getSelectedSheetQuestionMeta,
-  getSelectedProjectChapterMeta,
-  isUserAuthenticated,
-  formatDate,
-  isProgramActive,
+  checkUserCourseEnrollment,
   fetchAPIData,
+  formatDate,
+  getSelectedCourseChapterMeta,
+  getSelectedProjectChapterMeta,
+  getSelectedSheetQuestionMeta,
   getYoufocusSkillName,
+  isProgramActive,
+  isUserAuthenticated,
 } from '.';
 
 const getPreFetchProps = async ({ slug }: any) => {
@@ -169,7 +171,7 @@ const getCoursePageProps = async (context: any) => {
   let slug = routes.home;
 
   if (courseSlug) {
-    slug = '/shiksha/' + courseSlug;
+    slug = `/shiksha/${courseSlug}`;
   }
 
   if (courseId) {
@@ -229,6 +231,9 @@ const getCoursePageProps = async (context: any) => {
         if (selectedChapterMeta) meta = selectedChapterMeta;
       }
 
+      const isEnrolled = await checkUserCourseEnrollment(courseId, user?.id);
+      course.isEnrolled = isEnrolled;
+
       return {
         props: {
           slug,
@@ -236,6 +241,7 @@ const getCoursePageProps = async (context: any) => {
           course,
           meta,
           currentChapterId,
+          isEnrolled,
         },
       };
     } catch (error) {
@@ -258,7 +264,7 @@ const getSheetPageProps = async (context: any) => {
   let slug = routes.home;
 
   if (sheetSlug) {
-    slug = '/interview-prep/' + sheetSlug;
+    slug = `/interview-prep/${sheetSlug}`;
   }
 
   const seoMeta = getSEOMeta(slug);
@@ -516,14 +522,14 @@ const getSkillPlaylistPageProps = async (context: any) => {
 };
 
 export {
+  getCertificatePageProps,
+  getCoursePageProps,
+  getPlaylistPageProps,
   getPreFetchProps,
   getProjectPageProps,
-  getCoursePageProps,
   getSheetPageProps,
-  getWebinarPageProps,
-  getWebinarLandingPageProps,
-  getCertificatePageProps,
-  getPlaylistPageProps,
   getSkillPlaylistPageProps,
   getUnskilledLandingPageProps,
+  getWebinarLandingPageProps,
+  getWebinarPageProps,
 };

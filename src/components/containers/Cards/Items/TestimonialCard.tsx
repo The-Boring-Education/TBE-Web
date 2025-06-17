@@ -1,5 +1,5 @@
 import { GradientContainer, Image, Text } from '@/components';
-import { TestimonialCardProps } from '@/interfaces';
+import type { TestimonialCardProps } from '@/interfaces';
 
 const TestimonialCard = ({
   image,
@@ -7,26 +7,24 @@ const TestimonialCard = ({
   title,
   content,
   work,
-}: TestimonialCardProps) => {
-  return (
-    <GradientContainer className='max-w-sm border-borderColor3'>
-      <Image
-        className='h-12 w-12 rounded-full border object-cover'
-        fullWidth={false}
-        src={`${image}`}
-        alt={imageAltText}
-      />
-      <Text level='p' className='paragraph mt-2 font-medium'>
-        {title}
-      </Text>
-      <Text level='p' className='paragraph mt-1'>
-        {content}
-      </Text>
-      <Text level='p' className='paragraph span mt-2 text-secondary'>
-        {work}
-      </Text>
-    </GradientContainer>
-  );
-};
+}: TestimonialCardProps) => (
+  <GradientContainer className='max-w-sm border-borderColor3'>
+    <Image
+      alt={imageAltText}
+      className='h-12 w-12 rounded-full border object-cover'
+      fullWidth={false}
+      src={`${image}`}
+    />
+    <Text className='paragraph mt-2 font-medium' level='p'>
+      {title}
+    </Text>
+    <Text className='paragraph mt-1' level='p'>
+      {content}
+    </Text>
+    <Text className='paragraph span mt-2 text-secondary' level='p'>
+      {work}
+    </Text>
+  </GradientContainer>
+);
 
 export default TestimonialCard;

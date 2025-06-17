@@ -1,63 +1,61 @@
 import { CircularProgressBar, FlexContainer, Text } from '@/components';
-import { ResumeEvaluationSectionProps } from '@/interfaces';
+import type { ResumeEvaluationSectionProps } from '@/interfaces';
 
 const ResumeEvaluationSection = ({
   title,
   subtitle,
   items,
   colorScheme,
-}: ResumeEvaluationSectionProps) => {
-  return (
-    <FlexContainer direction='col' className='gap-4'>
-      <FlexContainer direction='col' className='gap-1'>
-        <Text level='h5' className='heading-5'>
-          {title}
-        </Text>
-        <Text level='p' className='pre-title'>
-          {subtitle}
-        </Text>
-      </FlexContainer>
-      <FlexContainer className='gap-4' wrap>
-        {items.map((item: any) => (
-          <FlexContainer
-            key={item.skill || item.name}
-            className='gap-3'
-            itemCenter
-          >
-            <CircularProgressBar
-              percentage={item.percentage}
-              color={colorScheme.ring}
-              bg={colorScheme.bg}
-              size={50}
-              strokeWidth={5}
-            >
-              <Text
-                level='span'
-                className={`text-xs font-bold ${colorScheme.text}`}
-              >
-                {item.percentage}%
-              </Text>
-            </CircularProgressBar>
-            <FlexContainer
-              direction='col'
-              className='gap-0.5 justify-start'
-              itemCenter={false}
-            >
-              <Text
-                level='span'
-                className={`strong-text capitalize ${colorScheme.text}`}
-              >
-                {item.skill || item.name}
-              </Text>
-              <Text level='span' className='pre-title text-gray-500'>
-                Seen in {item.frequency || item.count} jobs
-              </Text>
-            </FlexContainer>
-          </FlexContainer>
-        ))}
-      </FlexContainer>
+}: ResumeEvaluationSectionProps) => (
+  <FlexContainer className='gap-4' direction='col'>
+    <FlexContainer className='gap-1' direction='col'>
+      <Text className='heading-5' level='h5'>
+        {title}
+      </Text>
+      <Text className='pre-title' level='p'>
+        {subtitle}
+      </Text>
     </FlexContainer>
-  );
-};
+    <FlexContainer wrap className='gap-4'>
+      {items.map((item: any) => (
+        <FlexContainer
+          key={item.skill || item.name}
+          itemCenter
+          className='gap-3'
+        >
+          <CircularProgressBar
+            bg={colorScheme.bg}
+            color={colorScheme.ring}
+            percentage={item.percentage}
+            size={50}
+            strokeWidth={5}
+          >
+            <Text
+              className={`text-xs font-bold ${colorScheme.text}`}
+              level='span'
+            >
+              {item.percentage}%
+            </Text>
+          </CircularProgressBar>
+          <FlexContainer
+            className='gap-0.5 justify-start'
+            direction='col'
+            itemCenter={false}
+          >
+            <Text
+              className={`strong-text capitalize ${colorScheme.text}`}
+              level='span'
+            >
+              {item.skill || item.name}
+            </Text>
+            <Text className='pre-title text-gray-500' level='span'>
+              Seen in {item.frequency || item.count} jobs
+            </Text>
+          </FlexContainer>
+        </FlexContainer>
+      ))}
+    </FlexContainer>
+  </FlexContainer>
+);
 
 export default ResumeEvaluationSection;

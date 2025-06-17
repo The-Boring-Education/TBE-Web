@@ -1,47 +1,43 @@
-import { LandingPageHero, CardContainerA, SEO, LinkButton } from '@/components';
-import { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
-import { STATIC_FILE_PATH, TBP_FEATURES, routes } from '@/constant';
 import { Fragment } from 'react';
 
-const Home = ({ seoMeta }: PageProps) => {
-  return (
-    <Fragment>
-      <SEO seoMeta={seoMeta} />
-      <LandingPageHero
-        sectionHeaderProps={{
-          heading: 'Build Projects',
-          focusText: 'without Tutorials',
-        }}
-        heroText='Come Out of Tutorial Hell & Build Real Life Projects.'
-        primaryButton={
-          <LinkButton
-            href={routes.projectsExplore}
-            className='w-full sm:w-fit'
-            buttonProps={{
-              variant: 'PRIMARY',
-              text: 'Explore Projects',
-              className: 'w-full',
-            }}
-          />
-        }
-        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/projects.svg`}
-      />
-      <CardContainerA
-        heading='What We Do'
-        focusText='Differently'
-        cards={TBP_FEATURES}
-        borderColour={4}
-      />
-    </Fragment>
-  );
-};
+import { CardContainerA, LandingPageHero, LinkButton, SEO } from '@/components';
+import { routes, STATIC_FILE_PATH, TBP_FEATURES } from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.projects })),
-    revalidate: 1000,
-  };
-};
+const Home = ({ seoMeta }: PageProps) => (
+  <Fragment>
+    <SEO seoMeta={seoMeta} />
+    <LandingPageHero
+      backgroundImageUrl={`${STATIC_FILE_PATH.svg}/projects.svg`}
+      heroText='Come Out of Tutorial Hell & Build Real Life Projects.'
+      primaryButton={
+        <LinkButton
+          buttonProps={{
+            variant: 'PRIMARY',
+            text: 'Explore Projects',
+            className: 'w-full',
+          }}
+          className='w-full sm:w-fit'
+          href={routes.projectsExplore}
+        />
+      }
+      sectionHeaderProps={{
+        heading: 'Build Projects',
+        focusText: 'without Tutorials',
+      }}
+    />
+    <CardContainerA
+      borderColour={4}
+      cards={TBP_FEATURES}
+      focusText='Differently'
+      heading='What We Do'
+    />
+  </Fragment>
+);
+
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.projects })),
+});
 
 export default Home;

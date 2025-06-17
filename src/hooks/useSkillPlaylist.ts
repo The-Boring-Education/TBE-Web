@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useApi } from '@/hooks';
+import { useEffect, useState } from 'react';
+
 import { routes } from '@/constant';
-import { PlaylistSkillCardProps } from '@/interfaces';
+import { useApi } from '@/hooks';
+import type { PlaylistSkillCardProps } from '@/interfaces';
 
 const useSkillPlaylist = (q: string) => {
   const { makeRequest, loading } = useApi('fetchPlaylists');

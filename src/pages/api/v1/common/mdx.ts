@@ -1,5 +1,6 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { sendAPIResponse } from '@/utils';
 import { getMDXContent } from '@/utils/mdx';
 
@@ -20,12 +21,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const generateMDXContent = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
-  return res.status(apiStatusCodes.OKAY).json(getMDXContent());
-};
+const generateMDXContent = async (req: NextApiRequest, res: NextApiResponse) =>
+  res.status(apiStatusCodes.OKAY).json(getMDXContent());
 
 const generateBulkMDXContent = async (
   req: NextApiRequest,

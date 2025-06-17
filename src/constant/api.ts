@@ -1,13 +1,13 @@
-import {
+import type {
   CertificateType,
   DifficultyType,
   NotificationType,
+  PlatformUsageType,
   QuestionFrequencyType,
   RoadmapsType,
   SkillsType,
   UserPointsActionType,
   UserRoleType,
-  PlatformUsageType,
 } from '@/interfaces';
 
 const PROJECT_SKILLS: SkillsType[] = [
@@ -2509,20 +2509,29 @@ const SKILL_BLACKLIST = [
   'production planning',
 ];
 
+const ALLOWED_IPS = [
+  '52.66.101.190',
+  '3.109.102.144',
+  '3.111.60.173',
+  '18.60.134.245',
+  '18.60.183.142',
+];
+
 export {
-  PROJECT_SKILLS,
-  ROADMAPS,
+  ALLOWED_IPS,
+  CERTIFICATE_TYPE,
   DIFFICULTY_LEVEL,
   INTERVIEW_QUESTION_FREQUENCY,
-  CERTIFICATE_TYPE,
-  YOUTUBE_API_PATH,
-  NOTIFICATION_TYPE,
-  USER_POINTS_ACTION,
-  USER_ROLE,
-  PLATFORM_USAGE,
+  JOB_DOMAIN_MAPPER,
+  JOB_DOMAIN_NORMALIZER,
   JOB_LOCATION_NORMALIZER,
   JOB_SKILL_NORMALIZER,
-  JOB_DOMAIN_NORMALIZER,
-  JOB_DOMAIN_MAPPER,
+  NOTIFICATION_TYPE,
+  PLATFORM_USAGE,
+  PROJECT_SKILLS,
+  ROADMAPS,
   SKILL_BLACKLIST,
+  USER_POINTS_ACTION,
+  USER_ROLE,
+  YOUTUBE_API_PATH,
 };

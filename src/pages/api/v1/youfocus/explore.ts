@@ -1,8 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
+import { deletePlaylistByTagFromDB, getPlaylistByTagFromDB } from '@/database';
+import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
-import { getPlaylistByTagFromDB, deletePlaylistByTagFromDB } from '@/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

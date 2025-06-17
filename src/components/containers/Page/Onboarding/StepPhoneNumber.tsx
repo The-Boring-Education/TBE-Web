@@ -1,11 +1,11 @@
-import { COUNTRY_CODES } from '@/constant';
 import {
-  SelectInput,
   FlexContainer,
   InputFieldContainer,
+  SelectInput,
   Text,
 } from '@/components';
-import { StepPhoneNumberProps } from '@/interfaces';
+import { COUNTRY_CODES } from '@/constant';
+import type { StepPhoneNumberProps } from '@/interfaces';
 
 const StepPhoneNumber = ({
   countryCode,
@@ -17,27 +17,27 @@ const StepPhoneNumber = ({
 
   return (
     <FlexContainer className='gap-2' direction='col'>
-      <Text level='p' className='paragraph'>
+      <Text className='paragraph' level='p'>
         Your Contact No
       </Text>
 
       <FlexContainer className='gap-2 w-full items-center flex-nowrap'>
         <SelectInput
+          aria-label='Country Code'
+          className=''
           list={codeList}
           selectedItem={countryCode}
           onChange={onChangeCode}
-          className=''
-          aria-label='Country Code'
         />
 
         <InputFieldContainer
+          className='w-full'
+          isOptional
           label='Phone Number'
+          labelClass='sr-only'
           type='tel'
           value={phoneNumber}
           onChange={onChangeNumber}
-          className='w-full'
-          labelClass='sr-only'
-          isOptional={true}
         />
       </FlexContainer>
     </FlexContainer>

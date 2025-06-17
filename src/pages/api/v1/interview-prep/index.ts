@@ -1,17 +1,18 @@
+import type mongoose from 'mongoose';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
 import {
   addAInterviewSheetToDB,
   getAllInterviewSheetsFromDB,
   getInterviewSheetBySlugFromDB,
 } from '@/database';
-import {
+import type {
   AddInterviewSheetRequestPayloadProps,
   BaseInterviewSheetResponseProps,
 } from '@/interfaces';
-import mongoose from 'mongoose';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
@@ -99,9 +100,10 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
     // Create a map of all sheets by their ID
     const sheetMap = new Map<string, BaseInterviewSheetResponseProps>(
       allInterviewSheets.map(
-        (sheetDoc: mongoose.Document & BaseInterviewSheetResponseProps) => {
-          return [sheetDoc._id.toString(), { ...sheetDoc.toObject() }];
-        }
+        (sheetDoc: mongoose.Document & BaseInterviewSheetResponseProps) => [
+          sheetDoc._id.toString(),
+          { ...sheetDoc.toObject() },
+        ]
       )
     );
 

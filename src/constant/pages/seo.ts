@@ -1,6 +1,7 @@
-import { GetSEOMetaResponseType } from '@/interfaces';
+import type { GetSEOMetaResponseType } from '@/interfaces';
+
+import { INTERVIEW_PREP_SHEETS, products, TBP_PROJECTS } from '..';
 import { routes } from '../routes';
-import { TBP_PROJECTS, products, INTERVIEW_PREP_SHEETS } from '..';
 
 export const seoCommonMeta = {
   type: 'website',

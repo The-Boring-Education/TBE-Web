@@ -1,9 +1,10 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
 import { enrollInASheet, getEnrolledSheetFromDB } from '@/database';
-import { SheetEnrollmentRequestProps } from '@/interfaces';
+import type { SheetEnrollmentRequestProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -79,7 +80,7 @@ const handleSheetEnrollment = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while enrolling in sheet',
-        error: error,
+        error,
       })
     );
   }

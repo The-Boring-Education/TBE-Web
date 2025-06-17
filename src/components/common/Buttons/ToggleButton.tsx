@@ -1,6 +1,7 @@
-import { Button, FlexContainer } from '@/components';
-import { ToggleButtonProps } from '@/interfaces';
 import { useState } from 'react';
+
+import { Button, FlexContainer } from '@/components';
+import type { ToggleButtonProps } from '@/interfaces';
 
 const ToggleButton = ({
   options,
@@ -21,13 +22,13 @@ const ToggleButton = ({
       {options.map((option) => (
         <Button
           key={option}
+          animationClasses='w-fit'
           className={`${
             activeButton === option ? activeColor : inactiveColor
           } border-none ${textColors[options.indexOf(option)]}`}
-          onClick={() => handleClick(option)}
-          variant='GHOST'
           text={option}
-          animationClasses='w-fit'
+          variant='GHOST'
+          onClick={() => handleClick(option)}
         />
       ))}
     </FlexContainer>

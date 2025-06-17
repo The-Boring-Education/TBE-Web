@@ -1,12 +1,13 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
 import {
-  updateUserPlaylistData,
-  getPlaylistByIdFromDB,
   deletePlaylistFromDB,
+  getPlaylistByIdFromDB,
+  updateUserPlaylistData,
 } from '@/database';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
@@ -122,7 +123,7 @@ const handleDeletePlaylistById = async (
       sendAPIResponse({
         status: false,
         message: 'Error deleting playlist',
-        error: error,
+        error,
       })
     );
   }

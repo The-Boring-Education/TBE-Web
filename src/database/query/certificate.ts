@@ -1,8 +1,8 @@
-import {
+import { Certificate } from '@/database';
+import type {
   AddCertificateRequestPayloadProps,
   DatabaseQueryResponseType,
 } from '@/interfaces';
-import { Certificate } from '@/database';
 
 const addACertificateToDB = async (
   certificatePayload: AddCertificateRequestPayloadProps
@@ -67,6 +67,6 @@ const getUserCertificates = async (userId: string) => {
 export {
   addACertificateToDB,
   checkCertificateExistForAProgram,
-  getUserCertificates,
   getCertificateById,
+  getUserCertificates,
 };

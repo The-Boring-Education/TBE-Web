@@ -1,16 +1,17 @@
+import { type Model, model, models, Schema } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+
 import {
+  DATABASE_MODELS,
   DIFFICULTY_LEVEL,
   PROJECT_SKILLS,
   ROADMAPS,
-  DATABASE_MODELS,
 } from '@/constant';
-import {
+import type {
   ProjectChapter,
   ProjectDocumentModel,
   ProjectSection,
 } from '@/interfaces';
-import { Model, Schema, models, model } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 
 const chapterSchema: Schema<ProjectChapter> = new Schema(
   {

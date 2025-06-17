@@ -1,19 +1,20 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { v4 } from 'uuid';
+
 import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
 import {
   addSectionToProjectInDB,
   deleteSectionFromProjectInDB,
   getSectionsFromProjectInDB,
   updateSectionInProjectInDB,
 } from '@/database';
-import {
+import type {
   AddSectionRequestPayloadProps,
   DeleteSectionRequestPayloadProps,
   UpateSectionRequestPayloadProps,
 } from '@/interfaces';
-import { v4 } from 'uuid';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

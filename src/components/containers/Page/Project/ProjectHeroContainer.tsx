@@ -1,15 +1,14 @@
 import {
-  LinkButton,
+  Button,
   FlexContainer,
+  LinkButton,
+  LoginRedirectButton,
   PageHeroMetaContainer,
   Text,
-  Button,
-  LoginRedirectButton,
 } from '@/components';
 import { projectGroupWhatsapp, routes } from '@/constant';
-import { useAnalytics, useUser } from '@/hooks';
-import { useApi } from '@/hooks';
-import { ProjectHeroContainerProps } from '@/interfaces';
+import { useAnalytics, useApi, useUser } from '@/hooks';
+import type { ProjectHeroContainerProps } from '@/interfaces';
 
 const ProjectHeroContainer = ({
   id,
@@ -61,37 +60,37 @@ const ProjectHeroContainer = ({
     headerActionButton = (
       <FlexContainer>
         <Button
-          variant='PRIMARY'
           text='Enroll to Project'
+          variant='PRIMARY'
           onClick={enrollProject}
         />
       </FlexContainer>
     );
   } else if (loading) {
     headerActionButton = (
-      <Button variant='PRIMARY' text='Enrolling...' isLoading={true} />
+      <Button isLoading text='Enrolling...' variant='PRIMARY' />
     );
   } else {
     headerActionButton = (
       <FlexContainer
-        justifyCenter={false}
-        itemCenter={false}
         className='justify-start items-start gap-2'
+        itemCenter={false}
+        justifyCenter={false}
       >
         <LinkButton
-          href={projectGroupWhatsapp}
-          target='_blank'
           buttonProps={{
             variant: 'OUTLINE',
             text: 'Ask Question',
           }}
+          href={projectGroupWhatsapp}
+          target='_blank'
         />
         <LinkButton
-          href={routes.projectsExplore}
           buttonProps={{
             variant: 'GHOST',
             text: 'Back to Projects',
           }}
+          href={routes.projectsExplore}
         />
       </FlexContainer>
     );
@@ -101,21 +100,21 @@ const ProjectHeroContainer = ({
     <FlexContainer>
       <FlexContainer className='border gap-4 w-full p-2 justify-between rounded'>
         <FlexContainer
-          itemCenter={false}
-          direction='col'
           className='items-start gap-1'
+          direction='col'
+          itemCenter={false}
         >
-          <Text level='h4' className='heading-4'>
+          <Text className='heading-4' level='h4'>
             Hello {user?.name ?? 'there'}!
           </Text>
-          <Text level='p' className='paragraph text-greyDark'>
+          <Text className='paragraph text-greyDark' level='p'>
             Let's learn something today.
           </Text>
         </FlexContainer>
         <FlexContainer
-          justifyCenter={false}
-          itemCenter={false}
           className='justify-start items-start gap-3'
+          itemCenter={false}
+          justifyCenter={false}
         >
           <PageHeroMetaContainer subtitle="YOU'RE BUILDING" title={name} />
           <PageHeroMetaContainer subtitle='ROADMAP' title={roadmap} />

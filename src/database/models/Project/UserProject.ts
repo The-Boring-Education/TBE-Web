@@ -1,10 +1,11 @@
-import {
+import { type Model, model, models, Schema } from 'mongoose';
+
+import { DATABASE_MODELS } from '@/constant';
+import type {
+  UserProjectChapterModel,
   UserProjectModel,
   UserProjectSectionModel,
-  UserProjectChapterModel,
 } from '@/interfaces';
-import { Model, Schema, model, models } from 'mongoose';
-import { DATABASE_MODELS } from '@/constant';
 
 const UserProjectChapterSchema = new Schema<UserProjectChapterModel>(
   {

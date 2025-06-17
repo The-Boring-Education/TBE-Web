@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
-import { APIMakeRquestProps, APIResponseType } from '@/interfaces';
+
+import type { APIMakeRquestProps, APIResponseType } from '@/interfaces';
 import { sendRequest } from '@/utils';
 
 const useApi = (

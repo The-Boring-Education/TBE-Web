@@ -1,13 +1,14 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
 import {
   addAWebinarToDB,
   getAllWebinarsFromDB,
   getWebinarBySlugFromDB,
 } from '@/database';
-import { AddWebinarRequestPayloadProps } from '@/interfaces';
+import type { AddWebinarRequestPayloadProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

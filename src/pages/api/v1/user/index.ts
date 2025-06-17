@@ -1,13 +1,14 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
 import {
   createUserInDB,
   getUserByEmailFromDB,
   getUserByIdFromDB,
 } from '@/database/query/user';
-import { CreateUserRequestPayloadProps } from '@/interfaces';
+import type { CreateUserRequestPayloadProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

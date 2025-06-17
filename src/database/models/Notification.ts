@@ -1,6 +1,7 @@
+import { type Model, model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS, NOTIFICATION_TYPE } from '@/constant';
-import { NotificationModel } from '@/interfaces';
-import { Model, Schema, model, models } from 'mongoose';
+import type { NotificationModel } from '@/interfaces';
 
 const NotificationSchema: Schema<NotificationModel> = new Schema(
   {

@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { PlaylistVideoTimeCard as PlaylistVideoTimeCardProps } from '@/interfaces';
-import { convertSecondsToMinutes } from '@/utils';
+import { ArrowLeftIcon, PauseIcon, PlayIcon } from '@heroicons/react/20/solid';
+import { useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from 'react';
+
+import { FlexContainer, Text } from '@/components';
 import { routes } from '@/constant';
 import { useApi } from '@/hooks';
-import { FlexContainer, Text } from '@/components';
-import { PauseIcon, PlayIcon, ArrowLeftIcon } from '@heroicons/react/20/solid';
-import { useRouter } from 'next/navigation';
+import type { PlaylistVideoTimeCard as PlaylistVideoTimeCardProps } from '@/interfaces';
+import { convertSecondsToMinutes } from '@/utils';
 
 const PlaylistVideoTimeCard = ({
   usertime = 0,
@@ -28,9 +29,7 @@ const PlaylistVideoTimeCard = ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ learningTime: minutes }),
-    }).catch((error) => {
-      return error;
-    });
+    }).catch((error) => error);
   }, [time, makeRequest, playlistId, userId]);
 
   useEffect(() => {
@@ -77,38 +76,38 @@ const PlaylistVideoTimeCard = ({
 
   return (
     <FlexContainer
-      direction='row'
       className='gap-2 w-full justify-between p-2 bg-dark text-white rounded-lg shadow-md'
+      direction='row'
     >
       <button
-        className='w-10 h-10 flex items-center justify-center bg-white text-white rounded-full hover:bg-gray-200'
         aria-label='Go back'
+        className='w-10 h-10 flex items-center justify-center bg-white text-white rounded-full hover:bg-gray-200'
         onClick={handleBackButton}
       >
         <ArrowLeftIcon
-          className='w-5 h-5 p-[4px] text-gray-700'
           aria-hidden='true'
+          className='w-5 h-5 p-[4px] text-gray-700'
         />
       </button>
 
-      <Text level='span' className='strong-text text-contentDark'>
+      <Text className='strong-text text-contentDark' level='span'>
         {convertSecondsToMinutes(time)}
       </Text>
 
       <button
+        aria-label={isRunning ? 'Pause' : 'Play'}
         className='w-12 h-12 flex items-center justify-center bg-white text-white rounded-full hover:bg-gray-200'
         onClick={toggleTimer}
-        aria-label={isRunning ? 'Pause' : 'Play'}
       >
         {isRunning ? (
           <PauseIcon
-            className='w-5 h-5 p-[4px] text-gray-700'
             aria-hidden='true'
+            className='w-5 h-5 p-[4px] text-gray-700'
           />
         ) : (
           <PlayIcon
-            className='w-5 h-5 p-[4px] text-gray-700'
             aria-hidden='true'
+            className='w-5 h-5 p-[4px] text-gray-700'
           />
         )}
       </button>

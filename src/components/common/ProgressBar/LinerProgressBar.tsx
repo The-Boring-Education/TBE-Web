@@ -1,4 +1,4 @@
-import { LinerProgressBarProps } from '@/interfaces';
+import type { LinerProgressBarProps } from '@/interfaces';
 
 const LinerProgressBar = ({
   totalChapters,
@@ -15,7 +15,7 @@ const LinerProgressBar = ({
         <div
           className='bg-success h-full rounded-full'
           style={{ width: `${completionPercentage}%` }}
-        ></div>
+        />
       </div>
       <div className='text-sm mt-1'>
         {completedChapters} / {totalChapters} Chapters Completed (

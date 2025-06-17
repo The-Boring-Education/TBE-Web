@@ -1,9 +1,10 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
 import { enrollInAProject, getEnrolledProjectFromDB } from '@/database';
-import { ProjectEnrollmentRequestProps } from '@/interfaces';
+import type { ProjectEnrollmentRequestProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -79,7 +80,7 @@ const handleProjectEnrollment = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while enrolling in project',
-        error: error,
+        error,
       })
     );
   }

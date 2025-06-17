@@ -1,13 +1,13 @@
 import {
-  Text,
-  Image,
   FlexContainer,
+  Image,
   LinkButton,
   LoginRedirectButton,
+  Text,
 } from '@/components';
-import { PortfolioTemplateProps } from '@/interfaces';
-import { useUser } from '@/hooks';
 import LinkText from '@/components/common/Typography/Link';
+import { useUser } from '@/hooks';
+import type { PortfolioTemplateProps } from '@/interfaces';
 
 const PortfolioTemplate = ({
   repo,
@@ -21,15 +21,15 @@ const PortfolioTemplate = ({
 
   const codeButtonContainer = isAuth && (
     <LinkButton
-      href={repo}
-      target='_blank'
-      className=''
       buttonProps={{
         variant: 'OUTLINE',
         text: 'Code',
         active: isAuth,
         className: 'border-white text-white',
       }}
+      className=''
+      href={repo}
+      target='_blank'
     />
   );
 
@@ -37,39 +37,39 @@ const PortfolioTemplate = ({
 
   return (
     <FlexContainer className='w-full md:w-[48%] lg:w-[31%] border-2 border-gray-300 rounded-xl gap-2'>
-      <Image alt={title} src={imageUrl} className='w-full rounded' />
+      <Image alt={title} className='w-full rounded' src={imageUrl} />
       <FlexContainer
-        direction='col'
-        itemCenter={false}
-        fullWidth={true}
         className='px-3 pb-3 gap-1'
+        direction='col'
+        fullWidth
+        itemCenter={false}
       >
-        <Text level='h2' className='heading-4 text-white'>
+        <Text className='heading-4 text-white' level='h2'>
           {title}
         </Text>
-        <Text level='p' className='paragraph text-white'>
+        <Text className='paragraph text-white' level='p'>
           {description}
         </Text>
-        <FlexContainer justifyCenter={false} className='gap-1 my-2'>
+        <FlexContainer className='gap-1 my-2' justifyCenter={false}>
           {codeButtonContainer}
           {loginButton}
           <LinkButton
-            href={previewLink}
-            target='_blank'
-            className=''
             buttonProps={{
               variant: 'OUTLINE',
               text: 'Preview',
               className: 'border-white text-white',
             }}
+            className=''
+            href={previewLink}
+            target='_blank'
           />
         </FlexContainer>
-        <Text level='p' className='pre-text text-white'>
+        <Text className='pre-text text-white' level='p'>
           Template by{' '}
           <LinkText
+            className='text-white underline'
             href={developerProfileLink}
             target='_blank'
-            className='text-white underline'
           >
             {developerName}
           </LinkText>

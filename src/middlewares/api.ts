@@ -1,5 +1,6 @@
-import { envConfig } from '@/constant';
 import mongoose from 'mongoose';
+
+import { envConfig } from '@/constant';
 
 // Connect to DB
 const connectDB = async () => {

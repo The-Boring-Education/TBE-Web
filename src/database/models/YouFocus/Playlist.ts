@@ -1,6 +1,7 @@
-import { Schema, model, models, Model } from 'mongoose';
-import { PlaylistModel, Video } from '@/interfaces';
+import { type Model, model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS } from '@/constant';
+import type { PlaylistModel, Video } from '@/interfaces';
 
 const VideoSchema = new Schema<Video>(
   {

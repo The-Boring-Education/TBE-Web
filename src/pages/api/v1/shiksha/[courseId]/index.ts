@@ -1,14 +1,15 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
-import { AddCourseRequestPayloadProps } from '@/interfaces';
 import {
   deleteACourseFromDBById,
-  updateACourseInDB,
-  getACourseFromDBById,
   getACourseForUserFromDB,
+  getACourseFromDBById,
+  updateACourseInDB,
 } from '@/database';
+import type { AddCourseRequestPayloadProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
@@ -45,7 +46,7 @@ const handleDeleteCourse = async (
         sendAPIResponse({
           status: false,
           message: 'Failed while deleting course',
-          error: error,
+          error,
         })
       );
 
@@ -60,7 +61,7 @@ const handleDeleteCourse = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while deleting course',
-        error: error,
+        error,
       })
     );
   }

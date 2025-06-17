@@ -1,20 +1,22 @@
 'use client';
 
 import React, { Fragment } from 'react';
-import { useFeedback } from '@/hooks';
+
 import {
-  Modal,
   Button,
-  Toast,
-  StartRatingCard,
   FlexContainer,
+  Modal,
+  StartRatingCard,
+  Toast,
 } from '@/components';
-import { FeedbackPopupProps } from '@/interfaces';
+import { useFeedback } from '@/hooks';
+import type { FeedbackPopupProps } from '@/interfaces';
 
 const FeedbackPopup = ({
   type,
   refId,
   position = 'bottom-right',
+  onSubmit,
 }: FeedbackPopupProps) => {
   const {
     rating,
@@ -24,9 +26,26 @@ const FeedbackPopup = ({
     setFeedbackText,
     setFeedbackModal,
     setToast,
-    handleStarClick,
-    handleFeedbackSubmit,
+    handleStarClick: baseHandleStarClick,
+    handleFeedbackSubmit: handleSubmit,
   } = useFeedback({ type, refId });
+
+  const handleStarClick = async (value: number) => {
+    await baseHandleStarClick(value);
+  };
+
+  const handleFeedbackSubmit = async () => {
+    await handleSubmit();
+    if (onSubmit) {
+      onSubmit();
+    }
+  };
+
+  const handleModalClose = () => {
+    if (onSubmit) {
+      onSubmit();
+    }
+  };
 
   const positionClasses =
     position === 'bottom-center'
@@ -45,10 +64,11 @@ const FeedbackPopup = ({
             justifyCenter={false}
           >
             <button
-              onClick={() =>
-                setFeedbackModal((prev) => ({ ...prev, rating: false }))
-              }
               className='ml-auto text-gray-400 hover:text-black text-sm'
+              onClick={() => {
+                setFeedbackModal((prev) => ({ ...prev, rating: false }));
+                handleModalClose();
+              }}
             >
               ✕
             </button>
@@ -68,9 +88,9 @@ const FeedbackPopup = ({
 
           {rating > 0 && (
             <Button
+              className='mt-2 p-2 w-30 h-10'
               text='Provide More Feedback'
               variant='PRIMARY'
-              className='mt-2 p-2 w-30 h-10'
               onClick={() =>
                 setFeedbackModal((prev) => ({ ...prev, feedback: true }))
               }
@@ -80,32 +100,34 @@ const FeedbackPopup = ({
       )}
 
       <Modal
+        closeModal={() => {
+          setFeedbackModal((prev) => ({ ...prev, feedback: false }));
+          handleModalClose();
+        }}
         isOpen={feedbackModal.feedback}
-        closeModal={() =>
-          setFeedbackModal((prev) => ({ ...prev, feedback: false }))
-        }
         title='Your Feedback'
       >
         <FlexContainer className='p-4 bg-white space-y-4'>
           <textarea
-            rows={4}
             className='w-full border rounded-xl p-3 resize-none text-sm focus:outline-none focus:ring-2 focus:ring-primary'
             placeholder='Tell us more about your experience...'
+            rows={4}
             value={feedbackText}
             onChange={(e) => setFeedbackText(e.target.value)}
           />
 
           <FlexContainer
             className='w-full justify-end gap-4'
-            justifyCenter={false}
             itemCenter={false}
+            justifyCenter={false}
           >
             <Button
               text='Cancel'
               variant='GHOST'
-              onClick={() =>
-                setFeedbackModal((prev) => ({ ...prev, feedback: false }))
-              }
+              onClick={() => {
+                setFeedbackModal((prev) => ({ ...prev, feedback: false }));
+                handleModalClose();
+              }}
             />
             <Button
               text='Submit'
@@ -118,10 +140,10 @@ const FeedbackPopup = ({
 
       {toast.message && (
         <Toast
-          message={toast.message}
-          type='success'
-          position='top-right'
           duration={3000}
+          message={toast.message}
+          position='top-right'
+          type='success'
           onClose={() => setToast((prev) => ({ ...prev, show: false }))}
         />
       )}

@@ -1,43 +1,41 @@
 import { FlexContainer, Image, Text } from '@/components';
 import { STATIC_FILE_PATH } from '@/constant';
-import { RadioInputFieldProps } from '@/interfaces';
+import type { RadioInputFieldProps } from '@/interfaces';
 
 const RadioInputField = ({
   label,
   value,
   selected,
   onChange,
-}: RadioInputFieldProps) => {
-  return (
-    <label
-      key={value}
-      htmlFor={value}
-      className='w-full cursor-pointer md:w-fit'
-      onClick={() => onChange(value)}
+}: RadioInputFieldProps) => (
+  <label
+    key={value}
+    className='w-full cursor-pointer md:w-fit'
+    htmlFor={value}
+    onClick={() => onChange(value)}
+  >
+    <input className='hidden' name='custom-radio' type='radio' />
+    <FlexContainer
+      className={`justify-between gap-2 rounded-full border-2 border-white p-2 shadow-md ${
+        selected && 'bg-primary'
+      }`}
     >
-      <input type='radio' name='custom-radio' className='hidden' />
-      <FlexContainer
-        className={`justify-between gap-2 rounded-full border-2 border-white p-2 shadow-md ${
-          selected && 'bg-primary'
-        }`}
-      >
-        <FlexContainer direction='col'>
-          <Text level='p' className='strong-text text-contentDark'>
-            {label}
-          </Text>
-        </FlexContainer>
-        {selected && (
-          <Image
-            src={`${STATIC_FILE_PATH.svg}/select-radio.svg`}
-            alt='developer activities'
-            className='w-4'
-            fullWidth={false}
-            fullHeight={false}
-          />
-        )}
+      <FlexContainer direction='col'>
+        <Text className='strong-text text-contentDark' level='p'>
+          {label}
+        </Text>
       </FlexContainer>
-    </label>
-  );
-};
+      {selected && (
+        <Image
+          alt='developer activities'
+          className='w-4'
+          fullHeight={false}
+          fullWidth={false}
+          src={`${STATIC_FILE_PATH.svg}/select-radio.svg`}
+        />
+      )}
+    </FlexContainer>
+  </label>
+);
 
 export default RadioInputField;

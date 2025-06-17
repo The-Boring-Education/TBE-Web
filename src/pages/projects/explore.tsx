@@ -1,9 +1,10 @@
 import { Fragment } from 'react';
+
 import { CardContainerB, LoadingSpinner, SEO } from '@/components';
-import { PageProps } from '@/interfaces';
+import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
+import { useApi, useAPIResponseMapper } from '@/hooks';
+import type { PageProps } from '@/interfaces';
 import { getPreFetchProps, mapProjectResponseToCard } from '@/utils';
-import { useAPIResponseMapper, useApi } from '@/hooks';
-import { routes } from '@/constant';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('projects', {
@@ -23,22 +24,20 @@ const Home = ({ seoMeta }: PageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <CardContainerB
-        heading='Explore'
-        focusText='Projects'
-        cards={projects}
         borderColour={2}
-        subtext='Pick A Real Life Project and Start Building'
+        cards={projects}
+        focusText='Projects'
+        heading='Explore'
         sectionClassName='px-2 py-4'
+        subtext='Pick A Real Life Project and Start Building'
       />
     </Fragment>
   );
 };
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.projectsExplore })),
-    revalidate: 1000,
-  };
-};
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.projectsExplore })),
+  revalidate: PAGE_REFRESH_TIMEOUT.long,
+});
 
 export default Home;

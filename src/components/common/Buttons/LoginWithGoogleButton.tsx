@@ -1,8 +1,9 @@
-import { signIn } from 'next-auth/react';
-import Button from './Button';
-import { useSession } from 'next-auth/react';
-import { LoginWithGoogleBtnProps } from '@/interfaces';
+import { signIn, useSession } from 'next-auth/react';
+
 import { useAnalytics } from '@/hooks';
+import type { LoginWithGoogleBtnProps } from '@/interfaces';
+
+import Button from './Button';
 
 const LoginWithGoogleButton = ({ text = 'Login' }: LoginWithGoogleBtnProps) => {
   const session = useSession();
@@ -13,8 +14,8 @@ const LoginWithGoogleButton = ({ text = 'Login' }: LoginWithGoogleBtnProps) => {
 
   return (
     <Button
-      variant='PRIMARY'
       text={text}
+      variant='PRIMARY'
       onClick={() => {
         trackEvent({
           action: 'USER_LOGIN',

@@ -1,13 +1,15 @@
 import '@/styles/globals.css';
 import '@/styles/colors.css';
-import { AppProps } from 'next/app';
-import { PageLayout } from '@/components';
+
+import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
-import { googleAnalyticsScript, gtag, routes } from '@/constant';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+import { PageLayout } from '@/components';
+import { googleAnalyticsScript, gtag, routes } from '@/constant';
 import { useUser } from '@/hooks';
 import { getRedirectUrl } from '@/utils';
 
@@ -36,7 +38,7 @@ const AppContent = ({
       const redirectTo = getRedirectUrl();
       router.push(redirectTo);
     }
-  }, [isAuth, isOnboarded, loading]);
+  }, [isAuth, isOnboarded, loading, router]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -50,18 +52,16 @@ const AppContent = ({
 const TheBoringEducation = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps) => {
-  return (
-    <Fragment>
-      <Script async strategy='lazyOnload' src={gtag}></Script>
-      <Script id='google-analytics' strategy='lazyOnload'>
-        {googleAnalyticsScript}
-      </Script>
-      <SessionProvider session={session}>
-        <AppContent Component={Component} pageProps={pageProps} />
-      </SessionProvider>
-    </Fragment>
-  );
-};
+}: AppProps) => (
+  <Fragment>
+    <Script async src={gtag} strategy='lazyOnload' />
+    <Script id='google-analytics' strategy='lazyOnload'>
+      {googleAnalyticsScript}
+    </Script>
+    <SessionProvider session={session}>
+      <AppContent Component={Component} pageProps={pageProps} />
+    </SessionProvider>
+  </Fragment>
+);
 
 export default TheBoringEducation;

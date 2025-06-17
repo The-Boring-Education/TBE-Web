@@ -1,20 +1,20 @@
 import {
-  FlexContainer,
-  Text,
-  PageHeroMetaContainer,
-  LoginRedirectButton,
   Button,
+  FlexContainer,
   LinkButton,
+  LoginRedirectButton,
+  PageHeroMetaContainer,
+  Text,
 } from '@/components';
 import { routes } from '@/constant';
-import { useAnalytics, useUser } from '@/hooks';
-import { useApi } from '@/hooks';
-import { CourseHeroContainerProps } from '@/interfaces';
+import { useAnalytics, useApi, useUser } from '@/hooks';
+import type { CourseHeroContainerProps } from '@/interfaces';
 
 const CourseHeroContainer = ({
   id,
   name,
   isEnrolled,
+  isPremium,
 }: CourseHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -56,12 +56,12 @@ const CourseHeroContainer = ({
         <LoginRedirectButton text='Login to Get Started' />
       </FlexContainer>
     );
-  } else if (isAuth && !isEnrolled) {
+  } else if (isAuth && !isEnrolled && !isPremium) {
     headerActionButton = (
       <FlexContainer>
         <Button
-          variant='PRIMARY'
           text='Enroll to Course'
+          variant='PRIMARY'
           onClick={enrollCourse}
         />
       </FlexContainer>
@@ -70,7 +70,7 @@ const CourseHeroContainer = ({
 
   if (loading) {
     headerActionButton = (
-      <Button variant='PRIMARY' text='Enrolling...' isLoading={true} />
+      <Button isLoading text='Enrolling...' variant='PRIMARY' />
     );
   }
 
@@ -78,32 +78,32 @@ const CourseHeroContainer = ({
     <FlexContainer>
       <FlexContainer className='border md:w-4/5 gap-4 w-full p-2 justify-between rounded'>
         <FlexContainer
-          itemCenter={false}
-          direction='col'
           className='items-start gap-1'
+          direction='col'
+          itemCenter={false}
         >
-          <Text level='h4' className='heading-4'>
+          <Text className='heading-4' level='h4'>
             Hello {user?.name ?? 'there'}!
           </Text>
-          <Text level='p' className='paragraph text-greyDark'>
+          <Text className='paragraph text-greyDark' level='p'>
             Let's Learn Something Today.
           </Text>
         </FlexContainer>
         <FlexContainer
-          justifyCenter={false}
-          itemCenter={false}
           className='justify-start items-start gap-3'
+          itemCenter={false}
+          justifyCenter={false}
         >
           <PageHeroMetaContainer subtitle="YOU'RE LEARNING" title={name} />
         </FlexContainer>
         <FlexContainer className='gap-2'>
           {headerActionButton}
           <LinkButton
-            href={routes.shikshaExplore}
             buttonProps={{
               variant: 'GHOST',
               text: 'Back to Course',
             }}
+            href={routes.shikshaExplore}
           />
         </FlexContainer>
       </FlexContainer>

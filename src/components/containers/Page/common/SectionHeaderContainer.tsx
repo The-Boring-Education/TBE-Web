@@ -1,5 +1,5 @@
 import { FlexContainer, Text } from '@/components';
-import { SectionHeaderProps } from '@/interfaces';
+import type { SectionHeaderProps } from '@/interfaces';
 
 const SectionHeaderContainer = ({
   heading,
@@ -8,34 +8,32 @@ const SectionHeaderContainer = ({
   className = '',
   flexContainerProps,
   subtext,
-}: SectionHeaderProps) => {
-  return (
-    <FlexContainer
-      className={`gap-1 ${className}`}
-      {...flexContainerProps}
-      direction='col'
+}: SectionHeaderProps) => (
+  <FlexContainer
+    className={`gap-1 ${className}`}
+    {...flexContainerProps}
+    direction='col'
+  >
+    <Text
+      className={`heading-${headingLevel}`}
+      level={`h${headingLevel}`}
+      textCenter
     >
+      {heading}
       <Text
-        level={`h${headingLevel}`}
-        className={`heading-${headingLevel}`}
-        textCenter={true}
+        className={`heading-${headingLevel} text-primary`}
+        level='span'
+        textCenter
       >
-        {heading}
-        <Text
-          level='span'
-          className={`heading-${headingLevel} text-primary`}
-          textCenter={true}
-        >
-          &nbsp;{focusText}
-        </Text>
+        &nbsp;{focusText}
       </Text>
-      {subtext && (
-        <Text level='span' className='pre-text text-greyDark' textCenter={true}>
-          {subtext}
-        </Text>
-      )}
-    </FlexContainer>
-  );
-};
+    </Text>
+    {subtext && (
+      <Text className='pre-text text-greyDark' level='span' textCenter>
+        {subtext}
+      </Text>
+    )}
+  </FlexContainer>
+);
 
 export default SectionHeaderContainer;

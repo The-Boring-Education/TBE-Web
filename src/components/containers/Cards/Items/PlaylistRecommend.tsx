@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+
 import {
   Button,
-  SectionHeaderContainer,
   FlexContainer,
+  SectionHeaderContainer,
   Toast,
 } from '@/components';
 import { routes } from '@/constant';
 import useApi from '@/hooks/useApi';
-import { PlaylistRecommendProps } from '@/interfaces';
+import type { PlaylistRecommendProps } from '@/interfaces';
 
 const PlaylistRecommend = ({
   playlistId,
@@ -54,11 +55,11 @@ const PlaylistRecommend = ({
   };
 
   return (
-    <FlexContainer direction='col' className='relative rounded-lg mt-2 md:mt-4'>
+    <FlexContainer className='relative rounded-lg mt-2 md:mt-4' direction='col'>
       <div className='w-full max-w-md'>
         <SectionHeaderContainer
-          heading='Recommend'
           focusText='Playlist'
+          heading='Recommend'
           headingLevel={3}
           subtext='Share it With Your Friend and Learn Together'
         />
@@ -66,7 +67,6 @@ const PlaylistRecommend = ({
 
       <div className='mt-2 md:mt-4 flex justify-center gap-2'>
         <Button
-          variant={isRecommended ? 'GHOST' : 'PRIMARY'}
           className={`text-nowrap rounded-s-md ${
             loading ? 'opacity-50 cursor-not-allowed' : ''
           } ${!isRecommended ? 'text-white' : 'text-black'}`}
@@ -77,13 +77,14 @@ const PlaylistRecommend = ({
               ? 'Unrecommend'
               : 'Recommend'
           }
+          variant={isRecommended ? 'GHOST' : 'PRIMARY'}
           onClick={handleRecommendPlaylist}
         />
 
         <Button
-          variant='OUTLINE'
           className='text-nowrap rounded-s-md'
           text='Copy Link'
+          variant='OUTLINE'
           onClick={copyCurrentPageUrl}
         />
       </div>

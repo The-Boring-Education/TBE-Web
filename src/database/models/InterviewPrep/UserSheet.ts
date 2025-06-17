@@ -1,6 +1,7 @@
-import { UserSheetModel, UserSheetQuestionModel } from '@/interfaces';
-import { Model, Schema, model, models } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS } from '@/constant';
+import type { UserSheetModel, UserSheetQuestionModel } from '@/interfaces';
 
 const UserQuestionSchema = new Schema<UserSheetQuestionModel>(
   {

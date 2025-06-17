@@ -1,9 +1,10 @@
-import { Footer, Navbar } from '@/components';
-import { envConfig } from '@/constant';
-import { PageLayoutProps } from '@/interfaces';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
+
+import { Footer, Navbar } from '@/components';
+import { envConfig } from '@/constant';
+import type { PageLayoutProps } from '@/interfaces';
 
 const PageLayout = ({ children }: PageLayoutProps) => {
   const router = useRouter();
@@ -29,10 +30,10 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     <main className='bg-lightBG flex flex-col min-h-screen'>
       <Navbar />
       <motion.div
-        className='flex-1'
-        initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
+        className='flex-1'
         exit={{ opacity: 0, scale: 0.98 }}
+        initial={{ opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.6, ease: 'easeInOut' }}
       >
         {children}

@@ -1,18 +1,19 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
   apiStatusCodes,
   JOB_DOMAIN_NORMALIZER,
   JOB_LOCATION_NORMALIZER,
   JOB_SKILL_NORMALIZER,
 } from '@/constant';
+import { addJobToDB, getAllJobsFromDB, getJobByJobIdFromDB } from '@/database';
+import type { AddJobRequestPayloadProps } from '@/interfaces';
+import { connectDB } from '@/middlewares';
 import {
   cleanJobSkillsData,
   normalizeAPIPayload,
   sendAPIResponse,
 } from '@/utils';
-import { addJobToDB, getAllJobsFromDB, getJobByJobIdFromDB } from '@/database';
-import { AddJobRequestPayloadProps } from '@/interfaces';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

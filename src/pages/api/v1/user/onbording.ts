@@ -1,9 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
+import { getUserByUserNameFromDB, onboardUserToDB } from '@/database';
+import type { AddOnboardingPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
-import { onboardUserToDB, getUserByUserNameFromDB } from '@/database';
-import { AddOnboardingPayloadProps } from '@/interfaces';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

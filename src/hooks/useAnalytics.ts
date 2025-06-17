@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { TrackEventProps } from '@/interfaces';
+import { useEffect } from 'react';
+
 import { envConfig } from '@/constant';
+import type { TrackEventProps } from '@/interfaces';
 
 const useAnalytics = () => {
   const router = useRouter();

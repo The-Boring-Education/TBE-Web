@@ -1,22 +1,23 @@
+import { Fragment, useState } from 'react';
+
 import {
   Banner,
   Button,
   CertificateContent,
+  FeedbackPopup,
   FlexContainer,
   Section,
   SEO,
   Text,
-  FeedbackPopup,
 } from '@/components';
-import { CertificatePageProps } from '@/interfaces';
+import { routes, STATIC_FILE_PATH } from '@/constant';
+import { useCertificate, useUser } from '@/hooks';
+import type { CertificatePageProps } from '@/interfaces';
 import {
   formatDate,
   generateShareTemplate,
   getCertificatePageProps,
 } from '@/utils';
-import { useCertificate, useUser } from '@/hooks';
-import { routes, STATIC_FILE_PATH } from '@/constant';
-import { Fragment, useState } from 'react';
 
 const Home = ({
   seoMeta,
@@ -37,68 +38,68 @@ const Home = ({
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <Section className='md:px-4 md:py-4 px-2 py-2'>
-        <FlexContainer direction='col' className='gap-1'>
-          <Text level='span' className='pre-title'>
+        <FlexContainer className='gap-1' direction='col'>
+          <Text className='pre-title' level='span'>
             View Your Certificate for {type}
           </Text>
-          <Text level='h4' className='heading-4 text-primary' textCenter={true}>
+          <Text className='heading-4 text-primary' level='h4' textCenter>
             {programName}
           </Text>
         </FlexContainer>
         <div className='my-2'>
           <CertificateContent
-            type={type}
-            userName={userName}
+            certificateRef={certificateRef}
             courseName={programName}
             date={formatDate({}).date}
-            certificateRef={certificateRef}
+            type={type}
+            userName={userName}
           />
-          <FlexContainer direction='col' className='gap-2'>
+          <FlexContainer className='gap-2' direction='col'>
             <FlexContainer className='py-2 gap-1'>
               <Button
-                variant='PRIMARY'
-                text='Download'
-                onClick={handleDownloadClick}
                 animationClasses='w-fit'
+                text='Download'
+                variant='PRIMARY'
+                onClick={handleDownloadClick}
               />
               <Button
-                variant='OUTLINE'
+                animationClasses='w-fit'
                 text='Copy Link'
+                variant='OUTLINE'
                 onClick={() =>
                   navigator.clipboard.writeText(window.location.href)
                 }
-                animationClasses='w-fit'
               />
             </FlexContainer>
             <FlexContainer
-              direction='col'
               className='gap-2 mt-4 md:w-1/2 w-full m-auto'
+              direction='col'
             >
-              <Text level='h5' className='heading-5' textCenter={true}>
+              <Text className='heading-5' level='h5' textCenter>
                 Share your achievement on social media:
               </Text>
-              <FlexContainer direction='col' className='gap-2 w-full'>
+              <FlexContainer className='gap-2 w-full' direction='col'>
                 <pre className='bg-gray-100 border p-2 rounded w-full overflow-x-auto'>
                   {socialShareContent}
                 </pre>
                 <Button
-                  variant='SUCCESS'
+                  animationClasses='w-fit'
                   text='Copy'
+                  variant='SUCCESS'
                   onClick={() =>
                     navigator.clipboard.writeText(socialShareContent)
                   }
-                  animationClasses='w-fit'
                 />
               </FlexContainer>
             </FlexContainer>
           </FlexContainer>
           {!isAuth && (
             <Banner
-              title='Start Your Tech Journey'
-              description='Learn the latest technologies and build real-world projects with the help of industry experts.'
-              buttonText='Start Learning'
               buttonLink={routes.home}
+              buttonText='Start Learning'
+              description='Learn the latest technologies and build real-world projects with the help of industry experts.'
               imageSrc={`${STATIC_FILE_PATH.svg}/community.svg`}
+              title='Start Your Tech Journey'
               variant='VARIANT_B'
             />
           )}

@@ -1,4 +1,4 @@
-import { CertificateContentProps } from '@/interfaces';
+import type { CertificateContentProps } from '@/interfaces';
 
 const CertificateContent = ({
   type,
@@ -14,8 +14,8 @@ const CertificateContent = ({
 
   return (
     <div
-      className='certificate-container relative rounded-lg shadow-lg'
       ref={certificateRef}
+      className='certificate-container relative rounded-lg shadow-lg'
       style={{
         width: '100%',
         height: '100%',

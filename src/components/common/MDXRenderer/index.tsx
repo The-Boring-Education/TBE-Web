@@ -1,6 +1,7 @@
 import MarkdownIt from 'markdown-it';
-import { MDXRendererProps } from '@/interfaces';
 import { Fragment, useEffect, useRef } from 'react';
+
+import type { MDXRendererProps } from '@/interfaces';
 
 const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   const md = new MarkdownIt({
@@ -25,13 +26,9 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
     return `<${tag} class="md-1 mb-1">`;
   };
 
-  md.renderer.rules.list_open = () => {
-    return `<ol class="md-list bg-red">`;
-  };
+  md.renderer.rules.list_open = () => `<ol class="md-list bg-red">`;
 
-  md.renderer.rules.paragraph_open = () => {
-    return '<p class="mb-2">';
-  };
+  md.renderer.rules.paragraph_open = () => '<p class="mb-2">';
 
   md.renderer.rules.link_open = (tokens: any, idx: any) => {
     const token = tokens[idx];
@@ -114,8 +111,8 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   return (
     <div className='w-full flex flex-col justify-between'>
       <div
-        ref={containerRef}
         dangerouslySetInnerHTML={{ __html: mdxHTML }}
+        ref={containerRef}
         className='break-all'
       />
       {actionContainer}

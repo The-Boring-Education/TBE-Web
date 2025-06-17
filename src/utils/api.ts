@@ -1,6 +1,7 @@
-import { APIMakeRquestProps, APIResponseType } from '@/interfaces';
-import axios, { AxiosRequestConfig } from 'axios';
-import { NextApiResponse } from 'next';
+import axios, { type AxiosRequestConfig } from 'axios';
+import type { NextApiResponse } from 'next';
+
+import type { APIMakeRquestProps, APIResponseType } from '@/interfaces';
 
 const apiInstance = axios.create();
 
@@ -28,9 +29,12 @@ const sendRequest = async ({
   }
 };
 
-const sendAPIResponse = ({ status, error, message, data }: APIResponseType) => {
-  return { status, error, message, data };
-};
+const sendAPIResponse = ({
+  status,
+  error,
+  message,
+  data,
+}: APIResponseType) => ({ status, error, message, data });
 
 const applyCorsHeaders = (res: NextApiResponse, url: string) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -45,4 +49,4 @@ const applyCorsHeaders = (res: NextApiResponse, url: string) => {
   );
 };
 
-export { sendRequest, sendAPIResponse, applyCorsHeaders };
+export { applyCorsHeaders, sendAPIResponse, sendRequest };

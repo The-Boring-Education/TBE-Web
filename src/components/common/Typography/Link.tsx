@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { LinkProps } from '@/interfaces';
+
+import type { LinkProps } from '@/interfaces';
 
 const LinkText = ({
   href,
@@ -9,18 +10,16 @@ const LinkText = ({
   active = true,
   scroll = false,
   onClick,
-}: LinkProps) => {
-  return (
-    <Link
-      className={`${className} link ${!active && 'disabled'}`}
-      href={href}
-      target={target}
-      scroll={scroll}
-      onClick={onClick}
-    >
-      {children}
-    </Link>
-  );
-};
+}: LinkProps) => (
+  <Link
+    className={`${className} link ${!active && 'disabled'}`}
+    href={href}
+    scroll={scroll}
+    target={target}
+    onClick={onClick}
+  >
+    {children}
+  </Link>
+);
 
 export default LinkText;

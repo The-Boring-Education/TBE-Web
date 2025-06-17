@@ -1,47 +1,43 @@
-import { LandingPageHero, CardContainerA, SEO, LinkButton } from '@/components';
-import { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
-import { STATIC_FILE_PATH, TBP_FEATURES, routes } from '@/constant';
 import { Fragment } from 'react';
 
-const Home = ({ seoMeta }: PageProps) => {
-  return (
-    <Fragment>
-      <SEO seoMeta={seoMeta} />
-      <LandingPageHero
-        sectionHeaderProps={{
-          heading: 'Learn Tech with',
-          focusText: 'Mini Courses',
-        }}
-        heroText='Learn Tech with Free Bite-sized Courses'
-        primaryButton={
-          <LinkButton
-            href={routes.shikshaExplore}
-            className='w-full sm:w-fit'
-            buttonProps={{
-              variant: 'PRIMARY',
-              text: 'Explore Courses',
-              className: 'w-full',
-            }}
-          />
-        }
-        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/shiksha.svg`}
-      />
-      <CardContainerA
-        heading='What We Do'
-        focusText='Differently'
-        cards={TBP_FEATURES}
-        borderColour={4}
-      />
-    </Fragment>
-  );
-};
+import { CardContainerA, LandingPageHero, LinkButton, SEO } from '@/components';
+import { routes, STATIC_FILE_PATH, TBP_FEATURES } from '@/constant';
+import type { PageProps } from '@/interfaces';
+import { getPreFetchProps } from '@/utils';
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.shiksha })),
-    revalidate: 1000,
-  };
-};
+const Home = ({ seoMeta }: PageProps) => (
+  <Fragment>
+    <SEO seoMeta={seoMeta} />
+    <LandingPageHero
+      backgroundImageUrl={`${STATIC_FILE_PATH.svg}/shiksha.svg`}
+      heroText='Learn Tech with Free Bite-sized Courses'
+      primaryButton={
+        <LinkButton
+          buttonProps={{
+            variant: 'PRIMARY',
+            text: 'Explore Courses',
+            className: 'w-full',
+          }}
+          className='w-full sm:w-fit'
+          href={routes.shikshaExplore}
+        />
+      }
+      sectionHeaderProps={{
+        heading: 'Learn Tech with',
+        focusText: 'Mini Courses',
+      }}
+    />
+    <CardContainerA
+      borderColour={4}
+      cards={TBP_FEATURES}
+      focusText='Differently'
+      heading='What We Do'
+    />
+  </Fragment>
+);
+
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.shiksha })),
+});
 
 export default Home;

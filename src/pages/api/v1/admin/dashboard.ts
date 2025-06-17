@@ -1,18 +1,19 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes, envConfig } from '@/constant';
-import { applyCorsHeaders, sendAPIResponse } from '@/utils';
 import {
+  Course,
+  getAllDocumentsFromModel,
+  getTotalCountFromModel,
+  InterviewSheet,
+  Project,
   User,
   UserCourse,
   UserProject,
   UserSheet,
-  Course,
-  Project,
-  InterviewSheet,
-  getTotalCountFromModel,
-  getAllDocumentsFromModel,
 } from '@/database';
+import { connectDB } from '@/middlewares';
+import { applyCorsHeaders, sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   applyCorsHeaders(res, envConfig.ADMIN_BASE_URL);
@@ -54,8 +55,8 @@ const handleAdminDashboard = async (
     const mapUserLearningProgress = (
       items: any[],
       type: 'course' | 'project' | 'sheet'
-    ) => {
-      return items.map((item: any) => {
+    ) =>
+      items.map((item: any) => {
         const completedChapters =
           type === 'course'
             ? item.chapters?.filter((c: any) => c.isCompleted).length || 0
@@ -96,7 +97,6 @@ const handleAdminDashboard = async (
           )} | ${readableTime}`,
         };
       });
-    };
 
     switch (type) {
       case 'overview': {

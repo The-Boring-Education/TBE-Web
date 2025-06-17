@@ -1,6 +1,7 @@
 import { Popover, Transition } from '@headlessui/react';
+import { signOut, useSession } from 'next-auth/react';
 import { Fragment } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+
 import { Image, Link } from '@/components';
 import { TOP_NAVIGATION } from '@/constant';
 
@@ -21,9 +22,9 @@ const UserAvatar = () => {
                 outline-none p-0 w-full`}
             >
               <Image
-                src={session.data.user?.image || ''}
                 alt={`${session.data.user?.name} | The Boring Education` || ''}
                 className='rounded-[50%] '
+                src={session.data.user?.image || ''}
               />
             </Popover.Button>
             <Transition
@@ -43,9 +44,9 @@ const UserAvatar = () => {
                     {TOP_NAVIGATION.user.map(({ id, name, href, target }) => (
                       <Link
                         key={id}
+                        className='text-base text-left font-semibold text-gray-600 p-1 hover:bg-gray-100 rounded-md'
                         href={href}
                         target={target}
-                        className='text-base text-left font-semibold text-gray-600 p-1 hover:bg-gray-100 rounded-md'
                       >
                         {name}
                       </Link>

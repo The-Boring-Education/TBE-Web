@@ -1,4 +1,4 @@
-import { NotificationModel } from '.';
+import type { NotificationModel } from '.';
 
 export interface User {
   id: string;
@@ -64,6 +64,12 @@ export type TrackEventProps = {
 export interface useFeedbackProps {
   type: string;
   refId?: string;
+}
+
+export interface usePaymentStatusProps {
+  userId?: string;
+  productId: string;
+  isPremium?: boolean;
 }
 
 export type NotificationItemProps = Partial<NotificationModel>;

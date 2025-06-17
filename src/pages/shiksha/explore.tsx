@@ -1,16 +1,17 @@
 import { Fragment } from 'react';
-import { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
+
 import {
-  SEO,
   CardContainerB,
-  LoadingSpinner,
   FlexContainer,
-  Text,
   LinkButton,
+  LoadingSpinner,
+  SEO,
+  Text,
 } from '@/components';
-import { useAPIResponseMapper, useApi } from '@/hooks';
+import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
+import { useApi, useAPIResponseMapper } from '@/hooks';
+import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
 import { getPreFetchProps, mapCourseResponseToCard } from '@/utils';
-import { routes } from '@/constant';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('shiksha', {
@@ -28,10 +29,10 @@ const Home = ({ seoMeta }: PageProps) => {
 
   const noCourseFoundUI = (!courses || courses.length === 0) && (
     <FlexContainer
-      justifyCenter={true}
       className='w-screen h-screen item-center justify-center flex-col'
+      justifyCenter
     >
-      <Text level='h1' className='heading-4 mb-3'>
+      <Text className='heading-4 mb-3' level='h1'>
         Oops! No Courses found.
       </Text>
       <LinkButton
@@ -40,7 +41,7 @@ const Home = ({ seoMeta }: PageProps) => {
           text: 'Go Back To Home',
         }}
         href={routes.shiksha}
-      ></LinkButton>
+      />
     </FlexContainer>
   );
 
@@ -48,23 +49,21 @@ const Home = ({ seoMeta }: PageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <CardContainerB
-        heading='Explore'
-        focusText='Courses'
-        cards={courses}
         borderColour={2}
-        subtext='Pick A Course and Start Learning'
+        cards={courses}
+        focusText='Courses'
+        heading='Explore'
         sectionClassName='px-2 py-4'
+        subtext='Pick A Course and Start Learning'
       />
       {noCourseFoundUI}
     </Fragment>
   );
 };
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.shikshaExplore })),
-    revalidate: 1000,
-  };
-};
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.shikshaExplore })),
+  revalidate: PAGE_REFRESH_TIMEOUT.long,
+});
 
 export default Home;

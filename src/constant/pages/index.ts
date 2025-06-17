@@ -1,14 +1,16 @@
-import {
-  TestimonialCardProps,
-  PrimaryCardProps,
-  TopNavbarContainerProps,
-  PrimaryCardWithCTAProps,
+import { v4 } from 'uuid';
+
+import type {
   CohortRoadmapProps,
   CohortUserCategoryProps,
+  PrimaryCardProps,
+  PrimaryCardWithCTAProps,
+  TestimonialCardProps,
+  TopNavbarContainerProps,
 } from '@/interfaces';
+
 import { cohorts, LINKS, products, STATIC_FILE_PATH } from '../global';
-import { v4 } from 'uuid';
-import { routes } from '..';
+import { routes } from '../routes';
 
 const TOP_NAVIGATION: TopNavbarContainerProps = {
   cohorts: [
@@ -698,19 +700,19 @@ const BYI_USER_CATEGORIES: CohortUserCategoryProps[] = [
 ];
 
 export {
-  PRODUCTS,
-  TESTIMONIALS,
-  TOP_NAVIGATION,
-  USP,
-  TBP_FEATURES,
-  MY_PREV_EXPERIENCE,
-  TBP_PROJECTS,
-  INTERVIEW_PREP_SHEETS,
-  TBIP_FEATURES,
-  YOUFOCUS_FEATURES,
-  UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
   BYI_BEGINNER_ROADMAP,
   BYI_INTERMEDIATE_ROADMAP,
   BYI_SKILLED_ROADMAP,
   BYI_USER_CATEGORIES,
+  INTERVIEW_PREP_SHEETS,
+  MY_PREV_EXPERIENCE,
+  PRODUCTS,
+  TBIP_FEATURES,
+  TBP_FEATURES,
+  TBP_PROJECTS,
+  TESTIMONIALS,
+  TOP_NAVIGATION,
+  UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
+  USP,
+  YOUFOCUS_FEATURES,
 };

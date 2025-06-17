@@ -1,8 +1,9 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { sendAPIResponse } from '@/utils';
-import { connectDB } from '@/middlewares';
 import { getAllEnrolledSheetsFromDB } from '@/database';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -61,7 +62,7 @@ const handleGetAllUserSheets = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while fetching enrolled sheets',
-        error: error,
+        error,
       })
     );
   }

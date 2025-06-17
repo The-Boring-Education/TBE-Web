@@ -1,20 +1,18 @@
 import { FlexContainer } from '@/components';
-import { CardSectionContainerProps } from '@/interfaces';
+import type { CardSectionContainerProps } from '@/interfaces';
 
 const CardSectionContainer = ({
   children,
   isWidthFull = true,
   className = '',
   gap,
-}: CardSectionContainerProps) => {
-  return (
-    <FlexContainer
-      itemCenter={false}
-      className={`${isWidthFull && 'w-full'} ${gap ?? 'gap-4'} ${className}`}
-    >
-      {children}
-    </FlexContainer>
-  );
-};
+}: CardSectionContainerProps) => (
+  <FlexContainer
+    className={`${isWidthFull && 'w-full'} ${gap ?? 'gap-4'} ${className}`}
+    itemCenter={false}
+  >
+    {children}
+  </FlexContainer>
+);
 
 export default CardSectionContainer;
