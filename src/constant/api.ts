@@ -6,8 +6,10 @@ import type {
   QuestionFrequencyType,
   RoadmapsType,
   SkillsType,
+  TechStackType,
   UserPointsActionType,
   UserRoleType,
+  WorkDomainType,
 } from '@/interfaces';
 
 const PROJECT_SKILLS: SkillsType[] = [
@@ -71,6 +73,35 @@ const PLATFORM_USAGE: PlatformUsageType[] = [
   'INTERVIEW_PREP',
   'JOB_SEARCH',
 ];
+
+const WORK_DOMAIN: WorkDomainType [] =[
+  'WEB_DEVELOPMENT',
+   'DATA_SCIENCE',
+   'DEVOPS',
+  'MOBILE_DEVELOPMENT',
+   'AI_ML',
+   'UI_UX',
+   'CYBER_SECURITY',
+]  
+
+  const TECH_STACK :TechStackType [] =[ 
+  'JAVASCRIPT',
+   'TYPESCRIPT',
+   'REACT',
+   'NODE_JS',
+   'NEXT_JS',
+   'PYTHON',
+  'DJANGO',
+  'FLASK',
+  'JAVA',
+  'SPRING_BOOT',
+  'C_PLUS_PLUS',
+  'MONGO_DB',
+  'POSTGRESQL',
+  'AWS',
+  'DOCKER',]
+
+
 
 const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
 
@@ -2531,7 +2562,8 @@ export {
   PROJECT_SKILLS,
   ROADMAPS,
   SKILL_BLACKLIST,
+  TECH_STACK,
   USER_POINTS_ACTION,
   USER_ROLE,
-  YOUTUBE_API_PATH,
-};
+  WORK_DOMAIN,
+  YOUTUBE_API_PATH};

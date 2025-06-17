@@ -9,10 +9,12 @@ import type {
   QuestionFrequencyType,
   RoadmapsType,
   SkillsType,
+  TechStackType,
   UnskilledLandingGraphDataProps,
   UserPointsActionType,
   UserRoleType,
   WebinarEnrolledUsersProps,
+  WorkDomainType,
 } from '.';
 
 export interface UserModel {
@@ -26,6 +28,9 @@ export interface UserModel {
   purpose?: PlatformUsageType[];
   contactNo?: string;
   isOnboarded?: boolean;
+  workExperience:number;
+  workDomain:WorkDomainType;
+  techStack:TechStackType[]
 }
 
 export interface ProjectChapter {
