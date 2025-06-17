@@ -231,8 +231,8 @@ const getCoursePageProps = async (context: any) => {
         if (selectedChapterMeta) meta = selectedChapterMeta;
       }
 
-    const isEnrolled = await checkUserCourseEnrollment(courseId, user?.id);
-    course.isEnrolled = isEnrolled;
+      const isEnrolled = await checkUserCourseEnrollment(courseId, user?.id);
+      course.isEnrolled = isEnrolled;
 
       return {
         props: {

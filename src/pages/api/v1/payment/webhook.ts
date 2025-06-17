@@ -73,32 +73,28 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const webhookSignature = req.headers['x-webhook-signature'];
 
-if (process.env.NODE_ENV !== 'development') {
-  if (!webhookSignature || typeof webhookSignature !== 'string') {
-    return res.status(apiStatusCodes.UNAUTHORIZED).json(
-      sendAPIResponse({
-        status: false,
-        message: 'Missing webhook signature',
-      })
-    );
-  }
+    if (process.env.NODE_ENV !== 'development') {
+      if (!webhookSignature || typeof webhookSignature !== 'string') {
+        return res.status(apiStatusCodes.UNAUTHORIZED).json(
+          sendAPIResponse({
+            status: false,
+            message: 'Missing webhook signature',
+          })
+        );
+      }
 
-  const { isValid: isSignatureValid, error: signatureError } = verifyWebhookSignature(
-    payloadString,
-    webhookSignature,
-    WEBHOOK_SECRET
-  );
+      const { isValid: isSignatureValid, error: signatureError } =
+        verifyWebhookSignature(payloadString, webhookSignature, WEBHOOK_SECRET);
 
-  if (!isSignatureValid) {
-    return res.status(apiStatusCodes.UNAUTHORIZED).json(
-      sendAPIResponse({
-        status: false,
-        message: signatureError || 'Invalid webhook signature',
-      })
-    );
-  }
-}
-
+      if (!isSignatureValid) {
+        return res.status(apiStatusCodes.UNAUTHORIZED).json(
+          sendAPIResponse({
+            status: false,
+            message: signatureError || 'Invalid webhook signature',
+          })
+        );
+      }
+    }
 
     const event = JSON.parse(payloadString);
     const {
