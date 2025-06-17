@@ -10,7 +10,6 @@ import {
   ToggleButton,
   WebibarCard,
 } from '@/components';
-
 import { routes, STATIC_FILE_PATH } from '@/constant';
 import type { WebinarsLandingPageProps } from '@/interfaces';
 import { getWebinarLandingPageProps } from '@/utils';
@@ -52,7 +51,7 @@ const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
       />
       <Section id={routes.internals.landing.webinar}>
         <FlexContainer className='gap-4 md:gap-6' direction='col'>
-          <Text className='heading-4' level='h4' textCenter={true}>
+          <Text className='heading-4' level='h4' textCenter>
             Our Workshops
           </Text>
           <ToggleButton
@@ -63,9 +62,9 @@ const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
           />
           <FlexContainer className='gap-2'>
             {filteredWebinars.length > 0 ? (
-              filteredWebinars.map((webinar, index) => {
-                return <WebibarCard key={index} {...webinar} />;
-              })
+              filteredWebinars.map((webinar, index) => (
+                <WebibarCard key={index} {...webinar} />
+              ))
             ) : (
               <Text className='text-center strong-text' level='span'>
                 No webinars available.

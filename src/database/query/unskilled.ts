@@ -1,5 +1,4 @@
 import { Job, JobAggregate } from '@/database';
-
 import type {
   AddJobRequestPayloadProps,
   DatabaseQueryResponseType,

@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 
-import useApi from '@/hooks/useApi';
-
 import {
   Button,
   FlexContainer,
   SectionHeaderContainer,
   Toast,
 } from '@/components';
-
 import { routes } from '@/constant';
+import useApi from '@/hooks/useApi';
 import type { PlaylistRecommendProps } from '@/interfaces';
 
 const PlaylistRecommend = ({

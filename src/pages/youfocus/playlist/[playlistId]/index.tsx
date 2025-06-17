@@ -6,7 +6,6 @@ import {
   Section,
   SEO,
 } from '@/components';
-
 import type { PlaylistPageProps } from '@/interfaces';
 import { getPlaylistPageProps } from '@/utils';
 
@@ -21,25 +20,23 @@ const PlaylistPage = ({
     isRecommended,
   },
   seoMeta,
-}: PlaylistPageProps) => {
-  return (
-    <Fragment>
-      <SEO seoMeta={seoMeta} />
-      <Section className='p-2'>
-        <PlaylistContainer
-          description={description}
-          id={_id.toString()}
-          isRecommended={isRecommended}
-          learningTime={learningTime}
-          playlistName={playlistName}
-          thumbnail={thumbnail}
-          videos={videos}
-        />
-        <ScrollToTopBottomButton />
-      </Section>
-    </Fragment>
-  );
-};
+}: PlaylistPageProps) => (
+  <Fragment>
+    <SEO seoMeta={seoMeta} />
+    <Section className='p-2'>
+      <PlaylistContainer
+        description={description}
+        id={_id.toString()}
+        isRecommended={isRecommended}
+        learningTime={learningTime}
+        playlistName={playlistName}
+        thumbnail={thumbnail}
+        videos={videos}
+      />
+      <ScrollToTopBottomButton />
+    </Section>
+  </Fragment>
+);
 
 export const getServerSideProps = getPlaylistPageProps;
 export default PlaylistPage;

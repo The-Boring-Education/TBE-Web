@@ -5,7 +5,6 @@ import {
   Section,
   SectionHeaderContainer,
 } from '@/components';
-
 import type { CardContainerBProps } from '@/interfaces';
 
 const CardContainerB = ({
@@ -16,27 +15,25 @@ const CardContainerB = ({
   subtext,
   id,
   sectionClassName,
-}: CardContainerBProps) => {
-  return (
-    <Section className={sectionClassName} id={id}>
-      <FlexContainer className='gap-4' direction='col'>
-        <SectionHeaderContainer
-          focusText={focusText}
-          heading={heading}
-          subtext={subtext}
-        />
-        <CardSectionContainer>
-          {cards.map((program, key) => (
-            <PrimaryCardWithCTA
-              {...program}
-              key={key}
-              borderColour={borderColour}
-            />
-          ))}
-        </CardSectionContainer>
-      </FlexContainer>
-    </Section>
-  );
-};
+}: CardContainerBProps) => (
+  <Section className={sectionClassName} id={id}>
+    <FlexContainer className='gap-4' direction='col'>
+      <SectionHeaderContainer
+        focusText={focusText}
+        heading={heading}
+        subtext={subtext}
+      />
+      <CardSectionContainer>
+        {cards.map((program, key) => (
+          <PrimaryCardWithCTA
+            {...program}
+            key={key}
+            borderColour={borderColour}
+          />
+        ))}
+      </CardSectionContainer>
+    </FlexContainer>
+  </Section>
+);
 
 export default CardContainerB;

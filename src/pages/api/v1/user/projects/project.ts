@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   handleGamificationPoints,
   updateUserProjectChapterInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type { UpdateUserChapterInProjectRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

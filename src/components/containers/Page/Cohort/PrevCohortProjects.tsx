@@ -41,47 +41,43 @@ const prevProjects: Project[] = [
   },
 ];
 
-const PrevCohortProjects = () => {
-  return (
-    <section className='bg-gradient-to-br from-gray-900 to-black py-20 px-6 text-white'>
-      <div className='max-w-6xl mx-auto text-center'>
-        <h2 className='text-4xl sm:text-5xl font-extrabold mb-4 bg-gradient-to-r from-fuchsia-500 via-purple-400 to-indigo-500 bg-clip-text text-transparent'>
-          Previous Cohort Projects
-        </h2>
-        <p className='text-gray-400 max-w-2xl mx-auto mb-12'>
-          These are real projects built by our past cohort learners during their
-          journey.
-        </p>
+const PrevCohortProjects = () => (
+  <section className='bg-gradient-to-br from-gray-900 to-black py-20 px-6 text-white'>
+    <div className='max-w-6xl mx-auto text-center'>
+      <h2 className='text-4xl sm:text-5xl font-extrabold mb-4 bg-gradient-to-r from-fuchsia-500 via-purple-400 to-indigo-500 bg-clip-text text-transparent'>
+        Previous Cohort Projects
+      </h2>
+      <p className='text-gray-400 max-w-2xl mx-auto mb-12'>
+        These are real projects built by our past cohort learners during their
+        journey.
+      </p>
 
-        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-3'>
-          {prevProjects.map((project, idx) => (
-            <div
-              key={idx}
-              className='bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg p-6 hover:scale-105 transition-all relative'
-            >
-              <div className='mb-4'>
-                <h3 className='text-xl font-semibold'>{project.title}</h3>
-                <p className='text-sm text-gray-300'>{project.description}</p>
-              </div>
-              <p className='text-xs text-gray-400 italic'>
-                — {project.student}
-              </p>
-              {project.link && (
-                <a
-                  className='absolute top-4 right-4 text-white hover:text-indigo-400'
-                  href={project.link}
-                  rel='noopener noreferrer'
-                  target='_blank'
-                >
-                  <ArrowTopRightOnSquareIcon className='w-5 h-5' />
-                </a>
-              )}
+      <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-3'>
+        {prevProjects.map((project, idx) => (
+          <div
+            key={idx}
+            className='bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg p-6 hover:scale-105 transition-all relative'
+          >
+            <div className='mb-4'>
+              <h3 className='text-xl font-semibold'>{project.title}</h3>
+              <p className='text-sm text-gray-300'>{project.description}</p>
             </div>
-          ))}
-        </div>
+            <p className='text-xs text-gray-400 italic'>— {project.student}</p>
+            {project.link && (
+              <a
+                className='absolute top-4 right-4 text-white hover:text-indigo-400'
+                href={project.link}
+                rel='noopener noreferrer'
+                target='_blank'
+              >
+                <ArrowTopRightOnSquareIcon className='w-5 h-5' />
+              </a>
+            )}
+          </div>
+        ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default PrevCohortProjects;

@@ -2,7 +2,6 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { FlexContainer, Image, Text } from '@/components';
-
 import { routes } from '@/constant';
 import type { PlaylistSkillCardProps } from '@/interfaces';
 

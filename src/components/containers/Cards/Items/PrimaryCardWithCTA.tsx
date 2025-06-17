@@ -1,5 +1,4 @@
 import { GradientContainer, Image, LinkButton, Text } from '@/components';
-
 import type { PrimaryCardWithCTAProps } from '@/interfaces';
 
 const PrimaryCardWithCTA = ({

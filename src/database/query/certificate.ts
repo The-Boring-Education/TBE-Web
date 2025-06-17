@@ -1,5 +1,4 @@
 import { Certificate } from '@/database';
-
 import type {
   AddCertificateRequestPayloadProps,
   DatabaseQueryResponseType,

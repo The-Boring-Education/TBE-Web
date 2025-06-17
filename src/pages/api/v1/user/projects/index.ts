@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { getAllEnrolledProjectsFromDB } from '@/database';
-
 import { apiStatusCodes } from '@/constant';
+import { getAllEnrolledProjectsFromDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 
@@ -64,7 +63,7 @@ const handleGetAllUserProjects = async (
       sendAPIResponse({
         status: false,
         message: 'Failed while fetching enrolled projects',
-        error: error,
+        error,
       })
     );
   }

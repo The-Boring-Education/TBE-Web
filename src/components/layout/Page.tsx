@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import { Footer, Navbar } from '@/components';
-
 import { envConfig } from '@/constant';
 import type { PageLayoutProps } from '@/interfaces';
 

@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   deleteProjectFromDB,
   getAProjectForUserFromDB,
   getProjectByIDFromDB,
   updateProjectInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type { UpdateProjectRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

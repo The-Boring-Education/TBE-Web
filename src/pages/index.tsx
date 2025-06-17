@@ -13,7 +13,6 @@ import {
   Testimonials,
   WeAlreadyTaughtAt,
 } from '@/components';
-
 import {
   generateSectionPath,
   LINKS,
@@ -95,11 +94,9 @@ const Home = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.home })),
-    revalidate: PAGE_REFRESH_TIMEOUT.medium,
-  };
-};
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.home })),
+  revalidate: PAGE_REFRESH_TIMEOUT.medium,
+});
 
 export default Home;

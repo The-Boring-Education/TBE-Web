@@ -1,5 +1,4 @@
 import { GradientContainer, Image, Text } from '@/components';
-
 import type { PrimaryCardProps } from '@/interfaces';
 
 const PrimaryCard = ({

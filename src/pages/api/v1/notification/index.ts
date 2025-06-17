@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { apiStatusCodes } from '@/constant';
 import {
   addANotificationToDB,
   deleteANotificationsFromDB,
   getAllNotificationsFromDB,
   updateANotificationInDB,
 } from '@/database';
-
-import { apiStatusCodes } from '@/constant';
 import type {
   AddNotificationRequestPayloadProps,
   UpdateNotificationRequestPayloadProps,

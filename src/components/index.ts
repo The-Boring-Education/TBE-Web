@@ -289,6 +289,10 @@ const FeedbackPopup = dynamic(
   () => import('@/components/containers/Cards/FeedbackPopup')
 );
 
+const PaymentCard = dynamic(
+  () => import('@/components/containers/Cards/PaymentCard')
+);
+
 export {
   AboutTBE,
   Accordion,
@@ -352,6 +356,7 @@ export {
   OutlineCard,
   PageHeroMetaContainer,
   PageLayout,
+  PaymentCard,
   Pill,
   PlaylistCard,
   PlaylistContainer,

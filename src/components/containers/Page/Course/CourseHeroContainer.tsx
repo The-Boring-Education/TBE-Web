@@ -1,6 +1,3 @@
-import { useAnalytics, useUser } from '@/hooks';
-import { useApi } from '@/hooks';
-
 import {
   Button,
   FlexContainer,
@@ -9,14 +6,15 @@ import {
   PageHeroMetaContainer,
   Text,
 } from '@/components';
-
 import { routes } from '@/constant';
+import { useAnalytics, useApi, useUser } from '@/hooks';
 import type { CourseHeroContainerProps } from '@/interfaces';
 
 const CourseHeroContainer = ({
   id,
   name,
   isEnrolled,
+  isPremium,
 }: CourseHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -58,7 +56,7 @@ const CourseHeroContainer = ({
         <LoginRedirectButton text='Login to Get Started' />
       </FlexContainer>
     );
-  } else if (isAuth && !isEnrolled) {
+  } else if (isAuth && !isEnrolled && !isPremium) {
     headerActionButton = (
       <FlexContainer>
         <Button
@@ -72,7 +70,7 @@ const CourseHeroContainer = ({
 
   if (loading) {
     headerActionButton = (
-      <Button isLoading={true} text='Enrolling...' variant='PRIMARY' />
+      <Button isLoading text='Enrolling...' variant='PRIMARY' />
     );
   }
 

@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 
-import { useApi, useUser } from '@/hooks';
-
 import {
   Button,
   ExplorePlaylistContainer,
@@ -13,8 +11,8 @@ import {
   SEO,
   Toast,
 } from '@/components';
-
 import { routes } from '@/constant';
+import { useApi, useUser } from '@/hooks';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 
@@ -108,10 +106,8 @@ const Home = ({ seoMeta }: PageProps) => {
   );
 };
 
-export const getStaticProps = async () => {
-  return {
-    ...(await getPreFetchProps({ slug: routes.youfocusAddPlaylist })),
-  };
-};
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.youfocusAddPlaylist })),
+});
 
 export default Home;

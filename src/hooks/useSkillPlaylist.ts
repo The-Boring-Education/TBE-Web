@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { useApi } from '@/hooks';
-
 import { routes } from '@/constant';
+import { useApi } from '@/hooks';
 import type { PlaylistSkillCardProps } from '@/interfaces';
 
 const useSkillPlaylist = (q: string) => {

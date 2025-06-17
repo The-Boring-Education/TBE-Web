@@ -3,7 +3,6 @@ import { signOut, useSession } from 'next-auth/react';
 import { Fragment } from 'react';
 
 import { Image, Link } from '@/components';
-
 import { TOP_NAVIGATION } from '@/constant';
 
 const UserAvatar = () => {

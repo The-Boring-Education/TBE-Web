@@ -1,5 +1,4 @@
-import type { AxiosRequestConfig } from 'axios';
-import axios from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import type { NextApiResponse } from 'next';
 
 import type { APIMakeRquestProps, APIResponseType } from '@/interfaces';
@@ -30,9 +29,12 @@ const sendRequest = async ({
   }
 };
 
-const sendAPIResponse = ({ status, error, message, data }: APIResponseType) => {
-  return { status, error, message, data };
-};
+const sendAPIResponse = ({
+  status,
+  error,
+  message,
+  data,
+}: APIResponseType) => ({ status, error, message, data });
 
 const applyCorsHeaders = (res: NextApiResponse, url: string) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
