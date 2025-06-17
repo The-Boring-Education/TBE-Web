@@ -127,6 +127,9 @@ export interface AddCourseRequestPayloadProps {
   slug: string;
   meta?: string;
   roadmap: RoadmapsType;
+  isPremium?: boolean;
+  price?: number;
+  features?: string[];
 }
 
 export interface AddInterviewSheetRequestPayloadProps {
@@ -157,6 +160,9 @@ export interface UpdateCourseRequestPayloadProps {
     description?: string;
     coverImageURL?: string;
     meta?: string;
+    price?:number;
+    isPremium?:boolean;
+    features?:string[]
   };
   courseId: string;
 }
