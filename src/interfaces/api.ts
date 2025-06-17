@@ -9,7 +9,9 @@ import type {
   PlatformUsageType,
   PlaylistModel,
   ProjectChapter,
+  TechStackType,
   UserRoleType,
+  WorkDomainType,
 } from '.';
 
 export type APIMethodTypes = 'GET' | 'POST' | 'PATCH' | 'PUT';
@@ -215,6 +217,12 @@ export interface AddOnboardingPayloadProps {
   occupation: UserRoleType;
   purpose: PlatformUsageType[];
   contactNo: string;
+}
+export interface AddPrepYatraOnboardingPayloadProps{
+  userId:string;
+  workExperience:number;
+  workDomain:WorkDomainType;
+  techStack:TechStackType[]
 }
 export interface CourseEnrollmentRequestProps {
   courseId: string;
