@@ -115,6 +115,32 @@ export type PlatformUsageType =
   | 'INTERVIEW_PREP'
   | 'JOB_SEARCH';
 
+  export type WorkDomainType = 
+  | 'WEB_DEVELOPMENT'
+  | 'DATA_SCIENCE'
+  | 'DEVOPS'
+  | 'MOBILE_DEVELOPMENT'
+  | 'AI_ML'
+  | 'UI_UX'
+  | 'CYBER_SECURITY'
+
+  export type TechStackType = 
+  | 'JAVASCRIPT'
+  | 'TYPESCRIPT'
+  | 'REACT'
+  | 'NODE_JS'
+  | 'NEXT_JS'
+  | 'PYTHON'
+  |'DJANGO'
+  |'FLASK'
+  |'JAVA'
+  |'SPRING_BOOT'
+  |'C_PLUS_PLUS'
+  |'MONGO_DB'
+  |'POSTGRESQL'
+  |'AWS'
+  |'DOCKER'
+
 export type FormatDateType = {
   dateAndTime?: string;
   dateFormat?: Intl.DateTimeFormatOptions;
