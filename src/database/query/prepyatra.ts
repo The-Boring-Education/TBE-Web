@@ -35,7 +35,29 @@ const addRecruiterToDB = async ({
   }
 };
 
+const updateRecruiterInDB = async (
+  recruiterId: string,
+  updatePayload: Partial<Record<string, any>>
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const updatedRecruiter = await Recruiter.findByIdAndUpdate(
+      recruiterId,
+      updatePayload,
+      { new: true }
+    );
+
+    if (!updatedRecruiter) {
+      return { error: 'Recruiter not found' };
+    }
+
+    return { data: updatedRecruiter };
+  } catch (error: any) {
+    return { error: 'Failed to update recruiter' };
+  }
+};
+
 export {
   getRecruitersByUserFromDB,
-  addRecruiterToDB
+  addRecruiterToDB,
+  updateRecruiterInDB,
 };

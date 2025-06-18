@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { addRecruiterToDB, getRecruitersByUserFromDB } from '@/database';
+import { addRecruiterToDB, getRecruitersByUserFromDB, updateRecruiterInDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 
@@ -13,6 +13,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return handleGetRecruiters(req, res);
     case 'POST':
       return handleAddRecruiter(req, res);
+    case 'PUT':
+      return handleUpdateRecruiter(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -105,6 +107,48 @@ const handleAddRecruiter = async (req: NextApiRequest, res: NextApiResponse) => 
         status: false,
         message: 'Something went wrong while creating recruiter',
         error,
+      })
+    );
+  }
+};
+
+const handleUpdateRecruiter = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { recruiterId, ...updatePayload } = req.body;
+
+    if (!recruiterId) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Recruiter ID is required',
+        })
+      );
+    }
+
+    const { data, error } = await updateRecruiterInDB(recruiterId, updatePayload);
+
+    if (error) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: error,
+        })
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Recruiter updated successfully',
+        data,
+      })
+    );
+  } catch (error: any) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal Server Error',
+        error: error.message,
       })
     );
   }
