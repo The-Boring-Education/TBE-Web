@@ -299,9 +299,14 @@ export interface WebhookEvent {
 export interface RecruiterModel extends Document{
   user: Types.ObjectId;
   recruiterName: string;
-  contact: string;
-  company: string;
-  appliedPosition: string;
-  applicationStatus: ApplicationStatusType;
-  lastContacted: string;
+  email?: string
+  phone?: string;
+  company?: string;
+  appliedPosition?: string;
+  applicationStatus?: ApplicationStatusType;
+  lastContacted?: string;
+  follow_up_date?: string
+  last_interview_date?: string;
+  link?: string;
+  comments?: string;
 }
