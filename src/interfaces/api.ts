@@ -414,3 +414,8 @@ export interface UpdatePaymentStatusPayloadProps {
   paymentId: string | undefined;
   status: 'SUCCESS' | 'FAILED';
 }
+
+export interface AddRecruiterToDBPayloadProps{
+  userId:string
+  recruiterName:string
+}
