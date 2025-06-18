@@ -304,6 +304,4 @@ export interface RecruiterModel extends Document{
   appliedPosition: string;
   applicationStatus: ApplicationStatusType;
   lastContacted: string;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
