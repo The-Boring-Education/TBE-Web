@@ -36,8 +36,7 @@ export {
   UserPlaylist,
   UserProject,
   UserSheet,
-  Webinar,
-};
+  Webinar};
 
 // Query
 export * from './query/certificate';

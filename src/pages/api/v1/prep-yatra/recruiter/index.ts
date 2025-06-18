@@ -1,18 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { addRecruiterToDB, deleteRecruiterInDB, updateRecruiterInDB } from '@/database';
+import { addRecruiterToDB, getRecruitersByUserFromDB, updateRecruiterInDB, deleteRecruiterInDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
 
-  switch(req.method){
+  switch (req.method) {
+    case 'GET':
+      return handleGetRecruiters(req, res);
     case 'POST':
-        return handleAddRecruiter(req,res);
+      return handleAddRecruiter(req, res);
     case 'PUT':
-        return handleUpdateRecruiter(req,res);
+      return handleUpdateRecruiter(req, res);
     case 'DELETE':
         return handleDeleteRecruiter(req,res)
     default:
@@ -25,17 +27,52 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handleAddRecruiter = async (req: NextApiRequest,res: NextApiResponse) => {
-     try {
-    const {
-      userId,
-      recruiterName,
-    } = req.body;
+const handleGetRecruiters = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { userId } = req.query;
 
-    if (
-      !userId ||
-      !recruiterName      
-    ) {
+    if (!userId || typeof userId !== 'string') {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Missing or invalid userId',
+        })
+      );
+    }
+
+    const { data, error } = await getRecruitersByUserFromDB(userId);
+
+    if (error) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: error,
+        })
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Recruiters fetched successfully',
+        data,
+      })
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal Server Error',
+      })
+    );
+  }
+};
+
+const handleAddRecruiter = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { userId, recruiterName } = req.body;
+
+    if (!userId || !recruiterName) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
@@ -43,20 +80,20 @@ const handleAddRecruiter = async (req: NextApiRequest,res: NextApiResponse) => {
         })
       );
     }
-    
-    const {data, error} = await addRecruiterToDB({
-        userId,
-        recruiterName
-    })
+
+    const { data, error } = await addRecruiterToDB({
+      userId,
+      recruiterName,
+    });
 
     if (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
-        status: false,
-        message: 'Failed to submit star rating',
-        error,
+          status: false,
+          message: 'Failed to submit recruiter',
+          error,
         })
-    );
+      );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -75,7 +112,7 @@ const handleAddRecruiter = async (req: NextApiRequest,res: NextApiResponse) => {
       })
     );
   }
-}
+};
 
 const handleUpdateRecruiter = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
