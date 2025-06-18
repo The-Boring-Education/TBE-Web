@@ -417,10 +417,5 @@ export interface UpdatePaymentStatusPayloadProps {
 
 export interface AddRecruiterToDBPayloadProps{
   userId:string
-    recruiterName:string,
-    contact:string,
-    company:string,
-    appliedPosition:string,
-    applicationStatus:string,
-    lastContacted:string,
+  recruiterName:string
 }

@@ -26,21 +26,11 @@ const handleAddRecruiter = async (req: NextApiRequest,res: NextApiResponse) => {
     const {
       userId,
       recruiterName,
-      contact,
-      company,
-      appliedPosition,
-      applicationStatus,
-      lastContacted,
     } = req.body;
 
     if (
       !userId ||
-      !recruiterName ||
-      !contact ||
-      !company ||
-      !appliedPosition ||
-      !applicationStatus ||
-      !lastContacted
+      !recruiterName      
     ) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -52,12 +42,7 @@ const handleAddRecruiter = async (req: NextApiRequest,res: NextApiResponse) => {
     
     const {data, error} = await addRecruiterToDB({
         userId,
-        recruiterName,
-        contact,
-        company,
-        appliedPosition,
-        applicationStatus,
-        lastContacted
+        recruiterName
     })
 
     if (error) {

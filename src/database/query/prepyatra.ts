@@ -7,21 +7,11 @@ import type {
 const addRecruiterToDB = async({
     userId,
     recruiterName,
-    contact,
-    company,
-    appliedPosition,
-    applicationStatus,
-    lastContacted,
 }: AddRecruiterToDBPayloadProps): Promise<DatabaseQueryResponseType> =>{
   try {
     const addRecruiter = new Recruiter({
       user: userId,
-      recruiterName,
-      contact,
-      company,
-      appliedPosition,
-      applicationStatus,
-      lastContacted,
+      recruiterName
     });
 
     await addRecruiter.save();
