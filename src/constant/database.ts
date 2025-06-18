@@ -41,10 +41,12 @@ export const PRODUCT_TYPE = [
 export type ProductType = (typeof PRODUCT_TYPE)[number];
 
 export const APPLICATION_STATUS = [
-  'Ongoing',
-  'Ghosted',
-  'Rejected', 
-  'Accepted',
+  'Screening',
+  'Interviewing',
+  'Final Round Done',
+  'Offer Letter',
+  'Rejected',
+  'Not Interested'
 ]
 
 export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
