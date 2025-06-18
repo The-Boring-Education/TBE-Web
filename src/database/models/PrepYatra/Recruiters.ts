@@ -14,27 +14,37 @@ const RecruiterSchema = new Schema<RecruiterModel>(
       type: String,
       required: true,
     },
-    contact: {
-      type: String,
-      required: true,
+    email:{
+      type:String,
+    },
+     phone:{
+      type:String,
     },
     company: {
       type: String,
-      required: true,
     },
     appliedPosition: {
       type: String,
-      required: true,
     },
     applicationStatus: {
       type: String,
       enum: APPLICATION_STATUS,
-      required: true,
     },
     lastContacted: {
       type: String,
-      required: true,
     },
+    comments:{
+      type: String,
+    },
+    follow_up_date:{
+      type:String,
+    },
+    last_interview_date:{
+      type:String
+    },
+    link:{
+      type:String,
+    }
   },
   { timestamps: true }
 );
