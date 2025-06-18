@@ -18,6 +18,7 @@ const DATABASE_MODELS = {
   FEEDBACK: 'Feedback',
   JOB_AGGREGATE: 'JobAggregate',
   PAYMENT: 'Payment',
+  RECRUITER:'Recruiters'
 };
 
 export const FEEDBACK_TYPES = [
@@ -38,6 +39,17 @@ export const PRODUCT_TYPE = [
   'GENERAL',
 ];
 export type ProductType = (typeof PRODUCT_TYPE)[number];
+
+export const APPLICATION_STATUS = [
+  'Screening',
+  'Interviewing',
+  'Final Round Done',
+  'Offer Letter',
+  'Rejected',
+  'Not Interested'
+]
+
+export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
 
 const modelSelectParams = {
   coursePreview: '_id name slug coverImageURL description liveOn',

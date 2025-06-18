@@ -1,6 +1,6 @@
 import type { Document, Schema, Types } from 'mongoose';
 
-import type { FeedbackType, ProductType } from '@/constant';
+import type { ApplicationStatusType, FeedbackType, ProductType } from '@/constant';
 
 import type {
   CertificateType,
@@ -294,4 +294,14 @@ export interface WebhookEvent {
   payment_id?: string;
   isPaid: boolean;
   payment_status: 'SUCCESS' | 'FAILED';
+}
+
+export interface RecruiterModel extends Document{
+  user: Types.ObjectId;
+  recruiterName: string;
+  contact: string;
+  company: string;
+  appliedPosition: string;
+  applicationStatus: ApplicationStatusType;
+  lastContacted: string;
 }
