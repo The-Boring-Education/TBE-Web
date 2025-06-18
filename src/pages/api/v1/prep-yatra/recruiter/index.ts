@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { addRecruiterToDB, updateRecruiterInDB } from '@/database';
+import { addRecruiterToDB, deleteRecruiterInDB, updateRecruiterInDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 
@@ -12,7 +12,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'POST':
         return handleAddRecruiter(req,res);
     case 'PUT':
-        return handleUpdateRecruiter(req,res)
+        return handleUpdateRecruiter(req,res);
+    case 'DELETE':
+        return handleDeleteRecruiter(req,res)
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -116,5 +118,48 @@ const handleUpdateRecruiter = async (req: NextApiRequest, res: NextApiResponse) 
     );
   }
 };
+
+const handleDeleteRecruiter = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { recruiterId } = req.query;
+
+    if (!recruiterId || typeof recruiterId !== 'string') {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Missing or invalid recruiterId',
+        })
+      );
+    }
+
+    const {data,error} = await deleteRecruiterInDB(recruiterId)
+
+    if (error) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Recruiter not found',
+        })
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Recruiter deleted successfully',
+        data,
+      })
+    );
+  } catch (error: any) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Failed to delete recruiter',
+        error: error.message,
+      })
+    );
+  }
+};
+
 
 export default handler;

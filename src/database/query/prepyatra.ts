@@ -42,7 +42,25 @@ const updateRecruiterInDB = async (
   }
 };
 
+const deleteRecruiterInDB = async(
+  recruiterId:string
+): Promise<DatabaseQueryResponseType> =>{
+  try {
+      const deletedRecruiter = await Recruiter.findByIdAndDelete(recruiterId);
+
+      if(!deleteRecruiterInDB){
+        return {error:"Recruiter not deleted"}
+      }
+
+      return {data:deletedRecruiter}
+
+  } catch (error) {
+        return { error: 'Failed to update recruiter: '};
+
+  }
+}
 export {
     addRecruiterToDB,
+    deleteRecruiterInDB,
     updateRecruiterInDB,
 }
