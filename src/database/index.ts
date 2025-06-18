@@ -6,6 +6,7 @@ import InterviewSheet from './models/InterviewPrep/Sheet';
 import UserSheet from './models/InterviewPrep/UserSheet';
 import Notification from './models/Notification';
 import Payment from './models/Payment';
+import Recruiter from './models/PrepYatra/Recruiters';
 import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
 import Course from './models/Shiksha/Course';
@@ -29,6 +30,7 @@ export {
   Payment,
   Playlist,
   Project,
+  Recruiter,
   User,
   UserCourse,
   UserPlaylist,
@@ -45,6 +47,7 @@ export * from './query/gamification';
 export * from './query/interview-prep';
 export * from './query/notification';
 export * from './query/payment';
+export * from './query/prepyatra';
 export * from './query/project';
 export * from './query/shiksha';
 export * from './query/unskilled';
