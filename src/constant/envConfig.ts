@@ -14,6 +14,8 @@ const ADMIN_BASE_URL = process.env.ADMIN_BASE_URL as string;
 const CASHFREE_BASE_URL = process.env.CASHFREE_BASE_URL as string;
 const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY as string;
 const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID as string;
+const SUPABASE_URL = process.env.SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY as string;
 
 const envConfig = {
   NODE_ENV,
@@ -31,6 +33,8 @@ const envConfig = {
   CASHFREE_BASE_URL,
   CASHFREE_SECRET_KEY,
   CASHFREE_CLIENT_ID,
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
 };
 
 export { envConfig };
