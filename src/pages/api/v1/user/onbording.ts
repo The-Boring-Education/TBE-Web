@@ -4,9 +4,10 @@ import { apiStatusCodes } from '@/constant';
 import { getUserByUserNameFromDB, onboardPrepYatraUserTODB, onboardUserToDB } from '@/database';
 import type { AddOnboardingPayloadProps, AddPrepYatraOnboardingPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
+import { cors, sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await cors(req,res)
   await connectDB();
 
   const { method } = req;

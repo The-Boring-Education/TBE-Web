@@ -50,6 +50,6 @@ const RecruiterSchema = new Schema<RecruiterModel>(
 );
 
 const Recruiter: Model<RecruiterModel> =
-  models?.Recruiter || model<RecruiterModel>(DATABASE_MODELS.RECRUITER, RecruiterSchema);
+   models[DATABASE_MODELS.RECRUITER] || model<RecruiterModel>(DATABASE_MODELS.RECRUITER, RecruiterSchema);
 
 export default Recruiter;
