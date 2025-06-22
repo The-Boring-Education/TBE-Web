@@ -13,6 +13,7 @@ export interface UseUserReturnType {
   isAuth: boolean;
   loading: boolean;
   isOnboarded: boolean;
+  updateSession: () => Promise<any>;
 }
 
 type ActionTypes =
