@@ -24,9 +24,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleAddLog = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { userId, title, durationDays, tags } = req.body;
+    const { userId, title, description, timeSpent } = req.body;
 
-  if (!userId || !title || !durationDays) {
+  if (!userId || !title || !timeSpent) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(sendAPIResponse({
       status: false,
       message: 'userId, title, and durationDays are required'
@@ -36,8 +36,8 @@ const handleAddLog = async (req: NextApiRequest, res: NextApiResponse) => {
   const { data, error } = await addPrepLogToDB({ 
     userId, 
     title, 
-    durationDays, 
-    tags 
+    description, 
+    timeSpent 
   });
 
   if (error) {

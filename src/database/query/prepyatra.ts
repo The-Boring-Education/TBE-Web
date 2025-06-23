@@ -76,10 +76,20 @@ const deleteRecruiterInDB = async(
 }
 
 const addPrepLogToDB = async (
-  logData: AddPrepLogToDBPayloadProps
+  {
+    userId,
+    title,
+    description,
+    timeSpent
+  }:AddPrepLogToDBPayloadProps
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const newLog = await PrepLog.create(logData);
+    const newLog = await PrepLog.create({
+      user:userId,
+      title,
+      description,
+      timeSpent
+    });
     return { data: newLog };
   } catch (error: any) {
     return { error: error.message };

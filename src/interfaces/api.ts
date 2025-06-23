@@ -423,6 +423,6 @@ export interface AddRecruiterToDBPayloadProps{
 export interface AddPrepLogToDBPayloadProps{
 userId: string;
   title: string;
-  durationDays: number;
-  tags?: string[];
+  description: string;
+  timeSpent: number
 }

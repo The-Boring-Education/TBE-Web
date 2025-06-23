@@ -3,25 +3,6 @@ import { type Model,model, models, Schema } from 'mongoose';
 import { DATABASE_MODELS } from '@/constant';
 import type { PrepLogModel } from '@/interfaces';
 
-const SubLogSchema = new Schema(
-  {
-    timeGiven: { 
-        type: Number, 
-        required: true 
-    },
-    topicCompleted: { 
-        type: String, 
-        required: true 
-    },
-    description: { 
-        type: String 
-    },
-  },
-  { 
-    timestamps:true
-   }
-);
-
 const PrepLogSchema = new Schema<PrepLogModel>(
   {
     user: {
@@ -33,14 +14,13 @@ const PrepLogSchema = new Schema<PrepLogModel>(
         type: String,
         required: true
     },
-    durationDays: { 
+    description: {
+        type: String,
+    },
+    timeSpent: { 
         type: Number, 
         required: true 
     },
-    tags: [
-        { type: String }
-    ],
-    subLogs: [SubLogSchema],
   },
   { timestamps: true }
 );
