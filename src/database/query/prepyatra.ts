@@ -96,10 +96,49 @@ const addPrepLogToDB = async (
   }
 };
 
+
+const getPrepLogsByUserFromDB = async (userId: string) => {
+  try {
+    const logs = await PrepLog.find({ user: userId }).sort({ createdAt: -1 });
+    return { data: logs };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
+const updatePrepLogInDB = async (prepLogId: string, updateData: any) => {
+  try {
+    const updatedLog = await PrepLog.findByIdAndUpdate(prepLogId, updateData, {
+      new: true,
+    });
+
+    if (!updatedLog) return { error: 'Prep log not found' };
+
+    return { data: updatedLog };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
+const deletePrepLogInDB = async (prepLogId: string) => {
+  try {
+    const deletedLog = await PrepLog.findByIdAndDelete(prepLogId);
+
+    if (!deletedLog) return { error: 'Log not found' };
+
+    return { data: deletedLog };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
 export {
   getRecruitersByUserFromDB,
   addRecruiterToDB,
   updateRecruiterInDB,
   deleteRecruiterInDB,
-  addPrepLogToDB
+  addPrepLogToDB,
+  getPrepLogsByUserFromDB,
+  updatePrepLogInDB,
+  deletePrepLogInDB
 };
