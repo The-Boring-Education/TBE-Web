@@ -310,3 +310,20 @@ export interface RecruiterModel extends Document{
   link?: string;
   comments?: string;
 }
+
+export interface SubLog {
+  timeGiven: number;
+  topicCompleted: string;
+  description?: string;
+  createdAt?: Date;
+}
+
+export interface PrepLogModel extends Document {
+  user: Types.ObjectId;
+  title: string;
+  durationDays: number;
+  tags?: string[];
+  subLogs: SubLog[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}

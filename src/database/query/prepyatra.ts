@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
-import { Recruiter } from "@/database";
+import { Recruiter,PrepLog } from "@/database";
 import type {
   AddRecruiterToDBPayloadProps,
-  DatabaseQueryResponseType
+  DatabaseQueryResponseType,
+  AddPrepLogToDBPayloadProps
 } from "@/interfaces";
 
 const getRecruitersByUserFromDB = async (
@@ -62,7 +63,7 @@ const deleteRecruiterInDB = async(
   try {
       const deletedRecruiter = await Recruiter.findByIdAndDelete(recruiterId);
 
-      if(!deleteRecruiterInDB){
+      if(!deletedRecruiter){
         return {error:"Recruiter not deleted"}
       }
 
@@ -73,9 +74,22 @@ const deleteRecruiterInDB = async(
 
   }
 }
+
+const addPrepLogToDB = async (
+  logData: AddPrepLogToDBPayloadProps
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const newLog = await PrepLog.create(logData);
+    return { data: newLog };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
 export {
   getRecruitersByUserFromDB,
   addRecruiterToDB,
   updateRecruiterInDB,
   deleteRecruiterInDB,
+  addPrepLogToDB
 };
