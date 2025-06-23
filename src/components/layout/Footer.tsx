@@ -1,7 +1,7 @@
 import { FaGithub, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 import { FlexContainer, Link, Logo, Text } from '@/components';
-import { LINKS, products, routes } from '@/constant';
+import { LINKS, products } from '@/constant';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -71,17 +71,14 @@ const Footer = () => {
       },
     ],
     company: [
-      { name: 'Contact', href: routes.contactUs, description: 'Get in Touch' },
+      { name: 'About Us', href: '/about', description: 'Our Story' },
+      { name: 'Contact', href: '/contact', description: 'Get in Touch' },
       {
         name: 'Terms & Conditions',
-        href: routes.termsAndConditions,
+        href: '/terms-and-conditions',
         description: 'Legal Terms',
       },
-      {
-        name: 'Refund Policy',
-        href: routes.refund,
-        description: 'Refund Info',
-      },
+      { name: 'Refund Policy', href: '/refund', description: 'Refund Info' },
       {
         name: 'Open Source',
         href: LINKS.contributeOpenSource,
@@ -109,7 +106,7 @@ const Footer = () => {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8'>
           {/* Brand Section */}
           <div className='lg:col-span-2'>
-            <div className='w-100 flex'>
+            <div className='mb-4'>
               <Logo />
             </div>
             <Text className='text-gray-300 mb-4 max-w-md' level='p'>
@@ -245,7 +242,7 @@ const Footer = () => {
 
             <div className='flex items-center gap-4'>
               <Text className='text-gray-400 text-xs' level='span'>
-                Made for developers, by Developers
+                Made for developers, by developers
               </Text>
             </div>
           </FlexContainer>

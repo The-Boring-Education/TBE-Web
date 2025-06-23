@@ -100,8 +100,11 @@ export interface InterviewSheetModel extends Document {
   description: string;
   coverImageURL: string;
   liveOn: Date;
+  isPremium: boolean;
+  price: number;
   questions: InterviewSheetQuestionModel[];
   roadmap: RoadmapsType;
+  features: string[];
 }
 
 export interface InterviewSheetQuestionModel {

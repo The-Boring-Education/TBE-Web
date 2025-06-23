@@ -443,7 +443,7 @@ const TBIP_FEATURES: PrimaryCardProps[] = [
   {
     id: v4(),
     title: `Ask Questions`,
-    content: `Ask Interview Prep Questions in Community. We’re here to help.`,
+    content: `Ask Interview Prep Questions in Community. We're here to help.`,
     image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
     imageAltText: `doubt session`,
   },
