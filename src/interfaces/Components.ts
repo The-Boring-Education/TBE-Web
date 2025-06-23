@@ -9,8 +9,8 @@ import type {
 
 import type { FeedbackType } from '@/constant';
 import type {
-  BaseShikshaCourseResponseProps,
   BaseInterviewSheetResponseProps,
+  BaseShikshaCourseResponseProps,
   CertificateType,
   CohortRoadmapProps,
   GetSEOMetaResponseType,

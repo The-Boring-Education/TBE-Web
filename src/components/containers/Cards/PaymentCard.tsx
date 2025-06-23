@@ -1,16 +1,15 @@
 import {
   BanknotesIcon,
   BookOpenIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  LightBulbIcon,
   ShieldCheckIcon,
+  StarIcon,
   UserIcon,
   XMarkIcon,
-  StarIcon,
-  LightBulbIcon,
-  ClockIcon,
-  CheckCircleIcon,
 } from '@heroicons/react/20/solid';
-import { useState } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Button, FlexContainer, Section, Text } from '@/components';
 import { routes } from '@/constant';
