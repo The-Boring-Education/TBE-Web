@@ -211,7 +211,7 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
   // Yatra Tools Section
   {
     id: 'prep-yatra',
-    image: `${STATIC_FILE_PATH.svg}/tools-prep-yatra.svg`,
+    image: `${STATIC_FILE_PATH.svg}/interview.svg`,
     imageAltText: products.prepYatra.label,
     title: products.prepYatra.label,
     content: products.prepYatra.description,
@@ -222,7 +222,7 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
   },
   {
     id: 'tech-yatra',
-    image: `${STATIC_FILE_PATH.svg}/tools-tech-yatra.svg`,
+    image: `${STATIC_FILE_PATH.svg}/tech-yatra.svg`,
     imageAltText: products.techYatra.label,
     title: products.techYatra.label,
     content: products.techYatra.description,
@@ -233,7 +233,7 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
   },
   {
     id: 'dsa-yatra',
-    image: `${STATIC_FILE_PATH.svg}/tools-dsa-yatra.svg`,
+    image: `${STATIC_FILE_PATH.svg}/dsa-yatra.svg`,
     imageAltText: products.dsaYatra.label,
     title: products.dsaYatra.label,
     content: products.dsaYatra.description,
@@ -244,7 +244,7 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
   },
   {
     id: 'resume-yatra',
-    image: `${STATIC_FILE_PATH.svg}/tools-resume-yatra.svg`,
+    image: `${STATIC_FILE_PATH.svg}/resume-yatra.svg`,
     imageAltText: products.resumeYatra.label,
     title: products.resumeYatra.label,
     content: products.resumeYatra.description,
@@ -443,7 +443,7 @@ const TBIP_FEATURES: PrimaryCardProps[] = [
   {
     id: v4(),
     title: `Ask Questions`,
-    content: `Ask Interview Prep Questions in Community. We’re here to help.`,
+    content: `Ask Interview Prep Questions in Community. We're here to help.`,
     image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
     imageAltText: `doubt session`,
   },

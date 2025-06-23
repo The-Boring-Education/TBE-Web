@@ -8,7 +8,7 @@
       "isExternalLink": true
     },
     "tech_yatra": {
-      "type": "TECH YATRA", 
+      "type": "TECH YATRA",
       "text": "📚 Explore new technology roadmaps on Tech Yatra! Discover structured learning paths for your tech journey.",
       "isHTML": false,
       "link": "https://techyatra.netlify.app/",
@@ -82,7 +82,7 @@
       "isExternalLink": false
     },
     "feature_announcement": {
-      "type": "UPDATE", 
+      "type": "UPDATE",
       "text": "<strong>New Feature Alert!</strong> 🔥 Access all your favorite learning tools from one unified platform. Start your Yatra today!",
       "isHTML": true,
       "link": "/",
