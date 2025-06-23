@@ -21,6 +21,7 @@ import {
   routes,
   STATIC_FILE_PATH,
   USP,
+  YATRA_TOOLS,
 } from '@/constant';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';

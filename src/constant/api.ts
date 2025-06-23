@@ -59,6 +59,11 @@ const NOTIFICATION_TYPE: NotificationType[] = [
   'INTERVIEW PREP',
   'UPDATE',
   'COHORT',
+  'PREP YATRA',
+  'TECH YATRA',
+  'DSA YATRA',
+  'RESUME YATRA',
+  'TOOLS',
 ];
 
 const USER_ROLE: UserRoleType[] = [
@@ -74,23 +79,23 @@ const PLATFORM_USAGE: PlatformUsageType[] = [
   'JOB_SEARCH',
 ];
 
-const WORK_DOMAIN: WorkDomainType [] =[
+const WORK_DOMAIN: WorkDomainType[] = [
   'WEB_DEVELOPMENT',
-   'DATA_SCIENCE',
-   'DEVOPS',
+  'DATA_SCIENCE',
+  'DEVOPS',
   'MOBILE_DEVELOPMENT',
-   'AI_ML',
-   'UI_UX',
-   'CYBER_SECURITY',
-]  
+  'AI_ML',
+  'UI_UX',
+  'CYBER_SECURITY',
+];
 
-  const TECH_STACK :TechStackType [] =[ 
+const TECH_STACK: TechStackType[] = [
   'JAVASCRIPT',
-   'TYPESCRIPT',
-   'REACT',
-   'NODE_JS',
-   'NEXT_JS',
-   'PYTHON',
+  'TYPESCRIPT',
+  'REACT',
+  'NODE_JS',
+  'NEXT_JS',
+  'PYTHON',
   'DJANGO',
   'FLASK',
   'JAVA',
@@ -99,7 +104,8 @@ const WORK_DOMAIN: WorkDomainType [] =[
   'MONGO_DB',
   'POSTGRESQL',
   'AWS',
-  'DOCKER',]
+  'DOCKER',
+];
 
 const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
 
@@ -2564,4 +2570,5 @@ export {
   USER_POINTS_ACTION,
   USER_ROLE,
   WORK_DOMAIN,
-  YOUTUBE_API_PATH};
+  YOUTUBE_API_PATH,
+};
