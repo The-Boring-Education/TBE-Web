@@ -310,3 +310,10 @@ export interface RecruiterModel extends Document{
   link?: string;
   comments?: string;
 }
+
+export interface PrepLogModel extends Document {
+  user: Types.ObjectId;
+  title: string;
+  timeSpent: number;
+  description?:string,
+}

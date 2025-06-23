@@ -6,6 +6,7 @@ import InterviewSheet from './models/InterviewPrep/Sheet';
 import UserSheet from './models/InterviewPrep/UserSheet';
 import Notification from './models/Notification';
 import Payment from './models/Payment';
+import PrepLog from './models/PrepYatra/PrepLog';
 import Recruiter from './models/PrepYatra/Recruiters';
 import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
@@ -29,6 +30,7 @@ export {
   Notification,
   Payment,
   Playlist,
+  PrepLog,
   Project,
   Recruiter,
   User,

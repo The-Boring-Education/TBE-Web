@@ -18,7 +18,8 @@ const DATABASE_MODELS = {
   FEEDBACK: 'Feedback',
   JOB_AGGREGATE: 'JobAggregate',
   PAYMENT: 'Payment',
-  RECRUITER:'Recruiters'
+  RECRUITER:'Recruiters',
+  PREP_LOG:'PrepLog'
 };
 
 export const FEEDBACK_TYPES = [
