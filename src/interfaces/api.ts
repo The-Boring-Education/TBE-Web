@@ -277,6 +277,9 @@ export interface BaseInterviewSheetResponseProps
   _id: string;
   isEnrolled?: boolean;
   questions?: ExtendedInterviewSheetQuestionModel[];
+  isPremium?: boolean;
+  price?: number;
+  features?: string[];
 }
 
 export interface MarkQuestionCompletedRequestProps {

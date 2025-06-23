@@ -4,8 +4,13 @@ import {
   ShieldCheckIcon,
   UserIcon,
   XMarkIcon,
+  StarIcon,
+  LightBulbIcon,
+  ClockIcon,
+  CheckCircleIcon,
 } from '@heroicons/react/20/solid';
 import { useState } from 'react';
+import React from 'react';
 
 import { Button, FlexContainer, Section, Text } from '@/components';
 import { routes } from '@/constant';
@@ -22,6 +27,58 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Product type specific content
+  const isInterviewSheet = productType === 'INTERVIEW_SHEET';
+  const productName = isInterviewSheet ? 'Interview Sheet' : 'Course';
+  const productIcon = isInterviewSheet ? ShieldCheckIcon : BookOpenIcon;
+
+  // Dynamic reasons to buy based on product type
+  const reasonsToBuy = isInterviewSheet
+    ? [
+        {
+          icon: ShieldCheckIcon,
+          title: 'Real Interview Questions',
+          description: 'Questions asked in actual FAANG and top-tier companies',
+        },
+        {
+          icon: StarIcon,
+          title: 'Expert Solutions',
+          description: 'Detailed explanations and optimal approaches for each question',
+        },
+        {
+          icon: LightBulbIcon,
+          title: 'Interview Insights',
+          description: 'Pro tips and common mistakes to avoid during interviews',
+        },
+        {
+          icon: ClockIcon,
+          title: 'Save 100+ Hours',
+          description: 'Curated content saves months of research and preparation',
+        },
+      ]
+    : [
+        {
+          icon: BookOpenIcon,
+          title: 'Comprehensive Learning',
+          description: 'Complete hands-on course with practical projects',
+        },
+        {
+          icon: StarIcon,
+          title: 'Industry Relevant',
+          description: 'Latest technologies and best practices used in industry',
+        },
+        {
+          icon: CheckCircleIcon,
+          title: 'Completion Certificate',
+          description: 'Get verified certificate upon successful completion',
+        },
+        {
+          icon: ClockIcon,
+          title: 'Lifetime Access',
+          description: 'Learn at your own pace with permanent access to content',
+        },
+      ];
 
   const createPaymentOrder = async (): Promise<string> => {
     const response = await fetch(
@@ -103,88 +160,140 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
         </FlexContainer>
       </div>
 
-      <div className='p-2 space-y-6'>
-        {/* Course Details */}
-        <div className='bg-gray-50 rounded-lg p-2'>
-          <div className='flex items-center gap-3 mb-3'>
-            <BookOpenIcon className='w-5 h-5 text-blue-600' />
-            <Text level='h4' className='font-semibold text-gray-800'>
-              Course Details
-            </Text>
-          </div>
-          <Text level='p' className='text-gray-700 font-medium'>
-            {course.name}
-          </Text>
-        </div>
-
-        {/* Course Features */}
-        <div>
-          <Text level='h4' className='font-semibold text-gray-800 mb-3'>
-            What's Included
-          </Text>
-          <div className='bg-gray-50 rounded-lg p-3'>
-            <div className='flex flex-wrap gap-2'>
-              {course.features?.map((feature, index) => (
-                <div
-                  key={index}
-                  className='flex items-center gap-2 bg-white border border-gray-200 rounded-md px-3 py-2 text-sm'
-                >
-                  <p className='text-gray-700 font-medium whitespace-nowrap'>
-                    {feature}
-                  </p>
-                </div>
-              ))}
+      <div className='p-6 space-y-8'>
+        {/* Product Highlight */}
+        <div className='bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200'>
+          <div className='flex items-start gap-4'>
+            <div className='p-3 bg-blue-100 rounded-lg'>
+              {React.createElement(productIcon, { className: 'w-8 h-8 text-blue-600' })}
+            </div>
+            <div className='flex-1'>
+              <Text level='h3' className='font-bold text-gray-900 mb-2'>
+                {course.name}
+              </Text>
+              <Text level='p' className='text-gray-700 leading-relaxed'>
+                {course.description || `Premium ${productName.toLowerCase()} designed to accelerate your learning and career growth.`}
+              </Text>
             </div>
           </div>
         </div>
+
+        {/* Why This Is Worth It */}
+        <div>
+          <Text level='h3' className='font-bold text-gray-900 mb-4 flex items-center gap-2'>
+            <StarIcon className='w-5 h-5 text-yellow-500' />
+            Why thousands choose our premium {productName.toLowerCase()}s
+          </Text>
+          <div className='grid md:grid-cols-2 gap-4'>
+            {reasonsToBuy.map(({ icon: Icon, title, description }, index) => (
+              <div
+                key={index}
+                className='flex gap-3 p-4 bg-green-50 border border-green-200 rounded-lg hover:shadow-md transition-shadow'
+              >
+                <div className='p-2 bg-green-100 rounded-lg'>
+                  <Icon className='w-5 h-5 text-green-600' />
+                </div>
+                <div>
+                  <Text level='h5' className='font-semibold text-gray-900 mb-1'>
+                    {title}
+                  </Text>
+                  <Text level='p' className='text-gray-700 text-sm'>
+                    {description}
+                  </Text>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* What's Included */}
+        {course.features && course.features.length > 0 && (
+          <div>
+            <Text level='h4' className='font-semibold text-gray-800 mb-4 flex items-center gap-2'>
+              <CheckCircleIcon className='w-5 h-5 text-green-600' />
+              Everything included in your purchase
+            </Text>
+            <div className='bg-gray-50 rounded-lg p-4'>
+              <div className='grid md:grid-cols-2 gap-3'>
+                {course.features.map((feature, index) => (
+                  <div
+                    key={index}
+                    className='flex items-center gap-3 bg-white border border-gray-200 rounded-md px-4 py-3'
+                  >
+                    <CheckCircleIcon className='w-4 h-4 text-green-600 flex-shrink-0' />
+                    <Text level='p' className='text-gray-700 font-medium'>
+                      {feature}
+                    </Text>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Price Details */}
-        <div className='bg-green-50 border border-green-200 rounded-lg p-4'>
-          <div className='flex items-center gap-3 mb-3'>
-            <BanknotesIcon className='w-5 h-5 text-green-600' />
-            <Text level='h4' className='font-semibold text-gray-800'>
-              Price Details
+        <div className='bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl p-6'>
+          <div className='flex items-center gap-3 mb-4'>
+            <div className='p-2 bg-green-100 rounded-lg'>
+              <BanknotesIcon className='w-6 h-6 text-green-600' />
+            </div>
+            <Text level='h3' className='font-bold text-gray-900'>
+              🎯 Limited Time Investment
             </Text>
           </div>
-          <div className='flex justify-between items-center'>
-            <Text level='p' className='text-gray-600'>
-              Course Price
-            </Text>
-            <div className='text-right'>
-              <Text level='p' className='text-2xl font-bold text-green-600'>
-                ₹{course.price}
+          <div className='flex justify-between items-center mb-4'>
+            <div>
+              <Text level='p' className='text-gray-700 font-semibold'>
+                {productName} Price
               </Text>
-              <Text level='p' className='text-sm text-gray-500'>
-                One-time payment
+              <Text level='p' className='text-sm text-gray-600'>
+                One-time investment • Lifetime value
               </Text>
             </div>
+            <div className='text-right'>
+              <div className='flex items-baseline gap-2'>
+                <Text level='p' className='text-sm text-gray-500 line-through'>
+                  ₹{Math.round((course.price || 49) * 2.5)}
+                </Text>
+                <Text level='p' className='text-3xl font-bold text-green-600'>
+                  ₹{course.price || 49}
+                </Text>
+              </div>
+              <div className='bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold'>
+                {Math.round(((Math.round((course.price || 49) * 2.5) - (course.price || 49)) / Math.round((course.price || 49) * 2.5)) * 100)}% OFF
+              </div>
+            </div>
+          </div>
+          <div className='bg-white bg-opacity-50 rounded-lg p-3 border border-green-200'>
+            <Text level='p' className='text-sm text-gray-700 text-center'>
+              💡 <strong>ROI Guarantee:</strong> This investment typically pays for itself within weeks through improved interview performance or job opportunities
+            </Text>
           </div>
         </div>
 
         {/* Student Details */}
         <div className='bg-purple-50 border border-purple-200 rounded-lg p-4'>
           <div className='flex items-center gap-3 mb-3'>
-            <UserIcon className='w-5 h-5 text-purple-600' />
+            <div className='p-2 bg-purple-100 rounded-lg'>
+              <UserIcon className='w-5 h-5 text-purple-600' />
+            </div>
             <Text level='h4' className='font-semibold text-gray-800'>
-              Student Details
+              Your Account Details
             </Text>
           </div>
-          <div className='space-y-2'>
-            <div className='flex items-center gap-2'>
-              <Text level='p' className='text-gray-600 font-medium'>
-                Name:
-              </Text>
-              <Text level='p' className='text-gray-800'>
-                {user?.name}
-              </Text>
-            </div>
-            <div className='flex items-center gap-2'>
-              <Text level='p' className='text-gray-600 font-medium'>
-                Email:
-              </Text>
-              <Text level='p' className='text-gray-800'>
-                {user?.email}
-              </Text>
+          <div className='space-y-3'>
+            <div className='flex items-center gap-3 bg-white rounded-lg p-3 border border-purple-200'>
+              <div className='w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm'>
+                {user?.name?.charAt(0)?.toUpperCase()}
+              </div>
+              <div>
+                <Text level='p' className='text-gray-900 font-semibold'>
+                  {user?.name}
+                </Text>
+                <Text level='p' className='text-gray-600 text-sm'>
+                  {user?.email}
+                </Text>
+              </div>
             </div>
           </div>
         </div>

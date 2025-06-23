@@ -10,6 +10,7 @@ import type {
 import type { FeedbackType } from '@/constant';
 import type {
   BaseShikshaCourseResponseProps,
+  BaseInterviewSheetResponseProps,
   CertificateType,
   CohortRoadmapProps,
   GetSEOMetaResponseType,
@@ -349,6 +350,7 @@ export interface SheetHeroContainerProps {
   name: string;
   isEnrolled?: boolean;
   id: string;
+  isPremium?: boolean;
 }
 
 export interface AccordionProps {
@@ -722,7 +724,7 @@ export interface ResumeEvaluationSectionProps {
 }
 
 export interface PaymentCardProps {
-  course: BaseShikshaCourseResponseProps;
+  course: BaseShikshaCourseResponseProps | BaseInterviewSheetResponseProps;
   onClose: () => void;
   productType: string;
 }

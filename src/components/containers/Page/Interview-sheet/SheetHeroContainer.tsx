@@ -14,6 +14,7 @@ const SheetHeroContainer = ({
   id,
   name,
   isEnrolled,
+  isPremium,
 }: SheetHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -53,11 +54,21 @@ const SheetHeroContainer = ({
         <LoginRedirectButton text='Login to Get Started' />
       </FlexContainer>
     );
-  } else if (isAuth && !isEnrolled) {
+  } else if (isAuth && !isEnrolled && !isPremium) {
     headerActionButton = (
       <FlexContainer>
         <Button
           text='Enroll in Sheet'
+          variant='PRIMARY'
+          onClick={enrollSheet}
+        />
+      </FlexContainer>
+    );
+  } else if (isAuth && !isEnrolled && isPremium) {
+    headerActionButton = (
+      <FlexContainer>
+        <Button
+          text='🚀 Premium Sheet - View to Purchase'
           variant='PRIMARY'
           onClick={enrollSheet}
         />
