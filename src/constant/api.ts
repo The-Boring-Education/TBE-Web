@@ -59,6 +59,11 @@ const NOTIFICATION_TYPE: NotificationType[] = [
   'INTERVIEW PREP',
   'UPDATE',
   'COHORT',
+  'PREP YATRA',
+  'TECH YATRA',
+  'DSA YATRA',
+  'RESUME YATRA',
+  'TOOLS',
 ];
 
 const USER_ROLE: UserRoleType[] = [

@@ -25,7 +25,11 @@ export type ProductLabelType =
   | 'Interview Prep'
   | 'Portfolio'
   | 'YouFocus'
-  | 'UnSkilled';
+  | 'UnSkilled'
+  | 'Prep Yatra'
+  | 'Tech Yatra'
+  | 'DSA Yatra'
+  | 'Resume Yatra';
 
 export type CohortLabelType = 'Bring Your Idea';
 
@@ -102,7 +106,12 @@ export type NotificationType =
   | 'PROJECT'
   | 'INTERVIEW PREP'
   | 'UPDATE'
-  | 'COHORT';
+  | 'COHORT'
+  | 'PREP YATRA'
+  | 'TECH YATRA'
+  | 'DSA YATRA'
+  | 'RESUME YATRA'
+  | 'TOOLS';
 
 export type UserRoleType =
   | 'TECH_STUDENT'

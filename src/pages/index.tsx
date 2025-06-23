@@ -21,6 +21,7 @@ import {
   routes,
   STATIC_FILE_PATH,
   USP,
+  YATRA_TOOLS,
 } from '@/constant';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
@@ -73,6 +74,16 @@ const Home = ({ seoMeta }: PageProps) => {
         heading='Our'
         id={routes.internals.landing.products}
       />
+      
+      {/* Yatra Tools Section */}
+      <CardContainerB
+        borderColour={3}
+        cards={YATRA_TOOLS}
+        focusText='Tools'
+        heading='Powerful'
+        id='yatra-tools'
+      />
+      
       <NotificationContainer />
       <Banner
         buttonLink={routes.cohort.bringYourIdea}
