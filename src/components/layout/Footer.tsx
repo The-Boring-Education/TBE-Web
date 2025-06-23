@@ -245,7 +245,7 @@ const Footer = () => {
 
             <div className='flex items-center gap-4'>
               <Text className='text-gray-400 text-xs' level='span'>
-                Made for developers, by developers
+                Made for developers, by Developers
               </Text>
             </div>
           </FlexContainer>
