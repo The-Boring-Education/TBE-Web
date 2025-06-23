@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-
-import { PrepLog,Recruiter } from "@/database";
+import { Recruiter,PrepLog } from "@/database";
 import type {
-  AddPrepLogToDBPayloadProps,
   AddRecruiterToDBPayloadProps,
-  DatabaseQueryResponseType} from "@/interfaces";
+  DatabaseQueryResponseType,
+  AddPrepLogToDBPayloadProps
+} from "@/interfaces";
 
 const getRecruitersByUserFromDB = async (
   userId: string
@@ -132,17 +132,13 @@ const deletePrepLogInDB = async (prepLogId: string) => {
   }
 };
 
-
-
-
-
-
 export {
-  addPrepLogToDB,
-  addRecruiterToDB,
-  deletePrepLogInDB,
-  deleteRecruiterInDB,
-  getPrepLogsByUserFromDB,
   getRecruitersByUserFromDB,
+  addRecruiterToDB,
+  updateRecruiterInDB,
+  deleteRecruiterInDB,
+  addPrepLogToDB,
+  getPrepLogsByUserFromDB,
   updatePrepLogInDB,
-  updateRecruiterInDB};
+  deletePrepLogInDB
+};
