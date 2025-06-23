@@ -4,11 +4,14 @@ import { envConfig } from '@/constant';
 
 import initMiddleware from './initMiddleware';
 
+const allowedOrigins = [
+  envConfig.PREPYATRA_APP_URL,
+];
 
 export const cors = initMiddleware(
   Cors({
-    origin: envConfig.PY_FRONTEND,
-    methods: ['GET', 'POST','PUT', 'OPTIONS','DELETE'],
-    credentials:true,
-})
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'OPTIONS', 'DELETE'],
+    credentials: true,
+  })
 );
