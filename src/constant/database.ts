@@ -53,7 +53,7 @@ export const APPLICATION_STATUS = [
 export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
 
 const modelSelectParams = {
-  coursePreview: '_id name slug coverImageURL description liveOn',
+  coursePreview: '_id name slug coverImageURL description liveOn isPremium',
   projectPreview: '_id name slug coverImageURL description isActive',
 };
 

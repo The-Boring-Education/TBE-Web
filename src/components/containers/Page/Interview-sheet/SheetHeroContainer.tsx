@@ -64,16 +64,6 @@ const SheetHeroContainer = ({
         />
       </FlexContainer>
     );
-  } else if (isAuth && !isEnrolled && isPremium) {
-    headerActionButton = (
-      <FlexContainer>
-        <Button
-          text='🚀 Premium Sheet - View to Purchase'
-          variant='PRIMARY'
-          onClick={enrollSheet}
-        />
-      </FlexContainer>
-    );
   }
 
   if (loading) {

@@ -304,8 +304,8 @@ const getSheetPageProps = async (context: any) => {
         if (selectedQuestionMeta) meta = selectedQuestionMeta;
       }
 
-      const isEnrolled = await checkUserCourseEnrollment(sheetId, user?.id);
-      sheetId.isEnrolled = isEnrolled;
+
+      const isEnrolled = sheet.isEnrolled
 
       return {
         props: {
@@ -314,6 +314,7 @@ const getSheetPageProps = async (context: any) => {
           sheet,
           meta,
           currentQuestionId,
+          isEnrolled,
         },
       };
     } catch (error) {

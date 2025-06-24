@@ -261,6 +261,7 @@ export interface PrimaryCardWithCTAProps {
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
   target?: '_blank';
   launchingOn?: string;
+  isPremium?:string
 }
 
 export interface LandingPageHeroProps {
@@ -394,6 +395,7 @@ export interface QuestionLinkProps {
   title: string;
   question: string;
   isCompleted: boolean;
+  isLocked?:boolean;
   currentQuestionId: string;
   handleQuestionClick: (question: string) => void;
   frequency: QuestionFrequencyType;

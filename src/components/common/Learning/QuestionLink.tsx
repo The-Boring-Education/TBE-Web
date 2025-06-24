@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FaRegCircle } from 'react-icons/fa';
+import { FaLock, FaRegCircle } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 import type { QuestionLinkProps } from '@/interfaces';
@@ -12,6 +12,7 @@ const QuestionLink = ({
   isCompleted,
   currentQuestionId,
   frequency,
+  isLocked = false,
   handleQuestionClick,
 }: QuestionLinkProps) => {
   let additionalClasses =
@@ -34,12 +35,24 @@ const QuestionLink = ({
   return (
     <Link
       key={questionId}
-      className={`flex items-center gap-1 w-full p-2 mb-1 rounded text-left pre-title hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`}
+      className={`flex items-center gap-1 w-full p-2 mb-1 rounded text-left pre-title ${
+        isLocked
+          ? 'text-gray-700 cursor-not-allowed'
+          : `hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`
+      }`}
       href={href}
-      onClick={() => handleQuestionClick(question)}
+      onClick={(e) => {
+        if (isLocked) {
+          e.preventDefault();
+          return;
+        }
+        handleQuestionClick(question);
+      }}
     >
       <div className='flex-shrink-0'>
-        {isCompleted ? (
+        {isLocked ? (
+          <FaLock className='text-gray-400' size={20} />
+        ) : isCompleted ? (
           <IoIosCheckmarkCircle className={iconColor} size={24} />
         ) : (
           <FaRegCircle className={iconColor} size={24} />
