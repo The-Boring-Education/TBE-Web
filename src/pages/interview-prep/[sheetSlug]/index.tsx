@@ -64,11 +64,14 @@ const SheetPage = ({
   const { makeRequest } = useApi(`interview-prep/${sheet}`);
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
-  const { isLocked } = usePaymentStatus({
+  const { isPurchased } = usePaymentStatus({
     userId: user?.id,
     productId: sheet?._id,
     isPremium: sheet?.isPremium,
   });
+
+    const isLocked =
+    sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
 
   if (!sheet) return null;
 
@@ -173,10 +176,10 @@ const SheetPage = ({
               </Text>
 
               {/* LinerProgressBar */}
-              <LinerProgressBar
+             {!isLocked && ( <LinerProgressBar
                 completedChapters={completedQuestions}
                 totalChapters={totalQuestions}
-              />
+              />)}
             </div>
 
             <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
@@ -195,6 +198,7 @@ const SheetPage = ({
                       question={`${question}\n\n${answer}`}
                       questionId={questionId}
                       title={title}
+                      isLocked={isLocked}
                     />
                   );
                 }
@@ -205,7 +209,6 @@ const SheetPage = ({
           {/* Main Content Area */}
           <FlexContainer
             className='border md:w-8/12 w-full p-2 rounded'
-            disabled={!sheet.isEnrolled}
             itemCenter={false}
             justifyCenter={false}
           >
