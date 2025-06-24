@@ -6,6 +6,7 @@ import type {
 } from '@/interfaces';
 
 import {
+  checkUserCourseEnrollment,
   fetchAPIData,
   formatDate,
   getSelectedCourseChapterMeta,
@@ -230,6 +231,9 @@ const getCoursePageProps = async (context: any) => {
         if (selectedChapterMeta) meta = selectedChapterMeta;
       }
 
+      const isEnrolled = await checkUserCourseEnrollment(courseId, user?.id);
+      course.isEnrolled = isEnrolled;
+
       return {
         props: {
           slug,
@@ -237,6 +241,7 @@ const getCoursePageProps = async (context: any) => {
           course,
           meta,
           currentChapterId,
+          isEnrolled,
         },
       };
     } catch (error) {

@@ -23,7 +23,7 @@ const steps = [StepUsername, StepOccupation, StepUsage, StepPhoneNumber];
 
 const OnboardingPage = ({ seoMeta }: PageProps) => {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, updateSession } = useUser();
   const { makeRequest } = useApi('onboarding');
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -39,6 +39,7 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
     message: string;
     type?: 'success' | 'error';
   } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { userName, occupation, purpose, contactNo } = form;
 
@@ -48,29 +49,41 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
   const handleBack = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   const handleSubmit = async () => {
-    if (!user?.id) return;
+    if (!user?.id || isSubmitting) return;
+
+    setIsSubmitting(true);
 
     try {
       const payload = { ...form, isOnboarded: true };
 
-      await makeRequest({
+      const { status } = await makeRequest({
         url: `${routes.api.onboard}?userId=${user.id}`,
         method: 'POST',
         body: payload,
       });
 
-      setToast({
-        message: 'Onboarding completed successfully!',
-        type: 'success',
-      });
+      if (status) {
+        setToast({
+          message: 'Onboarding completed successfully!',
+          type: 'success',
+        });
 
-      const redirectTo = getRedirectUrl();
-      router.push(redirectTo);
+        // Update the session to reflect the new onboarding status
+        await updateSession();
+
+        // Add a small delay to ensure session is updated
+        setTimeout(() => {
+          const redirectTo = getRedirectUrl();
+          router.push(redirectTo);
+        }, 500);
+      }
     } catch {
       setToast({
         message: 'Something went wrong. Please try again.',
         type: 'error',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -161,6 +174,7 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
             onBack={handleBack}
             onNext={handleNext}
             onSubmit={handleSubmit}
+            isLoading={isSubmitting}
           />
         </FlexContainer>
       </OnboardingLayout>
