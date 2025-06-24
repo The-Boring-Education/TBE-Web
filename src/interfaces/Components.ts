@@ -73,6 +73,7 @@ export interface ButtonProps {
   animationClasses?: string;
   icon?: React.ReactNode;
   isFullWidth?: boolean;
+  disabled?: boolean;
 }
 
 export interface PageLayoutProps {
@@ -647,6 +648,7 @@ export interface StepNavigationProps {
   onNext: () => void;
   onSubmit: () => void;
   onBack: () => void;
+  isLoading?: boolean;
 }
 
 export interface StepOccupationProps {

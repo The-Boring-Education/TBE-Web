@@ -27,10 +27,9 @@ const AppContent = ({
   const { isOnboarded, isAuth, loading } = useUser();
 
   useEffect(() => {
-    if (loading) return;
+    if (loading || !isAuth) return;
 
-    // Redirect to onboarding if not onboarded and authenticated
-    if (!isOnboarded && isAuth) {
+    if (!isOnboarded && isAuth && router.pathname !== routes.onboarding) {
       router.push(routes.onboarding);
     }
     // Redirect to dashboard if onboarded and authenticated
@@ -38,7 +37,7 @@ const AppContent = ({
       const redirectTo = getRedirectUrl();
       router.push(redirectTo);
     }
-  }, [isAuth, isOnboarded, loading, router]);
+  }, [isAuth, isOnboarded, loading, router, router.pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>

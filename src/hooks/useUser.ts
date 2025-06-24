@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import type { User, UseUserReturnType } from '@/interfaces';
 
 const useUser = (): UseUserReturnType => {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const [user, setUser] = useState<User>(session?.user as User);
   const [isAuth, setIsAuth] = useState(false);
   const [isOnboarded, setIsOnboarded] = useState(false);
@@ -27,7 +27,7 @@ const useUser = (): UseUserReturnType => {
     }
   }, [session, status]);
 
-  return { user, isAuth, loading, isOnboarded };
+  return { user, isAuth, loading, isOnboarded, updateSession: update };
 };
 
 export default useUser;

@@ -32,18 +32,18 @@ const usePaymentStatus = ({
       }
     };
 
-    if (userId && productId && isPremium) {
-      checkPaymentStatus();
+    if (isPremium) {
+      if (!userId || !productId) {
+        setIsPurchased(false);
+      } else {
+        checkPaymentStatus();
+      }
     } else {
       setIsPurchased(true);
     }
   }, [userId, productId, isPremium]);
 
   const isLocked = isPremium && isPurchased === false;
-
-  if (!userId || !productId) {
-    return { isLocked: true };
-  }
 
   return { isPurchased, isLocked };
 };

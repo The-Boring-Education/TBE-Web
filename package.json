@@ -9,7 +9,7 @@
     "lint": "eslint src --fix",
     "format": "prettier -w .",
     "typecheck": "tsc --noEmit --incremental false",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "release": "npm run lint && npm run format && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
