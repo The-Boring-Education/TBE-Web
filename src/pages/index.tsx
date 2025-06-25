@@ -74,7 +74,7 @@ const Home = ({ seoMeta }: PageProps) => {
         heading='Our'
         id={routes.internals.landing.products}
       />
-      
+
       {/* Yatra Tools Section */}
       <CardContainerB
         borderColour={3}
@@ -83,7 +83,7 @@ const Home = ({ seoMeta }: PageProps) => {
         heading='Powerful'
         id='yatra-tools'
       />
-      
+
       <NotificationContainer />
       <Banner
         buttonLink={routes.cohort.bringYourIdea}

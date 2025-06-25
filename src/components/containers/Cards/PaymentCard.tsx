@@ -43,17 +43,20 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
         {
           icon: StarIcon,
           title: 'Expert Solutions',
-          description: 'Detailed explanations and optimal approaches for each question',
+          description:
+            'Detailed explanations and optimal approaches for each question',
         },
         {
           icon: LightBulbIcon,
           title: 'Interview Insights',
-          description: 'Pro tips and common mistakes to avoid during interviews',
+          description:
+            'Pro tips and common mistakes to avoid during interviews',
         },
         {
           icon: ClockIcon,
           title: 'Save 100+ Hours',
-          description: 'Curated content saves months of research and preparation',
+          description:
+            'Curated content saves months of research and preparation',
         },
       ]
     : [
@@ -65,7 +68,8 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
         {
           icon: StarIcon,
           title: 'Industry Relevant',
-          description: 'Latest technologies and best practices used in industry',
+          description:
+            'Latest technologies and best practices used in industry',
         },
         {
           icon: CheckCircleIcon,
@@ -75,7 +79,8 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
         {
           icon: ClockIcon,
           title: 'Lifetime Access',
-          description: 'Learn at your own pace with permanent access to content',
+          description:
+            'Learn at your own pace with permanent access to content',
         },
       ];
 
@@ -164,14 +169,17 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
         <div className='bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200'>
           <div className='flex items-start gap-4'>
             <div className='p-3 bg-blue-100 rounded-lg'>
-              {React.createElement(productIcon, { className: 'w-8 h-8 text-blue-600' })}
+              {React.createElement(productIcon, {
+                className: 'w-8 h-8 text-blue-600',
+              })}
             </div>
             <div className='flex-1'>
               <Text level='h3' className='font-bold text-gray-900 mb-2'>
                 {course.name}
               </Text>
               <Text level='p' className='text-gray-700 leading-relaxed'>
-                {course.description || `Premium ${productName.toLowerCase()} designed to accelerate your learning and career growth.`}
+                {course.description ||
+                  `Premium ${productName.toLowerCase()} designed to accelerate your learning and career growth.`}
               </Text>
             </div>
           </div>
@@ -179,7 +187,10 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
 
         {/* Why This Is Worth It */}
         <div>
-          <Text level='h3' className='font-bold text-gray-900 mb-4 flex items-center gap-2'>
+          <Text
+            level='h3'
+            className='font-bold text-gray-900 mb-4 flex items-center gap-2'
+          >
             <StarIcon className='w-5 h-5 text-yellow-500' />
             Why thousands choose our premium {productName.toLowerCase()}s
           </Text>
@@ -208,7 +219,10 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
         {/* What's Included */}
         {course.features && course.features.length > 0 && (
           <div>
-            <Text level='h4' className='font-semibold text-gray-800 mb-4 flex items-center gap-2'>
+            <Text
+              level='h4'
+              className='font-semibold text-gray-800 mb-4 flex items-center gap-2'
+            >
               <CheckCircleIcon className='w-5 h-5 text-green-600' />
               Everything included in your purchase
             </Text>
@@ -259,13 +273,21 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
                 </Text>
               </div>
               <div className='bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold'>
-                {Math.round(((Math.round((course.price || 49) * 2.5) - (course.price || 49)) / Math.round((course.price || 49) * 2.5)) * 100)}% OFF
+                {Math.round(
+                  ((Math.round((course.price || 49) * 2.5) -
+                    (course.price || 49)) /
+                    Math.round((course.price || 49) * 2.5)) *
+                    100
+                )}
+                % OFF
               </div>
             </div>
           </div>
           <div className='bg-white bg-opacity-50 rounded-lg p-3 border border-green-200'>
             <Text level='p' className='text-sm text-gray-700 text-center'>
-              💡 <strong>ROI Guarantee:</strong> This investment typically pays for itself within weeks through improved interview performance or job opportunities
+              💡 <strong>ROI Guarantee:</strong> This investment typically pays
+              for itself within weeks through improved interview performance or
+              job opportunities
             </Text>
           </div>
         </div>

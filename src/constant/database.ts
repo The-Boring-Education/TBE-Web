@@ -18,8 +18,8 @@ const DATABASE_MODELS = {
   FEEDBACK: 'Feedback',
   JOB_AGGREGATE: 'JobAggregate',
   PAYMENT: 'Payment',
-  RECRUITER:'Recruiters',
-  PREP_LOG:'PrepLog'
+  RECRUITER: 'Recruiters',
+  PREP_LOG: 'PrepLog',
 };
 
 export const FEEDBACK_TYPES = [
@@ -47,8 +47,8 @@ export const APPLICATION_STATUS = [
   'Final Round Done',
   'Offer Letter',
   'Rejected',
-  'Not Interested'
-]
+  'Not Interested',
+];
 
 export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
 

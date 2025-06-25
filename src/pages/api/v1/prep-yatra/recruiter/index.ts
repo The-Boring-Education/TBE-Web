@@ -1,13 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { addRecruiterToDB, deleteRecruiterInDB,getRecruitersByUserFromDB, updateRecruiterInDB } from '@/database';
+import {
+  addRecruiterToDB,
+  deleteRecruiterInDB,
+  getRecruitersByUserFromDB,
+  updateRecruiterInDB,
+} from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 import { cors } from '@/utils/cors';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req,res)
+  await cors(req, res);
   await connectDB();
 
   switch (req.method) {
@@ -18,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'PUT':
       return handleUpdateRecruiter(req, res);
     case 'DELETE':
-        return handleDeleteRecruiter(req,res)
+      return handleDeleteRecruiter(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -29,7 +34,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handleGetRecruiters = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleGetRecruiters = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   try {
     const { userId } = req.query;
 
@@ -70,7 +78,10 @@ const handleGetRecruiters = async (req: NextApiRequest, res: NextApiResponse) =>
   }
 };
 
-const handleAddRecruiter = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleAddRecruiter = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   try {
     const { userId, recruiterName } = req.body;
 
@@ -116,7 +127,10 @@ const handleAddRecruiter = async (req: NextApiRequest, res: NextApiResponse) => 
   }
 };
 
-const handleUpdateRecruiter = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleUpdateRecruiter = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   try {
     const { recruiterId, ...updatePayload } = req.body;
 
@@ -129,7 +143,10 @@ const handleUpdateRecruiter = async (req: NextApiRequest, res: NextApiResponse) 
       );
     }
 
-    const { data, error } = await updateRecruiterInDB(recruiterId, updatePayload);
+    const { data, error } = await updateRecruiterInDB(
+      recruiterId,
+      updatePayload
+    );
 
     if (error) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -158,7 +175,10 @@ const handleUpdateRecruiter = async (req: NextApiRequest, res: NextApiResponse) 
   }
 };
 
-const handleDeleteRecruiter = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleDeleteRecruiter = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   try {
     const { recruiterId } = req.query;
 
@@ -171,7 +191,7 @@ const handleDeleteRecruiter = async (req: NextApiRequest, res: NextApiResponse) 
       );
     }
 
-    const {data,error} = await deleteRecruiterInDB(recruiterId)
+    const { data, error } = await deleteRecruiterInDB(recruiterId);
 
     if (error) {
       return res.status(apiStatusCodes.NOT_FOUND).json(
@@ -199,6 +219,5 @@ const handleDeleteRecruiter = async (req: NextApiRequest, res: NextApiResponse) 
     );
   }
 };
-
 
 export default handler;

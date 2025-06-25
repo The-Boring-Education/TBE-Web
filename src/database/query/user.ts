@@ -94,29 +94,29 @@ const onboardUserToDB = async (
   }
 };
 
-const onboardPrepYatraUserTODB = async(
-  userId:string,
-  workExperience:number,
-  workDomain:WorkDomainType,
-  linkedInUrl:string,
-) : Promise<DatabaseQueryResponseType> =>{
-const user = await User.findByIdAndUpdate(
-      userId,
-      {
-       prepYatra:{
+const onboardPrepYatraUserTODB = async (
+  userId: string,
+  workExperience: number,
+  workDomain: WorkDomainType,
+  linkedInUrl: string
+): Promise<DatabaseQueryResponseType> => {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      prepYatra: {
         workExperience,
         workDomain,
         linkedInUrl,
-        pyOnboarded:true,
-       }
+        pyOnboarded: true,
       },
-      { new: true }
-    );
+    },
+    { new: true }
+  );
 
-    if (!user) return { error: 'User does not exist' };
+  if (!user) return { error: 'User does not exist' };
 
-    return { data: user };
-}
+  return { data: user };
+};
 
 export {
   createUserInDB,

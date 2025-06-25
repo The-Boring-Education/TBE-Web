@@ -70,7 +70,7 @@ const SheetPage = ({
     isPremium: sheet?.isPremium,
   });
 
-    const isLocked =
+  const isLocked =
     sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
 
   if (!sheet) return null;
@@ -176,10 +176,12 @@ const SheetPage = ({
               </Text>
 
               {/* LinerProgressBar */}
-             {!isLocked && ( <LinerProgressBar
-                completedChapters={completedQuestions}
-                totalChapters={totalQuestions}
-              />)}
+              {!isLocked && (
+                <LinerProgressBar
+                  completedChapters={completedQuestions}
+                  totalChapters={totalQuestions}
+                />
+              )}
             </div>
 
             <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
@@ -224,8 +226,9 @@ const SheetPage = ({
                     🚀 This is a Premium Interview Sheet
                   </Text>
                   <Text level='p' className='mb-4'>
-                    To access all the interview questions and detailed solutions, please complete the payment.
-                    Once payment is confirmed, all questions will be unlocked instantly.
+                    To access all the interview questions and detailed
+                    solutions, please complete the payment. Once payment is
+                    confirmed, all questions will be unlocked instantly.
                   </Text>
                   {!showPayment && (
                     <Button

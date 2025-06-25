@@ -1,17 +1,18 @@
 import mongoose from 'mongoose';
 
-import { PrepLog,Recruiter } from "@/database";
+import { PrepLog, Recruiter } from '@/database';
 import type {
   AddPrepLogToDBPayloadProps,
   AddRecruiterToDBPayloadProps,
-  DatabaseQueryResponseType} from "@/interfaces";
+  DatabaseQueryResponseType,
+} from '@/interfaces';
 
 const getRecruitersByUserFromDB = async (
   userId: string
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const recruiters = await Recruiter.find({
-      user: new mongoose.Types.ObjectId(userId)
+      user: new mongoose.Types.ObjectId(userId),
     }).sort({ updatedAt: -1 });
     return { data: recruiters };
   } catch (error) {
@@ -26,13 +27,13 @@ const addRecruiterToDB = async ({
   try {
     const addRecruiter = new Recruiter({
       user: userId,
-      recruiterName
+      recruiterName,
     });
 
     await addRecruiter.save();
     return { data: addRecruiter };
   } catch (error) {
-    return { error: "Error while saving recruiter to DB" };
+    return { error: 'Error while saving recruiter to DB' };
   }
 };
 
@@ -57,45 +58,40 @@ const updateRecruiterInDB = async (
   }
 };
 
-const deleteRecruiterInDB = async(
-  recruiterId:string
-): Promise<DatabaseQueryResponseType> =>{
-  try {
-      const deletedRecruiter = await Recruiter.findByIdAndDelete(recruiterId);
-
-      if(!deletedRecruiter){
-        return {error:"Recruiter not deleted"}
-      }
-
-      return {data:deletedRecruiter}
-
-  } catch (error) {
-        return { error: 'Failed to update recruiter: '};
-
-  }
-}
-
-const addPrepLogToDB = async (
-  {
-    userId,
-    title,
-    description,
-    timeSpent
-  }:AddPrepLogToDBPayloadProps
+const deleteRecruiterInDB = async (
+  recruiterId: string
 ): Promise<DatabaseQueryResponseType> => {
   try {
+    const deletedRecruiter = await Recruiter.findByIdAndDelete(recruiterId);
+
+    if (!deletedRecruiter) {
+      return { error: 'Recruiter not deleted' };
+    }
+
+    return { data: deletedRecruiter };
+  } catch (error) {
+    return { error: 'Failed to update recruiter: ' };
+  }
+};
+
+const addPrepLogToDB = async ({
+  userId,
+  title,
+  description,
+  timeSpent,
+}: AddPrepLogToDBPayloadProps): Promise<DatabaseQueryResponseType> => {
+  try {
     const newLog = await PrepLog.create({
-      user:userId,
+      user: userId,
       title,
       description,
-      timeSpent
+      timeSpent,
     });
     return { data: newLog };
   } catch (error: any) {
     return { error: error.message };
   }
 };
-
 
 const getPrepLogsByUserFromDB = async (userId: string) => {
   try {
@@ -140,4 +136,5 @@ export {
   getPrepLogsByUserFromDB,
   getRecruitersByUserFromDB,
   updatePrepLogInDB,
-  updateRecruiterInDB};
+  updateRecruiterInDB,
+};

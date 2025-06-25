@@ -1,6 +1,10 @@
 import type { Document, Schema, Types } from 'mongoose';
 
-import type { ApplicationStatusType, FeedbackType, ProductType } from '@/constant';
+import type {
+  ApplicationStatusType,
+  FeedbackType,
+  ProductType,
+} from '@/constant';
 
 import type {
   CertificateType,
@@ -27,12 +31,12 @@ export interface UserModel {
   purpose?: PlatformUsageType[];
   contactNo?: string;
   isOnboarded?: boolean;
-  prepYatra?:{
-    linkedInUrl?:string;
-    pyOnboarded?:boolean;
-    workExperience:number | null;
-    workDomain:WorkDomainType | '';
-  }
+  prepYatra?: {
+    linkedInUrl?: string;
+    pyOnboarded?: boolean;
+    workExperience: number | null;
+    workDomain: WorkDomainType | '';
+  };
 }
 
 export interface ProjectChapter {
@@ -301,16 +305,16 @@ export interface WebhookEvent {
   payment_status: 'SUCCESS' | 'FAILED';
 }
 
-export interface RecruiterModel extends Document{
+export interface RecruiterModel extends Document {
   user: Types.ObjectId;
   recruiterName: string;
-  email?: string
+  email?: string;
   phone?: string;
   company?: string;
   appliedPosition?: string;
   applicationStatus?: ApplicationStatusType;
   lastContacted?: string;
-  follow_up_date?: string
+  follow_up_date?: string;
   last_interview_date?: string;
   link?: string;
   comments?: string;
@@ -320,5 +324,5 @@ export interface PrepLogModel extends Document {
   user: Types.ObjectId;
   title: string;
   timeSpent: number;
-  description?:string,
+  description?: string;
 }

@@ -4,6 +4,6 @@ export default function initMiddleware(middleware: any) {
       middleware(req, res, (result: any) => {
         if (result instanceof Error) return reject(result);
         return resolve(result);
-   });
-});
+      });
+    });
 }

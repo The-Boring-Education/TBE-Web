@@ -16,7 +16,6 @@ const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY as string;
 const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID as string;
 const PREPYATRA_APP_URL = process.env.PREPYATRA_APP_URL as string;
 
-
 const envConfig = {
   NODE_ENV,
   NEXT_PUBLIC_BASE_URL,

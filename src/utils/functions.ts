@@ -199,7 +199,7 @@ const mapCourseResponseToCard = (
       liveOn = new Date(),
       slug,
       isEnrolled,
-      isPremium
+      isPremium,
     }) => {
       const isActive = isProgramActive(liveOn);
 
@@ -248,7 +248,7 @@ const mapInterviewSheetResponseToCard = (
       liveOn = new Date(),
       slug,
       isEnrolled,
-      isPremium
+      isPremium,
     }) => {
       const isActive = isProgramActive(liveOn);
 
@@ -282,7 +282,7 @@ const mapInterviewSheetResponseToCard = (
         active: isActive,
         ctaText,
         launchingOn,
-        isPremium
+        isPremium,
       };
     }
   );

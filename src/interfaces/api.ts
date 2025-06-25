@@ -223,11 +223,11 @@ export interface AddOnboardingPayloadProps {
   purpose: PlatformUsageType[];
   contactNo: string;
 }
-export interface AddPrepYatraOnboardingPayloadProps{
-  userId:string;
-  linkedInUrl:string;
-  workExperience:number;
-  workDomain:WorkDomainType;
+export interface AddPrepYatraOnboardingPayloadProps {
+  userId: string;
+  linkedInUrl: string;
+  workExperience: number;
+  workDomain: WorkDomainType;
 }
 export interface CourseEnrollmentRequestProps {
   courseId: string;
@@ -423,14 +423,14 @@ export interface UpdatePaymentStatusPayloadProps {
   status: 'SUCCESS' | 'FAILED';
 }
 
-export interface AddRecruiterToDBPayloadProps{
-  userId:string
-  recruiterName:string
+export interface AddRecruiterToDBPayloadProps {
+  userId: string;
+  recruiterName: string;
 }
 
-export interface AddPrepLogToDBPayloadProps{
-userId: string;
+export interface AddPrepLogToDBPayloadProps {
+  userId: string;
   title: string;
   description: string;
-  timeSpent: number
+  timeSpent: number;
 }

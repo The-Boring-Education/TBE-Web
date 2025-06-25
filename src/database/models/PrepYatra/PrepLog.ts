@@ -1,4 +1,4 @@
-import { type Model,model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS } from '@/constant';
 import type { PrepLogModel } from '@/interfaces';
@@ -11,21 +11,22 @@ const PrepLogSchema = new Schema<PrepLogModel>(
       required: true,
     },
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
+      type: String,
     },
-    timeSpent: { 
-        type: Number, 
-        required: true 
+    timeSpent: {
+      type: Number,
+      required: true,
     },
   },
   { timestamps: true }
 );
 
 const PrepLog: Model<PrepLogModel> =
-  models?.PrepLog || model<PrepLogModel>(DATABASE_MODELS.PREP_LOG, PrepLogSchema);
+  models?.PrepLog ||
+  model<PrepLogModel>(DATABASE_MODELS.PREP_LOG, PrepLogSchema);
 
 export default PrepLog;

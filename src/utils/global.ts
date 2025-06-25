@@ -304,8 +304,7 @@ const getSheetPageProps = async (context: any) => {
         if (selectedQuestionMeta) meta = selectedQuestionMeta;
       }
 
-
-      const isEnrolled = sheet.isEnrolled
+      const isEnrolled = sheet.isEnrolled;
 
       return {
         props: {

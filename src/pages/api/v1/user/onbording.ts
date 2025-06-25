@@ -1,13 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { getUserByUserNameFromDB, onboardPrepYatraUserTODB, onboardUserToDB } from '@/database';
-import type { AddOnboardingPayloadProps, AddPrepYatraOnboardingPayloadProps } from '@/interfaces';
+import {
+  getUserByUserNameFromDB,
+  onboardPrepYatraUserTODB,
+  onboardUserToDB,
+} from '@/database';
+import type {
+  AddOnboardingPayloadProps,
+  AddPrepYatraOnboardingPayloadProps,
+} from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { cors, sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req,res)
+  await cors(req, res);
   await connectDB();
 
   const { method } = req;
@@ -22,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'POST':
       return handleUserOnboarding(req, res, userId);
     case 'PUT':
-      return handlePrepYatraOnboarding(req,res,userId)
+      return handlePrepYatraOnboarding(req, res, userId);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -141,7 +148,7 @@ const handlePrepYatraOnboarding = async (
   try {
     const { workExperience, workDomain, linkedInUrl } =
       req.body as AddPrepYatraOnboardingPayloadProps;
-      
+
     if (!userId || !workExperience || !workDomain) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({

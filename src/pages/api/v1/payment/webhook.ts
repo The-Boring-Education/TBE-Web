@@ -8,9 +8,14 @@ import {
   isDevelopmentEnv,
   isProductionEnv,
 } from '@/constant';
-import {enrollInACourse,enrollInASheet,getEnrolledCourseFromDB,
-getEnrolledSheetFromDB,
-getPaymentByOrderIdFromDB, updatePaymentStatusToDB} from '@/database';
+import {
+  enrollInACourse,
+  enrollInASheet,
+  getEnrolledCourseFromDB,
+  getEnrolledSheetFromDB,
+  getPaymentByOrderIdFromDB,
+  updatePaymentStatusToDB,
+} from '@/database';
 import { connectDB } from '@/middlewares';
 import {
   sendAPIResponse,
@@ -141,8 +146,7 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-     if (webhookEvent.payment_status === 'SUCCESS') {
-
+    if (webhookEvent.payment_status === 'SUCCESS') {
       if (_payment.productType === 'SHIKSHA') {
         const { data: alreadyEnrolled } = await getEnrolledCourseFromDB({
           userId: _payment.user,
@@ -156,7 +160,10 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
           });
 
           if (enrollError) {
-            console.error('Course enrollment failed after payment:', enrollError);
+            console.error(
+              'Course enrollment failed after payment:',
+              enrollError
+            );
           }
         }
       }
@@ -174,11 +181,13 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
           });
 
           if (enrollError) {
-            console.error('Interview sheet enrollment failed after payment:', enrollError);
+            console.error(
+              'Interview sheet enrollment failed after payment:',
+              enrollError
+            );
           }
         }
       }
-
     }
 
     return res.status(apiStatusCodes.OKAY).json({ status: 'OK' });

@@ -1,4 +1,4 @@
-import { type Model,model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
 
 import { APPLICATION_STATUS, DATABASE_MODELS } from '@/constant';
 import type { RecruiterModel } from '@/interfaces';
@@ -14,11 +14,11 @@ const RecruiterSchema = new Schema<RecruiterModel>(
       type: String,
       required: true,
     },
-    email:{
-      type:String,
+    email: {
+      type: String,
     },
-     phone:{
-      type:String,
+    phone: {
+      type: String,
     },
     company: {
       type: String,
@@ -33,23 +33,24 @@ const RecruiterSchema = new Schema<RecruiterModel>(
     lastContacted: {
       type: String,
     },
-    comments:{
+    comments: {
       type: String,
     },
-    follow_up_date:{
-      type:String,
+    follow_up_date: {
+      type: String,
     },
-    last_interview_date:{
-      type:String
+    last_interview_date: {
+      type: String,
     },
-    link:{
-      type:String,
-    }
+    link: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
 
 const Recruiter: Model<RecruiterModel> =
-   models?.Recruiters || model<RecruiterModel>(DATABASE_MODELS.RECRUITER, RecruiterSchema);
+  models?.Recruiters ||
+  model<RecruiterModel>(DATABASE_MODELS.RECRUITER, RecruiterSchema);
 
 export default Recruiter;
