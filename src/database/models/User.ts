@@ -1,6 +1,6 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS, PLATFORM_USAGE, TECH_STACK, USER_ROLE, WORK_DOMAIN } from '@/constant';
+import { DATABASE_MODELS, PLATFORM_USAGE, USER_ROLE, WORK_DOMAIN } from '@/constant';
 import type { UserModel } from '@/interfaces';
 
 const UserSchema: Schema<UserModel> = new Schema(
@@ -41,17 +41,26 @@ const UserSchema: Schema<UserModel> = new Schema(
     contactNo: {
       type: String,
     },
-    workExperience: {
-      type: Number,
-      min: 0,
-    },
-    workDomain: {
-      type: String,
-      enum: WORK_DOMAIN,
-    },
-    techStack: {
-      type: [String],
-      enum: TECH_STACK,
+   prepYatra: {
+    type: new Schema(
+      {
+        pyOnboarded:{
+        type:Boolean,
+        default:false
+      },
+      linkedInUrl:{
+        type:String,
+      },
+        workExperience: {
+        type: Number,
+        min: 0,
+      },
+      workDomain: {
+        type: String,
+        enum: WORK_DOMAIN,
+      },
+      }
+    )
     },
   },
   { timestamps: true }

@@ -9,7 +9,6 @@ import type {
   PlatformUsageType,
   PlaylistModel,
   ProjectChapter,
-  TechStackType,
   UserRoleType,
   WorkDomainType,
 } from '.';
@@ -226,9 +225,9 @@ export interface AddOnboardingPayloadProps {
 }
 export interface AddPrepYatraOnboardingPayloadProps{
   userId:string;
+  linkedInUrl:string;
   workExperience:number;
   workDomain:WorkDomainType;
-  techStack:TechStackType[]
 }
 export interface CourseEnrollmentRequestProps {
   courseId: string;

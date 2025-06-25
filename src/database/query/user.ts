@@ -3,7 +3,6 @@ import type {
   CreateUserRequestPayloadProps,
   DatabaseQueryResponseType,
   PlatformUsageType,
-  TechStackType,
   UserRoleType,
   WorkDomainType,
 } from '@/interfaces';
@@ -99,14 +98,17 @@ const onboardPrepYatraUserTODB = async(
   userId:string,
   workExperience:number,
   workDomain:WorkDomainType,
-  techStack:TechStackType[]
+  linkedInUrl:string,
 ) : Promise<DatabaseQueryResponseType> =>{
 const user = await User.findByIdAndUpdate(
       userId,
       {
+       prepYatra:{
         workExperience,
         workDomain,
-        techStack,
+        linkedInUrl,
+        pyOnboarded:true,
+       }
       },
       { new: true }
     );

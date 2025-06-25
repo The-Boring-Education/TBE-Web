@@ -6,7 +6,6 @@ import type {
   QuestionFrequencyType,
   RoadmapsType,
   SkillsType,
-  TechStackType,
   UserPointsActionType,
   UserRoleType,
   WorkDomainType,
@@ -87,24 +86,6 @@ const WORK_DOMAIN: WorkDomainType[] = [
   'AI_ML',
   'UI_UX',
   'CYBER_SECURITY',
-];
-
-const TECH_STACK: TechStackType[] = [
-  'JAVASCRIPT',
-  'TYPESCRIPT',
-  'REACT',
-  'NODE_JS',
-  'NEXT_JS',
-  'PYTHON',
-  'DJANGO',
-  'FLASK',
-  'JAVA',
-  'SPRING_BOOT',
-  'C_PLUS_PLUS',
-  'MONGO_DB',
-  'POSTGRESQL',
-  'AWS',
-  'DOCKER',
 ];
 
 const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
@@ -2566,7 +2547,6 @@ export {
   PROJECT_SKILLS,
   ROADMAPS,
   SKILL_BLACKLIST,
-  TECH_STACK,
   USER_POINTS_ACTION,
   USER_ROLE,
   WORK_DOMAIN,

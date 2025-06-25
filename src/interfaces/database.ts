@@ -9,7 +9,6 @@ import type {
   QuestionFrequencyType,
   RoadmapsType,
   SkillsType,
-  TechStackType,
   UnskilledLandingGraphDataProps,
   UserPointsActionType,
   UserRoleType,
@@ -28,9 +27,12 @@ export interface UserModel {
   purpose?: PlatformUsageType[];
   contactNo?: string;
   isOnboarded?: boolean;
-  workExperience:number;
-  workDomain:WorkDomainType;
-  techStack:TechStackType[];
+  prepYatra?:{
+    linkedInUrl?:string;
+    pyOnboarded?:boolean;
+    workExperience:number | null;
+    workDomain:WorkDomainType | '';
+  }
 }
 
 export interface ProjectChapter {
