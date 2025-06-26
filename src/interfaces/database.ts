@@ -1,6 +1,10 @@
 import type { Document, Schema, Types } from 'mongoose';
 
-import type { FeedbackType, ProductType } from '@/constant';
+import type {
+  ApplicationStatusType,
+  FeedbackType,
+  ProductType,
+} from '@/constant';
 
 import type {
   CertificateType,
@@ -13,6 +17,7 @@ import type {
   UserPointsActionType,
   UserRoleType,
   WebinarEnrolledUsersProps,
+  WorkDomainType,
 } from '.';
 
 export interface UserModel {
@@ -26,6 +31,12 @@ export interface UserModel {
   purpose?: PlatformUsageType[];
   contactNo?: string;
   isOnboarded?: boolean;
+  prepYatra?: {
+    linkedInUrl?: string;
+    pyOnboarded?: boolean;
+    workExperience: number | null;
+    workDomain: WorkDomainType | '';
+  };
 }
 
 export interface ProjectChapter {
@@ -95,8 +106,11 @@ export interface InterviewSheetModel extends Document {
   description: string;
   coverImageURL: string;
   liveOn: Date;
+  isPremium: boolean;
+  price: number;
   questions: InterviewSheetQuestionModel[];
   roadmap: RoadmapsType;
+  features: string[];
 }
 
 export interface InterviewSheetQuestionModel {
@@ -289,4 +303,26 @@ export interface WebhookEvent {
   payment_id?: string;
   isPaid: boolean;
   payment_status: 'SUCCESS' | 'FAILED';
+}
+
+export interface RecruiterModel extends Document {
+  user: Types.ObjectId;
+  recruiterName: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  appliedPosition?: string;
+  applicationStatus?: ApplicationStatusType;
+  lastContacted?: string;
+  follow_up_date?: string;
+  last_interview_date?: string;
+  link?: string;
+  comments?: string;
+}
+
+export interface PrepLogModel extends Document {
+  user: Types.ObjectId;
+  title: string;
+  timeSpent: number;
+  description?: string;
 }

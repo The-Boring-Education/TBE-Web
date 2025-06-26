@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { FaLock } from 'react-icons/fa';
 
 import {
   Button,
@@ -6,6 +7,7 @@ import {
   FlexContainer,
   LinerProgressBar,
   MDXRenderer,
+  PaymentCard,
   QuestionLink,
   Section,
   SEO,
@@ -13,7 +15,7 @@ import {
   Text,
 } from '@/components';
 import { routes } from '@/constant';
-import { useAnalytics, useApi, useUser } from '@/hooks';
+import { useAnalytics, useApi, usePaymentStatus, useUser } from '@/hooks';
 import type { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
 
@@ -31,6 +33,8 @@ const SheetPage = ({
       ?.isCompleted
   );
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const paymentSectionRef = useRef<HTMLDivElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -60,11 +64,28 @@ const SheetPage = ({
   const { makeRequest } = useApi(`interview-prep/${sheet}`);
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
+  const { isPurchased } = usePaymentStatus({
+    userId: user?.id,
+    productId: sheet?._id,
+    isPremium: sheet?.isPremium,
+  });
+
+  const isLocked =
+    sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
 
   if (!sheet) return null;
 
   const handleQuestionClick = (questionMeta: string) => {
-    setSheetMeta(questionMeta);
+    if (!isLocked) {
+      setSheetMeta(questionMeta);
+    }
+  };
+
+  const handleShowPayment = () => {
+    setShowPayment(true);
+    setTimeout(() => {
+      paymentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const toggleCompletion = async () => {
@@ -139,6 +160,7 @@ const SheetPage = ({
           id={sheet._id ?? ''}
           isEnrolled={sheet.isEnrolled}
           name={sheet.name ?? ''}
+          isPremium={sheet.isPremium}
         />
       </Section>
       <Section className='md:p-2 p-2'>
@@ -154,10 +176,12 @@ const SheetPage = ({
               </Text>
 
               {/* LinerProgressBar */}
-              <LinerProgressBar
-                completedChapters={completedQuestions}
-                totalChapters={totalQuestions}
-              />
+              {!isLocked && (
+                <LinerProgressBar
+                  completedChapters={completedQuestions}
+                  totalChapters={totalQuestions}
+                />
+              )}
             </div>
 
             <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
@@ -176,6 +200,7 @@ const SheetPage = ({
                       question={`${question}\n\n${answer}`}
                       questionId={questionId}
                       title={title}
+                      isLocked={isLocked}
                     />
                   );
                 }
@@ -186,37 +211,73 @@ const SheetPage = ({
           {/* Main Content Area */}
           <FlexContainer
             className='border md:w-8/12 w-full p-2 rounded'
-            disabled={!sheet.isEnrolled}
             itemCenter={false}
             justifyCenter={false}
           >
-            <MDXRenderer
-              actions={[
-                currentQuestionId && (
-                  <Button
-                    key='complete'
-                    className='w-fit mt-2'
-                    isLoading={isLoading}
-                    text={
-                      isLoading
-                        ? 'Marking...'
-                        : isQuestionCompleted
-                        ? 'Completed'
-                        : 'Mark As Completed'
-                    }
-                    variant={
-                      isQuestionCompleted
-                        ? 'SUCCESS'
-                        : isLoading
-                        ? 'SECONDARY'
-                        : 'PRIMARY'
-                    }
-                    onClick={toggleCompletion}
-                  />
-                ),
-              ]}
-              mdxSource={sheetMeta}
-            />
+            {isLocked ? (
+              <div className='w-full'>
+                <Text level='h2' className='heading-4 mb-4'>
+                  Interview Sheet Overview
+                </Text>
+                <MDXRenderer mdxSource={sheet.meta || ''} />
+                <div className='mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm'>
+                  <Text level='h4' className='mb-2 flex items-center gap-2'>
+                    <FaLock className='text-yellow-600' />
+                    🚀 This is a Premium Interview Sheet
+                  </Text>
+                  <Text level='p' className='mb-4'>
+                    To access all the interview questions and detailed
+                    solutions, please complete the payment. Once payment is
+                    confirmed, all questions will be unlocked instantly.
+                  </Text>
+                  {!showPayment && (
+                    <Button
+                      text='Pay Now to Unlock'
+                      variant='PRIMARY'
+                      className='w-fit'
+                      onClick={handleShowPayment}
+                    />
+                  )}
+                </div>
+                {showPayment && (
+                  <div ref={paymentSectionRef}>
+                    <PaymentCard
+                      course={sheet}
+                      onClose={() => setShowPayment(false)}
+                      productType='INTERVIEW_SHEET'
+                    />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <MDXRenderer
+                actions={[
+                  currentQuestionId && (
+                    <Button
+                      key='complete'
+                      className='w-fit mt-2'
+                      isLoading={isLoading}
+                      text={
+                        isLoading
+                          ? 'Marking...'
+                          : isQuestionCompleted
+                          ? 'Completed'
+                          : 'Mark As Completed'
+                      }
+                      variant={
+                        isQuestionCompleted
+                          ? 'SUCCESS'
+                          : isLoading
+                          ? 'SECONDARY'
+                          : 'PRIMARY'
+                      }
+                      onClick={toggleCompletion}
+                    />
+                  ),
+                ]}
+                mdxSource={sheetMeta}
+              />
+            )}
           </FlexContainer>
         </FlexContainer>
       </Section>

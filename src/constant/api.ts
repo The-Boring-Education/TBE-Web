@@ -8,6 +8,7 @@ import type {
   SkillsType,
   UserPointsActionType,
   UserRoleType,
+  WorkDomainType,
 } from '@/interfaces';
 
 const PROJECT_SKILLS: SkillsType[] = [
@@ -57,6 +58,11 @@ const NOTIFICATION_TYPE: NotificationType[] = [
   'INTERVIEW PREP',
   'UPDATE',
   'COHORT',
+  'PREP YATRA',
+  'TECH YATRA',
+  'DSA YATRA',
+  'RESUME YATRA',
+  'TOOLS',
 ];
 
 const USER_ROLE: UserRoleType[] = [
@@ -70,6 +76,16 @@ const PLATFORM_USAGE: PlatformUsageType[] = [
   'BUILDING_PROJECTS',
   'INTERVIEW_PREP',
   'JOB_SEARCH',
+];
+
+const WORK_DOMAIN: WorkDomainType[] = [
+  'WEB_DEVELOPMENT',
+  'DATA_SCIENCE',
+  'DEVOPS',
+  'MOBILE_DEVELOPMENT',
+  'AI_ML',
+  'UI_UX',
+  'CYBER_SECURITY',
 ];
 
 const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
@@ -2533,5 +2549,6 @@ export {
   SKILL_BLACKLIST,
   USER_POINTS_ACTION,
   USER_ROLE,
+  WORK_DOMAIN,
   YOUTUBE_API_PATH,
 };
