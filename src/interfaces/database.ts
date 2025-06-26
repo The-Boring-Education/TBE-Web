@@ -105,6 +105,8 @@ export interface InterviewSheetQuestionModel {
   question: string;
   answer: string;
   frequency: QuestionFrequencyType;
+  companyTypes?: CompanyType[];
+  priority: PriorityType;
   toObject: () => UserCourseModel;
 }
 
@@ -282,6 +284,9 @@ export interface PaymentModel extends Document {
   paymentId?: string;
   paymentLink: string;
   isPaid: boolean;
+  subscriptionType?: SubscriptionType;
+  subscriptionDuration?: number;
+  expiresAt?: Date;
 }
 
 export interface WebhookEvent {
@@ -289,4 +294,30 @@ export interface WebhookEvent {
   payment_id?: string;
   isPaid: boolean;
   payment_status: 'SUCCESS' | 'FAILED';
+}
+
+export interface PrepYatraUserModel extends Document {
+  _id: Types.ObjectId;
+  supabaseUserId: string;
+  mongoUserId: Types.ObjectId;
+  goal: GoalType;
+  targetCompanies: CompanyType[];
+  subscriptionStatus: SubscriptionStatus;
+  subscriptionExpiry?: Date;
+  preferences: {
+    interviewCategories: InterviewCategoryType[];
+    focusAreas: string[];
+  };
+}
+
+export interface PrepYatraSubscriptionModel extends Document {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  type: SubscriptionType;
+  amount: number;
+  duration: number;
+  startDate: Date;
+  expiryDate: Date;
+  isActive: boolean;
+  features: SubscriptionFeature[];
 }

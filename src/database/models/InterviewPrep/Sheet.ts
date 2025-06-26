@@ -4,6 +4,8 @@ import {
   DATABASE_MODELS,
   INTERVIEW_QUESTION_FREQUENCY,
   ROADMAPS,
+  COMPANY_TYPES,
+  PRIORITY_LEVELS,
 } from '@/constant';
 import type {
   InterviewSheetModel,
@@ -27,6 +29,17 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
     frequency: {
       type: String,
       enum: INTERVIEW_QUESTION_FREQUENCY,
+      required: true,
+    },
+    companyTypes: {
+      type: [String],
+      enum: COMPANY_TYPES,
+      default: [],
+    },
+    priority: {
+      type: String,
+      enum: PRIORITY_LEVELS,
+      default: 'Medium',
       required: true,
     },
   },

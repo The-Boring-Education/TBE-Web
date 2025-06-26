@@ -8,6 +8,13 @@ import type {
   SkillsType,
   UserPointsActionType,
   UserRoleType,
+  PriorityType,
+  CompanyType,
+  GoalType,
+  SubscriptionType,
+  SubscriptionStatus,
+  InterviewCategoryType,
+  SubscriptionFeature,
 } from '@/interfaces';
 
 const PROJECT_SKILLS: SkillsType[] = [
@@ -2517,6 +2524,44 @@ const ALLOWED_IPS = [
   '18.60.183.142',
 ];
 
+const PRIORITY_LEVELS: PriorityType[] = ['High', 'Medium', 'Low'];
+
+const COMPANY_TYPES: CompanyType[] = ['Startup', 'MidSize', 'MNC', 'FAANG'];
+
+const GOAL_TYPES: GoalType[] = ['3Months', '6Months', '1Year'];
+
+const SUBSCRIPTION_TYPES: SubscriptionType[] = [
+  '3Months',
+  '5Months',
+  'Lifetime',
+];
+
+const SUBSCRIPTION_STATUS: SubscriptionStatus[] = [
+  'Active',
+  'Expired',
+  'Trial',
+  'Cancelled',
+];
+
+const INTERVIEW_CATEGORIES: InterviewCategoryType[] = [
+  'MNC',
+  'MERN',
+  'CollegePlacement',
+  'DSA',
+  'SystemDesign',
+  'GeneralTech',
+];
+
+const SUBSCRIPTION_FEATURES: SubscriptionFeature[] = [
+  'InterviewQuestions',
+  'SystemDesignResources',
+  'DSAResources',
+  'ResumeWorkshop',
+  'JobApplicationWorkshop',
+  'ColdEmailAutomation',
+  'LinkedInAutomation',
+];
+
 export {
   ALLOWED_IPS,
   CERTIFICATE_TYPE,
@@ -2534,4 +2579,11 @@ export {
   USER_POINTS_ACTION,
   USER_ROLE,
   YOUTUBE_API_PATH,
+  PRIORITY_LEVELS,
+  COMPANY_TYPES,
+  GOAL_TYPES,
+  SUBSCRIPTION_TYPES,
+  SUBSCRIPTION_STATUS,
+  INTERVIEW_CATEGORIES,
+  SUBSCRIPTION_FEATURES,
 };

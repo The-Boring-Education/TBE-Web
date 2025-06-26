@@ -18,6 +18,8 @@ const DATABASE_MODELS = {
   FEEDBACK: 'Feedback',
   JOB_AGGREGATE: 'JobAggregate',
   PAYMENT: 'Payment',
+  PREP_YATRA_USER: 'PrepYatraUser',
+  PREP_YATRA_SUBSCRIPTION: 'PrepYatraSubscription',
 };
 
 export const FEEDBACK_TYPES = [

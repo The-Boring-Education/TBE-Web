@@ -412,3 +412,56 @@ export interface UpdatePaymentStatusPayloadProps {
   paymentId: string | undefined;
   status: 'SUCCESS' | 'FAILED';
 }
+
+// New types for PrepYatra integration
+export type CompanyType = 'Startup' | 'MidSize' | 'MNC' | 'FAANG';
+export type PriorityType = 'High' | 'Medium' | 'Low';
+export type GoalType = '3Months' | '6Months' | '1Year';
+export type SubscriptionStatus = 'Active' | 'Expired' | 'Trial' | 'Cancelled';
+export type SubscriptionType = '3Months' | '5Months' | 'Lifetime';
+export type InterviewCategoryType =
+  | 'MNC'
+  | 'MERN'
+  | 'CollegePlacement'
+  | 'DSA'
+  | 'SystemDesign'
+  | 'GeneralTech';
+export type SubscriptionFeature =
+  | 'InterviewQuestions'
+  | 'SystemDesignResources'
+  | 'DSAResources'
+  | 'ResumeWorkshop'
+  | 'JobApplicationWorkshop'
+  | 'ColdEmailAutomation'
+  | 'LinkedInAutomation';
+
+// New interfaces for PrepYatra API requests
+export interface PrepYatraOnboardingPayload {
+  supabaseUserId: string;
+  name: string;
+  username: string;
+  experienceLevel: string;
+  linkedInUrl?: string;
+  goal: GoalType;
+  targetCompanies: CompanyType[];
+  preferredCategories: InterviewCategoryType[];
+}
+
+export interface UpdateCompanyTypePayload {
+  questionIds: string[];
+  companyTypes: CompanyType[];
+}
+
+export interface CreateSubscriptionPayload {
+  userId: string;
+  type: SubscriptionType;
+  amount: number;
+  duration: number;
+}
+
+export interface PrepYatraPaymentPayload
+  extends AddPaymentToDBRequestPayloadProps {
+  subscriptionType: SubscriptionType;
+  subscriptionDuration: number;
+  expiresAt: Date;
+}
