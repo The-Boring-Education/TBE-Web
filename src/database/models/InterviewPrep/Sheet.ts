@@ -1,11 +1,11 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
 import {
+  COMPANY_TYPES,
   DATABASE_MODELS,
   INTERVIEW_QUESTION_FREQUENCY,
-  ROADMAPS,
-  COMPANY_TYPES,
   PRIORITY_LEVELS,
+  ROADMAPS,
 } from '@/constant';
 import type {
   InterviewSheetModel,

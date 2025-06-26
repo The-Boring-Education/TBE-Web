@@ -53,10 +53,10 @@ const RevenueTransparency: React.FC = () => {
   if (loading) {
     return (
       <div className='animate-pulse bg-gray-100 rounded-lg p-6 mb-8'>
-        <div className='h-4 bg-gray-300 rounded w-1/4 mb-4'></div>
+        <div className='h-4 bg-gray-300 rounded w-1/4 mb-4' />
         <div className='space-y-2'>
-          <div className='h-3 bg-gray-300 rounded w-full'></div>
-          <div className='h-3 bg-gray-300 rounded w-3/4'></div>
+          <div className='h-3 bg-gray-300 rounded w-full' />
+          <div className='h-3 bg-gray-300 rounded w-3/4' />
         </div>
       </div>
     );
@@ -66,21 +66,17 @@ const RevenueTransparency: React.FC = () => {
     return null; // Don't show anything if there's an error or criteria not met
   }
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
+  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
       minimumFractionDigits: 0,
     }).format(amount);
-  };
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-IN', {
+  const formatDate = (date: Date) => new Intl.DateTimeFormat('en-IN', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
     }).format(new Date(date));
-  };
 
   return (
     <div className='bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 mb-8 border border-blue-200'>

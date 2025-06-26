@@ -9,7 +9,7 @@ import {
 import type { CreateUserRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
-import { captureAPIError, captureAuthError, setUser } from '@/utils/sentry';
+import { captureAPIError, captureAuthError } from '@/utils/sentry';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

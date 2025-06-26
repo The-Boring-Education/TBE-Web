@@ -2,8 +2,8 @@ import { type Model, model, models, Schema } from 'mongoose';
 
 import {
   DATABASE_MODELS,
-  SUBSCRIPTION_TYPES,
   SUBSCRIPTION_FEATURES,
+  SUBSCRIPTION_TYPES,
 } from '@/constant';
 import type { PrepYatraSubscriptionModel } from '@/interfaces';
 

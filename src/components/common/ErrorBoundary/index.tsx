@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/nextjs';
-import { Component, ErrorInfo, ReactNode } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
+import { Component } from 'react';
 
 interface Props {
   children: ReactNode;

@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { PrepYatraOnboardingPayload } from '@/interfaces';
 import PrepYatraUser from '@/database/models/PrepYatra/User';
 import User from '@/database/models/User';
+import type { PrepYatraOnboardingPayload } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 

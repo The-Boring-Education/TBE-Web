@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { CreateSubscriptionPayload } from '@/interfaces';
 import PrepYatraSubscription from '@/database/models/PrepYatra/Subscription';
 import PrepYatraUser from '@/database/models/PrepYatra/User';
+import type { CreateSubscriptionPayload } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 

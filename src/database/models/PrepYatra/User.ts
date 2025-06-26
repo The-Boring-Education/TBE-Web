@@ -1,11 +1,11 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
 import {
+  COMPANY_TYPES,
   DATABASE_MODELS,
   GOAL_TYPES,
-  COMPANY_TYPES,
-  SUBSCRIPTION_STATUS,
   INTERVIEW_CATEGORIES,
+  SUBSCRIPTION_STATUS,
 } from '@/constant';
 import type { PrepYatraUserModel } from '@/interfaces';
 

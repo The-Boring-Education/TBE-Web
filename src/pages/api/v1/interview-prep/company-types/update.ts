@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { UpdateCompanyTypePayload } from '@/interfaces';
 import InterviewSheet from '@/database/models/InterviewPrep/Sheet';
+import type { UpdateCompanyTypePayload } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 

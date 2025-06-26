@@ -6,6 +6,8 @@ import InterviewSheet from './models/InterviewPrep/Sheet';
 import UserSheet from './models/InterviewPrep/UserSheet';
 import Notification from './models/Notification';
 import Payment from './models/Payment';
+import PrepYatraSubscription from './models/PrepYatra/Subscription';
+import PrepYatraUser from './models/PrepYatra/User';
 import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
 import Course from './models/Shiksha/Course';
@@ -16,8 +18,6 @@ import User from './models/User';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
-import PrepYatraUser from './models/PrepYatra/User';
-import PrepYatraSubscription from './models/PrepYatra/Subscription';
 
 export {
   Certificate,
@@ -30,6 +30,8 @@ export {
   Notification,
   Payment,
   Playlist,
+  PrepYatraSubscription,
+  PrepYatraUser,
   Project,
   User,
   UserCourse,
@@ -37,8 +39,6 @@ export {
   UserProject,
   UserSheet,
   Webinar,
-  PrepYatraUser,
-  PrepYatraSubscription,
 };
 
 // Query

@@ -11,14 +11,12 @@ export const captureException = (
     user?: Record<string, any>;
     level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
   }
-) => {
-  return Sentry.captureException(error, {
+) => Sentry.captureException(error, {
     tags: context?.tags,
     extra: context?.extra,
     user: context?.user,
     level: context?.level || 'error',
   });
-};
 
 /**
  * Capture a message with additional context
@@ -30,13 +28,11 @@ export const captureMessage = (
     extra?: Record<string, any>;
     level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
   }
-) => {
-  return Sentry.captureMessage(message, {
+) => Sentry.captureMessage(message, {
     tags: context?.tags,
     extra: context?.extra,
     level: context?.level || 'info',
   });
-};
 
 /**
  * Add user context to Sentry
@@ -73,8 +69,7 @@ export const captureAPIError = (
   method: string,
   statusCode?: number,
   requestData?: any
-) => {
-  return Sentry.captureException(error, {
+) => Sentry.captureException(error, {
     tags: {
       section: 'api',
       endpoint,
@@ -89,7 +84,6 @@ export const captureAPIError = (
     },
     level: 'error',
   });
-};
 
 /**
  * Track database errors specifically
@@ -99,8 +93,7 @@ export const captureDatabaseError = (
   operation: string,
   collection?: string,
   query?: any
-) => {
-  return Sentry.captureException(error, {
+) => Sentry.captureException(error, {
     tags: {
       section: 'database',
       operation,
@@ -113,7 +106,6 @@ export const captureDatabaseError = (
     },
     level: 'error',
   });
-};
 
 /**
  * Track authentication errors specifically
@@ -122,8 +114,7 @@ export const captureAuthError = (
   error: Error,
   authMethod: string,
   userId?: string
-) => {
-  return Sentry.captureException(error, {
+) => Sentry.captureException(error, {
     tags: {
       section: 'authentication',
       auth_method: authMethod,
@@ -134,7 +125,6 @@ export const captureAuthError = (
     },
     level: 'warning',
   });
-};
 
 /**
  * Track payment errors specifically
@@ -144,8 +134,7 @@ export const capturePaymentError = (
   paymentMethod: string,
   amount?: number,
   userId?: string
-) => {
-  return Sentry.captureException(error, {
+) => Sentry.captureException(error, {
     tags: {
       section: 'payment',
       payment_method: paymentMethod,
@@ -157,7 +146,6 @@ export const capturePaymentError = (
     },
     level: 'error',
   });
-};
 
 /**
  * Track performance issues
@@ -192,12 +180,10 @@ export const addBreadcrumb = (
 /**
  * Start a new span for performance monitoring
  */
-export const startSpan = (name: string, op: string, callback: () => any) => {
-  return Sentry.startSpan({
+export const startSpan = (name: string, op: string, callback: () => any) => Sentry.startSpan({
     name,
     op,
   }, callback);
-};
 
 export default {
   captureException,
