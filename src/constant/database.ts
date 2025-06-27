@@ -18,6 +18,8 @@ const DATABASE_MODELS = {
   FEEDBACK: 'Feedback',
   JOB_AGGREGATE: 'JobAggregate',
   PAYMENT: 'Payment',
+  RECRUITER: 'Recruiters',
+  PREP_LOG: 'PrepLog',
 };
 
 export const FEEDBACK_TYPES = [
@@ -39,8 +41,19 @@ export const PRODUCT_TYPE = [
 ];
 export type ProductType = (typeof PRODUCT_TYPE)[number];
 
+export const APPLICATION_STATUS = [
+  'Screening',
+  'Interviewing',
+  'Final Round Done',
+  'Offer Letter',
+  'Rejected',
+  'Not Interested',
+];
+
+export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
+
 const modelSelectParams = {
-  coursePreview: '_id name slug coverImageURL description liveOn',
+  coursePreview: '_id name slug coverImageURL description liveOn isPremium',
   projectPreview: '_id name slug coverImageURL description isActive',
 };
 
