@@ -1,0 +1,122 @@
+{
+  "yatra_tools": {
+    "prep_yatra": {
+      "type": "PREP YATRA",
+      "text": "🚀 New updates available on Prep Yatra! Practice comprehensive interview questions and improve your technical skills.",
+      "isHTML": false,
+      "link": "https://prep-yatra.lovable.app/",
+      "isExternalLink": true
+    },
+    "tech_yatra": {
+      "type": "TECH YATRA",
+      "text": "📚 Explore new technology roadmaps on Tech Yatra! Discover structured learning paths for your tech journey.",
+      "isHTML": false,
+      "link": "https://techyatra.netlify.app/",
+      "isExternalLink": true
+    },
+    "dsa_yatra": {
+      "type": "DSA YATRA",
+      "text": "💻 Master Data Structures & Algorithms with DSA Yatra! New practice problems and solutions added weekly.",
+      "isHTML": false,
+      "link": "https://dsa-yatra.lovable.app/",
+      "isExternalLink": true
+    },
+    "resume_yatra": {
+      "type": "RESUME YATRA",
+      "text": "📄 Build your perfect tech resume with Resume Yatra! New templates and optimization tips available.",
+      "isHTML": false,
+      "link": "https://resumeyatra.netlify.app/",
+      "isExternalLink": true
+    }
+  },
+  "existing_products": {
+    "webinar": {
+      "type": "WEBINAR",
+      "text": "🎥 Join our upcoming free webinar on cutting-edge technologies! Limited seats available.",
+      "isHTML": false,
+      "link": "/webinar",
+      "isExternalLink": false
+    },
+    "shiksha": {
+      "type": "SHIKSHA",
+      "text": "📖 New free courses added to Shiksha! Learn programming fundamentals and advanced concepts.",
+      "isHTML": false,
+      "link": "/shiksha",
+      "isExternalLink": false
+    },
+    "project": {
+      "type": "PROJECT",
+      "text": "🛠️ New real-world projects available! Build portfolio-worthy applications with guided tutorials.",
+      "isHTML": false,
+      "link": "/projects",
+      "isExternalLink": false
+    },
+    "interview_prep": {
+      "type": "INTERVIEW PREP",
+      "text": "🎯 New interview questions and solutions added! Prepare for your dream tech job effectively.",
+      "isHTML": false,
+      "link": "/interview-prep",
+      "isExternalLink": false
+    },
+    "cohort": {
+      "type": "COHORT",
+      "text": "🌟 Bring Your Idea Cohort registration is now open! Turn your startup idea into reality with mentorship.",
+      "isHTML": false,
+      "link": "/cohort/bring-your-idea",
+      "isExternalLink": false
+    },
+    "tools": {
+      "type": "TOOLS",
+      "text": "🔧 New powerful tools added to accelerate your learning journey! Check out our latest integrations.",
+      "isHTML": false,
+      "link": "/",
+      "isExternalLink": false
+    }
+  },
+  "marketing_campaigns": {
+    "tool_launch": {
+      "type": "UPDATE",
+      "text": "🎉 Exciting News! We've integrated 4 new Yatra tools to supercharge your tech learning experience. Explore now!",
+      "isHTML": true,
+      "link": "/",
+      "isExternalLink": false
+    },
+    "feature_announcement": {
+      "type": "UPDATE",
+      "text": "<strong>New Feature Alert!</strong> 🔥 Access all your favorite learning tools from one unified platform. Start your Yatra today!",
+      "isHTML": true,
+      "link": "/",
+      "isExternalLink": false
+    }
+  },
+  "seasonal_promotions": {
+    "new_year": {
+      "type": "UPDATE",
+      "text": "🎊 New Year, New Skills! Start 2024 with our comprehensive learning platform. All tools now available in one place.",
+      "isHTML": false,
+      "link": "/",
+      "isExternalLink": false
+    },
+    "back_to_school": {
+      "type": "UPDATE",
+      "text": "🎒 Back to School Special! Access all Yatra tools for free and kickstart your tech career journey.",
+      "isHTML": false,
+      "link": "/",
+      "isExternalLink": false
+    }
+  },
+  "usage_examples": {
+    "api_endpoint": "/api/v1/notification",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "sample_request": {
+      "type": "PREP YATRA",
+      "text": "🚀 New interview challenges available! Test your skills with our latest coding problems.",
+      "isHTML": false,
+      "link": "https://prep-yatra.lovable.app/",
+      "isExternalLink": true
+    }
+  }
+}

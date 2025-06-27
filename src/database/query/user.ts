@@ -4,6 +4,7 @@ import type {
   DatabaseQueryResponseType,
   PlatformUsageType,
   UserRoleType,
+  WorkDomainType,
 } from '@/interfaces';
 
 const getUserByIdFromDB = async (
@@ -93,10 +94,35 @@ const onboardUserToDB = async (
   }
 };
 
+const onboardPrepYatraUserTODB = async (
+  userId: string,
+  workExperience: number,
+  workDomain: WorkDomainType,
+  linkedInUrl: string
+): Promise<DatabaseQueryResponseType> => {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      prepYatra: {
+        workExperience,
+        workDomain,
+        linkedInUrl,
+        pyOnboarded: true,
+      },
+    },
+    { new: true }
+  );
+
+  if (!user) return { error: 'User does not exist' };
+
+  return { data: user };
+};
+
 export {
   createUserInDB,
   getUserByEmailFromDB,
   getUserByIdFromDB,
   getUserByUserNameFromDB,
+  onboardPrepYatraUserTODB,
   onboardUserToDB,
 };

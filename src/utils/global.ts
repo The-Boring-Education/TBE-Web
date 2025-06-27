@@ -304,6 +304,8 @@ const getSheetPageProps = async (context: any) => {
         if (selectedQuestionMeta) meta = selectedQuestionMeta;
       }
 
+      const isEnrolled = sheet.isEnrolled;
+
       return {
         props: {
           slug,
@@ -311,6 +313,7 @@ const getSheetPageProps = async (context: any) => {
           sheet,
           meta,
           currentQuestionId,
+          isEnrolled,
         },
       };
     } catch (error) {

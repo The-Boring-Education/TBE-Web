@@ -12,14 +12,21 @@ const PrimaryCardWithCTA = ({
   borderColour = 4,
   target,
   launchingOn,
+  isPremium,
 }: PrimaryCardWithCTAProps) => {
   const border = `border-borderColor${borderColour}`;
 
   return (
     <GradientContainer
-      childrenClassName='p-2 h-full flex flex-col'
+      childrenClassName='p-2 h-full flex flex-col relative'
       className={`md:w-[45%] lg:w-[30%] max-w-md ${border} flex-1`}
     >
+      {isPremium && (
+        <div className='absolute top-3 right-3 bg-yellow-100 text-red-600 text-[12px] font-medium px-3 py-[4px] rounded-full border border-yellow-300 shadow-sm z-10'>
+          🔒 Premium
+        </div>
+      )}
+
       {image && (
         <Image
           alt={imageAltText}
