@@ -36,6 +36,7 @@ const routes = {
   contactUs: '/contact',
   refund: '/refund',
   termsAndConditions: '/terms-and-conditions',
+  contribute:'/contribute',
   user: {
     profile: '/user/profile',
     dashboard: '/user/dashboard',
