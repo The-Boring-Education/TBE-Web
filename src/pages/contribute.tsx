@@ -1,17 +1,25 @@
 import { Fragment } from 'react';
 
-import { 
-  CardContainerA, 
+import {
+  CardContainerA,
   FlexContainer,
+  GitHubIssuesContainer,
   GradientContainer,
   GridContainer,
   Image,
-  LinkButton, 
+  LinkButton,
   Section,
   SectionHeaderContainer,
   SEO,
-  Text} from '@/components';
-import { OPEN_SOURCE_INFO, OS_GETTING_STARTED_STEPS, routes, STATIC_FILE_PATH } from '@/constant';
+  Text,
+} from '@/components';
+import {
+  OPEN_SOURCE_INFO,
+  OS_GETTING_STARTED_STEPS,
+  routes,
+  STATIC_FILE_PATH,
+  TBE_REPOSITORIES,
+} from '@/constant';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 
@@ -26,7 +34,10 @@ const Contribute = ({ seoMeta }: PageProps) => (
           justifyCenter
           wrap={false}
         >
-          <FlexContainer className='w-full lg:w-1/2 items-center lg:items-start' direction='col'>
+          <FlexContainer
+            className='w-full lg:w-1/2 items-center lg:items-start'
+            direction='col'
+          >
             <SectionHeaderContainer
               focusText='Source'
               heading='Contribute to Open'
@@ -36,7 +47,8 @@ const Contribute = ({ seoMeta }: PageProps) => (
               className='paragraph mt-1 w-full text-center lg:text-left text-grey'
               level='p'
             >
-              Join our open source community and contribute to building the future of tech education. Learn, grow, and make a difference.
+              Join our open source community and contribute to building the
+              future of tech education. Learn, grow, and make a difference.
             </Text>
             <FlexContainer className='mt-4 gap-2'>
               <LinkButton
@@ -81,6 +93,14 @@ const Contribute = ({ seoMeta }: PageProps) => (
       subtext='Discover the benefits of contributing to open source and how it can accelerate your career growth.'
     />
 
+    {/* GitHub Issues Section */}
+    <Section id='repositories'>
+      <GitHubIssuesContainer
+        repositories={TBE_REPOSITORIES}
+        maxIssuesPerRepo={6}
+      />
+    </Section>
+
     {/* Getting Started Section */}
     <Section>
       <FlexContainer className='gap-8' direction='col'>
@@ -96,7 +116,11 @@ const Contribute = ({ seoMeta }: PageProps) => (
               className='border-borderColor4 p-6 text-center'
             >
               <FlexContainer direction='col' itemCenter className='mb-4'>
-                <FlexContainer className='h-12 w-12 items-center justify-center rounded-full bg-primary text-white mb-2' itemCenter justifyCenter>
+                <FlexContainer
+                  className='h-12 w-12 items-center justify-center rounded-full bg-primary text-white mb-2'
+                  itemCenter
+                  justifyCenter
+                >
                   <Text className='font-bold' level='span'>
                     {step.step}
                   </Text>
@@ -121,8 +145,9 @@ const Contribute = ({ seoMeta }: PageProps) => (
           Ready to Start Contributing?
         </Text>
         <Text className='paragraph mb-6 text-greyDark' level='p'>
-          Join hundreds of developers who are already contributing to our open source projects. 
-          Every contribution, no matter how small, makes a difference.
+          Join hundreds of developers who are already contributing to our open
+          source projects. Every contribution, no matter how small, makes a
+          difference.
         </Text>
         <FlexContainer className='gap-4' justifyCenter>
           <LinkButton

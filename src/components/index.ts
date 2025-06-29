@@ -293,6 +293,10 @@ const PaymentCard = dynamic(
   () => import('@/components/containers/Cards/PaymentCard')
 );
 
+const GitHubIssuesContainer = dynamic(
+  () => import('@/components/containers/Cards/GitHubIssuesContainer')
+);
+
 export {
   AboutTBE,
   Accordion,
@@ -322,6 +326,7 @@ export {
   FlexContainer,
   FloatingActionButton,
   Footer,
+  GitHubIssuesContainer,
   GradientContainer,
   GridContainer,
   HeaderLabel,
