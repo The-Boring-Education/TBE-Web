@@ -32,11 +32,13 @@ const routes = {
     nodeInterviewSheet: '/interview-prep/node-interview-questions',
     dbInterviewSheet: '/interview-prep/db-interview-questions',
   },
+  // PrepYatra
+  prepYatra: '/prepyatra',
   certificate: '/certificate',
   contactUs: '/contact',
   refund: '/refund',
   termsAndConditions: '/terms-and-conditions',
-  contribute:'/contribute',
+  contribute: '/contribute',
   user: {
     profile: '/user/profile',
     dashboard: '/user/dashboard',

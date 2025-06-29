@@ -356,8 +356,18 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
       keywords:
         'Open Source, Contribute, GitHub, Programming Projects, The Boring Education, Real-world Projects, College Students, Working Professionals, Developer Community, Career Growth, Skill Enhancement',
       ...seoCommonMeta,
-},
-
+    },
+    [`${routes.prepYatra}`]: {
+      title:
+        'PrepYatra - Complete Interview Preparation Platform | The Boring Education',
+      siteName: 'PrepYatra at The Boring Education',
+      description:
+        'Master your interviews with PrepYatra. Get personalized questions, mock interviews, and expert guidance to land your dream job.',
+      url: routes.prepYatra,
+      keywords:
+        'PrepYatra, Interview Preparation, Mock Interviews, Personalized Questions, Job Preparation, The Boring Education, Career Development, Skill Enhancement, Interview Tips, Job Search',
+      ...seoCommonMeta,
+    },
   };
 
   return meta[basePath];

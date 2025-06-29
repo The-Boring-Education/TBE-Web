@@ -80,7 +80,7 @@ const products: ProductDataProps = {
   // Yatra Products - External Tools
   prepYatra: {
     label: 'Prep Yatra',
-    slug: 'https://prep-yatra.lovable.app/',
+    slug: routes.prepYatra,
     description: 'Complete Interview Preparation Platform',
   },
   techYatra: {
