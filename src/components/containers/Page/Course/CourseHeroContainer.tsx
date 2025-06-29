@@ -7,7 +7,7 @@ import {
   Text,
 } from '@/components';
 import { routes } from '@/constant';
-import { useAnalytics, useApi, useUser } from '@/hooks';
+import { useAnalytics, useApi, useGamifiedAction, useUser } from '@/hooks';
 import type { CourseHeroContainerProps } from '@/interfaces';
 
 const CourseHeroContainer = ({
@@ -18,34 +18,40 @@ const CourseHeroContainer = ({
 }: CourseHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
+  const gamifiedAction = useGamifiedAction();
 
   const { makeRequest, loading } = useApi('shiksha/enrollCourse');
 
-  const enrollCourse = () => {
-    makeRequest({
-      method: 'POST',
-      url: routes.api.enrollCourse,
-      body: {
-        userId: user?.id,
-        courseId: id,
-      },
-    })
-      .then(() => {
-        trackEvent({
+  const enrollCourse = async () => {
+    try {
+      await makeRequest({
+        method: 'POST',
+        url: routes.api.enrollCourse,
+        body: {
+          userId: user?.id,
+          courseId: id,
+        },
+      });
+
+      // Use gamified action for course enrollment
+      await gamifiedAction.triggerGamifiedAction({
+        gamificationAction: 'ENROLL_COURSE',
+        analytics: {
           action: 'COURSE_ENROLL',
           category: 'User',
           label: 'Course Enrolled',
-          value: {
-            userId: user?.id,
-            courseId: id,
-          },
-        });
-
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error('Failed to enroll', error);
+        },
+        customMessage: 'Welcome to the course! Let\'s start learning!',
+        metadata: {
+          courseId: id,
+          courseName: name,
+        },
       });
+
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to enroll', error);
+    }
   };
 
   let headerActionButton;

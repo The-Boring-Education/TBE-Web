@@ -301,6 +301,9 @@ const IssuesTable = dynamic(
   () => import('@/components/containers/Page/OpenSource/IssuesTable')
 );
 
+const CelebrationAnimation = dynamic(() => import('@/components/common/CelebrationAnimation'));
+const GamificationToast = dynamic(() => import('@/components/common/GamificationToast'));
+
 export {
   AboutTBE,
   Accordion,
@@ -412,4 +415,6 @@ export {
   WebibarCard,
   WebinarHeroContainer,
   WeTaughtAtCard,
+  CelebrationAnimation,
+  GamificationToast,
 };

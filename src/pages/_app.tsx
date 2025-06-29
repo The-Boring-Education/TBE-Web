@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { PageLayout } from '@/components';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
+import { GamificationProvider } from '@/components/layout/GamificationProvider';
 import { googleAnalyticsScript, gtag, routes } from '@/constant';
 import { useUser } from '@/hooks';
 import { getRedirectUrl } from '@/utils';
@@ -43,9 +44,11 @@ const AppContent = ({
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <PageLayout>
-          <Component {...pageProps} />
-        </PageLayout>
+        <GamificationProvider>
+          <PageLayout>
+            <Component {...pageProps} />
+          </PageLayout>
+        </GamificationProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );

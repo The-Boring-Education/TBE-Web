@@ -7,7 +7,7 @@ import {
   Text,
 } from '@/components';
 import { projectGroupWhatsapp, routes } from '@/constant';
-import { useAnalytics, useApi, useUser } from '@/hooks';
+import { useAnalytics, useApi, useGamifiedAction, useUser } from '@/hooks';
 import type { ProjectHeroContainerProps } from '@/interfaces';
 
 const ProjectHeroContainer = ({
@@ -19,6 +19,7 @@ const ProjectHeroContainer = ({
 }: ProjectHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
+  const gamifiedAction = useGamifiedAction();
   const { makeRequest, loading } = useApi('projects/enrollProject');
 
   const enrollProject = async () => {
@@ -32,13 +33,20 @@ const ProjectHeroContainer = ({
         },
       });
 
-      trackEvent({
-        action: 'PROJECT_ENROLL',
-        category: 'Project',
-        label: 'Project Enrolled',
-        value: {
-          userId: user?.id,
+      // Use gamified action for project enrollment
+      await gamifiedAction.triggerGamifiedAction({
+        gamificationAction: 'ENROLL_PROJECT',
+        analytics: {
+          action: 'PROJECT_ENROLL',
+          category: 'Project',
+          label: 'Project Enrolled',
+        },
+        customMessage: 'Project enrolled! Time to build something amazing!',
+        metadata: {
           projectId: id,
+          projectName: name,
+          roadmap,
+          difficultyLevel,
         },
       });
 
