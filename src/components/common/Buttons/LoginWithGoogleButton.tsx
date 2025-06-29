@@ -17,11 +17,15 @@ const LoginWithGoogleButton = ({ text = 'Login' }: LoginWithGoogleBtnProps) => {
       text={text}
       variant='PRIMARY'
       onClick={() => {
-        trackEvent({
-          action: 'USER_LOGIN',
-          category: 'User',
-          label: 'User Logged In',
-        });
+            // Track login attempt and potentially award first login points
+    trackEvent({
+      action: 'USER_LOGIN',
+      category: 'User',
+      label: 'User Logged In',
+    });
+    
+    // Note: First login points will be awarded in the backend or user hook
+    // when we detect it's the user's first login
 
         signIn('google');
       }}

@@ -18,10 +18,12 @@ import {
   SEO,
   Text,
 } from '@/components';
+import { useGamificationContext } from '@/components/layout/GamificationProvider';
 import { routes, SCREEN_BREAKPOINTS } from '@/constant';
 import {
   useAnalytics,
   useApi,
+  useGamifiedAction,
   useMediaQuery,
   usePaymentStatus,
   useUser,
@@ -83,12 +85,26 @@ const CoursePage = ({
 
   const { makeRequest } = useApi(`shiksha/${course}`);
   const { trackEvent } = useAnalytics();
+  const gamifiedAction = useGamifiedAction();
+  const { triggerCelebration, showToast } = useGamificationContext();
 
   if (!course) return null;
 
   const handleChapterClick = (chapterMeta: string) => {
     if (!isLocked) {
       setCourseMeta(chapterMeta);
+      
+      // Track chapter start
+      trackEvent({
+        action: 'COURSE_CHAPTER_START',
+        category: 'Learning',
+        label: 'Chapter Started',
+        value: {
+          userId: user?.id,
+          courseId: course._id,
+          chapterId: currentChapterId,
+        },
+      });
     }
   };
 
@@ -115,15 +131,33 @@ const CoursePage = ({
         },
       });
 
-      trackEvent({
-        action: newCompletionStatus ? 'COURSE_COMPLETE' : 'COURSE_PROGRESS',
-        category: 'Course',
-        label: newCompletionStatus ? 'Course Completed' : 'Course Progress',
-        value: {
-          userId: user?.id,
-          courseId: course._id,
-        },
-      });
+      // Use gamified action for chapter completion
+      if (newCompletionStatus) {
+        await gamifiedAction.triggerGamifiedAction({
+          gamificationAction: 'COMPLETE_COURSE_CHAPTER',
+          analytics: {
+            action: 'COURSE_CHAPTER_COMPLETE',
+            category: 'Learning',
+            label: 'Chapter Completed',
+          },
+          customMessage: 'Chapter completed! Keep learning!',
+          metadata: {
+            courseId: course._id,
+            chapterId: currentChapterId,
+            courseName: course.name,
+          },
+        });
+      } else {
+        trackEvent({
+          action: 'COURSE_PROGRESS',
+          category: 'Course',
+          label: 'Course Progress',
+          value: {
+            userId: user?.id,
+            courseId: course._id,
+          },
+        });
+      }
 
       setChapters((prevChapters) =>
         prevChapters.map((chapter) =>
@@ -171,6 +205,23 @@ const CoursePage = ({
             setIsCourseCompleted(true);
             setCertificateId(data._id);
             setShowCourseFeedback(true);
+            
+            // Trigger course completion celebration
+            await gamifiedAction.triggerGamifiedAction({
+              gamificationAction: 'COMPLETE_COURSE_CERTIFICATE',
+              analytics: {
+                action: 'CERTIFICATE_GENERATED',
+                category: 'Achievement',
+                label: 'Certificate Generated',
+              },
+              celebrationType: 'achievement',
+              customMessage: 'Congratulations! Course completed!',
+              metadata: {
+                courseId: course._id,
+                courseName: course.name,
+                certificateId: data._id,
+              },
+            });
           }
         }
         setShowChapterFeedback(true);

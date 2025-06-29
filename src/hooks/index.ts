@@ -5,6 +5,7 @@ import useCashfreePayment from './useCashfreePayment';
 import useCertificate from './useCertificate';
 import useFeedback from './useFeedback';
 import useGamification from './useGamification';
+import useGamifiedAction from './useGamifiedAction';
 import useMediaQuery from './useMediaQuery';
 import useNotifications from './useNotifications';
 import usePaymentStatus from './usePaymentStatus';
@@ -23,6 +24,7 @@ export {
   useCertificate,
   useFeedback,
   useGamification,
+  useGamifiedAction,
   useMediaQuery,
   useNotifications,
   usePaymentStatus,
