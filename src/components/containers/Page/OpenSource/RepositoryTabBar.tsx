@@ -8,8 +8,7 @@ const RepositoryTabBar = ({
   repositories,
   activeRepository,
   onRepositoryChange,
-}: RepositoryTabBarProps) => {
-  return (
+}: RepositoryTabBarProps) => (
     <div className='w-full border-b border-gray-200 bg-white rounded-t-xl'>
       <FlexContainer className='px-6 pt-6 pb-0' wrap>
         {repositories.map((repository) => {
@@ -100,6 +99,5 @@ const RepositoryTabBar = ({
       </div>
     </div>
   );
-};
 
 export default RepositoryTabBar;

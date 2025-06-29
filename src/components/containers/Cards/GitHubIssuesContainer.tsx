@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { FlexContainer, SectionHeaderContainer, Text } from '@/components';
-import { IssuesTable, RepositoryTabBar } from '@/components';
+import { FlexContainer, IssuesTable, RepositoryTabBar,SectionHeaderContainer, Text } from '@/components';
 import type {
   GitHubIssue,
   GitHubIssuesContainerProps,
