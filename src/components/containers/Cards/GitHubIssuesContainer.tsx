@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { FlexContainer, IssuesTable, RepositoryTabBar,SectionHeaderContainer, Text } from '@/components';
+import { FlexContainer, SectionHeaderContainer, Text } from '@/components';
 import type {
   GitHubIssue,
   GitHubIssuesContainerProps,
   GitHubRepository,
 } from '@/interfaces';
 import { fetchContributorFriendlyIssues } from '@/utils/github';
+
+import { IssuesTable, RepositoryTabBar } from '../Page/OpenSource';
 
 const GitHubIssuesContainer = ({
   repositories,
