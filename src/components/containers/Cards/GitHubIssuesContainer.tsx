@@ -1,59 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import {
-  FlexContainer,
-  GridContainer,
-  LoadingSpinner,
-  SectionHeaderContainer,
-  Text,
-} from '@/components';
-import type { GitHubIssue, GitHubRepository } from '@/interfaces';
+import { FlexContainer, SectionHeaderContainer, Text } from '@/components';
+import { IssuesTable, RepositoryTabBar } from '@/components';
+import type {
+  GitHubIssue,
+  GitHubIssuesContainerProps,
+  GitHubRepository,
+} from '@/interfaces';
 import { fetchContributorFriendlyIssues } from '@/utils/github';
-
-import { GitHubIssueCard } from './Items';
-
-interface GitHubIssuesContainerProps {
-  repositories: GitHubRepository[];
-  maxIssuesPerRepo?: number;
-  className?: string;
-}
 
 const GitHubIssuesContainer = ({
   repositories,
-  maxIssuesPerRepo = 6,
+  maxIssuesPerRepo = 10,
   className = '',
 }: GitHubIssuesContainerProps) => {
-  const [issues, setIssues] = useState<
-    Array<{ issue: GitHubIssue; repository: GitHubRepository }>
-  >([]);
+  const [activeRepository, setActiveRepository] = useState<GitHubRepository>(
+    repositories[0]
+  );
+  const [issues, setIssues] = useState<GitHubIssue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchAllIssues = async () => {
+  const fetchIssuesForRepository = useCallback(
+    async (repository: GitHubRepository) => {
       try {
         setLoading(true);
         setError(null);
 
-        const allIssuesPromises = repositories.map(async (repo) => {
-          const repoIssues = await fetchContributorFriendlyIssues(
-            repo,
-            maxIssuesPerRepo
-          );
-          return repoIssues.map((issue) => ({ issue, repository: repo }));
-        });
-
-        const allIssuesArrays = await Promise.all(allIssuesPromises);
-        const flattenedIssues = allIssuesArrays.flat();
-
-        // Sort by creation date (newest first)
-        flattenedIssues.sort(
-          (a, b) =>
-            new Date(b.issue.created_at).getTime() -
-            new Date(a.issue.created_at).getTime()
+        const repoIssues = await fetchContributorFriendlyIssues(
+          repository,
+          maxIssuesPerRepo
         );
 
-        setIssues(flattenedIssues);
+        // Sort by creation date (newest first)
+        repoIssues.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+
+        setIssues(repoIssues);
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error('Error fetching GitHub issues:', err);
@@ -61,53 +46,29 @@ const GitHubIssuesContainer = ({
       } finally {
         setLoading(false);
       }
-    };
+    },
+    [maxIssuesPerRepo]
+  );
 
-    fetchAllIssues();
-  }, [repositories, maxIssuesPerRepo]);
+  const handleRepositoryChange = useCallback(
+    (repository: GitHubRepository) => {
+      setActiveRepository(repository);
+      fetchIssuesForRepository(repository);
+    },
+    [fetchIssuesForRepository]
+  );
 
-  if (loading) {
-    return (
-      <div className={`py-16 ${className}`}>
-        <FlexContainer
-          direction='col'
-          itemCenter
-          justifyCenter
-          className='gap-4'
-        >
-          <LoadingSpinner height={8} width={8} className='text-primary' />
-          <Text className='text-gray-600' level='p'>
-            Loading open issues...
-          </Text>
-        </FlexContainer>
-      </div>
-    );
-  }
+  const handleRetry = useCallback(() => {
+    fetchIssuesForRepository(activeRepository);
+  }, [activeRepository, fetchIssuesForRepository]);
 
-  if (error) {
-    return (
-      <div className={`py-16 ${className}`}>
-        <FlexContainer
-          direction='col'
-          itemCenter
-          justifyCenter
-          className='gap-4'
-        >
-          <Text className='text-red-600 text-center' level='p'>
-            {error}
-          </Text>
-          <button
-            onClick={() => window.location.reload()}
-            className='bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors'
-          >
-            Try Again
-          </button>
-        </FlexContainer>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (repositories.length > 0) {
+      fetchIssuesForRepository(activeRepository);
+    }
+  }, [repositories, activeRepository, fetchIssuesForRepository]);
 
-  if (issues.length === 0) {
+  if (repositories.length === 0) {
     return (
       <div className={`py-16 ${className}`}>
         <FlexContainer
@@ -117,7 +78,7 @@ const GitHubIssuesContainer = ({
           className='gap-4'
         >
           <Text className='text-gray-600 text-center' level='p'>
-            No open issues found at the moment. Check back later!
+            No repositories configured yet.
           </Text>
         </FlexContainer>
       </div>
@@ -129,35 +90,25 @@ const GitHubIssuesContainer = ({
       <SectionHeaderContainer
         focusText='Issues'
         heading='Open Source'
-        subtext='Start contributing by picking up any of these open issues. Perfect for beginners and experienced developers alike.'
+        subtext='Browse and contribute to our open source projects. Click on any repository tab to see its open issues.'
         className='mb-8'
       />
 
-      <GridContainer className='grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {issues.map(({ issue, repository }) => (
-          <GitHubIssueCard
-            key={`${repository.repo}-${issue.id}`}
-            issue={issue}
-            repository={repository}
-          />
-        ))}
-      </GridContainer>
+      <div className='max-w-7xl mx-auto'>
+        <RepositoryTabBar
+          repositories={repositories}
+          activeRepository={activeRepository}
+          onRepositoryChange={handleRepositoryChange}
+        />
 
-      {issues.length >= maxIssuesPerRepo && (
-        <FlexContainer justifyCenter className='mt-8'>
-          <Text className='text-gray-600 text-center' level='p'>
-            Want to see more issues?{' '}
-            <a
-              href={`${repositories[0]?.url}/issues`}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-primary hover:underline font-medium'
-            >
-              Visit our GitHub repository
-            </a>
-          </Text>
-        </FlexContainer>
-      )}
+        <IssuesTable
+          issues={issues}
+          repository={activeRepository}
+          loading={loading}
+          error={error}
+          onRetry={handleRetry}
+        />
+      </div>
     </div>
   );
 };

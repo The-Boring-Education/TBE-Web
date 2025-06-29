@@ -16,6 +16,7 @@ const nextConfig = {
       'images.unsplash.com',
       'i.ytimg.com',
       'via.placeholder.com',
+      'avatars.githubusercontent.com',
     ],
   },
 

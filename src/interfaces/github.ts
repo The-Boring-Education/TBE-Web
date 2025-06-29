@@ -41,15 +41,47 @@ export interface GitHubRepository {
   topics?: string[];
 }
 
-// Component interfaces
-export interface GitHubIssueCardProps {
-  issue: GitHubIssue;
+// Component interfaces for new tab-based structure
+export interface RepositoryTabBarProps {
+  repositories: GitHubRepository[];
+  activeRepository: GitHubRepository;
+  onRepositoryChange: (repository: GitHubRepository) => void;
+}
+
+export interface IssuesTableProps {
+  issues: GitHubIssue[];
   repository: GitHubRepository;
+  loading: boolean;
+  error: string | null;
+  onRetry: () => void;
 }
 
 export interface GitHubIssuesContainerProps {
+  repositories: GitHubRepository[];
+  maxIssuesPerRepo?: number;
+  className?: string;
+}
+
+export interface OpenSourceStatsProps {
+  stats: Array<{
+    number: string;
+    label: string;
+    icon: string;
+  }>;
+}
+
+export interface OpenSourceBenefitsProps {
+  benefits: Array<{
+    title: string;
+    description: string;
+    icon: string;
+  }>;
+}
+
+// Legacy interfaces (keeping for backward compatibility)
+export interface GitHubIssueCardProps {
+  issue: GitHubIssue;
   repository: GitHubRepository;
-  maxIssues?: number;
 }
 
 export interface OpenSourceRepoCardProps {
