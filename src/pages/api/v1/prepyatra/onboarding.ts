@@ -34,8 +34,6 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       supabaseUserId,
       name,
       username,
-      experienceLevel,
-      linkedInUrl,
       goal,
       targetCompanies,
       preferredCategories,
@@ -108,7 +106,6 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       })
     );
   } catch (error: any) {
-    console.error('Error during onboarding:', error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,

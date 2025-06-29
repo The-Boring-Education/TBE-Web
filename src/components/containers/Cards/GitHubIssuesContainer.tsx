@@ -1,33 +1,47 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { FlexContainer, SectionHeaderContainer, Text } from '@/components';
+import {
+  FlexContainer,
+  SectionHeaderContainer,
+  TabComponent,
+  Text,
+} from '@/components';
+import { REPOSITORY_TAB_CONFIG } from '@/constant';
 import type {
   GitHubIssue,
   GitHubIssuesContainerProps,
   GitHubRepository,
 } from '@/interfaces';
 import { fetchContributorFriendlyIssues } from '@/utils/github';
-
-import { IssuesTable, RepositoryTabBar } from '../Page/OpenSource';
+import IssuesTable from '../Page/OpenSource/IssuesTable';
 
 const GitHubIssuesContainer = ({
   repositories,
   maxIssuesPerRepo = 10,
   className = '',
 }: GitHubIssuesContainerProps) => {
-  const [activeRepository, setActiveRepository] = useState<GitHubRepository>(
-    repositories[0]
-  );
-  const [issues, setIssues] = useState<GitHubIssue[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [repositoryIssues, setRepositoryIssues] = useState<
+    Record<
+      string,
+      {
+        issues: GitHubIssue[];
+        loading: boolean;
+        error: string | null;
+      }
+    >
+  >({});
 
   const fetchIssuesForRepository = useCallback(
     async (repository: GitHubRepository) => {
-      try {
-        setLoading(true);
-        setError(null);
+      const repoKey = repository.repo;
 
+      // Set loading state
+      setRepositoryIssues((prev) => ({
+        ...prev,
+        [repoKey]: { issues: [], loading: true, error: null },
+      }));
+
+      try {
         const repoIssues = await fetchContributorFriendlyIssues(
           repository,
           maxIssuesPerRepo
@@ -39,35 +53,32 @@ const GitHubIssuesContainer = ({
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
 
-        setIssues(repoIssues);
+        setRepositoryIssues((prev) => ({
+          ...prev,
+          [repoKey]: { issues: repoIssues, loading: false, error: null },
+        }));
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error('Error fetching GitHub issues:', err);
-        setError('Failed to load GitHub issues. Please try again later.');
-      } finally {
-        setLoading(false);
+        setRepositoryIssues((prev) => ({
+          ...prev,
+          [repoKey]: {
+            issues: [],
+            loading: false,
+            error: 'Failed to load GitHub issues. Please try again later.',
+          },
+        }));
       }
     },
     [maxIssuesPerRepo]
   );
 
-  const handleRepositoryChange = useCallback(
-    (repository: GitHubRepository) => {
-      setActiveRepository(repository);
-      fetchIssuesForRepository(repository);
-    },
-    [fetchIssuesForRepository]
-  );
-
-  const handleRetry = useCallback(() => {
-    fetchIssuesForRepository(activeRepository);
-  }, [activeRepository, fetchIssuesForRepository]);
-
+  // Initialize first repository on mount
   useEffect(() => {
     if (repositories.length > 0) {
-      fetchIssuesForRepository(activeRepository);
+      fetchIssuesForRepository(repositories[0]);
     }
-  }, [repositories, activeRepository, fetchIssuesForRepository]);
+  }, [repositories, fetchIssuesForRepository]);
 
   if (repositories.length === 0) {
     return (
@@ -86,29 +97,50 @@ const GitHubIssuesContainer = ({
     );
   }
 
+  // Prepare tab labels with icons
+  const tabLabels = repositories.map((repo) => {
+    const config =
+      REPOSITORY_TAB_CONFIG[repo.repo as keyof typeof REPOSITORY_TAB_CONFIG];
+    return `${config?.icon || '📂'} ${config?.displayName || repo.name}`;
+  });
+
+  // Prepare tab panels with IssuesTable for each repository
+  const tabPanels = repositories.map((repo, index) => {
+    const repoKey = repo.repo;
+    const repoData = repositoryIssues[repoKey] || {
+      issues: [],
+      loading: true,
+      error: null,
+    };
+
+    // Lazy load issues when tab is accessed
+    if (!repositoryIssues[repoKey] && index > 0) {
+      fetchIssuesForRepository(repo);
+    }
+
+    return (
+      <IssuesTable
+        key={repoKey}
+        issues={repoData.issues}
+        repository={repo}
+        loading={repoData.loading}
+        error={repoData.error}
+        onRetry={() => fetchIssuesForRepository(repo)}
+      />
+    );
+  });
+
   return (
     <div className={className}>
       <SectionHeaderContainer
         focusText='Issues'
         heading='Open Source'
-        subtext='Browse and contribute to our open source projects. Click on any repository tab to see its open issues.'
+        subtext='Browse and contribute to our open source projects. Select a project to see its open issues.'
         className='mb-8'
       />
 
       <div className='max-w-7xl mx-auto'>
-        <RepositoryTabBar
-          repositories={repositories}
-          activeRepository={activeRepository}
-          onRepositoryChange={handleRepositoryChange}
-        />
-
-        <IssuesTable
-          issues={issues}
-          repository={activeRepository}
-          loading={loading}
-          error={error}
-          onRetry={handleRetry}
-        />
+        <TabComponent tabLabels={tabLabels} tabPanels={tabPanels} vertical />
       </div>
     </div>
   );

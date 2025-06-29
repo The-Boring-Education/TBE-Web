@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 
-import { FlexContainer, Image, LoadingSpinner, Text } from '@/components';
+import { FlexContainer, Image, Link, LoadingSpinner, Text } from '@/components';
 import type { IssuesTableProps } from '@/interfaces';
-import { formatIssueDate, getLabelColor } from '@/utils/github';
+import { formatIssueDate } from '@/utils/github';
 
 const IssuesTable = ({
   issues,
@@ -102,9 +102,6 @@ const IssuesTable = ({
                 Author
               </th>
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Labels
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                 Comments
               </th>
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
@@ -131,6 +128,9 @@ const IssuesTable = ({
                     itemCenter={false}
                     className='gap-1'
                   >
+                    <Text level='span' className='text-sm text-gray-500'>
+                      #{issue.number}
+                    </Text>
                     <a
                       href={issue.html_url}
                       target='_blank'
@@ -139,53 +139,26 @@ const IssuesTable = ({
                     >
                       {issue.title}
                     </a>
-                    <Text level='span' className='text-sm text-gray-500'>
-                      #{issue.number}
-                    </Text>
                   </FlexContainer>
                 </td>
 
                 {/* Author */}
                 <td className='px-6 py-4'>
-                  <FlexContainer itemCenter className='gap-3'>
-                    <Image
-                      alt={`${issue.user.login} avatar`}
-                      className='w-8 h-8 rounded-full'
-                      src={issue.user.avatar_url}
-                      loading='lazy'
-                    />
-                    <a
+                  <FlexContainer itemCenter className='gap-2'>
+                    <Link
                       href={issue.user.html_url}
                       target='_blank'
-                      rel='noopener noreferrer'
                       className='text-gray-900 hover:text-primary transition-colors'
                     >
-                      {issue.user.login}
-                    </a>
-                  </FlexContainer>
-                </td>
-
-                {/* Labels */}
-                <td className='px-6 py-4'>
-                  <FlexContainer className='gap-1 flex-wrap'>
-                    {issue.labels.slice(0, 3).map((label) => (
-                      <span
-                        key={label.id}
-                        className='px-2 py-1 rounded-full text-xs font-medium text-white'
-                        style={{
-                          backgroundColor:
-                            `#${label.color}` || getLabelColor(label.name),
-                          fontSize: '0.65rem',
-                        }}
-                      >
-                        {label.name}
-                      </span>
-                    ))}
-                    {issue.labels.length > 3 && (
-                      <span className='px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-700'>
-                        +{issue.labels.length - 3}
-                      </span>
-                    )}
+                      <Image
+                        alt={`${issue.user.login} avatar`}
+                        className='w-4 h-4 rounded-full'
+                        src={issue.user.avatar_url}
+                        loading='lazy'
+                        fullWidth={false}
+                        fullHeight={false}
+                      />
+                    </Link>
                   </FlexContainer>
                 </td>
 

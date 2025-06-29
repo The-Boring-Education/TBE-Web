@@ -614,6 +614,7 @@ export interface FloatingActionButtonProps {
 export interface TabProps {
   tabLabels: string[];
   tabPanels: React.ReactNode[];
+  vertical?: boolean;
 }
 
 export interface ProgressRingProps {
