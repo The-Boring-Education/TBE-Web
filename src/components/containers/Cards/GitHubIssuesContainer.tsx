@@ -7,9 +7,10 @@ import {
   SectionHeaderContainer,
   Text,
 } from '@/components';
-import { GitHubIssueCard } from './Items';
 import type { GitHubIssue, GitHubRepository } from '@/interfaces';
 import { fetchContributorFriendlyIssues } from '@/utils/github';
+
+import { GitHubIssueCard } from './Items';
 
 interface GitHubIssuesContainerProps {
   repositories: GitHubRepository[];
