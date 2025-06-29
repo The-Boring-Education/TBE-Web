@@ -77,6 +77,27 @@ const products: ProductDataProps = {
     slug: routes.unskilled,
     description: 'Find Your Next Tech Job with Insights',
   },
+  // Yatra Products - External Tools
+  prepYatra: {
+    label: 'Prep Yatra',
+    slug: 'https://prep-yatra.lovable.app/',
+    description: 'Complete Interview Preparation Platform',
+  },
+  techYatra: {
+    label: 'Tech Yatra',
+    slug: 'https://techyatra.netlify.app/',
+    description: 'Technology Learning Journey and Roadmaps',
+  },
+  dsaYatra: {
+    label: 'DSA Yatra',
+    slug: 'https://dsa-yatra.lovable.app/',
+    description: 'Data Structures & Algorithms Practice Platform',
+  },
+  resumeYatra: {
+    label: 'Resume Yatra',
+    slug: 'https://resumeyatra.netlify.app/',
+    description: 'Professional Resume Builder and Optimizer',
+  },
 };
 
 const cohorts: CohortDataProps = {

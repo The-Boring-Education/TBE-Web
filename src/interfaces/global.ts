@@ -25,7 +25,11 @@ export type ProductLabelType =
   | 'Interview Prep'
   | 'Portfolio'
   | 'YouFocus'
-  | 'UnSkilled';
+  | 'UnSkilled'
+  | 'Prep Yatra'
+  | 'Tech Yatra'
+  | 'DSA Yatra'
+  | 'Resume Yatra';
 
 export type CohortLabelType = 'Bring Your Idea';
 
@@ -102,7 +106,12 @@ export type NotificationType =
   | 'PROJECT'
   | 'INTERVIEW PREP'
   | 'UPDATE'
-  | 'COHORT';
+  | 'COHORT'
+  | 'PREP YATRA'
+  | 'TECH YATRA'
+  | 'DSA YATRA'
+  | 'RESUME YATRA'
+  | 'TOOLS';
 
 export type UserRoleType =
   | 'TECH_STUDENT'
@@ -114,6 +123,15 @@ export type PlatformUsageType =
   | 'BUILDING_PROJECTS'
   | 'INTERVIEW_PREP'
   | 'JOB_SEARCH';
+
+export type WorkDomainType =
+  | 'WEB_DEVELOPMENT'
+  | 'DATA_SCIENCE'
+  | 'DEVOPS'
+  | 'MOBILE_DEVELOPMENT'
+  | 'AI_ML'
+  | 'UI_UX'
+  | 'CYBER_SECURITY';
 
 export type FormatDateType = {
   dateAndTime?: string;

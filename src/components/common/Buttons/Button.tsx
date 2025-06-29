@@ -3,6 +3,23 @@ import { motion } from 'framer-motion';
 import { LoadingSpinner } from '@/components';
 import type { ButtonProps } from '@/interfaces';
 
+/**
+ * Button component with enhanced hover animations
+ *
+ * @param variant - Button style variant
+ * @param className - Additional CSS classes
+ * @param text - Button text content
+ * @param active - Whether button is active/enabled
+ * @param isLoading - Show loading spinner
+ * @param onClick - Click handler
+ * @param animationClasses - Additional animation classes
+ * @param icon - Optional icon element
+ * @param isFullWidth - Make button full width
+ * @param animationType - Hover animation type:
+ *   - 'DEFAULT': Subtle scale and shadow enhancement (default)
+ *   - 'BOUNCE': Scale up with slight upward movement
+ *   - 'GLOW': Scale with glowing shadow effect
+ */
 const getButtonClasses = (
   baseClasses: string,
   variant: string,
@@ -14,18 +31,56 @@ const getButtonClasses = (
 
   const variantClasses: Record<string, string> = {
     PRIMARY:
-      'bg-primary shadow-lg text-white border-2 border-primary hover:scale-105 transition-all',
+      'bg-primary shadow-lg text-white border-2 border-primary transition-all duration-300 ease-in-out',
     SECONDARY:
-      'bg-secondary shadow-lg text-white border-2 border-secondary hover:scale-105 transition-all',
+      'bg-secondary shadow-lg text-white border-2 border-secondary transition-all duration-300 ease-in-out',
     OUTLINE:
-      'bg-light-bg border-2 shadow-lg border-primary text-primary hover:scale-105 transition-all',
+      'bg-light-bg border-2 shadow-lg border-primary text-primary transition-all duration-300 ease-in-out',
     GHOST:
-      'bg-accent text-contentLight border-2 hover:border-black transition-all',
+      'bg-accent text-contentLight border-2 hover:border-black transition-all duration-300 ease-in-out',
     SUCCESS:
-      'bg-success text-white border-2 border-success hover:scale-105 transition-all',
+      'bg-success text-white border-2 border-success transition-all duration-300 ease-in-out',
   };
 
   return `${baseClasses} ${variantClasses[variant] || ''}`;
+};
+
+// Animation variants for different hover effects
+const animationVariants = {
+  DEFAULT: {
+    scale: 1,
+    boxShadow:
+      '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    transition: { duration: 0.2, ease: 'easeInOut' },
+  },
+  HOVER: {
+    scale: 1.02,
+    boxShadow:
+      '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    transition: { duration: 0.2, ease: 'easeInOut' },
+  },
+  BOUNCE: {
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.2, ease: 'easeInOut' },
+  },
+  BOUNCE_HOVER: {
+    scale: 1.05,
+    y: -2,
+    transition: { duration: 0.2, ease: 'easeInOut' },
+  },
+  GLOW: {
+    scale: 1,
+    boxShadow:
+      '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    transition: { duration: 0.3, ease: 'easeInOut' },
+  },
+  GLOW_HOVER: {
+    scale: 1.03,
+    boxShadow:
+      '0 0 20px rgba(59, 130, 246, 0.3), 0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+    transition: { duration: 0.3, ease: 'easeInOut' },
+  },
 };
 
 const Button = ({
@@ -38,6 +93,7 @@ const Button = ({
   animationClasses = '',
   icon,
   isFullWidth = false,
+  animationType = 'DEFAULT',
 }: ButtonProps) => {
   let baseClasses = 'button px-2 py-1';
   baseClasses = getButtonClasses(baseClasses, variant, active);
@@ -46,21 +102,44 @@ const Button = ({
     <LoadingSpinner borderColour='white' height={3} width={3} />
   );
 
+  // Get animation variant based on type
+  const getAnimationVariant = () => {
+    switch (animationType) {
+      case 'BOUNCE':
+        return {
+          initial: animationVariants.BOUNCE,
+          whileHover: animationVariants.BOUNCE_HOVER,
+          whileTap: { scale: 0.98, y: 0 },
+        };
+      case 'GLOW':
+        return {
+          initial: animationVariants.GLOW,
+          whileHover: animationVariants.GLOW_HOVER,
+          whileTap: { scale: 0.97 },
+        };
+      default:
+        return {
+          initial: animationVariants.DEFAULT,
+          whileHover: animationVariants.HOVER,
+          whileTap: { scale: 0.98 },
+        };
+    }
+  };
+
   return (
     <motion.div
       className={`${animationClasses} ${isFullWidth ? 'w-full' : ''}`}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
     >
-      <button
+      <motion.button
         className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-2`}
         disabled={!active || isLoading}
         onClick={onClick}
+        {...getAnimationVariant()}
       >
         {loadingContainer}
         {text}
         {icon && <span>{icon}</span>}
-      </button>
+      </motion.button>
     </motion.div>
   );
 };

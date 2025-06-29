@@ -69,12 +69,24 @@ const InterviewSheetSchema = new Schema<InterviewSheetModel>(
       type: Date,
       required: [true, 'Live on is required'],
     },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
+    price: {
+      type: Number,
+    },
     questions: [questionSchema],
     roadmap: {
       type: String,
       enum: ROADMAPS,
       required: [true, 'Roadmap on is required'],
     },
+    features: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,

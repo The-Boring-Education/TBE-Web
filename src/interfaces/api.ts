@@ -10,6 +10,7 @@ import type {
   PlaylistModel,
   ProjectChapter,
   UserRoleType,
+  WorkDomainType,
 } from '.';
 
 export type APIMethodTypes = 'GET' | 'POST' | 'PATCH' | 'PUT';
@@ -222,6 +223,12 @@ export interface AddOnboardingPayloadProps {
   purpose: PlatformUsageType[];
   contactNo: string;
 }
+export interface AddPrepYatraOnboardingPayloadProps {
+  userId: string;
+  linkedInUrl: string;
+  workExperience: number;
+  workDomain: WorkDomainType;
+}
 export interface CourseEnrollmentRequestProps {
   courseId: string;
   userId: string;
@@ -275,6 +282,9 @@ export interface BaseInterviewSheetResponseProps
   _id: string;
   isEnrolled?: boolean;
   questions?: ExtendedInterviewSheetQuestionModel[];
+  isPremium?: boolean;
+  price?: number;
+  features?: string[];
 }
 
 export interface MarkQuestionCompletedRequestProps {
@@ -461,7 +471,19 @@ export interface CreateSubscriptionPayload {
 
 export interface PrepYatraPaymentPayload
   extends AddPaymentToDBRequestPayloadProps {
-  subscriptionType: SubscriptionType;
-  subscriptionDuration: number;
-  expiresAt: Date;
+  subscriptionType: SubscriptionType
+  subscriptionDuration: number
+  expiresAt: Date
+}
+
+export interface AddRecruiterToDBPayloadProps {
+  userId: string;
+  recruiterName: string;
+}
+
+export interface AddPrepLogToDBPayloadProps {
+  userId: string;
+  title: string;
+  description: string;
+  timeSpent: number;
 }
