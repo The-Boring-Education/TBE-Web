@@ -4,7 +4,7 @@ import type { TabProps } from '@/interfaces';
 
 const TabComponent = ({ tabLabels, tabPanels, vertical = false }: TabProps) => (
   <Tab.Group className='w-full'>
-    <div className={`${vertical ? 'flex gap-6' : ''}`}>
+    <div className={`${vertical ? 'flex flex-col gap-6' : ''} flex-wrap`}>
       <Tab.List
         className={`${
           vertical

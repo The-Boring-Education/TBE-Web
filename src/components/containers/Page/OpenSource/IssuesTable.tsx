@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-import { FlexContainer, Image, LoadingSpinner, Text } from '@/components';
+import { FlexContainer, Image, Link, LoadingSpinner, Text } from '@/components';
 import type { IssuesTableProps } from '@/interfaces';
 import { formatIssueDate, getLabelColor } from '@/utils/github';
 
@@ -138,20 +138,20 @@ const IssuesTable = ({
                 className='gap-3 mb-3'
               >
                 <FlexContainer itemCenter className='gap-2'>
-                  <Image
-                    alt={`${issue.user.login} avatar`}
-                    className='w-6 h-6 rounded-full'
-                    src={issue.user.avatar_url}
-                    loading='lazy'
-                  />
-                  <a
+                  <Link
                     href={issue.user.html_url}
                     target='_blank'
-                    rel='noopener noreferrer'
                     className='text-gray-700 hover:text-primary transition-colors text-sm font-medium'
                   >
-                    {issue.user.login}
-                  </a>
+                    <Image
+                      alt={`${issue.user.login} avatar`}
+                      className='w-6 h-6 rounded-full'
+                      src={issue.user.avatar_url}
+                      loading='lazy'
+                      fullWidth={false}
+                      fullHeight={false}
+                    />
+                  </Link>
                 </FlexContainer>
                 <Text level='span' className='text-gray-500 text-xs'>
                   {formatIssueDate(issue.created_at)}
@@ -193,14 +193,13 @@ const IssuesTable = ({
                     {issue.comments}
                   </Text>
                 </FlexContainer>
-                <a
+                <Link
                   href={issue.html_url}
                   target='_blank'
-                  rel='noopener noreferrer'
                   className='bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors ml-auto'
                 >
                   View Issue
-                </a>
+                </Link>
               </FlexContainer>
             </motion.div>
           ))}
@@ -265,20 +264,20 @@ const IssuesTable = ({
                 {/* Author */}
                 <td className='px-6 py-4'>
                   <FlexContainer itemCenter className='gap-3'>
-                    <Image
-                      alt={`${issue.user.login} avatar`}
-                      className='w-8 h-8 rounded-full'
-                      src={issue.user.avatar_url}
-                      loading='lazy'
-                    />
-                    <a
+                    <Link
                       href={issue.user.html_url}
                       target='_blank'
-                      rel='noopener noreferrer'
                       className='text-gray-900 hover:text-primary transition-colors'
                     >
-                      {issue.user.login}
-                    </a>
+                      <Image
+                        alt={`${issue.user.login} avatar`}
+                        className='w-6 h-6 rounded-full'
+                        src={issue.user.avatar_url}
+                        loading='lazy'
+                        fullWidth={false}
+                        fullHeight={false}
+                      />
+                    </Link>
                   </FlexContainer>
                 </td>
 
@@ -327,14 +326,13 @@ const IssuesTable = ({
 
                 {/* Action */}
                 <td className='px-6 py-4'>
-                  <a
+                  <Link
                     href={issue.html_url}
                     target='_blank'
-                    rel='noopener noreferrer'
                     className='bg-primary text-white px-3 py-1.5 rounded text-sm font-medium hover:bg-primary/90 transition-colors'
                   >
-                    View Issue
-                  </a>
+                    View
+                  </Link>
                 </td>
               </motion.tr>
             ))}
