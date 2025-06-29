@@ -75,15 +75,6 @@ const Home = ({ seoMeta }: PageProps) => {
         id={routes.internals.landing.products}
       />
 
-      {/* Yatra Tools Section */}
-      <CardContainerB
-        borderColour={3}
-        cards={YATRA_TOOLS}
-        focusText='Tools'
-        heading='Powerful'
-        id='yatra-tools'
-      />
-
       <NotificationContainer />
       <Banner
         buttonLink={routes.cohort.bringYourIdea}

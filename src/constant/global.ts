@@ -59,7 +59,7 @@ const products: ProductDataProps = {
   },
   os: {
     label: 'Open Source',
-    slug: 'https://theboringeducation.notion.site/Contribute-The-Boring-Education-8171f19257fd4ef99b7287555eb5062b',
+    slug: routes.contribute,
     description: 'Learn and Contribute with Open Source',
   },
   portfolio: {

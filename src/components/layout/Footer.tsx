@@ -83,10 +83,9 @@ const Footer = () => {
         description: 'Refund Info',
       },
       {
-        name: 'Open Source',
-        href: LINKS.contributeOpenSource,
-        description: 'Contribute',
-        external: true,
+        name: 'Contribute to TBE',
+        href: routes.contribute,
+        description: 'Learn and Contribute',
       },
     ],
   };
