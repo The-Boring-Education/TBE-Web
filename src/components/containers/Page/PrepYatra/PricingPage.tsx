@@ -18,9 +18,33 @@ const PricingPage: React.FC = () => {
 
   const plans: PricingPlan[] = [
     {
+      id: '1months',
+      name: '1 Months Access',
+      price: 199,
+      duration: '1 months',
+      description: 'Perfect for quick interview preparation',
+      buttonText: 'Start 1-Month Plan',
+      features: [
+        '✅ Complete Interview Question Bank',
+        '✅ MNC Interview Prep (DSA + System Design + Tech)',
+        '✅ MERN Stack Interview Prep',
+        '✅ College Placement Prep + Aptitude',
+        '✅ System Design Resources & Case Studies',
+        '✅ Resume Building Workshop Access',
+        '✅ Job Application Strategy Workshop',
+        '✅ Personalized Question Prioritization',
+        '✅ Company-Specific Question Filtering',
+        '✅ Progress Tracking & Analytics',
+      ],
+      comingSoon: [
+        '🔄 Auto Cold Email Generation',
+        '🔄 LinkedIn Progress Auto-posting',
+      ],
+    },
+    {
       id: '3months',
       name: '3 Months Access',
-      price: 299,
+      price: 499,
       duration: '3 months',
       description: 'Perfect for quick interview preparation',
       buttonText: 'Start 3-Month Plan',
@@ -42,14 +66,14 @@ const PricingPage: React.FC = () => {
       ],
     },
     {
-      id: '5months',
-      name: '5 Months Access',
-      price: 399,
-      duration: '5 months',
+      id: '6months',
+      name: '6 Months Access',
+      price: 999,
+      duration: '6 months',
       popular: true,
       savings: 'Save ₹100',
       description: 'Most popular choice for comprehensive preparation',
-      buttonText: 'Start 5-Month Plan',
+      buttonText: 'Start 6-Month Plan',
       features: [
         '✅ Everything in 3-Month Plan',
         '✅ Extended preparation timeline',
@@ -69,7 +93,7 @@ const PricingPage: React.FC = () => {
     {
       id: 'lifetime',
       name: 'Lifetime Access',
-      price: 499,
+      price: 1999,
       duration: 'lifetime',
       savings: 'Best Value - Save ₹200',
       description: 'One-time payment, lifetime access to everything',
