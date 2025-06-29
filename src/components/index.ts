@@ -297,6 +297,10 @@ const GitHubIssuesContainer = dynamic(
   () => import('@/components/containers/Cards/GitHubIssuesContainer')
 );
 
+const IssuesTable = dynamic(
+  () => import('@/components/containers/Page/OpenSource/IssuesTable')
+);
+
 export {
   AboutTBE,
   Accordion,
@@ -337,6 +341,7 @@ export {
   InputFieldContainer,
   InputRadioContainer,
   InterviewPrepSection,
+  IssuesTable,
   LandingPageHero,
   LinerProgressBar,
   LinkText as Link,

@@ -41,13 +41,7 @@ export interface GitHubRepository {
   topics?: string[];
 }
 
-// Component interfaces for new tab-based structure
-export interface RepositoryTabBarProps {
-  repositories: GitHubRepository[];
-  activeRepository: GitHubRepository;
-  onRepositoryChange: (repository: GitHubRepository) => void;
-}
-
+// Component interfaces
 export interface IssuesTableProps {
   issues: GitHubIssue[];
   repository: GitHubRepository;

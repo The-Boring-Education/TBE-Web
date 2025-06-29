@@ -10,7 +10,8 @@ import {
 } from '@/components';
 import { OPEN_SOURCE_BENEFITS, OPEN_SOURCE_STATS } from '@/constant';
 
-const OpenSourceStatsSection = () => (
+const OpenSourceStatsSection = () => {
+  return (
     <GradientContainer className='border-borderColor2 p-8'>
       {/* Header */}
       <FlexContainer direction='col' itemCenter className='mb-12'>
@@ -168,5 +169,6 @@ const OpenSourceStatsSection = () => (
       </FlexContainer>
     </GradientContainer>
   );
+};
 
 export default OpenSourceStatsSection;

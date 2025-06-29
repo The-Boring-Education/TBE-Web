@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import {
   FlexContainer,
+  IssuesTable,
   SectionHeaderContainer,
   TabComponent,
   Text,
@@ -13,8 +14,6 @@ import type {
   GitHubRepository,
 } from '@/interfaces';
 import { fetchContributorFriendlyIssues } from '@/utils/github';
-
-import IssuesTable from '../Page/OpenSource/IssuesTable';
 
 const GitHubIssuesContainer = ({
   repositories,
@@ -83,14 +82,17 @@ const GitHubIssuesContainer = ({
 
   if (repositories.length === 0) {
     return (
-      <div className={`py-16 ${className}`}>
+      <div className={`py-8 md:py-16 px-4 md:px-0 ${className}`}>
         <FlexContainer
           direction='col'
           itemCenter
           justifyCenter
           className='gap-4'
         >
-          <Text className='text-gray-600 text-center' level='p'>
+          <Text
+            className='text-gray-600 text-center text-sm md:text-base'
+            level='p'
+          >
             No repositories configured yet.
           </Text>
         </FlexContainer>
@@ -132,12 +134,12 @@ const GitHubIssuesContainer = ({
   });
 
   return (
-    <div className={className}>
+    <div className={`${className} px-4 md:px-0`}>
       <SectionHeaderContainer
         focusText='Issues'
         heading='Open Source'
         subtext='Browse and contribute to our open source projects. Select a project to see its open issues.'
-        className='mb-8'
+        className='mb-6 md:mb-8'
       />
 
       <div className='max-w-7xl mx-auto'>
