@@ -347,6 +347,17 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'Onboarding, Online Learning, The Boring Education, User Onboarding, Learning Platform, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
+    [`${routes.contribute}`]: {
+      title: 'Open Source Contribution | The Boring Education',
+      siteName: 'Contribute at The Boring Education',
+      description:
+        'Contribute to open source projects at The Boring Education. Collaborate, learn, and grow your skills by building real-world projects with our community.',
+      url: routes.contribute,
+      keywords:
+        'Open Source, Contribute, GitHub, Programming Projects, The Boring Education, Real-world Projects, College Students, Working Professionals, Developer Community, Career Growth, Skill Enhancement',
+      ...seoCommonMeta,
+},
+
   };
 
   return meta[basePath];
