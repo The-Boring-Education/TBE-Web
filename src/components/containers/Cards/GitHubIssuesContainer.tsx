@@ -13,6 +13,7 @@ import type {
   GitHubRepository,
 } from '@/interfaces';
 import { fetchContributorFriendlyIssues } from '@/utils/github';
+
 import IssuesTable from '../Page/OpenSource/IssuesTable';
 
 const GitHubIssuesContainer = ({
