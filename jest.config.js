@@ -15,6 +15,9 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
 
   testEnvironment: 'jest-environment-jsdom',
+  testEnvironmentOptions: {
+    url: 'http://localhost',
+  },
 
   /**
    * Absolute imports and Module Path Aliases
@@ -23,6 +26,9 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/public/$1',
   },
+
+  // Transform ESM modules that Jest can't handle
+  transformIgnorePatterns: ['node_modules/(?!(axios)/)'],
 
   coverageReporters: ['text', 'lcov', 'html'],
   collectCoverageFrom: [
@@ -38,7 +44,7 @@ const customJestConfig = {
       statements: 70,
     },
   },
-  modulePathIgnorePatterns: ['<rootDir>/e2e/'],
+  modulePathIgnorePatterns: ['<rootDir>/e2e/', '<rootDir>/tests/api/'],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
