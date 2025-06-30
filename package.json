@@ -15,6 +15,10 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.0.17",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/core": "^2.0.1",
+    "@opentelemetry/resources": "^2.0.1",
+    "@opentelemetry/sdk-trace-base": "^2.0.1",
     "@sentry/nextjs": "^9.31.0",
     "@types/cors": "^2.8.19",
     "axios": "^1.4.0",

@@ -97,13 +97,14 @@ const PLATFORM_USAGE: PlatformUsageType[] = [
 ];
 
 const WORK_DOMAIN: WorkDomainType[] = [
-  'WEB_DEVELOPMENT',
-  'DATA_SCIENCE',
-  'DEVOPS',
-  'MOBILE_DEVELOPMENT',
-  'AI_ML',
-  'UI_UX',
-  'CYBER_SECURITY',
+  "MERN Full-stack",
+  "Java Full-stack",
+  "Python Full-stack",
+  "Data Analysis",
+  "Machine Learning",
+  "AI",
+  "App Development",
+  "Others"
 ];
 
 const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
