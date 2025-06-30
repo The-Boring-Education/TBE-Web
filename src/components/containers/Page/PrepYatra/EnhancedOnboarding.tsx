@@ -159,7 +159,7 @@ const EnhancedOnboarding: React.FC<EnhancedOnboardingProps> = ({
     setFormData((prev) => ({
       ...prev,
       [field]: prev[field].includes(value)
-        ? prev[field].filter((item) => item !== value)
+        ? (prev[field] as any[]).filter((item: any) => item !== value)
         : [...prev[field], value],
     }));
   };

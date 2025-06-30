@@ -317,6 +317,7 @@ export {
   CardContainerB,
   CardSectionContainer,
   Carousel,
+  CelebrationAnimation,
   CertificateBanner,
   CertificateContent,
   ChapterLink,
@@ -333,6 +334,7 @@ export {
   FlexContainer,
   FloatingActionButton,
   Footer,
+  GamificationToast,
   GitHubIssuesContainer,
   GradientContainer,
   GridContainer,
@@ -415,6 +417,4 @@ export {
   WebibarCard,
   WebinarHeroContainer,
   WeTaughtAtCard,
-  CelebrationAnimation,
-  GamificationToast,
 };

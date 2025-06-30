@@ -78,7 +78,7 @@ const GamificationToast = ({
         y: 0, 
         scale: 1,
       }}
-      className={`fixed top-20 right-6 z-50 max-w-sm`}
+      className="fixed top-20 right-6 z-50 max-w-sm"
       exit={{ 
         opacity: 0, 
         y: -20, 
