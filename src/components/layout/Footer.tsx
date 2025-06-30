@@ -164,28 +164,26 @@ const Footer = () => {
               Tools
             </Text>
             <ul className='space-y-2'>
-              {footerSections.tools.map(
-                ({ name, href, description, external }) => (
-                  <li key={name}>
-                    <Link
-                      href={href}
-                      target={external ? '_blank' : undefined}
-                      className='text-gray-300 hover:text-white transition-colors group'
-                    >
-                      <div>
-                        <Text className='group-hover:text-primary' level='span'>
-                          {name}
-                          {external && ' ↗'}
-                        </Text>
-                        <br />
-                        <Text className='text-xs text-gray-400' level='span'>
-                          {description}
-                        </Text>
-                      </div>
-                    </Link>
-                  </li>
-                )
-              )}
+              {footerSections.tools.map((item: any) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    target={item.external ? '_blank' : undefined}
+                    className='text-gray-300 hover:text-white transition-colors group'
+                  >
+                    <div>
+                      <Text className='group-hover:text-primary' level='span'>
+                        {item.name}
+                        {item.external && ' ↗'}
+                      </Text>
+                      <br />
+                      <Text className='text-xs text-gray-400' level='span'>
+                        {item.description}
+                      </Text>
+                    </div>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -195,28 +193,26 @@ const Footer = () => {
               Company
             </Text>
             <ul className='space-y-2'>
-              {footerSections.company.map(
-                ({ name, href, description, external }) => (
-                  <li key={name}>
-                    <Link
-                      href={href}
-                      target={external ? '_blank' : undefined}
-                      className='text-gray-300 hover:text-white transition-colors group'
-                    >
-                      <div>
-                        <Text className='group-hover:text-primary' level='span'>
-                          {name}
-                          {external && ' ↗'}
-                        </Text>
-                        <br />
-                        <Text className='text-xs text-gray-400' level='span'>
-                          {description}
-                        </Text>
-                      </div>
-                    </Link>
-                  </li>
-                )
-              )}
+              {footerSections.company.map((item: any) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    target={item.external ? '_blank' : undefined}
+                    className='text-gray-300 hover:text-white transition-colors group'
+                  >
+                    <div>
+                      <Text className='group-hover:text-primary' level='span'>
+                        {item.name}
+                        {item.external && ' ↗'}
+                      </Text>
+                      <br />
+                      <Text className='text-xs text-gray-400' level='span'>
+                        {item.description}
+                      </Text>
+                    </div>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

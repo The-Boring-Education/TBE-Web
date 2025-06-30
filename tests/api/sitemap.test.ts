@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { testApiHandler } from 'next-test-api-route-handler';
+import { testApiHandler } from 'next-test-api-route-handler/dist/src';
 import type { TestApiHandlerResponse } from 'next-test-api-route-handler';
 
 import handler from '@/pages/api/sitemap';

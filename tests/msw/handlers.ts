@@ -1,4 +1,5 @@
-import { rest, RestRequest, ResponseComposition, RestContext } from 'msw';
+import { rest } from 'msw';
+import type { RestRequest, ResponseComposition, RestContext } from 'msw';
 
 interface HealthResponse {
   status: string;
@@ -11,12 +12,12 @@ interface UserResponse {
 
 export const handlers = [
   // Health endpoint
-  rest.get<HealthResponse>('/api/health', (_req: RestRequest, res: ResponseComposition<HealthResponse>, ctx: RestContext) => {
+  rest.get('/api/health', (_req: any, res: any, ctx: any) => {
     return res(ctx.status(200), ctx.json({ status: 'ok' }));
   }),
 
   // Example user details endpoint
-  rest.get<UserResponse>('/api/v1/user/:id', (req: RestRequest, res: ResponseComposition<UserResponse>, ctx: RestContext) => {
+  rest.get('/api/v1/user/:id', (req: any, res: any, ctx: any) => {
     const { id } = req.params as { id: string };
     return res(
       ctx.status(200),
@@ -25,16 +26,16 @@ export const handlers = [
   }),
 
   // Example POST feedback endpoint
-  rest.post('/api/v1/feedback', (_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
+  rest.post('/api/v1/feedback', (_req: any, res: any, ctx: any) => {
     return res(ctx.status(201));
   }),
 
   // PrepYatra onboarding
-  rest.post('/api/v1/prepyatra/onboarding', (_req, res, ctx) => {
+  rest.post('/api/v1/prepyatra/onboarding', (_req: any, res: any, ctx: any) => {
     return res(ctx.status(201), ctx.json({ success: true, userId: 'temp123' }));
   }),
 
-  rest.get('/api/v1/prepyatra/subscription', (req, res, ctx) => {
+  rest.get('/api/v1/prepyatra/subscription', (req: any, res: any, ctx: any) => {
     const userId = req.url.searchParams.get('userId');
     return res(
       ctx.status(200),
@@ -43,7 +44,7 @@ export const handlers = [
   }),
 
   // Certificate public endpoint
-  rest.get('/api/v1/certificate/:id', (req, res, ctx) => {
+  rest.get('/api/v1/certificate/:id', (req: any, res: any, ctx: any) => {
     const { id } = req.params as { id: string };
     return res(
       ctx.status(200),
