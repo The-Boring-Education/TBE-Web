@@ -20,10 +20,9 @@
     },
     "incremental": true,
     "types": [
+      "node",
       "jest",
-      "@testing-library/jest-dom",
-      "@playwright/test",
-      "node"
+      "@playwright/test"
     ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
