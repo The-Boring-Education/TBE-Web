@@ -62,3 +62,32 @@ Our automated quality gates cover everything from isolated units to full browser
    - spins up the dev server and executes Playwright scenarios
 
 Feel free to add more tests; any file that matches `*.test.{js,ts,tsx}` will be picked up automatically.
+
+### Mocking patterns
+
+#### Component / Module
+```ts
+import { render } from '@testing-library/react';
+
+// Mock the next/router for deterministic navigation
+jest.mock('next/router', () => require('next-router-mock'));
+
+// Mock a utility module
+jest.mock('@/utils/api', () => ({
+  fetcher: jest.fn(() => Promise.resolve({ data: 'fake' })),
+}));
+
+// Now render your component and assert
+```
+
+#### API mocking with MSW
+```ts
+// tests/msw/handlers.ts
+import { rest } from 'msw';
+export const handlers = [
+  rest.get('/api/user/:id', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ id: req.params.id, name: 'Mocky' }));
+  }),
+];
+```
+The server is auto-started in `jest.setup.js` making network calls deterministic.

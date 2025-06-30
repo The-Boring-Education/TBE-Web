@@ -23,6 +23,22 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/public/$1',
   },
+
+  coverageReporters: ['text', 'lcov', 'html'],
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/__tests__/**',
+    '!src/**/index.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
+    },
+  },
+  modulePathIgnorePatterns: ['<rootDir>/e2e/'],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
