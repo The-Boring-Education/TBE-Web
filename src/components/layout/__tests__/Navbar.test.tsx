@@ -1,5 +1,6 @@
+import { fireEvent,render, screen } from '@testing-library/react';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+
 import Navbar from '../Navbar';
 
 // Mock heavy child sub-components to keep test light-weight
