@@ -28,4 +28,26 @@ export const handlers = [
   rest.post('/api/v1/feedback', (_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
     return res(ctx.status(201));
   }),
+
+  // PrepYatra onboarding
+  rest.post('/api/v1/prepyatra/onboarding', (_req, res, ctx) => {
+    return res(ctx.status(201), ctx.json({ success: true, userId: 'temp123' }));
+  }),
+
+  rest.get('/api/v1/prepyatra/subscription', (req, res, ctx) => {
+    const userId = req.url.searchParams.get('userId');
+    return res(
+      ctx.status(200),
+      ctx.json({ isActive: true, userId, expiryDate: new Date().toISOString() })
+    );
+  }),
+
+  // Certificate public endpoint
+  rest.get('/api/v1/certificate/:id', (req, res, ctx) => {
+    const { id } = req.params as { id: string };
+    return res(
+      ctx.status(200),
+      ctx.json({ certificateId: id, name: 'John Doe', course: 'Full-Stack' })
+    );
+  }),
 ];

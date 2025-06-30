@@ -44,6 +44,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.53.1",
     "@svgr/webpack": "^6.5.1",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
@@ -64,20 +65,19 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^9.1.7",
     "jest": "^27.5.1",
+    "jest-environment-node": "^29.7.0",
     "lint-staged": "^12.5.0",
+    "msw": "^2.10.2",
     "next-router-mock": "^0.7.5",
+    "next-test-api-route-handler": "^4.0.16",
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
+    "start-server-and-test": "^2.0.0",
+    "supertest": "^6.3.3",
     "tailwindcss": "^3.2.7",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^4.9.5",
-    "@playwright/test": "^1.44.0",
-    "start-server-and-test": "^2.0.0",
-    "supertest": "^6.3.3",
-    "next-test-api-route-handler": "^4.0.16",
-    "jest-environment-node": "^29.7.0",
-    "msw": "^2.3.1"
+    "typescript": "^4.9.5"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
