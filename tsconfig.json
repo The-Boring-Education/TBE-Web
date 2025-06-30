@@ -9,7 +9,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -19,16 +19,10 @@
       "~/*": ["./public/*"]
     },
     "incremental": true,
-    "types": [
-      "node",
-      "jest",
-      "@testing-library/jest-dom",
-      "@playwright/test"
-    ]
+    "types": ["node", "jest", "@testing-library/jest-dom", "@playwright/test"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
-  "moduleResolution": ["node_modules", ".next", "node"],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"
