@@ -91,3 +91,14 @@ export const handlers = [
 ];
 ```
 The server is auto-started in `jest.setup.js` making network calls deterministic.
+
+### Advanced Patterns
+
+1. **Testing Framer-Motion components** – Wrap expectations in `await waitFor` if animation influences DOM timing.
+2. **Mocking child components** – Use `jest.mock('@/components', () => ({ ... }))` to isolate the unit under test (see `Navbar.test.tsx`).
+3. **Using MSW in component tests** – Component fetches data:
+   ```ts
+   rest.get('/api/v1/posts', (_req, res, ctx) => res(ctx.json([{ id: 1, title: 'Demo' }])))
+   ```
+   Push local handler inside test via `server.use()` to override default behaviour.
+4. **Playwright fixtures** – Add file `e2e/fixtures.ts` exporting custom fixtures for signed-in state, reducing boilerplate across specs.

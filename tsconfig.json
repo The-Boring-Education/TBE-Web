@@ -22,6 +22,8 @@
     "types": [
       "jest",
       "@testing-library/jest-dom",
+      "@playwright/test",
+      "msw",
       "node"
     ]
   },
