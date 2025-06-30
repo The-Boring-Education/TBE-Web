@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { rest } from 'msw/node';
 import type { RestRequest, ResponseComposition, RestContext } from 'msw';
 
 interface HealthResponse {
