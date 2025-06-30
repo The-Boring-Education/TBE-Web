@@ -1,4 +1,4 @@
-import { rest } from 'msw/node';
+import { rest } from 'msw';
 import type { RestRequest, ResponseComposition, RestContext } from 'msw';
 
 interface HealthResponse {
@@ -12,12 +12,12 @@ interface UserResponse {
 
 export const handlers = [
   // Health endpoint
-  rest.get('/api/health', (_req: any, res: any, ctx: any) => {
+  rest.get('/api/health', (_req: RestRequest, res: ResponseComposition<HealthResponse>, ctx: RestContext) => {
     return res(ctx.status(200), ctx.json({ status: 'ok' }));
   }),
 
   // Example user details endpoint
-  rest.get('/api/v1/user/:id', (req: any, res: any, ctx: any) => {
+  rest.get('/api/v1/user/:id', (req: RestRequest, res: ResponseComposition<UserResponse>, ctx: RestContext) => {
     const { id } = req.params as { id: string };
     return res(
       ctx.status(200),
@@ -26,16 +26,16 @@ export const handlers = [
   }),
 
   // Example POST feedback endpoint
-  rest.post('/api/v1/feedback', (_req: any, res: any, ctx: any) => {
+  rest.post('/api/v1/feedback', (_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
     return res(ctx.status(201));
   }),
 
   // PrepYatra onboarding
-  rest.post('/api/v1/prepyatra/onboarding', (_req: any, res: any, ctx: any) => {
+  rest.post('/api/v1/prepyatra/onboarding', (_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
     return res(ctx.status(201), ctx.json({ success: true, userId: 'temp123' }));
   }),
 
-  rest.get('/api/v1/prepyatra/subscription', (req: any, res: any, ctx: any) => {
+  rest.get('/api/v1/prepyatra/subscription', (req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
     const userId = req.url.searchParams.get('userId');
     return res(
       ctx.status(200),
@@ -44,7 +44,7 @@ export const handlers = [
   }),
 
   // Certificate public endpoint
-  rest.get('/api/v1/certificate/:id', (req: any, res: any, ctx: any) => {
+  rest.get('/api/v1/certificate/:id', (req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
     const { id } = req.params as { id: string };
     return res(
       ctx.status(200),
