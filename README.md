@@ -4,7 +4,7 @@ Welcome to **The Boring Education**! This is an open-source educational platform
 
 ## Project Overview
 
-This project is designed to help students and developers improve their programming skills through interactive tutorials, examples, and challenges. We’re building a community where learning is fun and accessible to everyone.
+This project is designed to help students and developers improve their programming skills through interactive tutorials, examples, and challenges. We're building a community where learning is fun and accessible to everyone.
 
 ## Getting Started
 
@@ -41,3 +41,24 @@ npm run dev
 # Want to contribute?
 
 Please refer to our [Contribution Guidelines](CONTRIBUTING.md) for detailed information on how to contribute to this project.
+
+## 🧪 Testing & Quality Assurance
+
+Our automated quality gates cover everything from isolated units to full browser flows.
+
+1. **Unit & Integration Tests (Jest)** – Located under `src/**/__tests__` or `tests/`. Run locally with:
+   ```bash
+   npm test         # quick feedback
+   npm run test:ci  # generates coverage report in ./coverage
+   ```
+2. **API Route Tests** – Powered by `next-test-api-route-handler`, executed together with Jest. See `tests/api/*` for examples.
+3. **End-to-End (E2E) Tests** – Headless browser checks written with Playwright and stored in `e2e/`.
+   ```bash
+   npm run test:e2e
+   ```
+4. **Continuous Integration** – Every Pull Request triggers `.github/workflows/ci-tests.yml` which:
+   - installs dependencies
+   - runs all Jest suites & publishes coverage artifacts
+   - spins up the dev server and executes Playwright scenarios
+
+Feel free to add more tests; any file that matches `*.test.{js,ts,tsx}` will be picked up automatically.
