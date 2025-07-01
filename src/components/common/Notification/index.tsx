@@ -13,7 +13,7 @@ import { useNotifications } from '@/hooks';
 const NotificationPopover = () => {
   const { notifications } = useNotifications();
 
-  if (!notifications.length) return <></>;
+  if (!notifications || !notifications.length) return <></>;
 
   return (
     <Popover className='relative'>
