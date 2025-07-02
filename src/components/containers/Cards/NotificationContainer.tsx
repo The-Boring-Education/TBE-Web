@@ -18,7 +18,7 @@ const NotificationContainer = () => {
         className='px-2 py-4 m-auto gradient-6 md:w-1/3 w-full rounded-2 border gap-4'
         direction='col'
       >
-        <FlexContainer className='gap-4' direction='col'>
+        <FlexContainer className='gap-4 w-full' direction='col'>
           <FlexContainer className='gap-1.5' direction='col'>
             <Text className='pre-title text-greyDark' level='span'>
               What’s Happening at
@@ -29,19 +29,19 @@ const NotificationContainer = () => {
           </FlexContainer>
           {noNotificationContainer}
           {notifications && (
-            <FlexContainer className='gap-1' direction='col'>
+            <FlexContainer className='gap-1 w-full' direction='col'>
               {notifications.map((notification, index) => {
                 const { type, text, isExternalLink, link } = notification;
 
                 return (
                   <FlexContainer
                     key={index}
-                    className='p-2 w-full bg-lightBG rounded-2 border border-secondary gap-2.5'
+                    className='p-2 w-full bg-lightBG rounded-2 border border-secondary gap-2.5 items-start'
                     direction='col'
                   >
-                    <FlexContainer className='gap-0.5' direction='col'>
+                    <FlexContainer className='gap-0.5 w-full' direction='col'>
                       <FlexContainer
-                        className='gap-1 w-full'
+                        className='gap-1 w-full items-center'
                         justifyCenter={false}
                       >
                         <Text className='strong-text text-primary' level='span'>
@@ -53,7 +53,7 @@ const NotificationContainer = () => {
                           </Link>
                         )}
                       </FlexContainer>
-                      <Text className='pre-title' level='p'>
+                      <Text className='pre-title text-left w-full' level='p'>
                         {text}
                       </Text>
                     </FlexContainer>
