@@ -192,10 +192,7 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
           }
         }
       }
-        // ... existing logic for SHIKSHA and INTERVIEW_SHEET ...
-      
         if (_payment.productType === 'PREPYATRA') {
-          // Map productId to type/duration
           const planTypeMap = {
             '1months': { type: '3Months', duration: 1 },
             '3months': { type: '5Months', duration: 3 },
