@@ -14,10 +14,13 @@ import {
   getEnrolledCourseFromDB,
   getEnrolledSheetFromDB,
   getPaymentByOrderIdFromDB,
+  PrepYatraSubscription,
+  PrepYatraUser,
   updatePaymentStatusToDB,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import {
+  cors,
   sendAPIResponse,
   validateWebhookEvent,
   verifyWebhookSignature,
@@ -32,6 +35,7 @@ export const config = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await cors(req,res)
   await connectDB();
 
   if (!WEBHOOK_SECRET) {
@@ -187,6 +191,61 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
             );
           }
         }
+      }
+        // ... existing logic for SHIKSHA and INTERVIEW_SHEET ...
+      
+        if (_payment.productType === 'PREPYATRA') {
+          // Map productId to type/duration
+          const planTypeMap = {
+            '1months': { type: '3Months', duration: 1 },
+            '3months': { type: '5Months', duration: 3 },
+            '6months': { type: '5Months', duration: 6 },
+            'lifetime': { type: 'Lifetime', duration: 999 }
+          };
+          const plan = planTypeMap[String(_payment.productId) as keyof typeof planTypeMap] || { type: 'Monthly', duration: 1 };
+      
+          let expiryDate;
+          if (plan.type === 'Lifetime') {
+            expiryDate = new Date('2099-12-31');
+          } else {
+            expiryDate = new Date();
+            expiryDate.setMonth(expiryDate.getMonth() + plan.duration);
+          }
+      
+          // Avoid duplicate subscriptions
+          const existing = await PrepYatraSubscription.findOne({
+            userId: _payment.user,
+            type: plan.type,
+            isActive: true,
+            expiryDate: { $gt: new Date() }
+          });
+      
+          if (!existing) {
+            await PrepYatraSubscription.create({
+              userId: _payment.user,
+              type: plan.type,
+              amount: _payment.amount,
+              duration: plan.duration,
+              expiryDate,
+              features: [
+                'InterviewQuestions',
+                'SystemDesignResources',
+                'DSAResources',
+                'ResumeWorkshop',
+                'JobApplicationWorkshop',
+                ...(plan.type === 'Lifetime' ? ['ColdEmailAutomation', 'LinkedInAutomation'] : [])
+              ]
+            });
+      
+            await PrepYatraUser.updateOne(
+              { mongoUserId: _payment.user },
+              {
+                subscriptionStatus: 'Active',
+                subscriptionExpiry: expiryDate,
+              }
+            );
+          }
+        
       }
     }
 
