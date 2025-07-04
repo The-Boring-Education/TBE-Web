@@ -67,6 +67,8 @@ const USER_POINTS_ACTION: UserPointsActionType[] = [
   'WEBINAR_ATTEND',
   'DOWNLOAD_CERTIFICATE',
   'HELP_COMMUNITY',
+  'RECRUITER_ADDED',
+  'PREPLOG_CREATED'
 ];
 
 const NOTIFICATION_TYPE: NotificationType[] = [

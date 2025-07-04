@@ -342,6 +342,8 @@ const POINTS_RULES: Record<UserPointsActionType, number> = {
   WEBINAR_ATTEND: 40,
   DOWNLOAD_CERTIFICATE: 20,
   HELP_COMMUNITY: 15,
+  RECRUITER_ADDED: 25,
+  PREPLOG_CREATED: 15,
 };
 
 const USER_LEVELS: UserLevel[] = [

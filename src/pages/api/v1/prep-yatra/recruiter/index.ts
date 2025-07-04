@@ -6,6 +6,8 @@ import {
   deleteRecruiterInDB,
   getRecruitersByUserFromDB,
   updateRecruiterInDB,
+  updateUserPointsInDB,
+  addGamificationDocInDB,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
@@ -99,6 +101,8 @@ const handleAddRecruiter = async (
       recruiterName,
     });
 
+    console.log("thsi is user id ",userId)
+
     if (error) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
@@ -107,6 +111,36 @@ const handleAddRecruiter = async (
           error,
         })
       );
+    }
+
+    // Trigger gamification for recruiter addition
+    try {
+      let { data: gamificationData, error: gamificationError } = await updateUserPointsInDB(userId, 'RECRUITER_ADDED');
+      
+      // If user not found, create gamification record first
+      if (gamificationError && gamificationError === 'User not found') {
+        console.log('Creating gamification record for user:', userId);
+        const { data: newGamificationData, error: createError } = await addGamificationDocInDB(userId);
+        
+        if (createError) {
+          console.error('Failed to create gamification record:', createError);
+        } else {
+          // Now try updating points again
+          const { data: updatedData, error: updateError } = await updateUserPointsInDB(userId, 'RECRUITER_ADDED');
+          if (updateError) {
+            console.error('Gamification update failed after creating record:', updateError);
+          } else {
+            console.log('Gamification event added successfully for recruiter addition:', updatedData);
+          }
+        }
+      } else if (gamificationError) {
+        console.error('Gamification update failed:', gamificationError);
+      } else {
+        console.log('Gamification event added successfully for recruiter addition:', gamificationData);
+      }
+    } catch (gamificationError) {
+      console.error('Gamification trigger failed:', gamificationError);
+      // Don't fail the main request if gamification fails
     }
 
     return res.status(apiStatusCodes.OKAY).json(
