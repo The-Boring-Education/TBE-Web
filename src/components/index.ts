@@ -304,11 +304,27 @@ const IssuesTable = dynamic(
 const CelebrationAnimation = dynamic(() => import('@/components/common/CelebrationAnimation'));
 const GamificationToast = dynamic(() => import('@/components/common/GamificationToast'));
 
+// Admin Components
+const AdminLayout = dynamic(() => import('@/components/admin/AdminLayout'));
+const AdminTable = dynamic(() => import('@/components/admin/AdminTable'));
+const AdminStats = dynamic(() => import('@/components/admin/AdminStats'));
+const AdminAreaChart = dynamic(() => import('@/components/admin/AdminCharts').then(mod => ({ default: mod.AdminAreaChart })));
+const AdminBarChart = dynamic(() => import('@/components/admin/AdminCharts').then(mod => ({ default: mod.AdminBarChart })));
+const AdminLineChart = dynamic(() => import('@/components/admin/AdminCharts').then(mod => ({ default: mod.AdminLineChart })));
+const AdminPieChart = dynamic(() => import('@/components/admin/AdminCharts').then(mod => ({ default: mod.AdminPieChart })));
+
 export {
   AboutTBE,
   Accordion,
   AccordionLinkItem,
   ActionBanner,
+  AdminAreaChart,
+  AdminBarChart,
+  AdminLayout,
+  AdminLineChart,
+  AdminPieChart,
+  AdminStats,
+  AdminTable,
   Alert,
   BackgroundImage,
   Banner,
@@ -413,8 +429,5 @@ export {
   UserAvatar,
   UserLevelProgressContainer,
   UserPointButton,
-  WeAlreadyTaughtAt,
   WebibarCard,
-  WebinarHeroContainer,
-  WeTaughtAtCard,
 };
