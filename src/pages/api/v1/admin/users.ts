@@ -373,7 +373,7 @@ const getUserActivity = async (res: NextApiResponse, userId: string, dateRange: 
   const activityTimeline = await UserCourse.aggregate([
     {
       $match: {
-        userId: userId,
+        userId,
         updatedAt: { $gte: start, $lte: end },
       },
     },
@@ -731,7 +731,7 @@ const getFilteredUsers = async (
   const { start, end } = dateRange;
   const skip = (page - 1) * limit;
 
-  let matchCriteria: any = {
+  const matchCriteria: any = {
     createdAt: { $gte: start, $lte: end },
   };
 

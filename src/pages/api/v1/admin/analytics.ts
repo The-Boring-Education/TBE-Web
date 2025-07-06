@@ -10,13 +10,9 @@ import {
   Payment,
   PrepLog,
   PrepYatraSubscription,
-  PrepYatraUser,
   Project,
   User,
   UserCourse,
-  UserPlaylist,
-  UserProject,
-  UserSheet,
   Webinar,
 } from '@/database';
 import { connectDB } from '@/middlewares';
