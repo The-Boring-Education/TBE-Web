@@ -11,6 +11,7 @@ import useNotifications from './useNotifications';
 import usePaymentStatus from './usePaymentStatus';
 import usePDFFile from './usePDFFile';
 import useResumeEvaluation from './useResumeEvaluation';
+import useScrollDirection from './useScrollDirection';
 import useScrollPosition from './useScrollPosition';
 import useSkillPlaylist from './useSkillPlaylist';
 import useUser from './useUser';
@@ -30,6 +31,7 @@ export {
   usePaymentStatus,
   usePDFFile,
   useResumeEvaluation,
+  useScrollDirection,
   useScrollPosition,
   useSkillPlaylist,
   useUser,
