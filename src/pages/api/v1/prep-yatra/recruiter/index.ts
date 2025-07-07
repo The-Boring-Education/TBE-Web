@@ -110,12 +110,10 @@ const handleAddRecruiter = async (
       );
     }
 
-    // Trigger gamification for recruiter addition
     try {
       await handleGamificationPoints(true, userId, 'RECRUITER_ADDED');
     } catch (gamificationError) {
       console.error('Gamification trigger failed:', gamificationError);
-      // Don't fail the main request if gamification fails
     }
 
     return res.status(apiStatusCodes.OKAY).json(

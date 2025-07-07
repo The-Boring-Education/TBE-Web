@@ -63,12 +63,10 @@ const handleAddLog = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    // Trigger gamification for preplog creation
     try {
       await handleGamificationPoints(true, userId, 'PREPLOG_CREATED');
     } catch (gamificationError) {
       console.error('Gamification trigger failed:', gamificationError);
-      // Don't fail the main request if gamification fails
     }
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json(
