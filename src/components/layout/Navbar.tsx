@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 import { LINKS, TOP_NAVIGATION } from '@/constant';
+import { useScrollDirection } from '@/hooks';
 
 import {
   FlexContainer,
@@ -23,6 +24,7 @@ import {
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
+  const { isVisible } = useScrollDirection(100);
 
   const handleSetOpen = (popoverName: string) => {
     setOpenPopover(openPopover === popoverName ? null : popoverName);
@@ -33,7 +35,12 @@ const Navbar = () => {
   };
 
   return (
-    <header>
+    <motion.header
+      animate={{ y: isVisible ? 0 : -100 }}
+      className='fixed top-0 left-0 right-0 z-40 bg-white shadow-sm'
+      initial={{ y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+    >
       <nav className='flex items-center justify-between p-2 lg:px-8 border'>
         <div className='w-100 flex'>
           <Logo />
@@ -183,7 +190,7 @@ const Navbar = () => {
           </AnimatePresence>
         </Dialog.Panel>
       </Dialog>
-    </header>
+    </motion.header>
   );
 };
 

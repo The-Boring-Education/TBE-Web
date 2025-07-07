@@ -6,7 +6,7 @@ import { useNotifications } from '@/hooks';
 const NotificationContainer = () => {
   const { notifications } = useNotifications();
 
-  const noNotificationContainer = notifications.length === 0 && (
+  const noNotificationContainer = (!notifications || notifications.length === 0) && (
     <Text className='text-center' level='p'>
       We're Building Something Exciting For You. Stay tuned!
     </Text>
