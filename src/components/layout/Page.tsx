@@ -32,7 +32,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
       <Navbar />
       <motion.div
         animate={{ opacity: 1, scale: 1 }}
-        className='flex-1'
+        className='flex-1 pt-20'
         exit={{ opacity: 0, scale: 0.98 }}
         initial={{ opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.6, ease: 'easeInOut' }}
