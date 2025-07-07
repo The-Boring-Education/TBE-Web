@@ -2590,6 +2590,13 @@ const SUBSCRIPTION_FEATURES: SubscriptionFeature[] = [
   'LinkedInAutomation',
 ];
 
+const planTypeMap = {
+  '1months': { type: '3Months', duration: 1 },
+  '3months': { type: '5Months', duration: 3 },
+  '6months': { type: '5Months', duration: 6 },
+  'lifetime': { type: 'Lifetime', duration: 999 }
+};
+
 export {
   ALLOWED_IPS,
   CERTIFICATE_TYPE,
@@ -2615,4 +2622,5 @@ export {
   USER_ROLE,
   WORK_DOMAIN,
   YOUTUBE_API_PATH,
+  planTypeMap
 };

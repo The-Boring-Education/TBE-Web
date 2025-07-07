@@ -7,6 +7,7 @@ import {
   envConfig,
   isDevelopmentEnv,
   isProductionEnv,
+  planTypeMap,
 } from '@/constant';
 import {
   enrollInACourse,
@@ -14,13 +15,15 @@ import {
   getEnrolledCourseFromDB,
   getEnrolledSheetFromDB,
   getPaymentByOrderIdFromDB,
-  PrepYatraSubscription,
-  PrepYatraUser,
+  createSubscriptionInDB,
+  getActiveSubscriptionByUserFromDB,
+  updateUserSubscriptionStatusInDB,
   updatePaymentStatusToDB,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import {
   cors,
+  getPYSubscriptionFeaturesByType,
   sendAPIResponse,
   validateWebhookEvent,
   verifyWebhookSignature,
@@ -193,57 +196,56 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
         if (_payment.productType === 'PREPYATRA') {
-          const planTypeMap = {
-            '1months': { type: '3Months', duration: 1 },
-            '3months': { type: '5Months', duration: 3 },
-            '6months': { type: '5Months', duration: 6 },
-            'lifetime': { type: 'Lifetime', duration: 999 }
+          const plan = planTypeMap[String(_payment.productId) as keyof typeof planTypeMap] || { 
+            type: '3Months', 
+            duration: 1 
           };
-          const plan = planTypeMap[String(_payment.productId) as keyof typeof planTypeMap] || { type: 'Monthly', duration: 1 };
-      
-          let expiryDate;
-          if (plan.type === 'Lifetime') {
-            expiryDate = new Date('2099-12-31');
-          } else {
-            expiryDate = new Date();
-            expiryDate.setMonth(expiryDate.getMonth() + plan.duration);
-          }
-      
-          // Avoid duplicate subscriptions
-          const existing = await PrepYatraSubscription.findOne({
-            userId: _payment.user,
-            type: plan.type,
-            isActive: true,
-            expiryDate: { $gt: new Date() }
-          });
-      
-          if (!existing) {
-            await PrepYatraSubscription.create({
+
+          // Calculate expiry date
+          const expiryDate = plan.type === 'Lifetime' 
+            ? new Date('2099-12-31')
+            : new Date(Date.now() + plan.duration * 30 * 24 * 60 * 60 * 1000);
+
+          // Check for existing active subscription
+          const { data: existingSubscription } = await getActiveSubscriptionByUserFromDB(
+            _payment.user,
+            plan.type
+          );
+
+          if (!existingSubscription) {
+            // Get features based on subscription type
+            const features = getPYSubscriptionFeaturesByType(plan.type);
+
+            // Create subscription
+            const { error: createError } = await createSubscriptionInDB({
               userId: _payment.user,
               type: plan.type,
               amount: _payment.amount,
               duration: plan.duration,
               expiryDate,
-              features: [
-                'InterviewQuestions',
-                'SystemDesignResources',
-                'DSAResources',
-                'ResumeWorkshop',
-                'JobApplicationWorkshop',
-                ...(plan.type === 'Lifetime' ? ['ColdEmailAutomation', 'LinkedInAutomation'] : [])
-              ]
+              features,
             });
-      
-            await PrepYatraUser.updateOne(
-              { mongoUserId: _payment.user },
-              {
+
+            if (createError) {
+              console.error('Failed to create subscription:', createError);
+            } else {
+              // Update user subscription status
+              const { error: updateError } = await updateUserSubscriptionStatusInDB({
+                userId: _payment.user,
                 subscriptionStatus: 'Active',
                 subscriptionExpiry: expiryDate,
+              });
+
+              if (updateError) {
+                console.error('Failed to update user subscription status:', updateError);
+              } else {
+                console.log(`Successfully created ${plan.type} subscription for user ${_payment.user}`);
               }
-            );
+            }
+          } else {
+            console.log(`User ${_payment.user} already has an active ${plan.type} subscription`);
           }
-        
-      }
+        }
     }
 
     return res.status(apiStatusCodes.OKAY).json({ status: 'OK' });
