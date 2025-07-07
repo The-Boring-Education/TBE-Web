@@ -6,8 +6,7 @@ import {
   deletePrepLogInDB,
   getPrepLogsByUserFromDB,
   updatePrepLogInDB,
-  updateUserPointsInDB,
-  addGamificationDocInDB,
+  handleGamificationPoints,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import { cors, sendAPIResponse } from '@/utils';
@@ -66,29 +65,7 @@ const handleAddLog = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Trigger gamification for preplog creation
     try {
-      let { data: gamificationData, error: gamificationError } = await updateUserPointsInDB(userId, 'PREPLOG_CREATED');
-      
-      // If user not found, create gamification record first
-      if (gamificationError && gamificationError === 'User not found') {
-        console.log('Creating gamification record for user:', userId);
-        const { data: newGamificationData, error: createError } = await addGamificationDocInDB(userId);
-        
-        if (createError) {
-          console.error('Failed to create gamification record:', createError);
-        } else {
-          // Now try updating points again
-          const { data: updatedData, error: updateError } = await updateUserPointsInDB(userId, 'PREPLOG_CREATED');
-          if (updateError) {
-            console.error('Gamification update failed after creating record:', updateError);
-          } else {
-            console.log('Gamification event added successfully for preplog creation:', updatedData);
-          }
-        }
-      } else if (gamificationError) {
-        console.error('Gamification update failed:', gamificationError);
-      } else {
-        console.log('Gamification event added successfully for preplog creation:', gamificationData);
-      }
+      await handleGamificationPoints(true, userId, 'PREPLOG_CREATED');
     } catch (gamificationError) {
       console.error('Gamification trigger failed:', gamificationError);
       // Don't fail the main request if gamification fails
