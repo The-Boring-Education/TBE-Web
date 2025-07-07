@@ -7,6 +7,7 @@ import {
   POINTS_RULES,
   routes,
   SKILL_BLACKLIST,
+  SUBSCRIPTION_FEATURES,
   USER_LEVELS,
   YOUFOCUS_SKILL_PLAYLISTS,
   YOUTUBE_API_PATH,
@@ -706,6 +707,16 @@ const checkUserCourseEnrollment = async (
   }
 };
 
+const getPYSubscriptionFeaturesByType = (subscriptionType: string): string[] => {
+  const baseFeatures = SUBSCRIPTION_FEATURES.filter(feature => 
+    !['ColdEmailAutomation', 'LinkedInAutomation'].includes(feature)
+  );
+
+  return subscriptionType === 'Lifetime' 
+    ? SUBSCRIPTION_FEATURES
+    : baseFeatures;
+};
+
 export {
   type WebhookEvent,
   buildOrderPayload,
@@ -747,4 +758,5 @@ export {
   setLocalStorageItem,
   validateWebhookEvent,
   verifyWebhookSignature,
+  getPYSubscriptionFeaturesByType,
 };

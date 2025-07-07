@@ -299,7 +299,7 @@ export interface PaymentModel extends Document {
   _id: Types.ObjectId;
   user: Types.ObjectId;
   amount: number;
-  productId: Types.ObjectId;
+  productId: string;
   productType: ProductType;
   orderId: string;
   paymentId?: string;

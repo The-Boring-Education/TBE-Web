@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { PrepLog, Recruiter } from '@/database';
+import { PrepLog, PrepYatraSubscription, PrepYatraUser, Recruiter } from '@/database';
 import type {
   AddPrepLogToDBPayloadProps,
   AddRecruiterToDBPayloadProps,
@@ -128,13 +128,89 @@ const deletePrepLogInDB = async (prepLogId: string) => {
   }
 };
 
+
+const getActiveSubscriptionByUserFromDB = async (
+  userId: string,
+  subscriptionType: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const subscription = await PrepYatraSubscription.findOne({
+      userId: new mongoose.Types.ObjectId(userId),
+      type: subscriptionType,
+      isActive: true,
+      expiryDate: { $gt: new Date() }
+    });
+    return { data: subscription };
+  } catch (error) {
+    return { error: 'Failed to fetch active subscription from DB' };
+  }
+};
+
+const createSubscriptionInDB = async ({
+  userId,
+  type,
+  amount,
+  duration,
+  expiryDate,
+  features,
+}: {
+  userId: string;
+  type: string;
+  amount: number;
+  duration: number;
+  expiryDate: Date;
+  features: string[];
+}): Promise<DatabaseQueryResponseType> => {
+  try {
+    const subscription = await PrepYatraSubscription.create({
+      userId: new mongoose.Types.ObjectId(userId),
+      type,
+      amount,
+      duration,
+      expiryDate,
+      features,
+      startDate: new Date(),
+      isActive: true
+    });
+    return { data: subscription };
+  } catch (error) {
+    return { error: 'Failed to create subscription in DB' };
+  }
+};
+
+const updateUserSubscriptionStatusInDB = async ({
+  userId,
+  subscriptionStatus,
+  subscriptionExpiry,
+}: {
+  userId: string;
+  subscriptionStatus: string;
+  subscriptionExpiry: Date;
+}): Promise<DatabaseQueryResponseType> => {
+  try {
+    const updatedUser = await PrepYatraUser.updateOne(
+      { mongoUserId: new mongoose.Types.ObjectId(userId) },
+      {
+        subscriptionStatus,
+        subscriptionExpiry,
+      }
+    );
+    return { data: updatedUser };
+  } catch (error) {
+    return { error: 'Failed to update user subscription status in DB' };
+  }
+};
+
 export {
   addPrepLogToDB,
   addRecruiterToDB,
+  createSubscriptionInDB,
   deletePrepLogInDB,
   deleteRecruiterInDB,
+  getActiveSubscriptionByUserFromDB,
   getPrepLogsByUserFromDB,
   getRecruitersByUserFromDB,
   updatePrepLogInDB,
   updateRecruiterInDB,
+  updateUserSubscriptionStatusInDB,
 };
