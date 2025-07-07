@@ -6,6 +6,7 @@ import {
   deleteRecruiterInDB,
   getRecruitersByUserFromDB,
   updateRecruiterInDB,
+  handleGamificationPoints,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
@@ -107,6 +108,12 @@ const handleAddRecruiter = async (
           error,
         })
       );
+    }
+
+    try {
+      await handleGamificationPoints(true, userId, 'RECRUITER_ADDED');
+    } catch (gamificationError) {
+      console.error('Gamification trigger failed:', gamificationError);
     }
 
     return res.status(apiStatusCodes.OKAY).json(

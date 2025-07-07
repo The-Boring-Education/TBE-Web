@@ -107,6 +107,8 @@ const UserPointsActionType = [
   'WEBINAR_ATTEND',
   'DOWNLOAD_CERTIFICATE',
   'HELP_COMMUNITY',
+  'RECRUITER_ADDED',
+  'PREPLOG_CREATED'
 ] as const;
 
 export type UserPointsActionType = (typeof UserPointsActionType)[number];

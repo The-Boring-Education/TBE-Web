@@ -6,6 +6,7 @@ import {
   deletePrepLogInDB,
   getPrepLogsByUserFromDB,
   updatePrepLogInDB,
+  handleGamificationPoints,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import { cors, sendAPIResponse } from '@/utils';
@@ -60,6 +61,12 @@ const handleAddLog = async (req: NextApiRequest, res: NextApiResponse) => {
           message: error,
         })
       );
+    }
+
+    try {
+      await handleGamificationPoints(true, userId, 'PREPLOG_CREATED');
+    } catch (gamificationError) {
+      console.error('Gamification trigger failed:', gamificationError);
     }
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json(
