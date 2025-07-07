@@ -117,6 +117,13 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: LINKS.whatsappCommunity,
       target: '_blank',
     },
+    {
+      id: v4(),
+      name: 'Host TBE at Your College',
+      description: 'Bring Tech Education to Your Campus',
+      href: LINKS.hostTBEAtYourCollege,
+      target: '_blank',
+    },
   ],
   user: [
     {
