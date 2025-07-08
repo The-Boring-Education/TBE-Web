@@ -10,6 +10,7 @@ import {
   Toast,
 } from '@/components';
 import { useFeedback } from '@/hooks';
+import { useGamifiedAction } from '@/hooks';
 import type { FeedbackPopupProps } from '@/interfaces';
 
 const FeedbackPopup = ({
@@ -30,12 +31,30 @@ const FeedbackPopup = ({
     handleFeedbackSubmit: handleSubmit,
   } = useFeedback({ type, refId });
 
+  const gamifiedAction = useGamifiedAction();
+
   const handleStarClick = async (value: number) => {
     await baseHandleStarClick(value);
   };
 
   const handleFeedbackSubmit = async () => {
     await handleSubmit();
+    // Trigger gamification toast/celebration
+    await gamifiedAction.triggerGamifiedAction({
+      gamificationAction: 'FEEDBACK_SUBMIT',
+      analytics: {
+        action: 'FEEDBACK_SUBMITTED',
+        category: 'User',
+        label: 'Feedback Submitted',
+      },
+      customMessage: 'Thanks for your feedback! 🎉',
+      metadata: {
+        refId,
+        type,
+      },
+    });
+    // Add delay to allow toast/celebration UI to show
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     if (onSubmit) {
       onSubmit();
     }

@@ -7,7 +7,7 @@ import {
   Text,
 } from '@/components';
 import { routes } from '@/constant';
-import { useAnalytics, useApi, useUser } from '@/hooks';
+import { useAnalytics, useApi, useGamifiedAction, useUser } from '@/hooks';
 import type { SheetHeroContainerProps } from '@/interfaces';
 
 const SheetHeroContainer = ({
@@ -18,6 +18,7 @@ const SheetHeroContainer = ({
 }: SheetHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
+  const gamifiedAction = useGamifiedAction();
 
   const { makeRequest, loading } = useApi('interview-prep/enrollSheet');
 
@@ -30,7 +31,7 @@ const SheetHeroContainer = ({
         sheetId: id,
       },
     })
-      .then(() => {
+      .then(async () => {
         trackEvent({
           action: 'INTERVIEW_SHEET_ENROLL',
           category: 'InterviewSheet',
@@ -41,7 +42,25 @@ const SheetHeroContainer = ({
           },
         });
 
-        window.location.reload();
+        // Use gamified action for sheet enrollment
+        await gamifiedAction.triggerGamifiedAction({
+          gamificationAction: 'ENROLL_SHEET',
+          analytics: {
+            action: 'INTERVIEW_SHEET_ENROLL',
+            category: 'InterviewSheet',
+            label: 'Interview Sheet Enrolled',
+          },
+          customMessage: 'Interview sheet enrolled! Time to practice!',
+          metadata: {
+            sheetId: id,
+            sheetName: name,
+          },
+        });
+
+        // Add delay to allow toast/celebration UI to show
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       })
       .catch((error) => error);
   };

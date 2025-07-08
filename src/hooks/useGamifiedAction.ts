@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { routes } from '@/constant';
+import { useGamificationContext } from '@/components/layout/GamificationProvider';
 import { useAnalytics, useApi, useGamification, useUser } from '@/hooks';
 import type { TrackEventProps, UserPointsActionType } from '@/interfaces';
 import { calculateUserPointsForAction, getUserGamificationLevel } from '@/utils';
@@ -35,6 +36,7 @@ const useGamifiedAction = () => {
   const { trackEvent } = useAnalytics();
   const { points: currentPoints } = useGamification();
   const { makeRequest } = useApi('gamification');
+  const { triggerCelebration, showToast } = useGamificationContext();
   
   const [state, setState] = useState<GamificationState>({
     isLoading: false,
@@ -112,23 +114,20 @@ const useGamifiedAction = () => {
           celebrationType = event.celebrationType;
         }
 
-        // Set up celebration and toast
-        setState(prev => ({
-          ...prev,
-          showCelebration: true,
-          showToast: true,
-          celebrationData: {
-            type: celebrationType,
-            intensity: celebrationIntensity,
-          },
-          toastData: {
-            type: celebrationType,
-            message: toastMessage,
-            points: pointsEarned,
-            level: newLevel.currentLevel,
-            levelName: newLevel.currentLevelName,
-          },
-        }));
+        triggerCelebration({
+          type: celebrationType,
+          intensity: celebrationIntensity,
+        });
+        
+        showToast({
+          type: celebrationType,
+          message: toastMessage,
+          points: pointsEarned,
+          level: newLevel.currentLevel,
+          levelName: newLevel.currentLevelName,
+        });
+
+        console.log('🎮 [useGamifiedAction] Provider functions called successfully');
 
         // Track points earned event
         trackEvent({
@@ -148,7 +147,7 @@ const useGamifiedAction = () => {
     } finally {
       setState(prev => ({ ...prev, isLoading: false }));
     }
-  }, [user?.id, trackEvent, currentPoints, makeRequest]);
+  }, [user?.id, trackEvent, currentPoints, makeRequest, triggerCelebration, showToast]);
 
   const dismissCelebration = useCallback(() => {
     setState(prev => ({

@@ -50,7 +50,10 @@ const ProjectHeroContainer = ({
         },
       });
 
-      window.location.reload();
+      // Add delay to allow toast/celebration UI to show
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error('Failed to enroll in project', error);
     }
