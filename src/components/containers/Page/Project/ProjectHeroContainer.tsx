@@ -33,7 +33,6 @@ const ProjectHeroContainer = ({
         },
       });
 
-      // Use gamified action for project enrollment
       await gamifiedAction.triggerGamifiedAction({
         gamificationAction: 'ENROLL_PROJECT',
         analytics: {
@@ -50,7 +49,6 @@ const ProjectHeroContainer = ({
         },
       });
 
-      // Add delay to allow toast/celebration UI to show
       setTimeout(() => {
         window.location.reload();
       }, 1500);

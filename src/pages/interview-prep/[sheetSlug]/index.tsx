@@ -179,7 +179,6 @@ const SheetPage = ({
 
         if (nextIncompleteQuestion) {
           const questionId = nextIncompleteQuestion._id.toString();
-          // Add delay to allow toast/celebration UI to show
           setTimeout(() => {
             window.location.href = `${slug}?sheetId=${sheet._id}&questionId=${questionId}`;
           }, 1500);

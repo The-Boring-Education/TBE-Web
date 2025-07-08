@@ -42,7 +42,6 @@ const SheetHeroContainer = ({
           },
         });
 
-        // Use gamified action for sheet enrollment
         await gamifiedAction.triggerGamifiedAction({
           gamificationAction: 'ENROLL_SHEET',
           analytics: {
@@ -57,7 +56,6 @@ const SheetHeroContainer = ({
           },
         });
 
-        // Add delay to allow toast/celebration UI to show
         setTimeout(() => {
           window.location.reload();
         }, 1500);

@@ -39,7 +39,6 @@ const FeedbackPopup = ({
 
   const handleFeedbackSubmit = async () => {
     await handleSubmit();
-    // Trigger gamification toast/celebration
     await gamifiedAction.triggerGamifiedAction({
       gamificationAction: 'FEEDBACK_SUBMIT',
       analytics: {
@@ -53,7 +52,6 @@ const FeedbackPopup = ({
         type,
       },
     });
-    // Add delay to allow toast/celebration UI to show
     await new Promise((resolve) => setTimeout(resolve, 1500));
     if (onSubmit) {
       onSubmit();
