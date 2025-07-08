@@ -10,6 +10,7 @@ import { cors, sendAPIResponse } from '@/utils';
 /**
  * API Handler for PrepYatra user onboarding
  * POST /api/v1/prepyatra/onboarding
+ * PUT /api/v1/prepyatra/onboarding
  * GET /api/v1/prepyatra/onboarding
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -20,6 +21,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'POST':
       return handleOnboarding(req, res);
+    case 'PUT':
+      return updateOnboarding(req, res);
     case 'GET':
       return getOnboardingDetails(req, res);
     default:
@@ -114,6 +117,92 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       sendAPIResponse({
         status: false,
         message: 'Failed during onboarding',
+        error: error.message,
+      })
+    );
+  }
+};
+
+const updateOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const {
+      supabaseUserId,
+      name,
+      username,
+      goal,
+      targetCompanies,
+      preferredCategories,
+    }: PrepYatraOnboardingPayload = req.body;
+
+    if (!supabaseUserId) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'supabaseUserId is required for updating onboarding details',
+        })
+      );
+    }
+
+    // Find the existing PrepYatra user
+    const existingPrepYatraUser = await PrepYatraUser.findOne({
+      supabaseUserId,
+    });
+
+    if (!existingPrepYatraUser) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: 'User not found. Please complete onboarding first.',
+        })
+      );
+    }
+
+    // Update the PrepYatra user profile with new data
+    const updateData: any = {};
+    
+    if (goal) updateData.goal = goal;
+    if (targetCompanies) updateData.targetCompanies = targetCompanies;
+    if (preferredCategories) {
+      updateData.preferences = {
+        ...existingPrepYatraUser.preferences,
+        interviewCategories: preferredCategories,
+      };
+    }
+
+    // Update the user profile
+    const updatedPrepYatraUser = await PrepYatraUser.findByIdAndUpdate(
+      existingPrepYatraUser._id,
+      updateData,
+      { new: true }
+    );
+
+    // Also update the MongoDB user if name or username is provided
+    if (name || username) {
+      const updateMongoData: any = {};
+      if (name) updateMongoData.name = name;
+      if (username) updateMongoData.userName = username;
+
+      await User.findByIdAndUpdate(
+        existingPrepYatraUser.mongoUserId,
+        updateMongoData,
+        { new: true }
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data: {
+          prepYatraUser: updatedPrepYatraUser,
+        },
+        message: 'Onboarding details updated successfully',
+      })
+    );
+  } catch (error: any) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Failed to update onboarding details',
         error: error.message,
       })
     );
