@@ -33,7 +33,6 @@ const ProjectHeroContainer = ({
         },
       });
 
-      // Use gamified action for project enrollment
       await gamifiedAction.triggerGamifiedAction({
         gamificationAction: 'ENROLL_PROJECT',
         analytics: {
@@ -50,7 +49,9 @@ const ProjectHeroContainer = ({
         },
       });
 
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error('Failed to enroll in project', error);
     }

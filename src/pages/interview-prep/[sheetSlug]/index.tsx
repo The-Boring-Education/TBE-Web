@@ -179,7 +179,9 @@ const SheetPage = ({
 
         if (nextIncompleteQuestion) {
           const questionId = nextIncompleteQuestion._id.toString();
-          window.location.href = `${slug}?sheetId=${sheet._id}&questionId=${questionId}`;
+          setTimeout(() => {
+            window.location.href = `${slug}?sheetId=${sheet._id}&questionId=${questionId}`;
+          }, 1500);
         }
       }
 
