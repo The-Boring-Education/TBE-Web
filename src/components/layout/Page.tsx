@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import { Footer, Navbar } from '@/components';
-import GamificationDemo from '@/components/common/GamificationDemo';
 import { envConfig } from '@/constant';
 import type { PageLayoutProps } from '@/interfaces';
 
@@ -40,9 +39,6 @@ const PageLayout = ({ children }: PageLayoutProps) => {
         {children}
       </motion.div>
       <Footer />
-      
-      {/* Development/Testing Demo - Remove in production */}
-      {process.env.NODE_ENV === 'development' && <GamificationDemo />}
     </main>
   );
 };
