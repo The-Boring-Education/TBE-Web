@@ -447,7 +447,7 @@ export type SubscriptionFeature =
 
 // New interfaces for PrepYatra API requests
 export interface PrepYatraOnboardingPayload {
-  supabaseUserId: string;
+  userId: string;
   name: string;
   username: string;
   experienceLevel: string;
@@ -471,9 +471,9 @@ export interface CreateSubscriptionPayload {
 
 export interface PrepYatraPaymentPayload
   extends AddPaymentToDBRequestPayloadProps {
-  subscriptionType: SubscriptionType
-  subscriptionDuration: number
-  expiresAt: Date
+  subscriptionType: SubscriptionType;
+  subscriptionDuration: number;
+  expiresAt: Date;
 }
 
 export interface AddRecruiterToDBPayloadProps {

@@ -11,9 +11,9 @@ import type { PrepYatraUserModel } from '@/interfaces';
 
 const PrepYatraUserSchema = new Schema<PrepYatraUserModel>(
   {
-    supabaseUserId: {
+    userId: {
       type: String,
-      required: [true, 'Supabase User ID is required'],
+      required: [true, 'User ID is required'],
       unique: true,
       index: true,
     },

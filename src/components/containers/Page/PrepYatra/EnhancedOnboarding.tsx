@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface OnboardingData {
-  supabaseUserId: string;
+  userId: string;
   name: string;
   username: string;
   experienceLevel: string;
@@ -19,17 +19,17 @@ interface OnboardingData {
 }
 
 interface EnhancedOnboardingProps {
-  supabaseUserId: string;
+  userId: string;
   onComplete: (data: OnboardingData) => void;
 }
 
 const EnhancedOnboarding: React.FC<EnhancedOnboardingProps> = ({
-  supabaseUserId,
+  userId,
   onComplete,
 }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<OnboardingData>({
-    supabaseUserId,
+    userId,
     name: '',
     username: '',
     experienceLevel: '',

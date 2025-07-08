@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const {
-      supabaseUserId,
+      userId,
       name,
       username,
       goal,
@@ -46,37 +46,18 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       preferredCategories,
     }: PrepYatraOnboardingPayload = req.body;
 
-    if (!supabaseUserId || !name || !username || !goal) {
+    if (!userId || !name || !username || !goal) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'Required fields: supabaseUserId, name, username, goal',
+          message: 'Required fields: userId, name, username, goal',
         })
       );
     }
 
-    // First, create or find the MongoDB user
-    let mongoUser = await User.findOne({
-      $or: [
-        { providerAccountId: supabaseUserId },
-        { email: `${username}@prepyatra.temp` }, // Temporary email for Supabase users
-      ],
-    });
-
-    if (!mongoUser) {
-      mongoUser = await User.create({
-        name,
-        userName: username,
-        email: `${username}@prepyatra.temp`,
-        provider: 'supabase',
-        providerAccountId: supabaseUserId,
-        isOnboarded: true,
-      });
-    }
-
     // Check if PrepYatra user already exists
     const existingPrepYatraUser = await PrepYatraUser.findOne({
-      supabaseUserId,
+      userId,
     });
 
     if (existingPrepYatraUser) {
@@ -90,7 +71,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Create PrepYatra user profile
     const prepYatraUser = await PrepYatraUser.create({
-      supabaseUserId,
+      userId,
       mongoUserId: mongoUser._id,
       goal,
       targetCompanies,
@@ -126,7 +107,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
 const updateOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const {
-      supabaseUserId,
+      userId,
       name,
       username,
       goal,
@@ -134,18 +115,18 @@ const updateOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       preferredCategories,
     }: PrepYatraOnboardingPayload = req.body;
 
-    if (!supabaseUserId) {
+    if (!userId) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'supabaseUserId is required for updating onboarding details',
+          message: 'userId is required for updating onboarding details',
         })
       );
     }
 
     // Find the existing PrepYatra user
     const existingPrepYatraUser = await PrepYatraUser.findOne({
-      supabaseUserId,
+      userId,
     });
 
     if (!existingPrepYatraUser) {
@@ -159,7 +140,7 @@ const updateOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Update the PrepYatra user profile with new data
     const updateData: any = {};
-    
+
     if (goal) updateData.goal = goal;
     if (targetCompanies) updateData.targetCompanies = targetCompanies;
     if (preferredCategories) {
@@ -209,7 +190,10 @@ const updateOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const getOnboardingDetails = async (req: NextApiRequest, res: NextApiResponse) => {
+const getOnboardingDetails = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   try {
     const { userId } = req.query;
 
@@ -224,12 +208,10 @@ const getOnboardingDetails = async (req: NextApiRequest, res: NextApiResponse) =
 
     // Find the PrepYatra user by userId (you can change this field based on your database)
     const prepYatraUser = await PrepYatraUser.findOne({
-      $or: [
-        { supabaseUserId: userId },
-        { mongoUserId: userId },
-        { _id: userId }
-      ]
-    }).select('goal targetCompanies preferences subscriptionStatus subscriptionExpiry');
+      $or: [{ userId: userId }, { mongoUserId: userId }, { _id: userId }],
+    }).select(
+      'goal targetCompanies preferences subscriptionStatus subscriptionExpiry'
+    );
 
     if (!prepYatraUser) {
       return res.status(apiStatusCodes.NOT_FOUND).json(
@@ -266,6 +248,5 @@ const getOnboardingDetails = async (req: NextApiRequest, res: NextApiResponse) =
     );
   }
 };
-
 
 export default handler;

@@ -319,7 +319,7 @@ export interface WebhookEvent {
 
 export interface PrepYatraUserModel extends Document {
   _id: Types.ObjectId;
-  supabaseUserId: string;
+  userId: string;
   mongoUserId: Types.ObjectId;
   goal: GoalType;
   targetCompanies: CompanyType[];
@@ -332,15 +332,15 @@ export interface PrepYatraUserModel extends Document {
 }
 
 export interface PrepYatraSubscriptionModel extends Document {
-  _id: Types.ObjectId
-  userId: Types.ObjectId
-  type: SubscriptionType
-  amount: number
-  duration: number
-  startDate: Date
-  expiryDate: Date
-  isActive: boolean
-  features: SubscriptionFeature[]
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  type: SubscriptionType;
+  amount: number;
+  duration: number;
+  startDate: Date;
+  expiryDate: Date;
+  isActive: boolean;
+  features: SubscriptionFeature[];
 }
 
 export interface RecruiterModel extends Document {
