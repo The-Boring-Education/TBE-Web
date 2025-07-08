@@ -127,6 +127,7 @@ const LINKS = {
   bookProjectSession: 'https://topmate.io/imsks/1527401',
   postmanDocs: 'https://documenter.getpostman.com/view/10360102/2sAYdcsYK3',
   hostTBEAtYourCollege: 'https://tally.so/r/mZkOby',
+  viewSessionDetails: 'https://bit.ly/TBECampusConnect',
 };
 
 // Google analytics
