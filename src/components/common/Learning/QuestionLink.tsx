@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { FaLock, FaRegCircle } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 
+import { useAnalytics } from '@/hooks';
 import type { QuestionLinkProps } from '@/interfaces';
 
 const QuestionLink = ({
@@ -15,6 +16,7 @@ const QuestionLink = ({
   isLocked = false,
   handleQuestionClick,
 }: QuestionLinkProps) => {
+  const { trackEvent } = useAnalytics();
   let additionalClasses =
     currentQuestionId === questionId
       ? isCompleted
@@ -46,6 +48,20 @@ const QuestionLink = ({
           e.preventDefault();
           return;
         }
+        
+        // Track question start
+        trackEvent({
+          action: 'QUESTION_START',
+          category: 'Learning',
+          label: 'Question Started',
+          value: {
+            questionId,
+            questionTitle: title,
+            frequency,
+            isCompleted,
+          },
+        });
+        
         handleQuestionClick(question);
       }}
     >

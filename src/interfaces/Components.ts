@@ -614,6 +614,7 @@ export interface FloatingActionButtonProps {
 export interface TabProps {
   tabLabels: string[];
   tabPanels: React.ReactNode[];
+  vertical?: boolean;
 }
 
 export interface ProgressRingProps {
@@ -732,4 +733,28 @@ export interface PaymentCardProps {
   course: BaseShikshaCourseResponseProps | BaseInterviewSheetResponseProps;
   onClose: () => void;
   productType: string;
+}
+
+export interface RepositoryTabBarProps {
+  repositories: Array<{
+    repo: string;
+    name: string;
+    url: string;
+    description: string;
+    language: string;
+  }>;
+  activeRepository: {
+    repo: string;
+    name: string;
+    url: string;
+    description: string;
+    language: string;
+  };
+  onRepositoryChange: (repository: {
+    repo: string;
+    name: string;
+    url: string;
+    description: string;
+    language: string;
+  }) => void;
 }

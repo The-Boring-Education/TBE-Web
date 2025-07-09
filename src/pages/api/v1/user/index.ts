@@ -9,6 +9,7 @@ import {
 import type { CreateUserRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { cors, sendAPIResponse } from '@/utils';
+import { captureAPIError, captureAuthError } from '@/utils/sentry';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
@@ -36,6 +37,14 @@ const handleGetUser = async (
       const { data, error } = await getUserByEmailFromDB(email);
 
       if (error) {
+        captureAPIError(
+          error as Error,
+          '/api/v1/user',
+          'GET',
+          apiStatusCodes.INTERNAL_SERVER_ERROR,
+          { email }
+        );
+
         return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
           sendAPIResponse({
             status: false,
@@ -54,6 +63,14 @@ const handleGetUser = async (
       const { data, error } = await getUserByIdFromDB(userId);
 
       if (error) {
+        captureAPIError(
+          error as Error,
+          '/api/v1/user',
+          'GET',
+          apiStatusCodes.INTERNAL_SERVER_ERROR,
+          { userId }
+        );
+
         return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
           sendAPIResponse({
             status: false,
@@ -76,6 +93,14 @@ const handleGetUser = async (
       })
     );
   } catch (error) {
+    captureAPIError(
+      error as Error,
+      '/api/v1/user',
+      'GET',
+      apiStatusCodes.INTERNAL_SERVER_ERROR,
+      { email, userId }
+    );
+
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -135,6 +160,12 @@ const handleCreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
   } catch (error) {
+    captureAuthError(
+      error as Error,
+      'user_creation',
+      req.body?.email
+    );
+
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,

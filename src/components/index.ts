@@ -131,9 +131,6 @@ const GridContainer = dynamic(
 const WeAlreadyTaughtAt = dynamic(
   () => import('./containers/Cards/WeAlreadyTaughtAt')
 );
-const WeTaughtAtCard = dynamic(
-  () => import('./containers/Cards/Items/WeTaughtAtCard')
-);
 const ContactCard = dynamic(
   () => import('./containers/Cards/Items/ContactCard')
 );
@@ -189,6 +186,9 @@ const MentorshipPlans = dynamic(
   () => import('./containers/Page/Landing/MentorshipPlans')
 );
 const Community = dynamic(() => import('./containers/Page/Landing/Community'));
+const CollegeEventsSection = dynamic(
+  () => import('./containers/Page/Landing/CollegeEventsSection')
+);
 const ChapterLink = dynamic(
   () => import('@/components/common/Learning/ChapterLink')
 );
@@ -293,11 +293,58 @@ const PaymentCard = dynamic(
   () => import('@/components/containers/Cards/PaymentCard')
 );
 
+const GitHubIssuesContainer = dynamic(
+  () => import('@/components/containers/Cards/GitHubIssuesContainer')
+);
+
+const IssuesTable = dynamic(
+  () => import('@/components/containers/Page/OpenSource/IssuesTable')
+);
+
+const CelebrationAnimation = dynamic(
+  () => import('@/components/common/CelebrationAnimation')
+);
+const GamificationToast = dynamic(
+  () => import('@/components/common/GamificationToast')
+);
+
+// Admin Components
+const AdminLayout = dynamic(() => import('@/components/admin/AdminLayout'));
+const AdminTable = dynamic(() => import('@/components/admin/AdminTable'));
+const AdminStats = dynamic(() => import('@/components/admin/AdminStats'));
+const AdminAreaChart = dynamic(() =>
+  import('@/components/admin/AdminCharts').then((mod) => ({
+    default: mod.AdminAreaChart,
+  }))
+);
+const AdminBarChart = dynamic(() =>
+  import('@/components/admin/AdminCharts').then((mod) => ({
+    default: mod.AdminBarChart,
+  }))
+);
+const AdminLineChart = dynamic(() =>
+  import('@/components/admin/AdminCharts').then((mod) => ({
+    default: mod.AdminLineChart,
+  }))
+);
+const AdminPieChart = dynamic(() =>
+  import('@/components/admin/AdminCharts').then((mod) => ({
+    default: mod.AdminPieChart,
+  }))
+);
+
 export {
   AboutTBE,
   Accordion,
   AccordionLinkItem,
   ActionBanner,
+  AdminAreaChart,
+  AdminBarChart,
+  AdminLayout,
+  AdminLineChart,
+  AdminPieChart,
+  AdminStats,
+  AdminTable,
   Alert,
   BackgroundImage,
   Banner,
@@ -306,6 +353,7 @@ export {
   CardContainerB,
   CardSectionContainer,
   Carousel,
+  CelebrationAnimation,
   CertificateBanner,
   CertificateContent,
   ChapterLink,
@@ -313,6 +361,7 @@ export {
   CheckboxButtonContainer,
   CircularProgressBar,
   CohortJourneyContainer,
+  CollegeEventsSection,
   Community,
   ContactCard,
   CourseHeroContainer,
@@ -322,6 +371,8 @@ export {
   FlexContainer,
   FloatingActionButton,
   Footer,
+  GamificationToast,
+  GitHubIssuesContainer,
   GradientContainer,
   GridContainer,
   HeaderLabel,
@@ -332,6 +383,7 @@ export {
   InputFieldContainer,
   InputRadioContainer,
   InterviewPrepSection,
+  IssuesTable,
   LandingPageHero,
   LinerProgressBar,
   LinkText as Link,
@@ -401,5 +453,4 @@ export {
   WeAlreadyTaughtAt,
   WebibarCard,
   WebinarHeroContainer,
-  WeTaughtAtCard,
 };

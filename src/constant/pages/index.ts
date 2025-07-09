@@ -117,6 +117,13 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: LINKS.whatsappCommunity,
       target: '_blank',
     },
+    {
+      id: v4(),
+      name: 'Host TBE at Your College',
+      description: 'Bring Tech Education to Your Campus',
+      href: LINKS.hostTBEAtYourCollege,
+      target: '_blank',
+    },
   ],
   user: [
     {
@@ -820,6 +827,70 @@ const BYI_USER_CATEGORIES: CohortUserCategoryProps[] = [
   },
 ];
 
+const OPEN_SOURCE_INFO = [
+  {
+    id: '1',
+    image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
+    imageAltText: 'Learn Open Source',
+    title: 'Learn by Contributing',
+    content: 'Gain real-world experience by contributing to open source projects. Learn best practices, code review processes, and collaboration skills.'
+  },
+  {
+    id: '2',
+    image: `${STATIC_FILE_PATH.svg}/community.svg`,
+    imageAltText: 'Join Community',
+    title: 'Join Our Community',
+    content: 'Connect with like-minded developers, mentors, and contributors. Be part of a supportive community that helps you grow.'
+  },
+  {
+    id: '3',
+    image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
+    imageAltText: 'Build Portfolio',
+    title: 'Build Your Portfolio',
+    content: 'Showcase your contributions on GitHub and build a strong portfolio that stands out to potential employers.'
+  },
+  {
+    id: '4',
+    image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
+    imageAltText: 'Get Mentorship',
+    title: 'Get Mentorship',
+    content: 'Receive guidance from experienced developers who will help you understand the codebase and improve your skills.'
+  }
+];
+
+const OS_GETTING_STARTED_STEPS = [
+  {
+    step: '01',
+    title: 'Fork the Repository',
+    description: 'Start by forking the repository you want to contribute to on GitHub.'
+  },
+  {
+    step: '02',
+    title: 'Clone Locally',
+    description: 'Clone your forked repository to your local machine for development.'
+  },
+  {
+    step: '03',
+    title: 'Create a Branch',
+    description: 'Create a new branch for your feature or bug fix with a descriptive name.'
+  },
+  {
+    step: '04',
+    title: 'Make Changes',
+    description: 'Write your code, add tests, and ensure everything works as expected.'
+  },
+  {
+    step: '05',
+    title: 'Submit PR',
+    description: 'Push your changes and create a pull request with a clear description.'
+  },
+  {
+    step: '06',
+    title: 'Get Feedback',
+    description: 'Receive code review feedback and iterate on your changes.'
+  }
+];
+
 export {
   BYI_BEGINNER_ROADMAP,
   BYI_INTERMEDIATE_ROADMAP,
@@ -827,6 +898,8 @@ export {
   BYI_USER_CATEGORIES,
   INTERVIEW_PREP_SHEETS,
   MY_PREV_EXPERIENCE,
+  OPEN_SOURCE_INFO,
+  OS_GETTING_STARTED_STEPS,
   PRODUCTS,
   TBIP_FEATURES,
   TBP_FEATURES,

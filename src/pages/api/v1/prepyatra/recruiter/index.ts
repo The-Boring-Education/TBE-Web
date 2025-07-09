@@ -6,6 +6,7 @@ import {
   deleteRecruiterInDB,
   getRecruitersByUserFromDB,
   updateRecruiterInDB,
+  handleGamificationPoints,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
@@ -83,13 +84,13 @@ const handleAddRecruiter = async (
   res: NextApiResponse
 ) => {
   try {
-    const { userId, recruiterName } = req.body;
+    const { userId, recruiterName, ...optionalFields } = req.body;
 
     if (!userId || !recruiterName) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'All fields are required',
+          message: 'userId and recruiterName are required fields',
         })
       );
     }
@@ -97,6 +98,7 @@ const handleAddRecruiter = async (
     const { data, error } = await addRecruiterToDB({
       userId,
       recruiterName,
+      ...optionalFields
     });
 
     if (error) {
@@ -107,6 +109,12 @@ const handleAddRecruiter = async (
           error,
         })
       );
+    }
+
+    try {
+      await handleGamificationPoints(true, userId, 'RECRUITER_ADDED');
+    } catch (gamificationError) {
+      console.error('Gamification trigger failed:', gamificationError);
     }
 
     return res.status(apiStatusCodes.OKAY).json(

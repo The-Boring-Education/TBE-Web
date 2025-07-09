@@ -8,11 +8,18 @@ import type {
 
 import type {
   CertificateType,
+  CompanyType,
   DifficultyType,
+  GoalType,
+  InterviewCategoryType,
   PlatformUsageType,
+  PriorityType,
   QuestionFrequencyType,
   RoadmapsType,
   SkillsType,
+  SubscriptionFeature,
+  SubscriptionStatus,
+  SubscriptionType,
   UnskilledLandingGraphDataProps,
   UserPointsActionType,
   UserRoleType,
@@ -36,6 +43,12 @@ export interface UserModel {
     pyOnboarded?: boolean;
     workExperience: number | null;
     workDomain: WorkDomainType | '';
+    goal?: GoalType;
+    targetCompanies?: CompanyType[];
+    preferences: {
+      interviewCategories?: InterviewCategoryType[];
+      focusAreas?: string[];
+    };
   };
 }
 
@@ -119,6 +132,8 @@ export interface InterviewSheetQuestionModel {
   question: string;
   answer: string;
   frequency: QuestionFrequencyType;
+  companyTypes?: CompanyType[];
+  priority: PriorityType;
   toObject: () => UserCourseModel;
 }
 
@@ -290,12 +305,15 @@ export interface PaymentModel extends Document {
   _id: Types.ObjectId;
   user: Types.ObjectId;
   amount: number;
-  productId: Types.ObjectId;
+  productId: string;
   productType: ProductType;
   orderId: string;
   paymentId?: string;
   paymentLink: string;
   isPaid: boolean;
+  subscriptionType?: SubscriptionType;
+  subscriptionDuration?: number;
+  expiresAt?: Date;
 }
 
 export interface WebhookEvent {
@@ -303,6 +321,31 @@ export interface WebhookEvent {
   payment_id?: string;
   isPaid: boolean;
   payment_status: 'SUCCESS' | 'FAILED';
+}
+
+export interface PrepYatraUserModel extends Document {
+  _id: Types.ObjectId;
+  userId: string;
+  goal: GoalType;
+  targetCompanies: CompanyType[];
+  subscriptionStatus: SubscriptionStatus;
+  subscriptionExpiry?: Date;
+  preferences: {
+    interviewCategories: InterviewCategoryType[];
+    focusAreas: string[];
+  };
+}
+
+export interface PrepYatraSubscriptionModel extends Document {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  type: SubscriptionType;
+  amount: number;
+  duration: number;
+  startDate: Date;
+  expiryDate: Date;
+  isActive: boolean;
+  features: SubscriptionFeature[];
 }
 
 export interface RecruiterModel extends Document {
