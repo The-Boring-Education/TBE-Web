@@ -25,16 +25,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
 
   const { method, query } = req;
-  const { 
-    action, 
-    contentType, 
-    contentId, 
-    startDate, 
-    endDate, 
-    page = '1', 
+  const {
+    action,
+    contentType,
+    contentId,
+    startDate,
+    endDate,
+    page = '1',
     limit = '20',
     sortBy = 'createdAt',
-    order = 'desc'
+    order = 'desc',
   } = query;
 
   if (method !== 'GET') {
@@ -86,7 +86,12 @@ const handleContentManagementRequest = async (
       case 'difficulty-analysis':
         return await getDifficultyAnalysis(res, dateRange);
       case 'completion-funnel':
-        return await getCompletionFunnel(res, contentType, contentId, dateRange);
+        return await getCompletionFunnel(
+          res,
+          contentType,
+          contentId,
+          dateRange
+        );
       case 'feedback-analysis':
         return await getFeedbackAnalysis(res, contentType, dateRange);
       case 'trending':
@@ -96,7 +101,15 @@ const handleContentManagementRequest = async (
       case 'content-gaps':
         return await getContentGaps(res, dateRange);
       case 'list':
-        return await getContentList(res, contentType, page, limit, sortBy, sortOrder, dateRange);
+        return await getContentList(
+          res,
+          contentType,
+          page,
+          limit,
+          sortBy,
+          sortOrder,
+          dateRange
+        );
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
@@ -118,7 +131,9 @@ const handleContentManagementRequest = async (
 
 const getDateRange = (startDate: string, endDate: string) => {
   const end = endDate ? new Date(endDate) : new Date();
-  const start = startDate ? new Date(startDate) : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const start = startDate
+    ? new Date(startDate)
+    : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
   return { start, end };
 };
 
@@ -175,10 +190,7 @@ const getContentPerformance = async (
         {
           $addFields: {
             completionRate: {
-              $multiply: [
-                { $divide: ['$completions', '$enrollments'] },
-                100,
-              ],
+              $multiply: [{ $divide: ['$completions', '$enrollments'] }, 100],
             },
             certificateRate: {
               $multiply: [
@@ -386,61 +398,64 @@ const getContentDetails = async (
         },
       ]);
 
-      // Chapter-wise engagement
-      const chapterEngagement = await UserCourse.aggregate([
-        {
-          $match: {
-            courseId: contentId,
-            updatedAt: { $gte: start, $lte: end },
-          },
-        },
-        {
-          $unwind: '$chapters',
-        },
-        {
-          $group: {
-            _id: '$chapters.chapterId',
-            totalViews: { $sum: 1 },
-            completions: {
-              $sum: { $cond: [{ $eq: ['$chapters.isCompleted', true] }, 1, 0] },
+      {
+        // Chapter-wise engagement
+        const chapterEngagement = await UserCourse.aggregate([
+          {
+            $match: {
+              courseId: contentId,
+              updatedAt: { $gte: start, $lte: end },
             },
           },
-        },
-        {
-          $addFields: {
-            completionRate: {
-              $multiply: [
-                { $divide: ['$completions', '$totalViews'] },
-                100,
-              ],
+          {
+            $unwind: '$chapters',
+          },
+          {
+            $group: {
+              _id: '$chapters.chapterId',
+              totalViews: { $sum: 1 },
+              completions: {
+                $sum: {
+                  $cond: [{ $eq: ['$chapters.isCompleted', true] }, 1, 0],
+                },
+              },
             },
           },
-        },
-        {
-          $sort: { completionRate: -1 },
-        },
-      ]);
-
-      feedbackData = await Feedback.find({
-        type: 'SHIKSHA_COURSE',
-        ref: contentId,
-        createdAt: { $gte: start, $lte: end },
-      });
-
-      return res.status(apiStatusCodes.OKAY).json(
-        sendAPIResponse({
-          status: true,
-          data: {
-            contentDetails,
-            engagementMetrics: engagementMetrics[0] || {},
-            chapterEngagement,
-            feedbackData,
-            averageRating: feedbackData.length > 0 
-              ? feedbackData.reduce((sum, f) => sum + f.rating, 0) / feedbackData.length 
-              : 0,
+          {
+            $addFields: {
+              completionRate: {
+                $multiply: [{ $divide: ['$completions', '$totalViews'] }, 100],
+              },
+            },
           },
-        })
-      );
+          {
+            $sort: { completionRate: -1 },
+          },
+        ]);
+
+        feedbackData = await Feedback.find({
+          type: 'SHIKSHA_COURSE',
+          ref: contentId,
+          createdAt: { $gte: start, $lte: end },
+        });
+
+        return res.status(apiStatusCodes.OKAY).json(
+          sendAPIResponse({
+            status: true,
+            data: {
+              contentDetails,
+              engagementMetrics: engagementMetrics[0] || {},
+              chapterEngagement,
+              feedbackData,
+              averageRating:
+                feedbackData.length > 0
+                  ? feedbackData.reduce((sum, f) => sum + f.rating, 0) /
+                    feedbackData.length
+                  : 0,
+            },
+          })
+        );
+      }
 
     case 'projects':
       contentDetails = await Project.findById(contentId);
@@ -499,9 +514,11 @@ const getContentDetails = async (
             contentDetails,
             engagementMetrics: engagementMetrics[0] || {},
             feedbackData,
-            averageRating: feedbackData.length > 0 
-              ? feedbackData.reduce((sum, f) => sum + f.rating, 0) / feedbackData.length 
-              : 0,
+            averageRating:
+              feedbackData.length > 0
+                ? feedbackData.reduce((sum, f) => sum + f.rating, 0) /
+                  feedbackData.length
+                : 0,
           },
         })
       );
@@ -633,10 +650,7 @@ const getDifficultyAnalysis = async (
     {
       $addFields: {
         completionRate: {
-          $multiply: [
-            { $divide: ['$completions', '$totalEnrollments'] },
-            100,
-          ],
+          $multiply: [{ $divide: ['$completions', '$totalEnrollments'] }, 100],
         },
       },
     },
@@ -672,10 +686,7 @@ const getDifficultyAnalysis = async (
     {
       $addFields: {
         completionRate: {
-          $multiply: [
-            { $divide: ['$completions', '$totalEnrollments'] },
-            100,
-          ],
+          $multiply: [{ $divide: ['$completions', '$totalEnrollments'] }, 100],
         },
       },
     },
@@ -732,10 +743,7 @@ const getCompletionFunnel = async (
       {
         $addFields: {
           completionRate: {
-            $multiply: [
-              { $divide: ['$completed', '$started'] },
-              100,
-            ],
+            $multiply: [{ $divide: ['$completed', '$started'] }, 100],
           },
         },
       },
@@ -847,7 +855,12 @@ const getTrendingContent = async (
         recentActivity: {
           $sum: {
             $cond: [
-              { $gte: ['$updatedAt', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)] },
+              {
+                $gte: [
+                  '$updatedAt',
+                  new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+                ],
+              },
               1,
               0,
             ],
@@ -897,7 +910,12 @@ const getTrendingContent = async (
         recentActivity: {
           $sum: {
             $cond: [
-              { $gte: ['$updatedAt', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)] },
+              {
+                $gte: [
+                  '$updatedAt',
+                  new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+                ],
+              },
               1,
               0,
             ],
@@ -1188,7 +1206,9 @@ const getContentList = async (
     createdAt: { $gte: start, $lte: end },
   };
 
-  const sortCriteria: Record<string, 1 | -1> = { [sortBy]: sortOrder as 1 | -1 };
+  const sortCriteria: Record<string, 1 | -1> = {
+    [sortBy]: sortOrder as 1 | -1,
+  };
 
   let content: any;
   let totalContent: number;

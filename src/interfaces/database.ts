@@ -326,7 +326,6 @@ export interface WebhookEvent {
 export interface PrepYatraUserModel extends Document {
   _id: Types.ObjectId;
   userId: string;
-  mongoUserId: Types.ObjectId;
   goal: GoalType;
   targetCompanies: CompanyType[];
   subscriptionStatus: SubscriptionStatus;
