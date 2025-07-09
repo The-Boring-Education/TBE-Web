@@ -1,8 +1,10 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
 import {
+  COMPANY_TYPES,
   DATABASE_MODELS,
   INTERVIEW_QUESTION_FREQUENCY,
+  PRIORITY_LEVELS,
   ROADMAPS,
 } from '@/constant';
 import type {
@@ -27,6 +29,17 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
     frequency: {
       type: String,
       enum: INTERVIEW_QUESTION_FREQUENCY,
+      required: true,
+    },
+    companyTypes: {
+      type: [String],
+      enum: COMPANY_TYPES,
+      default: [],
+    },
+    priority: {
+      type: String,
+      enum: PRIORITY_LEVELS,
+      default: 'Medium',
       required: true,
     },
   },

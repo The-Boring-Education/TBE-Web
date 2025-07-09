@@ -1,3 +1,5 @@
+const { withSentryConfig } = require('@sentry/nextjs');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -14,6 +16,7 @@ const nextConfig = {
       'images.unsplash.com',
       'i.ytimg.com',
       'via.placeholder.com',
+      'avatars.githubusercontent.com',
     ],
   },
 
@@ -46,4 +49,23 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// Injected content via Sentry wizard below
+
+const sentryWebpackPluginOptions = {
+  // Additional config options for the Sentry Webpack plugin. Keep in mind that
+  // the following options are set automatically, and overriding them is not
+  // recommended:
+  //   release, url, authToken, configFile, stripPrefix,
+  //   urlPrefix, include, ignore
+
+  org: 'the-boring-education',
+  project: 'tbe-webapp',
+
+  // Only print logs for uploading source maps in CI
+  silent: !process.env.CI,
+
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options.
+};
+
+module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);

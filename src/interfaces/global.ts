@@ -94,8 +94,21 @@ const UserPointsActionType = [
   'COMPLETE_PROJECT_CHAPTER',
   'COMPLETE_QUESTION',
   'COMPLETE_COURSE_CERTIFICATE',
+  'COMPLETE_PROJECT',
+  'COMPLETE_INTERVIEW_SHEET',
+  'PROFILE_COMPLETION',
+  'SOCIAL_SHARE',
+  'FEEDBACK_SUBMIT',
+  'VIDEO_WATCH_COMPLETE',
+  'FIRST_LOGIN',
+  'DAILY_VISIT',
   'STREAK',
   'REFER',
+  'WEBINAR_ATTEND',
+  'DOWNLOAD_CERTIFICATE',
+  'HELP_COMMUNITY',
+  'RECRUITER_ADDED',
+  'PREPLOG_CREATED'
 ] as const;
 
 export type UserPointsActionType = (typeof UserPointsActionType)[number];
@@ -125,13 +138,14 @@ export type PlatformUsageType =
   | 'JOB_SEARCH';
 
 export type WorkDomainType =
-  | 'WEB_DEVELOPMENT'
-  | 'DATA_SCIENCE'
-  | 'DEVOPS'
-  | 'MOBILE_DEVELOPMENT'
-  | 'AI_ML'
-  | 'UI_UX'
-  | 'CYBER_SECURITY';
+| 'MERN Full-stack'
+    | 'Java Full-stack'
+    |'Python Full-stack'
+    | 'Data Analysis'
+    | 'Machine Learning'
+    | 'AI'
+    |'App Development'
+    |'Others'
 
 export type FormatDateType = {
   dateAndTime?: string;

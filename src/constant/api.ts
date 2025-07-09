@@ -1,11 +1,18 @@
 import type {
   CertificateType,
+  CompanyType,
   DifficultyType,
+  GoalType,
+  InterviewCategoryType,
   NotificationType,
   PlatformUsageType,
+  PriorityType,
   QuestionFrequencyType,
   RoadmapsType,
   SkillsType,
+  SubscriptionFeature,
+  SubscriptionStatus,
+  SubscriptionType,
   UserPointsActionType,
   UserRoleType,
   WorkDomainType,
@@ -47,8 +54,21 @@ const USER_POINTS_ACTION: UserPointsActionType[] = [
   'COMPLETE_PROJECT_CHAPTER',
   'COMPLETE_QUESTION',
   'COMPLETE_COURSE_CERTIFICATE',
+  'COMPLETE_PROJECT',
+  'COMPLETE_INTERVIEW_SHEET',
+  'PROFILE_COMPLETION',
+  'SOCIAL_SHARE',
+  'FEEDBACK_SUBMIT',
+  'VIDEO_WATCH_COMPLETE',
+  'FIRST_LOGIN',
+  'DAILY_VISIT',
   'STREAK',
   'REFER',
+  'WEBINAR_ATTEND',
+  'DOWNLOAD_CERTIFICATE',
+  'HELP_COMMUNITY',
+  'RECRUITER_ADDED',
+  'PREPLOG_CREATED'
 ];
 
 const NOTIFICATION_TYPE: NotificationType[] = [
@@ -79,13 +99,14 @@ const PLATFORM_USAGE: PlatformUsageType[] = [
 ];
 
 const WORK_DOMAIN: WorkDomainType[] = [
-  'WEB_DEVELOPMENT',
-  'DATA_SCIENCE',
-  'DEVOPS',
-  'MOBILE_DEVELOPMENT',
-  'AI_ML',
-  'UI_UX',
-  'CYBER_SECURITY',
+  "MERN Full-stack",
+  "Java Full-stack",
+  "Python Full-stack",
+  "Data Analysis",
+  "Machine Learning",
+  "AI",
+  "App Development",
+  "Others"
 ];
 
 const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
@@ -2533,10 +2554,58 @@ const ALLOWED_IPS = [
   '18.60.183.142',
 ];
 
+const PRIORITY_LEVELS: PriorityType[] = ['High', 'Medium', 'Low'];
+
+const COMPANY_TYPES: CompanyType[] = ['Startup', 'MidSize', 'MNC', 'FAANG'];
+
+const GOAL_TYPES: GoalType[] = ['3Months', '6Months', '1Year'];
+
+const SUBSCRIPTION_TYPES: SubscriptionType[] = [
+  '3Months',
+  '5Months',
+  'Lifetime',
+];
+
+const SUBSCRIPTION_STATUS: SubscriptionStatus[] = [
+  'Active',
+  'Expired',
+  'Trial',
+  'Cancelled',
+];
+
+const INTERVIEW_CATEGORIES: InterviewCategoryType[] = [
+  'MNC',
+  'MERN',
+  'CollegePlacement',
+  'DSA',
+  'SystemDesign',
+  'GeneralTech',
+];
+
+const SUBSCRIPTION_FEATURES: SubscriptionFeature[] = [
+  'InterviewQuestions',
+  'SystemDesignResources',
+  'DSAResources',
+  'ResumeWorkshop',
+  'JobApplicationWorkshop',
+  'ColdEmailAutomation',
+  'LinkedInAutomation',
+];
+
+const planTypeMap = {
+  '1months': { type: '3Months', duration: 1 },
+  '3months': { type: '5Months', duration: 3 },
+  '6months': { type: '5Months', duration: 6 },
+  'lifetime': { type: 'Lifetime', duration: 999 }
+};
+
 export {
   ALLOWED_IPS,
   CERTIFICATE_TYPE,
+  COMPANY_TYPES,
   DIFFICULTY_LEVEL,
+  GOAL_TYPES,
+  INTERVIEW_CATEGORIES,
   INTERVIEW_QUESTION_FREQUENCY,
   JOB_DOMAIN_MAPPER,
   JOB_DOMAIN_NORMALIZER,
@@ -2544,11 +2613,16 @@ export {
   JOB_SKILL_NORMALIZER,
   NOTIFICATION_TYPE,
   PLATFORM_USAGE,
+  PRIORITY_LEVELS,
   PROJECT_SKILLS,
   ROADMAPS,
   SKILL_BLACKLIST,
+  SUBSCRIPTION_FEATURES,
+  SUBSCRIPTION_STATUS,
+  SUBSCRIPTION_TYPES,
   USER_POINTS_ACTION,
   USER_ROLE,
   WORK_DOMAIN,
   YOUTUBE_API_PATH,
+  planTypeMap
 };

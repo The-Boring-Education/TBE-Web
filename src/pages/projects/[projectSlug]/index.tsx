@@ -13,7 +13,7 @@ import {
   Text,
 } from '@/components';
 import { routes } from '@/constant';
-import { useAnalytics, useApi, useUser } from '@/hooks';
+import { useAnalytics, useApi, useGamifiedAction, useUser } from '@/hooks';
 import type { ProjectPageProps } from '@/interfaces';
 import { getProjectPageProps, getSelectedProjectChapterMeta } from '@/utils';
 
@@ -52,6 +52,7 @@ const ProjectPage = ({
   const { makeRequest } = useApi(`projects/${project._id}`);
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
+  const gamifiedAction = useGamifiedAction();
 
   const handleChapterClick = ({ sectionId, chapterId }: any) => {
     const selectedChapter = getSelectedProjectChapterMeta(
@@ -97,6 +98,24 @@ const ProjectPage = ({
         },
       });
 
+      // Use gamified action for project chapter completion
+      if (newCompletionStatus) {
+        await gamifiedAction.triggerGamifiedAction({
+          gamificationAction: 'COMPLETE_PROJECT_CHAPTER',
+          analytics: {
+            action: 'PROJECT_CHAPTER_COMPLETE',
+            category: 'Learning',
+            label: 'Project Chapter Completed',
+          },
+          customMessage: 'Project chapter completed! Keep building!',
+          metadata: {
+            projectId: project._id,
+            chapterId: currentChapterId,
+            projectName: project.name,
+          },
+        });
+      }
+
       // Update chapter completion status in state
       setSections((prevSections) =>
         prevSections.map((section) => ({
@@ -136,7 +155,10 @@ const ProjectPage = ({
             )
           )?.sectionId;
 
-          window.location.href = `${slug}?projectId=${project._id}&sectionId=${targetSectionId}&chapterId=${targetChapter.chapterId}`;
+          // Add delay to allow toast/celebration UI to show
+          setTimeout(() => {
+            window.location.href = `${slug}?projectId=${project._id}&sectionId=${targetSectionId}&chapterId=${targetChapter.chapterId}`;
+          }, 1500);
         }
       }
     } catch (error) {

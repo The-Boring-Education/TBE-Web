@@ -8,8 +8,10 @@ import {
 } from '@/database';
 import type { UserPointsActionType } from '@/interfaces';
 import { connectDB } from '@/middlewares';
+import { cors } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await cors(req, res);
   await connectDB();
   const { query } = req;
   const { userId } = query as { userId: string };

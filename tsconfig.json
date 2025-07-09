@@ -18,11 +18,11 @@
       "@/*": ["./src/*"],
       "~/*": ["./public/*"]
     },
-    "incremental": true
+    "incremental": true,
+    "types": ["node", "jest", "@testing-library/jest-dom", "@playwright/test"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
-  "moduleResolution": ["node_modules", ".next", "node"],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"
