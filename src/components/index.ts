@@ -186,7 +186,9 @@ const MentorshipPlans = dynamic(
   () => import('./containers/Page/Landing/MentorshipPlans')
 );
 const Community = dynamic(() => import('./containers/Page/Landing/Community'));
-const CollegeEventsSection = dynamic(() => import('./containers/Page/Landing/CollegeEventsSection'));
+const CollegeEventsSection = dynamic(
+  () => import('./containers/Page/Landing/CollegeEventsSection')
+);
 const ChapterLink = dynamic(
   () => import('@/components/common/Learning/ChapterLink')
 );
@@ -450,4 +452,5 @@ export {
   UserPointButton,
   WeAlreadyTaughtAt,
   WebibarCard,
+  WebinarHeroContainer,
 };
