@@ -15,7 +15,6 @@ const CASHFREE_BASE_URL = process.env.CASHFREE_BASE_URL as string;
 const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY as string;
 const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID as string;
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN as string;
-const SENTRY_AUTH_TOKEN = process.env.SENTRY_AUTH_TOKEN as string;
 const PREPYATRA_APP_URL = process.env.PREPYATRA_APP_URL as string;
 
 const envConfig = {
@@ -35,7 +34,6 @@ const envConfig = {
   CASHFREE_SECRET_KEY,
   CASHFREE_CLIENT_ID,
   SENTRY_DSN,
-  SENTRY_AUTH_TOKEN,
   PREPYATRA_APP_URL,
 };
 
