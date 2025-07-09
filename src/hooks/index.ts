@@ -5,11 +5,13 @@ import useCashfreePayment from './useCashfreePayment';
 import useCertificate from './useCertificate';
 import useFeedback from './useFeedback';
 import useGamification from './useGamification';
+import useGamifiedAction from './useGamifiedAction';
 import useMediaQuery from './useMediaQuery';
 import useNotifications from './useNotifications';
 import usePaymentStatus from './usePaymentStatus';
 import usePDFFile from './usePDFFile';
 import useResumeEvaluation from './useResumeEvaluation';
+import useScrollDirection from './useScrollDirection';
 import useScrollPosition from './useScrollPosition';
 import useSkillPlaylist from './useSkillPlaylist';
 import useUser from './useUser';
@@ -23,11 +25,13 @@ export {
   useCertificate,
   useFeedback,
   useGamification,
+  useGamifiedAction,
   useMediaQuery,
   useNotifications,
   usePaymentStatus,
   usePDFFile,
   useResumeEvaluation,
+  useScrollDirection,
   useScrollPosition,
   useSkillPlaylist,
   useUser,

@@ -15,7 +15,7 @@ import {
   Text,
 } from '@/components';
 import { routes } from '@/constant';
-import { useAnalytics, useApi, usePaymentStatus, useUser } from '@/hooks';
+import { useAnalytics, useApi, useGamifiedAction, usePaymentStatus, useUser } from '@/hooks';
 import type { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
 
@@ -58,12 +58,33 @@ const SheetPage = ({
     // Show feedback popup if all questions are completed
     const allCompleted =
       questions.length > 0 && questions.every((q) => q.isCompleted);
+    
+    if (allCompleted && !showFeedback) {
+      // Trigger sheet completion celebration
+      gamifiedAction.triggerGamifiedAction({
+        gamificationAction: 'COMPLETE_INTERVIEW_SHEET',
+        analytics: {
+          action: 'INTERVIEW_SHEET_COMPLETE',
+          category: 'Achievement',
+          label: 'Interview Sheet Completed',
+        },
+        celebrationType: 'achievement',
+        customMessage: 'Interview sheet completed! You\'re ready!',
+        metadata: {
+          sheetId: sheet._id,
+          sheetName: sheet.name,
+          totalQuestions: questions.length,
+        },
+      });
+    }
+    
     setShowFeedback(allCompleted);
   }, [currentQuestionId, questions]);
 
   const { makeRequest } = useApi(`interview-prep/${sheet}`);
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
+  const gamifiedAction = useGamifiedAction();
   const { isPurchased } = usePaymentStatus({
     userId: user?.id,
     productId: sheet?._id,
@@ -104,16 +125,34 @@ const SheetPage = ({
         },
       });
 
-      trackEvent({
-        action: 'INTERVIEW_SHEET_PROGRESS',
-        category: 'InterviewSheet',
-        label: 'Interview Sheet Progress',
-        value: {
-          userId: user?.id,
-          sheetId: sheet._id,
-          questionId: currentQuestionId,
-        },
-      });
+      // Use gamified action for question completion
+      if (newCompletionStatus) {
+        await gamifiedAction.triggerGamifiedAction({
+          gamificationAction: 'COMPLETE_QUESTION',
+          analytics: {
+            action: 'QUESTION_COMPLETE',
+            category: 'Learning',
+            label: 'Question Completed',
+          },
+          customMessage: 'Question solved! Great work!',
+          metadata: {
+            sheetId: sheet._id,
+            questionId: currentQuestionId,
+            sheetName: sheet.name,
+          },
+        });
+      } else {
+        trackEvent({
+          action: 'INTERVIEW_SHEET_PROGRESS',
+          category: 'InterviewSheet',
+          label: 'Interview Sheet Progress',
+          value: {
+            userId: user?.id,
+            sheetId: sheet._id,
+            questionId: currentQuestionId,
+          },
+        });
+      }
 
       setQuestions((prevQuestions) =>
         prevQuestions.map((question) =>
@@ -140,7 +179,9 @@ const SheetPage = ({
 
         if (nextIncompleteQuestion) {
           const questionId = nextIncompleteQuestion._id.toString();
-          window.location.href = `${slug}?sheetId=${sheet._id}&questionId=${questionId}`;
+          setTimeout(() => {
+            window.location.href = `${slug}?sheetId=${sheet._id}&questionId=${questionId}`;
+          }, 1500);
         }
       }
 

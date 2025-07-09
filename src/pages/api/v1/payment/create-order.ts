@@ -5,6 +5,7 @@ import { addPaymentToDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import {
   buildOrderPayload,
+  cors,
   createCashfreeOrder,
   generatePaymentOrderId,
   sendAPIResponse,
@@ -12,6 +13,7 @@ import {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    await cors(req, res);
     await connectDB();
 
     switch (req.method) {

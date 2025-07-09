@@ -11,7 +11,7 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
       required: [true, 'User ref is required'],
     },
     productId: {
-      type: Schema.Types.ObjectId,
+      type: String,
       required: [true, 'Product ID is required'],
     },
     productType: {

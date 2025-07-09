@@ -45,8 +45,8 @@ const getButtonClasses = (
   return `${baseClasses} ${variantClasses[variant] || ''}`;
 };
 
-// Animation variants for different hover effects
-const animationVariants = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const animationVariants: any = {
   DEFAULT: {
     scale: 1,
     boxShadow:

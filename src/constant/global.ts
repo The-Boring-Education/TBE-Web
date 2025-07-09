@@ -59,7 +59,7 @@ const products: ProductDataProps = {
   },
   os: {
     label: 'Open Source',
-    slug: 'https://theboringeducation.notion.site/Contribute-The-Boring-Education-8171f19257fd4ef99b7287555eb5062b',
+    slug: routes.contribute,
     description: 'Learn and Contribute with Open Source',
   },
   portfolio: {
@@ -80,7 +80,7 @@ const products: ProductDataProps = {
   // Yatra Products - External Tools
   prepYatra: {
     label: 'Prep Yatra',
-    slug: 'https://prep-yatra.lovable.app/',
+    slug: routes.prepYatra,
     description: 'Complete Interview Preparation Platform',
   },
   techYatra: {
@@ -126,6 +126,8 @@ const LINKS = {
   applyBYICohort: 'https://tally.so/r/wakbx9',
   bookProjectSession: 'https://topmate.io/imsks/1527401',
   postmanDocs: 'https://documenter.getpostman.com/view/10360102/2sAYdcsYK3',
+  hostTBEAtYourCollege: 'https://tally.so/r/mZkOby',
+  viewSessionDetails: 'https://bit.ly/TBECampusConnect',
 };
 
 // Google analytics
@@ -328,9 +330,22 @@ const POINTS_RULES: Record<UserPointsActionType, number> = {
   COMPLETE_COURSE_CHAPTER: 20,
   COMPLETE_PROJECT_CHAPTER: 30,
   COMPLETE_COURSE_CERTIFICATE: 50,
+  COMPLETE_PROJECT: 100,
+  COMPLETE_INTERVIEW_SHEET: 80,
   COMPLETE_QUESTION: 10,
+  PROFILE_COMPLETION: 30,
+  SOCIAL_SHARE: 15,
+  FEEDBACK_SUBMIT: 10,
+  VIDEO_WATCH_COMPLETE: 5,
+  FIRST_LOGIN: 25,
+  DAILY_VISIT: 5,
   STREAK: 3,
   REFER: 20,
+  WEBINAR_ATTEND: 40,
+  DOWNLOAD_CERTIFICATE: 20,
+  HELP_COMMUNITY: 15,
+  RECRUITER_ADDED: 25,
+  PREPLOG_CREATED: 15,
 };
 
 const USER_LEVELS: UserLevel[] = [

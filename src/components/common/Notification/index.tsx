@@ -13,7 +13,7 @@ import { useNotifications } from '@/hooks';
 const NotificationPopover = () => {
   const { notifications } = useNotifications();
 
-  if (!notifications.length) return <></>;
+  if (!notifications || !notifications.length) return <></>;
 
   return (
     <Popover className='relative'>
@@ -30,7 +30,11 @@ const NotificationPopover = () => {
         leaveFrom='opacity-100 translate-y-0'
         leaveTo='opacity-0 translate-y-1'
       >
-        <PopoverPanel className='absolute z-10 mt-1 flex w-screen max-w-max md:-translate-x-2/3 -translate-x-2/4 shadow-md rounded-2'>
+        <PopoverPanel className="
+          fixed z-10 top-18 right-2 w-80 shadow-lg rounded-2xl p-1
+          md:absolute md:top-auto md:mt-2 md:w-96 md:right-0 md:left-auto md:mx-0
+          overflow-x-auto
+        ">
           {notifications && (
             <FlexContainer className='gap-1' direction='col'>
               {notifications.map((notification, index) => {
@@ -42,27 +46,25 @@ const NotificationPopover = () => {
                     className='p-2 w-full bg-lightBG rounded-2 border border-secondary gap-2.5'
                     direction='col'
                   >
-                    <FlexContainer className='gap-0.5' direction='col'>
-                      <FlexContainer
-                        className='gap-1 w-full'
-                        justifyCenter={false}
-                      >
-                        <Text className='pre-title text-primary' level='span'>
-                          {type}
-                        </Text>
-                        {link && (
-                          <Link
-                            href={link}
-                            target={`${isExternalLink ? '_blank' : ''}`}
-                          >
-                            <LinkIcon className='w-2 text-primary' />
-                          </Link>
-                        )}
-                      </FlexContainer>
-                      <Text className='pre-title' level='p'>
-                        {text}
+                    <FlexContainer
+                      className='gap-1 w-full items-center'
+                      justifyCenter={false}
+                    >
+                      <Text className='pre-title text-primary text-left' level='span'>
+                        {type}
                       </Text>
+                      {link && (
+                        <Link
+                          href={link}
+                          target={`${isExternalLink ? '_blank' : ''}`}
+                        >
+                          <LinkIcon className='w-2 text-primary' />
+                        </Link>
+                      )}
                     </FlexContainer>
+                    <Text className='pre-title text-left w-full' level='p'>
+                      {text}
+                    </Text>
                   </FlexContainer>
                 );
               })}
