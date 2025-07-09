@@ -43,6 +43,12 @@ export interface UserModel {
     pyOnboarded?: boolean;
     workExperience: number | null;
     workDomain: WorkDomainType | '';
+    goal?: GoalType;
+    targetCompanies?: CompanyType[];
+    preferences: {
+      interviewCategories?: InterviewCategoryType[];
+      focusAreas?: string[];
+    };
   };
 }
 
