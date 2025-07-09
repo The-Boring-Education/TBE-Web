@@ -479,6 +479,16 @@ export interface PrepYatraPaymentPayload
 export interface AddRecruiterToDBPayloadProps {
   userId: string;
   recruiterName: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  appliedPosition?: string;
+  applicationStatus?: string;
+  lastContacted?: string;
+  comments?: string;
+  follow_up_date?: string;
+  last_interview_date?: string;
+  link?: string;
 }
 
 export interface AddPrepLogToDBPayloadProps {

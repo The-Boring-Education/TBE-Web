@@ -84,13 +84,13 @@ const handleAddRecruiter = async (
   res: NextApiResponse
 ) => {
   try {
-    const { userId, recruiterName } = req.body;
+    const { userId, recruiterName, ...optionalFields } = req.body;
 
     if (!userId || !recruiterName) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'All fields are required',
+          message: 'userId and recruiterName are required fields',
         })
       );
     }
@@ -98,6 +98,7 @@ const handleAddRecruiter = async (
     const { data, error } = await addRecruiterToDB({
       userId,
       recruiterName,
+      ...optionalFields
     });
 
     if (error) {

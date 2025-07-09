@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { PrepLog, PrepYatraSubscription, PrepYatraUser, Recruiter } from '@/database';
+import { PrepLog, PrepYatraSubscription, Recruiter, User } from '@/database';
 import type {
   AddPrepLogToDBPayloadProps,
   AddRecruiterToDBPayloadProps,
@@ -20,16 +20,17 @@ const getRecruitersByUserFromDB = async (
   }
 };
 
-const addRecruiterToDB = async ({
-  userId,
-  recruiterName,
-}: AddRecruiterToDBPayloadProps): Promise<DatabaseQueryResponseType> => {
+const addRecruiterToDB = async (payload: AddRecruiterToDBPayloadProps): Promise<DatabaseQueryResponseType> => {
   try {
-    const addRecruiter = new Recruiter({
+    const { userId, recruiterName, ...optionalFields } = payload;
+    
+    const recruiterData = {
       user: userId,
       recruiterName,
-    });
+      ...optionalFields
+    };
 
+    const addRecruiter = new Recruiter(recruiterData);
     await addRecruiter.save();
     return { data: addRecruiter };
   } catch (error) {
@@ -188,7 +189,7 @@ const updateUserSubscriptionStatusInDB = async ({
   subscriptionExpiry: Date;
 }): Promise<DatabaseQueryResponseType> => {
   try {
-    const updatedUser = await PrepYatraUser.updateOne(
+    const updatedUser = await User.updateOne(
       { mongoUserId: new mongoose.Types.ObjectId(userId) },
       {
         subscriptionStatus,
@@ -198,6 +199,28 @@ const updateUserSubscriptionStatusInDB = async ({
     return { data: updatedUser };
   } catch (error) {
     return { error: 'Failed to update user subscription status in DB' };
+  }
+};
+
+const getPYUserByIdFromDB = async (userId: string): Promise<DatabaseQueryResponseType> => {
+  try {
+    const user = await User.findById(userId);
+    return { data: user };
+  } catch (error) {
+    return { error: 'Failed to fetch user from DB' };
+  }
+};
+
+const updatePYUserByIdInDB = async (
+  userId: string,
+  update: Record<string, any>,
+  options: Record<string, any> = { new: true }
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, update, options);
+    return { data: updatedUser };
+  } catch (error) {
+    return { error: 'Failed to update user in DB' };
   }
 };
 
@@ -213,4 +236,6 @@ export {
   updatePrepLogInDB,
   updateRecruiterInDB,
   updateUserSubscriptionStatusInDB,
+  getPYUserByIdFromDB,
+  updatePYUserByIdInDB,
 };
