@@ -20,14 +20,16 @@ const getRecruitersByUserFromDB = async (
   }
 };
 
-const addRecruiterToDB = async (payload: AddRecruiterToDBPayloadProps): Promise<DatabaseQueryResponseType> => {
+const addRecruiterToDB = async (
+  payload: AddRecruiterToDBPayloadProps
+): Promise<DatabaseQueryResponseType> => {
   try {
     const { userId, recruiterName, ...optionalFields } = payload;
-    
+
     const recruiterData = {
       user: userId,
       recruiterName,
-      ...optionalFields
+      ...optionalFields,
     };
 
     const addRecruiter = new Recruiter(recruiterData);
@@ -129,7 +131,6 @@ const deletePrepLogInDB = async (prepLogId: string) => {
   }
 };
 
-
 const getActiveSubscriptionByUserFromDB = async (
   userId: string,
   subscriptionType: string
@@ -139,7 +140,7 @@ const getActiveSubscriptionByUserFromDB = async (
       userId: new mongoose.Types.ObjectId(userId),
       type: subscriptionType,
       isActive: true,
-      expiryDate: { $gt: new Date() }
+      expiryDate: { $gt: new Date() },
     });
     return { data: subscription };
   } catch (error) {
@@ -171,7 +172,7 @@ const createSubscriptionInDB = async ({
       expiryDate,
       features,
       startDate: new Date(),
-      isActive: true
+      isActive: true,
     });
     return { data: subscription };
   } catch (error) {
@@ -190,7 +191,7 @@ const updateUserSubscriptionStatusInDB = async ({
 }): Promise<DatabaseQueryResponseType> => {
   try {
     const updatedUser = await User.updateOne(
-      { mongoUserId: new mongoose.Types.ObjectId(userId) },
+      { userId: new mongoose.Types.ObjectId(userId) },
       {
         subscriptionStatus,
         subscriptionExpiry,
@@ -202,7 +203,9 @@ const updateUserSubscriptionStatusInDB = async ({
   }
 };
 
-const getPYUserByIdFromDB = async (userId: string): Promise<DatabaseQueryResponseType> => {
+const getPYUserByIdFromDB = async (
+  userId: string
+): Promise<DatabaseQueryResponseType> => {
   try {
     const user = await User.findById(userId);
     return { data: user };

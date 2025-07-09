@@ -4,7 +4,6 @@ import { apiStatusCodes, envConfig } from '@/constant';
 import {
   Gamification,
   Payment,
-  PrepYatraUser,
   User,
   UserCourse,
   UserProject,
@@ -24,16 +23,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
 
   const { method, query } = req;
-  const { 
-    action, 
-    userId, 
-    segment, 
-    page = '1', 
+  const {
+    action,
+    userId,
+    segment,
+    page = '1',
     limit = '20',
     startDate,
     endDate,
     sortBy = 'createdAt',
-    order = 'desc'
+    order = 'desc',
   } = query;
 
   if (method !== 'GET') {
@@ -89,7 +88,15 @@ const handleUserManagementRequest = async (
       case 'engagement-score':
         return await getEngagementScores(res, dateRange);
       case 'list':
-        return await getFilteredUsers(res, segment, page, limit, sortBy, sortOrder, dateRange);
+        return await getFilteredUsers(
+          res,
+          segment,
+          page,
+          limit,
+          sortBy,
+          sortOrder,
+          dateRange
+        );
       case 'growth':
         return await getUserGrowthAnalysis(res, dateRange);
       case 'demographics':
@@ -115,11 +122,16 @@ const handleUserManagementRequest = async (
 
 const getDateRange = (startDate: string, endDate: string) => {
   const end = endDate ? new Date(endDate) : new Date();
-  const start = startDate ? new Date(startDate) : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const start = startDate
+    ? new Date(startDate)
+    : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
   return { start, end };
 };
 
-const getUserSegments = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getUserSegments = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // User segments by activity level
@@ -170,9 +182,18 @@ const getUserSegments = async (res: NextApiResponse, dateRange: { start: Date; e
           $switch: {
             branches: [
               { case: { $eq: ['$totalEnrollments', 0] }, then: 'Inactive' },
-              { case: { $lte: ['$totalEnrollments', 2] }, then: 'Low Activity' },
-              { case: { $lte: ['$totalEnrollments', 5] }, then: 'Medium Activity' },
-              { case: { $gt: ['$totalEnrollments', 5] }, then: 'High Activity' },
+              {
+                case: { $lte: ['$totalEnrollments', 2] },
+                then: 'Low Activity',
+              },
+              {
+                case: { $lte: ['$totalEnrollments', 5] },
+                then: 'Medium Activity',
+              },
+              {
+                case: { $gt: ['$totalEnrollments', 5] },
+                then: 'High Activity',
+              },
             ],
             default: 'Unknown',
           },
@@ -224,7 +245,11 @@ const getUserSegments = async (res: NextApiResponse, dateRange: { start: Date; e
               input: '$payments',
               as: 'payment',
               in: {
-                $cond: [{ $eq: ['$$payment.isPaid', true] }, '$$payment.amount', 0],
+                $cond: [
+                  { $eq: ['$$payment.isPaid', true] },
+                  '$$payment.amount',
+                  0,
+                ],
               },
             },
           },
@@ -286,7 +311,10 @@ const getUserDetails = async (res: NextApiResponse, userId: string) => {
   // Get user's learning progress
   const [courses, projects, sheets] = await Promise.all([
     UserCourse.find({ userId }).populate('courseId', 'name slug coverImageURL'),
-    UserProject.find({ userId }).populate('projectId', 'name slug coverImageURL'),
+    UserProject.find({ userId }).populate(
+      'projectId',
+      'name slug coverImageURL'
+    ),
     UserSheet.find({ userId }).populate('sheetId', 'name slug coverImageURL'),
   ]);
 
@@ -296,29 +324,29 @@ const getUserDetails = async (res: NextApiResponse, userId: string) => {
   // Get user's gamification data
   const gamificationData = await Gamification.findOne({ userId });
 
-  // Get PrepYatra data if exists
-  const prepYatraData = await PrepYatraUser.findOne({ mongoUserId: userId });
-
   // Calculate engagement metrics
   const totalEnrollments = courses.length + projects.length + sheets.length;
-  const completedCourses = courses.filter(c => c.isCompleted).length;
-  const completedProjects = projects.filter(p => {
+  const completedCourses = courses.filter((c) => c.isCompleted).length;
+  const completedProjects = projects.filter((p) => {
     // Project completion logic - check if all sections are completed
     const totalSections = p.sections?.length || 0;
-    const completedSections = p.sections?.filter(section => 
-      section.chapters?.every(chapter => chapter.isCompleted)
-    ).length || 0;
+    const completedSections =
+      p.sections?.filter((section) =>
+        section.chapters?.every((chapter) => chapter.isCompleted)
+      ).length || 0;
     return totalSections > 0 && completedSections === totalSections;
   }).length;
-  const completedSheets = sheets.filter(s => {
+  const completedSheets = sheets.filter((s) => {
     // Sheet completion logic - check if all questions are completed
     const totalQuestions = s.questions?.length || 0;
-    const completedQuestions = s.questions?.filter(q => q.isCompleted).length || 0;
+    const completedQuestions =
+      s.questions?.filter((q) => q.isCompleted).length || 0;
     return totalQuestions > 0 && completedQuestions === totalQuestions;
   }).length;
   const totalCompleted = completedCourses + completedProjects + completedSheets;
 
-  const engagementScore = totalEnrollments > 0 ? (totalCompleted / totalEnrollments) * 100 : 0;
+  const engagementScore =
+    totalEnrollments > 0 ? (totalCompleted / totalEnrollments) * 100 : 0;
 
   return res.status(apiStatusCodes.OKAY).json(
     sendAPIResponse({
@@ -335,13 +363,16 @@ const getUserDetails = async (res: NextApiResponse, userId: string) => {
         },
         payments,
         gamificationData,
-        prepYatraData,
       },
     })
   );
 };
 
-const getUserActivity = async (res: NextApiResponse, userId: string, dateRange: { start: Date; end: Date }) => {
+const getUserActivity = async (
+  res: NextApiResponse,
+  userId: string,
+  dateRange: { start: Date; end: Date }
+) => {
   if (!userId) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
@@ -358,15 +389,21 @@ const getUserActivity = async (res: NextApiResponse, userId: string, dateRange: 
     UserCourse.find({
       userId,
       updatedAt: { $gte: start, $lte: end },
-    }).populate('courseId', 'name').sort({ updatedAt: -1 }),
+    })
+      .populate('courseId', 'name')
+      .sort({ updatedAt: -1 }),
     UserProject.find({
       userId,
       updatedAt: { $gte: start, $lte: end },
-    }).populate('projectId', 'name').sort({ updatedAt: -1 }),
+    })
+      .populate('projectId', 'name')
+      .sort({ updatedAt: -1 }),
     UserSheet.find({
       userId,
       updatedAt: { $gte: start, $lte: end },
-    }).populate('sheetId', 'name').sort({ updatedAt: -1 }),
+    })
+      .populate('sheetId', 'name')
+      .sort({ updatedAt: -1 }),
   ]);
 
   // Get activity timeline
@@ -410,7 +447,10 @@ const getUserActivity = async (res: NextApiResponse, userId: string, dateRange: 
   );
 };
 
-const getCohortAnalysis = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getCohortAnalysis = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // Cohort analysis by registration month
@@ -469,9 +509,18 @@ const getCohortAnalysis = async (res: NextApiResponse, dateRange: { start: Date;
           $switch: {
             branches: [
               { case: { $lte: ['$daysSinceRegistration', 7] }, then: 'Week 1' },
-              { case: { $lte: ['$daysSinceRegistration', 30] }, then: 'Month 1' },
-              { case: { $lte: ['$daysSinceRegistration', 90] }, then: 'Month 3' },
-              { case: { $gt: ['$daysSinceRegistration', 90] }, then: '3+ Months' },
+              {
+                case: { $lte: ['$daysSinceRegistration', 30] },
+                then: 'Month 1',
+              },
+              {
+                case: { $lte: ['$daysSinceRegistration', 90] },
+                then: 'Month 3',
+              },
+              {
+                case: { $gt: ['$daysSinceRegistration', 90] },
+                then: '3+ Months',
+              },
             ],
             default: 'Unknown',
           },
@@ -487,10 +536,7 @@ const getCohortAnalysis = async (res: NextApiResponse, dateRange: { start: Date;
         totalUsers: 1,
         activeUsers: 1,
         retentionRate: {
-          $multiply: [
-            { $divide: ['$activeUsers', '$totalUsers'] },
-            100,
-          ],
+          $multiply: [{ $divide: ['$activeUsers', '$totalUsers'] }, 100],
         },
       },
     },
@@ -507,7 +553,10 @@ const getCohortAnalysis = async (res: NextApiResponse, dateRange: { start: Date;
   );
 };
 
-const getRetentionAnalysis = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getRetentionAnalysis = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // User retention by days since registration
@@ -567,10 +616,7 @@ const getRetentionAnalysis = async (res: NextApiResponse, dateRange: { start: Da
         totalUsers: 1,
         activeUsers: 1,
         retentionRate: {
-          $multiply: [
-            { $divide: ['$activeUsers', '$totalUsers'] },
-            100,
-          ],
+          $multiply: [{ $divide: ['$activeUsers', '$totalUsers'] }, 100],
         },
       },
     },
@@ -589,7 +635,10 @@ const getRetentionAnalysis = async (res: NextApiResponse, dateRange: { start: Da
   );
 };
 
-const getEngagementScores = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getEngagementScores = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // Calculate engagement scores for users
@@ -695,9 +744,18 @@ const getEngagementScores = async (res: NextApiResponse, dateRange: { start: Dat
         _id: {
           $switch: {
             branches: [
-              { case: { $lt: ['$engagementScore', 100] }, then: 'Low Engagement' },
-              { case: { $lt: ['$engagementScore', 500] }, then: 'Medium Engagement' },
-              { case: { $gte: ['$engagementScore', 500] }, then: 'High Engagement' },
+              {
+                case: { $lt: ['$engagementScore', 100] },
+                then: 'Low Engagement',
+              },
+              {
+                case: { $lt: ['$engagementScore', 500] },
+                then: 'Medium Engagement',
+              },
+              {
+                case: { $gte: ['$engagementScore', 500] },
+                then: 'High Engagement',
+              },
             ],
             default: 'No Engagement',
           },
@@ -749,7 +807,9 @@ const getFilteredUsers = async (
     matchCriteria._id = { $nin: activeUsers };
   }
 
-  const sortCriteria: Record<string, 1 | -1> = { [sortBy]: sortOrder as 1 | -1 };
+  const sortCriteria: Record<string, 1 | -1> = {
+    [sortBy]: sortOrder as 1 | -1,
+  };
   const users = await User.find(matchCriteria)
     .sort(sortCriteria)
     .skip(skip)
@@ -762,15 +822,16 @@ const getFilteredUsers = async (
   // Enrich user data with additional metrics
   const enrichedUsers = await Promise.all(
     users.map(async (user) => {
-      const [courseCount, projectCount, sheetCount, totalPayments] = await Promise.all([
-        UserCourse.countDocuments({ userId: user._id }),
-        UserProject.countDocuments({ userId: user._id }),
-        UserSheet.countDocuments({ userId: user._id }),
-        Payment.aggregate([
-          { $match: { user: user._id, isPaid: true } },
-          { $group: { _id: null, total: { $sum: '$amount' } } },
-        ]),
-      ]);
+      const [courseCount, projectCount, sheetCount, totalPayments] =
+        await Promise.all([
+          UserCourse.countDocuments({ userId: user._id }),
+          UserProject.countDocuments({ userId: user._id }),
+          UserSheet.countDocuments({ userId: user._id }),
+          Payment.aggregate([
+            { $match: { user: user._id, isPaid: true } },
+            { $group: { _id: null, total: { $sum: '$amount' } } },
+          ]),
+        ]);
 
       return {
         ...user,
@@ -799,7 +860,10 @@ const getFilteredUsers = async (
   );
 };
 
-const getUserGrowthAnalysis = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getUserGrowthAnalysis = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // Daily user growth
@@ -853,7 +917,10 @@ const getUserGrowthAnalysis = async (res: NextApiResponse, dateRange: { start: D
   );
 };
 
-const getUserDemographics = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getUserDemographics = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // Demographics by role

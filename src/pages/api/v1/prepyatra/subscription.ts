@@ -2,10 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
 import PrepYatraSubscription from '@/database/models/PrepYatra/Subscription';
-import PrepYatraUser from '@/database/models/PrepYatra/User';
 import type { CreateSubscriptionPayload } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
+import { User } from '@/database';
 
 /**
  * API Handler for PrepYatra subscriptions
@@ -81,8 +81,8 @@ const handleCreateSubscription = async (
     });
 
     // Update user subscription status
-    await PrepYatraUser.updateOne(
-      { mongoUserId: userId },
+    await User.updateOne(
+      { userId: userId },
       {
         subscriptionStatus: 'Active',
         subscriptionExpiry: expiryDate,
@@ -132,8 +132,8 @@ const handleGetSubscription = async (
     }).sort({ createdAt: -1 });
 
     // Get PrepYatra user data
-    const prepYatraUser = await PrepYatraUser.findOne({
-      mongoUserId: userId,
+    const prepYatraUser = await User.findOne({
+      userId,
     });
 
     return res.status(apiStatusCodes.OKAY).json(
