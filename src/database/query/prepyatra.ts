@@ -105,6 +105,15 @@ const getPrepLogsByUserFromDB = async (userId: string) => {
   }
 };
 
+const getLastPrepLogByUserFromDB = async (userId: string) => {
+  try {
+    const lastLog = await PrepLog.findOne({ user: userId }).sort({ createdAt: -1 });
+    return { data: lastLog };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
 const updatePrepLogInDB = async (prepLogId: string, updateData: any) => {
   try {
     const updatedLog = await PrepLog.findByIdAndUpdate(prepLogId, updateData, {
@@ -234,11 +243,12 @@ export {
   deletePrepLogInDB,
   deleteRecruiterInDB,
   getActiveSubscriptionByUserFromDB,
+  getLastPrepLogByUserFromDB,
   getPrepLogsByUserFromDB,
+  getPYUserByIdFromDB,
   getRecruitersByUserFromDB,
   updatePrepLogInDB,
+  updatePYUserByIdInDB,
   updateRecruiterInDB,
   updateUserSubscriptionStatusInDB,
-  getPYUserByIdFromDB,
-  updatePYUserByIdInDB,
 };

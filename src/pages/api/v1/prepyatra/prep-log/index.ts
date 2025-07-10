@@ -5,8 +5,8 @@ import {
   addPrepLogToDB,
   deletePrepLogInDB,
   getPrepLogsByUserFromDB,
-  updatePrepLogInDB,
   handleGamificationPoints,
+  updatePrepLogInDB,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import { cors, sendAPIResponse } from '@/utils';
