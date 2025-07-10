@@ -1,4 +1,4 @@
-import { fireEvent,render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import Navbar from '../Navbar';
@@ -10,11 +10,20 @@ jest.mock('@/components', () => ({
   UserPointButton: () => <button data-testid='points'>P</button>,
   UserAvatar: () => <div data-testid='avatar'>A</div>,
   LoginRedirectButton: ({ text }: { text: string }) => <button>{text}</button>,
-  PopoverContainer: ({ label }: { label: string; children: React.ReactNode }) => <div>{label}</div>,
+  PopoverContainer: ({
+    label,
+  }: {
+    label: string;
+    children: React.ReactNode;
+  }) => <div>{label}</div>,
   NavbarDropdownContainer: () => <div />,
-  FlexContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  FlexContainer: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
   MobileNavbarLinksContainer: () => <div />,
-  Text: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+  Text: ({ children }: { children: React.ReactNode }) => (
+    <span>{children}</span>
+  ),
   Link: ({ children }: { children: React.ReactNode }) => <a>{children}</a>,
 }));
 

@@ -160,11 +160,7 @@ const handleCreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
   } catch (error) {
-    captureAuthError(
-      error as Error,
-      'user_creation',
-      req.body?.email
-    );
+    captureAuthError(error as Error, 'user_creation', req.body?.email);
 
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({

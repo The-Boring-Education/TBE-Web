@@ -48,6 +48,23 @@ const PrepYatraSchema = new Schema({
       default: [],
     },
   },
+  prepLog: {
+    currentStreak: {
+      type: Number,
+      default: 0,
+    },
+    longestStreak: {
+      type: Number,
+      default: 0,
+    },
+    lastLoggedDate: {
+      type: Date,
+    },
+    totalLogs: {
+      type: Number,
+      default: 0,
+    },
+  },
 });
 
 const UserSchema: Schema<UserModel> = new Schema(

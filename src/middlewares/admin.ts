@@ -7,9 +7,9 @@ import { sendAPIResponse } from '@/utils';
 
 const ADMIN_EMAIL = 'theboringeducation@gmail.com';
 
-export const withAdminAuth = (
-  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>
-) => async (req: NextApiRequest, res: NextApiResponse) => {
+export const withAdminAuth =
+  (handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>) =>
+  async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const session = await getServerSession(req, res, authOptions);
 

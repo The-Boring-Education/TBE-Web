@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
+import { User } from '@/database';
 import PrepYatraSubscription from '@/database/models/PrepYatra/Subscription';
 import type { CreateSubscriptionPayload } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
-import { User } from '@/database';
 
 /**
  * API Handler for PrepYatra subscriptions
@@ -82,7 +82,7 @@ const handleCreateSubscription = async (
 
     // Update user subscription status
     await User.updateOne(
-      { userId: userId },
+      { userId },
       {
         subscriptionStatus: 'Active',
         subscriptionExpiry: expiryDate,
