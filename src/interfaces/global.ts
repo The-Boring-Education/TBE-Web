@@ -108,7 +108,11 @@ const UserPointsActionType = [
   'DOWNLOAD_CERTIFICATE',
   'HELP_COMMUNITY',
   'RECRUITER_ADDED',
-  'PREPLOG_CREATED'
+  'PREPLOG_CREATED',
+  'PREPLOG_STREAK_3',
+  'PREPLOG_STREAK_7',
+  'PREPLOG_STREAK_15',
+  'PREPLOG_STREAK_30'
 ] as const;
 
 export type UserPointsActionType = (typeof UserPointsActionType)[number];

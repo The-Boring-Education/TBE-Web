@@ -49,6 +49,12 @@ export interface UserModel {
       interviewCategories?: InterviewCategoryType[];
       focusAreas?: string[];
     };
+    prepLog?: {
+      currentStreak?: number;
+      longestStreak?: number;
+      lastLoggedDate?: Date;
+      totalLogs?: number;
+    };
   };
 }
 

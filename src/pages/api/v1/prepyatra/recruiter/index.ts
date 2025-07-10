@@ -5,8 +5,8 @@ import {
   addRecruiterToDB,
   deleteRecruiterInDB,
   getRecruitersByUserFromDB,
-  updateRecruiterInDB,
   handleGamificationPoints,
+  updateRecruiterInDB,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

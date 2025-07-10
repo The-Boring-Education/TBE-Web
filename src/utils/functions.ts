@@ -740,6 +740,7 @@ export {
   generateSitemap,
   getDiscountPercentage,
   getLocalStorageItem,
+  getPYSubscriptionFeaturesByType,
   getRedirectUrl,
   getSelectedCourseChapterMeta,
   getSelectedProjectChapterMeta,
@@ -758,5 +759,4 @@ export {
   setLocalStorageItem,
   validateWebhookEvent,
   verifyWebhookSignature,
-  getPYSubscriptionFeaturesByType,
 };
