@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
-import { routes } from '@/constant';
 import { useGamificationContext } from '@/components/layout/GamificationProvider';
+import { routes } from '@/constant';
 import { useAnalytics, useApi, useGamification, useUser } from '@/hooks';
 import type { TrackEventProps, UserPointsActionType } from '@/interfaces';
 import { calculateUserPointsForAction, getUserGamificationLevel } from '@/utils';

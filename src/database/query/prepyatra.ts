@@ -235,10 +235,10 @@ export {
   deleteRecruiterInDB,
   getActiveSubscriptionByUserFromDB,
   getPrepLogsByUserFromDB,
+  getPYUserByIdFromDB,
   getRecruitersByUserFromDB,
   updatePrepLogInDB,
+  updatePYUserByIdInDB,
   updateRecruiterInDB,
   updateUserSubscriptionStatusInDB,
-  getPYUserByIdFromDB,
-  updatePYUserByIdInDB,
 };

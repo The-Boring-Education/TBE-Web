@@ -11,16 +11,51 @@ export const TBE_REPOSITORIES: GitHubRepository[] = [
     language: 'TypeScript',
     topics: ['nextjs', 'react', 'typescript', 'education', 'open-source'],
   },
-  // Future repositories can be added here
-  // {
-  //   owner: 'The-Boring-Education',
-  //   repo: 'TBE-Mobile',
-  //   name: 'TBE Mobile App',
-  //   description: 'Mobile application for tech education',
-  //   url: 'https://github.com/The-Boring-Education/TBE-Mobile',
-  //   language: 'React Native',
-  //   topics: ['react-native', 'mobile', 'education']
-  // }
+  {
+    owner: 'The-Boring-Education',
+    repo: 'prep-yatra',
+    name: 'Prep Yatra',
+    description: 'Interview preparation platform with curated questions and practice sets',
+    url: 'https://github.com/The-Boring-Education/prep-yatra',
+    language: 'JavaScript',
+    topics: ['interview-prep', 'education', 'javascript', 'open-source'],
+  },
+  {
+    owner: 'The-Boring-Education',
+    repo: 'dsa-yatra',
+    name: 'DSA Yatra',
+    description: 'Data Structures and Algorithms practice platform for coding interviews',
+    url: 'https://github.com/The-Boring-Education/dsa-yatra',
+    language: 'JavaScript',
+    topics: ['dsa', 'algorithms', 'coding-interview', 'javascript', 'open-source'],
+  },
+  {
+    owner: 'The-Boring-Education',
+    repo: 'techyatra',
+    name: 'Tech Yatra',
+    description: 'Comprehensive tech roadmaps and learning paths for developers',
+    url: 'https://github.com/The-Boring-Education/techyatra',
+    language: 'JavaScript',
+    topics: ['roadmaps', 'learning-path', 'tech-education', 'javascript', 'open-source'],
+  },
+  {
+    owner: 'The-Boring-Education',
+    repo: 'resume-yatra',
+    name: 'Resume Yatra',
+    description: 'Professional resume builder with modern templates and ATS optimization',
+    url: 'https://github.com/The-Boring-Education/resume-yatra',
+    language: 'JavaScript',
+    topics: ['resume-builder', 'career', 'templates', 'javascript', 'open-source'],
+  },
+  {
+    owner: 'The-Boring-Education',
+    repo: 'The-Boring-Agents',
+    name: 'Agentic AI',
+    description: 'AI-powered educational agents and automation tools for learning',
+    url: 'https://github.com/The-Boring-Education/The-Boring-Agents',
+    language: 'Python',
+    topics: ['ai', 'agents', 'automation', 'education', 'python', 'open-source'],
+  },
 ];
 
 // Repository display configurations for tabs
@@ -30,15 +65,30 @@ export const REPOSITORY_TAB_CONFIG = {
     icon: '🌐',
     description: 'Main web application',
   },
-  'TBE-Mobile': {
-    displayName: 'Mobile App',
-    icon: '📱',
-    description: 'Mobile application',
+  'prep-yatra': {
+    displayName: 'Prep Yatra',
+    icon: '🎯',
+    description: 'Interview preparation platform',
   },
-  'TBE-Backend': {
-    displayName: 'Backend',
-    icon: '⚙️',
-    description: 'Backend services',
+  'dsa-yatra': {
+    displayName: 'DSA Yatra',
+    icon: '🧠',
+    description: 'Data structures & algorithms',
+  },
+  'techyatra': {
+    displayName: 'Tech Yatra',
+    icon: '🗺️',
+    description: 'Tech roadmaps & learning paths',
+  },
+  'resume-yatra': {
+    displayName: 'Resume Yatra',
+    icon: '📄',
+    description: 'Resume builder platform',
+  },
+  'The-Boring-Agents': {
+    displayName: 'Agentic AI',
+    icon: '🤖',
+    description: 'AI educational agents',
   },
 };
 
