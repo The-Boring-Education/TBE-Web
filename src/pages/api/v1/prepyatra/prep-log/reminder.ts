@@ -39,8 +39,10 @@ const handleSendPrepLogReminder = async (
     }
 
     // Get user's prep log stats to personalize the reminder
-    const { data: stats, error: statsError } = await getUserPrepLogStats(userId);
-    
+    const { data: stats, error: statsError } = await getUserPrepLogStats(
+      userId
+    );
+
     if (statsError) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -106,7 +108,11 @@ const generateReminderMessage = (stats: any, reminderType: string) => {
     };
   }
 
-  if (reminderType === 'streak_broken' && currentStreak === 0 && totalLogs > 0) {
+  if (
+    reminderType === 'streak_broken' &&
+    currentStreak === 0 &&
+    totalLogs > 0
+  ) {
     return {
       type: 'streak_recovery',
       text: `💪 Don't let yesterday break your momentum! Your longest streak was ${longestStreak} days. Start a new streak today and beat your record!`,

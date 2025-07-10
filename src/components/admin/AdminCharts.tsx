@@ -23,9 +23,13 @@ interface ChartWrapperProps {
   className?: string;
 }
 
-const ChartWrapper = ({ title, children, className = '' }: ChartWrapperProps) => (
+const ChartWrapper = ({
+  title,
+  children,
+  className = '',
+}: ChartWrapperProps) => (
   <div className={`bg-white rounded-lg shadow p-6 ${className}`}>
-    <Text className="text-lg font-semibold text-gray-900 mb-4" level="h3">
+    <Text className='text-lg font-semibold text-gray-900 mb-4' level='h3'>
       {title}
     </Text>
     {children}
@@ -40,24 +44,24 @@ interface LineChartProps {
   color?: string;
 }
 
-const AdminLineChart = ({ 
-  data, 
-  title, 
-  dataKey, 
-  xAxisKey, 
-  color = '#3B82F6' 
+const AdminLineChart = ({
+  data,
+  title,
+  dataKey,
+  xAxisKey,
+  color = '#3B82F6',
 }: LineChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width='100%' height={300}>
       <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray='3 3' />
         <XAxis dataKey={xAxisKey} />
         <YAxis />
         <Tooltip />
-        <Line 
-          type="monotone" 
-          dataKey={dataKey} 
-          stroke={color} 
+        <Line
+          type='monotone'
+          dataKey={dataKey}
+          stroke={color}
           strokeWidth={2}
           dot={{ fill: color, strokeWidth: 2 }}
         />
@@ -74,25 +78,25 @@ interface AreaChartProps {
   color?: string;
 }
 
-const AdminAreaChart = ({ 
-  data, 
-  title, 
-  dataKey, 
-  xAxisKey, 
-  color = '#10B981' 
+const AdminAreaChart = ({
+  data,
+  title,
+  dataKey,
+  xAxisKey,
+  color = '#10B981',
 }: AreaChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width='100%' height={300}>
       <AreaChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray='3 3' />
         <XAxis dataKey={xAxisKey} />
         <YAxis />
         <Tooltip />
-        <Area 
-          type="monotone" 
-          dataKey={dataKey} 
-          stroke={color} 
-          fill={color} 
+        <Area
+          type='monotone'
+          dataKey={dataKey}
+          stroke={color}
+          fill={color}
           fillOpacity={0.6}
         />
       </AreaChart>
@@ -108,17 +112,17 @@ interface BarChartProps {
   color?: string;
 }
 
-const AdminBarChart = ({ 
-  data, 
-  title, 
-  dataKey, 
-  xAxisKey, 
-  color = '#8B5CF6' 
+const AdminBarChart = ({
+  data,
+  title,
+  dataKey,
+  xAxisKey,
+  color = '#8B5CF6',
 }: BarChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width='100%' height={300}>
       <BarChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray='3 3' />
         <XAxis dataKey={xAxisKey} />
         <YAxis />
         <Tooltip />
@@ -136,24 +140,26 @@ interface PieChartProps {
   colors?: string[];
 }
 
-const AdminPieChart = ({ 
-  data, 
-  title, 
-  dataKey, 
-  nameKey, 
-  colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'] 
+const AdminPieChart = ({
+  data,
+  title,
+  dataKey,
+  nameKey,
+  colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'],
 }: PieChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width='100%' height={300}>
       <PieChart>
         <Pie
           data={data}
-          cx="50%"
-          cy="50%"
+          cx='50%'
+          cy='50%'
           labelLine={false}
-          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+          label={({ name, percent }) =>
+            `${name} ${(percent * 100).toFixed(0)}%`
+          }
           outerRadius={80}
-          fill="#8884d8"
+          fill='#8884d8'
           dataKey={dataKey}
         >
           {data.map((entry, index) => (
@@ -177,18 +183,23 @@ interface MultiBarChartProps {
   xAxisKey: string;
 }
 
-const AdminMultiBarChart = ({ data, title, bars, xAxisKey }: MultiBarChartProps) => (
+const AdminMultiBarChart = ({
+  data,
+  title,
+  bars,
+  xAxisKey,
+}: MultiBarChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width='100%' height={300}>
       <BarChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray='3 3' />
         <XAxis dataKey={xAxisKey} />
         <YAxis />
         <Tooltip />
         {bars.map((bar) => (
-          <Bar 
+          <Bar
             key={bar.dataKey}
-            dataKey={bar.dataKey} 
+            dataKey={bar.dataKey}
             fill={bar.color}
             name={bar.name}
           />

@@ -28,38 +28,44 @@ export const useAdminData = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = useCallback(async (endpoint: string, params?: Record<string, any>) => {
-    setLoading(true);
-    setError(null);
+  const fetchData = useCallback(
+    async (endpoint: string, params?: Record<string, any>) => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const url = new URL(endpoint, window.location.origin);
-      if (params) {
-        Object.entries(params).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            url.searchParams.append(key, value.toString());
-          }
-        });
+      try {
+        const url = new URL(endpoint, window.location.origin);
+        if (params) {
+          Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+              url.searchParams.append(key, value.toString());
+            }
+          });
+        }
+
+        const response = await fetch(url.toString());
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Failed to fetch data');
+        }
+
+        setData(result.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
       }
+    },
+    []
+  );
 
-      const response = await fetch(url.toString());
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Failed to fetch data');
-      }
-
-      setData(result.data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const refetch = useCallback((endpoint: string, params?: Record<string, any>) => {
-    fetchData(endpoint, params);
-  }, [fetchData]);
+  const refetch = useCallback(
+    (endpoint: string, params?: Record<string, any>) => {
+      fetchData(endpoint, params);
+    },
+    [fetchData]
+  );
 
   return {
     data,

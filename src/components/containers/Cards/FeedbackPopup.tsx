@@ -9,7 +9,7 @@ import {
   StartRatingCard,
   Toast,
 } from '@/components';
-import { useFeedback , useGamifiedAction } from '@/hooks';
+import { useFeedback, useGamifiedAction } from '@/hooks';
 import type { FeedbackPopupProps } from '@/interfaces';
 
 const FeedbackPopup = ({

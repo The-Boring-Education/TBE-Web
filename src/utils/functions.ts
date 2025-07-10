@@ -707,14 +707,15 @@ const checkUserCourseEnrollment = async (
   }
 };
 
-const getPYSubscriptionFeaturesByType = (subscriptionType: string): string[] => {
-  const baseFeatures = SUBSCRIPTION_FEATURES.filter(feature => 
-    !['ColdEmailAutomation', 'LinkedInAutomation'].includes(feature)
+const getPYSubscriptionFeaturesByType = (
+  subscriptionType: string
+): string[] => {
+  const baseFeatures = SUBSCRIPTION_FEATURES.filter(
+    (feature) =>
+      !['ColdEmailAutomation', 'LinkedInAutomation'].includes(feature)
   );
 
-  return subscriptionType === 'Lifetime' 
-    ? SUBSCRIPTION_FEATURES
-    : baseFeatures;
+  return subscriptionType === 'Lifetime' ? SUBSCRIPTION_FEATURES : baseFeatures;
 };
 
 export {

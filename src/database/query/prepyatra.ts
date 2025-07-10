@@ -246,8 +246,8 @@ const updateUserPrepLogStreak = async (
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    const lastLoggedDate = user.prepYatra?.prepLog?.lastLoggedDate 
-      ? new Date(user.prepYatra.prepLog.lastLoggedDate) 
+    const lastLoggedDate = user.prepYatra?.prepLog?.lastLoggedDate
+      ? new Date(user.prepYatra.prepLog.lastLoggedDate)
       : null;
 
     let currentStreak = user.prepYatra?.prepLog?.currentStreak || 0;
@@ -279,12 +279,16 @@ const updateUserPrepLogStreak = async (
     }
 
     // Update user with new streak data
-    await User.findByIdAndUpdate(userId, {
-      'prepYatra.prepLog.currentStreak': currentStreak,
-      'prepYatra.prepLog.longestStreak': longestStreak,
-      'prepYatra.prepLog.lastLoggedDate': today,
-      'prepYatra.prepLog.totalLogs': totalLogs,
-    }, { new: true });
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        'prepYatra.prepLog.currentStreak': currentStreak,
+        'prepYatra.prepLog.longestStreak': longestStreak,
+        'prepYatra.prepLog.lastLoggedDate': today,
+        'prepYatra.prepLog.totalLogs': totalLogs,
+      },
+      { new: true }
+    );
 
     // Award bonus points for streak milestones
     const streakMilestones = [3, 7, 15, 30];
@@ -292,14 +296,28 @@ const updateUserPrepLogStreak = async (
       if (currentStreak === milestone && previousStreak < milestone) {
         try {
           const { handleGamificationPoints } = await import('./gamification');
-          await handleGamificationPoints(true, userId, `PREPLOG_STREAK_${milestone}` as any);
+          await handleGamificationPoints(
+            true,
+            userId,
+            `PREPLOG_STREAK_${milestone}` as any
+          );
         } catch (gamificationError) {
-          console.error('Gamification streak reward failed:', gamificationError);
+          console.error(
+            'Gamification streak reward failed:',
+            gamificationError
+          );
         }
       }
     }
 
-    return { data: { currentStreak, longestStreak, totalLogs, streakMilestone: currentStreak } };
+    return {
+      data: {
+        currentStreak,
+        longestStreak,
+        totalLogs,
+        streakMilestone: currentStreak,
+      },
+    };
   } catch (error: any) {
     return { error: error.message };
   }
@@ -325,8 +343,8 @@ const getUserPrepLogStats = async (
     };
 
     // Check if user has logged today
-    const hasLoggedToday = prepLogStats.lastLoggedDate 
-      ? new Date(prepLogStats.lastLoggedDate) >= today 
+    const hasLoggedToday = prepLogStats.lastLoggedDate
+      ? new Date(prepLogStats.lastLoggedDate) >= today
       : false;
 
     // Get recent logs for the past 7 days

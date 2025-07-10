@@ -4,14 +4,15 @@ import * as Sentry from '@sentry/nextjs';
  * Capture an exception with additional context
  */
 export const captureException = (
-  error: Error, 
+  error: Error,
   context?: {
     tags?: Record<string, string>;
     extra?: Record<string, any>;
     user?: Record<string, any>;
     level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
   }
-) => Sentry.captureException(error, {
+) =>
+  Sentry.captureException(error, {
     tags: context?.tags,
     extra: context?.extra,
     user: context?.user,
@@ -28,7 +29,8 @@ export const captureMessage = (
     extra?: Record<string, any>;
     level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
   }
-) => Sentry.captureMessage(message, {
+) =>
+  Sentry.captureMessage(message, {
     tags: context?.tags,
     extra: context?.extra,
     level: context?.level || 'info',
@@ -69,7 +71,8 @@ export const captureAPIError = (
   method: string,
   statusCode?: number,
   requestData?: any
-) => Sentry.captureException(error, {
+) =>
+  Sentry.captureException(error, {
     tags: {
       section: 'api',
       endpoint,
@@ -93,7 +96,8 @@ export const captureDatabaseError = (
   operation: string,
   collection?: string,
   query?: any
-) => Sentry.captureException(error, {
+) =>
+  Sentry.captureException(error, {
     tags: {
       section: 'database',
       operation,
@@ -114,7 +118,8 @@ export const captureAuthError = (
   error: Error,
   authMethod: string,
   userId?: string
-) => Sentry.captureException(error, {
+) =>
+  Sentry.captureException(error, {
     tags: {
       section: 'authentication',
       auth_method: authMethod,
@@ -134,7 +139,8 @@ export const capturePaymentError = (
   paymentMethod: string,
   amount?: number,
   userId?: string
-) => Sentry.captureException(error, {
+) =>
+  Sentry.captureException(error, {
     tags: {
       section: 'payment',
       payment_method: paymentMethod,
@@ -180,10 +186,14 @@ export const addBreadcrumb = (
 /**
  * Start a new span for performance monitoring
  */
-export const startSpan = (name: string, op: string, callback: () => any) => Sentry.startSpan({
-    name,
-    op,
-  }, callback);
+export const startSpan = (name: string, op: string, callback: () => any) =>
+  Sentry.startSpan(
+    {
+      name,
+      op,
+    },
+    callback
+  );
 
 export default {
   captureException,

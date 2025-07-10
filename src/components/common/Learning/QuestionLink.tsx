@@ -48,7 +48,7 @@ const QuestionLink = ({
           e.preventDefault();
           return;
         }
-        
+
         // Track question start
         trackEvent({
           action: 'QUESTION_START',
@@ -61,7 +61,7 @@ const QuestionLink = ({
             isCompleted,
           },
         });
-        
+
         handleQuestionClick(question);
       }}
     >

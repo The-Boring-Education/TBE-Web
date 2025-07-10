@@ -98,7 +98,7 @@ const handleAddRecruiter = async (
     const { data, error } = await addRecruiterToDB({
       userId,
       recruiterName,
-      ...optionalFields
+      ...optionalFields,
     });
 
     if (error) {

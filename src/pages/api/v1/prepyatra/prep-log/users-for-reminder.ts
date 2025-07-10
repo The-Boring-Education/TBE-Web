@@ -46,7 +46,6 @@ const handleGetUsersForReminder = async (
           { 'prepYatra.prepLog.lastLoggedDate': { $lt: today } },
         ],
       }).select('_id name email prepYatra.prepLog');
-
     } else if (reminderType === 'streak_risk') {
       // Find users with active streaks who haven't logged today
       usersNeedingReminder = await User.find({
@@ -54,7 +53,6 @@ const handleGetUsersForReminder = async (
         'prepYatra.prepLog.currentStreak': { $gte: 3 },
         'prepYatra.prepLog.lastLoggedDate': { $lt: today },
       }).select('_id name email prepYatra.prepLog');
-
     } else if (reminderType === 'streak_broken') {
       // Find users whose streak was broken yesterday
       usersNeedingReminder = await User.find({
@@ -63,7 +61,6 @@ const handleGetUsersForReminder = async (
         'prepYatra.prepLog.lastLoggedDate': { $lt: yesterday },
         'prepYatra.prepLog.totalLogs': { $gt: 0 },
       }).select('_id name email prepYatra.prepLog');
-
     } else if (reminderType === 'inactive') {
       // Find users who haven't logged in the last 3 days
       const threeDaysAgo = new Date(today);
@@ -78,17 +75,18 @@ const handleGetUsersForReminder = async (
       }).select('_id name email prepYatra.prepLog');
     }
 
-    const reminderData = usersNeedingReminder?.map(user => ({
-      userId: user._id,
-      name: user.name,
-      email: user.email,
-      prepLogStats: user.prepYatra?.prepLog || {
-        currentStreak: 0,
-        longestStreak: 0,
-        totalLogs: 0,
-        lastLoggedDate: null,
-      },
-    })) || [];
+    const reminderData =
+      usersNeedingReminder?.map((user) => ({
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+        prepLogStats: user.prepYatra?.prepLog || {
+          currentStreak: 0,
+          longestStreak: 0,
+          totalLogs: 0,
+          lastLoggedDate: null,
+        },
+      })) || [];
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({

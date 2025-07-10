@@ -68,7 +68,7 @@ const USER_POINTS_ACTION: UserPointsActionType[] = [
   'DOWNLOAD_CERTIFICATE',
   'HELP_COMMUNITY',
   'RECRUITER_ADDED',
-  'PREPLOG_CREATED'
+  'PREPLOG_CREATED',
 ];
 
 const NOTIFICATION_TYPE: NotificationType[] = [
@@ -99,14 +99,14 @@ const PLATFORM_USAGE: PlatformUsageType[] = [
 ];
 
 const WORK_DOMAIN: WorkDomainType[] = [
-  "MERN Full-stack",
-  "Java Full-stack",
-  "Python Full-stack",
-  "Data Analysis",
-  "Machine Learning",
-  "AI",
-  "App Development",
-  "Others"
+  'MERN Full-stack',
+  'Java Full-stack',
+  'Python Full-stack',
+  'Data Analysis',
+  'Machine Learning',
+  'AI',
+  'App Development',
+  'Others',
 ];
 
 const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
@@ -2596,7 +2596,7 @@ const planTypeMap = {
   '1months': { type: '3Months', duration: 1 },
   '3months': { type: '5Months', duration: 3 },
   '6months': { type: '5Months', duration: 6 },
-  'lifetime': { type: 'Lifetime', duration: 999 }
+  lifetime: { type: 'Lifetime', duration: 999 },
 };
 
 export {
@@ -2624,4 +2624,5 @@ export {
   USER_POINTS_ACTION,
   USER_ROLE,
   WORK_DOMAIN,
-  YOUTUBE_API_PATH};
+  YOUTUBE_API_PATH,
+};

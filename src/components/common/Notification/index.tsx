@@ -30,11 +30,13 @@ const NotificationPopover = () => {
         leaveFrom='opacity-100 translate-y-0'
         leaveTo='opacity-0 translate-y-1'
       >
-        <PopoverPanel className="
+        <PopoverPanel
+          className='
           fixed z-10 top-18 right-2 w-80 shadow-lg rounded-2xl p-1
           md:absolute md:top-auto md:mt-2 md:w-96 md:right-0 md:left-auto md:mx-0
           overflow-x-auto
-        ">
+        '
+        >
           {notifications && (
             <FlexContainer className='gap-1' direction='col'>
               {notifications.map((notification, index) => {
@@ -50,7 +52,10 @@ const NotificationPopover = () => {
                       className='gap-1 w-full items-center'
                       justifyCenter={false}
                     >
-                      <Text className='pre-title text-primary text-left' level='span'>
+                      <Text
+                        className='pre-title text-primary text-left'
+                        level='span'
+                      >
                         {type}
                       </Text>
                       {link && (

@@ -38,7 +38,7 @@ export const config = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req,res)
+  await cors(req, res);
   await connectDB();
 
   if (!WEBHOOK_SECRET) {
@@ -195,57 +195,66 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
           }
         }
       }
-        if (_payment.productType === 'PREPYATRA') {
-          const plan = planTypeMap[String(_payment.productId) as keyof typeof planTypeMap] || { 
-            type: '3Months', 
-            duration: 1 
-          };
+      if (_payment.productType === 'PREPYATRA') {
+        const plan = planTypeMap[
+          String(_payment.productId) as keyof typeof planTypeMap
+        ] || {
+          type: '3Months',
+          duration: 1,
+        };
 
-          // Calculate expiry date
-          const expiryDate = plan.type === 'Lifetime' 
+        // Calculate expiry date
+        const expiryDate =
+          plan.type === 'Lifetime'
             ? new Date('2099-12-31')
             : new Date(Date.now() + plan.duration * 30 * 24 * 60 * 60 * 1000);
 
-          // Check for existing active subscription
-          const { data: existingSubscription } = await getActiveSubscriptionByUserFromDB(
-            _payment.user,
-            plan.type
-          );
+        // Check for existing active subscription
+        const { data: existingSubscription } =
+          await getActiveSubscriptionByUserFromDB(_payment.user, plan.type);
 
-          if (!existingSubscription) {
-            // Get features based on subscription type
-            const features = getPYSubscriptionFeaturesByType(plan.type);
+        if (!existingSubscription) {
+          // Get features based on subscription type
+          const features = getPYSubscriptionFeaturesByType(plan.type);
 
-            // Create subscription
-            const { error: createError } = await createSubscriptionInDB({
-              userId: _payment.user,
-              type: plan.type,
-              amount: _payment.amount,
-              duration: plan.duration,
-              expiryDate,
-              features,
-            });
+          // Create subscription
+          const { error: createError } = await createSubscriptionInDB({
+            userId: _payment.user,
+            type: plan.type,
+            amount: _payment.amount,
+            duration: plan.duration,
+            expiryDate,
+            features,
+          });
 
-            if (createError) {
-              console.error('Failed to create subscription:', createError);
-            } else {
-              // Update user subscription status
-              const { error: updateError } = await updateUserSubscriptionStatusInDB({
+          if (createError) {
+            console.error('Failed to create subscription:', createError);
+          } else {
+            // Update user subscription status
+            const { error: updateError } =
+              await updateUserSubscriptionStatusInDB({
                 userId: _payment.user,
                 subscriptionStatus: 'Active',
                 subscriptionExpiry: expiryDate,
               });
 
-              if (updateError) {
-                console.error('Failed to update user subscription status:', updateError);
-              } else {
-                console.log(`Successfully created ${plan.type} subscription for user ${_payment.user}`);
-              }
+            if (updateError) {
+              console.error(
+                'Failed to update user subscription status:',
+                updateError
+              );
+            } else {
+              console.log(
+                `Successfully created ${plan.type} subscription for user ${_payment.user}`
+              );
             }
-          } else {
-            console.log(`User ${_payment.user} already has an active ${plan.type} subscription`);
           }
+        } else {
+          console.log(
+            `User ${_payment.user} already has an active ${plan.type} subscription`
+          );
         }
+      }
     }
 
     return res.status(apiStatusCodes.OKAY).json({ status: 'OK' });
