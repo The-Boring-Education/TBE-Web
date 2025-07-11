@@ -72,12 +72,12 @@ export const REPOSITORY_TAB_CONFIG = {
   },
   'dsa-yatra': {
     displayName: 'DSA Yatra',
-    icon: '🧠',
+    icon: '💻',
     description: 'Data structures & algorithms',
   },
   'techyatra': {
     displayName: 'Tech Yatra',
-    icon: '🗺️',
+    icon: '🚀',
     description: 'Tech roadmaps & learning paths',
   },
   'resume-yatra': {
