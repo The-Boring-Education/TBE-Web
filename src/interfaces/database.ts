@@ -41,8 +41,8 @@ export interface UserModel {
   prepYatra?: {
     linkedInUrl?: string;
     pyOnboarded?: boolean;
-    workExperience: number | null;
-    workDomain: WorkDomainType | '';
+    experienceLevel?: string;
+    workDomain?: WorkDomainType;
     goal?: GoalType;
     targetCompanies?: CompanyType[];
     preferences: {

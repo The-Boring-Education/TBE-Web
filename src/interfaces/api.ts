@@ -226,7 +226,6 @@ export interface AddOnboardingPayloadProps {
 export interface AddPrepYatraOnboardingPayloadProps {
   userId: string;
   linkedInUrl: string;
-  workExperience: number;
   workDomain: WorkDomainType;
 }
 export interface CourseEnrollmentRequestProps {

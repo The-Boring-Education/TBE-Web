@@ -96,7 +96,6 @@ const onboardUserToDB = async (
 
 const onboardPrepYatraUserTODB = async (
   userId: string,
-  workExperience: number,
   workDomain: WorkDomainType,
   linkedInUrl: string
 ): Promise<DatabaseQueryResponseType> => {
@@ -104,7 +103,6 @@ const onboardPrepYatraUserTODB = async (
     userId,
     {
       prepYatra: {
-        workExperience,
         workDomain,
         linkedInUrl,
         pyOnboarded: true,
