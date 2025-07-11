@@ -1,0 +1,14 @@
+{
+  "name": "Test React Development Course",
+  "slug": "test-react-development-course",
+  "coverImageURL": "https://ik.imagekit.io/tbe/webapp/shiksha-test-react-development-course-cover.svg",
+  "description": "Learn React from basics to advanced with hands-on projects",
+  "liveOn": "2025-07-11T03:27:34.779436",
+  "roadmap": "Frontend",
+  "difficultyLevel": "Advanced",
+  "chapters": [],
+  "meta": "[MOCK RESPONSE] Content generated for prompt: \n                You are the Course Manager. Provide final review and create course metadata.\n      ...",
+  "createdAt": "2025-07-11T03:27:34.779451",
+  "updatedAt": "2025-07-11T03:27:34.779453",
+  "__v": 0
+}
