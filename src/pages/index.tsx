@@ -76,9 +76,9 @@ const Home = ({ seoMeta }: PageProps) => {
       />
 
       <NotificationContainer />
-      
+
       <CollegeEventsSection />
-      
+
       <Banner
         buttonLink={routes.cohort.bringYourIdea}
         buttonText='Register Now'

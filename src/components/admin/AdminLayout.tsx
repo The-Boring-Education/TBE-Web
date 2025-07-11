@@ -32,13 +32,16 @@ const navigationItems = [
   { name: 'Settings', href: '/admin/settings', icon: CogIcon },
 ];
 
-const AdminLayout = ({ children, title = 'Admin Dashboard' }: AdminLayoutProps) => {
+const AdminLayout = ({
+  children,
+  title = 'Admin Dashboard',
+}: AdminLayoutProps) => {
   const { isAdmin, isLoading, user } = useAdmin();
   const router = useRouter();
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className='flex items-center justify-center min-h-screen'>
         <LoadingSpinner />
       </div>
     );
@@ -46,34 +49,38 @@ const AdminLayout = ({ children, title = 'Admin Dashboard' }: AdminLayoutProps) 
 
   if (!isAdmin) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Text className="text-2xl font-bold text-red-600 mb-4" level="h1">
+      <div className='flex items-center justify-center min-h-screen'>
+        <div className='text-center'>
+          <Text className='text-2xl font-bold text-red-600 mb-4' level='h1'>
             Access Denied
           </Text>
-          <Text className="text-gray-600 mb-4" level="p">
+          <Text className='text-gray-600 mb-4' level='p'>
             You don't have permission to access this area.
           </Text>
-          <Button variant="PRIMARY" text="Return to Home" onClick={() => router.push('/')} />
+          <Button
+            variant='PRIMARY'
+            text='Return to Home'
+            onClick={() => router.push('/')}
+          />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className='flex min-h-screen bg-gray-50'>
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg">
-        <div className="p-6">
-          <Text className="text-xl font-bold text-gray-900" level="h2">
+      <div className='w-64 bg-white shadow-lg'>
+        <div className='p-6'>
+          <Text className='text-xl font-bold text-gray-900' level='h2'>
             TBE Admin
           </Text>
-          <Text className="text-sm text-gray-600 mt-1" level="p">
+          <Text className='text-sm text-gray-600 mt-1' level='p'>
             Welcome, {user?.name}
           </Text>
         </div>
-        
-        <nav className="mt-6">
+
+        <nav className='mt-6'>
           {navigationItems.map((item) => {
             const isActive = router.pathname === item.href;
             return (
@@ -86,7 +93,7 @@ const AdminLayout = ({ children, title = 'Admin Dashboard' }: AdminLayoutProps) 
                     : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                 }`}
               >
-                <item.icon className="mr-3 h-5 w-5" />
+                <item.icon className='mr-3 h-5 w-5' />
                 {item.name}
               </a>
             );
@@ -95,20 +102,18 @@ const AdminLayout = ({ children, title = 'Admin Dashboard' }: AdminLayoutProps) 
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className='flex-1 flex flex-col overflow-hidden'>
         {/* Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="px-6 py-4">
-            <Text className="text-2xl font-bold text-gray-900" level="h1">
+        <header className='bg-white shadow-sm border-b'>
+          <div className='px-6 py-4'>
+            <Text className='text-2xl font-bold text-gray-900' level='h1'>
               {title}
             </Text>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto p-6">
-          {children}
-        </main>
+        <main className='flex-1 overflow-auto p-6'>{children}</main>
       </div>
     </div>
   );

@@ -19,9 +19,8 @@ const PrepYatraSchema = new Schema({
   linkedInUrl: {
     type: String,
   },
-  workExperience: {
-    type: Number,
-    min: 0,
+  experienceLevel: {
+    type: String,
   },
   workDomain: {
     type: String,
@@ -46,6 +45,23 @@ const PrepYatraSchema = new Schema({
     focusAreas: {
       type: [String],
       default: [],
+    },
+  },
+  prepLog: {
+    currentStreak: {
+      type: Number,
+      default: 0,
+    },
+    longestStreak: {
+      type: Number,
+      default: 0,
+    },
+    lastLoggedDate: {
+      type: Date,
+    },
+    totalLogs: {
+      type: Number,
+      default: 0,
     },
   },
 });

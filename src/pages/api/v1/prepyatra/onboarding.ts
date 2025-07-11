@@ -33,6 +33,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       goal,
       targetCompanies,
       preferredCategories,
+      experienceLevel,
     }: PrepYatraOnboardingPayload = req.body;
 
     if (!userId || !name || !username || !goal) {
@@ -43,6 +44,8 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
         })
       );
     }
+
+    console.log(req.body)
 
     const userResult = await getPYUserByIdFromDB(userId);
     if (userResult.error || !userResult.data) {
@@ -65,6 +68,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
           'prepYatra.targetCompanies': targetCompanies,
           'prepYatra.preferences.interviewCategories': preferredCategories,
           'prepYatra.preferences.focusAreas': targetCompanies,
+          'prepYatra.experienceLevel': experienceLevel,
         }
       );
       return res.status(apiStatusCodes.OKAY).json(
@@ -88,6 +92,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
         'prepYatra.targetCompanies': targetCompanies,
         'prepYatra.preferences.interviewCategories': preferredCategories,
         'prepYatra.preferences.focusAreas': targetCompanies,
+        'prepYatra.experienceLevel': experienceLevel,
       }
     );
     return res.status(apiStatusCodes.OKAY).json(

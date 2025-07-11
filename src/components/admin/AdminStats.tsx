@@ -13,7 +13,13 @@ interface StatCardProps {
   color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'indigo';
 }
 
-const StatCard = ({ title, value, change, icon, color = 'blue' }: StatCardProps) => {
+const StatCard = ({
+  title,
+  value,
+  change,
+  icon,
+  color = 'blue',
+}: StatCardProps) => {
   const colorClasses = {
     blue: 'bg-blue-50 text-blue-600',
     green: 'bg-green-50 text-green-600',
@@ -24,23 +30,25 @@ const StatCard = ({ title, value, change, icon, color = 'blue' }: StatCardProps)
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <Text className="text-sm font-medium text-gray-600" level="p">
+    <div className='bg-white rounded-lg shadow p-6'>
+      <div className='flex items-center justify-between'>
+        <div className='flex-1'>
+          <Text className='text-sm font-medium text-gray-600' level='p'>
             {title}
           </Text>
-                     <Text className="text-2xl font-bold text-gray-900 mt-1" level="p">
-             {typeof value === 'number' ? value.toLocaleString() : value}
-           </Text>
+          <Text className='text-2xl font-bold text-gray-900 mt-1' level='p'>
+            {typeof value === 'number' ? value.toLocaleString() : value}
+          </Text>
           {change && (
-            <div className={`flex items-center mt-2 text-sm ${
-              change.type === 'increase' ? 'text-green-600' : 'text-red-600'
-            }`}>
+            <div
+              className={`flex items-center mt-2 text-sm ${
+                change.type === 'increase' ? 'text-green-600' : 'text-red-600'
+              }`}
+            >
               {change.type === 'increase' ? (
-                <ArrowUpIcon className="h-4 w-4 mr-1" />
+                <ArrowUpIcon className='h-4 w-4 mr-1' />
               ) : (
-                <ArrowDownIcon className="h-4 w-4 mr-1" />
+                <ArrowDownIcon className='h-4 w-4 mr-1' />
               )}
               {Math.abs(change.value)}% from last month
             </div>
@@ -64,12 +72,12 @@ interface AdminStatsProps {
 const AdminStats = ({ stats, loading = false }: AdminStatsProps) => {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white rounded-lg shadow p-6 animate-pulse">
-            <div className="h-4 bg-gray-200 rounded mb-2" />
-            <div className="h-8 bg-gray-200 rounded mb-2" />
-            <div className="h-4 bg-gray-200 rounded w-1/2" />
+          <div key={i} className='bg-white rounded-lg shadow p-6 animate-pulse'>
+            <div className='h-4 bg-gray-200 rounded mb-2' />
+            <div className='h-8 bg-gray-200 rounded mb-2' />
+            <div className='h-4 bg-gray-200 rounded w-1/2' />
           </div>
         ))}
       </div>
@@ -77,7 +85,7 @@ const AdminStats = ({ stats, loading = false }: AdminStatsProps) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
       {stats.map((stat, index) => (
         <StatCard key={index} {...stat} />
       ))}

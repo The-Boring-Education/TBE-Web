@@ -66,13 +66,15 @@ const RevenueTransparency: React.FC = () => {
     return null; // Don't show anything if there's an error or criteria not met
   }
 
-  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', {
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
       minimumFractionDigits: 0,
     }).format(amount);
 
-  const formatDate = (date: Date) => new Intl.DateTimeFormat('en-IN', {
+  const formatDate = (date: Date) =>
+    new Intl.DateTimeFormat('en-IN', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',

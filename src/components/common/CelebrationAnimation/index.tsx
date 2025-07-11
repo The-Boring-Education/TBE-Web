@@ -14,7 +14,16 @@ const CelebrationAnimation = ({
   type = 'points',
   intensity = 'medium',
 }: CelebrationAnimationProps) => {
-  const [particles, setParticles] = useState<Array<{ id: number; delay: number; color: string; size: number; x: number; y: number }>>([]);
+  const [particles, setParticles] = useState<
+    Array<{
+      id: number;
+      delay: number;
+      color: string;
+      size: number;
+      x: number;
+      y: number;
+    }>
+  >([]);
 
   const colors = {
     points: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'],
@@ -39,14 +48,14 @@ const CelebrationAnimation = ({
         x: Math.random() * 100,
         y: Math.random() * 50,
       }));
-      
+
       setParticles(newParticles);
-      
+
       const timer = setTimeout(() => {
         setParticles([]);
         onComplete?.();
       }, 3000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isActive, intensity, type, onComplete]);
@@ -54,26 +63,30 @@ const CelebrationAnimation = ({
   if (!isActive) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+    <div className='fixed inset-0 pointer-events-none z-50 overflow-hidden'>
       {/* Radial Glow Effect */}
       <motion.div
         animate={{ opacity: [0, 0.3, 0], scale: [0.8, 1.2, 1] }}
-        className="absolute top-1/2 left-1/2 w-96 h-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-yellow-400/20 via-purple-500/20 to-pink-500/20 blur-3xl"
+        className='absolute top-1/2 left-1/2 w-96 h-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-yellow-400/20 via-purple-500/20 to-pink-500/20 blur-3xl'
         initial={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 1.5, ease: 'easeOut' }}
       />
-      
+
       {/* Confetti Particles */}
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
           animate={{
             y: [0, -100, window.innerHeight + 50],
-            x: [0, Math.sin(particle.id) * 100, Math.sin(particle.id * 2) * 200],
+            x: [
+              0,
+              Math.sin(particle.id) * 100,
+              Math.sin(particle.id * 2) * 200,
+            ],
             rotate: [0, 360, 720],
             opacity: [0, 1, 1, 0],
           }}
-          className="absolute rounded-full shadow-lg"
+          className='absolute rounded-full shadow-lg'
           initial={{
             x: `${particle.x}vw`,
             y: '50vh',
@@ -88,11 +101,11 @@ const CelebrationAnimation = ({
           transition={{
             duration: 2.5,
             delay: particle.delay,
-            ease: "easeOut",
+            ease: 'easeOut',
           }}
         />
       ))}
-      
+
       {/* Sparkle Effects */}
       {Array.from({ length: 8 }).map((_, i) => (
         <motion.div
@@ -102,7 +115,7 @@ const CelebrationAnimation = ({
             rotate: [0, 180],
             opacity: [0, 1, 0],
           }}
-          className="absolute"
+          className='absolute'
           initial={{ scale: 0 }}
           style={{
             left: `${20 + Math.random() * 60}%`,
@@ -111,24 +124,24 @@ const CelebrationAnimation = ({
           transition={{
             duration: 1.5,
             delay: i * 0.1,
-            ease: "easeOut",
+            ease: 'easeOut',
           }}
         >
-          <div className="w-4 h-4 bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-full animate-pulse shadow-lg" />
+          <div className='w-4 h-4 bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-full animate-pulse shadow-lg' />
         </motion.div>
       ))}
-      
+
       {/* Success Ripple */}
       <motion.div
         animate={{
           scale: [0, 4],
           opacity: [0.6, 0],
         }}
-        className="absolute top-1/2 left-1/2 w-32 h-32 -translate-x-1/2 -translate-y-1/2 border-4 border-green-400 rounded-full"
+        className='absolute top-1/2 left-1/2 w-32 h-32 -translate-x-1/2 -translate-y-1/2 border-4 border-green-400 rounded-full'
         initial={{ scale: 0, opacity: 0.6 }}
         transition={{
           duration: 1.5,
-          ease: "easeOut",
+          ease: 'easeOut',
         }}
       />
     </div>
