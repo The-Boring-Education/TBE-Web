@@ -60,7 +60,7 @@ const handleSendPrepLogReminder = async (
       type: 'PREP YATRA' as const,
       text: reminderMessage.text,
       isHTML: false,
-      link: 'https://prepyatra.netlify.app/prep-log',
+      link: 'https://prepyatra-tbe.netlify.app//prep-log',
       isExternalLink: true,
     };
 
