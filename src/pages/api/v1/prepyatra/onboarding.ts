@@ -45,7 +45,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    console.log(req.body)
+    console.log(req.body);
 
     const userResult = await getPYUserByIdFromDB(userId);
     if (userResult.error || !userResult.data) {
@@ -59,18 +59,15 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
     const existingUser = userResult.data;
 
     if (existingUser.prepYatra?.pyOnboarded) {
-      const updateResult = await updatePYUserByIdInDB(
-        userId,
-        {
-          name,
-          userName: username,
-          'prepYatra.goal': goal,
-          'prepYatra.targetCompanies': targetCompanies,
-          'prepYatra.preferences.interviewCategories': preferredCategories,
-          'prepYatra.preferences.focusAreas': targetCompanies,
-          'prepYatra.experienceLevel': experienceLevel,
-        }
-      );
+      const updateResult = await updatePYUserByIdInDB(userId, {
+        name,
+        userName: username,
+        'prepYatra.goal': goal,
+        'prepYatra.targetCompanies': targetCompanies,
+        'prepYatra.preferences.interviewCategories': preferredCategories,
+        'prepYatra.preferences.focusAreas': targetCompanies,
+        'prepYatra.experienceLevel': experienceLevel,
+      });
       return res.status(apiStatusCodes.OKAY).json(
         sendAPIResponse({
           status: true,
@@ -82,19 +79,16 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const updateResult = await updatePYUserByIdInDB(
-      userId,
-      {
-        name,
-        userName: username,
-        'prepYatra.pyOnboarded': true,
-        'prepYatra.goal': goal,
-        'prepYatra.targetCompanies': targetCompanies,
-        'prepYatra.preferences.interviewCategories': preferredCategories,
-        'prepYatra.preferences.focusAreas': targetCompanies,
-        'prepYatra.experienceLevel': experienceLevel,
-      }
-    );
+    const updateResult = await updatePYUserByIdInDB(userId, {
+      name,
+      userName: username,
+      'prepYatra.pyOnboarded': true,
+      'prepYatra.goal': goal,
+      'prepYatra.targetCompanies': targetCompanies,
+      'prepYatra.preferences.interviewCategories': preferredCategories,
+      'prepYatra.preferences.focusAreas': targetCompanies,
+      'prepYatra.experienceLevel': experienceLevel,
+    });
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,

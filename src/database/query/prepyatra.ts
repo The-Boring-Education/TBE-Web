@@ -129,11 +129,13 @@ const deletePrepLogInDB = async (prepLogId: string) => {
 
     if (!deletedLog) return { error: 'Log not found' };
 
-
     try {
       await recalculateUserPrepLogStats(deletedLog.user.toString());
     } catch (recalcError) {
-      console.error('Failed to recalculate user stats after deletion:', recalcError);
+      console.error(
+        'Failed to recalculate user stats after deletion:',
+        recalcError
+      );
       // Don't fail the deletion if recalculation fails
     }
 
@@ -387,8 +389,7 @@ const recalculateUserPrepLogStats = async (
     }
 
     // Get all prep logs for the user, sorted by creation date
-    const allLogs = await PrepLog.find({ user: userId })
-      .sort({ createdAt: 1 });
+    const allLogs = await PrepLog.find({ user: userId }).sort({ createdAt: 1 });
 
     if (allLogs.length === 0) {
       // No logs left, reset all stats to zero
@@ -407,7 +408,9 @@ const recalculateUserPrepLogStats = async (
     // Group logs by date to calculate streaks
     const logsByDate = new Map<string, number>();
     allLogs.forEach((log) => {
-      const dateKey = new Date((log as any).createdAt).toISOString().split('T')[0];
+      const dateKey = new Date((log as any).createdAt)
+        .toISOString()
+        .split('T')[0];
       logsByDate.set(dateKey, (logsByDate.get(dateKey) || 0) + 1);
     });
 
@@ -429,7 +432,7 @@ const recalculateUserPrepLogStats = async (
 
       // Calculate current streak
       let streakCount = 0;
-      let currentDate = new Date(today);
+      const currentDate = new Date(today);
 
       // Check if user logged today
       if (sortedDates.includes(todayKey)) {
@@ -438,7 +441,7 @@ const recalculateUserPrepLogStats = async (
       }
 
       // Continue counting backwards
-      while (true) {
+      while (currentDate >= new Date('1900-01-01')) {
         const dateKey = currentDate.toISOString().split('T')[0];
         if (sortedDates.includes(dateKey)) {
           streakCount++;
@@ -457,12 +460,13 @@ const recalculateUserPrepLogStats = async (
 
       for (const dateKey of sortedDates) {
         const currentDate = new Date(dateKey);
-        
+
         if (previousDate) {
           const dayDiff = Math.floor(
-            (currentDate.getTime() - previousDate.getTime()) / (1000 * 60 * 60 * 24)
+            (currentDate.getTime() - previousDate.getTime()) /
+              (1000 * 60 * 60 * 24)
           );
-          
+
           if (dayDiff === 1) {
             // Consecutive day
             tempStreak++;
@@ -474,7 +478,7 @@ const recalculateUserPrepLogStats = async (
         } else {
           tempStreak = 1;
         }
-        
+
         previousDate = currentDate;
       }
 
