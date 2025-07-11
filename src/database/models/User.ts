@@ -19,9 +19,8 @@ const PrepYatraSchema = new Schema({
   linkedInUrl: {
     type: String,
   },
-  workExperience: {
-    type: Number,
-    min: 0,
+  experienceLevel: {
+    type: String,
   },
   workDomain: {
     type: String,

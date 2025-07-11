@@ -146,13 +146,11 @@ const handlePrepYatraOnboarding = async (
   userId: string
 ) => {
   try {
-    const { workExperience, workDomain, linkedInUrl } =
+    const { workDomain, linkedInUrl } =
       req.body as AddPrepYatraOnboardingPayloadProps;
 
     if (
       !userId ||
-      workExperience === undefined ||
-      workExperience === null ||
       !workDomain
     ) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -166,7 +164,6 @@ const handlePrepYatraOnboarding = async (
 
     const { data, error: onboardUserError } = await onboardPrepYatraUserTODB(
       userId,
-      workExperience,
       workDomain,
       linkedInUrl
     );
