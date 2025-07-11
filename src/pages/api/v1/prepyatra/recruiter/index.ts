@@ -5,8 +5,8 @@ import {
   addRecruiterToDB,
   deleteRecruiterInDB,
   getRecruitersByUserFromDB,
-  updateRecruiterInDB,
   handleGamificationPoints,
+  updateRecruiterInDB,
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
@@ -98,7 +98,7 @@ const handleAddRecruiter = async (
     const { data, error } = await addRecruiterToDB({
       userId,
       recruiterName,
-      ...optionalFields
+      ...optionalFields,
     });
 
     if (error) {

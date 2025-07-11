@@ -56,17 +56,14 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
     const existingUser = userResult.data;
 
     if (existingUser.prepYatra?.pyOnboarded) {
-      const updateResult = await updatePYUserByIdInDB(
-        userId,
-        {
-          name,
-          userName: username,
-          'prepYatra.goal': goal,
-          'prepYatra.targetCompanies': targetCompanies,
-          'prepYatra.preferences.interviewCategories': preferredCategories,
-          'prepYatra.preferences.focusAreas': targetCompanies,
-        }
-      );
+      const updateResult = await updatePYUserByIdInDB(userId, {
+        name,
+        userName: username,
+        'prepYatra.goal': goal,
+        'prepYatra.targetCompanies': targetCompanies,
+        'prepYatra.preferences.interviewCategories': preferredCategories,
+        'prepYatra.preferences.focusAreas': targetCompanies,
+      });
       return res.status(apiStatusCodes.OKAY).json(
         sendAPIResponse({
           status: true,
@@ -78,18 +75,15 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const updateResult = await updatePYUserByIdInDB(
-      userId,
-      {
-        name,
-        userName: username,
-        'prepYatra.pyOnboarded': true,
-        'prepYatra.goal': goal,
-        'prepYatra.targetCompanies': targetCompanies,
-        'prepYatra.preferences.interviewCategories': preferredCategories,
-        'prepYatra.preferences.focusAreas': targetCompanies,
-      }
-    );
+    const updateResult = await updatePYUserByIdInDB(userId, {
+      name,
+      userName: username,
+      'prepYatra.pyOnboarded': true,
+      'prepYatra.goal': goal,
+      'prepYatra.targetCompanies': targetCompanies,
+      'prepYatra.preferences.interviewCategories': preferredCategories,
+      'prepYatra.preferences.focusAreas': targetCompanies,
+    });
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,

@@ -35,13 +35,13 @@ const GamificationToast = ({
   const getIcon = () => {
     switch (type) {
       case 'points':
-        return <FaStar className="text-yellow-400" />;
+        return <FaStar className='text-yellow-400' />;
       case 'levelup':
-        return <FaCrown className="text-amber-400" />;
+        return <FaCrown className='text-amber-400' />;
       case 'achievement':
-        return <FaTrophy className="text-purple-400" />;
+        return <FaTrophy className='text-purple-400' />;
       default:
-        return <FaStar className="text-yellow-400" />;
+        return <FaStar className='text-yellow-400' />;
     }
   };
 
@@ -73,63 +73,65 @@ const GamificationToast = ({
 
   return (
     <motion.div
-      animate={{ 
-        opacity: 1, 
-        y: 0, 
+      animate={{
+        opacity: 1,
+        y: 0,
         scale: 1,
       }}
-      className="fixed top-20 right-6 z-50 max-w-sm"
-      exit={{ 
-        opacity: 0, 
-        y: -20, 
+      className='fixed top-20 right-6 z-50 max-w-sm'
+      exit={{
+        opacity: 0,
+        y: -20,
         scale: 0.95,
       }}
-      initial={{ 
-        opacity: 0, 
-        y: -20, 
+      initial={{
+        opacity: 0,
+        y: -20,
         scale: 0.9,
       }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 300, 
+      transition={{
+        type: 'spring',
+        stiffness: 300,
         damping: 25,
       }}
     >
-      <div className={`bg-gradient-to-r ${getGradient()} p-4 rounded-xl shadow-2xl ${getGlow()} backdrop-blur-sm border border-white/20`}>
-        <div className="flex items-center gap-3">
+      <div
+        className={`bg-gradient-to-r ${getGradient()} p-4 rounded-xl shadow-2xl ${getGlow()} backdrop-blur-sm border border-white/20`}
+      >
+        <div className='flex items-center gap-3'>
           <motion.div
             animate={{ rotate: [0, 360] }}
-            className="text-2xl"
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            className='text-2xl'
+            transition={{ duration: 0.8, ease: 'easeOut' }}
           >
             {getIcon()}
           </motion.div>
-          
-          <div className="flex-1">
-            <motion.p 
+
+          <div className='flex-1'>
+            <motion.p
               animate={{ opacity: 1 }}
-              className="text-white font-semibold text-sm"
+              className='text-white font-semibold text-sm'
               initial={{ opacity: 0 }}
               transition={{ delay: 0.2 }}
             >
               {message}
             </motion.p>
-            
+
             {points && (
-              <motion.p 
+              <motion.p
                 animate={{ opacity: 1, scale: [1, 1.1, 1] }}
-                className="text-white/90 text-xs font-medium"
+                className='text-white/90 text-xs font-medium'
                 initial={{ opacity: 0 }}
                 transition={{ delay: 0.3, scale: { duration: 0.5 } }}
               >
                 +{points} points earned!
               </motion.p>
             )}
-            
+
             {level && levelName && (
-              <motion.p 
+              <motion.p
                 animate={{ opacity: 1 }}
-                className="text-white/90 text-xs font-medium"
+                className='text-white/90 text-xs font-medium'
                 initial={{ opacity: 0 }}
                 transition={{ delay: 0.4 }}
               >
@@ -137,25 +139,35 @@ const GamificationToast = ({
               </motion.p>
             )}
           </div>
-          
+
           <button
-            className="text-white/70 hover:text-white transition-colors"
+            className='text-white/70 hover:text-white transition-colors'
             onClick={onClose}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className='w-4 h-4'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M6 18L18 6M6 6l12 12'
+              />
             </svg>
           </button>
         </div>
-        
+
         {/* Progress bar for duration */}
         <motion.div
-          animate={{ width: "0%" }}
-          className="mt-2 h-1 bg-white/30 rounded-full overflow-hidden"
-          initial={{ width: "100%" }}
-          transition={{ duration: duration / 1000, ease: "linear" }}
+          animate={{ width: '0%' }}
+          className='mt-2 h-1 bg-white/30 rounded-full overflow-hidden'
+          initial={{ width: '100%' }}
+          transition={{ duration: duration / 1000, ease: 'linear' }}
         >
-          <div className="h-full bg-white/60 rounded-full" />
+          <div className='h-full bg-white/60 rounded-full' />
         </motion.div>
       </div>
     </motion.div>

@@ -93,7 +93,7 @@ const CoursePage = ({
   const handleChapterClick = (chapterMeta: string) => {
     if (!isLocked) {
       setCourseMeta(chapterMeta);
-      
+
       // Track chapter start
       trackEvent({
         action: 'COURSE_CHAPTER_START',
@@ -205,7 +205,7 @@ const CoursePage = ({
             setIsCourseCompleted(true);
             setCertificateId(data._id);
             setShowCourseFeedback(true);
-            
+
             // Trigger course completion celebration
             await gamifiedAction.triggerGamifiedAction({
               gamificationAction: 'COMPLETE_COURSE_CERTIFICATE',

@@ -29,7 +29,7 @@ const GamificationDemo = () => {
       type: 'levelup',
       intensity: 'high',
     });
-    
+
     showToast({
       type: 'levelup',
       message: 'Level Up! Welcome to Coder!',
@@ -43,7 +43,7 @@ const GamificationDemo = () => {
       type: 'achievement',
       intensity: 'high',
     });
-    
+
     showToast({
       type: 'achievement',
       message: 'Achievement Unlocked!',
@@ -53,10 +53,10 @@ const GamificationDemo = () => {
 
   if (!demoMode) {
     return (
-      <div className="fixed bottom-4 left-4 z-40">
+      <div className='fixed bottom-4 left-4 z-40'>
         <Button
-          text="Show Gamification Demo"
-          variant="GHOST"
+          text='Show Gamification Demo'
+          variant='GHOST'
           onClick={() => setDemoMode(true)}
         />
       </div>
@@ -64,33 +64,33 @@ const GamificationDemo = () => {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 z-40 bg-white p-4 rounded-lg shadow-lg border max-w-xs">
-      <FlexContainer direction="col" className="gap-2">
-        <Text level="h6" className="font-bold text-sm">
+    <div className='fixed bottom-4 left-4 z-40 bg-white p-4 rounded-lg shadow-lg border max-w-xs'>
+      <FlexContainer direction='col' className='gap-2'>
+        <Text level='h6' className='font-bold text-sm'>
           Gamification Demo
         </Text>
-        
+
         <Button
-          text="Test Points (+10)"
-          variant="PRIMARY"
+          text='Test Points (+10)'
+          variant='PRIMARY'
           onClick={testPointsEarning}
         />
-        
+
         <Button
-          text="Test Level Up"
-          variant="SECONDARY"
+          text='Test Level Up'
+          variant='SECONDARY'
           onClick={testLevelUp}
         />
-        
+
         <Button
-          text="Test Achievement"
-          variant="SUCCESS"
+          text='Test Achievement'
+          variant='SUCCESS'
           onClick={testAchievement}
         />
-        
+
         <Button
-          text="Hide Demo"
-          variant="GHOST"
+          text='Hide Demo'
+          variant='GHOST'
           onClick={() => setDemoMode(false)}
         />
       </FlexContainer>

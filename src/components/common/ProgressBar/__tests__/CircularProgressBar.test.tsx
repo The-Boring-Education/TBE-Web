@@ -5,9 +5,7 @@ import CircularProgressBar from '../CircularProgressBar';
 
 describe('<CircularProgressBar />', () => {
   it('renders svg with calculated strokeDashoffset based on percentage', () => {
-    const { container } = render(
-      <CircularProgressBar percentage={50} />
-    );
+    const { container } = render(<CircularProgressBar percentage={50} />);
 
     const circles = container.querySelectorAll('circle');
     expect(circles.length).toBe(2);
