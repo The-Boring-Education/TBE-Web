@@ -149,10 +149,7 @@ const handlePrepYatraOnboarding = async (
     const { workDomain, linkedInUrl } =
       req.body as AddPrepYatraOnboardingPayloadProps;
 
-    if (
-      !userId ||
-      !workDomain
-    ) {
+    if (!userId || !workDomain) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
