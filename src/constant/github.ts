@@ -6,21 +6,35 @@ export const TBE_REPOSITORIES: GitHubRepository[] = [
     owner: 'The-Boring-Education',
     repo: 'TBE-Web',
     name: 'TBE Web Application',
-    description: 'Building Open Source Tech Education App For 🇮🇳',
+    description: 'TBE Web Application',
     url: 'https://github.com/The-Boring-Education/TBE-Web',
-    language: 'TypeScript',
-    topics: ['nextjs', 'react', 'typescript', 'education', 'open-source'],
+    language: 'Next.js',
+    topics: [
+      'React.js',
+      'Typescript',
+      'Tailwind CSS',
+      'MongoDB',
+      'Open Source',
+    ],
   },
-  // Future repositories can be added here
-  // {
-  //   owner: 'The-Boring-Education',
-  //   repo: 'TBE-Mobile',
-  //   name: 'TBE Mobile App',
-  //   description: 'Mobile application for tech education',
-  //   url: 'https://github.com/The-Boring-Education/TBE-Mobile',
-  //   language: 'React Native',
-  //   topics: ['react-native', 'mobile', 'education']
-  // }
+  {
+    owner: 'The-Boring-Education',
+    repo: 'Prep-Yatra',
+    name: 'Prep Yatra',
+    description: 'For Interview Preparation',
+    url: 'https://github.com/The-Boring-Education/Prep-Yatra',
+    language: 'React.js',
+    topics: ['Typescript', 'Tailwind CSS', 'Open Source'],
+  },
+  {
+    owner: 'The-Boring-Education',
+    repo: 'The-Boring-Agents',
+    name: 'The Boring Agents',
+    description: 'AI Agent for The Boring Education',
+    url: 'https://github.com/The-Boring-Education/The-Boring-Agents',
+    language: 'Python',
+    topics: ['Langchain', 'Open Source', 'AI Agent'],
+  },
 ];
 
 // Repository display configurations for tabs
@@ -30,15 +44,15 @@ export const REPOSITORY_TAB_CONFIG = {
     icon: '🌐',
     description: 'Main web application',
   },
-  'TBE-Mobile': {
-    displayName: 'Mobile App',
-    icon: '📱',
-    description: 'Mobile application',
+  'Prep-Yatra': {
+    displayName: 'Prep Yatra',
+    icon: '🚗',
+    description: 'For Interview Preparation',
   },
-  'TBE-Backend': {
-    displayName: 'Backend',
-    icon: '⚙️',
-    description: 'Backend services',
+  'The-Boring-Agents': {
+    displayName: 'The Boring Agents',
+    icon: '🤖',
+    description: 'AI Agent for The Boring Education',
   },
 };
 

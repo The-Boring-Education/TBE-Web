@@ -1,5 +1,5 @@
 export { default as ContactCard } from './ContactCard';
-export { default as GitHubIssueCard } from './GitHubIssueCard';
+
 export { default as IconCard } from './IconCard';
 export { default as OutlineCard } from './OutlineCard';
 export { default as PlaylistCard } from './PlaylistCard';

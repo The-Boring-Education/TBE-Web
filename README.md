@@ -27,10 +27,19 @@ npm install
 
 ### 3. Set Up Environment Variables
 
-You will need to create a .env.local file to configure the environment:
+You will need to create a `.env.local` file to configure the environment:
 
-Copy the .env.example file to .env.local.
-Update the values in the .env.local file with your MongoDB connection string and other relevant configuration.
+```bash
+# Create .env.local file
+touch .env.local
+```
+
+Add environment variables to your `.env.local` file as needed:
+
+```bash
+# Add environment variables here as needed
+# NEXT_PUBLIC_API_URL=http://localhost:3000
+```
 
 ### 4. Start the Development Server
 

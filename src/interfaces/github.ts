@@ -1,36 +1,4 @@
-// GitHub API interfaces
-export interface GitHubIssue {
-  id: number;
-  number: number;
-  title: string;
-  body: string;
-  state: 'open' | 'closed';
-  html_url: string;
-  created_at: string;
-  updated_at: string;
-  labels: GitHubLabel[];
-  user: {
-    login: string;
-    avatar_url: string;
-    html_url: string;
-  };
-  assignees: GitHubUser[];
-  comments: number;
-}
-
-export interface GitHubLabel {
-  id: number;
-  name: string;
-  color: string;
-  description?: string;
-}
-
-export interface GitHubUser {
-  login: string;
-  avatar_url: string;
-  html_url: string;
-}
-
+// GitHub Repository interface
 export interface GitHubRepository {
   owner: string;
   repo: string;
@@ -42,17 +10,8 @@ export interface GitHubRepository {
 }
 
 // Component interfaces
-export interface IssuesTableProps {
-  issues: GitHubIssue[];
-  repository: GitHubRepository;
-  loading: boolean;
-  error: string | null;
-  onRetry: () => void;
-}
-
 export interface GitHubIssuesContainerProps {
   repositories: GitHubRepository[];
-  maxIssuesPerRepo?: number;
   className?: string;
 }
 
@@ -70,16 +29,4 @@ export interface OpenSourceBenefitsProps {
     description: string;
     icon: string;
   }>;
-}
-
-// Legacy interfaces (keeping for backward compatibility)
-export interface GitHubIssueCardProps {
-  issue: GitHubIssue;
-  repository: GitHubRepository;
-}
-
-export interface OpenSourceRepoCardProps {
-  repository: GitHubRepository;
-  issuesCount: number;
-  onViewIssues: () => void;
 }
