@@ -1,8 +1,8 @@
 import {
   FlexContainer,
+  LinkButton,
   SectionHeaderContainer,
   Text,
-  LinkButton,
 } from '@/components';
 import { REPOSITORY_TAB_CONFIG } from '@/constant';
 import type { GitHubIssuesContainerProps } from '@/interfaces';
