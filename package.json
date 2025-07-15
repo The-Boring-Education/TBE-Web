@@ -22,7 +22,7 @@
     "@opentelemetry/core": "^2.0.1",
     "@opentelemetry/resources": "^2.0.1",
     "@opentelemetry/sdk-trace-base": "^2.0.1",
-    "@sentry/nextjs": "^9.31.0",
+    "@sentry/nextjs": "^9.38.0",
     "@types/cors": "^2.8.19",
     "axios": "^1.4.0",
     "cors": "^2.8.5",

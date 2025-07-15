@@ -297,10 +297,6 @@ const GitHubIssuesContainer = dynamic(
   () => import('@/components/containers/Cards/GitHubIssuesContainer')
 );
 
-const IssuesTable = dynamic(
-  () => import('@/components/containers/Page/OpenSource/IssuesTable')
-);
-
 const CelebrationAnimation = dynamic(
   () => import('@/components/common/CelebrationAnimation')
 );
@@ -383,7 +379,6 @@ export {
   InputFieldContainer,
   InputRadioContainer,
   InterviewPrepSection,
-  IssuesTable,
   LandingPageHero,
   LinerProgressBar,
   LinkText as Link,

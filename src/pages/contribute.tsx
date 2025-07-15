@@ -95,10 +95,7 @@ const Contribute = ({ seoMeta }: PageProps) => (
 
     {/* GitHub Issues Section */}
     <Section id='repositories'>
-      <GitHubIssuesContainer
-        repositories={TBE_REPOSITORIES}
-        maxIssuesPerRepo={6}
-      />
+      <GitHubIssuesContainer repositories={TBE_REPOSITORIES} />
     </Section>
 
     {/* Getting Started Section */}
