@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { PageLayout } from '@/components';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import { GamificationProvider } from '@/components/layout/GamificationProvider';
-import { googleAnalyticsScript, gtag, routes } from '@/constant';
+import { envConfig, googleAnalyticsScript, gtag, routes } from '@/constant';
 import { useUser } from '@/hooks';
 import { getRedirectUrl } from '@/utils';
 
@@ -26,20 +26,32 @@ const AppContent = ({
   pageProps: any;
 }) => {
   const router = useRouter();
-  const { isOnboarded, isAuth, loading } = useUser();
+  const { user, isOnboarded, isAuth, loading } = useUser();
 
   useEffect(() => {
     if (loading || !isAuth) return;
 
     if (!isOnboarded && isAuth && router.pathname !== routes.onboarding) {
-      router.push(routes.onboarding);
+      // Redirect to external onboarding app
+      const onboardingBaseUrl = envConfig.ONBOARDING_APP_URL; // TODO: Replace with actual onboarding app URL
+      const params = new URLSearchParams({
+        userId: user?.id || '',
+        from: 'webapp',
+        redirect: window.location.href,
+      });
+      // If token is available, add it
+      if (user && (user as any).token) {
+        params.append('token', (user as any).token);
+      }
+      window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
+      return;
     }
     // Redirect to dashboard if onboarded and authenticated
     else if (isOnboarded && router.pathname === routes.onboarding) {
       const redirectTo = getRedirectUrl();
       router.push(redirectTo);
     }
-  }, [isAuth, isOnboarded, loading, router, router.pathname]);
+  }, [isAuth, isOnboarded, loading, router, router.pathname, user]);
 
   return (
     <ErrorBoundary>
