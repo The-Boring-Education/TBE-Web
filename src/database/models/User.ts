@@ -16,9 +16,7 @@ const PrepYatraSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  linkedInUrl: {
-    type: String,
-  },
+ 
   experienceLevel: {
     type: String,
   },
@@ -102,6 +100,15 @@ const UserSchema: Schema<UserModel> = new Schema(
       enum: PLATFORM_USAGE,
     },
     contactNo: {
+      type: String,
+    },
+    linkedInUrl: {
+      type: String,
+    },
+    githubUrl: {
+      type: String,
+    },
+    leetCodeUrl: {
       type: String,
     },
     prepYatra: PrepYatraSchema,
