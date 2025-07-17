@@ -175,26 +175,6 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
 
-      if (_payment.productType === 'INTERVIEW_SHEET') {
-        const { data: alreadyEnrolled } = await getEnrolledSheetFromDB({
-          userId: _payment.user,
-          sheetId: _payment.productId,
-        });
-
-        if (!alreadyEnrolled) {
-          const { error: enrollError } = await enrollInASheet({
-            userId: _payment.user,
-            sheetId: _payment.productId,
-          });
-
-          if (enrollError) {
-            console.error(
-              'Interview sheet enrollment failed after payment:',
-              enrollError
-            );
-          }
-        }
-      }
       if (_payment.productType === 'PREPYATRA') {
         const plan = planTypeMap[
           String(_payment.productId) as keyof typeof planTypeMap

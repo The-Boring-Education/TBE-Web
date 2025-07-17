@@ -354,6 +354,7 @@ export interface SheetHeroContainerProps {
   isEnrolled?: boolean;
   id: string;
   isPremium?: boolean;
+  isPurchased?: boolean;
 }
 
 export interface AccordionProps {

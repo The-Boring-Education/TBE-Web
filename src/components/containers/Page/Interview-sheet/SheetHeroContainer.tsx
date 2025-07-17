@@ -15,6 +15,7 @@ const SheetHeroContainer = ({
   name,
   isEnrolled,
   isPremium,
+  isPurchased,
 }: SheetHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -79,6 +80,12 @@ const SheetHeroContainer = ({
           variant='PRIMARY'
           onClick={enrollSheet}
         />
+      </FlexContainer>
+    );
+  } else if (isAuth && !isEnrolled && isPremium && isPurchased) {
+    headerActionButton = (
+      <FlexContainer>
+        <Button text='Enroll in Sheet' variant='PRIMARY' onClick={enrollSheet} />
       </FlexContainer>
     );
   }

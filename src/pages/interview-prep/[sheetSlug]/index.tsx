@@ -208,6 +208,7 @@ const SheetPage = ({
           isEnrolled={sheet.isEnrolled}
           name={sheet.name ?? ''}
           isPremium={sheet.isPremium}
+          isPurchased={!!isPurchased} // Ensure boolean
         />
       </Section>
       <Section className='md:p-2 p-2'>
