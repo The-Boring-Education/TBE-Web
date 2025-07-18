@@ -1,4 +1,4 @@
-import { Payment } from '@/database';
+import { Payment, PrepYatraSubscription } from '@/database';
 import type {
   AddPaymentToDBRequestPayloadProps,
   DatabaseQueryResponseType,
@@ -73,6 +73,18 @@ const checkPaymentStatusFromDB = async (
   productId: string
 ): Promise<DatabaseQueryResponseType> => {
   try {
+
+    const activeSubscription = await PrepYatraSubscription.findOne({
+      userId: userId,
+      isActive: true,
+    });
+
+    if (activeSubscription) {
+      return {
+        data: { purchased: true },
+      };
+    }
+
     const payment = await Payment.findOne({ user: userId, productId });
 
     if (!payment) {

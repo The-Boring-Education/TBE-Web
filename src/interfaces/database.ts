@@ -38,8 +38,10 @@ export interface UserModel {
   purpose?: PlatformUsageType[];
   contactNo?: string;
   isOnboarded?: boolean;
+  linkedInUrl?: string;
+  githubUrl?: string;
+  leetCodeUrl?: string;
   prepYatra?: {
-    linkedInUrl?: string;
     pyOnboarded?: boolean;
     experienceLevel?: string;
     workDomain?: WorkDomainType;
