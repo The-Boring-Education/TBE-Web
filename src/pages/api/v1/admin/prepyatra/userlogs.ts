@@ -32,6 +32,7 @@ const handleGetUsersWithLogs = async (
   res: NextApiResponse
 ) => {
   try {
+    console.log('getAllUsersWithLogsFromDB');
     const { data, error } = await getAllUsersWithLogsFromDB();
 
     if (error) {

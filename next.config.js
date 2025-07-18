@@ -21,7 +21,7 @@ const nextConfig = {
   },
 
   // SVGR
-  webpack(config) {
+  webpack(config, { isServer, isEdgeRuntime }) {
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
@@ -35,6 +35,52 @@ const nextConfig = {
         },
       ],
     });
+
+    // Add comprehensive fallbacks for browser APIs that OpenTelemetry expects
+    if (isServer || isEdgeRuntime) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        performance: false,
+        'performance-now': false,
+        perf_hooks: false,
+        timers: false,
+        util: false,
+        buffer: false,
+        process: false,
+        events: false,
+        stream: false,
+        crypto: false,
+        url: false,
+        querystring: false,
+        path: false,
+        fs: false,
+        os: false,
+        http: false,
+        https: false,
+        zlib: false,
+        assert: false,
+        constants: false,
+        domain: false,
+        punycode: false,
+        string_decoder: false,
+        tty: false,
+        vm: false,
+        worker_threads: false,
+        child_process: false,
+        cluster: false,
+        dgram: false,
+        dns: false,
+        net: false,
+        readline: false,
+        repl: false,
+        tls: false,
+        v8: false,
+        inspector: false,
+        trace_events: false,
+        async_hooks: false,
+        module: false,
+      };
+    }
 
     return config;
   },

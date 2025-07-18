@@ -1,3 +1,6 @@
+// Import polyfills first to ensure they're loaded before Sentry
+import './polyfills';
+
 import * as Sentry from '@sentry/nextjs';
 
 export async function register() {

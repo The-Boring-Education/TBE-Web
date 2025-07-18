@@ -19,14 +19,8 @@
       "~/*": ["./public/*"]
     },
     "incremental": true,
-    "types": ["node", "jest", "@testing-library/jest-dom", "@playwright/test"]
+    "types": ["node"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    },
-    "require": ["tsconfig-paths/register"]
-  }
+  "exclude": ["node_modules"]
 }
