@@ -16,12 +16,9 @@ const PrepYatraSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  linkedInUrl: {
+ 
+  experienceLevel: {
     type: String,
-  },
-  workExperience: {
-    type: Number,
-    min: 0,
   },
   workDomain: {
     type: String,
@@ -46,6 +43,23 @@ const PrepYatraSchema = new Schema({
     focusAreas: {
       type: [String],
       default: [],
+    },
+  },
+  prepLog: {
+    currentStreak: {
+      type: Number,
+      default: 0,
+    },
+    longestStreak: {
+      type: Number,
+      default: 0,
+    },
+    lastLoggedDate: {
+      type: Date,
+    },
+    totalLogs: {
+      type: Number,
+      default: 0,
     },
   },
 });
@@ -86,6 +100,15 @@ const UserSchema: Schema<UserModel> = new Schema(
       enum: PLATFORM_USAGE,
     },
     contactNo: {
+      type: String,
+    },
+    linkedInUrl: {
+      type: String,
+    },
+    githubUrl: {
+      type: String,
+    },
+    leetCodeUrl: {
       type: String,
     },
     prepYatra: PrepYatraSchema,

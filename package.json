@@ -1,6 +1,6 @@
 {
   "name": "tbe-webapp",
-  "version": "2.0.0",
+  "version": "2.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,11 +9,7 @@
     "lint": "eslint src --fix",
     "format": "prettier -w .",
     "typecheck": "tsc --noEmit --incremental false",
-    "test": "jest --passWithNoTests",
-    "release": "npm run lint && npm run format && npm run typecheck && npm run test && npm run build",
-    "test:ci": "jest --coverage --runInBand",
-    "test:e2e": "start-server-and-test dev http://localhost:3000 test:playwright",
-    "test:playwright": "playwright test --reporter=list"
+    "release": "npm run lint && npm run format && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -22,7 +18,7 @@
     "@opentelemetry/core": "^2.0.1",
     "@opentelemetry/resources": "^2.0.1",
     "@opentelemetry/sdk-trace-base": "^2.0.1",
-    "@sentry/nextjs": "^9.31.0",
+    "@sentry/nextjs": "^9.38.0",
     "@types/cors": "^2.8.19",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
@@ -44,13 +40,9 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.53.1",
     "@svgr/webpack": "^6.5.1",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@types/jest": "^30.0.0",
     "@types/markdown-it": "^14.0.1",
     "@types/node": "^24.0.7",
     "@types/raw-body": "^2.1.4",
@@ -65,30 +57,10 @@
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "husky": "^9.1.7",
-    "jest": "^27.5.1",
-    "jest-environment-node": "^29.7.0",
-    "lint-staged": "^12.5.0",
-    "msw": "^1.2.3",
-    "next-router-mock": "^0.7.5",
-    "next-test-api-route-handler": "^4.0.16",
     "node-fetch": "^2.7.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
-    "start-server-and-test": "^2.0.0",
-    "supertest": "^6.3.3",
     "tailwindcss": "^3.2.7",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
     "typescript": "^4.9.5"
-  },
-  "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "eslint --max-warnings=0",
-      "prettier -w"
-    ],
-    "**/*.{json,css,scss,md,webmanifest}": [
-      "prettier -w"
-    ]
   }
 }

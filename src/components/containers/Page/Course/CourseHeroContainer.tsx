@@ -41,7 +41,7 @@ const CourseHeroContainer = ({
           category: 'User',
           label: 'Course Enrolled',
         },
-        customMessage: 'Welcome to the course! Let\'s start learning!',
+        customMessage: "Welcome to the course! Let's start learning!",
         metadata: {
           courseId: id,
           courseName: name,

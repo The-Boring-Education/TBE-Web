@@ -100,14 +100,18 @@ const getDateRange = (startDate: string, endDate: string, period: string) => {
   if (startDate) {
     start = new Date(startDate);
   } else {
-    const days = period === '7d' ? 7 : period === '30d' ? 30 : period === '90d' ? 90 : 365;
+    const days =
+      period === '7d' ? 7 : period === '30d' ? 30 : period === '90d' ? 90 : 365;
     start = new Date(end.getTime() - days * 24 * 60 * 60 * 1000);
   }
 
   return { start, end };
 };
 
-const getRevenueAnalytics = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getRevenueAnalytics = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // Revenue trends
@@ -178,7 +182,8 @@ const getRevenueAnalytics = async (res: NextApiResponse, dateRange: { start: Dat
     createdAt: { $gte: start, $lte: end },
   });
 
-  const conversionRate = totalUsers > 0 ? (paidUsers.length / totalUsers) * 100 : 0;
+  const conversionRate =
+    totalUsers > 0 ? (paidUsers.length / totalUsers) * 100 : 0;
 
   return res.status(apiStatusCodes.OKAY).json(
     sendAPIResponse({
@@ -187,19 +192,32 @@ const getRevenueAnalytics = async (res: NextApiResponse, dateRange: { start: Dat
         revenueTimeSeries: revenueData,
         productRevenue,
         subscriptionMetrics,
-        totalRevenue: productRevenue.reduce((sum, item) => sum + item.totalRevenue, 0),
+        totalRevenue: productRevenue.reduce(
+          (sum, item) => sum + item.totalRevenue,
+          0
+        ),
         conversionRate: parseFloat(conversionRate.toFixed(2)),
-        totalTransactions: productRevenue.reduce((sum, item) => sum + item.transactionCount, 0),
-        averageTransactionValue: productRevenue.length > 0 
-          ? productRevenue.reduce((sum, item) => sum + item.totalRevenue, 0) / 
-            productRevenue.reduce((sum, item) => sum + item.transactionCount, 0)
-          : 0,
+        totalTransactions: productRevenue.reduce(
+          (sum, item) => sum + item.transactionCount,
+          0
+        ),
+        averageTransactionValue:
+          productRevenue.length > 0
+            ? productRevenue.reduce((sum, item) => sum + item.totalRevenue, 0) /
+              productRevenue.reduce(
+                (sum, item) => sum + item.transactionCount,
+                0
+              )
+            : 0,
       },
     })
   );
 };
 
-const getUserEngagementAnalytics = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getUserEngagementAnalytics = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // User growth over time
@@ -313,7 +331,10 @@ const getUserEngagementAnalytics = async (res: NextApiResponse, dateRange: { sta
   );
 };
 
-const getContentPerformanceAnalytics = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getContentPerformanceAnalytics = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // Most popular courses
@@ -415,7 +436,10 @@ const getContentPerformanceAnalytics = async (res: NextApiResponse, dateRange: {
   );
 };
 
-const getGamificationAnalytics = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getGamificationAnalytics = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // Points distribution
@@ -431,8 +455,14 @@ const getGamificationAnalytics = async (res: NextApiResponse, dateRange: { start
           $switch: {
             branches: [
               { case: { $lt: ['$points', 500] }, then: 'Beginner (0-499)' },
-              { case: { $lt: ['$points', 1000] }, then: 'Intermediate (500-999)' },
-              { case: { $lt: ['$points', 2000] }, then: 'Advanced (1000-1999)' },
+              {
+                case: { $lt: ['$points', 1000] },
+                then: 'Intermediate (500-999)',
+              },
+              {
+                case: { $lt: ['$points', 2000] },
+                then: 'Advanced (1000-1999)',
+              },
               { case: { $gte: ['$points', 2000] }, then: 'Expert (2000+)' },
             ],
             default: 'Unknown',
@@ -478,7 +508,10 @@ const getGamificationAnalytics = async (res: NextApiResponse, dateRange: { start
   );
 };
 
-const getLearningPatternAnalytics = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getLearningPatternAnalytics = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // Learning time analysis
@@ -555,7 +588,10 @@ const getLearningPatternAnalytics = async (res: NextApiResponse, dateRange: { st
   );
 };
 
-const getOperationalMetrics = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getOperationalMetrics = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // System health metrics
@@ -607,7 +643,10 @@ const getOperationalMetrics = async (res: NextApiResponse, dateRange: { start: D
   );
 };
 
-const getPlatformHealthMetrics = async (res: NextApiResponse, dateRange: { start: Date; end: Date }) => {
+const getPlatformHealthMetrics = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
   const { start, end } = dateRange;
 
   // Database health

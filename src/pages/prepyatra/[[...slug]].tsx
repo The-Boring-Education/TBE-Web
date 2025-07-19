@@ -68,7 +68,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   // Base PrepYatra URL
   const prepYatraBaseUrl =
-    envConfig.PREPYATRA_APP_URL || 'https://prepyatra.netlify.app';
+    envConfig.PREPYATRA_APP_URL || 'https://prepyatra-tbe.netlify.app/';
 
   // Construct target URL
   const targetUrl = path ? `${prepYatraBaseUrl}/${path}` : prepYatraBaseUrl;

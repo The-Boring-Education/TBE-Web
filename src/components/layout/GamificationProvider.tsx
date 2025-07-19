@@ -27,8 +27,11 @@ interface GamificationProviderProps {
   children: ReactNode;
 }
 
-export const GamificationProvider = ({ children }: GamificationProviderProps) => {
-  const [celebrationData, setCelebrationData] = useState<CelebrationData | null>(null);
+export const GamificationProvider = ({
+  children,
+}: GamificationProviderProps) => {
+  const [celebrationData, setCelebrationData] =
+    useState<CelebrationData | null>(null);
   const [toastData, setToastData] = useState<ToastData | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showToastState, setShowToastState] = useState(false);
@@ -61,7 +64,7 @@ export const GamificationProvider = ({ children }: GamificationProviderProps) =>
   return (
     <GamificationContext.Provider value={contextValue}>
       {children}
-      
+
       {/* Global Celebration Animation */}
       <CelebrationAnimation
         isActive={showCelebration}
@@ -69,7 +72,7 @@ export const GamificationProvider = ({ children }: GamificationProviderProps) =>
         intensity={celebrationData?.intensity || 'medium'}
         onComplete={handleCelebrationComplete}
       />
-      
+
       {/* Global Gamification Toast */}
       <GamificationToast
         isVisible={showToastState}
@@ -87,7 +90,9 @@ export const GamificationProvider = ({ children }: GamificationProviderProps) =>
 export const useGamificationContext = () => {
   const context = useContext(GamificationContext);
   if (!context) {
-    throw new Error('useGamificationContext must be used within a GamificationProvider');
+    throw new Error(
+      'useGamificationContext must be used within a GamificationProvider'
+    );
   }
   return context;
 };

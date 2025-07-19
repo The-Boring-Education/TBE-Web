@@ -21,7 +21,7 @@ const nextConfig = {
   },
 
   // SVGR
-  webpack(config) {
+  webpack(config, { isServer, isEdgeRuntime }) {
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
@@ -36,6 +36,52 @@ const nextConfig = {
       ],
     });
 
+    // Add comprehensive fallbacks for browser APIs that OpenTelemetry expects
+    if (isServer || isEdgeRuntime) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        performance: false,
+        'performance-now': false,
+        perf_hooks: false,
+        timers: false,
+        util: false,
+        buffer: false,
+        process: false,
+        events: false,
+        stream: false,
+        crypto: false,
+        url: false,
+        querystring: false,
+        path: false,
+        fs: false,
+        os: false,
+        http: false,
+        https: false,
+        zlib: false,
+        assert: false,
+        constants: false,
+        domain: false,
+        punycode: false,
+        string_decoder: false,
+        tty: false,
+        vm: false,
+        worker_threads: false,
+        child_process: false,
+        cluster: false,
+        dgram: false,
+        dns: false,
+        net: false,
+        readline: false,
+        repl: false,
+        tls: false,
+        v8: false,
+        inspector: false,
+        trace_events: false,
+        async_hooks: false,
+        module: false,
+      };
+    }
+
     return config;
   },
   async redirects() {
@@ -49,14 +95,10 @@ const nextConfig = {
   },
 };
 
-// Injected content via Sentry wizard below
-
+// Sentry configuration
 const sentryWebpackPluginOptions = {
-  // Additional config options for the Sentry Webpack plugin. Keep in mind that
-  // the following options are set automatically, and overriding them is not
-  // recommended:
-  //   release, url, authToken, configFile, stripPrefix,
-  //   urlPrefix, include, ignore
+  // For all available options, see:
+  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
   org: 'the-boring-education',
   project: 'tbe-webapp',
@@ -65,7 +107,25 @@ const sentryWebpackPluginOptions = {
   silent: !process.env.CI,
 
   // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options.
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+
+  // Upload a larger set of source maps for prettier stack traces (increases build time)
+  widenClientFileUpload: true,
+
+  // Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
+  // This can increase your server load as well as your hosting bill.
+  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
+  // side errors will fail.
+  // tunnelRoute: "/monitoring",
+
+  // Automatically tree-shake Sentry logger statements to reduce bundle size
+  disableLogger: true,
+
+  // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
+  // See the following for more information:
+  // https://docs.sentry.io/product/crons/
+  // https://vercel.com/docs/cron-jobs
+  automaticVercelMonitors: true,
 };
 
 module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);

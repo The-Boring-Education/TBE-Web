@@ -707,14 +707,15 @@ const checkUserCourseEnrollment = async (
   }
 };
 
-const getPYSubscriptionFeaturesByType = (subscriptionType: string): string[] => {
-  const baseFeatures = SUBSCRIPTION_FEATURES.filter(feature => 
-    !['ColdEmailAutomation', 'LinkedInAutomation'].includes(feature)
+const getPYSubscriptionFeaturesByType = (
+  subscriptionType: string
+): string[] => {
+  const baseFeatures = SUBSCRIPTION_FEATURES.filter(
+    (feature) =>
+      !['ColdEmailAutomation', 'LinkedInAutomation'].includes(feature)
   );
 
-  return subscriptionType === 'Lifetime' 
-    ? SUBSCRIPTION_FEATURES
-    : baseFeatures;
+  return subscriptionType === 'Lifetime' ? SUBSCRIPTION_FEATURES : baseFeatures;
 };
 
 export {
@@ -740,6 +741,7 @@ export {
   generateSitemap,
   getDiscountPercentage,
   getLocalStorageItem,
+  getPYSubscriptionFeaturesByType,
   getRedirectUrl,
   getSelectedCourseChapterMeta,
   getSelectedProjectChapterMeta,
@@ -758,5 +760,4 @@ export {
   setLocalStorageItem,
   validateWebhookEvent,
   verifyWebhookSignature,
-  getPYSubscriptionFeaturesByType,
 };

@@ -15,7 +15,13 @@ import {
   Text,
 } from '@/components';
 import { routes } from '@/constant';
-import { useAnalytics, useApi, useGamifiedAction, usePaymentStatus, useUser } from '@/hooks';
+import {
+  useAnalytics,
+  useApi,
+  useGamifiedAction,
+  usePaymentStatus,
+  useUser,
+} from '@/hooks';
 import type { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
 
@@ -58,7 +64,7 @@ const SheetPage = ({
     // Show feedback popup if all questions are completed
     const allCompleted =
       questions.length > 0 && questions.every((q) => q.isCompleted);
-    
+
     if (allCompleted && !showFeedback) {
       // Trigger sheet completion celebration
       gamifiedAction.triggerGamifiedAction({
@@ -69,7 +75,7 @@ const SheetPage = ({
           label: 'Interview Sheet Completed',
         },
         celebrationType: 'achievement',
-        customMessage: 'Interview sheet completed! You\'re ready!',
+        customMessage: "Interview sheet completed! You're ready!",
         metadata: {
           sheetId: sheet._id,
           sheetName: sheet.name,
@@ -77,7 +83,7 @@ const SheetPage = ({
         },
       });
     }
-    
+
     setShowFeedback(allCompleted);
   }, [currentQuestionId, questions]);
 
@@ -202,6 +208,7 @@ const SheetPage = ({
           isEnrolled={sheet.isEnrolled}
           name={sheet.name ?? ''}
           isPremium={sheet.isPremium}
+          isPurchased={!!isPurchased} // Ensure boolean
         />
       </Section>
       <Section className='md:p-2 p-2'>

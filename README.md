@@ -27,10 +27,19 @@ npm install
 
 ### 3. Set Up Environment Variables
 
-You will need to create a .env.local file to configure the environment:
+You will need to create a `.env.local` file to configure the environment:
 
-Copy the .env.example file to .env.local.
-Update the values in the .env.local file with your MongoDB connection string and other relevant configuration.
+```bash
+# Create .env.local file
+touch .env.local
+```
+
+Add environment variables to your `.env.local` file as needed:
+
+```bash
+# Add environment variables here as needed
+# NEXT_PUBLIC_API_URL=http://localhost:3000
+```
 
 ### 4. Start the Development Server
 
@@ -66,6 +75,7 @@ Feel free to add more tests; any file that matches `*.test.{js,ts,tsx}` will be 
 ### Mocking patterns
 
 #### Component / Module
+
 ```ts
 import { render } from '@testing-library/react';
 
@@ -81,6 +91,7 @@ jest.mock('@/utils/api', () => ({
 ```
 
 #### API mocking with MSW
+
 ```ts
 // tests/msw/handlers.ts
 import { rest } from 'msw';
@@ -90,6 +101,7 @@ export const handlers = [
   }),
 ];
 ```
+
 The server is auto-started in `jest.setup.js` making network calls deterministic.
 
 ### Advanced Patterns
@@ -98,7 +110,9 @@ The server is auto-started in `jest.setup.js` making network calls deterministic
 2. **Mocking child components** – Use `jest.mock('@/components', () => ({ ... }))` to isolate the unit under test (see `Navbar.test.tsx`).
 3. **Using MSW in component tests** – Component fetches data:
    ```ts
-   rest.get('/api/v1/posts', (_req, res, ctx) => res(ctx.json([{ id: 1, title: 'Demo' }])))
+   rest.get('/api/v1/posts', (_req, res, ctx) =>
+     res(ctx.json([{ id: 1, title: 'Demo' }]))
+   );
    ```
    Push local handler inside test via `server.use()` to override default behaviour.
 4. **Playwright fixtures** – Add file `e2e/fixtures.ts` exporting custom fixtures for signed-in state, reducing boilerplate across specs.

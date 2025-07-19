@@ -33,6 +33,11 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       goal,
       targetCompanies,
       preferredCategories,
+      experienceLevel,
+      workDomain,
+      linkedInUrl,
+      githubUrl,
+      leetCodeUrl,
     }: PrepYatraOnboardingPayload = req.body;
 
     if (!userId || !name || !username || !goal) {
@@ -43,6 +48,8 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
         })
       );
     }
+
+    console.log(req.body);
 
     const userResult = await getPYUserByIdFromDB(userId);
     if (userResult.error || !userResult.data) {
@@ -56,17 +63,19 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
     const existingUser = userResult.data;
 
     if (existingUser.prepYatra?.pyOnboarded) {
-      const updateResult = await updatePYUserByIdInDB(
-        userId,
-        {
-          name,
-          userName: username,
-          'prepYatra.goal': goal,
-          'prepYatra.targetCompanies': targetCompanies,
-          'prepYatra.preferences.interviewCategories': preferredCategories,
-          'prepYatra.preferences.focusAreas': targetCompanies,
-        }
-      );
+      const updateResult = await updatePYUserByIdInDB(userId, {
+        name,
+        userName: username,
+        linkedInUrl,
+        githubUrl,
+        leetCodeUrl,
+        'prepYatra.goal': goal,
+        'prepYatra.targetCompanies': targetCompanies,
+        'prepYatra.preferences.interviewCategories': preferredCategories,
+        'prepYatra.preferences.focusAreas': targetCompanies,
+        'prepYatra.experienceLevel': experienceLevel,
+        'prepYatra.workDomain': workDomain,
+      });
       return res.status(apiStatusCodes.OKAY).json(
         sendAPIResponse({
           status: true,
@@ -78,18 +87,20 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const updateResult = await updatePYUserByIdInDB(
-      userId,
-      {
-        name,
-        userName: username,
-        'prepYatra.pyOnboarded': true,
-        'prepYatra.goal': goal,
-        'prepYatra.targetCompanies': targetCompanies,
-        'prepYatra.preferences.interviewCategories': preferredCategories,
-        'prepYatra.preferences.focusAreas': targetCompanies,
-      }
-    );
+    const updateResult = await updatePYUserByIdInDB(userId, {
+      name,
+      userName: username,
+      linkedInUrl,
+      githubUrl,
+      leetCodeUrl,
+      'prepYatra.pyOnboarded': true,
+      'prepYatra.goal': goal,
+      'prepYatra.targetCompanies': targetCompanies,
+      'prepYatra.preferences.interviewCategories': preferredCategories,
+      'prepYatra.preferences.focusAreas': targetCompanies,
+      'prepYatra.experienceLevel': experienceLevel,
+      'prepYatra.workDomain': workDomain,
+    });
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,

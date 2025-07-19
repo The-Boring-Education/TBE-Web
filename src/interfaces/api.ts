@@ -226,7 +226,6 @@ export interface AddOnboardingPayloadProps {
 export interface AddPrepYatraOnboardingPayloadProps {
   userId: string;
   linkedInUrl: string;
-  workExperience: number;
   workDomain: WorkDomainType;
 }
 export interface CourseEnrollmentRequestProps {
@@ -451,7 +450,10 @@ export interface PrepYatraOnboardingPayload {
   name: string;
   username: string;
   experienceLevel: string;
+  workDomain: WorkDomainType;
   linkedInUrl?: string;
+  githubUrl?: string;
+  leetCodeUrl?: string;
   goal: GoalType;
   targetCompanies: CompanyType[];
   preferredCategories: InterviewCategoryType[];
