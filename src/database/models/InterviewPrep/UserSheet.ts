@@ -9,6 +9,10 @@ const UserQuestionSchema = new Schema<UserSheetQuestionModel>(
       type: Schema.Types.ObjectId,
       required: [true, 'Question ID is required'],
     },
+    isStarred: {
+      type: Boolean,
+      default: false,
+    },
     isCompleted: {
       type: Boolean,
       default: false,

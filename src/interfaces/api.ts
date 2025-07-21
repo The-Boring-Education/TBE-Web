@@ -265,6 +265,7 @@ export interface ExtendedCourseChapterModel extends CourseChapterModel {
 export interface ExtendedInterviewSheetQuestionModel
   extends InterviewSheetQuestionModel {
   isCompleted: boolean; // Add `isCompleted` flag
+  isStarred?: boolean;
 }
 
 export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
@@ -498,4 +499,11 @@ export interface AddPrepLogToDBPayloadProps {
   title: string;
   description: string;
   timeSpent: number;
+}
+
+export interface MarkQuestionStarredRequestProps {
+  userId: string;
+  sheetId: string;
+  questionId: string;
+  isStarred: boolean;
 }

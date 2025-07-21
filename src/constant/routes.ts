@@ -134,6 +134,7 @@ const routes = {
     notification: '/notification',
     unskilled: '/unskilled',
     unskilledEvaluation: '/unskilled/evaluation',
+    markSheetQuestionAsStarred: '/user/interview-prep/starred',
   },
 };
 
