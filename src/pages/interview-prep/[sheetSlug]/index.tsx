@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { FaLock } from 'react-icons/fa';
+import { FaLock, FaStar } from 'react-icons/fa';
 
 import {
   Button,
@@ -13,6 +13,7 @@ import {
   SEO,
   SheetHeroContainer,
   Text,
+  StarButton,
 } from '@/components';
 import { routes } from '@/constant';
 import {
@@ -21,6 +22,7 @@ import {
   useGamifiedAction,
   usePaymentStatus,
   useUser,
+  useQuestionStarred,
 } from '@/hooks';
 import type { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
@@ -37,6 +39,10 @@ const SheetPage = ({
   const [isQuestionCompleted, setIsQuestionCompleted] = useState(
     questions.find((question) => question._id.toString() === currentQuestionId)
       ?.isCompleted
+  );
+  const [isQuestionStarred, setIsQuestionStarred] = useState(
+    questions.find((question) => question._id.toString() === currentQuestionId)
+      ?.isStarred
   );
   const [showFeedback, setShowFeedback] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -55,6 +61,8 @@ const SheetPage = ({
       (question) => question._id.toString() === currentQuestionId
     );
     setIsQuestionCompleted(currentQuestion?.isCompleted);
+    setIsQuestionStarred(currentQuestion?.isStarred);
+    setIsStarred(currentQuestion?.isStarred || false);
 
     if (currentQuestion) {
       const updatedMeta = `${currentQuestion.question}\n\n${currentQuestion.answer}`;
@@ -114,6 +122,19 @@ const SheetPage = ({
       paymentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   };
+
+    const {
+    isStarred,
+    isLoading: isStarLoading,
+    toggleStar,
+    setIsStarred,
+  } = useQuestionStarred({
+    userId: user?.id || '',
+    sheetId: sheet._id?.toString() || '',
+    questionId: currentQuestionId || '',
+    initialIsStarred:
+      questions.find((q) => q._id.toString() === currentQuestionId)?.isStarred || false,
+  });
 
   const toggleCompletion = async () => {
     setIsLoading(true);
@@ -234,22 +255,26 @@ const SheetPage = ({
 
             <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
               {questions?.map(
-                ({ _id, title, question, answer, isCompleted, frequency }) => {
+                ({ _id, title, question, answer, isCompleted, frequency, isStarred }) => {
                   const questionId = _id?.toString();
 
                   return (
-                    <QuestionLink
-                      key={questionId}
-                      currentQuestionId={currentQuestionId}
-                      frequency={frequency}
-                      handleQuestionClick={handleQuestionClick}
-                      href={`${slug}?sheetId=${sheet._id}&questionId=${questionId}`}
-                      isCompleted={isCompleted}
-                      question={`${question}\n\n${answer}`}
-                      questionId={questionId}
-                      title={title}
-                      isLocked={isLocked}
-                    />
+                    <div key={questionId} className="flex items-center w-full">
+                      <QuestionLink
+                        currentQuestionId={currentQuestionId}
+                        frequency={frequency}
+                        handleQuestionClick={handleQuestionClick}
+                        href={`${slug}?sheetId=${sheet._id}&questionId=${questionId}`}
+                        isCompleted={isCompleted}
+                        question={`${question}\n\n${answer}`}
+                        questionId={questionId}
+                        title={title}
+                        isLocked={isLocked}
+                      />
+                      {isStarred && (
+                        <FaStar className="ml-1 text-yellow-400" style={{ fontSize: '0.9em' }} title="Starred" />
+                      )}
+                    </div>
                   );
                 }
               )}
@@ -322,6 +347,15 @@ const SheetPage = ({
                       onClick={toggleCompletion}
                     />
                   ),
+                 currentQuestionId && (
+                   <StarButton
+                     key='star'
+                     isStarred={isStarred}
+                     onToggle={toggleStar}
+                     isLoading={isStarLoading}
+                     className="mt-2 ml-2"
+                   />
+                 ),
                 ]}
                 mdxSource={sheetMeta}
               />

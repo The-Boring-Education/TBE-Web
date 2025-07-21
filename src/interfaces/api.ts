@@ -265,6 +265,7 @@ export interface ExtendedCourseChapterModel extends CourseChapterModel {
 export interface ExtendedInterviewSheetQuestionModel
   extends InterviewSheetQuestionModel {
   isCompleted: boolean; // Add `isCompleted` flag
+  isStarred?: boolean;
 }
 
 export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {

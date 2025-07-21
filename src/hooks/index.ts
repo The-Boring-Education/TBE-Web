@@ -16,6 +16,7 @@ import useScrollPosition from './useScrollPosition';
 import useSkillPlaylist from './useSkillPlaylist';
 import useUser from './useUser';
 import useUsername from './useUsername';
+import useQuestionStarred from './useQuestionStarred';
 
 export {
   useAnalytics,
@@ -36,4 +37,5 @@ export {
   useSkillPlaylist,
   useUser,
   useUsername,
+  useQuestionStarred,
 };

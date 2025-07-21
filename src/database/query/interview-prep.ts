@@ -306,13 +306,13 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
     }
 
     const mappedQuestions = userSheet.sheet.questions.map((question) => {
-      const isCompleted = userSheet.questions.find(
+      const userQuestion = userSheet.questions.find(
         (uc) => uc.questionId.toString() === question._id.toString()
-      )?.isCompleted;
-
+      );
       return {
         ...question.toObject(),
-        isCompleted,
+        isCompleted: userQuestion?.isCompleted,
+        isStarred: userQuestion?.isStarred,
       };
     });
 

@@ -759,3 +759,11 @@ export interface RepositoryTabBarProps {
     language: string;
   }) => void;
 }
+
+export interface StarButtonProps {
+  isStarred: boolean;
+  onToggle: () => void;
+  isLoading?: boolean;
+  className?: string;
+  label?: string;
+}
