@@ -499,3 +499,10 @@ export interface AddPrepLogToDBPayloadProps {
   description: string;
   timeSpent: number;
 }
+
+export interface MarkQuestionStarredRequestProps {
+  userId: string;
+  sheetId: string;
+  questionId: string;
+  isStarred: boolean;
+}

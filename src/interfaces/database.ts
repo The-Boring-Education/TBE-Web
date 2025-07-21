@@ -155,6 +155,7 @@ export interface UserSheetModel extends Document {
 export interface UserSheetQuestionModel {
   questionId: typeof Schema.Types.ObjectId;
   isCompleted?: boolean;
+  isStarred?: boolean;
 }
 
 export interface CourseChapterModel {
