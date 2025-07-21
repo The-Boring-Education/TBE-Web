@@ -1,5 +1,4 @@
 import { modelSelectParams } from '@/constant';
-const mongoose = require('mongoose');
 import { InterviewSheet, updateUserPointsInDB, UserSheet } from '@/database';
 import type {
   AddInterviewQuestionRequestPayloadProps,
@@ -231,9 +230,8 @@ const markQuestionCompletedByUser = async (
   isCompleted: boolean
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const qid = toObjectId(questionId);
     const updatedSheet = await UserSheet.findOneAndUpdate(
-      { userId, sheetId, 'questions.questionId': qid },
+      { userId, sheetId, 'questions.questionId': questionId },
       { $set: { 'questions.$.isCompleted': isCompleted } },
       { new: true }
     );
@@ -246,44 +244,6 @@ const markQuestionCompletedByUser = async (
   } catch (error) {
     return { error: 'Failed to mark question as completed' };
   }
-};
-
-const markQuestionStarredByUser = async (
-  userId: string,
-  sheetId: string,
-  questionId: string,
-  isStarred: boolean
-): Promise<DatabaseQueryResponseType> => {
-  try {
-    const qid = toObjectId(questionId);
-
-    const updatedSheet = await UserSheet.findOneAndUpdate(
-      { userId, sheetId, 'questions.questionId': qid },
-      { $set: { 'questions.$.isStarred': isStarred } },
-      { new: true }
-    );
-
-    if (!updatedSheet) {
-      return { error: 'User or question not found' };
-    }
-    return { data: updatedSheet };
-  } catch (error) {
-    return { error: 'Failed to mark question as starred' };
-  }
-};
-
-const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
-  try {
-    const userSheet = await UserSheet.findOne({ userId, sheetId });
-    if (!userSheet) {
-      return { data: [], error: 'UserSheet not found' };
-    }
-    const starredQuestions = userSheet.questions.filter(q => q.isStarred === true);
-    return { data: starredQuestions };
-  } catch (error) {
-    return { error: 'Failed to get starred questions' };
-  }
-  
 };
 
 const getAllQuestionsByUser = async (userId: string) => {
@@ -370,6 +330,47 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
   } catch (error) {
     return { error: 'Failed to fetch courses with chapter status' };
   }
+};
+
+const markQuestionStarredByUser = async (
+  userId: string,
+  sheetId: string,
+  questionId: string,
+  isStarred: boolean
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const qid = toObjectId(questionId);
+
+    const updatedSheet = await UserSheet.findOneAndUpdate(
+      { userId, sheetId, 'questions.questionId': qid },
+      { $set: { 'questions.$.isStarred': isStarred } },
+      { new: true }
+    );
+
+    if (!updatedSheet) {
+      return { error: 'User or question not found' };
+    }
+
+    return { data: updatedSheet };
+  } catch (error) {
+    return { error: 'Failed to mark question as starred' };
+  }
+};
+
+const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
+  try {
+    const userSheet = await UserSheet.findOne({ userId, sheetId });
+
+    if (!userSheet) {
+      return { data: [], error: 'UserSheet not found' };
+    }
+    
+    const starredQuestions = userSheet.questions.filter(q => q.isStarred === true);
+    return { data: starredQuestions };
+  } catch (error) {
+    return { error: 'Failed to get starred questions' };
+  }
+  
 };
 
 export {
