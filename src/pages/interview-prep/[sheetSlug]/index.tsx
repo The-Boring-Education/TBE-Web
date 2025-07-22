@@ -108,6 +108,20 @@ const SheetPage = ({
   const isLocked =
     sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
 
+  const {
+    isStarred,
+    isLoading: isStarLoading,
+    toggleStar,
+    setIsStarred,
+  } = useQuestionStarred({
+    userId: user?.id || '',
+    sheetId: sheet._id?.toString() || '',
+    questionId: currentQuestionId || '',
+    initialIsStarred:
+      questions.find((q) => q._id.toString() === currentQuestionId)
+        ?.isStarred || false,
+  });
+
   if (!sheet) return null;
 
   const handleQuestionClick = (questionMeta: string) => {
@@ -122,19 +136,6 @@ const SheetPage = ({
       paymentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   };
-
-    const {
-    isStarred,
-    isLoading: isStarLoading,
-    toggleStar,
-    setIsStarred,
-  } = useQuestionStarred({
-    userId: user?.id || '',
-    sheetId: sheet._id?.toString() || '',
-    questionId: currentQuestionId || '',
-    initialIsStarred:
-      questions.find((q) => q._id.toString() === currentQuestionId)?.isStarred || false,
-  });
 
   const toggleCompletion = async () => {
     setIsLoading(true);
@@ -255,11 +256,19 @@ const SheetPage = ({
 
             <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
               {questions?.map(
-                ({ _id, title, question, answer, isCompleted, frequency, isStarred }) => {
+                ({
+                  _id,
+                  title,
+                  question,
+                  answer,
+                  isCompleted,
+                  frequency,
+                  isStarred,
+                }) => {
                   const questionId = _id?.toString();
 
                   return (
-                    <div key={questionId} className="flex items-center w-full">
+                    <div key={questionId} className='flex items-center w-full'>
                       <QuestionLink
                         currentQuestionId={currentQuestionId}
                         frequency={frequency}
@@ -272,7 +281,11 @@ const SheetPage = ({
                         isLocked={isLocked}
                       />
                       {isStarred && (
-                        <FaStar className="ml-1 text-yellow-400" style={{ fontSize: '0.9em' }} title="Starred" />
+                        <FaStar
+                          className='ml-1 text-yellow-400'
+                          style={{ fontSize: '0.9em' }}
+                          title='Starred'
+                        />
                       )}
                     </div>
                   );
@@ -347,15 +360,15 @@ const SheetPage = ({
                       onClick={toggleCompletion}
                     />
                   ),
-                 currentQuestionId && (
-                   <StarButton
-                     key='star'
-                     isStarred={isStarred}
-                     onToggle={toggleStar}
-                     isLoading={isStarLoading}
-                     className="mt-2 ml-2"
-                   />
-                 ),
+                  currentQuestionId && (
+                    <StarButton
+                      key='star'
+                      isStarred={isStarred}
+                      onToggle={toggleStar}
+                      isLoading={isStarLoading}
+                      className='mt-2 ml-2'
+                    />
+                  ),
                 ]}
                 mdxSource={sheetMeta}
               />

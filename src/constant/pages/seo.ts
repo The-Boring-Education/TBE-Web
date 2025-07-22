@@ -126,6 +126,24 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'Database, Interview Preparation, Coding Sheet, Database Interview Questions, Tech Interviews, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
+    [`${routes.allInterviewSheets.pythonInterviewSheet}`]: {
+      title: `${INTERVIEW_PREP_SHEETS[4].title} | The Boring Education`,
+      siteName: INTERVIEW_PREP_SHEETS[4].title,
+      description: `${INTERVIEW_PREP_SHEETS[4].content} - Prepare for Python interviews with our comprehensive interview sheet.`,
+      url: routes.allInterviewSheets.pythonInterviewSheet,
+      keywords:
+        'Python, Interview Preparation, Coding Sheet, Python Interview Questions, Tech Interviews, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
+    [`${routes.allInterviewSheets.javaInterviewSheet}`]: {
+      title: `${INTERVIEW_PREP_SHEETS[5].title} | The Boring Education`,
+      siteName: INTERVIEW_PREP_SHEETS[5].title,
+      description: `${INTERVIEW_PREP_SHEETS[5].content} - Prepare for Java interviews with our comprehensive interview sheet.`,
+      url: routes.allInterviewSheets.javaInterviewSheet,
+      keywords:
+        'Java, Interview Preparation, Coding Sheet, Java Interview Questions, Tech Interviews, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      ...seoCommonMeta,
+    },
     [`${routes.contactUs}`]: {
       title: 'Contact | The Boring Education',
       siteName: 'The Boring Education',

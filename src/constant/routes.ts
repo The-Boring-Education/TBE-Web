@@ -31,6 +31,8 @@ const routes = {
     reactInterviewSheet: '/interview-prep/react-interview-questions',
     nodeInterviewSheet: '/interview-prep/node-interview-questions',
     dbInterviewSheet: '/interview-prep/db-interview-questions',
+    pythonInterviewSheet: '/interview-prep/python-interview-questions',
+    javaInterviewSheet: '/interview-prep/java-interview-questions',
   },
   // PrepYatra
   prepYatra: '/prepyatra',
