@@ -41,6 +41,8 @@ export interface UserModel {
   linkedInUrl?: string;
   githubUrl?: string;
   leetCodeUrl?: string;
+  userSkills?: string[];
+  userSkillsLastUpdated?: Date;
   prepYatra?: {
     pyOnboarded?: boolean;
     experienceLevel?: string;

@@ -111,6 +111,14 @@ const UserSchema: Schema<UserModel> = new Schema(
     leetCodeUrl: {
       type: String,
     },
+    userSkills: {
+      type: [String],
+      default: [],
+    },
+    userSkillsLastUpdated: {
+      type: Date,
+      default: null,
+    },
     prepYatra: PrepYatraSchema,
   },
   { timestamps: true }
