@@ -45,6 +45,27 @@ const authOptions = {
           user.id = existingUser._id.toString();
         }
 
+        (async () => {
+          console.log(envConfig.CHITTHI_BASE_URL)
+          try {
+            await fetch(`${envConfig.CHITTHI_BASE_URL}/send-email`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Breevo-API-Key': envConfig.BREEVO_API_KEY!,
+              },
+              body: JSON.stringify({
+                from_email: envConfig.SENDER_EMAIL,
+                to_email: email,
+                subject: 'Welcome Back!',
+                html_content: `<h1>Welcome back, ${name}!</h1><p>Thanks for logging in again.</p>`,
+              }),
+            });
+          } catch (err) {
+            console.error('Failed to send login email:', err);
+          }
+        })();
+
         return true; // Allow the sign in
       } catch (error) {
         console.error('Error signing in:', error);

@@ -17,6 +17,9 @@ const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID as string;
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN as string;
 const PREPYATRA_APP_URL = process.env.PREPYATRA_APP_URL as string;
 const ONBOARDING_APP_URL = process.env.NEXT_PUBLIC_ONBOARDING_APP_URL as string;
+const CHITTHI_BASE_URL = process.env.CHITTHI_BASE_URL as string;
+const BREEVO_API_KEY = process.env.BREEVO_API_KEY as string;
+const SENDER_EMAIL = process.env.SENDER_EMAIL as string;
 
 const envConfig = {
   NODE_ENV,
@@ -37,6 +40,9 @@ const envConfig = {
   SENTRY_DSN,
   PREPYATRA_APP_URL,
   ONBOARDING_APP_URL,
-};
+  CHITTHI_BASE_URL,
+  BREEVO_API_KEY,
+  SENDER_EMAIL,
+  };
 
 export { envConfig };
