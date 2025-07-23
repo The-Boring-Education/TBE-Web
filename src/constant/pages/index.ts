@@ -395,6 +395,16 @@ const INTERVIEW_PREP_SHEETS: PrimaryCardWithCTAProps[] = [
     active: true,
     ctaText: 'View Sheet',
   },
+  {
+    id: 'dsa-interview-sheet',
+    image: `${STATIC_FILE_PATH.svg}/dsa-interview-questions.svg`,
+    imageAltText: 'Prepare for DSA interviews with essential questions.',
+    title: 'DSA Interview Sheet',
+    content: 'Prepare for DSA interviews with essential questions.',
+    href: routes.allInterviewSheets.dsaInterviewSheet,
+    active: true,
+    ctaText: 'View Sheet',
+  },
 ];
 
 const USP: PrimaryCardProps[] = [

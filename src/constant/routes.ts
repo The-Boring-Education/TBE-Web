@@ -33,6 +33,7 @@ const routes = {
     dbInterviewSheet: '/interview-prep/db-interview-questions',
     pythonInterviewSheet: '/interview-prep/python-interview-questions',
     javaInterviewSheet: '/interview-prep/java-interview-questions',
+    dsaInterviewSheet: '/interview-prep/dsa-interview-questions',
   },
   // PrepYatra
   prepYatra: '/prepyatra',
