@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { enrollInASheet, getEnrolledSheetFromDB } from '@/database';
+import { enrollInASheet, getEnrolledSheetFromDB, getUserByIdFromDB, getSheetByIdFromDB } from '@/database';
 import type { SheetEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
+import { sendInterviewPrepEnrollmentEmail } from '@/utils/email';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -67,6 +68,31 @@ const handleSheetEnrollment = async (
           message: 'Failed while enrolling in sheet',
         })
       );
+
+    // Send interview prep enrollment email (non-blocking)
+    try {
+      const [userResult, sheetResult] = await Promise.all([
+        getUserByIdFromDB(userId),
+        getSheetByIdFromDB(sheetId)
+      ]);
+
+      if (userResult.data && sheetResult.data) {
+        sendInterviewPrepEnrollmentEmail({
+          userEmail: userResult.data.email,
+          userName: userResult.data.name,
+          userId: userId,
+          sheetName: sheetResult.data.title,
+          sheetDescription: sheetResult.data.description,
+          sheetId: sheetId,
+        }).catch(error => {
+          console.error('Failed to send interview prep enrollment email:', error);
+          // Don't fail the enrollment if email fails
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching user/sheet data for email:', error);
+      // Don't fail the enrollment if email data fetch fails
+    }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
