@@ -51,7 +51,6 @@ const SheetPage = ({
 
   const [isLoading, setIsLoading] = useState(false);
 
-
   // Calculate total and completed questions for the progress bar
   const totalQuestions = questions.length;
   const completedQuestions = questions.filter(

@@ -87,8 +87,6 @@ const getAllInterviewSheetsFromDB =
       return { error };
     }
   };
-  
-  
 
 const getInterviewSheetByIDFromDB = async (
   id: string

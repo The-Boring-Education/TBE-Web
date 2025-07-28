@@ -83,8 +83,6 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { slug } = req.query;
     const {userId} = req.query;
-
-
     if (slug) {
       const { data: sheet, error } = await getInterviewSheetBySlugFromDB(
         slug as string, userId as string
@@ -137,6 +135,5 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 };
-
 
 export default handler;

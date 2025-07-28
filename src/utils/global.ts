@@ -321,9 +321,6 @@ const getCoursePageProps = async (context: any) => {
   };
 };
 
-
-
-
 const getWebinarLandingPageProps = async ({ resolvedUrl }: any) => {
   let slug = routes.home;
 
