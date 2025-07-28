@@ -113,6 +113,9 @@ const UserPointsActionType = [
   'PREPLOG_STREAK_7',
   'PREPLOG_STREAK_15',
   'PREPLOG_STREAK_30',
+  'COMPLETE_QUIZ',
+  'QUIZ_PERFECT_SCORE',
+  'QUIZ_STREAK',
 ] as const;
 
 export type UserPointsActionType = (typeof UserPointsActionType)[number];

@@ -9,7 +9,8 @@
     "lint": "eslint src --fix",
     "format": "prettier -w .",
     "typecheck": "tsc --noEmit --incremental false",
-    "release": "npm run lint && npm run format && npm run typecheck && npm run build"
+    "release": "npm run lint && npm run format && npm run typecheck && npm run build",
+    "seed:quiz": "npx tsx scripts/seed-quiz-data.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

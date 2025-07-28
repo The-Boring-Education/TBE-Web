@@ -19,6 +19,8 @@ import User from './models/User';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
+import Quiz from './models/Quiz/Quiz';
+import QuizAttempt from './models/Quiz/QuizAttempt';
 
 export {
   Certificate,
@@ -34,6 +36,8 @@ export {
   PrepLog,
   PrepYatraSubscription,
   Project,
+  Quiz,
+  QuizAttempt,
   Recruiter,
   User,
   UserCourse,
