@@ -257,9 +257,9 @@ const getCoursePageProps = async (context: any) => {
   };
 };
 
-const getSheetPageProps = async (context: any) => {
+ const getSheetPageProps = async (context: any) => {
   const { req, query } = context;
-  const { sheetSlug, sheetId, questionId } = query;
+  const { sheetSlug } = query;
 
   let slug = routes.home;
 
@@ -269,16 +269,14 @@ const getSheetPageProps = async (context: any) => {
 
   const seoMeta = getSEOMeta(slug);
 
-  if (sheetId && seoMeta) {
+  if (sheetSlug && seoMeta) {
     try {
       const user = await isUserAuthenticated(req);
 
-      // Fetch sheet data with user ID if available
       const { status, data } = await fetchAPIData(
-        routes.api.sheetByIdWithUser(sheetId as string, user?.id)
+        routes.api.sheetByIdWithUser(sheetSlug as string, user?.id)
       );
 
-      // Redirect if the sheet data is not found
       if (!status) {
         return {
           redirect: {
@@ -289,31 +287,25 @@ const getSheetPageProps = async (context: any) => {
       }
 
       const sheet: BaseInterviewSheetResponseProps = data;
-      let { meta } = sheet;
+
+      let meta = sheet.meta ?? '';
       let currentQuestionId = '';
 
-      // If a specific question is selected, get its metadata
-      if (questionId) {
-        currentQuestionId = questionId as string;
-
-        const selectedQuestionMeta = getSelectedSheetQuestionMeta(
-          sheet,
-          currentQuestionId
-        );
-
+      const firstQuestion = sheet.questions?.[0];
+      if (firstQuestion && firstQuestion._id) {
+        currentQuestionId = firstQuestion._id.toString();
+        const selectedQuestionMeta = getSelectedSheetQuestionMeta(sheet, currentQuestionId);
         if (selectedQuestionMeta) meta = selectedQuestionMeta;
       }
-
-      const isEnrolled = sheet.isEnrolled;
 
       return {
         props: {
           slug,
           seoMeta,
           sheet,
-          meta,
+          meta: meta ?? '',
           currentQuestionId,
-          isEnrolled,
+          isEnrolled: sheet.isEnrolled ?? null,
         },
       };
     } catch (error) {
@@ -328,6 +320,9 @@ const getSheetPageProps = async (context: any) => {
     props: { slug },
   };
 };
+
+
+
 
 const getWebinarLandingPageProps = async ({ resolvedUrl }: any) => {
   let slug = routes.home;
