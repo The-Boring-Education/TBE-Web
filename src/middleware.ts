@@ -126,6 +126,7 @@ export const config = {
     '/api/v1/course/:courseId*',
     '/api/v1/shiksha/:path*',
     '/api/v1/admin/:path*',
+    '/api/v1/interview-prep/:path*',
   ],
 };
 

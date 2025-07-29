@@ -8,6 +8,7 @@ import type {
   SheetEnrollmentRequestProps,
   UpdateInterviewSheetRequestPayloadProps,
 } from '@/interfaces';
+import { toObjectId } from '@/utils';
 
 const addAInterviewSheetToDB = async (
   sheetPayload: AddInterviewSheetRequestPayloadProps
@@ -38,21 +39,54 @@ const getAllInterviewSheetsFromDB =
     }
   };
 
-const getInterviewSheetBySlugFromDB = async (
-  slug: string
-): Promise<DatabaseQueryResponseType> => {
-  try {
-    const sheet = await InterviewSheet.findOne({ slug });
-
-    if (!sheet) {
-      return { error: 'Sheet not found' };
+  const getInterviewSheetBySlugFromDB = async (
+    slug: string,
+    userId?: string
+  ): Promise<DatabaseQueryResponseType> => {
+    try {
+      const sheet = await InterviewSheet.findOne({ slug });
+  
+      if (!sheet) {
+        return { error: 'Sheet not found' };
+      }
+  
+      let isEnrolled = false;
+      let mappedQuestions = sheet.questions.map((q) => q.toObject());
+  
+      if (userId) {
+        const userSheet = await UserSheet.findOne({
+          userId,
+          sheetId: sheet._id,
+        });
+  
+        isEnrolled = !!userSheet;
+  
+        if (userSheet) {
+          mappedQuestions = sheet.questions.map((question) => {
+            const userQuestion = userSheet.questions.find(
+              (uq) => uq.questionId.toString() === question._id.toString()
+            );
+  
+            return {
+              ...question.toObject(),
+              isCompleted: userQuestion?.isCompleted || false,
+              isStarred: userQuestion?.isStarred || false,
+            };
+          });
+        }
+      }
+  
+      return {
+        data: {
+          ...sheet.toObject(),
+          isEnrolled,
+          questions: mappedQuestions,
+        },
+      };
+    } catch (error) {
+      return { error };
     }
-
-    return { data: sheet };
-  } catch (error) {
-    return { error };
-  }
-};
+  };
 
 const getInterviewSheetByIDFromDB = async (
   id: string
@@ -305,13 +339,13 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
     }
 
     const mappedQuestions = userSheet.sheet.questions.map((question) => {
-      const isCompleted = userSheet.questions.find(
+      const userQuestion = userSheet.questions.find(
         (uc) => uc.questionId.toString() === question._id.toString()
-      )?.isCompleted;
-
+      );
       return {
         ...question.toObject(),
-        isCompleted,
+        isCompleted: userQuestion?.isCompleted,
+        isStarred: userQuestion?.isStarred,
       };
     });
 
@@ -331,6 +365,47 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
   }
 };
 
+const markQuestionStarredByUser = async (
+  userId: string,
+  sheetId: string,
+  questionId: string,
+  isStarred: boolean
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const qid = toObjectId(questionId);
+
+    const updatedSheet = await UserSheet.findOneAndUpdate(
+      { userId, sheetId, 'questions.questionId': qid },
+      { $set: { 'questions.$.isStarred': isStarred } },
+      { new: true }
+    );
+
+    if (!updatedSheet) {
+      return { error: 'User or question not found' };
+    }
+
+    return { data: updatedSheet };
+  } catch (error) {
+    return { error: 'Failed to mark question as starred' };
+  }
+};
+
+const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
+  try {
+    const userSheet = await UserSheet.findOne({ userId, sheetId });
+
+    if (!userSheet) {
+      return { data: [], error: 'UserSheet not found' };
+    }
+    
+    const starredQuestions = userSheet.questions.filter(q => q.isStarred === true);
+    return { data: starredQuestions };
+  } catch (error) {
+    return { error: 'Failed to get starred questions' };
+  }
+  
+};
+
 export {
   addAInterviewSheetToDB,
   addQuestionToInterviewSheetInDB,
@@ -346,4 +421,6 @@ export {
   markQuestionCompletedByUser,
   updateInterviewQuestionInDB,
   updateInterviewSheetInDB,
+  markQuestionStarredByUser,
+  getStarredQuestionsFromDB,
 };

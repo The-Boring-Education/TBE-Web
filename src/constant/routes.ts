@@ -31,6 +31,9 @@ const routes = {
     reactInterviewSheet: '/interview-prep/react-interview-questions',
     nodeInterviewSheet: '/interview-prep/node-interview-questions',
     dbInterviewSheet: '/interview-prep/db-interview-questions',
+    pythonInterviewSheet: '/interview-prep/python-interview-questions',
+    javaInterviewSheet: '/interview-prep/java-interview-questions',
+    dsaInterviewSheet: '/interview-prep/dsa-interview-questions',
   },
   // PrepYatra
   prepYatra: '/prepyatra',
@@ -101,13 +104,13 @@ const routes = {
       }
       return url;
     },
-    sheetByIdWithUser: (sheet: string, userId?: string) => {
-      let url = `/interview-prep/${sheet}`;
-      if (userId) {
-        url += `?userId=${userId}`;
-      }
+    sheetByIdWithUser: (slug: string, userId?: string, sheetId?: string) => {
+      let url = `/interview-prep?slug=${slug}`;
+      if (userId) url += `&userId=${userId}`;
+      if (sheetId) url += `&sheetId=${sheetId}`;  
       return url;
     },
+
     projectById: (project: string) => `/projects/${project}`,
     projectByIdWithUser: (project: string, userId?: string) => {
       let url = `/projects/${project}`;
@@ -134,6 +137,7 @@ const routes = {
     notification: '/notification',
     unskilled: '/unskilled',
     unskilledEvaluation: '/unskilled/evaluation',
+    markSheetQuestionAsStarred: '/user/interview-prep/starred',
   },
 };
 
