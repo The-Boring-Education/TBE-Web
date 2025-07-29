@@ -1,19 +1,21 @@
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import mongoose from 'mongoose';
+import path from 'path';
+
 import Job from '@/database/models/Unskilled/Jobs';
+
 import {
-  JOB_SKILL_NORMALIZER,
-  JOB_LOCATION_NORMALIZER,
-  JOB_DOMAIN_NORMALIZER,
-  JOB_DOMAIN_MAPPER,
   envConfig,
+  JOB_DOMAIN_MAPPER,
+  JOB_DOMAIN_NORMALIZER,
+  JOB_LOCATION_NORMALIZER,
+  JOB_SKILL_NORMALIZER,
 } from '../src/constant';
 import {
   cleanJobSkillsData,
   normalizeAPIPayload,
 } from '../src/utils/functions';
-import fs from 'fs';
-import path from 'path';
 
 dotenv.config({ path: '.env.local' });
 
@@ -31,9 +33,7 @@ class JobNormalizer {
     }
   }
 
-  deduplicateArray = (arr: string[]): string[] => {
-    return Array.from(new Set(arr.map((item) => item.trim())));
-  };
+  deduplicateArray = (arr: string[]): string[] => Array.from(new Set(arr.map((item) => item.trim())));
 
   async normalizeJobs() {
     await this.connectDB();
@@ -95,7 +95,7 @@ class JobNormalizer {
       const updates = jobs.map(async (job) => {
         const jobSkills = job.skills.map((s) => s.toLowerCase().trim());
         const currentRoles = job.role || [];
-        let newRoles: Set<string> = new Set(currentRoles);
+        const newRoles: Set<string> = new Set(currentRoles);
 
         for (const mapping of JOB_DOMAIN_MAPPER) {
           const matched = mapping.skills.some((skill) =>

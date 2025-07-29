@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+
 import { envConfig } from '../src/constant';
 import Quiz from '../src/database/models/Quiz/Quiz';
 

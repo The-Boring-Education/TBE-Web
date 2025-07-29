@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+
 import {
   FlexContainer,
   Image,
