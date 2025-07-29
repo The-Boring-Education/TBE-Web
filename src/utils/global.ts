@@ -263,6 +263,8 @@ const getSheetPageProps = async (context: any) => {
 
   let slug = routes.home;
 
+  console.log(slug)
+
   if (sheetSlug) {
     slug = `/interview-prep/${sheetSlug}`;
   }
@@ -301,6 +303,7 @@ const getSheetPageProps = async (context: any) => {
         if (selectedQuestionMeta) meta = selectedQuestionMeta;
       }
 
+
       return {
         props: {
           slug,
@@ -323,6 +326,7 @@ const getSheetPageProps = async (context: any) => {
     props: { slug },
   };
 };
+
 
 const getWebinarLandingPageProps = async ({ resolvedUrl }: any) => {
   let slug = routes.home;
