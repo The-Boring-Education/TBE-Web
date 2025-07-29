@@ -399,7 +399,7 @@ export interface QuestionLinkProps {
   isCompleted: boolean;
   isLocked?: boolean;
   currentQuestionId: string;
-  handleQuestionClick: (question: string) => void;
+  handleQuestionClick: (question: string, questionId: string) => void;
   frequency: QuestionFrequencyType;
 }
 

@@ -39,21 +39,54 @@ const getAllInterviewSheetsFromDB =
     }
   };
 
-const getInterviewSheetBySlugFromDB = async (
-  slug: string
-): Promise<DatabaseQueryResponseType> => {
-  try {
-    const sheet = await InterviewSheet.findOne({ slug });
-
-    if (!sheet) {
-      return { error: 'Sheet not found' };
+  const getInterviewSheetBySlugFromDB = async (
+    slug: string,
+    userId?: string
+  ): Promise<DatabaseQueryResponseType> => {
+    try {
+      const sheet = await InterviewSheet.findOne({ slug });
+  
+      if (!sheet) {
+        return { error: 'Sheet not found' };
+      }
+  
+      let isEnrolled = false;
+      let mappedQuestions = sheet.questions.map((q) => q.toObject());
+  
+      if (userId) {
+        const userSheet = await UserSheet.findOne({
+          userId,
+          sheetId: sheet._id,
+        });
+  
+        isEnrolled = !!userSheet;
+  
+        if (userSheet) {
+          mappedQuestions = sheet.questions.map((question) => {
+            const userQuestion = userSheet.questions.find(
+              (uq) => uq.questionId.toString() === question._id.toString()
+            );
+  
+            return {
+              ...question.toObject(),
+              isCompleted: userQuestion?.isCompleted || false,
+              isStarred: userQuestion?.isStarred || false,
+            };
+          });
+        }
+      }
+  
+      return {
+        data: {
+          ...sheet.toObject(),
+          isEnrolled,
+          questions: mappedQuestions,
+        },
+      };
+    } catch (error) {
+      return { error };
     }
-
-    return { data: sheet };
-  } catch (error) {
-    return { error };
-  }
-};
+  };
 
 const getInterviewSheetByIDFromDB = async (
   id: string
