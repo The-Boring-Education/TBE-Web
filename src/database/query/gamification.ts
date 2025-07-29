@@ -154,8 +154,8 @@ const getLeaderboardFromDB = async (
 
 export {
   addGamificationDocInDB,
+  getLeaderboardFromDB,
   getUserPointsFromDB,
   handleGamificationPoints,
   updateUserPointsInDB,
-  getLeaderboardFromDB,
 };

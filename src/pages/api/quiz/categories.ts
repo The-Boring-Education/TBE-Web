@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { getQuizCategories } from '@/database/query/quiz';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';

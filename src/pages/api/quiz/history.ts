@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]';
+
 import { getUserQuizHistory, getUserQuizStats } from '@/database/query/quiz';
 import { connectDB } from '@/middlewares';
+
+import { authOptions } from '../auth/[...nextauth]';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {

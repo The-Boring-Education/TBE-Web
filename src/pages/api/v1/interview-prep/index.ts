@@ -1,4 +1,3 @@
-import type mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
@@ -9,7 +8,6 @@ import {
 } from '@/database';
 import type {
   AddInterviewSheetRequestPayloadProps,
-  BaseInterviewSheetResponseProps,
 } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

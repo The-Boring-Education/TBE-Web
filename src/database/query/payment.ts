@@ -75,7 +75,7 @@ const checkPaymentStatusFromDB = async (
   try {
 
     const activeSubscription = await PrepYatraSubscription.findOne({
-      userId: userId,
+      userId,
       isActive: true,
     });
 

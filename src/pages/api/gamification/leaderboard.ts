@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { getLeaderboardFromDB } from '@/database/query/gamification';
 import { connectDB } from '@/middlewares';
 

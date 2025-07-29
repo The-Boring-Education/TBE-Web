@@ -1,4 +1,5 @@
 import { type Model, model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS } from '@/constant';
 
 export interface QuizQuestionModel {
@@ -33,7 +34,7 @@ const QuizQuestionSchema = new Schema<QuizQuestionModel>(
       required: [true, 'Options are required'],
       validate: [
         {
-          validator: function (v: string[]) {
+          validator (v: string[]) {
             return v.length >= 2;
           },
           message: 'At least 2 options are required',

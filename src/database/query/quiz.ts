@@ -1,5 +1,4 @@
 import { Quiz, QuizAttempt } from '@/database';
-import type { QuizModel } from '@/database/models/Quiz/Quiz';
 import type { QuizAttemptModel } from '@/database/models/Quiz/QuizAttempt';
 import type { DatabaseQueryResponseType } from '@/interfaces';
 

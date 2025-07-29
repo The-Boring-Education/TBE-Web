@@ -2,9 +2,14 @@ import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { Logo, LoginWithGoogleButton, Section } from '@/components';
-import { Image, Text } from '@/components';
-import { FlexContainer } from '@/components';
+import {
+  FlexContainer,
+  Image,
+  LoginWithGoogleButton,
+  Logo,
+  Section,
+  Text,
+} from '@/components';
 
 const Login = () => {
   const { status } = useSession();

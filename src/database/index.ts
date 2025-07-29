@@ -11,6 +11,8 @@ import Recruiter from './models/PrepYatra/Recruiters';
 import PrepYatraSubscription from './models/PrepYatra/Subscription';
 import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
+import Quiz from './models/Quiz/Quiz';
+import QuizAttempt from './models/Quiz/QuizAttempt';
 import Course from './models/Shiksha/Course';
 import UserCourse from './models/Shiksha/UserCourse';
 import JobAggregate from './models/Unskilled/JobAggregate';
@@ -19,8 +21,6 @@ import User from './models/User';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
-import Quiz from './models/Quiz/Quiz';
-import QuizAttempt from './models/Quiz/QuizAttempt';
 
 export {
   Certificate,

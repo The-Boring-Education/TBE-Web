@@ -12,8 +12,8 @@ import {
   Section,
   SEO,
   SheetHeroContainer,
-  Text,
   StarButton,
+  Text,
 } from '@/components';
 import { routes } from '@/constant';
 import {
@@ -21,8 +21,8 @@ import {
   useApi,
   useGamifiedAction,
   usePaymentStatus,
-  useUser,
   useQuestionStarred,
+  useUser,
 } from '@/hooks';
 import type { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
@@ -200,7 +200,7 @@ const SheetPage = ({
           (q) => q._id.toString() === currentQuestionId
         );
   
-        let next = questions
+        const next = questions
           .slice(currentIndex + 1)
           .find((q) => !q.isCompleted) ||
           questions.find((q) => !q.isCompleted); // Loop to beginning if none left

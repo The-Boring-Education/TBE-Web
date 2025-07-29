@@ -1,15 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]';
+
+import type { QuizAttemptAnswer } from '@/database/models/Quiz/QuizAttempt';
+import { updateUserPointsInDB } from '@/database/query/gamification';
 import {
   getQuizByCategoryId,
-  saveQuizAttempt,
   getUserQuizStreak,
   hasUserAttemptedQuizToday,
+  saveQuizAttempt,
 } from '@/database/query/quiz';
-import { updateUserPointsInDB } from '@/database/query/gamification';
 import { connectDB } from '@/middlewares';
-import type { QuizAttemptAnswer } from '@/database/models/Quiz/QuizAttempt';
+
+import { authOptions } from '../auth/[...nextauth]';
 
 interface SubmitQuizBody {
   categoryId: string;

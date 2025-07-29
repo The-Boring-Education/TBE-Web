@@ -432,6 +432,7 @@ export {
   SEO,
   SessionDetailsSection,
   SheetHeroContainer,
+  StarButton,
   StartRatingCard,
   StepNavigation,
   StepOccupation,
@@ -451,5 +452,4 @@ export {
   WeAlreadyTaughtAt,
   WebibarCard,
   WebinarHeroContainer,
-  StarButton,
 };

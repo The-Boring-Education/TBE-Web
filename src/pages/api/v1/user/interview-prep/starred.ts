@@ -1,9 +1,10 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+
 import { apiStatusCodes } from "@/constant";
 import { getStarredQuestionsFromDB, markQuestionStarredByUser } from "@/database/query/interview-prep";
-import { MarkQuestionStarredRequestProps } from "@/interfaces";
+import type { MarkQuestionStarredRequestProps } from "@/interfaces";
 import { connectDB } from "@/middlewares";
 import { sendAPIResponse } from "@/utils";
-import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async(req:NextApiRequest, res:NextApiResponse) => {
     try {

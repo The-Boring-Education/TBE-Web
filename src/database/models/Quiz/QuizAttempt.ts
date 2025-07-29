@@ -1,4 +1,5 @@
 import { type Model, model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS } from '@/constant';
 
 export interface QuizAttemptAnswer {
