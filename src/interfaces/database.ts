@@ -41,6 +41,8 @@ export interface UserModel {
   linkedInUrl?: string;
   githubUrl?: string;
   leetCodeUrl?: string;
+  userSkills?: string[];
+  userSkillsLastUpdated?: Date;
   prepYatra?: {
     pyOnboarded?: boolean;
     experienceLevel?: string;
@@ -155,6 +157,7 @@ export interface UserSheetModel extends Document {
 export interface UserSheetQuestionModel {
   questionId: typeof Schema.Types.ObjectId;
   isCompleted?: boolean;
+  isStarred?: boolean;
 }
 
 export interface CourseChapterModel {

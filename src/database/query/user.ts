@@ -116,6 +116,26 @@ const onboardPrepYatraUserTODB = async (
   return { data: user };
 };
 
+const updateUserSkillsInDB = async (
+  userId: string,
+  userSkills: string[]
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $addToSet: { userSkills: { $each: userSkills } },
+        userSkillsLastUpdated: new Date(),
+      },
+      { new: true }
+    );
+    if (!user) return { error: 'User does not exist' };
+    return { data: user };
+  } catch (error) {
+    return { error: 'Failed to update user skills' };
+  }
+};
+
 export {
   createUserInDB,
   getUserByEmailFromDB,
@@ -123,4 +143,5 @@ export {
   getUserByUserNameFromDB,
   onboardPrepYatraUserTODB,
   onboardUserToDB,
+  updateUserSkillsInDB,
 };

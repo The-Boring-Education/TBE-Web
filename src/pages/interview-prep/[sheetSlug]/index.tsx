@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { FaLock } from 'react-icons/fa';
+import { FaLock, FaStar } from 'react-icons/fa';
 
 import {
   Button,
@@ -12,6 +12,7 @@ import {
   Section,
   SEO,
   SheetHeroContainer,
+  StarButton,
   Text,
 } from '@/components';
 import { routes } from '@/constant';
@@ -20,23 +21,24 @@ import {
   useApi,
   useGamifiedAction,
   usePaymentStatus,
+  useQuestionStarred,
   useUser,
 } from '@/hooks';
 import type { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
 
-const SheetPage = ({
-  sheet,
-  meta,
-  slug,
-  seoMeta,
-  currentQuestionId,
-}: SheetPageProps) => {
+const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const [sheetMeta, setSheetMeta] = useState<string>(meta || '');
   const [questions, setQuestions] = useState(sheet.questions || []);
+  const firstQuestionId = questions?.[0]?._id?.toString() || '';
+  const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
   const [isQuestionCompleted, setIsQuestionCompleted] = useState(
     questions.find((question) => question._id.toString() === currentQuestionId)
       ?.isCompleted
+  );
+  const [isQuestionStarred, setIsQuestionStarred] = useState(
+    questions.find((question) => question._id.toString() === currentQuestionId)
+      ?.isStarred
   );
   const [showFeedback, setShowFeedback] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -55,6 +57,8 @@ const SheetPage = ({
       (question) => question._id.toString() === currentQuestionId
     );
     setIsQuestionCompleted(currentQuestion?.isCompleted);
+    setIsQuestionStarred(currentQuestion?.isStarred);
+    setIsStarred(currentQuestion?.isStarred || false);
 
     if (currentQuestion) {
       const updatedMeta = `${currentQuestion.question}\n\n${currentQuestion.answer}`;
@@ -87,7 +91,7 @@ const SheetPage = ({
     setShowFeedback(allCompleted);
   }, [currentQuestionId, questions]);
 
-  const { makeRequest } = useApi(`interview-prep/${sheet}`);
+  const { makeRequest } = useApi(`interview-prep/${slug}`);
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
@@ -100,11 +104,26 @@ const SheetPage = ({
   const isLocked =
     sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
 
+  const {
+    isStarred,
+    isLoading: isStarLoading,
+    toggleStar,
+    setIsStarred,
+  } = useQuestionStarred({
+    userId: user?.id || '',
+    sheetId: sheet._id?.toString() || '',
+    questionId: currentQuestionId || '',
+    initialIsStarred:
+      questions.find((q) => q._id.toString() === currentQuestionId)
+        ?.isStarred || false,
+  });
+
   if (!sheet) return null;
 
-  const handleQuestionClick = (questionMeta: string) => {
+  const handleQuestionClick = (questionMeta: string, questionId: string) => {
     if (!isLocked) {
       setSheetMeta(questionMeta);
+      setCurrentQuestionId(questionId);
     }
   };
 
@@ -131,7 +150,7 @@ const SheetPage = ({
         },
       });
 
-      // Use gamified action for question completion
+      // Fire gamified action on completion
       if (newCompletionStatus) {
         await gamifiedAction.triggerGamifiedAction({
           gamificationAction: 'COMPLETE_QUESTION',
@@ -160,38 +179,32 @@ const SheetPage = ({
         });
       }
 
-      setQuestions((prevQuestions) =>
-        prevQuestions.map((question) =>
-          question._id.toString() === currentQuestionId
-            ? { ...question, isCompleted: newCompletionStatus }
-            : question
-        )
+      // Update local state (mark question completed)
+      const updatedQuestions = questions.map((question) =>
+        question._id.toString() === currentQuestionId
+          ? { ...question, isCompleted: newCompletionStatus }
+          : question
       );
 
+      setQuestions(updatedQuestions);
+      setIsQuestionCompleted(newCompletionStatus);
+
+      // Move to next question if completed
       if (newCompletionStatus) {
         const currentIndex = questions.findIndex(
-          (question) => question._id.toString() === currentQuestionId
+          (q) => q._id.toString() === currentQuestionId
         );
 
-        let nextIncompleteQuestion = questions
-          .slice(currentIndex + 1)
-          .find((question) => !question.isCompleted);
+        const next =
+          questions.slice(currentIndex + 1).find((q) => !q.isCompleted) ||
+          questions.find((q) => !q.isCompleted); // Loop to beginning if none left
 
-        if (!nextIncompleteQuestion) {
-          nextIncompleteQuestion = questions
-            .slice(0, currentIndex)
-            .find((question) => !question.isCompleted);
-        }
-
-        if (nextIncompleteQuestion) {
-          const questionId = nextIncompleteQuestion._id.toString();
-          setTimeout(() => {
-            window.location.href = `${slug}?sheetId=${sheet._id}&questionId=${questionId}`;
-          }, 1500);
+        if (next) {
+          const questionId = next._id.toString();
+          setCurrentQuestionId(questionId);
+          setSheetMeta(`${next.question}\n\n${next.answer}`);
         }
       }
-
-      setIsQuestionCompleted(newCompletionStatus);
     } catch (error) {
       console.error('Error toggling question completion:', error);
     } finally {
@@ -232,24 +245,46 @@ const SheetPage = ({
               )}
             </div>
 
+            {/* Sidebar: use button for question navigation, not <Link> */}
             <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
               {questions?.map(
-                ({ _id, title, question, answer, isCompleted, frequency }) => {
+                ({
+                  _id,
+                  title,
+                  question,
+                  answer,
+                  isCompleted,
+                  frequency,
+                  isStarred,
+                }) => {
                   const questionId = _id?.toString();
 
                   return (
-                    <QuestionLink
-                      key={questionId}
-                      currentQuestionId={currentQuestionId}
-                      frequency={frequency}
-                      handleQuestionClick={handleQuestionClick}
-                      href={`${slug}?sheetId=${sheet._id}&questionId=${questionId}`}
-                      isCompleted={isCompleted}
-                      question={`${question}\n\n${answer}`}
-                      questionId={questionId}
-                      title={title}
-                      isLocked={isLocked}
-                    />
+                    <div key={questionId} className='flex items-center w-full'>
+                      <QuestionLink
+                        currentQuestionId={currentQuestionId}
+                        frequency={frequency}
+                        handleQuestionClick={() =>
+                          handleQuestionClick(
+                            `${question}\n\n${answer}`,
+                            questionId
+                          )
+                        }
+                        href={`${slug}`}
+                        isCompleted={isCompleted}
+                        question={`${question}\n\n${answer}`}
+                        questionId={questionId}
+                        title={title}
+                        isLocked={isLocked}
+                      />
+                      {isStarred && (
+                        <FaStar
+                          className='ml-1 text-yellow-400'
+                          style={{ fontSize: '0.9em' }}
+                          title='Starred'
+                        />
+                      )}
+                    </div>
                   );
                 }
               )}
@@ -320,6 +355,15 @@ const SheetPage = ({
                           : 'PRIMARY'
                       }
                       onClick={toggleCompletion}
+                    />
+                  ),
+                  currentQuestionId && (
+                    <StarButton
+                      key='star'
+                      isStarred={isStarred}
+                      onToggle={toggleStar}
+                      isLoading={isStarLoading}
+                      className='mt-2 ml-2'
                     />
                   ),
                 ]}
