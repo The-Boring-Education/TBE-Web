@@ -6,9 +6,7 @@ import {
   getAllInterviewSheetsFromDB,
   getInterviewSheetBySlugFromDB,
 } from '@/database';
-import type {
-  AddInterviewSheetRequestPayloadProps,
-} from '@/interfaces';
+import type { AddInterviewSheetRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 
@@ -80,10 +78,11 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
 const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { slug } = req.query;
-    const {userId} = req.query;
+    const { userId } = req.query;
     if (slug) {
       const { data: sheet, error } = await getInterviewSheetBySlugFromDB(
-        slug as string, userId as string
+        slug as string,
+        userId as string
       );
 
       if (error || !sheet) {

@@ -257,7 +257,7 @@ const getCoursePageProps = async (context: any) => {
   };
 };
 
- const getSheetPageProps = async (context: any) => {
+const getSheetPageProps = async (context: any) => {
   const { req, query } = context;
   const { sheetSlug } = query;
 
@@ -294,7 +294,10 @@ const getCoursePageProps = async (context: any) => {
       const firstQuestion = sheet.questions?.[0];
       if (firstQuestion && firstQuestion._id) {
         currentQuestionId = firstQuestion._id.toString();
-        const selectedQuestionMeta = getSelectedSheetQuestionMeta(sheet, currentQuestionId);
+        const selectedQuestionMeta = getSelectedSheetQuestionMeta(
+          sheet,
+          currentQuestionId
+        );
         if (selectedQuestionMeta) meta = selectedQuestionMeta;
       }
 

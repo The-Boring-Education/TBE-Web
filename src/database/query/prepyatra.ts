@@ -512,48 +512,49 @@ const recalculateUserPrepLogStats = async (
   }
 };
 
-const getAllUsersWithLogsFromDB = async (): Promise<DatabaseQueryResponseType> => {
-  try {
-    // Fetch only PrepYatra onboarded users
-    const users = await User.find({ 'prepYatra.pyOnboarded': true })
-      .select('_id name email userName image prepYatra createdAt')
-      .sort({ createdAt: -1 })
-      .lean();
+const getAllUsersWithLogsFromDB =
+  async (): Promise<DatabaseQueryResponseType> => {
+    try {
+      // Fetch only PrepYatra onboarded users
+      const users = await User.find({ 'prepYatra.pyOnboarded': true })
+        .select('_id name email userName image prepYatra createdAt')
+        .sort({ createdAt: -1 })
+        .lean();
 
-    // Fetch all prep logs
-    const logs = await PrepLog.find().sort({ createdAt: -1 }).lean();
+      // Fetch all prep logs
+      const logs = await PrepLog.find().sort({ createdAt: -1 }).lean();
 
-    // Map userId to logs
-    const logsMap: Record<string, any[]> = {};
-    for (const log of logs) {
-      const uid = String(log.user);
-      if (!logsMap[uid]) logsMap[uid] = [];
-      logsMap[uid].push(log);
+      // Map userId to logs
+      const logsMap: Record<string, any[]> = {};
+      for (const log of logs) {
+        const uid = String(log.user);
+        if (!logsMap[uid]) logsMap[uid] = [];
+        logsMap[uid].push(log);
+      }
+
+      // Attach logs and stats to each user
+      const usersWithLogs = users.map((user) => ({
+        ...user,
+        logs: logsMap[user._id.toString()] || [],
+        totalLogs: logsMap[user._id.toString()]?.length || 0,
+        prepLogStats: user.prepYatra?.prepLog || {
+          currentStreak: 0,
+          longestStreak: 0,
+          lastLoggedDate: null,
+          totalLogs: 0,
+        },
+      }));
+
+      return {
+        data: {
+          users: usersWithLogs,
+          totalUsers: usersWithLogs.length,
+        },
+      };
+    } catch (error: any) {
+      return { error: error.message };
     }
-
-    // Attach logs and stats to each user
-    const usersWithLogs = users.map(user => ({
-      ...user,
-      logs: logsMap[user._id.toString()] || [],
-      totalLogs: logsMap[user._id.toString()]?.length || 0,
-      prepLogStats: user.prepYatra?.prepLog || {
-        currentStreak: 0,
-        longestStreak: 0,
-        lastLoggedDate: null,
-        totalLogs: 0,
-      },
-    }));
-
-    return {
-      data: {
-        users: usersWithLogs,
-        totalUsers: usersWithLogs.length,
-      },
-    };
-  } catch (error: any) {
-    return { error: error.message };
-  }
-};
+  };
 
 export {
   addPrepLogToDB,

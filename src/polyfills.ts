@@ -1,7 +1,7 @@
 // Comprehensive polyfill for performance object in Edge Runtime
 if (typeof global !== 'undefined' && !global.performance) {
   const now = () => Date.now();
-  
+
   global.performance = {
     now,
     mark: (name: string) => {

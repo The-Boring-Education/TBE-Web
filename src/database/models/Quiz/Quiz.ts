@@ -34,7 +34,7 @@ const QuizQuestionSchema = new Schema<QuizQuestionModel>(
       required: [true, 'Options are required'],
       validate: [
         {
-          validator (v: string[]) {
+          validator(v: string[]) {
             return v.length >= 2;
           },
           message: 'At least 2 options are required',
@@ -93,4 +93,4 @@ const QuizSchema = new Schema<QuizModel>(
 const Quiz: Model<QuizModel> =
   models?.Quiz || model<QuizModel>(DATABASE_MODELS.QUIZ, QuizSchema);
 
-export default Quiz; 
+export default Quiz;

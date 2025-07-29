@@ -73,7 +73,6 @@ const checkPaymentStatusFromDB = async (
   productId: string
 ): Promise<DatabaseQueryResponseType> => {
   try {
-
     const activeSubscription = await PrepYatraSubscription.findOne({
       userId,
       isActive: true,

@@ -62,7 +62,7 @@ const QuestionLink = ({
           },
         });
 
-        handleQuestionClick(question,questionId);
+        handleQuestionClick(question, questionId);
       }}
     >
       <div className='flex-shrink-0'>

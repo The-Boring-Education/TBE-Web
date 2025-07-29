@@ -33,7 +33,8 @@ class JobNormalizer {
     }
   }
 
-  deduplicateArray = (arr: string[]): string[] => Array.from(new Set(arr.map((item) => item.trim())));
+  deduplicateArray = (arr: string[]): string[] =>
+    Array.from(new Set(arr.map((item) => item.trim())));
 
   async normalizeJobs() {
     await this.connectDB();
