@@ -375,6 +375,36 @@ const INTERVIEW_PREP_SHEETS: PrimaryCardWithCTAProps[] = [
     active: true,
     ctaText: 'View Sheet',
   },
+  {
+    id: 'python-interview-sheet',
+    image: `${STATIC_FILE_PATH.svg}/python-interview-questions.svg`,
+    imageAltText: 'Prepare for Python interviews with essential questions.',
+    title: 'Python Interview Sheet',
+    content: 'Prepare for Python interviews with essential questions.',
+    href: routes.allInterviewSheets.pythonInterviewSheet,
+    active: true,
+    ctaText: 'View Sheet',
+  },
+  {
+    id: 'java-interview-sheet',
+    image: `${STATIC_FILE_PATH.svg}/java-interview-questions.svg`,
+    imageAltText: 'Prepare for Java interviews with essential questions.',
+    title: 'Java Interview Sheet',
+    content: 'Prepare for Java interviews with essential questions.',
+    href: routes.allInterviewSheets.javaInterviewSheet,
+    active: true,
+    ctaText: 'View Sheet',
+  },
+  {
+    id: 'dsa-interview-sheet',
+    image: `${STATIC_FILE_PATH.svg}/dsa-interview-questions.svg`,
+    imageAltText: 'Prepare for DSA interviews with essential questions.',
+    title: 'DSA Interview Sheet',
+    content: 'Prepare for DSA interviews with essential questions.',
+    href: routes.allInterviewSheets.dsaInterviewSheet,
+    active: true,
+    ctaText: 'View Sheet',
+  },
 ];
 
 const USP: PrimaryCardProps[] = [

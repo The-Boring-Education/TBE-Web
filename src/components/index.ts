@@ -328,6 +328,9 @@ const AdminPieChart = dynamic(() =>
     default: mod.AdminPieChart,
   }))
 );
+const StarButton = dynamic(
+  () => import('@/components/common/Buttons/StarButton')
+);
 
 export {
   AboutTBE,
@@ -429,6 +432,7 @@ export {
   SEO,
   SessionDetailsSection,
   SheetHeroContainer,
+  StarButton,
   StartRatingCard,
   StepNavigation,
   StepOccupation,

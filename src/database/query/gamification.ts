@@ -119,8 +119,42 @@ const handleGamificationPoints = async (
   }
 };
 
+const getLeaderboardFromDB = async (
+  limit = 10
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const leaderboard = await Gamification.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+      {
+        $project: {
+          userId: 1,
+          points: 1,
+          'user.name': 1,
+          'user.image': 1,
+          'user.email': 1,
+        },
+      },
+      { $sort: { points: -1 } },
+      { $limit: limit },
+    ]);
+
+    return { data: leaderboard };
+  } catch (error) {
+    return { error: 'Error fetching leaderboard' };
+  }
+};
+
 export {
   addGamificationDocInDB,
+  getLeaderboardFromDB,
   getUserPointsFromDB,
   handleGamificationPoints,
   updateUserPointsInDB,

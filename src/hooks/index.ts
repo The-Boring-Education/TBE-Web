@@ -10,6 +10,7 @@ import useMediaQuery from './useMediaQuery';
 import useNotifications from './useNotifications';
 import usePaymentStatus from './usePaymentStatus';
 import usePDFFile from './usePDFFile';
+import useQuestionStarred from './useQuestionStarred';
 import useResumeEvaluation from './useResumeEvaluation';
 import useScrollDirection from './useScrollDirection';
 import useScrollPosition from './useScrollPosition';
@@ -30,6 +31,7 @@ export {
   useNotifications,
   usePaymentStatus,
   usePDFFile,
+  useQuestionStarred,
   useResumeEvaluation,
   useScrollDirection,
   useScrollPosition,
