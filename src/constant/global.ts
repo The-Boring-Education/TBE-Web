@@ -350,6 +350,9 @@ const POINTS_RULES: Record<UserPointsActionType, number> = {
   PREPLOG_STREAK_7: 50,
   PREPLOG_STREAK_15: 100,
   PREPLOG_STREAK_30: 200,
+  COMPLETE_QUIZ: 30,
+  QUIZ_PERFECT_SCORE: 50,
+  QUIZ_STREAK: 20,
 };
 
 const USER_LEVELS: UserLevel[] = [

@@ -399,7 +399,7 @@ export interface QuestionLinkProps {
   isCompleted: boolean;
   isLocked?: boolean;
   currentQuestionId: string;
-  handleQuestionClick: (question: string) => void;
+  handleQuestionClick: (question: string, questionId: string) => void;
   frequency: QuestionFrequencyType;
 }
 
@@ -758,4 +758,12 @@ export interface RepositoryTabBarProps {
     description: string;
     language: string;
   }) => void;
+}
+
+export interface StarButtonProps {
+  isStarred: boolean;
+  onToggle: () => void;
+  isLoading?: boolean;
+  className?: string;
+  label?: string;
 }

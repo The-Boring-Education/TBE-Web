@@ -124,3 +124,10 @@ export interface usePaymentStatusProps {
 }
 
 export type NotificationItemProps = Partial<NotificationModel>;
+
+export interface useQuestionStarredProps {
+  userId: string;
+  sheetId: string;
+  questionId: string;
+  initialIsStarred: boolean;
+}

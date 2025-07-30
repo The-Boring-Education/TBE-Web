@@ -1,4 +1,3 @@
-import type mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
@@ -7,10 +6,7 @@ import {
   getAllInterviewSheetsFromDB,
   getInterviewSheetBySlugFromDB,
 } from '@/database';
-import type {
-  AddInterviewSheetRequestPayloadProps,
-  BaseInterviewSheetResponseProps,
-} from '@/interfaces';
+import type { AddInterviewSheetRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 
@@ -81,49 +77,56 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    let allInterviewSheetsResponse: BaseInterviewSheetResponseProps[] = [];
+    const { slug } = req.query;
+    const { userId } = req.query;
+    if (slug) {
+      const { data: sheet, error } = await getInterviewSheetBySlugFromDB(
+        slug as string,
+        userId as string
+      );
 
-    // Fetch all sheets
-    const { data: allInterviewSheets, error: allInterviewSheetsError } =
-      await getAllInterviewSheetsFromDB();
+      if (error || !sheet) {
+        return res.status(apiStatusCodes.NOT_FOUND).json(
+          sendAPIResponse({
+            status: false,
+            message: 'Sheet not found',
+            error,
+          })
+        );
+      }
 
-    if (allInterviewSheetsError || !allInterviewSheets) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      return res.status(apiStatusCodes.OKAY).json(
         sendAPIResponse({
-          status: false,
-          message: 'Failed while fetching sheets',
-          error: allInterviewSheetsError,
+          status: true,
+          data: sheet,
         })
       );
     }
 
-    // Create a map of all sheets by their ID
-    const sheetMap = new Map<string, BaseInterviewSheetResponseProps>(
-      allInterviewSheets.map(
-        (sheetDoc: mongoose.Document & BaseInterviewSheetResponseProps) => [
-          sheetDoc._id.toString(),
-          { ...sheetDoc.toObject() },
-        ]
-      )
-    );
+    // No slug? Return all sheets
+    const { data: allSheets, error } = await getAllInterviewSheetsFromDB();
 
-    // If the user is logged in, fetch enrolled sheets and mark them in the map
-    // TODO: Implement this feature
-
-    // Convert the map back to an array to prepare the final response
-    allInterviewSheetsResponse = Array.from(sheetMap.values());
+    if (error || !allSheets) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Failed while fetching sheets',
+          error,
+        })
+      );
+    }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        data: allInterviewSheetsResponse,
+        data: allSheets,
       })
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Failed while fetching sheets',
+        message: 'Unexpected error while fetching sheets',
         error,
       })
     );

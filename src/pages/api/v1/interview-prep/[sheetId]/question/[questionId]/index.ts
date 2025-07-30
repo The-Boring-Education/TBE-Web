@@ -87,7 +87,7 @@ const handleDeleteQuestion = async (
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: 'Failed while deleting chapter to section',
+          message: 'Failed while deleting question from sheet',
         })
       );
     }
@@ -99,7 +99,7 @@ const handleDeleteQuestion = async (
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Failed while deleting chapter to section',
+        message: 'Failed while deleting question from sheet',
       })
     );
   }

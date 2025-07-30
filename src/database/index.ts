@@ -11,6 +11,8 @@ import Recruiter from './models/PrepYatra/Recruiters';
 import PrepYatraSubscription from './models/PrepYatra/Subscription';
 import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
+import Quiz from './models/Quiz/Quiz';
+import QuizAttempt from './models/Quiz/QuizAttempt';
 import Course from './models/Shiksha/Course';
 import UserCourse from './models/Shiksha/UserCourse';
 import JobAggregate from './models/Unskilled/JobAggregate';
@@ -34,6 +36,8 @@ export {
   PrepLog,
   PrepYatraSubscription,
   Project,
+  Quiz,
+  QuizAttempt,
   Recruiter,
   User,
   UserCourse,

@@ -1,4 +1,4 @@
-import type { Model } from 'mongoose';
+import mongoose, { type Model } from 'mongoose';
 
 import type { DatabaseQueryResponseType } from '@/interfaces';
 
@@ -47,4 +47,12 @@ const getAllDocumentsFromModel = async (
   }
 };
 
-export { getAllDocumentsFromModel, getTotalCountFromModel };
+/**
+ * Utility to convert string or ObjectId to mongoose ObjectId
+ */
+const toObjectId = (id: string | mongoose.Types.ObjectId) => {
+  if (id instanceof mongoose.Types.ObjectId) return id;
+  return new mongoose.Types.ObjectId(id);
+};
+
+export { getAllDocumentsFromModel, getTotalCountFromModel, toObjectId };
