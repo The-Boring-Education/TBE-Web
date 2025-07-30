@@ -153,15 +153,6 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
         'DSA, Interview Preparation, Coding Sheet, DSA Interview Questions, Tech Interviews, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
       ...seoCommonMeta,
     },
-    [`${routes.allInterviewSheets.devopsInterviewSheet}`]: {
-      title: `${INTERVIEW_PREP_SHEETS[6].title} | The Boring Education`,
-      siteName: INTERVIEW_PREP_SHEETS[6].title,
-      description: `${INTERVIEW_PREP_SHEETS[6].content} - Prepare for DSA interviews with our comprehensive interview sheet.`,
-      url: routes.allInterviewSheets.devopsInterviewSheet,
-      keywords:
-        'DSA, Interview Preparation, Coding Sheet, DSA Interview Questions, Tech Interviews, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
-      ...seoCommonMeta,
-    },
     [`${routes.contactUs}`]: {
       title: 'Contact | The Boring Education',
       siteName: 'The Boring Education',
