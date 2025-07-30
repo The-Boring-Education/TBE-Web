@@ -12,10 +12,8 @@ import {
 import {
   createSubscriptionInDB,
   enrollInACourse,
-  enrollInASheet,
   getActiveSubscriptionByUserFromDB,
   getEnrolledCourseFromDB,
-  getEnrolledSheetFromDB,
   getPaymentByOrderIdFromDB,
   updatePaymentStatusToDB,
   updateUserSubscriptionStatusInDB,

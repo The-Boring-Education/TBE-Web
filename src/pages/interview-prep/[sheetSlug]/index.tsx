@@ -12,8 +12,8 @@ import {
   Section,
   SEO,
   SheetHeroContainer,
-  Text,
   StarButton,
+  Text,
 } from '@/components';
 import { routes } from '@/constant';
 import {
@@ -21,23 +21,18 @@ import {
   useApi,
   useGamifiedAction,
   usePaymentStatus,
-  useUser,
   useQuestionStarred,
+  useUser,
 } from '@/hooks';
 import type { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
 
-const SheetPage = ({
-  sheet,
-  meta,
-  slug,
-  seoMeta,
-}: SheetPageProps) => {
+const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const [sheetMeta, setSheetMeta] = useState<string>(meta || '');
   const [questions, setQuestions] = useState(sheet.questions || []);
   const firstQuestionId = questions?.[0]?._id?.toString() || '';
   const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
-    const [isQuestionCompleted, setIsQuestionCompleted] = useState(
+  const [isQuestionCompleted, setIsQuestionCompleted] = useState(
     questions.find((question) => question._id.toString() === currentQuestionId)
       ?.isCompleted
   );
@@ -131,7 +126,7 @@ const SheetPage = ({
       setCurrentQuestionId(questionId);
     }
   };
-  
+
   const handleShowPayment = () => {
     setShowPayment(true);
     setTimeout(() => {
@@ -143,7 +138,7 @@ const SheetPage = ({
     setIsLoading(true);
     try {
       const newCompletionStatus = !isQuestionCompleted;
-  
+
       await makeRequest({
         method: 'PATCH',
         url: routes.api.markSheetQuestionAsCompleted,
@@ -154,7 +149,7 @@ const SheetPage = ({
           isCompleted: newCompletionStatus,
         },
       });
-  
+
       // Fire gamified action on completion
       if (newCompletionStatus) {
         await gamifiedAction.triggerGamifiedAction({
@@ -183,28 +178,27 @@ const SheetPage = ({
           },
         });
       }
-  
+
       // Update local state (mark question completed)
       const updatedQuestions = questions.map((question) =>
         question._id.toString() === currentQuestionId
           ? { ...question, isCompleted: newCompletionStatus }
           : question
       );
-  
+
       setQuestions(updatedQuestions);
       setIsQuestionCompleted(newCompletionStatus);
-  
+
       // Move to next question if completed
       if (newCompletionStatus) {
         const currentIndex = questions.findIndex(
           (q) => q._id.toString() === currentQuestionId
         );
-  
-        let next = questions
-          .slice(currentIndex + 1)
-          .find((q) => !q.isCompleted) ||
+
+        const next =
+          questions.slice(currentIndex + 1).find((q) => !q.isCompleted) ||
           questions.find((q) => !q.isCompleted); // Loop to beginning if none left
-  
+
         if (next) {
           const questionId = next._id.toString();
           setCurrentQuestionId(questionId);
@@ -271,7 +265,10 @@ const SheetPage = ({
                         currentQuestionId={currentQuestionId}
                         frequency={frequency}
                         handleQuestionClick={() =>
-                          handleQuestionClick(`${question}\n\n${answer}`, questionId)
+                          handleQuestionClick(
+                            `${question}\n\n${answer}`,
+                            questionId
+                          )
                         }
                         href={`${slug}`}
                         isCompleted={isCompleted}

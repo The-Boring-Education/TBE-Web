@@ -26,7 +26,6 @@ import type {
   Video,
   WebhookEvent,
 } from '@/interfaces';
-import mongoose from 'mongoose';
 
 const fetchAPIData = async (url: string) => {
   const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
@@ -719,11 +718,6 @@ const getPYSubscriptionFeaturesByType = (
   return subscriptionType === 'Lifetime' ? SUBSCRIPTION_FEATURES : baseFeatures;
 };
 
-const toObjectId = (id: string | mongoose.Types.ObjectId) => {
-  if (id instanceof mongoose.Types.ObjectId) return id;
-  return new mongoose.Types.ObjectId(id);
-};
-
 export {
   type WebhookEvent,
   buildOrderPayload,
@@ -766,5 +760,4 @@ export {
   setLocalStorageItem,
   validateWebhookEvent,
   verifyWebhookSignature,
-  toObjectId,
 };

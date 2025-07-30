@@ -123,8 +123,10 @@ const updateUserSkillsInDB = async (
   try {
     const user = await User.findOneAndUpdate(
       { _id: userId },
-      { $addToSet: { userSkills: { $each: userSkills } },
-      userSkillsLastUpdated: new Date(),  },
+      {
+        $addToSet: { userSkills: { $each: userSkills } },
+        userSkillsLastUpdated: new Date(),
+      },
       { new: true }
     );
     if (!user) return { error: 'User does not exist' };

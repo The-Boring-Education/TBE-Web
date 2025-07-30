@@ -107,7 +107,7 @@ const routes = {
     sheetByIdWithUser: (slug: string, userId?: string, sheetId?: string) => {
       let url = `/interview-prep?slug=${slug}`;
       if (userId) url += `&userId=${userId}`;
-      if (sheetId) url += `&sheetId=${sheetId}`;  
+      if (sheetId) url += `&sheetId=${sheetId}`;
       return url;
     },
 

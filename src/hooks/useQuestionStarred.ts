@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useApi } from '@/hooks';
+
 import { routes } from '@/constant';
-import { useQuestionStarredProps } from '@/interfaces';
+import { useApi } from '@/hooks';
+import type { useQuestionStarredProps } from '@/interfaces';
 
 const useQuestionStarred = ({
   userId,
@@ -29,6 +30,7 @@ const useQuestionStarred = ({
       });
       if (result.status) setIsStarred(!isStarred);
     } catch (e) {
+      console.error(e);
     } finally {
       setIsLoading(false);
     }
