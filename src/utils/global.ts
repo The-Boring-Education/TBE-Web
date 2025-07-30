@@ -267,7 +267,7 @@ const getSheetPageProps = async (context: any) => {
     slug = `/interview-prep/${sheetSlug}`;
   }
 
-  const seoMeta = getSEOMeta(slug)??getSEOMeta(routes.interviewPrep);
+  const seoMeta = getSEOMeta(slug) ?? getSEOMeta(routes.interviewPrep);
 
   if (sheetSlug && seoMeta) {
     try {
