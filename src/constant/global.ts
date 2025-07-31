@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef } from 'react';
 
 import type {
   CohortDataProps,
+  LeaderboardType,
   MentorshipCardProps,
   PlatformUsageType,
   PortfolioTemplateProps,
@@ -433,6 +434,9 @@ const PAGE_REFRESH_TIMEOUT = {
 const isProductionEnv = envConfig.NODE_ENV === 'production';
 const isDevelopmentEnv = envConfig.NODE_ENV === 'development';
 
+const LEADERBOARD_TABS: LeaderboardType[] = ['DAILY', 'WEEKLY', 'MONTHLY'];
+
+
 export {
   apiStatusCodes,
   cohorts,
@@ -461,4 +465,5 @@ export {
   USER_ROLE_OPTIONS,
   USER_USAGE_OPTIONS,
   YOUFOCUS_SKILL_PLAYLISTS,
+  LEADERBOARD_TABS,
 };

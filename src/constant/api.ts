@@ -2602,6 +2602,12 @@ const planTypeMap = {
   lifetime: { type: 'Lifetime', duration: 999 },
 };
 
+enum LeaderboardEnum {
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+}
+
 export {
   ALLOWED_IPS,
   CERTIFICATE_TYPE,
@@ -2628,4 +2634,5 @@ export {
   USER_ROLE,
   WORK_DOMAIN,
   YOUTUBE_API_PATH,
+  LeaderboardEnum
 };

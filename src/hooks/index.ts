@@ -17,6 +17,7 @@ import useScrollPosition from './useScrollPosition';
 import useSkillPlaylist from './useSkillPlaylist';
 import useUser from './useUser';
 import useUsername from './useUsername';
+import useLeaderboard from './useLeaderboard';
 
 export {
   useAnalytics,
@@ -38,4 +39,5 @@ export {
   useSkillPlaylist,
   useUser,
   useUsername,
+  useLeaderboard,
 };
