@@ -1,10 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
+import { applyMultiOriginCorsHeaders, sendAPIResponse } from '@/utils';
 import { getMDXContent } from '@/utils/mdx';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Apply CORS headers
+  const isPreflight = applyMultiOriginCorsHeaders(req, res);
+  if (isPreflight) return;
+
   switch (req.method) {
     case 'GET':
       return generateMDXContent(req, res);
