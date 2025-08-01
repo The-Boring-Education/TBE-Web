@@ -11,6 +11,7 @@ import {
   Section,
   SEO,
   Text,
+  Leaderboard
 } from '@/components';
 import { LINKS, routes, STATIC_FILE_PATH } from '@/constant';
 import { useApi, useAPIResponseMapper, useUser } from '@/hooks';
@@ -95,6 +96,7 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
           subtext='Continue Learning From Where You Left'
         />
         {noCourseFoundUI}
+        <Leaderboard />
         <NotificationContainer />
         <Banner
           buttonLink={LINKS.contributeOpenSource}

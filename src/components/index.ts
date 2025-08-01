@@ -331,6 +331,9 @@ const AdminPieChart = dynamic(() =>
 const StarButton = dynamic(
   () => import('@/components/common/Buttons/StarButton')
 );
+const Leaderboard = dynamic(
+  () => import('@/components/containers/Cards/Leaderboard')
+)
 
 export {
   AboutTBE,
@@ -452,4 +455,5 @@ export {
   WeAlreadyTaughtAt,
   WebibarCard,
   WebinarHeroContainer,
+  Leaderboard
 };
