@@ -42,7 +42,7 @@ const applyCorsHeaders = (res: NextApiResponse, req: NextApiRequest) => {
   const allowedOrigins = [
     envConfig.PREPYATRA_APP_URL,
     envConfig.ONBOARDING_APP_URL,
-    envConfig.QUIZES_APP_URL,
+    envConfig.QUIZ_APP_URL,
     envConfig.ADMIN_BASE_URL,
   ].filter(Boolean);
 
