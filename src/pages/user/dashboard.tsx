@@ -5,6 +5,7 @@ import {
   Banner,
   CardContainerB,
   FlexContainer,
+  Leaderboard,
   LinkButton,
   LoadingSpinner,
   NotificationContainer,
@@ -95,6 +96,7 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
           subtext='Continue Learning From Where You Left'
         />
         {noCourseFoundUI}
+        <Leaderboard />
         <NotificationContainer />
         <Banner
           buttonLink={LINKS.contributeOpenSource}

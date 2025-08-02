@@ -4,6 +4,7 @@ import Feedback from './models/Feedback';
 import Gamification from './models/Gamification';
 import InterviewSheet from './models/InterviewPrep/Sheet';
 import UserSheet from './models/InterviewPrep/UserSheet';
+import Leaderboard from './models/Leaderboard';
 import Notification from './models/Notification';
 import Payment from './models/Payment';
 import PrepLog from './models/PrepYatra/PrepLog';
@@ -30,6 +31,7 @@ export {
   InterviewSheet,
   Job,
   JobAggregate,
+  Leaderboard,
   Notification,
   Payment,
   Playlist,
@@ -53,6 +55,7 @@ export * from './query/common';
 export * from './query/feedback';
 export * from './query/gamification';
 export * from './query/interview-prep';
+export * from './query/leaderboard';
 export * from './query/notification';
 export * from './query/payment';
 export * from './query/prepyatra';

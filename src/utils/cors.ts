@@ -7,7 +7,7 @@ import initMiddleware from './initMiddleware';
 const allowedOrigins = [
   envConfig.PREPYATRA_APP_URL,
   envConfig.ONBOARDING_APP_URL,
-  envConfig.QUIZES_APP_URL || 'http://localhost:5173', // Default to Vite dev server
+  envConfig.QUIZ_APP_URL,
 ];
 
 export const cors = initMiddleware(

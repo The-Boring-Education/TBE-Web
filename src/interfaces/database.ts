@@ -3,6 +3,7 @@ import type { Document, Schema, Types } from 'mongoose';
 import type {
   ApplicationStatusType,
   FeedbackType,
+  LeaderboardEnum,
   ProductType,
 } from '@/constant';
 
@@ -286,6 +287,8 @@ export interface JobModel extends Document {
 export interface UserPointsAction {
   actionType: UserPointsActionType;
   pointsEarned: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface GamificationModel {
@@ -379,4 +382,13 @@ export interface PrepLogModel extends Document {
   title: string;
   timeSpent: number;
   description?: string;
+}
+
+export interface LeaderboardModel extends Document {
+  type: LeaderboardEnum;
+  date: Date;
+  entries: {
+    userId: Types.ObjectId;
+    points: number;
+  }[];
 }
