@@ -1,6 +1,7 @@
 import axios, { type AxiosRequestConfig } from 'axios';
-import type { NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { envConfig } from '@/constant';
 import type { APIMakeRquestProps, APIResponseType } from '@/interfaces';
 
 const apiInstance = axios.create();
@@ -36,12 +37,23 @@ const sendAPIResponse = ({
   data,
 }: APIResponseType) => ({ status, error, message, data });
 
-const applyCorsHeaders = (res: NextApiResponse, url: string) => {
+const applyCorsHeaders = (res: NextApiResponse, req: NextApiRequest) => {
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    envConfig.PREPYATRA_APP_URL,
+    envConfig.ONBOARDING_APP_URL,
+    envConfig.QUIZ_APP_URL,
+    envConfig.ADMIN_BASE_URL,
+  ].filter(Boolean);
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', url);
   res.setHeader(
     'Access-Control-Allow-Methods',
-    'GET,POST,DELETE,PATCH,OPTIONS'
+    'GET,POST,PUT,DELETE,PATCH,OPTIONS'
   );
   res.setHeader(
     'Access-Control-Allow-Headers',

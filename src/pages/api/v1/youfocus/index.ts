@@ -10,9 +10,18 @@ import {
   updateTagsInPlaylist,
 } from '@/database';
 import { connectDB } from '@/middlewares';
-import { extractPlaylistId, fetchPlaylistData, sendAPIResponse } from '@/utils';
+import {
+  applyMultiOriginCorsHeaders,
+  extractPlaylistId,
+  fetchPlaylistData,
+  sendAPIResponse,
+} from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Apply CORS headers
+  const isPreflight = applyMultiOriginCorsHeaders(req, res);
+  if (isPreflight) return;
+
   await connectDB();
   const { query } = req;
   const { userId } = query as { userId: string };

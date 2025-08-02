@@ -21,6 +21,7 @@ import User from './models/User';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
+import Leaderboard from './models/Leaderboard';
 
 export {
   Certificate,
@@ -45,6 +46,7 @@ export {
   UserProject,
   UserSheet,
   Webinar,
+  Leaderboard
 };
 
 // Query
@@ -62,3 +64,4 @@ export * from './query/unskilled';
 export * from './query/user';
 export * from './query/webinar';
 export * from './query/youfocus';
+export * from './query/leaderboard'

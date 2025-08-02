@@ -152,10 +152,19 @@ const getLeaderboardFromDB = async (
   }
 };
 
+const getActionsWithinDateRange = async(
+  start: Date, end: Date
+):Promise<DatabaseQueryResponseType> => {
+  return await Gamification.find({
+    createdAt: { $gte: start, $lte: end },
+  }).lean();
+}
+
 export {
   addGamificationDocInDB,
   getLeaderboardFromDB,
   getUserPointsFromDB,
   handleGamificationPoints,
   updateUserPointsInDB,
+  getActionsWithinDateRange
 };

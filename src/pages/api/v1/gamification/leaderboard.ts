@@ -2,8 +2,13 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getLeaderboardFromDB } from '@/database/query/gamification';
 import { connectDB } from '@/middlewares';
+import { applyMultiOriginCorsHeaders } from '@/utils';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Apply CORS headers
+  const isPreflight = applyMultiOriginCorsHeaders(req, res);
+  if (isPreflight) return;
+
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

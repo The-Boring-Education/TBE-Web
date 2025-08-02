@@ -8,9 +8,13 @@ import {
 } from '@/database';
 import type { AddWebinarRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
+import { applyMultiOriginCorsHeaders, sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Apply CORS headers
+  const isPreflight = applyMultiOriginCorsHeaders(req, res);
+  if (isPreflight) return;
+
   await connectDB();
   const { method } = req;
 
