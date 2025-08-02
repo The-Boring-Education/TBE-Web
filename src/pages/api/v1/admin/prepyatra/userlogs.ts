@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes, envConfig } from '@/constant';
+import { apiStatusCodes } from '@/constant';
 import { getAllUsersWithLogsFromDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import { applyCorsHeaders, sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  applyCorsHeaders(res, envConfig.ADMIN_BASE_URL);
+  applyCorsHeaders(res, req);
 
   if (req.method === 'OPTIONS') {
     res.status(200).end();

@@ -10,7 +10,7 @@
     "pre-release": "npx eslint src --fix --ext .ts,.tsx,.js,.jsx && npm run build",
     "format": "prettier -w .",
     "typecheck": "tsc --noEmit --incremental false",
-    "release": "npm run lint && npm run format && npm run typecheck && npm run build",
+    "release": "npm run pre-release && npm run format && npm run typecheck && npm run build",
     "seed:quiz": "npx tsx scripts/seed-quiz-data.ts"
   },
   "dependencies": {
@@ -40,6 +40,9 @@
     "react-query": "^3.39.3",
     "recharts": "^2.15.1",
     "uuid": "^9.0.0"
+  },
+  "engines": {
+    "node": "20.x"
   },
   "devDependencies": {
     "@svgr/webpack": "^6.5.1",

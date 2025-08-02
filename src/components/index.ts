@@ -331,6 +331,9 @@ const AdminPieChart = dynamic(() =>
 const StarButton = dynamic(
   () => import('@/components/common/Buttons/StarButton')
 );
+const Leaderboard = dynamic(
+  () => import('@/components/containers/Cards/Leaderboard')
+);
 
 export {
   AboutTBE,
@@ -383,6 +386,7 @@ export {
   InputRadioContainer,
   InterviewPrepSection,
   LandingPageHero,
+  Leaderboard,
   LinerProgressBar,
   LinkText as Link,
   LinkButton,

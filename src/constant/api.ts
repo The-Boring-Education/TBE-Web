@@ -2602,6 +2602,12 @@ const planTypeMap = {
   lifetime: { type: 'Lifetime', duration: 999 },
 };
 
+enum LeaderboardEnum {
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+}
+
 export {
   ALLOWED_IPS,
   CERTIFICATE_TYPE,
@@ -2614,6 +2620,7 @@ export {
   JOB_DOMAIN_NORMALIZER,
   JOB_LOCATION_NORMALIZER,
   JOB_SKILL_NORMALIZER,
+  LeaderboardEnum,
   NOTIFICATION_TYPE,
   planTypeMap,
   PLATFORM_USAGE,

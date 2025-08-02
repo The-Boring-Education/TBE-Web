@@ -1,25 +1,65 @@
 import { Quiz, QuizAttempt } from '@/database';
+import type { QuizModel } from '@/database/models/Quiz/Quiz';
 import type { QuizAttemptModel } from '@/database/models/Quiz/QuizAttempt';
 import type { DatabaseQueryResponseType } from '@/interfaces';
 
-// Get all quiz categories
-export async function getQuizCategories(): Promise<DatabaseQueryResponseType> {
+// Add a quiz to database
+const addAQuizToDB = async (
+  quizData: Omit<QuizModel, '_id' | 'createdAt' | 'updatedAt'>
+): Promise<DatabaseQueryResponseType> => {
   try {
-    const categories = await Quiz.find(
-      { isActive: true },
-      'categoryId categoryName categoryDescription categoryIcon'
-    ).lean();
-
-    return { data: categories };
+    const quiz = new Quiz(quizData);
+    await quiz.save();
+    return { data: quiz };
   } catch (error) {
-    return { error: 'Error fetching quiz categories' };
+    return { error: 'Failed while adding quiz' };
   }
-}
+};
 
-// Get questions for a specific category
-export async function getQuizByCategoryId(
+// Update a quiz in database
+const updateAQuizInDB = async ({
+  categoryId,
+  updatedData,
+}: {
+  categoryId: string;
+  updatedData: Partial<
+    Omit<QuizModel, '_id' | 'categoryId' | 'createdAt' | 'updatedAt'>
+  >;
+}): Promise<DatabaseQueryResponseType> => {
+  try {
+    const updatedQuiz = await Quiz.findOneAndUpdate(
+      { categoryId },
+      updatedData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedQuiz) return { error: 'Quiz does not exist' };
+
+    return { data: updatedQuiz };
+  } catch (error) {
+    return { error: 'Failed while updating quiz' };
+  }
+};
+
+// Get all quiz categories from database
+const getQuizCategoriesFromDB =
+  async (): Promise<DatabaseQueryResponseType> => {
+    try {
+      const categories = await Quiz.find(
+        { isActive: true },
+        'categoryId categoryName categoryDescription categoryIcon'
+      ).lean();
+
+      return { data: categories };
+    } catch (error) {
+      return { error: 'Failed while fetching quiz categories' };
+    }
+  };
+
+// Get quiz by category ID from database
+const getQuizByCategoryIdFromDB = async (
   categoryId: string
-): Promise<DatabaseQueryResponseType> {
+): Promise<DatabaseQueryResponseType> => {
   try {
     const quiz = await Quiz.findOne({ categoryId, isActive: true }).lean();
 
@@ -29,30 +69,33 @@ export async function getQuizByCategoryId(
 
     return { data: quiz };
   } catch (error) {
-    return { error: 'Error fetching quiz' };
+    return { error: 'Failed while fetching quiz' };
   }
-}
+};
 
-// Save quiz attempt
-export async function saveQuizAttempt(
+// Save quiz attempt to database
+const saveQuizAttemptToDB = async (
   attemptData: Partial<QuizAttemptModel>
-): Promise<DatabaseQueryResponseType> {
+): Promise<DatabaseQueryResponseType> => {
   try {
     const attempt = new QuizAttempt(attemptData);
     const savedAttempt = await attempt.save();
-
     return { data: savedAttempt };
   } catch (error) {
-    return { error: 'Error saving quiz attempt' };
+    return { error: 'Failed while saving quiz attempt' };
   }
-}
+};
 
-// Get user's quiz history
-export async function getUserQuizHistory(
-  userId: string,
-  limit?: number,
-  categoryId?: string
-): Promise<DatabaseQueryResponseType> {
+// Get user quiz history from database
+const getUserQuizHistoryFromDB = async ({
+  userId,
+  limit = 20,
+  categoryId,
+}: {
+  userId: string;
+  limit?: number;
+  categoryId?: string;
+}): Promise<DatabaseQueryResponseType> => {
   try {
     let query = QuizAttempt.find({ userId });
 
@@ -60,21 +103,18 @@ export async function getUserQuizHistory(
       query = query.where('categoryId').equals(categoryId);
     }
 
-    const attempts = await query
-      .sort({ completedAt: -1 })
-      .limit(limit || 20)
-      .lean();
+    const attempts = await query.sort({ completedAt: -1 }).limit(limit).lean();
 
     return { data: attempts };
   } catch (error) {
-    return { error: 'Error fetching quiz history' };
+    return { error: 'Failed while fetching quiz history' };
   }
-}
+};
 
-// Get user's quiz statistics
-export async function getUserQuizStats(
+// Get user quiz statistics from database
+const getUserQuizStatsFromDB = async (
   userId: string
-): Promise<DatabaseQueryResponseType> {
+): Promise<DatabaseQueryResponseType> => {
   try {
     const stats = await QuizAttempt.aggregate([
       { $match: { userId } },
@@ -125,73 +165,16 @@ export async function getUserQuizStats(
 
     return { data: stats[0] || defaultStats };
   } catch (error) {
-    return { error: 'Error fetching quiz statistics' };
+    return { error: 'Failed while fetching quiz statistics' };
   }
-}
+};
 
-// Check if user has attempted a quiz today
-export async function hasUserAttemptedQuizToday(
-  userId: string
-): Promise<DatabaseQueryResponseType> {
-  try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const attempt = await QuizAttempt.findOne({
-      userId,
-      completedAt: { $gte: today },
-    });
-
-    return { data: !!attempt };
-  } catch (error) {
-    return { error: 'Error checking quiz attempt' };
-  }
-}
-
-// Get quiz streak for a user
-export async function getUserQuizStreak(
-  userId: string
-): Promise<DatabaseQueryResponseType> {
-  try {
-    const attempts = await QuizAttempt.find({ userId })
-      .sort({ completedAt: -1 })
-      .select('completedAt')
-      .lean();
-
-    if (!attempts.length) {
-      return { data: { currentStreak: 0, maxStreak: 0 } };
-    }
-
-    // Calculate streak
-    let currentStreak = 0;
-    let maxStreak = 0;
-    let lastDate = new Date();
-    lastDate.setHours(0, 0, 0, 0);
-
-    for (const attempt of attempts) {
-      const attemptDate = new Date(attempt.completedAt!);
-      attemptDate.setHours(0, 0, 0, 0);
-
-      const dayDiff = Math.floor(
-        (lastDate.getTime() - attemptDate.getTime()) / (1000 * 60 * 60 * 24)
-      );
-
-      if (dayDiff === 0 && currentStreak === 0) {
-        currentStreak = 1;
-      } else if (dayDiff === 1) {
-        currentStreak++;
-      } else if (dayDiff > 1) {
-        maxStreak = Math.max(maxStreak, currentStreak);
-        if (currentStreak > 0) break; // Current streak is broken
-      }
-
-      lastDate = attemptDate;
-    }
-
-    maxStreak = Math.max(maxStreak, currentStreak);
-
-    return { data: { currentStreak, maxStreak } };
-  } catch (error) {
-    return { error: 'Error calculating quiz streak' };
-  }
-}
+export {
+  addAQuizToDB,
+  getQuizByCategoryIdFromDB,
+  getQuizCategoriesFromDB,
+  getUserQuizHistoryFromDB,
+  getUserQuizStatsFromDB,
+  saveQuizAttemptToDB,
+  updateAQuizInDB,
+};

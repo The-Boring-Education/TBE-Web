@@ -4,7 +4,7 @@ import { apiStatusCodes } from '@/constant';
 import Payment from '@/database/models/Payment';
 import PrepYatraSubscription from '@/database/models/PrepYatra/Subscription';
 import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
+import { applyMultiOriginCorsHeaders, sendAPIResponse } from '@/utils';
 
 interface PopulatedPayment {
   _id: any;
@@ -34,6 +34,10 @@ interface PopulatedSubscription {
  * GET /api/v1/revenue/transparency - Get recent transactions and total revenue
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Apply CORS headers
+  const isPreflight = applyMultiOriginCorsHeaders(req, res);
+  if (isPreflight) return;
+
   await connectDB();
   const { method } = req;
 
