@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import {useApi} from '@/hooks';
-import { LeaderboardType } from '@/interfaces';
+import { useEffect,useState } from 'react';
+
 import { routes } from '@/constant';
+import { useApi } from '@/hooks';
+import type { LeaderboardType } from '@/interfaces';
 
 const useLeaderboard = (tab: LeaderboardType) => {
   const { response, makeRequest, loading } = useApi(`leaderboard-${tab}`, {

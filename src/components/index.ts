@@ -333,7 +333,7 @@ const StarButton = dynamic(
 );
 const Leaderboard = dynamic(
   () => import('@/components/containers/Cards/Leaderboard')
-)
+);
 
 export {
   AboutTBE,
@@ -386,6 +386,7 @@ export {
   InputRadioContainer,
   InterviewPrepSection,
   LandingPageHero,
+  Leaderboard,
   LinerProgressBar,
   LinkText as Link,
   LinkButton,
@@ -455,5 +456,4 @@ export {
   WeAlreadyTaughtAt,
   WebibarCard,
   WebinarHeroContainer,
-  Leaderboard
 };

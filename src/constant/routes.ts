@@ -138,7 +138,7 @@ const routes = {
     unskilled: '/unskilled',
     unskilledEvaluation: '/unskilled/evaluation',
     markSheetQuestionAsStarred: '/user/interview-prep/starred',
-    leaderboard:'/leaderboard',
+    leaderboard: '/leaderboard',
   },
 };
 

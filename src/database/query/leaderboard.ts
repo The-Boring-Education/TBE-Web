@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import type { 
+
+import { Gamification, Leaderboard } from '@/database';
+import type {
   DatabaseQueryResponseType,
   LeaderboardModel,
-  LeaderboardType 
+  LeaderboardType,
 } from '@/interfaces';
-import { Gamification,Leaderboard } from '@/database';
-
 
 const addLeaderboardTopperToDB = async (
   payload: Omit<LeaderboardModel, 'createdAt' | 'updatedAt'>
@@ -60,7 +60,7 @@ const getLeaderboardWithUsersFromDB = async (
   }
 };
 
-const getStartDateByType = (type:LeaderboardType) => {
+const getStartDateByType = (type: LeaderboardType) => {
   const now = new Date();
   if (type === 'DAILY') {
     now.setHours(0, 0, 0, 0);
@@ -80,7 +80,7 @@ const generateLeaderboard = async (type: LeaderboardType) => {
   const endDate = new Date();
 
   const gamificationData = await Gamification.find();
-  
+
   const userScores: Record<string, number> = {};
 
   gamificationData.forEach((user) => {
@@ -118,10 +118,10 @@ const generateLeaderboard = async (type: LeaderboardType) => {
   return sorted;
 };
 
-export { 
+export {
   addLeaderboardTopperToDB,
+  generateLeaderboard,
   getLeaderboardEntriesFromDB,
-  saveLeaderboardToDB,
   getLeaderboardWithUsersFromDB,
-  generateLeaderboard
+  saveLeaderboardToDB,
 };

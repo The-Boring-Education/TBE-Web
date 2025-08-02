@@ -171,4 +171,8 @@ export interface UnskilledLandingGraphDataProps {
 
 export type LeaderboardType = 'DAILY' | 'WEEKLY' | 'MONTHLY';
 
-export const LEADERBOARD_TYPES: LeaderboardType[] = ['DAILY', 'WEEKLY', 'MONTHLY'];
+export const LEADERBOARD_TYPES: LeaderboardType[] = [
+  'DAILY',
+  'WEEKLY',
+  'MONTHLY',
+];
