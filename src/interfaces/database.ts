@@ -3,8 +3,8 @@ import type { Document, Schema, Types } from 'mongoose';
 import type {
   ApplicationStatusType,
   FeedbackType,
+  LeaderboardEnum,
   ProductType,
-  LeaderboardEnum
 } from '@/constant';
 
 import type {
@@ -287,7 +287,7 @@ export interface JobModel extends Document {
 export interface UserPointsAction {
   actionType: UserPointsActionType;
   pointsEarned: number;
-  createdAt?: Date; 
+  createdAt?: Date;
   updatedAt?: Date;
 }
 
@@ -385,7 +385,7 @@ export interface PrepLogModel extends Document {
 }
 
 export interface LeaderboardModel extends Document {
-  type:LeaderboardEnum;
+  type: LeaderboardEnum;
   date: Date;
   entries: {
     userId: Types.ObjectId;

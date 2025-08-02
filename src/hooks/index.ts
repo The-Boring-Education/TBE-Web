@@ -6,6 +6,7 @@ import useCertificate from './useCertificate';
 import useFeedback from './useFeedback';
 import useGamification from './useGamification';
 import useGamifiedAction from './useGamifiedAction';
+import useLeaderboard from './useLeaderboard';
 import useMediaQuery from './useMediaQuery';
 import useNotifications from './useNotifications';
 import usePaymentStatus from './usePaymentStatus';
@@ -17,7 +18,6 @@ import useScrollPosition from './useScrollPosition';
 import useSkillPlaylist from './useSkillPlaylist';
 import useUser from './useUser';
 import useUsername from './useUsername';
-import useLeaderboard from './useLeaderboard';
 
 export {
   useAnalytics,
@@ -28,6 +28,7 @@ export {
   useFeedback,
   useGamification,
   useGamifiedAction,
+  useLeaderboard,
   useMediaQuery,
   useNotifications,
   usePaymentStatus,
@@ -39,5 +40,4 @@ export {
   useSkillPlaylist,
   useUser,
   useUsername,
-  useLeaderboard,
 };

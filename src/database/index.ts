@@ -4,6 +4,7 @@ import Feedback from './models/Feedback';
 import Gamification from './models/Gamification';
 import InterviewSheet from './models/InterviewPrep/Sheet';
 import UserSheet from './models/InterviewPrep/UserSheet';
+import Leaderboard from './models/Leaderboard';
 import Notification from './models/Notification';
 import Payment from './models/Payment';
 import PrepLog from './models/PrepYatra/PrepLog';
@@ -21,7 +22,6 @@ import User from './models/User';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
-import Leaderboard from './models/Leaderboard';
 
 export {
   Certificate,
@@ -31,6 +31,7 @@ export {
   InterviewSheet,
   Job,
   JobAggregate,
+  Leaderboard,
   Notification,
   Payment,
   Playlist,
@@ -46,7 +47,6 @@ export {
   UserProject,
   UserSheet,
   Webinar,
-  Leaderboard
 };
 
 // Query
@@ -55,6 +55,7 @@ export * from './query/common';
 export * from './query/feedback';
 export * from './query/gamification';
 export * from './query/interview-prep';
+export * from './query/leaderboard';
 export * from './query/notification';
 export * from './query/payment';
 export * from './query/prepyatra';
@@ -64,4 +65,3 @@ export * from './query/unskilled';
 export * from './query/user';
 export * from './query/webinar';
 export * from './query/youfocus';
-export * from './query/leaderboard'

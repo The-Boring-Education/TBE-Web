@@ -5,13 +5,13 @@ import {
   Banner,
   CardContainerB,
   FlexContainer,
+  Leaderboard,
   LinkButton,
   LoadingSpinner,
   NotificationContainer,
   Section,
   SEO,
   Text,
-  Leaderboard
 } from '@/components';
 import { LINKS, routes, STATIC_FILE_PATH } from '@/constant';
 import { useApi, useAPIResponseMapper, useUser } from '@/hooks';

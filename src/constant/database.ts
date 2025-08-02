@@ -23,7 +23,7 @@ const DATABASE_MODELS = {
   PREP_LOG: 'PrepLog',
   QUIZ: 'Quiz',
   QUIZ_ATTEMPT: 'QuizAttempt',
-  LEADERBOARD:'Leaderboard',
+  LEADERBOARD: 'Leaderboard',
 };
 
 export const FEEDBACK_TYPES = [

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes, envConfig } from '@/constant';
+import { apiStatusCodes } from '@/constant';
 import {
   Course,
   getAllDocumentsFromModel,

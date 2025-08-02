@@ -2620,6 +2620,7 @@ export {
   JOB_DOMAIN_NORMALIZER,
   JOB_LOCATION_NORMALIZER,
   JOB_SKILL_NORMALIZER,
+  LeaderboardEnum,
   NOTIFICATION_TYPE,
   planTypeMap,
   PLATFORM_USAGE,
@@ -2634,5 +2635,4 @@ export {
   USER_ROLE,
   WORK_DOMAIN,
   YOUTUBE_API_PATH,
-  LeaderboardEnum
 };

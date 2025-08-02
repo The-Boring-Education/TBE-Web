@@ -436,7 +436,6 @@ const isDevelopmentEnv = envConfig.NODE_ENV === 'development';
 
 const LEADERBOARD_TABS: LeaderboardType[] = ['DAILY', 'WEEKLY', 'MONTHLY'];
 
-
 export {
   apiStatusCodes,
   cohorts,
@@ -450,6 +449,7 @@ export {
   isProductionEnv,
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
+  LEADERBOARD_TABS,
   LINKS,
   localStorageKeys,
   MENTORSHIP_CARDS,
@@ -465,5 +465,4 @@ export {
   USER_ROLE_OPTIONS,
   USER_USAGE_OPTIONS,
   YOUFOCUS_SKILL_PLAYLISTS,
-  LEADERBOARD_TABS,
 };
