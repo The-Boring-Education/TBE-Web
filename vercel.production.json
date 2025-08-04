@@ -12,7 +12,7 @@
         },
         {
             "source": "/quizzes/:match*",
-            "destination": "https://quiz.theboringeducation.com/:match*"
+            "destination": "https://quiz.theboringeducation.com/"
         }
     ],
     "headers": [
