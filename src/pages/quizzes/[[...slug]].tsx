@@ -9,7 +9,7 @@ import {
   sanitizePath,
 } from '@/utils/reverse-proxy';
 
-interface PrepYatraPageProps {
+interface QuizzesPageProps {
   seoMeta: {
     title: string;
     description: string;
@@ -20,11 +20,11 @@ interface PrepYatraPageProps {
   structuredData: string;
 }
 
-const PrepYatraPage = ({
+const QuizzesPage = ({
   seoMeta,
   targetUrl,
   structuredData,
-}: PrepYatraPageProps) => {
+}: QuizzesPageProps) => {
   useEffect(() => {
     // This will only run if the reverse proxy fails and falls back to Next.js
     // In normal operation, Vercel rewrites should handle the request
@@ -72,15 +72,28 @@ const PrepYatraPage = ({
       </Head>
 
       {/* Loading state while redirecting */}
-      <div className='min-h-screen flex items-center justify-center bg-gray-50'>
-        <div className='text-center'>
-          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4' />
-          <h1 className='text-xl font-semibold text-gray-900 mb-2'>
-            Redirecting to PrepYatra...
+      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-100'>
+        <div className='text-center max-w-md mx-auto px-4'>
+          <div className='animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto mb-6' />
+          <h1 className='text-2xl font-bold text-gray-900 mb-4'>
+            Loading The Boring Quizzes...
           </h1>
-          <p className='text-gray-600'>
-            You're being redirected to our interview preparation platform.
+          <p className='text-gray-600 mb-6'>
+            Preparing your interactive quiz experience. This should only take a
+            moment.
           </p>
+          <div className='bg-white rounded-lg p-4 shadow-sm'>
+            <p className='text-sm text-gray-500'>
+              If this takes longer than expected, please{' '}
+              <a
+                href='mailto:support@theboringeducation.com'
+                className='text-purple-600 hover:underline'
+              >
+                contact our support team
+              </a>
+              .
+            </p>
+          </div>
         </div>
       </div>
     </>
@@ -95,57 +108,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const proxyUrls = getProxyUrls();
 
   // Construct target URL
-  const targetUrl = path
-    ? `${proxyUrls.prepyatra}${path}`
-    : proxyUrls.prepyatra;
+  const targetUrl = path ? `${proxyUrls.quiz}${path}` : proxyUrls.quiz;
 
-  // Generate route-specific SEO metadata
-  const getSEOConfig = (path: string) => {
-    const baseConfig = generateProductSEO('prepyatra', path);
-
-    // Route-specific overrides
-    switch (path) {
-      case '':
-        return {
-          ...baseConfig,
-          title: 'PrepYatra - Turn Hustle Into Hires | The Boring Education',
-          description:
-            'Complete interview preparation platform with personalized questions, mock interviews, and expert guidance.',
-        };
-
-      case 'dashboard':
-        return {
-          ...baseConfig,
-          title: 'PrepYatra Dashboard - Track Your Interview Progress',
-          description:
-            'Monitor your interview preparation progress, track mock interviews, and manage your personalized questions.',
-        };
-
-      case 'onboarding':
-        return {
-          ...baseConfig,
-          title: 'PrepYatra Onboarding - Start Your Interview Journey',
-          description:
-            'Complete your PrepYatra profile to get personalized interview questions and expert guidance.',
-        };
-
-      case 'pricing':
-        return {
-          ...baseConfig,
-          title: 'PrepYatra Pricing - Choose Your Interview Prep Plan',
-          description:
-            'Select the perfect PrepYatra plan for your interview preparation needs. Start with free tier or upgrade for premium features.',
-        };
-
-      default:
-        return baseConfig;
-    }
-  };
-
-  const seoMeta = getSEOConfig(path);
+  // Generate SEO metadata
+  const seoMeta = generateProductSEO('quiz', path);
 
   // Generate structured data
-  const structuredData = generateStructuredData('prepyatra');
+  const structuredData = generateStructuredData('quiz');
 
   return {
     props: {
@@ -156,4 +125,4 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   };
 };
 
-export default PrepYatraPage;
+export default QuizzesPage;

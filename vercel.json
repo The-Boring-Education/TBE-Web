@@ -1,4 +1,24 @@
 {
+  "buildCommand": "npm run build",
+  "functions": {
+    "src/pages/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/prepyatra/:match*",
+      "destination": "$PREPYATRA_APP_URL/:match*"
+    },
+    {
+      "source": "/quizzes/:match*",
+      "destination": "$QUIZ_APP_URL/:match*"
+    },
+    {
+      "source": "/onboarding-redirect/:match*",
+      "destination": "$NEXT_PUBLIC_ONBOARDING_APP_URL/:match*"
+    }
+  ],
   "headers": [
     {
       "source": "/fonts/inter-var-latin.woff2",
@@ -6,6 +26,48 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/prepyatra/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=60, stale-while-revalidate=300"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
+    {
+      "source": "/quizzes/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=60, stale-while-revalidate=300"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     }

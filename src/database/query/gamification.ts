@@ -155,7 +155,8 @@ const getLeaderboardFromDB = async (
 const getActionsWithinDateRange = async (
   start: Date,
   end: Date
-): Promise<DatabaseQueryResponseType> => await Gamification.find({
+): Promise<DatabaseQueryResponseType> =>
+  await Gamification.find({
     createdAt: { $gte: start, $lte: end },
   }).lean();
 
