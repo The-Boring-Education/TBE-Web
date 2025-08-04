@@ -8,11 +8,11 @@
     "rewrites": [
         {
             "source": "/prepyatra/:match*",
-            "destination": "https://prep-yatra-git-development-tbe.vercel.app/:match*"
+            "destination": "https://prepyatra.theboringeducation.com/:match*"
         },
         {
             "source": "/quizzes/:match*",
-            "destination": "https://the-boring-quizes-git-development-tbe.vercel.app/:match*"
+            "destination": "https://quiz.theboringeducation.com/:match*"
         }
     ],
     "headers": [

@@ -5,18 +5,16 @@
   "scripts": {
     "dev": "next dev",
     "dev:vercel": "vercel dev",
-    "build": "next build",
+    "build": "node scripts/setup-vercel-config.js && next build",
     "start": "next start",
     "lint": "next lint",
     "pre-release": "npx eslint src --fix --ext .ts,.tsx,.js,.jsx && npm run build",
     "format": "prettier -w .",
     "typecheck": "tsc --noEmit --incremental false",
     "release": "npm run pre-release && npm run format && npm run typecheck && npm run build",
-    "test:proxy": "node scripts/test-reverse-proxy.js",
     "setup:vercel": "bash scripts/setup-vercel-dev.sh",
     "env:pull": "vercel env pull .env.local",
-    "env:pull:dev": "vercel env pull .env.development --environment=development",
-    "debug:proxy": "echo 'Visit http://localhost:3000/prepyatra/debug for reverse proxy debugging'"
+    "env:pull:dev": "vercel env pull .env.development --environment=development"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

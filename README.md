@@ -47,6 +47,22 @@ Add environment variables to your `.env.local` file as needed:
 npm run dev
 ```
 
+## Building & Deployment
+
+### Development Build
+
+```bash
+npm run build
+```
+
+### Production Build
+
+```bash
+NODE_ENV=production npm run build
+```
+
+**That's it!** The build automatically configures the correct URLs for your environment.
+
 # Want to contribute?
 
 Please refer to our [Contribution Guidelines](CONTRIBUTING.md) for detailed information on how to contribute to this project.
