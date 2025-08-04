@@ -15,7 +15,7 @@ Instead of using client-side redirects (which cause SPA routing issues), we now 
 ```
 User Request: theboringeducation.com/prepyatra
        ↓
-Vercel Rewrite: $PREPYATRA_APP_URL (e.g., https://prepyatra.vercel.app)
+Vercel Rewrite: $PREPYATRA_APP_URL (e.g., https://prepyatra.theboringeducation.com)
        ↓
 If rewrite fails → Next.js fallback → Enhanced redirect page
 ```
@@ -25,7 +25,7 @@ If rewrite fails → Next.js fallback → Enhanced redirect page
 ### Production Environment
 
 ```bash
-PREPYATRA_APP_URL=https://prepyatra.vercel.app
+PREPYATRA_APP_URL=https://prepyatra.theboringeducation.com
 QUIZ_APP_URL=https://quiz.vercel.app
 NEXT_PUBLIC_ONBOARDING_APP_URL=https://onboarding.vercel.app
 ```
@@ -33,9 +33,9 @@ NEXT_PUBLIC_ONBOARDING_APP_URL=https://onboarding.vercel.app
 ### Development Environment
 
 ```bash
-PREPYATRA_APP_URL=https://prepyatra-dev.vercel.app
-QUIZ_APP_URL=https://quiz-dev.vercel.app
-NEXT_PUBLIC_ONBOARDING_APP_URL=https://onboarding-dev.vercel.app
+PREPYATRA_APP_URL=https://prep-yatra-git-development-tbe.vercel.app
+QUIZ_APP_URL=https://the-boring-quizes-git-development-tbe.vercel.app
+NEXT_PUBLIC_ONBOARDING_APP_URL=https://the-boring-onboarding-git-development-tbe.vercel.app
 ```
 
 ### Local Development
@@ -165,23 +165,42 @@ async rewrites() {
    - Check variable names match exactly
    - Verify environment-specific values
    - Redeploy after variable changes
+   - **Error**: `destination does not start with /`, `http://`, or `https://`
+     - **Cause**: Environment variables are undefined or invalid
+     - **Solution**: Set proper environment variables or use the automatic fallbacks
 
 2. **Rewrite Not Working**
 
    - Check vercel.json syntax
    - Verify target URL accessibility
    - Check Vercel function logs
+   - Verify environment variables are set correctly
 
 3. **SEO Issues**
+
    - Verify canonical URLs
    - Check meta tag rendering
    - Test with social media debuggers
 
+4. **Undefined URL Errors**
+
+   - **Error**: `undefined/api/health` in destination
+   - **Cause**: Missing environment variables
+   - **Solution**: The system now includes automatic fallbacks and validation
+
 ### Testing Commands
 
 ```bash
-# Test health endpoints
+# Test configuration before deployment
+npm run test:proxy
+
+# Test environment setup during development
+curl http://localhost:3000/api/env-check
+
+# Test health endpoints (production)
 curl https://theboringeducation.com/api/health/prepyatra
+curl https://theboringeducation.com/api/health/quizzes
+curl https://theboringeducation.com/api/health
 
 # Test reverse proxy
 curl -H "User-Agent: Mozilla/5.0" https://theboringeducation.com/prepyatra
@@ -189,6 +208,36 @@ curl -H "User-Agent: Mozilla/5.0" https://theboringeducation.com/prepyatra
 # Check headers
 curl -I https://theboringeducation.com/prepyatra
 ```
+
+### Development Tools
+
+1. **Configuration Test Script**
+
+   ```bash
+   npm run test:proxy
+   ```
+
+   - Validates environment variables
+   - Checks Next.js and Vercel config syntax
+   - Provides recommendations
+
+2. **Environment Check API** (Development only)
+
+   ```
+   GET /api/env-check
+   ```
+
+   - Returns current environment configuration
+   - Shows validation status
+   - Lists missing variables and warnings
+
+3. **Health Check Dashboard**
+   ```
+   GET /api/health
+   ```
+   - Overall system health status
+   - Individual service status
+   - Response time metrics
 
 ## Future Enhancements
 

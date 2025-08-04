@@ -106,29 +106,87 @@ const nextConfig = {
   },
 
   async rewrites() {
-    return {
-      beforeFiles: [
-        // Health check endpoints for reverse proxied apps
-        {
+    // Get environment variables with proper validation
+    const isProduction = process.env.NODE_ENV === 'production';
+    const isDevelopment = process.env.NODE_ENV === 'development';
+
+    // Define fallback URLs
+    const fallbacks = {
+      production: {
+        prepyatra: 'https://prepyatra.theboringeducation.com',
+        quiz: 'https://quiz.theboringeducation.com',
+        onboarding: 'https://onboarding.theboringeducation.com',
+      },
+      development: {
+        prepyatra: 'https://prep-yatra-git-development-tbe.vercel.app',
+        quiz: 'https://the-boring-quizes-git-development-tbe.vercel.app',
+        onboarding:
+          'https://the-boring-onboarding-git-development-tbe.vercel.app',
+      },
+      local: {
+        prepyatra: 'http://localhost:5173',
+        quiz: 'http://localhost:5174',
+        onboarding: 'http://localhost:5175',
+      },
+    };
+
+    const environmentFallbacks = isProduction
+      ? fallbacks.production
+      : isDevelopment
+      ? fallbacks.development
+      : fallbacks.local;
+
+    const prepyatraUrl =
+      process.env.PREPYATRA_APP_URL || environmentFallbacks.prepyatra;
+    const quizUrl = process.env.QUIZ_APP_URL || environmentFallbacks.quiz;
+
+    const beforeFiles = [];
+    const afterFiles = [
+      // Fallback for SPA routes when reverse proxy fails
+      {
+        source: '/prepyatra/:path*',
+        destination: '/prepyatra-fallback?path=:path*',
+      },
+      {
+        source: '/quizzes/:path*',
+        destination: '/quizzes-fallback?path=:path*',
+      },
+    ];
+
+    // Only add health check rewrites if URLs are valid
+    if (
+      prepyatraUrl &&
+      prepyatraUrl !== 'undefined' &&
+      prepyatraUrl !== 'null'
+    ) {
+      try {
+        new URL(prepyatraUrl); // Validate URL
+        beforeFiles.push({
           source: '/api/health/prepyatra',
-          destination: `${process.env.PREPYATRA_APP_URL}/api/health`,
-        },
-        {
+          destination: `${prepyatraUrl}/api/health`,
+        });
+      } catch (error) {
+        console.warn(
+          '⚠️  Invalid PREPYATRA_APP_URL, skipping health check rewrite'
+        );
+      }
+    }
+
+    if (quizUrl && quizUrl !== 'undefined' && quizUrl !== 'null') {
+      try {
+        new URL(quizUrl); // Validate URL
+        beforeFiles.push({
           source: '/api/health/quizzes',
-          destination: `${process.env.QUIZ_APP_URL}/api/health`,
-        },
-      ],
-      afterFiles: [
-        // Fallback for SPA routes when reverse proxy fails
-        {
-          source: '/prepyatra/:path*',
-          destination: '/prepyatra-fallback?path=:path*',
-        },
-        {
-          source: '/quizzes/:path*',
-          destination: '/quizzes-fallback?path=:path*',
-        },
-      ],
+          destination: `${quizUrl}/api/health`,
+        });
+      } catch (error) {
+        console.warn('⚠️  Invalid QUIZ_APP_URL, skipping health check rewrite');
+      }
+    }
+
+    return {
+      beforeFiles,
+      afterFiles,
     };
   },
 
