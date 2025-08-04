@@ -5,16 +5,6 @@
       "maxDuration": 30
     }
   },
-  "rewrites": [
-    {
-      "source": "/prepyatra/:match*",
-      "destination": "$PREPYATRA_APP_URL/:match*"
-    },
-    {
-      "source": "/quizzes/:match*",
-      "destination": "$QUIZ_APP_URL/:match*"
-    }
-  ],
   "headers": [
     {
       "source": "/fonts/inter-var-latin.woff2",

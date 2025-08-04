@@ -141,6 +141,36 @@ const nextConfig = {
     const quizUrl = process.env.QUIZ_APP_URL || environmentFallbacks.quiz;
 
     const beforeFiles = [];
+
+    // Add main proxy rewrites if URLs are valid
+    if (
+      prepyatraUrl &&
+      prepyatraUrl !== 'undefined' &&
+      prepyatraUrl !== 'null'
+    ) {
+      try {
+        new URL(prepyatraUrl); // Validate URL
+        beforeFiles.push({
+          source: '/prepyatra/:match*',
+          destination: `${prepyatraUrl}/:match*`,
+        });
+      } catch (error) {
+        console.warn('⚠️  Invalid PREPYATRA_APP_URL, skipping main rewrite');
+      }
+    }
+
+    if (quizUrl && quizUrl !== 'undefined' && quizUrl !== 'null') {
+      try {
+        new URL(quizUrl); // Validate URL
+        beforeFiles.push({
+          source: '/quizzes/:match*',
+          destination: `${quizUrl}/:match*`,
+        });
+      } catch (error) {
+        console.warn('⚠️  Invalid QUIZ_APP_URL, skipping main rewrite');
+      }
+    }
+
     const afterFiles = [
       // Fallback for SPA routes when reverse proxy fails
       {

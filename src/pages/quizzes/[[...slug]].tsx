@@ -32,6 +32,7 @@ const QuizzesPage = ({ targetUrl }: QuizzesPageProps) => {
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const slug = (params?.slug as string[]) || [];
   const path = slug.join('/');
+  console.log('path', path);
 
   const baseUrl =
     process.env.QUIZ_APP_URL ||
