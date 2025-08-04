@@ -13,7 +13,6 @@ interface OverallHealthResponse {
   status: 'healthy' | 'degraded' | 'unhealthy';
   timestamp: string;
   services: {
-    prepyatra: ServiceHealthStatus;
     quizzes: ServiceHealthStatus;
     onboarding: ServiceHealthStatus;
   };
@@ -106,18 +105,15 @@ export default async function handler(
 
   try {
     // Check all services in parallel
-    const [prepyatraHealth, quizzesHealth, onboardingHealth] =
-      await Promise.all([
-        checkServiceHealth('prepyatra', envConfig.PREPYATRA_APP_URL),
-        checkServiceHealth('quizzes', envConfig.QUIZ_APP_URL),
-        checkServiceHealth(
-          'onboarding',
-          envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL
-        ),
-      ]);
+    const [quizzesHealth, onboardingHealth] = await Promise.all([
+      checkServiceHealth('quizzes', envConfig.QUIZ_APP_URL),
+      checkServiceHealth(
+        'onboarding',
+        envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL
+      ),
+    ]);
 
     const services = {
-      prepyatra: prepyatraHealth,
       quizzes: quizzesHealth,
       onboarding: onboardingHealth,
     };
@@ -165,7 +161,6 @@ export default async function handler(
       status: 'unhealthy',
       timestamp: new Date().toISOString(),
       services: {
-        prepyatra: { status: 'unknown', url: 'error', error: errorMessage },
         quizzes: { status: 'unknown', url: 'error', error: errorMessage },
         onboarding: { status: 'unknown', url: 'error', error: errorMessage },
       },

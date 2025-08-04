@@ -45,14 +45,7 @@ function setupVercelConfig() {
 
     // Verify the copied file
     const config = JSON.parse(fs.readFileSync(targetFile, 'utf8'));
-    const rewriteCount = config.rewrites ? config.rewrites.length : 0;
-    log(`✅ Configuration verified: ${rewriteCount} rewrite rules`, 'green');
-
-    if (config.rewrites && config.rewrites.length > 0) {
-      config.rewrites.forEach((rule, index) => {
-        log(`   ${index + 1}. ${rule.source} → ${rule.destination}`, 'reset');
-      });
-    }
+    log(`✅ Configuration verified`, 'green');
   } catch (error) {
     log(`❌ Error setting up Vercel config: ${error.message}`, 'red');
     process.exit(1);

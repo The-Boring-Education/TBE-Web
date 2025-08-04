@@ -79,11 +79,6 @@ const products: ProductDataProps = {
     description: 'Find Your Next Tech Job with Insights',
   },
   // Yatra Products - External Tools
-  prepYatra: {
-    label: 'Prep Yatra',
-    slug: routes.prepYatra,
-    description: 'Complete Interview Preparation Platform',
-  },
   techYatra: {
     label: 'Tech Yatra',
     slug: 'https://techyatra.netlify.app/',

@@ -28,13 +28,7 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       description: products.unskilled.description,
       href: products.unskilled.slug,
     },
-    {
-      id: v4(),
-      name: products.prepYatra.label,
-      description: products.prepYatra.description,
-      href: products.prepYatra.slug,
-      target: '_blank',
-    },
+
     {
       id: v4(),
       name: products.techYatra.label,
