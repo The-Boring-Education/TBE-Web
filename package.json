@@ -4,17 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:vercel": "vercel dev",
-    "build": "node scripts/setup-vercel-config.js && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "pre-release": "npx eslint src --fix --ext .ts,.tsx,.js,.jsx && npm run build",
     "format": "prettier -w .",
     "typecheck": "tsc --noEmit --incremental false",
-    "release": "npm run pre-release && npm run format && npm run typecheck && npm run build",
-    "setup:vercel": "bash scripts/setup-vercel-dev.sh",
-    "env:pull": "vercel env pull .env.local",
-    "env:pull:dev": "vercel env pull .env.development --environment=development"
+    "release": "npm run pre-release && npm run format && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
