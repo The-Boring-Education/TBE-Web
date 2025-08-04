@@ -108,7 +108,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const proxyUrls = getProxyUrls();
 
   // Construct target URL
-  const targetUrl = path ? `${proxyUrls.quiz}${path}` : proxyUrls.quiz;
+  const targetUrl = path ? `${proxyUrls.quiz}/${path}` : proxyUrls.quiz;
 
   // Generate SEO metadata
   const seoMeta = generateProductSEO('quiz', path);

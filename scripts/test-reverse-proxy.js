@@ -141,13 +141,37 @@ function testHealthEndpoints() {
   return true;
 }
 
+function checkVercelCLI() {
+  log('\n🔍 Checking Vercel CLI...', 'blue');
+
+  try {
+    execSync('vercel --version', { stdio: 'pipe' });
+    log('  ✅ Vercel CLI is installed', 'green');
+
+    try {
+      execSync('vercel whoami', { stdio: 'pipe' });
+      log('  ✅ Logged into Vercel', 'green');
+      return true;
+    } catch (authError) {
+      log('  ⚠️  Not logged into Vercel (run: vercel login)', 'yellow');
+      return false;
+    }
+  } catch (error) {
+    log('  ❌ Vercel CLI not installed (run: npm i -g vercel)', 'red');
+    return false;
+  }
+}
+
 function showRecommendations() {
   log('\n💡 Recommendations:', 'blue');
-  log('  1. Set environment variables in Vercel dashboard', 'reset');
-  log('  2. Test locally with .env.local file', 'reset');
-  log('  3. Use different URLs for dev/prod environments', 'reset');
-  log('  4. Monitor /api/health endpoint after deployment', 'reset');
-  log('  5. Check Vercel function logs for any issues', 'reset');
+  log('  1. Install Vercel CLI: npm i -g vercel', 'reset');
+  log('  2. Login to Vercel: vercel login', 'reset');
+  log('  3. Link project: vercel link', 'reset');
+  log('  4. Pull env vars: npm run env:pull', 'reset');
+  log('  5. Test with Vercel dev: npm run dev:vercel', 'reset');
+  log('  6. Set environment variables in Vercel dashboard', 'reset');
+  log('  7. Use /prepyatra/debug page to troubleshoot', 'reset');
+  log('  8. Monitor /api/health endpoint after deployment', 'reset');
 }
 
 function main() {
@@ -155,6 +179,7 @@ function main() {
   log('==========================================');
 
   const checks = [
+    { name: 'Vercel CLI', fn: checkVercelCLI },
     { name: 'Environment Variables', fn: checkEnvironmentVariables },
     { name: 'Next.js Config', fn: checkNextConfigSyntax },
     { name: 'Vercel Config', fn: checkVercelConfigSyntax },

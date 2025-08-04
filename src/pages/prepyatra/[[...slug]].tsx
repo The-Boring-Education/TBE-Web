@@ -96,7 +96,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   // Construct target URL
   const targetUrl = path
-    ? `${proxyUrls.prepyatra}${path}`
+    ? `${proxyUrls.prepyatra}/${path}`
     : proxyUrls.prepyatra;
 
   // Generate route-specific SEO metadata
