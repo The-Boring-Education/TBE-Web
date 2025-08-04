@@ -16,7 +16,8 @@ const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY as string;
 const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID as string;
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN as string;
 const PREPYATRA_APP_URL = process.env.PREPYATRA_APP_URL as string;
-const ONBOARDING_APP_URL = process.env.NEXT_PUBLIC_ONBOARDING_APP_URL as string;
+const NEXT_PUBLIC_ONBOARDING_APP_URL = process.env
+  .NEXT_PUBLIC_ONBOARDING_APP_URL as string;
 const QUIZ_APP_URL = process.env.QUIZ_APP_URL as string;
 
 const envConfig = {
@@ -37,7 +38,7 @@ const envConfig = {
   CASHFREE_CLIENT_ID,
   SENTRY_DSN,
   PREPYATRA_APP_URL,
-  ONBOARDING_APP_URL,
+  NEXT_PUBLIC_ONBOARDING_APP_URL,
   QUIZ_APP_URL,
 };
 

@@ -104,6 +104,72 @@ const nextConfig = {
       },
     ];
   },
+
+  async rewrites() {
+    return {
+      beforeFiles: [
+        // Health check endpoints for reverse proxied apps
+        {
+          source: '/api/health/prepyatra',
+          destination: `${process.env.PREPYATRA_APP_URL}/api/health`,
+        },
+        {
+          source: '/api/health/quizzes',
+          destination: `${process.env.QUIZ_APP_URL}/api/health`,
+        },
+      ],
+      afterFiles: [
+        // Fallback for SPA routes when reverse proxy fails
+        {
+          source: '/prepyatra/:path*',
+          destination: '/prepyatra-fallback?path=:path*',
+        },
+        {
+          source: '/quizzes/:path*',
+          destination: '/quizzes-fallback?path=:path*',
+        },
+      ],
+    };
+  },
+
+  async headers() {
+    return [
+      {
+        source: '/prepyatra/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Robots-Tag',
+            value: 'index, follow',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=60, stale-while-revalidate=300',
+          },
+        ],
+      },
+      {
+        source: '/quizzes/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Robots-Tag',
+            value: 'index, follow',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=60, stale-while-revalidate=300',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 // Sentry configuration

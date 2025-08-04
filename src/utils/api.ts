@@ -41,7 +41,7 @@ const applyCorsHeaders = (res: NextApiResponse, req: NextApiRequest) => {
   const origin = req.headers.origin;
   const allowedOrigins = [
     envConfig.PREPYATRA_APP_URL,
-    envConfig.ONBOARDING_APP_URL,
+    envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL,
     envConfig.QUIZ_APP_URL,
     envConfig.ADMIN_BASE_URL,
   ].filter(Boolean);
@@ -68,7 +68,7 @@ const applyMultiOriginCorsHeaders = (
   const origin = req.headers.origin;
   const allowedOrigins = [
     envConfig.PREPYATRA_APP_URL,
-    envConfig.ONBOARDING_APP_URL,
+    envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL,
     envConfig.QUIZ_APP_URL,
     envConfig.ADMIN_BASE_URL,
   ].filter(Boolean);

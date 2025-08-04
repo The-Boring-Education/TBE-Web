@@ -6,7 +6,7 @@ import initMiddleware from './initMiddleware';
 
 const allowedOrigins = [
   envConfig.PREPYATRA_APP_URL,
-  envConfig.ONBOARDING_APP_URL,
+  envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL,
   envConfig.QUIZ_APP_URL,
 ];
 
