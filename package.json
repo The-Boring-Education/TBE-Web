@@ -10,7 +10,8 @@
     "pre-release": "npx eslint src --fix --ext .ts,.tsx,.js,.jsx && npm run build",
     "format": "prettier -w .",
     "typecheck": "tsc --noEmit --incremental false",
-    "release": "npm run pre-release && npm run format && npm run typecheck && npm run build"
+    "release": "npm run pre-release && npm run format && npm run typecheck && npm run build",
+    "test:proxy": "node scripts/test-reverse-proxy.js"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

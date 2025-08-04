@@ -1,4 +1,4 @@
-import { envConfig } from '@/constant/envConfig';
+import { getEnvironmentConfig } from './env-validation';
 
 /**
  * Configuration for reverse proxy environments
@@ -12,14 +12,15 @@ export interface ProxyEnvironmentConfig {
 /**
  * Get environment-specific URLs for reverse proxy
  */
-export const getProxyUrls = (): ProxyEnvironmentConfig => ({
-  prepyatra:
-    envConfig.PREPYATRA_APP_URL || 'https://prepyatra-tbe.netlify.app/',
-  quiz: envConfig.QUIZ_APP_URL || 'https://quiz-tbe.netlify.app/',
-  onboarding:
-    envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL ||
-    'https://onboarding-tbe.netlify.app/',
-});
+export const getProxyUrls = (): ProxyEnvironmentConfig => {
+  const envConfig = getEnvironmentConfig();
+
+  return {
+    prepyatra: envConfig.prepyatraUrl,
+    quiz: envConfig.quizUrl,
+    onboarding: envConfig.onboardingUrl,
+  };
+};
 
 /**
  * Generate SEO metadata for embedded products
