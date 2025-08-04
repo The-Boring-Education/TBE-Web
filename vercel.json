@@ -13,10 +13,6 @@
     {
       "source": "/quizzes/:match*",
       "destination": "$QUIZ_APP_URL/:match*"
-    },
-    {
-      "source": "/onboarding-redirect/:match*",
-      "destination": "$NEXT_PUBLIC_ONBOARDING_APP_URL/:match*"
     }
   ],
   "headers": [
