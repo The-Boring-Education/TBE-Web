@@ -35,6 +35,8 @@ const routes = {
     javaInterviewSheet: '/interview-prep/java-interview-questions',
     dsaInterviewSheet: '/interview-prep/dsa-interview-questions',
   },
+  // PrepYatra
+  prepYatra: '/prepyatra',
 
   certificate: '/certificate',
   contactUs: '/contact',
