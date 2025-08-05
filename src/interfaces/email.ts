@@ -9,6 +9,7 @@ export interface EmailResponse {
   success: boolean;
   message?: string;
   error?: string;
+  requestId?: string;
 }
 
 export interface EmailTriggerData {
@@ -36,7 +37,7 @@ export interface InterviewPrepEnrollmentEmailData extends EmailTriggerData {
   sheetUrl: string;
 }
 
-export type EmailTriggerType = 
+export type EmailTriggerType =
   | 'WELCOME'
   | 'COURSE_ENROLLMENT'
   | 'PROJECT_ENROLLMENT'
@@ -44,5 +45,9 @@ export type EmailTriggerType =
 
 export interface EmailTriggerRequest {
   trigger: EmailTriggerType;
-  data: EmailTriggerData | CourseEnrollmentEmailData | ProjectEnrollmentEmailData | InterviewPrepEnrollmentEmailData;
+  data:
+    | EmailTriggerData
+    | CourseEnrollmentEmailData
+    | ProjectEnrollmentEmailData
+    | InterviewPrepEnrollmentEmailData;
 }

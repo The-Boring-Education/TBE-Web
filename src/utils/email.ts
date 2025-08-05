@@ -1,13 +1,14 @@
-import type { 
-  EmailTriggerData, 
-  CourseEnrollmentEmailData, 
-  ProjectEnrollmentEmailData, 
-  InterviewPrepEnrollmentEmailData 
+import type {
+  EmailTriggerData,
+  CourseEnrollmentEmailData,
+  ProjectEnrollmentEmailData,
+  InterviewPrepEnrollmentEmailData,
 } from '@/interfaces/email';
 import { emailTriggerService } from '@/services/email';
 
 /**
  * Utility function to send welcome email to new users
+ * Now includes enhanced logging and request tracking
  */
 export const sendWelcomeEmail = async (userData: {
   email: string;
@@ -22,6 +23,19 @@ export const sendWelcomeEmail = async (userData: {
 
   try {
     const result = await emailTriggerService.sendWelcomeEmail(emailData);
+
+    // Enhanced logging for better tracking
+    if (result.success) {
+      console.log(
+        `✅ Welcome email queued successfully for ${userData.email} (RequestID: ${result.requestId})`
+      );
+    } else {
+      console.error(
+        `❌ Welcome email failed for ${userData.email} (RequestID: ${result.requestId}):`,
+        result.error
+      );
+    }
+
     return result;
   } catch (error) {
     console.error('Failed to send welcome email:', error);
@@ -31,6 +45,7 @@ export const sendWelcomeEmail = async (userData: {
 
 /**
  * Utility function to send course enrollment email
+ * Now includes enhanced logging and request tracking
  */
 export const sendCourseEnrollmentEmail = async (enrollmentData: {
   userEmail: string;
@@ -50,7 +65,22 @@ export const sendCourseEnrollmentEmail = async (enrollmentData: {
   };
 
   try {
-    const result = await emailTriggerService.sendCourseEnrollmentEmail(emailData);
+    const result = await emailTriggerService.sendCourseEnrollmentEmail(
+      emailData
+    );
+
+    // Enhanced logging for better tracking
+    if (result.success) {
+      console.log(
+        `✅ Course enrollment email queued successfully for ${enrollmentData.userEmail} - ${enrollmentData.courseName} (RequestID: ${result.requestId})`
+      );
+    } else {
+      console.error(
+        `❌ Course enrollment email failed for ${enrollmentData.userEmail} - ${enrollmentData.courseName} (RequestID: ${result.requestId}):`,
+        result.error
+      );
+    }
+
     return result;
   } catch (error) {
     console.error('Failed to send course enrollment email:', error);
@@ -60,6 +90,7 @@ export const sendCourseEnrollmentEmail = async (enrollmentData: {
 
 /**
  * Utility function to send project enrollment email
+ * Now includes enhanced logging and request tracking
  */
 export const sendProjectEnrollmentEmail = async (enrollmentData: {
   userEmail: string;
@@ -79,7 +110,22 @@ export const sendProjectEnrollmentEmail = async (enrollmentData: {
   };
 
   try {
-    const result = await emailTriggerService.sendProjectEnrollmentEmail(emailData);
+    const result = await emailTriggerService.sendProjectEnrollmentEmail(
+      emailData
+    );
+
+    // Enhanced logging for better tracking
+    if (result.success) {
+      console.log(
+        `✅ Project enrollment email queued successfully for ${enrollmentData.userEmail} - ${enrollmentData.projectName} (RequestID: ${result.requestId})`
+      );
+    } else {
+      console.error(
+        `❌ Project enrollment email failed for ${enrollmentData.userEmail} - ${enrollmentData.projectName} (RequestID: ${result.requestId}):`,
+        result.error
+      );
+    }
+
     return result;
   } catch (error) {
     console.error('Failed to send project enrollment email:', error);
@@ -89,6 +135,7 @@ export const sendProjectEnrollmentEmail = async (enrollmentData: {
 
 /**
  * Utility function to send interview prep enrollment email
+ * Now includes enhanced logging and request tracking
  */
 export const sendInterviewPrepEnrollmentEmail = async (enrollmentData: {
   userEmail: string;
@@ -108,10 +155,28 @@ export const sendInterviewPrepEnrollmentEmail = async (enrollmentData: {
   };
 
   try {
-    const result = await emailTriggerService.sendInterviewPrepEnrollmentEmail(emailData);
+    const result = await emailTriggerService.sendInterviewPrepEnrollmentEmail(
+      emailData
+    );
+
+    // Enhanced logging for better tracking
+    if (result.success) {
+      console.log(
+        `✅ Interview prep enrollment email queued successfully for ${enrollmentData.userEmail} - ${enrollmentData.sheetName} (RequestID: ${result.requestId})`
+      );
+    } else {
+      console.error(
+        `❌ Interview prep enrollment email failed for ${enrollmentData.userEmail} - ${enrollmentData.sheetName} (RequestID: ${result.requestId}):`,
+        result.error
+      );
+    }
+
     return result;
   } catch (error) {
     console.error('Failed to send interview prep enrollment email:', error);
-    return { success: false, error: 'Failed to send interview prep enrollment email' };
+    return {
+      success: false,
+      error: 'Failed to send interview prep enrollment email',
+    };
   }
 };
