@@ -1,7 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { enrollInAProject, getEnrolledProjectFromDB, getUserByIdFromDB, getProjectByIdFromDB } from '@/database';
+import {
+  enrollInAProject,
+  getEnrolledProjectFromDB,
+  getUserByIdFromDB,
+  getProjectByIDFromDB,
+} from '@/database';
 import type { ProjectEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
@@ -73,7 +78,7 @@ const handleProjectEnrollment = async (
     try {
       const [userResult, projectResult] = await Promise.all([
         getUserByIdFromDB(userId),
-        getProjectByIdFromDB(projectId)
+        getProjectByIDFromDB(projectId),
       ]);
 
       if (userResult.data && projectResult.data) {
@@ -84,7 +89,7 @@ const handleProjectEnrollment = async (
           projectName: projectResult.data.title,
           projectDescription: projectResult.data.description,
           projectId: projectId,
-        }).catch(error => {
+        }).catch((error) => {
           console.error('Failed to send project enrollment email:', error);
           // Don't fail the enrollment if email fails
         });

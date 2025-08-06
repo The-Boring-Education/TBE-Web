@@ -34,26 +34,29 @@ class EmailTriggerService {
           htmlContent: welcomeEmailTemplate(data as EmailTriggerData),
         };
 
-      case 'COURSE_ENROLLMENT':
+      case 'COURSE_ENROLLMENT': {
         const courseData = data as CourseEnrollmentEmailData;
         return {
           subject: `🚀 You're enrolled in ${courseData.courseName} - Let's start learning!`,
           htmlContent: courseEnrollmentTemplate(courseData),
         };
+      }
 
-      case 'PROJECT_ENROLLMENT':
+      case 'PROJECT_ENROLLMENT': {
         const projectData = data as ProjectEnrollmentEmailData;
         return {
           subject: `🛠️ Time to build ${projectData.projectName} - Your coding journey starts now!`,
           htmlContent: projectEnrollmentTemplate(projectData),
         };
+      }
 
-      case 'INTERVIEW_PREP_ENROLLMENT':
+      case 'INTERVIEW_PREP_ENROLLMENT': {
         const interviewData = data as InterviewPrepEnrollmentEmailData;
         return {
           subject: `💼 Ready to ace ${interviewData.sheetName}? Let's prep for success!`,
           htmlContent: interviewPrepEnrollmentTemplate(interviewData),
         };
+      }
 
       default:
         throw new Error(`Unknown email trigger: ${trigger}`);

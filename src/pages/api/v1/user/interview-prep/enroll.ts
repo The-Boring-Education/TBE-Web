@@ -1,7 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { enrollInASheet, getEnrolledSheetFromDB, getUserByIdFromDB, getSheetByIdFromDB } from '@/database';
+import {
+  enrollInASheet,
+  getEnrolledSheetFromDB,
+  getUserByIdFromDB,
+  getInterviewSheetByIDFromDB,
+} from '@/database';
 import type { SheetEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
@@ -73,7 +78,7 @@ const handleSheetEnrollment = async (
     try {
       const [userResult, sheetResult] = await Promise.all([
         getUserByIdFromDB(userId),
-        getSheetByIdFromDB(sheetId)
+        getInterviewSheetByIDFromDB(sheetId),
       ]);
 
       if (userResult.data && sheetResult.data) {
@@ -84,8 +89,11 @@ const handleSheetEnrollment = async (
           sheetName: sheetResult.data.title,
           sheetDescription: sheetResult.data.description,
           sheetId: sheetId,
-        }).catch(error => {
-          console.error('Failed to send interview prep enrollment email:', error);
+        }).catch((error) => {
+          console.error(
+            'Failed to send interview prep enrollment email:',
+            error
+          );
           // Don't fail the enrollment if email fails
         });
       }
