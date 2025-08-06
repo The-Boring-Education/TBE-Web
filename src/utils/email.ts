@@ -1,6 +1,4 @@
-import type {
-  ExternalEmailRequest,
-} from '@/interfaces';
+import type { ExternalEmailRequest } from '@/interfaces';
 import { emailTriggerService } from '@/services/email';
 
 /**
@@ -134,4 +132,5 @@ export const sendCourseCompletionEmail = async (data: {
 /**
  * Generic function to send any type of email
  */
-export const sendEmail = async (request: ExternalEmailRequest) => emailTriggerService.sendExternalEmail(request);
+export const sendEmail = async (request: ExternalEmailRequest) =>
+  emailTriggerService.sendExternalEmail(request);

@@ -266,7 +266,8 @@ export const projectEnrollmentTemplate = (
 
 export const interviewPrepEnrollmentTemplate = (
   data: InterviewPrepEnrollmentEmailData
-): string => getBaseTemplate(`
+): string =>
+  getBaseTemplate(`
     <div class="greeting">Hello ${data.userName}! 👋</div>
     
     <div class="main-text">
@@ -311,7 +312,8 @@ export const interviewPrepEnrollmentTemplate = (
 
 export const courseCompletionTemplate = (
   data: CourseCompletionEmailData
-): string => getBaseTemplate(`
+): string =>
+  getBaseTemplate(`
     <div class="greeting">Congratulations ${data.userName}! 🎉</div>
     
     <div class="main-text">
