@@ -1,6 +1,8 @@
 export interface EmailRequest {
   from_email: string;
+  from_name?: string;
   to_email: string;
+  to_name?: string;
   subject: string;
   html_content: string;
 }
@@ -34,14 +36,21 @@ export interface ProjectEnrollmentEmailData extends EmailTriggerData {
 export interface InterviewPrepEnrollmentEmailData extends EmailTriggerData {
   sheetName: string;
   sheetDescription?: string;
-  sheetUrl: string;
+}
+
+export interface CourseCompletionEmailData extends EmailTriggerData {
+  courseName: string;
+  courseUrl: string;
+  completionDate: string;
+  certificateUrl?: string;
 }
 
 export type EmailTriggerType =
   | 'WELCOME'
   | 'COURSE_ENROLLMENT'
   | 'PROJECT_ENROLLMENT'
-  | 'INTERVIEW_PREP_ENROLLMENT';
+  | 'INTERVIEW_PREP_ENROLLMENT'
+  | 'COURSE_COMPLETION';
 
 export interface EmailTriggerRequest {
   trigger: EmailTriggerType;
@@ -49,5 +58,24 @@ export interface EmailTriggerRequest {
     | EmailTriggerData
     | CourseEnrollmentEmailData
     | ProjectEnrollmentEmailData
-    | InterviewPrepEnrollmentEmailData;
+    | InterviewPrepEnrollmentEmailData
+    | CourseCompletionEmailData;
+}
+
+// New interfaces for external API usage
+export interface ExternalEmailRequest {
+  emailType: EmailTriggerType;
+  userData: {
+    email: string;
+    name: string;
+    id: string;
+  };
+  additionalData?: Record<string, any>;
+}
+
+export interface ExternalEmailResponse {
+  success: boolean;
+  message: string;
+  requestId?: string;
+  error?: string;
 }

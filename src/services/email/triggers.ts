@@ -1,65 +1,82 @@
 import { envConfig } from '@/constant';
 import type {
-  EmailTriggerType,
-  EmailTriggerData,
+  CourseCompletionEmailData,
   CourseEnrollmentEmailData,
-  ProjectEnrollmentEmailData,
+  EmailTriggerData,
+  EmailTriggerType,
+  ExternalEmailRequest,
+  ExternalEmailResponse,
   InterviewPrepEnrollmentEmailData,
-  EmailRequest,
-  EmailResponse,
-} from '@/interfaces/email';
-import { emailClient } from './client';
-import {
-  welcomeEmailTemplate,
-  courseEnrollmentTemplate,
-  projectEnrollmentTemplate,
-  interviewPrepEnrollmentTemplate,
-} from './templates';
+  ProjectEnrollmentEmailData,
+} from '@/interfaces';
 import { emailLogger } from '@/utils/emailLogger';
 
+import { emailClient } from './client';
+import {
+  courseCompletionTemplate,
+  courseEnrollmentTemplate,
+  interviewPrepEnrollmentTemplate,
+  projectEnrollmentTemplate,
+  welcomeEmailTemplate,
+} from './templates';
+
 class EmailTriggerService {
-  private getEmailTemplate(
-    trigger: EmailTriggerType,
+  private getDefaultFromEmail(): string {
+    return envConfig.FROM_EMAIL || 'theboringeducation@gmail.com';
+  }
+
+  private getDefaultFromName(): string {
+    return 'TBE';
+  }
+
+  private async sendEmailWithTemplate(
+    emailType: EmailTriggerType,
     data:
       | EmailTriggerData
       | CourseEnrollmentEmailData
       | ProjectEnrollmentEmailData
       | InterviewPrepEnrollmentEmailData
-  ): { subject: string; htmlContent: string } {
-    switch (trigger) {
-      case 'WELCOME':
-        return {
-          subject:
-            "🎉 Welcome to The Boring Education - Let's Build Something Amazing!",
-          htmlContent: welcomeEmailTemplate(data as EmailTriggerData),
-        };
+      | CourseCompletionEmailData,
+    templateFunction: (data: any) => string,
+    subject: string
+  ) {
+    const requestId = emailLogger.generateRequestId();
 
-      case 'COURSE_ENROLLMENT': {
-        const courseData = data as CourseEnrollmentEmailData;
-        return {
-          subject: `🚀 You're enrolled in ${courseData.courseName} - Let's start learning!`,
-          htmlContent: courseEnrollmentTemplate(courseData),
-        };
-      }
+    try {
+      const htmlContent = templateFunction(data);
 
-      case 'PROJECT_ENROLLMENT': {
-        const projectData = data as ProjectEnrollmentEmailData;
-        return {
-          subject: `🛠️ Time to build ${projectData.projectName} - Your coding journey starts now!`,
-          htmlContent: projectEnrollmentTemplate(projectData),
-        };
-      }
+      const emailData = {
+        from_email: this.getDefaultFromEmail(),
+        from_name: this.getDefaultFromName(),
+        to_email: data.userEmail,
+        to_name: data.userName,
+        subject,
+        html_content: htmlContent,
+      };
 
-      case 'INTERVIEW_PREP_ENROLLMENT': {
-        const interviewData = data as InterviewPrepEnrollmentEmailData;
-        return {
-          subject: `💼 Ready to ace ${interviewData.sheetName}? Let's prep for success!`,
-          htmlContent: interviewPrepEnrollmentTemplate(interviewData),
-        };
-      }
+      const result = await emailClient.sendEmail(emailData, requestId);
 
-      default:
-        throw new Error(`Unknown email trigger: ${trigger}`);
+      return {
+        success: result.success,
+        message: result.success
+          ? `${emailType} email sent successfully`
+          : 'Failed to send email',
+        requestId: result.requestId,
+        error: result.error,
+      };
+    } catch (error: any) {
+      emailLogger.logError(
+        requestId,
+        data.userEmail,
+        error,
+        'TEMPLATE_GENERATION'
+      );
+      return {
+        success: false,
+        message: 'Failed to send email',
+        requestId,
+        error: error.message || 'Unknown error',
+      };
     }
   }
 
@@ -70,98 +87,181 @@ class EmailTriggerService {
       | CourseEnrollmentEmailData
       | ProjectEnrollmentEmailData
       | InterviewPrepEnrollmentEmailData
-  ): Promise<EmailResponse> {
-    const requestId = emailLogger.generateRequestId();
-    const startTime = Date.now();
-
-    try {
-      // Log initial request
-      emailLogger.logRequest(requestId, trigger, data.userEmail, data.userId, {
-        trigger,
-        userName: data.userName,
-      });
-
-      // Generate template
-      emailLogger.logTemplateGeneration(requestId, data.userEmail, {
-        trigger,
-        templateType: trigger,
-      });
-
-      const { subject, htmlContent } = this.getEmailTemplate(trigger, data);
-
-      const emailRequest: EmailRequest = {
-        from_email: envConfig.FROM_EMAIL,
-        to_email: data.userEmail,
-        subject,
-        html_content: htmlContent,
-      };
-
-      const result = await emailClient.sendEmail(emailRequest, requestId);
-
-      if (result.success) {
-        const duration = Date.now() - startTime;
-        emailLogger.logSuccess(requestId, data.userEmail, duration, {
+      | CourseCompletionEmailData
+  ) {
+    switch (trigger) {
+      case 'WELCOME':
+        return this.sendEmailWithTemplate(
           trigger,
-          subject,
-          userName: data.userName,
-          totalDuration: duration,
-        });
-      } else {
-        emailLogger.logError(
-          requestId,
-          data.userEmail,
-          new Error(result.error),
-          'TRIGGER_SEND',
-          {
-            trigger,
-            subject,
-            userName: data.userName,
-          }
+          data as EmailTriggerData,
+          welcomeEmailTemplate,
+          'Welcome to The Boring Education! 🎉'
         );
-      }
 
-      return { ...result, requestId };
-    } catch (error: any) {
-      emailLogger.logError(
-        requestId,
-        data.userEmail,
-        error,
-        'TRIGGER_PROCESS',
-        {
+      case 'COURSE_ENROLLMENT':
+        return this.sendEmailWithTemplate(
           trigger,
-          userName: data.userName,
-          stage: 'template_generation_or_setup',
-        }
-      );
+          data as CourseEnrollmentEmailData,
+          courseEnrollmentTemplate,
+          `Welcome to ${(data as CourseEnrollmentEmailData).courseName}! 🚀`
+        );
 
-      return {
-        success: false,
-        error: error.message || 'Failed to send trigger email',
-        requestId,
-      };
+      case 'PROJECT_ENROLLMENT':
+        return this.sendEmailWithTemplate(
+          trigger,
+          data as ProjectEnrollmentEmailData,
+          projectEnrollmentTemplate,
+          `Welcome to ${(data as ProjectEnrollmentEmailData).projectName}! 🛠️`
+        );
+
+      case 'INTERVIEW_PREP_ENROLLMENT':
+        return this.sendEmailWithTemplate(
+          trigger,
+          data as InterviewPrepEnrollmentEmailData,
+          interviewPrepEnrollmentTemplate,
+          `Welcome to ${
+            (data as InterviewPrepEnrollmentEmailData).sheetName
+          }! 🎯`
+        );
+
+      case 'COURSE_COMPLETION':
+        return this.sendEmailWithTemplate(
+          trigger,
+          data as CourseCompletionEmailData,
+          courseCompletionTemplate,
+          `Congratulations! You've completed ${
+            (data as CourseCompletionEmailData).courseName
+          }! 🏆`
+        );
+
+      default:
+        return {
+          success: false,
+          message: `Unsupported email trigger: ${trigger}`,
+          error: 'Invalid email trigger type',
+          requestId: undefined,
+        };
     }
   }
 
-  async sendWelcomeEmail(data: EmailTriggerData): Promise<EmailResponse> {
-    return this.sendTriggerEmail('WELCOME', data);
-  }
+  // New method for external API usage
+  async sendExternalEmail(
+    request: ExternalEmailRequest
+  ): Promise<ExternalEmailResponse> {
+    const { emailType, userData, additionalData } = request;
 
-  async sendCourseEnrollmentEmail(
-    data: CourseEnrollmentEmailData
-  ): Promise<EmailResponse> {
-    return this.sendTriggerEmail('COURSE_ENROLLMENT', data);
-  }
+    try {
+      // Validate required data
+      if (!userData.email || !userData.name || !userData.id) {
+        return {
+          success: false,
+          message: 'Missing required user data: email, name, or id',
+          error: 'INVALID_USER_DATA',
+        };
+      }
 
-  async sendProjectEnrollmentEmail(
-    data: ProjectEnrollmentEmailData
-  ): Promise<EmailResponse> {
-    return this.sendTriggerEmail('PROJECT_ENROLLMENT', data);
-  }
+      // Create base data object
+      const baseData = {
+        userEmail: userData.email,
+        userName: userData.name,
+        userId: userData.id,
+        metadata: additionalData || {},
+      };
 
-  async sendInterviewPrepEnrollmentEmail(
-    data: InterviewPrepEnrollmentEmailData
-  ): Promise<EmailResponse> {
-    return this.sendTriggerEmail('INTERVIEW_PREP_ENROLLMENT', data);
+      // Create specific data object based on email type
+      let emailData: any = baseData;
+
+      switch (emailType) {
+        case 'WELCOME':
+          emailData = baseData;
+          break;
+
+        case 'COURSE_ENROLLMENT':
+          if (!additionalData?.courseName) {
+            return {
+              success: false,
+              message: 'Missing required course data: courseName',
+              error: 'INVALID_COURSE_DATA',
+            };
+          }
+          emailData = {
+            ...baseData,
+            courseName: additionalData.courseName,
+            courseDescription: additionalData.courseDescription,
+          };
+          break;
+
+        case 'PROJECT_ENROLLMENT':
+          if (!additionalData?.projectName) {
+            return {
+              success: false,
+              message: 'Missing required project data: projectName',
+              error: 'INVALID_PROJECT_DATA',
+            };
+          }
+          emailData = {
+            ...baseData,
+            projectName: additionalData.projectName,
+            projectDescription: additionalData.projectDescription,
+          };
+          break;
+
+        case 'INTERVIEW_PREP_ENROLLMENT':
+          if (!additionalData?.sheetName) {
+            return {
+              success: false,
+              message: 'Missing required sheet data: sheetName',
+              error: 'INVALID_SHEET_DATA',
+            };
+          }
+          emailData = {
+            ...baseData,
+            sheetName: additionalData.sheetName,
+            sheetDescription: additionalData.sheetDescription,
+          };
+          break;
+
+        case 'COURSE_COMPLETION':
+          if (!additionalData?.courseName || !additionalData?.completionDate) {
+            return {
+              success: false,
+              message:
+                'Missing required completion data: courseName, completionDate',
+              error: 'INVALID_COMPLETION_DATA',
+            };
+          }
+          emailData = {
+            ...baseData,
+            courseName: additionalData.courseName,
+            completionDate: additionalData.completionDate,
+            certificateUrl: additionalData.certificateUrl,
+          };
+          break;
+
+        default:
+          return {
+            success: false,
+            message: `Unsupported email type: ${emailType}`,
+            error: 'INVALID_EMAIL_TYPE',
+          };
+      }
+
+      // Send the email
+      const result = await this.sendTriggerEmail(emailType, emailData);
+
+      return {
+        success: result.success,
+        message: result.message || 'Email processed',
+        requestId: result.requestId || undefined,
+        error: result.error,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: 'Failed to process email request',
+        error: error.message || 'Unknown error',
+      };
+    }
   }
 }
 

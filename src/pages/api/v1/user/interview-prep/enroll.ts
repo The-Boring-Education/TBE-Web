@@ -4,8 +4,8 @@ import { apiStatusCodes } from '@/constant';
 import {
   enrollInASheet,
   getEnrolledSheetFromDB,
-  getUserByIdFromDB,
   getInterviewSheetByIDFromDB,
+  getUserByIdFromDB,
 } from '@/database';
 import type { SheetEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
@@ -83,23 +83,20 @@ const handleSheetEnrollment = async (
 
       if (userResult.data && sheetResult.data) {
         sendInterviewPrepEnrollmentEmail({
-          userEmail: userResult.data.email,
-          userName: userResult.data.name,
-          userId: userId,
-          sheetName: sheetResult.data.title,
+          email: userResult.data.email,
+          name: userResult.data.name,
+          id: userId,
+          sheetName: sheetResult.data.name,
           sheetDescription: sheetResult.data.description,
-          sheetId: sheetId,
         }).catch((error) => {
           console.error(
             'Failed to send interview prep enrollment email:',
             error
           );
-          // Don't fail the enrollment if email fails
         });
       }
     } catch (error) {
       console.error('Error fetching user/sheet data for email:', error);
-      // Don't fail the enrollment if email data fetch fails
     }
 
     return res.status(apiStatusCodes.OKAY).json(

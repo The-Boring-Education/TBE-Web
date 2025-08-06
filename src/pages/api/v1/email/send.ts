@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import type { EmailRequest } from '@/interfaces/email';
+import type { EmailRequest } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { emailClient } from '@/services/email';
 import { sendAPIResponse } from '@/utils';
@@ -34,7 +34,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleSendEmail = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { from_email, to_email, subject, html_content } = req.body as EmailRequest;
+    const { from_email, from_name, to_email, to_name, subject, html_content } =
+      req.body as EmailRequest;
 
     if (!to_email || !subject || !html_content) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -46,8 +47,10 @@ const handleSendEmail = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const emailData: EmailRequest = {
-      from_email: from_email || 'sachin@theboringeducation.com',
+      from_email: from_email || 'theboringeducation@gmail.com',
+      from_name: from_name || 'TBE',
       to_email,
+      to_name,
       subject,
       html_content,
     };

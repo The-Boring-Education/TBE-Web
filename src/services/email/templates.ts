@@ -1,9 +1,11 @@
-import type { 
-  EmailTriggerData, 
-  CourseEnrollmentEmailData, 
-  ProjectEnrollmentEmailData, 
-  InterviewPrepEnrollmentEmailData 
-} from '@/interfaces/email';
+import { envConfig, routes } from '@/constant';
+import type {
+  CourseCompletionEmailData,
+  CourseEnrollmentEmailData,
+  EmailTriggerData,
+  InterviewPrepEnrollmentEmailData,
+  ProjectEnrollmentEmailData,
+} from '@/interfaces';
 
 const getBaseTemplate = (content: string) => `
 <!DOCTYPE html>
@@ -169,11 +171,13 @@ export const welcomeEmailTemplate = (data: EmailTriggerData): string => {
         </a>
     </div>
   `;
-  
+
   return getBaseTemplate(content);
 };
 
-export const courseEnrollmentTemplate = (data: CourseEnrollmentEmailData): string => {
+export const courseEnrollmentTemplate = (
+  data: CourseEnrollmentEmailData
+): string => {
   const content = `
     <div class="greeting">Hey ${data.userName}! 📚</div>
     
@@ -186,7 +190,11 @@ export const courseEnrollmentTemplate = (data: CourseEnrollmentEmailData): strin
         
         <br><br>
         
-        ${data.courseDescription ? `<em>"${data.courseDescription}"</em><br><br>` : ''}
+        ${
+          data.courseDescription
+            ? `<em>"${data.courseDescription}"</em><br><br>`
+            : ''
+        }
         
         Here's what I recommend to make the most of this course:
         <ul>
@@ -200,21 +208,27 @@ export const courseEnrollmentTemplate = (data: CourseEnrollmentEmailData): strin
     </div>
     
     <div style="text-align: center;">
-        <a href="${data.courseUrl}" class="cta-button">
+        <a href=${
+          envConfig.NEXT_PUBLIC_BASE_URL + routes.user.dashboard
+        } class="cta-button">
             📖 Continue Learning
         </a>
     </div>
   `;
-  
+
   return getBaseTemplate(content);
 };
 
-export const projectEnrollmentTemplate = (data: ProjectEnrollmentEmailData): string => {
+export const projectEnrollmentTemplate = (
+  data: ProjectEnrollmentEmailData
+): string => {
   const content = `
     <div class="greeting">Hey ${data.userName}! 🛠️</div>
     
     <div class="main-text">
-        Awesome! You've enrolled in the <strong>${data.projectName}</strong> project! 🚀
+        Awesome! You've enrolled in the <strong>${
+          data.projectName
+        }</strong> project! 🚀
         
         <br><br>
         
@@ -222,7 +236,11 @@ export const projectEnrollmentTemplate = (data: ProjectEnrollmentEmailData): str
         
         <br><br>
         
-        ${data.projectDescription ? `<em>"${data.projectDescription}"</em><br><br>` : ''}
+        ${
+          data.projectDescription
+            ? `<em>"${data.projectDescription}"</em><br><br>`
+            : ''
+        }
         
         Here's how to ace this project:
         <ul>
@@ -242,43 +260,107 @@ export const projectEnrollmentTemplate = (data: ProjectEnrollmentEmailData): str
         </a>
     </div>
   `;
-  
+
   return getBaseTemplate(content);
 };
 
-export const interviewPrepEnrollmentTemplate = (data: InterviewPrepEnrollmentEmailData): string => {
-  const content = `
-    <div class="greeting">Hey ${data.userName}! 💼</div>
+export const interviewPrepEnrollmentTemplate = (
+  data: InterviewPrepEnrollmentEmailData
+): string => getBaseTemplate(`
+    <div class="greeting">Hello ${data.userName}! 👋</div>
     
     <div class="main-text">
-        Great choice! You've enrolled in <strong>${data.sheetName}</strong> for interview preparation! 🎯
-        
-        <br><br>
-        
-        Landing your dream tech job is completely achievable, and you're taking the right steps to get there.
-        
-        <br><br>
-        
-        ${data.sheetDescription ? `<em>"${data.sheetDescription}"</em><br><br>` : ''}
-        
-        Here's my proven strategy for interview success:
-        <ul>
-            <li>📊 <strong>Consistency over intensity</strong> - Solve 2-3 problems daily rather than 20 once a week</li>
-            <li>🧠 <strong>Understand patterns</strong> - Don't just memorize solutions</li>
-            <li>⏰ <strong>Time yourself</strong> - Practice under real interview conditions</li>
-            <li>🗣️ <strong>Think out loud</strong> - Explain your approach as you code</li>
-            <li>📚 <strong>Review regularly</strong> - Revisit problems you found challenging</li>
-        </ul>
-        
-        Remember, every "no" gets you closer to that "yes". Stay consistent, stay confident!
+      <p>Welcome to your Interview Prep journey! 🎯</p>
+      
+      <p>You've successfully enrolled in <strong>${data.sheetName}</strong>.</p>
+      
+      ${data.sheetDescription ? `<p>${data.sheetDescription}</p>` : ''}
+      
+      <p>This comprehensive interview preparation sheet will help you:</p>
+      <ul style="margin: 20px 0; padding-left: 20px;">
+        <li>Master key concepts and algorithms</li>
+        <li>Practice with real interview questions</li>
+        <li>Build confidence for technical interviews</li>
+        <li>Track your progress systematically</li>
+      </ul>
     </div>
     
     <div style="text-align: center;">
-        <a href="${data.sheetUrl}" class="cta-button">
-            🧩 Start Practicing
-        </a>
+      <a href=${
+        envConfig.NEXT_PUBLIC_BASE_URL + routes.user.dashboard
+      } class="cta-button">
+        Start Your Interview Prep 🚀
+      </a>
     </div>
-  `;
-  
-  return getBaseTemplate(content);
-};
+    
+    <div class="main-text">
+      <p><strong>Pro Tips:</strong></p>
+      <ul style="margin: 20px 0; padding-left: 20px;">
+        <li>Set aside dedicated time daily for practice</li>
+        <li>Focus on understanding concepts, not just memorizing</li>
+        <li>Practice coding problems regularly</li>
+        <li>Review and revise completed topics</li>
+      </ul>
+    </div>
+    
+    <div class="signature">
+      <div class="signature-name">The TBE Team</div>
+      <div class="signature-title">Your Interview Success Partners</div>
+    </div>
+  `);
+
+export const courseCompletionTemplate = (
+  data: CourseCompletionEmailData
+): string => getBaseTemplate(`
+    <div class="greeting">Congratulations ${data.userName}! 🎉</div>
+    
+    <div class="main-text">
+      <p>You've successfully completed <strong>${data.courseName}</strong>!</p>
+      
+      <p>This is a significant milestone in your learning journey. You've demonstrated dedication, persistence, and a commitment to growth.</p>
+      
+      <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <h3 style="margin: 0 0 10px 0; color: #0369a1;">🎯 What You've Achieved:</h3>
+        <ul style="margin: 0; padding-left: 20px;">
+          <li>Mastered course concepts and practical applications</li>
+          <li>Completed all assignments and assessments</li>
+          <li>Built real-world projects and skills</li>
+          <li>Joined an elite group of course completers</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div style="text-align: center;">
+      <a href=${
+        envConfig.NEXT_PUBLIC_BASE_URL + routes.user.dashboard
+      } class="cta-button">
+        Review Your Course 📚
+      </a>
+      ${
+        data.certificateUrl
+          ? `
+        <a href="${data.certificateUrl}" class="cta-button" style="margin-left: 10px; background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+          Download Certificate 🏆
+        </a>
+      `
+          : ''
+      }
+    </div>
+    
+    <div class="main-text">
+      <p><strong>What's Next?</strong></p>
+      <ul style="margin: 20px 0; padding-left: 20px;">
+        <li>Apply your new skills to real projects</li>
+        <li>Share your knowledge with the community</li>
+        <li>Explore advanced courses in related topics</li>
+        <li>Consider mentoring other learners</li>
+      </ul>
+      
+      <p>Remember, learning is a continuous journey. Keep building, keep growing, and keep pushing your boundaries!</p>
+    </div>
+    
+    <div class="signature">
+      <div class="signature-name">The TBE Team</div>
+      <div class="signature-title">Proud of Your Achievement!</div>
+    </div>
+  `);

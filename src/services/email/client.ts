@@ -1,6 +1,7 @@
 import axios from 'axios';
+
 import { envConfig } from '@/constant';
-import type { EmailRequest, EmailResponse } from '@/interfaces/email';
+import type { EmailRequest, EmailResponse } from '@/interfaces';
 import { emailLogger } from '@/utils/emailLogger';
 
 class EmailClient {

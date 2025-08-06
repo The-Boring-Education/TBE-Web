@@ -1,11 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { enrollInACourse, getEnrolledCourseFromDB, getUserByIdFromDB, getACourseFromDBById } from '@/database';
+import {
+  enrollInACourse,
+  getACourseFromDBById,
+  getEnrolledCourseFromDB,
+  getUserByIdFromDB,
+} from '@/database';
 import type { CourseEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { sendCourseEnrollmentEmail } from '@/utils/email';
+import { sendAPIResponse, sendCourseEnrollmentEmail } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -72,25 +76,22 @@ const handleCourseEnrollment = async (
     try {
       const [userResult, courseResult] = await Promise.all([
         getUserByIdFromDB(userId),
-        getACourseFromDBById(courseId)
+        getACourseFromDBById(courseId),
       ]);
 
       if (userResult.data && courseResult.data) {
         sendCourseEnrollmentEmail({
-          userEmail: userResult.data.email,
-          userName: userResult.data.name,
-          userId: userId,
-          courseName: courseResult.data.title,
+          email: userResult.data.email,
+          name: userResult.data.name,
+          id: userId,
+          courseName: courseResult.data.name,
           courseDescription: courseResult.data.description,
-          courseId: courseId,
-        }).catch(error => {
+        }).catch((error) => {
           console.error('Failed to send course enrollment email:', error);
-          // Don't fail the enrollment if email fails
         });
       }
     } catch (error) {
       console.error('Error fetching user/course data for email:', error);
-      // Don't fail the enrollment if email data fetch fails
     }
 
     return res.status(apiStatusCodes.OKAY).json(

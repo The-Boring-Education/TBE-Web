@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import type { EmailTriggerRequest } from '@/interfaces';
+import type { ExternalEmailRequest, ExternalEmailResponse } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { emailTriggerService } from '@/services/email';
 import { sendAPIResponse } from '@/utils';
@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (req.method) {
       case 'POST':
-        return handleEmailTrigger(req, res);
+        return handleExternalEmail(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
@@ -32,56 +32,73 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handleEmailTrigger = async (
+const handleExternalEmail = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   try {
-    const { trigger, data } = req.body as EmailTriggerRequest;
+    const { emailType, userData, additionalData } =
+      req.body as ExternalEmailRequest;
 
-    if (!trigger || !data) {
+    // Validate required fields
+    if (!emailType || !userData) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'Missing required fields: trigger, data',
+          message: 'Missing required fields: emailType, userData',
         })
       );
     }
 
-    if (!data.userEmail || !data.userName || !data.userId) {
+    if (!userData.email || !userData.name || !userData.id) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'Missing required user data: userEmail, userName, userId',
+          message: 'Missing required user data: email, name, id',
         })
       );
     }
 
-    const result = await emailTriggerService.sendTriggerEmail(trigger, data);
+    // Send email using the external email service
+    const result: ExternalEmailResponse =
+      await emailTriggerService.sendExternalEmail({
+        emailType,
+        userData,
+        additionalData,
+      });
 
     if (result.success) {
       return res.status(apiStatusCodes.OKAY).json(
         sendAPIResponse({
           status: true,
-          message: `${trigger} email sent successfully`,
-          data: result,
+          message: result.message,
+          data: {
+            requestId: result.requestId,
+            emailType,
+            userEmail: userData.email,
+          },
         })
       );
     } else {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: `Failed to send ${trigger} email`,
+          message: result.message,
           error: result.error,
+          data: {
+            requestId: result.requestId,
+            emailType,
+            userEmail: userData.email,
+          },
         })
       );
     }
   } catch (error) {
-    console.error('Email trigger error:', error);
+    console.error('External email sending error:', error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Failed to send email trigger',
+        message: 'Failed to send email',
         error,
       })
     );

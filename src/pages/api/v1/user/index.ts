@@ -153,8 +153,8 @@ const handleCreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
         sendWelcomeEmail({
           email,
           name,
-          userId: data._id.toString(),
-        }).catch(error => {
+          id: data._id.toString(),
+        }).catch((error) => {
           console.error('Failed to send welcome email:', error);
           // Don't fail the user creation if email fails
         });

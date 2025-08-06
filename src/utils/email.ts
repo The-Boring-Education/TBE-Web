@@ -1,182 +1,137 @@
 import type {
-  EmailTriggerData,
-  CourseEnrollmentEmailData,
-  ProjectEnrollmentEmailData,
-  InterviewPrepEnrollmentEmailData,
-} from '@/interfaces/email';
+  ExternalEmailRequest,
+} from '@/interfaces';
 import { emailTriggerService } from '@/services/email';
 
 /**
- * Utility function to send welcome email to new users
- * Now includes enhanced logging and request tracking
+ * Send a welcome email to a new user
  */
-export const sendWelcomeEmail = async (userData: {
+export const sendWelcomeEmail = async (data: {
   email: string;
   name: string;
-  userId: string;
+  id: string;
 }) => {
-  const emailData: EmailTriggerData = {
-    userEmail: userData.email,
-    userName: userData.name,
-    userId: userData.userId,
+  const request: ExternalEmailRequest = {
+    emailType: 'WELCOME',
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
   };
 
-  try {
-    const result = await emailTriggerService.sendWelcomeEmail(emailData);
-
-    // Enhanced logging for better tracking
-    if (result.success) {
-      console.log(
-        `✅ Welcome email queued successfully for ${userData.email} (RequestID: ${result.requestId})`
-      );
-    } else {
-      console.error(
-        `❌ Welcome email failed for ${userData.email} (RequestID: ${result.requestId}):`,
-        result.error
-      );
-    }
-
-    return result;
-  } catch (error) {
-    console.error('Failed to send welcome email:', error);
-    return { success: false, error: 'Failed to send welcome email' };
-  }
+  return emailTriggerService.sendExternalEmail(request);
 };
 
 /**
- * Utility function to send course enrollment email
- * Now includes enhanced logging and request tracking
+ * Send a course enrollment email
  */
-export const sendCourseEnrollmentEmail = async (enrollmentData: {
-  userEmail: string;
-  userName: string;
-  userId: string;
+export const sendCourseEnrollmentEmail = async (data: {
+  email: string;
+  name: string;
+  id: string;
   courseName: string;
   courseDescription?: string;
-  courseId: string;
 }) => {
-  const emailData: CourseEnrollmentEmailData = {
-    userEmail: enrollmentData.userEmail,
-    userName: enrollmentData.userName,
-    userId: enrollmentData.userId,
-    courseName: enrollmentData.courseName,
-    courseDescription: enrollmentData.courseDescription,
-    courseUrl: `https://www.theboringeducation.com/shiksha/${enrollmentData.courseId}`,
+  const request: ExternalEmailRequest = {
+    emailType: 'COURSE_ENROLLMENT',
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
+    additionalData: {
+      courseName: data.courseName,
+      courseDescription: data.courseDescription,
+    },
   };
 
-  try {
-    const result = await emailTriggerService.sendCourseEnrollmentEmail(
-      emailData
-    );
-
-    // Enhanced logging for better tracking
-    if (result.success) {
-      console.log(
-        `✅ Course enrollment email queued successfully for ${enrollmentData.userEmail} - ${enrollmentData.courseName} (RequestID: ${result.requestId})`
-      );
-    } else {
-      console.error(
-        `❌ Course enrollment email failed for ${enrollmentData.userEmail} - ${enrollmentData.courseName} (RequestID: ${result.requestId}):`,
-        result.error
-      );
-    }
-
-    return result;
-  } catch (error) {
-    console.error('Failed to send course enrollment email:', error);
-    return { success: false, error: 'Failed to send course enrollment email' };
-  }
+  return emailTriggerService.sendExternalEmail(request);
 };
 
 /**
- * Utility function to send project enrollment email
- * Now includes enhanced logging and request tracking
+ * Send a project enrollment email
  */
-export const sendProjectEnrollmentEmail = async (enrollmentData: {
-  userEmail: string;
-  userName: string;
-  userId: string;
+export const sendProjectEnrollmentEmail = async (data: {
+  email: string;
+  name: string;
+  id: string;
   projectName: string;
   projectDescription?: string;
-  projectId: string;
 }) => {
-  const emailData: ProjectEnrollmentEmailData = {
-    userEmail: enrollmentData.userEmail,
-    userName: enrollmentData.userName,
-    userId: enrollmentData.userId,
-    projectName: enrollmentData.projectName,
-    projectDescription: enrollmentData.projectDescription,
-    projectUrl: `https://www.theboringeducation.com/projects/${enrollmentData.projectId}`,
+  const request: ExternalEmailRequest = {
+    emailType: 'PROJECT_ENROLLMENT',
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
+    additionalData: {
+      projectName: data.projectName,
+      projectDescription: data.projectDescription,
+    },
   };
 
-  try {
-    const result = await emailTriggerService.sendProjectEnrollmentEmail(
-      emailData
-    );
-
-    // Enhanced logging for better tracking
-    if (result.success) {
-      console.log(
-        `✅ Project enrollment email queued successfully for ${enrollmentData.userEmail} - ${enrollmentData.projectName} (RequestID: ${result.requestId})`
-      );
-    } else {
-      console.error(
-        `❌ Project enrollment email failed for ${enrollmentData.userEmail} - ${enrollmentData.projectName} (RequestID: ${result.requestId}):`,
-        result.error
-      );
-    }
-
-    return result;
-  } catch (error) {
-    console.error('Failed to send project enrollment email:', error);
-    return { success: false, error: 'Failed to send project enrollment email' };
-  }
+  return emailTriggerService.sendExternalEmail(request);
 };
 
 /**
- * Utility function to send interview prep enrollment email
- * Now includes enhanced logging and request tracking
+ * Send an interview prep enrollment email
  */
-export const sendInterviewPrepEnrollmentEmail = async (enrollmentData: {
-  userEmail: string;
-  userName: string;
-  userId: string;
+export const sendInterviewPrepEnrollmentEmail = async (data: {
+  email: string;
+  name: string;
+  id: string;
   sheetName: string;
   sheetDescription?: string;
-  sheetId: string;
 }) => {
-  const emailData: InterviewPrepEnrollmentEmailData = {
-    userEmail: enrollmentData.userEmail,
-    userName: enrollmentData.userName,
-    userId: enrollmentData.userId,
-    sheetName: enrollmentData.sheetName,
-    sheetDescription: enrollmentData.sheetDescription,
-    sheetUrl: `https://www.theboringeducation.com/interview-prep/${enrollmentData.sheetId}`,
+  const request: ExternalEmailRequest = {
+    emailType: 'INTERVIEW_PREP_ENROLLMENT',
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
+    additionalData: {
+      sheetName: data.sheetName,
+      sheetDescription: data.sheetDescription,
+    },
   };
 
-  try {
-    const result = await emailTriggerService.sendInterviewPrepEnrollmentEmail(
-      emailData
-    );
-
-    // Enhanced logging for better tracking
-    if (result.success) {
-      console.log(
-        `✅ Interview prep enrollment email queued successfully for ${enrollmentData.userEmail} - ${enrollmentData.sheetName} (RequestID: ${result.requestId})`
-      );
-    } else {
-      console.error(
-        `❌ Interview prep enrollment email failed for ${enrollmentData.userEmail} - ${enrollmentData.sheetName} (RequestID: ${result.requestId}):`,
-        result.error
-      );
-    }
-
-    return result;
-  } catch (error) {
-    console.error('Failed to send interview prep enrollment email:', error);
-    return {
-      success: false,
-      error: 'Failed to send interview prep enrollment email',
-    };
-  }
+  return emailTriggerService.sendExternalEmail(request);
 };
+
+/**
+ * Send a course completion email
+ */
+export const sendCourseCompletionEmail = async (data: {
+  email: string;
+  name: string;
+  id: string;
+  courseName: string;
+  courseUrl: string;
+  completionDate: string;
+  certificateUrl?: string;
+}) => {
+  const request: ExternalEmailRequest = {
+    emailType: 'COURSE_COMPLETION',
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
+    additionalData: {
+      courseName: data.courseName,
+      courseUrl: data.courseUrl,
+      completionDate: data.completionDate,
+      certificateUrl: data.certificateUrl,
+    },
+  };
+
+  return emailTriggerService.sendExternalEmail(request);
+};
+
+/**
+ * Generic function to send any type of email
+ */
+export const sendEmail = async (request: ExternalEmailRequest) => emailTriggerService.sendExternalEmail(request);

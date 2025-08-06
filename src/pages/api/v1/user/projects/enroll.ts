@@ -4,8 +4,8 @@ import { apiStatusCodes } from '@/constant';
 import {
   enrollInAProject,
   getEnrolledProjectFromDB,
-  getUserByIdFromDB,
   getProjectByIDFromDB,
+  getUserByIdFromDB,
 } from '@/database';
 import type { ProjectEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
@@ -83,15 +83,13 @@ const handleProjectEnrollment = async (
 
       if (userResult.data && projectResult.data) {
         sendProjectEnrollmentEmail({
-          userEmail: userResult.data.email,
-          userName: userResult.data.name,
-          userId: userId,
-          projectName: projectResult.data.title,
+          email: userResult.data.email,
+          name: userResult.data.name,
+          id: userId,
+          projectName: projectResult.data.name,
           projectDescription: projectResult.data.description,
-          projectId: projectId,
         }).catch((error) => {
           console.error('Failed to send project enrollment email:', error);
-          // Don't fail the enrollment if email fails
         });
       }
     } catch (error) {
