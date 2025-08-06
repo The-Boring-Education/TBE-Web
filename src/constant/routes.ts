@@ -37,6 +37,7 @@ const routes = {
   },
   // PrepYatra
   prepYatra: '/prepyatra',
+
   certificate: '/certificate',
   contactUs: '/contact',
   refund: '/refund',
@@ -80,7 +81,7 @@ const routes = {
     webinar: '/webinar',
     project: (project: string) => `/projects/${project}`,
     shiksha: '/shiksha',
-    onboard: '/user/onbording',
+    onboard: '/user/onboarding',
     user: '/user',
     myCourses: '/user/shiksha',
     myProjects: '/user/projects',
@@ -104,13 +105,13 @@ const routes = {
       }
       return url;
     },
-    sheetByIdWithUser: (sheet: string, userId?: string) => {
-      let url = `/interview-prep/${sheet}`;
-      if (userId) {
-        url += `?userId=${userId}`;
-      }
+    sheetByIdWithUser: (slug: string, userId?: string, sheetId?: string) => {
+      let url = `/interview-prep?slug=${slug}`;
+      if (userId) url += `&userId=${userId}`;
+      if (sheetId) url += `&sheetId=${sheetId}`;
       return url;
     },
+
     projectById: (project: string) => `/projects/${project}`,
     projectByIdWithUser: (project: string, userId?: string) => {
       let url = `/projects/${project}`;
@@ -138,6 +139,7 @@ const routes = {
     unskilled: '/unskilled',
     unskilledEvaluation: '/unskilled/evaluation',
     markSheetQuestionAsStarred: '/user/interview-prep/starred',
+    leaderboard: '/leaderboard',
   },
 };
 

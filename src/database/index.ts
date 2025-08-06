@@ -4,6 +4,7 @@ import Feedback from './models/Feedback';
 import Gamification from './models/Gamification';
 import InterviewSheet from './models/InterviewPrep/Sheet';
 import UserSheet from './models/InterviewPrep/UserSheet';
+import Leaderboard from './models/Leaderboard';
 import Notification from './models/Notification';
 import Payment from './models/Payment';
 import PrepLog from './models/PrepYatra/PrepLog';
@@ -11,6 +12,8 @@ import Recruiter from './models/PrepYatra/Recruiters';
 import PrepYatraSubscription from './models/PrepYatra/Subscription';
 import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
+import Quiz from './models/Quiz/Quiz';
+import QuizAttempt from './models/Quiz/QuizAttempt';
 import Course from './models/Shiksha/Course';
 import UserCourse from './models/Shiksha/UserCourse';
 import JobAggregate from './models/Unskilled/JobAggregate';
@@ -28,12 +31,15 @@ export {
   InterviewSheet,
   Job,
   JobAggregate,
+  Leaderboard,
   Notification,
   Payment,
   Playlist,
   PrepLog,
   PrepYatraSubscription,
   Project,
+  Quiz,
+  QuizAttempt,
   Recruiter,
   User,
   UserCourse,
@@ -49,6 +55,7 @@ export * from './query/common';
 export * from './query/feedback';
 export * from './query/gamification';
 export * from './query/interview-prep';
+export * from './query/leaderboard';
 export * from './query/notification';
 export * from './query/payment';
 export * from './query/prepyatra';

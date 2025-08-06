@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
 import { updateUserSkillsInDB } from '@/database/query/user';
 import { connectDB } from '@/middlewares';

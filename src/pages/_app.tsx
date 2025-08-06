@@ -32,18 +32,8 @@ const AppContent = ({
     if (loading || !isAuth) return;
 
     if (!isOnboarded && isAuth && router.pathname !== routes.onboarding) {
-      // Redirect to external onboarding app
-      const onboardingBaseUrl = envConfig.ONBOARDING_APP_URL;
-      const params = new URLSearchParams({
-        userId: user?.id || '',
-        from: 'webapp',
-        redirect: window.location.href,
-      });
-      // If token is available, add it
-      if (user && (user as any).token) {
-        params.append('token', (user as any).token);
-      }
-      window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
+      // Redirect to internal onboarding page
+      router.push(routes.onboarding);
       return;
     }
     // Redirect to dashboard if onboarded and authenticated

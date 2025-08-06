@@ -1,5 +1,10 @@
 import { modelSelectParams } from '@/constant';
-import { InterviewSheet, updateUserPointsInDB, UserSheet } from '@/database';
+import {
+  InterviewSheet,
+  toObjectId,
+  updateUserPointsInDB,
+  UserSheet,
+} from '@/database';
 import type {
   AddInterviewQuestionRequestPayloadProps,
   AddInterviewSheetRequestPayloadProps,
@@ -8,7 +13,6 @@ import type {
   SheetEnrollmentRequestProps,
   UpdateInterviewSheetRequestPayloadProps,
 } from '@/interfaces';
-import { toObjectId } from '@/utils';
 
 const addAInterviewSheetToDB = async (
   sheetPayload: AddInterviewSheetRequestPayloadProps
@@ -40,7 +44,8 @@ const getAllInterviewSheetsFromDB =
   };
 
 const getInterviewSheetBySlugFromDB = async (
-  slug: string
+  slug: string,
+  userId?: string
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const sheet = await InterviewSheet.findOne({ slug });
@@ -49,7 +54,39 @@ const getInterviewSheetBySlugFromDB = async (
       return { error: 'Sheet not found' };
     }
 
-    return { data: sheet };
+    let isEnrolled = false;
+    let mappedQuestions = sheet.questions.map((q) => q.toObject());
+
+    if (userId) {
+      const userSheet = await UserSheet.findOne({
+        userId,
+        sheetId: sheet._id,
+      });
+
+      isEnrolled = !!userSheet;
+
+      if (userSheet) {
+        mappedQuestions = sheet.questions.map((question) => {
+          const userQuestion = userSheet.questions.find(
+            (uq) => uq.questionId.toString() === question._id.toString()
+          );
+
+          return {
+            ...question.toObject(),
+            isCompleted: userQuestion?.isCompleted || false,
+            isStarred: userQuestion?.isStarred || false,
+          };
+        });
+      }
+    }
+
+    return {
+      data: {
+        ...sheet.toObject(),
+        isEnrolled,
+        questions: mappedQuestions,
+      },
+    };
   } catch (error) {
     return { error };
   }
@@ -364,13 +401,14 @@ const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
     if (!userSheet) {
       return { data: [], error: 'UserSheet not found' };
     }
-    
-    const starredQuestions = userSheet.questions.filter(q => q.isStarred === true);
+
+    const starredQuestions = userSheet.questions.filter(
+      (q) => q.isStarred === true
+    );
     return { data: starredQuestions };
   } catch (error) {
     return { error: 'Failed to get starred questions' };
   }
-  
 };
 
 export {
@@ -385,9 +423,9 @@ export {
   getEnrolledSheetFromDB,
   getInterviewSheetByIDFromDB,
   getInterviewSheetBySlugFromDB,
+  getStarredQuestionsFromDB,
   markQuestionCompletedByUser,
+  markQuestionStarredByUser,
   updateInterviewQuestionInDB,
   updateInterviewSheetInDB,
-  markQuestionStarredByUser,
-  getStarredQuestionsFromDB,
 };

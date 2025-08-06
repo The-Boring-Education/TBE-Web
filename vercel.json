@@ -1,13 +1,19 @@
 {
-  "headers": [
-    {
-      "source": "/fonts/inter-var-latin.woff2",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
+    "buildCommand": "npm run build",
+    "functions": {
+        "src/pages/api/**/*.ts": {
+            "maxDuration": 30
         }
-      ]
-    }
-  ]
+    },
+    "headers": [
+        {
+            "source": "/fonts/inter-var-latin.woff2",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=31536000, immutable"
+                }
+            ]
+        }
+    ]
 }

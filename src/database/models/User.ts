@@ -16,7 +16,7 @@ const PrepYatraSchema = new Schema({
     type: Boolean,
     default: false,
   },
- 
+
   experienceLevel: {
     type: String,
   },

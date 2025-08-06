@@ -85,7 +85,11 @@ const SheetHeroContainer = ({
   } else if (isAuth && !isEnrolled && isPremium && isPurchased) {
     headerActionButton = (
       <FlexContainer>
-        <Button text='Enroll in Sheet' variant='PRIMARY' onClick={enrollSheet} />
+        <Button
+          text='Enroll in Sheet'
+          variant='PRIMARY'
+          onClick={enrollSheet}
+        />
       </FlexContainer>
     );
   }

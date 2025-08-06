@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef } from 'react';
 
 import type {
   CohortDataProps,
+  LeaderboardType,
   MentorshipCardProps,
   PlatformUsageType,
   PortfolioTemplateProps,
@@ -77,12 +78,13 @@ const products: ProductDataProps = {
     slug: routes.unskilled,
     description: 'Find Your Next Tech Job with Insights',
   },
-  // Yatra Products - External Tools
+  // PrepYatra - Internal Product
   prepYatra: {
     label: 'Prep Yatra',
     slug: routes.prepYatra,
     description: 'Complete Interview Preparation Platform',
   },
+  // Yatra Products - External Tools
   techYatra: {
     label: 'Tech Yatra',
     slug: 'https://techyatra.netlify.app/',
@@ -350,6 +352,9 @@ const POINTS_RULES: Record<UserPointsActionType, number> = {
   PREPLOG_STREAK_7: 50,
   PREPLOG_STREAK_15: 100,
   PREPLOG_STREAK_30: 200,
+  COMPLETE_QUIZ: 30,
+  QUIZ_PERFECT_SCORE: 50,
+  QUIZ_STREAK: 20,
 };
 
 const USER_LEVELS: UserLevel[] = [
@@ -430,6 +435,8 @@ const PAGE_REFRESH_TIMEOUT = {
 const isProductionEnv = envConfig.NODE_ENV === 'production';
 const isDevelopmentEnv = envConfig.NODE_ENV === 'development';
 
+const LEADERBOARD_TABS: LeaderboardType[] = ['DAILY', 'WEEKLY', 'MONTHLY'];
+
 export {
   apiStatusCodes,
   cohorts,
@@ -443,6 +450,7 @@ export {
   isProductionEnv,
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
+  LEADERBOARD_TABS,
   LINKS,
   localStorageKeys,
   MENTORSHIP_CARDS,

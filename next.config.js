@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
@@ -7,6 +8,15 @@ const nextConfig = {
   },
 
   reactStrictMode: true,
+
+  // Performance optimizations
+  swcMinify: true,
+  compress: true,
+
+  // Bundle size optimization - simplified approach
+  experimental: {
+    optimizePackageImports: ['framer-motion'],
+  },
 
   images: {
     domains: [
@@ -83,15 +93,6 @@ const nextConfig = {
     }
 
     return config;
-  },
-  async redirects() {
-    return [
-      {
-        source: '/sitemap.xml',
-        destination: '/api/sitemap',
-        permanent: true,
-      },
-    ];
   },
 };
 
