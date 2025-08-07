@@ -64,6 +64,7 @@ export interface TopNavbarContainerProps {
   cohorts: TopNavbarLinkProps[];
   tools: TopNavbarLinkProps[];
   links: TopNavbarLinkProps[];
+  issues: TopNavbarLinkProps[];
 }
 
 export interface ServerSessionProp {

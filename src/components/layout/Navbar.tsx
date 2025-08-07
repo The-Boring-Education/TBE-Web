@@ -58,6 +58,13 @@ const Navbar = () => {
           </button>
         </div>
         <div className='hidden items-center lg:flex lg:gap-x-4'>
+        <PopoverContainer
+            isOpen={openPopover === 'Contribute'}
+            label='Contribute'
+            onToggle={() => handleSetOpen('Contribute')}
+        >
+          <NavbarDropdownContainer links={TOP_NAVIGATION.issues} />
+        </PopoverContainer>
           <PopoverContainer
             isOpen={openPopover === 'cohorts'}
             label='Cohorts'
