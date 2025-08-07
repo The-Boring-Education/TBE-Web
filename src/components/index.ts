@@ -334,6 +334,9 @@ const StarButton = dynamic(
 const Leaderboard = dynamic(
   () => import('@/components/containers/Cards/Leaderboard')
 );
+const QuizSection = dynamic(
+  () => import('@/components/containers/Cards/QuizSection')
+);
 
 export {
   AboutTBE,
@@ -389,6 +392,7 @@ export {
   Leaderboard,
   LinerProgressBar,
   LinkText as Link,
+  QuizSection,
   LinkButton,
   LoadingSpinner,
   LoginCard,
