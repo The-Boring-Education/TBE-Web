@@ -11,11 +11,12 @@ const allowedOrigins = [
   envConfig.ADMIN_BASE_URL,
 ].filter(Boolean);
 
+// Whitelist all origins for now
 export const cors = initMiddleware(
   Cors({
-    origin: true,
+    origin: '*', // Allow all origins
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    credentials: true,
+    credentials: false, // Set to false when using origin: '*'
     allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-secret'],
   })
 );
