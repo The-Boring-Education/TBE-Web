@@ -8,12 +8,17 @@ import {
 } from '@/database';
 import type { AddProjectRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
-import { applyMultiOriginCorsHeaders, sendAPIResponse } from '@/utils';
+import { sendAPIResponse } from '@/utils';
+import { cors } from '@/utils/cors';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers
-  const isPreflight = applyMultiOriginCorsHeaders(req, res);
-  if (isPreflight) return;
+  await cors(req, res);
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
 
   await connectDB();
 

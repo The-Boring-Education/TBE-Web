@@ -11,16 +11,20 @@ import {
 } from '@/database';
 import { connectDB } from '@/middlewares';
 import {
-  applyMultiOriginCorsHeaders,
   extractPlaylistId,
   fetchPlaylistData,
   sendAPIResponse,
 } from '@/utils';
+import { cors } from '@/utils/cors';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers
-  const isPreflight = applyMultiOriginCorsHeaders(req, res);
-  if (isPreflight) return;
+  await cors(req, res);
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
 
   await connectDB();
   const { query } = req;
