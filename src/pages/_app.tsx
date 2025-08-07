@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { PageLayout } from '@/components';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import { GamificationProvider } from '@/components/layout/GamificationProvider';
-import { envConfig, googleAnalyticsScript, gtag, routes } from '@/constant';
+import { googleAnalyticsScript, gtag, routes } from '@/constant';
 import { useUser } from '@/hooks';
 import { getRedirectUrl } from '@/utils';
 

@@ -1,10 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { enrollInACourse, getEnrolledCourseFromDB } from '@/database';
+import {
+  enrollInACourse,
+  getACourseFromDBById,
+  getEnrolledCourseFromDB,
+  getUserByIdFromDB,
+} from '@/database';
 import type { CourseEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
+import { sendAPIResponse, sendCourseEnrollmentEmail } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -66,6 +71,28 @@ const handleCourseEnrollment = async (
           message: 'Failed while enrolling course',
         })
       );
+
+    // Send course enrollment email (non-blocking)
+    try {
+      const [userResult, courseResult] = await Promise.all([
+        getUserByIdFromDB(userId),
+        getACourseFromDBById(courseId),
+      ]);
+
+      if (userResult.data && courseResult.data) {
+        sendCourseEnrollmentEmail({
+          email: userResult.data.email,
+          name: userResult.data.name,
+          id: userId,
+          courseName: courseResult.data.name,
+          courseDescription: courseResult.data.description,
+        }).catch((error) => {
+          console.error('Failed to send course enrollment email:', error);
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching user/course data for email:', error);
+    }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({

@@ -2,6 +2,8 @@ export * from './api';
 export * from './Components';
 export * from './constants';
 export * from './database';
+export * from './email';
+export * from './email';
 export * from './github';
 export * from './global';
 export * from './hooks';
