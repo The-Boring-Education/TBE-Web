@@ -41,7 +41,7 @@
     "uuid": "^9.0.0"
   },
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   },
   "devDependencies": {
     "@svgr/webpack": "^6.5.1",

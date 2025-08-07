@@ -13,7 +13,7 @@ const allowedOrigins = [
 
 export const cors = initMiddleware(
   Cors({
-    origin: allowedOrigins,
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-secret'],
