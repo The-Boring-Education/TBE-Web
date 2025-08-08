@@ -237,6 +237,7 @@ const ProjectPage = ({
                     key='enroll'
                     className='w-fit'
                     isLoading={isLoading}
+                    disabled={!project.isEnrolled}
                     text={
                       isLoading
                         ? 'Marking...'
