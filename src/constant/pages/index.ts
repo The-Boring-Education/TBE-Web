@@ -126,6 +126,15 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: routes.user.dashboard,
     },
   ],
+  issues: [
+    {
+      id: v4(),
+      name: 'Open Source',
+      description: 'Create Open Source Issues for our community.',
+      href: LINKS.createIssue,
+      target: '_blank',
+    },
+  ],
 };
 
 const PRODUCTS: PrimaryCardWithCTAProps[] = [
