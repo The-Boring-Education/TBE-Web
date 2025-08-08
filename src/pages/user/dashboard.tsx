@@ -100,7 +100,7 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
         <Leaderboard />
         <NotificationContainer />
         <QuizSection
-          buttonLink='https://quiz.theboringeducation.com'
+          buttonLink={LINKS.quizApp}
           imageSrc={`${STATIC_FILE_PATH.svg}/hero-image.svg`}
           buttonText='Start Quizzing'
           description='Test your knowledge with our interactive quizzes. Challenge yourself with questions on various tech topics and track your progress.'

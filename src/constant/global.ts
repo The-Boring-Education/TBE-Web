@@ -130,7 +130,8 @@ const LINKS = {
   postmanDocs: 'https://documenter.getpostman.com/view/10360102/2sAYdcsYK3',
   hostTBEAtYourCollege: 'https://tally.so/r/mZkOby',
   viewSessionDetails: 'https://bit.ly/TBECampusConnect',
-  createIssue:'https://github.com/The-Boring-Education/TBE-Web/issues/new',
+  createIssue: 'https://github.com/The-Boring-Education/TBE-Web/issues/new',
+  quizApp: 'https://quiz.theboringeducation.com',
 };
 
 // Google analytics

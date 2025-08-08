@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { PageLayout } from '@/components';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import { GamificationProvider } from '@/components/layout/GamificationProvider';
-import { googleAnalyticsScript, gtag, routes } from '@/constant';
+import { envConfig, googleAnalyticsScript, gtag, routes } from '@/constant';
 import { useUser } from '@/hooks';
 import { getRedirectUrl } from '@/utils';
 
@@ -32,8 +32,18 @@ const AppContent = ({
     if (loading || !isAuth) return;
 
     if (!isOnboarded && isAuth && router.pathname !== routes.onboarding) {
-      // Redirect to internal onboarding page
-      router.push(routes.onboarding);
+      // Redirect to external onboarding app
+      const onboardingBaseUrl = envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL;
+      const params = new URLSearchParams({
+        userId: user?.id || '',
+        from: 'webapp',
+        redirect: window.location.href,
+      });
+      // If token is available, add it
+      if (user && (user as any).token) {
+        params.append('token', (user as any).token);
+      }
+      window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
       return;
     }
     // Redirect to dashboard if onboarded and authenticated
