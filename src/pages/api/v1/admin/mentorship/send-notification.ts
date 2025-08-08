@@ -78,7 +78,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
               <a class="cta" href="#" target="_blank" rel="noopener">Keep up the momentum</a>
               <div class="note">You don’t need to reply to this email. We’ll reach out when an action is needed from your side.</div>
-              <div class="section" style="margin-top:18px;">— Team TBE</div>
+              <div class="section" style="margin-top:18px;">- Sachin from The Boring Education</div>
             </div>
           </div>
           <div class="footer">You received this because you are enrolled in Prep Yatra. © The Boring Education</div>
