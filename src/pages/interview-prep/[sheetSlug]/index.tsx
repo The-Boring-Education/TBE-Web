@@ -135,11 +135,16 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   };
 
   const toggleCompletion = async () => {
+    // Don't allow completion if user is not enrolled
+    if (!sheet.isEnrolled) {
+      return;
+    }
+
     setIsLoading(true);
     try {
       const newCompletionStatus = !isQuestionCompleted;
 
-      await makeRequest({
+      const response = await makeRequest({
         method: 'PATCH',
         url: routes.api.markSheetQuestionAsCompleted,
         body: {
@@ -150,34 +155,36 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         },
       });
 
-      // Fire gamified action on completion
-      if (newCompletionStatus) {
-        await gamifiedAction.triggerGamifiedAction({
-          gamificationAction: 'COMPLETE_QUESTION',
-          analytics: {
-            action: 'QUESTION_COMPLETE',
-            category: 'Learning',
-            label: 'Question Completed',
-          },
-          customMessage: 'Question solved! Great work!',
-          metadata: {
-            sheetId: sheet._id,
-            questionId: currentQuestionId,
-            sheetName: sheet.name,
-          },
-        });
-      } else {
-        trackEvent({
-          action: 'INTERVIEW_SHEET_PROGRESS',
-          category: 'InterviewSheet',
-          label: 'Interview Sheet Progress',
-          value: {
-            userId: user?.id,
-            sheetId: sheet._id,
-            questionId: currentQuestionId,
-          },
-        });
-      }
+      // Only proceed if the API call was successful
+      if (response?.status) {
+        // Fire gamified action on completion
+        if (newCompletionStatus) {
+          await gamifiedAction.triggerGamifiedAction({
+            gamificationAction: 'COMPLETE_QUESTION',
+            analytics: {
+              action: 'QUESTION_COMPLETE',
+              category: 'Learning',
+              label: 'Question Completed',
+            },
+            customMessage: 'Question solved! Great work!',
+            metadata: {
+              sheetId: sheet._id,
+              questionId: currentQuestionId,
+              sheetName: sheet.name,
+            },
+          });
+        } else {
+          trackEvent({
+            action: 'INTERVIEW_SHEET_PROGRESS',
+            category: 'InterviewSheet',
+            label: 'Interview Sheet Progress',
+            value: {
+              userId: user?.id,
+              sheetId: sheet._id,
+              questionId: currentQuestionId,
+            },
+          });
+        }
 
       // Update local state (mark question completed)
       const updatedQuestions = questions.map((question) =>
@@ -186,24 +193,28 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           : question
       );
 
-      setQuestions(updatedQuestions);
-      setIsQuestionCompleted(newCompletionStatus);
+        setQuestions(updatedQuestions);
+        setIsQuestionCompleted(newCompletionStatus);
 
-      // Move to next question if completed
-      if (newCompletionStatus) {
-        const currentIndex = questions.findIndex(
-          (q) => q._id.toString() === currentQuestionId
-        );
+        // Move to next question if completed
+        if (newCompletionStatus) {
+          const currentIndex = questions.findIndex(
+            (q) => q._id.toString() === currentQuestionId
+          );
 
-        const next =
-          questions.slice(currentIndex + 1).find((q) => !q.isCompleted) ||
-          questions.find((q) => !q.isCompleted); // Loop to beginning if none left
+          const next =
+            questions.slice(currentIndex + 1).find((q) => !q.isCompleted) ||
+            questions.find((q) => !q.isCompleted); // Loop to beginning if none left
 
-        if (next) {
-          const questionId = next._id.toString();
-          setCurrentQuestionId(questionId);
-          setSheetMeta(`${next.question}\n\n${next.answer}`);
+          if (next) {
+            const questionId = next._id.toString();
+            setCurrentQuestionId(questionId);
+            setSheetMeta(`${next.question}\n\n${next.answer}`);
+          }
         }
+      } else {
+        // Handle API error - don't update local state
+        console.error('Failed to update question completion:', response?.message);
       }
     } catch (error) {
       console.error('Error toggling question completion:', error);
@@ -340,9 +351,12 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       key='complete'
                       className='w-fit mt-2'
                       isLoading={isLoading}
+                      disabled={!sheet.isEnrolled}
                       text={
                         isLoading
                           ? 'Marking...'
+                          : !sheet.isEnrolled
+                          ? 'Enroll to Mark Complete'
                           : isQuestionCompleted
                           ? 'Completed'
                           : 'Mark As Completed'
@@ -350,6 +364,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       variant={
                         isQuestionCompleted
                           ? 'SUCCESS'
+                          : !sheet.isEnrolled
+                          ? 'SECONDARY'
                           : isLoading
                           ? 'SECONDARY'
                           : 'PRIMARY'

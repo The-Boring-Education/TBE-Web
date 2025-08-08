@@ -116,11 +116,16 @@ const CoursePage = ({
   };
 
   const toggleCompletion = async () => {
+    // Don't allow completion if user is not enrolled
+    if (!course.isEnrolled) {
+      return;
+    }
+
     setIsLoading(true);
     const newCompletionStatus = !isChapterCompleted;
 
     try {
-      await makeRequest({
+      const response = await makeRequest({
         method: 'PATCH',
         url: routes.api.markCourseChapterAsCompleted,
         body: {
@@ -131,41 +136,43 @@ const CoursePage = ({
         },
       });
 
-      // Use gamified action for chapter completion
-      if (newCompletionStatus) {
-        await gamifiedAction.triggerGamifiedAction({
-          gamificationAction: 'COMPLETE_COURSE_CHAPTER',
-          analytics: {
-            action: 'COURSE_CHAPTER_COMPLETE',
-            category: 'Learning',
-            label: 'Chapter Completed',
-          },
-          customMessage: 'Chapter completed! Keep learning!',
-          metadata: {
-            courseId: course._id,
-            chapterId: currentChapterId,
-            courseName: course.name,
-          },
-        });
-      } else {
-        trackEvent({
-          action: 'COURSE_PROGRESS',
-          category: 'Course',
-          label: 'Course Progress',
-          value: {
-            userId: user?.id,
-            courseId: course._id,
-          },
-        });
-      }
+      // Only proceed if the API call was successful
+      if (response?.status) {
+        // Use gamified action for chapter completion
+        if (newCompletionStatus) {
+          await gamifiedAction.triggerGamifiedAction({
+            gamificationAction: 'COMPLETE_COURSE_CHAPTER',
+            analytics: {
+              action: 'COURSE_CHAPTER_COMPLETE',
+              category: 'Learning',
+              label: 'Chapter Completed',
+            },
+            customMessage: 'Chapter completed! Keep learning!',
+            metadata: {
+              courseId: course._id,
+              chapterId: currentChapterId,
+              courseName: course.name,
+            },
+          });
+        } else {
+          trackEvent({
+            action: 'COURSE_PROGRESS',
+            category: 'Course',
+            label: 'Course Progress',
+            value: {
+              userId: user?.id,
+              courseId: course._id,
+            },
+          });
+        }
 
-      setChapters((prevChapters) =>
-        prevChapters.map((chapter) =>
-          chapter._id.toString() === currentChapterId
-            ? { ...chapter, isCompleted: newCompletionStatus }
-            : chapter
-        )
-      );
+        setChapters((prevChapters) =>
+          prevChapters.map((chapter) =>
+            chapter._id.toString() === currentChapterId
+              ? { ...chapter, isCompleted: newCompletionStatus }
+              : chapter
+          )
+        );
 
       if (newCompletionStatus) {
         const currentIndex = chapters.findIndex(
@@ -228,12 +235,15 @@ const CoursePage = ({
       }
 
       setIsChapterCompleted(newCompletionStatus);
-    } catch (error) {
-      console.error('Error toggling chapter completion:', error);
-    } finally {
-      setIsLoading(false);
+    } else {
+      console.error('Failed to update chapter completion:', response?.message);
     }
-  };
+  } catch (error) {
+    console.error('Error toggling chapter completion:', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleShowPayment = () => {
     setShowPayment(true);
@@ -401,9 +411,12 @@ const CoursePage = ({
                           key='enroll'
                           className='w-fit'
                           isLoading={isLoading}
+                          disabled={!course.isEnrolled}
                           text={
                             isLoading
                               ? 'Marking...'
+                              : !course.isEnrolled
+                              ? 'Enroll to Mark Complete'
                               : isChapterCompleted
                               ? 'Completed'
                               : 'Mark As Completed'
@@ -411,6 +424,8 @@ const CoursePage = ({
                           variant={
                             isChapterCompleted
                               ? 'SUCCESS'
+                              : !course.isEnrolled
+                              ? 'SECONDARY'
                               : isLoading
                               ? 'SECONDARY'
                               : 'PRIMARY'
