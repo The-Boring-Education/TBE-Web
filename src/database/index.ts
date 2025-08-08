@@ -10,6 +10,7 @@ import Payment from './models/Payment';
 import PrepLog from './models/PrepYatra/PrepLog';
 import Recruiter from './models/PrepYatra/Recruiters';
 import PrepYatraSubscription from './models/PrepYatra/Subscription';
+import Mentorship from './models/PrepYatra/Mentorship';
 import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
 import Quiz from './models/Quiz/Quiz';
@@ -41,6 +42,7 @@ export {
   Quiz,
   QuizAttempt,
   Recruiter,
+  Mentorship,
   User,
   UserCourse,
   UserPlaylist,
