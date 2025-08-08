@@ -21,16 +21,7 @@ const protectedAPIRoutes = [
 const protectedUIRoutes = [{ path: /^\/shiksha\/(?:\/|$)/ }];
 
 const addCorsHeaders = (res: NextResponse, origin: string | null) => {
-  const allowedOrigins = new Set([
-    'http://localhost:5173',
-    'http://localhost:8080',
-  ]);
-
-  const allowOrigin = origin && (allowedOrigins.has(origin) || origin.endsWith('.theboringeducation.com'))
-    ? origin
-    : '*';
-
-  res.headers.set('Access-Control-Allow-Origin', allowOrigin);
+  res.headers.set('Access-Control-Allow-Origin', '*');
   res.headers.set('Vary', 'Origin');
   res.headers.set('Access-Control-Allow-Credentials', 'true');
   res.headers.set(
