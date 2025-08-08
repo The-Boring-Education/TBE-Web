@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { PrepLog, PrepYatraSubscription, Recruiter, User } from '@/database';
+import { Mentorship, PrepLog, PrepYatraSubscription, Recruiter, User } from '@/database';
 import type {
   AddPrepLogToDBPayloadProps,
   AddRecruiterToDBPayloadProps,
@@ -556,10 +556,97 @@ const getAllUsersWithLogsFromDB =
     }
   };
 
+// Mentorship helper queries
+const getAllMenteesFromDB = async (): Promise<DatabaseQueryResponseType> => {
+  try {
+    const mentees = await Mentorship.find()
+      .populate('user', '_id name email userName image prepYatra createdAt')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const userIds = mentees.map((m: any) => String(m.user._id));
+    const logs = await PrepLog.find({ user: { $in: userIds } })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const logsMap: Record<string, any[]> = {};
+    for (const log of logs) {
+      const uid = String(log.user);
+      if (!logsMap[uid]) logsMap[uid] = [];
+      logsMap[uid].push(log);
+    }
+
+    const menteesWithDetails = mentees.map((m: any) => {
+      const user = m.user;
+      return {
+        ...user,
+        logs: logsMap[user._id.toString()] || [],
+        totalLogs: logsMap[user._id.toString()]?.length || 0,
+        prepLogStats: user.prepYatra?.prepLog || {
+          currentStreak: 0,
+          longestStreak: 0,
+          lastLoggedDate: null,
+          totalLogs: 0,
+        },
+        mentorshipSelectedAt: m.selectedAt,
+        mentorshipNote: m.note,
+      };
+    });
+
+    return {
+      data: {
+        mentees: menteesWithDetails,
+        totalMentees: menteesWithDetails.length,
+      },
+    };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
+const isUserMenteeInDB = async (
+  userId: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const existing = await Mentorship.findOne({ user: userId });
+    return { data: { isMentee: !!existing } };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
+const toggleMentorshipInDB = async (
+  userId: string,
+  isSelected: boolean,
+  note?: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    if (isSelected) {
+      const existing = await Mentorship.findOne({ user: userId });
+      if (existing) {
+        existing.note = note || existing.note;
+        existing.selectedAt = new Date();
+        await existing.save();
+        return { data: existing };
+      }
+      const created = await Mentorship.create({ user: userId, note });
+      return { data: created };
+    } else {
+      const deleted = await Mentorship.findOneAndDelete({ user: userId });
+      return { data: deleted };
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
 export {
   addPrepLogToDB,
   addRecruiterToDB,
   createSubscriptionInDB,
+  getAllMenteesFromDB,
+  isUserMenteeInDB,
+  toggleMentorshipInDB,
   deletePrepLogInDB,
   deleteRecruiterInDB,
   getActiveSubscriptionByUserFromDB,

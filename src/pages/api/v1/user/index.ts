@@ -9,6 +9,7 @@ import {
 import type { CreateUserRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { cors, sendAPIResponse } from '@/utils';
+import { sendWelcomeEmail } from '@/utils/email';
 import { captureAPIError, captureAuthError } from '@/utils/sentry';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -145,6 +146,18 @@ const handleCreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
             message: 'Error while creating user',
           })
         );
+      }
+
+      // Send welcome email (non-blocking)
+      if (data && data._id) {
+        sendWelcomeEmail({
+          email,
+          name,
+          id: data._id.toString(),
+        }).catch((error) => {
+          console.error('Failed to send welcome email:', error);
+          // Don't fail the user creation if email fails
+        });
       }
 
       return res

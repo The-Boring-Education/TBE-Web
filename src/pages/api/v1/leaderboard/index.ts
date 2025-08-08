@@ -1,7 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { generateLeaderboard , getLeaderboardWithUsersFromDB,saveLeaderboardToDB } from '@/database';
+import {
+  generateLeaderboard,
+  getLeaderboardWithUsersFromDB,
+  saveLeaderboardToDB,
+} from '@/database';
 import type { LeaderboardType } from '@/interfaces';
 import { LEADERBOARD_TYPES } from '@/interfaces';
 import { connectDB } from '@/middlewares';

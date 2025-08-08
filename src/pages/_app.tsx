@@ -33,7 +33,7 @@ const AppContent = ({
 
     if (!isOnboarded && isAuth && router.pathname !== routes.onboarding) {
       // Redirect to external onboarding app
-      const onboardingBaseUrl = envConfig.ONBOARDING_APP_URL;
+      const onboardingBaseUrl = envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL;
       const params = new URLSearchParams({
         userId: user?.id || '',
         from: 'webapp',

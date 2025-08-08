@@ -47,6 +47,22 @@ Add environment variables to your `.env.local` file as needed:
 npm run dev
 ```
 
+## Building & Deployment
+
+### Development Build
+
+```bash
+npm run build
+```
+
+### Production Build
+
+```bash
+NODE_ENV=production npm run build
+```
+
+**That's it!** The build automatically configures the correct URLs for your environment.
+
 # Want to contribute?
 
 Please refer to our [Contribution Guidelines](CONTRIBUTING.md) for detailed information on how to contribute to this project.
@@ -116,3 +132,54 @@ The server is auto-started in `jest.setup.js` making network calls deterministic
    ```
    Push local handler inside test via `server.use()` to override default behaviour.
 4. **Playwright fixtures** – Add file `e2e/fixtures.ts` exporting custom fixtures for signed-in state, reducing boilerplate across specs.
+
+## 📧 Email System
+
+The TBE Email System provides a robust, scalable email sending solution with support for multiple email types and external API integration.
+
+### Features
+
+- ✅ Multiple email types (Welcome, Course Enrollment, Project Enrollment, Interview Prep, Course Completion)
+- ✅ External API support for third-party integrations
+- ✅ Comprehensive logging and error tracking
+- ✅ Template-based email generation
+- ✅ Request tracking with unique IDs
+
+### Quick Start
+
+```javascript
+// Send a welcome email
+const response = await fetch('/api/v1/email/external', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    emailType: 'WELCOME',
+    userData: {
+      email: 'user@example.com',
+      name: 'John Doe',
+      id: 'user123',
+    },
+  }),
+});
+```
+
+### API Endpoints
+
+- `POST /api/v1/email/send` - Send custom emails
+- `POST /api/v1/email/triggers` - Send trigger-based emails
+- `POST /api/v1/email/external` - Simplified API for external products
+
+### Documentation
+
+For detailed documentation and integration examples, see:
+
+- [Email Service Documentation](src/services/email/README.md)
+- [External Integration Examples](examples/external-email-usage.md)
+
+### Testing
+
+Test the email system using the provided test script:
+
+```bash
+node scripts/test-email.js
+```

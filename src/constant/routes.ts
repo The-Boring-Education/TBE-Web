@@ -37,6 +37,7 @@ const routes = {
   },
   // PrepYatra
   prepYatra: '/prepyatra',
+
   certificate: '/certificate',
   contactUs: '/contact',
   refund: '/refund',
@@ -80,7 +81,7 @@ const routes = {
     webinar: '/webinar',
     project: (project: string) => `/projects/${project}`,
     shiksha: '/shiksha',
-    onboard: '/user/onbording',
+    onboard: '/user/onboarding',
     user: '/user',
     myCourses: '/user/shiksha',
     myProjects: '/user/projects',

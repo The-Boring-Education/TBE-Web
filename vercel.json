@@ -1,4 +1,10 @@
 {
+  "buildCommand": "npm run build",
+  "functions": {
+    "src/pages/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
   "headers": [
     {
       "source": "/fonts/inter-var-latin.woff2",

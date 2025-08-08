@@ -13,10 +13,11 @@ import {
   UserSheet,
 } from '@/database';
 import { connectDB } from '@/middlewares';
-import { applyCorsHeaders, sendAPIResponse } from '@/utils';
+import { sendAPIResponse } from '@/utils';
+import { cors } from '@/utils/cors';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  applyCorsHeaders(res, req);
+  await cors(req, res);
 
   if (req.method === 'OPTIONS') {
     res.status(200).end();

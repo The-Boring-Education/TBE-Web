@@ -1,10 +1,10 @@
 'use client';
 
-import { AnimatePresence,motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import {FiUser } from 'react-icons/fi';
+import { FiUser } from 'react-icons/fi';
 
-import { FlexContainer, Section,Text } from '@/components';
+import { FlexContainer, Section, Text } from '@/components';
 import { LEADERBOARD_TABS } from '@/constant';
 import { useLeaderboard, useUser } from '@/hooks';
 import type { LeaderboardType } from '@/interfaces';

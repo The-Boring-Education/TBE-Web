@@ -1,17 +1,16 @@
 {
   "name": "tbe-webapp",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000",
     "lint": "next lint",
     "pre-release": "npx eslint src --fix --ext .ts,.tsx,.js,.jsx && npm run build",
     "format": "prettier -w .",
     "typecheck": "tsc --noEmit --incremental false",
-    "release": "npm run pre-release && npm run format && npm run typecheck && npm run build",
-    "seed:quiz": "npx tsx scripts/seed-quiz-data.ts"
+    "release": "npm run pre-release && npm run format && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -42,14 +41,14 @@
     "uuid": "^9.0.0"
   },
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   },
   "devDependencies": {
     "@svgr/webpack": "^6.5.1",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
     "@types/markdown-it": "^14.0.1",
-    "@types/node": "^24.0.7",
+    "@types/node": "^24.2.0",
     "@types/raw-body": "^2.1.4",
     "@types/react": "^18.0.28",
     "@types/recharts": "^1.8.29",
@@ -66,6 +65,7 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
     "tailwindcss": "^3.2.7",
+    "ts-node": "^10.9.2",
     "typescript": "^4.9.5",
     "webpack-bundle-analyzer": "^4.10.2"
   }

@@ -21,6 +21,7 @@ const DATABASE_MODELS = {
   PREP_YATRA_SUBSCRIPTION: 'PrepYatraSubscription',
   RECRUITER: 'Recruiters',
   PREP_LOG: 'PrepLog',
+  MENTORSHIP: 'Mentorship',
   QUIZ: 'Quiz',
   QUIZ_ATTEMPT: 'QuizAttempt',
   LEADERBOARD: 'Leaderboard',

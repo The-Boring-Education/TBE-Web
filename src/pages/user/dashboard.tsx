@@ -9,6 +9,7 @@ import {
   LinkButton,
   LoadingSpinner,
   NotificationContainer,
+  QuizSection,
   Section,
   SEO,
   Text,
@@ -98,6 +99,13 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
         {noCourseFoundUI}
         <Leaderboard />
         <NotificationContainer />
+        <QuizSection
+          buttonLink={LINKS.quizApp}
+          imageSrc={`${STATIC_FILE_PATH.svg}/hero-image.svg`}
+          buttonText='Start Quizzing'
+          description='Test your knowledge with our interactive quizzes. Challenge yourself with questions on various tech topics and track your progress.'
+          title='Quizzes by TBE'
+        />
         <Banner
           buttonLink={LINKS.contributeOpenSource}
           buttonText='Start Contributing'

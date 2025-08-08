@@ -1,10 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { enrollInAProject, getEnrolledProjectFromDB } from '@/database';
+import {
+  enrollInAProject,
+  getEnrolledProjectFromDB,
+  getProjectByIDFromDB,
+  getUserByIdFromDB,
+} from '@/database';
 import type { ProjectEnrollmentRequestProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
+import { sendProjectEnrollmentEmail } from '@/utils/email';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -67,6 +73,29 @@ const handleProjectEnrollment = async (
           message: 'Failed while enrolling in project',
         })
       );
+
+    // Send project enrollment email (non-blocking)
+    try {
+      const [userResult, projectResult] = await Promise.all([
+        getUserByIdFromDB(userId),
+        getProjectByIDFromDB(projectId),
+      ]);
+
+      if (userResult.data && projectResult.data) {
+        sendProjectEnrollmentEmail({
+          email: userResult.data.email,
+          name: userResult.data.name,
+          id: userId,
+          projectName: projectResult.data.name,
+          projectDescription: projectResult.data.description,
+        }).catch((error) => {
+          console.error('Failed to send project enrollment email:', error);
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching user/project data for email:', error);
+      // Don't fail the enrollment if email data fetch fails
+    }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
