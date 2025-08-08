@@ -305,7 +305,7 @@ export const interviewPrepEnrollmentTemplate = (
     </div>
     
     <div class="signature">
-      <div class="signature-name">The TBE Team</div>
+      <div class="signature-name">Sachin from The Boring Education</div>
       <div class="signature-title">Your Interview Success Partners</div>
     </div>
   `);
@@ -362,7 +362,7 @@ export const courseCompletionTemplate = (
     </div>
     
     <div class="signature">
-      <div class="signature-name">The TBE Team</div>
+      <div class="signature-name">Sachin from The Boring Education</div>
       <div class="signature-title">Proud of Your Achievement!</div>
     </div>
   `);

@@ -20,11 +20,34 @@ const protectedAPIRoutes = [
 
 const protectedUIRoutes = [{ path: /^\/shiksha\/(?:\/|$)/ }];
 
+const addCorsHeaders = (res: NextResponse, origin: string | null) => {
+  res.headers.set('Access-Control-Allow-Origin', '*');
+  res.headers.set('Vary', 'Origin');
+  res.headers.set('Access-Control-Allow-Credentials', 'true');
+  res.headers.set(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PATCH, PUT, DELETE, OPTIONS'
+  );
+  res.headers.set(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, X-Requested-With, x-admin-secret'
+  );
+  return res;
+};
+
 const middleware = async (req: NextRequest) => {
   try {
     const currentUrl = req.nextUrl.pathname;
     const method = req.method;
     const adminHeader = req.headers.get('x-admin-secret') || '';
+    const origin = req.headers.get('origin');
+    const isAPI = currentUrl.startsWith('/api/');
+
+    // Handle CORS preflight early
+    if (method === 'OPTIONS' && isAPI) {
+      const preflight = new NextResponse(null, { status: 204 });
+      return addCorsHeaders(preflight, origin);
+    }
 
     // Add request context to Sentry
     Sentry.setContext('middleware', {
@@ -42,13 +65,14 @@ const middleware = async (req: NextRequest) => {
         data: { url: currentUrl, method },
       });
 
-      return NextResponse.json(
+      const res = NextResponse.json(
         sendAPIResponse({
           status: false,
           message: 'Unauthorized - Admin header required for DELETE',
         }),
         { status: 401 }
       );
+      return isAPI ? addCorsHeaders(res, origin) : res;
     }
 
     // Check API restrictions
@@ -63,13 +87,14 @@ const middleware = async (req: NextRequest) => {
             data: { url: currentUrl, method, route: route.path.source },
           });
 
-          return NextResponse.json(
+          const res = NextResponse.json(
             sendAPIResponse({
               status: false,
               message: 'Unauthorized',
             }),
             { status: 401 }
           );
+          return isAPI ? addCorsHeaders(res, origin) : res;
         }
       }
     }
@@ -93,7 +118,8 @@ const middleware = async (req: NextRequest) => {
       }
     }
 
-    return NextResponse.next();
+    const next = NextResponse.next();
+    return isAPI ? addCorsHeaders(next, origin) : next;
   } catch (error) {
     // Capture middleware errors
     Sentry.captureException(error, {
@@ -109,13 +135,16 @@ const middleware = async (req: NextRequest) => {
     });
 
     // Return a generic error response
-    return NextResponse.json(
+    const res = NextResponse.json(
       sendAPIResponse({
         status: false,
         message: 'Internal server error',
       }),
       { status: 500 }
     );
+    const origin = req.headers.get('origin');
+    const isAPI = req.nextUrl.pathname.startsWith('/api/');
+    return isAPI ? addCorsHeaders(res, origin) : res;
   }
 };
 
