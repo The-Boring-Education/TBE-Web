@@ -58,13 +58,15 @@ const Navbar = () => {
           </button>
         </div>
         <div className='hidden items-center lg:flex lg:gap-x-4'>
-        <PopoverContainer
-            isOpen={openPopover === 'Contribute'}
-            label='Contribute'
-            onToggle={() => handleSetOpen('Contribute')}
-        >
-          <NavbarDropdownContainer links={TOP_NAVIGATION.issues} />
-        </PopoverContainer>
+        <FlexContainer direction='col' itemCenter={false}>
+              <Link
+                className='text-base text-black hover:text-primary'
+                href={TOP_NAVIGATION.issues[0].href}
+                target={TOP_NAVIGATION.issues[0].target}
+              >
+                {TOP_NAVIGATION.issues[0].name}
+            </Link>
+          </FlexContainer>
           <PopoverContainer
             isOpen={openPopover === 'cohorts'}
             label='Cohorts'

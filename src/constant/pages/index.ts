@@ -129,8 +129,8 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
   issues: [
     {
       id: v4(),
-      name: 'Open Source',
-      description: 'Create Open Source Issues for our community.',
+      name: 'Found a Bug?',
+      description: 'Create an Issue for our community.',
       href: LINKS.createIssue,
       target: '_blank',
     },
