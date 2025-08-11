@@ -4,6 +4,8 @@ const routes = {
   home: '/',
   login: '/login',
   onboarding: '/onboarding',
+  // Campus Connect & DevRel
+  campusConnect: '/campus-connect',
   // Shiksha
   shiksha: '/shiksha',
   shikshaExplore: '/shiksha/explore',
