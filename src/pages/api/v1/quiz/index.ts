@@ -1,6 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { addAQuizToDB, getQuizCategoriesFromDB } from '@/database/query/quiz';
+import {
+  addAQuizToDB,
+  getQuizCategoriesFromDB,
+  getQuizCategoriesWithCountsFromDB,
+} from '@/database/query/quiz';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
 
@@ -12,7 +16,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
       case 'GET':
-        return handleGetCategories(res);
+        return handleGetCategories(req, res);
 
       case 'POST':
         return handleCreateQuiz(req, res);
@@ -26,8 +30,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-async function handleGetCategories(res: NextApiResponse) {
-  const { data, error } = await getQuizCategoriesFromDB();
+async function handleGetCategories(req: NextApiRequest, res: NextApiResponse) {
+  const { withCounts } = req.query;
+
+  const useCounts = typeof withCounts === 'string' ? withCounts === 'true' : false;
+  const { data, error } = useCounts
+    ? await getQuizCategoriesWithCountsFromDB()
+    : await getQuizCategoriesFromDB();
 
   if (error) {
     return res.status(400).json({ error });

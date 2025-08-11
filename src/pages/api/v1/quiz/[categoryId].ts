@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import {
+  appendQuestionsToQuizInDB,
   getQuizByCategoryIdFromDB,
   updateAQuizInDB,
 } from '@/database/query/quiz';
@@ -25,6 +26,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
       case 'PUT':
         return handleUpdateQuiz(categoryId, req, res);
+      case 'POST':
+        return handleAppendQuestions(categoryId, req, res);
 
       default:
         return res.status(405).json({ error: 'Method not allowed' });
@@ -64,6 +67,23 @@ async function handleUpdateQuiz(
     return res.status(400).json({ error });
   }
 
+  return res.status(200).json({ success: true, data });
+}
+
+async function handleAppendQuestions(
+  categoryId: string,
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { questions } = req.body || {};
+  if (!Array.isArray(questions) || questions.length === 0) {
+    return res.status(400).json({ error: 'questions must be a non-empty array' });
+  }
+
+  const { data, error } = await appendQuestionsToQuizInDB(categoryId, questions);
+  if (error) {
+    return res.status(400).json({ error });
+  }
   return res.status(200).json({ success: true, data });
 }
 

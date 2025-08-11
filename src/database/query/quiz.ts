@@ -73,6 +73,53 @@ const getQuizByCategoryIdFromDB = async (
   }
 };
 
+// Get quiz categories with question counts
+const getQuizCategoriesWithCountsFromDB = async (): Promise<DatabaseQueryResponseType> => {
+  try {
+    const categories = await Quiz.aggregate([
+      { $match: { isActive: true } },
+      {
+        $project: {
+          _id: 0,
+          categoryId: 1,
+          categoryName: 1,
+          categoryDescription: 1,
+          categoryIcon: 1,
+          questionCount: { $size: { $ifNull: ['$questions', []] } },
+        },
+      },
+    ]);
+
+    return { data: categories };
+  } catch (error) {
+    return { error: 'Failed while fetching quiz categories with counts' };
+  }
+};
+
+// Append questions to an existing quiz category
+const appendQuestionsToQuizInDB = async (
+  categoryId: string,
+  questions: QuizModel['questions']
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return { error: 'Questions must be a non-empty array' };
+    }
+
+    const updated = await Quiz.findOneAndUpdate(
+      { categoryId },
+      { $push: { questions: { $each: questions } } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) return { error: 'Quiz category not found' };
+
+    return { data: updated };
+  } catch (error) {
+    return { error: 'Failed while appending questions to quiz' };
+  }
+};
+
 // Save quiz attempt to database
 const saveQuizAttemptToDB = async (
   attemptData: Partial<QuizAttemptModel>
@@ -173,8 +220,10 @@ export {
   addAQuizToDB,
   getQuizByCategoryIdFromDB,
   getQuizCategoriesFromDB,
+  getQuizCategoriesWithCountsFromDB,
   getUserQuizHistoryFromDB,
   getUserQuizStatsFromDB,
   saveQuizAttemptToDB,
   updateAQuizInDB,
+  appendQuestionsToQuizInDB,
 };
