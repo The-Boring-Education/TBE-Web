@@ -60,10 +60,88 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
     });
   }
 
+  // Ensure non-empty description
+  if (
+    typeof categoryDescription !== 'string' ||
+    categoryDescription.trim().length === 0
+  ) {
+    return res
+      .status(400)
+      .json({ error: 'categoryDescription must be a non-empty string' });
+  }
+
   if (!Array.isArray(questions) || questions.length === 0) {
     return res
       .status(400)
       .json({ error: 'Questions must be a non-empty array' });
+  }
+
+  // Normalize and validate each question
+  type PartialQuestion = {
+    question?: string;
+    options?: string[];
+    correctAnswer?: number;
+    correct_answer?: number;
+    explanation?: string;
+    detailedExplanation?: string;
+    difficulty?: 'easy' | 'medium' | 'hard' | string;
+  };
+
+  const errors: string[] = [];
+  const normalizedQuestions = (questions as PartialQuestion[]).map((q, idx) => {
+    const missing: string[] = [];
+    const questionText = (q.question || '').trim();
+    if (!questionText) missing.push('question');
+
+    const options = Array.isArray(q.options) ? q.options : [];
+    if (options.length < 2) missing.push('options(>=2)');
+
+    const correctAnswer =
+      typeof q.correctAnswer === 'number'
+        ? q.correctAnswer
+        : typeof q.correct_answer === 'number'
+        ? q.correct_answer
+        : undefined;
+    if (typeof correctAnswer !== 'number') missing.push('correctAnswer');
+
+    const explanation = (q.explanation || '').trim();
+    if (!explanation) missing.push('explanation');
+
+    const detailedExplanation = (q.detailedExplanation || '').trim();
+    if (!detailedExplanation) missing.push('detailedExplanation');
+
+    const difficulty = (q.difficulty || '').toString().toLowerCase();
+    const difficultyValid = ['easy', 'medium', 'hard'].includes(difficulty);
+    if (!difficultyValid) missing.push('difficulty(easy|medium|hard)');
+
+    if (missing.length) {
+      errors.push(`Question[${idx}] missing/invalid: ${missing.join(', ')}`);
+    } else if (
+      typeof correctAnswer === 'number' &&
+      (correctAnswer < 0 || correctAnswer >= options.length)
+    ) {
+      errors.push(
+        `Question[${idx}] correctAnswer out of bounds (0..${
+          options.length - 1
+        })`
+      );
+    }
+
+    return {
+      question: questionText,
+      options,
+      correctAnswer: typeof correctAnswer === 'number' ? correctAnswer : 0,
+      explanation,
+      detailedExplanation,
+      difficulty: (difficultyValid ? difficulty : 'medium') as
+        | 'easy'
+        | 'medium'
+        | 'hard',
+    };
+  });
+
+  if (errors.length) {
+    return res.status(400).json({ error: errors.join('; ') });
   }
 
   const quizData = {
@@ -71,7 +149,7 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
     categoryName,
     categoryDescription,
     categoryIcon,
-    questions,
+    questions: normalizedQuestions,
     isActive,
   };
 
