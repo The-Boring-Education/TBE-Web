@@ -22,6 +22,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return handleGetLogs(req, res);
     case 'PUT':
       return handleUpdateLog(req, res);
+    case 'PATCH':
+      return handleAddMentorFeedback(req, res);
     case 'DELETE':
       return handleDeleteLog(req, res);
     default:
@@ -164,6 +166,86 @@ const handleUpdateLog = async (req: NextApiRequest, res: NextApiResponse) => {
       sendAPIResponse({
         status: false,
         message: 'Something went wrong while creating recruiter',
+        error,
+      })
+    );
+  }
+};
+
+// Admin-only: add mentor feedback to a prep log and email the user
+const handleAddMentorFeedback = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  try {
+    const adminHeader = req.headers['x-admin-secret'];
+    const { prepLogId, mentorFeedback, notifyEmail, userId, userName, userEmail } = req.body;
+
+    const expectedSecret = process.env.ADMIN_SECRET || 'TBEAdmin';
+    if (!adminHeader || adminHeader !== expectedSecret) {
+      return res.status(apiStatusCodes.UNAUTHORIZED).json(
+        sendAPIResponse({ status: false, message: 'Unauthorized' })
+      );
+    }
+
+    if (!prepLogId || !mentorFeedback) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'prepLogId and mentorFeedback are required',
+        })
+      );
+    }
+
+    const { data, error } = await updatePrepLogInDB(prepLogId, {
+      mentorFeedback,
+    });
+
+    if (error) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({ status: false, message: error })
+      );
+    }
+
+    // Optionally notify learner via email
+    if (notifyEmail && userEmail && userName && userId) {
+      try {
+        const { emailClient } = await import('@/services/email');
+
+        await emailClient.sendEmail({
+          from_email: process.env.FROM_EMAIL || 'theboringeducation@gmail.com',
+          from_name: 'Sachin from The Boring Education',
+          to_email: userEmail,
+          to_name: userName,
+          subject: 'I have some feedback for your Prep Yatra 🚀',
+          html_content:
+            `<p>Hi ${userName.split(' ')[0]},</p>` +
+            `<p>I reviewed your recent Prep Yatra logs. Here's my feedback to help you level up this week:</p>` +
+            `<blockquote style="margin:12px 0;padding:12px;border-left:4px solid #6b46c1;background:#faf7ff;">${
+              mentorFeedback
+            }</blockquote>` +
+            `<p>Keep going — consistency compounds. Proud of your progress.</p>` +
+            `<p>— Sachin</p>`,
+        });
+      } catch (e) {
+        // Do not fail the API if email fails; just proceed
+        // eslint-disable-next-line no-console
+        console.error('Feedback email send failed:', e);
+      }
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Mentor feedback added',
+        data,
+      })
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Something went wrong while adding mentor feedback',
         error,
       })
     );

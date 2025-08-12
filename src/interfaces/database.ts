@@ -382,6 +382,7 @@ export interface PrepLogModel extends Document {
   title: string;
   timeSpent: number;
   description?: string;
+  mentorFeedback?: string;
 }
 
 export interface LeaderboardModel extends Document {

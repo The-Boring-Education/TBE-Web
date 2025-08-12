@@ -21,6 +21,9 @@ const PrepLogSchema = new Schema<PrepLogModel>(
       type: Number,
       required: true,
     },
+    mentorFeedback: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
