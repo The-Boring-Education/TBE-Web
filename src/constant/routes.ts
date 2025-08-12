@@ -6,6 +6,8 @@ const routes = {
   onboarding: '/onboarding',
   // Campus Connect & DevRel
   campusConnect: '/campus-connect',
+  // Topmate Sessions
+  topmateSessions: '/topmate-sessions',
   // Shiksha
   shiksha: '/shiksha',
   shikshaExplore: '/shiksha/explore',

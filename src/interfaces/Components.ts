@@ -537,6 +537,21 @@ export interface MentorshipCardProps {
   link: string;
 }
 
+export interface TopmateServiceCardProps {
+  id: string;
+  title: string;
+  description: string;
+  rating?: number;
+  isPopular?: boolean;
+  icon?: string;
+  sessionDuration: string;
+  sessionType: string;
+  originalPrice: number;
+  currentPrice: number;
+  topmateLink: string;
+  category: 'mentorship' | 'ebooks' | 'events' | 'templates' | 'bootcamps';
+}
+
 export interface CarouselProps {
   items: any[];
   renderItem: (item: any) => ReactNode;
