@@ -392,3 +392,29 @@ export interface LeaderboardModel extends Document {
     points: number;
   }[];
 }
+
+export interface ChallengeModel {
+  _id: string;
+  user: string;
+  name: string;
+  totalDays: number;
+  currentDay: number;
+  startDate: Date;
+  endDate: Date;
+  isActive: boolean;
+  category?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ChallengeLogModel {
+  _id: string;
+  challenge: string;
+  day: number;
+  progressText: string;
+  hoursSpent: number;
+  nextGoals: string[];
+  loggedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
