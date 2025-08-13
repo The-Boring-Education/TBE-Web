@@ -1,16 +1,21 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
+import { cors } from '@/utils/cors';
 import Challenge from '@/database/models/PrepYatra/Challenge';
-import { cors } from '@/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  await cors(req, res);
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (!req.method || !['GET', 'POST'].includes(req.method)) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
   try {
-    await cors(req, res);
-
     await connectDB();
 
     switch (req.method) {
