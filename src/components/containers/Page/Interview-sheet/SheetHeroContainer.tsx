@@ -16,6 +16,7 @@ const SheetHeroContainer = ({
   isEnrolled,
   isPremium,
   isPurchased,
+  redirectTo,
 }: SheetHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -58,7 +59,11 @@ const SheetHeroContainer = ({
         });
 
         setTimeout(() => {
-          window.location.reload();
+          if (redirectTo) {
+            window.location.href = redirectTo;
+          } else {
+            window.location.reload();
+          }
         }, 1500);
       })
       .catch((error) => error);

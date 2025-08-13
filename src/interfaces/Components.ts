@@ -355,6 +355,7 @@ export interface SheetHeroContainerProps {
   id: string;
   isPremium?: boolean;
   isPurchased?: boolean;
+  redirectTo?: string;
 }
 
 export interface AccordionProps {

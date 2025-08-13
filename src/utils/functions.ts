@@ -278,7 +278,7 @@ const mapInterviewSheetResponseToCard = (
         title: name,
         imageAltText: name,
         content: description,
-        href: `/interview-prep/${slug}`,
+        href: `/interview-prep/${slug}/about`,
         isEnrolled,
         active: isActive,
         ctaText,

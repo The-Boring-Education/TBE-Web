@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useMemo } from 'react';
 
 import {
   CardContainerB,
@@ -22,6 +22,18 @@ const Home = ({ seoMeta }: PageProps) => {
     response?.data,
     mapInterviewSheetResponseToCard
   );
+
+  // Group by roadmap/domain for structured sections
+  const groupedByRoadmap = useMemo(() => {
+    const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
+    (response?.data || []).forEach((sheet: any) => {
+      const roadmap = sheet?.roadmap || 'Tech';
+      if (!groups[roadmap]) groups[roadmap] = [];
+      const card = (sheets || []).find((c) => c.id === sheet._id);
+      if (card) groups[roadmap].push(card);
+    });
+    return groups;
+  }, [response?.data, sheets]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -48,14 +60,17 @@ const Home = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <CardContainerB
-        borderColour={2}
-        cards={sheets}
-        focusText='Sheets'
-        heading='Explore'
-        sectionClassName='px-2 py-4'
-        subtext='Pick A Sheet and Start Preparing'
-      />
+      {Object.entries(groupedByRoadmap).map(([roadmap, cards]) => (
+        <CardContainerB
+          key={roadmap}
+          borderColour={2}
+          cards={cards}
+          focusText={`${roadmap} Sheets`}
+          heading={`Explore ${roadmap}`}
+          sectionClassName='px-2 py-4'
+          subtext={`Pick a ${roadmap} sheet and start preparing`}
+        />
+      ))}
       {noSheetFoundUI}
     </Fragment>
   );
