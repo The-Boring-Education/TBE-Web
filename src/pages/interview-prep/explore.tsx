@@ -94,7 +94,7 @@ const Home = ({ seoMeta }: PageProps) => {
                        roadmap === 'Fullstack' ? '🚀' :
                        '💻'}
                     </span>
-                    <Text className='text-lg font-semibold'>{roadmap} Domain</Text>
+                    <Text level='h3' className='text-lg font-semibold'>{roadmap} Domain</Text>
                   </div>
                   <Text className='text-3xl font-bold text-gray-900 mb-2' level='h2'>
                     {roadmap} Interview Sheets

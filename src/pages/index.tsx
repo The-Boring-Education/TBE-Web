@@ -6,6 +6,7 @@ import {
   CardContainerA,
   CardContainerB,
   CollegeEventsSection,
+  ComingSoon,
   Community,
   LandingPageHero,
   LinkButton,
@@ -76,6 +77,8 @@ const Home = ({ seoMeta }: PageProps) => {
       />
 
       <NotificationContainer />
+
+      <ComingSoon />
 
       <CollegeEventsSection />
 

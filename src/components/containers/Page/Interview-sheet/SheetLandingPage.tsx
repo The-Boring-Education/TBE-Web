@@ -133,14 +133,14 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                   href={routes.interviewPrepExplore}
                 />
                 <span>•</span>
-                <Text className='text-sm uppercase tracking-wide'>{sheet.roadmap} Track</Text>
+                <Text level='p' className='text-sm uppercase tracking-wide'>{sheet.roadmap} Track</Text>
               </div>
               
               <Text className='text-4xl lg:text-5xl font-bold leading-tight' level='h1'>
                 {sheet.name}
               </Text>
               
-              <Text className='text-xl text-blue-100' level='p'>
+              <Text level='p' className='text-xl text-blue-100'>
                 {sheet.description}
               </Text>
 
@@ -186,7 +186,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                 )}
                 
                 {sheet?.isPremium && !isPurchased && (
-                  <Text className='text-blue-200 text-sm flex items-center'>
+                  <Text level='p' className='text-blue-200 text-sm flex items-center'>
                     <FaLock className='mr-2' />
                     Premium - ₹{sheet.price} for lifetime access
                   </Text>
@@ -200,8 +200,8 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                 <div className='aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4'>
                   <FaPlay className='text-4xl text-blue-600' />
                 </div>
-                <Text className='font-semibold mb-2'>Preview this sheet</Text>
-                <Text className='text-sm text-gray-600 mb-4'>
+                <Text level='p' className='font-semibold mb-2'>Preview this sheet</Text>
+                <Text level='p' className='text-sm text-gray-600 mb-4'>
                   Get a quick overview of the questions and difficulty levels
                 </Text>
                 <Button
@@ -240,7 +240,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                     {sheet.features.map((feature, index) => (
                       <div key={index} className='flex items-start gap-3'>
                         <FaCheckCircle className='text-green-500 mt-1 flex-shrink-0' />
-                        <Text className='text-gray-700'>{feature}</Text>
+                        <Text level='p' className='text-gray-700'>{feature}</Text>
                       </div>
                     ))}
                   </div>
@@ -250,7 +250,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
               {/* Preview Questions Section */}
               <div id='preview-section' className='bg-white rounded-lg border p-6'>
                 <Text className='text-2xl font-bold mb-4' level='h3'>Preview Questions</Text>
-                <Text className='text-gray-600 mb-6'>
+                <Text level='p' className='text-gray-600 mb-6'>
                   Here are the first {previewQuestions.length} questions to give you a taste of what's inside:
                 </Text>
                 
@@ -258,18 +258,14 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                   {previewQuestions.map((q, index) => (
                     <div key={q._id.toString()} className='border rounded-lg p-4 hover:shadow-md transition-shadow'>
                       <div className='flex items-start justify-between mb-2'>
-                        <Text className='font-semibold text-gray-900'>
+                        <Text level='p' className='font-semibold text-gray-900'>
                           {index + 1}. {q.title}
                         </Text>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          q.frequency === 'High' ? 'bg-red-100 text-red-800' :
-                          q.frequency === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-green-100 text-green-800'
-                        }`}>
+                        <span className={`px-2 py-1 rounded text-xs font-medium`}>
                           {q.frequency} Frequency
                         </span>
                       </div>
-                      <Text className='text-gray-600 text-sm line-clamp-2'>
+                      <Text level='p' className='text-gray-600 text-sm line-clamp-2'>
                         {q.question}
                       </Text>
                     </div>
@@ -287,7 +283,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                     </Text>
                   </div>
                   
-                  <Text className='text-gray-600 mb-6'>
+                  <Text level='p' className='text-gray-600 mb-6'>
                     {isLocked 
                       ? 'Unlock premium access to view all questions with detailed solutions and explanations.'
                       : 'More questions are waiting for you after enrollment!'
@@ -298,7 +294,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                     {lockedQuestions.slice(0, 6).map((q, index) => (
                       <div key={q._id.toString()} className='flex items-center gap-3 p-3 bg-white rounded border opacity-60'>
                         <FaLock className='text-gray-400 text-sm' />
-                        <Text className='text-gray-500 text-sm truncate'>
+                        <Text level='p' className='text-gray-500 text-sm truncate'>
                           {previewQuestions.length + index + 1}. {q.title}
                         </Text>
                       </div>
@@ -331,11 +327,11 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                     )}
                     
                     <div>
-                      <Text className='text-3xl font-bold text-gray-900'>
+                      <Text level='p' className='text-3xl font-bold text-gray-900'>
                         {sheet?.isPremium ? `₹${sheet.price}` : 'Free'}
                       </Text>
                       {sheet?.isPremium && (
-                        <Text className='text-sm text-gray-600'>Lifetime Access</Text>
+                        <Text level='p' className='text-sm text-gray-600'>Lifetime Access</Text>
                       )}
                     </div>
 
@@ -356,7 +352,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                       />
                     )}
 
-                    <Text className='text-xs text-gray-500'>
+                    <Text level='p' className='text-xs text-gray-500'>
                       ✓ Instant access ✓ Lifetime updates ✓ Mobile friendly
                     </Text>
                   </div>
@@ -364,7 +360,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
                 {/* Quick Info */}
                 <div className='bg-white rounded-lg border p-6'>
-                  <Text className='font-semibold mb-4'>This sheet includes:</Text>
+                  <Text level='p' className='font-semibold mb-4'>This sheet includes:</Text>
                   <div className='space-y-3 text-sm text-gray-600'>
                     <div className='flex items-center gap-3'>
                       <FaPlay className='text-blue-500' />

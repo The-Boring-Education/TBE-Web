@@ -191,6 +191,7 @@ const MentorshipPlans = dynamic(
   () => import('./containers/Page/Landing/MentorshipPlans')
 );
 const Community = dynamic(() => import('./containers/Page/Landing/Community'));
+const ComingSoon = dynamic(() => import('@/components/common/ComingSoon'));
 const CollegeEventsSection = dynamic(
   () => import('./containers/Page/Landing/CollegeEventsSection')
 );
@@ -372,6 +373,7 @@ export {
   CircularProgressBar,
   CohortJourneyContainer,
   CollegeEventsSection,
+  ComingSoon,
   Community,
   ContactCard,
   CourseHeroContainer,

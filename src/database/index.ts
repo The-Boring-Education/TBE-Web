@@ -20,6 +20,7 @@ import UserCourse from './models/Shiksha/UserCourse';
 import JobAggregate from './models/Unskilled/JobAggregate';
 import Job from './models/Unskilled/Jobs';
 import User from './models/User';
+import UserInterest from './models/UserInterest';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
@@ -45,6 +46,7 @@ export {
   Mentorship,
   User,
   UserCourse,
+  UserInterest,
   UserPlaylist,
   UserProject,
   UserSheet,
