@@ -56,6 +56,7 @@ export {
 // Query
 export * from './query/certificate';
 export * from './query/common';
+export * from './query/email';
 export * from './query/feedback';
 export * from './query/gamification';
 export * from './query/interview-prep';
@@ -67,5 +68,6 @@ export * from './query/project';
 export * from './query/shiksha';
 export * from './query/unskilled';
 export * from './query/user';
+export * from './query/userInterest';
 export * from './query/webinar';
 export * from './query/youfocus';

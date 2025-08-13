@@ -1,7 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { UserInterest } from '@/database';
+import {
+  createUserInterestInDB,
+  getUserInterestsFromDB,
+  updateUserInterestInDB,
+} from '@/database';
 import type {
   CreateUserInterestRequestProps,
   GetUserInterestsRequestProps,
@@ -13,9 +17,9 @@ import { cors } from '@/utils/cors';
 
 /**
  * API Handler for User Interests
- * POST /api/v1/user/interest - Create new user interest
- * GET /api/v1/user/interest - Get user interests with filters
- * PATCH /api/v1/user/interest - Update interest status (activate/deactivate)
+ * POST /user/interest - Create new user interest
+ * GET /user/interest - Get user interests with filters
+ * PATCH /user/interest - Update interest status (activate/deactivate)
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers
@@ -77,47 +81,30 @@ const handleCreateInterest = async (
     
     const userAgent = req.headers['user-agent'] || 'unknown';
 
-    // Check if user already has an active interest for this event type
-    const existingInterest = await UserInterest.findOne({
+    const { data, error } = await createUserInterestInDB({
       userId,
       eventType,
-      isActive: true,
+      eventDescription,
+      metadata,
+      source,
+      ipAddress,
+      userAgent,
     });
 
-    if (existingInterest) {
-      // Update existing interest instead of creating new one
-      existingInterest.eventDescription = eventDescription;
-      existingInterest.metadata = { ...existingInterest.metadata, ...metadata };
-      existingInterest.source = source;
-      existingInterest.ipAddress = ipAddress;
-      existingInterest.userAgent = userAgent;
-      await existingInterest.save();
-
-      return res.status(apiStatusCodes.OKAY).json(
+    if (error) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
-          status: true,
-          data: existingInterest,
-          message: 'User interest updated successfully',
+          status: false,
+          message: 'Failed to create user interest',
+          error,
         })
       );
     }
 
-    // Create new interest
-    const interest = await UserInterest.create({
-      userId,
-      eventType,
-      eventDescription,
-      metadata: metadata || {},
-      source,
-      ipAddress,
-      userAgent,
-      isActive: true,
-    });
-
-    return res.status(apiStatusCodes.CREATED).json(
+    return res.status(apiStatusCodes.RESOURCE_CREATED).json(
       sendAPIResponse({
         status: true,
-        data: interest,
+        data,
         message: 'User interest created successfully',
       })
     );
@@ -145,49 +132,43 @@ const handleGetInterests = async (
       isActive,
       page = '1',
       limit = '10',
-    } = req.query as GetUserInterestsRequestProps & {
+    } = req.query as unknown as GetUserInterestsRequestProps & {
       page: string;
       limit: string;
     };
 
-    // Build query filters
-    const filters: any = {};
-    if (userId) filters.userId = userId;
-    if (eventType) filters.eventType = eventType;
-    if (source) filters.source = source;
-    if (isActive !== undefined) filters.isActive = isActive === 'true';
-
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
-    const skip = (pageNum - 1) * limitNum;
 
-    // Get interests with pagination
-    const [interests, total] = await Promise.all([
-      UserInterest.find(filters)
-        .populate('userId', 'name email image')
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limitNum)
-        .lean(),
-      UserInterest.countDocuments(filters),
-    ]);
+    // Parse isActive properly
+    let parsedIsActive: boolean | undefined;
+    if (isActive !== undefined) {
+      parsedIsActive = typeof isActive === 'string' ? isActive === 'true' : Boolean(isActive);
+    }
 
-    const totalPages = Math.ceil(total / limitNum);
+    const { data, error } = await getUserInterestsFromDB({
+      userId,
+      eventType,
+      source,
+      isActive: parsedIsActive,
+      page: pageNum,
+      limit: limitNum,
+    });
+
+    if (error) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Failed to get user interests',
+          error,
+        })
+      );
+    }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        data: {
-          interests,
-          pagination: {
-            currentPage: pageNum,
-            totalPages,
-            totalItems: total,
-            itemsPerPage: limitNum,
-            hasNextPage: pageNum < totalPages,
-            hasPrevPage: pageNum > 1,
-          },
-        },
+        data,
         message: 'User interests retrieved successfully',
       })
     );
@@ -219,17 +200,23 @@ const handleUpdateInterest = async (
       );
     }
 
-    const interest = await UserInterest.findByIdAndUpdate(
-      interestId,
-      { isActive },
-      { new: true }
-    ).populate('userId', 'name email image');
+    const { data, error } = await updateUserInterestInDB(interestId, isActive);
 
-    if (!interest) {
-      return res.status(apiStatusCodes.NOT_FOUND).json(
+    if (error) {
+      if (error === 'Interest not found') {
+        return res.status(apiStatusCodes.NOT_FOUND).json(
+          sendAPIResponse({
+            status: false,
+            message: error,
+          })
+        );
+      }
+
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: 'Interest not found',
+          message: 'Failed to update user interest',
+          error,
         })
       );
     }
@@ -237,7 +224,7 @@ const handleUpdateInterest = async (
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        data: interest,
+        data,
         message: 'Interest status updated successfully',
       })
     );

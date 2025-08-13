@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
+import { sendEmailFromDB } from '@/database';
 import type { EmailRequest } from '@/interfaces';
 import { connectDB } from '@/middlewares';
-import { emailClient } from '@/services/email';
 import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -46,34 +46,32 @@ const handleSendEmail = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const emailData: EmailRequest = {
-      from_email: from_email || 'theboringeducation@gmail.com',
-      from_name: from_name || 'TBE',
+    const { data, error } = await sendEmailFromDB({
+      from_email,
+      from_name,
       to_email,
       to_name,
       subject,
       html_content,
-    };
+    });
 
-    const result = await emailClient.sendEmail(emailData);
-
-    if (result.success) {
-      return res.status(apiStatusCodes.OKAY).json(
-        sendAPIResponse({
-          status: true,
-          message: 'Email sent successfully',
-          data: result,
-        })
-      );
-    } else {
+    if (error) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
           message: 'Failed to send email',
-          error: result.error,
+          error,
         })
       );
     }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Email sent successfully',
+        data,
+      })
+    );
   } catch (error) {
     console.error('Email sending error:', error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(

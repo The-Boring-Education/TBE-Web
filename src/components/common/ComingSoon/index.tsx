@@ -48,7 +48,7 @@ const ComingSoon = ({ className = '' }: ComingSoonProps) => {
     try {
       const { status } = await makeRequest({
         method: 'POST',
-        url: '/api/v1/user/interest',
+        url: '/user/interest',
         body: {
           userId: user.id,
           eventType: 'WEBAPP_SUBSCRIPTION',
