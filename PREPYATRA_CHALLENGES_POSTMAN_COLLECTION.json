@@ -1,0 +1,354 @@
+{
+  "info": {
+    "name": "PrepYatra Challenges API",
+    "description": "Complete testing collection for PrepYatra challenges APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1/prepyatra/challenges",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "507f1f77bcf86cd799439011",
+      "type": "string"
+    },
+    {
+      "key": "challengeId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "logId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Create Challenge",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"30 Days Coding Challenge\",\n  \"totalDays\": 30,\n  \"category\": \"Programming\",\n  \"userId\": \"{{userId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}",
+          "host": ["{{baseUrl}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    const response = pm.response.json();",
+              "    pm.collectionVariables.set('challengeId', response.data._id);",
+              "    console.log('Challenge ID set:', response.data._id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Get All Challenges",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}?userId={{userId}}",
+          "host": ["{{baseUrl}}"],
+          "query": [
+            {
+              "key": "userId",
+              "value": "{{userId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Get Specific Challenge",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}"]
+        }
+      }
+    },
+    {
+      "name": "4. Add Day 1 Log",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"day\": 1,\n  \"progressText\": \"Completed basic setup and solved first coding problem\",\n  \"hoursSpent\": 2.5,\n  \"nextGoals\": [\"Learn new algorithm\", \"Practice more problems\"]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}/logs",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}", "logs"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    const response = pm.response.json();",
+              "    pm.collectionVariables.set('logId', response.data._id);",
+              "    console.log('Log ID set:', response.data._id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Get Challenge Progress",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}/progress",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}", "progress"]
+        }
+      }
+    },
+    {
+      "name": "6. Get Challenge Logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}/logs",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}", "logs"]
+        }
+      }
+    },
+    {
+      "name": "7. Update Challenge Log",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"progressText\": \"Completed basic setup and solved first coding problem. Also learned about time complexity.\",\n  \"hoursSpent\": 3.0,\n  \"nextGoals\": [\"Learn new algorithm\", \"Practice more problems\", \"Review data structures\"]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}/logs/{{logId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}", "logs", "{{logId}}"]
+        }
+      }
+    },
+    {
+      "name": "8. Add Day 2 Log",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"day\": 2,\n  \"progressText\": \"Solved 3 medium difficulty problems and learned about dynamic programming\",\n  \"hoursSpent\": 4.0,\n  \"nextGoals\": [\"Practice DP problems\", \"Learn graph algorithms\"]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}/logs",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}", "logs"]
+        }
+      }
+    },
+    {
+      "name": "9. Update Challenge Details",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"30 Days Advanced Coding Challenge\",\n  \"totalDays\": 30,\n  \"category\": \"Advanced Programming\",\n  \"isActive\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}"]
+        }
+      }
+    },
+    {
+      "name": "10. Get Updated Progress",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}/progress",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}", "progress"]
+        }
+      }
+    },
+    {
+      "name": "11. Get User Statistics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/stats/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["stats", "{{userId}}"]
+        }
+      }
+    },
+    {
+      "name": "12. Delete Challenge Log",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}/logs/{{logId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}", "logs", "{{logId}}"]
+        }
+      }
+    },
+    {
+      "name": "13. Deactivate Challenge",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}"]
+        }
+      }
+    },
+    {
+      "name": "14. Verify Deactivation",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{challengeId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{challengeId}}"]
+        }
+      }
+    },
+    {
+      "name": "15. Final Statistics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/stats/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["stats", "{{userId}}"]
+        }
+      }
+    },
+    {
+      "name": "Error Tests",
+      "item": [
+        {
+          "name": "Invalid User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}?userId=",
+              "host": ["{{baseUrl}}"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Invalid Challenge ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/invalid-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["invalid-id"]
+            }
+          }
+        },
+        {
+          "name": "Missing Required Fields",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}",
+              "host": ["{{baseUrl}}"]
+            }
+          }
+        },
+        {
+          "name": "Method Not Allowed",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{challengeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{challengeId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

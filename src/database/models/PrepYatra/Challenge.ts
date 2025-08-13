@@ -1,22 +1,31 @@
-import { type Model, model, models, Schema } from 'mongoose';
-
+import { type Model, model, models, Schema, Document } from 'mongoose';
 import { DATABASE_MODELS } from '@/constant';
-import type { ChallengeModel } from '@/interfaces';
 
-const ChallengeSchema = new Schema<ChallengeModel>(
+// Define the document interface
+interface IChallenge extends Document {
+  user: Schema.Types.ObjectId;
+  name: string;
+  totalDays: number;
+  currentDay: number;
+  startDate: Date;
+  endDate: Date;
+  isActive: boolean;
+  category?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const ChallengeSchema = new Schema<IChallenge>(
   {
     user: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
       required: true,
+      index: true,
     },
     name: {
       type: String,
       required: true,
-      trim: true,
-    },
-    description: {
-      type: String,
       trim: true,
     },
     totalDays: {
@@ -30,40 +39,37 @@ const ChallengeSchema = new Schema<ChallengeModel>(
       default: 0,
       min: 0,
     },
-    status: {
-      type: String,
-      enum: ['active', 'completed', 'paused', 'cancelled'],
-      default: 'active',
-    },
     startDate: {
       type: Date,
       default: Date.now,
     },
     endDate: {
       type: Date,
+      required: true,
     },
-    isPredefined: {
+    isActive: {
       type: Boolean,
-      default: false,
+      default: true,
     },
-    predefinedType: {
+    category: {
       type: String,
-      enum: ['21DaysPython', '21DaysJava', '50DaysInternship'],
-    },
-    gamificationPoints: {
-      type: Number,
-      default: 0,
+      trim: true,
     },
   },
   { timestamps: true }
 );
 
-// Add indexes for performance
-ChallengeSchema.index({ user: 1, status: 1 });
-ChallengeSchema.index({ user: 1, createdAt: -1 });
+// Pre-save hook with proper typing
+ChallengeSchema.pre('save', function(this: IChallenge, next) {
+  if (this.isModified('totalDays') || this.isNew) {
+    this.endDate = new Date(this.startDate);
+    this.endDate.setDate(this.startDate.getDate() + this.totalDays);
+  }
+  next();
+});
 
-const Challenge: Model<ChallengeModel> =
+const Challenge: Model<IChallenge> =
   models?.Challenge ||
-  model<ChallengeModel>(DATABASE_MODELS.CHALLENGE, ChallengeSchema);
+  model<IChallenge>(DATABASE_MODELS.CHALLENGE, ChallengeSchema);
 
 export default Challenge;

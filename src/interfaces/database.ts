@@ -421,19 +421,28 @@ export interface LeaderboardModel extends Document {
   }[];
 }
 
-export interface UserInterestModel {
-  userId: Types.ObjectId;
-  eventType: InterestEventType;
-  eventDescription?: string;
-  metadata?: Record<string, any>;
+export interface ChallengeModel {
+  _id: string;
+  user: string;
+  name: string;
+  totalDays: number;
+  currentDay: number;
+  startDate: Date;
+  endDate: Date;
   isActive: boolean;
-  source: 'WEBAPP' | 'PREPYATRA' | 'ADMIN' | 'API';
-  ipAddress?: string;
-  userAgent?: string;
+  category?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface UserInterestDocument extends UserInterestModel, Document {
-  _id: Types.ObjectId;
+export interface ChallengeLogModel {
+  _id: string;
+  challenge: string;
+  day: number;
+  progressText: string;
+  hoursSpent: number;
+  nextGoals: string[];
+  loggedAt: Date;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -26,6 +26,8 @@ import UserInterest from './models/UserInterest';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
+import Challenge from './models/PrepYatra/Challenge';
+import ChallengeLog from './models/PrepYatra/ChallengeLog';
 
 export {
   Certificate,
@@ -55,6 +57,8 @@ export {
   UserProject,
   UserSheet,
   Webinar,
+  Challenge,
+  ChallengeLog,
 };
 
 // Query
