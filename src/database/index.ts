@@ -8,6 +8,8 @@ import Leaderboard from './models/Leaderboard';
 import Notification from './models/Notification';
 import Payment from './models/Payment';
 import PrepLog from './models/PrepYatra/PrepLog';
+import Challenge from './models/PrepYatra/Challenge';
+import ChallengeLog from './models/PrepYatra/ChallengeLog';
 import Recruiter from './models/PrepYatra/Recruiters';
 import PrepYatraSubscription from './models/PrepYatra/Subscription';
 import Mentorship from './models/PrepYatra/Mentorship';
@@ -27,6 +29,8 @@ import UserPlaylist from './models/YouFocus/UserPlaylist';
 
 export {
   Certificate,
+  Challenge,
+  ChallengeLog,
   Course,
   Feedback,
   Gamification,

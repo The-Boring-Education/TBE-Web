@@ -386,6 +386,32 @@ export interface PrepLogModel extends Document {
   mentorFeedback?: string;
 }
 
+export interface ChallengeModel extends Document {
+  user: Types.ObjectId;
+  name: string;
+  description?: string;
+  totalDays: number;
+  currentDay: number;
+  status: 'active' | 'completed' | 'paused' | 'cancelled';
+  startDate: Date;
+  endDate?: Date;
+  isPredefined: boolean;
+  predefinedType?: '21DaysPython' | '21DaysJava' | '50DaysInternship';
+  gamificationPoints: number;
+}
+
+export interface ChallengeLogModel extends Document {
+  challenge: Types.ObjectId;
+  user: Types.ObjectId;
+  day: number;
+  progressText: string;
+  hoursSpent: number;
+  date: Date;
+  copiedToPrepLogs: boolean;
+  prepLogId?: Types.ObjectId;
+  gamificationPoints: number;
+}
+
 export interface LeaderboardModel extends Document {
   type: LeaderboardEnum;
   date: Date;

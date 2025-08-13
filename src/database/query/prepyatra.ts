@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { Mentorship, PrepLog, PrepYatraSubscription, Recruiter, User } from '@/database';
+import { Challenge, ChallengeLog, Mentorship, PrepLog, PrepYatraSubscription, Recruiter, User } from '@/database';
 import type {
   AddPrepLogToDBPayloadProps,
   AddRecruiterToDBPayloadProps,
@@ -640,22 +640,290 @@ const toggleMentorshipInDB = async (
   }
 };
 
+// Challenge Functions
+const getChallengesByUserFromDB = async (
+  userId: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const challenges = await Challenge.find({
+      user: new mongoose.Types.ObjectId(userId),
+    }).sort({ createdAt: -1 });
+    return { data: challenges };
+  } catch (error) {
+    return { error: 'Failed to fetch challenges from DB' };
+  }
+};
+
+const createChallengeInDB = async (payload: {
+  userId: string;
+  name: string;
+  description?: string;
+  totalDays: number;
+  isPredefined: boolean;
+  predefinedType?: string;
+}): Promise<DatabaseQueryResponseType> => {
+  try {
+    const challengeData = {
+      user: new mongoose.Types.ObjectId(payload.userId),
+      name: payload.name,
+      description: payload.description,
+      totalDays: payload.totalDays,
+      isPredefined: payload.isPredefined,
+      predefinedType: payload.predefinedType,
+      startDate: new Date(),
+      gamificationPoints: 0,
+    };
+
+    const newChallenge = new Challenge(challengeData);
+    await newChallenge.save();
+    return { data: newChallenge };
+  } catch (error: any) {
+    return { error: error.message || 'Error while creating challenge in DB' };
+  }
+};
+
+const updateChallengeInDB = async (
+  challengeId: string,
+  updatePayload: Partial<Record<string, any>>
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const updatedChallenge = await Challenge.findByIdAndUpdate(
+      challengeId,
+      updatePayload,
+      { new: true }
+    );
+
+    if (!updatedChallenge) {
+      return { error: 'Challenge not found' };
+    }
+
+    return { data: updatedChallenge };
+  } catch (error: any) {
+    return { error: 'Failed to update challenge' };
+  }
+};
+
+const deleteChallengeInDB = async (
+  challengeId: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    // Delete all associated logs first
+    await ChallengeLog.deleteMany({ challenge: challengeId });
+    
+    const deletedChallenge = await Challenge.findByIdAndDelete(challengeId);
+
+    if (!deletedChallenge) {
+      return { error: 'Challenge not found' };
+    }
+
+    return { data: deletedChallenge };
+  } catch (error) {
+    return { error: 'Failed to delete challenge' };
+  }
+};
+
+const getChallengeLogsByIdFromDB = async (
+  challengeId: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const logs = await ChallengeLog.find({
+      challenge: new mongoose.Types.ObjectId(challengeId),
+    }).sort({ day: 1 });
+    return { data: logs };
+  } catch (error) {
+    return { error: 'Failed to fetch challenge logs from DB' };
+  }
+};
+
+const createChallengeLogInDB = async (payload: {
+  challengeId: string;
+  userId: string;
+  progressText: string;
+  hoursSpent: number;
+  copyToPrepLogs?: boolean;
+}): Promise<DatabaseQueryResponseType> => {
+  try {
+    // Get the challenge to determine the next day
+    const challenge = await Challenge.findById(payload.challengeId);
+    if (!challenge) {
+      return { error: 'Challenge not found' };
+    }
+
+    const nextDay = challenge.currentDay + 1;
+
+    // Check if this day has already been logged
+    const existingLog = await ChallengeLog.findOne({
+      challenge: payload.challengeId,
+      day: nextDay,
+    });
+
+    if (existingLog) {
+      return { error: 'This day has already been logged' };
+    }
+
+    // Create the challenge log
+    const logData = {
+      challenge: new mongoose.Types.ObjectId(payload.challengeId),
+      user: new mongoose.Types.ObjectId(payload.userId),
+      day: nextDay,
+      progressText: payload.progressText,
+      hoursSpent: payload.hoursSpent,
+      date: new Date(),
+      copiedToPrepLogs: payload.copyToPrepLogs || false,
+      gamificationPoints: 10, // Base points for logging
+    };
+
+    const newLog = new ChallengeLog(logData);
+    await newLog.save();
+
+    // Update challenge current day
+    await Challenge.findByIdAndUpdate(payload.challengeId, {
+      currentDay: nextDay,
+      $inc: { gamificationPoints: 10 },
+      ...(nextDay >= challenge.totalDays && { status: 'completed', endDate: new Date() }),
+    });
+
+    // Copy to prep logs if requested
+    if (payload.copyToPrepLogs) {
+      const prepLogData = {
+        user: payload.userId,
+        title: `${challenge.name} - Day ${nextDay}`,
+        description: payload.progressText,
+        timeSpent: payload.hoursSpent,
+      };
+
+      const prepLogResult = await addPrepLogToDB(prepLogData);
+      if (prepLogResult.data) {
+        await ChallengeLog.findByIdAndUpdate(newLog._id, {
+          prepLogId: prepLogResult.data._id,
+        });
+      }
+    }
+
+    return { data: newLog };
+  } catch (error: any) {
+    return { error: error.message || 'Error while creating challenge log in DB' };
+  }
+};
+
+const getChallengeProgressFromDB = async (
+  challengeId: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const challenge = await Challenge.findById(challengeId);
+    if (!challenge) {
+      return { error: 'Challenge not found' };
+    }
+
+    const logs = await ChallengeLog.find({
+      challenge: new mongoose.Types.ObjectId(challengeId),
+    }).sort({ day: 1 });
+
+    const totalHoursSpent = logs.reduce((sum, log) => sum + log.hoursSpent, 0);
+    const averageHoursPerDay = logs.length > 0 ? totalHoursSpent / logs.length : 0;
+    const completionPercentage = Math.round((challenge.currentDay / challenge.totalDays) * 100);
+    const daysRemaining = Math.max(0, challenge.totalDays - challenge.currentDay);
+
+    // Calculate streak (consecutive days without gaps)
+    let streak = 0;
+    const sortedLogs = logs.sort((a, b) => a.day - b.day);
+    for (let i = 0; i < sortedLogs.length; i++) {
+      if (i === 0 || sortedLogs[i].day === sortedLogs[i - 1].day + 1) {
+        streak++;
+      } else {
+        streak = 1;
+      }
+    }
+
+    const progressData = {
+      challenge,
+      logs,
+      completionPercentage,
+      daysRemaining,
+      streak,
+      totalHoursSpent,
+      averageHoursPerDay,
+    };
+
+    return { data: progressData };
+  } catch (error: any) {
+    return { error: error.message || 'Failed to fetch challenge progress' };
+  }
+};
+
+// Challenge Stats Functions
+const getChallengeStatsFromDB = async (): Promise<DatabaseQueryResponseType> => {
+  try {
+    const [
+      totalChallenges,
+      activeChallenges,
+      completedChallenges,
+      totalUsers,
+      totalLogs,
+    ] = await Promise.all([
+      Challenge.countDocuments(),
+      Challenge.countDocuments({ status: 'active' }),
+      Challenge.countDocuments({ status: 'completed' }),
+      Challenge.distinct('user').then(users => users.length),
+      ChallengeLog.countDocuments(),
+    ]);
+
+    // Get popular challenge types
+    const popularTypes = await Challenge.aggregate([
+      { $match: { isPredefined: true } },
+      { $group: { _id: '$predefinedType', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 },
+    ]);
+
+    // Get recent activity (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const recentActivity = await ChallengeLog.countDocuments({
+      createdAt: { $gte: thirtyDaysAgo },
+    });
+
+    const stats = {
+      totalChallenges,
+      activeChallenges,
+      completedChallenges,
+      totalUsers,
+      totalLogs,
+      popularTypes,
+      recentActivity,
+    };
+
+    return { data: stats };
+  } catch (error: any) {
+    return { error: error.message || 'Failed to fetch challenge stats' };
+  }
+};
+
 export {
   addPrepLogToDB,
   addRecruiterToDB,
+  createChallengeInDB,
+  createChallengeLogInDB,
   createSubscriptionInDB,
-  getAllMenteesFromDB,
-  isUserMenteeInDB,
-  toggleMentorshipInDB,
+  deleteChallengeInDB,
   deletePrepLogInDB,
   deleteRecruiterInDB,
-  getActiveSubscriptionByUserFromDB,
+  getAllMenteesFromDB,
   getAllUsersWithLogsFromDB,
+  getActiveSubscriptionByUserFromDB,
+  getChallengeLogsByIdFromDB,
+  getChallengeProgressFromDB,
+  getChallengesByUserFromDB,
+  getChallengeStatsFromDB,
   getPrepLogsByUserFromDB,
   getPYUserByIdFromDB,
   getRecruitersByUserFromDB,
   getUserPrepLogStats,
+  isUserMenteeInDB,
   recalculateUserPrepLogStats,
+  toggleMentorshipInDB,
+  updateChallengeInDB,
   updatePrepLogInDB,
   updatePYUserByIdInDB,
   updateRecruiterInDB,
