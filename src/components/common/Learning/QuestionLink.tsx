@@ -72,7 +72,9 @@ const QuestionLink = ({
             title,
             frequency,
           });
-        } catch {}
+        } catch {
+          /* ignore analytics errors */
+        }
 
         handleQuestionClick(question, questionId);
       }}

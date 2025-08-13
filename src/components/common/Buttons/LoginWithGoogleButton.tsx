@@ -27,7 +27,9 @@ const LoginWithGoogleButton = ({ text = 'Login' }: LoginWithGoogleBtnProps) => {
 
         try {
           sendEvent('login_click', { category: 'auth', label: text });
-        } catch {}
+        } catch {
+          /* ignore analytics errors */
+        }
 
         // Note: First login points will be awarded in the backend or user hook
         // when we detect it's the user's first login

@@ -46,7 +46,9 @@ const ChapterLink = ({
             label: name,
             chapterId,
           });
-        } catch {}
+        } catch {
+          /* ignore analytics errors */
+        }
         handleChapterClick(content);
       }}
     >

@@ -19,7 +19,9 @@ const LoginRedirectButton = ({
           category: 'auth',
           label: 'Login Redirect',
         });
-      } catch {}
+      } catch {
+        /* ignore analytics errors */
+      }
       router.push(`/login?redirect=${encodeURIComponent(router.asPath)}`);
     }
   };
