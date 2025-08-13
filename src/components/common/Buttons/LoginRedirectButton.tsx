@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 
 import { Button } from '@/components';
 import type { LoginRedirectButtonProps } from '@/interfaces';
+import { trackEvent } from '@/utils/analytics';
 
 const LoginRedirectButton = ({
   text = 'Login to Start',
@@ -13,6 +14,12 @@ const LoginRedirectButton = ({
 
   const handleLoginRedirect = () => {
     if (status === 'unauthenticated') {
+      try {
+        trackEvent('login_redirect_click', {
+          category: 'auth',
+          label: 'Login Redirect',
+        });
+      } catch {}
       router.push(`/login?redirect=${encodeURIComponent(router.asPath)}`);
     }
   };

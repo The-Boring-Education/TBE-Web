@@ -4,6 +4,7 @@ import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 import { useAnalytics } from '@/hooks';
 import type { QuestionLinkProps } from '@/interfaces';
+import { trackEvent as sendEvent } from '@/utils/analytics';
 
 const QuestionLink = ({
   href,
@@ -43,6 +44,8 @@ const QuestionLink = ({
           : `hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`
       }`}
       href={href}
+      data-analytics
+      data-analytics-label={`question:${title}`}
       onClick={(e) => {
         if (isLocked) {
           e.preventDefault();
@@ -61,6 +64,15 @@ const QuestionLink = ({
             isCompleted,
           },
         });
+
+        try {
+          sendEvent('question_start', {
+            category: 'learning',
+            questionId,
+            title,
+            frequency,
+          });
+        } catch {}
 
         handleQuestionClick(question, questionId);
       }}

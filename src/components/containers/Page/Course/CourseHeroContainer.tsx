@@ -69,6 +69,7 @@ const CourseHeroContainer = ({
           text='Enroll to Course'
           variant='PRIMARY'
           onClick={enrollCourse}
+          animationClasses=''
         />
       </FlexContainer>
     );
@@ -110,6 +111,7 @@ const CourseHeroContainer = ({
               text: 'Back to Course',
             }}
             href={routes.shikshaExplore}
+            
           />
         </FlexContainer>
       </FlexContainer>
