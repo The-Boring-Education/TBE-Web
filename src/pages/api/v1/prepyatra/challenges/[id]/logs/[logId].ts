@@ -1,68 +1,118 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
+import { apiStatusCodes } from '@/constant';
+import { sendAPIResponse } from '@/utils';
 import ChallengeLog from '@/database/models/PrepYatra/ChallengeLog';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
+  await connectDB();
+  const { method } = req;
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+  switch (method) {
+    case 'PUT':
+      return handleUpdateLog(req, res);
+    case 'DELETE':
+      return handleDeleteLog(req, res);
+    default:
+      return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${req.method} Not Allowed`,
+        })
+      );
   }
+};
 
-  if (!req.method || !['PUT', 'DELETE'].includes(req.method)) {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
+const handleUpdateLog = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
+    const { logId } = req.query;
+    const { progressText, hoursSpent, nextGoals } = req.body;
+
+    if (!logId) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Log ID is required',
+        })
+      );
+    }
+    
+    const updatedLog = await ChallengeLog.findByIdAndUpdate(
+      logId,
+      { progressText, hoursSpent, nextGoals },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedLog) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Log not found',
+        })
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Log updated successfully',
+        data: updatedLog,
+      })
+    );
+  } catch (error) {
+    console.error('Update Challenge Log Error:', error);
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal server error',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
+    );
+  }
+};
+
+const handleDeleteLog = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
     const { logId } = req.query;
 
     if (!logId) {
-      return res.status(400).json({ message: 'Log ID is required' });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Log ID is required',
+        })
+      );
+    }
+    
+    const deletedLog = await ChallengeLog.findByIdAndDelete(logId);
+    
+    if (!deletedLog) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Log not found',
+        })
+      );
     }
 
-    switch (req.method) {
-      case 'PUT':
-        const { progressText, hoursSpent, nextGoals } = req.body;
-        
-        const updatedLog = await ChallengeLog.findByIdAndUpdate(
-          logId,
-          { progressText, hoursSpent, nextGoals },
-          { new: true, runValidators: true }
-        );
-
-        if (!updatedLog) {
-          return res.status(404).json({ message: 'Log not found' });
-        }
-
-        return res.status(200).json({ 
-          success: true, 
-          message: 'Log updated successfully', 
-          data: updatedLog 
-        });
-
-      case 'DELETE':
-        const deletedLog = await ChallengeLog.findByIdAndDelete(logId);
-        
-        if (!deletedLog) {
-          return res.status(404).json({ message: 'Log not found' });
-        }
-
-        return res.status(200).json({ 
-          success: true, 
-          message: 'Log deleted successfully' 
-        });
-
-      default:
-        return res.status(405).json({ message: 'Method not allowed' });
-    }
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Log deleted successfully',
+      })
+    );
   } catch (error) {
-    console.error('Challenge Log API Error:', error);
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Internal server error' 
-    });
+    console.error('Delete Challenge Log Error:', error);
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal server error',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
+    );
   }
-}
+};
+
+export default handler;
