@@ -25,6 +25,7 @@ const DATABASE_MODELS = {
   QUIZ: 'Quiz',
   QUIZ_ATTEMPT: 'QuizAttempt',
   LEADERBOARD: 'Leaderboard',
+  USER_INTEREST: 'UserInterest',
 };
 
 export const FEEDBACK_TYPES = [
@@ -56,6 +57,17 @@ export const APPLICATION_STATUS = [
 ];
 
 export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
+
+export const INTEREST_EVENT_TYPES = [
+  'PREPYATRA_SUBSCRIPTION',
+  'AI_MENTOR',
+  'WEBAPP_SUBSCRIPTION',
+  'COHORT_PROGRAM',
+  'NEWSLETTER',
+  'BETA_FEATURE',
+] as const;
+
+export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 
 const modelSelectParams = {
   coursePreview: '_id name slug coverImageURL description liveOn isPremium',

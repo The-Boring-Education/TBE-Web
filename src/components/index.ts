@@ -79,6 +79,10 @@ const SheetHeroContainer = dynamic(
   () =>
     import('@/components/containers/Page/Interview-sheet/SheetHeroContainer')
 );
+const SheetLandingPage = dynamic(
+  () =>
+    import('@/components/containers/Page/Interview-sheet/SheetLandingPage')
+);
 const Navbar = dynamic(() => import('@/components/layout/Navbar'));
 const LinkText = dynamic(() => import('@/components/common/Typography/Link'));
 const Text = dynamic(() => import('@/components/common/Typography/Text'));
@@ -441,6 +445,7 @@ export {
   SEO,
   SessionDetailsSection,
   SheetHeroContainer,
+  SheetLandingPage,
   StarButton,
   StartRatingCard,
   StepNavigation,

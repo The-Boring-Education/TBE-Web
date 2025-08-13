@@ -3,6 +3,7 @@ import type { Document, Schema, Types } from 'mongoose';
 import type {
   ApplicationStatusType,
   FeedbackType,
+  InterestEventType,
   LeaderboardEnum,
   ProductType,
 } from '@/constant';
@@ -392,4 +393,21 @@ export interface LeaderboardModel extends Document {
     userId: Types.ObjectId;
     points: number;
   }[];
+}
+
+export interface UserInterestModel {
+  userId: Types.ObjectId;
+  eventType: InterestEventType;
+  eventDescription?: string;
+  metadata?: Record<string, any>;
+  isActive: boolean;
+  source: 'WEBAPP' | 'PREPYATRA' | 'ADMIN' | 'API';
+  ipAddress?: string;
+  userAgent?: string;
+}
+
+export interface UserInterestDocument extends UserInterestModel, Document {
+  _id: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
