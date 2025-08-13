@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { FlexContainer, Image, Section, Text } from '@/components';
+import { FlexContainer, Image, Section, Text, Toast } from '@/components';
 import { Button } from '@/components';
 import { useApi, useUser } from '@/hooks';
-import { apiStatusCodes, STATIC_FILE_PATH } from '@/constant';
-import { toast } from 'react-hot-toast';
+import { STATIC_FILE_PATH } from '@/constant';
 
 interface ComingSoonProps {
   className?: string;
@@ -11,9 +10,13 @@ interface ComingSoonProps {
 
 const ComingSoon = ({ className = '' }: ComingSoonProps) => {
   const { user, isAuth } = useUser();
-  const { makeRequest } = useApi();
+  const { makeRequest } = useApi('user-interest');
   const [isLoading, setIsLoading] = useState(false);
   const [isInterested, setIsInterested] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: 'success' | 'error' | 'info' | 'warning';
+  } | null>(null);
 
   const subscriptionFeatures = [
     'Advanced Interview Questions with AI Feedback',
@@ -25,23 +28,29 @@ const ComingSoon = ({ className = '' }: ComingSoonProps) => {
   ];
 
   const handleInterestClick = async () => {
-    if (!isAuth || !user?._id) {
-      toast.error('Please login to show your interest');
+    if (!isAuth || !user?.id) {
+      setToast({
+        message: 'Please login to show your interest',
+        type: 'error'
+      });
       return;
     }
 
     if (isInterested) {
-      toast.success('You\'re already on our interest list!');
+      setToast({
+        message: 'You\'re already on our interest list!',
+        type: 'success'
+      });
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await makeRequest({
+      const { status } = await makeRequest({
         method: 'POST',
         url: '/api/v1/user/interest',
         body: {
-          userId: user._id,
+          userId: user.id,
           eventType: 'WEBAPP_SUBSCRIPTION',
           eventDescription: 'User interested in webapp subscription from home page',
           metadata: {
@@ -52,15 +61,24 @@ const ComingSoon = ({ className = '' }: ComingSoonProps) => {
         },
       });
 
-      if (response.status === apiStatusCodes.OKAY || response.status === apiStatusCodes.CREATED) {
+      if (status) {
         setIsInterested(true);
-        toast.success('Thanks! We\'ll notify you when subscription launches 🚀');
+        setToast({
+          message: 'Thanks! We\'ll notify you when subscription launches 🚀',
+          type: 'success'
+        });
       } else {
-        toast.error('Something went wrong. Please try again.');
+        setToast({
+          message: 'Something went wrong. Please try again.',
+          type: 'error'
+        });
       }
     } catch (error) {
       console.error('Error showing interest:', error);
-      toast.error('Failed to register interest. Please try again.');
+      setToast({
+        message: 'Failed to register interest. Please try again.',
+        type: 'error'
+      });
     } finally {
       setIsLoading(false);
     }
@@ -135,6 +153,14 @@ const ComingSoon = ({ className = '' }: ComingSoonProps) => {
           </FlexContainer>
         </FlexContainer>
       </FlexContainer>
+      
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </Section>
   );
 };
