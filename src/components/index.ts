@@ -97,6 +97,9 @@ const LinkButton = dynamic(
 const LandingPageHero = dynamic(
   () => import('@/components/containers/Page/common/Hero')
 );
+const ModernLandingHero = dynamic(
+  () => import('@/components/containers/Page/common/ModernLandingHero')
+);
 const Section = dynamic(() => import('@/components/layout/Section'));
 const CardContainerB = dynamic(
   () => import('@/components/containers/Cards/CardContainerB')
@@ -396,6 +399,7 @@ export {
   InputRadioContainer,
   InterviewPrepSection,
   LandingPageHero,
+  ModernLandingHero,
   Leaderboard,
   LinerProgressBar,
   LinkText as Link,
