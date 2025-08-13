@@ -93,9 +93,8 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
     {
       id: v4(),
       name: 'Tech Mentorship',
-      description: 'Get Book Tech Consultation',
-      href: LINKS.bookTechConsultation,
-      target: '_blank',
+      description: 'Book personalized mentorship sessions',
+      href: routes.topmateSessions,
     },
     {
       id: v4(),
@@ -486,6 +485,30 @@ const TBIP_FEATURES: PrimaryCardProps[] = [
     content: `Ask Interview Prep Questions in Community. We're here to help.`,
     image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
     imageAltText: `doubt session`,
+  },
+];
+
+const TBSH_FEATURES: PrimaryCardProps[] = [
+  {
+    id: v4(),
+    title: `Bite-sized Learning`,
+    content: `Learn complex topics in small, digestible chunks. Perfect for busy schedules.`,
+    image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
+    imageAltText: `bite-sized learning`,
+  },
+  {
+    id: v4(),
+    title: `100% Free Courses`,
+    content: `Quality tech education without any cost. Focus on learning, not on payment.`,
+    image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
+    imageAltText: `free education`,
+  },
+  {
+    id: v4(),
+    title: `Certificate on Completion`,
+    content: `Get verified certificates to showcase your skills and boost your resume.`,
+    image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
+    imageAltText: `certificate`,
   },
 ];
 
@@ -945,6 +968,7 @@ export {
   PRODUCTS,
   TBIP_FEATURES,
   TBP_FEATURES,
+  TBSH_FEATURES,
   TBP_PROJECTS,
   TESTIMONIALS,
   TOP_NAVIGATION,

@@ -1,6 +1,7 @@
 import { signIn, useSession } from 'next-auth/react';
 
 import { useAnalytics } from '@/hooks';
+import { trackEvent as sendEvent } from '@/utils/analytics';
 import type { LoginWithGoogleBtnProps } from '@/interfaces';
 
 import Button from './Button';
@@ -23,6 +24,12 @@ const LoginWithGoogleButton = ({ text = 'Login' }: LoginWithGoogleBtnProps) => {
           category: 'User',
           label: 'User Logged In',
         });
+
+        try {
+          sendEvent('login_click', { category: 'auth', label: text });
+        } catch {
+          /* ignore analytics errors */
+        }
 
         // Note: First login points will be awarded in the backend or user hook
         // when we detect it's the user's first login

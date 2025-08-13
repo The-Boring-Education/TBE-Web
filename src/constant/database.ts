@@ -21,12 +21,14 @@ const DATABASE_MODELS = {
   PREP_YATRA_SUBSCRIPTION: 'PrepYatraSubscription',
   RECRUITER: 'Recruiters',
   PREP_LOG: 'PrepLog',
+  CHALLENGE: 'Challenge',
+  CHALLENGE_LOG: 'ChallengeLog',
   MENTORSHIP: 'Mentorship',
   QUIZ: 'Quiz',
   QUIZ_ATTEMPT: 'QuizAttempt',
   LEADERBOARD: 'Leaderboard',
   CHALLENGE: 'Challenge',
-  CHALLENGE_LOG: 'ChallengeLog',
+  CHALLENGE_LOG: 'ChallengeLog'
 };
 
 export const FEEDBACK_TYPES = [
@@ -58,6 +60,17 @@ export const APPLICATION_STATUS = [
 ];
 
 export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
+
+export const INTEREST_EVENT_TYPES = [
+  'PREPYATRA_SUBSCRIPTION',
+  'AI_MENTOR',
+  'WEBAPP_SUBSCRIPTION',
+  'COHORT_PROGRAM',
+  'NEWSLETTER',
+  'BETA_FEATURE',
+] as const;
+
+export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 
 const modelSelectParams = {
   coursePreview: '_id name slug coverImageURL description liveOn isPremium',

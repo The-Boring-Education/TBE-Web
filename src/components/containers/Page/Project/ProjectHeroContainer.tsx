@@ -5,10 +5,12 @@ import {
   LoginRedirectButton,
   PageHeroMetaContainer,
   Text,
+  Section,
 } from '@/components';
 import { projectGroupWhatsapp, routes } from '@/constant';
 import { useAnalytics, useApi, useGamifiedAction, useUser } from '@/hooks';
 import type { ProjectHeroContainerProps } from '@/interfaces';
+import { FaCode, FaUsers, FaQuestionCircle, FaRocket, FaBolt } from 'react-icons/fa';
 
 const ProjectHeroContainer = ({
   id,
@@ -57,84 +59,170 @@ const ProjectHeroContainer = ({
     }
   };
 
+  const getDifficultyColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case 'beginner': return 'text-green-400';
+      case 'intermediate': return 'text-yellow-400';
+      case 'advanced': return 'text-red-400';
+      default: return 'text-blue-400';
+    }
+  };
+
+  const getDifficultyIcon = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case 'beginner': return <FaBolt />;
+      case 'intermediate': return <FaRocket />;
+      case 'advanced': return <FaCode />;
+      default: return <FaCode />;
+    }
+  };
+
   let headerActionButton;
 
   if (!isAuth) {
-    headerActionButton = (
-      <FlexContainer>
-        <LoginRedirectButton text='Login to Get Started' />
-      </FlexContainer>
-    );
+    headerActionButton = <LoginRedirectButton text='Login to Get Started' />;
   } else if (isAuth && !isEnrolled) {
     headerActionButton = (
-      <FlexContainer>
-        <Button
-          text='Enroll to Project'
-          variant='PRIMARY'
-          onClick={enrollProject}
-        />
-      </FlexContainer>
+      <Button
+        text='Enroll to Project'
+        variant='PRIMARY'
+        onClick={enrollProject}
+        className='bg-orange-600 hover:bg-orange-700 text-white px-6 py-2'
+      />
     );
   } else if (loading) {
     headerActionButton = (
-      <Button isLoading text='Enrolling...' variant='PRIMARY' />
-    );
-  } else {
-    headerActionButton = (
-      <FlexContainer
-        className='justify-start items-start gap-2'
-        itemCenter={false}
-        justifyCenter={false}
-      >
-        <LinkButton
-          buttonProps={{
-            variant: 'OUTLINE',
-            text: 'Ask Question',
-          }}
-          href={projectGroupWhatsapp}
-          target='_blank'
-        />
-        <LinkButton
-          buttonProps={{
-            variant: 'GHOST',
-            text: 'Back to Projects',
-          }}
-          href={routes.projectsExplore}
-        />
-      </FlexContainer>
+      <Button 
+        isLoading 
+        text='Enrolling...' 
+        variant='PRIMARY' 
+        className='bg-orange-600 hover:bg-orange-700 text-white px-6 py-2'
+      />
     );
   }
 
   return (
-    <FlexContainer>
-      <FlexContainer className='border gap-4 w-full p-2 justify-between rounded'>
-        <FlexContainer
-          className='items-start gap-1'
-          direction='col'
-          itemCenter={false}
-        >
-          <Text className='heading-4' level='h4'>
-            Hello {user?.name ?? 'there'}!
-          </Text>
-          <Text className='paragraph text-greyDark' level='p'>
-            Let's learn something today.
-          </Text>
-        </FlexContainer>
-        <FlexContainer
-          className='justify-start items-start gap-3'
-          itemCenter={false}
-          justifyCenter={false}
-        >
-          <PageHeroMetaContainer subtitle="YOU'RE BUILDING" title={name} />
-          <PageHeroMetaContainer subtitle='ROADMAP' title={roadmap} />
-          <PageHeroMetaContainer
-            subtitle='DIFFICULTY LEVEL'
-            title={difficultyLevel}
-          />
-        </FlexContainer>
-        {headerActionButton}
-      </FlexContainer>
-    </FlexContainer>
+    <Section className='bg-gradient-to-r from-orange-600 to-purple-700 text-white'>
+      <div className='max-w-7xl mx-auto px-4 py-8'>
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 items-center'>
+          
+          {/* Left: Greeting & Project Info */}
+          <div className='lg:col-span-2 space-y-4'>
+            {/* Navigation */}
+            <div className='flex items-center gap-2 text-purple-200'>
+              <LinkButton
+                buttonProps={{
+                  variant: 'GHOST',
+                  text: '← Back to Projects',
+                  className: 'text-white hover:text-purple-200',
+                }}
+                href={routes.projectsExplore}
+              />
+              <span>•</span>
+              <Text level='p' className='text-sm uppercase tracking-wide'>{roadmap} Track</Text>
+            </div>
+            
+            {/* Welcome Message */}
+            <div className='space-y-2'>
+              <Text className='text-2xl lg:text-3xl font-bold' level='h2'>
+                Hello {user?.name ?? 'there'}! 🚀
+              </Text>
+              <Text level='p' className='text-purple-100 text-lg'>
+                Ready to build something amazing today?
+              </Text>
+            </div>
+
+            {/* Project Title */}
+            <div className='bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20'>
+              <Text level='p' className='text-purple-200 text-sm uppercase tracking-wide mb-1'>
+                YOU'RE BUILDING
+              </Text>
+              <Text className='text-xl lg:text-2xl font-bold text-white' level='h3'>
+                {name}
+              </Text>
+            </div>
+
+            {/* Project Stats */}
+            <div className='grid grid-cols-2 gap-4'>
+              <div className='bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20'>
+                <Text level='p' className='text-purple-200 text-xs uppercase tracking-wide mb-1'>
+                  ROADMAP
+                </Text>
+                <Text className='text-white font-semibold' level='p'>
+                  {roadmap}
+                </Text>
+              </div>
+              
+              <div className='bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20'>
+                <Text level='p' className='text-purple-200 text-xs uppercase tracking-wide mb-1'>
+                  DIFFICULTY
+                </Text>
+                <div className='flex items-center gap-2'>
+                  <span className={getDifficultyColor(difficultyLevel)}>
+                    {getDifficultyIcon(difficultyLevel)}
+                  </span>
+                  <Text className='text-white font-semibold' level='p'>
+                    {difficultyLevel}
+                  </Text>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className='flex flex-wrap gap-3 pt-2'>
+              {headerActionButton}
+              {isEnrolled && (
+                <>
+                  <LinkButton
+                    buttonProps={{
+                      variant: 'OUTLINE',
+                      text: 'Ask Question',
+                      className: 'border-white text-white hover:bg-white hover:text-orange-600',
+                    }}
+                    href={projectGroupWhatsapp}
+                    target='_blank'
+                  />
+                  <LinkButton
+                    buttonProps={{
+                      variant: 'OUTLINE',
+                      text: 'Project Overview',
+                      className: 'border-white text-white hover:bg-white hover:text-orange-600',
+                    }}
+                    href={routes.projectsExplore}
+                  />
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Progress Card */}
+          <div className='lg:col-span-1'>
+            <div className='bg-white rounded-lg shadow-xl p-6 text-gray-900'>
+              <div className='text-center space-y-3'>
+                <div className='w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto'>
+                  <FaCode className='text-2xl text-orange-600' />
+                </div>
+                <Text level='p' className='font-semibold text-lg'>Start Building</Text>
+                <Text level='p' className='text-sm text-gray-600'>
+                  Begin your project journey with guided steps
+                </Text>
+                {isEnrolled ? (
+                  <Button
+                    text='Continue Building'
+                    variant='PRIMARY'
+                    className='w-full bg-orange-600 hover:bg-orange-700'
+                  />
+                ) : (
+                  <Text level='p' className='text-orange-600 text-sm font-medium'>
+                    Enroll to get started
+                  </Text>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Section>
   );
 };
 
