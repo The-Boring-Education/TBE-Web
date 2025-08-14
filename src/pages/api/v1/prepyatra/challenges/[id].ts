@@ -1,83 +1,165 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
+import { apiStatusCodes } from '@/constant';
+import { sendAPIResponse } from '@/utils';
 import Challenge from '@/database/models/PrepYatra/Challenge';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
+  await connectDB();
+  const { method } = req;
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+  switch (method) {
+    case 'GET':
+      return handleGetChallenge(req, res);
+    case 'PUT':
+      return handleUpdateChallenge(req, res);
+    case 'DELETE':
+      return handleDeleteChallenge(req, res);
+    default:
+      return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${req.method} Not Allowed`,
+        })
+      );
   }
+};
 
-  if (!req.method || !['GET', 'PUT', 'DELETE'].includes(req.method)) {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
+const handleGetChallenge = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
     const { id } = req.query;
 
     if (!id) {
-      return res.status(400).json({ message: 'Challenge ID is required' });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Challenge ID is required',
+        })
+      );
     }
 
-    switch (req.method) {
-      case 'GET':
-        const challenge = await Challenge.findById(id);
-        if (!challenge) {
-          return res.status(404).json({ message: 'Challenge not found' });
-        }
-        return res.status(200).json({ 
-          success: true, 
-          message: 'Challenge retrieved successfully', 
-          data: challenge 
-        });
-
-      case 'PUT':
-        const { name, totalDays, category, isActive } = req.body;
-        
-        const updatedChallenge = await Challenge.findByIdAndUpdate(
-          id,
-          { name, totalDays, category, isActive },
-          { new: true, runValidators: true }
-        );
-
-        if (!updatedChallenge) {
-          return res.status(404).json({ message: 'Challenge not found' });
-        }
-
-        return res.status(200).json({ 
-          success: true, 
-          message: 'Challenge updated successfully', 
-          data: updatedChallenge 
-        });
-
-      case 'DELETE':
-        const deletedChallenge = await Challenge.findByIdAndUpdate(
-          id,
-          { isActive: false },
-          { new: true }
-        );
-        
-        if (!deletedChallenge) {
-          return res.status(404).json({ message: 'Challenge not found' });
-        }
-
-        return res.status(200).json({ 
-          success: true, 
-          message: 'Challenge deactivated successfully' 
-        });
-
-      default:
-        return res.status(405).json({ message: 'Method not allowed' });
+    const challenge = await Challenge.findById(id);
+    if (!challenge) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Challenge not found',
+        })
+      );
     }
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Challenge retrieved successfully',
+        data: challenge,
+      })
+    );
   } catch (error) {
-    console.error('Challenge API Error:', error);
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Internal server error' 
-    });
+    console.error('Get Challenge Error:', error);
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal server error',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
+    );
   }
-}
+};
+
+const handleUpdateChallenge = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { id } = req.query;
+    const { name, totalDays, category, isActive } = req.body;
+
+    if (!id) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Challenge ID is required',
+        })
+      );
+    }
+    
+    const updatedChallenge = await Challenge.findByIdAndUpdate(
+      id,
+      { name, totalDays, category, isActive },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedChallenge) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Challenge not found',
+        })
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Challenge updated successfully',
+        data: updatedChallenge,
+      })
+    );
+  } catch (error) {
+    console.error('Update Challenge Error:', error);
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal server error',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
+    );
+  }
+};
+
+const handleDeleteChallenge = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Challenge ID is required',
+        })
+      );
+    }
+    
+    const deletedChallenge = await Challenge.findByIdAndUpdate(
+      id,
+      { isActive: false },
+      { new: true }
+    );
+    
+    if (!deletedChallenge) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Challenge not found',
+        })
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Challenge deactivated successfully',
+      })
+    );
+  } catch (error) {
+    console.error('Delete Challenge Error:', error);
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal server error',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
+    );
+  }
+};
+
+export default handler;

@@ -1,27 +1,40 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
+import { apiStatusCodes } from '@/constant';
+import { sendAPIResponse } from '@/utils';
 import Challenge from '@/database/models/PrepYatra/Challenge';
 import ChallengeLog from '@/database/models/PrepYatra/ChallengeLog';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
+  await connectDB();
+  const { method } = req;
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+  switch (method) {
+    case 'GET':
+      return handleGetStats(req, res);
+    default:
+      return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${req.method} Not Allowed`,
+        })
+      );
   }
+};
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
+const handleGetStats = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
     const { userId } = req.query;
 
     if (!userId) {
-      return res.status(400).json({ message: 'User ID is required' });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: 'User ID is required',
+        })
+      );
     }
 
     const challenges = await Challenge.find({ user: String(userId) });
@@ -47,16 +60,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       completionRate: totalChallenges > 0 ? Math.round((completedChallenges / totalChallenges) * 100) : 0
     };
 
-    return res.status(200).json({ 
-      success: true, 
-      message: 'Stats retrieved successfully', 
-      data: stats 
-    });
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: 'Stats retrieved successfully',
+        data: stats,
+      })
+    );
   } catch (error) {
-    console.error('Challenge Stats API Error:', error);
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Internal server error' 
-    });
+    console.error('Get Challenge Stats Error:', error);
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Internal server error',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
+    );
   }
-}
+};
+
+export default handler;
