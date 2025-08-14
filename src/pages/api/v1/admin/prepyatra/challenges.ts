@@ -35,7 +35,7 @@ const handleGetChallengeStats = async (req: NextApiRequest, res: NextApiResponse
       );
     }
 
-    return res.status(apiStatusCodes.OK).json(
+    return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
         message: 'Challenge stats fetched successfully',

@@ -786,7 +786,7 @@ const createChallengeLogInDB = async (payload: {
     // Copy to prep logs if requested
     if (payload.copyToPrepLogs) {
       const prepLogData = {
-        user: payload.userId,
+        userId: payload.userId,
         title: `${challenge.name} - Day ${nextDay}`,
         description: payload.progressText,
         timeSpent: payload.hoursSpent,

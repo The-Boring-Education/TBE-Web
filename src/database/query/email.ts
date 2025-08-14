@@ -2,7 +2,7 @@ import type { DatabaseQueryResponseType } from '@/interfaces';
 import { emailClient } from '@/services/email';
 
 interface EmailRequest {
-  from_email?: string;
+  from_email: string;
   from_name?: string;
   to_email: string;
   to_name?: string;

@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS, INTEREST_EVENT_TYPES } from '@/constant';
-import type { UserInterestDocument, UserInterestModel } from '@/interfaces';
+import type { UserInterestModel } from '@/interfaces';
 
 const UserInterestSchema = new Schema<UserInterestModel>(
   {
@@ -75,15 +75,15 @@ UserInterestSchema.index({ userId: 1, isActive: 1 });
 // Prevent duplicate interests for the same user and event type
 UserInterestSchema.index(
   { userId: 1, eventType: 1 },
-  { 
+  {
     unique: true,
     partialFilterExpression: { isActive: true }
   }
 );
 
-const UserInterest: Model<UserInterestDocument> =
+const UserInterest: Model<UserInterestModel> =
   models?.UserInterest ||
-  model<UserInterestDocument>(
+  model<UserInterestModel>(
     DATABASE_MODELS.USER_INTEREST,
     UserInterestSchema
   );

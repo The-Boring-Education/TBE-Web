@@ -394,7 +394,7 @@ export interface ChallengeModel extends Document {
   currentDay: number;
   status: 'active' | 'completed' | 'paused' | 'cancelled';
   startDate: Date;
-  endDate?: Date;
+  endDate: Date;
   isPredefined: boolean;
   predefinedType?: '21DaysPython' | '21DaysJava' | '50DaysInternship';
   gamificationPoints: number;
@@ -423,7 +423,7 @@ export interface LeaderboardModel extends Document {
 
 export interface ChallengeModel {
   _id: string;
-  user: string;
+  user: Types.ObjectId;
   name: string;
   totalDays: number;
   currentDay: number;
@@ -437,7 +437,7 @@ export interface ChallengeModel {
 
 export interface ChallengeLogModel {
   _id: string;
-  challenge: string;
+  challenge: Types.ObjectId;
   day: number;
   progressText: string;
   hoursSpent: number;
@@ -445,4 +445,15 @@ export interface ChallengeLogModel {
   loggedAt: Date;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface UserInterestModel {
+  userId: Types.ObjectId;
+  eventType: InterestEventType;
+  eventDescription?: string;
+  metadata?: Record<string, any>;
+  isActive: boolean;
+  source: 'WEBAPP' | 'PREPYATRA' | 'ADMIN' | 'API';
+  ipAddress?: string;
+  userAgent?: string;
 }
