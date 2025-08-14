@@ -40,7 +40,7 @@ const routes = {
     dsaInterviewSheet: '/interview-prep/dsa-interview-questions',
   },
   // PrepYatra
-  prepYatra: '/prepyatra',
+  prepYatra: 'https://prepyatra.theboringeducation.com/',
 
   certificate: '/certificate',
   contactUs: '/contact',
