@@ -180,7 +180,7 @@ const ProjectPage = ({
           roadmap={project.roadmap}
         />
       </Section>
-      <Section className='p-2'>
+      <Section id='project-content' className='p-2'>
         <FlexContainer className='w-full gap-4' itemCenter={false}>
           {/* Sidebar with Progress Bar and Chapters */}
           <FlexContainer
