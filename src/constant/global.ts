@@ -79,10 +79,10 @@ const products: ProductDataProps = {
     slug: routes.unskilled,
     description: 'Find Your Next Tech Job with Insights',
   },
-  // PrepYatra - Internal Product
+  // PrepYatra - External Product
   prepYatra: {
     label: 'Prep Yatra',
-    slug: routes.prepYatra,
+    slug: 'https://prepyatra.theboringeducation.com',
     description: 'Complete Interview Preparation Platform',
   },
   // Yatra Products - External Tools

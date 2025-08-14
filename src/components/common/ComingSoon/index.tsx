@@ -87,21 +87,21 @@ const ComingSoon = ({ className = '' }: ComingSoonProps) => {
   return (
     <Section className={`md:px-8 md:py-6 px-2 py-6 ${className}`}>
       <FlexContainer justifyCenter={false}>
-        <FlexContainer className='w-full gap-6 rounded-3xl bg-gradient-to-br from-blue-50 to-indigo-100 md:px-8 md:py-8 px-4 py-6 shadow-xl border border-blue-200 lg:px-6 lg:py-6'>
+        <FlexContainer className='w-full gap-6 rounded-lg bg-white border border-gray-200 md:px-8 md:py-8 px-4 py-6 shadow-sm'>
           <div className='max-w-sm lg:max-w-md'>
             <Image 
               alt='subscription coming soon' 
-              src={`${STATIC_FILE_PATH.svg}/rocket.svg`}
+              src={`${STATIC_FILE_PATH.svg}/community.svg`}
               className='w-full h-auto'
             />
           </div>
           
           <FlexContainer direction='col' itemCenter className='flex-1 text-center lg:text-left'>
             <div className='mb-4'>
-              <div className='inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm font-medium mb-3'>
+              <div className='inline-flex items-center px-3 py-1 rounded-full bg-red-500 text-white text-sm font-medium mb-3'>
                 🚀 Coming Soon
               </div>
-              <Text className='heading-2 text-gray-800 mb-2' level='h2'>
+              <Text className='heading-3 text-gray-900 mb-2' level='h3'>
                 TBE Premium Subscription
               </Text>
               <Text className='paragraph text-gray-600 mb-4' level='p'>
@@ -116,7 +116,7 @@ const ComingSoon = ({ className = '' }: ComingSoonProps) => {
               <ul className='space-y-2'>
                 {subscriptionFeatures.map((feature, index) => (
                   <li key={index} className='flex items-start text-sm text-gray-600'>
-                    <span className='text-green-500 mr-2 mt-0.5'>✓</span>
+                    <span className='text-red-500 mr-2 mt-0.5'>✓</span>
                     {feature}
                   </li>
                 ))}
@@ -135,7 +135,7 @@ const ComingSoon = ({ className = '' }: ComingSoonProps) => {
                 }
                 onClick={handleInterestClick}
                 disabled={isLoading || isInterested}
-                className='px-6 py-3 font-medium transition-all duration-200 hover:scale-105'
+                className='px-6 py-2 font-medium transition-all duration-200'
               />
               
               {!isAuth && (
