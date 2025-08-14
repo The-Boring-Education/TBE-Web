@@ -120,7 +120,7 @@ const ModernLandingHero = ({
                 <Button
                   text={previewContent.buttonText}
                   variant='SECONDARY'
-                  className='w-full hover:bg-gray-100'
+                  className='w-full hover:bg-gray-100 hover:text-black'
                   onClick={previewContent.onPreviewClick}
                 />
               </div>
