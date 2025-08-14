@@ -118,17 +118,17 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
       
       {/* Hero Section - Full Width */}
       <Section className='bg-gradient-to-r from-blue-600 to-purple-700 text-white'>
-        <div className='max-w-7xl mx-auto px-4 py-12'>
-          <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 items-center'>
+        <div className='max-w-7xl mx-auto px-4 py-8'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 items-center'>
             
             {/* Left: Content */}
-            <div className='lg:col-span-2 space-y-6'>
-              <div className='flex items-center gap-2 text-blue-200'>
+            <div className='lg:col-span-2 space-y-4'>
+              <div className='flex items-center gap-2 text-red-200'>
                 <LinkButton
                   buttonProps={{
                     variant: 'GHOST',
                     text: '← Back to Explore',
-                    className: 'text-white hover:text-blue-200',
+                    className: 'bg-white text-red-600 hover:bg-gray-100 text-sm px-3 py-1 rounded border',
                   }}
                   href={routes.interviewPrepExplore}
                 />
@@ -136,16 +136,16 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                 <Text level='p' className='text-sm uppercase tracking-wide'>{sheet.roadmap} Track</Text>
               </div>
               
-              <Text className='text-4xl lg:text-5xl font-bold leading-tight' level='h1'>
+              <Text className='text-3xl lg:text-4xl font-bold leading-tight' level='h1'>
                 {sheet.name}
               </Text>
               
-              <Text level='p' className='text-xl text-blue-100'>
+              <Text level='p' className='text-lg text-red-100'>
                 {sheet.description}
               </Text>
 
               {/* Stats */}
-              <div className='flex flex-wrap gap-6 text-sm'>
+              <div className='flex flex-wrap gap-4 text-sm'>
                 <div className='flex items-center gap-2'>
                   <FaPlay className='text-green-400' />
                   <span>{sheet.questions?.length || 0} Questions</span>
@@ -167,26 +167,26 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
               </div>
 
               {/* Action Buttons */}
-              <div className='flex flex-wrap gap-4'>
+              <div className='flex flex-wrap gap-3'>
                 {!isAuth ? (
                   <LoginRedirectButton text='Login to Get Started' />
                 ) : (
-                  <Button
-                    text={
-                      loading ? 'Loading...' :
-                      canStartNow ? 'Start Practicing Now' :
-                      !sheet?.isEnrolled && !sheet?.isPremium ? 'Enroll for Free' :
-                      'Unlock Full Access'
-                    }
-                    variant='PRIMARY'
-                    className='bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold'
-                    onClick={handleStartNow}
-                    isLoading={loading}
-                  />
+                                      <Button
+                      text={
+                        loading ? 'Loading...' : 
+                        canStartNow ? 'Start Practicing Now' :
+                        !sheet?.isEnrolled && !sheet?.isPremium ? 'Enroll for Free' :
+                        'Unlock Full Access'
+                      }
+                      variant='PRIMARY'
+                      className='bg-red-500 text-white hover:bg-red-600 px-4 py-2 text-base font-semibold'
+                      onClick={handleStartNow}
+                      isLoading={loading}
+                    />
                 )}
                 
                 {sheet?.isPremium && !isPurchased && (
-                  <Text level='p' className='text-blue-200 text-sm flex items-center'>
+                  <Text level='p' className='text-red-200 text-sm flex items-center'>
                     <FaLock className='mr-2' />
                     Premium - ₹{sheet.price} for lifetime access
                   </Text>
@@ -196,20 +196,20 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
             {/* Right: Preview Card */}
             <div className='lg:col-span-1'>
-              <div className='bg-white rounded-lg shadow-2xl p-6 text-gray-900'>
-                <div className='aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4'>
-                  <FaPlay className='text-4xl text-blue-600' />
+              <div className='bg-white rounded-lg shadow-lg p-4 text-gray-900'>
+                <div className='aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-3'>
+                  <FaPlay className='text-3xl text-red-600' />
                 </div>
                 <Text level='p' className='font-semibold mb-2'>Preview this sheet</Text>
-                <Text level='p' className='text-sm text-gray-600 mb-4'>
+                <Text level='p' className='text-sm text-gray-600 mb-3'>
                   Get a quick overview of the questions and difficulty levels
                 </Text>
-                <Button
-                  text='Preview Questions'
-                  variant='SECONDARY'
-                  className='w-full'
-                  onClick={() => document.getElementById('preview-section')?.scrollIntoView({ behavior: 'smooth' })}
-                />
+                                      <Button
+                        text='Preview Questions'
+                        variant='SECONDARY'
+                        className='w-full px-3 py-2 text-sm bg-red-500 text-white hover:bg-red-600'
+                        onClick={() => document.getElementById('preview-section')?.scrollIntoView({ behavior: 'smooth' })}
+                      />
               </div>
             </div>
           </div>
@@ -217,16 +217,16 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
       </Section>
 
       {/* Content Section */}
-      <Section className='py-12'>
+      <Section className='py-8'>
         <div className='max-w-7xl mx-auto px-4'>
-          <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
             
             {/* Main Content */}
-            <div className='lg:col-span-2 space-y-8'>
+            <div className='lg:col-span-2 space-y-6'>
               
               {/* About Section */}
-              <div className='bg-white rounded-lg border p-6'>
-                <Text className='text-2xl font-bold mb-4' level='h2'>About This Sheet</Text>
+              <div className='bg-white rounded-lg border p-5'>
+                <Text className='text-xl font-bold mb-3' level='h2'>About This Sheet</Text>
                 <div className='prose max-w-none'>
                   <MDXRenderer mdxSource={sheet.meta || meta || ''} />
                 </div>
@@ -234,8 +234,8 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
               {/* What You'll Learn */}
               {sheet?.features && sheet.features.length > 0 && (
-                <div className='bg-white rounded-lg border p-6'>
-                  <Text className='text-2xl font-bold mb-4' level='h3'>What You'll Learn</Text>
+                <div className='bg-white rounded-lg border p-5'>
+                  <Text className='text-xl font-bold mb-3' level='h3'>What You'll Learn</Text>
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
                     {sheet.features.map((feature, index) => (
                       <div key={index} className='flex items-start gap-3'>
@@ -248,20 +248,20 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
               )}
 
               {/* Preview Questions Section */}
-              <div id='preview-section' className='bg-white rounded-lg border p-6'>
-                <Text className='text-2xl font-bold mb-4' level='h3'>Preview Questions</Text>
-                <Text level='p' className='text-gray-600 mb-6'>
+              <div id='preview-section' className='bg-white rounded-lg border p-5'>
+                <Text className='text-xl font-bold mb-3' level='h3'>Preview Questions</Text>
+                <Text level='p' className='text-gray-600 mb-4'>
                   Here are the first {previewQuestions.length} questions to give you a taste of what's inside:
                 </Text>
                 
                 <div className='space-y-3'>
                   {previewQuestions.map((q, index) => (
-                    <div key={q._id.toString()} className='border rounded-lg p-4 hover:shadow-md transition-shadow'>
+                    <div key={q._id.toString()} className='border rounded-lg p-3 hover:shadow-md transition-shadow'>
                       <div className='flex items-start justify-between mb-2'>
                         <Text level='p' className='font-semibold text-gray-900'>
                           {index + 1}. {q.title}
                         </Text>
-                        <span className={`px-2 py-1 rounded text-xs font-medium`}>
+                        <span className='px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700'>
                           {q.frequency} Frequency
                         </span>
                       </div>
@@ -275,22 +275,22 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
               {/* Locked Content Section */}
               {lockedQuestions.length > 0 && (
-                <div className='bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border p-6'>
-                  <div className='flex items-center gap-3 mb-4'>
+                <div className='bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border p-5'>
+                  <div className='flex items-center gap-3 mb-3'>
                     <FaLock className='text-gray-500' />
-                    <Text className='text-2xl font-bold text-gray-700' level='h3'>
+                    <Text className='text-xl font-bold text-gray-700' level='h3'>
                       {lockedQuestions.length} More Questions Available
                     </Text>
                   </div>
                   
-                  <Text level='p' className='text-gray-600 mb-6'>
+                  <Text level='p' className='text-gray-600 mb-4'>
                     {isLocked 
                       ? 'Unlock premium access to view all questions with detailed solutions and explanations.'
                       : 'More questions are waiting for you after enrollment!'
                     }
                   </Text>
 
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-6'>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-4'>
                     {lockedQuestions.slice(0, 6).map((q, index) => (
                       <div key={q._id.toString()} className='flex items-center gap-3 p-3 bg-white rounded border opacity-60'>
                         <FaLock className='text-gray-400 text-sm' />
@@ -306,7 +306,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                       text={`Unlock All ${sheet.questions?.length} Questions - ₹${sheet.price}`}
                       variant='PRIMARY'
                       onClick={handleShowPayment}
-                      className='w-full'
+                      className='w-full px-4 py-2 text-sm bg-red-500 text-white hover:bg-red-600'
                     />
                   )}
                 </div>
@@ -315,19 +315,19 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
             {/* Sidebar */}
             <div className='lg:col-span-1'>
-              <div className='sticky top-6 space-y-6'>
+              <div className='sticky top-6 space-y-4'>
                 
                 {/* Action Card */}
-                <div className='bg-white rounded-lg border shadow-lg p-6'>
-                  <div className='text-center space-y-4'>
+                <div className='bg-white rounded-lg border shadow-lg p-5'>
+                  <div className='text-center space-y-3'>
                     {sheet?.isPremium && (
-                      <div className='bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium'>
+                      <div className='bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-medium'>
                         Premium Content
                       </div>
                     )}
                     
                     <div>
-                      <Text level='p' className='text-3xl font-bold text-gray-900'>
+                      <Text level='p' className='text-2xl font-bold text-gray-900'>
                         {sheet?.isPremium ? `₹${sheet.price}` : 'Free'}
                       </Text>
                       {sheet?.isPremium && (
@@ -346,7 +346,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                           'Purchase Access'
                         }
                         variant='PRIMARY'
-                        className='w-full py-3 text-lg font-semibold'
+                        className='w-full px-4 py-2 text-sm font-semibold bg-red-500 text-white hover:bg-red-600'
                         onClick={handleStartNow}
                         isLoading={loading}
                       />
@@ -359,11 +359,11 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                 </div>
 
                 {/* Quick Info */}
-                <div className='bg-white rounded-lg border p-6'>
-                  <Text level='p' className='font-semibold mb-4'>This sheet includes:</Text>
-                  <div className='space-y-3 text-sm text-gray-600'>
+                <div className='bg-white rounded-lg border p-4'>
+                  <Text level='p' className='font-semibold mb-3'>This sheet includes:</Text>
+                  <div className='space-y-2 text-sm text-gray-600'>
                     <div className='flex items-center gap-3'>
-                      <FaPlay className='text-blue-500' />
+                      <FaPlay className='text-red-500' />
                       <span>{sheet.questions?.length || 0} Interview Questions</span>
                     </div>
                     <div className='flex items-center gap-3'>
