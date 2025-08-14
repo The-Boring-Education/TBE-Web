@@ -114,7 +114,7 @@ const ProjectHeroContainer = ({
                 buttonProps={{
                   variant: 'GHOST',
                   text: '← Back to Projects',
-                  className: 'text-white hover:text-purple-200',
+                  className: 'text-black ',
                 }}
                 href={routes.projectsExplore}
               />
