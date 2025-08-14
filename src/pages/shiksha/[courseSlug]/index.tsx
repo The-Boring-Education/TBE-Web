@@ -256,7 +256,7 @@ const CoursePage = ({
         />
       </Section>
 
-      <Section className='md:p-2 p-2'>
+      <Section id='course-content' className='md:p-2 p-2'>
         <FlexContainer className='w-full gap-4' itemCenter={false}>
           {/* Left Sidebar (Chapters) */}
           <FlexContainer

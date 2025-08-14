@@ -95,7 +95,7 @@ const CourseHeroContainer = ({
                 buttonProps={{
                   variant: 'GHOST',
                   text: '← Back to Courses',
-                  className: 'text-white hover:text-blue-200',
+                  className: 'text-black hover:text-black',
                 }}
                 href={routes.shikshaExplore}
               />
@@ -143,13 +143,22 @@ const CourseHeroContainer = ({
             <div className='flex flex-wrap gap-3 pt-2'>
               {headerActionButton}
               {isEnrolled && (
-                <LinkButton
-                  buttonProps={{
-                    variant: 'OUTLINE',
-                    text: 'Course Overview',
-                    className: 'border-white text-white hover:bg-white hover:text-emerald-600',
+                <Button
+                  text='Course Overview'
+                  variant='OUTLINE'
+                  className='border-white text-white hover:bg-white hover:text-emerald-600'
+                  onClick={() => {
+                    // Scroll to the course content section with offset
+                    const contentSection = document.getElementById('course-content');
+                    if (contentSection) {
+                      const offset = 80; // Account for any fixed headers
+                      const elementPosition = contentSection.offsetTop - offset;
+                      window.scrollTo({
+                        top: elementPosition,
+                        behavior: 'smooth'
+                      });
+                    }
                   }}
-                  href={routes.shikshaExplore}
                 />
               )}
             </div>
@@ -170,7 +179,7 @@ const CourseHeroContainer = ({
                   <Button
                     text='Continue Learning'
                     variant='PRIMARY'
-                    className='w-full bg-emerald-600 hover:bg-emerald-700'
+                    className='w-full bg-emerald-600 '
                   />
                 ) : (
                   <Text level='p' className='text-emerald-600 text-sm font-medium'>
