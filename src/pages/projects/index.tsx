@@ -57,7 +57,7 @@ const Home = ({ seoMeta }: PageProps) => {
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Explore Projects',
-              className: 'bg-white text-orange-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold w-full sm:w-auto',
+              className: 'bg-black text-black hover:bg-gray-100 hover:text-black px-6 py-2 text-base font-semibold w-full sm:w-auto',
             }}
             className='w-full sm:w-fit'
             href={routes.projectsExplore}
@@ -68,7 +68,7 @@ const Home = ({ seoMeta }: PageProps) => {
             buttonProps={{
               variant: 'OUTLINE',
               text: 'Get Mentorship',
-              className: 'border-white text-white hover:bg-white hover:text-orange-600 px-8 py-3 text-lg font-semibold w-full sm:w-auto',
+              className: 'border-white text-white hover:bg-white hover:text-orange-600 px-6 py-2 text-base font-semibold w-full sm:w-auto',
             }}
             className='w-full sm:w-fit'
             href={LINKS.bookTechConsultation}

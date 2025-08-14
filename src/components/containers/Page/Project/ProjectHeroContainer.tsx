@@ -114,7 +114,7 @@ const ProjectHeroContainer = ({
                 buttonProps={{
                   variant: 'GHOST',
                   text: '← Back to Projects',
-                  className: 'text-white hover:text-purple-200',
+                  className: 'text-black ',
                 }}
                 href={routes.projectsExplore}
               />
@@ -182,13 +182,19 @@ const ProjectHeroContainer = ({
                     href={projectGroupWhatsapp}
                     target='_blank'
                   />
-                  <LinkButton
-                    buttonProps={{
-                      variant: 'OUTLINE',
-                      text: 'Project Overview',
-                      className: 'border-white text-white hover:bg-white hover:text-orange-600',
+                  <Button
+                    text='Project Overview'
+                    variant='OUTLINE'
+                    className='border-white text-white hover:bg-white hover:text-orange-600'
+                    onClick={() => {
+                      const contentSection = document.getElementById('project-content');
+                      if (contentSection) {
+                        contentSection.scrollIntoView({ 
+                          behavior: 'smooth',
+                          block: 'start'
+                        });
+                      }
                     }}
-                    href={routes.projectsExplore}
                   />
                 </>
               )}
