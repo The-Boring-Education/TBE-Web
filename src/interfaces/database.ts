@@ -3,6 +3,7 @@ import type { Document, Schema, Types } from 'mongoose';
 import type {
   ApplicationStatusType,
   FeedbackType,
+  InterestEventType,
   LeaderboardEnum,
   ProductType,
 } from '@/constant';
@@ -382,6 +383,33 @@ export interface PrepLogModel extends Document {
   title: string;
   timeSpent: number;
   description?: string;
+  mentorFeedback?: string;
+}
+
+export interface ChallengeModel extends Document {
+  user: Types.ObjectId;
+  name: string;
+  description?: string;
+  totalDays: number;
+  currentDay: number;
+  status: 'active' | 'completed' | 'paused' | 'cancelled';
+  startDate: Date;
+  endDate: Date;
+  isPredefined: boolean;
+  predefinedType?: '21DaysPython' | '21DaysJava' | '50DaysInternship';
+  gamificationPoints: number;
+}
+
+export interface ChallengeLogModel extends Document {
+  challenge: Types.ObjectId;
+  user: Types.ObjectId;
+  day: number;
+  progressText: string;
+  hoursSpent: number;
+  date: Date;
+  copiedToPrepLogs: boolean;
+  prepLogId?: Types.ObjectId;
+  gamificationPoints: number;
 }
 
 export interface LeaderboardModel extends Document {
@@ -391,4 +419,41 @@ export interface LeaderboardModel extends Document {
     userId: Types.ObjectId;
     points: number;
   }[];
+}
+
+export interface ChallengeModel {
+  _id: string;
+  user: Types.ObjectId;
+  name: string;
+  totalDays: number;
+  currentDay: number;
+  startDate: Date;
+  endDate: Date;
+  isActive: boolean;
+  category?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ChallengeLogModel {
+  _id: string;
+  challenge: Types.ObjectId;
+  day: number;
+  progressText: string;
+  hoursSpent: number;
+  nextGoals: string[];
+  loggedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface UserInterestModel {
+  userId: Types.ObjectId;
+  eventType: InterestEventType;
+  eventDescription?: string;
+  metadata?: Record<string, any>;
+  isActive: boolean;
+  source: 'WEBAPP' | 'PREPYATRA' | 'ADMIN' | 'API';
+  ipAddress?: string;
+  userAgent?: string;
 }

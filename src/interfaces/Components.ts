@@ -355,6 +355,7 @@ export interface SheetHeroContainerProps {
   id: string;
   isPremium?: boolean;
   isPurchased?: boolean;
+  redirectTo?: string;
 }
 
 export interface AccordionProps {
@@ -535,6 +536,21 @@ export interface MentorshipCardProps {
   heading: string;
   description: string;
   link: string;
+}
+
+export interface TopmateServiceCardProps {
+  id: string;
+  title: string;
+  description: string;
+  rating?: number;
+  isPopular?: boolean;
+  icon?: string;
+  sessionDuration: string;
+  sessionType: string;
+  originalPrice: number;
+  currentPrice: number;
+  topmateLink: string;
+  category: 'mentorship' | 'ebooks' | 'events' | 'templates' | 'bootcamps';
 }
 
 export interface CarouselProps {

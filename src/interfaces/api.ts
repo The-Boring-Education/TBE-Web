@@ -507,3 +507,35 @@ export interface MarkQuestionStarredRequestProps {
   questionId: string;
   isStarred: boolean;
 }
+
+// User Interest API Interfaces
+export interface CreateUserInterestRequestProps {
+  userId: string;
+  eventType: import('@/constant').InterestEventType;
+  eventDescription?: string;
+  metadata?: Record<string, any>;
+  source: 'WEBAPP' | 'PREPYATRA' | 'ADMIN' | 'API';
+}
+
+export interface GetUserInterestsRequestProps {
+  userId?: string;
+  eventType?: import('@/constant').InterestEventType;
+  source?: 'WEBAPP' | 'PREPYATRA' | 'ADMIN' | 'API';
+  isActive?: boolean;
+  page?: number;
+  limit?: number;
+}
+
+export interface UserInterestResponseProps {
+  _id: string;
+  userId: string;
+  eventType: import('@/constant').InterestEventType;
+  eventDescription?: string;
+  metadata?: Record<string, any>;
+  isActive: boolean;
+  source: 'WEBAPP' | 'PREPYATRA' | 'ADMIN' | 'API';
+  ipAddress?: string;
+  userAgent?: string;
+  createdAt: string;
+  updatedAt: string;
+}

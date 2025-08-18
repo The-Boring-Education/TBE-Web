@@ -47,6 +47,7 @@ const HeaderLabel = dynamic(
 const MentorshipCard = dynamic(
   () => import('@/components/containers/Cards/MentorshipCard')
 );
+
 const ToggleButton = dynamic(
   () => import('@/components/common/Buttons/ToggleButton')
 );
@@ -78,6 +79,10 @@ const SheetHeroContainer = dynamic(
   () =>
     import('@/components/containers/Page/Interview-sheet/SheetHeroContainer')
 );
+const SheetLandingPage = dynamic(
+  () =>
+    import('@/components/containers/Page/Interview-sheet/SheetLandingPage')
+);
 const Navbar = dynamic(() => import('@/components/layout/Navbar'));
 const LinkText = dynamic(() => import('@/components/common/Typography/Link'));
 const Text = dynamic(() => import('@/components/common/Typography/Text'));
@@ -91,6 +96,9 @@ const LinkButton = dynamic(
 );
 const LandingPageHero = dynamic(
   () => import('@/components/containers/Page/common/Hero')
+);
+const ModernLandingHero = dynamic(
+  () => import('@/components/containers/Page/common/ModernLandingHero')
 );
 const Section = dynamic(() => import('@/components/layout/Section'));
 const CardContainerB = dynamic(
@@ -186,6 +194,7 @@ const MentorshipPlans = dynamic(
   () => import('./containers/Page/Landing/MentorshipPlans')
 );
 const Community = dynamic(() => import('./containers/Page/Landing/Community'));
+const ComingSoon = dynamic(() => import('@/components/common/ComingSoon'));
 const CollegeEventsSection = dynamic(
   () => import('./containers/Page/Landing/CollegeEventsSection')
 );
@@ -367,6 +376,7 @@ export {
   CircularProgressBar,
   CohortJourneyContainer,
   CollegeEventsSection,
+  ComingSoon,
   Community,
   ContactCard,
   CourseHeroContainer,
@@ -389,6 +399,7 @@ export {
   InputRadioContainer,
   InterviewPrepSection,
   LandingPageHero,
+  ModernLandingHero,
   Leaderboard,
   LinerProgressBar,
   LinkText as Link,
@@ -440,6 +451,7 @@ export {
   SEO,
   SessionDetailsSection,
   SheetHeroContainer,
+  SheetLandingPage,
   StarButton,
   StartRatingCard,
   StepNavigation,

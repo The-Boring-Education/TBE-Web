@@ -11,6 +11,7 @@ import type {
   UserLevel,
   UserPointsActionType,
   UserRoleType,
+  PrimaryCardWithCTAProps,
 } from '@/interfaces';
 
 import { JOB_DOMAIN_NORMALIZER } from './api';
@@ -199,6 +200,74 @@ const MENTORSHIP_CARDS: MentorshipCardProps[] = [
     description:
       'Get a resume review to enhance your job application and stand out to employers.',
     link: 'https://topmate.io/imsks/714264',
+  },
+];
+
+const MENTORSHIP_SERVICES_CARDS: PrimaryCardWithCTAProps[] = [
+  {
+    id: '1',
+    image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
+    imageAltText: 'Mentorship icon for project idea service',
+    title: 'Find Your Project Idea',
+    content: 'Discover a project idea that fits you in 15 minutes',
+    href: 'https://topmate.io/imsks/',
+    ctaText: 'Book Now',
+    borderColour: 1,
+    target: '_blank',
+    active: true,
+    launchingOn: 'Available Now',
+  },
+  {
+    id: '2',
+    image: `${STATIC_FILE_PATH.svg}/community.svg`,
+    imageAltText: 'Community icon for remote jobs roadmap service',
+    title: 'Personalised Roadmap for Remote Internships /Jobs',
+    content: 'Create a personalised plan to land remote roles',
+    href: 'https://topmate.io/imsks/',
+    ctaText: 'Book Now',
+    borderColour: 2,
+    target: '_blank',
+    active: true,
+    launchingOn: 'Available Now',
+  },
+  {
+    id: '3',
+    image: `${STATIC_FILE_PATH.svg}/interview.svg`,
+    imageAltText: 'Interview icon for interview prep service',
+    title: 'Personal Interview Prep Plan',
+    content: 'Create a custom plan to crack tech interviews',
+    href: 'https://topmate.io/imsks/',
+    ctaText: 'Book Now',
+    borderColour: 3,
+    target: '_blank',
+    active: true,
+    launchingOn: 'Available Now',
+  },
+  {
+    id: '4',
+    image: `${STATIC_FILE_PATH.svg}/projects.svg`,
+    imageAltText: 'Projects icon for resume review service',
+    title: 'Resume Review',
+    content: 'Fix your resume & make it internship/job ready',
+    href: 'https://topmate.io/imsks/',
+    ctaText: 'Book Now',
+    borderColour: 4,
+    target: '_blank',
+    active: true,
+    launchingOn: 'Available Now',
+  },
+  {
+    id: '5',
+    image: `${STATIC_FILE_PATH.svg}/webinar-hero.svg`,
+    imageAltText: 'Webinar icon for tech guidance service',
+    title: 'Tech Guidance',
+    content: 'Plan your next step in tech together',
+    href: 'https://topmate.io/imsks/',
+    ctaText: 'Book Now',
+    borderColour: 5,
+    target: '_blank',
+    active: true,
+    launchingOn: 'Available Now',
   },
 ];
 
@@ -468,4 +537,5 @@ export {
   USER_ROLE_OPTIONS,
   USER_USAGE_OPTIONS,
   YOUFOCUS_SKILL_PLAYLISTS,
+  MENTORSHIP_SERVICES_CARDS,
 };

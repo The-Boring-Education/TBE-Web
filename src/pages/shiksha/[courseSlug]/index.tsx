@@ -13,7 +13,6 @@ import {
   FlexContainer,
   LinerProgressBar,
   MDXRenderer,
-  PaymentCard,
   Section,
   SEO,
   Text,
@@ -25,7 +24,6 @@ import {
   useApi,
   useGamifiedAction,
   useMediaQuery,
-  usePaymentStatus,
   useUser,
 } from '@/hooks';
 import type {
@@ -59,16 +57,8 @@ const CoursePage = ({
   const [showCourseFeedback, setShowCourseFeedback] = useState(false);
 
   const { user } = useUser();
-  const { isPurchased } = usePaymentStatus({
-    userId: user?.id,
-    productId: course?._id,
-    isPremium: course?.isPremium,
-  });
-  const isLocked =
-    course?.isPremium && !course?.isEnrolled && isPurchased === false;
-
-  const [showPayment, setShowPayment] = useState(false);
-  const paymentSectionRef = useRef<HTMLDivElement>(null);
+  // All courses are free now - only check enrollment
+  const isLocked = !course?.isEnrolled;
 
   // Calculate the total chapters and completed chapters
   const totalChapters = chapters.length;
@@ -245,13 +235,6 @@ const CoursePage = ({
   }
 };
 
-  const handleShowPayment = () => {
-    setShowPayment(true);
-    setTimeout(() => {
-      paymentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-  };
-
   const alertContainer = isSmallScreen && (
     <Alert
       className='my-2'
@@ -268,12 +251,12 @@ const CoursePage = ({
         <CourseHeroContainer
           id={course._id ?? ''}
           isEnrolled={course.isEnrolled}
-          isPremium={course.isPremium}
+          isPremium={false}
           name={course.name ?? ''}
         />
       </Section>
 
-      <Section className='md:p-2 p-2'>
+      <Section id='course-content' className='md:p-2 p-2'>
         <FlexContainer className='w-full gap-4' itemCenter={false}>
           {/* Left Sidebar (Chapters) */}
           <FlexContainer
@@ -283,6 +266,9 @@ const CoursePage = ({
             <div className='w-full sticky top-0 bg-inherit py-2'>
               <Text className='heading-5' level='h5'>
                 Chapters
+                <Text className='text-xs text-gray-500' level='p'>
+                  {chapters.length} chapters
+                </Text>
               </Text>
               {!isLocked && (
                 <LinerProgressBar
@@ -296,7 +282,7 @@ const CoursePage = ({
               className='gap-px overflow-y-auto max-h-[60vh]'
               justifyCenter={false}
             >
-              {chapters?.map(({ _id, name, content, isCompleted }) => {
+              {chapters?.map(({ _id, name, content, isCompleted }, index) => {
                 const chapterId = _id?.toString();
 
                 return (
@@ -312,7 +298,7 @@ const CoursePage = ({
                         : `${slug}?courseId=${course._id}&chapterId=${chapterId}`
                     }
                     isCompleted={isCompleted}
-                    name={name}
+                    name={`${index + 1} - ${name}`}
                     isLocked={isLocked}
                   />
                 );
@@ -374,32 +360,17 @@ const CoursePage = ({
                   Course Overview
                 </Text>
                 <MDXRenderer mdxSource={course.meta || ''} />
-                <div className='mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm'>
+                <div className='mt-6 w-full rounded bg-blue-100 p-4 border border-blue-300 shadow-sm'>
                   <Text level='h4' className='mb-2 flex items-center gap-2'>
-                    🚀 This is a Premium Course
+                    📚 Enroll to Access Course
                   </Text>
                   <Text level='p' className='mb-4'>
-                    To access the course content, please complete the payment.
-                    Once payment is confirmed, all chapters will be unlocked.
+                    This course is completely free! Simply enroll to access all chapters and start learning.
                   </Text>
-                  {!showPayment && (
-                    <Button
-                      text='Pay Now to Unlock'
-                      variant='PRIMARY'
-                      className='w-fit'
-                      onClick={handleShowPayment}
-                    />
-                  )}
+                  <Text level='p' className='text-sm text-gray-600'>
+                    Click the "Enroll to Course" button above to get started.
+                  </Text>
                 </div>
-                {showPayment && (
-                  <div ref={paymentSectionRef}>
-                    <PaymentCard
-                      course={course}
-                      onClose={() => setShowPayment(false)}
-                      productType='SHIKSHA'
-                    />
-                  </div>
-                )}
               </div>
             ) : (
               <MDXRenderer

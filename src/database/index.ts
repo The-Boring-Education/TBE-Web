@@ -8,6 +8,8 @@ import Leaderboard from './models/Leaderboard';
 import Notification from './models/Notification';
 import Payment from './models/Payment';
 import PrepLog from './models/PrepYatra/PrepLog';
+import Challenge from './models/PrepYatra/Challenge';
+import ChallengeLog from './models/PrepYatra/ChallengeLog';
 import Recruiter from './models/PrepYatra/Recruiters';
 import PrepYatraSubscription from './models/PrepYatra/Subscription';
 import Mentorship from './models/PrepYatra/Mentorship';
@@ -20,12 +22,15 @@ import UserCourse from './models/Shiksha/UserCourse';
 import JobAggregate from './models/Unskilled/JobAggregate';
 import Job from './models/Unskilled/Jobs';
 import User from './models/User';
+import UserInterest from './models/UserInterest';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
 
 export {
   Certificate,
+  Challenge,
+  ChallengeLog,
   Course,
   Feedback,
   Gamification,
@@ -45,6 +50,7 @@ export {
   Mentorship,
   User,
   UserCourse,
+  UserInterest,
   UserPlaylist,
   UserProject,
   UserSheet,
@@ -54,6 +60,7 @@ export {
 // Query
 export * from './query/certificate';
 export * from './query/common';
+export * from './query/email';
 export * from './query/feedback';
 export * from './query/gamification';
 export * from './query/interview-prep';
@@ -65,5 +72,6 @@ export * from './query/project';
 export * from './query/shiksha';
 export * from './query/unskilled';
 export * from './query/user';
+export * from './query/userInterest';
 export * from './query/webinar';
 export * from './query/youfocus';

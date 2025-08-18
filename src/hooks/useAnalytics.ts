@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 import { envConfig } from '@/constant';
 import type { TrackEventProps } from '@/interfaces';
+import { installGlobalAnalyticsListeners, trackEvent as sendEvent } from '@/utils/analytics';
 
 const useAnalytics = () => {
   const router = useRouter();
@@ -16,6 +17,7 @@ const useAnalytics = () => {
     };
 
     router.events.on('routeChangeComplete', handleRouteChange);
+    installGlobalAnalyticsListeners();
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange);
     };
@@ -23,13 +25,11 @@ const useAnalytics = () => {
 
   // Function to Track Custom Events
   const trackEvent = ({ action, category, label, value }: TrackEventProps) => {
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', action, {
-        event_category: category,
-        event_label: label,
-        value,
-      });
-    }
+    sendEvent(action, {
+      category,
+      label,
+      value,
+    });
   };
 
   return { trackEvent };

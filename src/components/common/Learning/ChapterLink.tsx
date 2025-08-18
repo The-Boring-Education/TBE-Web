@@ -3,6 +3,7 @@ import { FaLock, FaRegCircle } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 import type { ChapterLinkProps } from '@/interfaces';
+import { trackEvent } from '@/utils/analytics';
 
 const ChapterLink = ({
   href,
@@ -32,10 +33,21 @@ const ChapterLink = ({
           : `hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`
       }`}
       href={href}
+      data-analytics
+      data-analytics-label={`chapter:${name}`}
       onClick={(e) => {
         if (isLocked) {
           e.preventDefault();
           return;
+        }
+        try {
+          trackEvent('COURSE_CHAPTER_START', {
+            category: 'Course',
+            label: name,
+            chapterId,
+          });
+        } catch {
+          /* ignore analytics errors */
         }
         handleChapterClick(content);
       }}

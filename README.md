@@ -175,11 +175,3 @@ For detailed documentation and integration examples, see:
 
 - [Email Service Documentation](src/services/email/README.md)
 - [External Integration Examples](examples/external-email-usage.md)
-
-### Testing
-
-Test the email system using the provided test script:
-
-```bash
-node scripts/test-email.js
-```
