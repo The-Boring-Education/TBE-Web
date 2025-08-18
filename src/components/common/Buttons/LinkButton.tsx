@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { LinkButtonProps } from '@/interfaces';
 
 import { Button, Link } from '../..';
@@ -8,10 +9,22 @@ const LinkButton = ({
   buttonProps,
   target,
   active = true,
-}: LinkButtonProps) => (
-  <Link active={active} className={className} href={href} target={target}>
-    <Button {...buttonProps} />
-  </Link>
-);
+}: LinkButtonProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = () => {
+    // Show immediate loading feedback (hidden from user)
+    setIsLoading(true);
+    
+    // Reset loading state after a short delay
+    setTimeout(() => setIsLoading(false), 200);
+  };
+
+  return (
+    <Link active={active} className={className} href={href} target={target} onClick={handleClick}>
+      <Button {...buttonProps} isLoading={false} />
+    </Link>
+  );
+};
 
 export default LinkButton;

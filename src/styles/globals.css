@@ -147,3 +147,40 @@
     @apply flex items-center gap-2 px-3 py-2 border label rounded-full transition-all duration-150 cursor-pointer shadow-md;
   }
 }
+
+/* Add performance optimizations for better button responsiveness */
+.button {
+  /* Optimize for better performance */
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Optimize framer-motion animations */
+[data-framer-motion] {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Improve button click responsiveness */
+button:active {
+  transform: scale(0.98) !important;
+  transition: transform 0.05s ease-out !important;
+}
+
+/* Optimize page transitions */
+.page-transition {
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

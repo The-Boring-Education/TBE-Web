@@ -16,8 +16,15 @@ const nextConfig = {
   // Bundle size optimization - simplified approach
   experimental: {
     optimizePackageImports: ['framer-motion'],
+    scrollRestoration: true,
   },
 
+  // Performance optimizations for better page transitions
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
+  // Optimize images and static assets
   images: {
     domains: [
       'lh3.googleusercontent.com',
@@ -28,6 +35,8 @@ const nextConfig = {
       'via.placeholder.com',
       'avatars.githubusercontent.com',
     ],
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60,
   },
 
   // SVGR

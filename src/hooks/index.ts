@@ -9,6 +9,7 @@ import useGamifiedAction from './useGamifiedAction';
 import useLeaderboard from './useLeaderboard';
 import useMediaQuery from './useMediaQuery';
 import useNotifications from './useNotifications';
+import useOptimizedNavigation from './useOptimizedNavigation';
 import usePaymentStatus from './usePaymentStatus';
 import usePDFFile from './usePDFFile';
 import useQuestionStarred from './useQuestionStarred';
@@ -31,6 +32,7 @@ export {
   useLeaderboard,
   useMediaQuery,
   useNotifications,
+  useOptimizedNavigation,
   usePaymentStatus,
   usePDFFile,
   useQuestionStarred,
