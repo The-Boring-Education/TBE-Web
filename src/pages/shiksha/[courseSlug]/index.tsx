@@ -266,6 +266,9 @@ const CoursePage = ({
             <div className='w-full sticky top-0 bg-inherit py-2'>
               <Text className='heading-5' level='h5'>
                 Chapters
+                <Text className='text-xs text-gray-500' level='p'>
+                  {chapters.length} chapters
+                </Text>
               </Text>
               {!isLocked && (
                 <LinerProgressBar
@@ -279,7 +282,7 @@ const CoursePage = ({
               className='gap-px overflow-y-auto max-h-[60vh]'
               justifyCenter={false}
             >
-              {chapters?.map(({ _id, name, content, isCompleted }) => {
+              {chapters?.map(({ _id, name, content, isCompleted }, index) => {
                 const chapterId = _id?.toString();
 
                 return (
@@ -295,7 +298,7 @@ const CoursePage = ({
                         : `${slug}?courseId=${course._id}&chapterId=${chapterId}`
                     }
                     isCompleted={isCompleted}
-                    name={name}
+                    name={`${index + 1} - ${name}`}
                     isLocked={isLocked}
                   />
                 );

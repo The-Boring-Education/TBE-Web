@@ -14,7 +14,7 @@ const Home = ({ seoMeta }: PageProps) => {
   const stats = [
     {
       icon: <FaPlay />,
-      text: '15+ Free Courses',
+      text: '4+ Free Courses',
       color: 'text-green-400',
     },
     {
@@ -57,7 +57,7 @@ const Home = ({ seoMeta }: PageProps) => {
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Explore Courses',
-              className: 'bg-red text-emerald-600 hover:bg-gray-100 px-6 py-2 text-base font-semibold w-full sm:w-auto',
+              className: 'bg-red hover:bg-gray-100 hover:text-black px-6 py-2 text-base font-semibold w-full sm:w-auto',
             }}
             className='w-full sm:w-fit'
             href={routes.shikshaExplore}
