@@ -113,7 +113,7 @@ const mapProjectResponseToCard = (
         imageAltText: name,
         title: name,
         content: description,
-        href: `/projects/${slug}?projectId=${_id}`,
+        href: `/projects/${slug}`,
         active: isActive,
         ctaText,
       };

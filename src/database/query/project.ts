@@ -71,6 +71,49 @@ const getProjectBySlugFromDB = async (
   }
 };
 
+const getProjectBySlugWithUserFromDB = async (
+  slug: string,
+  userId?: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const project = await Project.findOne({ slug });
+
+    if (!project) {
+      return { error: 'Project not found' };
+    }
+
+    if (userId) {
+      // Use getAProjectForUserFromDB which properly maps user completion status
+      const { data: projectWithUser, error } = await getAProjectForUserFromDB(userId, project._id);
+      
+      if (error) {
+        return { error };
+      }
+
+      return {
+        data: projectWithUser,
+      };
+    }
+
+    // No user ID, return project without user data
+    return {
+      data: {
+        ...project.toObject(),
+        isEnrolled: false,
+        sections: project.sections.map((section) => ({
+          ...section.toObject(),
+          chapters: section.chapters.map((chapter) => ({
+            ...chapter.toObject(),
+            isCompleted: false,
+          })),
+        })),
+      },
+    };
+  } catch (error) {
+    return { error };
+  }
+};
+
 const getProjectByIDFromDB = async (
   projectId: string,
   userId?: string
@@ -609,6 +652,7 @@ export {
   getEnrolledProjectFromDB,
   getProjectByIDFromDB,
   getProjectBySlugFromDB,
+  getProjectBySlugWithUserFromDB,
   getProjectsFromDB,
   getSectionsFromProjectInDB,
   updateChapterInSectionInDB,

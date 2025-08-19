@@ -129,6 +129,11 @@ const routes = {
       }
       return url;
     },
+    projectBySlugWithUser: (slug: string, userId?: string) => {
+      let url = `/projects?slug=${slug}`;
+      if (userId) url += `&userId=${userId}`;
+      return url;
+    },
     gamification: '/gamification',
     webinarBySlug: (webinar: string) => `/webinar/${webinar}`,
     certificate: '/certificate',
