@@ -50,17 +50,21 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
   // Calculate pricing with discounts
   const priceBreakdown = useMemo(() => {
-    if (!sheet?.isPremium || !sheet?.price) {
+    if (!sheet?.isPremium || !sheet?.price || !sheet.name) {
       return null;
     }
-    return calculatePriceBreakdown(sheet, appliedCoupon || undefined);
+    // Cast sheet to InterviewSheetModel for the utility functions
+    const sheetModel = sheet as any;
+    return calculatePriceBreakdown(sheetModel, appliedCoupon || undefined);
   }, [sheet, appliedCoupon]);
 
   const discountInfo = useMemo(() => {
-    if (!sheet?.isPremium) {
+    if (!sheet?.isPremium || !sheet.name) {
       return null;
     }
-    return getDiscountDisplayInfo(sheet, appliedCoupon || undefined);
+    // Cast sheet to InterviewSheetModel for the utility functions
+    const sheetModel = sheet as any;
+    return getDiscountDisplayInfo(sheetModel, appliedCoupon || undefined);
   }, [sheet, appliedCoupon]);
 
   const isLocked = sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
@@ -121,7 +125,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
     setCouponError('');
 
     try {
-      const response = await fetch(`${routes.api.base}/coupon/validate`, {
+      const response = await fetch(`${routes.api.base}${routes.api.validateCoupon}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -137,9 +141,9 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
         setAppliedCoupon(data.data);
         setCouponError('');
         trackEvent({
-          action: 'COUPON_APPLIED',
-          category: 'Payment',
-          label: 'Coupon Applied Successfully',
+          action: 'COUPON_APPLIED' as any,
+          category: 'Payment' as any,
+          label: 'Coupon Applied Successfully' as any,
           value: { couponCode, sheetId: sheet?._id },
         });
       } else {
@@ -585,7 +589,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                   savings: priceBreakdown.savings,
                 }),
                 ...(appliedCoupon && {
-                  appliedCoupon: appliedCoupon,
+                  appliedCoupon: appliedCoupon._id || appliedCoupon,
                 }),
               }}
               onClose={() => setShowPayment(false)}

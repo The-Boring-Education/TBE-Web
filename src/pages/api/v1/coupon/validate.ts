@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { VITE_BASE_API_URL } from '@/constant';
 import { apiStatusCodes } from '@/constant';
-import type { APIResponse } from '@/interfaces';
+import { validateCouponForProductFromDB } from '@/database';
+import { connectDB } from '@/middlewares';
+import type { APIResponseType } from '@/interfaces';
 
 interface ValidateCouponRequest {
   code: string;
@@ -29,7 +30,7 @@ interface ValidateCouponResponse {
 
 const validateCoupon = async (
   req: NextApiRequest,
-  res: NextApiResponse<APIResponse<ValidateCouponResponse | null>>
+  res: NextApiResponse<APIResponseType>
 ) => {
   if (req.method !== 'POST') {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json({
@@ -40,6 +41,8 @@ const validateCoupon = async (
   }
 
   try {
+    await connectDB();
+    
     const { code, productId, productType, userId }: ValidateCouponRequest = req.body;
 
     if (!code || !productId || !productType) {
@@ -50,43 +53,39 @@ const validateCoupon = async (
       });
     }
 
-    // Call the database API to validate coupon
-    const response = await fetch(`${VITE_BASE_API_URL}/coupon/validate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        code: code.toUpperCase(),
-        productId,
-        productType,
-        userId,
-      }),
-    });
+    // Validate coupon using database query
+    const { data: coupon, error } = await validateCouponForProductFromDB(
+      code,
+      productId,
+      productType,
+      userId
+    );
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json({
-        status: false,
-        message: data.message || 'Failed to validate coupon',
-        data: null,
-      });
-    }
-
-    if (data.status && data.data) {
-      return res.status(apiStatusCodes.OKAY).json({
-        status: true,
-        message: 'Coupon validated successfully',
-        data: data.data,
-      });
-    } else {
+    if (error || !coupon) {
       return res.status(apiStatusCodes.BAD_REQUEST).json({
         status: false,
-        message: data.message || 'Invalid coupon code',
+        message: error || 'Invalid coupon code',
         data: null,
       });
     }
+
+    return res.status(apiStatusCodes.OKAY).json({
+      status: true,
+      message: 'Coupon validated successfully',
+      data: {
+        _id: coupon._id.toString(),
+        code: coupon.code,
+        discountPercentage: coupon.discountPercentage,
+        description: coupon.description,
+        isActive: coupon.isActive,
+        expiryDate: coupon.expiryDate.toISOString(),
+        maxUsage: coupon.maxUsage,
+        currentUsage: coupon.currentUsage,
+        applicableProducts: coupon.applicableProducts,
+        minimumAmount: coupon.minimumAmount,
+        isValid: coupon.isValid,
+      },
+    });
   } catch (error) {
     console.error('Error validating coupon:', error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({

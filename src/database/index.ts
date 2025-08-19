@@ -26,7 +26,7 @@ import UserInterest from './models/UserInterest';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
-
+import Coupon from './models/Coupon';
 export {
   Certificate,
   Challenge,
@@ -55,11 +55,13 @@ export {
   UserProject,
   UserSheet,
   Webinar,
+  Coupon,
 };
 
 // Query
 export * from './query/certificate';
 export * from './query/common';
+export * from './query/coupon';
 export * from './query/email';
 export * from './query/feedback';
 export * from './query/gamification';
