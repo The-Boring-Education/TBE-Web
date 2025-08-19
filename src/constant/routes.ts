@@ -109,6 +109,11 @@ const routes = {
       }
       return url;
     },
+    courseBySlugWithUser: (slug: string, userId?: string) => {
+      let url = `/shiksha?slug=${slug}`;
+      if (userId) url += `&userId=${userId}`;
+      return url;
+    },
     sheetByIdWithUser: (slug: string, userId?: string, sheetId?: string) => {
       let url = `/interview-prep?slug=${slug}`;
       if (userId) url += `&userId=${userId}`;

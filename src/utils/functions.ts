@@ -227,7 +227,7 @@ const mapCourseResponseToCard = (
         title: name,
         imageAltText: name,
         content: description,
-        href: `/shiksha/${slug}/?courseId=${_id}`,
+        href: `/shiksha/${slug}`,
         isEnrolled,
         active: isActive,
         ctaText,
