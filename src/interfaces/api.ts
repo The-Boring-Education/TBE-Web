@@ -407,6 +407,8 @@ export interface AddPaymentToDBRequestPayloadProps {
   amount: number;
   orderId: string;
   paymentLink: string;
+  appliedCoupon?: string;
+  couponCode?: string;
 }
 
 export interface BuildOrderPayloadProps {

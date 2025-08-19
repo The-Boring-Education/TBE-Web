@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useRef, useState } from 'react';
-import { FaLock, FaStar, FaPlay, FaClock, FaUsers, FaCheckCircle } from 'react-icons/fa';
+import { FaLock, FaStar, FaPlay, FaClock, FaUsers, FaCheckCircle, FaTags, FaPercentage } from 'react-icons/fa';
 
 import {
   Button,
@@ -15,7 +15,8 @@ import {
 } from '@/components';
 import { routes } from '@/constant';
 import { useAnalytics, useApi, useGamifiedAction, usePaymentStatus, useUser } from '@/hooks';
-import type { SheetPageProps } from '@/interfaces';
+import type { SheetPageProps, CouponModel } from '@/interfaces';
+import { calculatePriceBreakdown, getDiscountDisplayInfo, formatPrice, getSavingsPercentage } from '@/utils/discount';
 
 interface SheetLandingPageProps {
   sheet: SheetPageProps['sheet'];
@@ -26,6 +27,10 @@ interface SheetLandingPageProps {
 
 const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps) => {
   const [showPayment, setShowPayment] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponModel | null>(null);
+  const [couponError, setCouponError] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
   const paymentSectionRef = useRef<HTMLDivElement>(null);
 
   const { user, isAuth } = useUser();
@@ -42,6 +47,21 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
   const previewQuestions = useMemo(() => (sheet?.questions || []).slice(0, 3), [sheet?.questions]);
   const lockedQuestions = useMemo(() => (sheet?.questions || []).slice(3), [sheet?.questions]);
+
+  // Calculate pricing with discounts
+  const priceBreakdown = useMemo(() => {
+    if (!sheet?.isPremium || !sheet?.price) {
+      return null;
+    }
+    return calculatePriceBreakdown(sheet, appliedCoupon || undefined);
+  }, [sheet, appliedCoupon]);
+
+  const discountInfo = useMemo(() => {
+    if (!sheet?.isPremium) {
+      return null;
+    }
+    return getDiscountDisplayInfo(sheet, appliedCoupon || undefined);
+  }, [sheet, appliedCoupon]);
 
   const isLocked = sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
   const canStartNow = sheet?.isEnrolled || (!sheet?.isPremium) || isPurchased;
@@ -92,6 +112,52 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
     setTimeout(() => {
       paymentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+
+    setCouponLoading(true);
+    setCouponError('');
+
+    try {
+      const response = await fetch(`${routes.api.base}/coupon/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: couponCode.toUpperCase(),
+          productId: sheet?._id,
+          productType: 'INTERVIEW_SHEET',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.status && data.data) {
+        setAppliedCoupon(data.data);
+        setCouponError('');
+        trackEvent({
+          action: 'COUPON_APPLIED',
+          category: 'Payment',
+          label: 'Coupon Applied Successfully',
+          value: { couponCode, sheetId: sheet?._id },
+        });
+      } else {
+        setCouponError(data.message || 'Invalid coupon code');
+        setAppliedCoupon(null);
+      }
+    } catch (error) {
+      setCouponError('Failed to validate coupon. Please try again.');
+      setAppliedCoupon(null);
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    setCouponError('');
   };
 
   const handleStartNow = () => {
@@ -303,7 +369,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
                   {isLocked && (
                     <Button
-                      text={`Unlock All ${sheet.questions?.length} Questions - ₹${sheet.price}`}
+                      text={`Unlock All ${sheet.questions?.length} Questions - ${priceBreakdown ? formatPrice(priceBreakdown.finalPrice) : formatPrice(sheet.price || 0)}`}
                       variant='PRIMARY'
                       onClick={handleShowPayment}
                       className='w-full px-4 py-2 text-sm bg-red-500 text-white hover:bg-red-600'
@@ -321,19 +387,136 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                 <div className='bg-white rounded-lg border shadow-lg p-5'>
                   <div className='text-center space-y-3'>
                     {sheet?.isPremium && (
-                      <div className='bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-medium'>
-                        Premium Content
+                      <div className='flex items-center justify-center gap-2 flex-wrap'>
+                        <div className='bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-medium'>
+                          Premium Content
+                        </div>
+                        {discountInfo?.showDiscountBadge && (
+                          <div className='bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1'>
+                            <FaPercentage className='text-xs' />
+                            {discountInfo.discountText}
+                          </div>
+                        )}
                       </div>
                     )}
                     
                     <div>
-                      <Text level='p' className='text-2xl font-bold text-gray-900'>
-                        {sheet?.isPremium ? `₹${sheet.price}` : 'Free'}
-                      </Text>
+                      {!sheet?.isPremium ? (
+                        <Text level='p' className='text-2xl font-bold text-gray-900'>Free</Text>
+                      ) : priceBreakdown ? (
+                        <div className='space-y-2'>
+                          {priceBreakdown.savings > 0 && (
+                            <div className='flex items-center justify-center gap-2'>
+                              <Text level='p' className='text-lg text-gray-500 line-through'>
+                                {formatPrice(priceBreakdown.originalPrice)}
+                              </Text>
+                              <div className='bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium'>
+                                {getSavingsPercentage(priceBreakdown.originalPrice, priceBreakdown.finalPrice)}% OFF
+                              </div>
+                            </div>
+                          )}
+                          <Text level='p' className='text-2xl font-bold text-gray-900'>
+                            {formatPrice(priceBreakdown.finalPrice)}
+                          </Text>
+                          {priceBreakdown.savings > 0 && (
+                            <Text level='p' className='text-sm text-green-600 font-medium'>
+                              You save {formatPrice(priceBreakdown.savings)}!
+                            </Text>
+                          )}
+                        </div>
+                      ) : (
+                        <Text level='p' className='text-2xl font-bold text-gray-900'>
+                          {formatPrice(sheet.price || 0)}
+                        </Text>
+                      )}
                       {sheet?.isPremium && (
                         <Text level='p' className='text-sm text-gray-600'>Lifetime Access</Text>
                       )}
                     </div>
+
+                    {/* Price Breakdown */}
+                    {sheet?.isPremium && priceBreakdown && priceBreakdown.savings > 0 && (
+                      <div className='bg-gray-50 rounded-lg p-3 text-left space-y-2'>
+                        <Text level='p' className='text-sm font-semibold text-gray-700 mb-2'>Price Breakdown</Text>
+                        <div className='flex justify-between text-sm'>
+                          <span className='text-gray-600'>Original Price</span>
+                          <span>{formatPrice(priceBreakdown.originalPrice)}</span>
+                        </div>
+                        {priceBreakdown.discountAmount > 0 && (
+                          <div className='flex justify-between text-sm text-green-600'>
+                            <span>Sheet Discount ({priceBreakdown.discountPercentage}%)</span>
+                            <span>-{formatPrice(priceBreakdown.discountAmount)}</span>
+                          </div>
+                        )}
+                        {priceBreakdown.couponDiscount > 0 && appliedCoupon && (
+                          <div className='flex justify-between text-sm text-green-600'>
+                            <span>Coupon ({appliedCoupon.code})</span>
+                            <span>-{formatPrice(priceBreakdown.couponDiscount)}</span>
+                          </div>
+                        )}
+                        <hr className='border-gray-200' />
+                        <div className='flex justify-between text-sm font-semibold'>
+                          <span>Final Price</span>
+                          <span>{formatPrice(priceBreakdown.finalPrice)}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Coupon Input */}
+                    {sheet?.isPremium && !appliedCoupon && (
+                      <div className='bg-blue-50 rounded-lg p-3 text-left'>
+                        <div className='flex items-center gap-2 mb-2'>
+                          <FaTags className='text-blue-500 text-sm' />
+                          <Text level='p' className='text-sm font-semibold text-blue-700'>Have a coupon?</Text>
+                        </div>
+                        <div className='flex gap-2'>
+                          <input
+                            type='text'
+                            placeholder='Enter coupon code'
+                            value={couponCode}
+                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                            className='flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                            onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                          />
+                          <Button
+                            text={couponLoading ? 'Applying...' : 'Apply'}
+                            variant='PRIMARY'
+                            className='px-3 py-2 text-xs bg-blue-500 hover:bg-blue-600'
+                            onClick={handleApplyCoupon}
+                            isLoading={couponLoading}
+                            disabled={!couponCode.trim()}
+                          />
+                        </div>
+                        {couponError && (
+                          <Text level='p' className='text-xs text-red-600 mt-1'>{couponError}</Text>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Applied Coupon Display */}
+                    {sheet?.isPremium && appliedCoupon && (
+                      <div className='bg-green-50 rounded-lg p-3 text-left'>
+                        <div className='flex items-center justify-between'>
+                          <div className='flex items-center gap-2'>
+                            <FaTags className='text-green-500 text-sm' />
+                            <div>
+                              <Text level='p' className='text-sm font-semibold text-green-700'>
+                                {appliedCoupon.code} Applied
+                              </Text>
+                              <Text level='p' className='text-xs text-green-600'>
+                                {appliedCoupon.description}
+                              </Text>
+                            </div>
+                          </div>
+                          <button
+                            onClick={handleRemoveCoupon}
+                            className='text-xs text-red-500 hover:text-red-700 underline'
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
                     {!isAuth ? (
                       <LoginRedirectButton text='Login to Get Started' />
@@ -343,6 +526,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                           loading ? 'Loading...' :
                           canStartNow ? 'Start Now' :
                           !sheet?.isEnrolled && !sheet?.isPremium ? 'Enroll Free' :
+                          priceBreakdown ? `Purchase Access - ${formatPrice(priceBreakdown.finalPrice)}` :
                           'Purchase Access'
                         }
                         variant='PRIMARY'
@@ -391,7 +575,19 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
         <div ref={paymentSectionRef} className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4'>
           <div className='bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto'>
             <PaymentCard
-              course={sheet}
+              course={{
+                ...sheet,
+                price: priceBreakdown?.finalPrice || sheet.price || 0,
+                // Pass additional discount info as custom properties
+                ...(priceBreakdown && {
+                  originalPrice: priceBreakdown.originalPrice,
+                  discountAmount: priceBreakdown.totalDiscount,
+                  savings: priceBreakdown.savings,
+                }),
+                ...(appliedCoupon && {
+                  appliedCoupon: appliedCoupon,
+                }),
+              }}
               onClose={() => setShowPayment(false)}
               productType='INTERVIEW_SHEET'
             />

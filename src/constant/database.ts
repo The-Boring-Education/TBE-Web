@@ -27,7 +27,8 @@ const DATABASE_MODELS = {
   QUIZ: 'Quiz',
   QUIZ_ATTEMPT: 'QuizAttempt',
   LEADERBOARD: 'Leaderboard',
-  USER_INTEREST: 'UserInterest'
+  USER_INTEREST: 'UserInterest',
+  COUPON: 'Coupon'
 };
 
 export const FEEDBACK_TYPES = [

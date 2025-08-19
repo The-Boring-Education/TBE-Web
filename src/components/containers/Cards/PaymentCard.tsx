@@ -97,6 +97,10 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
           amount: course.price,
           customerName: user?.name,
           customerEmail: user?.email,
+          ...(((course as any).appliedCoupon) && {
+            appliedCoupon: (course as any).appliedCoupon._id,
+            couponCode: (course as any).appliedCoupon.code,
+          }),
         }),
       }
     );
@@ -244,53 +248,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
           </div>
         )}
 
-        {/* Price Details */}
-        <div className='bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl p-6'>
-          <div className='flex items-center gap-3 mb-4'>
-            <div className='p-2 bg-green-100 rounded-lg'>
-              <BanknotesIcon className='w-6 h-6 text-green-600' />
-            </div>
-            <Text level='h3' className='font-bold text-gray-900'>
-              🎯 Limited Time Investment
-            </Text>
-          </div>
-          <div className='flex justify-between items-center mb-4'>
-            <div>
-              <Text level='p' className='text-gray-700 font-semibold'>
-                {productName} Price
-              </Text>
-              <Text level='p' className='text-sm text-gray-600'>
-                One-time investment • Lifetime value
-              </Text>
-            </div>
-            <div className='text-right'>
-              <div className='flex items-baseline gap-2'>
-                <Text level='p' className='text-sm text-gray-500 line-through'>
-                  ₹{Math.round((course.price || 49) * 2.5)}
-                </Text>
-                <Text level='p' className='text-3xl font-bold text-green-600'>
-                  ₹{course.price || 49}
-                </Text>
-              </div>
-              <div className='bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold'>
-                {Math.round(
-                  ((Math.round((course.price || 49) * 2.5) -
-                    (course.price || 49)) /
-                    Math.round((course.price || 49) * 2.5)) *
-                    100
-                )}
-                % OFF
-              </div>
-            </div>
-          </div>
-          <div className='bg-white bg-opacity-50 rounded-lg p-3 border border-green-200'>
-            <Text level='p' className='text-sm text-gray-700 text-center'>
-              💡 <strong>ROI Guarantee:</strong> This investment typically pays
-              for itself within weeks through improved interview performance or
-              job opportunities
-            </Text>
-          </div>
-        </div>
+
 
         {/* Student Details */}
         <div className='bg-purple-50 border border-purple-200 rounded-lg p-4'>
@@ -317,6 +275,60 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Price Summary */}
+        <div className='bg-gray-50 rounded-xl p-6 border'>
+          <div className='flex items-center gap-2 mb-4'>
+            <BanknotesIcon className='w-5 h-5 text-green-600' />
+            <Text level='h4' className='font-semibold text-gray-800'>
+              Order Summary
+            </Text>
+          </div>
+          
+          {/* Price breakdown logic */}
+          {(course as any).originalPrice && (course as any).originalPrice !== course.price ? (
+            <div className='space-y-3'>
+              <div className='flex justify-between items-center text-sm'>
+                <span className='text-gray-600'>Original Price</span>
+                <span className='line-through text-gray-500'>₹{(course as any).originalPrice?.toLocaleString('en-IN')}</span>
+              </div>
+              {(course as any).discountAmount > 0 && (
+                <div className='flex justify-between items-center text-sm text-green-600'>
+                  <span>Total Discount</span>
+                  <span>-₹{(course as any).discountAmount?.toLocaleString('en-IN')}</span>
+                </div>
+              )}
+              {(course as any).appliedCoupon && (
+                <div className='bg-green-50 rounded-lg p-3 border border-green-200'>
+                  <div className='flex items-center gap-2 text-sm text-green-700'>
+                    <CheckCircleIcon className='w-4 h-4' />
+                    <span className='font-medium'>Coupon Applied: {(course as any).appliedCoupon.code}</span>
+                  </div>
+                  <Text level='p' className='text-xs text-green-600 mt-1'>
+                    {(course as any).appliedCoupon.description}
+                  </Text>
+                </div>
+              )}
+              <hr className='border-gray-200' />
+              <div className='flex justify-between items-center'>
+                <Text level='h4' className='font-bold text-gray-900'>Total Amount</Text>
+                <div className='text-right'>
+                  <Text level='h4' className='font-bold text-gray-900'>₹{course.price?.toLocaleString('en-IN')}</Text>
+                  {(course as any).savings > 0 && (
+                    <Text level='p' className='text-sm text-green-600'>
+                      You save ₹{(course as any).savings?.toLocaleString('en-IN')}!
+                    </Text>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className='flex justify-between items-center'>
+              <Text level='h4' className='font-bold text-gray-900'>Total Amount</Text>
+              <Text level='h4' className='font-bold text-gray-900'>₹{course.price?.toLocaleString('en-IN')}</Text>
+            </div>
+          )}
         </div>
 
         {/* Error message */}
