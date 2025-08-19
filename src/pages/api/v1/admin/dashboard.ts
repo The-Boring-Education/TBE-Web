@@ -16,6 +16,34 @@ import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 import { cors } from '@/utils/cors';
 
+// Helper function to convert date to IST and format it
+const formatDateToIST = (date: Date) => {
+  const istDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+  
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Kolkata',
+  };
+
+  const readableTime = istDate.toLocaleString('en-US', options);
+  const daysAgo = Math.floor(
+    (Date.now() - istDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  return {
+    readableTime: `${daysAgo} Days Ago | ${istDate.getDate()} ${istDate.toLocaleString(
+      'default',
+      { month: 'short', timeZone: 'Asia/Kolkata' }
+    )} | ${readableTime}`,
+    daysAgo,
+    istDate
+  };
+};
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
 
@@ -64,20 +92,12 @@ const handleAdminDashboard = async (
             : undefined;
         const totalChapters =
           type === 'course' ? item.chapters?.length || 0 : undefined;
+        
         const lastUpdatedDate = new Date(item.updatedAt);
-
-        const options: Intl.DateTimeFormatOptions = {
-          day: 'numeric',
-          month: 'short',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true,
-        };
-
-        const readableTime = lastUpdatedDate.toLocaleString('en-US', options);
-        const daysAgo = Math.floor(
-          (Date.now() - lastUpdatedDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
+        const createdDate = new Date(item.createdAt);
+        
+        const lastUpdatedIST = formatDateToIST(lastUpdatedDate);
+        const createdIST = formatDateToIST(createdDate);
 
         return {
           _id: item._id,
@@ -92,10 +112,8 @@ const handleAdminDashboard = async (
           totalChapters,
           isCompleted: item.isCompleted,
           certificateId: item.certificateId,
-          lastUpdated: `${daysAgo} Days Ago | ${lastUpdatedDate.getDate()} ${lastUpdatedDate.toLocaleString(
-            'default',
-            { month: 'short' }
-          )} | ${readableTime}`,
+          lastUpdated: lastUpdatedIST.readableTime,
+          createdAt: createdIST.readableTime,
         };
       });
 
@@ -160,28 +178,23 @@ const handleAdminDashboard = async (
           sendAPIResponse({
             status: true,
             data: {
-              items: items.map((item: any) => ({
-                _id: item._id,
-                name: item.name,
-                userName: item.userName,
-                email: item.email,
-                contactNo: item.contactNo,
-                isOnboarded: item.isOnboarded,
-                occupation: item.occupation,
-                purpose: item.purpose?.join(', ') || '',
-                lastUpdated: `${Math.floor(
-                  (Date.now() - new Date(item.updatedAt).getTime()) /
-                    (1000 * 60 * 60 * 24)
-                )} Days Ago | ${new Date(item.updatedAt).getDate()} ${new Date(
-                  item.updatedAt
-                ).toLocaleString('default', { month: 'short' })} | ${new Date(
-                  item.updatedAt
-                ).toLocaleTimeString('en-US', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: true,
-                })}`,
-              })),
+              items: items.map((item: any) => {
+                const lastUpdatedIST = formatDateToIST(new Date(item.updatedAt));
+                const createdIST = formatDateToIST(new Date(item.createdAt));
+                
+                return {
+                  _id: item._id,
+                  name: item.name,
+                  userName: item.userName,
+                  email: item.email,
+                  contactNo: item.contactNo,
+                  isOnboarded: item.isOnboarded,
+                  occupation: item.occupation,
+                  purpose: item.purpose?.join(', ') || '',
+                  lastUpdated: lastUpdatedIST.readableTime,
+                  createdAt: createdIST.readableTime,
+                };
+              }),
               total,
               currentPage: page,
               totalPages,
