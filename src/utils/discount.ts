@@ -72,7 +72,7 @@ export const getDiscountDisplayInfo = (
   appliedCoupon?: CouponModel
 ): DiscountDisplayInfo => {
   const hasSheetDiscount = (sheet.discountPercentage || 0) > 0;
-  const hasCouponDiscount = appliedCoupon && appliedCoupon.isValid;
+  const hasCouponDiscount = Boolean(appliedCoupon && appliedCoupon.isValid);
   const hasAnyDiscount = hasSheetDiscount || hasCouponDiscount;
   
   let discountText = '';
@@ -82,7 +82,7 @@ export const getDiscountDisplayInfo = (
     discountText = `${sheet.discountPercentage}% OFF`;
   }
   
-  if (hasCouponDiscount) {
+  if (hasCouponDiscount && appliedCoupon) {
     couponText = `Extra ${appliedCoupon.discountPercentage}% off with ${appliedCoupon.code}`;
   }
   
