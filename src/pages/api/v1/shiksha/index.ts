@@ -7,6 +7,7 @@ import {
   getAllCourseFromDB,
   getAllEnrolledCoursesFromDB,
   getCourseBySlugFromDB,
+  getCourseBySlugWithUserFromDB,
 } from '@/database';
 import type {
   AddCourseRequestPayloadProps,
@@ -27,13 +28,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await connectDB();
   const { method, query } = req;
-  const { userId } = query as { userId: string };
+  const { userId, slug } = query as { userId: string; slug: string };
 
   switch (method) {
     case 'POST':
       return handleAddACourse(req, res);
     case 'GET':
-      return handleAllGetCourse(req, res, userId);
+      return handleAllGetCourse(req, res, userId, slug);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -93,9 +94,33 @@ const handleAddACourse = async (req: NextApiRequest, res: NextApiResponse) => {
 const handleAllGetCourse = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  userId: string
+  userId: string,
+  slug?: string
 ) => {
   try {
+    // If slug is provided, fetch specific course by slug with user data
+    if (slug) {
+      const { data: course, error } = await getCourseBySlugWithUserFromDB(slug, userId);
+
+      if (error || !course) {
+        return res.status(apiStatusCodes.NOT_FOUND).json(
+          sendAPIResponse({
+            status: false,
+            message: 'Course not found',
+            error,
+          })
+        );
+      }
+
+      return res.status(apiStatusCodes.OKAY).json(
+        sendAPIResponse({
+          status: true,
+          data: course,
+        })
+      );
+    }
+
+    // No slug? Return all courses (existing logic)
     let allCoursesResponse: BaseShikshaCourseResponseProps[] = [];
 
     // Fetch all courses
@@ -164,7 +189,7 @@ const handleAllGetCourse = async (
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Failed while fetching courses',
+        message: 'Unexpected error while fetching courses',
         error,
       })
     );

@@ -4,6 +4,7 @@ import { apiStatusCodes } from '@/constant';
 import {
   addAProjectToDB,
   getProjectBySlugFromDB,
+  getProjectBySlugWithUserFromDB,
   getProjectsFromDB,
 } from '@/database';
 import type { AddProjectRequestPayloadProps } from '@/interfaces';
@@ -89,6 +90,31 @@ const handleAddProject = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const handleGetProjects = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { slug, userId } = req.query as { slug: string; userId: string };
+
+  // If slug is provided, fetch specific project by slug with user data
+  if (slug) {
+    const { data: project, error } = await getProjectBySlugWithUserFromDB(slug, userId);
+
+    if (error || !project) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: 'Project not found',
+          error,
+        })
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data: project,
+      })
+    );
+  }
+
+  // No slug? Return all projects (existing logic)
   const { data, error } = await getProjectsFromDB();
 
   if (error) {

@@ -242,6 +242,54 @@ const getCourseBySlugFromDB = async (
   }
 };
 
+const getCourseBySlugWithUserFromDB = async (
+  slug: string,
+  userId?: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const course = await Course.findOne({ slug });
+
+    if (!course) {
+      return { error: 'Course not found' };
+    }
+
+    let isEnrolled = false;
+    let mappedChapters = course.chapters.map((chapter) => chapter.toObject());
+
+    if (userId) {
+      const userCourse = await UserCourse.findOne({
+        userId,
+        courseId: course._id,
+      });
+
+      isEnrolled = !!userCourse;
+
+      if (userCourse) {
+        mappedChapters = course.chapters.map((chapter) => {
+          const userChapter = userCourse.chapters.find(
+            (uc) => uc.chapterId.toString() === chapter._id.toString()
+          );
+
+          return {
+            ...chapter.toObject(),
+            isCompleted: userChapter?.isCompleted || false,
+          };
+        });
+      }
+    }
+
+    return {
+      data: {
+        ...course.toObject(),
+        isEnrolled,
+        chapters: mappedChapters,
+      },
+    };
+  } catch (error) {
+    return { error };
+  }
+};
+
 const updateUserCourseChapterInDB = async ({
   userId,
   courseId,
@@ -360,6 +408,7 @@ export {
   getAllCourseFromDB,
   getAllEnrolledCoursesFromDB,
   getCourseBySlugFromDB,
+  getCourseBySlugWithUserFromDB,
   getEnrolledCourseFromDB,
   updateACourseInDB,
   updateCertificateToUserShikshaCourseDoc,

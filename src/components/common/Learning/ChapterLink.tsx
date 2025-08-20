@@ -49,7 +49,7 @@ const ChapterLink = ({
         } catch {
           /* ignore analytics errors */
         }
-        handleChapterClick(content);
+        handleChapterClick(content, chapterId);
       }}
     >
       {isLocked ? (

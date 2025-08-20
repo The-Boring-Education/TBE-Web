@@ -388,7 +388,7 @@ export interface ChapterLinkProps {
   content: string;
   isCompleted: boolean;
   currentChapterId: string;
-  handleChapterClick: (content: string) => void;
+  handleChapterClick: (content: string, chapterId: string) => void;
   isLocked?: boolean;
 }
 
