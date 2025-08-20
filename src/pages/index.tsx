@@ -80,6 +80,15 @@ const Home = ({ seoMeta }: PageProps) => {
 
       <ComingSoon />
 
+      <Banner
+        buttonLink={routes.campusConnect}
+        buttonText='Apply Now'
+        description='Join The Boring Education Campus Connect & DevRel Program. Build, Lead, and Learn as a tech ambassador at your college.'
+        imageSrc={`${STATIC_FILE_PATH.svg}/tech-yatra.svg`}
+        title='Be the Face of Tech in Your College 🚀'
+        variant='VARIANT_C'
+      />
+
       <CollegeEventsSection />
 
       <Banner
@@ -90,6 +99,9 @@ const Home = ({ seoMeta }: PageProps) => {
         title='Bring Your Idea Cohort 2 Starts Soon'
         variant='VARIANT_A'
       />
+      
+
+      
       <Community />
       <CardContainerA
         cards={USP}
