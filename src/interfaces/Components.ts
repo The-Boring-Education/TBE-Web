@@ -448,7 +448,7 @@ export interface BannerProps {
   buttonText: string;
   buttonLink: string;
   imageSrc: string;
-  variant?: 'VARIANT_A' | 'VARIANT_B';
+  variant?: 'VARIANT_A' | 'VARIANT_B' | 'VARIANT_C';
 }
 
 export interface ActionBannerProps {
