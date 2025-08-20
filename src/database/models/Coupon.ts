@@ -84,7 +84,7 @@ CouponSchema.virtual('isExpired').get(function () {
 
 // Virtual for checking if coupon usage limit is reached
 CouponSchema.virtual('isUsageLimitReached').get(function () {
-  return this.maxUsage !== null && this.currentUsage >= this.maxUsage;
+  return this.maxUsage != null && this.maxUsage > 0 && this.currentUsage >= this.maxUsage;
 });
 
 // Virtual for checking if coupon is currently valid
