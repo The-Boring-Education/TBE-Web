@@ -101,6 +101,7 @@ const routes = {
     submitUserFeedback: '/feedback',
     createOrder: '/payment/create-order',
     checkStatus: '/payment/checkstatus',
+    validateCoupon: '/coupon/validate',
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {
       let url = `/shiksha/${course}`;

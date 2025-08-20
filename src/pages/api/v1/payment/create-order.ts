@@ -47,6 +47,8 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       amount,
       customerName,
       customerEmail,
+      appliedCoupon,
+      couponCode,
     } = req.body;
 
     if (
@@ -96,6 +98,8 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       amount,
       orderId,
       paymentLink,
+      appliedCoupon,
+      couponCode,
     });
 
     if (error) {

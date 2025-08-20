@@ -12,6 +12,8 @@ const addPaymentToDB = async ({
   amount,
   orderId,
   paymentLink,
+  appliedCoupon,
+  couponCode,
 }: AddPaymentToDBRequestPayloadProps): Promise<DatabaseQueryResponseType> => {
   try {
     const payment = new Payment({
@@ -22,6 +24,8 @@ const addPaymentToDB = async ({
       orderId,
       paymentLink,
       isPaid: false,
+      ...(appliedCoupon && { appliedCoupon }),
+      ...(couponCode && { couponCode }),
     });
 
     await payment.save();

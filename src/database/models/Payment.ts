@@ -39,6 +39,15 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
       type: Boolean,
       default: false,
     },
+    appliedCoupon: {
+      type: Schema.Types.ObjectId,
+      ref: DATABASE_MODELS.COUPON,
+      default: null,
+    },
+    couponCode: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
