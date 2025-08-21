@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import cors from '@/middlewares/cors';
 import { connectDB } from '@/middlewares';
 import { completeQuizSessionInDB } from '@/database/query/enhancedQuiz';
+import type { QuizSessionQuestion } from '@/database/models/Quiz/QuizSession';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);
@@ -27,8 +28,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Calculate detailed results
-    const answeredQuestions = session.questions.filter(q => q.userAnswer !== undefined);
-    const correctAnswers = answeredQuestions.filter(q => q.isCorrect).length;
+    const answeredQuestions = session.questions.filter((q: QuizSessionQuestion) => q.userAnswer !== undefined);
+    const correctAnswers = answeredQuestions.filter((q: QuizSessionQuestion) => q.isCorrect).length;
     const totalTime = session.totalTime || 0;
 
     // Calculate badge earned
@@ -56,7 +57,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         medium: calculateDifficultyPerformance(session.questions, 'medium'),
         hard: calculateDifficultyPerformance(session.questions, 'hard'),
       },
-      detailedResults: session.questions.map((q, index) => ({
+      detailedResults: session.questions.map((q: QuizSessionQuestion, index: number) => ({
         questionIndex: index,
         question: q.question,
         options: q.options,
@@ -97,8 +98,8 @@ function calculateConsecutiveCorrect(questions: any[]): number {
 }
 
 // Helper function to calculate performance by difficulty
-function calculateDifficultyPerformance(questions: any[], difficulty: string) {
-  const difficultyQuestions = questions.filter(q => 
+function calculateDifficultyPerformance(questions: QuizSessionQuestion[], difficulty: string) {
+  const difficultyQuestions = questions.filter((q: QuizSessionQuestion) => 
     q.difficulty === difficulty && q.userAnswer !== undefined
   );
   
@@ -106,7 +107,7 @@ function calculateDifficultyPerformance(questions: any[], difficulty: string) {
     return { attempted: 0, correct: 0, percentage: 0 };
   }
 
-  const correct = difficultyQuestions.filter(q => q.isCorrect).length;
+  const correct = difficultyQuestions.filter((q: QuizSessionQuestion) => q.isCorrect).length;
   
   return {
     attempted: difficultyQuestions.length,

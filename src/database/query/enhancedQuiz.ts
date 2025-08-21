@@ -7,7 +7,7 @@ import type { UserQuestionPerformanceModel } from '@/database/models/Quiz/UserQu
 import type { UserQuizAnalyticsModel } from '@/database/models/Quiz/UserQuizAnalytics';
 import type { QuizModel } from '@/database/models/Quiz/Quiz';
 import type { DatabaseQueryResponseType } from '@/interfaces';
-import { Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 // ====================
 // Quiz Session Management
@@ -49,8 +49,8 @@ const createQuizSessionInDB = async ({
 
     // Create session
     const sessionData: Omit<QuizSessionModel, '_id' | 'createdAt' | 'updatedAt'> = {
-      userId: new Types.ObjectId(userId),
-      quizId: new Types.ObjectId(quizId),
+      userId: new Schema.Types.ObjectId(userId),
+      quizId: new Schema.Types.ObjectId(quizId),
       categoryName: quiz.categoryName,
       difficulty,
       questionCount: selectedQuestions.length,
@@ -131,7 +131,7 @@ const selectQuestionsIntelligently = async ({
   const selectedQuestions = weightedQuestions
     .slice(0, questionCount)
     .map(({ question }, index) => ({
-      questionId: new Types.ObjectId((question as any)._id || Math.random().toString()),
+      questionId: new Schema.Types.ObjectId((question as any)._id || Math.random().toString()),
       question: question.question,
       options: question.options,
       correctAnswer: question.correctAnswer,
@@ -454,7 +454,7 @@ const getUserAnalyticsFromDB = async (
 // Get quiz leaderboard
 const getQuizLeaderboardFromDB = async (
   categoryName?: string,
-  limit: number = 50
+  limit = 50
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const matchFilter: any = {};
@@ -608,21 +608,24 @@ const getActiveSessionsFromDB = async (): Promise<DatabaseQueryResponseType> => 
     .sort({ startedAt: -1 })
     .lean();
 
-    const formattedSessions = activeSessions.map(session => ({
-      sessionId: session._id.toString(),
-      userId: session.userId._id.toString(),
-      userName: (session.userId as any).name || 'Unknown User',
-      categoryName: session.categoryName,
-      difficulty: session.difficulty,
-      status: session.status,
-      progress: {
-        answered: session.currentQuestionIndex || 0,
-        total: session.questionCount,
-        percentage: session.currentQuestionIndex ? Math.round((session.currentQuestionIndex / session.questionCount) * 100) : 0
-      },
-      startedAt: session.startedAt.toISOString(),
-      score: session.status === 'completed' ? session.finalScore : undefined
-    }));
+    const formattedSessions = activeSessions.map(session => {
+      const answeredCount = session.questions.filter(q => q.userAnswer !== undefined).length;
+      return {
+        sessionId: session._id.toString(),
+        userId: session.userId.toString(),
+        userName: (session.userId as any).name || 'Unknown User',
+        categoryName: session.categoryName,
+        difficulty: session.difficulty,
+        status: session.status,
+        progress: {
+          answered: answeredCount,
+          total: session.questionCount,
+          percentage: answeredCount > 0 ? Math.round((answeredCount / session.questionCount) * 100) : 0
+        },
+        startedAt: session.startedAt.toISOString(),
+        score: session.status === 'completed' ? session.score : undefined
+      };
+    });
 
     return { data: formattedSessions };
   } catch (error) {
