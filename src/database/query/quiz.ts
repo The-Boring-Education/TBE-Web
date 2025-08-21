@@ -43,11 +43,12 @@ const updateAQuizInDB = async ({
 
 // Get all quiz categories from database
 const getQuizCategoriesFromDB =
-  async (): Promise<DatabaseQueryResponseType> => {
+  async (includeInactive: boolean = false): Promise<DatabaseQueryResponseType> => {
     try {
+      const filter = includeInactive ? {} : { isActive: true };
       const categories = await Quiz.find(
-        { isActive: true },
-        'categoryId categoryName categoryDescription categoryIcon'
+        filter,
+        'categoryId categoryName categoryDescription categoryIcon isActive'
       ).lean();
 
       return { data: categories };
@@ -58,10 +59,12 @@ const getQuizCategoriesFromDB =
 
 // Get quiz by category ID from database
 const getQuizByCategoryIdFromDB = async (
-  categoryId: string
+  categoryId: string,
+  includeInactive: boolean = false
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const quiz = await Quiz.findOne({ categoryId, isActive: true }).lean();
+    const filter = includeInactive ? { categoryId } : { categoryId, isActive: true };
+    const quiz = await Quiz.findOne(filter).lean();
 
     if (!quiz) {
       return { error: 'Quiz category not found' };
@@ -74,10 +77,11 @@ const getQuizByCategoryIdFromDB = async (
 };
 
 // Get quiz categories with question counts
-const getQuizCategoriesWithCountsFromDB = async (): Promise<DatabaseQueryResponseType> => {
+const getQuizCategoriesWithCountsFromDB = async (includeInactive: boolean = false): Promise<DatabaseQueryResponseType> => {
   try {
+    const matchFilter = includeInactive ? {} : { isActive: true };
     const categories = await Quiz.aggregate([
-      { $match: { isActive: true } },
+      { $match: matchFilter },
       {
         $project: {
           _id: 0,
@@ -85,6 +89,7 @@ const getQuizCategoriesWithCountsFromDB = async (): Promise<DatabaseQueryRespons
           categoryName: 1,
           categoryDescription: 1,
           categoryIcon: 1,
+          isActive: 1,
           questionCount: { $size: { $ifNull: ['$questions', []] } },
         },
       },

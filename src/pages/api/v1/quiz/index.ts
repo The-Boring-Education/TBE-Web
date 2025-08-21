@@ -31,12 +31,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleGetCategories(req: NextApiRequest, res: NextApiResponse) {
-  const { withCounts } = req.query;
+  const { withCounts, includeInactive } = req.query;
 
   const useCounts = typeof withCounts === 'string' ? withCounts === 'true' : false;
+  const includeInactiveQuizzes = typeof includeInactive === 'string' ? includeInactive === 'true' : false;
+  
   const { data, error } = useCounts
-    ? await getQuizCategoriesWithCountsFromDB()
-    : await getQuizCategoriesFromDB();
+    ? await getQuizCategoriesWithCountsFromDB(includeInactiveQuizzes)
+    : await getQuizCategoriesFromDB(includeInactiveQuizzes);
 
   if (error) {
     return res.status(400).json({ error });
