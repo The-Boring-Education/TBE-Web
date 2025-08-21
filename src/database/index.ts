@@ -17,6 +17,9 @@ import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
 import Quiz from './models/Quiz/Quiz';
 import QuizAttempt from './models/Quiz/QuizAttempt';
+import QuizSession from './models/Quiz/QuizSession';
+import UserQuestionPerformance from './models/Quiz/UserQuestionPerformance';
+import UserQuizAnalytics from './models/Quiz/UserQuizAnalytics';
 import Course from './models/Shiksha/Course';
 import UserCourse from './models/Shiksha/UserCourse';
 import JobAggregate from './models/Unskilled/JobAggregate';
@@ -46,6 +49,9 @@ export {
   Project,
   Quiz,
   QuizAttempt,
+  QuizSession,
+  UserQuestionPerformance,
+  UserQuizAnalytics,
   Recruiter,
   Mentorship,
   User,
@@ -77,3 +83,5 @@ export * from './query/user';
 export * from './query/userInterest';
 export * from './query/webinar';
 export * from './query/youfocus';
+export * from './query/quiz';
+export * from './query/enhancedQuiz';
