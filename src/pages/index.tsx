@@ -81,7 +81,7 @@ const Home = ({ seoMeta }: PageProps) => {
       <ComingSoon />
 
       <Banner
-        buttonLink={routes.campusConnect}
+        buttonLink={routes.devRels}
         buttonText='Apply Now'
         description='Join The Boring Education Campus Connect & DevRel Program. Build, Lead, and Learn as a tech ambassador at your college.'
         imageSrc={`${STATIC_FILE_PATH.svg}/tech-yatra.svg`}

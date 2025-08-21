@@ -4,8 +4,6 @@ const routes = {
   home: '/',
   login: '/login',
   onboarding: '/onboarding',
-  // Campus Connect & DevRel
-  campusConnect: '/campus-connect',
   // Topmate Sessions
   topmateSessions: '/topmate-sessions',
   // Shiksha
@@ -41,6 +39,7 @@ const routes = {
   },
   // PrepYatra
   prepYatra: 'https://prepyatra.theboringeducation.com/',
+  devRels: 'https://devrel.theboringeducation.com/',
 
   certificate: '/certificate',
   contactUs: '/contact',

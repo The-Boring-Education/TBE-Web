@@ -130,7 +130,7 @@ const LINKS = {
   bookProjectSession: 'https://topmate.io/imsks/1527401',
   postmanDocs: 'https://documenter.getpostman.com/view/10360102/2sAYdcsYK3',
   hostTBEAtYourCollege: 'https://tally.so/r/mZkOby',
-  viewSessionDetails: 'https://bit.ly/TBECampusConnect',
+  viewSessionDetails: 'https://www.canva.com/design/DAGVf1D9DGw/LbEBK9ux5s2xQN_l6WKyvA/view?utm_content=DAGVf1D9DGw&utm_campaign=designshare&utm_medium=link&utm_source=editor',
   createIssue: 'https://github.com/The-Boring-Education/TBE-Web/issues/new',
   quizApp: 'https://quiz.theboringeducation.com',
 };
