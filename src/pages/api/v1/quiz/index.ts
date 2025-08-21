@@ -4,6 +4,7 @@ import {
   addAQuizToDB,
   getQuizCategoriesFromDB,
   getQuizCategoriesWithCountsFromDB,
+  appendQuestionsToQuizInDB,
 } from '@/database/query/quiz';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
@@ -49,6 +50,7 @@ async function handleGetCategories(req: NextApiRequest, res: NextApiResponse) {
 
 async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   const {
+    quizId,
     categoryName,
     categoryDescription,
     categoryIcon,
@@ -56,7 +58,29 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
     isActive = true,
   } = req.body;
 
-  // Basic validation
+  // If quizId is provided, append to existing quiz
+  if (quizId) {
+    if (!questions || !Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({
+        error: 'Missing required fields for append: questions',
+      });
+    }
+    
+    // Append questions to existing quiz
+    const { data, error } = await appendQuestionsToQuizInDB(quizId, questions);
+    
+    if (error) {
+      return res.status(400).json({ error });
+    }
+    
+    return res.status(200).json({ 
+      success: true, 
+      data,
+      message: `Successfully appended ${questions.length} questions to quiz`
+    });
+  }
+
+  // Basic validation for new quiz creation
   if (
     !categoryName ||
     !categoryDescription ||
