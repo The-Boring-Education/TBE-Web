@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import cors from '@/middlewares/cors';
-import { connectDB } from '@/database';
+import { connectDB } from '@/middlewares';
 import { getUserAnalyticsFromDB } from '@/database/query/enhancedQuiz';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

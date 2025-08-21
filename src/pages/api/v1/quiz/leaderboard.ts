@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { cors } from '@/utils/cors';
-import { getLeaderboardFromDB } from '@/database/query/enhancedQuiz';
+import { getQuizLeaderboardFromDB } from '@/database/query/enhancedQuiz';
 import { connectDB } from '@/middlewares';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -15,7 +15,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     await connectDB();
 
-    const { data: leaderboard, error } = await getLeaderboardFromDB(
+    const { data: leaderboard, error } = await getQuizLeaderboardFromDB(
       categoryName as string,
       parseInt(limit as string)
     );

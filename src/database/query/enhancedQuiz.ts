@@ -451,8 +451,8 @@ const getUserAnalyticsFromDB = async (
   }
 };
 
-// Get leaderboard
-const getLeaderboardFromDB = async (
+// Get quiz leaderboard
+const getQuizLeaderboardFromDB = async (
   categoryName?: string,
   limit: number = 50
 ): Promise<DatabaseQueryResponseType> => {
@@ -638,7 +638,7 @@ export {
   updateUserQuestionPerformance,
   updateUserAnalyticsInDB,
   getUserAnalyticsFromDB,
-  getLeaderboardFromDB,
+  getQuizLeaderboardFromDB,
   getUserQuizSessionsFromDB,
   getQuizAdminAnalyticsFromDB,
   getActiveSessionsFromDB,

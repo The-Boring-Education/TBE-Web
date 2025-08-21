@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import cors from '@/middlewares/cors';
-import { connectDB } from '@/database';
+import { connectDB } from '@/middlewares';
 import { submitAnswerInDB } from '@/database/query/enhancedQuiz';
 import { QuizSession } from '@/database';
 
