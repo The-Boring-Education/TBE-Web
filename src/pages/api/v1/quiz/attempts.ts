@@ -11,7 +11,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { userId, limit, categoryId } = req.query;
+  const { userId, limit, quizId } = req.query;
 
   // Basic validation
   if (!userId || typeof userId !== 'string') {
@@ -24,7 +24,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { data: history, error } = await getUserQuizHistoryFromDB({
       userId,
       limit: limit ? parseInt(limit as string) : 20,
-      categoryId: categoryId as string,
+      quizId: quizId as string,
     });
 
     if (error) {

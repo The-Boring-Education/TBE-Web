@@ -49,7 +49,6 @@ async function handleGetCategories(req: NextApiRequest, res: NextApiResponse) {
 
 async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   const {
-    categoryId,
     categoryName,
     categoryDescription,
     categoryIcon,
@@ -59,7 +58,6 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
 
   // Basic validation
   if (
-    !categoryId ||
     !categoryName ||
     !categoryDescription ||
     !categoryIcon ||
@@ -67,7 +65,7 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   ) {
     return res.status(400).json({
       error:
-        'Missing required fields: categoryId, categoryName, categoryDescription, categoryIcon, questions',
+        'Missing required fields: categoryName, categoryDescription, categoryIcon, questions',
     });
   }
 
@@ -156,7 +154,6 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const quizData = {
-    categoryId,
     categoryName,
     categoryDescription,
     categoryIcon,

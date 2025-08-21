@@ -22,27 +22,27 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
       case 'GET':
-        return handleGetQuiz(categoryId, req, res);
+        return handleGetQuiz(id, req, res);
 
       case 'PUT':
-        return handleUpdateQuiz(categoryId, req, res);
+        return handleUpdateQuiz(id, req, res);
       case 'POST':
-        return handleAppendQuestions(categoryId, req, res);
+        return handleAppendQuestions(id, req, res);
 
       default:
         return res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
-    console.error('Quiz category API error:', error);
+    console.error('Quiz API error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
 
-async function handleGetQuiz(categoryId: string, req: NextApiRequest, res: NextApiResponse) {
+async function handleGetQuiz(id: string, req: NextApiRequest, res: NextApiResponse) {
   const { includeInactive } = req.query;
   const includeInactiveQuizzes = typeof includeInactive === 'string' ? includeInactive === 'true' : false;
   
-  const { data, error } = await getQuizByCategoryIdFromDB(categoryId, includeInactiveQuizzes);
+  const { data, error } = await getQuizByIdFromDB(id, includeInactiveQuizzes);
 
   if (error) {
     return res.status(404).json({ error });
@@ -52,19 +52,18 @@ async function handleGetQuiz(categoryId: string, req: NextApiRequest, res: NextA
 }
 
 async function handleUpdateQuiz(
-  categoryId: string,
+  id: string,
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const updatedData = req.body;
 
   // Remove fields that shouldn't be updated directly
-  delete updatedData.categoryId;
   delete updatedData._id;
   delete updatedData.createdAt;
   delete updatedData.updatedAt;
 
-  const { data, error } = await updateAQuizInDB({ categoryId, updatedData });
+  const { data, error } = await updateAQuizInDB({ id, updatedData });
 
   if (error) {
     return res.status(400).json({ error });
@@ -74,7 +73,7 @@ async function handleUpdateQuiz(
 }
 
 async function handleAppendQuestions(
-  categoryId: string,
+  id: string,
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -83,7 +82,7 @@ async function handleAppendQuestions(
     return res.status(400).json({ error: 'questions must be a non-empty array' });
   }
 
-  const { data, error } = await appendQuestionsToQuizInDB(categoryId, questions);
+  const { data, error } = await appendQuestionsToQuizInDB(id, questions);
   if (error) {
     return res.status(400).json({ error });
   }
