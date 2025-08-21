@@ -22,7 +22,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
       case 'GET':
-        return handleGetQuiz(categoryId, res);
+        return handleGetQuiz(categoryId, req, res);
 
       case 'PUT':
         return handleUpdateQuiz(categoryId, req, res);
@@ -38,8 +38,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-async function handleGetQuiz(categoryId: string, res: NextApiResponse) {
-  const { data, error } = await getQuizByCategoryIdFromDB(categoryId);
+async function handleGetQuiz(categoryId: string, req: NextApiRequest, res: NextApiResponse) {
+  const { includeInactive } = req.query;
+  const includeInactiveQuizzes = typeof includeInactive === 'string' ? includeInactive === 'true' : false;
+  
+  const { data, error } = await getQuizByCategoryIdFromDB(categoryId, includeInactiveQuizzes);
 
   if (error) {
     return res.status(404).json({ error });
