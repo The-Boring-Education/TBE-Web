@@ -43,7 +43,7 @@ const updateAQuizInDB = async ({
 
 // Get all quiz categories from database
 const getQuizCategoriesFromDB =
-  async (includeInactive: boolean = false): Promise<DatabaseQueryResponseType> => {
+  async (includeInactive: boolean): Promise<DatabaseQueryResponseType> => {
     try {
       const filter = includeInactive ? {} : { isActive: true };
       const categories = await Quiz.find(
@@ -60,7 +60,7 @@ const getQuizCategoriesFromDB =
 // Get quiz by category ID from database
 const getQuizByCategoryIdFromDB = async (
   categoryId: string,
-  includeInactive: boolean = false
+  includeInactive: boolean
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const filter = includeInactive ? { categoryId } : { categoryId, isActive: true };
@@ -77,7 +77,7 @@ const getQuizByCategoryIdFromDB = async (
 };
 
 // Get quiz categories with question counts
-const getQuizCategoriesWithCountsFromDB = async (includeInactive: boolean = false): Promise<DatabaseQueryResponseType> => {
+const getQuizCategoriesWithCountsFromDB = async (includeInactive: boolean): Promise<DatabaseQueryResponseType> => {
   try {
     const matchFilter = includeInactive ? {} : { isActive: true };
     const categories = await Quiz.aggregate([

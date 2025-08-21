@@ -39,7 +39,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Get quiz questions to calculate score
     const { data: quiz, error: quizError } = await getQuizByCategoryIdFromDB(
-      categoryId
+      categoryId,
+      true
     );
     if (quizError || !quiz) {
       return res.status(404).json({ error: 'Quiz not found' });
