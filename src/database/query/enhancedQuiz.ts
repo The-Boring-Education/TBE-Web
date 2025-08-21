@@ -531,6 +531,106 @@ const getUserQuizSessionsFromDB = async (
   }
 };
 
+// Get quiz admin analytics (aggregated)
+const getQuizAdminAnalyticsFromDB = async (): Promise<DatabaseQueryResponseType> => {
+  try {
+    // Get total sessions
+    const totalSessions = await QuizSession.countDocuments();
+    
+    // Get total questions answered
+    const totalQuestionsAnswered = await QuizSession.aggregate([
+      { $match: { status: 'completed' } },
+      { $group: { _id: null, total: { $sum: '$questionCount' } } }
+    ]);
+    
+    // Get average session time
+    const avgSessionTime = await QuizSession.aggregate([
+      { $match: { status: 'completed' } },
+      { $group: { _id: null, avgTime: { $avg: '$totalTimeSpent' } } }
+    ]);
+    
+    // Get top performing categories
+    const topCategories = await UserQuizAnalytics.aggregate([
+      { $group: { _id: '$categoryName', attempts: { $sum: '$totalAttempts' }, avgScore: { $avg: '$averageScore' } } },
+      { $sort: { attempts: -1 } },
+      { $limit: 5 }
+    ]);
+    
+    // Get difficulty distribution
+    const difficultyDist = await QuizSession.aggregate([
+      { $group: { _id: '$difficulty', count: { $sum: 1 } } }
+    ]);
+    
+    // Get user engagement metrics
+    const userEngagement = await QuizSession.aggregate([
+      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$startedAt' } }, sessions: { $sum: 1 } } },
+      { $sort: { _id: -1 } },
+      { $limit: 7 }
+    ]);
+
+    const analytics = {
+      totalQuizSessions: totalSessions,
+      totalQuestionsAnswered: totalQuestionsAnswered[0]?.total || 0,
+      averageSessionTime: Math.round(avgSessionTime[0]?.avgTime || 0),
+      topPerformingCategories: topCategories.map(cat => ({
+        categoryName: cat._id,
+        attempts: cat.attempts,
+        averageScore: Math.round(cat.avgScore * 10) / 10
+      })),
+      difficultyDistribution: difficultyDist.reduce((acc, diff) => {
+        acc[diff._id] = diff.count;
+        return acc;
+      }, {} as any),
+      userEngagement: {
+        dailyActiveSessions: userEngagement[0]?.sessions || 0,
+        weeklyActiveUsers: await QuizSession.distinct('userId', { 
+          startedAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } 
+        }).then(users => users.length),
+        averageSessionsPerUser: totalSessions > 0 ? Math.round((totalSessions / await QuizSession.distinct('userId').then(users => users.length)) * 10) / 10 : 0
+      }
+    };
+
+    return { data: analytics };
+  } catch (error) {
+    console.error('Error fetching admin analytics:', error);
+    return { error: 'Failed to fetch admin analytics' };
+  }
+};
+
+// Get active sessions for admin monitoring
+const getActiveSessionsFromDB = async (): Promise<DatabaseQueryResponseType> => {
+  try {
+    const activeSessions = await QuizSession.find({ 
+      status: { $in: ['in_progress', 'paused'] },
+      startedAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } // Last 24 hours
+    })
+    .populate('userId', 'name email')
+    .sort({ startedAt: -1 })
+    .lean();
+
+    const formattedSessions = activeSessions.map(session => ({
+      sessionId: session._id.toString(),
+      userId: session.userId._id.toString(),
+      userName: (session.userId as any).name || 'Unknown User',
+      categoryName: session.categoryName,
+      difficulty: session.difficulty,
+      status: session.status,
+      progress: {
+        answered: session.currentQuestionIndex || 0,
+        total: session.questionCount,
+        percentage: session.currentQuestionIndex ? Math.round((session.currentQuestionIndex / session.questionCount) * 100) : 0
+      },
+      startedAt: session.startedAt.toISOString(),
+      score: session.status === 'completed' ? session.finalScore : undefined
+    }));
+
+    return { data: formattedSessions };
+  } catch (error) {
+    console.error('Error fetching active sessions:', error);
+    return { error: 'Failed to fetch active sessions' };
+  }
+};
+
 export {
   createQuizSessionInDB,
   submitAnswerInDB,
@@ -540,4 +640,6 @@ export {
   getUserAnalyticsFromDB,
   getLeaderboardFromDB,
   getUserQuizSessionsFromDB,
+  getQuizAdminAnalyticsFromDB,
+  getActiveSessionsFromDB,
 };
