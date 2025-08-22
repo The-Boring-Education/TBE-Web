@@ -141,6 +141,9 @@ export interface AddInterviewSheetRequestPayloadProps {
   slug: string;
   meta?: string;
   roadmap: RoadmapsType;
+  isPremium?: boolean;
+  price?: number;
+  features?: string[];
 }
 
 export interface UpdateInterviewSheetRequestPayloadProps {
