@@ -6,7 +6,7 @@ import { createQuizSessionInDB } from '@/database/query/enhancedQuiz';
 interface StartSessionBody {
   userId: string;
   quizId: string;
-  difficulty: 'easy' | 'medium' | 'hard' | 'mixed';
+  difficulty?: 'easy' | 'medium' | 'hard' | 'mixed';
   questionCount?: number;
 }
 
@@ -17,16 +17,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { userId, quizId, difficulty, questionCount = 10 }: StartSessionBody = req.body;
+  const { userId, quizId, difficulty = 'mixed', questionCount = 10 }: StartSessionBody = req.body;
 
   // Validation
-  if (!userId || !quizId || !difficulty) {
+  if (!userId || !quizId) {
     return res.status(400).json({ 
-      error: 'Missing required fields: userId, quizId, difficulty' 
+      error: 'Missing required fields: userId, quizId' 
     });
   }
 
-  if (!['easy', 'medium', 'hard', 'mixed'].includes(difficulty)) {
+  if (difficulty && !['easy', 'medium', 'hard', 'mixed'].includes(difficulty)) {
     return res.status(400).json({ 
       error: 'Invalid difficulty. Must be easy, medium, hard, or mixed' 
     });
