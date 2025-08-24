@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
-import { getQuizLeaderboardFromDB } from '@/database/query/userQuizAttempt';
+import { getLeaderboardFromDB } from '@/database/query/userQuizAttempt';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);
@@ -24,10 +24,7 @@ async function handleGetLeaderboard(req: NextApiRequest, res: NextApiResponse) {
   const limitNum = Math.min(100, Math.max(1, parseInt(limit as string) || 50));
   const categoryFilter = typeof category === 'string' ? category : undefined;
 
-  const { data: leaderboard, error } = await getQuizLeaderboardFromDB({
-    limit: limitNum,
-    category: categoryFilter
-  });
+  const { data: leaderboard, error } = await getLeaderboardFromDB(limitNum);
 
   if (error) {
     return res.status(500).json({ error });

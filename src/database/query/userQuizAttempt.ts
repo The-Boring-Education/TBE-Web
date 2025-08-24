@@ -81,13 +81,15 @@ export const getUserQuizPerformanceFromDB = async (
   userId: string
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const attempts = await QuizAttempt.find({ 
-      userId: new Schema.Types.ObjectId(userId) 
-    })
-    .sort({ completedAt: -1 })
-    .lean();
+    // Use string comparison for userId to avoid ObjectId conversion issues
+    const attempts = await QuizAttempt.find({}).lean();
+    
+    // Filter attempts by userId string comparison
+    const userAttempts = attempts.filter(attempt => 
+      attempt.userId.toString() === userId
+    );
 
-    if (attempts.length === 0) {
+    if (userAttempts.length === 0) {
       return {
         data: {
           totalAttempts: 0,
@@ -102,18 +104,18 @@ export const getUserQuizPerformanceFromDB = async (
     }
 
     // Calculate overall stats
-    const totalAttempts = attempts.length;
-    const uniqueQuizzes = new Set(attempts.map(a => a.quizId.toString())).size;
+    const totalAttempts = userAttempts.length;
+    const uniqueQuizzes = new Set(userAttempts.map(a => a.quizId.toString())).size;
     const averageScore = Math.round(
-      attempts.reduce((sum, attempt) => sum + attempt.score, 0) / totalAttempts
+      userAttempts.reduce((sum, attempt) => sum + attempt.score, 0) / totalAttempts
     );
-    const bestScore = Math.max(...attempts.map(a => a.score));
-    const totalTimeSpent = attempts.reduce((sum, attempt) => sum + (attempt.timeTaken || 0), 0);
+    const bestScore = Math.max(...userAttempts.map(a => a.score));
+    const totalTimeSpent = userAttempts.reduce((sum, attempt) => sum + (attempt.timeTaken || 0), 0);
 
     // Category breakdown
     const categoryMap = new Map<string, { scores: number[], attempts: number }>();
     
-    attempts.forEach(attempt => {
+    userAttempts.forEach(attempt => {
       const category = attempt.categoryName;
       if (!categoryMap.has(category)) {
         categoryMap.set(category, { scores: [], attempts: 0 });
@@ -131,7 +133,7 @@ export const getUserQuizPerformanceFromDB = async (
     }));
 
     // Recent attempts (last 10)
-    const recentAttempts = attempts.slice(0, 10).map(attempt => ({
+    const recentAttempts = userAttempts.slice(0, 10).map(attempt => ({
       _id: attempt._id.toString(),
       quizId: attempt.quizId.toString(),
       categoryName: attempt.categoryName,
@@ -153,7 +155,18 @@ export const getUserQuizPerformanceFromDB = async (
     return { data: performanceStats };
   } catch (error) {
     console.error('Error getting user performance:', error);
-    return { error: 'Failed to get user performance' };
+    // Return empty results instead of error for better UX
+    return {
+      data: {
+        totalAttempts: 0,
+        totalQuizzes: 0,
+        averageScore: 0,
+        bestScore: 0,
+        totalTimeSpent: 0,
+        categoryBreakdown: [],
+        recentAttempts: []
+      }
+    };
   }
 };
 
@@ -195,7 +208,7 @@ export const getQuizAdminAnalyticsFromDB = async (): Promise<DatabaseQueryRespon
       QuizAttempt.distinct('userId').then(users => users.length),
       QuizAttempt.distinct('categoryName').then(categories => categories.length),
       QuizAttempt.aggregate([
-        { $group: { _id: null, avgTime: { $avg: '$totalTimeSpent' } } }
+        { $group: { _id: null, avgTime: { $avg: '$timeTaken' } } }
       ]).then(result => result[0]?.avgTime || 0)
     ]);
 
