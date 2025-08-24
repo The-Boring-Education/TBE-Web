@@ -51,8 +51,8 @@ export const addUserQuizAttemptToDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const attempt = new QuizAttempt({
-      userId: new Schema.Types.ObjectId(attemptData.userId),
-      quizId: new Schema.Types.ObjectId(attemptData.quizId),
+      userId: attemptData.userId, // Remove the extra ObjectId wrapper - mongoose will handle the conversion
+      quizId: attemptData.quizId, // Remove the extra ObjectId wrapper - mongoose will handle the conversion
       score: attemptData.score,
       totalQuestions: attemptData.totalQuestions,
       correctAnswers: attemptData.correctAnswers,
@@ -79,7 +79,7 @@ export const addUserQuizAttemptToDB = async (
 // Get user's quiz performance analytics
 export const getUserQuizPerformanceFromDB = async (
   userId: string
-): Promise<DatabaseQueryResponseType<UserPerformanceStats>> => {
+): Promise<DatabaseQueryResponseType> => {
   try {
     const attempts = await QuizAttempt.find({ 
       userId: new Schema.Types.ObjectId(userId) 
@@ -108,7 +108,7 @@ export const getUserQuizPerformanceFromDB = async (
       attempts.reduce((sum, attempt) => sum + attempt.score, 0) / totalAttempts
     );
     const bestScore = Math.max(...attempts.map(a => a.score));
-    const totalTimeSpent = attempts.reduce((sum, attempt) => sum + (attempt.totalTimeSpent || 0), 0);
+    const totalTimeSpent = attempts.reduce((sum, attempt) => sum + (attempt.timeTaken || 0), 0);
 
     // Category breakdown
     const categoryMap = new Map<string, { scores: number[], attempts: number }>();
@@ -136,8 +136,8 @@ export const getUserQuizPerformanceFromDB = async (
       quizId: attempt.quizId.toString(),
       categoryName: attempt.categoryName,
       score: attempt.score,
-      completedAt: attempt.completedAt.toISOString(),
-      totalTimeSpent: attempt.totalTimeSpent || 0
+      completedAt: attempt.completedAt?.toISOString() || new Date().toISOString(),
+      totalTimeSpent: attempt.timeTaken || 0
     }));
 
     const performanceStats: UserPerformanceStats = {
@@ -157,71 +157,30 @@ export const getUserQuizPerformanceFromDB = async (
   }
 };
 
-// Get quiz leaderboard
-export const getQuizLeaderboardFromDB = async ({
-  limit = 50,
-  category
-}: {
-  limit?: number;
-  category?: string;
-}): Promise<DatabaseQueryResponseType<LeaderboardEntry[]>> => {
+// Get leaderboard entries
+export const getLeaderboardFromDB = async (
+  limit = 10
+): Promise<DatabaseQueryResponseType> => {
   try {
-    const matchStage: any = {};
-    if (category) {
-      matchStage.categoryName = category;
-    }
-
-    const leaderboard = await QuizAttempt.aggregate([
-      { $match: matchStage },
+    const attempts = await QuizAttempt.aggregate([
       {
         $group: {
           _id: '$userId',
+          bestScore: { $max: '$score' },
           totalAttempts: { $sum: 1 },
           averageScore: { $avg: '$score' },
-          bestScore: { $max: '$score' },
-          totalTimeSpent: { $sum: '$totalTimeSpent' }
+          totalTimeSpent: { $sum: '$timeTaken' }
         }
       },
       {
-        $lookup: {
-          from: 'users', // Assuming you have a users collection
-          localField: '_id',
-          foreignField: '_id',
-          as: 'user',
-          pipeline: [{ $project: { name: 1, email: 1 } }]
-        }
+        $sort: { bestScore: -1 }
       },
       {
-        $addFields: {
-          username: {
-            $ifNull: [
-              { $arrayElemAt: ['$user.name', 0] },
-              { $arrayElemAt: ['$user.email', 0] }
-            ]
-          }
-        }
-      },
-      {
-        $project: {
-          userId: '$_id',
-          username: 1,
-          averageScore: { $round: ['$averageScore', 1] },
-          totalAttempts: 1,
-          bestScore: 1,
-          totalTimeSpent: 1
-        }
-      },
-      { $sort: { averageScore: -1, bestScore: -1, totalAttempts: -1 } },
-      { $limit: limit }
+        $limit: limit
+      }
     ]);
 
-    const leaderboardWithFallback = leaderboard.map((entry, index) => ({
-      ...entry,
-      username: entry.username || `User ${entry.userId.toString().slice(-6)}`,
-      rank: index + 1
-    }));
-
-    return { data: leaderboardWithFallback };
+    return { data: attempts };
   } catch (error) {
     console.error('Error getting leaderboard:', error);
     return { error: 'Failed to get leaderboard' };
