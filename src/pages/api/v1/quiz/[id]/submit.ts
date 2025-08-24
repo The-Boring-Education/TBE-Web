@@ -60,7 +60,7 @@ async function handleSubmitQuiz(
   }
 
   // Get quiz to validate answers
-  const { data: quiz, error: quizError } = await getQuizByIdFromDB(quizId);
+  const { data: quiz, error: quizError } = await getQuizByIdFromDB(quizId, true);
   
   if (quizError || !quiz) {
     return res.status(404).json({ error: 'Quiz not found' });
