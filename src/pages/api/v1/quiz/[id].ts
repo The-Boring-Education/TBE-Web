@@ -48,7 +48,29 @@ async function handleGetQuiz(id: string, req: NextApiRequest, res: NextApiRespon
     return res.status(404).json({ error });
   }
 
-  return res.status(200).json({ success: true, data });
+  // Simplify: Return only 10 random questions without difficulty information
+  const allQuestions = data.questions || [];
+  const shuffledQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
+  const selectedQuestions = shuffledQuestions.slice(0, 10);
+
+  // Remove difficulty from questions for cleaner UI
+  const simplifiedQuestions = selectedQuestions.map(question => ({
+    question: question.question,
+    options: question.options,
+    correctAnswer: question.correctAnswer,
+    explanation: question.explanation,
+    detailedExplanation: question.detailedExplanation
+  }));
+
+  const simplifiedData = {
+    _id: data._id,
+    categoryName: data.categoryName,
+    categoryDescription: data.categoryDescription,
+    categoryIcon: data.categoryIcon,
+    questions: simplifiedQuestions
+  };
+
+  return res.status(200).json({ success: true, data: simplifiedData });
 }
 
 async function handleUpdateQuiz(

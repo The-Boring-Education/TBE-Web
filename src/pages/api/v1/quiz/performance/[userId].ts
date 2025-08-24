@@ -1,10 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
-import { getQuizLeaderboardFromDB } from '@/database/query/userQuizAttempt';
+import { getUserQuizPerformanceFromDB } from '@/database/query/userQuizAttempt';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);
+
+  const { userId } = req.query;
+
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
 
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -12,22 +18,19 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     await connectDB();
-    return handleGetLeaderboard(req, res);
+    return handleGetUserPerformance(userId, req, res);
   } catch (error) {
-    console.error('Leaderboard API error:', error);
+    console.error('Performance API error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
 
-async function handleGetLeaderboard(req: NextApiRequest, res: NextApiResponse) {
-  const { limit = '50', category } = req.query;
-  const limitNum = Math.min(100, Math.max(1, parseInt(limit as string) || 50));
-  const categoryFilter = typeof category === 'string' ? category : undefined;
-
-  const { data: leaderboard, error } = await getQuizLeaderboardFromDB({
-    limit: limitNum,
-    category: categoryFilter
-  });
+async function handleGetUserPerformance(
+  userId: string,
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { data: performance, error } = await getUserQuizPerformanceFromDB(userId);
 
   if (error) {
     return res.status(500).json({ error });
@@ -35,7 +38,7 @@ async function handleGetLeaderboard(req: NextApiRequest, res: NextApiResponse) {
 
   return res.status(200).json({
     success: true,
-    data: leaderboard
+    data: performance
   });
 }
 
