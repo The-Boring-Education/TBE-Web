@@ -56,9 +56,10 @@ export const addUserQuizAttemptToDB = async (
       score: attemptData.score,
       totalQuestions: attemptData.totalQuestions,
       correctAnswers: attemptData.correctAnswers,
-      totalTimeSpent: attemptData.totalTimeSpent,
+      timeTaken: attemptData.totalTimeSpent, // Fix: use timeTaken instead of totalTimeSpent
       answers: attemptData.answers,
       categoryName: attemptData.categoryName,
+      pointsEarned: Math.round((attemptData.correctAnswers / attemptData.totalQuestions) * 100), // Add missing pointsEarned
       completedAt: new Date(attemptData.completedAt)
     });
 
@@ -66,6 +67,11 @@ export const addUserQuizAttemptToDB = async (
     return { data: savedAttempt };
   } catch (error) {
     console.error('Error saving quiz attempt:', error);
+    console.error('Attempt data that failed:', JSON.stringify(attemptData, null, 2));
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+      console.error('Error stack:', error.stack);
+    }
     return { error: 'Failed to save quiz attempt' };
   }
 };

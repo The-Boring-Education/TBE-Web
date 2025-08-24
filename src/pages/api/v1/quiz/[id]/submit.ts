@@ -75,7 +75,6 @@ async function handleSubmitQuiz(
         questionIndex: answer.questionIndex,
         isCorrect: false,
         selectedAnswer: answer.selectedAnswer,
-        correctAnswer: -1,
         timeSpent: answer.timeSpent
       };
     }
@@ -87,10 +86,7 @@ async function handleSubmitQuiz(
       questionIndex: answer.questionIndex,
       isCorrect,
       selectedAnswer: answer.selectedAnswer,
-      correctAnswer: question.correctAnswer,
-      timeSpent: answer.timeSpent,
-      explanation: question.explanation,
-      detailedExplanation: question.detailedExplanation
+      timeSpent: answer.timeSpent
     };
   });
 
@@ -114,6 +110,7 @@ async function handleSubmitQuiz(
 
   if (attemptError) {
     console.error('Failed to save quiz attempt:', attemptError);
+    console.error('Attempt data that failed:', JSON.stringify(attemptData, null, 2));
     return res.status(500).json({ error: 'Failed to save quiz attempt' });
   }
 
