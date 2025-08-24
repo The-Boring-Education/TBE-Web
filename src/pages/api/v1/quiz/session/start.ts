@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import cors from '@/middlewares/cors';
 import { connectDB } from '@/middlewares';
-import { createQuizSessionInDB } from '@/database/query/enhancedQuiz';
+import { Quiz, QuizSession } from '@/database';
+import { Types } from 'mongoose';
 
 interface StartSessionBody {
   userId: string;
@@ -41,16 +42,57 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     await connectDB();
 
-    const { data: session, error } = await createQuizSessionInDB({
-      userId,
-      quizId,
-      difficulty,
-      questionCount,
-    });
-
-    if (error || !session) {
-      return res.status(400).json({ error: error || 'Failed to create session' });
+    // Get the quiz
+    const quiz = await Quiz.findById(quizId).lean();
+    if (!quiz || !quiz.isActive) {
+      return res.status(404).json({ error: 'Quiz not found or inactive' });
     }
+
+    // Check if quiz has questions
+    if (!quiz.questions || quiz.questions.length === 0) {
+      return res.status(400).json({ error: 'Quiz has no questions' });
+    }
+
+    // Question selection
+    let selectedQuestions = quiz.questions;
+
+    // Filter by difficulty if not mixed
+    if (difficulty !== 'mixed') {
+      selectedQuestions = quiz.questions.filter(q => q.difficulty === difficulty);
+    }
+
+    // Limit to requested question count
+    if (selectedQuestions.length > questionCount) {
+      selectedQuestions = selectedQuestions.slice(0, questionCount);
+    }
+
+    if (selectedQuestions.length === 0) {
+      return res.status(400).json({ error: 'No questions available for the selected difficulty' });
+    }
+
+    // Create session data
+    const sessionData = {
+      userId: new Types.ObjectId(userId),
+      quizId: new Types.ObjectId(quizId),
+      categoryName: quiz.categoryName,
+      difficulty,
+      questionCount: selectedQuestions.length,
+      questions: selectedQuestions.map(q => ({
+        questionId: new Types.ObjectId(),
+        question: q.question,
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        difficulty: q.difficulty,
+        explanation: q.explanation,
+        detailedExplanation: q.detailedExplanation,
+      })),
+      status: 'in_progress',
+      startedAt: new Date(),
+    };
+
+    // Create and save session
+    const session = new QuizSession(sessionData);
+    await session.save();
 
     // Return session with first question
     const response = {
