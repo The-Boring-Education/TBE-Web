@@ -445,6 +445,8 @@ const USER_ROLE_OPTIONS: { label: string; value: UserRoleType }[] = [
   { label: 'Tech Student', value: 'TECH_STUDENT' },
   { label: 'Non-Tech Student', value: 'NON_TECH_STUDENT' },
   { label: 'Working Professional', value: 'WORKING_PROFESSIONAL' },
+  { label: 'DevRel Advocate', value: 'DEVREL_ADVOCATE' },
+  { label: 'DevRel Lead', value: 'DEVREL_LEAD' },
 ];
 
 const USER_USAGE_OPTIONS: { label: string; value: PlatformUsageType }[] = [
