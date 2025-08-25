@@ -468,31 +468,31 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
                     {/* Coupon Input */}
                     {sheet?.isPremium && !appliedCoupon && (
-                      <div className='bg-blue-50 rounded-lg p-3 text-left'>
-                        <div className='flex items-center gap-2 mb-2'>
+                      <div className='bg-blue-50 rounded-lg p-3 text-center'>
+                        <div className='flex items-center justify-center gap-2 mb-3'>
                           <FaTags className='text-blue-500 text-sm' />
                           <Text level='p' className='text-sm font-semibold text-blue-700'>Have a coupon?</Text>
                         </div>
-                        <div className='flex gap-2'>
+                        <div className='space-y-3'>
                           <input
                             type='text'
                             placeholder='Enter coupon code'
                             value={couponCode}
                             onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                            className='flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                            className='w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-center'
                             onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
                           />
                           <Button
                             text={couponLoading ? 'Applying...' : 'Apply'}
                             variant='PRIMARY'
-                            className='px-3 py-2 text-xs bg-blue-500 hover:bg-blue-600'
+                            className='w-full px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600'
                             onClick={handleApplyCoupon}
                             isLoading={couponLoading}
                             disabled={!couponCode.trim()}
                           />
                         </div>
                         {couponError && (
-                          <Text level='p' className='text-xs text-red-600 mt-1'>{couponError}</Text>
+                          <Text level='p' className='text-xs text-red-600 mt-2 text-center'>{couponError}</Text>
                         )}
                       </div>
                     )}
