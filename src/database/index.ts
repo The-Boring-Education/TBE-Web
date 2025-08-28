@@ -17,6 +17,9 @@ import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
 import Quiz from './models/Quiz/Quiz';
 import QuizAttempt from './models/Quiz/QuizAttempt';
+import QuizSession from './models/Quiz/QuizSession';
+import UserQuestionPerformance from './models/Quiz/UserQuestionPerformance';
+import UserQuizAnalytics from './models/Quiz/UserQuizAnalytics';
 import Course from './models/Shiksha/Course';
 import UserCourse from './models/Shiksha/UserCourse';
 import JobAggregate from './models/Unskilled/JobAggregate';
@@ -26,7 +29,7 @@ import UserInterest from './models/UserInterest';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
-
+import Coupon from './models/Coupon';
 export {
   Certificate,
   Challenge,
@@ -46,6 +49,9 @@ export {
   Project,
   Quiz,
   QuizAttempt,
+  QuizSession,
+  UserQuestionPerformance,
+  UserQuizAnalytics,
   Recruiter,
   Mentorship,
   User,
@@ -55,11 +61,13 @@ export {
   UserProject,
   UserSheet,
   Webinar,
+  Coupon,
 };
 
 // Query
 export * from './query/certificate';
 export * from './query/common';
+export * from './query/coupon';
 export * from './query/email';
 export * from './query/feedback';
 export * from './query/gamification';
@@ -75,3 +83,5 @@ export * from './query/user';
 export * from './query/userInterest';
 export * from './query/webinar';
 export * from './query/youfocus';
+export * from './query/quiz';
+export * from './query/enhancedQuiz';

@@ -388,7 +388,7 @@ export interface ChapterLinkProps {
   content: string;
   isCompleted: boolean;
   currentChapterId: string;
-  handleChapterClick: (content: string) => void;
+  handleChapterClick: (content: string, chapterId: string) => void;
   isLocked?: boolean;
 }
 
@@ -448,7 +448,7 @@ export interface BannerProps {
   buttonText: string;
   buttonLink: string;
   imageSrc: string;
-  variant?: 'VARIANT_A' | 'VARIANT_B';
+  variant?: 'VARIANT_A' | 'VARIANT_B' | 'VARIANT_C';
 }
 
 export interface ActionBannerProps {

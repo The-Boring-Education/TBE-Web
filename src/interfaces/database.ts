@@ -133,6 +133,8 @@ export interface InterviewSheetModel extends Document {
   liveOn: Date;
   isPremium: boolean;
   price: number;
+  discountPercentage: number;
+  appliedCoupon?: typeof Schema.Types.ObjectId;
   questions: InterviewSheetQuestionModel[];
   roadmap: RoadmapsType;
   features: string[];
@@ -147,6 +149,22 @@ export interface InterviewSheetQuestionModel {
   companyTypes?: CompanyType[];
   priority: PriorityType;
   toObject: () => UserCourseModel;
+}
+
+export interface CouponModel extends Document {
+  code: string;
+  discountPercentage: number;
+  description: string;
+  isActive: boolean;
+  expiryDate: Date;
+  maxUsage?: number;
+  currentUsage: number;
+  applicableProducts: string[];
+  minimumAmount: number;
+  createdBy: typeof Schema.Types.ObjectId;
+  isExpired: boolean;
+  isUsageLimitReached: boolean;
+  isValid: boolean;
 }
 
 export interface UserSheetModel extends Document {
@@ -329,6 +347,8 @@ export interface PaymentModel extends Document {
   subscriptionType?: SubscriptionType;
   subscriptionDuration?: number;
   expiresAt?: Date;
+  appliedCoupon?: typeof Schema.Types.ObjectId;
+  couponCode?: string;
 }
 
 export interface WebhookEvent {

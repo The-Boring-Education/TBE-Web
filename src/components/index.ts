@@ -166,7 +166,15 @@ const InputFieldContainer = dynamic(
 const InputRadioContainer = dynamic(
   () => import('./containers/Forms/InputRadioContainer')
 );
-const LoadingSpinner = dynamic(() => import('./common/LoadingSpinner'));
+const LoadingSpinner = dynamic(
+  () => import('@/components/common/LoadingSpinner')
+);
+const LoadingIndicator = dynamic(
+  () => import('@/components/common/LoadingIndicator')
+);
+const LoginCard = dynamic(
+  () => import('@/components/containers/Cards/LoginCard')
+);
 const MobileNavbarLinksContainer = dynamic(
   () => import('./containers/Page/common/MobileNavbarLinksContainer')
 );
@@ -250,10 +258,6 @@ const ActionBanner = dynamic(
 
 const LoginRedirectButton = dynamic(
   () => import('@/components/common/Buttons/LoginRedirectButton')
-);
-
-const LoginCard = dynamic(
-  () => import('@/components/containers/Cards/LoginCard')
 );
 
 const CheckboxButton = dynamic(
@@ -405,6 +409,7 @@ export {
   LinkText as Link,
   QuizSection,
   LinkButton,
+  LoadingIndicator,
   LoadingSpinner,
   LoginCard,
   LoginRedirectButton,

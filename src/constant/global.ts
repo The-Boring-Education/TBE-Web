@@ -79,10 +79,10 @@ const products: ProductDataProps = {
     slug: routes.unskilled,
     description: 'Find Your Next Tech Job with Insights',
   },
-  // PrepYatra - Internal Product
+  // PrepYatra - External Product
   prepYatra: {
     label: 'Prep Yatra',
-    slug: routes.prepYatra,
+    slug: 'https://prepyatra.theboringeducation.com',
     description: 'Complete Interview Preparation Platform',
   },
   // Yatra Products - External Tools
@@ -130,7 +130,7 @@ const LINKS = {
   bookProjectSession: 'https://topmate.io/imsks/1527401',
   postmanDocs: 'https://documenter.getpostman.com/view/10360102/2sAYdcsYK3',
   hostTBEAtYourCollege: 'https://tally.so/r/mZkOby',
-  viewSessionDetails: 'https://bit.ly/TBECampusConnect',
+  viewSessionDetails: 'https://www.canva.com/design/DAGVf1D9DGw/LbEBK9ux5s2xQN_l6WKyvA/view?utm_content=DAGVf1D9DGw&utm_campaign=designshare&utm_medium=link&utm_source=editor',
   createIssue: 'https://github.com/The-Boring-Education/TBE-Web/issues/new',
   quizApp: 'https://quiz.theboringeducation.com',
 };
@@ -445,6 +445,8 @@ const USER_ROLE_OPTIONS: { label: string; value: UserRoleType }[] = [
   { label: 'Tech Student', value: 'TECH_STUDENT' },
   { label: 'Non-Tech Student', value: 'NON_TECH_STUDENT' },
   { label: 'Working Professional', value: 'WORKING_PROFESSIONAL' },
+  { label: 'DevRel Advocate', value: 'DEVREL_ADVOCATE' },
+  { label: 'DevRel Lead', value: 'DEVREL_LEAD' },
 ];
 
 const USER_USAGE_OPTIONS: { label: string; value: PlatformUsageType }[] = [

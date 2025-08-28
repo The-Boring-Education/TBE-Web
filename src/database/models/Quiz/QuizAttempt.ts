@@ -13,7 +13,6 @@ export interface QuizAttemptModel {
   _id?: string;
   userId: Schema.Types.ObjectId;
   quizId: Schema.Types.ObjectId;
-  categoryId: string;
   categoryName: string;
   answers: QuizAttemptAnswer[];
   score: number;
@@ -60,10 +59,6 @@ const QuizAttemptSchema = new Schema<QuizAttemptModel>(
       ref: DATABASE_MODELS.QUIZ,
       required: [true, 'Quiz ID is required'],
     },
-    categoryId: {
-      type: String,
-      required: [true, 'Category ID is required'],
-    },
     categoryName: {
       type: String,
       required: [true, 'Category name is required'],
@@ -100,7 +95,7 @@ const QuizAttemptSchema = new Schema<QuizAttemptModel>(
 
 // Index for faster queries
 QuizAttemptSchema.index({ userId: 1, completedAt: -1 });
-QuizAttemptSchema.index({ userId: 1, categoryId: 1 });
+QuizAttemptSchema.index({ userId: 1, quizId: 1 });
 
 const QuizAttempt: Model<QuizAttemptModel> =
   models?.QuizAttempt ||

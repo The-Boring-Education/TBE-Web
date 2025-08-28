@@ -137,7 +137,9 @@ export type NotificationType =
 export type UserRoleType =
   | 'TECH_STUDENT'
   | 'WORKING_PROFESSIONAL'
-  | 'NON_TECH_STUDENT';
+  | 'NON_TECH_STUDENT'
+  | 'DEVREL_ADVOCATE'
+  | 'DEVREL_LEAD';
 
 export type PlatformUsageType =
   | 'LEARNING_TECH'

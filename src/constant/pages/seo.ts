@@ -394,17 +394,7 @@ const getSEOMeta = (basePath: any): GetSEOMetaResponseType => {
       keywords:
         'PrepYatra, Interview Preparation, Mock Interviews, Personalized Questions, Job Preparation, The Boring Education, Career Development, Skill Enhancement, Interview Tips, Job Search',
       ...seoCommonMeta,
-    },
-    [`${routes.campusConnect}`]: {
-      title: 'Campus Connect & DevRel Program | The Boring Education',
-      siteName: 'TBE Campus Connect & DevRel',
-      description:
-        'Become the face of tech in your college. Build a community, host events, learn from mentors, and grow as a DevRel with The Boring Education.',
-      url: routes.campusConnect,
-      keywords:
-        'Campus Ambassador, DevRel, Developer Relations, College Ambassador, Tech Community, Events, Workshops, Hackathons, Mentorship, The Boring Education, India',
-      ...seoCommonMeta,
-    },
+    }
   };
 
   return meta[basePath];

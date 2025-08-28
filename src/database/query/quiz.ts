@@ -18,17 +18,17 @@ const addAQuizToDB = async (
 
 // Update a quiz in database
 const updateAQuizInDB = async ({
-  categoryId,
+  id,
   updatedData,
 }: {
-  categoryId: string;
+  id: string;
   updatedData: Partial<
-    Omit<QuizModel, '_id' | 'categoryId' | 'createdAt' | 'updatedAt'>
+    Omit<QuizModel, '_id' | 'createdAt' | 'updatedAt'>
   >;
 }): Promise<DatabaseQueryResponseType> => {
   try {
-    const updatedQuiz = await Quiz.findOneAndUpdate(
-      { categoryId },
+    const updatedQuiz = await Quiz.findByIdAndUpdate(
+      id,
       updatedData,
       { new: true, runValidators: true }
     );
@@ -43,11 +43,12 @@ const updateAQuizInDB = async ({
 
 // Get all quiz categories from database
 const getQuizCategoriesFromDB =
-  async (): Promise<DatabaseQueryResponseType> => {
+  async (includeInactive: boolean): Promise<DatabaseQueryResponseType> => {
     try {
+      const filter = includeInactive ? {} : { isActive: true };
       const categories = await Quiz.find(
-        { isActive: true },
-        'categoryId categoryName categoryDescription categoryIcon'
+        filter,
+        '_id categoryName categoryDescription categoryIcon isActive'
       ).lean();
 
       return { data: categories };
@@ -56,15 +57,17 @@ const getQuizCategoriesFromDB =
     }
   };
 
-// Get quiz by category ID from database
-const getQuizByCategoryIdFromDB = async (
-  categoryId: string
+// Get quiz by ID from database
+const getQuizByIdFromDB = async (
+  id: string,
+  includeInactive: boolean
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const quiz = await Quiz.findOne({ categoryId, isActive: true }).lean();
+    const filter = includeInactive ? { _id: id } : { _id: id, isActive: true };
+    const quiz = await Quiz.findOne(filter).lean();
 
     if (!quiz) {
-      return { error: 'Quiz category not found' };
+      return { error: 'Quiz not found' };
     }
 
     return { data: quiz };
@@ -74,17 +77,18 @@ const getQuizByCategoryIdFromDB = async (
 };
 
 // Get quiz categories with question counts
-const getQuizCategoriesWithCountsFromDB = async (): Promise<DatabaseQueryResponseType> => {
+const getQuizCategoriesWithCountsFromDB = async (includeInactive: boolean): Promise<DatabaseQueryResponseType> => {
   try {
+    const matchFilter = includeInactive ? {} : { isActive: true };
     const categories = await Quiz.aggregate([
-      { $match: { isActive: true } },
+      { $match: matchFilter },
       {
         $project: {
-          _id: 0,
-          categoryId: 1,
+          _id: 1,
           categoryName: 1,
           categoryDescription: 1,
           categoryIcon: 1,
+          isActive: 1,
           questionCount: { $size: { $ifNull: ['$questions', []] } },
         },
       },
@@ -96,9 +100,9 @@ const getQuizCategoriesWithCountsFromDB = async (): Promise<DatabaseQueryRespons
   }
 };
 
-// Append questions to an existing quiz category
+// Append questions to an existing quiz
 const appendQuestionsToQuizInDB = async (
-  categoryId: string,
+  id: string,
   questions: QuizModel['questions']
 ): Promise<DatabaseQueryResponseType> => {
   try {
@@ -106,13 +110,13 @@ const appendQuestionsToQuizInDB = async (
       return { error: 'Questions must be a non-empty array' };
     }
 
-    const updated = await Quiz.findOneAndUpdate(
-      { categoryId },
+    const updated = await Quiz.findByIdAndUpdate(
+      id,
       { $push: { questions: { $each: questions } } },
       { new: true, runValidators: true }
     );
 
-    if (!updated) return { error: 'Quiz category not found' };
+    if (!updated) return { error: 'Quiz not found' };
 
     return { data: updated };
   } catch (error) {
@@ -137,17 +141,17 @@ const saveQuizAttemptToDB = async (
 const getUserQuizHistoryFromDB = async ({
   userId,
   limit = 20,
-  categoryId,
+  quizId,
 }: {
   userId: string;
   limit?: number;
-  categoryId?: string;
+  quizId?: string;
 }): Promise<DatabaseQueryResponseType> => {
   try {
     let query = QuizAttempt.find({ userId });
 
-    if (categoryId) {
-      query = query.where('categoryId').equals(categoryId);
+    if (quizId) {
+      query = query.where('quizId').equals(quizId);
     }
 
     const attempts = await query.sort({ completedAt: -1 }).limit(limit).lean();
@@ -218,7 +222,7 @@ const getUserQuizStatsFromDB = async (
 
 export {
   addAQuizToDB,
-  getQuizByCategoryIdFromDB,
+  getQuizByIdFromDB,
   getQuizCategoriesFromDB,
   getQuizCategoriesWithCountsFromDB,
   getUserQuizHistoryFromDB,

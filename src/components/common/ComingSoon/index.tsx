@@ -87,7 +87,7 @@ const ComingSoon = ({ className = '' }: ComingSoonProps) => {
   return (
     <Section className={`md:px-8 md:py-6 px-2 py-6 ${className}`}>
       <FlexContainer justifyCenter={false}>
-        <FlexContainer className='w-full gap-6 rounded-3xl bg-gradient-to-br from-blue-50 to-indigo-100 md:px-8 md:py-8 px-4 py-6 shadow-xl border border-blue-200 lg:px-6 lg:py-6'>
+        <FlexContainer className='w-full gap-6 rounded-lg bg-white border border-gray-200 md:px-8 md:py-8 px-4 py-6 shadow-sm'>
           <div className='max-w-sm lg:max-w-md'>
             <Image
               alt='subscription coming soon'

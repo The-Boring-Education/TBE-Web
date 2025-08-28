@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import {
-  getQuizByCategoryIdFromDB,
+  getQuizByIdFromDB,
   saveQuizAttemptToDB,
 } from '@/database/query/quiz';
 import { connectDB } from '@/middlewares';
@@ -20,12 +20,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { categoryId } = req.query;
+  const { id } = req.query;
   const { userId, answers, timeTaken }: SubmitQuizBody = req.body;
 
   // Basic validation
-  if (!categoryId || typeof categoryId !== 'string') {
-    return res.status(400).json({ error: 'Category ID is required' });
+  if (!id || typeof id !== 'string') {
+    return res.status(400).json({ error: 'Quiz ID is required' });
   }
 
   if (!userId || !answers || !Array.isArray(answers) || !timeTaken) {
@@ -38,8 +38,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await connectDB();
 
     // Get quiz questions to calculate score
-    const { data: quiz, error: quizError } = await getQuizByCategoryIdFromDB(
-      categoryId
+    const { data: quiz, error: quizError } = await getQuizByIdFromDB(
+      id,
+      true
     );
     if (quizError || !quiz) {
       return res.status(404).json({ error: 'Quiz not found' });
@@ -68,7 +69,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const attemptData = {
       userId: userId as any,
       quizId: quiz._id as any,
-      categoryId,
       categoryName: quiz.categoryName,
       answers: attemptAnswers,
       score,

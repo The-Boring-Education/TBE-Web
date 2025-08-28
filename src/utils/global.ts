@@ -38,7 +38,7 @@ const getPreFetchProps = async ({ slug }: any) => {
 
 const getProjectPageProps = async (context: any) => {
   const { req, query } = context;
-  const { projectSlug, projectId, sectionId, chapterId } = query;
+  const { projectSlug, sectionId, chapterId } = query;
 
   let slug = routes.home;
 
@@ -46,19 +46,15 @@ const getProjectPageProps = async (context: any) => {
     slug = `/projects/${projectSlug}`;
   }
 
-  const seoMeta = getSEOMeta(slug);
-
-  if (projectId && seoMeta) {
+  if (projectSlug) {
     try {
-      // Authenticate user
       const user = await isUserAuthenticated(req);
 
-      // Fetch project data using the new route builder function
       const { status, data } = await fetchAPIData(
-        routes.api.projectByIdWithUser(projectId, user?.id)
+        routes.api.projectBySlugWithUser(projectSlug, user?.id)
       );
 
-      // If the project data is not found, redirect to
+      // If the project data is not found, return the message
       if (!status) {
         return {
           redirect: {
@@ -69,10 +65,14 @@ const getProjectPageProps = async (context: any) => {
       }
 
       const project: ProjectPickedPageProps = data;
-      let { meta } = project;
+
+      const seoMeta = getSEOMeta(slug);
+
+      // Determine which chapter to show
+      let meta = project.meta || '';
       let currentChapterId = '';
 
-      // If section and chapter IDs are provided, get specific chapter metadata
+      // If section and chapter IDs are provided in URL, use those
       if (sectionId && chapterId) {
         currentChapterId = chapterId;
 
@@ -84,6 +84,21 @@ const getProjectPageProps = async (context: any) => {
 
         if (selectedChapterMeta) {
           meta = selectedChapterMeta;
+        }
+      } else {
+        // No specific chapter requested - find the first incomplete chapter or first chapter
+        const allChapters = project.sections.flatMap((section) => section.chapters);
+        const firstIncompleteChapter = allChapters.find((chapter) => !chapter.isCompleted);
+        
+        if (firstIncompleteChapter) {
+          // Show first incomplete chapter
+          currentChapterId = firstIncompleteChapter.chapterId.toString();
+          meta = firstIncompleteChapter.content;
+        } else if (allChapters.length > 0) {
+          // All chapters completed, show first chapter
+          const firstChapter = allChapters[0];
+          currentChapterId = firstChapter.chapterId.toString();
+          meta = firstChapter.content;
         }
       }
 
@@ -101,7 +116,6 @@ const getProjectPageProps = async (context: any) => {
     }
   }
 
-  // Redirect to  if projectId is missing or seoMeta is not set
   return {
     redirect: {
       destination: routes.home,
@@ -166,7 +180,7 @@ const getPlaylistPageProps = async (context: any) => {
 
 const getCoursePageProps = async (context: any) => {
   const { req, query } = context;
-  const { courseSlug, courseId, chapterId } = query;
+  const { courseSlug } = query;
 
   let slug = routes.home;
 
@@ -174,12 +188,12 @@ const getCoursePageProps = async (context: any) => {
     slug = `/shiksha/${courseSlug}`;
   }
 
-  if (courseId) {
+  if (courseSlug) {
     try {
       const user = await isUserAuthenticated(req);
 
       const { status, data } = await fetchAPIData(
-        routes.api.courseByIdWithUser(courseId, user?.id)
+        routes.api.courseBySlugWithUser(courseSlug, user?.id)
       );
 
       // If the course data is not found, return the message
@@ -211,28 +225,21 @@ const getCoursePageProps = async (context: any) => {
         title: `${name} | Shiksha | The Boring Education`,
         siteName: 'Shiksha The Boring Education',
         description,
-        url: `${routes.shiksha}/${slug}`,
+        url: `${routes.shiksha}/${courseSlug}`,
         keywords:
           'Shiksha online courses, advanced programming tutorials, free tech education, career development for professionals, skill enhancement programs, coding bootcamps, tech webinars, online learning for college students, GitHub projects, tech career growth, free certifications, free courses',
         ...seoCommonMeta,
       };
 
-      let { meta } = course;
+      // Always show the first chapter by default
+      const firstChapter = course.chapters?.[0];
+      let meta = course.meta || '';
       let currentChapterId = '';
 
-      if (chapterId) {
-        currentChapterId = chapterId;
-
-        const selectedChapterMeta = getSelectedCourseChapterMeta(
-          course,
-          chapterId
-        );
-
-        if (selectedChapterMeta) meta = selectedChapterMeta;
+      if (firstChapter) {
+        currentChapterId = firstChapter._id.toString();
+        meta = firstChapter.content;
       }
-
-      const isEnrolled = await checkUserCourseEnrollment(courseId, user?.id);
-      course.isEnrolled = isEnrolled;
 
       return {
         props: {
@@ -241,7 +248,6 @@ const getCoursePageProps = async (context: any) => {
           course,
           meta,
           currentChapterId,
-          isEnrolled,
         },
       };
     } catch (error) {

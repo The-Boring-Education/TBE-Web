@@ -141,6 +141,9 @@ export interface AddInterviewSheetRequestPayloadProps {
   slug: string;
   meta?: string;
   roadmap: RoadmapsType;
+  isPremium?: boolean;
+  price?: number;
+  features?: string[];
 }
 
 export interface UpdateInterviewSheetRequestPayloadProps {
@@ -407,6 +410,8 @@ export interface AddPaymentToDBRequestPayloadProps {
   amount: number;
   orderId: string;
   paymentLink: string;
+  appliedCoupon?: string;
+  couponCode?: string;
 }
 
 export interface BuildOrderPayloadProps {

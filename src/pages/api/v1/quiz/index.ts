@@ -4,6 +4,7 @@ import {
   addAQuizToDB,
   getQuizCategoriesFromDB,
   getQuizCategoriesWithCountsFromDB,
+  appendQuestionsToQuizInDB,
 } from '@/database/query/quiz';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
@@ -31,12 +32,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleGetCategories(req: NextApiRequest, res: NextApiResponse) {
-  const { withCounts } = req.query;
+  const { withCounts, includeInactive } = req.query;
 
   const useCounts = typeof withCounts === 'string' ? withCounts === 'true' : false;
+  const includeInactiveQuizzes = typeof includeInactive === 'string' ? includeInactive === 'true' : false;
+  
   const { data, error } = useCounts
-    ? await getQuizCategoriesWithCountsFromDB()
-    : await getQuizCategoriesFromDB();
+    ? await getQuizCategoriesWithCountsFromDB(includeInactiveQuizzes)
+    : await getQuizCategoriesFromDB(includeInactiveQuizzes);
 
   if (error) {
     return res.status(400).json({ error });
@@ -47,7 +50,7 @@ async function handleGetCategories(req: NextApiRequest, res: NextApiResponse) {
 
 async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   const {
-    categoryId,
+    quizId,
     categoryName,
     categoryDescription,
     categoryIcon,
@@ -55,9 +58,30 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
     isActive = true,
   } = req.body;
 
-  // Basic validation
+  // If quizId is provided, append to existing quiz
+  if (quizId) {
+    if (!questions || !Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({
+        error: 'Missing required fields for append: questions',
+      });
+    }
+    
+    // Append questions to existing quiz
+    const { data, error } = await appendQuestionsToQuizInDB(quizId, questions);
+    
+    if (error) {
+      return res.status(400).json({ error });
+    }
+    
+    return res.status(200).json({ 
+      success: true, 
+      data,
+      message: `Successfully appended ${questions.length} questions to quiz`
+    });
+  }
+
+  // Basic validation for new quiz creation
   if (
-    !categoryId ||
     !categoryName ||
     !categoryDescription ||
     !categoryIcon ||
@@ -65,7 +89,7 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   ) {
     return res.status(400).json({
       error:
-        'Missing required fields: categoryId, categoryName, categoryDescription, categoryIcon, questions',
+        'Missing required fields: categoryName, categoryDescription, categoryIcon, questions',
     });
   }
 
@@ -154,7 +178,6 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const quizData = {
-    categoryId,
     categoryName,
     categoryDescription,
     categoryIcon,

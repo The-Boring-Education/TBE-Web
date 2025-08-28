@@ -129,11 +129,7 @@ const handleDeleteChallenge = async (req: NextApiRequest, res: NextApiResponse) 
       );
     }
     
-    const deletedChallenge = await Challenge.findByIdAndUpdate(
-      id,
-      { isActive: false },
-      { new: true }
-    );
+    const deletedChallenge = await Challenge.findByIdAndDelete(id);
     
     if (!deletedChallenge) {
       return res.status(apiStatusCodes.NOT_FOUND).json(
@@ -147,7 +143,7 @@ const handleDeleteChallenge = async (req: NextApiRequest, res: NextApiResponse) 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        message: 'Challenge deactivated successfully',
+        message: 'Challenge permanently deleted successfully',
       })
     );
   } catch (error) {

@@ -113,7 +113,7 @@ const mapProjectResponseToCard = (
         imageAltText: name,
         title: name,
         content: description,
-        href: `/projects/${slug}?projectId=${_id}`,
+        href: `/projects/${slug}`,
         active: isActive,
         ctaText,
       };
@@ -227,7 +227,7 @@ const mapCourseResponseToCard = (
         title: name,
         imageAltText: name,
         content: description,
-        href: `/shiksha/${slug}/?courseId=${_id}`,
+        href: `/shiksha/${slug}`,
         isEnrolled,
         active: isActive,
         ctaText,

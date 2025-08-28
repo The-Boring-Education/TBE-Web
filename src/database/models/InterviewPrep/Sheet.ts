@@ -76,6 +76,17 @@ const InterviewSheetSchema = new Schema<InterviewSheetModel>(
     price: {
       type: Number,
     },
+    discountPercentage: {
+      type: Number,
+      min: [0, 'Discount percentage cannot be negative'],
+      max: [100, 'Discount percentage cannot exceed 100%'],
+      default: 0,
+    },
+    appliedCoupon: {
+      type: Schema.Types.ObjectId,
+      ref: 'Coupon',
+      default: null,
+    },
     questions: [questionSchema],
     roadmap: {
       type: String,

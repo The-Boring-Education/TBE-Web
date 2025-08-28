@@ -26,8 +26,12 @@ const DATABASE_MODELS = {
   MENTORSHIP: 'Mentorship',
   QUIZ: 'Quiz',
   QUIZ_ATTEMPT: 'QuizAttempt',
+  QUIZ_SESSION: 'QuizSession',
+  USER_QUESTION_PERFORMANCE: 'UserQuestionPerformance',
+  USER_QUIZ_ANALYTICS: 'UserQuizAnalytics',
   LEADERBOARD: 'Leaderboard',
-  USER_INTEREST: 'UserInterest'
+  USER_INTEREST: 'UserInterest',
+  COUPON: 'Coupon'
 };
 
 export const FEEDBACK_TYPES = [

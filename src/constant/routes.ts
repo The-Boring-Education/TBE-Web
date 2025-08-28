@@ -4,8 +4,6 @@ const routes = {
   home: '/',
   login: '/login',
   onboarding: '/onboarding',
-  // Campus Connect & DevRel
-  campusConnect: '/campus-connect',
   // Topmate Sessions
   topmateSessions: '/topmate-sessions',
   // Shiksha
@@ -41,6 +39,7 @@ const routes = {
   },
   // PrepYatra
   prepYatra: 'https://prepyatra.theboringeducation.com/',
+  devRels: 'https://devrel.theboringeducation.com/',
 
   certificate: '/certificate',
   contactUs: '/contact',
@@ -101,12 +100,18 @@ const routes = {
     submitUserFeedback: '/feedback',
     createOrder: '/payment/create-order',
     checkStatus: '/payment/checkstatus',
+    validateCoupon: '/coupon/validate',
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {
       let url = `/shiksha/${course}`;
       if (userId) {
         url += `?userId=${userId}`;
       }
+      return url;
+    },
+    courseBySlugWithUser: (slug: string, userId?: string) => {
+      let url = `/shiksha?slug=${slug}`;
+      if (userId) url += `&userId=${userId}`;
       return url;
     },
     sheetByIdWithUser: (slug: string, userId?: string, sheetId?: string) => {
@@ -122,6 +127,11 @@ const routes = {
       if (userId) {
         url += `?userId=${userId}`;
       }
+      return url;
+    },
+    projectBySlugWithUser: (slug: string, userId?: string) => {
+      let url = `/projects?slug=${slug}`;
+      if (userId) url += `&userId=${userId}`;
       return url;
     },
     gamification: '/gamification',

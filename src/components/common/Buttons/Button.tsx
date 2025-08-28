@@ -98,7 +98,8 @@ const Button = ({
   let baseClasses = 'button px-2 py-1';
   baseClasses = getButtonClasses(baseClasses, variant, active);
 
-  const loadingContainer = isLoading && (
+  // Hide loading spinner but keep functionality
+  const loadingContainer = false && isLoading && (
     <LoadingSpinner borderColour='white' height={3} width={3} />
   );
 
@@ -126,6 +127,23 @@ const Button = ({
     }
   };
 
+  // Optimized click handler with immediate feedback
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) {
+      // Add immediate visual feedback
+      const target = e.currentTarget;
+      target.style.transform = 'scale(0.95)';
+      target.style.transition = 'transform 0.05s ease-out';
+      
+      setTimeout(() => {
+        target.style.transform = '';
+        target.style.transition = '';
+      }, 50);
+      
+      onClick(e);
+    }
+  };
+
   return (
     <motion.div
       className={`${animationClasses} ${isFullWidth ? 'w-full' : ''}`}
@@ -133,7 +151,7 @@ const Button = ({
       <motion.button
         className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-2`}
         disabled={!active || isLoading}
-        onClick={onClick}
+        onClick={handleClick}
         {...getAnimationVariant()}
       >
         {loadingContainer}
