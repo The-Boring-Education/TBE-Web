@@ -30,11 +30,17 @@ import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
 import Coupon from './models/Coupon';
+import EmailCampaign from './models/EmailCampaign';
+import EmailLog from './models/EmailLog';
+import EmailTemplate from './models/EmailTemplate';
 export {
   Certificate,
   Challenge,
   ChallengeLog,
   Course,
+  EmailCampaign,
+  EmailLog,
+  EmailTemplate,
   Feedback,
   Gamification,
   InterviewSheet,
