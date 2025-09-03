@@ -177,8 +177,21 @@ export const getLeaderboardFromDB = async (
   try {
     const attempts = await QuizAttempt.aggregate([
       {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $unwind: '$user'
+      },
+      {
         $group: {
           _id: '$userId',
+          username: { $first: '$user.name' },
+          image: { $first: '$user.image' },
           bestScore: { $max: '$score' },
           totalAttempts: { $sum: 1 },
           averageScore: { $avg: '$score' },
