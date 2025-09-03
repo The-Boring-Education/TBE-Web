@@ -119,6 +119,16 @@ const UserSchema: Schema<UserModel> = new Schema(
       type: Date,
       default: null,
     },
+    from: {
+      type: String,
+      enum: [
+        'webapp',           // From main webapp
+        'prepyatra',        // From PrepYatra platform
+        'quiz',             // From quiz app
+        'direct'            // Direct onboarding (existing users)
+      ],
+      default: 'direct'
+    },
     prepYatra: PrepYatraSchema,
   },
   { timestamps: true }
