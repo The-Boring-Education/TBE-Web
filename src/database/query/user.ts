@@ -83,9 +83,12 @@ const onboardUserToDB = async (
       isOnboarded: true,
     };
 
-    // Add from if provided
+    // Only add 'from' if it doesn't already exist
     if (from) {
-      updateData.from = from;
+      const existingUser = await User.findById(userId);
+      if (!existingUser?.from) {
+        updateData.from = from;
+      }
     }
 
     const user = await User.findByIdAndUpdate(
@@ -116,9 +119,12 @@ const onboardPrepYatraUserTODB = async (
     },
   };
 
-  // Add from if provided
+  // Only add 'from' if it doesn't already exist
   if (from) {
-    updateData.from = from;
+    const existingUser = await User.findById(userId);
+    if (!existingUser?.from) {
+      updateData.from = from;
+    }
   }
 
   const user = await User.findByIdAndUpdate(
