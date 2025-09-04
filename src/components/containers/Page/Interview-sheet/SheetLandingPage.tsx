@@ -228,12 +228,17 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                   <FaUsers className='text-blue-400' />
                   <span>Beginner to Advanced</span>
                 </div>
-                {sheet.isPremium && (
+                {isPurchased ? (
+                  <div className='flex items-center gap-2'>
+                    <FaCheckCircle className='text-green-400' />
+                    <span>Full Access Unlocked</span>
+                  </div>
+                ) : sheet.isPremium ? (
                   <div className='flex items-center gap-2'>
                     <FaStar className='text-yellow-400' />
                     <span>Premium Content</span>
                   </div>
-                )}
+                ) : null}
               </div>
 
               {/* Action Buttons */}
@@ -241,18 +246,23 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                 {!isAuth ? (
                   <LoginRedirectButton text='Login to Get Started' />
                 ) : (
-                                      <Button
-                      text={
-                        loading ? 'Loading...' : 
-                        canStartNow ? 'Start Practicing Now' :
-                        !sheet?.isEnrolled && !sheet?.isPremium ? 'Enroll for Free' :
-                        'Unlock Full Access'
-                      }
-                      variant='PRIMARY'
-                      className='bg-red-500 text-white hover:bg-red-600 px-4 py-2 text-base font-semibold'
-                      onClick={handleStartNow}
-                      isLoading={loading}
-                    />
+                  <Button
+                    text={
+                      loading ? 'Loading...' : 
+                      isPurchased ? 'Start Practicing Now' :
+                      canStartNow ? 'Start Practicing Now' :
+                      !sheet?.isEnrolled && !sheet?.isPremium ? 'Enroll for Free' :
+                      'Unlock Full Access'
+                    }
+                    variant={isPurchased ? 'SUCCESS' : 'PRIMARY'}
+                    className={`px-4 py-2 text-base font-semibold ${
+                      isPurchased 
+                        ? 'bg-green-500 text-white hover:bg-green-600' 
+                        : 'bg-red-500 text-white hover:bg-red-600'
+                    }`}
+                    onClick={handleStartNow}
+                    isLoading={loading}
+                  />
                 )}
                 
                 {sheet?.isPremium && !isPurchased && (
@@ -354,7 +364,9 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                   </div>
                   
                   <Text level='p' className='text-gray-600 mb-4'>
-                    {isLocked 
+                    {isPurchased 
+                      ? 'You have full access to all questions! Continue practicing to master your skills.'
+                      : isLocked 
                       ? 'Unlock premium access to view all questions with detailed solutions and explanations.'
                       : 'More questions are waiting for you after enrollment!'
                     }
@@ -362,22 +374,43 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
 
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-4'>
                     {lockedQuestions.slice(0, 6).map((q, index) => (
-                      <div key={q._id.toString()} className='flex items-center gap-3 p-3 bg-white rounded border opacity-60'>
-                        <FaLock className='text-gray-400 text-sm' />
-                        <Text level='p' className='text-gray-500 text-sm truncate'>
+                      <div key={q._id.toString()} className={`flex items-center gap-3 p-3 rounded border ${
+                        isPurchased 
+                          ? 'bg-green-50 border-green-200' 
+                          : 'bg-white opacity-60'
+                      }`}>
+                        {isPurchased ? (
+                          <FaCheckCircle className='text-green-500 text-sm' />
+                        ) : (
+                          <FaLock className='text-gray-400 text-sm' />
+                        )}
+                        <Text level='p' className={`text-sm truncate ${
+                          isPurchased ? 'text-green-700' : 'text-gray-500'
+                        }`}>
                           {previewQuestions.length + index + 1}. {q.title}
                         </Text>
                       </div>
                     ))}
                   </div>
 
-                  {isLocked && (
+                  {isLocked && !isPurchased && (
                     <Button
                       text={`Unlock All ${sheet.questions?.length} Questions - ${priceBreakdown ? formatPrice(priceBreakdown.finalPrice) : formatPrice(sheet.price || 0)}`}
                       variant='PRIMARY'
                       onClick={handleShowPayment}
                       className='w-full px-4 py-2 text-sm bg-red-500 text-white hover:bg-red-600'
                     />
+                  )}
+                  {isPurchased && (
+                    <div className='bg-green-50 border border-green-200 rounded-lg p-3 text-center'>
+                      <div className='flex items-center justify-center gap-2 text-green-700 mb-2'>
+                        <FaCheckCircle className='text-sm' />
+                        <Text level='p' className='text-sm font-medium'>All Questions Unlocked</Text>
+                      </div>
+                      <Text level='p' className='text-xs text-green-600'>
+                        You can now access all {sheet.questions?.length} questions and start practicing!
+                      </Text>
+                    </div>
                   )}
                 </div>
               )}
@@ -390,7 +423,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                 {/* Action Card */}
                 <div className='bg-white rounded-lg border shadow-lg p-5'>
                   <div className='text-center space-y-3'>
-                    {sheet?.isPremium && (
+                    {sheet?.isPremium && !isPurchased && (
                       <div className='flex items-center justify-center gap-2 flex-wrap'>
                         <div className='bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-medium'>
                           Premium Content
@@ -405,7 +438,21 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                     )}
                     
                     <div>
-                      {!sheet?.isPremium ? (
+                      {isPurchased ? (
+                        <div className='space-y-2'>
+                          <Text level='p' className='text-2xl font-bold text-green-600'>Purchased</Text>
+                          <Text level='p' className='text-sm text-gray-600'>Lifetime Access</Text>
+                          <div className='bg-green-50 border border-green-200 rounded-lg p-3 mt-3'>
+                            <div className='flex items-center gap-2 text-green-700'>
+                              <FaCheckCircle className='text-sm' />
+                              <Text level='p' className='text-sm font-medium'>Full Access Granted</Text>
+                            </div>
+                            <Text level='p' className='text-xs text-green-600 mt-1'>
+                              You can access all {sheet.questions?.length || 0} questions and solutions
+                            </Text>
+                          </div>
+                        </div>
+                      ) : !sheet?.isPremium ? (
                         <Text level='p' className='text-2xl font-bold text-gray-900'>Free</Text>
                       ) : priceBreakdown ? (
                         <div className='space-y-2'>
@@ -433,7 +480,7 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                           {formatPrice(sheet.price || 0)}
                         </Text>
                       )}
-                      {sheet?.isPremium && (
+                      {sheet?.isPremium && !isPurchased && (
                         <Text level='p' className='text-sm text-gray-600'>Lifetime Access</Text>
                       )}
                     </div>
@@ -466,8 +513,8 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                       </div>
                     )}
 
-                    {/* Coupon Input */}
-                    {sheet?.isPremium && !appliedCoupon && (
+                    {/* Coupon Input - Only show if sheet is premium and not purchased */}
+                    {sheet?.isPremium && !appliedCoupon && !isPurchased && (
                       <div className='bg-blue-50 rounded-lg p-3 text-center'>
                         <div className='flex items-center justify-center gap-2 mb-3'>
                           <FaTags className='text-blue-500 text-sm' />
@@ -497,8 +544,8 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                       </div>
                     )}
 
-                    {/* Applied Coupon Display */}
-                    {sheet?.isPremium && appliedCoupon && (
+                    {/* Applied Coupon Display - Only show if sheet is premium and not purchased */}
+                    {sheet?.isPremium && appliedCoupon && !isPurchased && (
                       <div className='bg-green-50 rounded-lg p-3 text-left'>
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center gap-2'>
@@ -528,13 +575,18 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
                       <Button
                         text={
                           loading ? 'Loading...' :
+                          isPurchased ? 'Start Practicing Now' :
                           canStartNow ? 'Start Now' :
                           !sheet?.isEnrolled && !sheet?.isPremium ? 'Enroll Free' :
                           priceBreakdown ? `Purchase Access - ${formatPrice(priceBreakdown.finalPrice)}` :
                           'Purchase Access'
                         }
-                        variant='PRIMARY'
-                        className='w-full px-4 py-2 text-sm font-semibold bg-red-500 text-white hover:bg-red-600'
+                        variant={isPurchased ? 'SUCCESS' : 'PRIMARY'}
+                        className={`w-full px-4 py-2 text-sm font-semibold ${
+                          isPurchased 
+                            ? 'bg-green-500 text-white hover:bg-green-600' 
+                            : 'bg-red-500 text-white hover:bg-red-600'
+                        }`}
                         onClick={handleStartNow}
                         isLoading={loading}
                       />

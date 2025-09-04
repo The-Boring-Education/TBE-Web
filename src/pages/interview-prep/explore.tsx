@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from 'react';
+import { Fragment, useMemo, useState, useEffect } from 'react';
 
 import {
   CardContainerB,
@@ -10,7 +10,7 @@ import {
   Text,
 } from '@/components';
 import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
-import { useApi, useAPIResponseMapper } from '@/hooks';
+import { useApi, useAPIResponseMapper, useUser, usePaymentStatus } from '@/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
 import { getPreFetchProps, mapInterviewSheetResponseToCard } from '@/utils';
 
@@ -18,11 +18,53 @@ const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('interview-prep', {
     url: routes.api.interviewPrep,
   });
+  const { user } = useUser();
+  const [purchaseStatuses, setPurchaseStatuses] = useState<Record<string, boolean>>({});
 
-  const sheets: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
-    response?.data,
-    mapInterviewSheetResponseToCard
-  );
+  // Check purchase status for each premium sheet
+  useEffect(() => {
+    if (response?.data && user?.id) {
+      const checkPurchaseStatuses = async () => {
+        const statuses: Record<string, boolean> = {};
+        
+        for (const sheet of response.data) {
+          if (sheet.isPremium) {
+            try {
+              const response = await fetch(
+                `${routes.api.base}${routes.api.checkStatus}?userId=${user.id}&productId=${sheet._id}`,
+                { method: 'GET' }
+              );
+              const result = await response.json();
+              statuses[sheet._id] = result.status && result.data?.purchased;
+            } catch (error) {
+              statuses[sheet._id] = false;
+            }
+          } else {
+            statuses[sheet._id] = false; // Free sheets are not "purchased", they're just free
+          }
+        }
+        
+        setPurchaseStatuses(statuses);
+      };
+
+      checkPurchaseStatuses();
+    }
+  }, [response?.data, user?.id]);
+
+  const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
+    if (!response?.data) return [];
+    
+    return response.data.map((sheet: any) => {
+      const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
+      const isPurchased = purchaseStatuses[sheet._id] || false;
+      
+      return {
+        ...baseCard,
+        isPurchased: sheet.isPremium ? isPurchased : false, // Only premium sheets can be purchased
+        isPremium: sheet.isPremium && !isPurchased, // Only show premium if not purchased
+      };
+    });
+  }, [response?.data, purchaseStatuses]);
 
   // Group by roadmap/domain for structured sections
   const groupedByRoadmap = useMemo(() => {
