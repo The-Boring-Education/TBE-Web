@@ -75,6 +75,8 @@ const handleAnalyticsRequest = async (
         return await getLearningPatternAnalytics(res, dateRange);
       case 'platform-health':
         return await getPlatformHealthMetrics(res, dateRange);
+      case 'user-sources':
+        return await getUserSourceAnalytics(res, dateRange);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
@@ -687,6 +689,116 @@ const getPlatformHealthMetrics = async (
       },
     })
   );
+};
+
+const getUserSourceAnalytics = async (
+  res: NextApiResponse,
+  dateRange: { start: Date; end: Date }
+) => {
+  try {
+    const { start, end } = dateRange;
+    
+    // Get user source breakdown
+    const sourceBreakdown = await User.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: start,
+            $lte: end,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$from',
+          userCount: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { userCount: -1 },
+      },
+    ]);
+
+    // Get total users in date range
+    const totalUsers = await User.countDocuments({
+      createdAt: {
+        $gte: start,
+        $lte: end,
+      },
+    });
+
+    // Calculate percentages and format data
+    const sourceBreakdownWithPercentage = sourceBreakdown.map((item) => ({
+      source: item._id || 'direct',
+      userCount: item.userCount,
+      percentage: totalUsers > 0 ? parseFloat(((item.userCount / totalUsers) * 100).toFixed(2)) : 0,
+    }));
+
+    // Find top source
+    const topSource = sourceBreakdownWithPercentage.length > 0 
+      ? sourceBreakdownWithPercentage[0] 
+      : { source: 'direct', userCount: 0, percentage: 0 };
+
+    // Get 7-day growth for each source
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const previousWeekSourceBreakdown = await User.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: sevenDaysAgo,
+            $lt: start,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$from',
+          userCount: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // Calculate growth for each source
+    const sourceBreakdownWithGrowth = sourceBreakdownWithPercentage.map((current) => {
+      const previous = previousWeekSourceBreakdown.find(p => p._id === current.source);
+      const previousCount = previous ? previous.userCount : 0;
+      const growth = previousCount > 0 
+        ? parseFloat((((current.userCount - previousCount) / previousCount) * 100).toFixed(2))
+        : current.userCount > 0 ? 100 : 0;
+
+      return {
+        ...current,
+        growth,
+      };
+    });
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data: {
+          sourceBreakdown: sourceBreakdownWithGrowth,
+          totalUsers,
+          topSource: topSource.source,
+          topSourceCount: topSource.userCount,
+          topSourcePercentage: topSource.percentage,
+          dateRange: {
+            startDate: start.toISOString(),
+            endDate: end.toISOString(),
+          },
+        },
+      })
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Error fetching user source analytics',
+        error,
+      })
+    );
+  }
 };
 
 export default handler;

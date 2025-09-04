@@ -225,11 +225,13 @@ export interface AddOnboardingPayloadProps {
   occupation: UserRoleType;
   purpose: PlatformUsageType[];
   contactNo: string;
+  from?: string;
 }
 export interface AddPrepYatraOnboardingPayloadProps {
   userId: string;
   linkedInUrl: string;
   workDomain: WorkDomainType;
+  from?: string;
 }
 export interface CourseEnrollmentRequestProps {
   courseId: string;
