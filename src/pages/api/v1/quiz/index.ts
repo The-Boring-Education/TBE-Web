@@ -185,10 +185,10 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
     isActive,
   };
 
-  const { data, error } = await addAQuizToDB(quizData);
+  const { data, error, details } = await addAQuizToDB(quizData);
 
   if (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error, details });
   }
 
   return res.status(201).json({ success: true, data });
