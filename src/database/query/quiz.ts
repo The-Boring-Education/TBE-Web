@@ -12,7 +12,7 @@ const addAQuizToDB = async (
     await quiz.save();
     return { data: quiz };
   } catch (error) {
-    return { error: 'Failed while adding quiz' };
+    return { error: 'Failed while adding quiz', details: error };
   }
 };
 
