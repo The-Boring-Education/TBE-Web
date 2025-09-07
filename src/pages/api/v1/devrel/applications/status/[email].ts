@@ -51,8 +51,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           email: application.email,
           status: application.status,
           submittedAt: application.createdAt,
-          reviewedAt: application.reviewedAt,
-          approvedAt: application.approvedAt,
           rejectedAt: application.rejectedAt,
           rejectionReason: application.rejectionReason,
           interviewDate: application.interviewData?.scheduledAt,
