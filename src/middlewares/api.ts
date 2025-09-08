@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { envConfig } from '@/constant';
+import { envConfig, apiStatusCodes } from '@/constant';
+import { sendAPIResponse } from '@/utils';
 
 // Connect to DB
 const connectDB = async () => {
@@ -12,4 +14,36 @@ const connectDB = async () => {
   }
 };
 
-export { connectDB };
+// Admin authentication middleware
+const adminMiddleware = async (
+  req: NextApiRequest, 
+  res: NextApiResponse
+): Promise<boolean> => {
+  try {
+    const adminHeader = req.headers['x-admin-secret'];
+    const expectedSecret = process.env.ADMIN_SECRET || 'TBEAdmin';
+    
+    if (!adminHeader || adminHeader !== expectedSecret) {
+      res.status(apiStatusCodes.UNAUTHORIZED).json(
+        sendAPIResponse({ 
+          status: false, 
+          message: 'Unauthorized. Admin access required.' 
+        })
+      );
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: 'Admin authentication error',
+        error,
+      })
+    );
+    return false;
+  }
+};
+
+export { connectDB, adminMiddleware };
