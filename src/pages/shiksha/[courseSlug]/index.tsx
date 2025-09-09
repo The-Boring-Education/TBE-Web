@@ -48,6 +48,7 @@ const CoursePage = ({
       ?.isCompleted
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [isGeneratingCertificate, setIsGeneratingCertificate] = useState(false);
   const [isCourseCompleted, setIsCourseCompleted] = useState(
     course.isCompleted ?? false
   );
@@ -68,6 +69,51 @@ const CoursePage = ({
     (chapter) => chapter.isCompleted
   ).length;
 
+  // Check if all chapters are completed and update course completion status
+  const checkCourseCompletion = () => {
+    const allChaptersCompleted = chapters.length > 0 && chapters.every(chapter => chapter.isCompleted);
+    if (allChaptersCompleted && !isCourseCompleted) {
+      setIsCourseCompleted(true);
+    }
+  };
+
+  // Generate certificate if all chapters are completed but no certificate exists
+  const generateCertificateIfNeeded = async () => {
+    const allChaptersCompleted = chapters.length > 0 && chapters.every(chapter => chapter.isCompleted);
+    if (allChaptersCompleted && !certificateId && user?.id && !isGeneratingCertificate) {
+      setIsGeneratingCertificate(true);
+      try {
+        const { status, data } = await makeRequest({
+          method: 'POST',
+          url: routes.api.certificate,
+          body: {
+            type: 'SHIKSHA',
+            userId: user.id,
+            userName: user.name,
+            programId: course._id,
+            programName: course.name,
+            date: formatDate({
+              dateFormat: {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              },
+            }).date,
+          } as AddCertificateRequestPayloadProps,
+        });
+
+        if (status && data?._id) {
+          setCertificateId(data._id);
+          console.log('Certificate generated:', data._id);
+        }
+      } catch (error) {
+        console.error('Error generating certificate:', error);
+      } finally {
+        setIsGeneratingCertificate(false);
+      }
+    }
+  };
+
   useEffect(() => {
     const currentChapter = chapters.find(
       (chapter) => chapter._id.toString() === currentChapterIdState
@@ -77,6 +123,12 @@ const CoursePage = ({
     if (currentChapter) {
       setCourseMeta(currentChapter.content);
     }
+
+    // Check course completion status
+    checkCourseCompletion();
+
+    // Generate certificate if needed
+    generateCertificateIfNeeded();
 
     // Show feedback popup if all chapters are completed
     const allCompleted =
@@ -103,6 +155,13 @@ const CoursePage = ({
 
     setShowChapterFeedback(allCompleted);
   }, [currentChapterIdState, chapters]);
+
+  // Generate certificate when user is available and all chapters are completed
+  useEffect(() => {
+    if (user?.id && chapters.length > 0) {
+      generateCertificateIfNeeded();
+    }
+  }, [user?.id, chapters, certificateId]);
 
   const { makeRequest } = useApi(`shiksha/${slug}`);
   const { trackEvent } = useAnalytics();
@@ -194,6 +253,12 @@ const CoursePage = ({
 
         setChapters(updatedChapters);
         setIsChapterCompleted(newCompletionStatus);
+
+        // Check if course is now completed
+        const allChaptersCompleted = updatedChapters.every(chapter => chapter.isCompleted);
+        if (allChaptersCompleted && !isCourseCompleted) {
+          setIsCourseCompleted(true);
+        }
 
         // Move to next chapter if completed
         if (newCompletionStatus) {
@@ -349,19 +414,23 @@ const CoursePage = ({
                         isCourseCompleted ? 'bg-purple-600' : 'bg-purple-400'
                       }
                       heading={
-                        isCourseCompleted
+                        isGeneratingCertificate
+                          ? 'Generating Certificate...'
+                          : isCourseCompleted
                           ? 'View Certificate'
                           : 'Certificate Locked'
                       }
                       icon={isCourseCompleted ? FaTrophy : FaLock}
-                      isLocked={!isCourseCompleted}
+                      isLocked={!isCourseCompleted || isGeneratingCertificate}
                       subtext={
-                        isCourseCompleted
+                        isGeneratingCertificate
+                          ? 'Please wait while we generate your certificate.'
+                          : isCourseCompleted
                           ? 'Click below to download your certificate.'
                           : 'Complete All to Get Your Certificate.'
                       }
                       onClick={() => {
-                        if (isCourseCompleted) {
+                        if (isCourseCompleted && certificateId && !isGeneratingCertificate) {
                           router.push(`/certificate/${certificateId}`);
                         }
                       }}
