@@ -158,6 +158,18 @@ const updateUserSkillsInDB = async (
   }
 };
 
+
+const getUserDataByUserNameFromDB = async (
+  userName: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const user = await User.findOne({ userName });
+    return { data: user };
+  } catch (error) {
+    return { error: 'Failed to fetch user from DB' };
+  }
+};
+
 export {
   createUserInDB,
   getUserByEmailFromDB,
@@ -166,4 +178,5 @@ export {
   onboardPrepYatraUserTODB,
   onboardUserToDB,
   updateUserSkillsInDB,
+  getUserDataByUserNameFromDB
 };
