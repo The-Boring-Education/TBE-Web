@@ -47,6 +47,10 @@ export { default as Page } from "./Page"
 export { default as Section } from "./Section"
 export { default as SEO } from "./SEO"
 
+// Standardized Layout Components (NEW - Use these for consistent UI)
+export { default as StandardizedNavbar } from "./StandardizedNavbar"
+export { default as StandardizedFooter } from "./StandardizedFooter"
+
 // Loading Components
 export { default as LoadingIndicator } from "./LoadingIndicator"
 export { default as LoadingSpinner } from "./LoadingSpinner"
@@ -77,6 +81,53 @@ export { default as GamificationToast } from "./GamificationToast"
 
 // MDX Components
 export { default as MDXRenderer } from "./MDXRenderer"
+
+// === APP-SPECIFIC COMPONENTS ===
+
+// PrepYatra Components
+export { default as ChallengeCard } from "./PrepYatra/Cards/ChallengeCard"
+export { default as ChallengeShareCard } from "./PrepYatra/Cards/ChallengeShareCard"
+export { default as FeatureCards } from "./PrepYatra/Cards/FeatureCards"
+
+export { default as BuildYourStack } from "./PrepYatra/Features/BuildYourStack"
+export { default as ChallengeSection } from "./PrepYatra/Features/ChallengeSection"
+export { default as DailyPrepEncouragement } from "./PrepYatra/Features/DailyPrepEncouragement"
+export { default as PrepYatraHero } from "./PrepYatra/Features/Hero"
+export { default as InstallButton } from "./PrepYatra/Features/InstallButton"
+export { default as MotivationalBoost } from "./PrepYatra/Features/MotivationalBoost"
+export { default as PrepLogsList } from "./PrepYatra/Features/PrepLogsList"
+export { default as RecruiterContactsTable } from "./PrepYatra/Features/RecruiterContactsTable"
+
+export { default as ProtectedRoute } from "./PrepYatra/Auth/ProtectedRoute"
+export { default as PublicRoute } from "./PrepYatra/Auth/PublicRoute"
+
+export { default as PrepYatraNavbar } from "./PrepYatra/Layout/Navbar"
+export { default as PrepYatraFooter } from "./PrepYatra/Layout/Footer"
+export { default as Navigation } from "./PrepYatra/Layout/Navigation"
+
+export { default as PrepYatraGamificationBadge } from "./PrepYatra/Gamification/GamificationBadge"
+export { default as PrepYatraGamificationDisplay } from "./PrepYatra/Gamification/GamificationDisplay"
+
+// Quizes Components
+export { default as QuizNavbar } from "./Quizes/Layout/Navbar"
+export { default as QuizFooter } from "./Quizes/Layout/Footer"
+export { default as QuizLayout } from "./Quizes/Layout/Layout"
+export { default as DashboardNav } from "./Quizes/Layout/DashboardNav"
+
+export { default as ClientAuth } from "./Quizes/Auth/ClientAuth"
+export { default as QuizProtectedRoute } from "./Quizes/Auth/ProtectedRoute"
+
+export { default as QuizGamificationCard } from "./Quizes/Gamification/GamificationCard"
+export { default as GamificationWrapper } from "./Quizes/Gamification/GamificationWrapper"
+export { default as PointsDisplay } from "./Quizes/Gamification/PointsDisplay"
+
+export { default as CodeRenderer } from "./Quizes/Common/CodeRenderer"
+export { default as MarkdownRenderer } from "./Quizes/Common/MarkdownRenderer"
+
+// Onboarding Components
+export { default as OnboardingNavbar } from "./Onboarding/Layout/Navbar"
+export { default as OnboardingLayout } from "./Onboarding/Layout/OnboardingLayout"
+export { default as OnboardingForm } from "./Onboarding/Core/OnboardingForm"
 
 // Utilities
 export * from "./lib/utils"

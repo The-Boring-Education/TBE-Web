@@ -116,10 +116,11 @@ cp .env.example .env.local
 pnpm dev
 
 # Run individual apps
-pnpm dev:webapp      # Port 3000
-pnpm dev:prep-yatra  # Port 3001
-pnpm dev:quizes      # Port 3002
-pnpm dev:onboarding  # Port 3003
+pnpm dev:platform    # Main TBE platform (Port 3000)
+pnpm dev:prep-yatra  # Career navigation (Port 3001)
+pnpm dev:quizes      # Quiz platform (Port 3002)
+pnpm dev:onboarding  # User onboarding (Port 3003)
+pnpm dev:api         # Centralized API (Port 3004)
 ```
 
 ## 📦 Shared Packages
@@ -134,14 +135,35 @@ All apps use shared packages with these aliases:
 ### Usage Example
 
 ```typescript
-// Import UI components
-import { Button, Card, Modal } from "@tbe/ui"
+// Import UI components (135+ available)
+import {
+    Button,
+    Card,
+    Modal,
+    StandardizedNavbar,
+    StandardizedFooter,
+    ChallengeCard,
+    PrepYatraHero,
+    QuizGamificationCard,
+    CodeRenderer,
+    OnboardingForm
+} from "@tbe/ui"
+
+// Import hooks (25+ available)
+import {
+    useAnalytics,
+    useUser,
+    useGamification,
+    useApi,
+    useScrollDirection
+} from "@tbe/hooks"
 
 // Import utilities
-import { trackEvent, sendRequest } from "@tbe/utils"
+import { trackEvent, sendRequest, connectToDatabase } from "@tbe/utils"
 
-// Import types
-import { APIResponseType, BaseUser } from "@tbe/types"
+// Import types & database
+import { APIResponseType, BaseUser, Challenge } from "@tbe/types"
+import { User, Quiz, PrepLog } from "@tbe/database"
 ```
 
 ## 🏗️ Building for Production
@@ -151,10 +173,73 @@ import { APIResponseType, BaseUser } from "@tbe/types"
 pnpm build
 
 # Build specific apps
-pnpm build:webapp
-pnpm build:prep-yatra
-pnpm build:quizes
-pnpm build:onboarding
+pnpm build:platform    # Main TBE platform
+pnpm build:prep-yatra   # Career navigation
+pnpm build:quizes       # Quiz platform
+pnpm build:onboarding   # User onboarding
+pnpm build:api          # Centralized API for Cloud Run
+```
+
+## 🎨 **Component Usage Guidelines**
+
+### **🔄 Standardized Components (Use These!)**
+
+For consistent UI across all apps, use the standardized components:
+
+```typescript
+import { StandardizedNavbar, StandardizedFooter } from '@tbe/ui'
+
+// In your app layout
+<StandardizedNavbar
+  variant="prep-yatra"  // or "quizes", "onboarding", "platform"
+  showUserPoints={true}
+  appName="Prep Yatra"
+/>
+
+<StandardizedFooter
+  variant="prep-yatra"
+  showProducts={true}
+/>
+```
+
+### **🎯 App-Specific Components**
+
+Each app's components are available with clear prefixes:
+
+```typescript
+// PrepYatra components
+import {
+    ChallengeCard,
+    ChallengeSection,
+    BuildYourStack,
+    PrepYatraHero,
+    PrepLogsList
+} from "@tbe/ui"
+
+// Quiz components
+import {
+    QuizGamificationCard,
+    CodeRenderer,
+    MarkdownRenderer,
+    PointsDisplay,
+    DashboardNav
+} from "@tbe/ui"
+
+// Onboarding components
+import { OnboardingForm, OnboardingLayout } from "@tbe/ui"
+```
+
+### **🔐 Authentication Components**
+
+Unified auth across all apps:
+
+```typescript
+import { ProtectedRoute, PublicRoute, ClientAuth } from '@tbe/ui'
+
+// Use in your routing
+<ProtectedRoute>
+  <YourProtectedComponent />
+</ProtectedRoute>
 ```
 
 ## 🆕 Adding a New App
