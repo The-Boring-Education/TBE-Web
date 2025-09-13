@@ -8,7 +8,7 @@ import { connectDB } from '@/middlewares';
 const authOptions = {
   providers: [
     GoogleProvider({
-      clientId: envConfig.GOOGLE_AUTH_CLIENT_ID,
+      clientId: envConfig.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
       clientSecret: envConfig.GOOGLE_AUTH_CLIENT_SECRET,
     }),
   ],
