@@ -320,6 +320,10 @@ const updateUserCourseChapterInDB = async ({
       userCourse.chapters[chapterIndex].isCompleted = isCompleted;
     }
 
+    // Check if all chapters are completed and update isCompleted field
+    const allChaptersCompleted = userCourse.chapters.every(chapter => chapter.isCompleted);
+    userCourse.isCompleted = allChaptersCompleted;
+
     // Save the updated document
     await userCourse.save();
 

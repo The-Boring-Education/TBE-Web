@@ -45,6 +45,7 @@ export interface UserModel {
   leetCodeUrl?: string;
   userSkills?: string[];
   userSkillsLastUpdated?: Date;
+  from?: string;
   prepYatra?: {
     pyOnboarded?: boolean;
     experienceLevel?: string;

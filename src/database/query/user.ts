@@ -71,18 +71,29 @@ const onboardUserToDB = async (
   userName: string,
   occupation: UserRoleType,
   purpose: PlatformUsageType[],
-  contactNo: string
+  contactNo: string,
+  from?: string
 ): Promise<DatabaseQueryResponseType> => {
   try {
+    const updateData: any = {
+      userName,
+      occupation,
+      purpose,
+      contactNo,
+      isOnboarded: true,
+    };
+
+    // Only add 'from' if it doesn't already exist
+    if (from) {
+      const existingUser = await User.findById(userId);
+      if (!existingUser?.from) {
+        updateData.from = from;
+      }
+    }
+
     const user = await User.findByIdAndUpdate(
       userId,
-      {
-        userName,
-        occupation,
-        purpose,
-        contactNo,
-        isOnboarded: true,
-      },
+      updateData,
       { new: true }
     );
 
@@ -97,17 +108,28 @@ const onboardUserToDB = async (
 const onboardPrepYatraUserTODB = async (
   userId: string,
   workDomain: WorkDomainType,
-  linkedInUrl: string
+  linkedInUrl: string,
+  from?: string
 ): Promise<DatabaseQueryResponseType> => {
+  const updateData: any = {
+    prepYatra: {
+      workDomain,
+      linkedInUrl,
+      pyOnboarded: true,
+    },
+  };
+
+  // Only add 'from' if it doesn't already exist
+  if (from) {
+    const existingUser = await User.findById(userId);
+    if (!existingUser?.from) {
+      updateData.from = from;
+    }
+  }
+
   const user = await User.findByIdAndUpdate(
     userId,
-    {
-      prepYatra: {
-        workDomain,
-        linkedInUrl,
-        pyOnboarded: true,
-      },
-    },
+    updateData,
     { new: true }
   );
 
@@ -136,6 +158,18 @@ const updateUserSkillsInDB = async (
   }
 };
 
+
+const getUserDataByUserNameFromDB = async (
+  userName: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const user = await User.findOne({ userName });
+    return { data: user };
+  } catch (error) {
+    return { error: 'Failed to fetch user from DB' };
+  }
+};
+
 export {
   createUserInDB,
   getUserByEmailFromDB,
@@ -144,4 +178,5 @@ export {
   onboardPrepYatraUserTODB,
   onboardUserToDB,
   updateUserSkillsInDB,
+  getUserDataByUserNameFromDB
 };

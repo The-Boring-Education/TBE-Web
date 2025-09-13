@@ -91,7 +91,7 @@ const handleUserOnboarding = async (
   userId: string
 ) => {
   try {
-    const { userName, occupation, purpose, contactNo } =
+    const { userName, occupation, purpose, contactNo, from } =
       req.body as AddOnboardingPayloadProps;
 
     if (!userId || !userName || !occupation || !purpose || !contactNo) {
@@ -109,7 +109,8 @@ const handleUserOnboarding = async (
       userName,
       occupation,
       purpose,
-      contactNo
+      contactNo,
+      from
     );
 
     if (updateUserError) {
@@ -146,7 +147,7 @@ const handlePrepYatraOnboarding = async (
   userId: string
 ) => {
   try {
-    const { workDomain, linkedInUrl } =
+    const { workDomain, linkedInUrl, from } =
       req.body as AddPrepYatraOnboardingPayloadProps;
 
     if (!userId || !workDomain) {
@@ -162,7 +163,8 @@ const handlePrepYatraOnboarding = async (
     const { data, error: onboardUserError } = await onboardPrepYatraUserTODB(
       userId,
       workDomain,
-      linkedInUrl
+      linkedInUrl,
+      from
     );
 
     if (onboardUserError) {

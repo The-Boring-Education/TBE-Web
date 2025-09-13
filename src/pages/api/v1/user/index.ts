@@ -5,6 +5,7 @@ import {
   createUserInDB,
   getUserByEmailFromDB,
   getUserByIdFromDB,
+  getUserDataByUserNameFromDB,
 } from '@/database/query/user';
 import type { CreateUserRequestPayloadProps } from '@/interfaces';
 import { connectDB } from '@/middlewares';
@@ -17,11 +18,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
 
   const { method, query } = req;
-  const { email, userId } = query;
+  const { email, userId, username } = query;
 
   switch (method) {
     case 'GET':
-      return handleGetUser(req, res, email as string, userId as string);
+      return handleGetUser(req, res, email as string, userId as string,  username as string);
     case 'POST':
       return handleCreateUser(req, res);
   }
@@ -31,7 +32,8 @@ const handleGetUser = async (
   req: NextApiRequest,
   res: NextApiResponse,
   email: string,
-  userId: string
+  userId: string,
+  username: string
 ) => {
   try {
     if (email) {
@@ -85,12 +87,38 @@ const handleGetUser = async (
         .status(apiStatusCodes.OKAY)
         .json(sendAPIResponse({ status: true, data }));
     }
+    
+    if (username) {
+      const { data, error } = await getUserDataByUserNameFromDB(username);
+
+      if (error) {
+        captureAPIError(
+          error as Error,
+          '/api/v1/user',
+          'GET',
+          apiStatusCodes.INTERNAL_SERVER_ERROR,
+          { username }
+        );
+
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+          sendAPIResponse({
+            status: false,
+            error,
+            message: 'Error while fetching user',
+          })
+        );
+      }
+
+      return res
+        .status(apiStatusCodes.OKAY)
+        .json(sendAPIResponse({ status: true, data }));
+    }
 
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: false,
-        message: 'Please provide Email or User id',
-        error: 'Please provide Email or User id',
+        message: 'Please provide Email or User id or Username',
+        error: 'Please provide Email or User id or Username',
       })
     );
   } catch (error) {
@@ -99,7 +127,7 @@ const handleGetUser = async (
       '/api/v1/user',
       'GET',
       apiStatusCodes.INTERNAL_SERVER_ERROR,
-      { email, userId }
+      { email, userId, username }
     );
 
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(

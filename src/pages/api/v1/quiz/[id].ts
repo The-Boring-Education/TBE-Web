@@ -39,8 +39,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleGetQuiz(id: string, req: NextApiRequest, res: NextApiResponse) {
-  const { includeInactive } = req.query;
+  const { includeInactive, shuffle } = req.query;
   const includeInactiveQuizzes = typeof includeInactive === 'string' ? includeInactive === 'true' : false;
+  
+  // Check if shuffling should be disabled
+  const shouldShuffle = shuffle !== 'false' && shuffle !== '0'; // Default to true for backward compatibility
   
   const { data, error } = await getQuizByIdFromDB(id, includeInactiveQuizzes);
 
@@ -48,13 +51,21 @@ async function handleGetQuiz(id: string, req: NextApiRequest, res: NextApiRespon
     return res.status(404).json({ error });
   }
 
-  // Simplify: Return only 10 random questions without difficulty information
+  // Get all questions
   const allQuestions = data.questions || [];
-  const shuffledQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
-  const selectedQuestions = shuffledQuestions.slice(0, 10);
+  
+  // Only shuffle if shuffle parameter is not explicitly set to false
+  let selectedQuestions;
+  if (shouldShuffle) {
+    const shuffledQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
+    selectedQuestions = shuffledQuestions.slice(0, 10);
+  } else {
+    // Return questions in their original order (first 10)
+    selectedQuestions = allQuestions.slice(0, 10);
+  }
 
   // Remove difficulty from questions for cleaner UI
-  const simplifiedQuestions = selectedQuestions.map(question => ({
+  const simplifiedQuestions = selectedQuestions.map((question: any) => ({
     question: question.question,
     options: question.options,
     correctAnswer: question.correctAnswer,

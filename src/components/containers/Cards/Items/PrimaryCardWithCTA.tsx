@@ -13,6 +13,7 @@ const PrimaryCardWithCTA = ({
   target,
   launchingOn,
   isPremium,
+  isPurchased,
 }: PrimaryCardWithCTAProps) => {
   const border = `border-borderColor${borderColour}`;
 
@@ -21,11 +22,15 @@ const PrimaryCardWithCTA = ({
       childrenClassName='p-2 h-full flex flex-col relative'
       className={`md:w-[45%] lg:w-[30%] max-w-md ${border} flex-1`}
     >
-      {isPremium && (
+      {isPurchased ? (
+        <div className='absolute top-3 right-3 bg-green-100 text-green-600 text-[12px] font-medium px-3 py-[4px] rounded-full border border-green-300 shadow-sm z-10'>
+          ✅ Purchased
+        </div>
+      ) : isPremium ? (
         <div className='absolute top-3 right-3 bg-yellow-100 text-red-600 text-[12px] font-medium px-3 py-[4px] rounded-full border border-yellow-300 shadow-sm z-10'>
           🔒 Premium
         </div>
-      )}
+      ) : null}
 
       {image && (
         <Image

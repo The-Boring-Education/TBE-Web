@@ -262,7 +262,8 @@ export interface PrimaryCardWithCTAProps {
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
   target?: '_blank';
   launchingOn?: string;
-  isPremium?: string;
+  isPremium?: boolean;
+  isPurchased?: boolean;
 }
 
 export interface LandingPageHeroProps {
