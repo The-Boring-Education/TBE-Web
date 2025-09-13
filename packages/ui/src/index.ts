@@ -31,6 +31,7 @@ export { default as InputFieldContainer } from "./Form/InputFieldContainer"
 export { default as RadioButton } from "./Form/RadioButton"
 export { default as RadioInputField } from "./Form/RadioInputField"
 export { default as SelectInput } from "./Form/SelectInput"
+export { default as OnboardingField } from "./Form/OnboardingField"
 
 // Image Components
 export { default as BackgroundImage } from "./Images/BackgroundImage"
@@ -58,6 +59,7 @@ export { default as LoadingSpinner } from "./LoadingSpinner"
 // Progress Components
 export { default as CircularProgressBar } from "./ProgressBar/CircularProgressBar"
 export { default as LinerProgressBar } from "./ProgressBar/LinerProgressBar"
+export { default as OnboardingProgressBar } from "./ProgressBar/OnboardingProgressBar"
 
 // Pill Components
 export { default as Pill } from "./Pill"
@@ -124,9 +126,8 @@ export { default as PointsDisplay } from "./Quizes/Gamification/PointsDisplay"
 export { default as CodeRenderer } from "./Quizes/Common/CodeRenderer"
 export { default as MarkdownRenderer } from "./Quizes/Common/MarkdownRenderer"
 
-// Onboarding Components
-export { default as OnboardingNavbar } from "./Onboarding/Layout/Navbar"
-export { default as OnboardingLayout } from "./Onboarding/Layout/OnboardingLayout"
+// Onboarding Components (Refactored with shared components)
+export { default as OnboardingLayout } from "./Onboarding/Core/OnboardingLayout"
 export { default as OnboardingForm } from "./Onboarding/Core/OnboardingForm"
 
 // Utilities
