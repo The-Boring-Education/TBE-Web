@@ -22,6 +22,10 @@ export { default as useSkillPlaylist } from "./useSkillPlaylist"
 export { default as useUser } from "./useUser"
 export { default as useUsername } from "./useUsername"
 export { default as useOnboarding } from "./useOnboarding"
+export { default as useChallenges } from "./useChallenges"
+export { useChallengeProgress } from "./useChallenges"
+export { default as usePrepLogs } from "./usePrepLogs"
+export { default as useQuizData } from "./useQuizData"
 
 // Export types
 export type * from "@tbe/types"
