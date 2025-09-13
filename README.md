@@ -1,135 +1,135 @@
-# Turborepo starter
+# 🚀 TBE Platform - Turborepo Monorepo
 
-This Turborepo starter is maintained by the Turborepo core team.
+Welcome to The Boring Education (TBE) Platform - a comprehensive monorepo housing all TBE frontend applications, shared packages, and centralized configurations.
 
-## Using this example
-
-Run the following command:
-
-```sh
-npx create-turbo@latest
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## 🧱 Monorepo Structure
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+tbe-platform/
+├── apps/                        # 📱 Frontend Applications
+│   ├── tbe-webapp/             # 🏠 Main marketing + landing + global APIs (Port: 3000)
+│   ├── prep-yatra/             # 🧭 Career navigation tool (Port: 3001)
+│   ├── quizes/                 # 🧠 The Boring Quizzes app (Port: 3002)
+│   ├── onboarding/             # 🎯 The Boring Onboarding app (Port: 3003)
+│   └── tbe-api/                # 🌐 Central API service (Coming Soon)
+├── packages/                    # 📦 Shared Packages
+│   ├── ui/                     # 💅 Shared UI components (Button, Modal, etc.)
+│   ├── utils/                  # ⚙️ Shared logic - auth, MongoDB, fetchers
+│   ├── config/                 # 📐 Shared Tailwind, ESLint, TS, Prettier config
+│   ├── types/                  # 📄 Shared TypeScript types/interfaces
+│   ├── eslint-config/          # 🔍 ESLint configurations
+│   └── typescript-config/      # 🔧 TypeScript configurations
+├── .env                        # ✅ Single env file for all apps
+├── turbo.json                  # 🔄 Turborepo configuration
+├── package.json                # 📋 Root package.json with scripts
+└── pnpm-workspace.yaml         # 🚀 PNPM workspace configuration
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 🛠️ Prerequisites
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+- **Node.js**: >= 18.0.0
+- **PNPM**: >= 9.0.0 (Install with `npm install -g pnpm`)
+- **MongoDB**: For database operations
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+## 🚀 Quick Start
 
-### Develop
+### 1. Install Dependencies
 
-To develop all apps and packages, run the following command:
+```bash
+# Clone the repository
+git clone <repository-url>
+cd tbe-platform
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+# Install all dependencies for all apps and packages
+pnpm install
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### 2. Environment Setup
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+Create a `.env` file in the root directory:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+```bash
+# Database
+MONGODB_URI=mongodb://localhost:27017/tbe-platform
 
-### Remote Caching
+# Google Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+# Authentication (NextAuth)
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### 3. Local Development Setup
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+Add these entries to your `/etc/hosts` file:
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+127.0.0.1   webapp.local
+127.0.0.1   prepyatra.local
+127.0.0.1   quizes.local
+127.0.0.1   onboarding.local
 ```
 
-## Useful Links
+## 🏃‍♂️ Development
 
-Learn more about the power of Turborepo:
+### Run All Apps
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+```bash
+# Start all apps in development mode
+pnpm dev
+
+# Run individual apps
+pnpm dev:webapp      # Port 3000
+pnpm dev:prep-yatra  # Port 3001
+pnpm dev:quizes      # Port 3002
+pnpm dev:onboarding  # Port 3003
+```
+
+## 📦 Shared Packages
+
+All apps use shared packages with these aliases:
+
+- `@tbe/ui` - Shared UI components (Button, Modal, Card, etc.)
+- `@tbe/utils` - Shared utilities (analytics, API helpers, auth, MongoDB)
+- `@tbe/types` - Shared TypeScript types and interfaces
+- `@tbe/config` - Shared configurations (Tailwind, PostCSS, Prettier)
+
+### Usage Example
+
+```typescript
+// Import UI components
+import { Button, Card, Modal } from "@tbe/ui"
+
+// Import utilities
+import { trackEvent, sendRequest } from "@tbe/utils"
+
+// Import types
+import { APIResponseType, BaseUser } from "@tbe/types"
+```
+
+## 🏗️ Building for Production
+
+```bash
+# Build all applications
+pnpm build
+
+# Build specific apps
+pnpm build:webapp
+pnpm build:prep-yatra
+pnpm build:quizes
+pnpm build:onboarding
+```
+
+## 🆕 Adding a New App
+
+1. Create new app directory in `apps/`
+2. Update `package.json` to include shared packages
+3. Configure TypeScript and ESLint to use shared configs
+4. Add scripts to root `package.json`
+
+See full documentation in the repository for detailed steps.
+
+---
+
+**Built with ❤️ by The Boring Education Team**

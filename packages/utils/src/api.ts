@@ -1,0 +1,98 @@
+import axios, { type AxiosRequestConfig } from "axios"
+
+export interface APIMakeRequestProps {
+    method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
+    url: string
+    headers?: Record<string, string>
+    body?: any
+    baseURL?: string
+}
+
+export interface APIResponseType {
+    status: number
+    error: boolean
+    message: string
+    data?: any
+}
+
+const apiInstance = axios.create()
+
+/**
+ * Universal API request utility for TBE apps
+ * Supports different base URLs for different services
+ */
+export const sendRequest = async ({
+    method = "GET",
+    url,
+    headers,
+    body,
+    baseURL
+}: APIMakeRequestProps): Promise<APIResponseType> => {
+    const config: AxiosRequestConfig = {
+        method,
+        url: baseURL ? `${baseURL}${url}` : `/api/v1${url}`,
+        headers: {
+            ...headers,
+            cache: "no-store"
+        },
+        data: body
+    }
+
+    try {
+        const response = await apiInstance.request(config)
+        return response.data as APIResponseType
+    } catch (error: any) {
+        return (
+            (error.response?.data as APIResponseType) || {
+                status: 500,
+                error: true,
+                message: "Network error occurred",
+                data: null
+            }
+        )
+    }
+}
+
+/**
+ * Standardized API response helper
+ */
+export const sendAPIResponse = ({
+    status,
+    error,
+    message,
+    data
+}: APIResponseType): APIResponseType => ({
+    status,
+    error,
+    message,
+    data
+})
+
+/**
+ * API client for external services
+ */
+export const createAPIClient = (
+    baseURL: string,
+    defaultHeaders?: Record<string, string>
+) => {
+    const instance = axios.create({
+        baseURL,
+        headers: {
+            "Content-Type": "application/json",
+            ...defaultHeaders
+        }
+    })
+
+    return {
+        get: (url: string, config?: AxiosRequestConfig) =>
+            instance.get(url, config),
+        post: (url: string, data?: any, config?: AxiosRequestConfig) =>
+            instance.post(url, data, config),
+        put: (url: string, data?: any, config?: AxiosRequestConfig) =>
+            instance.put(url, data, config),
+        delete: (url: string, config?: AxiosRequestConfig) =>
+            instance.delete(url, config),
+        patch: (url: string, data?: any, config?: AxiosRequestConfig) =>
+            instance.patch(url, data, config)
+    }
+}

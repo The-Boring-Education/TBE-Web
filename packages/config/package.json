@@ -1,0 +1,29 @@
+{
+    "name": "@tbe/config",
+    "version": "0.0.0",
+    "private": true,
+    "license": "MIT",
+    "exports": {
+        "./tailwind": "./tailwind.config.js",
+        "./postcss": "./postcss.config.js",
+        "./prettier": "./prettier.config.js"
+    },
+    "scripts": {
+        "lint": "eslint . --max-warnings 0"
+    },
+    "dependencies": {
+        "tailwindcss": "^3.4.11",
+        "autoprefixer": "^10.4.20",
+        "postcss": "^8.4.47",
+        "@tailwindcss/forms": "^0.5.3",
+        "@tailwindcss/typography": "^0.5.15",
+        "tailwindcss-animate": "^1.0.7"
+    },
+    "devDependencies": {
+        "@tbe/eslint-config": "workspace:*",
+        "@tbe/typescript-config": "workspace:*",
+        "eslint": "^8.57.1",
+        "typescript": "^5.4.0",
+        "prettier": "^3.6.2"
+    }
+}

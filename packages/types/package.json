@@ -1,0 +1,24 @@
+{
+    "name": "@tbe/types",
+    "version": "0.0.0",
+    "private": true,
+    "license": "MIT",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": "./src/index.ts",
+        "./api": "./src/api.ts",
+        "./user": "./src/user.ts",
+        "./quiz": "./src/quiz.ts",
+        "./prepyatra": "./src/prepyatra.ts"
+    },
+    "scripts": {
+        "lint": "eslint . --max-warnings 0"
+    },
+    "devDependencies": {
+        "@tbe/eslint-config": "workspace:*",
+        "@tbe/typescript-config": "workspace:*",
+        "eslint": "^8.57.1",
+        "typescript": "^5.4.0"
+    }
+}
