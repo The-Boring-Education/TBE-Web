@@ -46,30 +46,66 @@ pnpm install
 
 ### 2. Environment Setup
 
-Create a `.env` file in the root directory:
+**✅ Hybrid Environment Structure (Recommended)**
+
+The monorepo uses a hybrid approach with both root-level and app-specific environment files:
+
+```
+tbe-platform/
+├── .env.example         # 📋 Template with all variables
+├── .env.local          # 🏠 Local development (gitignored)
+├── .env.development    # 🔧 Development environment (gitignored)
+├── .env.production     # 🚀 Production environment (gitignored)
+└── apps/
+    ├── tbe-webapp/.env.local     # App-specific overrides
+    ├── prep-yatra/.env.local     # App-specific overrides
+    ├── quizes/.env.example       # Next.js specific template
+    └── onboarding/.env.example   # Vite specific template
+```
+
+**Quick Setup:**
 
 ```bash
-# Database
-MONGODB_URI=mongodb://localhost:27017/tbe-platform
+# 1. Copy template to local environment
+cp .env.example .env.local
 
-# Google Analytics
-NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+# 2. Update .env.local with your actual values
+# Edit: Database URL, API keys, etc.
 
-# Authentication (NextAuth)
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-secret-key
+# 3. Apps inherit shared variables automatically
+# Individual apps can override with their own .env.local files
 ```
 
-### 3. Local Development Setup
+**Key Benefits:**
 
-Add these entries to your `/etc/hosts` file:
+- 🔄 **Shared variables** managed in one place (database, auth, APIs)
+- 🎯 **App-specific overrides** for unique requirements
+- 🔒 **Security** - sensitive files are gitignored
+- 🏗️ **Framework support** - handles Next.js vs Vite differences
 
-```
-127.0.0.1   webapp.local
-127.0.0.1   prepyatra.local
-127.0.0.1   quizes.local
-127.0.0.1   onboarding.local
-```
+### 🔧 Environment Variables Reference
+
+| Category           | Variable                        | Description                 | Shared | App-Specific |
+| ------------------ | ------------------------------- | --------------------------- | ------ | ------------ |
+| **Database**       | `MONGODB_URI`                   | MongoDB connection string   | ✅     |              |
+| **Authentication** | `NEXTAUTH_SECRET`               | NextAuth JWT secret         | ✅     |              |
+|                    | `GOOGLE_AUTH_CLIENT_ID`         | Google OAuth client ID      | ✅     |              |
+|                    | `GOOGLE_AUTH_CLIENT_SECRET`     | Google OAuth secret         | ✅     |              |
+| **External APIs**  | `OPENAI_API_KEY`                | OpenAI API key              | ✅     |              |
+|                    | `YOUTUBE_API_KEY`               | YouTube API key             | ✅     |              |
+| **Payment**        | `CASHFREE_*`                    | Payment gateway credentials | ✅     |              |
+| **Monitoring**     | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics ID         | ✅     |              |
+|                    | `NEXT_PUBLIC_SENTRY_DSN`        | Sentry error tracking       | ✅     |              |
+| **App URLs**       | `NEXT_PUBLIC_*_URL`             | App-specific base URLs      |        | ✅           |
+| **API URLs**       | `*_API_URL`                     | Cross-app API endpoints     |        | ✅           |
+
+### 🌍 Environment-Specific Values
+
+| Environment     | Database          | URLs                     | Purpose     |
+| --------------- | ----------------- | ------------------------ | ----------- |
+| **Local**       | `localhost:27017` | `localhost:300X`         | Development |
+| **Development** | TBE Dev MongoDB   | `*-dev.vercel.app`       | Testing     |
+| **Production**  | TBE Prod MongoDB  | `theboringeducation.com` | Live        |
 
 ## 🏃‍♂️ Development
 
