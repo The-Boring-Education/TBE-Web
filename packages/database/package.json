@@ -1,0 +1,27 @@
+{
+  "name": "@tbe/database",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./models": "./src/models/index.ts",
+    "./queries": "./src/queries/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0"
+  },
+  "dependencies": {
+    "@tbe/types": "workspace:*",
+    "mongoose": "^7.4.1"
+  },
+  "devDependencies": {
+    "@tbe/eslint-config": "workspace:*",
+    "@tbe/typescript-config": "workspace:*",
+    "@types/node": "^22.5.5",
+    "eslint": "^8.57.1",
+    "typescript": "^5.4.0"
+  }
+}

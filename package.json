@@ -10,12 +10,14 @@
     "clean": "turbo run clean",
     "dev:webapp": "turbo run dev --filter=@tbe/webapp",
     "dev:prep-yatra": "turbo run dev --filter=@tbe/prep-yatra",
-    "dev:quizes": "turbo run dev --filter=@tbe/quizes",
+    "dev:quizes": "turbo run dev --filter=@tbe/quizes", 
     "dev:onboarding": "turbo run dev --filter=@tbe/onboarding",
+    "dev:api": "turbo run dev --filter=@tbe/api",
     "build:webapp": "turbo run build --filter=@tbe/webapp",
     "build:prep-yatra": "turbo run build --filter=@tbe/prep-yatra",
     "build:quizes": "turbo run build --filter=@tbe/quizes",
     "build:onboarding": "turbo run build --filter=@tbe/onboarding",
+    "build:api": "turbo run build --filter=@tbe/api",
     "install:all": "pnpm install"
   },
   "devDependencies": {

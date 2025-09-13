@@ -1,0 +1,41 @@
+{
+  "name": "@tbe/api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3004",
+    "build": "next build",
+    "start": "next start -p 3004",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tbe/database": "workspace:*",
+    "@tbe/utils": "workspace:*",
+    "@tbe/types": "workspace:*",
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "markdown-it": "^14.1.0",
+    "mongoose": "^7.4.1",
+    "next": "^13.2.4",
+    "next-auth": "^4.24.7",
+    "openai": "^4.85.2",
+    "raw-body": "^3.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@tbe/eslint-config": "workspace:*",
+    "@tbe/typescript-config": "workspace:*",
+    "@types/cors": "^2.8.19",
+    "@types/markdown-it": "^14.0.1",
+    "@types/node": "^24.2.0",
+    "@types/raw-body": "^2.1.4",
+    "@types/react": "^18.0.28",
+    "@types/uuid": "^9.0.1",
+    "eslint": "^8.36.0",
+    "eslint-config-next": "^13.2.4",
+    "typescript": "^4.9.5"
+  }
+}

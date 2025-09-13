@@ -1,0 +1,421 @@
+import { modelSelectParams } from '@/constant';
+import { Course, updateUserPointsInDB, UserCourse } from '@/database';
+import type {
+  AddChapterToCourseRequestProps,
+  AddCourseRequestPayloadProps,
+  BaseShikshaCourseResponseProps,
+  DatabaseQueryResponseType,
+  EnrollCourseInDBRequestProps,
+  UpdateChapterInCourseRequestProps,
+  UpdateCourseRequestPayloadProps,
+  UpdateUserChapterInCourseRequestProps,
+} from '@/interfaces';
+
+const addACourseToDB = async (
+  courseDetails: AddCourseRequestPayloadProps
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const course = new Course(courseDetails);
+    await course.save();
+    return { data: course };
+  } catch (error) {
+    return { error: 'Failed while adding course' };
+  }
+};
+
+const updateACourseInDB = async ({
+  courseId,
+  updatedData,
+}: UpdateCourseRequestPayloadProps): Promise<DatabaseQueryResponseType> => {
+  try {
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      updatedData,
+      { new: true }
+    );
+
+    if (!updatedCourse) return { error: 'Course does not exists' };
+
+    return { data: updatedCourse };
+  } catch (error) {
+    return { error: 'Failed while updating course' };
+  }
+};
+
+const deleteACourseFromDBById = async (
+  courseId: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const deletedCourse = await Course.findByIdAndDelete(courseId);
+
+    if (!deletedCourse) {
+      return { error: 'Course not found' };
+    }
+    return { data: 'Course deleted' };
+  } catch (error) {
+    return { error: 'Failed while deleting course' };
+  }
+};
+
+const getAllCourseFromDB = async (): Promise<DatabaseQueryResponseType> => {
+  try {
+    const course = await Course.find()
+      .select(modelSelectParams.coursePreview)
+      .exec();
+
+    if (!course) {
+      return { error: 'Course not found' };
+    }
+
+    return { data: course };
+  } catch (error) {
+    return { error: `Failed while fetching a course ${error}` };
+  }
+};
+
+const getACourseFromDBById = async (
+  courseId: string,
+  userId?: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return { error: 'Course not found' };
+    }
+
+    if (userId) {
+      const { data } = await getEnrolledCourseFromDB({ userId, courseId });
+
+      return {
+        data: {
+          ...course.toObject(),
+          isEnrolled: !!data,
+        } as BaseShikshaCourseResponseProps,
+      };
+    }
+
+    return { data: course };
+  } catch (error) {
+    return { error: `Failed while fetching a course ${error}` };
+  }
+};
+
+const addChapterToCourseInDB = async (
+  courseId: string,
+  chapter: AddChapterToCourseRequestProps
+) => {
+  try {
+    const updatedCourse = await Course.findOneAndUpdate(
+      { _id: courseId },
+      { $push: { chapters: chapter } },
+      { new: true }
+    );
+
+    if (!updatedCourse) {
+      return { error: 'Course not found' };
+    }
+
+    return { data: updatedCourse };
+  } catch (error) {
+    return { error: 'Failed to add chapter to course' };
+  }
+};
+
+const updateCourseChapterInDB = async (
+  courseId: string,
+  chapterId: string,
+  { name, content, isOptional }: UpdateChapterInCourseRequestProps
+) => {
+  try {
+    const course = await Course.findOneAndUpdate(
+      { _id: courseId, 'chapters._id': chapterId },
+      {
+        $set: {
+          'chapters.$.chapterName': name,
+          'chapters.$.content': content,
+          'chapters.$.isOptional': isOptional,
+        },
+      },
+      { new: true }
+    );
+
+    return { data: course };
+  } catch (error) {
+    return { error: 'Failed to update chapter to course' };
+  }
+};
+
+const deleteCourseChapterByIdFromDB = async (
+  courseId: string,
+  chapterId: string
+) => {
+  try {
+    const course = await Course.findOneAndUpdate(
+      { _id: courseId },
+      { $pull: { chapters: { _id: chapterId } } },
+      { new: true }
+    );
+    return { data: course };
+  } catch (error) {
+    return { error: 'Failed to delete chapter from course' };
+  }
+};
+
+const enrollInACourse = async ({
+  userId,
+  courseId,
+}: EnrollCourseInDBRequestProps): Promise<DatabaseQueryResponseType> => {
+  try {
+    const course = await Course.findById(courseId).lean();
+    if (!course) {
+      return { error: 'Course not found' };
+    }
+
+    const chapters = course.chapters.map((chapter: any) => ({
+      chapterId: chapter._id,
+      isCompleted: false,
+    }));
+
+    const userCourse = await UserCourse.create({
+      userId,
+      courseId,
+      chapters,
+    });
+
+    // Enrollment was successful add Points
+    await updateUserPointsInDB(userId, 'ENROLL_COURSE');
+
+    return { data: userCourse };
+  } catch (error) {
+    return { error: 'Failed while enrolling in a course' };
+  }
+};
+
+const getEnrolledCourseFromDB = async ({
+  userId,
+  courseId,
+}: EnrollCourseInDBRequestProps): Promise<DatabaseQueryResponseType> => {
+  try {
+    const enrolledCourse = await UserCourse.findOne({ userId, courseId });
+    return { data: enrolledCourse };
+  } catch (error) {
+    return { error: 'Failed while fetching enrolled course' };
+  }
+};
+
+const getAllEnrolledCoursesFromDB = async (
+  userId: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const enrolledCourse = await UserCourse.find({ userId })
+      .populate({
+        path: 'course',
+        select: modelSelectParams.coursePreview,
+      })
+      .exec();
+
+    return {
+      data: enrolledCourse.map((course) => ({
+        ...course.course.toObject(),
+        isEnrolled: true,
+      })) as unknown as BaseShikshaCourseResponseProps,
+    };
+  } catch (error) {
+    return { error: 'Failed while fetching enrolled course' };
+  }
+};
+
+const getCourseBySlugFromDB = async (
+  slug: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const course = await Course.findOne({ slug });
+
+    if (!course) {
+      return { error: 'Course not found' };
+    }
+
+    return { data: course };
+  } catch (error) {
+    return { error };
+  }
+};
+
+const getCourseBySlugWithUserFromDB = async (
+  slug: string,
+  userId?: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const course = await Course.findOne({ slug });
+
+    if (!course) {
+      return { error: 'Course not found' };
+    }
+
+    let isEnrolled = false;
+    let mappedChapters = course.chapters.map((chapter) => chapter.toObject());
+
+    if (userId) {
+      const userCourse = await UserCourse.findOne({
+        userId,
+        courseId: course._id,
+      });
+
+      isEnrolled = !!userCourse;
+
+      if (userCourse) {
+        mappedChapters = course.chapters.map((chapter) => {
+          const userChapter = userCourse.chapters.find(
+            (uc) => uc.chapterId.toString() === chapter._id.toString()
+          );
+
+          return {
+            ...chapter.toObject(),
+            isCompleted: userChapter?.isCompleted || false,
+          };
+        });
+      }
+    }
+
+    return {
+      data: {
+        ...course.toObject(),
+        isEnrolled,
+        chapters: mappedChapters,
+      },
+    };
+  } catch (error) {
+    return { error };
+  }
+};
+
+const updateUserCourseChapterInDB = async ({
+  userId,
+  courseId,
+  chapterId,
+  isCompleted,
+}: UpdateUserChapterInCourseRequestProps) => {
+  try {
+    // Find the UserCourse document
+    const userCourse = await UserCourse.findOne({ userId, courseId });
+
+    if (!userCourse) {
+      return { error: 'User course not found' };
+    }
+
+    // Find the specific chapter in the chapters array
+    const chapterIndex = userCourse.chapters.findIndex(
+      (chapter) => chapter.chapterId.toString() === chapterId.toString()
+    );
+
+    if (chapterIndex === -1) {
+      // If chapter is not found in the array, add it with the given status
+      userCourse.chapters.push({
+        chapterId,
+        isCompleted,
+      });
+    } else {
+      // If chapter is found, update the isCompleted status
+      userCourse.chapters[chapterIndex].isCompleted = isCompleted;
+    }
+
+    // Check if all chapters are completed and update isCompleted field
+    const allChaptersCompleted = userCourse.chapters.every(chapter => chapter.isCompleted);
+    userCourse.isCompleted = allChaptersCompleted;
+
+    // Save the updated document
+    await userCourse.save();
+
+    return { data: userCourse };
+  } catch (error) {
+    return { error: 'Failed to update chapter in user course' };
+  }
+};
+
+const getACourseForUserFromDB = async (userId: string, courseId: string) => {
+  try {
+    // Find the UserCourse document, including the populated course data
+    const userCourse = await UserCourse.findOne({ userId, courseId })
+      .populate({
+        path: 'course',
+      })
+      .exec();
+
+    // If the user is not enrolled in the course, fetch the course data without user-specific data
+    if (!userCourse) {
+      const { data: course } = await getACourseFromDBById(courseId);
+      return { data: { ...course.toObject(), isEnrolled: false } };
+    }
+
+    // Map the chapters to include the `isCompleted` status from the embedded chapters in UserCourse
+    const mappedChapters = userCourse.course.chapters.map((chapter) => {
+      const isCompleted = userCourse.chapters.find(
+        (uc) => uc.chapterId.toString() === chapter._id.toString()
+      )?.isCompleted;
+
+      return {
+        ...chapter.toObject(),
+        isCompleted,
+      };
+    });
+
+    // Construct the updated course response
+    const updatedCourseResponse = {
+      ...userCourse.course.toObject(),
+      chapters: mappedChapters,
+      isCompleted: userCourse.isCompleted,
+      certificateId: userCourse.certificateId,
+    };
+
+    return {
+      data: {
+        ...updatedCourseResponse,
+        isEnrolled: true,
+      } as BaseShikshaCourseResponseProps,
+    };
+  } catch (error) {
+    return { error: 'Failed to fetch courses with chapter status' };
+  }
+};
+
+const updateCertificateToUserShikshaCourseDoc = async (
+  userId: string,
+  courseId: string,
+  certificateId: string
+) => {
+  try {
+    const userCourse = await UserCourse.findOneAndUpdate(
+      { userId, courseId },
+      { isCompleted: true, certificateId },
+      { new: true }
+    );
+
+    if (!userCourse) {
+      return { error: 'User course not found' };
+    }
+
+    return { data: userCourse };
+  } catch (error) {
+    return { error: 'Failed to update certificate status in user course' };
+  }
+};
+
+export {
+  addACourseToDB,
+  addChapterToCourseInDB,
+  deleteACourseFromDBById,
+  deleteCourseChapterByIdFromDB,
+  enrollInACourse,
+  getACourseForUserFromDB,
+  getACourseFromDBById,
+  getAllCourseFromDB,
+  getAllEnrolledCoursesFromDB,
+  getCourseBySlugFromDB,
+  getCourseBySlugWithUserFromDB,
+  getEnrolledCourseFromDB,
+  updateACourseInDB,
+  updateCertificateToUserShikshaCourseDoc,
+  updateCourseChapterInDB,
+  updateUserCourseChapterInDB,
+};
