@@ -10,7 +10,8 @@
         "./api": "./src/api.ts",
         "./user": "./src/user.ts",
         "./quiz": "./src/quiz.ts",
-        "./prepyatra": "./src/prepyatra.ts"
+        "./prepyatra": "./src/prepyatra.ts",
+        "./platform": "./src/platform.ts"
     },
     "scripts": {
         "lint": "eslint . --max-warnings 0"
