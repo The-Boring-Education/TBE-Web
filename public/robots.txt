@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: http:/quiz.theboringeducation.com/
+
+# Sitemaps
+Sitemap: http:/quiz.theboringeducation.com/sitemap.xml
