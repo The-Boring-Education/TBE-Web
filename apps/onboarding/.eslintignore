@@ -1,0 +1,19 @@
+# Configs
+.eslintrc.js
+prettier.config.js
+tsconfig.js
+
+# Distributable
+dist
+build
+*.bundle.js
+*.js.map
+
+# Version control
+.git
+.history
+
+.cache
+.vscode
+
+node_modules
