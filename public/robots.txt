@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Allow: /auth
+Allow: /pricing
+
+# Disallow protected/private routes
+Disallow: /dashboard
+Disallow: /onboarding
+
+# Disallow admin or API routes (if any in future)
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://prepyatra.theboringeducation.com/sitemap.xml
+
+# Crawl-delay (optional, helps with server load)
+Crawl-delay: 1
