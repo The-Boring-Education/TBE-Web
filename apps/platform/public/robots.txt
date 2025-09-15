@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://theboringeducation.com/
+
+# Sitemaps
+Sitemap: https://theboringeducation.com/sitemap.xml
