@@ -1,0 +1,263 @@
+{
+  "lastUpdated": "2025-04-02",
+  "trendingSkills": [
+    {
+      "name": "Java",
+      "count": 3130
+    },
+    {
+      "name": "Python",
+      "count": 2939
+    },
+    {
+      "name": "React.js",
+      "count": 1822
+    },
+    {
+      "name": "JavaScript",
+      "count": 1752
+    },
+    {
+      "name": "AWS",
+      "count": 1644
+    },
+    {
+      "name": "Node.js",
+      "count": 1143
+    },
+    {
+      "name": "SQL",
+      "count": 1139
+    },
+    {
+      "name": "Data Structures",
+      "count": 909
+    },
+    {
+      "name": "Golang",
+      "count": 829
+    },
+    {
+      "name": "Spring",
+      "count": 739
+    },
+    {
+      "name": "Machine Learning",
+      "count": 701
+    },
+    {
+      "name": "Angular",
+      "count": 679
+    },
+    {
+      "name": "HTML",
+      "count": 660
+    },
+    {
+      "name": "Microservices",
+      "count": 655
+    },
+    {
+      "name": "Spring Boot",
+      "count": 603
+    },
+    {
+      "name": "CSS",
+      "count": 575
+    },
+    {
+      "name": "Kubernetes",
+      "count": 561
+    },
+    {
+      "name": "Algorithms",
+      "count": 552
+    },
+    {
+      "name": "Automation Testing",
+      "count": 545
+    },
+    {
+      "name": "CI - CD",
+      "count": 498
+    }
+  ],
+  "topLocations": [
+    {
+      "count": 5996,
+      "name": "Bangalore"
+    },
+    {
+      "count": 1039,
+      "name": "Work From Home"
+    },
+    {
+      "count": 1026,
+      "name": "Hyderabad"
+    },
+    {
+      "count": 822,
+      "name": "Gurgaon"
+    },
+    {
+      "count": 648,
+      "name": "Mumbai"
+    },
+    {
+      "count": 524,
+      "name": "Pune"
+    },
+    {
+      "count": 449,
+      "name": "Chennai"
+    },
+    {
+      "count": 276,
+      "name": "Noida"
+    },
+    {
+      "count": 172,
+      "name": "Delhi"
+    },
+    {
+      "count": 53,
+      "name": "Jaipur"
+    },
+    {
+      "count": 51,
+      "name": "Ahmedabad"
+    },
+    {
+      "count": 26,
+      "name": "Kochi"
+    },
+    {
+      "count": 22,
+      "name": "Indore"
+    },
+    {
+      "count": 21,
+      "name": "Navi Mumbai"
+    },
+    {
+      "count": 19,
+      "name": "Chandigarh"
+    },
+    {
+      "count": 18,
+      "name": "Coimbatore"
+    },
+    {
+      "count": 16,
+      "name": "Kolkata"
+    },
+    {
+      "count": 14,
+      "name": "Mohali"
+    },
+    {
+      "count": 9,
+      "name": "Greater Noida"
+    },
+    {
+      "count": 8,
+      "name": "Vadodara"
+    }
+  ],
+  "jobDomains": [
+    {
+      "name": "Backend Development",
+      "count": 4226
+    },
+    {
+      "name": "Full-Stack Development",
+      "count": 2021
+    },
+    {
+      "name": "Frontend Development",
+      "count": 1422
+    },
+    {
+      "name": "Other Software Development",
+      "count": 862
+    },
+    {
+      "name": "QA / SDET",
+      "count": 782
+    },
+    {
+      "name": "Data Science / Machine Learning",
+      "count": 781
+    },
+    {
+      "name": "DevOps / Cloud",
+      "count": 749
+    },
+    {
+      "name": "Big Data / DWH / ETL",
+      "count": 621
+    },
+    {
+      "name": "Mobile Development",
+      "count": 464
+    },
+    {
+      "name": "Data Analysis / Business Intelligence",
+      "count": 454
+    },
+    {
+      "name": "Engineering Management",
+      "count": 448
+    },
+    {
+      "name": "Product Management",
+      "count": 382
+    },
+    {
+      "name": "IT Security",
+      "count": 188
+    },
+    {
+      "name": "Database Admin / Development",
+      "count": 175
+    },
+    {
+      "name": "UX / Visual Design",
+      "count": 161
+    },
+    {
+      "name": "IT Management / IT Support",
+      "count": 154
+    },
+    {
+      "name": "Functional / Technical Consulting",
+      "count": 119
+    },
+    {
+      "name": "Technical / Production Support",
+      "count": 111
+    },
+    {
+      "name": "Project Management",
+      "count": 67
+    },
+    {
+      "name": "Other Design",
+      "count": 59
+    }
+  ],
+  "companyTypes": [
+    {
+      "name": "Mid-Size",
+      "count": 1256
+    },
+    {
+      "name": "MNC",
+      "count": 4925
+    },
+    {
+      "name": "Startup",
+      "count": 4702
+    }
+  ]
+}
