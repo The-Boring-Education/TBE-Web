@@ -18,17 +18,90 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
-  apps/onboarding:
+  apps/api:
     dependencies:
+      '@tbe/database':
+        specifier: workspace:*
+        version: link:../../packages/database
       '@tbe/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@tbe/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@tbe/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      axios:
+        specifier: ^1.4.0
+        version: 1.12.1
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.5
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.6.1
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.1.0
+      mongoose:
+        specifier: ^7.4.1
+        version: 7.8.7
+      next:
+        specifier: ^13.2.4
+        version: 13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next-auth:
+        specifier: ^4.24.7
+        version: 4.24.11(next@13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      openai:
+        specifier: ^4.85.2
+        version: 4.104.0(ws@7.5.10)(zod@3.25.76)
+      raw-body:
+        specifier: ^3.0.0
+        version: 3.0.1
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      uuid:
+        specifier: ^9.0.0
+        version: 9.0.1
+    devDependencies:
+      '@tbe/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@tbe/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/cors':
+        specifier: ^2.8.19
+        version: 2.8.19
+      '@types/markdown-it':
+        specifier: ^14.0.1
+        version: 14.1.2
+      '@types/node':
+        specifier: ^24.2.0
+        version: 24.3.3
+      '@types/raw-body':
+        specifier: ^2.1.4
+        version: 2.3.0
+      '@types/react':
+        specifier: ^18.0.28
+        version: 18.3.24
+      '@types/uuid':
+        specifier: ^9.0.1
+        version: 9.0.8
+      eslint:
+        specifier: ^8.36.0
+        version: 8.57.1
+      eslint-config-next:
+        specifier: ^13.2.4
+        version: 13.5.11(eslint@8.57.1)(typescript@4.9.5)
+      typescript:
+        specifier: ^4.9.5
+        version: 4.9.5
+
+  apps/onboarding:
+    dependencies:
       '@types/react':
         specifier: ^18.0.37
         version: 18.3.24
@@ -46,20 +119,11 @@ importers:
         version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tailwindcss:
         specifier: ^3.3.2
-        version: 3.4.17(ts-node@10.9.2(@types/node@22.15.3)(typescript@5.9.2))
+        version: 3.4.17(ts-node@10.9.2(@types/node@24.3.3)(typescript@5.9.2))
       typescript:
         specifier: ^5.0.2
         version: 5.9.2
     devDependencies:
-      '@tbe/config':
-        specifier: workspace:*
-        version: link:../../packages/config
-      '@tbe/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@tbe/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.59.8
         version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.2))(eslint@8.57.1)(typescript@5.9.2)
@@ -68,7 +132,7 @@ importers:
         version: 5.62.0(eslint@8.57.1)(typescript@5.9.2)
       '@vitejs/plugin-react':
         specifier: ^4.0.0
-        version: 4.7.0(vite@4.5.14(@types/node@22.15.3))
+        version: 4.7.0(vite@4.5.14(@types/node@24.3.3)(terser@5.44.0))
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.21(postcss@8.5.6)
@@ -101,7 +165,161 @@ importers:
         version: 8.5.6
       vite:
         specifier: ^4.3.9
-        version: 4.5.14(@types/node@22.15.3)
+        version: 4.5.14(@types/node@24.3.3)(terser@5.44.0)
+
+  apps/platform:
+    dependencies:
+      '@headlessui/react':
+        specifier: ^2.2.0
+        version: 2.2.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@heroicons/react':
+        specifier: ^2.0.17
+        version: 2.2.0(react@18.3.1)
+      '@opentelemetry/api':
+        specifier: ^1.9.0
+        version: 1.9.0
+      '@opentelemetry/core':
+        specifier: ^2.0.1
+        version: 2.1.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources':
+        specifier: ^2.0.1
+        version: 2.1.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base':
+        specifier: ^2.0.1
+        version: 2.1.0(@opentelemetry/api@1.9.0)
+      '@sentry/nextjs':
+        specifier: ^9.38.0
+        version: 9.46.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.1.0(@opentelemetry/api@1.9.0))(next@13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.101.3)
+      '@types/cors':
+        specifier: ^2.8.19
+        version: 2.8.19
+      axios:
+        specifier: ^1.4.0
+        version: 1.12.1
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.5
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.6.1
+      framer-motion:
+        specifier: ^12.4.2
+        version: 12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      html-to-image:
+        specifier: ^1.11.11
+        version: 1.11.13
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.1.0
+      mongoose:
+        specifier: ^7.4.1
+        version: 7.8.7
+      next:
+        specifier: ^13.2.4
+        version: 13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next-auth:
+        specifier: ^4.24.7
+        version: 4.24.11(next@13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      openai:
+        specifier: ^4.85.2
+        version: 4.104.0(ws@7.5.10)(zod@3.25.76)
+      raw-body:
+        specifier: ^3.0.0
+        version: 3.0.1
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      react-icons:
+        specifier: ^4.8.0
+        version: 4.12.0(react@18.3.1)
+      react-pdftotext:
+        specifier: ^1.3.4
+        version: 1.3.4(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-query:
+        specifier: ^3.39.3
+        version: 3.39.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      recharts:
+        specifier: ^2.15.1
+        version: 2.15.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      uuid:
+        specifier: ^9.0.0
+        version: 9.0.1
+    devDependencies:
+      '@svgr/webpack':
+        specifier: ^6.5.1
+        version: 6.5.1
+      '@tailwindcss/forms':
+        specifier: ^0.5.3
+        version: 0.5.10(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@24.3.3)(typescript@4.9.5)))
+      '@tailwindcss/typography':
+        specifier: ^0.5.9
+        version: 0.5.16(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@24.3.3)(typescript@4.9.5)))
+      '@types/markdown-it':
+        specifier: ^14.0.1
+        version: 14.1.2
+      '@types/node':
+        specifier: ^24.2.0
+        version: 24.3.3
+      '@types/raw-body':
+        specifier: ^2.1.4
+        version: 2.3.0
+      '@types/react':
+        specifier: ^18.0.28
+        version: 18.3.24
+      '@types/recharts':
+        specifier: ^1.8.29
+        version: 1.8.29
+      '@types/uuid':
+        specifier: ^9.0.1
+        version: 9.0.8
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.54.1
+        version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)(typescript@4.9.5)
+      '@typescript-eslint/parser':
+        specifier: ^5.54.1
+        version: 5.62.0(eslint@8.57.1)(typescript@4.9.5)
+      autoprefixer:
+        specifier: ^10.4.14
+        version: 10.4.21(postcss@8.5.6)
+      eslint:
+        specifier: ^8.36.0
+        version: 8.57.1
+      eslint-config-next:
+        specifier: ^13.2.4
+        version: 13.5.11(eslint@8.57.1)(typescript@4.9.5)
+      eslint-config-prettier:
+        specifier: ^8.7.0
+        version: 8.10.2(eslint@8.57.1)
+      eslint-plugin-simple-import-sort:
+        specifier: ^7.0.0
+        version: 7.0.0(eslint@8.57.1)
+      eslint-plugin-unused-imports:
+        specifier: ^2.0.0
+        version: 2.0.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)
+      node-fetch:
+        specifier: ^2.7.0
+        version: 2.7.0
+      postcss:
+        specifier: ^8.4.21
+        version: 8.5.6
+      prettier:
+        specifier: ^2.8.8
+        version: 2.8.8
+      tailwindcss:
+        specifier: ^3.2.7
+        version: 3.4.17(ts-node@10.9.2(@types/node@24.3.3)(typescript@4.9.5))
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@24.3.3)(typescript@4.9.5)
+      typescript:
+        specifier: ^4.9.5
+        version: 4.9.5
+      webpack-bundle-analyzer:
+        specifier: ^4.10.2
+        version: 4.10.2
 
   apps/prep-yatra:
     dependencies:
@@ -192,15 +410,6 @@ importers:
       '@react-oauth/google':
         specifier: ^0.12.2
         version: 0.12.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tbe/types':
-        specifier: workspace:*
-        version: link:../../packages/types
-      '@tbe/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      '@tbe/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
       '@types/react-datepicker':
         specifier: ^6.2.0
         version: 6.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -274,15 +483,6 @@ importers:
       '@tailwindcss/typography':
         specifier: ^0.5.15
         version: 0.5.16(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.15.3)(typescript@5.9.2)))
-      '@tbe/config':
-        specifier: workspace:*
-        version: link:../../packages/config
-      '@tbe/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@tbe/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^22.5.5
         version: 22.15.3
@@ -391,15 +591,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.87.4(react@18.3.1)
-      '@tbe/types':
-        specifier: workspace:*
-        version: link:../../packages/types
-      '@tbe/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      '@tbe/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
       '@types/markdown-it':
         specifier: ^14.1.2
         version: 14.1.2
@@ -464,15 +655,6 @@ importers:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@tbe/config':
-        specifier: workspace:*
-        version: link:../../packages/config
-      '@tbe/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@tbe/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       '@types/js-cookie':
         specifier: ^3.0.6
         version: 3.0.6
@@ -503,178 +685,6 @@ importers:
       typescript:
         specifier: ^5.5.3
         version: 5.9.2
-
-  apps/tbe-webapp:
-    dependencies:
-      '@headlessui/react':
-        specifier: ^2.2.0
-        version: 2.2.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@heroicons/react':
-        specifier: ^2.0.17
-        version: 2.2.0(react@18.3.1)
-      '@opentelemetry/api':
-        specifier: ^1.9.0
-        version: 1.9.0
-      '@opentelemetry/core':
-        specifier: ^2.0.1
-        version: 2.1.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/resources':
-        specifier: ^2.0.1
-        version: 2.1.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-trace-base':
-        specifier: ^2.0.1
-        version: 2.1.0(@opentelemetry/api@1.9.0)
-      '@sentry/nextjs':
-        specifier: ^9.38.0
-        version: 9.46.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.1.0(@opentelemetry/api@1.9.0))(next@13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.101.3)
-      '@tbe/types':
-        specifier: workspace:*
-        version: link:../../packages/types
-      '@tbe/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      '@tbe/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
-      '@types/cors':
-        specifier: ^2.8.19
-        version: 2.8.19
-      axios:
-        specifier: ^1.4.0
-        version: 1.12.1
-      cors:
-        specifier: ^2.8.5
-        version: 2.8.5
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.6.1
-      framer-motion:
-        specifier: ^12.4.2
-        version: 12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      html-to-image:
-        specifier: ^1.11.11
-        version: 1.11.13
-      markdown-it:
-        specifier: ^14.1.0
-        version: 14.1.0
-      mongoose:
-        specifier: ^7.4.1
-        version: 7.8.7
-      next:
-        specifier: ^13.2.4
-        version: 13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      next-auth:
-        specifier: ^4.24.7
-        version: 4.24.11(next@13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      openai:
-        specifier: ^4.85.2
-        version: 4.104.0(ws@7.5.10)(zod@3.25.76)
-      raw-body:
-        specifier: ^3.0.0
-        version: 3.0.1
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-      react-icons:
-        specifier: ^4.8.0
-        version: 4.12.0(react@18.3.1)
-      react-pdftotext:
-        specifier: ^1.3.4
-        version: 1.3.4(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-query:
-        specifier: ^3.39.3
-        version: 3.39.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      recharts:
-        specifier: ^2.15.1
-        version: 2.15.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
-    devDependencies:
-      '@svgr/webpack':
-        specifier: ^6.5.1
-        version: 6.5.1
-      '@tailwindcss/forms':
-        specifier: ^0.5.3
-        version: 0.5.10(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@24.3.3)(typescript@4.9.5)))
-      '@tailwindcss/typography':
-        specifier: ^0.5.9
-        version: 0.5.16(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@24.3.3)(typescript@4.9.5)))
-      '@tbe/config':
-        specifier: workspace:*
-        version: link:../../packages/config
-      '@tbe/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@tbe/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      '@types/markdown-it':
-        specifier: ^14.0.1
-        version: 14.1.2
-      '@types/node':
-        specifier: ^24.2.0
-        version: 24.3.3
-      '@types/raw-body':
-        specifier: ^2.1.4
-        version: 2.3.0
-      '@types/react':
-        specifier: ^18.0.28
-        version: 18.3.24
-      '@types/recharts':
-        specifier: ^1.8.29
-        version: 1.8.29
-      '@types/uuid':
-        specifier: ^9.0.1
-        version: 9.0.8
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^5.54.1
-        version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)(typescript@4.9.5)
-      '@typescript-eslint/parser':
-        specifier: ^5.54.1
-        version: 5.62.0(eslint@8.57.1)(typescript@4.9.5)
-      autoprefixer:
-        specifier: ^10.4.14
-        version: 10.4.21(postcss@8.5.6)
-      eslint:
-        specifier: ^8.36.0
-        version: 8.57.1
-      eslint-config-next:
-        specifier: ^13.2.4
-        version: 13.5.11(eslint@8.57.1)(typescript@4.9.5)
-      eslint-config-prettier:
-        specifier: ^8.7.0
-        version: 8.10.2(eslint@8.57.1)
-      eslint-plugin-simple-import-sort:
-        specifier: ^7.0.0
-        version: 7.0.0(eslint@8.57.1)
-      eslint-plugin-unused-imports:
-        specifier: ^2.0.0
-        version: 2.0.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)
-      node-fetch:
-        specifier: ^2.7.0
-        version: 2.7.0
-      postcss:
-        specifier: ^8.4.21
-        version: 8.5.6
-      prettier:
-        specifier: ^2.8.8
-        version: 2.8.8
-      tailwindcss:
-        specifier: ^3.2.7
-        version: 3.4.17(ts-node@10.9.2(@types/node@24.3.3)(typescript@4.9.5))
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@types/node@24.3.3)(typescript@4.9.5)
-      typescript:
-        specifier: ^4.9.5
-        version: 4.9.5
-      webpack-bundle-analyzer:
-        specifier: ^4.10.2
-        version: 4.10.2
 
   packages/config:
     dependencies:
@@ -709,6 +719,31 @@ importers:
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.2
+
+  packages/database:
+    dependencies:
+      '@tbe/types':
+        specifier: workspace:*
+        version: link:../types
+      mongoose:
+        specifier: ^7.4.1
+        version: 7.8.7
+    devDependencies:
+      '@tbe/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@tbe/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.5.5
+        version: 22.15.3
+      eslint:
+        specifier: ^8.57.1
+        version: 8.57.1
       typescript:
         specifier: ^5.4.0
         version: 5.9.2
@@ -748,6 +783,46 @@ importers:
       typescript-eslint:
         specifier: ^8.40.0
         version: 8.40.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
+
+  packages/hooks:
+    dependencies:
+      '@tbe/types':
+        specifier: workspace:*
+        version: link:../types
+      '@tbe/utils':
+        specifier: workspace:*
+        version: link:../utils
+      axios:
+        specifier: ^1.4.0
+        version: 1.12.1
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      react-query:
+        specifier: ^3.39.3
+        version: 3.39.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    devDependencies:
+      '@tbe/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@tbe/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.24)
+      eslint:
+        specifier: ^8.57.1
+        version: 8.57.1
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.2
 
   packages/types:
     devDependencies:
@@ -849,6 +924,15 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.4
         version: 1.2.8(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tbe/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@tbe/types':
+        specifier: workspace:*
+        version: link:../types
+      '@tbe/utils':
+        specifier: workspace:*
+        version: link:../utils
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -864,12 +948,24 @@ importers:
       embla-carousel-react:
         specifier: ^8.3.0
         version: 8.6.0(react@18.3.1)
+      framer-motion:
+        specifier: ^12.4.2
+        version: 12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       input-otp:
         specifier: ^1.2.4
         version: 1.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       lucide-react:
         specifier: ^0.462.0
         version: 0.462.0(react@18.3.1)
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.1.0
+      next:
+        specifier: ^13.2.4
+        version: 13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next-auth:
+        specifier: ^4.24.7
+        version: 4.24.11(next@13.5.6(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -885,6 +981,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-icons:
+        specifier: ^4.8.0
+        version: 4.12.0(react@18.3.1)
       react-resizable-panels:
         specifier: ^2.1.3
         version: 2.1.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -10367,7 +10466,7 @@ snapshots:
 
   '@types/whatwg-url@8.2.2':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 24.3.3
       '@types/webidl-conversions': 7.0.3
 
   '@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)(typescript@4.9.5)':
@@ -10818,7 +10917,7 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.11.1':
     optional: true
 
-  '@vitejs/plugin-react@4.7.0(vite@4.5.14(@types/node@22.15.3))':
+  '@vitejs/plugin-react@4.7.0(vite@4.5.14(@types/node@24.3.3)(terser@5.44.0))':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.4)
@@ -10826,7 +10925,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 4.5.14(@types/node@22.15.3)
+      vite: 4.5.14(@types/node@24.3.3)(terser@5.44.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11750,7 +11849,7 @@ snapshots:
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.1)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.2))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.1)
       eslint-plugin-react: 7.37.5(eslint@8.57.1)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.1)
@@ -11826,18 +11925,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.2))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
-    transitivePeerDependencies:
-      - supports-color
-
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.1))(eslint@8.57.1):
-    dependencies:
-      debug: 3.2.7
-    optionalDependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@8.57.1)(typescript@4.9.5)
-      eslint: 8.57.1
-      eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.2))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -11863,35 +11951,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1):
-    dependencies:
-      '@rtsao/scc': 1.1.0
-      array-includes: 3.1.9
-      array.prototype.findlastindex: 1.2.6
-      array.prototype.flat: 1.3.3
-      array.prototype.flatmap: 1.3.3
-      debug: 3.2.7
-      doctrine: 2.1.0
-      eslint: 8.57.1
-      eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.1))(eslint@8.57.1)
-      hasown: 2.0.2
-      is-core-module: 2.16.1
-      is-glob: 4.0.3
-      minimatch: 3.1.2
-      object.fromentries: 2.0.8
-      object.groupby: 1.0.3
-      object.values: 1.2.1
-      semver: 6.3.1
-      string.prototype.trimend: 1.0.9
-      tsconfig-paths: 3.15.0
-    optionalDependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@8.57.1)(typescript@4.9.5)
-    transitivePeerDependencies:
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - supports-color
-
   eslint-plugin-import@2.32.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.2))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1):
     dependencies:
       '@rtsao/scc': 1.1.0
@@ -11903,7 +11962,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.1))(eslint@8.57.1)
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.1))(eslint@8.57.1)
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -12817,7 +12876,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 24.3.3
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -14270,7 +14329,7 @@ snapshots:
     dependencies:
       debug: 4.4.1
       module-details-from-path: 1.0.4
-      resolve: 1.22.8
+      resolve: 1.22.10
     transitivePeerDependencies:
       - supports-color
 
@@ -15280,14 +15339,15 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  vite@4.5.14(@types/node@22.15.3):
+  vite@4.5.14(@types/node@24.3.3)(terser@5.44.0):
     dependencies:
       esbuild: 0.18.20
       postcss: 8.5.6
       rollup: 3.29.5
     optionalDependencies:
-      '@types/node': 22.15.3
+      '@types/node': 24.3.3
       fsevents: 2.3.3
+      terser: 5.44.0
 
   warning@4.0.3:
     dependencies:
