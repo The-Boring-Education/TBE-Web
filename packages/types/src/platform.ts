@@ -5,7 +5,15 @@
  * but not necessarily part of the common domain types.
  */
 
-import type { FooterLinksContainerProps, WebinarModel } from './database';
+// Define FooterLinksContainerProps locally to avoid dependency on @tbe/interface
+interface FooterLinksContainerProps {
+  heading: string;
+  links: Array<{
+    label: string;
+    href: string;
+    target?: '_blank';
+  }>;
+}
 
 // ================================
 // PLATFORM NAVIGATION & STRUCTURE
@@ -80,6 +88,12 @@ export type GetSEOMetaResponseType = {
   type: string;
   robots: string;
   image: string;
+  keywords: string;
+  author: string;
+  publisher: string;
+  linkedIn: string;
+  instagram: string;
+  github: string;
 };
 
 export interface SEOProps {
@@ -392,7 +406,41 @@ export interface SheetPageProps extends PageProps {
   currentQuestionId: string;
 }
 
-import type { WebinarModel } from './database'
+// Define WebinarModel locally to avoid dependency on @tbe/interface
+interface WebinarModel {
+  _id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  duration: number;
+  speaker: {
+    name: string;
+    bio: string;
+    image: string;
+    socialLinks: {
+      linkedin?: string;
+      twitter?: string;
+      github?: string;
+    };
+  };
+  topics: string[];
+  prerequisites: string[];
+  isLive: boolean;
+  maxAttendees: number;
+  currentAttendees: number;
+  registrationUrl: string;
+  meetingUrl?: string;
+  recordingUrl?: string;
+  resources: Array<{
+    title: string;
+    url: string;
+    type: 'document' | 'video' | 'link';
+  }>;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface WebinarCardProps extends WebinarModel {
   isCompleted: boolean

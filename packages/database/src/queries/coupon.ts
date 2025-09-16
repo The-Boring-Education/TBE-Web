@@ -1,5 +1,5 @@
-import { Coupon } from '@/database';
-import type { DatabaseQueryResponseType } from '@/interfaces';
+import Coupon from '../models/Coupon';
+import type { DatabaseQueryResponseType } from '@tbe/interface';
 
 const findCouponByCodeFromDB = async (
   code: string
@@ -257,7 +257,7 @@ const removeCouponFromSheetFromDB = async (
     }
 
     const updatedProducts = coupon.applicableProducts.filter(
-      productId => productId !== sheetId
+      (productId: string) => productId !== sheetId
     );
     
     const updatedCoupon = await Coupon.findByIdAndUpdate(

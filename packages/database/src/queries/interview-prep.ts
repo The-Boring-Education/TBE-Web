@@ -1,10 +1,9 @@
-import { modelSelectParams } from '@/constant';
+import { modelSelectParams } from '@tbe/constants';
 import {
   InterviewSheet,
-  toObjectId,
-  updateUserPointsInDB,
   UserSheet,
-} from '@/database';
+} from '../models';
+import { toObjectId, updateUserPointsInDB } from '@tbe/database';
 import type {
   AddInterviewQuestionRequestPayloadProps,
   AddInterviewSheetRequestPayloadProps,
@@ -12,7 +11,7 @@ import type {
   DatabaseQueryResponseType,
   SheetEnrollmentRequestProps,
   UpdateInterviewSheetRequestPayloadProps,
-} from '@/interfaces';
+} from '@tbe/types';
 
 const addAInterviewSheetToDB = async (
   sheetPayload: AddInterviewSheetRequestPayloadProps

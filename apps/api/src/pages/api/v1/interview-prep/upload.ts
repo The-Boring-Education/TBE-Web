@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import { addAInterviewSheetToDB } from '@/database'
-import { AddInterviewSheetRequestPayloadProps } from '@/interfaces'
+import { addAInterviewSheetToDB } from '@tbe/database'
+import { AddInterviewSheetRequestPayloadProps } from '@tbe/interface'
 
 /**
  * API endpoint to upload/publish completed interview sheets from The-Boring-Agents to database

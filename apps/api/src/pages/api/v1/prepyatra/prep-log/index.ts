@@ -1,19 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   addPrepLogToDB,
   deletePrepLogInDB,
   getPrepLogsByUserFromDB,
   handleGamificationPoints,
   updatePrepLogInDB,
-} from '@/database';
-import { connectDB } from '@/middlewares';
-import { cors, sendAPIResponse } from '@/utils';
+} from '@tbe/database';
+import { connectDB } from '@/middleware';
+import { cors, sendAPIResponse } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
-  await connectDB();
+  await connectDB();  
 
   switch (req.method) {
     case 'POST':
@@ -210,7 +210,7 @@ const handleAddMentorFeedback = async (
     // Optionally notify learner via email
     if (notifyEmail && userEmail && userName && userId) {
       try {
-        const { emailClient } = await import('@/services/email');
+        const { emailClient } = await import('@tbe/services');
 
         await emailClient.sendEmail({
           from_email: process.env.FROM_EMAIL || 'theboringeducation@gmail.com',

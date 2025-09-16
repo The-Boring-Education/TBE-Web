@@ -1,5 +1,5 @@
 import { type Model, model, models, Schema, Types } from 'mongoose';
-import { DATABASE_MODELS } from '@/constant';
+import { DATABASE_MODELS } from '@tbe/constants';
 
 export interface MentorshipDocumentModel {
   user: Types.ObjectId;

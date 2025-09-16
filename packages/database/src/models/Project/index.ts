@@ -5,13 +5,13 @@ import {
   DATABASE_MODELS,
   DIFFICULTY_LEVEL,
   PROJECT_SKILLS,
-  ROADMAPS,
-} from '@/constant';
+  ROADMAPS, 
+} from '@tbe/constants';
 import type {
   ProjectChapter,
   ProjectDocumentModel,
   ProjectSection,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 const chapterSchema: Schema<ProjectChapter> = new Schema(
   {

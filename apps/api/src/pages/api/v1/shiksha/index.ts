@@ -1,21 +1,21 @@
 import type mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   addACourseToDB,
   getAllCourseFromDB,
   getAllEnrolledCoursesFromDB,
   getCourseBySlugFromDB,
   getCourseBySlugWithUserFromDB,
-} from '@/database';
+} from '@tbe/database';
 import type {
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,
-} from '@/interfaces';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
+} from '@tbe/interface';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
+import { cors } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

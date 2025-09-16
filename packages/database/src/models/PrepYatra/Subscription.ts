@@ -4,8 +4,8 @@ import {
   DATABASE_MODELS,
   SUBSCRIPTION_FEATURES,
   SUBSCRIPTION_TYPES,
-} from '@/constant';
-import type { PrepYatraSubscriptionModel } from '@/interfaces';
+} from '@tbe/constants';
+import type { PrepYatraSubscriptionModel } from '@tbe/interface';
 
 const PrepYatraSubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
   {

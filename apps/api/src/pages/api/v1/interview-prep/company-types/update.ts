@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
-import InterviewSheet from '@/database/models/InterviewPrep/Sheet';
-import type { UpdateCompanyTypePayload } from '@/interfaces';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
+import { apiStatusCodes } from '@tbe/constants';
+import {InterviewSheet} from '@tbe/database';
+import type { UpdateCompanyTypePayload } from '@tbe/interface';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
 
 /**
  * API Handler to update company types for multiple interview questions

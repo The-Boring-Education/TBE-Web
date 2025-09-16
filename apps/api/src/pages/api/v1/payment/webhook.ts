@@ -8,7 +8,7 @@ import {
   isDevelopmentEnv,
   isProductionEnv,
   planTypeMap,
-} from '@/constant';
+} from '@tbe/constants';
 import {
   createSubscriptionInDB,
   enrollInACourse,
@@ -17,15 +17,15 @@ import {
   getPaymentByOrderIdFromDB,
   updatePaymentStatusToDB,
   updateUserSubscriptionStatusInDB,
-} from '@/database';
-import { connectDB } from '@/middlewares';
+} from '@tbe/database';
+import { connectDB } from '@/middleware';
 import {
   cors,
   getPYSubscriptionFeaturesByType,
   sendAPIResponse,
   validateWebhookEvent,
   verifyWebhookSignature,
-} from '@/utils';
+} from '@tbe/utils';
 
 const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY;
 

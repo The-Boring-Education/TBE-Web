@@ -6,12 +6,14 @@ export interface APIMakeRequestProps {
     headers?: Record<string, string>
     body?: any
     baseURL?: string
+    data?: any
 }
 
 export interface APIResponseType {
-    status: number
-    error: boolean
-    message: string
+    success?: boolean
+    status?: number | boolean
+    error?: any
+    message?: string
     data?: any
 }
 
@@ -40,10 +42,14 @@ export const sendRequest = async ({
 
     try {
         const response = await apiInstance.request(config)
-        return response.data as APIResponseType
+        return {
+            ...response.data,
+            success: true
+        } as APIResponseType
     } catch (error: any) {
         return (
             (error.response?.data as APIResponseType) || {
+                success: false,
                 status: 500,
                 error: true,
                 message: "Network error occurred",
@@ -57,11 +63,13 @@ export const sendRequest = async ({
  * Standardized API response helper
  */
 export const sendAPIResponse = ({
+    success,
     status,
     error,
     message,
     data
 }: APIResponseType): APIResponseType => ({
+    success,
     status,
     error,
     message,

@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes, envConfig, isDevelopmentEnv } from '@/constant';
-import { addPaymentToDB } from '@/database';
-import { connectDB } from '@/middlewares';
+import { apiStatusCodes, envConfig, isDevelopmentEnv } from '@tbe/constants';
+import { addPaymentToDB } from '@tbe/database';
+import { connectDB } from '@/middleware';
 import {
   buildOrderPayload,
-  cors,
+  cors, 
   createCashfreeOrder,
   generatePaymentOrderId,
   sendAPIResponse,
-} from '@/utils';
+} from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

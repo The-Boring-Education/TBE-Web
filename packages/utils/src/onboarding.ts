@@ -17,7 +17,7 @@ export async function checkUsernameAvailable(
             headers: token ? { Authorization: `Bearer ${token}` } : {}
         })
 
-        return response.success && response.data?.available === true
+        return Boolean(response.success && response.data?.available === true)
     } catch {
         return false
     }

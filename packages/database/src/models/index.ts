@@ -11,9 +11,7 @@ export { default as UserInterest } from './UserInterest'
 export { default as Webinar } from './Webinar'
 
 // DevRel models
-export { default as DevRelEvent } from './DevRel/Event'
-export { default as DevRelSpeaker } from './DevRel/Speaker'
-export { default as DevRelSponsor } from './DevRel/Sponsor'
+export { DevRelLead, DevRelTask } from './DevRel'
 
 // Interview Prep models
 export { default as InterviewSheet } from './InterviewPrep/Sheet'
@@ -28,13 +26,13 @@ export { default as Recruiter } from './PrepYatra/Recruiters'
 export { default as PrepYatraSubscription } from './PrepYatra/Subscription'
 
 // Project models
-export { default as Project } from './Project/Project'
+export { default as Project } from './Project'
 export { default as UserProject } from './Project/UserProject'
 
 // Quiz models
 export { default as Quiz } from './Quiz/Quiz'
 export { default as QuizAttempt } from './Quiz/QuizAttempt'
-export { default as QuizSession } from './Quiz/QuizSession'
+export { default as QuizSession, type QuizSessionQuestion, type QuizSessionModel } from './Quiz/QuizSession'
 export { default as UserQuestionPerformance } from './Quiz/UserQuestionPerformance'
 export { default as UserQuizAnalytics } from './Quiz/UserQuizAnalytics'
 

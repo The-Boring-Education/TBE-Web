@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   Course,
   Feedback,
@@ -14,10 +14,10 @@ import {
   User,
   UserCourse,
   Webinar,
-} from '@/database';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
+} from '@tbe/database';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
+import { cors } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
@@ -780,9 +780,9 @@ const getUserSourceAnalytics = async (
         data: {
           sourceBreakdown: sourceBreakdownWithGrowth,
           totalUsers,
-          topSource: topSource.source,
-          topSourceCount: topSource.userCount,
-          topSourcePercentage: topSource.percentage,
+          topSource: topSource?.source,
+          topSourceCount: topSource?.userCount,
+          topSourcePercentage: topSource?.percentage,
           dateRange: {
             startDate: start.toISOString(),
             endDate: end.toISOString(),

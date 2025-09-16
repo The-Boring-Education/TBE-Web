@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS } from '@/constant';
-import type { UserCourseModel } from '@/interfaces';
+import { DATABASE_MODELS } from '@tbe/constants';
+import type { UserCourseModel } from '@tbe/interface';
 
 const UserChapterSchema = new Schema(
   {

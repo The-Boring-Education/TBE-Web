@@ -1,8 +1,8 @@
-import { Certificate } from '@/database';
+import Certificate from '../models/Certificate';
 import type {
   AddCertificateRequestPayloadProps,
   DatabaseQueryResponseType,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 const addACertificateToDB = async (
   certificatePayload: AddCertificateRequestPayloadProps

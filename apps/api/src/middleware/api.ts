@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { envConfig, apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
+import { envConfig, apiStatusCodes } from '@tbe/constants';
+import { sendAPIResponse } from '@tbe/utils';
 
 // Connect to DB
 const connectDB = async () => {
@@ -26,7 +26,9 @@ const adminMiddleware = async (
     if (!adminHeader || adminHeader !== expectedSecret) {
       res.status(apiStatusCodes.UNAUTHORIZED).json(
         sendAPIResponse({ 
-          status: false, 
+          success: false,
+          status: apiStatusCodes.UNAUTHORIZED,
+          error: true,
           message: 'Unauthorized. Admin access required.' 
         })
       );
@@ -37,9 +39,11 @@ const adminMiddleware = async (
   } catch (error) {
     res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
-        status: false,
+        success: false,
+        status: apiStatusCodes.INTERNAL_SERVER_ERROR,
+        error: true,
         message: 'Admin authentication error',
-        error,
+        data: error,
       })
     );
     return false;

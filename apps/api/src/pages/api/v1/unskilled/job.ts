@@ -5,15 +5,15 @@ import {
   JOB_DOMAIN_NORMALIZER,
   JOB_LOCATION_NORMALIZER,
   JOB_SKILL_NORMALIZER,
-} from '@/constant';
-import { addJobToDB, getAllJobsFromDB, getJobByJobIdFromDB } from '@/database';
-import type { AddJobRequestPayloadProps } from '@/interfaces';
-import { connectDB } from '@/middlewares';
+} from '@tbe/constants';
+import { addJobToDB, getAllJobsFromDB, getJobByJobIdFromDB } from '@tbe/database';
+import type { AddJobRequestPayloadProps } from '@tbe/interface';
+import { connectDB } from '@/middleware';
 import {
   cleanJobSkillsData,
   normalizeAPIPayload,
   sendAPIResponse,
-} from '@/utils';
+} from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

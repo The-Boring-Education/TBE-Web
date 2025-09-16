@@ -1,5 +1,5 @@
 import { type Model, model, models, Schema, Document } from 'mongoose';
-import { DATABASE_MODELS } from '@/constant';
+import { DATABASE_MODELS } from '@tbe/constants';
 
 // Define the document interface
 interface IChallenge extends Document {

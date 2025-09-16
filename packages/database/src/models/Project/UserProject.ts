@@ -1,11 +1,11 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS } from '@/constant';
+import { DATABASE_MODELS } from '@tbe/constants';
 import type {
   UserProjectChapterModel,
   UserProjectModel,
   UserProjectSectionModel,
-} from '@/interfaces';
+    } from '@tbe/interface';
 
 const UserProjectChapterSchema = new Schema<UserProjectChapterModel>(
   {

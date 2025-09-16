@@ -441,7 +441,7 @@ export interface NavbarDropdownLink {
 }
 
 export interface NavbarDropdownContainerProps {
-  links: NavbarDropdownLink[];
+  links: TopNavbarLinkProps[];
 }
 
 export interface NavbarProps {

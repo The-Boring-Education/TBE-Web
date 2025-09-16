@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   addAWebinarToDB,
   getAllWebinarsFromDB,
   getWebinarBySlugFromDB,
-} from '@/database';
-import type { AddWebinarRequestPayloadProps } from '@/interfaces';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
+} from '@tbe/database';
+import type { AddWebinarRequestPayloadProps } from '@tbe/interface';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
+import { cors } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS } from '@/constant';
-import type { PlaylistModel, Video } from '@/interfaces';
+import { DATABASE_MODELS } from '@tbe/constants';
+import type { PlaylistModel, Video } from '@tbe/interface';
 
 const VideoSchema = new Schema<Video>(
   {

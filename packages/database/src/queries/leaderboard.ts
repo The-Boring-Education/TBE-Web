@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 
-import { Gamification, Leaderboard } from '@/database';
+import { Gamification, Leaderboard } from '@tbe/database';
 import type {
   DatabaseQueryResponseType,
   LeaderboardModel,
   LeaderboardType,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 const addLeaderboardTopperToDB = async (
   payload: Omit<LeaderboardModel, 'createdAt' | 'updatedAt'>

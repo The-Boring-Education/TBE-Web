@@ -1,8 +1,8 @@
-import { Notification } from '@/database';
+import { Notification } from '@tbe/database';
 import type {
   AddNotificationRequestPayloadProps,
   UpdateNotificationRequestPayloadProps,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 const addANotificationToDB = async (
   notificationPayload: AddNotificationRequestPayloadProps

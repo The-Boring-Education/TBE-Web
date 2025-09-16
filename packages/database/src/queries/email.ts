@@ -1,5 +1,5 @@
-import type { DatabaseQueryResponseType } from '@/interfaces';
-import { emailClient } from '@/services/email';
+import type { DatabaseQueryResponseType } from '@tbe/interface';
+import { emailClient } from '@tbe/services';
 
 interface EmailRequest {
   from_email: string;

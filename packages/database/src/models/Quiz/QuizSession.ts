@@ -1,8 +1,8 @@
 import { type Model, model, models, Schema } from 'mongoose';
-import { DATABASE_MODELS } from '@/constant';
+import { DATABASE_MODELS } from '@tbe/constants';
 
 export interface QuizSessionQuestion {
-  questionId: Schema.Types.ObjectId;
+  questionId: Schema.Types.ObjectId;        
   question: string;
   options: string[];
   correctAnswer: number;

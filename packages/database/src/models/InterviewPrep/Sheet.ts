@@ -6,11 +6,11 @@ import {
   INTERVIEW_QUESTION_FREQUENCY,
   PRIORITY_LEVELS,
   ROADMAPS,
-} from '@/constant';
+} from '@tbe/constants';
 import type {
   InterviewSheetModel,
   InterviewSheetQuestionModel,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 const questionSchema = new Schema<InterviewSheetQuestionModel>(
   {

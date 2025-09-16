@@ -8,7 +8,19 @@
 // ================================
 // COMMON TYPES (Used across all apps)
 // ================================
-export * from "./common"
+export type {
+  // Re-export all common types except conflicting ones
+  BaseUser,
+  APIResponse,
+  TrackEventProps,
+  GamificationAction,
+  UserPoints,
+  Achievement,
+  // Conflicting types with aliases
+  APIMakeRequestProps as CommonAPIMakeRequestProps,
+  LeaderboardEntry as CommonLeaderboardEntry,
+  QuizCategory as CommonQuizCategory,
+} from "./common"
 
 // ================================
 // DOMAIN-SPECIFIC TYPES
@@ -17,14 +29,48 @@ export * from "./common"
 // Database models and schemas
 export * from "./database"
 
+// Additional database types that are commonly used
+export type {
+  UserRoleType,
+  PlatformUsageType,
+  UserPointsActionType,
+} from "./database"
+
 // API types and request/response interfaces
 export * from "./api"
 
 // Component interfaces and UI types
 export * from "./components"
 
-// Platform-specific shared types
-export * from "./platform"
+// Additional component types that are commonly used
+export type {
+  MentorshipCardProps,
+  PortfolioTemplateProps,
+  PrimaryCardProps,
+  PrimaryCardWithCTAProps,
+  RadioButtonOptionsProps,
+  TestimonialCardProps,
+  UserLevel,
+} from "./components"
+
+// Platform-specific shared types (with explicit exports to avoid conflicts)
+export type {
+  // Re-export all platform types except conflicting ones
+  GetSEOMetaResponseType,
+  SEOProps,
+  ServerSessionProp,
+  LeaderboardType,
+  LEADERBOARD_TYPES,
+  ProductDataProps,
+  CohortDataProps,
+  CohortRoadmapProps,
+  CohortUserCategoryProps,
+  TopNavbarContainerProps,
+  // Email types from platform (these conflict with email module)
+  EmailSendRequest as PlatformEmailSendRequest,
+  EmailSendResponse as PlatformEmailSendResponse,
+  EmailTemplate as PlatformEmailTemplate,
+} from "./platform"
 
 // Email and communication types
 export * from "./email"
@@ -44,11 +90,7 @@ export * from "./quiz"
 // Re-export common types with their original names
 export type {
     BaseUser as User,
-    APIResponse as APIResponseType,
-    TrackEventProps,
-    GamificationAction,
-    UserPoints,
-    Achievement
+    APIResponse as CommonAPIResponseType,
 } from "./common"
 
 // Re-export database types with their original names for compatibility
@@ -90,14 +132,8 @@ export type ValueOf<T> = T[keyof T]
 // GLOBAL TYPE AUGMENTATIONS
 // ================================
 
-declare global {
-    interface Window {
-        gtag?: (...args: any[]) => void
-        dataLayer?: any[]
-        __analytics_listeners_installed?: boolean
-        __ga_initialized?: boolean
-    }
-}
+// Note: Global Window interface extensions are handled in individual modules
+// to avoid conflicts with existing declarations
 
 // ================================
 // EXPORT SUMMARY

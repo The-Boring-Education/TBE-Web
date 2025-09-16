@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { envConfig } from '@/constant/envConfig';
+import { envConfig } from '@tbe/constants';
 
 interface HealthCheckResponse {
   status: 'healthy' | 'unhealthy' | 'unknown';

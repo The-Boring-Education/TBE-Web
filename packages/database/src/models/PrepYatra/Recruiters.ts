@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { APPLICATION_STATUS, DATABASE_MODELS } from '@/constant';
-import type { RecruiterModel } from '@/interfaces';
+import { APPLICATION_STATUS, DATABASE_MODELS } from '@tbe/constants';
+import type { RecruiterModel } from '@tbe/interface';
 
 const RecruiterSchema = new Schema<RecruiterModel>(
   {

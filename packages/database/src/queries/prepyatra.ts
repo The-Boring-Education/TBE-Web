@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
-import { Challenge, ChallengeLog, Mentorship, PrepLog, PrepYatraSubscription, Recruiter, User } from '@/database';
+import { Challenge, ChallengeLog, Mentorship, PrepLog, PrepYatraSubscription, Recruiter, User } from '@tbe/database';
 import type {
   AddPrepLogToDBPayloadProps,
   AddRecruiterToDBPayloadProps,
   DatabaseQueryResponseType,
-} from '@/interfaces';
+} from '@tbe/types';
 
-const getRecruitersByUserFromDB = async (
+const getRecruitersByUserFromDB = async(
   userId: string
 ): Promise<DatabaseQueryResponseType> => {
   try {
@@ -408,10 +408,15 @@ const recalculateUserPrepLogStats = async (
     // Group logs by date to calculate streaks
     const logsByDate = new Map<string, number>();
     allLogs.forEach((log) => {
-      const dateKey = new Date((log as any).createdAt)
-        .toISOString()
-        .split('T')[0];
-      logsByDate.set(dateKey, (logsByDate.get(dateKey) || 0) + 1);
+      const createdAt = (log as any).createdAt;
+      if (createdAt) {
+        const dateKey = new Date(createdAt)
+          .toISOString()
+          .split('T')[0];
+        if (dateKey) {
+          logsByDate.set(dateKey, (logsByDate.get(dateKey) || 0) + 1);
+        }
+      }
     });
 
     // Get sorted unique dates
@@ -428,14 +433,17 @@ const recalculateUserPrepLogStats = async (
       const todayKey = today.toISOString().split('T')[0];
 
       // Set last logged date to the most recent date
-      lastLoggedDate = new Date(sortedDates[sortedDates.length - 1]);
+      const lastDate = sortedDates[sortedDates.length - 1];
+      if (lastDate) {
+        lastLoggedDate = new Date(lastDate);
+      }
 
       // Calculate current streak
       let streakCount = 0;
       const currentDate = new Date(today);
 
       // Check if user logged today
-      if (sortedDates.includes(todayKey)) {
+      if (todayKey && sortedDates.includes(todayKey)) {
         streakCount = 1;
         currentDate.setDate(currentDate.getDate() - 1);
       }
@@ -443,7 +451,7 @@ const recalculateUserPrepLogStats = async (
       // Continue counting backwards
       while (currentDate >= new Date('1900-01-01')) {
         const dateKey = currentDate.toISOString().split('T')[0];
-        if (sortedDates.includes(dateKey)) {
+        if (dateKey && sortedDates.includes(dateKey)) {
           streakCount++;
           currentDate.setDate(currentDate.getDate() - 1);
         } else {
@@ -529,7 +537,7 @@ const getAllUsersWithLogsFromDB =
       for (const log of logs) {
         const uid = String(log.user);
         if (!logsMap[uid]) logsMap[uid] = [];
-        logsMap[uid].push(log);
+        logsMap[uid]!.push(log);
       }
 
       // Attach logs and stats to each user
@@ -573,7 +581,7 @@ const getAllMenteesFromDB = async (): Promise<DatabaseQueryResponseType> => {
     for (const log of logs) {
       const uid = String(log.user);
       if (!logsMap[uid]) logsMap[uid] = [];
-      logsMap[uid].push(log);
+      logsMap[uid]!.push(log);
     }
 
     const menteesWithDetails = mentees.map((m: any) => {
@@ -828,7 +836,9 @@ const getChallengeProgressFromDB = async (
     let streak = 0;
     const sortedLogs = logs.sort((a, b) => a.day - b.day);
     for (let i = 0; i < sortedLogs.length; i++) {
-      if (i === 0 || sortedLogs[i].day === sortedLogs[i - 1].day + 1) {
+      const currentLog = sortedLogs[i];
+      const previousLog = i > 0 ? sortedLogs[i - 1] : null;
+      if (i === 0 || (currentLog && previousLog && currentLog.day === previousLog.day + 1)) {
         streak++;
       } else {
         streak = 1;

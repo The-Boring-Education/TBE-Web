@@ -10,21 +10,29 @@
         "./analytics": "./src/analytics.ts",
         "./api": "./src/api.ts",
         "./auth": "./src/auth.ts",
-        "./mongodb": "./src/mongodb.ts"
+        "./mongodb": "./src/mongodb.ts",
+        "./cors": "./src/cors.ts",
+        "./mdx": "./src/mdx/index.ts"
     },
     "scripts": {
         "lint": "eslint . --max-warnings 0"
     },
     "dependencies": {
+        "@sentry/nextjs": "^9.38.0",
+        "@tbe/constants": "workspace:*",
+        "@tbe/interface": "workspace:*",
+        "@tbe/types": "workspace:*",
+        "@types/cors": "^2.8.19",
+        "@types/node": "^22.15.3",
         "axios": "^1.4.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
         "mongoose": "^7.4.1",
-        "next-auth": "^4.24.7",
-        "dotenv": "^16.4.7"
+        "next-auth": "^4.24.7"
     },
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",
         "@tbe/typescript-config": "workspace:*",
-        "@types/node": "^22.5.5",
         "eslint": "^8.57.1",
         "typescript": "^5.4.0"
     }

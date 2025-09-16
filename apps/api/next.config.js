@@ -6,9 +6,13 @@ const nextConfig = {
   // API-only configuration
   poweredByHeader: false,
   
+  // Transpile packages
+  transpilePackages: ['@tbe/constants', '@tbe/types', '@tbe/utils', '@tbe/database', '@tbe/interface', '@tbe/services'],
+  
   // Environment variables
   env: {
-    NODE_ENV: process.env.NODE_ENV,
+    // Add other environment variables here if needed
+    // NODE_ENV is automatically handled by Next.js
   },
   
   // Redirect all non-API routes to API documentation or health check

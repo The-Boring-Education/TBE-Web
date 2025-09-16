@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import cors from '@/middlewares/cors';
-import { connectDB } from '@/middlewares';
-import { submitAnswerInDB } from '@/database/query/enhancedQuiz';
-import { QuizSession } from '@/database';
+import { cors } from '@tbe/utils';
+import { connectDB } from '@/middleware';
+import { submitAnswerInDB } from '@tbe/database';
+import { QuizSession } from '@tbe/database';
 
 interface SubmitAnswerBody {
   questionIndex: number;
@@ -26,8 +26,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   if (questionIndex === undefined || answer === undefined || timeSpent === undefined) {
-    return res.status(400).json({ 
-      error: 'Missing required fields: questionIndex, answer, timeSpent' 
+    return res.status(400).json({
+      error: 'Missing required fields: questionIndex, answer, timeSpent',
     });
   }
 
@@ -64,17 +64,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).json({ error: 'Session not found' });
     }
 
-    const answeredQuestions = session.questions.filter(q => q.userAnswer !== undefined).length;
+    const answeredQuestions = session.questions.filter(
+      (q: any) => q.userAnswer !== undefined
+    ).length;
+
     const isCompleted = answeredQuestions >= session.questionCount;
     const nextQuestionIndex = answeredQuestions;
 
     let nextQuestion = null;
-    if (!isCompleted && session.questions[nextQuestionIndex]) {
+    const q = session.questions[nextQuestionIndex]; // ✅ narrow here
+    if (!isCompleted && q) {
       nextQuestion = {
         index: nextQuestionIndex,
-        question: session.questions[nextQuestionIndex].question,
-        options: session.questions[nextQuestionIndex].options,
-        difficulty: session.questions[nextQuestionIndex].difficulty,
+        question: q.question,
+        options: q.options,
+        difficulty: q.difficulty,
       };
     }
 
@@ -87,7 +91,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       progress: {
         answered: answeredQuestions,
         total: session.questionCount,
-        percentage: Math.round((answeredQuestions / session.questionCount) * 100),
+        percentage: Math.round(
+          (answeredQuestions / session.questionCount) * 100
+        ),
       },
     };
 

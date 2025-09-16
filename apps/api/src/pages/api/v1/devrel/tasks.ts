@@ -1,13 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { connectDB } from '@/middlewares';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
+import { connectDB } from '@/middleware';
+import { apiStatusCodes } from '@tbe/constants';
+import { sendAPIResponse } from '@tbe/utils';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { DevRelTask } from '@/database/models/DevRel/DevRelTask';
-import { DevRelLead } from '@/database/models/DevRel/DevRelLead';
-import User from '@/database/models/User';
+import { DevRelTask, DevRelLead, User } from '@tbe/database';
 
 interface CreateTaskRequest {
   title: string;

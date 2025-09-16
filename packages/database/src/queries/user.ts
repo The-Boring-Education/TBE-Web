@@ -1,11 +1,11 @@
-import { User } from '@/database';
+import { User } from '@tbe/database';
 import type {
   CreateUserRequestPayloadProps,
   DatabaseQueryResponseType,
   PlatformUsageType,
   UserRoleType,
   WorkDomainType,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 const getUserByIdFromDB = async (
   id: string

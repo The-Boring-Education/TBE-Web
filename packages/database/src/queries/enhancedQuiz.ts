@@ -1,12 +1,9 @@
-import { Quiz, QuizAttempt } from '@/database';
-import QuizSession from '@/database/models/Quiz/QuizSession';
-import UserQuestionPerformance from '@/database/models/Quiz/UserQuestionPerformance';
-import UserQuizAnalytics from '@/database/models/Quiz/UserQuizAnalytics';
-import type { QuizSessionModel, QuizSessionQuestion } from '@/database/models/Quiz/QuizSession';
-import type { UserQuestionPerformanceModel } from '@/database/models/Quiz/UserQuestionPerformance';
-import type { UserQuizAnalyticsModel } from '@/database/models/Quiz/UserQuizAnalytics';
-import type { QuizModel } from '@/database/models/Quiz/Quiz';
-import type { DatabaseQueryResponseType } from '@/interfaces';
+import { Quiz, QuizAttempt, QuizSession, UserQuestionPerformance, UserQuizAnalytics } from '../models';
+import type { QuizSessionModel, QuizSessionQuestion } from '../models';
+import type { UserQuestionPerformanceModel } from '../models/Quiz/UserQuestionPerformance';
+import type { UserQuizAnalyticsModel } from '../models/Quiz/UserQuizAnalytics';
+import type { QuizModel } from '../models/Quiz/Quiz';
+import type { DatabaseQueryResponseType } from '@tbe/types';
 import { Schema, Types } from 'mongoose';
 
 // ====================

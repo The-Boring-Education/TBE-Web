@@ -1,5 +1,5 @@
-import { modelSelectParams } from '@/constant';
-import { Project, updateUserPointsInDB, UserProject } from '@/database';
+import { modelSelectParams } from '@tbe/constants';
+import { Project, updateUserPointsInDB, UserProject } from '@tbe/database';
 import type {
   AddChapterRequestPayloadProps,
   AddProjectRequestPayloadProps,
@@ -12,7 +12,7 @@ import type {
   UpdateChapterDBRequestProps,
   UpdateProjectRequestPayloadProps,
   UpdateUserChapterInProjectRequestProps,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 const addAProjectToDB = async ({
   name,
@@ -84,7 +84,7 @@ const getProjectBySlugWithUserFromDB = async (
 
     if (userId) {
       // Use getAProjectForUserFromDB which properly maps user completion status
-      const { data: projectWithUser, error } = await getAProjectForUserFromDB(userId, project._id);
+      const { data: projectWithUser, error } = await getAProjectForUserFromDB(userId, project.id);
       
       if (error) {
         return { error };
@@ -486,20 +486,27 @@ const updateUserProjectChapterInDB = async ({
     }
 
     // Find the specific chapter in the chapters array within the section
-    const chapterIndex = userProject.sections[sectionIndex].chapters.findIndex(
+    const section = userProject.sections[sectionIndex];
+    if (!section) {
+      return { error: 'Section not found in user project' };
+    }
+    
+    const chapterIndex = section.chapters.findIndex(
       (chapter) => chapter.chapterId.toString() === chapterId.toString()
     );
 
     if (chapterIndex === -1) {
       // If chapter is not found, add it with the given status
-      userProject.sections[sectionIndex].chapters.push({
+      section.chapters.push({
         chapterId,
         isCompleted,
       });
     } else {
       // If chapter is found, update the isCompleted status and update timestamp
-      userProject.sections[sectionIndex].chapters[chapterIndex].isCompleted =
-        isCompleted;
+      const chapter = section.chapters[chapterIndex];
+      if (chapter) {
+        chapter.isCompleted = isCompleted;
+      }
     }
 
     // Save the updated document

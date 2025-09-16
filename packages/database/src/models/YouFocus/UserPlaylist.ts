@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS } from '@/constant';
-import type { UserPlaylistModel } from '@/interfaces';
+import { DATABASE_MODELS } from '@tbe/constants';
+import type { UserPlaylistModel } from '@tbe/interface';
 
 // Define UserPlaylist schema and model
 const UserPlaylistSchema = new Schema<UserPlaylistModel>(

@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
-import { deletePlaylistByTagFromDB, getPlaylistByTagFromDB } from '@/database';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
+import { apiStatusCodes } from '@tbe/constants';
+import { deletePlaylistByTagFromDB, getPlaylistByTagFromDB } from '@tbe/database';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

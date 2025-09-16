@@ -1,8 +1,8 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS } from '@/constant';
+import { DATABASE_MODELS } from '@tbe/constants';
 
-export interface QuizAttemptAnswer {
+export interface QuizAttemptAnswer {  
   questionIndex: number;
   selectedAnswer: number | null;
   isCorrect: boolean;

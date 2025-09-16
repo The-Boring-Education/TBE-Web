@@ -7,9 +7,9 @@ import {
   INTERVIEW_CATEGORIES,
   PLATFORM_USAGE,
   USER_ROLE,
-  WORK_DOMAIN,
-} from '@/constant';
-import type { UserModel } from '@/interfaces';
+  WORK_DOMAIN,  
+} from '@tbe/constants';
+import type { UserModel } from '@tbe/interface';
 
 const PrepYatraSchema = new Schema({
   pyOnboarded: {

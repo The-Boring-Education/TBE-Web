@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS, LeaderboardEnum } from '@/constant';
-import { type LeaderboardModel } from '@/interfaces';
+import { DATABASE_MODELS, LeaderboardEnum } from '@tbe/constants';
+import { type LeaderboardModel } from '@tbe/interface';
 
 const LeaderboardEntrySchema = new Schema(
   {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { routes } from '@/constant';
+import { routes } from '@tbe/constants';
 import { useApi, useUser } from '@/hooks';
 import type { useFeedbackProps } from '@/interfaces';
 

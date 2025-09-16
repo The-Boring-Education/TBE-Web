@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   addPlaylistToDB,
   addUserPlaylistToDB,
   checkPlaylistExistsByID,
   updateReferredByInPlaylist,
   updateTagsInPlaylist,
-} from '@/database';
-import { connectDB } from '@/middlewares';
-import { extractPlaylistId, fetchPlaylistData, sendAPIResponse } from '@/utils';
+} from '@tbe/database';
+import { connectDB } from '@/middleware';
+import { extractPlaylistId, fetchPlaylistData, sendAPIResponse } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

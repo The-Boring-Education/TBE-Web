@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   getAllCouponsFromDB,
   createCouponFromDB,
-} from '@/database';
-import { connectDB, adminMiddleware } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
+} from '@tbe/database';
+import { connectDB, adminMiddleware } from '@/middleware';
+import { cors, sendAPIResponse } from '@tbe/utils';
 
 interface CreateCouponRequest {
   code: string;
@@ -46,7 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     default:
       return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
         sendAPIResponse({
-          status: false,
+          status: apiStatusCodes.BAD_REQUEST,
           message: `Method ${method} not allowed`,
         })
       );
@@ -61,7 +60,7 @@ const handleGetAllCoupons = async (res: NextApiResponse) => {
     if (error) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
-          status: false,
+          status: apiStatusCodes.BAD_REQUEST,
           message: error,
         })
       );
@@ -69,7 +68,7 @@ const handleGetAllCoupons = async (res: NextApiResponse) => {
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
-        status: true,
+        status: apiStatusCodes.OKAY,
         message: 'Coupons fetched successfully',
         data: coupons,
       })
@@ -78,7 +77,7 @@ const handleGetAllCoupons = async (res: NextApiResponse) => {
     console.error('Error fetching coupons:', error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
-        status: false,
+        status: apiStatusCodes.BAD_REQUEST,
         message: 'Internal server error while fetching coupons',
       })
     );
@@ -106,7 +105,7 @@ const handleCreateCoupon = async (
     if (!code || !description || discountPercentage == null || !expiryDate) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
-          status: false,
+          status: apiStatusCodes.BAD_REQUEST,
           message: 'Code, description, discountPercentage, and expiryDate are required',
         })
       );
@@ -115,7 +114,7 @@ const handleCreateCoupon = async (
     if (discountPercentage < 1 || discountPercentage > 100) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
-          status: false,
+          status: apiStatusCodes.BAD_REQUEST,
           message: 'Discount percentage must be between 1 and 100',
         })
       );
@@ -126,7 +125,7 @@ const handleCreateCoupon = async (
     if (expiryDateObj <= new Date()) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
-          status: false,
+          status: apiStatusCodes.BAD_REQUEST,
           message: 'Expiry date must be in the future',
         })
       );
@@ -153,7 +152,7 @@ const handleCreateCoupon = async (
     if (error) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
-          status: false,
+            status: apiStatusCodes.BAD_REQUEST,
           message: error,
         })
       );
@@ -161,7 +160,7 @@ const handleCreateCoupon = async (
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json(
       sendAPIResponse({
-        status: true,
+        status: apiStatusCodes.RESOURCE_CREATED,
         message: 'Coupon created successfully',
         data: newCoupon,
       })
@@ -170,7 +169,7 @@ const handleCreateCoupon = async (
     console.error('Error creating coupon:', error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
-        status: false,
+        status: apiStatusCodes.INTERNAL_SERVER_ERROR,
         message: 'Internal server error while creating coupon',
       })
     );

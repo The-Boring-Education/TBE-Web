@@ -1,9 +1,9 @@
 import { type NextApiRequest, type NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { sendAPIResponse } from '@/utils';
+import { sendAPIResponse } from '@tbe/utils';
 
 const ADMIN_EMAIL = 'theboringeducation@gmail.com';
 
@@ -16,7 +16,9 @@ export const withAdminAuth =
       if (!session || !session.user) {
         return res.status(apiStatusCodes.UNAUTHORIZED).json(
           sendAPIResponse({
-            status: false,
+            success: false,
+            status: apiStatusCodes.UNAUTHORIZED,
+            error: true,
             message: 'Authentication required',
           })
         );
@@ -25,7 +27,9 @@ export const withAdminAuth =
       if (session.user.email !== ADMIN_EMAIL) {
         return res.status(apiStatusCodes.FORBIDDEN).json(
           sendAPIResponse({
-            status: false,
+            success: false,
+            status: apiStatusCodes.FORBIDDEN,
+            error: true,
             message: 'Admin access required',
           })
         );
@@ -35,9 +39,11 @@ export const withAdminAuth =
     } catch (error) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
-          status: false,
-          error,
+          success: false,
+          status: apiStatusCodes.INTERNAL_SERVER_ERROR,
+          error: true,
           message: 'Admin authentication error',
+          data: error,
         })
       );
     }

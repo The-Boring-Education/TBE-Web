@@ -1,16 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   addRecruiterToDB,
   deleteRecruiterInDB,
   getRecruitersByUserFromDB,
   handleGamificationPoints,
   updateRecruiterInDB,
-} from '@/database';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
+} from '@tbe/database';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
+import { cors } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS, FEEDBACK_TYPES } from '@/constant';
-import type { FeedbackModel } from '@/interfaces';
+import { DATABASE_MODELS, FEEDBACK_TYPES } from '@tbe/constants';
+import type { FeedbackModel } from '@tbe/interface';
 
 const FeedbackSchema: Schema<FeedbackModel> = new Schema(
   {

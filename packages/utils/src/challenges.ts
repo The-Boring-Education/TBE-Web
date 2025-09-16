@@ -42,7 +42,7 @@ export const challengesService = {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges`,
                 method: 'POST',
-                data
+                body: data
             })
 
             if (!response.success) {
@@ -51,8 +51,7 @@ export const challengesService = {
 
             // Analytics
             try {
-                trackEvent({
-                    action: 'challenge_create',
+                trackEvent('challenge_create', {
                     category: 'challenge',
                     value: data.totalDays,
                     challengeName: data.name,
@@ -73,7 +72,7 @@ export const challengesService = {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges/${data.challengeId}`,
                 method: 'PUT',
-                data: {
+                body: {
                     name: data.name,
                     totalDays: data.totalDays,
                     category: data.category,
@@ -87,8 +86,7 @@ export const challengesService = {
 
             // Analytics
             try {
-                trackEvent({
-                    action: 'challenge_update',
+                trackEvent('challenge_update', {
                     category: 'challenge',
                     challengeId: data.challengeId,
                     updatedFields: Object.keys(data).filter(key => key !== 'challengeId')
@@ -116,8 +114,7 @@ export const challengesService = {
 
             // Analytics
             try {
-                trackEvent({
-                    action: 'challenge_delete',
+                trackEvent('challenge_delete', {
                     category: 'challenge',
                     challengeId
                 })
@@ -153,7 +150,7 @@ export const challengesService = {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges/${data.challengeId}/logs`,
                 method: 'POST',
-                data
+                body: data
             })
 
             if (!response.success) {
@@ -162,8 +159,7 @@ export const challengesService = {
 
             // Analytics
             try {
-                trackEvent({
-                    action: 'challenge_log_create',
+                trackEvent('challenge_log_create', {
                     category: 'challenge',
                     challengeId: data.challengeId,
                     day: data.day,

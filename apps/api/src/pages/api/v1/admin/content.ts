@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   Course,
   Feedback,
@@ -10,10 +10,10 @@ import {
   UserProject,
   UserSheet,
   Webinar,
-} from '@/database';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
+} from '@tbe/database';
+import { connectDB } from '@/middleware/api';
+import { sendAPIResponse } from '@tbe/utils';
+import { cors } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
@@ -340,7 +340,8 @@ const getContentPerformance = async (
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
-          status: false,
+          status: apiStatusCodes.BAD_REQUEST,
+          error: true,
           message: 'Invalid content type specified',
         })
       );
@@ -363,7 +364,8 @@ const getContentDetails = async (
   if (!contentId) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
-        status: false,
+        status: apiStatusCodes.BAD_REQUEST,
+        error: true,
         message: 'Content ID is required',
       })
     );
@@ -442,7 +444,9 @@ const getContentDetails = async (
 
         return res.status(apiStatusCodes.OKAY).json(
           sendAPIResponse({
-            status: true,
+            status: apiStatusCodes.OKAY,
+            error: false,
+            message: 'Content details fetched successfully',
             data: {
               contentDetails,
               engagementMetrics: engagementMetrics[0] || {},
@@ -477,7 +481,9 @@ const getContentDetails = async (
 
       return res.status(apiStatusCodes.OKAY).json(
         sendAPIResponse({
-          status: true,
+          status: apiStatusCodes.OKAY,
+          error: false,
+          message: 'Content details fetched successfully',
           data: {
             contentDetails,
             engagementMetrics: engagementMetrics[0] || {},
@@ -510,7 +516,9 @@ const getContentDetails = async (
 
       return res.status(apiStatusCodes.OKAY).json(
         sendAPIResponse({
-          status: true,
+          status: apiStatusCodes.OKAY,
+          error: false,
+          message: 'Content details fetched successfully',
           data: {
             contentDetails,
             engagementMetrics: engagementMetrics[0] || {},
@@ -527,7 +535,8 @@ const getContentDetails = async (
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
-          status: false,
+          status: apiStatusCodes.BAD_REQUEST,
+          error: true,
           message: 'Invalid content type specified',
         })
       );
@@ -596,7 +605,9 @@ const getContentEngagement = async (
 
   return res.status(apiStatusCodes.OKAY).json(
     sendAPIResponse({
-      status: true,
+      status: apiStatusCodes.OKAY,
+      error: false,
+      message: 'Content engagement fetched successfully',
       data: {
         engagementByTime,
         engagementByDemographics,
@@ -695,7 +706,9 @@ const getDifficultyAnalysis = async (
 
   return res.status(apiStatusCodes.OKAY).json(
     sendAPIResponse({
-      status: true,
+      status: apiStatusCodes.OKAY,
+      error: false,
+      message: 'Difficulty analysis fetched successfully',
       data: {
         coursesDifficultyAnalysis,
         roadmapAnalysis,
@@ -713,7 +726,8 @@ const getCompletionFunnel = async (
   if (!contentId) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
-        status: false,
+        status: apiStatusCodes.BAD_REQUEST,
+        error: true,
         message: 'Content ID is required for funnel analysis',
       })
     );
@@ -755,7 +769,9 @@ const getCompletionFunnel = async (
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
-        status: true,
+        status: apiStatusCodes.OKAY,
+        error: false,
+        message: 'Funnel analysis fetched successfully',
         data: {
           funnelData,
         },
@@ -765,7 +781,8 @@ const getCompletionFunnel = async (
 
   return res.status(apiStatusCodes.BAD_REQUEST).json(
     sendAPIResponse({
-      status: false,
+      status: apiStatusCodes.BAD_REQUEST,
+      error: true,
       message: 'Funnel analysis not implemented for this content type',
     })
   );

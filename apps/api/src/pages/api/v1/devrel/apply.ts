@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { connectDB } from '@/middlewares';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { DevRelLead } from '@/database/models/DevRel/DevRelLead';
+import { connectDB } from '@/middleware';
+import { apiStatusCodes } from '@tbe/constants';
+import { sendAPIResponse } from '@tbe/utils';
+import { DevRelLead } from '@tbe/database';
 
 interface CreateApplicationRequest {
   name: string;
