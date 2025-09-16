@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
-import { cors } from '@/utils/cors';
-import { getUserQuizPerformanceFromDB } from '@/database/query/userQuizAttempt';
+import { connectDB } from '@/middleware';
+import { cors } from '@tbe/utils';
+import { getUserQuizPerformanceFromDB } from '@tbe/database';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);
 
-  const { userId } = req.query;
+  const { userId } = req.query; 
 
   if (!userId || typeof userId !== 'string') {
     return res.status(400).json({ error: 'User ID is required' });

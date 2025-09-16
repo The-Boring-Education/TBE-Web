@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { connectDB } from '@/middlewares';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { DevRelLead } from '@/database/models/DevRel/DevRelLead';
+import { connectDB } from '@/middleware';
+import { apiStatusCodes } from '@tbe/constants';
+import { sendAPIResponse } from '@tbe/utils';
+import { DevRelLead } from '@tbe/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'GET') {
@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         message: 'Method not allowed',
       })
     );
-  }
+  } 
 
   try {
     await connectDB();
@@ -65,7 +65,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        error,
+        error: true,
         message: 'Internal server error while checking application status',
       })
     );

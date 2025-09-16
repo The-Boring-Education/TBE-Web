@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import cors from '@/middlewares/cors';
-import { connectDB } from '@/middlewares';
-import { getUserQuizSessionsFromDB } from '@/database/query/enhancedQuiz';
+import {cors} from '@tbe/utils';
+import { connectDB } from '@/middleware';
+import { getUserQuizSessionsFromDB } from '@tbe/database';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);

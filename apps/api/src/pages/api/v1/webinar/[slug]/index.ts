@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   checkUserRegistrationInWebinarDB,
   deleteAWebinarFromDB,
   getWebinarDetailsFromDB,
   updateWebinarInDB,
-} from '@/database';
-import type { UpdateEnrolledUsersRequestPayloadProps } from '@/interfaces';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
+} from '@tbe/database';
+import type { UpdateEnrolledUsersRequestPayloadProps } from '@tbe/interface';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

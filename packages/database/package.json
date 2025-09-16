@@ -15,6 +15,10 @@
   },
   "dependencies": {
     "@tbe/types": "workspace:*",
+    "@tbe/utils": "workspace:*",
+    "@tbe/constants": "workspace:*",
+    "@tbe/interface": "workspace:*",
+    "@tbe/services": "workspace:*",
     "mongoose": "^7.4.1"
   },
   "devDependencies": {

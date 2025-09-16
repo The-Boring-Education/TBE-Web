@@ -5,9 +5,9 @@ import {
   getQuizCategoriesFromDB,
   getQuizCategoriesWithCountsFromDB,
   appendQuestionsToQuizInDB,
-} from '@/database/query/quiz';
-import { connectDB } from '@/middlewares';
-import { cors } from '@/utils/cors';
+} from '@tbe/database';
+import { connectDB } from '@/middleware';
+import { cors } from '@tbe/utils';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);

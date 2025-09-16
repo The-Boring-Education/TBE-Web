@@ -1,5 +1,17 @@
-import { NextApiRequest } from "next"
-import { getSession } from "next-auth/react"
+// Conditional imports to avoid issues when Next.js is not available
+let NextApiRequest: any;
+let getSession: any;
+
+try {
+  const next = require("next");
+  const nextAuth = require("next-auth/react");
+  NextApiRequest = next.NextApiRequest;
+  getSession = nextAuth.getSession;
+} catch (error) {
+  // Next.js not available, define fallback types
+  NextApiRequest = class {};
+  getSession = () => Promise.resolve(null);
+}
 
 export interface AuthUser {
     id: string
@@ -12,7 +24,7 @@ export interface AuthUser {
  * Get authenticated user from Next.js API request
  */
 export const getAuthenticatedUser = async (
-    req: NextApiRequest
+    req: typeof NextApiRequest
 ): Promise<AuthUser | null> => {
     try {
         const session = await getSession({ req })
@@ -37,7 +49,7 @@ export const getAuthenticatedUser = async (
  * Validate if user is authenticated
  */
 export const isAuthenticated = async (
-    req: NextApiRequest
+    req: typeof NextApiRequest
 ): Promise<boolean> => {
     const user = await getAuthenticatedUser(req)
     return user !== null
@@ -47,7 +59,7 @@ export const isAuthenticated = async (
  * Check if user has required role (extend as needed)
  */
 export const hasRole = async (
-    req: NextApiRequest,
+    req: typeof NextApiRequest,
     requiredRole: string
 ): Promise<boolean> => {
     const user = await getAuthenticatedUser(req)

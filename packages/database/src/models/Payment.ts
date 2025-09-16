@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS, PRODUCT_TYPE } from '@/constant';
-import type { PaymentModel } from '@/interfaces';
+import { DATABASE_MODELS, PRODUCT_TYPE } from '@tbe/constants';
+import type { PaymentModel } from '@tbe/interface';
 
 const PaymentSchema: Schema<PaymentModel> = new Schema(
   {

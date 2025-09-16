@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS } from '@/constant';
-import type { UserSheetModel, UserSheetQuestionModel } from '@/interfaces';
+import { DATABASE_MODELS } from '@tbe/constants';
+import type { UserSheetModel, UserSheetQuestionModel } from '@tbe/interface';
 
 const UserQuestionSchema = new Schema<UserSheetQuestionModel>(
   {

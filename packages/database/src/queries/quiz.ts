@@ -1,7 +1,7 @@
-import { Quiz, QuizAttempt } from '@/database';
-import type { QuizModel } from '@/database/models/Quiz/Quiz';
-import type { QuizAttemptModel } from '@/database/models/Quiz/QuizAttempt';
-import type { DatabaseQueryResponseType } from '@/interfaces';
+import { Quiz, QuizAttempt } from '../models';
+import type { QuizModel } from '../models/Quiz/Quiz';
+import type { QuizAttemptModel } from '../models/Quiz/QuizAttempt';
+import type { DatabaseQueryResponseType } from '@tbe/types';
 
 // Add a quiz to database
 const addAQuizToDB = async (

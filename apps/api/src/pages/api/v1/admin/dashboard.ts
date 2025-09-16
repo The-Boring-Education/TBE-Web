@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   Course,
   getAllDocumentsFromModel,
@@ -11,10 +11,9 @@ import {
   UserCourse,
   UserProject,
   UserSheet,
-} from '@/database';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
+} from '@tbe/database';
+import { connectDB } from '@/middleware';
+import { cors, sendAPIResponse } from '@tbe/utils';
 
 // Helper function to convert date to IST and format it
 const formatDateToIST = (date: Date) => {

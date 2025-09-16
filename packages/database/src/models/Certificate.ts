@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { CERTIFICATE_TYPE, DATABASE_MODELS } from '@/constant';
-import type { CertificateModel } from '@/interfaces';
+import { CERTIFICATE_TYPE, DATABASE_MODELS } from '@tbe/constants';
+import type { CertificateModel } from '@tbe/interface'; 
 
 const CertificateSchema = new Schema<CertificateModel>(
   {

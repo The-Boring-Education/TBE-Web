@@ -1,10 +1,10 @@
-import { Gamification } from '@/database';
+import { Gamification } from '../models';
 import type {
   DatabaseQueryResponseType,
   UserPointsAction,
   UserPointsActionType,
-} from '@/interfaces';
-import { calculateUserPointsForAction } from '@/utils';
+} from '@tbe/types';
+import { calculateUserPointsForAction } from '@tbe/utils';
 
 const addGamificationDocInDB = async (
   userId: string

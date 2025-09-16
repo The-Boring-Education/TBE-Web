@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
-import { User } from '@/database';
-import PrepYatraSubscription from '@/database/models/PrepYatra/Subscription';
-import type { CreateSubscriptionPayload } from '@/interfaces';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
+import { apiStatusCodes } from '@tbe/constants';
+import { User } from '@tbe/database';
+import {PrepYatraSubscription} from '@tbe/database';
+import { type CreateSubscriptionPayload } from '@tbe/interface';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
 
 /**
  * API Handler for PrepYatra subscriptions

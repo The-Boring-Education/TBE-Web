@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS } from '@/constant';
-import type { JobAggregateModel } from '@/interfaces';
+import { DATABASE_MODELS } from '@tbe/constants';
+import type { JobAggregateModel } from '@tbe/interface';
 
 const JobAggregateSchema = new Schema<JobAggregateModel>(
   {

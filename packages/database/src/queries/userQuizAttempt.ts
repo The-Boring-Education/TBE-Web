@@ -1,5 +1,5 @@
-import { QuizAttempt } from '@/database';
-import type { DatabaseQueryResponseType } from '@/interfaces';
+import { QuizAttempt } from '../models';
+import type { DatabaseQueryResponseType } from '@tbe/types';
 import { Schema } from 'mongoose';
 
 interface QuizAttemptData {

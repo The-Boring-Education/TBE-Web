@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS, INTEREST_EVENT_TYPES } from '@/constant';
-import type { UserInterestModel } from '@/interfaces';
+import { DATABASE_MODELS, INTEREST_EVENT_TYPES } from '@tbe/constants';
+import type { UserInterestModel } from '@tbe/interface';
 
 const UserInterestSchema = new Schema<UserInterestModel>(
   {

@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from '@/constant';
-import type { CourseChapterModel, CourseModel } from '@/interfaces';
+import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from '@tbe/constants';
+import type { CourseChapterModel, CourseModel } from '@tbe/interface';
 
 const chapterSchema = new Schema<CourseChapterModel>(
   {

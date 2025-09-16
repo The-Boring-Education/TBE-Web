@@ -1,5 +1,5 @@
-import { Playlist, UserPlaylist } from '@/database';
-import type { DatabaseQueryResponseType, PlaylistModel } from '@/interfaces';
+import { Playlist, UserPlaylist } from '@tbe/database';
+import type { DatabaseQueryResponseType, PlaylistModel } from '@tbe/interface';
 
 // Add a playlist to the database
 const addPlaylistToDB = async (
@@ -236,7 +236,7 @@ const updateUserPlaylistData = async (
 
     if (!updatedUserPlaylist) return { error: 'Failed to update UserPlaylist' };
 
-    let updatedPlaylist = null;
+    let updatedPlaylist: DatabaseQueryResponseType | null = null;
     if (
       isRecommended !== undefined &&
       userPlaylist.isRecommended !== isRecommended

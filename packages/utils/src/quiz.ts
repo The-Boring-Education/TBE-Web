@@ -66,7 +66,7 @@ export const quizService = {
 
             // Analytics
             try {
-                trackEvent({
+                trackEvent('quiz_session_start', {
                     action: 'quiz_session_start',
                     category: 'quiz',
                     label: quizId,
@@ -104,7 +104,7 @@ export const quizService = {
 
             // Analytics
             try {
-                trackEvent({
+                trackEvent('quiz_answer_submit', {
                     action: 'quiz_answer_submit',
                     category: 'quiz',
                     value: selectedOption,
@@ -152,7 +152,7 @@ export const quizService = {
 
             // Analytics
             try {
-                trackEvent({
+                trackEvent('quiz_session_complete', {
                     action: 'quiz_session_complete',
                     category: 'quiz',
                     sessionId

@@ -68,8 +68,7 @@ export const prepLogsService = {
 
             // Analytics
             try {
-                trackEvent({
-                    action: 'prep_log_create',
+                trackEvent('prep_log_create', {
                     category: 'prep_yatra',
                     value: data.timeSpent,
                     title: data.title
@@ -103,8 +102,7 @@ export const prepLogsService = {
 
             // Analytics
             try {
-                trackEvent({
-                    action: 'prep_log_update',
+                trackEvent('prep_log_update', {
                     category: 'prep_yatra',
                     logId: data.logId
                 })
@@ -131,8 +129,7 @@ export const prepLogsService = {
 
             // Analytics
             try {
-                trackEvent({
-                    action: 'prep_log_delete',
+                trackEvent('prep_log_delete', {
                     category: 'prep_yatra',
                     logId
                 })

@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS } from '@/constant';
-import type { CouponModel } from '@/interfaces';
+import { DATABASE_MODELS } from '@tbe/constants';
+import type { CouponModel } from '@tbe/interface';
 
 const CouponSchema = new Schema<CouponModel>(
   {

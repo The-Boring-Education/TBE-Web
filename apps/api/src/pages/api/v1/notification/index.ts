@@ -1,19 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   addANotificationToDB,
   deleteANotificationsFromDB,
   getAllNotificationsFromDB,
   updateANotificationInDB,
-} from '@/database';
+} from '@tbe/database';
 import type {
   AddNotificationRequestPayloadProps,
   UpdateNotificationRequestPayloadProps,
-} from '@/interfaces';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
+} from '@tbe/interface';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
+import { cors } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

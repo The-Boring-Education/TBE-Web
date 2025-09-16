@@ -1,15 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from '@tbe/constants';
 import {
   enrollInACourse,
   getACourseFromDBById,
   getEnrolledCourseFromDB,
   getUserByIdFromDB,
-} from '@/database';
-import type { CourseEnrollmentRequestProps } from '@/interfaces';
-import { connectDB } from '@/middlewares';
-import { sendAPIResponse, sendCourseEnrollmentEmail } from '@/utils';
+} from '@tbe/database';
+import type { CourseEnrollmentRequestProps } from '@tbe/interface';
+import { connectDB } from '@/middleware';
+import { sendAPIResponse } from '@tbe/utils';
+import { sendCourseEnrollmentEmail } from '@tbe/services';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

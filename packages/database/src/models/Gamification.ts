@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS, USER_POINTS_ACTION } from '@/constant';
-import type { GamificationModel, UserPointsAction } from '@/interfaces';
+import { DATABASE_MODELS, USER_POINTS_ACTION } from '@tbe/constants';
+import type { GamificationModel, UserPointsAction } from '@tbe/interface';
 
 const ActionSchema = new Schema<UserPointsAction>(
   {

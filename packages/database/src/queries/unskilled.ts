@@ -1,10 +1,10 @@
-import { Job, JobAggregate } from '@/database';
+import { Job, JobAggregate } from '@tbe/database';
 import type {
   AddJobRequestPayloadProps,
   DatabaseQueryResponseType,
   UnSkilledEvaluationRequestBody,
-} from '@/interfaces';
-import { constrainNumberToRange } from '@/utils';
+} from '@tbe/interface';
+import { constrainNumberToRange } from '@tbe/utils';
 
 // Add A Job
 const addJobToDB = async (

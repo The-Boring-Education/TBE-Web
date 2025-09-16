@@ -1,9 +1,9 @@
-import { Payment, PrepYatraSubscription } from '@/database';
+import { Payment, PrepYatraSubscription } from '@tbe/database';
 import type {
   AddPaymentToDBRequestPayloadProps,
   DatabaseQueryResponseType,
   UpdatePaymentStatusPayloadProps,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 const addPaymentToDB = async ({
   userId,

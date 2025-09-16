@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@/constant';
+import { apiStatusCodes } from "@tbe/constants";
 import {
   applyCouponToSheetsFromDB,
   getCouponByIdFromDB,
-} from '@/database';
-import { connectDB, adminMiddleware } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
+} from '@tbe/database';
+import { connectDB, adminMiddleware } from '@/middleware';
+import { cors, sendAPIResponse  } from '@tbe/utils';
 
 interface BulkApplyRequest {
   sheetIds: string[];
@@ -33,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!couponId || typeof couponId !== 'string') {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
-        status: false,
+        status: apiStatusCodes.BAD_REQUEST,
         message: 'Coupon ID is required',
       })
     );

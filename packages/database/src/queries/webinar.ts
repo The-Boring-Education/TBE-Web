@@ -1,9 +1,9 @@
-import { Webinar } from '@/database';
+import { Webinar } from '@tbe/database';
 import type {
   AddWebinarRequestPayloadProps,
   UpdateEnrolledUsersRequestPayloadProps,
-} from '@/interfaces';
-import { isProgramActive } from '@/utils';
+} from '@tbe/interface';
+import { isProgramActive } from '@tbe/utils';
 
 // Add A Webinar
 const addAWebinarToDB = async (

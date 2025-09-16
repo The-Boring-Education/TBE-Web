@@ -1,14 +1,14 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
-import { envConfig, routes } from '@/constant';
-import { createUserInDB, getUserByEmailFromDB } from '@/database/query/user';
-import { connectDB } from '@/middlewares';
+import { envConfig, routes } from '@tbe/constants';
+import { createUserInDB, getUserByEmailFromDB } from '@tbe/database';
+import { connectDB } from '@/middleware/api';
 
 const authOptions = {
   providers: [
     GoogleProvider({
-      clientId: envConfig.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      clientId: envConfig.GOOGLE_AUTH_CLIENT_ID,
       clientSecret: envConfig.GOOGLE_AUTH_CLIENT_SECRET,
     }),
   ],

@@ -1,5 +1,5 @@
-import { modelSelectParams } from '@/constant';
-import { Course, updateUserPointsInDB, UserCourse } from '@/database';
+import { modelSelectParams } from '@tbe/constants';
+import { Course, updateUserPointsInDB, UserCourse } from '@tbe/database';
 import type {
   AddChapterToCourseRequestProps,
   AddCourseRequestPayloadProps,
@@ -9,7 +9,7 @@ import type {
   UpdateChapterInCourseRequestProps,
   UpdateCourseRequestPayloadProps,
   UpdateUserChapterInCourseRequestProps,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 const addACourseToDB = async (
   courseDetails: AddCourseRequestPayloadProps
@@ -317,7 +317,10 @@ const updateUserCourseChapterInDB = async ({
       });
     } else {
       // If chapter is found, update the isCompleted status
-      userCourse.chapters[chapterIndex].isCompleted = isCompleted;
+      const chapter = userCourse.chapters[chapterIndex];
+      if (chapter) {
+        chapter.isCompleted = isCompleted;
+      }
     }
 
     // Check if all chapters are completed and update isCompleted field

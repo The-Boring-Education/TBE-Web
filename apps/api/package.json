@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tbe/constants": "workspace:*",
     "@tbe/database": "workspace:*",
-    "@tbe/utils": "workspace:*",
     "@tbe/types": "workspace:*",
+    "@tbe/utils": "workspace:*",    
+    "@tbe/interface": "workspace:*",
+    "@tbe/services": "workspace:*",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -28,14 +31,15 @@
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
     "@tbe/typescript-config": "workspace:*",
+    "@tbe/interface": "workspace:*", 
     "@types/cors": "^2.8.19",
     "@types/markdown-it": "^14.0.1",
-    "@types/node": "^24.2.0",
+    "@types/node": "18",
     "@types/raw-body": "^2.1.4",
     "@types/react": "^18.0.28",
     "@types/uuid": "^9.0.1",
     "eslint": "^8.36.0",
     "eslint-config-next": "^13.2.4",
-    "typescript": "^4.9.5"
+    "typescript": "5.3.3"
   }
 }

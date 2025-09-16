@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { envConfig } from '@/constant/envConfig';
+import { envConfig } from '@tbe/constants';
 
 interface ServiceHealthStatus {
   status: 'healthy' | 'unhealthy' | 'unknown';
   responseTime?: number;
-  url: string;
+  url: string;  
   error?: string;
 }
 

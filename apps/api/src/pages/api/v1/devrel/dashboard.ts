@@ -1,19 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { connectDB } from '@/middlewares';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
+import { connectDB } from '@/middleware';
+import { apiStatusCodes } from '@tbe/constants';
+import { sendAPIResponse } from '@tbe/utils';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { DevRelLead } from '@/database/models/DevRel/DevRelLead';
-import { DevRelTask } from '@/database/models/DevRel/DevRelTask';
-import User from '@/database/models/User';
+import { DevRelTask, DevRelLead, User } from '@tbe/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'GET') {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
       sendAPIResponse({
-        status: false,
+        status: false,  
         message: 'Method not allowed',
       })
     );

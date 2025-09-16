@@ -1,7 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
-import { DATABASE_MODELS } from '@/constant';
-import type { PrepLogModel } from '@/interfaces';
+import { DATABASE_MODELS } from '@tbe/constants';
+import type { PrepLogModel } from '@tbe/interface';
 
 const PrepLogSchema = new Schema<PrepLogModel>(
   {

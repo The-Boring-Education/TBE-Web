@@ -1,8 +1,8 @@
-import { UserInterest } from '@/database';
+import { UserInterest } from '@tbe/database';
 import type {
   CreateUserInterestRequestProps,
   DatabaseQueryResponseType,
-} from '@/interfaces';
+} from '@tbe/interface';
 
 /**
  * Create a new user interest or update existing one

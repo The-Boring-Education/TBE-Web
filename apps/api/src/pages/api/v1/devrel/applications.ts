@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { connectDB } from '@/middlewares';
-import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
+import { connectDB } from '@/middleware';
+import { apiStatusCodes } from '@tbe/constants';
+import { sendAPIResponse } from '@tbe/utils';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { DevRelLead } from '@/database/models/DevRel/DevRelLead';
-import User from '@/database/models/User';
+import {User, DevRelLead} from '@tbe/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -52,7 +51,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        error,
+        error: true,
         message: 'Internal server error',
       })
     );
@@ -92,7 +91,7 @@ const handleGetApplications = async (req: NextApiRequest, res: NextApiResponse) 
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        error,
+        error: true,
         message: 'Failed to fetch applications',
       })
     );

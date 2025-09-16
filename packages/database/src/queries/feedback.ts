@@ -1,9 +1,9 @@
-import { Feedback } from '@/database';
+import { Feedback } from '../models';
 import type {
   AddFeedbackRequestProps,
   DatabaseQueryResponseType,
   UpdateFeedbackRequestProps,
-} from '@/interfaces';
+} from '@tbe/types';
 
 const addFeedbackToDB = async ({
   rating,
