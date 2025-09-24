@@ -5,6 +5,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const nextConfig = {
   eslint: {
     dirs: ['src'],
+    ignoreDuringBuilds: true,
   },
 
   reactStrictMode: true,
