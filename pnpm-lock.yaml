@@ -762,9 +762,6 @@ importers:
       '@tbe/constants':
         specifier: workspace:*
         version: link:../constants
-      '@tbe/database':
-        specifier: workspace:*
-        version: 'link:'
       '@tbe/interface':
         specifier: workspace:*
         version: link:../interface
@@ -950,9 +947,6 @@ importers:
         specifier: ^19.1.1
         version: 19.1.1(react@19.1.1)
     devDependencies:
-      '@tbe/database':
-        specifier: workspace:*
-        version: link:../database
       '@tbe/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -1169,15 +1163,9 @@ importers:
       '@tbe/interface':
         specifier: workspace:*
         version: link:../interface
-      '@tbe/services':
-        specifier: workspace:*
-        version: link:../services
       '@tbe/types':
         specifier: workspace:*
         version: link:../types
-      '@tbe/utils':
-        specifier: workspace:*
-        version: 'link:'
       '@types/cors':
         specifier: ^2.8.19
         version: 2.8.19
