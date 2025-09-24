@@ -1,15 +1,15 @@
 {
-    "buildCommand": "cd ../.. && pnpm run build:prep-yatra",
+    "buildCommand": "cd ../.. && pnpm run build:api",
     "outputDirectory": ".next",
     "framework": "nextjs",
     "installCommand": "cd ../.. && pnpm install",
-    "devCommand": "cd ../.. && pnpm run dev:prep-yatra",
+    "devCommand": "cd ../.. && pnpm run dev:api",
     "regions": [
         "iad1"
     ],
     "functions": {
         "src/pages/api/**/*.ts": {
-            "maxDuration": 10
+            "maxDuration": 60
         }
     }
 }

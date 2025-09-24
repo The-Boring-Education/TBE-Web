@@ -1,4 +1,9 @@
 {
+    "buildCommand": "cd ../.. && pnpm run build:quizes",
+    "outputDirectory": ".next",
+    "framework": "nextjs",
+    "installCommand": "cd ../.. && pnpm install",
+    "devCommand": "cd ../.. && pnpm run dev:quizes",
     "cleanUrls": true,
     "trailingSlash": false,
     "rewrites": [

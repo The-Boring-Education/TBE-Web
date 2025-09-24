@@ -1,0 +1,10 @@
+{
+    "buildCommand": "cd ../.. && pnpm run build:onboarding",
+    "outputDirectory": "dist",
+    "framework": "vite",
+    "installCommand": "cd ../.. && pnpm install",
+    "devCommand": "cd ../.. && pnpm run dev:onboarding",
+    "regions": [
+        "iad1"
+    ]
+}
