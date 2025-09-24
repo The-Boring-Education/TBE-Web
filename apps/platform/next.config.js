@@ -113,6 +113,9 @@ const sentryWebpackPluginOptions = {
   org: 'the-boring-education',
   project: 'tbe-webapp',
 
+  // Auth token for Sentry API access
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
 
