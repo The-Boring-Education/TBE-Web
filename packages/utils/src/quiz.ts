@@ -1,9 +1,10 @@
-import { sendRequest, trackEvent } from '@tbe/utils'
-import { QuizQuestion, QuizSession, QuizResult } from '@tbe/types'
+import { sendRequest } from "./api"
+import { trackEvent } from "./analytics"
+import { QuizQuestion, QuizSession, QuizResult } from "@tbe/types"
 
 /**
  * Quiz Service
- * 
+ *
  * Extracted from quizes app and made reusable
  * Handles all quiz-related API operations
  */
@@ -13,17 +14,17 @@ export const quizService = {
     async getCategories() {
         try {
             const response = await sendRequest({
-                url: '/api/v1/quiz/categories',
-                method: 'GET'
+                url: "/api/v1/quiz/categories",
+                method: "GET"
             })
 
             if (!response.success) {
-                throw new Error('Failed to fetch quiz categories')
+                throw new Error("Failed to fetch quiz categories")
             }
 
             return response.data || []
         } catch (error) {
-            console.error('Error fetching quiz categories:', error)
+            console.error("Error fetching quiz categories:", error)
             throw error
         }
     },
@@ -33,26 +34,30 @@ export const quizService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/quiz/${quizId}`,
-                method: 'GET'
+                method: "GET"
             })
 
             if (!response.success) {
-                throw new Error('Failed to fetch quiz questions')
+                throw new Error("Failed to fetch quiz questions")
             }
 
             return response.data || []
         } catch (error) {
-            console.error('Error fetching quiz questions:', error)
+            console.error("Error fetching quiz questions:", error)
             throw error
         }
     },
 
     // Start a new quiz session
-    async startSession(quizId: string, difficulty: string, questionCount: number): Promise<QuizSession> {
+    async startSession(
+        quizId: string,
+        difficulty: string,
+        questionCount: number
+    ): Promise<QuizSession> {
         try {
             const response = await sendRequest({
-                url: '/api/v1/quiz/session/start',
-                method: 'POST',
+                url: "/api/v1/quiz/session/start",
+                method: "POST",
                 data: {
                     quizId,
                     difficulty,
@@ -61,14 +66,14 @@ export const quizService = {
             })
 
             if (!response.success) {
-                throw new Error('Failed to start quiz session')
+                throw new Error("Failed to start quiz session")
             }
 
             // Analytics
             try {
-                trackEvent('quiz_session_start', {
-                    action: 'quiz_session_start',
-                    category: 'quiz',
+                trackEvent("quiz_session_start", {
+                    action: "quiz_session_start",
+                    category: "quiz",
                     label: quizId,
                     value: questionCount
                 })
@@ -76,21 +81,21 @@ export const quizService = {
 
             return response.data
         } catch (error) {
-            console.error('Error starting quiz session:', error)
+            console.error("Error starting quiz session:", error)
             throw error
         }
     },
 
     // Submit an answer
     async submitAnswer(
-        sessionId: string, 
-        questionIndex: number, 
+        sessionId: string,
+        questionIndex: number,
         selectedOption: number
     ): Promise<QuizResult> {
         try {
             const response = await sendRequest({
-                url: '/api/v1/quiz/session/answer',
-                method: 'POST',
+                url: "/api/v1/quiz/session/answer",
+                method: "POST",
                 data: {
                     sessionId,
                     questionIndex,
@@ -99,14 +104,14 @@ export const quizService = {
             })
 
             if (!response.success) {
-                throw new Error('Failed to submit answer')
+                throw new Error("Failed to submit answer")
             }
 
             // Analytics
             try {
-                trackEvent('quiz_answer_submit', {
-                    action: 'quiz_answer_submit',
-                    category: 'quiz',
+                trackEvent("quiz_answer_submit", {
+                    action: "quiz_answer_submit",
+                    category: "quiz",
                     value: selectedOption,
                     sessionId
                 })
@@ -114,7 +119,7 @@ export const quizService = {
 
             return response.data
         } catch (error) {
-            console.error('Error submitting answer:', error)
+            console.error("Error submitting answer:", error)
             throw error
         }
     },
@@ -124,16 +129,16 @@ export const quizService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/quiz/session/${sessionId}`,
-                method: 'GET'
+                method: "GET"
             })
 
             if (!response.success) {
-                throw new Error('Failed to get quiz session')
+                throw new Error("Failed to get quiz session")
             }
 
             return response.data
         } catch (error) {
-            console.error('Error fetching quiz session:', error)
+            console.error("Error fetching quiz session:", error)
             throw error
         }
     },
@@ -143,25 +148,25 @@ export const quizService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/quiz/session/${sessionId}/complete`,
-                method: 'POST'
+                method: "POST"
             })
 
             if (!response.success) {
-                throw new Error('Failed to complete quiz session')
+                throw new Error("Failed to complete quiz session")
             }
 
             // Analytics
             try {
-                trackEvent('quiz_session_complete', {
-                    action: 'quiz_session_complete',
-                    category: 'quiz',
+                trackEvent("quiz_session_complete", {
+                    action: "quiz_session_complete",
+                    category: "quiz",
                     sessionId
                 })
             } catch {}
 
             return response.data
         } catch (error) {
-            console.error('Error completing quiz session:', error)
+            console.error("Error completing quiz session:", error)
             throw error
         }
     },
@@ -171,16 +176,16 @@ export const quizService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/quiz/history?userId=${userId}`,
-                method: 'GET'
+                method: "GET"
             })
 
             if (!response.success) {
-                throw new Error('Failed to fetch quiz history')
+                throw new Error("Failed to fetch quiz history")
             }
 
             return response.data || []
         } catch (error) {
-            console.error('Error fetching quiz history:', error)
+            console.error("Error fetching quiz history:", error)
             throw error
         }
     },
@@ -188,22 +193,22 @@ export const quizService = {
     // Get leaderboard
     async getLeaderboard(quizId?: string, limit: number = 10) {
         try {
-            const url = quizId 
+            const url = quizId
                 ? `/api/v1/quiz/leaderboard?quizId=${quizId}&limit=${limit}`
                 : `/api/v1/quiz/leaderboard?limit=${limit}`
 
             const response = await sendRequest({
                 url,
-                method: 'GET'
+                method: "GET"
             })
 
             if (!response.success) {
-                throw new Error('Failed to fetch leaderboard')
+                throw new Error("Failed to fetch leaderboard")
             }
 
             return response.data || []
         } catch (error) {
-            console.error('Error fetching leaderboard:', error)
+            console.error("Error fetching leaderboard:", error)
             throw error
         }
     }

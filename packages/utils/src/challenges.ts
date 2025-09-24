@@ -1,4 +1,5 @@
-import { sendRequest, trackEvent } from '@tbe/utils'
+import { sendRequest } from "./api"
+import { trackEvent } from "./analytics"
 import {
     Challenge,
     ChallengeLog,
@@ -7,11 +8,11 @@ import {
     UpdateChallengeRequest,
     CreateChallengeLogRequest,
     SocialMediaTemplate
-} from '@tbe/types'
+} from "@tbe/types"
 
 /**
  * Challenges Service
- * 
+ *
  * Extracted from prep-yatra and made reusable
  * Handles all challenge-related API operations
  */
@@ -22,37 +23,39 @@ export const challengesService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges?userId=${userId}`,
-                method: 'GET'
+                method: "GET"
             })
 
             if (!response.success) {
-                throw new Error('Failed to fetch challenges')
+                throw new Error("Failed to fetch challenges")
             }
 
             return response.data || []
         } catch (error) {
-            console.error('Error fetching challenges:', error)
+            console.error("Error fetching challenges:", error)
             throw error
         }
     },
 
     // Create a new challenge
-    async create(data: CreateChallengeRequest & { user: string }): Promise<Challenge> {
+    async create(
+        data: CreateChallengeRequest & { user: string }
+    ): Promise<Challenge> {
         try {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges`,
-                method: 'POST',
+                method: "POST",
                 body: data
             })
 
             if (!response.success) {
-                throw new Error('Failed to create challenge')
+                throw new Error("Failed to create challenge")
             }
 
             // Analytics
             try {
-                trackEvent('challenge_create', {
-                    category: 'challenge',
+                trackEvent("challenge_create", {
+                    category: "challenge",
                     value: data.totalDays,
                     challengeName: data.name,
                     challengeCategory: data.category
@@ -61,7 +64,7 @@ export const challengesService = {
 
             return response.data
         } catch (error) {
-            console.error('Error creating challenge:', error)
+            console.error("Error creating challenge:", error)
             throw error
         }
     },
@@ -71,7 +74,7 @@ export const challengesService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges/${data.challengeId}`,
-                method: 'PUT',
+                method: "PUT",
                 body: {
                     name: data.name,
                     totalDays: data.totalDays,
@@ -81,21 +84,23 @@ export const challengesService = {
             })
 
             if (!response.success) {
-                throw new Error('Failed to update challenge')
+                throw new Error("Failed to update challenge")
             }
 
             // Analytics
             try {
-                trackEvent('challenge_update', {
-                    category: 'challenge',
+                trackEvent("challenge_update", {
+                    category: "challenge",
                     challengeId: data.challengeId,
-                    updatedFields: Object.keys(data).filter(key => key !== 'challengeId')
+                    updatedFields: Object.keys(data).filter(
+                        (key) => key !== "challengeId"
+                    )
                 })
             } catch {}
 
             return response.data
         } catch (error) {
-            console.error('Error updating challenge:', error)
+            console.error("Error updating challenge:", error)
             throw error
         }
     },
@@ -105,22 +110,22 @@ export const challengesService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges/${challengeId}`,
-                method: 'DELETE'
+                method: "DELETE"
             })
 
             if (!response.success) {
-                throw new Error('Failed to delete challenge')
+                throw new Error("Failed to delete challenge")
             }
 
             // Analytics
             try {
-                trackEvent('challenge_delete', {
-                    category: 'challenge',
+                trackEvent("challenge_delete", {
+                    category: "challenge",
                     challengeId
                 })
             } catch {}
         } catch (error) {
-            console.error('Error deleting challenge:', error)
+            console.error("Error deleting challenge:", error)
             throw error
         }
     },
@@ -130,16 +135,16 @@ export const challengesService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges/${challengeId}/logs`,
-                method: 'GET'
+                method: "GET"
             })
 
             if (!response.success) {
-                throw new Error('Failed to fetch challenge logs')
+                throw new Error("Failed to fetch challenge logs")
             }
 
             return response.data || []
         } catch (error) {
-            console.error('Error fetching challenge logs:', error)
+            console.error("Error fetching challenge logs:", error)
             throw error
         }
     },
@@ -149,18 +154,18 @@ export const challengesService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges/${data.challengeId}/logs`,
-                method: 'POST',
+                method: "POST",
                 body: data
             })
 
             if (!response.success) {
-                throw new Error('Failed to create challenge log')
+                throw new Error("Failed to create challenge log")
             }
 
             // Analytics
             try {
-                trackEvent('challenge_log_create', {
-                    category: 'challenge',
+                trackEvent("challenge_log_create", {
+                    category: "challenge",
                     challengeId: data.challengeId,
                     day: data.day,
                     hoursSpent: data.hoursSpent
@@ -169,7 +174,7 @@ export const challengesService = {
 
             return response.data
         } catch (error) {
-            console.error('Error creating challenge log:', error)
+            console.error("Error creating challenge log:", error)
             throw error
         }
     },
@@ -179,16 +184,16 @@ export const challengesService = {
         try {
             const response = await sendRequest({
                 url: `/api/v1/prepyatra/challenges/${challengeId}/progress`,
-                method: 'GET'
+                method: "GET"
             })
 
             if (!response.success) {
-                throw new Error('Failed to fetch challenge progress')
+                throw new Error("Failed to fetch challenge progress")
             }
 
             return response.data
         } catch (error) {
-            console.error('Error fetching challenge progress:', error)
+            console.error("Error fetching challenge progress:", error)
             throw error
         }
     },
@@ -199,7 +204,9 @@ export const challengesService = {
         currentLog: ChallengeLog,
         nextGoals: string[] = []
     ): SocialMediaTemplate {
-        const appUrl = process.env.NEXT_PUBLIC_PREPYATRA_BASE_URL || 'https://prepyatra.theboringeducation.com'
+        const appUrl =
+            process.env.NEXT_PUBLIC_PREPYATRA_BASE_URL ||
+            "https://prepyatra.theboringeducation.com"
 
         return {
             challengeName: challenge.name,
@@ -214,7 +221,7 @@ export const challengesService = {
     formatSocialMediaMessage(template: SocialMediaTemplate): string {
         const goals = template.nextGoals
             .map((goal, index) => `${index + 1}. ${goal}`)
-            .join('\n')
+            .join("\n")
 
         return `Today was Day ${template.currentDay} of ${template.challengeName}
 
