@@ -21,8 +21,6 @@
     "install:all": "pnpm install"
   },
   "devDependencies": {
-    "@types/react": "^19.1.13",
-    "@types/react-dom": "^19.1.9",
     "@types/uuid": "^9.0.1",
     "prettier": "^3.6.2",
     "turbo": "^2.5.6"
