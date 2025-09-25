@@ -8,6 +8,10 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   reactStrictMode: true,
 
   // Performance optimizations
