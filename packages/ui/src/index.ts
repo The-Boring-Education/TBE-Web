@@ -1,17 +1,16 @@
 // Export all UI components from TBE design system
 
 // Common Components
-export { default as Accordion } from "./Accordion"
-export { default as Alert } from "./Alert"
+export { Accordion } from "./Accordion"
+export { Alert } from "./Alert"
 export { default as Banner } from "./Banner"
-export { default as Carousel } from "./Carousel"
+export { Carousel } from "./Carousel"
 export { default as CelebrationAnimation } from "./CelebrationAnimation"
 export { default as ComingSoon } from "./ComingSoon"
-export { default as ErrorBoundary } from "./ErrorBoundary"
 export { default as Modal } from "./Modal"
 export { default as Notification } from "./Notification"
 export { default as Tab } from "./Tab"
-export { default as Toast } from "./Toast"
+export { Toast } from "./Toast"
 
 // Button Components
 export { default as Button } from "./Buttons/Button"
@@ -107,24 +106,24 @@ export { default as PrepYatraNavbar } from "./PrepYatra/Layout/Navbar"
 export { default as PrepYatraFooter } from "./PrepYatra/Layout/Footer"
 export { default as Navigation } from "./PrepYatra/Layout/Navigation"
 
-export { default as PrepYatraGamificationBadge } from "./PrepYatra/Gamification/GamificationBadge"
+export { GamificationBadge } from "./PrepYatra/Gamification/GamificationBadge"
 export { default as PrepYatraGamificationDisplay } from "./PrepYatra/Gamification/GamificationDisplay"
 
 // Quizes Components
-export { default as QuizNavbar } from "./Quizes/Layout/Navbar"
-export { default as QuizFooter } from "./Quizes/Layout/Footer"
-export { default as QuizLayout } from "./Quizes/Layout/Layout"
-export { default as DashboardNav } from "./Quizes/Layout/DashboardNav"
+export { QuizNavbar } from "./Quizes/Layout/Navbar"
+export { QuizFooter } from "./Quizes/Layout/Footer"
+export { QuizLayout } from "./Quizes/Layout/Layout"
+export { DashboardNav } from "./Quizes/Layout/DashboardNav"
 
-export { default as ClientAuth } from "./Quizes/Auth/ClientAuth"
-export { default as QuizProtectedRoute } from "./Quizes/Auth/ProtectedRoute"
+export { ClientAuth } from "./Quizes/Auth/ClientAuth"
+export { QuizProtectedRoute } from "./Quizes/Auth/ProtectedRoute"
 
-export { default as QuizGamificationCard } from "./Quizes/Gamification/GamificationCard"
-export { default as GamificationWrapper } from "./Quizes/Gamification/GamificationWrapper"
-export { default as PointsDisplay } from "./Quizes/Gamification/PointsDisplay"
+export { QuizGamificationCard } from "./Quizes/Gamification/GamificationCard"
+export { GamificationWrapper } from "./Quizes/Gamification/GamificationWrapper"
+export { PointsDisplay } from "./Quizes/Gamification/PointsDisplay"
 
-export { default as CodeRenderer } from "./Quizes/Common/CodeRenderer"
-export { default as MarkdownRenderer } from "./Quizes/Common/MarkdownRenderer"
+export { CodeRenderer } from "./Quizes/Common/CodeRenderer"
+export { MarkdownRenderer } from "./Quizes/Common/MarkdownRenderer"
 
 // Onboarding Components (Refactored with shared components)
 export { default as OnboardingLayout } from "./Onboarding/Core/OnboardingLayout"

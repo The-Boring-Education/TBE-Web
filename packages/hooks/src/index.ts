@@ -1,5 +1,5 @@
 // Export all hooks
-export { default as useAdmin } from "./useAdmin"
+export { useAdmin } from "./useAdmin"
 export { default as useAnalytics } from "./useAnalytics"
 export { default as useApi } from "./useApi"
 export { default as useAPIResponseMapper } from "./useAPIResponseMapper"

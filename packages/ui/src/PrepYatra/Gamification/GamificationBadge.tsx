@@ -1,28 +1,29 @@
-import {Star} from "lucide-react";
+import { Star } from "lucide-react"
 
-import {Badge} from "@/components/ui/badge";
-import {useGamification} from "@/hooks/useGamification";
-import {GamificationBadgeProps} from "@/interfaces/components";
+import { Badge } from "@tbe/ui"
+import { useGamification } from "@tbe/hooks"
+import { GamificationBadgeProps } from "@tbe/types"
+import React from "react"
 
-export function GamificationBadge({userId, className = ""}: GamificationBadgeProps) {
-    const {points, currentLevel, loading} = useGamification(userId);
+export function GamificationBadge({ className = "" }: GamificationBadgeProps) {
+    const { points, currentLevel, loading } = useGamification()
 
     if (loading) {
         return (
-            <div className={`flex items-center gap-2 px-3 py-1 rounded-full bg-gray-800/50 ${className}`}>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
+            <div
+                className={`flex items-center gap-2 px-3 py-1 rounded-full bg-gray-800/50 ${className}`}>
+                <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-primary' />
             </div>
-        );
+        )
     }
 
     return (
-        <Badge 
-            variant="secondary" 
-            className={`flex items-center gap-1 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 ${className}`}
-        >
-            <Star className="h-3 w-3" />
-            <span className="font-semibold">{points}</span>
-            <span className="text-xs opacity-75">L{currentLevel}</span>
+        <Badge
+            variant='secondary'
+            className={`flex items-center gap-1 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 ${className}`}>
+            <Star className='h-3 w-3' />
+            <span className='font-semibold'>{points}</span>
+            <span className='text-xs opacity-75'>L{currentLevel}</span>
         </Badge>
-    );
-} 
+    )
+}

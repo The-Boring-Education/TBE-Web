@@ -9,7 +9,6 @@ import { Fragment, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { PageLayout } from '@/components';
-import ErrorBoundary from '@/components/common/ErrorBoundary';
 import { GamificationProvider } from '@/components/layout/GamificationProvider';
 import { envConfig, googleAnalyticsScript, gtag, routes } from '@/constant';
 import { useUser } from '@/hooks';
@@ -54,15 +53,13 @@ const AppContent = ({
   }, [isAuth, isOnboarded, loading, router, router.pathname, user]);
 
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <GamificationProvider>
-          <PageLayout>
-            <Component {...pageProps} />
-          </PageLayout>
-        </GamificationProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <GamificationProvider>
+        <PageLayout>
+          <Component {...pageProps} />
+        </PageLayout>
+      </GamificationProvider>
+    </QueryClientProvider>
   );
 };
 
