@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { envConfig, apiStatusCodes } from '@/constant';
+import { apiStatusCodes,envConfig } from '@/constant';
 import { sendAPIResponse } from '@/utils';
 
 // Connect to DB
@@ -46,4 +46,4 @@ const adminMiddleware = async (
   }
 };
 
-export { connectDB, adminMiddleware };
+export { adminMiddleware,connectDB };

@@ -1,16 +1,15 @@
+import { FaCertificate,FaPlay, FaUsers } from 'react-icons/fa';
+
 import {
   Button,
-  FlexContainer,
   LinkButton,
   LoginRedirectButton,
-  PageHeroMetaContainer,
-  Text,
   Section,
+  Text,
 } from '@/components';
 import { routes } from '@/constant';
 import { useAnalytics, useApi, useGamifiedAction, useUser } from '@/hooks';
 import type { CourseHeroContainerProps } from '@/interfaces';
-import { FaArrowLeft, FaPlay, FaUsers, FaCertificate } from 'react-icons/fa';
 
 const CourseHeroContainer = ({
   id,

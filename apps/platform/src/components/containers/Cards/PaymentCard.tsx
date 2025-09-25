@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/20/solid';
 import React, { useState } from 'react';
 
-import { Button, FlexContainer, Section, Text } from '@/components';
+import { Button, FlexContainer, Text } from '@/components';
 import { routes } from '@/constant';
 import { useCashfreePayment, useUser } from '@/hooks';
 import type { PaymentCardProps } from '@/interfaces';

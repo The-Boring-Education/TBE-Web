@@ -1,4 +1,5 @@
 import Cors from 'cors';
+
 import initMiddleware from '@/utils/initMiddleware';
 
 const cors = initMiddleware(

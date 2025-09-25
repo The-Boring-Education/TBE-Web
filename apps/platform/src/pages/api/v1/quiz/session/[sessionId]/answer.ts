@@ -1,8 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import cors from '@/middlewares/cors';
-import { connectDB } from '@/middlewares';
-import { submitAnswerInDB } from '@/database/query/enhancedQuiz';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { QuizSession } from '@/database';
+import { submitAnswerInDB } from '@/database/query/enhancedQuiz';
+import { connectDB } from '@/middlewares';
+import cors from '@/middlewares/cors';
 
 interface SubmitAnswerBody {
   questionIndex: number;

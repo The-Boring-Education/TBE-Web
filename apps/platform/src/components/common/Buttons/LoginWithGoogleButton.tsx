@@ -1,8 +1,8 @@
 import { signIn, useSession } from 'next-auth/react';
 
 import { useAnalytics } from '@/hooks';
-import { trackEvent as sendEvent } from '@/utils/analytics';
 import type { LoginWithGoogleBtnProps } from '@/interfaces';
+import { trackEvent as sendEvent } from '@/utils/analytics';
 
 import Button from './Button';
 

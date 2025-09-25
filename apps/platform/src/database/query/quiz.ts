@@ -222,6 +222,7 @@ const getUserQuizStatsFromDB = async (
 
 export {
   addAQuizToDB,
+  appendQuestionsToQuizInDB,
   getQuizByIdFromDB,
   getQuizCategoriesFromDB,
   getQuizCategoriesWithCountsFromDB,
@@ -229,5 +230,4 @@ export {
   getUserQuizStatsFromDB,
   saveQuizAttemptToDB,
   updateAQuizInDB,
-  appendQuestionsToQuizInDB,
 };

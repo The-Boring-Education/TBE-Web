@@ -1,7 +1,5 @@
 import axios, { type AxiosRequestConfig } from 'axios';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { envConfig } from '@/constant';
 import type { APIMakeRquestProps, APIResponseType } from '@/interfaces';
 
 const apiInstance = axios.create();

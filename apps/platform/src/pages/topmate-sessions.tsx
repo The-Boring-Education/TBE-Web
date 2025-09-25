@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
-import { LandingPageHero, LinkButton, SEO, Section, Text, FlexContainer, SectionHeaderContainer, Image } from '@/components';
-import { MENTORSHIP_SERVICES_CARDS, STATIC_FILE_PATH, getSEOMeta, routes } from '@/constant';
+import { FlexContainer, Image,LandingPageHero, LinkButton, Section, SectionHeaderContainer, SEO, Text } from '@/components';
+import { getSEOMeta, MENTORSHIP_SERVICES_CARDS, routes,STATIC_FILE_PATH } from '@/constant';
 
 // Custom card component specifically for topmate-sessions
 const TopmateServiceCard = ({ card }: { card: any }) => (

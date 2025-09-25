@@ -1,22 +1,20 @@
 import { Fragment, useMemo, useRef, useState } from 'react';
-import { FaLock, FaStar, FaPlay, FaClock, FaUsers, FaCheckCircle, FaTags, FaPercentage } from 'react-icons/fa';
+import { FaCheckCircle, FaClock, FaLock, FaPercentage,FaPlay, FaStar, FaTags, FaUsers } from 'react-icons/fa';
 
 import {
   Button,
-  FlexContainer,
   LinkButton,
   LoginRedirectButton,
   MDXRenderer,
   PaymentCard,
-  QuestionLink,
   Section,
   SEO,
   Text,
 } from '@/components';
 import { routes } from '@/constant';
 import { useAnalytics, useApi, useGamifiedAction, usePaymentStatus, useUser } from '@/hooks';
-import type { SheetPageProps, CouponModel } from '@/interfaces';
-import { calculatePriceBreakdown, getDiscountDisplayInfo, formatPrice, getSavingsPercentage } from '@/utils/discount';
+import type { CouponModel,SheetPageProps } from '@/interfaces';
+import { calculatePriceBreakdown, formatPrice, getDiscountDisplayInfo, getSavingsPercentage } from '@/utils/discount';
 
 interface SheetLandingPageProps {
   sheet: SheetPageProps['sheet'];

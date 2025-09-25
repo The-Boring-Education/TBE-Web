@@ -1,4 +1,5 @@
-import { type Model, model, models, Schema, Document } from 'mongoose';
+import type { type Model,Document } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
 
 // DevRel Lead Model Interface
 export interface DevRelLeadModel extends Document {
@@ -350,7 +351,7 @@ const DevRelLeadSchema = new Schema<DevRelLeadModel>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: function(doc, ret) {
+      transform(doc, ret) {
         delete ret.__v;
         return ret;
       },

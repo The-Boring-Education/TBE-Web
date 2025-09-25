@@ -1,15 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
-import { connectDB, adminMiddleware } from '@/middlewares';
-import { sendAPIResponse } from '@/utils';
-import { cors } from '@/utils/cors';
-
 // Import all product models
 import InterviewSheet from '@/database/models/InterviewPrep/Sheet';
-import Course from '@/database/models/Shiksha/Course';
 import Project from '@/database/models/Project';
+import Course from '@/database/models/Shiksha/Course';
 import Webinar from '@/database/models/Webinar';
+import { adminMiddleware,connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
+import { cors } from '@/utils/cors';
 
 interface ProductInfo {
   _id: string;

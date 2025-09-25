@@ -6,12 +6,12 @@ import type {
   MentorshipCardProps,
   PlatformUsageType,
   PortfolioTemplateProps,
+  PrimaryCardWithCTAProps,
   ProductDataProps,
   RadioButtonOptionsProps,
   UserLevel,
   UserPointsActionType,
   UserRoleType,
-  PrimaryCardWithCTAProps,
 } from '@/interfaces';
 
 import { JOB_DOMAIN_NORMALIZER } from './api';
@@ -527,6 +527,7 @@ export {
   LINKS,
   localStorageKeys,
   MENTORSHIP_CARDS,
+  MENTORSHIP_SERVICES_CARDS,
   PAGE_REFRESH_TIMEOUT,
   POINTS_RULES,
   PORTFOLIO_CARDS,
@@ -539,5 +540,4 @@ export {
   USER_ROLE_OPTIONS,
   USER_USAGE_OPTIONS,
   YOUFOCUS_SKILL_PLAYLISTS,
-  MENTORSHIP_SERVICES_CARDS,
 };

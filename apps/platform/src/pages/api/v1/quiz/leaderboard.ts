@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+
+import { getLeaderboardFromDB } from '@/database/query/userQuizAttempt';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
-import { getLeaderboardFromDB } from '@/database/query/userQuizAttempt';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);

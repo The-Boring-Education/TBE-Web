@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState, useEffect } from 'react';
+import { Fragment, useEffect,useMemo, useState } from 'react';
 
 import {
   CardContainerB,
@@ -10,7 +10,7 @@ import {
   Text,
 } from '@/components';
 import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
-import { useApi, useAPIResponseMapper, useUser, usePaymentStatus } from '@/hooks';
+import { useApi,useUser } from '@/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
 import { getPreFetchProps, mapInterviewSheetResponseToCard } from '@/utils';
 

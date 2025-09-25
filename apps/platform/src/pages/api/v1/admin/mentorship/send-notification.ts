@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
 import { connectDB } from '@/middlewares';
+import { emailClient } from '@/services/email/client';
 import { sendAPIResponse } from '@/utils';
 import { cors } from '@/utils/cors';
-import { emailClient } from '@/services/email/client';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

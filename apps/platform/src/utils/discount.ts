@@ -135,9 +135,7 @@ export const validateCouponForSheet = (
 /**
  * Format price for display
  */
-export const formatPrice = (amount: number): string => {
-  return `₹${amount.toLocaleString('en-IN')}`;
-};
+export const formatPrice = (amount: number): string => `₹${amount.toLocaleString('en-IN')}`;
 
 /**
  * Get savings percentage

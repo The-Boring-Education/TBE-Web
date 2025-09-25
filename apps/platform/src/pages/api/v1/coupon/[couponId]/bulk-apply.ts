@@ -5,7 +5,7 @@ import {
   applyCouponToSheetsFromDB,
   getCouponByIdFromDB,
 } from '@/database';
-import { connectDB, adminMiddleware } from '@/middlewares';
+import { adminMiddleware,connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 import { cors } from '@/utils/cors';
 

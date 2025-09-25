@@ -1,9 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middlewares';
-import { cors } from '@/utils/cors';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
 import Challenge from '@/database/models/PrepYatra/Challenge';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
+import { cors } from '@/utils/cors';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

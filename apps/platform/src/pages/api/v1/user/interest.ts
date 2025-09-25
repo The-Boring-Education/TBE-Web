@@ -9,7 +9,6 @@ import {
 import type {
   CreateUserInterestRequestProps,
   GetUserInterestsRequestProps,
-  UserInterestResponseProps,
 } from '@/interfaces';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';

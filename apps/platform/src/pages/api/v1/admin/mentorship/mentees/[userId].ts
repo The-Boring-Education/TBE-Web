@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
+import { toggleMentorshipInDB } from '@/database';
 import { connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 import { cors } from '@/utils/cors';
-import { toggleMentorshipInDB } from '@/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

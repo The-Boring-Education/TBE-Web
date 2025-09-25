@@ -175,8 +175,7 @@ export {
   getUserByEmailFromDB,
   getUserByIdFromDB,
   getUserByUserNameFromDB,
+  getUserDataByUserNameFromDB,
   onboardPrepYatraUserTODB,
   onboardUserToDB,
-  updateUserSkillsInDB,
-  getUserDataByUserNameFromDB
-};
+  updateUserSkillsInDB};

@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { connectDB } from '@/middlewares';
 import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { DevRelLead } from '@/database/models/DevRel/DevRelLead';
 import { DevRelTask } from '@/database/models/DevRel/DevRelTask';
 import User from '@/database/models/User';
+import { connectDB } from '@/middlewares';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'GET') {

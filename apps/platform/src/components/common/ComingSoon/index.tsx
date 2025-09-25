@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { FlexContainer, Image, Section, Text, Toast } from '@/components';
-import { Button } from '@/components';
-import { useApi, useUser } from '@/hooks';
+
+import { Button,FlexContainer, Image, Section, Text, Toast } from '@/components';
 import { STATIC_FILE_PATH } from '@/constant';
+import { useApi, useUser } from '@/hooks';
 
 interface ComingSoonProps {
   className?: string;

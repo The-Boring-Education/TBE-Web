@@ -1,4 +1,5 @@
-import { type Model, model, models, Schema, Document } from 'mongoose';
+import type { type Model,Document } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
 
 // DevRel Task Model Interface
 export interface DevRelTaskModel extends Document {
@@ -198,7 +199,7 @@ const DevRelTaskSchema = new Schema<DevRelTaskModel>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: function(doc, ret) {
+      transform(doc, ret) {
         delete ret.__v;
         // Convert Map to Object for JSON serialization
         if (ret.completionTracking instanceof Map) {

@@ -89,7 +89,7 @@ const ProjectPage = ({
         metadata: {
           projectId: project._id,
           projectName: project.name,
-          totalChapters: totalChapters,
+          totalChapters,
         },
       });
     }

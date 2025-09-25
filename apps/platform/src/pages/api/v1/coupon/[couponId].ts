@@ -2,11 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
 import {
-  updateCouponFromDB,
   deleteCouponFromDB,
   getCouponByIdFromDB,
+  updateCouponFromDB,
 } from '@/database';
-import { connectDB, adminMiddleware } from '@/middlewares';
+import { adminMiddleware,connectDB } from '@/middlewares';
 import { sendAPIResponse } from '@/utils';
 import { cors } from '@/utils/cors';
 

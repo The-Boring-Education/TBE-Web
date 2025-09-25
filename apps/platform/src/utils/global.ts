@@ -6,10 +6,8 @@ import type {
 } from '@/interfaces';
 
 import {
-  checkUserCourseEnrollment,
   fetchAPIData,
   formatDate,
-  getSelectedCourseChapterMeta,
   getSelectedProjectChapterMeta,
   getSelectedSheetQuestionMeta,
   getYoufocusSkillName,

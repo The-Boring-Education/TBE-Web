@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case 'GET':
-      return handleGetUser(req, res, email as string, userId as string,  username as string);
+      return handleGetUser(req, res, email as string, userId as string, username as string);
     case 'POST':
       return handleCreateUser(req, res);
   }

@@ -1,5 +1,6 @@
 // Models
 import Certificate from './models/Certificate';
+import Coupon from './models/Coupon';
 import Feedback from './models/Feedback';
 import Gamification from './models/Gamification';
 import InterviewSheet from './models/InterviewPrep/Sheet';
@@ -7,12 +8,12 @@ import UserSheet from './models/InterviewPrep/UserSheet';
 import Leaderboard from './models/Leaderboard';
 import Notification from './models/Notification';
 import Payment from './models/Payment';
-import PrepLog from './models/PrepYatra/PrepLog';
 import Challenge from './models/PrepYatra/Challenge';
 import ChallengeLog from './models/PrepYatra/ChallengeLog';
+import Mentorship from './models/PrepYatra/Mentorship';
+import PrepLog from './models/PrepYatra/PrepLog';
 import Recruiter from './models/PrepYatra/Recruiters';
 import PrepYatraSubscription from './models/PrepYatra/Subscription';
-import Mentorship from './models/PrepYatra/Mentorship';
 import Project from './models/Project';
 import UserProject from './models/Project/UserProject';
 import Quiz from './models/Quiz/Quiz';
@@ -29,11 +30,11 @@ import UserInterest from './models/UserInterest';
 import Webinar from './models/Webinar';
 import Playlist from './models/YouFocus/Playlist';
 import UserPlaylist from './models/YouFocus/UserPlaylist';
-import Coupon from './models/Coupon';
 export {
   Certificate,
   Challenge,
   ChallengeLog,
+  Coupon,
   Course,
   Feedback,
   Gamification,
@@ -41,6 +42,7 @@ export {
   Job,
   JobAggregate,
   Leaderboard,
+  Mentorship,
   Notification,
   Payment,
   Playlist,
@@ -50,18 +52,16 @@ export {
   Quiz,
   QuizAttempt,
   QuizSession,
-  UserQuestionPerformance,
-  UserQuizAnalytics,
   Recruiter,
-  Mentorship,
   User,
   UserCourse,
   UserInterest,
   UserPlaylist,
   UserProject,
+  UserQuestionPerformance,
+  UserQuizAnalytics,
   UserSheet,
   Webinar,
-  Coupon,
 };
 
 // Query
@@ -69,6 +69,7 @@ export * from './query/certificate';
 export * from './query/common';
 export * from './query/coupon';
 export * from './query/email';
+export * from './query/enhancedQuiz';
 export * from './query/feedback';
 export * from './query/gamification';
 export * from './query/interview-prep';
@@ -77,11 +78,10 @@ export * from './query/notification';
 export * from './query/payment';
 export * from './query/prepyatra';
 export * from './query/project';
+export * from './query/quiz';
 export * from './query/shiksha';
 export * from './query/unskilled';
 export * from './query/user';
 export * from './query/userInterest';
 export * from './query/webinar';
 export * from './query/youfocus';
-export * from './query/quiz';
-export * from './query/enhancedQuiz';

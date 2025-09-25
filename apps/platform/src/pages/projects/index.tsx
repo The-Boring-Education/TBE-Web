@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
-import { FaCode, FaClock, FaUsers, FaTrophy } from 'react-icons/fa';
+import { FaClock, FaCode, FaTrophy,FaUsers } from 'react-icons/fa';
 
-import { CardContainerA, ModernLandingHero, LinkButton, SEO } from '@/components';
-import { routes, STATIC_FILE_PATH, TBP_FEATURES, LINKS } from '@/constant';
+import { CardContainerA, LinkButton, ModernLandingHero, SEO } from '@/components';
+import { LINKS,routes, TBP_FEATURES } from '@/constant';
 import type { PageProps } from '@/interfaces';
 import { getPreFetchProps } from '@/utils';
 

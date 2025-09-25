@@ -1,12 +1,10 @@
-import { FaPlay, FaClock, FaUsers, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { FaPlay } from 'react-icons/fa';
 
 import {
-  FlexContainer,
+  Button,
   Section,
   Text,
-  Button,
-  LinkButton,
 } from '@/components';
 
 interface ModernLandingHeroProps {
@@ -40,8 +38,7 @@ const ModernLandingHero = ({
   gradientTo = 'to-purple-700',
   stats,
   previewContent,
-}: ModernLandingHeroProps) => {
-  return (
+}: ModernLandingHeroProps) => (
     <Section className={`bg-gradient-to-r ${gradientFrom} ${gradientTo} text-white`}>
       <div className='max-w-7xl mx-auto px-4 py-12'>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 items-center'>
@@ -130,6 +127,5 @@ const ModernLandingHero = ({
       </div>
     </Section>
   );
-};
 
 export default ModernLandingHero;

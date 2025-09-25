@@ -1,16 +1,15 @@
+import { FaBolt,FaCode, FaRocket } from 'react-icons/fa';
+
 import {
   Button,
-  FlexContainer,
   LinkButton,
   LoginRedirectButton,
-  PageHeroMetaContainer,
-  Text,
   Section,
+  Text,
 } from '@/components';
 import { projectGroupWhatsapp, routes } from '@/constant';
 import { useAnalytics, useApi, useGamifiedAction, useUser } from '@/hooks';
 import type { ProjectHeroContainerProps } from '@/interfaces';
-import { FaCode, FaUsers, FaQuestionCircle, FaRocket, FaBolt } from 'react-icons/fa';
 
 const ProjectHeroContainer = ({
   id,

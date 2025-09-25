@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { connectDB } from '@/middlewares';
 import { apiStatusCodes } from '@/constant';
-import { sendAPIResponse } from '@/utils';
 import { DevRelLead } from '@/database/models/DevRel/DevRelLead';
+import { connectDB } from '@/middlewares';
+import { sendAPIResponse } from '@/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'GET') {

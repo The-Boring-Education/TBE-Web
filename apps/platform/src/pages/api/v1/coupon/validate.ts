@@ -2,8 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/constant';
 import { validateCouponForProductFromDB } from '@/database';
-import { connectDB } from '@/middlewares';
 import type { APIResponseType } from '@/interfaces';
+import { connectDB } from '@/middlewares';
 
 interface ValidateCouponRequest {
   code: string;

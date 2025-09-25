@@ -1,13 +1,13 @@
+import { Schema } from 'mongoose';
+
 import { Quiz, QuizAttempt } from '@/database';
+import type { QuizModel } from '@/database/models/Quiz/Quiz';
+import type { QuizSessionModel, QuizSessionQuestion } from '@/database/models/Quiz/QuizSession';
 import QuizSession from '@/database/models/Quiz/QuizSession';
+import type { UserQuestionPerformanceModel } from '@/database/models/Quiz/UserQuestionPerformance';
 import UserQuestionPerformance from '@/database/models/Quiz/UserQuestionPerformance';
 import UserQuizAnalytics from '@/database/models/Quiz/UserQuizAnalytics';
-import type { QuizSessionModel, QuizSessionQuestion } from '@/database/models/Quiz/QuizSession';
-import type { UserQuestionPerformanceModel } from '@/database/models/Quiz/UserQuestionPerformance';
-import type { UserQuizAnalyticsModel } from '@/database/models/Quiz/UserQuizAnalytics';
-import type { QuizModel } from '@/database/models/Quiz/Quiz';
 import type { DatabaseQueryResponseType } from '@/interfaces';
-import { Schema, Types } from 'mongoose';
 
 // ====================
 // Quiz Session Management
@@ -635,14 +635,14 @@ const getActiveSessionsFromDB = async (): Promise<DatabaseQueryResponseType> => 
 };
 
 export {
-  createQuizSessionInDB,
-  submitAnswerInDB,
   completeQuizSessionInDB,
-  updateUserQuestionPerformance,
-  updateUserAnalyticsInDB,
-  getUserAnalyticsFromDB,
-  getQuizLeaderboardFromDB,
-  getUserQuizSessionsFromDB,
-  getQuizAdminAnalyticsFromDB,
+  createQuizSessionInDB,
   getActiveSessionsFromDB,
+  getQuizAdminAnalyticsFromDB,
+  getQuizLeaderboardFromDB,
+  getUserAnalyticsFromDB,
+  getUserQuizSessionsFromDB,
+  submitAnswerInDB,
+  updateUserAnalyticsInDB,
+  updateUserQuestionPerformance,
 };

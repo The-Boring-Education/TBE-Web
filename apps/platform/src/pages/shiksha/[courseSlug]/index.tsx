@@ -183,7 +183,7 @@ const CoursePage = ({
         value: {
           userId: user?.id,
           courseId: course._id,
-          chapterId: chapterId,
+          chapterId,
         },
       });
     }

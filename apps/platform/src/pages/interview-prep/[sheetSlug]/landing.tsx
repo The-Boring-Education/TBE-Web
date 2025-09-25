@@ -2,8 +2,7 @@ import SheetLandingPage from '@/components/containers/Page/Interview-sheet/Sheet
 import type { SheetPageProps } from '@/interfaces';
 import { getSheetPageProps } from '@/utils';
 
-const SheetLandingPageRoute = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
-  return (
+const SheetLandingPageRoute = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => (
     <SheetLandingPage
       sheet={sheet}
       meta={meta}
@@ -11,7 +10,6 @@ const SheetLandingPageRoute = ({ sheet, meta, slug, seoMeta }: SheetPageProps) =
       seoMeta={seoMeta}
     />
   );
-};
 
 export const getServerSideProps = getSheetPageProps;
 

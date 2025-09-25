@@ -122,10 +122,10 @@ const UserSchema: Schema<UserModel> = new Schema(
     from: {
       type: String,
       enum: [
-        'webapp',           // From main webapp
-        'prepyatra',        // From PrepYatra platform
-        'quiz',             // From quiz app
-        'direct'            // Direct onboarding (existing users)
+        'webapp', // From main webapp
+        'prepyatra', // From PrepYatra platform
+        'quiz', // From quiz app
+        'direct' // Direct onboarding (existing users)
       ],
       default: 'direct'
     },

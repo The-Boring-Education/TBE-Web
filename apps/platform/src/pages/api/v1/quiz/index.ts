@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import {
   addAQuizToDB,
+  appendQuestionsToQuizInDB,
   getQuizCategoriesFromDB,
   getQuizCategoriesWithCountsFromDB,
-  appendQuestionsToQuizInDB,
 } from '@/database/query/quiz';
 import { connectDB } from '@/middlewares';
 import { cors } from '@/utils/cors';
