@@ -1,4 +1,4 @@
-import type { type Model,Document } from 'mongoose';
+import type { Model, Document } from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS } from '@/constant';
@@ -39,10 +39,12 @@ const ChallengeLogSchema = new Schema<IChallengeLog>(
       min: 0,
       max: 24,
     },
-    nextGoals: [{
-      type: String,
-      trim: true,
-    }],
+    nextGoals: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
     loggedAt: {
       type: Date,
       default: Date.now,

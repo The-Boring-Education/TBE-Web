@@ -1,4 +1,4 @@
-import type { type Model,Types } from 'mongoose';
+import type { Model, Types } from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS } from '@/constant';
@@ -11,7 +11,12 @@ export interface MentorshipDocumentModel {
 
 const mentorshipSchema: Schema<MentorshipDocumentModel> = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      unique: true,
+    },
     note: { type: String },
     selectedAt: { type: Date, default: () => new Date() },
   },
@@ -20,7 +25,9 @@ const mentorshipSchema: Schema<MentorshipDocumentModel> = new Schema(
 
 const Mentorship: Model<MentorshipDocumentModel> =
   (models as any)?.Mentorship ||
-  model<MentorshipDocumentModel>(DATABASE_MODELS.MENTORSHIP || 'Mentorship', mentorshipSchema);
+  model<MentorshipDocumentModel>(
+    DATABASE_MODELS.MENTORSHIP || 'Mentorship',
+    mentorshipSchema
+  );
 
 export default Mentorship;
-

@@ -1,4 +1,4 @@
-import type { type Model,Document } from 'mongoose';
+import type { Model, Document } from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 
 // DevRel Task Model Interface
@@ -8,19 +8,54 @@ export interface DevRelTaskModel extends Document {
   description: string;
   type: TaskType;
   priority: 'low' | 'medium' | 'high';
-  
+
   // Assignment
   assignedTo?: Schema.Types.ObjectId[];
   assignedToAll?: boolean;
   createdBy: Schema.Types.ObjectId;
-  
+
   // Timing
   dueDate?: Date;
   estimatedHours?: number;
-  
+
   // Status Tracking
   status: TaskStatusType;
-  completionTracking: Map<string, {
+  completionTracking: Map<
+    string,
+    {
+      status: TaskStatusType;
+      startedAt?: Date;
+      completedAt?: Date;
+      notes?: string;
+      submissionUrl?: string;
+      reviewStatus?: 'pending' | 'approved' | 'needs_revision';
+      reviewNotes?: string;
+      reviewedBy?: Schema.Types.ObjectId;
+      reviewedAt?: Date;
+    }
+  >;
+
+  // Task Details
+  requirements?: string[];
+  resources?: {
+    title: string;
+    url: string;
+    type: 'link' | 'document' | 'video';
+  }[];
+
+  // Submission Requirements
+  submissionRequired: boolean;
+  submissionType?: 'url' | 'text' | 'file';
+  submissionInstructions?: string;
+
+  tags?: string[];
+  isActive: boolean;
+
+  createdAt: Date;
+  updatedAt: Date;
+
+  // Instance methods
+  getLeadStatus(leadId: string): {
     status: TaskStatusType;
     startedAt?: Date;
     completedAt?: Date;
@@ -29,31 +64,18 @@ export interface DevRelTaskModel extends Document {
     reviewStatus?: 'pending' | 'approved' | 'needs_revision';
     reviewNotes?: string;
     reviewedBy?: Schema.Types.ObjectId;
-    reviewedAt?: Date;
-  }>;
-  
-  // Task Details
-  requirements?: string[];
-  resources?: {
-    title: string;
-    url: string;
-    type: 'link' | 'document' | 'video';
-  }[];
-  
-  // Submission Requirements
-  submissionRequired: boolean;
-  submissionType?: 'url' | 'text' | 'file';
-  submissionInstructions?: string;
-  
-  tags?: string[];
-  isActive: boolean;
-  
-  createdAt: Date;
-  updatedAt: Date;
-  
-  // Instance methods
-  getLeadStatus(leadId: string): { status: TaskStatusType; startedAt?: Date; completedAt?: Date; notes?: string; submissionUrl?: string; reviewStatus?: 'pending' | 'approved' | 'needs_revision'; reviewNotes?: string; reviewedBy?: Schema.Types.ObjectId; };
-  updateLeadProgress(leadId: string, status: string, data?: { notes?: string; submissionUrl?: string; reviewStatus?: string; reviewNotes?: string; reviewedBy?: string; }): Promise<DevRelTaskModel>;
+  };
+  updateLeadProgress(
+    leadId: string,
+    status: string,
+    data?: {
+      notes?: string;
+      submissionUrl?: string;
+      reviewStatus?: string;
+      reviewNotes?: string;
+      reviewedBy?: string;
+    }
+  ): Promise<DevRelTaskModel>;
 }
 
 // Types
@@ -81,21 +103,24 @@ interface DevRelTaskStatics {
 }
 
 // Schemas
-const ResourceSchema = new Schema({
-  title: {
-    type: String,
-    required: [true, 'Resource title is required'],
+const ResourceSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: [true, 'Resource title is required'],
+    },
+    url: {
+      type: String,
+      required: [true, 'Resource URL is required'],
+    },
+    type: {
+      type: String,
+      enum: ['link', 'document', 'video'],
+      required: [true, 'Resource type is required'],
+    },
   },
-  url: {
-    type: String,
-    required: [true, 'Resource URL is required'],
-  },
-  type: {
-    type: String,
-    enum: ['link', 'document', 'video'],
-    required: [true, 'Resource type is required'],
-  },
-}, { _id: false });
+  { _id: false }
+);
 
 const DevRelTaskSchema = new Schema<DevRelTaskModel>(
   {
@@ -119,12 +144,14 @@ const DevRelTaskSchema = new Schema<DevRelTaskModel>(
       enum: ['low', 'medium', 'high'],
       default: 'medium',
     },
-    
+
     // Assignment
-    assignedTo: [{
-      type: Schema.Types.ObjectId,
-      ref: 'DevRelLead',
-    }],
+    assignedTo: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'DevRelLead',
+      },
+    ],
     assignedToAll: {
       type: Boolean,
       default: false,
@@ -134,14 +161,14 @@ const DevRelTaskSchema = new Schema<DevRelTaskModel>(
       ref: 'User',
       required: [true, 'Task creator is required'],
     },
-    
+
     // Timing
     dueDate: Date,
     estimatedHours: {
       type: Number,
       min: 0,
     },
-    
+
     // Status Tracking
     status: {
       type: String,
@@ -173,11 +200,11 @@ const DevRelTaskSchema = new Schema<DevRelTaskModel>(
       },
       default: () => new Map(),
     },
-    
+
     // Task Details
     requirements: [String],
     resources: [ResourceSchema],
-    
+
     // Submission Requirements
     submissionRequired: {
       type: Boolean,
@@ -188,7 +215,7 @@ const DevRelTaskSchema = new Schema<DevRelTaskModel>(
       enum: ['url', 'text', 'file'],
     },
     submissionInstructions: String,
-    
+
     tags: [String],
     isActive: {
       type: Boolean,
@@ -220,12 +247,16 @@ DevRelTaskSchema.index({ dueDate: 1 });
 DevRelTaskSchema.index({ isActive: 1 });
 
 // Virtual fields
-DevRelTaskSchema.virtual('isOverdue').get(function() {
-  return this.dueDate && new Date() > this.dueDate && this.status !== TASK_STATUS.COMPLETED;
+DevRelTaskSchema.virtual('isOverdue').get(function () {
+  return (
+    this.dueDate &&
+    new Date() > this.dueDate &&
+    this.status !== TASK_STATUS.COMPLETED
+  );
 });
 
 // Instance methods
-DevRelTaskSchema.methods.assignToLead = function(leadId: string) {
+DevRelTaskSchema.methods.assignToLead = function (leadId: string) {
   if (!this.assignedTo.includes(leadId)) {
     this.assignedTo.push(leadId);
     this.completionTracking.set(leadId, {
@@ -235,49 +266,50 @@ DevRelTaskSchema.methods.assignToLead = function(leadId: string) {
   return this.save();
 };
 
-DevRelTaskSchema.methods.updateLeadProgress = function(
-  leadId: string, 
-  status: string, 
+DevRelTaskSchema.methods.updateLeadProgress = function (
+  leadId: string,
+  status: string,
   data: any = {}
 ) {
   const tracking = this.completionTracking.get(leadId) || {};
-  
+
   tracking.status = status;
-  
+
   if (status === TASK_STATUS.IN_PROGRESS && !tracking.startedAt) {
     tracking.startedAt = new Date();
   }
-  
+
   if (status === TASK_STATUS.COMPLETED) {
     tracking.completedAt = new Date();
   }
-  
+
   // Merge additional data
   Object.assign(tracking, data);
-  
+
   this.completionTracking.set(leadId, tracking);
-  
+
   return this.save();
 };
 
-DevRelTaskSchema.methods.getLeadStatus = function(leadId: string) {
+DevRelTaskSchema.methods.getLeadStatus = function (leadId: string) {
   return this.completionTracking.get(leadId) || { status: TASK_STATUS.PENDING };
 };
 
 // Static methods
-DevRelTaskSchema.statics.findByType = function(type: string) {
+DevRelTaskSchema.statics.findByType = function (type: string) {
   return this.find({ type, isActive: true }).sort({ createdAt: -1 });
 };
 
-DevRelTaskSchema.statics.findForLead = function(leadId: string) {
+DevRelTaskSchema.statics.findForLead = function (leadId: string) {
   return this.find({
-    $or: [
-      { assignedTo: leadId },
-      { assignedToAll: true }
-    ],
-    isActive: true
+    $or: [{ assignedTo: leadId }, { assignedToAll: true }],
+    isActive: true,
   }).sort({ dueDate: 1, createdAt: -1 });
 };
 
-export const DevRelTask: Model<DevRelTaskModel> & DevRelTaskStatics = 
-  (models?.DevRelTask || model<DevRelTaskModel>('DevRelTask', DevRelTaskSchema)) as Model<DevRelTaskModel> & DevRelTaskStatics;
+export const DevRelTask: Model<DevRelTaskModel> & DevRelTaskStatics =
+  (models?.DevRelTask ||
+    model<DevRelTaskModel>(
+      'DevRelTask',
+      DevRelTaskSchema
+    )) as Model<DevRelTaskModel> & DevRelTaskStatics;

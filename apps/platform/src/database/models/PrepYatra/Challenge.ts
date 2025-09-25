@@ -1,4 +1,4 @@
-import type { type Model,Document } from 'mongoose';
+import type { Model, Document } from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS } from '@/constant';
@@ -62,7 +62,7 @@ const ChallengeSchema = new Schema<IChallenge>(
 );
 
 // Pre-save hook with proper typing
-ChallengeSchema.pre('save', function(this: IChallenge, next) {
+ChallengeSchema.pre('save', function (this: IChallenge, next) {
   if (this.isModified('totalDays') || this.isNew) {
     this.endDate = new Date(this.startDate);
     this.endDate.setDate(this.startDate.getDate() + this.totalDays);
