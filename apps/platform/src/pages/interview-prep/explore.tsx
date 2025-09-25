@@ -1,4 +1,4 @@
-import { Fragment, useEffect,useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 
 import {
   CardContainerB,
@@ -10,7 +10,7 @@ import {
   Text,
 } from '@/components';
 import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
-import { useApi,useUser } from '@/hooks';
+import { useApi, useUser } from '@/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
 import { getPreFetchProps, mapInterviewSheetResponseToCard } from '@/utils';
 
@@ -19,14 +19,16 @@ const Home = ({ seoMeta }: PageProps) => {
     url: routes.api.interviewPrep,
   });
   const { user } = useUser();
-  const [purchaseStatuses, setPurchaseStatuses] = useState<Record<string, boolean>>({});
+  const [purchaseStatuses, setPurchaseStatuses] = useState<
+    Record<string, boolean>
+  >({});
 
   // Check purchase status for each premium sheet
   useEffect(() => {
     if (response?.data && user?.id) {
       const checkPurchaseStatuses = async () => {
         const statuses: Record<string, boolean> = {};
-        
+
         for (const sheet of response.data) {
           if (sheet.isPremium) {
             try {
@@ -43,7 +45,7 @@ const Home = ({ seoMeta }: PageProps) => {
             statuses[sheet._id] = false; // Free sheets are not "purchased", they're just free
           }
         }
-        
+
         setPurchaseStatuses(statuses);
       };
 
@@ -53,11 +55,11 @@ const Home = ({ seoMeta }: PageProps) => {
 
   const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
     if (!response?.data) return [];
-    
+
     return response.data.map((sheet: any) => {
       const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
       const isPurchased = purchaseStatuses[sheet._id] || false;
-      
+
       return {
         ...baseCard,
         isPurchased: sheet.isPremium ? isPurchased : false, // Only premium sheets can be purchased
@@ -103,7 +105,7 @@ const Home = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      
+
       {/* Header Section */}
       <Section className='bg-gradient-to-r from-blue-50 to-purple-50 py-8'>
         <div className='max-w-6xl mx-auto px-4 text-center'>
@@ -111,7 +113,8 @@ const Home = ({ seoMeta }: PageProps) => {
             Explore Interview Prep Sheets
           </Text>
           <Text className='text-lg text-gray-600' level='p'>
-            Choose from our carefully curated collection of interview questions, organized by technology domains
+            Choose from our carefully curated collection of interview questions,
+            organized by technology domains
           </Text>
         </div>
       </Section>
@@ -124,33 +127,49 @@ const Home = ({ seoMeta }: PageProps) => {
               <div key={roadmap} className='max-w-7xl mx-auto px-4'>
                 {/* Domain Header */}
                 <div className='mb-8 text-center'>
-                  <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-full mb-4 ${
-                    roadmap === 'Frontend' ? 'bg-blue-100 text-blue-800' :
-                    roadmap === 'Backend' ? 'bg-green-100 text-green-800' :
-                    roadmap === 'Fullstack' ? 'bg-purple-100 text-purple-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
+                  <div
+                    className={`inline-flex items-center gap-3 px-6 py-3 rounded-full mb-4 ${
+                      roadmap === 'Frontend'
+                        ? 'bg-blue-100 text-blue-800'
+                        : roadmap === 'Backend'
+                        ? 'bg-green-100 text-green-800'
+                        : roadmap === 'Fullstack'
+                        ? 'bg-purple-100 text-purple-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
                     <span className='text-2xl'>
-                      {roadmap === 'Frontend' ? '🎨' :
-                       roadmap === 'Backend' ? '⚙️' :
-                       roadmap === 'Fullstack' ? '🚀' :
-                       '💻'}
+                      {roadmap === 'Frontend'
+                        ? '🎨'
+                        : roadmap === 'Backend'
+                        ? '⚙️'
+                        : roadmap === 'Fullstack'
+                        ? '🚀'
+                        : '💻'}
                     </span>
-                    <Text level='h3' className='text-lg font-semibold'>{roadmap} Domain</Text>
+                    <Text level='h3' className='text-lg font-semibold'>
+                      {roadmap} Domain
+                    </Text>
                   </div>
-                  <Text className='text-3xl font-bold text-gray-900 mb-2' level='h2'>
+                  <Text
+                    className='text-3xl font-bold text-gray-900 mb-2'
+                    level='h2'
+                  >
                     {roadmap} Interview Sheets
                   </Text>
                   <Text className='text-gray-600 max-w-2xl mx-auto' level='p'>
-                    Master {roadmap.toLowerCase()} interviews with real questions asked by top companies
+                    Master {roadmap.toLowerCase()} interviews with real
+                    questions asked by top companies
                   </Text>
                 </div>
 
                 {/* Cards Grid */}
                 <CardContainerB
                   borderColour={2}
-                  cards={cards}
-                  focusText={`${cards.length} Sheet${cards.length > 1 ? 's' : ''} Available`}
+                  cards={cards || []}
+                  focusText={`${cards?.length || 0} Sheet${
+                    (cards?.length || 0) > 1 ? 's' : ''
+                  } Available`}
                   heading=''
                   sectionClassName='px-0'
                   subtext=''
