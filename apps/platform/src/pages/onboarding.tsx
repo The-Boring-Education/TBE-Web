@@ -12,12 +12,12 @@ import {
   StepUsage,
   StepUsername,
   Toast,
-} from '@/components';
-import FlexContainer from '@/components/containers/Page/common/FlexContainer';
-import { routes } from '@/constant';
-import { useApi, useUser } from '@/hooks';
-import type { PageProps } from '@/interfaces';
-import { getPreFetchProps, getRedirectUrl } from '@/utils';
+  FlexContainer
+} from '@tbe/components';
+import { routes } from '@tbe/constants';
+import { useApi, useUser } from '@tbe/hooks';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps, getRedirectUrl } from '@tbe/utils';
 
 const steps = [StepUsername, StepOccupation, StepUsage, StepPhoneNumber];
 

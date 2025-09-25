@@ -19,7 +19,7 @@ const useApi = (
     setError(null);
     try {
       const response = await sendRequest(params);
-      setData(response);
+      setData(response as APIResponseType);
       return response;
     } catch (error: any) {
       setError(error.message);
@@ -30,7 +30,7 @@ const useApi = (
   };
 
   // Custom function to refetch with optional new params
-  const makeRequest = (overrideParams?: APIMakeRquestProps) => {
+  const makeRequest = (overrideParams?: APIMakeRequestProps) => {
     const params = overrideParams || initialParams;
     if (!params) {
       throw new Error('Params are required to make a request.');

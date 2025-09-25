@@ -3,12 +3,13 @@ import {
     UseOnboardingProps,
     UseOnboardingReturn,
     BaseUser,
-    OnboardingProductConfig
+    OnboardingProductConfig,
+    OnboardingFieldConfig
 } from "@tbe/types"
 import {
     getOnboardingConfig,
     isValidOnboardingProduct
-} from "@tbe/config/onboarding"
+} from "@tbe/config" // FIXME: REFACTOR
 import { sendRequest, trackEvent } from "@tbe/utils"
 
 /**
@@ -103,8 +104,7 @@ export default function useOnboarding({
 
     const handleNext = () => {
         try {
-            trackEvent({
-                action: "onboarding_next",
+            trackEvent("onboarding_next", {
                 category: "onboarding",
                 label: `${productId}_step_${step}`,
                 value: step
@@ -116,8 +116,7 @@ export default function useOnboarding({
 
     const handleBack = () => {
         try {
-            trackEvent({
-                action: "onboarding_previous",
+            trackEvent("onboarding_previous", {
                 category: "onboarding",
                 label: `${productId}_step_${step}`,
                 value: step
@@ -137,8 +136,7 @@ export default function useOnboarding({
         setError("")
 
         try {
-            trackEvent({
-                action: "onboarding_submit",
+            trackEvent("onboarding_submit", {
                 category: "onboarding",
                 label: productId
             })
@@ -160,8 +158,7 @@ export default function useOnboarding({
 
             if (response.success) {
                 try {
-                    trackEvent({
-                        action: "onboarding_complete",
+                    trackEvent("onboarding_complete", {
                         category: "onboarding",
                         label: productId
                     })
@@ -179,8 +176,7 @@ export default function useOnboarding({
             setError(errorMessage)
 
             try {
-                trackEvent({
-                    action: "onboarding_error",
+                trackEvent("onboarding_error", {
                     category: "onboarding",
                     label: `${productId}_${errorMessage}`
                 })

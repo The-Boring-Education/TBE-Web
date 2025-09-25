@@ -1,13 +1,9 @@
 import { useCallback, useState } from 'react';
 
-import { useGamificationContext } from '@/components/layout/GamificationProvider';
-import { routes } from '@/constant';
-import { useAnalytics, useApi, useGamification, useUser } from '@/hooks';
-import type { TrackEventProps, UserPointsActionType } from '@/interfaces';
-import {
-  calculateUserPointsForAction,
-  getUserGamificationLevel,
-} from '@/utils';
+import { routes } from '@tbe/constants';
+import { useAnalytics, useApi, useGamification, useUser, useGamificationContext } from '@tbe/hooks';
+import type { TrackEventProps, UserPointsActionType } from '@tbe/interface';
+import { calculateUserPointsForAction, getUserGamificationLevel } from '@tbe/utils';
 
 export interface GamificationEvent {
   gamificationAction?: UserPointsActionType;

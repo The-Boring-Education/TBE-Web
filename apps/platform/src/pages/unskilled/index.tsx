@@ -30,17 +30,17 @@ import {
   TabComponent,
   Text,
   UploadFileInput,
-} from '@/components';
+} from '@tbe/components';
 import {
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
   routes,
   STATIC_FILE_PATH,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
-} from '@/constant';
-import { useResumeEvaluation } from '@/hooks';
-import type { OutlineCardProps, UnskilledLandingPageProps } from '@/interfaces';
-import { formatDate, getUnskilledLandingPageProps } from '@/utils';
+} from '@tbe/constants';
+import { useResumeEvaluation } from '@tbe/hooks';
+import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface';
+import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
   {

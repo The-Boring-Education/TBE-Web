@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { Button, LoadingSpinner, Text } from '@/components';
-import { useAdmin } from '@/hooks/useAdmin';
+import { useAdmin } from '@tbe/hooks';
 
 interface AdminLayoutProps {
   children: React.ReactNode;

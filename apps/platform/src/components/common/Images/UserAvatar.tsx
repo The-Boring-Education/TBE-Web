@@ -6,7 +6,7 @@ import { Image, Link } from '@/components';
 import { TOP_NAVIGATION } from '@/constant';
 
 const UserAvatar = () => {
-  const session = useSession();
+  const session = useSession() || { data: null, status: 'loading' };
 
   if (session.status === 'loading') return null;
   if (session.status !== 'authenticated') return null;

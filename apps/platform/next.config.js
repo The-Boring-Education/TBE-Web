@@ -1,5 +1,19 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { withSentryConfig } = require('@sentry/nextjs');
+const withTM = require('next-transpile-modules')([
+  '@tbe/components', // <-- your workspace package
+  '@tbe/hooks',
+  '@tbe/constants',
+  '@tbe/utils',
+  '@tbe/interface',
+  '@tbe/services',
+  '@tbe/database',
+  '@tbe/ui',
+  '@tbe/types',
+  '@tbe/typescript-config',
+  '@tbe/eslint-config',
+  '@tbe/config',
+]);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -13,23 +27,18 @@ const nextConfig = {
   },
 
   reactStrictMode: true,
-
-  // Performance optimizations
   swcMinify: true,
   compress: true,
 
-  // Bundle size optimization - simplified approach
   experimental: {
     optimizePackageImports: ['framer-motion'],
     scrollRestoration: true,
   },
 
-  // Performance optimizations for better page transitions
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // Optimize images and static assets
   images: {
     domains: [
       'lh3.googleusercontent.com',
@@ -44,7 +53,6 @@ const nextConfig = {
     minimumCacheTTL: 60,
   },
 
-  // SVGR
   webpack(config, { isServer, isEdgeRuntime }) {
     config.module.rules.push({
       test: /\.svg$/i,
@@ -60,90 +68,66 @@ const nextConfig = {
       ],
     });
 
-    // Add comprehensive fallbacks for browser APIs that OpenTelemetry expects
-    if (isServer || isEdgeRuntime) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        performance: false,
-        'performance-now': false,
-        perf_hooks: false,
-        timers: false,
-        util: false,
-        buffer: false,
-        process: false,
-        events: false,
-        stream: false,
-        crypto: false,
-        url: false,
-        querystring: false,
-        path: false,
-        fs: false,
-        os: false,
-        http: false,
-        https: false,
-        zlib: false,
-        assert: false,
-        constants: false,
-        domain: false,
-        punycode: false,
-        string_decoder: false,
-        tty: false,
-        vm: false,
-        worker_threads: false,
-        child_process: false,
-        cluster: false,
-        dgram: false,
-        dns: false,
-        net: false,
-        readline: false,
-        repl: false,
-        tls: false,
-        v8: false,
-        inspector: false,
-        trace_events: false,
-        async_hooks: false,
-        module: false,
-      };
-    }
+    // Add comprehensive fallbacks for Node.js modules in both client and server
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      performance: false,
+      'performance-now': false,
+      perf_hooks: false,
+      timers: false,
+      util: false,
+      buffer: false,
+      process: false,
+      events: false,
+      stream: false,
+      crypto: false,
+      url: false,
+      querystring: false,
+      path: false,
+      fs: false,
+      os: false,
+      http: false,
+      https: false,
+      zlib: false,
+      assert: false,
+      constants: false,
+      domain: false,
+      punycode: false,
+      string_decoder: false,
+      tty: false,
+      vm: false,
+      worker_threads: false,
+      child_process: false,
+      cluster: false,
+      dgram: false,
+      dns: false,
+      net: false,
+      readline: false,
+      repl: false,
+      tls: false,
+      v8: false,
+      inspector: false,
+      trace_events: false,
+      async_hooks: false,
+      module: false,
+    };
 
     return config;
   },
 };
 
-// Sentry configuration
+// Sentry config
 const sentryWebpackPluginOptions = {
-  // For all available options, see:
-  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
-
   org: 'the-boring-education',
   project: 'tbe-webapp',
-
-  // Auth token for Sentry API access
   authToken: process.env.SENTRY_AUTH_TOKEN,
-
-  // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
-
-  // For all available options, see:
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
-
-  // Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  // This can increase your server load as well as your hosting bill.
-  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-  // side errors will fail.
-  // tunnelRoute: "/monitoring",
-
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
   disableLogger: true,
-
-  // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-  // See the following for more information:
-  // https://docs.sentry.io/product/crons/
-  // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
 };
 
-module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+module.exports = withSentryConfig(
+  withTM(nextConfig),
+  sentryWebpackPluginOptions
+);

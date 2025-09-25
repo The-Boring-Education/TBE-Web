@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
 
-import { CardContainerB, LoadingSpinner, SEO } from '@/components';
-import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
-import { useApi, useAPIResponseMapper } from '@/hooks';
-import type { PageProps } from '@/interfaces';
-import { getPreFetchProps, mapProjectResponseToCard } from '@/utils';
+import { CardContainerB, LoadingSpinner, SEO } from '@tbe/components';
+import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
+import { useApi, useAPIResponseMapper } from '@tbe/hooks';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps, mapProjectResponseToCard } from '@tbe/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('projects', {

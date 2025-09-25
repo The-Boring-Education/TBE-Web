@@ -14,7 +14,7 @@ import {
   SEO,
   Testimonials,
   WeAlreadyTaughtAt,
-} from '@/components';
+} from '@tbe/components';
 import {
   generateSectionPath,
   LINKS,
@@ -23,9 +23,9 @@ import {
   routes,
   STATIC_FILE_PATH,
   USP,
-} from '@/constant';
-import type { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
+} from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps } from '@tbe/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   const router = useRouter();

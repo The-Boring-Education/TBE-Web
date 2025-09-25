@@ -10,7 +10,7 @@ import {
   Section,
   SEO,
   Text,
-} from '@/components';
+} from '@tbe/components';
 import {
   LINKS,
   PAGE_REFRESH_TIMEOUT,
@@ -18,9 +18,9 @@ import {
   PORTFOLIO_TEMPLATES,
   routes,
   STATIC_FILE_PATH,
-} from '@/constant';
-import type { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
+} from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps } from '@tbe/utils';
 
 const Portfolio = ({ seoMeta }: PageProps) => {
   const router = useRouter();

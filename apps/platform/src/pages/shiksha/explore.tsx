@@ -7,11 +7,11 @@ import {
   LoadingSpinner,
   SEO,
   Text,
-} from '@/components';
-import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
-import { useApi, useAPIResponseMapper } from '@/hooks';
-import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
-import { getPreFetchProps, mapCourseResponseToCard } from '@/utils';
+} from '@tbe/components';
+import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
+import { useApi, useAPIResponseMapper } from '@tbe/hooks';
+import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
+import { getPreFetchProps, mapCourseResponseToCard } from '@tbe/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('shiksha', {

@@ -4,6 +4,7 @@ import {
   CreditCardIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
 import {
@@ -14,8 +15,8 @@ import {
   AdminPieChart,
   AdminStats,
   SEO,
-} from '@/components';
-import { useAdminData } from '@/hooks/useAdmin';
+} from '@tbe/components';
+import { useAdminData } from '@tbe/hooks';
 
 const AdminRevenue = () => {
   const {
@@ -291,4 +292,6 @@ const AdminRevenue = () => {
   );
 };
 
-export default AdminRevenue;
+export default dynamic(() => Promise.resolve(AdminRevenue), {
+  ssr: false,
+});

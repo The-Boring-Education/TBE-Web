@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
 import { FaClock, FaCode, FaTrophy,FaUsers } from 'react-icons/fa';
 
-import { CardContainerA, LinkButton, ModernLandingHero, SEO } from '@/components';
-import { LINKS,routes, TBP_FEATURES } from '@/constant';
-import type { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
+import { CardContainerA, LinkButton, ModernLandingHero, SEO } from '@tbe/components';
+import { LINKS,routes, TBP_FEATURES } from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps } from '@tbe/utils';
 
 const Home = ({ seoMeta }: PageProps) => {
   const handlePreviewClick = () => {

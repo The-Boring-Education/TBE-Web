@@ -7,7 +7,7 @@ import { trackEvent as sendEvent } from '@/utils/analytics';
 import Button from './Button';
 
 const LoginWithGoogleButton = ({ text = 'Login' }: LoginWithGoogleBtnProps) => {
-  const session = useSession();
+  const session = useSession() || { data: null, status: 'loading' };
   const { trackEvent } = useAnalytics();
 
   if (session.status === 'authenticated' || session.status === 'loading')

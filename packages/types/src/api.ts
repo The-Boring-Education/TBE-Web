@@ -603,3 +603,11 @@ export interface UserInterestResponseProps {
 export interface UpdateGamificationRecordBody {
   gamificationRecordId: string;
 }
+
+export interface QuizCategoryAPI {
+  _id: string
+  categoryName: string
+  categoryDescription: string
+  categoryIcon: string
+}
+
