@@ -29,8 +29,8 @@ const JobSchema: Schema<JobModel> = new Schema(
     },
     jobUrl: { type: String, required: true },
     salary: {
-      min: { type: String },
-      max: { type: String },
+      min: { type: Number },
+      max: { type: Number },
     },
     isInternship: { type: Boolean, default: false },
     platform: { type: String, required: true },

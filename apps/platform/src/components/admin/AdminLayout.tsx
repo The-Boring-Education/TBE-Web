@@ -10,13 +10,13 @@ import {
   UsersIcon,
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
-import React, { type ReactNode } from 'react';
+import * as React from 'react';
 
 import { Button, LoadingSpinner, Text } from '@/components';
 import { useAdmin } from '@/hooks/useAdmin';
 
 interface AdminLayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
   title?: string;
 }
 

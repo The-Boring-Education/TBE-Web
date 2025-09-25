@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
-import React, { Component, type ErrorInfo } from 'react';
+import * as React from 'react';
 
 interface Props {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ interface State {
   eventId?: string;
 }
 
-class ErrorBoundary extends Component<Props, State> {
+class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false };
@@ -21,7 +21,7 @@ class ErrorBoundary extends Component<Props, State> {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error details to Sentry
     const eventId = Sentry.captureException(error, {
       contexts: {

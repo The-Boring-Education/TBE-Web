@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import * as React from 'react';
 
 import { CelebrationAnimation, GamificationToast } from '@/components';
 
@@ -20,7 +20,9 @@ interface ToastData {
   levelName?: string;
 }
 
-const GamificationContext = createContext<GamificationContextType | null>(null);
+const GamificationContext = React.createContext<GamificationContextType | null>(
+  null
+);
 
 interface GamificationProviderProps {
   children: React.ReactNode;
@@ -30,10 +32,10 @@ export const GamificationProvider = ({
   children,
 }: GamificationProviderProps) => {
   const [celebrationData, setCelebrationData] =
-    useState<CelebrationData | null>(null);
-  const [toastData, setToastData] = useState<ToastData | null>(null);
-  const [showCelebration, setShowCelebration] = useState(false);
-  const [showToastState, setShowToastState] = useState(false);
+    React.useState<CelebrationData | null>(null);
+  const [toastData, setToastData] = React.useState<ToastData | null>(null);
+  const [showCelebration, setShowCelebration] = React.useState(false);
+  const [showToastState, setShowToastState] = React.useState(false);
 
   const triggerCelebration = (data: CelebrationData) => {
     setCelebrationData(data);
@@ -87,7 +89,7 @@ export const GamificationProvider = ({
 };
 
 export const useGamificationContext = () => {
-  const context = useContext(GamificationContext);
+  const context = React.useContext(GamificationContext);
   if (!context) {
     throw new Error(
       'useGamificationContext must be used within a GamificationProvider'
