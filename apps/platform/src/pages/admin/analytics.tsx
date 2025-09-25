@@ -3,6 +3,7 @@ import {
   ChartBarIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
 import {
@@ -14,8 +15,8 @@ import {
   AdminStats,
   SEO,
   TabComponent,
-} from '@/components';
-import { useAdminData } from '@/hooks/useAdmin';
+} from '@tbe/components';
+import { useAdminData } from '@tbe/hooks';
 
 const AdminAnalytics = () => {
   const {
@@ -285,4 +286,6 @@ const AdminAnalytics = () => {
   );
 };
 
-export default AdminAnalytics;
+export default dynamic(() => Promise.resolve(AdminAnalytics), {
+  ssr: false,
+});

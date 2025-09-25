@@ -1,8 +1,9 @@
 import { EyeIcon, UserIcon } from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-import { AdminLayout, AdminStats, AdminTable, SEO } from '@/components';
-import { useAdminData } from '@/hooks/useAdmin';
+import { AdminLayout, AdminStats, AdminTable, SEO } from '@tbe/components';
+import { useAdminData } from '@tbe/hooks';
 
 const AdminUsers = () => {
   const {
@@ -229,4 +230,6 @@ const AdminUsers = () => {
   );
 };
 
-export default AdminUsers;
+export default dynamic(() => Promise.resolve(AdminUsers), {
+  ssr: false,
+});

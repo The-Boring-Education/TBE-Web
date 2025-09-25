@@ -1,6 +1,6 @@
-import SheetLandingPage from '@/components/containers/Page/Interview-sheet/SheetLandingPage';
-import type { SheetPageProps } from '@/interfaces';
-import { getSheetPageProps } from '@/utils';
+import { SheetLandingPage } from '@tbe/components';
+import type { SheetPageProps } from '@tbe/interface';
+import { getSheetPageProps } from '@tbe/utils';
 
 const SheetLandingPageRoute = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => (
     <SheetLandingPage

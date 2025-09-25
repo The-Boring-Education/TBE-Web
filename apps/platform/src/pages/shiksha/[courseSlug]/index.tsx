@@ -16,21 +16,21 @@ import {
   Section,
   SEO,
   Text,
-} from '@/components';
-import { useGamificationContext } from '@/components/layout/GamificationProvider';
-import { routes, SCREEN_BREAKPOINTS } from '@/constant';
+} from '@tbe/components';
+import { routes, SCREEN_BREAKPOINTS } from '@tbe/constants';
 import {
   useAnalytics,
   useApi,
   useGamifiedAction,
   useMediaQuery,
   useUser,
-} from '@/hooks';
+  useGamificationContext
+} from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,
-} from '@/interfaces';
-import { formatDate, getCoursePageProps } from '@/utils';
+} from '@tbe/interface';
+import { formatDate, getCoursePageProps } from '@tbe/utils';
 
 const CoursePage = ({
   course,

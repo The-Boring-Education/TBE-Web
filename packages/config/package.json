@@ -3,7 +3,10 @@
     "version": "0.0.0",
     "private": true,
     "license": "MIT",
+    "main": "./onboarding.ts",
+    "types": "./onboarding.ts",
     "exports": {
+        ".": "./onboarding.ts",
         "./tailwind": "./tailwind.config.js",
         "./postcss": "./postcss.config.js",
         "./prettier": "./prettier.config.js"
@@ -12,6 +15,7 @@
         "lint": "eslint . --max-warnings 0"
     },
     "dependencies": {
+        "@tbe/types": "workspace:*",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/typography": "^0.5.15",
         "autoprefixer": "^10.4.20",

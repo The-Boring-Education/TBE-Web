@@ -1,9 +1,7 @@
 import { RiAlarmWarningFill } from 'react-icons/ri';
 
-import { Link } from '@/components';
-import Layout from '@/components/layout/Section';
-import SEO from '@/components/layout/SEO';
-import { getSEOMeta } from '@/constant';
+import { Link, Layout, SEO } from '@tbe/components';
+import { getSEOMeta } from '@tbe/constants';
 
 const NotFoundPage = () => {
   const seoMeta = getSEOMeta('/404');

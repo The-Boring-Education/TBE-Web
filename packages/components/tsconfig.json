@@ -1,0 +1,14 @@
+{
+    "extends": "@tbe/typescript-config/react-library.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "./src",
+        "baseUrl": "./",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "declaration": true,
+        "declarationMap": true
+    },
+    "include": ["./src/**/*"],
+    "exclude": ["node_modules", "dist"]
+}

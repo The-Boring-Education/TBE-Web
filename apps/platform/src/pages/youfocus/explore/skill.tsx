@@ -8,10 +8,10 @@ import {
   SectionHeaderContainer,
   SEO,
   Toast,
-} from '@/components';
-import { useSkillPlaylist } from '@/hooks';
-import type { PageProps } from '@/interfaces';
-import { getSkillPlaylistPageProps, getYoufocusSkillName } from '@/utils';
+} from '@tbe/components';
+import { useSkillPlaylist } from '@tbe/hooks';
+import type { PageProps } from '@tbe/interface';
+import { getSkillPlaylistPageProps, getYoufocusSkillName } from '@tbe/utils';
 
 const Explore = ({ seoMeta }: PageProps) => {
   const router = useRouter();

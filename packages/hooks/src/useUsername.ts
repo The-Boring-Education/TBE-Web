@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { routes } from '@/constant';
-import { useApi } from '@/hooks';
-import type { APIMakeRquestProps } from '@/interfaces';
+import { routes } from '@tbe/constants';
+import { useApi } from '@tbe/hooks';
+import type { APIMakeRquestProps } from '@tbe/interface';
 
 const useUsername = (userName: string) => {
   const [message, setMessage] = useState<string>();

@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 const ADMIN_EMAIL = 'theboringeducation@gmail.com';
 
 export const useAdmin = () => {
-  const { data: session, status } = useSession();
+  const sessionResult = useSession();
+  const { data: session, status } = sessionResult || { data: null, status: 'loading' };
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 

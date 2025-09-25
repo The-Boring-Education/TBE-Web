@@ -10,7 +10,8 @@ const LoginRedirectButton = ({
   className = '',
 }: LoginRedirectButtonProps) => {
   const router = useRouter();
-  const { status } = useSession();
+  const sessionData = useSession();
+  const { status } = sessionData || { status: 'loading' };
 
   const handleLoginRedirect = () => {
     if (status === 'unauthenticated') {

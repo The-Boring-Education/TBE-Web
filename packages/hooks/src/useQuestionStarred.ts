@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import { routes } from '@/constant';
-import { useApi } from '@/hooks';
-import type { useQuestionStarredProps } from '@/interfaces';
+  import { routes } from '@tbe/constants';
+import { useApi } from '@tbe/hooks';
+import type { useQuestionStarredProps } from '@tbe/interface';
 
 const useQuestionStarred = ({
   userId,

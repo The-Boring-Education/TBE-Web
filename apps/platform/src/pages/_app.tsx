@@ -8,11 +8,11 @@ import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { PageLayout } from '@/components';
-import { GamificationProvider } from '@/components/layout/GamificationProvider';
-import { envConfig, googleAnalyticsScript, gtag, routes } from '@/constant';
-import { useUser } from '@/hooks';
-import { getRedirectUrl } from '@/utils';
+import { Layout } from '@tbe/components';
+import { GamificationProvider } from '@tbe/hooks';
+import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
+import { useUser } from '@tbe/hooks';
+import { getRedirectUrl } from '@tbe/utils';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -25,7 +25,8 @@ const AppContent = ({
   pageProps: any;
 }) => {
   const router = useRouter();
-  const { user, isOnboarded, isAuth, loading } = useUser();
+  const userData = useUser();
+  const { user, isOnboarded, isAuth, loading } = userData || { user: null, isOnboarded: false, isAuth: false, loading: true };
 
   useEffect(() => {
     if (loading || !isAuth) return;
@@ -55,9 +56,9 @@ const AppContent = ({
   return (
     <QueryClientProvider client={queryClient}>
       <GamificationProvider>
-        <PageLayout>
+          <Layout>
           <Component {...pageProps} />
-        </PageLayout>
+        </Layout>
       </GamificationProvider>
     </QueryClientProvider>
   );

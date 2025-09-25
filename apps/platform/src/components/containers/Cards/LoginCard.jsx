@@ -13,7 +13,8 @@ import {
 } from '@/components';
 
 const Login = () => {
-  const { status } = useSession();
+  const sessionData = useSession();
+  const { status } = sessionData || { status: 'loading' };
   const router = useRouter();
   const redirectPath = router.query.redirect
     ? String(router.query.redirect)

@@ -7,16 +7,16 @@ import {
   FeedbackPopup,
   FlexContainer,
   LinerProgressBar,
-  MDXRenderer,
+  MDXRenderer,  
   ProjectHeroContainer,
   Section,
   SEO,
   Text,
-} from '@/components';
-import { routes } from '@/constant';
-import { useAnalytics, useApi, useGamifiedAction, useUser } from '@/hooks';
-import type { ProjectPageProps } from '@/interfaces';
-import { getProjectPageProps, getSelectedProjectChapterMeta } from '@/utils';
+} from '@tbe/components';
+import { useAnalytics, useApi, useGamifiedAction, useUser } from '@tbe/hooks';
+import type { ProjectPageProps } from '@tbe/interface';
+import { getProjectPageProps, getSelectedProjectChapterMeta } from '@tbe/utils';
+import { routes } from '@tbe/constants';
 
 const ProjectPage = ({
   project,

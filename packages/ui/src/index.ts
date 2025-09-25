@@ -41,7 +41,7 @@ export { default as UserAvatar } from "./Images/UserAvatar"
 
 // Layout Components
 export { default as Footer } from "./Footer"
-export { default as GamificationProvider } from "./GamificationProvider"
+export { default as GamificationProvider, useGamificationContext } from "./GamificationProvider"
 export { default as Navbar } from "./Navbar"
 export { default as Page } from "./Page"
 export { default as Section } from "./Section"

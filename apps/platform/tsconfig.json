@@ -15,7 +15,16 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@tbe/components/*": ["../../packages/components/src/*"],
+      "@tbe/hooks/*": ["../../packages/hooks/src/*"],
+      "@tbe/constants/*": ["../../packages/constants/src/*"],
+      "@tbe/utils/*": ["../../packages/utils/src/*"],
+      "@tbe/interface/*": ["../../packages/interface/src/*"],
+      "@tbe/services/*": ["../../packages/services/src/*"],
+      "@tbe/database/*": ["../../packages/database/src/*"],
+      "@tbe/ui/*": ["../../packages/ui/src/*"],
+      "@tbe/types/*": ["../../packages/types/src/*"]
     },
     "noImplicitAny": false,
     "noUnusedParameters": false,
@@ -28,6 +37,29 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "../../packages/components/src/**/*.ts",
+    "../../packages/components/src/**/*.tsx",
+    "../../packages/hooks/src/**/*.ts",
+    "../../packages/hooks/src/**/*.tsx",
+    "../../packages/constants/src/**/*.ts",
+    "../../packages/constants/src/**/*.tsx",
+    "../../packages/utils/src/**/*.ts",
+    "../../packages/utils/src/**/*.tsx",
+    "../../packages/interface/src/**/*.ts",
+    "../../packages/interface/src/**/*.tsx",
+    "../../packages/services/src/**/*.ts",
+    "../../packages/services/src/**/*.tsx",
+    "../../packages/database/src/**/*.ts",
+    "../../packages/database/src/**/*.tsx",
+    "../../packages/ui/src/**/*.ts",
+    "../../packages/ui/src/**/*.tsx",
+    "../../packages/types/src/**/*.ts",
+    "../../packages/types/src/**/*.tsx"
+  ],
   "exclude": ["node_modules", "scripts"]
 }

@@ -9,15 +9,15 @@ import {
   Section,
   SEO,
   Text,
-} from '@/components';
-import { routes, STATIC_FILE_PATH } from '@/constant';
-import { useCertificate, useUser } from '@/hooks';
-import type { CertificatePageProps } from '@/interfaces';
+} from '@tbe/components';
+import { routes, STATIC_FILE_PATH } from '@tbe/constants';
+import { useCertificate, useUser } from '@tbe/hooks';
+import type { CertificatePageProps } from '@tbe/interface';
 import {
   formatDate,
   generateShareTemplate,
   getCertificatePageProps,
-} from '@/utils';
+} from '@tbe/utils';
 
 const Home = ({
   seoMeta,

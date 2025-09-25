@@ -18,14 +18,14 @@ import {
   TestimonialCard,
   Text,
   WebinarHeroContainer,
-} from '@/components';
-import { routes, TESTIMONIALS } from '@/constant';
-import { useAnalytics, useApi, useUser } from '@/hooks';
+} from '@tbe/components';
+import { routes, TESTIMONIALS } from '@tbe/constants';
+import { useAnalytics, useApi, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   WebinarPageProps,
-} from '@/interfaces';
-import { formatDate, getWebinarPageProps } from '@/utils';
+    } from '@tbe/interface';
+import { formatDate, getWebinarPageProps } from '@tbe/utils';
 
 const WebinarPage = ({
   seoMeta,

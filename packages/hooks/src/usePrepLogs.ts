@@ -88,11 +88,11 @@ export default function usePrepLogs(userId: string) {
 
             // Analytics
             try {
-                trackEvent({
+                trackEvent('prep_log_create', {
                     action: 'prep_log_create',
                     category: 'prep_yatra',
-                    value: data.timeSpent,
-                    day: data.day
+                    value: data.timeSpent as number,
+                    day: data.day as number
                 })
             } catch {}
 

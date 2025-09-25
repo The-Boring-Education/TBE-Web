@@ -5,6 +5,7 @@ import {
   TrophyIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 
 import {
@@ -15,20 +16,20 @@ import {
   AdminPieChart,
   AdminStats,
   SEO,
-} from '@/components';
-import { useAdminData } from '@/hooks/useAdmin';
+} from '@tbe/components';
+import { useAdminData } from '@tbe/hooks';
 
 const AdminDashboard = () => {
   const {
     data: overviewData,
     loading: overviewLoading,
     fetchData: fetchOverview,
-  } = useAdminData();
+  } = useAdminData(); // Overview data
   const {
     data: analyticsData,
     loading: analyticsLoading,
     fetchData: fetchAnalytics,
-  } = useAdminData();
+  } = useAdminData(); // Analytics data
   const {
     data: revenueData,
     loading: revenueLoading,
@@ -225,4 +226,6 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default dynamic(() => Promise.resolve(AdminDashboard), {
+  ssr: false,
+});

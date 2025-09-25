@@ -14,8 +14,8 @@ import {
   SheetHeroContainer,
   StarButton,
   Text,
-} from '@/components';
-import { routes } from '@/constant';
+} from '@tbe/components';
+import { routes } from '@tbe/constants';
 import {
   useAnalytics,
   useApi,
@@ -23,9 +23,9 @@ import {
   usePaymentStatus,
   useQuestionStarred,
   useUser,
-} from '@/hooks';
-import type { SheetPageProps } from '@/interfaces';
-import { getSheetPageProps } from '@/utils';
+} from '@tbe/hooks';
+import type { SheetPageProps } from '@tbe/interface';
+import { getSheetPageProps } from '@tbe/utils';
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const [sheetMeta, setSheetMeta] = useState<string>(meta || '');

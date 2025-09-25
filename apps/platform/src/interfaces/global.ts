@@ -15,6 +15,8 @@ export type GetSEOMetaResponseType = {
   image: string;
 };
 
+
+
 export type ProductLabelType =
   | 'Roadmaps'
   | 'Projects'

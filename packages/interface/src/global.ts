@@ -13,12 +13,6 @@ export type GetSEOMetaResponseType = {
   type: string;
   robots: string;
   image: string;
-  keywords: string;
-  author: string;
-  publisher: string;
-  linkedIn: string;
-  instagram: string;
-  github: string;
 };
 
 export type ProductLabelType =
