@@ -12,7 +12,10 @@
         }
     },
     "scripts": {
-        "build": "tsc",
+        "build": "echo 'Building @tbe/components...' && tsc && echo 'Build completed successfully!'",
+        "build:verbose": "tsc --listFiles",
+        "build:watch": "tsc --watch",
+        "build:clean": "rimraf dist && tsc",
         "lint": "eslint . --max-warnings 0"
     },
     "dependencies": {

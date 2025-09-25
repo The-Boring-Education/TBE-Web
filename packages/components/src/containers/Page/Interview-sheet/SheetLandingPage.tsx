@@ -12,7 +12,8 @@ import {
   Text,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
-import { useAnalytics, useApi, useGamifiedAction, usePaymentStatus, useUser } from '@tbe/hooks';
+import { useAnalytics, useApi, usePaymentStatus, useUser } from '@tbe/hooks';
+import { useGamifiedAction } from '@tbe/components';
 import type { CouponModel,SheetPageProps } from '@tbe/interface';
 import { calculatePriceBreakdown, formatPrice, getDiscountDisplayInfo, getSavingsPercentage } from '@tbe/utils';
 

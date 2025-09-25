@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Button, FlexContainer, Text } from '@tbe/components';
 import { useGamificationContext } from './GamificationProvider';
-import { useGamifiedAction } from '@tbe/hooks';
+import useGamifiedAction from './useGamifiedAction';
 
 const GamificationDemo = () => {
   const [demoMode, setDemoMode] = useState(false);

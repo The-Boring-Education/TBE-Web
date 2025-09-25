@@ -5,11 +5,11 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { SessionProvider } from 'next-auth/react';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { Layout } from '@tbe/components';
-import { GamificationProvider } from '@tbe/hooks';
+import { GamificationProvider } from '@tbe/components';
 import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
 import { useUser } from '@tbe/hooks';
 import { getRedirectUrl } from '@tbe/utils';
@@ -25,11 +25,18 @@ const AppContent = ({
   pageProps: any;
 }) => {
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
   const userData = useUser();
   const { user, isOnboarded, isAuth, loading } = userData || { user: null, isOnboarded: false, isAuth: false, loading: true };
 
+  // Ensure we're on the client side before accessing window
   useEffect(() => {
-    if (loading || !isAuth) return;
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    // Only run on client side
+    if (!isClient || loading || !isAuth) return;
 
     if (!isOnboarded && isAuth && router.pathname !== routes.onboarding) {
       // Redirect to external onboarding app
@@ -51,12 +58,12 @@ const AppContent = ({
       const redirectTo = getRedirectUrl();
       router.push(redirectTo);
     }
-  }, [isAuth, isOnboarded, loading, router, router.pathname, user]);
+  }, [isClient, isAuth, isOnboarded, loading, router, router.pathname, user]);
 
   return (
     <QueryClientProvider client={queryClient}>
       <GamificationProvider>
-          <Layout>
+        <Layout>
           <Component {...pageProps} />
         </Layout>
       </GamificationProvider>

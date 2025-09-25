@@ -4,12 +4,13 @@ import {
   PopoverPanel,
   Transition,
 } from '@headlessui/react';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 import { UserLevelProgressContainer } from '@tbe/components';
 import { useGamification, useUser } from '@tbe/hooks';
 
 const UserPointButton = () => {
+  const [isClient, setIsClient] = useState(false);
   const { isAuth, loading } = useUser();
   const {
     points,
@@ -20,7 +21,11 @@ const UserPointButton = () => {
     percentageProgress,
   } = useGamification();
 
-  if (!isAuth || loading) return null;
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient || !isAuth || loading) return null;
 
   return (
     <Popover className='relative'>

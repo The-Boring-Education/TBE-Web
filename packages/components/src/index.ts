@@ -146,4 +146,5 @@ export { default as Section } from './layout/Section';
 export { default as SEO } from './layout/SEO';
 
 
-export { useGamificationContext } from './common/GamificationDemo/GamificationProvider';
+export { GamificationProvider, useGamificationContext } from './common/GamificationDemo/GamificationProvider';
+export { default as useGamifiedAction } from './common/GamificationDemo/useGamifiedAction';
