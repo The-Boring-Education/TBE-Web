@@ -1,6 +1,7 @@
 {
   "name": "tbe-platform",
   "private": true,
+  "version": "2.6.4",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
