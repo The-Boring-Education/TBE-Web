@@ -11,10 +11,10 @@
   "dependencies": {
     "@tbe/constants": "workspace:*",
     "@tbe/database": "workspace:*",
-    "@tbe/types": "workspace:*",
-    "@tbe/utils": "workspace:*",    
     "@tbe/interface": "workspace:*",
     "@tbe/services": "workspace:*",
+    "@tbe/types": "workspace:*",
+    "@tbe/utils": "workspace:*",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -24,22 +24,22 @@
     "next-auth": "^4.24.7",
     "openai": "^4.85.2",
     "raw-body": "^3.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
+    "@tbe/interface": "workspace:*",
     "@tbe/typescript-config": "workspace:*",
-    "@tbe/interface": "workspace:*", 
     "@types/cors": "^2.8.19",
     "@types/markdown-it": "^14.0.1",
     "@types/node": "18",
     "@types/raw-body": "^2.1.4",
-    "@types/react": "^18.0.28",
+    "@types/react": "^18.3.24",
     "@types/uuid": "^9.0.1",
     "eslint": "^8.36.0",
     "eslint-config-next": "^13.2.4",
-    "typescript": "5.3.3"
+    "typescript": "5.9.2"
   }
 }

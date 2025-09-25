@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@tbe/typescript-config": "workspace:*",
-    "@types/react": "^18.2.0",
-    "typescript": "5.3.3"
+    "@types/react": "^18.3.24",
+    "typescript": "5.9.2"
   }
 }

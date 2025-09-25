@@ -14,11 +14,11 @@
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
-    "@tbe/types": "workspace:*",
-    "@tbe/utils": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/interface": "workspace:*",
     "@tbe/services": "workspace:*",
+    "@tbe/types": "workspace:*",
+    "@tbe/utils": "workspace:*",
     "mongoose": "^7.4.1"
   },
   "devDependencies": {
@@ -26,6 +26,6 @@
     "@tbe/typescript-config": "workspace:*",
     "@types/node": "^22.5.5",
     "eslint": "^8.57.1",
-    "typescript": "^5.4.0"
+    "typescript": "^5.9.2"
   }
 }
