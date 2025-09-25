@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import React, { createContext, useContext, useState } from 'react';
 
 import { CelebrationAnimation, GamificationToast } from '@/components';
@@ -24,7 +23,7 @@ interface ToastData {
 const GamificationContext = createContext<GamificationContextType | null>(null);
 
 interface GamificationProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const GamificationProvider = ({
