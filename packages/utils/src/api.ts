@@ -30,7 +30,7 @@ export const sendRequest = async ({
     body,
     baseURL
 }: APIMakeRequestProps): Promise<APIResponseType> => {
-    const defaultBaseURL = envConfig.BASE_API_APP_URL || 'http://localhost:3004/api/v1';
+    const defaultBaseURL = envConfig.NEXT_APP_BASE_API_APP_URL;
     const config: AxiosRequestConfig = {
         method,
         url: baseURL ? `${baseURL}${url}` : `${defaultBaseURL}${url}`,
