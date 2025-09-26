@@ -1,4 +1,5 @@
 import type { GenerateSectionPathProps } from '@tbe/types';
+import {envConfig} from "./envConfig"
 
 const routes = {
   home: '/',
@@ -79,7 +80,7 @@ const routes = {
   unskilled: '/unskilled',
   404: '/404',
   api: {
-    base: '/api/v1',
+    base: `${envConfig.BASE_API_APP_URL}/api/v1`,
     projects: '/projects',
     webinar: '/webinar',
     project: (project: string) => `/projects/${project}`,

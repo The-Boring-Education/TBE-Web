@@ -1,5 +1,5 @@
 import axios, { type AxiosRequestConfig } from "axios"
-
+import { envConfig } from "@tbe/constants"
 export interface APIMakeRequestProps {
     method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
     url: string
@@ -30,9 +30,10 @@ export const sendRequest = async ({
     body,
     baseURL
 }: APIMakeRequestProps): Promise<APIResponseType> => {
+    const defaultBaseURL = envConfig.BASE_API_APP_URL || 'http://localhost:3004/api/v1';
     const config: AxiosRequestConfig = {
         method,
-        url: baseURL ? `${baseURL}${url}` : `/api/v1${url}`,
+        url: baseURL ? `${baseURL}${url}` : `${defaultBaseURL}${url}`,
         headers: {
             ...headers,
             cache: "no-store"

@@ -18,6 +18,7 @@ import {
   SEO,
 } from '@tbe/components';
 import { useAdminData } from '@tbe/hooks';
+import { routes } from '@tbe/constants';
 
 const AdminDashboard = () => {
   const {
@@ -42,10 +43,10 @@ const AdminDashboard = () => {
   } = useAdminData();
 
   useEffect(() => {
-    fetchOverview('/api/v1/admin/dashboard', { type: 'overview' });
-    fetchAnalytics('/api/v1/admin/analytics', { type: 'user-engagement' });
-    fetchRevenue('/api/v1/admin/analytics', { type: 'revenue' });
-    fetchUserGrowth('/api/v1/admin/users', { action: 'growth' });
+    fetchOverview(`${routes.api.base}/admin/dashboard`, { type: 'overview' });
+    fetchAnalytics(`${routes.api.base}/admin/analytics`, { type: 'user-engagement' });
+    fetchRevenue(`${routes.api.base}/admin/analytics`, { type: 'revenue' });
+    fetchUserGrowth(`${routes.api.base}/admin/users`, { action: 'growth' });
   }, [fetchOverview, fetchAnalytics, fetchRevenue, fetchUserGrowth]);
 
   const stats = overviewData

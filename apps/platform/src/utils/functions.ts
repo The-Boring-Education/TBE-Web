@@ -5,13 +5,13 @@ import {
   JOB_SKILL_NORMALIZER,
   LINKS,
   POINTS_RULES,
-  routes,
   SKILL_BLACKLIST,
   SUBSCRIPTION_FEATURES,
   USER_LEVELS,
   YOUFOCUS_SKILL_PLAYLISTS,
   YOUTUBE_API_PATH,
 } from '@/constant';
+import { routes } from '@tbe/constants';
 import type {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
@@ -28,7 +28,8 @@ import type {
 } from '@/interfaces';
 
 const fetchAPIData = async (url: string) => {
-  const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
+  const response = await fetch(`${routes.api.base}/${url}`);
+  // const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
 
   return await response.json();
 };

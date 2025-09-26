@@ -17,6 +17,6 @@ export const cors = initMiddleware(
     origin: '*', // Allow all origins
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: false, // Set to false when using origin: '*'
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-secret'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-secret', 'cache'],
   })
 );
