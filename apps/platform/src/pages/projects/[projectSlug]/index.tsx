@@ -13,7 +13,8 @@ import {
   SEO,
   Text,
 } from '@tbe/components';
-import { useAnalytics, useApi, useGamifiedAction, useUser } from '@tbe/hooks';
+import { useAnalytics, useApi, useUser } from '@tbe/hooks';
+import { useGamifiedAction } from '@tbe/components';
 import type { ProjectPageProps } from '@tbe/interface';
 import { getProjectPageProps, getSelectedProjectChapterMeta } from '@tbe/utils';
 import { routes } from '@tbe/constants';

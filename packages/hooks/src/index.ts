@@ -8,8 +8,8 @@ export { default as useCashfreePayment } from "./useCashfreePayment"
 export { default as useCertificate } from "./useCertificate"
 export { default as useFeedback } from "./useFeedback"
 export { default as useGamification } from "./useGamification"
-export { default as useGamifiedAction } from "./useGamifiedAction"
-export { useGamificationContext, GamificationProvider } from "./GamificationProvider"
+// useGamifiedAction moved to @tbe/components package
+// GamificationProvider moved to @tbe/components package
 export { default as useLeaderboard } from "./useLeaderboard"
 export { default as useMediaQuery } from "./useMediaQuery"
 export { default as useNotifications } from "./useNotifications"

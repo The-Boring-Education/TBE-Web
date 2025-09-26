@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Footer, Navbar } from '@tbe/components';
 import { envConfig } from '@tbe/constants';
@@ -8,14 +8,23 @@ import type { PageLayoutProps } from '@tbe/interface';
 
 const PageLayout = ({ children }: PageLayoutProps) => {
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const handleRouteChange = (url: string) => {
       window.scrollTo(0, 0);
 
-      window.gtag('config', envConfig.GA_TRACKING_ID, {
-        page_path: url,
-      });
+      if (typeof window.gtag !== 'undefined') {
+        window.gtag('config', envConfig.GA_TRACKING_ID, {
+          page_path: url,
+        });
+      }
     };
 
     router.events.on('routeChangeComplete', handleRouteChange);
@@ -24,7 +33,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange);
     };
-  }, [router.events]);
+  }, [isClient, router.events]);
 
   return (
     <main className='bg-lightBG flex flex-col min-h-screen'>

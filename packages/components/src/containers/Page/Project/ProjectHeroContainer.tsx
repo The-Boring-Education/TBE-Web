@@ -8,7 +8,8 @@ import {
   Text,
 } from '@tbe/components';
 import { projectGroupWhatsapp, routes } from '@tbe/constants';
-import { useAnalytics, useApi, useGamifiedAction, useUser } from '@tbe/hooks';
+import { useAnalytics, useApi, useUser } from '@tbe/hooks';
+import { useGamifiedAction } from '@tbe/components';
 import type { ProjectHeroContainerProps } from '@tbe/interface';
 
 const ProjectHeroContainer = ({

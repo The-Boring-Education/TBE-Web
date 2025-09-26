@@ -21,11 +21,10 @@ import { routes, SCREEN_BREAKPOINTS } from '@tbe/constants';
 import {
   useAnalytics,
   useApi,
-  useGamifiedAction,
   useMediaQuery,
   useUser,
-  useGamificationContext
 } from '@tbe/hooks';
+import { useGamifiedAction, useGamificationContext } from '@tbe/components';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,

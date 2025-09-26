@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react';
 
 import { routes } from '@tbe/constants';
-import { useAnalytics, useApi, useGamification, useUser, useGamificationContext } from '@tbe/hooks';
+import { useAnalytics, useApi, useGamification, useUser } from '@tbe/hooks';
+import { useGamificationContext } from './GamificationProvider';
 import type { TrackEventProps, UserPointsActionType } from '@tbe/interface';
 import { calculateUserPointsForAction, getUserGamificationLevel } from '@tbe/utils';
 

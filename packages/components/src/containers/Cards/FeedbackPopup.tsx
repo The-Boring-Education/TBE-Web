@@ -9,7 +9,8 @@ import {
   StarRatingCard,
   Toast,
 } from '@tbe/components';
-import { useFeedback, useGamifiedAction } from '@tbe/hooks';
+import { useFeedback } from '@tbe/hooks';
+import { useGamifiedAction } from '@tbe/components';
 import type { FeedbackPopupProps } from '@tbe/interface';
 
 const FeedbackPopup = ({
