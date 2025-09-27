@@ -7,10 +7,11 @@ import {
   getInterviewSheetBySlugFromDB,
 } from '@tbe/database';
 import type { AddInterviewSheetRequestPayloadProps } from '@tbe/interface';
-import { connectDB } from '@/middleware';
+import { connectDB, cors } from '@/middleware';
 import { sendAPIResponse } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await cors(req, res);
   await connectDB();
   const { method } = req;
 

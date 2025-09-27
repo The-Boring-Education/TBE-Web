@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { envConfig, apiStatusCodes } from '@tbe/constants';
-import { sendAPIResponse } from '@tbe/utils';
+import { sendAPIResponse, cors } from '@tbe/utils';
 
 // Connect to DB
 const connectDB = async () => {
@@ -50,4 +50,4 @@ const adminMiddleware = async (
   }
 };
 
-export { connectDB, adminMiddleware };
+export { connectDB, adminMiddleware, cors };

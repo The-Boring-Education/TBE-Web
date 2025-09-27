@@ -1,6 +1,7 @@
 import axios, { type AxiosRequestConfig } from 'axios';
 
 import type { APIMakeRquestProps, APIResponseType } from '@/interfaces';
+import { routes } from '@tbe/constants';
 
 const apiInstance = axios.create();
 
@@ -12,7 +13,7 @@ const sendRequest = async ({
 }: APIMakeRquestProps): Promise<APIResponseType> => {
   const config: AxiosRequestConfig = {
     method,
-    url: `/api/v1${url}`,
+    url: `${routes.api.base}${url}`,
     headers: {
       ...headers,
       cache: 'no-store',

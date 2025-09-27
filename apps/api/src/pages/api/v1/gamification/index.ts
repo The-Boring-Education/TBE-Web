@@ -7,8 +7,7 @@ import {
   updateUserPointsInDB,
 } from '@tbe/database';
 import type { UserPointsActionType } from '@tbe/interface';
-import { connectDB } from '@/middleware';
-import { cors } from '@tbe/utils';
+import { connectDB, cors } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

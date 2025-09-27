@@ -13,9 +13,8 @@ import type {
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,
 } from '@tbe/interface';
-import { connectDB } from '@/middleware';
+import { connectDB, cors } from '@/middleware';
 import { sendAPIResponse } from '@tbe/utils';
-import { cors } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

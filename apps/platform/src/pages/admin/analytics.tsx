@@ -17,6 +17,7 @@ import {
   TabComponent,
 } from '@tbe/components';
 import { useAdminData } from '@tbe/hooks';
+import { routes } from '@tbe/constants';
 
 const AdminAnalytics = () => {
   const {
@@ -43,16 +44,16 @@ const AdminAnalytics = () => {
 
   useEffect(() => {
     const params = { period: dateRange };
-    fetchRevenue('/api/v1/admin/analytics', { type: 'revenue', ...params });
-    fetchEngagement('/api/v1/admin/analytics', {
+    fetchRevenue(`${routes.api.base}/admin/analytics`, { type: 'revenue', ...params });
+    fetchEngagement(`${routes.api.base}/admin/analytics`, {
       type: 'user-engagement',
       ...params,
     });
-    fetchContent('/api/v1/admin/analytics', {
+    fetchContent(`${routes.api.base}/admin/analytics`, {
       type: 'content-performance',
       ...params,
     });
-    fetchGamification('/api/v1/admin/analytics', {
+    fetchGamification(`${routes.api.base}/admin/analytics`, {
       type: 'gamification',
       ...params,
     });

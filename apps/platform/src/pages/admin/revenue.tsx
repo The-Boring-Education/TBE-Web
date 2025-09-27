@@ -17,6 +17,7 @@ import {
   SEO,
 } from '@tbe/components';
 import { useAdminData } from '@tbe/hooks';
+import { routes } from '@tbe/constants';
 
 const AdminRevenue = () => {
   const {
@@ -33,8 +34,8 @@ const AdminRevenue = () => {
 
   useEffect(() => {
     const params = { period: dateRange };
-    fetchRevenue('/api/v1/admin/analytics', { type: 'revenue', ...params });
-    fetchSubscriptions('/api/v1/admin/analytics', {
+    fetchRevenue(`${routes.api.base}/admin/analytics`, { type: 'revenue', ...params });
+    fetchSubscriptions(`${routes.api.base}/admin/analytics`, {
       type: 'operational',
       ...params,
     });
