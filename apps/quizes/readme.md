@@ -75,7 +75,7 @@ A comprehensive quiz platform for mastering tech interviews with detailed analyt
     Update `.env.local` with your configuration:
 
     ```env
-    API_URL=your_api_url
+    NEXT_PUBLIC_API_URL=your_api_url
     NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
     ```
 
