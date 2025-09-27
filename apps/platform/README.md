@@ -38,7 +38,7 @@ Add environment variables to your `.env.local` file as needed:
 
 ```bash
 # Add environment variables here as needed
-# NEXT_PUBLIC_API_URL=http://localhost:3000
+# API_URL=http://localhost:3000
 ```
 
 ### 4. Start the Development Server

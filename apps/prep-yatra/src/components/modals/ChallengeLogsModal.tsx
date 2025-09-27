@@ -72,7 +72,7 @@ const ChallengeLogsModal = ({
         const progressPercentage = Math.round(
             (log.day / challenge.totalDays) * 100
         )
-        const appUrl = process.env.NEXT_PUBLIC_BASE_URL
+        const appUrl = process.env.BASE_URL
 
         const templates = [
             // Template 1: Casual and friendly
@@ -91,12 +91,12 @@ ${
     progressPercentage >= 90
         ? "Almost there! 🏁"
         : progressPercentage >= 75
-        ? "Getting close! 🔥"
-        : progressPercentage >= 50
-        ? "Halfway point! ⚡"
-        : progressPercentage >= 25
-        ? "Building momentum! 🚀"
-        : "Just getting started! ✨"
+          ? "Getting close! 🔥"
+          : progressPercentage >= 50
+            ? "Halfway point! ⚡"
+            : progressPercentage >= 25
+              ? "Building momentum! 🚀"
+              : "Just getting started! ✨"
 }
 
 ${
@@ -123,12 +123,12 @@ ${
     progressPercentage >= 90
         ? "Final stretch - staying focused on the goal! 🎯"
         : progressPercentage >= 75
-        ? "Strong progress - maintaining consistency! 💪"
-        : progressPercentage >= 50
-        ? "Milestone reached - building solid foundation! 🏗️"
-        : progressPercentage >= 25
-        ? "Establishing learning rhythm - every day counts! 📈"
-        : "Setting the foundation - committed to the process! 🌱"
+          ? "Strong progress - maintaining consistency! 💪"
+          : progressPercentage >= 50
+            ? "Milestone reached - building solid foundation! 🏗️"
+            : progressPercentage >= 25
+              ? "Establishing learning rhythm - every day counts! 📈"
+              : "Setting the foundation - committed to the process! 🌱"
 }
 
 ${
@@ -149,12 +149,12 @@ ${
     progressPercentage >= 90
         ? "The finish line is calling! 🏁"
         : progressPercentage >= 75
-        ? "The momentum is real! 🔥"
-        : progressPercentage >= 50
-        ? "Halfway there - proving it's possible! ⚡"
-        : progressPercentage >= 25
-        ? "Every step forward is progress! 🚀"
-        : "Just getting started! ✨"
+          ? "The momentum is real! 🔥"
+          : progressPercentage >= 50
+            ? "Halfway there - proving it's possible! ⚡"
+            : progressPercentage >= 25
+              ? "Every step forward is progress! 🚀"
+              : "Just getting started! ✨"
 }
 
 Remember: Consistency beats perfection every time! 
@@ -172,7 +172,6 @@ ${
         const message = generateSocialMessage(log, selectedTemplate)
         setSocialMessage(message)
         setShowSocialPreview(true)
-        
     }
 
     const handleTemplateChange = (templateIndex: number) => {
@@ -182,7 +181,6 @@ ${
             setSocialMessage(message)
         }
     }
-
 
     const copyToClipboard = async (text: string) => {
         try {
@@ -199,7 +197,7 @@ ${
             ? generateSocialMessage(selectedLog, selectedTemplate)
             : ""
         const encodedText = encodeURIComponent(message)
-        const appUrl = process.env.NEXT_PUBLIC_BASE_URL
+        const appUrl = process.env.BASE_URL
 
         let shareUrl = ""
         switch (platform) {
@@ -243,9 +241,7 @@ ${
             return 0
         }
         const totalDays = logs.length
-        return Math.round(
-            (totalDays / challenge.totalDays) * 100
-        )
+        return Math.round((totalDays / challenge.totalDays) * 100)
     }
 
     const totalHoursSpent = logs.reduce((sum, log) => sum + log.hoursSpent, 0)
@@ -281,8 +277,9 @@ ${
                                         <div className='flex items-center gap-4 mt-2 text-sm text-gray-400'>
                                             <div className='flex items-center gap-1'>
                                                 <Calendar className='w-3 h-3' />
-                                                {challenge.currentDay + 1} of{" "}
-                                                {challenge.totalDays} days
+                                                {challenge.currentDay +
+                                                    1} of {challenge.totalDays}{" "}
+                                                days
                                             </div>
                                             <div className='flex items-center gap-1'>
                                                 <TrendingUp className='w-3 h-3' />

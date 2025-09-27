@@ -40,7 +40,7 @@ const ChallengeShareCard = ({
     const progressPercentage = Math.round(
         (challenge.currentDay / challenge.totalDays) * 100
     )
-    const appUrl = process.env.NEXT_PUBLIC_BASE_URL
+    const appUrl = process.env.BASE_URL
 
     const getShareMessage = (templateId: string = "default") => {
         const templateData: SocialMediaTemplateData = {
@@ -131,7 +131,7 @@ const ChallengeShareCard = ({
         platform: string,
         templateId: string = "default"
     ) => {
-        const appUrl = process.env.NEXT_PUBLIC_BASE_URL
+        const appUrl = process.env.BASE_URL
         const message = generateSocialMessage(templateId, {
             challengeName: challenge.name,
             currentDay: challenge.currentDay,
@@ -192,8 +192,9 @@ const ChallengeShareCard = ({
                             {challenge.name}
                         </h3>
                         <p className='text-sm text-gray-400'>
-                            Day {challenge.currentDay + 1} of {challenge.totalDays}{" "}
-                            • {progressPercentage}% complete
+                            Day {challenge.currentDay + 1} of{" "}
+                            {challenge.totalDays} • {progressPercentage}%
+                            complete
                         </p>
                     </div>
                     <Badge

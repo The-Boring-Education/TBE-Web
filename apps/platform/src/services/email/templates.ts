@@ -209,7 +209,7 @@ export const courseEnrollmentTemplate = (
     
     <div style="text-align: center;">
         <a href=${
-          envConfig.NEXT_PUBLIC_BASE_URL + routes.user.dashboard
+          envConfig.PLATFORM_URL + routes.user.dashboard
         } class="cta-button">
             📖 Continue Learning
         </a>
@@ -288,7 +288,7 @@ export const interviewPrepEnrollmentTemplate = (
     
     <div style="text-align: center;">
       <a href=${
-        envConfig.NEXT_PUBLIC_BASE_URL + routes.user.dashboard
+        envConfig.PLATFORM_URL + routes.user.dashboard
       } class="cta-button">
         Start Your Interview Prep 🚀
       </a>
@@ -334,7 +334,7 @@ export const courseCompletionTemplate = (
     
     <div style="text-align: center;">
       <a href=${
-        envConfig.NEXT_PUBLIC_BASE_URL + routes.user.dashboard
+        envConfig.PLATFORM_URL + routes.user.dashboard
       } class="cta-button">
         Review Your Course 📚
       </a>

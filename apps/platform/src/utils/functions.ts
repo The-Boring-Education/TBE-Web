@@ -29,7 +29,7 @@ import type {
 
 const fetchAPIData = async (url: string) => {
   const response = await fetch(`${routes.api.base}/${url}`);
-  // const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
+  // const response = await fetch(`${envConfig.API_URL}/${url}`);
 
   return await response.json();
 };
@@ -171,7 +171,7 @@ const isUserAuthenticated = async (req: any): Promise<User | null> => {
   const cookie = req.headers.cookie;
 
   try {
-    const response = await fetch(`${envConfig.BASE_AUTH_API_URL}/session`, {
+    const response = await fetch(`${envConfig.AUTH_URL}/session`, {
       headers: {
         'Content-Type': 'application/json',
         Cookie: cookie || '',
@@ -623,7 +623,7 @@ const buildOrderPayload = ({
     customer_phone: '0000000000',
   },
   order_meta: {
-    return_url: `${envConfig.NEXT_PUBLIC_BASE_URL}/payment/status?order_id=${orderId}`,
+    return_url: `${envConfig.PLATFORM_URL}/payment/status?order_id=${orderId}`,
   },
 });
 

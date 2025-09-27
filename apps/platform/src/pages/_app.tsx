@@ -27,7 +27,12 @@ const AppContent = ({
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const userData = useUser();
-  const { user, isOnboarded, isAuth, loading } = userData || { user: null, isOnboarded: false, isAuth: false, loading: true };
+  const { user, isOnboarded, isAuth, loading } = userData || {
+    user: null,
+    isOnboarded: false,
+    isAuth: false,
+    loading: true,
+  };
 
   // Ensure we're on the client side before accessing window
   useEffect(() => {
@@ -40,7 +45,7 @@ const AppContent = ({
 
     if (!isOnboarded && isAuth && router.pathname !== routes.onboarding) {
       // Redirect to external onboarding app
-      const onboardingBaseUrl = envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL;
+      const onboardingBaseUrl = envConfig.ONBOARDING_URL;
       const params = new URLSearchParams({
         userId: user?.id || '',
         from: 'webapp',

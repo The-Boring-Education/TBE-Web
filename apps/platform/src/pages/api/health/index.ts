@@ -107,10 +107,7 @@ export default async function handler(
     // Check all services in parallel
     const [quizzesHealth, onboardingHealth] = await Promise.all([
       checkServiceHealth('quizzes', envConfig.QUIZ_APP_URL),
-      checkServiceHealth(
-        'onboarding',
-        envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL
-      ),
+      checkServiceHealth('onboarding', envConfig.ONBOARDING_URL),
     ]);
 
     const services = {

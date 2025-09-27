@@ -1,8 +1,8 @@
-import {X, Plus, Code, AlertTriangle} from "lucide-react";
-import React, {useState, useRef} from "react";
+import { X, Plus, Code, AlertTriangle } from "lucide-react"
+import React, { useState, useRef } from "react"
 
-import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
@@ -10,10 +10,10 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle
-} from "@/components/ui/dialog";
-import {InputField} from "@/components/ui/input";
-import {useToast} from "@/hooks/use-toast";
-import {trackEvent} from "@/lib/analytics";
+} from "@/components/ui/dialog"
+import { InputField } from "@/components/ui/input"
+import { useToast } from "@/hooks/use-toast"
+import { trackEvent } from "@/lib/analytics"
 
 interface AddSkillsModalProps {
     isOpen: boolean
@@ -25,14 +25,16 @@ interface AddSkillsModalProps {
 }
 
 function isOlderThan60Days(dateString: string | undefined) {
-    if (!dateString) {return true;}
-    const last = new Date(dateString);
-    const now = new Date();
-    const diff = now.getTime() - last.getTime();
-    return diff > 60 * 24 * 60 * 60 * 1000; // 60 days in ms
+    if (!dateString) {
+        return true
+    }
+    const last = new Date(dateString)
+    const now = new Date()
+    const diff = now.getTime() - last.getTime()
+    return diff > 60 * 24 * 60 * 60 * 1000 // 60 days in ms
 }
 
-const API_URL = process.env.NEXT_PUBLIC_TBE_WEBAPP_API_URL;
+const API_URL = process.env.API_URL
 
 const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
     isOpen,
@@ -42,76 +44,82 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
     lastUpdated,
     onSkillsUpdated
 }) => {
-    const [skills, setSkills] = useState<string[]>(userSkills);
-    const [inputValue, setInputValue] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [removing, setRemoving] = useState<string | null>(null);
-    const {toast} = useToast();
-    const inputRef = useRef<HTMLInputElement>(null);
+    const [skills, setSkills] = useState<string[]>(userSkills)
+    const [inputValue, setInputValue] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [removing, setRemoving] = useState<string | null>(null)
+    const { toast } = useToast()
+    const inputRef = useRef<HTMLInputElement>(null)
 
     // Show warning only if no skills
-    const showWarning = skills.length === 0;
+    const showWarning = skills.length === 0
 
     const handleAddSkill = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const skill = inputValue.trim();
-        if (!skill || skills.includes(skill)) {return;}
-        setLoading(true);
+        e.preventDefault()
+        const skill = inputValue.trim()
+        if (!skill || skills.includes(skill)) {
+            return
+        }
+        setLoading(true)
         try {
             const res = await fetch(`${API_URL}/prepyatra/userskills`, {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({userId, userSkills: [skill]})
-            });
-            const result = await res.json();
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId, userSkills: [skill] })
+            })
+            const result = await res.json()
             if (result.status) {
-                setSkills((prev) => [...prev, skill]);
-                setInputValue("");
+                setSkills((prev) => [...prev, skill])
+                setInputValue("")
                 toast({
                     title: "Skill added!",
                     description: `${skill} added to your stack.`
-                });
+                })
                 try {
-                    trackEvent("skill_add", {category: "skills", skill});
+                    trackEvent("skill_add", { category: "skills", skill })
                 } catch {}
-                if (onSkillsUpdated) {onSkillsUpdated();}
+                if (onSkillsUpdated) {
+                    onSkillsUpdated()
+                }
             } else {
                 toast({
                     title: "Error",
                     description: result.message || "Failed to add skill.",
                     variant: "destructive"
-                });
+                })
             }
         } catch (err) {
             toast({
                 title: "Error",
                 description: "Failed to add skill.",
                 variant: "destructive"
-            });
+            })
         } finally {
-            setLoading(false);
-            inputRef.current?.focus();
+            setLoading(false)
+            inputRef.current?.focus()
         }
-    };
+    }
 
     const handleRemoveSkill = async (skill: string) => {
-        setRemoving(skill);
+        setRemoving(skill)
         try {
             // Remove skill from backend (implement API if needed)
             // For now, just remove locally
-            setSkills((prev) => prev.filter((s) => s !== skill));
+            setSkills((prev) => prev.filter((s) => s !== skill))
             toast({
                 title: "Skill removed",
                 description: `${skill} removed from your stack.`
-            });
+            })
             try {
-                trackEvent("skill_remove", {category: "skills", skill});
+                trackEvent("skill_remove", { category: "skills", skill })
             } catch {}
-            if (onSkillsUpdated) {onSkillsUpdated();}
+            if (onSkillsUpdated) {
+                onSkillsUpdated()
+            }
         } finally {
-            setRemoving(null);
+            setRemoving(null)
         }
-    };
+    }
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -129,7 +137,8 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
                     <div className='flex items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-lg px-4 py-3 mb-4'>
                         <AlertTriangle className='w-5 h-5 text-yellow-400' />
                         <span>
-                            You haven't added any skills yet. Please add your skills to build your stack!
+                            You haven't added any skills yet. Please add your
+                            skills to build your stack!
                         </span>
                     </div>
                 )}
@@ -185,7 +194,7 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
                 </form>
             </DialogContent>
         </Dialog>
-    );
-};
+    )
+}
 
-export default AddSkillsModal;
+export default AddSkillsModal

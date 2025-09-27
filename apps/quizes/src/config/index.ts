@@ -1,11 +1,11 @@
-const baseApiUrl = process.env.NEXT_PUBLIC_TBE_WEBAPP_API_URL as string
+const baseApiUrl = process.env.API_URL as string
 
 export const config = {
     API_BASE_URL: baseApiUrl?.endsWith("/api/v1")
         ? baseApiUrl
         : `${baseApiUrl}/api/v1`,
     GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
-    ONBOARDING_APP_URL: process.env.NEXT_PUBLIC_ONBOARDING_APP_URL as string
+    ONBOARDING_APP_URL: process.env.ONBOARDING_URL as string
 }
 
 export const API_ENDPOINTS = {

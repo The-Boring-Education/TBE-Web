@@ -6,48 +6,48 @@ A comprehensive quiz platform for mastering tech interviews with detailed analyt
 
 ### 🎯 Core Quiz System
 
--   **Multiple Categories**: JavaScript, React, Algorithms, Web Development, and more
--   **Interactive Questions**: Multiple choice with detailed explanations
--   **Real-time Scoring**: Immediate feedback and performance tracking
--   **Progress Tracking**: Save attempts and track improvement over time
+- **Multiple Categories**: JavaScript, React, Algorithms, Web Development, and more
+- **Interactive Questions**: Multiple choice with detailed explanations
+- **Real-time Scoring**: Immediate feedback and performance tracking
+- **Progress Tracking**: Save attempts and track improvement over time
 
 ### 📊 Enhanced Dashboard
 
--   **Unified Navigation**: Clean, intuitive navigation across all features
--   **Quick Stats**: Overview of total attempts, average scores, and time spent
--   **Category Progress**: Visual progress indicators for each quiz category
--   **Performance Insights**: Detailed analytics and improvement tracking
+- **Unified Navigation**: Clean, intuitive navigation across all features
+- **Quick Stats**: Overview of total attempts, average scores, and time spent
+- **Category Progress**: Visual progress indicators for each quiz category
+- **Performance Insights**: Detailed analytics and improvement tracking
 
 ### 📈 Stats & Analytics
 
--   **Performance Metrics**: Comprehensive performance overview
--   **Time Range Filtering**: 7 days, 30 days, 90 days, or all time
--   **Category Performance**: Detailed breakdown by quiz category
--   **Trend Analysis**: Performance improvement tracking and insights
--   **Accuracy Metrics**: Time management and accuracy statistics
+- **Performance Metrics**: Comprehensive performance overview
+- **Time Range Filtering**: 7 days, 30 days, 90 days, or all time
+- **Category Performance**: Detailed breakdown by quiz category
+- **Trend Analysis**: Performance improvement tracking and insights
+- **Accuracy Metrics**: Time management and accuracy statistics
 
 ### 📚 Performance History
 
--   **Detailed Attempt Tracking**: Complete history of all quiz attempts
--   **Advanced Filtering**: Search by category, time range, and keywords
--   **Performance Trends**: Compare recent vs. previous performance
--   **Detailed Insights**: Expandable attempt details with metrics
--   **Export & Analysis**: Comprehensive performance data for review
+- **Detailed Attempt Tracking**: Complete history of all quiz attempts
+- **Advanced Filtering**: Search by category, time range, and keywords
+- **Performance Trends**: Compare recent vs. previous performance
+- **Detailed Insights**: Expandable attempt details with metrics
+- **Export & Analysis**: Comprehensive performance data for review
 
 ### 🏆 Leaderboard & Competition
 
--   **Global Rankings**: Compete with learners worldwide
--   **Achievement System**: Unlock badges and rewards
--   **User Profiles**: View detailed profiles and achievements
--   **Ranking Tiers**: Top 25, 50, or 100 learners
--   **Personal Ranking**: Track your position globally
+- **Global Rankings**: Compete with learners worldwide
+- **Achievement System**: Unlock badges and rewards
+- **User Profiles**: View detailed profiles and achievements
+- **Ranking Tiers**: Top 25, 50, or 100 learners
+- **Personal Ranking**: Track your position globally
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
--   Node.js 18+
--   npm or yarn
+- Node.js 18+
+- npm or yarn
 
 ### Installation
 
@@ -75,7 +75,7 @@ A comprehensive quiz platform for mastering tech interviews with detailed analyt
     Update `.env.local` with your configuration:
 
     ```env
-    NEXT_PUBLIC_TBE_WEBAPP_API_URL=your_api_url
+    API_URL=your_api_url
     NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
     ```
 
@@ -122,40 +122,40 @@ src/
 
 #### DashboardNav
 
--   **Unified Navigation**: Consistent navigation across all dashboard pages
--   **Responsive Design**: Mobile-friendly with collapsible menu
--   **Active States**: Visual feedback for current page
--   **User Management**: Profile menu and sign out functionality
+- **Unified Navigation**: Consistent navigation across all dashboard pages
+- **Responsive Design**: Mobile-friendly with collapsible menu
+- **Active States**: Visual feedback for current page
+- **User Management**: Profile menu and sign out functionality
 
 #### Stats & Analytics
 
--   **Performance Metrics**: Key performance indicators
--   **Time Range Filtering**: Flexible date range selection
--   **Category Breakdown**: Performance by quiz category
--   **Trend Analysis**: Improvement tracking over time
+- **Performance Metrics**: Key performance indicators
+- **Time Range Filtering**: Flexible date range selection
+- **Category Breakdown**: Performance by quiz category
+- **Trend Analysis**: Improvement tracking over time
 
 #### Performance History
 
--   **Attempt Tracking**: Complete history of quiz attempts
--   **Advanced Filtering**: Search and filter capabilities
--   **Performance Trends**: Comparative analysis
--   **Detailed Insights**: Expandable attempt information
+- **Attempt Tracking**: Complete history of quiz attempts
+- **Advanced Filtering**: Search and filter capabilities
+- **Performance Trends**: Comparative analysis
+- **Detailed Insights**: Expandable attempt information
 
 #### Leaderboard
 
--   **Global Rankings**: Worldwide competition
--   **User Profiles**: Detailed user information
--   **Achievement System**: Badges and rewards
--   **Ranking Tiers**: Multiple leaderboard views
+- **Global Rankings**: Worldwide competition
+- **User Profiles**: Detailed user information
+- **Achievement System**: Badges and rewards
+- **Ranking Tiers**: Multiple leaderboard views
 
 ## 🔧 API Integration
 
 ### Endpoints
 
--   **Quiz Management**: Categories, questions, and submissions
--   **Analytics**: Performance metrics and category analysis
--   **User Management**: Profiles, authentication, and preferences
--   **Leaderboard**: Rankings and achievements
+- **Quiz Management**: Categories, questions, and submissions
+- **Analytics**: Performance metrics and category analysis
+- **User Management**: Profiles, authentication, and preferences
+- **Leaderboard**: Rankings and achievements
 
 ### Data Flow
 
@@ -168,72 +168,72 @@ src/
 
 ### Design Principles
 
--   **Clean & Modern**: Minimalist design with clear hierarchy
--   **Responsive**: Mobile-first responsive design
--   **Accessible**: WCAG compliant with proper contrast
--   **Interactive**: Smooth animations and micro-interactions
+- **Clean & Modern**: Minimalist design with clear hierarchy
+- **Responsive**: Mobile-first responsive design
+- **Accessible**: WCAG compliant with proper contrast
+- **Interactive**: Smooth animations and micro-interactions
 
 ### Visual Elements
 
--   **Glass Morphism**: Modern backdrop blur effects
--   **Gradient Accents**: Subtle color gradients
--   **Icon System**: Consistent Lucide React icons
--   **Animation**: Smooth transitions and loading states
+- **Glass Morphism**: Modern backdrop blur effects
+- **Gradient Accents**: Subtle color gradients
+- **Icon System**: Consistent Lucide React icons
+- **Animation**: Smooth transitions and loading states
 
 ## 📱 Responsive Design
 
 ### Breakpoints
 
--   **Mobile**: 320px - 768px
--   **Tablet**: 768px - 1024px
--   **Desktop**: 1024px+
+- **Mobile**: 320px - 768px
+- **Tablet**: 768px - 1024px
+- **Desktop**: 1024px+
 
 ### Mobile Features
 
--   **Collapsible Navigation**: Hamburger menu for mobile
--   **Touch-Friendly**: Optimized for touch interactions
--   **Adaptive Layouts**: Responsive grid systems
--   **Mobile-First**: Designed for mobile devices first
+- **Collapsible Navigation**: Hamburger menu for mobile
+- **Touch-Friendly**: Optimized for touch interactions
+- **Adaptive Layouts**: Responsive grid systems
+- **Mobile-First**: Designed for mobile devices first
 
 ## 🚀 Performance
 
 ### Optimization
 
--   **React Query**: Efficient data fetching and caching
--   **Code Splitting**: Lazy loading of components
--   **Image Optimization**: Next.js image optimization
--   **Bundle Analysis**: Optimized bundle sizes
+- **React Query**: Efficient data fetching and caching
+- **Code Splitting**: Lazy loading of components
+- **Image Optimization**: Next.js image optimization
+- **Bundle Analysis**: Optimized bundle sizes
 
 ### Caching Strategy
 
--   **Client-Side**: React Query cache management
--   **Server-Side**: API response caching
--   **Static Assets**: CDN optimization for static files
+- **Client-Side**: React Query cache management
+- **Server-Side**: API response caching
+- **Static Assets**: CDN optimization for static files
 
 ## 🔒 Security
 
 ### Authentication
 
--   **Google OAuth**: Secure third-party authentication
--   **JWT Tokens**: Secure session management
--   **Protected Routes**: Route-level authentication
--   **User Isolation**: Secure data separation
+- **Google OAuth**: Secure third-party authentication
+- **JWT Tokens**: Secure session management
+- **Protected Routes**: Route-level authentication
+- **User Isolation**: Secure data separation
 
 ### Data Protection
 
--   **Input Validation**: Client and server-side validation
--   **XSS Prevention**: Sanitized user inputs
--   **CSRF Protection**: Cross-site request forgery prevention
--   **Rate Limiting**: API abuse prevention
+- **Input Validation**: Client and server-side validation
+- **XSS Prevention**: Sanitized user inputs
+- **CSRF Protection**: Cross-site request forgery prevention
+- **Rate Limiting**: API abuse prevention
 
 ## 🧪 Testing
 
 ### Testing Strategy
 
--   **Unit Tests**: Component and utility testing
--   **Integration Tests**: API integration testing
--   **E2E Tests**: End-to-end user flow testing
--   **Performance Tests**: Load and stress testing
+- **Unit Tests**: Component and utility testing
+- **Integration Tests**: API integration testing
+- **E2E Tests**: End-to-end user flow testing
+- **Performance Tests**: Load and stress testing
 
 ### Test Commands
 
@@ -247,27 +247,27 @@ npm run test:coverage # Generate coverage report
 
 <<<<<<< HEAD
 
--   `POST /user` - Create/find user after Google auth
--   `GET /user/onbording?userName={username}` - Check username availability
--   `POST /user/onbording?userId={userId}` - Complete user onboarding
--   `GET /quiz` - Get available quiz categories
--   `GET /quiz/{categoryId}` - Get questions for a category
--   # `POST /quiz/{categoryId}/attempt` - Submit quiz attempt
+- `POST /user` - Create/find user after Google auth
+- `GET /user/onbording?userName={username}` - Check username availability
+- `POST /user/onbording?userId={userId}` - Complete user onboarding
+- `GET /quiz` - Get available quiz categories
+- `GET /quiz/{categoryId}` - Get questions for a category
+- # `POST /quiz/{categoryId}/attempt` - Submit quiz attempt
 
 ### Performance Monitoring
 
--   **Core Web Vitals**: LCP, FID, CLS tracking
--   **Error Tracking**: Sentry integration for error monitoring
--   **User Analytics**: Google Analytics integration
--   **Performance Metrics**: Real-time performance tracking
+- **Core Web Vitals**: LCP, FID, CLS tracking
+- **Error Tracking**: Sentry integration for error monitoring
+- **User Analytics**: Google Analytics integration
+- **Performance Metrics**: Real-time performance tracking
     > > > > > > > eea263a45a6a795009639f422308aa2962dcf4cd
 
 ### User Behavior
 
--   **Quiz Completion Rates**: Track user engagement
--   **Performance Trends**: Monitor learning progress
--   **Feature Usage**: Understand user preferences
--   **Conversion Funnel**: Optimize user journey
+- **Quiz Completion Rates**: Track user engagement
+- **Performance Trends**: Monitor learning progress
+- **Feature Usage**: Understand user preferences
+- **Conversion Funnel**: Optimize user journey
 
 ## 🤝 Contributing
 
@@ -281,10 +281,10 @@ npm run test:coverage # Generate coverage report
 
 ### Code Standards
 
--   **TypeScript**: Strict type checking
--   **ESLint**: Code quality enforcement
--   **Prettier**: Consistent code formatting
--   **Conventional Commits**: Standardized commit messages
+- **TypeScript**: Strict type checking
+- **ESLint**: Code quality enforcement
+- **Prettier**: Consistent code formatting
+- **Conventional Commits**: Standardized commit messages
 
 ## 📄 License
 
@@ -292,17 +292,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
--   **Next.js Team**: For the amazing React framework
--   **Tailwind CSS**: For the utility-first CSS framework
--   **Lucide Icons**: For the beautiful icon set
--   **React Query**: For efficient data management
+- **Next.js Team**: For the amazing React framework
+- **Tailwind CSS**: For the utility-first CSS framework
+- **Lucide Icons**: For the beautiful icon set
+- **React Query**: For efficient data management
 
 ## 📞 Support
 
--   **Documentation**: [Wiki](link-to-wiki)
--   **Issues**: [GitHub Issues](link-to-issues)
--   **Discussions**: [GitHub Discussions](link-to-discussions)
--   **Email**: support@theboringquizes.com
+- **Documentation**: [Wiki](link-to-wiki)
+- **Issues**: [GitHub Issues](link-to-issues)
+- **Discussions**: [GitHub Discussions](link-to-discussions)
+- **Email**: support@theboringquizes.com
 
 ---
 

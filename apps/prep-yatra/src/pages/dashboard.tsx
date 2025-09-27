@@ -1,36 +1,53 @@
-import {useRouter} from "next/router";
-import React, {useState, useEffect, Suspense, lazy} from "react";
-import {toast} from "sonner";
-import {Menu, X} from "lucide-react";
+import { useRouter } from "next/router"
+import React, { useState, useEffect, Suspense, lazy } from "react"
+import { toast } from "sonner"
+import { Menu, X } from "lucide-react"
 
-import {ProfileSection, DashboardTabs, LoadingSpinner} from "@/components/dashboard";
-import {useGamificationContext} from "@/contexts/GamificationContext";
-import {useAuth} from "@/contexts/useAuth";
-import {usePrepLogs} from "@/hooks/use-prep-logs";
-import {recruitersService} from "@/services/recruiters";
-import {RecruiterContact} from "@/types/recruiters";
-import {Button} from "@/components/ui/button";
-
+import {
+    ProfileSection,
+    DashboardTabs,
+    LoadingSpinner
+} from "@/components/dashboard"
+import { useGamificationContext } from "@/contexts/GamificationContext"
+import { useAuth } from "@/contexts/useAuth"
+import { usePrepLogs } from "@/hooks/use-prep-logs"
+import { recruitersService } from "@/services/recruiters"
+import { RecruiterContact } from "@/types/recruiters"
+import { Button } from "@/components/ui/button"
 
 // Dashboard Components
 
 // Lazy load components for better performance
-const Navbar = lazy(() => import("@/components/layout/Navbar"));
-const AddPrepLogModal = lazy(() => import("@/components/modals/AddPrepLogModal"));
-const AddRecruiterModal = lazy(() => import("@/components/modals/AddRecruiterModal"));
-const EditOnboardingModal = lazy(() => import("@/components/modals/EditOnboardingModal"));
-const GamificationDisplay = lazy(() => import("@/components/gamification/GamificationDisplay"));
-const BuildYourStack = lazy(() => import("@/components/features/BuildYourStack"));
-const DailyPrepEncouragement = lazy(() => import("@/components/features/DailyPrepEncouragement"));
-const SubscriptionInterestPopover = lazy(() => import("@/components/popovers/SubscriptionInterestPopover"));
-const AddSkillsModal = lazy(() => import("@/components/modals/AddSkillsModal"));
+const Navbar = lazy(() => import("@/components/layout/Navbar"))
+const AddPrepLogModal = lazy(
+    () => import("@/components/modals/AddPrepLogModal")
+)
+const AddRecruiterModal = lazy(
+    () => import("@/components/modals/AddRecruiterModal")
+)
+const EditOnboardingModal = lazy(
+    () => import("@/components/modals/EditOnboardingModal")
+)
+const GamificationDisplay = lazy(
+    () => import("@/components/gamification/GamificationDisplay")
+)
+const BuildYourStack = lazy(
+    () => import("@/components/features/BuildYourStack")
+)
+const DailyPrepEncouragement = lazy(
+    () => import("@/components/features/DailyPrepEncouragement")
+)
+const SubscriptionInterestPopover = lazy(
+    () => import("@/components/popovers/SubscriptionInterestPopover")
+)
+const AddSkillsModal = lazy(() => import("@/components/modals/AddSkillsModal"))
 
 // Loading component for Suspense fallback
 const ComponentLoader = () => (
-    <div className="flex items-center justify-center h-32">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+    <div className='flex items-center justify-center h-32'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary' />
     </div>
-);
+)
 
 // Type definitions
 
@@ -60,176 +77,199 @@ type Profile = {
 }
 
 const Dashboard = () => {
-    const router = useRouter();
-    const {user, loading: authLoading, signOut} = useAuth();
-    const {showCelebration} = useGamificationContext();
-    const {logs: prepLogs, loading: prepLogsLoading, refetch: refetchPrepLogs, setLogs: setPrepLogs} = usePrepLogs(user?.id);
+    const router = useRouter()
+    const { user, loading: authLoading, signOut } = useAuth()
+    const { showCelebration } = useGamificationContext()
+    const {
+        logs: prepLogs,
+        loading: prepLogsLoading,
+        refetch: refetchPrepLogs,
+        setLogs: setPrepLogs
+    } = usePrepLogs(user?.id)
 
     // State management
-    const [profile, setProfile] = useState<Profile | null>(null);
-    const [recruiterContacts, setRecruiterContacts] = useState<RecruiterContact[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [profile, setProfile] = useState<Profile | null>(null)
+    const [recruiterContacts, setRecruiterContacts] = useState<
+        RecruiterContact[]
+    >([])
+    const [loading, setLoading] = useState(true)
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
 
     // Modal states
-    const [isPrepLogModalOpen, setIsPrepLogModalOpen] = useState(false);
-    const [isRecruiterModalOpen, setIsRecruiterModalOpen] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
+    const [isPrepLogModalOpen, setIsPrepLogModalOpen] = useState(false)
+    const [isRecruiterModalOpen, setIsRecruiterModalOpen] = useState(false)
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false)
 
     // Data fetching functions
     const fetchProfile = async (userId: string) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_TBE_WEBAPP_API_URL}/user?userId=${userId}`);
+            const response = await fetch(
+                `${process.env.API_URL}/user?userId=${userId}`
+            )
             if (response.ok) {
-                const result = await response.json();
+                const result = await response.json()
                 // Extract data from the API response structure
                 if (result.status && result.data) {
-                    setProfile(result.data);
+                    setProfile(result.data)
                 } else {
-                    setProfile(result);
+                    setProfile(result)
                 }
             }
         } catch (error) {
-            console.error("Error fetching profile:", error);
+            console.error("Error fetching profile:", error)
         }
-    };
+    }
 
     const fetchRecruiterContacts = async (userId: string) => {
         try {
-            const contacts = await recruitersService.getByUserId(userId);
-            setRecruiterContacts(contacts);
+            const contacts = await recruitersService.getByUserId(userId)
+            setRecruiterContacts(contacts)
         } catch (error) {
-            console.error("Error fetching recruiter contacts:", error);
+            console.error("Error fetching recruiter contacts:", error)
         }
-        };
+    }
 
-        const initializeData = async () => {
-        if (!user?.id) {return;}
+    const initializeData = async () => {
+        if (!user?.id) {
+            return
+        }
 
-        setLoading(true);
-            try {
-                await Promise.all([
+        setLoading(true)
+        try {
+            await Promise.all([
                 fetchProfile(user.id),
                 fetchRecruiterContacts(user.id)
-                ]);
-            } catch (error) {
-            console.error("Error initializing data:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+            ])
+        } catch (error) {
+            console.error("Error initializing data:", error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     // Effects
     useEffect(() => {
         const checkAuthAndProfile = async () => {
-            if (authLoading) {return;}
+            if (authLoading) {
+                return
+            }
 
             if (!user) {
-                router.push("/auth");
-                return;
+                router.push("/auth")
+                return
             }
 
             try {
                 // Check if user needs onboarding
-                const response = await fetch(`${process.env.NEXT_PUBLIC_TBE_WEBAPP_API_URL}/user?userId=${user.id}`);
+                const response = await fetch(
+                    `${process.env.API_URL}/user?userId=${user.id}`
+                )
                 if (!response.ok) {
-                    const onboardingUrl = process.env.NEXT_PUBLIC_ONBOARDING_URL;
+                    const onboardingUrl = process.env.NEXT_PUBLIC_ONBOARDING_URL
                     if (onboardingUrl) {
-                        const redirectUrl = `${onboardingUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`;
-                        window.location.href = redirectUrl;
+                        const redirectUrl = `${onboardingUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
+                        window.location.href = redirectUrl
                     } else {
-                        router.push("/onboarding");
+                        router.push("/onboarding")
                     }
-                    return;
+                    return
                 }
 
-                const result = await response.json();
+                const result = await response.json()
                 // Check if user is onboarded based on API response
                 if (result.status && result.data) {
-                    if (!result.data.isOnboarded && !result.data.prepYatra?.pyOnboarded) {
-                        const onboardingUrl = process.env.NEXT_PUBLIC_ONBOARDING_URL;
+                    if (
+                        !result.data.isOnboarded &&
+                        !result.data.prepYatra?.pyOnboarded
+                    ) {
+                        const onboardingUrl =
+                            process.env.NEXT_PUBLIC_ONBOARDING_URL
                         if (onboardingUrl) {
-                            const redirectUrl = `${onboardingUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`;
-                            window.location.href = redirectUrl;
+                            const redirectUrl = `${onboardingUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
+                            window.location.href = redirectUrl
                         } else {
-                            router.push("/onboarding");
+                            router.push("/onboarding")
                         }
-                        return;
+                        return
                     }
                 }
 
-                initializeData();
+                initializeData()
             } catch (error) {
-                console.error("Error checking onboarding status:", error);
-                initializeData();
+                console.error("Error checking onboarding status:", error)
+                initializeData()
             }
-        };
+        }
 
-        checkAuthAndProfile();
-    }, [user, router, authLoading]);
+        checkAuthAndProfile()
+    }, [user, router, authLoading])
 
     // Event handlers
     const handleSignOut = async () => {
         try {
-            await signOut();
-            router.push("/");
+            await signOut()
+            router.push("/")
         } catch (error) {
-            console.error("Error signing out:", error);
+            console.error("Error signing out:", error)
         }
-    };
+    }
 
     const handleLogAdded = () => {
         if (user?.id) {
             // Only refetch prep logs, not everything
-            refetchPrepLogs();
-            showCelebration(10);
-            toast.success("Prep log added successfully!");
+            refetchPrepLogs()
+            showCelebration(10)
+            toast.success("Prep log added successfully!")
         }
-    };
+    }
 
     const handleContactAdded = () => {
         if (user?.id) {
             // Only refetch recruiter contacts, not everything
-            fetchRecruiterContacts(user.id);
-            showCelebration(5);
-            toast.success("Recruiter contact added successfully!");
+            fetchRecruiterContacts(user.id)
+            showCelebration(5)
+            toast.success("Recruiter contact added successfully!")
         }
-    };
+    }
 
     const handleContactUpdated = () => {
         if (user?.id) {
             // Only refetch recruiter contacts, not everything
-            fetchRecruiterContacts(user.id);
+            fetchRecruiterContacts(user.id)
         }
-    };
+    }
 
     const handleLogDeleted = (deletedLogId: string) => {
         // Immediately remove the deleted log from local state
-        setPrepLogs(prevLogs => prevLogs.filter(log => log._id !== deletedLogId));
-        toast.success("Prep log deleted successfully!");
-    };
+        setPrepLogs((prevLogs) =>
+            prevLogs.filter((log) => log._id !== deletedLogId)
+        )
+        toast.success("Prep log deleted successfully!")
+    }
 
     const handleContactDeleted = (deletedContactId: string) => {
         // Immediately remove the deleted contact from local state
-        setRecruiterContacts(prevContacts => prevContacts.filter(contact => contact._id !== deletedContactId));
-        toast.success("Recruiter contact deleted successfully!");
-    };
+        setRecruiterContacts((prevContacts) =>
+            prevContacts.filter((contact) => contact._id !== deletedContactId)
+        )
+        toast.success("Recruiter contact deleted successfully!")
+    }
 
     const handleSkillsUpdated = () => {
         if (user?.id) {
             // Only refetch profile, not everything
-            fetchProfile(user.id);
-            toast.success("Skills updated successfully!");
+            fetchProfile(user.id)
+            toast.success("Skills updated successfully!")
         }
-    };
+    }
 
     if (loading || authLoading) {
-        return <LoadingSpinner />;
+        return <LoadingSpinner />
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className='min-h-screen bg-background'>
             <Suspense fallback={<ComponentLoader />}>
                 <Navbar
                     username={user?.name || ""}
@@ -238,62 +278,72 @@ const Dashboard = () => {
                 />
             </Suspense>
 
-            <main className="container mx-auto px-4 py-8">
+            <main className='container mx-auto px-4 py-8'>
                 {/* Mobile backdrop */}
                 {!isSidebarCollapsed && (
-                    <div 
-                        className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                    <div
+                        className='fixed inset-0 bg-black/50 z-40 lg:hidden'
                         onClick={() => setIsSidebarCollapsed(true)}
                     />
                 )}
 
                 {/* Sidebar Toggle Button - Mobile */}
                 <Button
-                    variant="default"
-                    size="sm"
-                    className="fixed top-20 left-4 z-50 lg:hidden bg-primary text-primary-foreground shadow-lg border-2 border-primary-foreground/20"
-                    onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                >
-                    {isSidebarCollapsed ? <Menu className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                    variant='default'
+                    size='sm'
+                    className='fixed top-20 left-4 z-50 lg:hidden bg-primary text-primary-foreground shadow-lg border-2 border-primary-foreground/20'
+                    onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
+                    {isSidebarCollapsed ? (
+                        <Menu className='w-4 h-4' />
+                    ) : (
+                        <X className='w-4 h-4' />
+                    )}
                 </Button>
 
                 {/* Sidebar Toggle Button - Desktop */}
                 <Button
-                    variant="default"
-                    size="sm"
-                    className="hidden lg:flex fixed top-20 left-4 z-50 bg-primary text-primary-foreground shadow-lg border-2 border-primary-foreground/20"
-                    onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                >
-                    {isSidebarCollapsed ? <Menu className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                    variant='default'
+                    size='sm'
+                    className='hidden lg:flex fixed top-20 left-4 z-50 bg-primary text-primary-foreground shadow-lg border-2 border-primary-foreground/20'
+                    onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
+                    {isSidebarCollapsed ? (
+                        <Menu className='w-4 h-4' />
+                    ) : (
+                        <X className='w-4 h-4' />
+                    )}
                 </Button>
 
-                <div className="flex gap-6">
+                <div className='flex gap-6'>
                     {/* Profile Section - Collapsible Sidebar */}
-                    <div className={`${isSidebarCollapsed ? 'hidden' : 'block'} w-full lg:w-1/3 transition-all duration-300`}>
-                        <ProfileSection 
-                            user={user} 
-                            profile={profile} 
+                    <div
+                        className={`${isSidebarCollapsed ? "hidden" : "block"} w-full lg:w-1/3 transition-all duration-300`}>
+                        <ProfileSection
+                            user={user}
+                            profile={profile}
                             onEditClick={() => setIsEditModalOpen(true)}
                         />
 
                         {/* Additional components */}
                         <Suspense fallback={<ComponentLoader />}>
-                            <BuildYourStack 
-                                userId={user?.id || ""} 
-                                userSkills={profile?.userSkills || []} 
+                            <BuildYourStack
+                                userId={user?.id || ""}
+                                userSkills={profile?.userSkills || []}
                                 lastUpdated={profile?.userSkillsLastUpdated}
                             />
                         </Suspense>
                     </div>
 
                     {/* Main Content */}
-                    <div className={`${isSidebarCollapsed ? 'w-full' : 'w-full lg:w-2/3'} transition-all duration-300`}>
+                    <div
+                        className={`${isSidebarCollapsed ? "w-full" : "w-full lg:w-2/3"} transition-all duration-300`}>
                         {/* Daily Prep Check-in above tabs */}
                         <Suspense fallback={<ComponentLoader />}>
-                            <div className="mb-6">
-                                <DailyPrepEncouragement 
-                                    userId={user?.id || ""} 
-                                    onAddPrepLog={() => setIsPrepLogModalOpen(true)} 
+                            <div className='mb-6'>
+                                <DailyPrepEncouragement
+                                    userId={user?.id || ""}
+                                    onAddPrepLog={() =>
+                                        setIsPrepLogModalOpen(true)
+                                    }
                                 />
                             </div>
                         </Suspense>
@@ -303,8 +353,12 @@ const Dashboard = () => {
                             recruiterContacts={recruiterContacts}
                             user={user}
                             profile={profile}
-                            onPrepLogModalOpen={() => setIsPrepLogModalOpen(true)}
-                            onRecruiterModalOpen={() => setIsRecruiterModalOpen(true)}
+                            onPrepLogModalOpen={() =>
+                                setIsPrepLogModalOpen(true)
+                            }
+                            onRecruiterModalOpen={() =>
+                                setIsRecruiterModalOpen(true)
+                            }
                             onSkillsModalOpen={() => setIsSkillsModalOpen(true)}
                             onContactUpdated={handleContactUpdated}
                             onLogDeleted={handleLogDeleted}
@@ -339,7 +393,7 @@ const Dashboard = () => {
                     onClose={() => setIsEditModalOpen(false)}
                     onUpdate={() => {
                         if (user?.id) {
-                            fetchProfile(user.id);
+                            fetchProfile(user.id)
                         }
                     }}
                     currentData={profile as any}
@@ -357,7 +411,7 @@ const Dashboard = () => {
                 />
             </Suspense>
         </div>
-    );
-};
+    )
+}
 
-export default Dashboard;
+export default Dashboard

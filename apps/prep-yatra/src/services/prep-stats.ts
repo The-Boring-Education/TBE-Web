@@ -26,28 +26,28 @@ export const prepStatsService = {
     async getByUserId(userId: string): Promise<PrepStats> {
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_TBE_WEBAPP_API_URL}/prepyatra/prep-log/stats?userId=${userId}`,
+                `${process.env.API_URL}/prepyatra/prep-log/stats?userId=${userId}`,
                 {
                     headers: {
                         "Content-Type": "application/json"
                     }
                 }
-            );
+            )
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${response.status}`)
             }
 
-            const result: PrepStatsResponse = await response.json();
+            const result: PrepStatsResponse = await response.json()
 
             if (!result.status) {
-                throw new Error("Failed to fetch prep stats");
+                throw new Error("Failed to fetch prep stats")
             }
 
-            return result.data;
+            return result.data
         } catch (error) {
-            console.error("Error fetching prep stats:", error);
-            throw error;
+            console.error("Error fetching prep stats:", error)
+            throw error
         }
     }
-};
+}

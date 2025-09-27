@@ -80,7 +80,7 @@ const routes = {
   unskilled: '/unskilled',
   404: '/404',
   api: {
-    base: `${envConfig.NEXT_APP_BASE_API_APP_URL}/api/v1`,
+    base: `${envConfig.API_URL}/api/v1`,
     projects: '/projects',
     webinar: '/webinar',
     project: (project: string) => `/projects/${project}`,

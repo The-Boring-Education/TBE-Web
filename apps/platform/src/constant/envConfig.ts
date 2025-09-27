@@ -1,9 +1,8 @@
 const NODE_ENV = process.env.NODE_ENV as string;
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
+const PLATFORM_URL = process.env.NEXT_PUBLIC_PLATFORM_URL as string;
 const MONGODB_URI = process.env.MONGODB_URI as string;
-const BASE_API_URL = process.env.BASE_API_URL as string;
-const BASE_AUTH_API_URL = process.env.BASE_AUTH_API_URL as string;
-const NEXT_APP_BASE_API_APP_URL= process.env.NEXT_APP_BASE_API_APP_URL as string;
+const AUTH_URL = process.env.NEXT_PUBLIC_AUTH_URL as string;
+const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 const GOOGLE_AUTH_CLIENT_ID = process.env.GOOGLE_AUTH_CLIENT_ID as string;
 const GOOGLE_AUTH_CLIENT_SECRET = process.env
   .GOOGLE_AUTH_CLIENT_SECRET as string;
@@ -17,8 +16,7 @@ const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY as string;
 const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID as string;
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN as string;
 const PREPYATRA_APP_URL = process.env.PREPYATRA_APP_URL as string;
-const NEXT_PUBLIC_ONBOARDING_APP_URL = process.env
-  .NEXT_PUBLIC_ONBOARDING_APP_URL as string;
+const ONBOARDING_URL = process.env.NEXT_PUBLIC_ONBOARDING_APP_URL as string;
 const QUIZ_APP_URL = process.env.QUIZ_APP_URL as string;
 
 // Email Service Configuration
@@ -28,16 +26,15 @@ const FROM_EMAIL = process.env.FROM_EMAIL as string;
 
 const envConfig = {
   NODE_ENV,
-  NEXT_PUBLIC_BASE_URL,
+  PLATFORM_URL,
   MONGODB_URI,
-  BASE_API_URL,
-  NEXT_APP_BASE_API_APP_URL,
+  API_URL,
   GOOGLE_AUTH_CLIENT_ID,
   GOOGLE_AUTH_CLIENT_SECRET,
   ADMIN_SECRET,
   YOUTUBE_API_KEY,
   NEXTAUTH_SECRET,
-  BASE_AUTH_API_URL,
+  AUTH_URL,
   GA_TRACKING_ID,
   ADMIN_BASE_URL,
   CASHFREE_BASE_URL,
@@ -48,7 +45,7 @@ const envConfig = {
   EMAIL_SERVICE_URL,
   EMAIL_API_KEY,
   FROM_EMAIL,
-  NEXT_PUBLIC_ONBOARDING_APP_URL,
+  ONBOARDING_URL,
   QUIZ_APP_URL,
 };
 

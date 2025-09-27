@@ -1,18 +1,27 @@
-import {Calendar, Clock, User, Target, TrendingUp, Linkedin, Github, ExternalLink} from "lucide-react";
-import {useRouter} from "next/router";
-import {useEffect, useState} from "react";
+import {
+    Calendar,
+    Clock,
+    User,
+    Target,
+    TrendingUp,
+    Linkedin,
+    Github,
+    ExternalLink
+} from "lucide-react"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 
-import Footer from "@/components/layout/Footer";
-import Navigation from "@/components/layout/Navigation";
-import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
+import Footer from "@/components/layout/Footer"
+import Navigation from "@/components/layout/Navigation"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle
-} from "@/components/ui/card";
+} from "@/components/ui/card"
 
 interface PrepLog {
     _id: string
@@ -46,105 +55,113 @@ interface UserProfile {
 }
 
 const PrepLogsShowcase = () => {
-    const router = useRouter();
-    const {username} = router.query;
-    const [prepLogs, setPrepLogs] = useState<PrepLog[]>([]);
-    const [profile, setProfile] = useState<UserProfile | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    const router = useRouter()
+    const { username } = router.query
+    const [prepLogs, setPrepLogs] = useState<PrepLog[]>([])
+    const [profile, setProfile] = useState<UserProfile | null>(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState("")
 
     const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
+        const date = new Date(dateString)
         return date.toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric"
-        });
-    };
+        })
+    }
 
     const formatTimeSpent = (hours: number) => {
-        if (hours < 1) {return `${Math.round(hours * 60)} minutes`;}
-        return `${hours} hour${hours !== 1 ? "s" : ""}`;
-    };
+        if (hours < 1) {
+            return `${Math.round(hours * 60)} minutes`
+        }
+        return `${hours} hour${hours !== 1 ? "s" : ""}`
+    }
 
     const getTimeOfDay = () => {
-        const hour = new Date().getHours();
-        if (hour < 12) {return "Good morning";}
-        if (hour < 17) {return "Good afternoon";}
-        return "Good evening";
-    };
+        const hour = new Date().getHours()
+        if (hour < 12) {
+            return "Good morning"
+        }
+        if (hour < 17) {
+            return "Good afternoon"
+        }
+        return "Good evening"
+    }
 
     // Utility function to add protocol to URLs
     function withProtocol(url: string | undefined) {
-        if (!url) {return undefined;}
+        if (!url) {
+            return undefined
+        }
 
-        return url.startsWith("http") ? url : `https://${url}`;
+        return url.startsWith("http") ? url : `https://${url}`
     }
 
     const handleGetStarted = () => {
-        router.push("/auth");
-    };
+        router.push("/auth")
+    }
 
     useEffect(() => {
         const fetchProfile = async () => {
-            if (!username) {return;}
+            if (!username) {
+                return
+            }
 
             try {
-                
-                
-                setLoading(true);
+                setLoading(true)
 
                 // Fetch user profile by username
                 const profileResponse = await fetch(
-                    `${process.env.NEXT_PUBLIC_TBE_WEBAPP_API_URL}/user?username=${username}`
-                );
+                    `${process.env.API_URL}/user?username=${username}`
+                )
 
                 if (!profileResponse.ok) {
-                    throw new Error("User not found");
+                    throw new Error("User not found")
                 }
 
-                const profileData = await profileResponse.json();
+                const profileData = await profileResponse.json()
                 // Extract data from the API response structure
                 if (profileData.status && profileData.data) {
-                    setProfile(profileData.data);
+                    setProfile(profileData.data)
                 } else {
-                    setProfile(profileData);
+                    setProfile(profileData)
                 }
 
                 // Fetch prep logs using the userId from the profile data
                 if (profileData.data?._id || profileData._id) {
-                    const userId = profileData.data?._id || profileData._id;
+                    const userId = profileData.data?._id || profileData._id
                     const logsResponse = await fetch(
-                        `${process.env.NEXT_PUBLIC_TBE_WEBAPP_API_URL}/prepyatra/prep-log?userId=${userId}`
-                    );
+                        `${process.env.API_URL}/prepyatra/prep-log?userId=${userId}`
+                    )
 
                     if (logsResponse.ok) {
-                        const logsData = await logsResponse.json();
+                        const logsData = await logsResponse.json()
                         // Extract data from the API response structure
                         if (logsData.status && logsData.data) {
-                            setPrepLogs(logsData.data || []);
+                            setPrepLogs(logsData.data || [])
                         } else {
-                            setPrepLogs(logsData || []);
+                            setPrepLogs(logsData || [])
                         }
                     }
                 }
             } catch (err) {
-                setError("Failed to load user profile");
-                console.error("Error fetching data:", err);
+                setError("Failed to load user profile")
+                console.error("Error fetching data:", err)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
+        }
 
-        fetchProfile();
-    }, [username]);
+        fetchProfile()
+    }, [username])
 
     if (loading) {
         return (
             <div className='min-h-screen flex items-center justify-center'>
                 <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary' />
             </div>
-        );
+        )
     }
 
     if (error || !profile) {
@@ -165,14 +182,14 @@ const PrepLogsShowcase = () => {
                 </div>
                 <Footer />
             </div>
-        );
+        )
     }
 
     const totalTimeSpent = prepLogs.reduce(
         (total, log) => total + log.timeSpent,
         0
-    );
-    const totalLogs = prepLogs.length;
+    )
+    const totalLogs = prepLogs.length
 
     return (
         <div className='min-h-screen bg-background'>
@@ -256,7 +273,10 @@ const PrepLogsShowcase = () => {
                                 <CardDescription>
                                     {profile.userSkillsLastUpdated && (
                                         <span className='text-xs sm:text-sm text-muted-foreground'>
-                                            Last updated: {formatDate(profile.userSkillsLastUpdated)}
+                                            Last updated:{" "}
+                                            {formatDate(
+                                                profile.userSkillsLastUpdated
+                                            )}
                                         </span>
                                     )}
                                 </CardDescription>
@@ -286,10 +306,14 @@ const PrepLogsShowcase = () => {
                         <CardTitle className='text-xl sm:text-2xl lg:text-3xl mb-3 sm:mb-4'>
                             {profile.name}
                         </CardTitle>
-                        <CardDescription className='text-base sm:text-lg mb-4 sm:mb-6'>@{profile.userName}</CardDescription>
-                        
+                        <CardDescription className='text-base sm:text-lg mb-4 sm:mb-6'>
+                            @{profile.userName}
+                        </CardDescription>
+
                         {/* Social Media Links */}
-                        {(profile.linkedInUrl || profile.githubUrl || profile.leetCodeUrl) && (
+                        {(profile.linkedInUrl ||
+                            profile.githubUrl ||
+                            profile.leetCodeUrl) && (
                             <div className='flex justify-center space-x-2 sm:space-x-3 mt-4 sm:mt-6'>
                                 {profile.linkedInUrl && (
                                     <Button
@@ -298,7 +322,9 @@ const PrepLogsShowcase = () => {
                                         className='w-10 h-10 sm:w-12 sm:h-12 border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 hover:scale-105'
                                         asChild>
                                         <a
-                                            href={withProtocol(profile.linkedInUrl)}
+                                            href={withProtocol(
+                                                profile.linkedInUrl
+                                            )}
                                             target='_blank'
                                             rel='noopener noreferrer'>
                                             <Linkedin className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
@@ -312,7 +338,9 @@ const PrepLogsShowcase = () => {
                                         className='w-10 h-10 sm:w-12 sm:h-12 border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 hover:scale-105'
                                         asChild>
                                         <a
-                                            href={withProtocol(profile.githubUrl)}
+                                            href={withProtocol(
+                                                profile.githubUrl
+                                            )}
                                             target='_blank'
                                             rel='noopener noreferrer'>
                                             <Github className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
@@ -326,7 +354,9 @@ const PrepLogsShowcase = () => {
                                         className='w-10 h-10 sm:w-12 sm:h-12 border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 hover:scale-105'
                                         asChild>
                                         <a
-                                            href={withProtocol(profile.leetCodeUrl)}
+                                            href={withProtocol(
+                                                profile.leetCodeUrl
+                                            )}
                                             target='_blank'
                                             rel='noopener noreferrer'>
                                             <ExternalLink className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
@@ -348,35 +378,49 @@ const PrepLogsShowcase = () => {
                                 </span>
                             </div>
                             <div className='bg-gray-50/5 rounded-lg p-3 sm:p-4'>
-                                <span className='font-medium text-foreground'>Goal:</span>
+                                <span className='font-medium text-foreground'>
+                                    Goal:
+                                </span>
                                 <br />
                                 <span className='text-muted-foreground'>
                                     {profile.prepYatra.goal || "Not specified"}
                                 </span>
                             </div>
                         </div>
-                        
+
                         {/* Additional Profile Info */}
                         {(profile.occupation || profile.purpose) && (
                             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-sm sm:text-base pt-4 sm:pt-6'>
                                 {profile.occupation && (
                                     <div className='bg-gray-50/5 rounded-lg p-3 sm:p-4'>
-                                        <span className='font-medium text-foreground'>Occupation:</span>
+                                        <span className='font-medium text-foreground'>
+                                            Occupation:
+                                        </span>
                                         <br />
                                         <span className='text-muted-foreground'>
-                                            {profile.occupation.replace("_", " ")}
+                                            {profile.occupation.replace(
+                                                "_",
+                                                " "
+                                            )}
                                         </span>
                                     </div>
                                 )}
-                                {profile.purpose && profile.purpose.length > 0 && (
-                                    <div className='bg-gray-50/5 rounded-lg p-3 sm:p-4'>
-                                        <span className='font-medium text-foreground'>Purpose:</span>
-                                        <br />
-                                        <span className='text-muted-foreground'>
-                                            {profile.purpose.map(p => p.replace("_", " ")).join(", ")}
-                                        </span>
-                                    </div>
-                                )}
+                                {profile.purpose &&
+                                    profile.purpose.length > 0 && (
+                                        <div className='bg-gray-50/5 rounded-lg p-3 sm:p-4'>
+                                            <span className='font-medium text-foreground'>
+                                                Purpose:
+                                            </span>
+                                            <br />
+                                            <span className='text-muted-foreground'>
+                                                {profile.purpose
+                                                    .map((p) =>
+                                                        p.replace("_", " ")
+                                                    )
+                                                    .join(", ")}
+                                            </span>
+                                        </div>
+                                    )}
                             </div>
                         )}
                     </CardContent>
@@ -400,7 +444,9 @@ const PrepLogsShowcase = () => {
                     ) : (
                         <div className='grid gap-4 sm:gap-6'>
                             {prepLogs.slice(0, 10).map((log) => (
-                                <Card key={log._id} className='hover:shadow-lg transition-shadow duration-300'>
+                                <Card
+                                    key={log._id}
+                                    className='hover:shadow-lg transition-shadow duration-300'>
                                     <CardHeader className='pb-3 sm:pb-4'>
                                         <div className='flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4'>
                                             <div className='flex-1'>
@@ -410,15 +456,21 @@ const PrepLogsShowcase = () => {
                                                 <CardDescription className='flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm'>
                                                     <div className='flex items-center'>
                                                         <Calendar className='w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2' />
-                                                        {formatDate(log.createdAt)}
+                                                        {formatDate(
+                                                            log.createdAt
+                                                        )}
                                                     </div>
                                                     <div className='flex items-center'>
                                                         <Clock className='w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2' />
-                                                        {formatTimeSpent(log.timeSpent)}
+                                                        {formatTimeSpent(
+                                                            log.timeSpent
+                                                        )}
                                                     </div>
                                                 </CardDescription>
                                             </div>
-                                            <Badge variant='outline' className='self-start sm:self-auto text-xs sm:text-sm px-2 sm:px-3 py-1'>
+                                            <Badge
+                                                variant='outline'
+                                                className='self-start sm:self-auto text-xs sm:text-sm px-2 sm:px-3 py-1'>
                                                 {formatTimeSpent(log.timeSpent)}
                                             </Badge>
                                         </div>
@@ -446,10 +498,13 @@ const PrepLogsShowcase = () => {
                             <p className='text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed'>
                                 Track your interview preparation, connect with
                                 recruiters, and showcase your progress just like{" "}
-                                <span className='text-primary font-medium'>{profile.name}</span>!
+                                <span className='text-primary font-medium'>
+                                    {profile.name}
+                                </span>
+                                !
                             </p>
-                            <Button 
-                                size='lg' 
+                            <Button
+                                size='lg'
                                 onClick={handleGetStarted}
                                 className='px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg hover:scale-105 transition-transform duration-200'>
                                 Get Started for Free
@@ -461,7 +516,7 @@ const PrepLogsShowcase = () => {
 
             <Footer />
         </div>
-    );
-};
+    )
+}
 
-export default PrepLogsShowcase;
+export default PrepLogsShowcase

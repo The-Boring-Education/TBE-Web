@@ -1,14 +1,20 @@
-import {Check, Star, Zap, Crown} from "lucide-react";
-import {useRouter} from "next/router";
-import React, {useEffect, useState} from "react";
+import { Check, Star, Zap, Crown } from "lucide-react"
+import { useRouter } from "next/router"
+import React, { useEffect, useState } from "react"
 
-import Footer from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navbar";
-import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {useAuth} from "@/contexts/useAuth";
-import useCashfreePayment from "@/hooks/useCashfreePayment";
+import Footer from "@/components/layout/Footer"
+import Navbar from "@/components/layout/Navbar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card"
+import { useAuth } from "@/contexts/useAuth"
+import useCashfreePayment from "@/hooks/useCashfreePayment"
 
 interface PricingPlan {
     id: string
@@ -24,10 +30,10 @@ interface PricingPlan {
 }
 
 const PricingPage: React.FC = () => {
-    const router = useRouter();
-    const {user, signOut} = useAuth();
-    const {launchPayment, isCashfreeLoaded} = useCashfreePayment();
-    const [loading, setLoading] = useState(false);
+    const router = useRouter()
+    const { user, signOut } = useAuth()
+    const { launchPayment, isCashfreeLoaded } = useCashfreePayment()
+    const [loading, setLoading] = useState(false)
 
     const plans: PricingPlan[] = [
         {
@@ -35,7 +41,8 @@ const PricingPage: React.FC = () => {
             name: "Free Plan",
             price: 0,
             duration: "Forever",
-            description: "Perfect for getting started with interview preparation",
+            description:
+                "Perfect for getting started with interview preparation",
             buttonText: "Current Plan",
             features: [
                 "Track unlimited preparation logs",
@@ -90,30 +97,30 @@ const PricingPage: React.FC = () => {
                 "Interview performance predictions"
             ]
         }
-    ];
+    ]
 
     useEffect(() => {
         if (!user) {
-            router.push("/auth");
+            router.push("/auth")
         }
-    }, [user, router]);
+    }, [user, router])
 
     const handleSelectPlan = async (planId: string) => {
         if (planId === "free") {
-            return; // Already on free plan
+            return // Already on free plan
         }
 
         if (!user?.id) {
-            router.push("/auth");
-            return;
+            router.push("/auth")
+            return
         }
 
-        setLoading(true);
+        setLoading(true)
 
         try {
             // Create payment session
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_TBE_WEBAPP_API_URL}/payments/create-session`,
+                `${process.env.API_URL}/payments/create-session`,
                 {
                     method: "POST",
                     headers: {
@@ -126,163 +133,190 @@ const PricingPage: React.FC = () => {
                         userName: user.name
                     })
                 }
-            );
+            )
 
             if (!response.ok) {
-                throw new Error("Failed to create payment session");
+                throw new Error("Failed to create payment session")
             }
 
-            const {paymentSessionId} = await response.json();
+            const { paymentSessionId } = await response.json()
 
             // Launch Cashfree payment
             if (isCashfreeLoaded) {
                 launchPayment(
                     paymentSessionId,
                     (data) => {
-                        console.log("Payment successful:", data);
-                        router.push("/dashboard?payment=success");
+                        console.log("Payment successful:", data)
+                        router.push("/dashboard?payment=success")
                     },
                     (data) => {
-                        console.error("Payment failed:", data);
-                        router.push("/pricing?payment=failed");
+                        console.error("Payment failed:", data)
+                        router.push("/pricing?payment=failed")
                     },
                     () => {
-                        console.log("Payment dialog closed");
+                        console.log("Payment dialog closed")
                     }
-                );
+                )
             }
         } catch (error) {
-            console.error("Error creating payment session:", error);
+            console.error("Error creating payment session:", error)
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
-    };
+    }
 
     const handleSignOut = async () => {
         try {
-            await signOut();
-            router.push("/");
+            await signOut()
+            router.push("/")
         } catch (error) {
-            console.error("Error signing out:", error);
+            console.error("Error signing out:", error)
         }
-    };
+    }
 
     return (
-        <div className="min-h-screen bg-background">
-            <Navbar 
-                username={user?.name || ""} 
-                onSignOut={handleSignOut} 
-                userId={user?.id} 
+        <div className='min-h-screen bg-background'>
+            <Navbar
+                username={user?.name || ""}
+                onSignOut={handleSignOut}
+                userId={user?.id}
             />
 
-            <main className="container mx-auto px-4 py-16">
-                <div className="text-center mb-16">
-                    <h1 className="text-4xl font-bold mb-4">
-                        Choose Your <span className="text-primary">PrepYatra</span> Plan
+            <main className='container mx-auto px-4 py-16'>
+                <div className='text-center mb-16'>
+                    <h1 className='text-4xl font-bold mb-4'>
+                        Choose Your{" "}
+                        <span className='text-primary'>PrepYatra</span> Plan
                     </h1>
-                    <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                        Accelerate your interview preparation with our premium features. 
-                        Start for free and upgrade when you're ready.
+                    <p className='text-xl text-muted-foreground max-w-2xl mx-auto'>
+                        Accelerate your interview preparation with our premium
+                        features. Start for free and upgrade when you're ready.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div className='grid md:grid-cols-3 gap-8 max-w-6xl mx-auto'>
                     {plans.map((plan) => (
-                        <Card 
-                            key={plan.id} 
+                        <Card
+                            key={plan.id}
                             className={`relative ${
-                                plan.popular 
-                                    ? "border-primary shadow-lg scale-105" 
+                                plan.popular
+                                    ? "border-primary shadow-lg scale-105"
                                     : "border-border"
-                            }`}
-                        >
+                            }`}>
                             {plan.popular && (
-                                <Badge 
-                                    className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground"
-                                >
-                                    <Star className="w-3 h-3 mr-1" />
+                                <Badge className='absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground'>
+                                    <Star className='w-3 h-3 mr-1' />
                                     Most Popular
                                 </Badge>
                             )}
-                            
-                            <CardHeader className="text-center">
-                                <div className="flex justify-center mb-4">
-                                    {plan.id === "free" && <Zap className="w-8 h-8 text-blue-500" />}
-                                    {plan.id === "pro_monthly" && <Star className="w-8 h-8 text-primary" />}
-                                    {plan.id === "pro_yearly" && <Crown className="w-8 h-8 text-yellow-500" />}
+
+                            <CardHeader className='text-center'>
+                                <div className='flex justify-center mb-4'>
+                                    {plan.id === "free" && (
+                                        <Zap className='w-8 h-8 text-blue-500' />
+                                    )}
+                                    {plan.id === "pro_monthly" && (
+                                        <Star className='w-8 h-8 text-primary' />
+                                    )}
+                                    {plan.id === "pro_yearly" && (
+                                        <Crown className='w-8 h-8 text-yellow-500' />
+                                    )}
                                 </div>
-                                
-                                <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                                <CardDescription className="text-sm">
+
+                                <CardTitle className='text-2xl'>
+                                    {plan.name}
+                                </CardTitle>
+                                <CardDescription className='text-sm'>
                                     {plan.description}
                                 </CardDescription>
-                                
-                                <div className="mt-4">
-                                    <span className="text-4xl font-bold">₹{plan.price}</span>
-                                    <span className="text-muted-foreground">/{plan.duration}</span>
+
+                                <div className='mt-4'>
+                                    <span className='text-4xl font-bold'>
+                                        ₹{plan.price}
+                                    </span>
+                                    <span className='text-muted-foreground'>
+                                        /{plan.duration}
+                                    </span>
                                     {plan.savings && (
-                                        <div className="text-sm text-green-600 font-medium mt-1">
+                                        <div className='text-sm text-green-600 font-medium mt-1'>
                                             {plan.savings}
                                         </div>
                                     )}
                                 </div>
                             </CardHeader>
-                            
-                            <CardContent className="space-y-4">
-                                <Button 
+
+                            <CardContent className='space-y-4'>
+                                <Button
                                     className={`w-full ${
-                                        plan.popular 
-                                            ? "bg-primary hover:bg-primary/90" 
+                                        plan.popular
+                                            ? "bg-primary hover:bg-primary/90"
                                             : "bg-secondary hover:bg-secondary/80"
                                     }`}
                                     onClick={() => handleSelectPlan(plan.id)}
-                                    disabled={loading || (plan.id === "free")}
-                                >
-                                    {loading ? "Processing..." : plan.buttonText}
+                                    disabled={loading || plan.id === "free"}>
+                                    {loading
+                                        ? "Processing..."
+                                        : plan.buttonText}
                                 </Button>
-                                
-                                <div className="space-y-3">
-                                    <h4 className="font-semibold text-sm">What's included:</h4>
-                                    <ul className="space-y-2 text-sm">
+
+                                <div className='space-y-3'>
+                                    <h4 className='font-semibold text-sm'>
+                                        What's included:
+                                    </h4>
+                                    <ul className='space-y-2 text-sm'>
                                         {plan.features.map((feature, index) => (
-                                            <li key={index} className="flex items-start">
-                                                <Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                                            <li
+                                                key={index}
+                                                className='flex items-start'>
+                                                <Check className='w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0' />
                                                 <span>{feature}</span>
                                             </li>
                                         ))}
                                     </ul>
-                                    
-                                    {plan.comingSoon && plan.comingSoon.length > 0 && (
-                                        <>
-                                            <h4 className="font-semibold text-sm text-primary pt-3">
-                                                Coming Soon:
-                                            </h4>
-                                            <ul className="space-y-2 text-sm">
-                                                {plan.comingSoon.map((feature, index) => (
-                                                    <li key={index} className="flex items-start">
-                                                        <Zap className="w-4 h-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
-                                                        <span className="text-muted-foreground">{feature}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </>
-                                    )}
+
+                                    {plan.comingSoon &&
+                                        plan.comingSoon.length > 0 && (
+                                            <>
+                                                <h4 className='font-semibold text-sm text-primary pt-3'>
+                                                    Coming Soon:
+                                                </h4>
+                                                <ul className='space-y-2 text-sm'>
+                                                    {plan.comingSoon.map(
+                                                        (feature, index) => (
+                                                            <li
+                                                                key={index}
+                                                                className='flex items-start'>
+                                                                <Zap className='w-4 h-4 text-primary mr-2 mt-0.5 flex-shrink-0' />
+                                                                <span className='text-muted-foreground'>
+                                                                    {feature}
+                                                                </span>
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </ul>
+                                            </>
+                                        )}
                                 </div>
                             </CardContent>
                         </Card>
                     ))}
                 </div>
 
-                <div className="text-center mt-16">
-                    <p className="text-muted-foreground">
-                        Have questions? <a href="mailto:support@theboringeducation.com" className="text-primary hover:underline">Contact our support team</a>
+                <div className='text-center mt-16'>
+                    <p className='text-muted-foreground'>
+                        Have questions?{" "}
+                        <a
+                            href='mailto:support@theboringeducation.com'
+                            className='text-primary hover:underline'>
+                            Contact our support team
+                        </a>
                     </p>
                 </div>
             </main>
 
             <Footer />
         </div>
-    );
-};
+    )
+}
 
-export default PricingPage;
+export default PricingPage

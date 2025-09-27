@@ -50,7 +50,6 @@ const ChallengeLogModal = ({
     const isChallengeCompleted = challenge.currentDay >= challenge.totalDays
     const nextDay = challenge.currentDay
 
-
     const handleInputChange = (field: string, value: string | string[]) => {
         setFormData((prev) => ({
             ...prev,
@@ -71,7 +70,7 @@ const ChallengeLogModal = ({
         const progressPercentage = Math.round(
             (nextDay / challenge.totalDays) * 100
         )
-        const appUrl = process.env.NEXT_PUBLIC_BASE_URL
+        const appUrl = process.env.BASE_URL
 
         const templates = [
             // Template 1: Casual and friendly
@@ -93,12 +92,12 @@ ${
     progressPercentage >= 90
         ? "Almost there! 🏁"
         : progressPercentage >= 75
-        ? "Getting close! 🔥"
-        : progressPercentage >= 50
-        ? "Halfway point! ⚡"
-        : progressPercentage >= 25
-        ? "Building momentum! 🚀"
-        : "Just getting started! ✨"
+          ? "Getting close! 🔥"
+          : progressPercentage >= 50
+            ? "Halfway point! ⚡"
+            : progressPercentage >= 25
+              ? "Building momentum! 🚀"
+              : "Just getting started! ✨"
 }
 
 ${
@@ -128,12 +127,12 @@ ${
     progressPercentage >= 90
         ? "Final stretch - staying focused on the goal! 🎯"
         : progressPercentage >= 75
-        ? "Strong progress - maintaining consistency! 💪"
-        : progressPercentage >= 50
-        ? "Milestone reached - building solid foundation! 🏗️"
-        : progressPercentage >= 25
-        ? "Establishing learning rhythm - every day counts! 📈"
-        : "Setting the foundation - committed to the process! 🌱"
+          ? "Strong progress - maintaining consistency! 💪"
+          : progressPercentage >= 50
+            ? "Milestone reached - building solid foundation! 🏗️"
+            : progressPercentage >= 25
+              ? "Establishing learning rhythm - every day counts! 📈"
+              : "Setting the foundation - committed to the process! 🌱"
 }
 
 ${
@@ -159,12 +158,12 @@ ${
     progressPercentage >= 90
         ? "The finish line is calling! 🏁"
         : progressPercentage >= 75
-        ? "The momentum is real! 🔥"
-        : progressPercentage >= 50
-        ? "Halfway there - proving it's possible! ⚡"
-        : progressPercentage >= 25
-        ? "Every step forward is progress! 🚀"
-        : "The journey of a thousand miles begins with a single step! ✨"
+          ? "The momentum is real! 🔥"
+          : progressPercentage >= 50
+            ? "Halfway there - proving it's possible! ⚡"
+            : progressPercentage >= 25
+              ? "Every step forward is progress! 🚀"
+              : "The journey of a thousand miles begins with a single step! ✨"
 }
 
 Remember: Consistency beats perfection every time! 
@@ -254,9 +253,11 @@ ${
     }
 
     const shareToSocial = (platform: string) => {
-        const message = textareaRef.current?.value || generateSocialMessageFromTemplate(selectedTemplate)
+        const message =
+            textareaRef.current?.value ||
+            generateSocialMessageFromTemplate(selectedTemplate)
         const encodedText = encodeURIComponent(message)
-        const appUrl = process.env.NEXT_PUBLIC_BASE_URL
+        const appUrl = process.env.BASE_URL
 
         let shareUrl = ""
         switch (platform) {
@@ -533,8 +534,8 @@ ${
                                 Share Your Progress
                             </DialogTitle>
                             <DialogDescription className='text-gray-300'>
-                                Choose a template to share your Day {nextDay + 1}{" "}
-                                progress
+                                Choose a template to share your Day{" "}
+                                {nextDay + 1} progress
                             </DialogDescription>
                         </DialogHeader>
 
@@ -570,13 +571,16 @@ ${
                                                     : "border-gray-600 bg-gray-800/30 hover:border-gray-500"
                                             }`}
                                             onClick={() => {
-                                                setSelectedTemplate(index);
+                                                setSelectedTemplate(index)
                                                 // Update the textarea with new template
                                                 setTimeout(() => {
                                                     if (textareaRef.current) {
-                                                        textareaRef.current.value = generateSocialMessageFromTemplate(index);
+                                                        textareaRef.current.value =
+                                                            generateSocialMessageFromTemplate(
+                                                                index
+                                                            )
                                                     }
-                                                }, 100);
+                                                }, 100)
                                             }}>
                                             <div className='flex items-center gap-3'>
                                                 <span className='text-2xl'>
@@ -608,12 +612,14 @@ ${
                                     ref={textareaRef}
                                     className='w-full h-40 bg-gray-900/50 text-gray-200 p-4 border border-gray-600 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400'
                                     placeholder='Click here to edit your social media message...'
-                                    defaultValue={generateSocialMessageFromTemplate(selectedTemplate)}
+                                    defaultValue={generateSocialMessageFromTemplate(
+                                        selectedTemplate
+                                    )}
                                     style={{
-                                        fontFamily: 'inherit',
-                                        fontSize: '14px',
-                                        lineHeight: '1.5',
-                                        whiteSpace: 'pre-wrap'
+                                        fontFamily: "inherit",
+                                        fontSize: "14px",
+                                        lineHeight: "1.5",
+                                        whiteSpace: "pre-wrap"
                                     }}
                                 />
                             </div>
@@ -622,8 +628,12 @@ ${
                             <div className='flex flex-wrap gap-2'>
                                 <Button
                                     onClick={() => {
-                                        const message = textareaRef.current?.value || generateSocialMessageFromTemplate(selectedTemplate);
-                                        copyToClipboard(message);
+                                        const message =
+                                            textareaRef.current?.value ||
+                                            generateSocialMessageFromTemplate(
+                                                selectedTemplate
+                                            )
+                                        copyToClipboard(message)
                                     }}
                                     variant='outline'
                                     size='sm'
@@ -634,8 +644,12 @@ ${
 
                                 <Button
                                     onClick={() => {
-                                        const message = textareaRef.current?.value || generateSocialMessageFromTemplate(selectedTemplate);
-                                        copyToClipboard(message);
+                                        const message =
+                                            textareaRef.current?.value ||
+                                            generateSocialMessageFromTemplate(
+                                                selectedTemplate
+                                            )
+                                        copyToClipboard(message)
                                         toast.success("Ready to share! 📱")
                                     }}
                                     variant='outline'
