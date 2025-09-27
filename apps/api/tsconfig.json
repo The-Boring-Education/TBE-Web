@@ -7,17 +7,10 @@
         "paths": {
             "@/*": ["./src/*"],
             "@/lib/constants": ["./src/lib/constants"],
-            "@/lib/constants/*": ["./src/lib/constants/*"],
             "@/lib/database": ["./src/lib/database"],
-            "@/lib/database/*": ["./src/lib/database/*"],
             "@/lib/interfaces": ["./src/lib/interfaces"],
-            "@/lib/interfaces/*": ["./src/lib/interfaces/*"],
             "@/lib/services": ["./src/lib/services"],
-            "@/lib/services/*": ["./src/lib/services/*"],
-            "@/lib/types": ["./src/lib/types"],
-            "@/lib/types/*": ["./src/lib/types/*"],
-            "@/lib/utils": ["./src/lib/utils"],
-            "@/lib/utils/*": ["./src/lib/utils/*"]
+            "@/lib/utils": ["./src/lib/utils"]
         },
         "forceConsistentCasingInFileNames": true
     }

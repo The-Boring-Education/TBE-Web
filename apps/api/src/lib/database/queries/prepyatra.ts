@@ -13,7 +13,7 @@ import type {
     AddPrepLogToDBPayloadProps,
     AddRecruiterToDBPayloadProps,
     DatabaseQueryResponseType
-} from "@/lib/types"
+} from "@/lib/interfaces"
 
 const getRecruitersByUserFromDB = async (
     userId: string

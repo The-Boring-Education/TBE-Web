@@ -1,3 +1,5 @@
+import { ProjectDocumentModel } from "./database"
+
 export interface APIResponse<T = any> {
     success: boolean
     status?: boolean
@@ -186,4 +188,20 @@ export interface CreateSubscriptionPayload {
     type: SubscriptionType
     amount: number
     duration: number
+}
+
+export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY"
+
+export type ProjectPickedPageProps = Pick<
+    ProjectDocumentModel,
+    | "_id"
+    | "name"
+    | "meta"
+    | "roadmap"
+    | "difficultyLevel"
+    | "sections"
+    | "requiredSkills"
+> & {
+    isEnrolled?: boolean
+    _id: string
 }

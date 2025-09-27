@@ -9,7 +9,7 @@ import type {
     DatabaseQueryResponseType,
     SheetEnrollmentRequestProps,
     UpdateInterviewSheetRequestPayloadProps
-} from "@/lib/types"
+} from "@/lib/interfaces"
 
 const addAInterviewSheetToDB = async (
     sheetPayload: AddInterviewSheetRequestPayloadProps

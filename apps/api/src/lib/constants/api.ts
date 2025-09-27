@@ -4,6 +4,7 @@ import type {
     DifficultyType,
     GoalType,
     InterviewCategoryType,
+    LeaderboardType,
     NotificationType,
     PlatformUsageType,
     PriorityType,
@@ -17,6 +18,18 @@ import type {
     UserRoleType,
     WorkDomainType
 } from "@/lib/interfaces"
+
+const apiStatusCodes = {
+    OKAY: 200,
+    RESOURCE_CREATED: 201,
+    SUCCESSFUL_WITHOUT_RESPONSE: 204,
+    BAD_REQUEST: 400,
+    UNAUTHORIZED: 401,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
+    INTERNAL_SERVER_ERROR: 500,
+    METHOD_NOT_ALLOWED: 405
+}
 
 const PROJECT_SKILLS: SkillsType[] = [
     "HTML",
@@ -2673,7 +2686,42 @@ enum LeaderboardEnum {
     MONTHLY = "MONTHLY"
 }
 
+const POINTS_RULES: Record<UserPointsActionType, number> = {
+    ENROLL_COURSE: 50,
+    ENROLL_SHEET: 50,
+    ENROLL_PROJECT: 50,
+    COMPLETE_COURSE_CHAPTER: 20,
+    COMPLETE_PROJECT_CHAPTER: 30,
+    COMPLETE_COURSE_CERTIFICATE: 50,
+    COMPLETE_PROJECT: 100,
+    COMPLETE_INTERVIEW_SHEET: 80,
+    COMPLETE_QUESTION: 10,
+    PROFILE_COMPLETION: 30,
+    SOCIAL_SHARE: 15,
+    FEEDBACK_SUBMIT: 10,
+    VIDEO_WATCH_COMPLETE: 5,
+    FIRST_LOGIN: 25,
+    DAILY_VISIT: 5,
+    STREAK: 3,
+    REFER: 20,
+    WEBINAR_ATTEND: 40,
+    DOWNLOAD_CERTIFICATE: 20,
+    HELP_COMMUNITY: 15,
+    RECRUITER_ADDED: 25,
+    PREPLOG_CREATED: 15,
+    PREPLOG_STREAK_3: 25,
+    PREPLOG_STREAK_7: 50,
+    PREPLOG_STREAK_15: 100,
+    PREPLOG_STREAK_30: 200,
+    COMPLETE_QUIZ: 30,
+    QUIZ_PERFECT_SCORE: 50,
+    QUIZ_STREAK: 20
+}
+
+const LEADERBOARD_TYPES: LeaderboardType[] = ["DAILY", "WEEKLY", "MONTHLY"]
+
 export {
+    apiStatusCodes,
     ALLOWED_IPS,
     CERTIFICATE_TYPE,
     COMPANY_TYPES,
@@ -2699,5 +2747,7 @@ export {
     USER_POINTS_ACTION,
     USER_ROLE,
     WORK_DOMAIN,
-    YOUTUBE_API_PATH
+    YOUTUBE_API_PATH,
+    POINTS_RULES,
+    LEADERBOARD_TYPES
 }

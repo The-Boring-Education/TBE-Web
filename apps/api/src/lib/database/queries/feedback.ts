@@ -1,53 +1,53 @@
-import { Feedback } from '../models';
+import { Feedback } from "../models"
 import type {
-  AddFeedbackRequestProps,
-  DatabaseQueryResponseType,
-  UpdateFeedbackRequestProps,
-} from '@/lib/types';
+    AddFeedbackRequestProps,
+    DatabaseQueryResponseType,
+    UpdateFeedbackRequestProps
+} from "@/lib/interfaces"
 
 const addFeedbackToDB = async ({
-  rating,
-  type,
-  ref,
-  userId,
+    rating,
+    type,
+    ref,
+    userId
 }: AddFeedbackRequestProps): Promise<DatabaseQueryResponseType> => {
-  try {
-    const newFeedback = new Feedback({
-      rating,
-      type,
-      ref,
-      user: userId,
-      feedback: '',
-    });
+    try {
+        const newFeedback = new Feedback({
+            rating,
+            type,
+            ref,
+            user: userId,
+            feedback: ""
+        })
 
-    await newFeedback.save();
-    return { data: newFeedback };
-  } catch (error) {
-    return { error: 'Failed to create feedback' };
-  }
-};
+        await newFeedback.save()
+        return { data: newFeedback }
+    } catch (error) {
+        return { error: "Failed to create feedback" }
+    }
+}
 
 const updateFeedbackTextInDB = async ({
-  feedbackId,
-  userId,
-  feedback,
+    feedbackId,
+    userId,
+    feedback
 }: UpdateFeedbackRequestProps): Promise<DatabaseQueryResponseType> => {
-  try {
-    const existingFeedback = await Feedback.findOne({
-      _id: feedbackId,
-      user: userId,
-    });
+    try {
+        const existingFeedback = await Feedback.findOne({
+            _id: feedbackId,
+            user: userId
+        })
 
-    if (!existingFeedback) {
-      return { error: 'Feedback not found' };
+        if (!existingFeedback) {
+            return { error: "Feedback not found" }
+        }
+
+        existingFeedback.feedback = feedback
+        await existingFeedback.save()
+        return { data: existingFeedback }
+    } catch (error) {
+        return { error: "Failed to update feedback text" }
     }
+}
 
-    existingFeedback.feedback = feedback;
-    await existingFeedback.save();
-    return { data: existingFeedback };
-  } catch (error) {
-    return { error: 'Failed to update feedback text' };
-  }
-};
-
-export { addFeedbackToDB, updateFeedbackTextInDB };
+export { addFeedbackToDB, updateFeedbackTextInDB }

@@ -1,4 +1,3 @@
-import type { GenerateSectionPathProps } from "@/lib/types"
 import { envConfig } from "./envConfig"
 
 const routes = {
@@ -163,9 +162,4 @@ const routes = {
     }
 }
 
-const generateSectionPath = ({
-    basePath,
-    sectionID
-}: GenerateSectionPathProps) => `${basePath}#${sectionID}`
-
-export { generateSectionPath, routes }
+export { routes }
