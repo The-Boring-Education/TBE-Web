@@ -75,7 +75,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         googleUser: GoogleUser
     ): Promise<User> => {
         try {
-            const res = await fetch(`${process.env.API_URL}/user`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -110,7 +110,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const checkUserOnboarding = async (userEmail: string, userId: string) => {
         try {
             const res = await fetch(
-                `${process.env.API_URL}/user?email=${userEmail}`
+                `${process.env.NEXT_PUBLIC_API_URL}/user?email=${userEmail}`
             )
             const data = await res.json()
 
@@ -118,7 +118,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 router.push("/dashboard")
             } else {
                 // Redirect to external onboarding app
-                const onboardingUrl = process.env.ONBOARDING_URL
+                const onboardingUrl = process.env.NEXT_PUBLIC_ONBOARDING_URL
                 if (onboardingUrl) {
                     const redirectUrl = `${onboardingUrl}?userId=${userId}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
                     window.location.href = redirectUrl
@@ -186,7 +186,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
                 // Verify with backend
                 const res = await fetch(
-                    `${process.env.API_URL}/user?email=${userData.email}`
+                    `${process.env.NEXT_PUBLIC_API_URL}/user?email=${userData.email}`
                 )
                 const data = await res.json()
 

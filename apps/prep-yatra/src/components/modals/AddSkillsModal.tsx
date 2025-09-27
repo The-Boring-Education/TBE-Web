@@ -34,7 +34,7 @@ function isOlderThan60Days(dateString: string | undefined) {
     return diff > 60 * 24 * 60 * 60 * 1000 // 60 days in ms
 }
 
-const API_URL = process.env.API_URL
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 
 const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
     isOpen,
@@ -62,11 +62,14 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
         }
         setLoading(true)
         try {
-            const res = await fetch(`${API_URL}/prepyatra/userskills`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId, userSkills: [skill] })
-            })
+            const res = await fetch(
+                `${NEXT_PUBLIC_API_URL}/prepyatra/userskills`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId, userSkills: [skill] })
+                }
+            )
             const result = await res.json()
             if (result.status) {
                 setSkills((prev) => [...prev, skill])

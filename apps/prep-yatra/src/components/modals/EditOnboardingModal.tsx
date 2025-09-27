@@ -134,7 +134,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
             }
 
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/onboarding`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/onboarding`,
                 {
                     method: "POST",
                     headers: {

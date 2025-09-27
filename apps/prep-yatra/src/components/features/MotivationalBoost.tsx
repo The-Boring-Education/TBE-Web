@@ -165,7 +165,7 @@ const MotivationalBoost = ({
 "${randomQuote.text}" - ${randomQuote.author}
 
 Join me on Prep Yatra and start your own challenge! 🚀
-${process.env.BASE_URL}
+${process.env.NEXT_PUBLIC_BASE_URL}
 
 #PrepYatra #LearningJourney #ChallengeAccepted #ConsistencyIsKey`
 

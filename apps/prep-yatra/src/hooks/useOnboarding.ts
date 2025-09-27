@@ -9,7 +9,7 @@ import { OnboardingData } from "@/types/onboarding"
 // Debug function to help identify issues
 const debugOnboardingConfig = () => {
     console.log("=== Onboarding Debug Info ===")
-    console.log("API URL:", process.env.API_URL)
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL)
     console.log("Environment:", process.env.NODE_ENV)
     console.log("User Agent:", navigator.userAgent)
     console.log("Online Status:", navigator.onLine)
@@ -50,7 +50,7 @@ export function useOnboarding() {
             try {
                 console.log("Checking user in central DB:", user.email)
                 const res = await fetch(
-                    `${process.env.API_URL}/user?email=${user.email}`
+                    `${process.env.NEXT_PUBLIC_API_URL}/user?email=${user.email}`
                 )
 
                 if (!res.ok) {
@@ -243,7 +243,7 @@ export function useOnboarding() {
                 )
                 const step1Response = await fetch(
                     `${
-                        process.env.API_URL
+                        process.env.NEXT_PUBLIC_API_URL
                     }/user/onboarding?userId=${centralUserId}`,
                     {
                         method: "PUT",
@@ -293,7 +293,7 @@ export function useOnboarding() {
                 console.log("PrepYatra request body:", requestBody)
 
                 const prepYatraResponse = await fetch(
-                    `${process.env.API_URL}/prepyatra/onboarding`,
+                    `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/onboarding`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },

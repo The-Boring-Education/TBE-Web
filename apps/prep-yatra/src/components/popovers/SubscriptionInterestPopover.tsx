@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/popover"
 import { useUser } from "@/hooks/use-user"
 
-const API_BASE_URL = process.env.API_URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 interface SubscriptionInterestPopoverProps {
     className?: string

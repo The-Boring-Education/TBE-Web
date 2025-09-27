@@ -29,13 +29,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                 const checkOnboarding = async () => {
                     try {
                         const res = await fetch(
-                            `${process.env.API_URL}/user?email=${user.email}`
+                            `${process.env.NEXT_PUBLIC_API_URL}/user?email=${user.email}`
                         )
                         const data = await res.json()
 
                         if (!data?.data?.prepYatra?.pyOnboarded) {
                             // Redirect to external onboarding app
-                            const onboardingBaseUrl = process.env.ONBOARDING_URL
+                            const onboardingBaseUrl =
+                                process.env.NEXT_PUBLIC_ONBOARDING_URL
                             if (onboardingBaseUrl) {
                                 const redirectUrl = `${onboardingBaseUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
                                 window.location.href = redirectUrl
@@ -48,7 +49,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                     } catch (error) {
                         console.error("Error checking onboarding:", error)
                         // On error, also redirect to external onboarding app
-                        const onboardingBaseUrl = process.env.ONBOARDING_URL
+                        const onboardingBaseUrl =
+                            process.env.NEXT_PUBLIC_ONBOARDING_URL
                         if (onboardingBaseUrl) {
                             const redirectUrl = `${onboardingBaseUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
                             window.location.href = redirectUrl

@@ -47,7 +47,7 @@ export function useGamification(userId?: string) {
         setError(null)
         try {
             const res = await fetch(
-                `${process.env.API_URL}/gamification?userId=${userId}`
+                `${process.env.NEXT_PUBLIC_API_URL}/gamification?userId=${userId}`
             )
             const result = await res.json()
             if (!result.success) {

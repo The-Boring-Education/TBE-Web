@@ -105,7 +105,7 @@ const Dashboard = () => {
     const fetchProfile = async (userId: string) => {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/user?userId=${userId}`
+                `${process.env.NEXT_PUBLIC_API_URL}/user?userId=${userId}`
             )
             if (response.ok) {
                 const result = await response.json()
@@ -163,7 +163,7 @@ const Dashboard = () => {
             try {
                 // Check if user needs onboarding
                 const response = await fetch(
-                    `${process.env.API_URL}/user?userId=${user.id}`
+                    `${process.env.NEXT_PUBLIC_API_URL}/user?userId=${user.id}`
                 )
                 if (!response.ok) {
                     const onboardingUrl = process.env.NEXT_PUBLIC_ONBOARDING_URL

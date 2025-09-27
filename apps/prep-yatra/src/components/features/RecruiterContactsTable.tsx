@@ -78,7 +78,7 @@ const RecruiterContactsTable = ({
     const handleDelete = async (recruiterId: string) => {
         try {
             const res = await fetch(
-                `${process.env.API_URL}/prepyatra/recruiter?recruiterId=${recruiterId}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/recruiter?recruiterId=${recruiterId}`,
                 {
                     method: "DELETE"
                 }
@@ -116,7 +116,7 @@ const RecruiterContactsTable = ({
     ) => {
         try {
             const res = await fetch(
-                `${process.env.API_URL}/prepyatra/recruiter`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/recruiter`,
                 {
                     method: "PUT",
                     headers: {
@@ -159,7 +159,7 @@ const RecruiterContactsTable = ({
     ) => {
         try {
             const res = await fetch(
-                `${process.env.API_URL}/prepyatra/recruiter`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/recruiter`,
                 {
                     method: "PUT",
                     headers: {

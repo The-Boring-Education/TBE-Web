@@ -5,7 +5,7 @@ export const prepLogsService = {
     async getByUserId(userId: string): Promise<PrepLog[]> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/prep-log?userId=${userId}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/prep-log?userId=${userId}`,
                 {
                     headers: {
                         "Content-Type": "application/json"
@@ -38,7 +38,7 @@ export const prepLogsService = {
     }): Promise<PrepLog> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/prep-log`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/prep-log`,
                 {
                     method: "POST",
                     headers: {
@@ -82,7 +82,7 @@ export const prepLogsService = {
     }): Promise<PrepLog> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/prep-log`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/prep-log`,
                 {
                     method: "PUT",
                     headers: {
@@ -120,7 +120,7 @@ export const prepLogsService = {
     async delete(id: string): Promise<void> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/prep-log?prepLogId=${id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/prep-log?prepLogId=${id}`,
                 {
                     method: "DELETE",
                     headers: {

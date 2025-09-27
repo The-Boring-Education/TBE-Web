@@ -113,7 +113,7 @@ const PrepLogsShowcase = () => {
 
                 // Fetch user profile by username
                 const profileResponse = await fetch(
-                    `${process.env.API_URL}/user?username=${username}`
+                    `${process.env.NEXT_PUBLIC_API_URL}/user?username=${username}`
                 )
 
                 if (!profileResponse.ok) {
@@ -132,7 +132,7 @@ const PrepLogsShowcase = () => {
                 if (profileData.data?._id || profileData._id) {
                     const userId = profileData.data?._id || profileData._id
                     const logsResponse = await fetch(
-                        `${process.env.API_URL}/prepyatra/prep-log?userId=${userId}`
+                        `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/prep-log?userId=${userId}`
                     )
 
                     if (logsResponse.ok) {

@@ -14,7 +14,7 @@ export const challengesService = {
     async getByUserId(userId: string): Promise<Challenge[]> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/challenges?userId=${userId}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/challenges?userId=${userId}`,
                 {
                     headers: {
                         "Content-Type": "application/json"
@@ -47,7 +47,7 @@ export const challengesService = {
     ): Promise<Challenge> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/challenges`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/challenges`,
                 {
                     method: "POST",
                     headers: {
@@ -94,7 +94,7 @@ export const challengesService = {
     async update(data: UpdateChallengeRequest): Promise<Challenge> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/challenges/${data.challengeId}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/challenges/${data.challengeId}`,
                 {
                     method: "PUT",
                     headers: {
@@ -141,7 +141,7 @@ export const challengesService = {
     async delete(challengeId: string): Promise<void> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/challenges/${challengeId}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/challenges/${challengeId}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -177,7 +177,7 @@ export const challengesService = {
     async getLogs(challengeId: string): Promise<ChallengeLog[]> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/challenges/${challengeId}/logs`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/challenges/${challengeId}/logs`,
                 {
                     headers: {
                         "Content-Type": "application/json"
@@ -206,7 +206,7 @@ export const challengesService = {
     async createLog(data: CreateChallengeLogRequest): Promise<ChallengeLog> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/challenges/${data.challengeId}/logs`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/challenges/${data.challengeId}/logs`,
                 {
                     method: "POST",
                     headers: {
@@ -247,7 +247,7 @@ export const challengesService = {
     async getProgress(challengeId: string): Promise<ChallengeProgress> {
         try {
             const response = await fetch(
-                `${process.env.API_URL}/prepyatra/challenges/${challengeId}/progress`,
+                `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/challenges/${challengeId}/progress`,
                 {
                     headers: {
                         "Content-Type": "application/json"
@@ -278,7 +278,7 @@ export const challengesService = {
         currentLog: ChallengeLog,
         nextGoals: string[] = []
     ): SocialMediaTemplate {
-        const appUrl = process.env.BASE_URL
+        const appUrl = process.env.NEXT_PUBLIC_BASE_URL
 
         return {
             challengeName: challenge.name,

@@ -120,7 +120,7 @@ const PricingPage: React.FC = () => {
         try {
             // Create payment session
             const response = await fetch(
-                `${process.env.API_URL}/payments/create-session`,
+                `${process.env.NEXT_PUBLIC_API_URL}/payments/create-session`,
                 {
                     method: "POST",
                     headers: {
