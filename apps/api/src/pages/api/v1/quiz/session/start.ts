@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import {cors} from '@tbe/utils';
+import {cors} from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { Quiz, QuizSession } from '@tbe/database';
+import { Quiz, QuizSession } from '@/lib/database';
 import { Types } from 'mongoose';
 
 interface StartSessionBody {

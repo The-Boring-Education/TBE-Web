@@ -1,16 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   enrollInASheet,
   getEnrolledSheetFromDB,
   getInterviewSheetByIDFromDB,
   getUserByIdFromDB,
-} from '@tbe/database';
-import type { SheetEnrollmentRequestProps } from '@tbe/interface';
+} from '@/lib/database';
+import type { SheetEnrollmentRequestProps } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { sendInterviewPrepEnrollmentEmail } from '@tbe/services';
+import { sendAPIResponse } from '@/lib/utils';
+import { sendInterviewPrepEnrollmentEmail } from '@/lib/services';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

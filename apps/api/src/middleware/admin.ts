@@ -1,9 +1,9 @@
 import { type NextApiRequest, type NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { sendAPIResponse } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
 
 const ADMIN_EMAIL = 'theboringeducation@gmail.com';
 

@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import { addChapterToCourseInDB } from '@tbe/database';
-import type { AddChapterToCourseRequestProps } from '@tbe/interface';
+import { apiStatusCodes } from '@/lib/constants';
+import { addChapterToCourseInDB } from '@/lib/database';
+import type { AddChapterToCourseRequestProps } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

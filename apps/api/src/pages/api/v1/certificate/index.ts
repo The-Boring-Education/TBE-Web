@@ -1,18 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   addACertificateToDB,
   checkCertificateExistForAProgram,
   updateCertificateToUserShikshaCourseDoc,
   updateUserPointsInDB,
-} from '@tbe/database';
+} from '@/lib/database';
 import type {
   AddCertificateRequestPayloadProps,
   CertificateType,
-} from '@tbe/types';
+} from '@/lib/types';
 import { connectDB } from '@/middleware/api';
-import { sendAPIResponse, cors } from '@tbe/utils';
+import { sendAPIResponse, cors } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

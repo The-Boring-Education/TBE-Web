@@ -9,17 +9,17 @@
 // COMMON TYPES (Used across all apps)
 // ================================
 export type {
-  // Re-export all common types except conflicting ones
-  BaseUser,
-  APIResponse,
-  TrackEventProps,
-  GamificationAction,
-  UserPoints,
-  Achievement,
-  // Conflicting types with aliases
-  APIMakeRequestProps as CommonAPIMakeRequestProps,
-  LeaderboardEntry as CommonLeaderboardEntry,
-  QuizCategory as CommonQuizCategory,
+    // Re-export all common types except conflicting ones
+    BaseUser,
+    APIResponse,
+    TrackEventProps,
+    GamificationAction,
+    UserPoints,
+    Achievement,
+    // Conflicting types with aliases
+    APIMakeRequestProps as CommonAPIMakeRequestProps,
+    LeaderboardEntry as CommonLeaderboardEntry,
+    QuizCategory as CommonQuizCategory
 } from "./common"
 
 // ================================
@@ -27,14 +27,8 @@ export type {
 // ================================
 
 // Database models and schemas
-export * from "./database"
 
 // Additional database types that are commonly used
-export type {
-  UserRoleType,
-  PlatformUsageType,
-  UserPointsActionType,
-} from "./database"
 
 // API types and request/response interfaces
 export * from "./api"
@@ -44,32 +38,32 @@ export * from "./components"
 
 // Additional component types that are commonly used
 export type {
-  MentorshipCardProps,
-  PortfolioTemplateProps,
-  PrimaryCardProps,
-  PrimaryCardWithCTAProps,
-  RadioButtonOptionsProps,
-  TestimonialCardProps,
-  UserLevel,
+    MentorshipCardProps,
+    PortfolioTemplateProps,
+    PrimaryCardProps,
+    PrimaryCardWithCTAProps,
+    RadioButtonOptionsProps,
+    TestimonialCardProps,
+    UserLevel
 } from "./components"
 
 // Platform-specific shared types (with explicit exports to avoid conflicts)
 export type {
-  // Re-export all platform types except conflicting ones
-  GetSEOMetaResponseType,
-  SEOProps,
-  ServerSessionProp,
-  LeaderboardType,
-  LEADERBOARD_TYPES,
-  ProductDataProps,
-  CohortDataProps,
-  CohortRoadmapProps,
-  CohortUserCategoryProps,
-  TopNavbarContainerProps,
-  // Email types from platform (these conflict with email module)
-  EmailSendRequest as PlatformEmailSendRequest,
-  EmailSendResponse as PlatformEmailSendResponse,
-  EmailTemplate as PlatformEmailTemplate,
+    // Re-export all platform types except conflicting ones
+    GetSEOMetaResponseType,
+    SEOProps,
+    ServerSessionProp,
+    LeaderboardType,
+    LEADERBOARD_TYPES,
+    ProductDataProps,
+    CohortDataProps,
+    CohortRoadmapProps,
+    CohortUserCategoryProps,
+    TopNavbarContainerProps,
+    // Email types from platform (these conflict with email module)
+    EmailSendRequest as PlatformEmailSendRequest,
+    EmailSendResponse as PlatformEmailSendResponse,
+    EmailTemplate as PlatformEmailTemplate
 } from "./platform"
 
 // Email and communication types
@@ -90,16 +84,11 @@ export * from "./quiz"
 // Re-export common types with their original names
 export type {
     BaseUser as User,
-    APIResponse as CommonAPIResponseType,
+    APIResponse as CommonAPIResponseType
 } from "./common"
 
 // Re-export database types with their original names for compatibility
 // Note: Do NOT alias UserModel as PlatformUser to avoid conflict with platform PlatformUser
-export type {
-    ProjectDocumentModel as Project,
-    CourseModel as Course,
-    InterviewSheetModel as InterviewSheet
-} from "./database"
 
 // Re-export API types with their original names for compatibility
 export type {

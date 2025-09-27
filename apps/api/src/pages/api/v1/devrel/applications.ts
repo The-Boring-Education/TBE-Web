@@ -2,10 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
 import { connectDB } from '@/middleware';
-import { apiStatusCodes } from '@tbe/constants';
-import { sendAPIResponse } from '@tbe/utils';
+import { apiStatusCodes } from '@/lib/constants';
+import { sendAPIResponse } from '@/lib/utils';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import {User, DevRelLead} from '@tbe/database';
+import {User, DevRelLead} from '@/lib/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

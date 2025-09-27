@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import {Payment, PrepYatraSubscription} from '@tbe/database';
+import { apiStatusCodes } from '@/lib/constants';
+import {Payment, PrepYatraSubscription} from '@/lib/database';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { cors } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
 
 interface PopulatedPayment {
   _id: any;

@@ -9,12 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@tbe/constants": "workspace:*",
-    "@tbe/database": "workspace:*",
-    "@tbe/interface": "workspace:*",
-    "@tbe/services": "workspace:*",
-    "@tbe/types": "workspace:*",
-    "@tbe/utils": "workspace:*",
+    "@sentry/nextjs": "^9.38.0",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -30,7 +25,6 @@
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
-    "@tbe/interface": "workspace:*",
     "@tbe/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/markdown-it": "^14.0.1",

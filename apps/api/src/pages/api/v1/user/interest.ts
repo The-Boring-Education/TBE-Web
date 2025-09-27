@@ -1,19 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   createUserInterestInDB,
   getUserInterestsFromDB,
   updateUserInterestInDB,
-} from '@tbe/database';
+} from '@/lib/database';
 import type {
   CreateUserInterestRequestProps,
   GetUserInterestsRequestProps,
   UserInterestResponseProps,
-} from '@tbe/interface';
+} from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { cors } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
 
 /**
  * API Handler for User Interests

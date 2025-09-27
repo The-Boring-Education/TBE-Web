@@ -1,8 +1,8 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
-import { envConfig, routes } from '@tbe/constants';
-import { createUserInDB, getUserByEmailFromDB } from '@tbe/database';
+import { envConfig, routes } from '@/lib/constants';
+import { createUserInDB, getUserByEmailFromDB } from '@/lib/database';
 import { connectDB } from '@/middleware/api';
 
 const authOptions = {

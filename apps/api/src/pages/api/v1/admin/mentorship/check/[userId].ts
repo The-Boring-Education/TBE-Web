@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { cors } from '@tbe/utils';
-import { isUserMenteeInDB } from '@tbe/database';
+import { sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
+import { isUserMenteeInDB } from '@/lib/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

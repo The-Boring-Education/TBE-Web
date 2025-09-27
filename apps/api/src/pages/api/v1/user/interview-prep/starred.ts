@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   getStarredQuestionsFromDB,
   markQuestionStarredByUser,
-} from '@tbe/database';
-import type { MarkQuestionStarredRequestProps } from '@tbe/interface';
+} from '@/lib/database';
+import type { MarkQuestionStarredRequestProps } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

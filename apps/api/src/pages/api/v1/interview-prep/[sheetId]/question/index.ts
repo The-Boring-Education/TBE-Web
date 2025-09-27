@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import { addQuestionToInterviewSheetInDB } from '@tbe/database';
-import type { AddInterviewQuestionRequestPayloadProps } from '@tbe/interface';
+import { apiStatusCodes } from '@/lib/constants';
+import { addQuestionToInterviewSheetInDB } from '@/lib/database';
+import type { AddInterviewQuestionRequestPayloadProps } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

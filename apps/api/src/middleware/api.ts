@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { envConfig, apiStatusCodes } from '@tbe/constants';
-import { sendAPIResponse, cors } from '@tbe/utils';
+import { envConfig, apiStatusCodes } from '@/lib/constants';
+import { sendAPIResponse, cors } from '@/lib/utils';
 
 // Connect to DB
 const connectDB = async () => {

@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   generateLeaderboard,
   getLeaderboardWithUsersFromDB,
   saveLeaderboardToDB,
-} from '@tbe/database';
-import type { LeaderboardType } from '@tbe/interface';
-import { LEADERBOARD_TYPES } from '@tbe/interface';
+} from '@/lib/database';
+import type { LeaderboardType } from '@/lib/interfaces';
+import { LEADERBOARD_TYPES } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { cors, sendAPIResponse } from '@tbe/utils';
+import { cors, sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

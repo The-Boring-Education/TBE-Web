@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectDB } from '@/middleware';
-import { cors } from '@tbe/utils';
-import { apiStatusCodes } from '@tbe/constants';
-import { sendAPIResponse } from '@tbe/utils';
-import {ChallengeLog} from '@tbe/database';
-import {Challenge} from '@tbe/database';
+import { cors } from '@/lib/utils';
+import { apiStatusCodes } from '@/lib/constants';
+import { sendAPIResponse } from '@/lib/utils';
+import {ChallengeLog} from '@/lib/database';
+import {Challenge} from '@/lib/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { cors } from '@tbe/utils';
+import { cors } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { submitAnswerInDB } from '@tbe/database';
-import { QuizSession } from '@tbe/database';
+import { submitAnswerInDB } from '@/lib/database';
+import { QuizSession } from '@/lib/database';
 
 interface SubmitAnswerBody {
   questionIndex: number;

@@ -2,14 +2,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v4 } from 'uuid';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   addChapterToSectionInDB,
   getChaptersFromSectionInDB,
-} from '@tbe/database';
-import type { AddChapterRequestPayloadProps } from '@tbe/interface';
+} from '@/lib/database';
+import type { AddChapterRequestPayloadProps } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse, getMDXContent } from '@tbe/utils';
+import { sendAPIResponse, getMDXContent } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

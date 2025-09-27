@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   Gamification,
   Payment,
@@ -8,10 +8,10 @@ import {
   UserCourse,
   UserProject,
   UserSheet,
-} from '@tbe/database';
+} from '@/lib/database';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { cors } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

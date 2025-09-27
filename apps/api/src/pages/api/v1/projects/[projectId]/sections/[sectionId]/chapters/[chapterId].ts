@@ -1,15 +1,15 @@
 // Add Chapter API
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   deleteChapterFromSectionInDB,
   getChapterFromSectionInDB,
   updateChapterInSectionInDB,
-} from '@tbe/database';
-import type { UpdateChapterRequestPayloadProps } from '@tbe/interface';
+} from '@/lib/database';
+import type { UpdateChapterRequestPayloadProps } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

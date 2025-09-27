@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import { getPYUserByIdFromDB, updatePYUserByIdInDB } from '@tbe/database';
-import type { PrepYatraOnboardingPayload } from '@tbe/interface';
+import { apiStatusCodes } from '@/lib/constants';
+import { getPYUserByIdFromDB, updatePYUserByIdInDB } from '@/lib/database';
+import type { PrepYatraOnboardingPayload } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { cors, sendAPIResponse } from '@tbe/utils';
+import { cors, sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

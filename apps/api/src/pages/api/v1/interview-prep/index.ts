@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   addAInterviewSheetToDB,
   getAllInterviewSheetsFromDB,
   getInterviewSheetBySlugFromDB,
-} from '@tbe/database';
-import type { AddInterviewSheetRequestPayloadProps } from '@tbe/interface';
+} from '@/lib/database';
+import type { AddInterviewSheetRequestPayloadProps } from '@/lib/interfaces';
 import { connectDB, cors } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

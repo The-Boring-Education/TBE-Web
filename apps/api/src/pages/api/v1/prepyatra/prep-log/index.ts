@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   addPrepLogToDB,
   deletePrepLogInDB,
   getPrepLogsByUserFromDB,
   handleGamificationPoints,
   updatePrepLogInDB,
-} from '@tbe/database';
+} from '@/lib/database';
 import { connectDB } from '@/middleware';
-import { cors, sendAPIResponse } from '@tbe/utils';
+import { cors, sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
@@ -210,7 +210,7 @@ const handleAddMentorFeedback = async (
     // Optionally notify learner via email
     if (notifyEmail && userEmail && userName && userId) {
       try {
-        const { emailClient } = await import('@tbe/services');
+        const { emailClient } = await import('@/lib/services');
 
         await emailClient.sendEmail({
           from_email: process.env.FROM_EMAIL || 'theboringeducation@gmail.com',

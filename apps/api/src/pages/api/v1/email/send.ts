@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import { sendEmailFromDB } from '@tbe/database';
-import type { EmailRequest } from '@tbe/interface';
+import { apiStatusCodes } from '@/lib/constants';
+import { sendEmailFromDB } from '@/lib/database';
+import type { EmailRequest } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
+import { sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
