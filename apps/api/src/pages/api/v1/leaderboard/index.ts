@@ -7,7 +7,7 @@ import {
   saveLeaderboardToDB,
 } from '@/lib/database';
 import type { LeaderboardType } from '@/lib/interfaces';
-import { LEADERBOARD_TYPES } from '@/lib/interfaces';
+import { LEADERBOARD_TYPES } from '@/lib/constants';
 import { connectDB } from '@/middleware';
 import { cors, sendAPIResponse } from '@/lib/utils';
 

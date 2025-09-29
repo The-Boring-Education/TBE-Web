@@ -19,6 +19,7 @@
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",
         "@tbe/typescript-config": "workspace:*",
+        "@types/node": "^18.19.0",
         "@types/react": "^18.3.24",
         "@types/react-dom": "^18.3.7",
         "eslint": "^8.57.1",
@@ -27,5 +28,5 @@
     "dependencies": {
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
-    }
+        }
 }

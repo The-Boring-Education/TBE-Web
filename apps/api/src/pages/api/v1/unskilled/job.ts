@@ -124,6 +124,8 @@ const handleAddJob = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
+
+
 const handleGetJobs = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { page = '1', limit = '10', role, location, skills } = req.query;
