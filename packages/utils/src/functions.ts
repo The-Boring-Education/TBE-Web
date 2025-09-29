@@ -581,10 +581,12 @@ const extractSkillsFromText = (text: string): string[] => {
     const lowerText = text.toLowerCase()
     const matchedSkills = new Set<string>()
     JOB_SKILL_NORMALIZER.forEach(({ label, value }) => {
-        if (
-            label.some((alt: string) => lowerText.includes(alt.toLowerCase()))
-        ) {
-            matchedSkills.add(value)
+        if (Array.isArray(label)) {
+            if (
+                label.some((alt: string) => lowerText.includes(alt.toLowerCase()))
+            ) {
+                matchedSkills.add(value)
+            }
         }
     })
     return Array.from(matchedSkills)

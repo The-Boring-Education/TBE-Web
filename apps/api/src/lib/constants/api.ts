@@ -2721,7 +2721,6 @@ const POINTS_RULES: Record<UserPointsActionType, number> = {
 const LEADERBOARD_TYPES: LeaderboardType[] = ["DAILY", "WEEKLY", "MONTHLY"]
 
 export {
-    apiStatusCodes,
     ALLOWED_IPS,
     CERTIFICATE_TYPE,
     COMPANY_TYPES,

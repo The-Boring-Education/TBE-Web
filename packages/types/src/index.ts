@@ -27,6 +27,7 @@ export type {
 // ================================
 
 // Database models and schemas
+export * from "./database"
 
 // Additional database types that are commonly used
 

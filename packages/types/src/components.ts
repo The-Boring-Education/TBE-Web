@@ -17,16 +17,6 @@ import type {
 import type {
   CertificateType,
   QuestionFrequencyType,
-  CompanyDetails,
-  InterviewSheetModel,
-  InterviewSheetQuestionModel,
-  CourseModel,
-  WebinarModel,
-  PlaylistModel,
-  GoalType,
-  CompanyType,
-  InterviewCategoryType,
-  SubscriptionType,
 } from './database';
 
 // ================================
@@ -978,3 +968,35 @@ export type GenerateSectionPathProps = {
   basePath: string;
   sectionID: string;
 };
+
+const UserPointsActionType = [
+  'ENROLL_COURSE',
+  'ENROLL_SHEET',
+  'ENROLL_PROJECT',
+  'COMPLETE_COURSE_CHAPTER',
+  'COMPLETE_PROJECT_CHAPTER',
+  'COMPLETE_QUESTION',
+  'COMPLETE_COURSE_CERTIFICATE',
+  'COMPLETE_PROJECT',
+  'COMPLETE_INTERVIEW_SHEET',
+  'PROFILE_COMPLETION',
+  'SOCIAL_SHARE',
+  'FEEDBACK_SUBMIT',
+  'VIDEO_WATCH_COMPLETE',
+  'FIRST_LOGIN',
+  'DAILY_VISIT',
+  'STREAK',
+  'REFER',
+  'WEBINAR_ATTEND',
+  'DOWNLOAD_CERTIFICATE',
+  'HELP_COMMUNITY',
+  'RECRUITER_ADDED',
+  'PREPLOG_CREATED',
+  'PREPLOG_STREAK_3',
+  'PREPLOG_STREAK_7',
+  'PREPLOG_STREAK_15',
+  'PREPLOG_STREAK_30',
+  'COMPLETE_QUIZ',
+  'QUIZ_PERFECT_SCORE',
+  'QUIZ_STREAK',
+] as const;
