@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '@/contexts/AuthContext'
-import { leaderboardApi, userProfileApi, APIError } from '@/services/api'
+import { useAuth } from '@tbe/components/quizes'
+import { leaderboardApi, userProfileApi, APIError } from '@tbe/services'
 import { LeaderboardData, UserProfile } from '@/types/api'
 import { 
     Trophy, 
@@ -21,13 +21,12 @@ import {
     Filter,
     Clock
 } from 'lucide-react'
-import { ProtectedRoute } from '@/components/ProtectedRoute'
-import { DashboardNav } from '@/components/layout/DashboardNav'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useToast } from '@/components/ui/use-toast'
+import { ProtectedRoute, DashboardNav } from '@tbe/components/quizes'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@tbe/components/quizes'
+import { Button } from '@tbe/components/quizes'
+import { Badge } from '@tbe/components/quizes'
+import { Avatar, AvatarFallback, AvatarImage } from '@tbe/components/quizes'
+import { useToast } from '@tbe/components/quizes'
 import { formatTimeAgo } from '@/lib/utils'
 
 // Rank Badge Component
@@ -258,10 +257,10 @@ function LeaderboardContent() {
         queryFn: async () => {
             const response = await leaderboardApi.getLeaderboard(leaderboardLimit)
             // Add rank to each entry based on position
-            return response.data.map((entry, index) => ({
+            return response.data?.map((entry, index) => ({
                 ...entry,
                 rank: index + 1
-            }))
+            })) || []
         }
     })
 
@@ -273,7 +272,7 @@ function LeaderboardContent() {
         queryFn: async () => {
             if (!user?.id) return { rank: 0 }
             const response = await leaderboardApi.getUserRank(user.id)
-            return response.data
+            return response.data || { rank: 0 }
         },
         enabled: !!user?.id
     })
@@ -301,7 +300,7 @@ function LeaderboardContent() {
     const handleViewProfile = async (userId: string) => {
         try {
             const response = await userProfileApi.getUserProfile(userId)
-            setSelectedProfile(response.data)
+            setSelectedProfile(response.data || null)
             setShowProfileModal(true)
         } catch (error) {
             toast({

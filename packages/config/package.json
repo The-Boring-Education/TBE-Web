@@ -7,6 +7,7 @@
     "types": "./onboarding.ts",
     "exports": {
         ".": "./onboarding.ts",
+        "./quizes": "./quizes.ts",
         "./tailwind": "./tailwind.config.js",
         "./postcss": "./postcss.config.js",
         "./prettier": "./prettier.config.js"

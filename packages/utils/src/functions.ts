@@ -1,6 +1,7 @@
 import crypto from "crypto"
-import {type ClassValue, clsx} from "clsx";
-import {twMerge} from "tailwind-merge";
+
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 
 import {
     envConfig,
@@ -730,11 +731,12 @@ const getPYSubscriptionFeaturesByType = (
         : baseFeatures
 }
 
-
-
-export function cn(...inputs: ClassValue[]) {
+const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
 }
+
+
+
 
 // Utility functions migrated from original project
 export function debounce<T extends (...args: unknown[]) => unknown>(
@@ -812,7 +814,31 @@ export function chunkArray<T>(array: T[], size: number): T[][] {
     return chunks;
 }
 
-export {
+
+const isValidUser = (user: User | null): user is User => {
+    return user !== null && 
+           typeof user === 'object' && 
+           typeof user.id === 'string' && 
+           user.id.length > 0 &&
+           typeof user.name === 'string' && 
+           user.name.length > 0 &&
+           typeof user.email === 'string' && 
+           user.email.length > 0
+  }
+  
+  /**
+   * Safely gets user ID with validation
+   * @param user - The user object
+   * @returns user ID if valid, null otherwise
+   */
+  const getValidUserId = (user: User | null): string | null => {
+    return isValidUser(user) ? user.id : null
+  }
+
+export {    
+    isValidUser,
+    getValidUserId,
+    cn,
     type WebhookEvent,
     buildOrderPayload,
     calculateProgressPercentage,

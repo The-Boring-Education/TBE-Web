@@ -18,7 +18,7 @@ import { PointsDisplay } from "@tbe/ui"
 import React from "react"
 
 export function Navbar() {
-    const { user, signOut } = useUser()
+    const { user, updateSession } = useUser()
     const router = useRouter()
     const pathname = usePathname()
     const { toast } = useToast()
@@ -28,7 +28,7 @@ export function Navbar() {
     const handleSignOut = async () => {
         try {
             setLoading(true)
-            await signOut()
+            await updateSession()
             setShowUserMenu(false)
             router.push("/login")
         } catch (error) {

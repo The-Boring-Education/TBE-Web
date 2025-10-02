@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@tbe/components/quizes'
 import { analyticsApi, quizApi, APIError } from '@/services/api'
 import { PerformanceHistory, QuizAttempt } from '@/types/api'
 import { 
@@ -19,13 +19,11 @@ import {
     RefreshCw,
     Award
 } from 'lucide-react'
-import { ProtectedRoute } from '@/components/ProtectedRoute'
-import { DashboardNav } from '@/components/layout/DashboardNav'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { useToast } from '@/components/ui/use-toast'
+import { ProtectedRoute,DashboardNav } from '@tbe/components/quizes'
+import {  Card, CardContent, CardDescription, CardHeader, CardTitle, Badge } from '@tbe/components/quizes'
+import {  Button } from '@tbe/components/quizes'
+import {  Input } from '@tbe/components/quizes'
+import { useToast } from '@tbe/components/quizes'
 import { formatTimeAgo, formatDuration } from '@/lib/utils'
 
 // Filter component

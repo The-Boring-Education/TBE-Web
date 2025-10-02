@@ -77,7 +77,8 @@ export interface LinkButtonProps extends LinkProps {
 export interface ButtonProps {
     variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY' | 'NEUTRAL';
   className?: string;
-  text: string;
+  text?: string;
+  children?: React.ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   active?: boolean;
   isLoading?: boolean;

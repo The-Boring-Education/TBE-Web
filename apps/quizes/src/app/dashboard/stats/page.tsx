@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '@/contexts/AuthContext'
-import { analyticsApi, APIError } from '@/services/api'
+import { useAuth } from '@tbe/components/quizes'
+import { analyticsApi, APIError } from '@tbe/services'
 import { PerformanceMetrics, CategoryPerformance } from '@/types/api'
 import { 
     TrendingUp, 
@@ -17,11 +17,11 @@ import {
     Star,
     Trophy
 } from 'lucide-react'
-import { ProtectedRoute } from '@/components/ProtectedRoute'
-import { DashboardNav } from '@/components/layout/DashboardNav'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { useToast } from '@/components/ui/use-toast'
+import { ProtectedRoute } from '@tbe/components/quizes'
+import { DashboardNav } from '@tbe/components/quizes'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@tbe/components/quizes'
+import { Button } from '@tbe/components/quizes'
+import { useToast } from '@tbe/components/quizes'
 import { formatTimeAgo, formatDuration } from '@/lib/utils'
 
 // Loading component
@@ -138,9 +138,12 @@ function StatsContent() {
         error: metricsError
     } = useQuery<PerformanceMetrics>({
         queryKey: ['performance-metrics', user?.id, timeRange],
-        queryFn: async () => {
+        queryFn: async (): Promise<PerformanceMetrics> => {
             if (!user?.id) throw new Error('User not authenticated')
             const response = await analyticsApi.getPerformanceMetrics(user.id)
+            if (!response.data) {
+                throw new Error('No data received from API')
+            }
             return response.data
         },
         enabled: !!user?.id
@@ -152,9 +155,12 @@ function StatsContent() {
         error: categoryError
     } = useQuery<CategoryPerformance[]>({
         queryKey: ['category-performance', user?.id, timeRange],
-        queryFn: async () => {
+        queryFn: async (): Promise<CategoryPerformance[]> => {
             if (!user?.id) throw new Error('User not authenticated')
             const response = await analyticsApi.getCategoryPerformance(user.id)
+            if (!response.data) {
+                throw new Error('No data received from API')
+            }
             return response.data
         },
         enabled: !!user?.id
@@ -181,8 +187,9 @@ function StatsContent() {
         if (categoryError) handleError(categoryError)
     }, [metricsError, categoryError, handleError])
 
-    const metrics = metricsData || {
+    const metrics: PerformanceMetrics = metricsData || {
         totalAttempts: 0,
+        totalQuizzes: 0,
         totalScore: 0,
         averageScore: 0,
         bestScore: 0,
@@ -191,7 +198,9 @@ function StatsContent() {
         accuracyRate: 0,
         improvementRate: 0,
         streakDays: 0,
-        lastActiveDate: new Date().toISOString()
+        lastActiveDate: new Date().toISOString(),
+        categoryBreakdown: [],
+        recentAttempts: []
     }
 
     return (

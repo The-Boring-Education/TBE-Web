@@ -10,7 +10,10 @@
   "dependencies": {
     "@tbe/constants": "workspace:*",
     "@tbe/interface": "workspace:*",
-    "@tbe/utils": "workspace:*"
+    "@tbe/utils": "workspace:*",
+    "@tbe/types": "workspace:*",
+    "@tbe/config": "workspace:*"
+
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",

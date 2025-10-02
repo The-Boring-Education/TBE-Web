@@ -22,6 +22,7 @@
     "install:all": "pnpm install"
   },
   "devDependencies": {
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^9.0.1",
     "prettier": "^3.6.2",
     "turbo": "^2.5.6"
@@ -35,14 +36,22 @@
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
-    "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.1.0",
-    "@radix-ui/react-slot": "^1.1.0",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.3.0",
     "react-day-picker": "^8.10.1",
     "react-query": "3.39.3",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-progress": "^1.1.7",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
+    "@react-oauth/google": "^0.12.2",
+    "class-variance-authority": "^0.7.1",
+    "react-markdown": "^10.1.0",
+    "react-syntax-highlighter": "^15.6.1",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^2.5.2",
     "vercel": "^48.1.4"
   }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from "@/contexts/AuthContext"
+import { useAuth } from "@tbe/components/quizes"
 import { useEffect, useState } from "react"
 
 export default function DebugPage() {

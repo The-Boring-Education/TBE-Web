@@ -2,15 +2,15 @@
 
   import React, { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Layout } from "@/components/Layout"
-import { ProtectedRoute } from "@/components/ProtectedRoute"
-import { useAuth } from "@/contexts/AuthContext"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
+import { Button } from "@tbe/components/quizes"
+import { Layout } from "@tbe/components/quizes"
+import { ProtectedRoute } from "@tbe/components/quizes"
 import { useQuizData } from "@/hooks/useQuizData"
+import { useAuth } from "@tbe/components/quizes"
 import { debugAPIUrls } from "@/utils/apiDebug"
 import { Play, BookOpen } from "lucide-react"
-import { gamificationApi } from "@/services/api"
+import { gamificationApi } from "@tbe/services"
 
 function DashboardContent() {
   const { user } = useAuth()
@@ -27,10 +27,10 @@ function DashboardContent() {
   }
 
   useEffect(() => {
-    gamificationApi.getuserGamificationPoints(user?.id || '').then((res:any) => {
+    gamificationApi.getuserGamificationPoints(user?._id || user?.id || '').then((res:any) => {
      console.log(res)
     })
- }, [user?.id])
+ }, [user?._id, user?.id])
 
   if (loading) {
     return (

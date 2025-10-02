@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Layout } from "@/components/Layout"
-import { useAuth } from "@/contexts/AuthContext"
-import { leaderboardApi, APIError } from "@/services/api"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
+import { Button } from "@tbe/components/quizes"
+import { Layout } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/components/quizes"
+import { leaderboardApi, APIError } from "@tbe/services"
 import {
   Trophy,
   Medal,
@@ -48,7 +48,7 @@ function LeaderboardContent() {
 
       if (response.success) {
         // Transform LeaderboardData to LeaderboardEntry
-        const transformedData: LeaderboardEntry[] = response.data.map((item, index) => ({
+        const transformedData: LeaderboardEntry[] = response.data?.map((item, index) => ({
           _id: item._id || '',
           username: item.username || 'Unknown User',
           image: item.image || '',
@@ -57,7 +57,7 @@ function LeaderboardContent() {
           averageScore: item.averageScore || 0,
           totalTimeSpent: item.totalTimeSpent || 0,
           rank: index + 1
-        }))
+        })) || []
         setLeaderboard(transformedData)
       } else {
         throw new APIError(response.message || 'Failed to load leaderboard', 500)
