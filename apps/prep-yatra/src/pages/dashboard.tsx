@@ -8,8 +8,8 @@ import {
     DashboardTabs,
     LoadingSpinner
 } from "@/components/dashboard"
-import { useGamificationContext } from "@/contexts/GamificationContext"
-import { useAuth } from "@/contexts/useAuth"
+import { usePrepYatraGamificationContext } from "@tbe/components"
+import { useAuth } from "@tbe/components"
 import { usePrepLogs } from "@/hooks/use-prep-logs"
 import { recruitersService } from "@/services/recruiters"
 import { RecruiterContact } from "@/types/recruiters"
@@ -41,6 +41,8 @@ const SubscriptionInterestPopover = lazy(
     () => import("@/components/popovers/SubscriptionInterestPopover")
 )
 const AddSkillsModal = lazy(() => import("@/components/modals/AddSkillsModal"))
+
+
 
 // Loading component for Suspense fallback
 const ComponentLoader = () => (
@@ -79,7 +81,7 @@ type Profile = {
 const Dashboard = () => {
     const router = useRouter()
     const { user, loading: authLoading, signOut } = useAuth()
-    const { showCelebration } = useGamificationContext()
+    const { showCelebration } = usePrepYatraGamificationContext()
     const {
         logs: prepLogs,
         loading: prepLogsLoading,

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 
 import { routes } from "@tbe/constants"
-import { useApi, useUser } from "@tbe/hooks"
+import { useApi } from "@tbe/hooks"
+import { useUser } from "@tbe/hooks"
 import { getUserGamificationLevel } from "@tbe/utils"
 
 const useGamification = () => {

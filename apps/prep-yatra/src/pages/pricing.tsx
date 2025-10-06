@@ -13,7 +13,7 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import { useAuth } from "@/contexts/useAuth"
+import { useAuth } from "@tbe/components"
 import useCashfreePayment from "@/hooks/useCashfreePayment"
 
 interface PricingPlan {

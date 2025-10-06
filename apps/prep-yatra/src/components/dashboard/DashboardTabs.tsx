@@ -1,11 +1,11 @@
 import {Plus} from "lucide-react";
 import React, {Suspense} from "react";
 
-import {Button} from "@/components/ui/button";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {PrepLog} from "@/hooks/use-prep-logs";
-import {RecruiterContact} from "@/types/recruiters";
+import {Button} from "@tbe/components";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@tbe/components";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@tbe/components";
+import {PrepLog} from "@tbe/types";
+import {RecruiterContact} from "@tbe/types";
 
 // Lazy load components
 const PrepLogsList = React.lazy(() => import("@/components/features/PrepLogsList"));
@@ -72,10 +72,12 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                                 Track your learning progress and preparation journey
                             </CardDescription>
                         </div>
-                        <Button onClick={onPrepLogModalOpen} size="sm">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Log
-                        </Button>
+                        <Button
+                            onClick={onPrepLogModalOpen}
+                            variant='PRIMARY'
+                            text="Add Log"
+                            icon={<Plus className="w-4 h-4" />}
+                        />
                     </CardHeader>
                     <CardContent>
                         <Suspense fallback={<ComponentLoader />}>
@@ -105,10 +107,12 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                                 Manage your network of recruiting professionals
                             </CardDescription>
                         </div>
-                        <Button onClick={onRecruiterModalOpen} size="sm">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Contact
-                        </Button>
+                        <Button
+                            onClick={onRecruiterModalOpen}
+                            variant='PRIMARY'
+                            text="Add Contact"
+                            icon={<Plus className="w-4 h-4" />}
+                        />
                     </CardHeader>
                     <CardContent>
                         <Suspense fallback={<ComponentLoader />}>
@@ -131,10 +135,12 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                                 Showcase your technical skills and expertise
                             </CardDescription>
                         </div>
-                        <Button onClick={onSkillsModalOpen} size="sm">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Skills
-                        </Button>
+                        <Button
+                            onClick={onSkillsModalOpen}
+                            variant='PRIMARY'
+                            text="Add Skills"
+                            icon={<Plus className="w-4 h-4" />}
+                        />
                     </CardHeader>
                     <CardContent>
                         <Suspense fallback={<ComponentLoader />}>

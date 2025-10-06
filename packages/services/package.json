@@ -10,6 +10,7 @@
   "dependencies": {
     "@tbe/constants": "workspace:*",
     "@tbe/interface": "workspace:*",
+    "@tbe/hooks": "workspace:*",
     "@tbe/utils": "workspace:*"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import {useRef, useState, useEffect} from "react";
 
-import {useGamification} from "@/hooks/useGamification";
+import {useGamification} from "@/hooks/usePyGamification";
 
 const GamificationDisplay = ({userId}: { userId: string }) => {
     const {

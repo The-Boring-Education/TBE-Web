@@ -3,7 +3,7 @@ import {useRouter} from "next/router";
 
 import InstallButton from "@/components/features/InstallButton";
 import {Button} from "@/components/ui/button";
-import {useAuth} from "@/contexts/useAuth";
+import {useAuth} from "@tbe/components";
 
 const Auth = () => {
     const router = useRouter();
