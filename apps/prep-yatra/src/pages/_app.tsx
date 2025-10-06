@@ -7,8 +7,8 @@ import React, { useEffect } from "react"
 import { Toaster as Sonner } from "@/components/ui/sonner"
 import { Toaster } from "@/components/ui/toaster"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import AuthProvider from "@/contexts/AuthContext"
-import { GamificationProvider } from "@/contexts/GamificationContext"
+import { AuthProvider } from "@tbe/components"
+import { PrepYatraGamificationProvider } from "@tbe/components"
 import "@/styles/globals.css"
 import { initGA, installGlobalListeners, trackPageview } from "@/lib/analytics"
 
@@ -88,9 +88,9 @@ export default function App({ Component, pageProps }: AppProps) {
                     <Sonner />
                     <CacheManager />
                     <AuthProvider>
-                        <GamificationProvider>
+                        <PrepYatraGamificationProvider>
                             <Component {...pageProps} />
-                        </GamificationProvider>
+                        </PrepYatraGamificationProvider>
                     </AuthProvider>
                 </TooltipProvider>
             </GoogleOAuthProvider>

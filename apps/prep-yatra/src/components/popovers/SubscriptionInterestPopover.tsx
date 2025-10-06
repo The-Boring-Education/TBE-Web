@@ -19,7 +19,7 @@ import {
     PopoverContent,
     PopoverTrigger
 } from "@/components/ui/popover"
-import { useUser } from "@/hooks/use-user"
+import { useUser } from "@tbe/components"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 

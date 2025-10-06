@@ -78,7 +78,6 @@ export * from "./prepyatra"
 
 // Quiz domain
 export * from "./quiz"
-
 // ================================
 // LEGACY EXPORTS (for backward compatibility)
 // ================================

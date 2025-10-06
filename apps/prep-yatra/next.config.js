@@ -3,32 +3,41 @@ const nextConfig = {
     reactStrictMode: true,
     trailingSlash: true,
     images: {
-        unoptimized: true
+      unoptimized: true,
     },
+  
+    // 👇 ADD THIS: transpile TypeScript packages from your monorepo
+    transpilePackages: ["@tbe/components", "@tbe/utils"],
+  
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-        // Handle Canvas for client-side (if using any Canvas libraries)
-        if (!isServer) {
-            config.resolve.fallback = {
-                ...config.resolve.fallback,
-                canvas: false
-            }
-        }
-
-        return config
+      // Handle Canvas for client-side (if using any Canvas libraries)
+      if (!isServer) {
+        config.resolve.fallback = {
+          ...config.resolve.fallback,
+          canvas: false,
+        };
+      }
+  
+      return config;
     },
+  
     experimental: {
-        // Remove optimizeCss as it's causing issues with static export
+      // (You can add experimental options here if needed)
     },
+  
     compiler: {
-        // Remove console logs in production
-        removeConsole: process.env.NODE_ENV === "production"
+      // Remove console logs in production
+      removeConsole: process.env.NODE_ENV === "production",
     },
-    // Add some additional configurations to prevent issues
+  
     poweredByHeader: false,
     generateEtags: false,
-    // Ensure proper error handling
+  
     onDemandEntries: {
-        maxInactiveAge: 25 * 1000,
-        pagesBufferLength: 2
-    }
-}
+      maxInactiveAge: 25 * 1000,
+      pagesBufferLength: 2,
+    },
+  };
+  
+  module.exports = nextConfig;
+  

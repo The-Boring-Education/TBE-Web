@@ -16,6 +16,7 @@
     "@tbe/interface": "workspace:*",
     "@tbe/types": "workspace:*",
     "@tbe/utils": "workspace:*",
+    "@tbe/services": "workspace:*",
     "@tbe/config": "workspace:*",
     "axios": "^1.4.0",
     "html-to-image": "^1.11.11",

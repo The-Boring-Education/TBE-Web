@@ -18,6 +18,14 @@
     "export": "next export"
   },
   "dependencies": {
+    "@tbe/components": "workspace:*",
+    "@tbe/ui": "workspace:*",
+    "@tbe/hooks": "workspace:*",
+    "@tbe/types": "workspace:*",
+    "@tbe/utils": "workspace:*",
+    "@tbe/services": "workspace:*",
+    "@tbe/interface": "workspace:*",
+    "@tbe/constants": "workspace:*",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",

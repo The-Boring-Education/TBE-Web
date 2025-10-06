@@ -146,5 +146,20 @@ export { default as Section } from './layout/Section';
 export { default as SEO } from './layout/SEO';
 
 
-export { GamificationProvider, useGamificationContext } from './common/GamificationDemo/GamificationProvider';
+// Note: GamificationProvider/useGamificationContext are exported from prepyatra contexts
 export { default as useGamifiedAction } from './common/GamificationDemo/useGamifiedAction';
+
+export * from "./prepyatra";
+// Re-export selected UI primitives from prepyatra/ui with their original names
+// Note: We do not re-export prepyatra `Button` to avoid clashing with existing common Button export.
+export { buttonVariants } from './prepyatra/ui/button';
+export { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './prepyatra/ui/alert-dialog';
+export { Card, CardContent, CardDescription, CardHeader, CardTitle } from './prepyatra/ui/card';
+export { Badge } from './prepyatra/ui/badge';
+export { Input } from './prepyatra/ui/input';
+export { Label } from './prepyatra/ui/label';
+export { Textarea } from './prepyatra/ui/textarea';
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './prepyatra/ui/tabs';
+export { Sheet, SheetContent } from './prepyatra/ui/sheet';
+export { Progress } from './prepyatra/ui/progress';
+export { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from './prepyatra/ui/tooltip';
