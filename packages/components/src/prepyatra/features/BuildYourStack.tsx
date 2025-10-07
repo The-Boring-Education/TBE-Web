@@ -3,7 +3,9 @@ import React, {useState} from "react";
 
 import AddSkillsModal from "../modals/AddSkillsModal";
 import {Badge} from "../ui/badge";
-import {Button} from "../ui/button";
+import Button from "../../common/Buttons/Button";
+import Text from "../../common/Typography/Text";
+import FlexContainer from "../../containers/Page/common/FlexContainer";
 
 interface BuildYourStackProps {
     userId: string
@@ -32,38 +34,43 @@ const BuildYourStack: React.FC<BuildYourStackProps> = ({
     const showWarning = userSkills.length === 0;
 
     return (
-        <div className='glass-dark rounded-2xl p-6 mb-8 shadow-lg'>
-            <h3 className='text-xl font-bold text-white mb-4 flex items-center gap-2'>
-                <Plus className='w-5 h-5 text-primary' /> Build Your Stack
-            </h3>
+        <div className='glass rounded-1 p-5 mb-6 shadow border border-greyLight'>
+            <div className='flex items-center gap-2 mb-3 justify-start'>
+                <Plus className='w-4 h-4 text-primary' />
+                <Text level="h3" className='text-base font-semibold text-contentLight'>
+                    Build Your Stack
+                </Text>
+            </div>
             {showWarning && (
-                <div className='flex items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-lg px-4 py-2 mb-4'>
-                    <AlertTriangle className='w-5 h-5 text-yellow-400' />
-                    <span>
+                <FlexContainer className='items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-md px-3 py-1.5 mb-3'>
+                    <AlertTriangle className='w-4 h-4 text-yellow-400' />
+                    <Text level="span">
                         You haven't added any skills yet. Please add your skills to build your stack!
-                    </span>
-                </div>
+                    </Text>
+                </FlexContainer>
             )}
-            <div className='flex flex-wrap gap-2 mb-4'>
+            <div className='flex flex-wrap gap-2 mb-3 justify-start items-start'>
                 {userSkills.length === 0 && (
-                    <span className='text-gray-400 text-sm'>
+                    <Text level="span" className='text-greyDark text-xs'>
                         No skills added yet. Start building your stack!
-                    </span>
+                    </Text>
                 )}
                 {userSkills.map((skill) => (
                     <Badge
                         key={skill}
-                        className='flex items-center gap-2 bg-primary/20 text-primary font-semibold px-4 py-1.5 rounded-full border border-primary/40 shadow-none'>
-                        <Code className='w-4 h-4 text-primary' />
-                        <span>{skill}</span>
+                        className='flex items-center gap-1.5 bg-primary/20 text-primary font-medium px-3 py-1 rounded-full border border-primary/40 shadow-none text-xs'>
+                        <Code className='w-3.5 h-3.5 text-primary' />
+                        <Text level="span">{skill}</Text>
                     </Badge>
                 ))}
             </div>
             <Button
                 onClick={() => setModalOpen(true)}
-                className='bg-primary text-primary-foreground hover:bg-primary/90'>
-                <Plus className='w-4 h-4 mr-2' /> Add Skills
-            </Button>
+                variant="NEUTRAL"
+                text="Add Skills"
+                icon={<Plus className='w-4 h-4' />}
+                className='rounded-1 bg-primary text-white hover:bg-primary/90 text-sm px-3 py-1.5'
+            />
             <AddSkillsModal
                 isOpen={modalOpen}
                 onClose={() => {

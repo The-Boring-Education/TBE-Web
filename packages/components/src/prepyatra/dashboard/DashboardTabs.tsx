@@ -1,9 +1,11 @@
 import {Plus} from "lucide-react";
 import React, {Suspense} from "react";
 
-import {Button} from "../ui/button";
+import Button from "../../common/Buttons/Button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "../ui/tabs";
+import Text from "../../common/Typography/Text";
+import FlexContainer from "../../containers/Page/common/FlexContainer";
 import {PrepLog} from "@tbe/types";
 import {RecruiterContact} from "@tbe/types";
 
@@ -55,7 +57,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
     onContactDeleted
 }) => {
     return (
-        <Tabs defaultValue="prep-logs" className="space-y-6">
+        <Tabs defaultValue="challenges" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="challenges">Challenges</TabsTrigger>
                 <TabsTrigger value="prep-logs">Prep Logs</TabsTrigger>
@@ -65,19 +67,22 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 
             <TabsContent value="prep-logs" className="space-y-4">
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
+                    <CardHeader className="flex flex-row items-center justify-between p-4">
                         <div>
-                            <CardTitle>Preparation Logs</CardTitle>
-                            <CardDescription>
+                            <Text level="h3" className="text-lg font-semibold">Preparation Logs</Text>
+                            <Text level="p" className="text-sm text-muted-foreground">
                                 Track your learning progress and preparation journey
-                            </CardDescription>
+                            </Text>
                         </div>
-                        <Button onClick={onPrepLogModalOpen} size="sm">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Log
-                        </Button>
+                        <Button 
+                            onClick={onPrepLogModalOpen} 
+                            variant="PRIMARY"
+                            text="Add Log"
+                            icon={<Plus className="w-4 h-4 mr-2" />}
+                            className="rounded-1 text-sm px-3 py-1.5"
+                        />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4">
                         <Suspense fallback={<ComponentLoader />}>
                             <PrepLogsList 
                                 logs={prepLogs}
@@ -98,19 +103,22 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 
             <TabsContent value="recruiters" className="space-y-4">
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
+                    <CardHeader className="flex flex-row items-center justify-between p-4">
                         <div>
-                            <CardTitle>Recruiter Contacts</CardTitle>
-                            <CardDescription>
+                            <Text level="h3" className="text-lg font-semibold">Recruiter Contacts</Text>
+                            <Text level="p" className="text-sm text-muted-foreground">
                                 Manage your network of recruiting professionals
-                            </CardDescription>
+                            </Text>
                         </div>
-                        <Button onClick={onRecruiterModalOpen} size="sm">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Contact
-                        </Button>
+                        <Button 
+                            onClick={onRecruiterModalOpen} 
+                            variant="PRIMARY"
+                            text="Add Contact"
+                            icon={<Plus className="w-4 h-4 mr-2" />}
+                            className="rounded-1 text-sm px-3 py-1.5"
+                        />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4">
                         <Suspense fallback={<ComponentLoader />}>
                             <RecruiterContactsTable
                                 contacts={recruiterContacts}
@@ -124,19 +132,22 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 
             <TabsContent value="skills" className="space-y-4">
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
+                    <CardHeader className="flex flex-row items-center justify-between p-4">
                         <div>
-                            <CardTitle>Skills & Technologies</CardTitle>
-                            <CardDescription>
+                            <Text level="h3" className="text-lg font-semibold">Skills & Technologies</Text>
+                            <Text level="p" className="text-sm text-muted-foreground">
                                 Showcase your technical skills and expertise
-                            </CardDescription>
+                            </Text>
                         </div>
-                        <Button onClick={onSkillsModalOpen} size="sm">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Skills
-                        </Button>
+                        <Button 
+                            onClick={onSkillsModalOpen} 
+                            variant="PRIMARY"
+                            text="Add Skills"
+                            icon={<Plus className="w-4 h-4 mr-2" />}
+                            className="rounded-1 text-sm px-3 py-1.5"
+                        />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4">
                         <Suspense fallback={<ComponentLoader />}>
                             <UserSkillsShowcase 
                                 userSkills={profile?.userSkills || []}

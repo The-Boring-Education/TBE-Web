@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 
 import GamificationDisplay from "../gamification/GamificationDisplay";
 import NavbarDropdownLinks from "../layout/NavbarDropdownLinks";
-import {Button} from "../ui/button";
+import {Button} from "@tbe/components";
 import {NavbarProps} from "@tbe/interface";
 import { SubscriptionInterestPopover } from "../popovers";
 
@@ -12,31 +12,32 @@ const capitalize = (str: string) => {
 
 const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
     return (
-        <nav className='w-full bg-gray-900 border-b border-primary/20 px-4 py-3 flex items-center justify-between'>
-            <div className='flex flex-col gap-1'>
-                <span className='text-3xl font-bold text-primary'>
+        <nav className='fixed top-0 left-0 right-0 z-50 w-full bg-white border-b border-greyLight shadow-sm px-4 py-2.5 flex items-center justify-between'>
+            <div className='flex flex-col gap-0'>
+                <span className='text-2xl font-bold text-primary leading-tight'>
                     PrepYatra
                 </span>
-                <span className='text-xs text-white'>
+                <span className='text-[10px] text-greyDark -mt-0.5'>
                     By The Boring Education
                 </span>
-            </div>
-            <div className='flex items-center gap-4'>
-                <SubscriptionInterestPopover />
+                    </div>
+            <div className='flex items-center gap-3'>
+                                    <SubscriptionInterestPopover />
                 <NavbarDropdownLinks />
-                {userId && <GamificationDisplay userId={userId} />}
-                <span className='text-white font-medium hidden sm:inline'>
-                    Hello {capitalize(username)}
+                                    {userId && <GamificationDisplay userId={userId} />}
+                <span className='text-contentLight font-medium hidden sm:inline'>
                 </span>
-                <Button
-                    onClick={onSignOut}
-                    variant='outline'
-                    className='border-gray-300 text-white hover:bg-gray-100'>
-                    Sign Out
-                </Button>
+                                    <Button
+                                        onClick={onSignOut}
+                                        text='Sign Out'
+                                        variant='PRIMARY'
+                                        className='text-sm px-3 py-1.5'
+                                        isLoading={false}
+                                        animationType='BOUNCE'
+                                        />
             </div>
         </nav>
     );
 };
 
-export default Navbar;
+export default Navbar;  

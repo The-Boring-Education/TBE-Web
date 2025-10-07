@@ -1,6 +1,6 @@
 import {Calendar, Clock, Flame, TrendingUp, Plus} from "lucide-react";
 
-import {Button} from "@/components/ui/button";
+import {Button, Text, FlexContainer} from "@tbe/components";
 import {Card, CardContent} from "@/components/ui/card";
 import {useDailyPrepEncouragement} from "@/hooks/useDailyPrepEncouragement";
 
@@ -29,76 +29,69 @@ const DailyPrepEncouragement = ({
         <Card
             className={`glass-dark border-primary/20 hover:border-primary/40 transition-all duration-300 ${className}`}>
             <CardContent className='p-6'>
-                <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-4'>
+                <FlexContainer className='flex-col md:flex-row items-start md:items-center justify-between gap-4'>
                     {/* Main Content */}
                     <div className='flex-1'>
-                        <div className='flex items-center gap-3 mb-3'>
-                            <span className='text-2xl'>
+                        <FlexContainer className='items-center gap-3 mb-3'>
+                            <Text level='span' className='text-2xl'>
                                 {encouragementEmoji}
-                            </span>
-                            <h3 className='text-lg font-bold text-white'>
+                            </Text>
+                            <Text level='h3' className='text-lg font-bold text-white'>
                                 Daily Prep Check-in
-                            </h3>
-                        </div>
+                            </Text>
+                        </FlexContainer>
 
-                        <p className='text-white font-medium mb-2'>
+                        <Text level='p' className='text-white font-medium mb-2'>
                             {encouragementMessage}
-                        </p>
+                        </Text>
 
-                        <p className='text-gray text-sm mb-4'>
+                        <Text level='p' className='text-gray-300 text-sm mb-4'>
                             {motivationalTip}
-                        </p>
+                        </Text>
 
                         {/* Stats Row */}
-                        <div className='flex flex-wrap gap-4 text-sm text-gray'>
+                        <FlexContainer className='flex-wrap gap-4 text-sm text-gray-300'>
                             {streak > 0 && (
-                                <div className='flex items-center gap-1'>
+                                <FlexContainer className='items-center gap-1'>
                                     <Flame className='h-4 w-4 text-orange-500' />
-                                    <span>{streak} day streak</span>
-                                </div>
+                                    <Text level='span'>{streak} day streak</Text>
+                                </FlexContainer>
                             )}
 
-                            <div className='flex items-center gap-1'>
+                            <FlexContainer className='items-center gap-1'>
                                 <Clock className='h-4 w-4 text-blue-500' />
-                                <span>{totalTimeSpent}h total</span>
-                            </div>
+                                <Text level='span'>{totalTimeSpent}h total</Text>
+                            </FlexContainer>
 
-                            <div className='flex items-center gap-1'>
+                            <FlexContainer className='items-center gap-1'>
                                 <Calendar className='h-4 w-4 text-green-500' />
-                                <span>
+                                <Text level='span'>
                                     {hasLoggedToday
                                         ? "Logged today"
                                         : "No log today"}
-                                </span>
-                            </div>
-                        </div>
+                                </Text>
+                            </FlexContainer>
+                        </FlexContainer>
                     </div>
 
                     {/* Action Button */}
-                    <div className='flex flex-col items-center gap-2'>
+                    <FlexContainer direction='col' className='items-center gap-2'>
                         <Button
+                            text={buttonText}
                             onClick={onAddPrepLog}
-                            className={`
-                                min-w-[140px] font-medium transition-all duration-300
-                                ${
-                                    hasLoggedToday
-                                        ? "bg-green-600 hover:bg-green-700 text-white"
-                                        : "bg-primary hover:bg-primary/90 text-primary-foreground"
-                                }
-                            `}
-                            size='sm'>
-                            <Plus className='h-4 w-4 mr-2' />
-                            {buttonText}
-                        </Button>
+                            variant={hasLoggedToday ? 'SUCCESS' : 'PRIMARY'}
+                            className={`min-w-[140px] font-medium transition-all duration-300`}
+                            icon={<Plus className='h-4 w-4 mr-2' />}
+                        />
 
                         {!hasLoggedToday && streak > 0 && (
-                            <div className='flex items-center text-xs text-orange-400'>
+                            <FlexContainer className='items-center text-xs text-orange-400'>
                                 <TrendingUp className='h-3 w-3 mr-1' />
-                                Streak at risk!
-                            </div>
+                                <Text level='span'>Streak at risk!</Text>
+                            </FlexContainer>
                         )}
-                    </div>
-                </div>
+                    </FlexContainer>
+                </FlexContainer>
             </CardContent>
         </Card>
     );

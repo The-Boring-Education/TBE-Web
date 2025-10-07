@@ -1,5 +1,5 @@
-import {Button} from "../ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "../ui/card";
+import Button from "../../common/Buttons/Button";
 
 const ResourceSharingShowcase = () => {
     const resources = [
@@ -58,16 +58,16 @@ const ResourceSharingShowcase = () => {
     ];
 
     return (
-        <section className='py-20 px-4'>
+        <section className='py-20 px-4 bg-white'>
             <div className='container mx-auto'>
                 <div className='text-center mb-16 animate-fade-in'>
-                    <h2 className='text-4xl md:text-5xl font-bold text-white mb-6'>
+                    <h2 className='text-4xl md:text-5xl font-bold text-contentLight mb-6'>
                         🔄{" "}
                         <span className='text-primary'>
                             Resource Sharing Feed
                         </span>
                     </h2>
-                    <p className='text-xl text-gray max-w-3xl mx-auto'>
+                    <p className='text-xl text-greyDark max-w-3xl mx-auto'>
                         Discover and share valuable resources with the
                         community. Learn from others' experiences and contribute
                         your own insights.
@@ -76,24 +76,26 @@ const ResourceSharingShowcase = () => {
 
                 <div className='max-w-4xl mx-auto'>
                     <div className='flex justify-between items-center mb-8 animate-slide-in-left'>
-                        <div className='text-white'>
+                        <div className='text-contentLight'>
                             <h3 className='text-2xl font-semibold'>
                                 🔥 Trending Resources
                             </h3>
-                            <p className='text-gray'>
+                            <p className='text-greyDark'>
                                 Community-curated content to boost your prep
                             </p>
                         </div>
-                        <Button className='bg-primary text-primary-foreground hover:bg-primary/90'>
-                            + Share Resource
-                        </Button>
+                        <Button 
+                            variant='PRIMARY'
+                            text='+ Share Resource'
+                            className='bg-primary text-white hover:bg-primary/90 text-sm px-4 py-2'
+                        />
                     </div>
 
                     <div className='space-y-6'>
                         {resources.map((resource, index) => (
                             <Card
                                 key={resource.id}
-                                className={"glass-dark border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-[1.02] animate-slide-in-right"}
+                                className={"glass border-greyLight hover:border-primary/40 transition-all duration-300 hover:scale-[1.02] animate-slide-in-right"}
                                 style={{animationDelay: `${index * 0.1}s`}}>
                                 <CardHeader className='pb-3'>
                                     <div className='flex items-start gap-4'>
@@ -102,23 +104,23 @@ const ResourceSharingShowcase = () => {
                                         </div>
                                         <div className='flex-1'>
                                             <div className='flex items-center gap-2 mb-2'>
-                                                <span className='text-white font-semibold'>
+                                                <span className='text-contentLight font-semibold'>
                                                     {resource.author}
                                                 </span>
-                                                <span className='text-gray-400 text-sm'>
+                                                <span className='text-greyDark text-sm'>
                                                     •
                                                 </span>
-                                                <span className='text-gray-400 text-sm'>
+                                                <span className='text-greyDark text-sm'>
                                                     {resource.timeAgo}
                                                 </span>
                                                 <span className='px-2 py-1 bg-primary/20 text-primary rounded text-xs font-medium'>
                                                     {resource.type}
                                                 </span>
                                             </div>
-                                            <CardTitle className='text-white text-xl mb-2'>
+                                            <CardTitle className='text-contentLight text-xl mb-2'>
                                                 {resource.title}
                                             </CardTitle>
-                                            <p className='text-gray text-sm'>
+                                            <p className='text-greyDark text-sm'>
                                                 {resource.description}
                                             </p>
                                         </div>
@@ -137,7 +139,7 @@ const ResourceSharingShowcase = () => {
 
                                     <div className='flex items-center justify-between'>
                                         <div className='flex items-center gap-6'>
-                                            <button className='flex items-center gap-2 text-gray hover:text-primary transition-colors'>
+                                            <button className='flex items-center gap-2 text-greyDark hover:text-primary transition-colors'>
                                                 <svg
                                                     className='w-5 h-5'
                                                     fill='none'
@@ -155,7 +157,7 @@ const ResourceSharingShowcase = () => {
                                                 </span>
                                             </button>
 
-                                            <button className='flex items-center gap-2 text-gray hover:text-primary transition-colors'>
+                                            <button className='flex items-center gap-2 text-greyDark hover:text-primary transition-colors'>
                                                 <svg
                                                     className='w-5 h-5'
                                                     fill='none'
@@ -171,7 +173,7 @@ const ResourceSharingShowcase = () => {
                                                 <span>{resource.comments}</span>
                                             </button>
 
-                                            <button className='flex items-center gap-2 text-gray hover:text-primary transition-colors'>
+                                            <button className='flex items-center gap-2 text-greyDark hover:text-primary transition-colors'>
                                                 <svg
                                                     className='w-5 h-5'
                                                     fill='none'
@@ -189,11 +191,10 @@ const ResourceSharingShowcase = () => {
                                         </div>
 
                                         <Button
-                                            variant='outline'
-                                            size='sm'
-                                            className='border-primary/30 hover:bg-primary/10 text-white'>
-                                            📖 View Resource
-                                        </Button>
+                                            variant='NEUTRAL'
+                                            text='📖 View Resource'
+                                            className='text-sm px-3 py-1.5'
+                                        />
                                     </div>
                                 </CardContent>
                             </Card>
@@ -202,10 +203,10 @@ const ResourceSharingShowcase = () => {
 
                     <div className='text-center mt-8'>
                         <Button
-                            variant='outline'
-                            className='border-primary/30 hover:bg-primary/10 text-white'>
-                            Load More Resources 🔽
-                        </Button>
+                            variant='NEUTRAL'
+                            text='Load More Resources 🔽'
+                            className='text-sm px-4 py-2'
+                        />
                     </div>
                 </div>
             </div>

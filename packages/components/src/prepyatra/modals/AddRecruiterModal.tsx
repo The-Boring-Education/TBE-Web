@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 
-import { Button } from "../ui/button"
 import {
     Dialog,
     DialogContent,
@@ -15,6 +14,9 @@ import { Textarea } from "../ui/textarea"
 import { useToast } from "@tbe/hooks"
 import { useUser } from "../contexts/useAuth"
 import { RecruiterContact } from "@tbe/types"
+import Button from "../../common/Buttons/Button"
+import Text from "../../common/Typography/Text"
+import FlexContainer from "../../containers/Page/common/FlexContainer"
 
 interface AddRecruiterModalProps {
     isOpen: boolean
@@ -150,24 +152,25 @@ const AddRecruiterModal = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
+            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 <DialogHeader>
-                    <DialogTitle className='text-white'>
+                    <Text level="h3" className='text-contentLight text-lg font-semibold'>
                         {editContact
                             ? "Edit Recruiter Contact"
                             : "Add New Recruiter Contact"}
-                    </DialogTitle>
-                    <DialogDescription className='text-gray'>
+                    </Text>
+                    <Text level="p" className='text-greyDark text-sm'>
                         {editContact
                             ? "Update recruiter information and progress."
                             : "Add a new recruiter contact to your prep journey."}
-                    </DialogDescription>
+                    </Text>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className='space-y-4'>
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                         <InputField
                             label='Name'
                             value={formData.recruiterName}
+                            className='bg-white border-greyLight text-contentLight'
                             field='recruiterName'
                             onChange={handleInputChange}
                             required
@@ -176,6 +179,7 @@ const AddRecruiterModal = ({
                             label='Email'
                             type='email'
                             value={formData.email}
+                            className='bg-white border-greyLight text-contentLight'
                             field='email'
                             placeholder='Optional'
                             onChange={handleInputChange}
@@ -184,6 +188,7 @@ const AddRecruiterModal = ({
                             label='Phone'
                             placeholder='Optional'
                             value={formData.phone}
+                            className='bg-white border-greyLight text-contentLight'
                             field='phone'
                             onChange={handleInputChange}
                         />
@@ -191,6 +196,7 @@ const AddRecruiterModal = ({
                             label='Company'
                             placeholder='Optional'
                             value={formData.company}
+                            className='bg-white border-greyLight text-contentLight'
                             field='company'
                             onChange={handleInputChange}
                         />
@@ -198,14 +204,14 @@ const AddRecruiterModal = ({
                             label='Applied Position'
                             placeholder='Optional'
                             value={formData.appliedPosition}
+                            className='bg-white border-greyLight text-contentLight'
                             field='appliedPosition'
                             onChange={handleInputChange}
                         />
                         <div className='flex gap-2 flex-col'>
                             <Label
                                 htmlFor='applicationStatus'
-                                className='text-white'>
-                                Status
+                                className='text-contentLight'>                                Status
                             </Label>
                             <select
                                 value={formData.applicationStatus}
@@ -215,7 +221,7 @@ const AddRecruiterModal = ({
                                         e.target.value
                                     )
                                 }
-                                className='bg-gray-800 border border-primary/20 text-white rounded-md px-2 py-2'>
+                                className='bg-white border border-greyLight text-contentLight rounded-md px-2 py-2'>
                                 <option value='Screening in Process'>
                                     Screening in Process
                                 </option>
@@ -235,6 +241,7 @@ const AddRecruiterModal = ({
                             label='Follow-up Date'
                             type='date'
                             value={formData.follow_up_date}
+                            className='bg-white border-greyLight text-contentLight'
                             field='follow_up_date'
                             onChange={handleInputChange}
                         />
@@ -242,6 +249,7 @@ const AddRecruiterModal = ({
                             label='Last Interview Date'
                             type='date'
                             value={formData.last_interview_date}
+                            className='bg-white border-greyLight text-contentLight'
                             field='last_interview_date'
                             onChange={handleInputChange}
                         />
@@ -249,12 +257,13 @@ const AddRecruiterModal = ({
                             label='Link'
                             value={formData.link}
                             placeholder='Optional'
+                            className='bg-white border-greyLight text-contentLight'
                             field='link'
                             onChange={handleInputChange}
                         />
                     </div>
                     <div>
-                        <Label htmlFor='comments' className='text-white'>
+                        <Label htmlFor='comments' className='text-contentLight'>
                             Comments
                         </Label>
                         <Textarea
@@ -264,30 +273,29 @@ const AddRecruiterModal = ({
                             onChange={(e:any) =>
                                 handleInputChange("comments", e.target.value)
                             }
-                            className='bg-gray-800 border-gray-600 text-white resize-none'
+                            className='bg-white border-greyLight text-contentLight border resize-none'
                             rows={3}
                         />
                     </div>
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            type='button'
-                            variant='outline'
+                            variant='OUTLINE'
+                            text="Cancel"
                             onClick={onClose}
-                            className='border-gray-300 text-white hover:bg-gray-100'>
-                            Cancel
-                        </Button>
+                            className='border-greyLight text-contentLight hover:bg-greyLight'
+                        />
                         <Button
-                            type='submit'
-                            disabled={loading}
-                            className='bg-primary text-primary-foreground'>
-                            {loading
+                            variant='PRIMARY'
+                            text={loading
                                 ? editContact
                                     ? "Updating..."
                                     : "Creating..."
                                 : editContact
                                   ? "Update Contact"
                                   : "Create Contact"}
-                        </Button>
+                            disabled={loading}
+                            className='bg-primary text-white'
+                        />
                     </DialogFooter>
                 </form>
             </DialogContent>

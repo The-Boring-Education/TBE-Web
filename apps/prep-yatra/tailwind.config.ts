@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss"
+const { fontFamily } = require('tailwindcss/defaultTheme');
 
 export default {
     darkMode: ["class"],
@@ -6,18 +7,39 @@ export default {
         "./src/pages/**/*.{ts,tsx}",
         "./src/components/**/*.{ts,tsx}",
         "./src/app/**/*.{ts,tsx}",
-        "./src/**/*.{ts,tsx}"
+        "./src/**/*.{ts,tsx}",
+        "../../packages/components/src/**/*.{js,ts,jsx,tsx}"
     ],
     prefix: "",
     theme: {
         container: {
             center: true,
-            padding: "2rem",
+            padding: "1rem",
             screens: {
-                "2xl": "1400px"
+                sm: '480px',
+                md: '768px',
+                lg: '976px',
+                xl: '1280px',
+                "2xl": "1280px"
             }
         },
         extend: {
+            fontFamily: {
+                primary: ['Inter', ...fontFamily.sans],
+            },
+            fontSize: {
+                'header-1': '4rem',
+                'header-2': '2.75rem',
+                'header-3': '2rem',
+                'header-4': '1.5rem',
+                'header-5': '1.25rem',
+                subtitle: '1.25rem',
+                paragraph: '1rem',
+                'strong-text': '1rem',
+                'pre-title': '0.875rem',
+                'button-text': '0.875rem',
+                label: '0.875rem',
+            },
             colors: {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
@@ -25,17 +47,25 @@ export default {
                 background: "hsl(var(--background))",
                 foreground: "hsl(var(--foreground))",
                 primary: {
-                    DEFAULT: "#FFCF25",
-                    foreground: "#111827"
-                },
-                secondary: {
-                    DEFAULT: "#111827",
+                    DEFAULT: "#FF5757",
                     foreground: "#FFFFFF"
                 },
-                accent: {
-                    DEFAULT: "#FFCF25",
-                    foreground: "#111827"
+                secondary: {
+                    DEFAULT: "#E0B034",
+                    foreground: "#FFFFFF"
                 },
+                dark: '#040505',
+                success: '#31ad6b',
+                contentLight: '#19191B',
+                contentDark: '#FDFDFD',
+                grey: '#B0B0B0',
+                greyLight: '#e3e3e3',
+                greyDark: '#848484',
+                accent: {
+                    DEFAULT: "#ECF1F4",
+                    foreground: "#19191B"
+                },
+                lightBG: '#F8F8F8',
                 destructive: {
                     DEFAULT: "hsl(var(--destructive))",
                     foreground: "hsl(var(--destructive-foreground))"
@@ -53,10 +83,41 @@ export default {
                     foreground: "hsl(var(--card-foreground))"
                 }
             },
+            spacing: {
+                1: '8px',
+                2: '16px',
+                3: '24px',
+                4: '32px',
+                5: '40px',
+                6: '48px',
+                7: '56px',
+                8: '64px',
+            },
+            padding: {
+                1: '10px',
+                2: '16px',
+                4: '32px',
+                6: '48px',
+                8: '64px',
+                10: '80px',
+                12: '96px',
+                14: '112px',
+                16: '128px',
+            },
             borderRadius: {
                 lg: "var(--radius)",
                 md: "calc(var(--radius) - 2px)",
-                sm: "calc(var(--radius) - 4px)"
+                sm: "calc(var(--radius) - 4px)",
+                1: '5px',
+                2: '10px',
+            },
+            borderColor: {
+                borderColor1: '#F6FFBE',
+                borderColor2: '#2555FF',
+                borderColor3: '#FFE259',
+                borderColor4: '#FF76E1',
+                borderColor5: '#923CFF',
+                borderColor6: '#F0F3FF',
             },
             keyframes: {
                 "accordion-down": {

@@ -75,7 +75,7 @@ export interface LinkButtonProps extends LinkProps {
 }
 
 export interface ButtonProps {
-  variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY';
+    variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY' | 'NEUTRAL';
   className?: string;
   text: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -576,7 +576,7 @@ export interface IconCardProps {
   description: string;
   className?: string;
   bgColor?: string;
-  key: number;
+  index?: number;
 }
 
 export interface HeaderLabelProps {

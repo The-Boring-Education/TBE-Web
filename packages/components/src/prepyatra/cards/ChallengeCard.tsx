@@ -24,7 +24,7 @@ import {
     AlertDialogTrigger
 } from "../ui/alert-dialog"
 import { Badge } from "../ui/badge"
-import { Button } from "../ui/button"
+import { Button } from "@tbe/components"
 import {
     Card,
     CardContent,
@@ -59,9 +59,9 @@ const ChallengeCard = ({
 
     const getStatusIcon = (isActive: boolean) => {
         return isActive ? (
-            <Play className='w-3 h-3' />
+            <Play className='w-2 h-2' />
         ) : (
-            <CheckCircle2 className='w-3 h-3' />
+            <CheckCircle2 className='w-2 h-2' />
         )
     }
 
@@ -127,18 +127,18 @@ const ChallengeCard = ({
     const isCompleted = challenge.currentDay >= challenge.totalDays
 
     return (
-        <Card className='bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-all duration-300'>
-            <CardHeader className='pb-3'>
+        <Card className='glass border-greyLight transition-all duration-200'>
+            <CardHeader className='pb-2'>
                 <div className='flex items-start justify-between'>
                     <div className='flex-1'>
-                        <div className='flex items-center gap-2 mb-2'>
-                            <CardTitle className='text-lg text-white line-clamp-1'>
+                        <div className='flex items-center gap-2 mb-1.5'>
+                            <CardTitle className='text-base text-contentLight line-clamp-1'>
                                 {challenge.name}
                             </CardTitle>
                             {challenge.category && (
                                 <Badge
                                     variant='secondary'
-                                    className='bg-primary/20 text-primary border-primary/30'>
+                                    className='bg-primary/10 text-primary border-primary/20'>
                                     {challenge.category}
                                 </Badge>
                             )}
@@ -162,112 +162,101 @@ const ChallengeCard = ({
                 </div>
             </CardHeader>
 
-            <CardContent className='space-y-4'>
+            <CardContent className='space-y-3'>
                 {challenge.description && (
-                    <CardDescription className='text-gray-300 line-clamp-2'>
+                    <CardDescription className='text-greyDark line-clamp-2'>
                         {challenge.description}
                     </CardDescription>
                 )}
 
                 {/* Progress Section */}
-                <div className='space-y-3'>
+                <div className='space-y-2.5'>
                     <div className='flex items-center justify-between text-sm'>
-                        <span className='text-gray-300'>Progress</span>
-                        <span className='text-white font-medium'>
+                        <span className='text-greyDark'>Progress</span>
+                        <span className='text-contentLight font-medium'>
                             {progress}%
                         </span>
                     </div>
-                    <Progress value={progress} className='h-2 bg-gray-700' />
+                    <Progress value={progress} className='h-2' />
 
-                    <div className='grid grid-cols-3 gap-4 text-sm'>
+                    <div className='grid grid-cols-3 gap-3 text-sm'>
                         <div className='text-center'>
                             <div className='text-primary font-semibold'>
                                 {challenge.currentDay + 1}
                             </div>
-                            <div className='text-gray-400'>Current Day</div>
+                            <div className='text-greyDark'>Current Day</div>
                         </div>
                         <div className='text-center'>
-                            <div className='text-white font-semibold'>
+                            <div className='text-contentLight font-semibold'>
                                 {daysRemaining}
                             </div>
-                            <div className='text-gray-400'>Days Left</div>
+                            <div className='text-greyDark'>Days Left</div>
                         </div>
                         <div className='text-center'>
-                            <div className='text-white font-semibold'>
+                            <div className='text-contentLight font-semibold'>
                                 {challenge.totalDays}
                             </div>
-                            <div className='text-gray-400'>Total Days</div>
+                            <div className='text-greyDark'>Total Days</div>
                         </div>
                     </div>
                 </div>
 
                 {/* Date Information */}
-                <div className='flex items-center gap-4 text-xs text-gray-400'>
+                <div className='flex items-center gap-4 text-xs text-greyDark'>
                     <div className='flex items-center gap-1'>
-                        <Calendar className='w-3 h-3' />
+                        <Calendar className='w-2 h-2' />
                         Started: {formatDate(challenge.startDate)}
                     </div>
                     {challenge.endDate && (
                         <div className='flex items-center gap-1'>
-                            <Clock className='w-3 h-3' />
+                            <Clock className='w-2 h-2' />
                             Ended: {formatDate(challenge.endDate)}
                         </div>
                     )}
                 </div>
 
                 {/* Action Buttons */}
-                <div className='flex flex-wrap gap-2 pt-2'>
+                <div className='flex flex-wrap gap-2 pt-1.5'>
                     {challenge.isActive && !isCompleted && (
                         <Button
                             onClick={() => onLogProgress(challenge)}
-                            className='flex-1 bg-primary hover:bg-primary/90'
-                            size='sm'>
-                            <TrendingUp className='w-4 h-4 mr-2' />
-                            Log Progress
-                        </Button>
+                            variant='PRIMARY'
+                            text='Log Progress'
+                            icon={<TrendingUp className='w-2 h-2' />}
+                            className='flex-1 text-sm px-3 py-1'
+                        />
                     )}
 
                     {!isCompleted && (
                         <Button
                             onClick={handlePauseResume}
-                            variant='outline'
-                            size='sm'
-                            disabled={loading}
-                            className='border-gray-600 text-white hover:bg-gray-700'>
-                            {challenge.isActive ? (
-                                <>
-                                    <Pause className='w-4 h-4 mr-2' />
-                                    Pause
-                                </>
-                            ) : (
-                                <>
-                                    <Play className='w-4 h-4 mr-2' />
-                                    Resume
-                                </>
-                            )}
-                        </Button>
+                            variant='OUTLINE'
+                            text={challenge.isActive ? 'Pause' : 'Resume'}
+                            icon={challenge.isActive ? <Pause className='w-2 h-2' /> : <Play className='w-2 h-2' />}
+                            active={!loading}
+                            className='text-sm px-3 py-1 border-gray-300 text-contentLight hover:border-black'
+                        />
                     )}
 
                     {onViewLogs && (
                         <Button
                             onClick={() => onViewLogs(challenge)}
-                            variant='outline'
-                            size='sm'
-                            className='border-blue-500/50 text-blue-400 hover:bg-blue-500/10'>
-                            <History className='w-4 h-4 mr-2' />
-                            View Logs
-                        </Button>
+                            variant='OUTLINE'
+                            text='View Logs'
+                            icon={<History className='w-2 h-2' />}
+                            className='text-sm px-3 py-1 border-blue-500 text-blue-600 hover:border-blue-600'
+                        />
                     )}
 
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button
-                                variant='outline'
-                                size='sm'
-                                disabled={loading}
-                                className='border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500'>
-                                <Trash2 className='w-4 h-4' />
-                            </Button>
+                                variant='OUTLINE'
+                                text=''
+                                icon={<Trash2 className='w-2 h-2' />}
+                                active={!loading}
+                                className='text-sm px-2 py-1 border-red-500 text-red-500 hover:border-red-600'
+                            />
                         </AlertDialogTrigger>
                         <AlertDialogContent className='bg-gray-800 border-primary/20'>
                             <AlertDialogHeader>

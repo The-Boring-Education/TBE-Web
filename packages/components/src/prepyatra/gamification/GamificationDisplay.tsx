@@ -46,8 +46,8 @@ const GamificationDisplay = ({userId}: { userId: string }) => {
             </button>
 
             {open && (
-                <div className='absolute z-50 mt-2 left-1/2 -translate-x-1/2'>
-                    <div className='bg-white rounded-2xl shadow-lg border px-4 py-4 w-[260px]'>
+            <div className='absolute z-50 mt-2 left-1/2 -translate-x-1/2'>
+                    <div className='bg-white rounded-xl shadow-lg border px-5 py-4 w-[340px]'>
                         <div className='flex items-center gap-4 justify-between'>
                             {/* Progress Circle */}
                             <div className='w-[64px] h-[64px] flex items-center justify-center'>

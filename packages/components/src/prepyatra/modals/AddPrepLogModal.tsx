@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 
-import {Button} from "../ui/button";
 import {
     Dialog,
     DialogContent,
@@ -14,6 +13,9 @@ import {Label} from "../ui/label";
 import {Textarea} from "../ui/textarea";
 import {useToast} from "../ui/use-toast";
 import {prepLogsService} from "@tbe/services";
+import Button from "../../common/Buttons/Button";
+import Text from "../../common/Typography/Text";
+import FlexContainer from "../../containers/Page/common/FlexContainer";
 
 interface AddPrepLogModalProps {
     isOpen: boolean
@@ -117,16 +119,16 @@ const AddPrepLogModal = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
+            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 <DialogHeader>
-                    <DialogTitle className='text-white'>
+                    <Text level="h3" className='text-contentLight text-lg font-semibold'>
                         {editLog ? "✏️ Edit Prep Log" : "📝 Add New Prep Log"}
-                    </DialogTitle>
-                    <DialogDescription className='text-gray'>
+                    </Text>
+                    <Text level="p" className='text-greyDark text-sm'>
                         {editLog
                             ? "Update your existing preparation log entry."
                             : "Log your daily preparation efforts."}
-                    </DialogDescription>
+                    </Text>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className='space-y-4'>
@@ -134,15 +136,16 @@ const AddPrepLogModal = ({
                         label='Title'
                         field='title'
                         value={formData.title}
+                        className='bg-white border-greyLight text-contentLight' 
                         onChange={handleInputChange}
                         placeholder='E.g. Solved Leetcode Mediums'
                         required
                     />
 
-                    <div className='flex gap-2 flex-col'>
-                        <Label htmlFor='description' className='text-white'>
+                    <div className='flex flex-col gap-2'>
+                        <Text level="label" className='text-contentLight'>
                             Description
-                        </Label>
+                        </Text>
                         <Textarea
                             id='description'
                             value={formData.description}
@@ -150,7 +153,7 @@ const AddPrepLogModal = ({
                                 handleInputChange("description", e.target.value)
                             }
                             placeholder='Briefly describe your preparation work...'
-                            className='bg-gray-800 border-gray-600 text-white resize-none'
+                            className='bg-white border-greyLight text-contentLight resize-none'
                             rows={3}
                         />
                     </div>
@@ -159,6 +162,7 @@ const AddPrepLogModal = ({
                         label='Time Spent (in hours)'
                         field='timeSpent'
                         value={formData.timeSpent}
+                        className='bg-white border-greyLight text-contentLight'
                         type='number'
                         onChange={handleInputChange}
                         placeholder='E.g. 1.5'
@@ -167,24 +171,23 @@ const AddPrepLogModal = ({
 
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            type='button'
-                            variant='outline'
+                            variant='OUTLINE'
+                            text="Cancel"
                             onClick={onClose}
-                            className='border-gray-300 text-white hover:bg-gray-100'>
-                            Cancel
-                        </Button>
+                            className='rounded-md text-contentLight border-greyLight hover:bg-greyLight'
+                        />
                         <Button
-                            type='submit'
-                            disabled={loading}
-                            className='bg-primary text-primary-foreground'>
-                            {loading
+                            variant='PRIMARY'
+                            text={loading
                                 ? editLog
                                     ? "Updating..."
                                     : "Creating..."
                                 : editLog
                                 ? "Update Log"
                                 : "Add Log"}
-                        </Button>
+                            disabled={loading}
+                            className='rounded-md text-white bg-primary hover:bg-primary/90'
+                        />
                     </DialogFooter>
                 </form>
             </DialogContent>

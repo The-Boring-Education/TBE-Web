@@ -38,6 +38,9 @@ importers:
       react-day-picker:
         specifier: ^8.10.1
         version: 8.10.1(date-fns@4.1.0)(react@18.3.1)
+      react-query:
+        specifier: 3.39.3
+        version: 3.39.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -528,6 +531,9 @@ importers:
       embla-carousel-react:
         specifier: ^8.3.0
         version: 8.6.0(react@18.3.1)
+      framer-motion:
+        specifier: ^12.4.2
+        version: 12.23.22(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       input-otp:
         specifier: ^1.2.4
         version: 1.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -555,6 +561,9 @@ importers:
       react-hook-form:
         specifier: ^7.53.0
         version: 7.63.0(react@18.3.1)
+      react-query:
+        specifier: ^3.39.3
+        version: 3.39.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-resizable-panels:
         specifier: ^2.1.3
         version: 2.1.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1003,9 +1012,6 @@ importers:
 
   packages/constants:
     dependencies:
-      '@tbe/interface':
-        specifier: workspace:*
-        version: link:../interface
       '@tbe/types':
         specifier: workspace:*
         version: link:../types
@@ -1202,9 +1208,6 @@ importers:
       '@tbe/constants':
         specifier: workspace:*
         version: link:../constants
-      '@tbe/hooks':
-        specifier: workspace:*
-        version: link:../hooks
       '@tbe/interface':
         specifier: workspace:*
         version: link:../interface

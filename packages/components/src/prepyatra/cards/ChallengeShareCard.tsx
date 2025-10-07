@@ -12,7 +12,6 @@ import React from "react"
 import { toast } from "sonner"
 
 import { Badge } from "../ui/badge"
-import { Button } from "../ui/button"
 import {
     Card,
     CardContent,
@@ -20,6 +19,7 @@ import {
     CardHeader,
     CardTitle
 } from "../ui/card"
+import Button from "../../common/Buttons/Button"
 import { Challenge } from "@tbe/types"
 import {
     generateSocialMessage,
@@ -173,13 +173,13 @@ const ChallengeShareCard = ({
 
     return (
         <Card
-            className={`bg-gradient-to-br from-primary/10 to-purple-600/10 border-primary/20 ${className}`}>
+            className={`glass border-greyLight ${className}`}>
             <CardHeader>
-                <CardTitle className='flex items-center gap-2 text-white'>
+                <CardTitle className='flex items-center gap-2 text-contentLight'>
                     {getVariantIcon()}
                     {getVariantTitle()}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className='text-greyDark'>
                     Share your learning journey and inspire others to start
                     their own challenges
                 </CardDescription>
@@ -188,10 +188,10 @@ const ChallengeShareCard = ({
                 {/* Challenge Info */}
                 <div className='flex items-center justify-between'>
                     <div>
-                        <h3 className='font-semibold text-white'>
+                        <h3 className='font-semibold text-contentLight'>
                             {challenge.name}
                         </h3>
-                        <p className='text-sm text-gray-400'>
+                        <p className='text-sm text-greyDark'>
                             Day {challenge.currentDay + 1} of{" "}
                             {challenge.totalDays} • {progressPercentage}%
                             complete
@@ -207,65 +207,60 @@ const ChallengeShareCard = ({
                 {/* Quick Share Options */}
                 <div className='grid grid-cols-2 gap-2'>
                     <Button
-                        variant='outline'
-                        size='sm'
+                        variant='NEUTRAL'
+                        text='Copy Message'
                         onClick={() =>
                             copyToClipboard(getShareMessage("default"))
                         }
-                        className='border-gray-600 text-white hover:bg-gray-700'>
-                        <Copy className='w-4 h-4 mr-2' />
-                        Copy Message
-                    </Button>
+                        icon={<Copy className='w-4 h-4' />}
+                        className='text-sm px-3 py-1.5'
+                    />
                     <Button
-                        variant='outline'
-                        size='sm'
+                        variant='NEUTRAL'
+                        text='Motivational'
                         onClick={() =>
                             copyToClipboard(getShareMessage("motivational"))
                         }
-                        className='border-gray-600 text-white hover:bg-gray-700'>
-                        <Share2 className='w-4 h-4 mr-2' />
-                        Motivational
-                    </Button>
+                        icon={<Share2 className='w-4 h-4' />}
+                        className='text-sm px-3 py-1.5'
+                    />
                 </div>
 
                 {/* Social Platform Buttons */}
                 <div className='flex gap-2'>
                     <Button
-                        variant='outline'
-                        size='sm'
+                        variant='OUTLINE'
+                        text='Twitter'
                         onClick={() =>
                             shareToSocial("twitter", "twitter-short")
                         }
-                        className='flex-1 border-blue-500/50 text-blue-400 hover:bg-blue-500/10'>
-                        <Twitter className='w-4 h-4 mr-1' />
-                        Twitter
-                    </Button>
+                        icon={<Twitter className='w-4 h-4' />}
+                        className='flex-1 text-sm px-3 py-1.5 border-blue-500 text-blue-600 hover:border-blue-600'
+                    />
                     <Button
-                        variant='outline'
-                        size='sm'
+                        variant='OUTLINE'
+                        text='LinkedIn'
                         onClick={() =>
                             shareToSocial("linkedin", "linkedin-professional")
                         }
-                        className='flex-1 border-blue-600/50 text-blue-500 hover:bg-blue-600/10'>
-                        <Linkedin className='w-4 h-4 mr-1' />
-                        LinkedIn
-                    </Button>
+                        icon={<Linkedin className='w-4 h-4' />}
+                        className='flex-1 text-sm px-3 py-1.5 border-blue-600 text-blue-700 hover:border-blue-700'
+                    />
                     <Button
-                        variant='outline'
-                        size='sm'
+                        variant='OUTLINE'
+                        text='Facebook'
                         onClick={() =>
                             shareToSocial("facebook", "storytelling")
                         }
-                        className='flex-1 border-blue-700/50 text-blue-600 hover:bg-blue-700/10'>
-                        <Facebook className='w-4 h-4 mr-1' />
-                        Facebook
-                    </Button>
+                        icon={<Facebook className='w-4 h-4' />}
+                        className='flex-1 text-sm px-3 py-1.5 border-blue-700 text-blue-800 hover:border-blue-800'
+                    />
                 </div>
 
                 {/* Preview Message */}
-                <div className='bg-gray-900/50 p-3 rounded-lg border border-gray-600'>
-                    <p className='text-xs text-gray-400 mb-2'>Preview:</p>
-                    <p className='text-sm text-gray-300 line-clamp-3'>
+                <div className='bg-white/50 p-3 rounded-lg border border-greyLight'>
+                    <p className='text-xs text-greyDark mb-2'>Preview:</p>
+                    <p className='text-sm text-contentLight line-clamp-3'>
                         {getShareMessage("default").substring(0, 120)}...
                     </p>
                 </div>

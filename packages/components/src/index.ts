@@ -45,7 +45,7 @@ export { default as LoadingIndicator } from './common/LoadingIndicator';
 export { default as LoadingSpinner } from './common/LoadingSpinner';
 export { default as MDXRenderer } from './common/MDXRenderer';
 export { default as Modal } from './common/Modal';
-export { default as Notification } from './common/Notification';
+export { default as NotificationPopover } from './common/Notification';
 export { default as IconPill } from './common/Pill/IconPill';
 export { default as Pill } from './common/Pill';
 export { default as CircularProgressBar } from './common/ProgressBar/CircularProgressBar';
@@ -146,9 +146,8 @@ export { default as Section } from './layout/Section';
 export { default as SEO } from './layout/SEO';
 
 
-// Note: GamificationProvider/useGamificationContext are exported from prepyatra contexts
+export { GamificationProvider, useGamificationContext } from './common/GamificationDemo/GamificationProvider';
 export { default as useGamifiedAction } from './common/GamificationDemo/useGamifiedAction';
-
 export * from "./prepyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names
 // Note: We do not re-export prepyatra `Button` to avoid clashing with existing common Button export.
