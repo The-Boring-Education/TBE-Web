@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 
 import GamificationDisplay from "../gamification/GamificationDisplay";
 import NavbarDropdownLinks from "../layout/NavbarDropdownLinks";
-import {Button} from "../ui/button";
+import {Button} from "@tbe/components";
 import {NavbarProps} from "@tbe/interface";
 import { SubscriptionInterestPopover } from "../popovers";
 
@@ -20,23 +20,24 @@ const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
                 <span className='text-xs text-white'>
                     By The Boring Education
                 </span>
-            </div>
+                    </div>
             <div className='flex items-center gap-4'>
-                <SubscriptionInterestPopover />
+                                    <SubscriptionInterestPopover />
                 <NavbarDropdownLinks />
-                {userId && <GamificationDisplay userId={userId} />}
+                                    {userId && <GamificationDisplay userId={userId} />}
                 <span className='text-white font-medium hidden sm:inline'>
-                    Hello {capitalize(username)}
                 </span>
-                <Button
-                    onClick={onSignOut}
-                    variant='outline'
-                    className='border-gray-300 text-white hover:bg-gray-100'>
-                    Sign Out
-                </Button>
+                                    <Button
+                                        onClick={onSignOut}
+                                        text='Sign Out'
+                                        variant='SUCCESS'
+                                        className='border-gray-300 bg-black text-white hover:bg-gray-900'
+                                        isLoading={false}
+                                        animationType='BOUNCE'
+                                        />
             </div>
         </nav>
     );
 };
 
-export default Navbar;
+export default Navbar;  

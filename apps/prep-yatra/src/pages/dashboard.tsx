@@ -7,40 +7,40 @@ import {
     ProfileSection,
     DashboardTabs,
     LoadingSpinner
-} from "@/components/dashboard"
+} from "@tbe/components"
 import { usePrepYatraGamificationContext } from "@tbe/components"
 import { useAuth } from "@tbe/components"
 import { usePrepLogs } from "@/hooks/use-prep-logs"
 import { recruitersService } from "@/services/recruiters"
 import { RecruiterContact } from "@/types/recruiters"
-import { Button } from "@/components/ui/button"
+import { Button } from "@tbe/components"
 
 // Dashboard Components
 
 // Lazy load components for better performance
-const Navbar = lazy(() => import("@/components/layout/Navbar"))
+const PrepYatraNavbar = lazy(() => import("@tbe/components").then(module => ({ default: module.PrepYatraNavbar })))
 const AddPrepLogModal = lazy(
-    () => import("@/components/modals/AddPrepLogModal")
+    () => import("@tbe/components").then(module => ({ default: module.AddPrepLogModal }))
 )
 const AddRecruiterModal = lazy(
-    () => import("@/components/modals/AddRecruiterModal")
+    () => import("@tbe/components").then(module => ({ default: module.AddRecruiterModal }))
 )
 const EditOnboardingModal = lazy(
-    () => import("@/components/modals/EditOnboardingModal")
+    () => import("@tbe/components").then(module => ({ default: module.EditOnboardingModal }))
 )
 const GamificationDisplay = lazy(
-    () => import("@/components/gamification/GamificationDisplay")
+    () => import("@tbe/components").then(module => ({ default: module.GamificationDisplay }))
 )
 const BuildYourStack = lazy(
-    () => import("@/components/features/BuildYourStack")
+    () => import("@tbe/components").then(module => ({ default: module.BuildYourStack }))
 )
 const DailyPrepEncouragement = lazy(
-    () => import("@/components/features/DailyPrepEncouragement")
+    () => import("@tbe/components").then(module => ({ default: module.DailyPrepEncouragement }))
 )
 const SubscriptionInterestPopover = lazy(
-    () => import("@/components/popovers/SubscriptionInterestPopover")
+    () => import("@tbe/components").then(module => ({ default: module.SubscriptionInterestPopover }))
 )
-const AddSkillsModal = lazy(() => import("@/components/modals/AddSkillsModal"))
+const AddSkillsModal = lazy(() => import("@tbe/components").then(module => ({ default: module.AddSkillsModal })))
 
 
 
@@ -273,7 +273,7 @@ const Dashboard = () => {
     return (
         <div className='min-h-screen bg-background'>
             <Suspense fallback={<ComponentLoader />}>
-                <Navbar
+                <PrepYatraNavbar
                     username={user?.name || ""}
                     onSignOut={handleSignOut}
                     userId={user?.id}
@@ -291,29 +291,21 @@ const Dashboard = () => {
 
                 {/* Sidebar Toggle Button - Mobile */}
                 <Button
-                    variant='default'
-                    size='sm'
+                    variant='PRIMARY'
+                    text=""
                     className='fixed top-20 left-4 z-50 lg:hidden bg-primary text-primary-foreground shadow-lg border-2 border-primary-foreground/20'
-                    onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
-                    {isSidebarCollapsed ? (
-                        <Menu className='w-4 h-4' />
-                    ) : (
-                        <X className='w-4 h-4' />
-                    )}
-                </Button>
+                    onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                    icon={isSidebarCollapsed ? <Menu className='w-4 h-4' /> : <X className='w-4 h-4' />}
+                />
 
                 {/* Sidebar Toggle Button - Desktop */}
                 <Button
-                    variant='default'
-                    size='sm'
+                    variant='PRIMARY'
+                    text=""
                     className='hidden lg:flex fixed top-20 left-4 z-50 bg-primary text-primary-foreground shadow-lg border-2 border-primary-foreground/20'
-                    onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
-                    {isSidebarCollapsed ? (
-                        <Menu className='w-4 h-4' />
-                    ) : (
-                        <X className='w-4 h-4' />
-                    )}
-                </Button>
+                    onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                    icon={isSidebarCollapsed ? <Menu className='w-4 h-4' /> : <X className='w-4 h-4' />}
+                />
 
                 <div className='flex gap-6'>
                     {/* Profile Section - Collapsible Sidebar */}

@@ -1,48 +1,50 @@
-import {useRouter} from "next/router";
 import {useState} from "react";
+import {useRouter} from "next/router";
+import {motion} from "framer-motion";
 
-import {Button} from "../ui/button";
+import {Button, FlexContainer, Text} from "@tbe/components";
 
 const Navigation = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const router = useRouter();
-
-    const scrollToWaitlist = () => {
-        const waitlistSection = document.getElementById("waitlist");
-        waitlistSection?.scrollIntoView({behavior: "smooth"});
-    };
 
     const handleGetStarted = () => {
         router.push("/auth");
     };
 
     return (
-        <nav className='fixed top-0 left-0 right-0 z-50 glass-dark'>
+        <motion.nav
+            initial={{y: -100}}
+            animate={{y: 0}}
+            transition={{duration: 0.5}}
+            className='fixed top-0 left-0 right-0 z-50 glass-dark backdrop-blur-md'>
             <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-                <div className='flex items-center justify-between h-16'>
-                    <div className='flex items-center'>
-                        <div className='text-left gap-2'>
-                            <span className='block text-2xl font-bold text-primary'>
+                <FlexContainer className='h-16' justifyCenter={false}>
+                    <FlexContainer className='flex-1' justifyCenter={false}>
+                        <FlexContainer direction='col' className='gap-0 items-start' itemCenter={false}>
+                            <Text level='span' className='text-2xl font-bold text-primary'>
                                 PrepYatra
-                            </span>
-                            <span className='block text-xs text-gray -mt-1'>
+                            </Text>
+                            <Text level='span' className='text-xs text-gray-400 -mt-1'>
                                 by The Boring Education
-                            </span>
-                        </div>
-                    </div>
+                            </Text>
+                        </FlexContainer>
+                    </FlexContainer>
 
                     <div className='hidden md:flex items-center space-x-4'>
                         <Button
+                            text='Get Started'
                             onClick={handleGetStarted}
-                            className='bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-6 transform transition-transform hover:scale-105'>
-                            Get Started
-                        </Button>
+                            variant='NEUTRAL'
+                            className='bg-primary rounded-md text-black hover:bg-primary/90 font-semibold px-6 transform transition-transform hover:scale-105'
+                        />
                     </div>
 
                     <div className='md:hidden'>
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className='text-white hover:text-primary focus:outline-none transition-colors'>
+                            className='text-white hover:text-primary focus:outline-none transition-colors'
+                            aria-label='Toggle menu'>
                             <svg
                                 className='h-6 w-6'
                                 fill='none'
@@ -57,21 +59,26 @@ const Navigation = () => {
                             </svg>
                         </button>
                     </div>
-                </div>
+                </FlexContainer>
 
                 {isMenuOpen && (
-                    <div className='md:hidden animate-fade-in'>
+                    <motion.div
+                        initial={{opacity: 0, y: -20}}
+                        animate={{opacity: 1, y: 0}}
+                        exit={{opacity: 0, y: -20}}
+                        className='md:hidden'>
                         <div className='px-2 pt-2 pb-3 space-y-2 sm:px-3'>
                             <Button
+                                text='Get Started'
                                 onClick={handleGetStarted}
-                                className='w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold transform transition-transform hover:scale-105'>
-                                Get Started
-                            </Button>
+                                variant='NEUTRAL'   
+                                className='w-full bg-primary rounded-full text-black hover:bg-primary/90 font-semibold transform transition-transform hover:scale-105'
+                            />
                         </div>
-                    </div>
+                    </motion.div>
                 )}
             </div>
-        </nav>
+        </motion.nav>
     );
 };
 

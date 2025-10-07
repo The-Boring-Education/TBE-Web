@@ -1,9 +1,9 @@
 import React, { Suspense } from "react";
 
-import {GamificationDisplay} from "@/components/gamification";
-import NavbarDropdownLinks from "@/components/layout/NavbarDropdownLinks";
-import {Button} from "@/components/ui/button";
-import {NavbarProps} from "@/interfaces/components";
+import {GamificationDisplay} from "../gamification";
+import PrepYatraNavbarDropdownLinks from "../layout/NavbarDropdownLinks";
+import {Button} from "@tbe/components";
+import {NavbarProps} from "@tbe/interface";
 import { SubscriptionInterestPopover } from "../popovers";
 
 const capitalize = (str: string) => {
@@ -23,16 +23,16 @@ const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
             </div>
             <div className='flex items-center gap-4'>
                 <SubscriptionInterestPopover />
-                <NavbarDropdownLinks />
+                <PrepYatraNavbarDropdownLinks />
                 {userId && <GamificationDisplay userId={userId} />}
                 <span className='text-white font-medium hidden sm:inline'>
                     Hello {capitalize(username)}
                 </span>
                 <Button
                     onClick={onSignOut}
-                    variant='outline'
+                    variant='OUTLINE'
+                    text='Sign Out'
                     className='border-gray-300 text-white hover:bg-gray-100'>
-                    Sign Out
                 </Button>
             </div>
         </nav>

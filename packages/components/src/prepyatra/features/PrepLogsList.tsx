@@ -12,10 +12,12 @@ import {
     AlertDialogCancel,
     AlertDialogAction
 } from "../ui/alert-dialog";
-import {Button} from "../ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "../ui/card";
 import {toast} from "../ui/use-toast";
 import {prepLogsService} from "@tbe/services";
+import Button from "../../common/Buttons/Button";
+import Text from "../../common/Typography/Text";
+import FlexContainer from "../../containers/Page/common/FlexContainer";
 
 type PrepLog = {
     _id: string
@@ -133,37 +135,34 @@ const PrepLogCard = ({logs, onLogUpdated, onLogDeleted, mongoUserId}: Props) => 
                                          </p>
                                      </div>
                                  )}
-                                <div className='flex gap-2'>
-                                    <Button
-                                        size='sm'
-                                        variant='outline'
-                                        className='bg-secondary text-secondary-foreground'
-                                        onClick={() => openEditModal(log)}>
-                                        ✏️ Edit
-                                    </Button>
-
+                                <div className='flex gap-2 justify-start'>
+                                <button
+                                                className='inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium bg-secondary text-secondary-foreground border border-input rounded-md hover:bg-accent hover:text-accent-foreground'
+                                                onClick={() =>
+                                                    openEditModal(log)
+                                                }>
+                                                ✏️ Edit
+                                            </button>
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
-                                            <Button
-                                                size='sm'
-                                                variant='outline'
-                                                className='bg-secondary text-secondary-foreground'
+                                            <button
+                                                className='inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium bg-secondary text-secondary-foreground border border-input rounded-md hover:bg-accent hover:text-accent-foreground'
                                                 onClick={() =>
                                                     setDeleteId(log._id)
                                                 }>
                                                 ❌ Delete
-                                            </Button>
+                                            </button>
                                         </AlertDialogTrigger>
                                         <AlertDialogContent className='bg-gray-800 border-primary/20'>
                                             <AlertDialogHeader>
-                                                <AlertDialogTitle className='text-white'>
+                                                <Text level="h3" className='text-white text-lg font-semibold'>
                                                     Delete Prep Log
-                                                </AlertDialogTitle>
-                                                <AlertDialogDescription className='text-gray'>
+                                                </Text>
+                                                <Text level="p" className='text-gray-400 text-sm'>
                                                     Are you sure you want to
                                                     delete this prep log? This
                                                     action cannot be undone.
-                                                </AlertDialogDescription>
+                                                </Text>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
                                                 <AlertDialogCancel className='bg-muted border-primary/20 bg-gray-800 text-white '>

@@ -10,18 +10,19 @@ import {
 } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 
 import Footer from "@/components/layout/Footer"
 import Navigation from "@/components/layout/Navigation"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@tbe/components"
+import { Button, Text, FlexContainer, Section, GridContainer, IconCard } from "@tbe/components"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle
-} from "@/components/ui/card"
+} from "@tbe/components"
 
 interface PrepLog {
     _id: string
@@ -168,18 +169,20 @@ const PrepLogsShowcase = () => {
         return (
             <div className='min-h-screen bg-background'>
                 <Navigation />
-                <div className='container mx-auto px-4 py-16 text-center'>
-                    <h1 className='text-4xl font-bold text-foreground mb-4'>
+                <Section className='container mx-auto px-4 py-16 text-center'>
+                    <Text level='h1' className='text-4xl font-bold text-foreground mb-4'>
                         User Not Found
-                    </h1>
-                    <p className='text-muted-foreground mb-8'>
+                    </Text>
+                    <Text level='p' className='text-muted-foreground mb-8'>
                         The user profile you're looking for doesn't exist or has
                         been made private.
-                    </p>
-                    <Button onClick={handleGetStarted}>
-                        Start Your Own Journey
-                    </Button>
-                </div>
+                    </Text>
+                    <Button 
+                        text='Start Your Own Journey'
+                        onClick={handleGetStarted}
+                        variant='PRIMARY'
+                    />
+                </Section>
                 <Footer />
             </div>
         )
@@ -195,72 +198,90 @@ const PrepLogsShowcase = () => {
         <div className='min-h-screen bg-background'>
             <Navigation />
 
-            <main className='container mx-auto px-4 mt-12 px-6 lg:px-8 py-8 md:py-12 lg:py-16'>
+            <Section className='container mx-auto px-4 mt-12 px-6 lg:px-8 py-8 md:py-12 lg:py-16'>
                 {/* Header Section */}
-                <div className='text-center mb-12 sm:mb-16 lg:mb-20 mt-4 sm:mt-8'>
-                    <h1 className='text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6'>
+                <FlexContainer direction='col' className='text-center mb-12 sm:mb-16 lg:mb-20 mt-4 sm:mt-8'>
+                    <Text level='h1' className='text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6'>
                         {getTimeOfDay()}! Meet{" "}
                         <span className='text-primary'>{profile.name}</span>
-                    </h1>
-                    <p className='text-lg sm:text-xl lg:text-2xl text-muted-foreground mb-8 sm:mb-12 max-w-3xl mx-auto'>
+                    </Text>
+                    <Text level='p' className='text-lg sm:text-xl lg:text-2xl text-muted-foreground mb-8 sm:mb-12 max-w-3xl mx-auto'>
                         Following their interview preparation journey on
                         PrepYatra
-                    </p>
+                    </Text>
 
                     {/* Stats Cards */}
-                    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto mb-8 sm:mb-12'>
-                        <Card className='hover:shadow-lg transition-shadow duration-300'>
-                            <CardContent className='flex items-center justify-center p-4 sm:p-6'>
-                                <div className='text-center'>
-                                    <div className='flex items-center justify-center mb-2'>
-                                        <Target className='w-5 h-5 sm:w-6 sm:h-6 text-primary mr-2' />
-                                        <span className='text-xl sm:text-2xl lg:text-3xl font-bold'>
-                                            {totalLogs}
-                                        </span>
-                                    </div>
-                                    <p className='text-xs sm:text-sm text-muted-foreground'>
-                                        Prep Sessions
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
+                    <GridContainer className='grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto mb-8 sm:mb-12'>
+                        <motion.div
+                            initial={{opacity: 0, y: 20}}
+                            whileInView={{opacity: 1, y: 0}}
+                            viewport={{once: true}}
+                            transition={{duration: 0.6}}>
+                            <Card className='hover:shadow-lg transition-shadow duration-300'>
+                                <CardContent className='flex items-center justify-center p-4 sm:p-6'>
+                                    <FlexContainer direction='col' className='text-center'>
+                                        <FlexContainer className='mb-2'>
+                                            <Target className='w-5 h-5 sm:w-6 sm:h-6 text-primary mr-2' />
+                                            <Text level='span' className='text-xl sm:text-2xl lg:text-3xl font-bold'>
+                                                {totalLogs}
+                                            </Text>
+                                        </FlexContainer>
+                                        <Text level='p' className='text-xs sm:text-sm text-muted-foreground'>
+                                            Prep Sessions
+                                        </Text>
+                                    </FlexContainer>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
 
-                        <Card className='hover:shadow-lg transition-shadow duration-300'>
-                            <CardContent className='flex items-center justify-center p-4 sm:p-6'>
-                                <div className='text-center'>
-                                    <div className='flex items-center justify-center mb-2'>
-                                        <Clock className='w-5 h-5 sm:w-6 sm:h-6 text-primary mr-2' />
-                                        <span className='text-xl sm:text-2xl lg:text-3xl font-bold'>
-                                            {Math.round(totalTimeSpent)}
-                                        </span>
-                                    </div>
-                                    <p className='text-xs sm:text-sm text-muted-foreground'>
-                                        Hours Invested
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <motion.div
+                            initial={{opacity: 0, y: 20}}
+                            whileInView={{opacity: 1, y: 0}}
+                            viewport={{once: true}}
+                            transition={{duration: 0.6, delay: 0.1}}>
+                            <Card className='hover:shadow-lg transition-shadow duration-300'>
+                                <CardContent className='flex items-center justify-center p-4 sm:p-6'>
+                                    <FlexContainer direction='col' className='text-center'>
+                                        <FlexContainer className='mb-2'>
+                                            <Clock className='w-5 h-5 sm:w-6 sm:h-6 text-primary mr-2' />
+                                            <Text level='span' className='text-xl sm:text-2xl lg:text-3xl font-bold'>
+                                                {Math.round(totalTimeSpent)}
+                                            </Text>
+                                        </FlexContainer>
+                                        <Text level='p' className='text-xs sm:text-sm text-muted-foreground'>
+                                            Hours Invested
+                                        </Text>
+                                    </FlexContainer>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
 
-                        <Card className='hover:shadow-lg transition-shadow duration-300 sm:col-span-2 lg:col-span-1'>
-                            <CardContent className='flex items-center justify-center p-4 sm:p-6'>
-                                <div className='text-center'>
-                                    <div className='flex items-center justify-center mb-2'>
-                                        <TrendingUp className='w-5 h-5 sm:w-6 sm:h-6 text-primary mr-2' />
-                                        <Badge
-                                            variant='secondary'
-                                            className='text-sm sm:text-base px-2 sm:px-3 py-1'>
-                                            {profile.prepYatra
-                                                .experienceLevel || "Learning"}
-                                        </Badge>
-                                    </div>
-                                    <p className='text-xs sm:text-sm text-muted-foreground'>
-                                        Experience Level
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
+                        <motion.div
+                            initial={{opacity: 0, y: 20}}
+                            whileInView={{opacity: 1, y: 0}}
+                            viewport={{once: true}}
+                            transition={{duration: 0.6, delay: 0.2}}>
+                            <Card className='hover:shadow-lg transition-shadow duration-300 sm:col-span-2 lg:col-span-1'>
+                                <CardContent className='flex items-center justify-center p-4 sm:p-6'>
+                                    <FlexContainer direction='col' className='text-center'>
+                                        <FlexContainer className='mb-2'>
+                                            <TrendingUp className='w-5 h-5 sm:w-6 sm:h-6 text-primary mr-2' />
+                                            <Badge
+                                                variant='secondary'
+                                                className='text-sm sm:text-base px-2 sm:px-3 py-1'>
+                                                {profile.prepYatra
+                                                    .experienceLevel || "Learning"}
+                                            </Badge>
+                                        </FlexContainer>
+                                        <Text level='p' className='text-xs sm:text-sm text-muted-foreground'>
+                                            Experience Level
+                                        </Text>
+                                    </FlexContainer>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    </GridContainer>
+                </FlexContainer>
 
                 {/* User Skills Section */}
                 {profile.userSkills && profile.userSkills.length > 0 && (
@@ -316,52 +337,37 @@ const PrepLogsShowcase = () => {
                             profile.leetCodeUrl) && (
                             <div className='flex justify-center space-x-2 sm:space-x-3 mt-4 sm:mt-6'>
                                 {profile.linkedInUrl && (
-                                    <Button
-                                        variant='outline'
-                                        size='sm'
-                                        className='w-10 h-10 sm:w-12 sm:h-12 border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 hover:scale-105'
-                                        asChild>
-                                        <a
-                                            href={withProtocol(
-                                                profile.linkedInUrl
-                                            )}
-                                            target='_blank'
-                                            rel='noopener noreferrer'>
-                                            <Linkedin className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
-                                        </a>
-                                    </Button>
+                                    <a
+                                        href={withProtocol(
+                                            profile.linkedInUrl
+                                        )}
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                        className='w-10 h-10 sm:w-12 sm:h-12 border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 hover:scale-105 rounded-md border flex items-center justify-center'>
+                                        <Linkedin className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
+                                    </a>
                                 )}
                                 {profile.githubUrl && (
-                                    <Button
-                                        variant='outline'
-                                        size='sm'
-                                        className='w-10 h-10 sm:w-12 sm:h-12 border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 hover:scale-105'
-                                        asChild>
-                                        <a
-                                            href={withProtocol(
-                                                profile.githubUrl
-                                            )}
-                                            target='_blank'
-                                            rel='noopener noreferrer'>
-                                            <Github className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
-                                        </a>
-                                    </Button>
+                                    <a
+                                        href={withProtocol(
+                                            profile.githubUrl
+                                        )}
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                        className='w-10 h-10 sm:w-12 sm:h-12 border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 hover:scale-105 rounded-md border flex items-center justify-center'>
+                                        <Github className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
+                                    </a>
                                 )}
                                 {profile.leetCodeUrl && (
-                                    <Button
-                                        variant='outline'
-                                        size='sm'
-                                        className='w-10 h-10 sm:w-12 sm:h-12 border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 hover:scale-105'
-                                        asChild>
-                                        <a
-                                            href={withProtocol(
-                                                profile.leetCodeUrl
-                                            )}
-                                            target='_blank'
-                                            rel='noopener noreferrer'>
-                                            <ExternalLink className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
-                                        </a>
-                                    </Button>
+                                    <a
+                                        href={withProtocol(
+                                            profile.leetCodeUrl
+                                        )}
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                        className='w-10 h-10 sm:w-12 sm:h-12 border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 hover:scale-105 rounded-md border flex items-center justify-center'>
+                                        <ExternalLink className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
+                                    </a>
                                 )}
                             </div>
                         )}
@@ -489,30 +495,30 @@ const PrepLogsShowcase = () => {
                 </div>
 
                 {/* CTA Section */}
-                <div className='text-center mt-12 sm:mt-16 lg:mt-20'>
+                <FlexContainer className='text-center mt-12 sm:mt-16 lg:mt-20'>
                     <Card className='max-w-3xl mx-auto hover:shadow-lg transition-shadow duration-300'>
                         <CardContent className='p-6 sm:p-8 lg:p-10'>
-                            <h3 className='text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6'>
+                            <Text level='h3' className='text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6'>
                                 Start Your Own PrepYatra Journey
-                            </h3>
-                            <p className='text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed'>
+                            </Text>
+                            <Text level='p' className='text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed'>
                                 Track your interview preparation, connect with
                                 recruiters, and showcase your progress just like{" "}
                                 <span className='text-primary font-medium'>
                                     {profile.name}
                                 </span>
                                 !
-                            </p>
+                            </Text>
                             <Button
-                                size='lg'
+                                text='Get Started for Free'
                                 onClick={handleGetStarted}
-                                className='px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg hover:scale-105 transition-transform duration-200'>
-                                Get Started for Free
-                            </Button>
+                                variant='PRIMARY'
+                                className='px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg hover:scale-105 transition-transform duration-200'
+                            />
                         </CardContent>
                     </Card>
-                </div>
-            </main>
+                </FlexContainer>
+            </Section>
 
             <Footer />
         </div>

@@ -1,6 +1,6 @@
 import {NavbarDropdownContainerProps} from "@tbe/interface";
 
-const NavbarDropdownContainer = ({links}: NavbarDropdownContainerProps) => (
+const PrepYatraNavbarDropdownContainer = ({links}: NavbarDropdownContainerProps) => (
     <div className='p-2 bg-gray-900 rounded-xl shadow-lg border border-primary z-[1000] min-w-[220px]'>
         {links.map(({name, href, description, target, isDevelopment}) => (
             <div
@@ -25,4 +25,4 @@ const NavbarDropdownContainer = ({links}: NavbarDropdownContainerProps) => (
     </div>
 );
 
-export default NavbarDropdownContainer;
+export default PrepYatraNavbarDropdownContainer;

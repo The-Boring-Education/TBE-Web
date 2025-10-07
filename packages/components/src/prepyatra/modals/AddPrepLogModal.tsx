@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 
-import {Button} from "../ui/button";
 import {
     Dialog,
     DialogContent,
@@ -14,6 +13,9 @@ import {Label} from "../ui/label";
 import {Textarea} from "../ui/textarea";
 import {useToast} from "../ui/use-toast";
 import {prepLogsService} from "@tbe/services";
+import Button from "../../common/Buttons/Button";
+import Text from "../../common/Typography/Text";
+import FlexContainer from "../../containers/Page/common/FlexContainer";
 
 interface AddPrepLogModalProps {
     isOpen: boolean
@@ -119,14 +121,14 @@ const AddPrepLogModal = ({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
                 <DialogHeader>
-                    <DialogTitle className='text-white'>
+                    <Text level="h3" className='text-white text-lg font-semibold'>
                         {editLog ? "✏️ Edit Prep Log" : "📝 Add New Prep Log"}
-                    </DialogTitle>
-                    <DialogDescription className='text-gray'>
+                    </Text>
+                    <Text level="p" className='text-gray-400 text-sm'>
                         {editLog
                             ? "Update your existing preparation log entry."
                             : "Log your daily preparation efforts."}
-                    </DialogDescription>
+                    </Text>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className='space-y-4'>
@@ -139,10 +141,10 @@ const AddPrepLogModal = ({
                         required
                     />
 
-                    <div className='flex gap-2 flex-col'>
-                        <Label htmlFor='description' className='text-white'>
+                    <div className='flex flex-col gap-2'>
+                        <Text level="label" className='text-white'>
                             Description
-                        </Label>
+                        </Text>
                         <Textarea
                             id='description'
                             value={formData.description}
@@ -167,24 +169,23 @@ const AddPrepLogModal = ({
 
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            type='button'
-                            variant='outline'
+                            variant='NEUTRAL'
+                            text="Cancel"
                             onClick={onClose}
-                            className='border-gray-300 text-white hover:bg-gray-100'>
-                            Cancel
-                        </Button>
+                            className='rounded-md text-black hover:bg-primary/90'
+                        />
                         <Button
-                            type='submit'
-                            disabled={loading}
-                            className='bg-primary text-primary-foreground'>
-                            {loading
+                            variant='NEUTRAL'
+                            text={loading
                                 ? editLog
                                     ? "Updating..."
                                     : "Creating..."
                                 : editLog
                                 ? "Update Log"
                                 : "Add Log"}
-                        </Button>
+                            disabled={loading}
+                            className='rounded-md text-black hover:bg-primary/90'
+                        />
                     </DialogFooter>
                 </form>
             </DialogContent>

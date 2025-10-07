@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 
-import { Button } from "../ui/button"
 import {
     Dialog,
     DialogContent,
@@ -15,6 +14,9 @@ import { Textarea } from "../ui/textarea"
 import { useToast } from "@tbe/hooks"
 import { useUser } from "../contexts/useAuth"
 import { RecruiterContact } from "@tbe/types"
+import Button from "../../common/Buttons/Button"
+import Text from "../../common/Typography/Text"
+import FlexContainer from "../../containers/Page/common/FlexContainer"
 
 interface AddRecruiterModalProps {
     isOpen: boolean
@@ -152,16 +154,16 @@ const AddRecruiterModal = ({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
                 <DialogHeader>
-                    <DialogTitle className='text-white'>
+                    <Text level="h3" className='text-white text-lg font-semibold'>
                         {editContact
                             ? "Edit Recruiter Contact"
                             : "Add New Recruiter Contact"}
-                    </DialogTitle>
-                    <DialogDescription className='text-gray'>
+                    </Text>
+                    <Text level="p" className='text-gray-400 text-sm'>
                         {editContact
                             ? "Update recruiter information and progress."
                             : "Add a new recruiter contact to your prep journey."}
-                    </DialogDescription>
+                    </Text>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className='space-y-4'>
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -270,24 +272,23 @@ const AddRecruiterModal = ({
                     </div>
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            type='button'
-                            variant='outline'
+                            variant='OUTLINE'
+                            text="Cancel"
                             onClick={onClose}
-                            className='border-gray-300 text-white hover:bg-gray-100'>
-                            Cancel
-                        </Button>
+                            className='border-gray-300 text-white hover:bg-gray-100'
+                        />
                         <Button
-                            type='submit'
-                            disabled={loading}
-                            className='bg-primary text-primary-foreground'>
-                            {loading
+                            variant='PRIMARY'
+                            text={loading
                                 ? editContact
                                     ? "Updating..."
                                     : "Creating..."
                                 : editContact
                                   ? "Update Contact"
                                   : "Create Contact"}
-                        </Button>
+                            disabled={loading}
+                            className='bg-primary text-primary-foreground'
+                        />
                     </DialogFooter>
                 </form>
             </DialogContent>

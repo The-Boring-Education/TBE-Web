@@ -2,7 +2,6 @@ import { X, Plus, Code, AlertTriangle } from "lucide-react"
 import React, { useState, useRef } from "react"
 
 import { Badge } from "../ui/badge"
-import { Button } from "../ui/button"
 import {
     Dialog,
     DialogContent,
@@ -14,6 +13,9 @@ import {
 import { InputField } from "../ui/input"
 import { useToast } from "@tbe/hooks"
 import { trackEvent } from "@tbe/utils"
+import Button from "../../common/Buttons/Button"
+import Text from "../../common/Typography/Text"
+import FlexContainer from "../../containers/Page/common/FlexContainer"
 
 interface AddSkillsModalProps {
     isOpen: boolean
@@ -128,22 +130,22 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
                 <DialogHeader>
-                    <DialogTitle className='text-white'>
+                    <Text level="h3" className='text-white text-lg font-semibold'>
                         ✨ Add Skills
-                    </DialogTitle>
-                    <DialogDescription className='text-gray'>
+                    </Text>
+                    <Text level="p" className='text-gray-400 text-sm'>
                         Build your skills stack to showcase your expertise
-                    </DialogDescription>
+                    </Text>
                 </DialogHeader>
 
                 {showWarning && (
-                    <div className='flex items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-lg px-4 py-3 mb-4'>
+                    <FlexContainer className='items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-lg px-4 py-3 mb-4'>
                         <AlertTriangle className='w-5 h-5 text-yellow-400' />
-                        <span>
+                        <Text level="span">
                             You haven't added any skills yet. Please add your
                             skills to build your stack!
-                        </span>
-                    </div>
+                        </Text>
+                    </FlexContainer>
                 )}
 
                 <form onSubmit={handleAddSkill} className='space-y-4'>
@@ -156,18 +158,18 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
                         required
                     />
 
-                    <div className='flex flex-wrap gap-2'>
+                    <div className='flex flex-wrap gap-2 justify-start items-start'>
                         {skills.length === 0 && (
-                            <span className='text-gray-400 text-sm'>
+                            <Text level="span" className='text-gray-400 text-sm'>
                                 No skills added yet. Start building your stack!
-                            </span>
+                            </Text>
                         )}
                         {skills.map((skill) => (
                             <Badge
                                 key={skill}
                                 className='flex items-center gap-2 bg-primary/20 text-primary font-semibold px-4 py-1.5 rounded-full border border-primary/40 transition hover:bg-primary/40 hover:border-primary hover:text-primary-foreground cursor-pointer shadow-none'>
                                 <Code className='w-4 h-4 text-primary' />
-                                <span>{skill}</span>
+                                <Text level="span">{skill}</Text>
                                 <button
                                     type='button'
                                     className='ml-2 text-primary/70 hover:text-red-400 focus:outline-none'
@@ -181,18 +183,21 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
 
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            type='button'
-                            variant='outline'
+                            variant='NEUTRAL'
+                            text="Cancel"
                             onClick={onClose}
-                            className='border-gray-300 text-white hover:bg-gray-100 hover:text-gray-900'>
-                            Cancel
-                        </Button>
+                            className='border-gray-300  rounded-md text-black hover:bg-gray-100 hover:text-gray-900 border-2'
+                            isLoading={loading}
+                            animationType='BOUNCE'
+                            />
                         <Button
-                            type='submit'
+                            variant='NEUTRAL'
+                            text={loading ? "Adding..." : "Add Skill"}
                             disabled={loading || !inputValue.trim()}
-                            className='bg-primary text-primary-foreground'>
-                            {loading ? "Adding..." : "Add Skill"}
-                        </Button>
+                            className='bg-primary  rounded-md text-black border-2'
+                            isLoading={loading}
+                            animationType='BOUNCE'
+                        />
                     </DialogFooter>
                 </form>
             </DialogContent>

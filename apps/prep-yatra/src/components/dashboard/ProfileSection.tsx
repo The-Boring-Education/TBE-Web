@@ -5,7 +5,7 @@ import {toast} from "sonner";
 
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
+import {Button, Text, FlexContainer} from "@tbe/components";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 interface Profile {
@@ -103,56 +103,38 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({user, profile, onEditCli
                 </CardDescription>
 
                 {/* Social Links */}
-                <div className="flex justify-center space-x-3 mt-4">
+                <FlexContainer className="justify-center space-x-3 mt-4">
                     {profile?.linkedInUrl && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50"
-                            asChild
+                        <a
+                            href={withProtocol(profile.linkedInUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-8 h-8 border border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 rounded-md flex items-center justify-center transition-all duration-200 hover:scale-105"
                         >
-                            <a
-                                href={withProtocol(profile.linkedInUrl)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Linkedin className="w-4 h-4 text-white" />
-                            </a>
-                        </Button>
+                            <Linkedin className="w-4 h-4 text-white" />
+                        </a>
                     )}
                     {profile?.githubUrl && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50"
-                            asChild
+                        <a
+                            href={withProtocol(profile.githubUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-8 h-8 border border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 rounded-md flex items-center justify-center transition-all duration-200 hover:scale-105"
                         >
-                            <a
-                                href={withProtocol(profile.githubUrl)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Github className="w-4 h-4 text-white" />
-                            </a>
-                        </Button>
+                            <Github className="w-4 h-4 text-white" />
+                        </a>
                     )}
                     {profile?.leetCodeUrl && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50"
-                            asChild
+                        <a
+                            href={withProtocol(profile.leetCodeUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-8 h-8 border border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 rounded-md flex items-center justify-center transition-all duration-200 hover:scale-105"
                         >
-                            <a
-                                href={withProtocol(profile.leetCodeUrl)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <ExternalLink className="w-4 h-4 text-white" />
-                            </a>
-                        </Button>
+                            <ExternalLink className="w-4 h-4 text-white" />
+                        </a>
                     )}
-                </div>
+                </FlexContainer>
             </CardHeader>
             <CardContent>
                 <div className="space-y-3">
@@ -195,27 +177,26 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({user, profile, onEditCli
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col gap-3 mt-6">
+                <FlexContainer direction="col" className="gap-3 mt-6">
                     {onEditClick && (
                         <Button
+                            text="Edit Onboarding Details"
                             onClick={onEditClick}
+                            variant="PRIMARY"
                             className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium"
-                        >
-                            <Edit className="w-4 h-4 mr-2" />
-                            Edit Onboarding Details
-                        </Button>
+                            icon={<Edit className="w-4 h-4 mr-2" />}
+                        />
                     )}
                     {profile?.userName && (
                         <Button
-                            variant="outline"
+                            text="Share Your Journey"
                             onClick={handleShareJourneyClick}
+                            variant="OUTLINE"
                             className="bg-white hover:bg-gray-100 text-black font-medium border-gray-300"
-                        >
-                            <Copy className="w-4 h-4 mr-2" />
-                            Share Your Journey
-                        </Button>
+                            icon={<Copy className="w-4 h-4 mr-2" />}
+                        />
                     )}
-                </div>
+                </FlexContainer>
             </CardContent>
         </Card>
     );

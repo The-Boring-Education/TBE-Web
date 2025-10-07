@@ -2,7 +2,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google"
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
+import { QueryClient, QueryClientProvider } from "react-query"
 
 import { Toaster as Sonner } from "@/components/ui/sonner"
 import { Toaster } from "@/components/ui/toaster"
@@ -40,6 +41,7 @@ const CacheManager = () => {
 
 export default function App({ Component, pageProps }: AppProps) {
     const router = useRouter()
+    const [queryClient] = useState(() => new QueryClient())
 
     useEffect(() => {
         initGA()
@@ -81,18 +83,19 @@ export default function App({ Component, pageProps }: AppProps) {
                 <link rel='manifest' href='/manifest.json' />
             </Head>
 
-            <GoogleOAuthProvider
-                clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
-                <TooltipProvider>
-                    <Toaster />
-                    <Sonner />
-                    <CacheManager />
-                    <AuthProvider>
-                        <PrepYatraGamificationProvider>
-                            <Component {...pageProps} />
-                        </PrepYatraGamificationProvider>
-                    </AuthProvider>
-                </TooltipProvider>
+            <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
+                <QueryClientProvider client={queryClient}>
+                    <TooltipProvider>
+                        <Toaster />
+                        <Sonner />
+                        <CacheManager />
+                        <AuthProvider>
+                            <PrepYatraGamificationProvider>
+                                <Component {...pageProps} />
+                            </PrepYatraGamificationProvider>
+                        </AuthProvider>
+                    </TooltipProvider>
+                </QueryClientProvider>
             </GoogleOAuthProvider>
         </>
     )

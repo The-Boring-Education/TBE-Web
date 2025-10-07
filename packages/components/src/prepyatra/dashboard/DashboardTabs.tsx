@@ -1,9 +1,11 @@
 import {Plus} from "lucide-react";
 import React, {Suspense} from "react";
 
-import {Button} from "../ui/button";
+import Button from "../../common/Buttons/Button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "../ui/tabs";
+import Text from "../../common/Typography/Text";
+import FlexContainer from "../../containers/Page/common/FlexContainer";
 import {PrepLog} from "@tbe/types";
 import {RecruiterContact} from "@tbe/types";
 
@@ -67,15 +69,18 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
-                            <CardTitle>Preparation Logs</CardTitle>
-                            <CardDescription>
+                            <Text level="h3" className="text-lg font-semibold">Preparation Logs</Text>
+                            <Text level="p" className="text-sm text-muted-foreground">
                                 Track your learning progress and preparation journey
-                            </CardDescription>
+                            </Text>
                         </div>
-                        <Button onClick={onPrepLogModalOpen} size="sm">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Log
-                        </Button>
+                        <Button 
+                            onClick={onPrepLogModalOpen} 
+                            variant="NEUTRAL"
+                            text="Add Log"
+                            icon={<Plus className="w-4 h-4 mr-2" />}
+                            className="rounded-md text-black hover:bg-primary/90"
+                        />
                     </CardHeader>
                     <CardContent>
                         <Suspense fallback={<ComponentLoader />}>
@@ -100,15 +105,18 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
-                            <CardTitle>Recruiter Contacts</CardTitle>
-                            <CardDescription>
+                            <Text level="h3" className="text-lg font-semibold">Recruiter Contacts</Text>
+                            <Text level="p" className="text-sm text-muted-foreground">
                                 Manage your network of recruiting professionals
-                            </CardDescription>
+                            </Text>
                         </div>
-                        <Button onClick={onRecruiterModalOpen} size="sm">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Contact
-                        </Button>
+                        <Button 
+                            onClick={onRecruiterModalOpen} 
+                            variant="NEUTRAL"
+                            text="Add Contact"
+                            icon={<Plus className="w-4 h-4 mr-2" />}
+                            className="rounded-md text-black hover:bg-primary/90"
+                        />
                     </CardHeader>
                     <CardContent>
                         <Suspense fallback={<ComponentLoader />}>
@@ -126,15 +134,18 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
-                            <CardTitle>Skills & Technologies</CardTitle>
-                            <CardDescription>
+                            <Text level="h3" className="text-lg font-semibold">Skills & Technologies</Text>
+                            <Text level="p" className="text-sm text-muted-foreground">
                                 Showcase your technical skills and expertise
-                            </CardDescription>
+                            </Text>
                         </div>
-                        <Button onClick={onSkillsModalOpen} size="sm">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Skills
-                        </Button>
+                        <Button 
+                            onClick={onSkillsModalOpen} 
+                            variant="NEUTRAL"
+                            text="Add Skills"
+                            icon={<Plus className="w-4 h-4 mr-2" />}
+                            className="rounded-md text-black hover:bg-primary/90"
+                        />
                     </CardHeader>
                     <CardContent>
                         <Suspense fallback={<ComponentLoader />}>

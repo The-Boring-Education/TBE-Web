@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import React, { ReactNode, useEffect } from "react"
 
-    import { useAuth } from "@/contexts/useAuth"
+    import { useAuth } from "../contexts/useAuth"
 
 interface ProtectedRouteProps {
     children: ReactNode

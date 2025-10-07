@@ -1,11 +1,11 @@
 import React, {useState, useRef, useEffect} from "react";
 
-import NavbarDropdownContainer from "../layout/NavbarDropdownContainer";
+import PrepYatraNavbarDropdownContainer from "./NavbarDropdownContainer";
 import {links} from "@tbe/constants";
 
 
 
-const NavbarDropdownLinks: React.FC = () => {
+const PrepYatraNavbarDropdownLinks: React.FC = () => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -33,11 +33,11 @@ const NavbarDropdownLinks: React.FC = () => {
           onMouseEnter={() => setOpen(true)}
           onMouseLeave={() => setOpen(false)}
         >
-          <NavbarDropdownContainer links={links} />
+          <PrepYatraNavbarDropdownContainer links={links} />
         </div>
       )}
     </div>
   );
 };
 
-export default NavbarDropdownLinks; 
+export default PrepYatraNavbarDropdownLinks; 

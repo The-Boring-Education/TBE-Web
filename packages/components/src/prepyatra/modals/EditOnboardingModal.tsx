@@ -13,7 +13,7 @@ import {
     COMPANY_TYPES,
     INTERVIEW_CATEGORIES
 } from "@tbe/constants"
-import { useAuth } from "@/contexts/useAuth"
+import { useAuth } from "../contexts/useAuth"
 import { useToast } from "../ui/use-toast"
 import {
     OnboardingData,

@@ -40,6 +40,9 @@ const getButtonClasses = (
       'bg-accent text-contentLight border-2 hover:border-black transition-all duration-300 ease-in-out',
     SUCCESS:
       'bg-success text-white border-2 border-success transition-all duration-300 ease-in-out',
+      NEUTRAL:
+      'bg-primary shadow-lg text-black border-2 border-neutral transition-all duration-300 ease-in-out',
+
   };
 
   return `${baseClasses} ${variantClasses[variant] || ''}`;
