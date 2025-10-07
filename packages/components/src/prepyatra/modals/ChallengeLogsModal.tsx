@@ -253,28 +253,28 @@ ${
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className='sm:max-w-[800px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
+            <DialogContent className='sm:max-w-[800px] max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 {!showSocialPreview ? (
                     <>
                         <DialogHeader>
-                            <DialogTitle className='text-xl font-bold text-white flex items-center gap-2'>
+                            <DialogTitle className='text-xl font-bold text-contentLight flex items-center gap-2'>
                                 <Target className='w-5 h-5 text-primary' />
                                 Challenge Progress Logs
                             </DialogTitle>
-                            <DialogDescription className='text-gray-300'>
+                            <DialogDescription className='text-greyDark'>
                                 View all progress logs for "{challenge.name}"
                             </DialogDescription>
                         </DialogHeader>
 
                         {/* Challenge Summary */}
-                        <Card className='bg-gray-800/30 border-gray-600'>
+                        <Card className='bg-white/30 border-greyLight'>
                             <CardHeader className='pb-3'>
                                 <div className='flex items-center justify-between'>
                                     <div>
-                                        <CardTitle className='text-lg text-white'>
+                                        <CardTitle className='text-lg text-contentLight'>
                                             {challenge.name}
                                         </CardTitle>
-                                        <div className='flex items-center gap-4 mt-2 text-sm text-gray-400'>
+                                            <div className='flex items-center gap-4 mt-2 text-sm text-greyDark'>
                                             <div className='flex items-center gap-1'>
                                                 <Calendar className='w-3 h-3' />
                                                 {challenge.currentDay +
@@ -313,7 +313,7 @@ ${
                         {/* Logs List */}
                         <div className='space-y-4'>
                             <div className='flex items-center justify-between'>
-                                <h3 className='text-lg font-semibold text-white'>
+                                <h3 className='text-lg font-semibold text-contentLight'>
                                     Progress Logs ({logs.length})
                                 </h3>
                                 {logs.length > 0 && (
@@ -331,18 +331,18 @@ ${
                             {loading ? (
                                 <div className='text-center py-8'>
                                     <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto' />
-                                    <p className='text-gray-400 mt-2'>
+                                    <p className='text-greyDark mt-2'>
                                         Loading logs...
                                     </p>
                                 </div>
                             ) : logs.length === 0 ? (
-                                <Card className='bg-gray-800/30 border-gray-600'>
+                                <Card className='bg-white/30 border-greyLight'>
                                     <CardContent className='pt-6 text-center'>
                                         <Target className='w-12 h-12 text-gray-400 mx-auto mb-3' />
-                                        <p className='text-gray-300 mb-2'>
+                                        <p className='text-contentLight mb-2'>
                                             No progress logs yet
                                         </p>
-                                        <p className='text-gray-400 text-sm'>
+                                        <p className='text-greyDark text-sm'>
                                             Start logging your daily progress to
                                             see your journey here!
                                         </p>
@@ -353,14 +353,14 @@ ${
                                     {logs.map((log) => (
                                         <Card
                                             key={log._id}
-                                            className='bg-gray-800/30 border-gray-600'>
+                                            className='bg-white/30 border-greyLight'>
                                             <CardHeader className='pb-3'>
                                                 <div className='flex items-center justify-between'>
                                                     <div className='flex items-center gap-3'>
                                                         <Badge className='bg-primary/20 text-primary border-primary/30'>
                                                             Day {log.day}
                                                         </Badge>
-                                                        <div className='text-sm text-gray-400'>
+                                                        <div className='text-sm text-greyDark'>
                                                             {formatDate(
                                                                 log.loggedAt
                                                             )}
@@ -369,7 +369,7 @@ ${
                                                     <div className='flex items-center gap-2'>
                                                         <Badge
                                                             variant='outline'
-                                                            className='border-gray-600 text-gray-300'>
+                                                            className='border-greyLight text-greyDark'>
                                                             <Clock className='w-3 h-3 mr-1' />
                                                             {log.hoursSpent}h
                                                         </Badge>
@@ -389,17 +389,17 @@ ${
                                             </CardHeader>
                                             <CardContent className='space-y-3'>
                                                 <div>
-                                                    <h4 className='text-white font-medium mb-2'>
+                                                    <h4 className='text-contentLight font-medium mb-2'>
                                                         What I worked on:
                                                     </h4>
-                                                    <p className='text-gray-300 text-sm'>
+                                                    <p className='text-greyDark text-sm'>
                                                         {log.progressText}
                                                     </p>
                                                 </div>
 
                                                 {log.nextGoals.length > 0 && (
                                                     <div>
-                                                        <h4 className='text-white font-medium mb-2'>
+                                                        <h4 className='text-contentLight font-medium mb-2'>
                                                             Next goals:
                                                         </h4>
                                                         <ul className='space-y-1'>
@@ -412,7 +412,7 @@ ${
                                                                         key={
                                                                             index
                                                                         }
-                                                                        className='text-gray-300 text-sm flex items-center gap-2'>
+                                                                        className='text-greyDark text-sm flex items-center gap-2'>
                                                                         <span className='text-primary'>
                                                                             •
                                                                         </span>
@@ -434,7 +434,7 @@ ${
                             <Button
                                 onClick={onClose}
                                 variant='outline'
-                                className='border-gray-300 text-white hover:bg-gray-100 hover:text-gray-900'>
+                                className='border-greyLight text-contentLight hover:bg-greyLight'>
                                 Close
                             </Button>
                         </DialogFooter>
@@ -442,17 +442,17 @@ ${
                 ) : (
                     <>
                         <DialogHeader>
-                            <DialogTitle className='text-xl font-bold text-white flex items-center gap-2'>
+                            <DialogTitle className='text-xl font-bold text-contentLight flex items-center gap-2'>
                                 <Share2 className='w-5 h-5 text-primary' />
                                 Share Your Progress
                             </DialogTitle>
-                            <DialogDescription className='text-gray-300'>
+                            <DialogDescription className='text-greyDark'>
                                 Share Day {selectedLog?.day} progress on social
                                 media
                             </DialogDescription>
                         </DialogHeader>
 
-                        <Card className='bg-gray-800/30 border-gray-600'>
+                        <Card className='bg-white/30 border-greyLight'>
                             <CardHeader>
                                 <CardTitle className='text-lg text-white flex items-center gap-2'>
                                     <ExternalLink className='w-5 h-5 text-primary' />
@@ -621,12 +621,12 @@ ${
                             <Button
                                 onClick={() => setShowSocialPreview(false)}
                                 variant='outline'
-                                className='border-gray-300 text-white hover:bg-gray-100 hover:text-gray-900'>
+                                className='border-greyLight text-contentLight hover:bg-greyLight'>
                                 Back to Logs
                             </Button>
                             <Button
                                 onClick={onClose}
-                                className='bg-primary text-primary-foreground hover:bg-primary/90'>
+                                className='bg-primary text-white hover:bg-primary/90'>
                                 Done
                             </Button>
                         </DialogFooter>

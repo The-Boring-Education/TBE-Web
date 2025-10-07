@@ -182,19 +182,19 @@ const CreateChallengeModal = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-[900px] max-h-[85vh] overflow-y-auto glass-dark border-primary/20">
+        <DialogContent className="sm:max-w-[900px] max-h-[85vh] overflow-y-auto glass border-greyLight">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
+            <DialogTitle className="text-2xl font-bold text-contentLight flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-primary" />
               Create Your Challenge
             </DialogTitle>
-            <DialogDescription className="text-gray-300">
+            <DialogDescription className="text-greyDark">
               Choose from popular challenges or create your own custom learning journey
             </DialogDescription>
           </DialogHeader>
 
-          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-gray-800/50">
+          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full py-4">
+            <TabsList className="grid w-full grid-cols-2 bg-white/50">
               <TabsTrigger value="predefined" className="data-[state=active]:bg-primary">
                 <Sparkles className="w-4 h-4 mr-2" />
                 Popular Challenges
@@ -210,7 +210,7 @@ const CreateChallengeModal = ({
                 {PREDEFINED_CHALLENGES.map((template) => (
                   <Card
                     key={template.id}
-                    className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-lg border-gray-700 bg-gray-800/50 hover:bg-gray-800/70"
+                    className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-lg border-greyLight bg-white/50 hover:bg-white/70"
                     onClick={() => handleTemplateSelect(template)}
                   >
                     <CardHeader className="pb-3">
@@ -220,7 +220,7 @@ const CreateChallengeModal = ({
                             <span className="text-2xl">{template.icon}</span>
                           </div>
                           <div className="flex-1">
-                            <CardTitle className="text-lg text-white">{template.name}</CardTitle>
+                            <CardTitle className="text-lg text-contentLight">{template.name}</CardTitle>
                             <div className="flex items-center gap-2 mt-2">
                               <Badge variant="secondary" className={`bg-${template.color}-500/20 text-${template.color}-300 border-${template.color}-500/30`}>
                                 <Calendar className="w-3 h-3 mr-1" />
@@ -230,7 +230,7 @@ const CreateChallengeModal = ({
                                 <Star className="w-3 h-3 mr-1" />
                                 {template.difficulty}
                               </Badge>
-                              <Badge variant="outline" className="border-gray-600 text-gray-300">
+                              <Badge variant="outline" className="border-greyLight text-greyDark">
                                 <Clock className="w-3 h-3 mr-1" />
                                 ~{template.estimatedHoursPerDay}h/day
                               </Badge>
@@ -241,12 +241,12 @@ const CreateChallengeModal = ({
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <CardDescription className="text-gray-300 line-clamp-2 mb-3">
+                      <CardDescription className="text-greyDark line-clamp-2 mb-3">
                         {template.description}
                       </CardDescription>
                       <div className="flex flex-wrap gap-1">
                         {template.tags.slice(0, 3).map((tag, index) => (
-                          <Badge key={index} variant="outline" className="text-xs border-gray-600 text-gray-300">
+                          <Badge key={index} variant="outline" className="text-xs border-greyLight text-greyDark">
                             {tag}
                           </Badge>
                         ))}
@@ -255,7 +255,7 @@ const CreateChallengeModal = ({
                   </Card>
                 ))}
               </div>
-              <div className="text-center text-sm text-gray-400 mt-4">
+              <div className="text-center text-sm text-greyDark mt-4">
                 Click on any challenge to customize and start your journey! 🚀
               </div>
             </TabsContent>
@@ -263,7 +263,7 @@ const CreateChallengeModal = ({
             <TabsContent value="custom" className="space-y-4 mt-6">
               <form onSubmit={handleCustomChallengeSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-white">
+                  <Label htmlFor="name" className="text-contentLight">
                     Challenge Name <span className="text-red-400">*</span>
                   </Label>
                   <Input
@@ -271,13 +271,13 @@ const CreateChallengeModal = ({
                     value={customForm.name}
                     onChange={(e) => handleCustomInputChange("name", e.target.value)}
                     placeholder="e.g., 30 Days of React Development"
-                    className="bg-gray-800 border-gray-600 text-white focus:border-primary"
+                    className="bg-white border-greyLight text-contentLight focus:border-primary"
                     maxLength={100}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-white">
+                  <Label htmlFor="description" className="text-contentLight">
                     Description (Optional)
                   </Label>
                   <Textarea
@@ -285,15 +285,16 @@ const CreateChallengeModal = ({
                     value={customForm.description}
                     onChange={(e) => handleCustomInputChange("description", e.target.value)}
                     placeholder="Describe what you want to achieve in this challenge..."
-                    className="bg-gray-800 border-gray-600 text-white focus:border-primary resize-none"
+                    className="bg-white border-greyLight text-contentLight border resize-none focus:border-primary"
                     rows={3}
                     maxLength={500}
+                    
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="totalDays" className="text-white">
+                    <Label htmlFor="totalDays" className="text-contentLight">
                       Duration (Days) <span className="text-red-400">*</span>
                     </Label>
                     <Input
@@ -302,15 +303,15 @@ const CreateChallengeModal = ({
                       value={customForm.totalDays}
                       onChange={(e) => handleCustomInputChange("totalDays", e.target.value)}
                       placeholder="e.g., 30"
-                      className="bg-gray-800 border-gray-600 text-white focus:border-primary"
+                      className="bg-white border-greyLight text-contentLight border focus:border-primary"
                       min="1"
                       max="365"
                     />
-                    <p className="text-xs text-gray-400">Choose between 1 to 365 days</p>
+                    <p className="text-xs text-greyDark">Choose between 1 to 365 days</p>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="category" className="text-white">
+                    <Label htmlFor="category" className="text-contentLight">
                       Category <span className="text-red-400">*</span>
                     </Label>
                     <select 
@@ -318,7 +319,7 @@ const CreateChallengeModal = ({
                       onChange={(e) => {
                         handleCustomInputChange("category", e.target.value);
                       }}
-                      className="w-full bg-gray-800 border border-gray-600 text-white rounded px-3 py-2 text-sm"
+                      className="w-full bg-white border border-greyLight text-contentLight rounded px-3 py-2 text-sm"
                     >
                       <option value="">Select category</option>
                       {categories.map((category) => (
@@ -329,14 +330,14 @@ const CreateChallengeModal = ({
                     </select>
                       
                     {customForm.category && (
-                      <div className="flex items-center gap-2 text-sm text-green-400">
-                        <div className="w-2 h-2 bg-green-400 rounded-full" />
+                      <div className="flex items-center gap-2 text-sm text-green-600">
+                        <div className="w-2 h-2 bg-green-600 rounded-full" />
                         Category selected: {customForm.category}
                       </div>
                     )}
                     {!customForm.category && (
-                      <div className="flex items-center gap-2 text-sm text-red-400">
-                        <div className="w-2 h-2 bg-red-400 rounded-full" />
+                      <div className="flex items-center gap-2 text-sm text-red-600">
+                        <div className="w-2 h-2 bg-red-600 rounded-full" />
                         Please select a category
                       </div>
                     )}
@@ -348,14 +349,14 @@ const CreateChallengeModal = ({
                     type="button"
                     variant="outline"
                     onClick={onClose}
-                    className="border-gray-300 text-white hover:bg-gray-100 hover:text-gray-900"
+                    className="border-greyLight text-contentLight hover:bg-greyLight"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="bg-primary text-white hover:bg-primary/90"
                   >
                     {loading ? "Creating..." : "Create Challenge"}
                   </Button>
@@ -369,46 +370,46 @@ const CreateChallengeModal = ({
       {/* Customize Predefined Challenge Modal */}
       {selectedTemplate && (
         <Dialog open={showCustomizeModal} onOpenChange={setShowCustomizeModal}>
-          <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto glass-dark border-primary/20">
+          <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto glass border-greyLight">
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold text-white flex items-center gap-2">
+              <DialogTitle className="text-xl font-bold text-contentLight flex items-center gap-2">
                 <Zap className="w-5 h-5 text-primary" />
                 Customize Your Challenge
               </DialogTitle>
-              <DialogDescription className="text-gray-300">
+              <DialogDescription className="text-greyDark">
                 Personalize "{selectedTemplate.name}" before starting
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="customize-name" className="text-white">
+                <Label htmlFor="customize-name" className="text-contentLight">
                   Challenge Name <span className="text-red-400">*</span>
                 </Label>
                 <Input
                   id="customize-name"
                   value={customizeForm.name}
                   onChange={(e) => handleCustomizeInputChange("name", e.target.value)}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-primary"
+                  className="bg-white border-greyLight text-contentLight focus:border-primary"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="customize-description" className="text-white">
+                <Label htmlFor="customize-description" className="text-contentLight">
                   Description
                 </Label>
                 <Textarea
                   id="customize-description"
                   value={customizeForm.description}
                   onChange={(e) => handleCustomizeInputChange("description", e.target.value)}
-                  className="bg-gray-800 border-gray-600 text-white focus:border-primary resize-none"
+                  className="bg-white border-greyLight text-contentLight focus:border-primary resize-none"
                   rows={3}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="customize-days" className="text-white">
+                  <Label htmlFor="customize-days" className="text-contentLight">
                     Duration (Days) <span className="text-red-400">*</span>
                   </Label>
                   <Input
@@ -416,30 +417,30 @@ const CreateChallengeModal = ({
                     type="number"
                     value={customizeForm.totalDays}
                     onChange={(e) => handleCustomizeInputChange("totalDays", e.target.value)}
-                    className="bg-gray-800 border-gray-600 text-white focus:border-primary"
+                    className="bg-white border-greyLight text-contentLight focus:border-primary"
                     min="1"
                     max="365"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="customize-category" className="text-white">
+                  <Label htmlFor="customize-category" className="text-contentLight">
                     Category
                   </Label>
                   <Input
                     id="customize-category"
                     value={customizeForm.category}
                     onChange={(e) => handleCustomizeInputChange("category", e.target.value)}
-                    className="bg-gray-800 border-gray-600 text-white focus:border-primary"
+                    className="bg-white border-greyLight text-contentLight focus:border-primary"
                   />
                 </div>
               </div>
 
               {/* Learning Path Preview */}
               <div className="space-y-2">
-                <Label className="text-white">Learning Path Preview</Label>
-                <div className="bg-gray-800/50 p-3 rounded-lg border border-gray-600">
-                  <div className="text-sm text-gray-300">
+                <Label className="text-contentLight">Learning Path Preview</Label>
+                <div className="bg-white/50 p-3 rounded-lg border border-greyLight">
+                  <div className="text-sm text-greyDark">
                     {selectedTemplate.learningPath.map((item, index) => (
                       <div key={index} className="flex items-center gap-2 mb-1">
                         <span className="text-primary">•</span>
@@ -456,7 +457,7 @@ const CreateChallengeModal = ({
                 type="button"
                 variant="outline"
                 onClick={() => setShowCustomizeModal(false)}
-                className="border-gray-300 text-white hover:bg-gray-100 hover:text-gray-900"
+                className="border-greyLight text-contentLight hover:bg-greyLight"
               >
                 Back
               </Button>

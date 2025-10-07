@@ -11,7 +11,7 @@ const PrepYatraFooter = () => {
             whileInView={{opacity: 1}}
             viewport={{once: true}}
             transition={{duration: 0.6}}
-            className='pt-8 px-4 border-t border-white/10 bg-gray-900/90 backdrop-blur-md'>
+            className='pt-8 px-4 border-t border-greyLight bg-white'>
             <div className='container mx-auto flex flex-col gap-6'>
                 <FlexContainer
                     direction='col'
@@ -26,7 +26,7 @@ const PrepYatraFooter = () => {
                             <Text level='span' className='text-3xl font-bold text-primary'>
                                 PrepYatra
                             </Text>
-                            <Text level='span' className='text-xs text-white'>
+                            <Text level='span' className='text-xs text-greyDark'>
                                 By The Boring Education
                             </Text>
                         </FlexContainer>
@@ -75,7 +75,7 @@ const PrepYatraFooter = () => {
                                     key={link.name}
                                     href={link.href}
                                     target='_blank'
-                                    className='text-gray-400 hover:text-primary transition-colors'
+                                    className='text-greyDark hover:text-primary transition-colors'
                                     aria-label={link.name}>
                                         {getIcon(link.icon)}
                                 </Link>
@@ -94,7 +94,7 @@ const PrepYatraFooter = () => {
                             direction='col'
                             className='gap-2 w-full lg:w-auto'
                             itemCenter={false}>
-                            <Text level='span' className='text-gray-400 font-semibold text-sm mb-1 text-left'>
+                            <Text level='span' className='text-greyDark font-semibold text-sm mb-1 text-left'>
                                 Contribute
                             </Text>
                             <FlexContainer
@@ -104,7 +104,7 @@ const PrepYatraFooter = () => {
                                 <Link
                                     href='https://github.com/The-Boring-Education/prep-yatra/issues'
                                     target='_blank'
-                                    className='text-gray-400 hover:text-primary transition-colors text-sm font-medium flex items-center gap-2'>
+                                    className='text-contentLight hover:text-primary transition-colors text-sm font-medium flex items-center gap-2'>
                                     <svg
                                         fill='currentColor'
                                         viewBox='0 0 24 24'
@@ -121,7 +121,7 @@ const PrepYatraFooter = () => {
                             direction='col'
                             className='gap-2 w-full lg:w-auto'
                             itemCenter={false}>
-                            <Text level='span' className='text-gray-400 font-semibold text-sm mb-1 text-left'>
+                            <Text level='span' className='text-greyDark font-semibold text-sm mb-1 text-left'>
                                 Our Products
                             </Text>
                             <FlexContainer
@@ -133,7 +133,7 @@ const PrepYatraFooter = () => {
                                         key={link.name}
                                         href={link.href}
                                         target='_blank'
-                                        className='text-gray-400 hover:text-primary transition-colors text-sm font-medium'>
+                                        className='text-contentLight hover:text-primary transition-colors text-sm font-medium'>
                                         {link.name}
                                     </Link>
                                 ))}
@@ -143,8 +143,8 @@ const PrepYatraFooter = () => {
                 </FlexContainer>
 
                 {/* Built with love - Center Bottom */}
-                <FlexContainer className='py-4 border-t border-white/10'>
-                    <Text level='p' className='text-gray-400 text-center text-sm'>
+                <FlexContainer className='py-4 border-t border-greyLight'>
+                    <Text level='p' className='text-greyDark text-center text-sm'>
                         Built with <span className='text-red-500'>❤️</span> by{" "}
                         <Link
                             href='https://theboringeducation.com'

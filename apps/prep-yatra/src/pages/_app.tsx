@@ -69,7 +69,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <link rel='icon' href='/favicon.ico' />
 
                 {/* PWA meta tags */}
-                <meta name='theme-color' content='#FFCF25' />
+                <meta name='theme-color' content='#FF5757' />
                 <meta name='apple-mobile-web-app-capable' content='yes' />
                 <meta
                     name='apple-mobile-web-app-status-bar-style'

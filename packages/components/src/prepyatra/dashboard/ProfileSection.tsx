@@ -103,36 +103,36 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
   };
 
   return (
-    <Card className="mb-6">
-      <CardHeader className="text-center">
-        <Avatar className="w-20 h-20 mx-auto mb-4">
+    <Card className="mb-2">
+      <CardHeader className="text-center p-3">
+        <Avatar className="w-16 h-16 mx-auto mb-3">
           <AvatarImage
             src={profile?.image || user?.picture}
             alt={profile?.name || user?.name}
           />
-          <AvatarFallback className="text-lg">
+          <AvatarFallback className="text-base">
             {getInitials(profile?.name || user?.name)}
           </AvatarFallback>
         </Avatar>
 
-        <Text level="h3" className="text-xl font-bold">
+        <Text level="h3" className="text-lg font-semibold">
           {profile?.name || user?.name}
         </Text>
 
-        <Text level="p" className="text-muted-foreground">
+        <Text level="p" className="text-xs text-muted-foreground">
           @{profile?.userName || user?.name?.toLowerCase()}
         </Text>
 
         {/* ✅ Social Links */}
-        <FlexContainer className="justify-center gap-3 mt-4">
+        <FlexContainer className="justify-center gap-2 mt-2.5">
            {profile?.linkedInUrl && (
              <a
                href={withProtocol(profile.linkedInUrl)}
                target="_blank"
                rel="noopener noreferrer"
-               className="inline-flex items-center justify-center w-8 h-8 border border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 rounded-md transition-colors"
+               className="inline-flex items-center justify-center w-7 h-7 border border-black/10 bg-white hover:bg-accent rounded-md transition-colors"
              >
-               <Linkedin className="w-4 h-4 text-white" />
+               <Linkedin className="w-3.5 h-3.5 text-contentLight" />
              </a>
            )}
 
@@ -141,9 +141,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               href={withProtocol(profile.githubUrl)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center w-8 h-8 border border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 rounded-md transition-colors"
+              className="inline-flex items-center justify-center w-7 h-7 border border-black/10 bg-white hover:bg-accent rounded-md transition-colors"
             >
-              <Github className="w-4 h-4 text-white" />
+              <Github className="w-3.5 h-3.5 text-contentLight" />
             </a>
           )}
 
@@ -152,61 +152,61 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               href={withProtocol(profile.leetCodeUrl)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center w-8 h-8 border border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 rounded-md transition-colors"
+              className="inline-flex items-center justify-center w-7 h-7 border border-black/10 bg-white hover:bg-accent rounded-md transition-colors"
             >
-              <ExternalLink className="w-4 h-4 text-white" />
+              <ExternalLink className="w-3.5 h-3.5 text-contentLight" />
             </a>
           )}
         </FlexContainer>
       </CardHeader>
 
-      <CardContent>
-        <div className="space-y-3">
-          <FlexContainer className="justify-between text-sm">
-            <Text level="span" className="text-muted-foreground">
+      <CardContent className="p-3">
+        <div className="space-y-1.5">
+          <FlexContainer className="justify-between text-xs">
+            <Text level="h1" className="text-muted-foreground text-md">
               Experience:
             </Text>
-            <Badge variant="secondary">
+            <Badge variant="default">
               {profile?.prepYatra?.experienceLevel || "Not set"}
             </Badge>
           </FlexContainer>
 
-          <FlexContainer className="justify-between text-sm">
-            <Text level="span" className="text-muted-foreground">
+          <FlexContainer className="justify-between text-xs">
+            <Text level="h1" className="text-muted-foreground text-md">
               Goal:
             </Text>
-            <Badge variant="outline">
+            <Badge variant="default">
               {profile?.prepYatra?.goal || "Not set"}
             </Badge>
           </FlexContainer>
 
-          <FlexContainer className="justify-between text-sm">
+          <FlexContainer className="justify-between text-xs">
             <Text level="span" className="text-muted-foreground">
               Occupation:
             </Text>
-            <Text level="span">
+            <Text level="h1">
               {profile?.occupation
                 ? profile.occupation.replace("_", " ")
                 : "Not set"}
-            </Text>
+            </Text> 
           </FlexContainer>
 
-          <FlexContainer className="justify-between text-sm">
-            <Text level="span" className="text-muted-foreground">
+          <FlexContainer className="justify-between text-xs">
+            <Text level="h1" className="text-muted-foreground text-md">
               Purpose:
             </Text>
-            <Text level="span">
+            <Text level="h1">
               {profile?.purpose?.length
                 ? profile.purpose.map((p) => String(p).replace("_", " ")).join(", ")
                 : "Not set"}
             </Text>
           </FlexContainer>
 
-          <FlexContainer className="justify-between text-sm">
-            <Text level="span" className="text-muted-foreground">
+          <FlexContainer className="justify-between text-xs">
+            <Text level="h1" className="text-muted-foreground text-md">
               Joined:
             </Text>
-            <Text level="span">
+            <Text level="h1">
               {profile?.createdAt
                 ? new Date(profile.createdAt).toLocaleDateString()
                 : "Unknown"}
@@ -215,26 +215,29 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         </div>
 
         {/* ✅ Action Buttons */}
-        <FlexContainer className="flex flex-col gap-3 mt-6">
+        <FlexContainer className="flex flex-col gap-1.5 mt-3">
+
+        {profile?.userName && (
+            <Button
+              onClick={handleShareJourneyClick}
+              variant="NEUTRAL"
+              text="Share Your Journey"
+              className="w-full"
+              icon={<Copy className="w-2 h-2 mr-2" />}
+            />
+          )}
+          
           {onEditClick && (
             <Button
               onClick={onEditClick}
-              className="bg-yellow-600 rounded-md hover:bg-yellow-700 text-black font-medium"
               variant="OUTLINE"
               text="Edit Onboarding Details"
-              icon={<Edit className="w-4 h-4 mr-2" />}
+              className="w-full"
+              icon={<Edit className="w-2 h-2 mr-2" />}
             />
           )}
 
-          {profile?.userName && (
-            <Button
-              onClick={handleShareJourneyClick}
-              variant="OUTLINE"
-              className="bg-yellow-600 rounded-md hover:bg-yellow-700 text-black font-medium"
-              text="Share Your Journey"
-              icon={<Copy className="w-4 h-4 mr-2" />}
-            />
-          )}
+         
         </FlexContainer>
       </CardContent>
     </Card>

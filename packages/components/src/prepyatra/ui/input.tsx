@@ -27,7 +27,8 @@ const InputField = ({
     onChange,
     type = "text",
     required = false,
-    placeholder
+    placeholder,
+    className
 }: {
     label: string
     field: string
@@ -36,9 +37,10 @@ const InputField = ({
     required?: boolean
     placeholder?: string
     onChange: (field: string, value: string) => void
+    className?: string
 }) => (
     <div className='flex gap-2 flex-col'>
-        <Label htmlFor={field} className='text-white'>
+        <Label htmlFor={field} className='text-contentLight'>
             {label}
             {required && " *"}
         </Label>
@@ -49,7 +51,7 @@ const InputField = ({
             onChange={(e) => onChange(field, e.target.value)}
             required={required}
             placeholder={placeholder}
-            className='bg-gray-800 border-gray-600 text-white'
+            className={cn('bg-gray-800 border-gray-600 text-white', className)}
         />
     </div>
 );

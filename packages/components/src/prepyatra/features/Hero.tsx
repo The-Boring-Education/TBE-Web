@@ -14,7 +14,7 @@ const PrepYatraHero = () => {
         {
             icon: (
                 <svg
-                    className='w-8 h-8 text-primary-foreground'
+                    className='w-8 h-8 text-white'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -33,7 +33,7 @@ const PrepYatraHero = () => {
         {
             icon: (
                 <svg
-                    className='w-8 h-8 text-primary-foreground'
+                    className='w-8 h-8 text-white'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -52,7 +52,7 @@ const PrepYatraHero = () => {
         {
             icon: (
                 <svg
-                    className='w-8 h-8 text-primary-foreground'
+                    className='w-8 h-8 text-white'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -71,7 +71,7 @@ const PrepYatraHero = () => {
     ];
 
     return (
-        <section className='min-h-screen flex items-center justify-center px-4 pt-16 relative overflow-hidden'>
+        <section className='min-h-[70vh] flex items-center justify-center px-3 pt-16 relative overflow-hidden bg-lightBG'>
             {/* Background Animation Elements */}
             <div className='absolute inset-0 opacity-10'>
                 <motion.div
@@ -96,7 +96,7 @@ const PrepYatraHero = () => {
                     initial={{opacity: 0, y: 20}}
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.6}}>
-                    <Text level='h1' className='text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight'>
+                    <Text level='h1' className='text-3xl md:text-5xl font-bold text-contentLight mb-4 leading-tight'>
                         Turn{" "}
                         <motion.span
                             className='text-primary'
@@ -114,7 +114,7 @@ const PrepYatraHero = () => {
                         </motion.span>
                     </Text>
 
-                    <Text level='p' className='text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto'>
+                    <Text level='p' className='text-base md:text-lg text-greyDark mb-6 max-w-3xl mx-auto'>
                         The ultimate community platform for job hunters to store
                         recruiter contacts, share prep logs, and crowdsource
                         resources together.{" "}
@@ -123,33 +123,33 @@ const PrepYatraHero = () => {
                         </span>
                     </Text>
 
-                    <FlexContainer className='mb-12 flex-col sm:flex-row gap-4'>
+                    <FlexContainer className='mb-8 flex-col sm:flex-row gap-3'>
                         <Button
                             text='🚀 Start Your Journey Free'
                             onClick={handleGetStarted}
-                            variant='NEUTRAL'
-                            className='rounded-md text-black hover:bg-primary/90 text-lg px-8 py-2 font-semibold transform transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-primary/50'
+                            variant='PRIMARY'
+                            className='text-sm px-4 py-2 font-semibold'
                         />
                     </FlexContainer>
                 </motion.div>
 
-                <GridContainer className='md:grid-cols-3 gap-6 mt-16'>
+                <GridContainer className='md:grid-cols-3 gap-4 mt-10'>
                     {features.map((feature, index) => (
                         <motion.div
                             key={index}
                             initial={{opacity: 0, y: 20}}
                             animate={{opacity: 1, y: 0}}
                             transition={{duration: 0.6, delay: feature.delay}}
-                            whileHover={{scale: 1.05}}
-                            className='glass rounded-2xl p-6 transition-transform duration-300'>
+                            whileHover={{scale: 1.02, y: -3}}
+                            className='glass rounded-1 p-4 transition-transform duration-200 shadow hover:shadow-md'>
                             <FlexContainer direction='col'>
-                                <div className='w-16 h-16 bg-primary rounded-full mx-auto mb-4 flex items-center justify-center'>
+                                <div className='w-12 h-12 bg-primary rounded-full mx-auto mb-3 flex items-center justify-center'>
                                     {feature.icon}
                                 </div>
-                                <Text level='h3' className='text-white font-semibold mb-2'>
+                                <Text level='h3' className='text-lg font-semibold mb-1 text-contentLight'>
                                     {feature.title}
                                 </Text>
-                                <Text level='p' className='text-gray-300 text-sm'>
+                                <Text level='p' className='text-sm text-greyDark'>
                                     {feature.description}
                                 </Text>
                             </FlexContainer>

@@ -2,6 +2,8 @@ import React, {useState, useRef, useEffect} from "react";
 
 import PrepYatraNavbarDropdownContainer from "./NavbarDropdownContainer";
 import {links} from "@tbe/constants";
+import { ChevronDown } from "lucide-react";
+import { Button } from "@tbe/components";
 
 
 
@@ -20,13 +22,12 @@ const PrepYatraNavbarDropdownLinks: React.FC = () => {
 
   return (
     <div className="relative" ref={ref}>
-      <button
-        className="px-3 py-1 rounded-md font-semibold text-primary bg-gray-900 border border-primary hover:bg-primary hover:text-gray-900 transition-colors"
+      <Button
+        variant="NEUTRAL"
+        text="Links"
         onClick={() => setOpen((v) => !v)}
-        onMouseEnter={() => setOpen(true)}
-      >
-        Links <span className="ml-1">&#9662;</span>
-      </button>
+        icon={<ChevronDown className="w-4 h-4" />}
+      />
       {open && (
         <div
           className="absolute right-0 mt-2 z-[1000]"

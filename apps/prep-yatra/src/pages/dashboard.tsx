@@ -10,9 +10,9 @@ import {
 } from "@tbe/components"
 import { usePrepYatraGamificationContext } from "@tbe/components"
 import { useAuth } from "@tbe/components"
-import { usePrepLogs } from "@/hooks/use-prep-logs"
-import { recruitersService } from "@/services/recruiters"
-import { RecruiterContact } from "@/types/recruiters"
+import { usePrepLogs } from "@tbe/hooks"
+import { recruitersService } from "@tbe/services"
+import { RecruiterContact } from "@tbe/types"
 import { Button } from "@tbe/components"
 
 // Dashboard Components
@@ -271,7 +271,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className='min-h-screen bg-background'>
+        <div className='min-h-screen bg-gray-100'>
             <Suspense fallback={<ComponentLoader />}>
                 <PrepYatraNavbar
                     username={user?.name || ""}
@@ -280,7 +280,7 @@ const Dashboard = () => {
                 />
             </Suspense>
 
-            <main className='container mx-auto px-4 py-8'>
+            <main className='w-full px-2 md:px-4 pt-[72px] pb-6'>
                 {/* Mobile backdrop */}
                 {!isSidebarCollapsed && (
                     <div
@@ -293,7 +293,7 @@ const Dashboard = () => {
                 <Button
                     variant='PRIMARY'
                     text=""
-                    className='fixed top-20 left-4 z-50 lg:hidden bg-primary text-primary-foreground shadow-lg border-2 border-primary-foreground/20'
+                    className='fixed top-[76px] left-3 z-50 lg:hidden bg-primary text-primary-foreground shadow border border-primary/30 text-sm px-2 py-2'
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                     icon={isSidebarCollapsed ? <Menu className='w-4 h-4' /> : <X className='w-4 h-4' />}
                 />
@@ -302,7 +302,7 @@ const Dashboard = () => {
                 <Button
                     variant='PRIMARY'
                     text=""
-                    className='hidden lg:flex fixed top-20 left-4 z-50 bg-primary text-primary-foreground shadow-lg border-2 border-primary-foreground/20'
+                    className='hidden lg:flex fixed top-[76px] left-3 z-50 bg-primary text-primary-foreground shadow border border-primary/30 text-sm px-2 py-2'
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                     icon={isSidebarCollapsed ? <Menu className='w-4 h-4' /> : <X className='w-4 h-4' />}
                 />
@@ -332,7 +332,7 @@ const Dashboard = () => {
                         className={`${isSidebarCollapsed ? "w-full" : "w-full lg:w-2/3"} transition-all duration-300`}>
                         {/* Daily Prep Check-in above tabs */}
                         <Suspense fallback={<ComponentLoader />}>
-                            <div className='mb-6'>
+                            <div className='mb-4'>
                                 <DailyPrepEncouragement
                                     userId={user?.id || ""}
                                     onAddPrepLog={() =>

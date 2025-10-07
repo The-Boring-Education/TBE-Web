@@ -1,5 +1,5 @@
-import {Button} from "../ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "../ui/card";
+import Button from "../../common/Buttons/Button";
 
 const PrepLogsShowcase = () => {
     const prepLogs = [
@@ -36,13 +36,13 @@ const PrepLogsShowcase = () => {
     ];
 
     return (
-        <section className='py-20 px-4 bg-gradient-to-r from-gray-900/50 to-gray-800/50'>
+        <section className='py-20 px-4 bg-white'>
             <div className='container mx-auto'>
                 <div className='text-center mb-16 animate-fade-in'>
-                    <h2 className='text-4xl md:text-5xl font-bold text-white mb-6'>
+                    <h2 className='text-4xl md:text-5xl font-bold text-contentLight mb-6'>
                         📝 <span className='text-primary'>Prep Logs</span>
                     </h2>
-                    <p className='text-xl text-gray max-w-3xl mx-auto'>
+                    <p className='text-xl text-greyDark max-w-3xl mx-auto'>
                         Track your preparation journey, monitor progress, and
                         never lose sight of your learning goals.
                     </p>
@@ -50,39 +50,41 @@ const PrepLogsShowcase = () => {
 
                 <div className='max-w-4xl mx-auto'>
                     <div className='flex justify-between items-center mb-8 animate-slide-in-left'>
-                        <div className='text-white'>
+                        <div className='text-contentLight'>
                             <h3 className='text-2xl font-semibold'>
                                 📊 Your Preparation Dashboard
                             </h3>
-                            <p className='text-gray'>
+                            <p className='text-greyDark'>
                                 Keep track of your daily prep sessions
                             </p>
                         </div>
-                        <Button className='bg-primary text-primary-foreground hover:bg-primary/90'>
-                            + Add New Log
-                        </Button>
+                        <Button 
+                            variant='PRIMARY'
+                            text='+ Add New Log'
+                            className='bg-primary text-white hover:bg-primary/90 text-sm px-4 py-2'
+                        />
                     </div>
 
                     <div className='space-y-6'>
                         {prepLogs.map((log, index) => (
                             <Card
                                 key={log.id}
-                                className={"glass-dark border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 animate-slide-in-right"}
+                                className={"glass border-greyLight hover:border-primary/40 transition-all duration-300 hover:scale-105 animate-slide-in-right"}
                                 style={{animationDelay: `${index * 0.1}s`}}>
                                 <CardHeader className='pb-3'>
                                     <div className='flex justify-between items-start'>
                                         <div>
-                                            <CardTitle className='text-white text-lg'>
+                                            <CardTitle className='text-contentLight text-lg'>
                                                 {log.title}
                                             </CardTitle>
                                             <div className='flex gap-2 mt-2'>
                                                 <span className='px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium'>
                                                     {log.category}
                                                 </span>
-                                                <span className='px-3 py-1 bg-gray-600/50 text-gray rounded-full text-sm'>
+                                                <span className='px-3 py-1 bg-greyLight text-greyDark rounded-full text-sm'>
                                                     ⏱️ {log.duration}
                                                 </span>
-                                                <span className='px-3 py-1 bg-gray-600/50 text-gray rounded-full text-sm'>
+                                                <span className='px-3 py-1 bg-greyLight text-greyDark rounded-full text-sm'>
                                                     📅 {log.date}
                                                 </span>
                                             </div>
@@ -91,7 +93,7 @@ const PrepLogsShowcase = () => {
                                             <div className='text-primary font-bold text-lg'>
                                                 {log.progress}%
                                             </div>
-                                            <div className='w-16 h-2 bg-gray-600 rounded-full overflow-hidden'>
+                                            <div className='w-16 h-2 bg-greyLight rounded-full overflow-hidden'>
                                                 <div
                                                     className='h-full bg-primary transition-all duration-500'
                                                     style={{
@@ -102,7 +104,7 @@ const PrepLogsShowcase = () => {
                                     </div>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className='text-gray mb-4'>
+                                    <p className='text-greyDark mb-4'>
                                         {log.notes}
                                     </p>
                                     <div className='flex flex-wrap gap-2 mb-4'>
@@ -116,23 +118,20 @@ const PrepLogsShowcase = () => {
                                     </div>
                                     <div className='flex gap-2'>
                                         <Button
-                                            size='sm'
-                                            variant='outline'
-                                            className='border-primary/30 hover:bg-primary/10 text-white'>
-                                            ✏️ Edit
-                                        </Button>
+                                            variant='NEUTRAL'
+                                            text='✏️ Edit'
+                                            className='text-sm px-3 py-1.5'
+                                        />
                                         <Button
-                                            size='sm'
-                                            variant='outline'
-                                            className='border-primary/30 hover:bg-primary/10 text-white'>
-                                            🔄 Continue
-                                        </Button>
+                                            variant='NEUTRAL'
+                                            text='🔄 Continue'
+                                            className='text-sm px-3 py-1.5'
+                                        />
                                         <Button
-                                            size='sm'
-                                            variant='outline'
-                                            className='border-primary/30 hover:bg-primary/10 text-white'>
-                                            📤 Share
-                                        </Button>
+                                            variant='NEUTRAL'
+                                            text='📤 Share'
+                                            className='text-sm px-3 py-1.5'
+                                        />
                                     </div>
                                 </CardContent>
                             </Card>

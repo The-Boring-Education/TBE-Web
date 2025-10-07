@@ -31,17 +31,17 @@ const getButtonClasses = (
 
   const variantClasses: Record<string, string> = {
     PRIMARY:
-      'bg-primary shadow-lg text-white border-2 border-primary transition-all duration-300 ease-in-out',
+      'bg-primary text-white border border-primary/70 transition-colors duration-200 ease-in-out',
     SECONDARY:
-      'bg-secondary shadow-lg text-white border-2 border-secondary transition-all duration-300 ease-in-out',
+      'bg-secondary text-white border border-secondary/70 transition-colors duration-200 ease-in-out',
     OUTLINE:
-      'bg-light-bg border-2 shadow-lg border-primary text-primary transition-all duration-300 ease-in-out',
+      'bg-transparent border border-primary text-primary transition-colors duration-200 ease-in-out',
     GHOST:
-      'bg-accent text-contentLight border-2 hover:border-black transition-all duration-300 ease-in-out',
+      'bg-accent text-contentLight border border-black/10 transition-colors duration-200 ease-in-out',
     SUCCESS:
-      'bg-success text-white border-2 border-success transition-all duration-300 ease-in-out',
-      NEUTRAL:
-      'bg-primary shadow-lg text-black border-2 border-neutral transition-all duration-300 ease-in-out',
+      'bg-success text-white border border-success/70 transition-colors duration-200 ease-in-out',
+    NEUTRAL:
+      'bg-primary text-black border border-black/10 transition-colors duration-200 ease-in-out',
 
   };
 
@@ -98,7 +98,7 @@ const Button = ({
   isFullWidth = false,
   animationType = 'DEFAULT',
 }: ButtonProps) => {
-  let baseClasses = 'button px-2 py-1';
+  let baseClasses = 'button px-2 py-1 text-sm rounded-1';
   baseClasses = getButtonClasses(baseClasses, variant, active);
 
   // Hide loading spinner but keep functionality

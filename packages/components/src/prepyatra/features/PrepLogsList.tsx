@@ -81,15 +81,15 @@ const PrepLogCard = ({logs, onLogUpdated, onLogDeleted, mongoUserId}: Props) => 
 
     if (logs.length === 0) {
         return (
-            <div className='mt-8'>
-                <h2 className='text-2xl font-bold text-white mb-4'>
+            <div className='mt-4'>
+                <h2 className='text-lg font-semibold text-contentLight mb-2'>
                     📚 Your Prep Logs
                 </h2>
-                <div className='glass-dark rounded-2xl p-8 text-center'>
-                    <h3 className='text-xl font-bold text-white mb-2'>
+                <div className='glass rounded-1 p-4 text-center'>
+                    <h3 className='text-base font-semibold text-contentLight mb-1'>
                         No PrepLogs Yet
                     </h3>
-                    <p className='text-gray'>
+                    <p className='text-greyDark text-sm'>
                         Start building your recruiter network by adding your
                         first contact!
                     </p>
@@ -100,44 +100,44 @@ const PrepLogCard = ({logs, onLogUpdated, onLogDeleted, mongoUserId}: Props) => 
 
     return (
         <>
-            <div className='mt-8'>
-                <h2 className='text-2xl font-bold text-white mb-4'>
+            <div className='mt-4'>
+                <h2 className='text-lg font-semibold text-contentLight mb-2'>
                     📚 Your Prep Logs
                 </h2>
 
-                <div className='grid gap-4 md:grid-cols-2'>
+                <div className='grid gap-3 md:grid-cols-2'>
                     {logs.map((log) => (
                         <Card
                             key={log._id}
-                            className='glass-dark border border-primary/20 hover:border-primary/40 transition-all'>
-                            <CardHeader>
-                                <CardTitle className='text-white text-lg'>
+                            className='glass rounded-1 border border-greyLight transition-all'>
+                            <CardHeader className='p-3'>
+                                <CardTitle className='text-contentLight text-base'>
                                     {log.title}
                                 </CardTitle>
-                                <p className='text-sm text-gray-400'>
+                                <p className='text-xs text-greyDark'>
                                     {new Date(
                                         log.createdAt
                                     ).toLocaleDateString()}{" "}
                                     • ⏱ {log.timeSpent} hr
                                 </p>
                             </CardHeader>
-                            <CardContent>
-                                <p className='text-gray mb-4'>
+                            <CardContent className='p-3'>
+                                <p className='text-greyDark text-sm mb-3'>
                                     {log.description || "No description"}
                                 </p>
                                  {log.mentorFeedback && (
-                                     <div className='mb-4 rounded-md border border-purple-500/30 bg-purple-900/30 p-3'>
-                                         <div className='text-xs font-semibold text-purple-200 mb-1'>
+                                     <div className='mb-3 rounded-md border border-purple-300/40 bg-purple-50 p-2'>
+                                         <div className='text-[11px] font-semibold text-purple-800 mb-1'>
                                              Mentor Feedback
                                          </div>
-                                         <p className='text-sm text-purple-100 whitespace-pre-line'>
+                                         <p className='text-xs text-purple-900 whitespace-pre-line'>
                                              {log.mentorFeedback}
                                          </p>
                                      </div>
                                  )}
                                 <div className='flex gap-2 justify-start'>
                                 <button
-                                                className='inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium bg-secondary text-secondary-foreground border border-input rounded-md hover:bg-accent hover:text-accent-foreground'
+                                                className='inline-flex items-center justify-center px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground border border-input rounded-1 hover:bg-accent hover:text-accent-foreground'
                                                 onClick={() =>
                                                     openEditModal(log)
                                                 }>
@@ -146,26 +146,26 @@ const PrepLogCard = ({logs, onLogUpdated, onLogDeleted, mongoUserId}: Props) => 
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
                                             <button
-                                                className='inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium bg-secondary text-secondary-foreground border border-input rounded-md hover:bg-accent hover:text-accent-foreground'
+                                                className='inline-flex items-center justify-center px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground border border-input rounded-1 hover:bg-accent hover:text-accent-foreground'
                                                 onClick={() =>
                                                     setDeleteId(log._id)
                                                 }>
                                                 ❌ Delete
                                             </button>
                                         </AlertDialogTrigger>
-                                        <AlertDialogContent className='bg-gray-800 border-primary/20'>
+                                        <AlertDialogContent className='bg-white'>
                                             <AlertDialogHeader>
-                                                <Text level="h3" className='text-white text-lg font-semibold'>
+                                                <Text level="h3" className='text-contentLight text-base font-semibold'>
                                                     Delete Prep Log
                                                 </Text>
-                                                <Text level="p" className='text-gray-400 text-sm'>
+                                                <Text level="p" className='text-greyDark text-sm'>
                                                     Are you sure you want to
                                                     delete this prep log? This
                                                     action cannot be undone.
                                                 </Text>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
-                                                <AlertDialogCancel className='bg-muted border-primary/20 bg-gray-800 text-white '>
+                                                <AlertDialogCancel>
                                                     Cancel
                                                 </AlertDialogCancel>
                                                 <AlertDialogAction

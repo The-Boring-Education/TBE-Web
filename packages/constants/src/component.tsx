@@ -1,5 +1,13 @@
-import {NavbarDropdownLink} from "@tbe/interface";
 import React from "react";
+
+interface NavbarDropdownLink {
+  id: string;
+  name: string;
+  href: string;
+  description: string;
+  target?: '_blank';
+  isDevelopment?: boolean;
+}
 
 const socialLinks = [
     {

@@ -12,27 +12,27 @@ const capitalize = (str: string) => {
 
 const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
     return (
-        <nav className='w-full bg-gray-900 border-b border-primary/20 px-4 py-3 flex items-center justify-between'>
+        <nav className='w-full bg-white border-b border-greyLight shadow-sm px-3 py-2 flex items-center justify-between fixed top-0 left-0 right-0 z-50'>
             <div className='flex flex-col gap-1'>
-                <span className='text-3xl font-bold text-primary'>
+                <span className='text-2xl font-bold text-primary'>
                     PrepYatra
                 </span>
-                <span className='text-xs text-white'>
+                <span className='text-[11px] text-greyDark'>
                     By The Boring Education
                 </span>
             </div>
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-3'>
                 <SubscriptionInterestPopover />
                 <PrepYatraNavbarDropdownLinks />
                 {userId && <GamificationDisplay userId={userId} />}
-                <span className='text-white font-medium hidden sm:inline'>
+                <span className='text-contentLight text-sm font-medium hidden sm:inline'>
                     Hello {capitalize(username)}
                 </span>
                 <Button
                     onClick={onSignOut}
-                    variant='OUTLINE'
+                    variant='PRIMARY'
                     text='Sign Out'
-                    className='border-gray-300 text-white hover:bg-gray-100'>
+                    className='px-3 py-1 text-sm'>
                 </Button>
             </div>
         </nav>

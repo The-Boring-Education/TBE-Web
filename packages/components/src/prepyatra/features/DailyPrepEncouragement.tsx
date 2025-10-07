@@ -29,30 +29,30 @@ const DailyPrepEncouragement = ({
 
     return (
         <Card
-            className={`glass-dark border-primary/20 hover:border-primary/40 transition-all duration-300 ${className}`}>
-            <CardContent className='p-6'>
-                <div className='flex flex-col md:flex-row items-start justify-between gap-4'>
+            className={`glass border-greyLight hover:border-primary/30 transition-all duration-200 ${className}`}>
+            <CardContent className='p-3'>
+                <div className='flex flex-col md:flex-row items-start justify-between gap-3'>
                     {/* Main Content */}
                     <div className='flex-1 w-full'>
-                        <div className='flex items-center gap-3 mb-3'>
-                            <span className='text-2xl'>
+                        <div className='flex items-center gap-2 mb-2'>
+                            <span className='text-xl'>
                                 {encouragementEmoji}
                             </span>
-                            <Text level="h3" className='text-lg font-bold text-white'>
+                            <Text level="h3" className='text-base font-semibold text-contentLight'>
                                 Daily Prep Check-in
                             </Text>
                         </div>
 
-                        <Text level="p" className='text-white font-medium mb-2'>
+                        <Text level="p" className='text-contentLight text-sm mb-1.5'>
                             {encouragementMessage}
                         </Text>
 
-                        <Text level="p" className='text-gray-400 text-sm mb-4'>
+                        <Text level="p" className='text-greyDark text-xs mb-3'>
                             {motivationalTip}
                         </Text>
 
                         {/* Stats Row */}
-                        <div className='flex flex-wrap gap-4 text-sm text-gray-400 justify-start'>
+                        <div className='flex flex-wrap gap-3 text-xs text-greyDark justify-start'>
                             {streak > 0 && (
                                 <div className='flex items-center gap-1'>
                                     <Flame className='h-4 w-4 text-orange-500' />
@@ -77,26 +77,22 @@ const DailyPrepEncouragement = ({
                     </div>
 
                     {/* Action Button */}
-                    <FlexContainer direction="col" className='items-center gap-2'>
+                    <FlexContainer direction="col" className='items-center gap-1.5'>
                         <Button
                             onClick={onAddPrepLog}
-                            variant="NEUTRAL"
+                            variant="PRIMARY"
                             text={buttonText}
                             icon={<Plus className='h-4 w-4 mr-2' />}
                             className={`
-                                min-w-[140px] font-medium transition-all rounded-md duration-300
-                                ${
-                                    hasLoggedToday
-                                        ? "bg-green-600 hover:bg-green-700 text-white"
-                                        : "bg-primary hover:bg-primary/90 text-primary-foreground"
-                                }
+                                min-w-[120px] font-medium transition-all rounded-1 duration-200 text-sm px-3 py-1.5
+                                ${hasLoggedToday ? "bg-green-600 hover:bg-green-700" : ""}
                             `}
                         />
 
                         {!hasLoggedToday && streak > 0 && (
-                            <FlexContainer className='items-center text-xs text-orange-400'>
+                            <FlexContainer className='items-center text-[11px] text-orange-500'>
                                 <TrendingUp className='h-3 w-3 mr-1' />
-                                <Text level="span">Streak at risk!</Text>
+                                <Text level="span" className='text-orange-600'>Streak at risk!</Text>
                             </FlexContainer>
                         )}
                     </FlexContainer>

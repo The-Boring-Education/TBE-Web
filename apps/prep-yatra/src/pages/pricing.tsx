@@ -2,17 +2,17 @@ import { Check, Star, Zap, Crown } from "lucide-react"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 
-import Footer from "@/components/layout/Footer"
-import Navbar from "@/components/layout/Navbar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import {PrepYatraFooter, PrepYatraNavbar} from "@tbe/components"
+import {PrepYatraNavigation} from "@tbe/components"
+import { Badge } from "@tbe/components"
+import { Button } from "@tbe/components"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle
-} from "@/components/ui/card"
+} from "@tbe/components"
 import { useAuth } from "@tbe/components"
 import useCashfreePayment from "@/hooks/useCashfreePayment"
 
@@ -176,7 +176,7 @@ const PricingPage: React.FC = () => {
 
     return (
         <div className='min-h-screen bg-background'>
-            <Navbar
+            <PrepYatraNavbar
                 username={user?.name || ""}
                 onSignOut={handleSignOut}
                 userId={user?.id}
@@ -246,18 +246,17 @@ const PricingPage: React.FC = () => {
                             </CardHeader>
 
                             <CardContent className='space-y-4'>
-                                <Button
-                                    className={`w-full ${
-                                        plan.popular
-                                            ? "bg-primary hover:bg-primary/90"
-                                            : "bg-secondary hover:bg-secondary/80"
-                                    }`}
+                                    <Button
+                                    variant={plan.popular
+                                        ? "PRIMARY"
+                                        : "SECONDARY"}
+                                    className="w-full"
                                     onClick={() => handleSelectPlan(plan.id)}
-                                    disabled={loading || plan.id === "free"}>
-                                    {loading
+                                    disabled={loading || plan.id === "free"}
+                                    text={loading
                                         ? "Processing..."
                                         : plan.buttonText}
-                                </Button>
+                                    />
 
                                 <div className='space-y-3'>
                                     <h4 className='font-semibold text-sm'>
@@ -314,7 +313,7 @@ const PricingPage: React.FC = () => {
                 </div>
             </main>
 
-            <Footer />
+            <PrepYatraFooter />
         </div>
     )
 }

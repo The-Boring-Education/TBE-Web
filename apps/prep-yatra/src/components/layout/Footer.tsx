@@ -11,7 +11,7 @@ const Footer = () => {
             whileInView={{opacity: 1}}
             viewport={{once: true}}
             transition={{duration: 0.6}}
-            className='pt-8 px-4 border-t border-white/10 bg-gray-900/90 backdrop-blur-md'>
+            className='pt-6 px-3 border-t border-greyLight bg-white'>
             <div className='container mx-auto flex flex-col gap-6'>
                 <FlexContainer
                     direction='col'
@@ -22,21 +22,21 @@ const Footer = () => {
                         direction='col'
                         className='items-start gap-3 w-full lg:w-1/2'
                         itemCenter={false}>
-                        <FlexContainer direction='col' className='gap-1' itemCenter={false}>
-                            <Text level='span' className='text-3xl font-bold text-primary'>
+                        <FlexContainer direction='col' className='gap-[2px]' itemCenter={false}>
+                            <Text level='span' className='text-2xl font-bold text-primary'>
                                 PrepYatra
                             </Text>
-                            <Text level='span' className='text-xs text-white'>
+                            <Text level='span' className='text-[11px] text-greyDark'>
                                 By The Boring Education
                             </Text>
                         </FlexContainer>
-                        <FlexContainer className='gap-4 mt-2' justifyCenter={false}>
+                        <FlexContainer className='gap-3 mt-2' justifyCenter={false}>
                             {socialLinks.map((link) => (
                                 <Link
                                     key={link.name}
                                     href={link.href}
                                     target='_blank'
-                                    className='text-gray-400 hover:text-primary transition-colors'
+                                    className='text-greyDark hover:text-primary transition-colors'
                                     aria-label={link.name}>
                                     {link.icon}
                                 </Link>
@@ -47,14 +47,14 @@ const Footer = () => {
                     {/* Right: Contribute and Products Sections Side-by-Side */}
                     <FlexContainer
                         direction='col'
-                        className='w-full lg:w-1/2 lg:flex-row lg:justify-end gap-10'
+                        className='w-full lg:w-1/2 lg:flex-row lg:justify-end gap-8'
                         itemCenter={false}>
                         {/* Contribute Section */}
                         <FlexContainer
                             direction='col'
                             className='gap-2 w-full lg:w-auto'
                             itemCenter={false}>
-                            <Text level='span' className='text-gray-400 font-semibold text-sm mb-1 text-left'>
+                            <Text level='span' className='text-greyDark font-semibold text-xs mb-1 text-left'>
                                 Contribute
                             </Text>
                             <FlexContainer
@@ -64,7 +64,7 @@ const Footer = () => {
                                 <Link
                                     href='https://github.com/The-Boring-Education/prep-yatra/issues'
                                     target='_blank'
-                                    className='text-gray-400 hover:text-primary transition-colors text-sm font-medium flex items-center gap-2'>
+                                    className='text-contentLight hover:text-primary transition-colors text-xs font-medium flex items-center gap-2'>
                                     <svg
                                         fill='currentColor'
                                         viewBox='0 0 24 24'
@@ -81,7 +81,7 @@ const Footer = () => {
                             direction='col'
                             className='gap-2 w-full lg:w-auto'
                             itemCenter={false}>
-                            <Text level='span' className='text-gray-400 font-semibold text-sm mb-1 text-left'>
+                            <Text level='span' className='text-greyDark font-semibold text-xs mb-1 text-left'>
                                 Our Products
                             </Text>
                             <FlexContainer
@@ -93,7 +93,7 @@ const Footer = () => {
                                         key={link.name}
                                         href={link.href}
                                         target='_blank'
-                                        className='text-gray-400 hover:text-primary transition-colors text-sm font-medium'>
+                                        className='text-contentLight hover:text-primary transition-colors text-xs font-medium'>
                                         {link.name}
                                     </Link>
                                 ))}
@@ -103,8 +103,8 @@ const Footer = () => {
                 </FlexContainer>
 
                 {/* Built with love - Center Bottom */}
-                <FlexContainer className='py-4 border-t border-white/10'>
-                    <Text level='p' className='text-gray-400 text-center text-sm'>
+                <FlexContainer className='py-3 border-t border-greyLight'>
+                    <Text level='p' className='text-greyDark text-center text-xs'>
                         Built with <span className='text-red-500'>❤️</span> by{" "}
                         <Link
                             href='https://theboringeducation.com'

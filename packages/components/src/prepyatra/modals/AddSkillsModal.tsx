@@ -128,12 +128,12 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
+            <DialogContent className='sm:max-w-[700px] max-h-[85vh] overflow-y-auto glass p-6 border-greyLight rounded-xl'>
                 <DialogHeader>
-                    <Text level="h3" className='text-white text-lg font-semibold'>
+                    <Text level="h3" className='text-contentLight text-lg font-semibold'>
                         ✨ Add Skills
                     </Text>
-                    <Text level="p" className='text-gray-400 text-sm'>
+                    <Text level="p" className='text-greyDark text-sm'>
                         Build your skills stack to showcase your expertise
                     </Text>
                 </DialogHeader>
@@ -155,12 +155,13 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
                         value={inputValue}
                         onChange={(field, value) => setInputValue(value)}
                         placeholder='Type a skill and press Enter...'
+                        className='bg-white border-greyLight text-contentLight'
                         required
                     />
 
                     <div className='flex flex-wrap gap-2 justify-start items-start'>
                         {skills.length === 0 && (
-                            <Text level="span" className='text-gray-400 text-sm'>
+                            <Text level="span" className='text-greyDark text-sm'>
                                 No skills added yet. Start building your stack!
                             </Text>
                         )}
@@ -186,7 +187,7 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
                             variant='NEUTRAL'
                             text="Cancel"
                             onClick={onClose}
-                            className='border-gray-300  rounded-md text-black hover:bg-gray-100 hover:text-gray-900 border-2'
+                            className='border-greyLight rounded-md text-contentLight hover:bg-greyLight border-2'
                             isLoading={loading}
                             animationType='BOUNCE'
                             />
@@ -194,7 +195,7 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
                             variant='NEUTRAL'
                             text={loading ? "Adding..." : "Add Skill"}
                             disabled={loading || !inputValue.trim()}
-                            className='bg-primary  rounded-md text-black border-2'
+                            className='bg-primary rounded-md text-white border-2'
                             isLoading={loading}
                             animationType='BOUNCE'
                         />

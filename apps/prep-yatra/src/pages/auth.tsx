@@ -35,21 +35,21 @@ const Auth = () => {
     });
 
     return (
-        <div className='min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-gradient-to-b from-gray-900 via-black to-gray-900'>
+        <div className='min-h-screen flex items-center justify-center px-3 relative overflow-hidden bg-lightBG'>
             {/* Background Animation Elements */}
-            <div className='absolute inset-0 opacity-10'>
+            <div className='absolute inset-0 opacity-5'>
                 <motion.div
-                    className='absolute top-20 left-10 w-32 h-32 bg-primary/20 rounded-full'
+                    className='absolute top-20 left-10 w-32 h-32 bg-primary/30 rounded-full'
                     animate={{y: [0, 20, 0]}}
                     transition={{duration: 3, repeat: Infinity, ease: "easeInOut"}}
                 />
                 <motion.div
-                    className='absolute top-60 right-20 w-24 h-24 bg-primary/30 rounded-full'
+                    className='absolute top-60 right-20 w-24 h-24 bg-secondary/40 rounded-full'
                     animate={{y: [0, -20, 0]}}
                     transition={{duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1}}
                 />
                 <motion.div
-                    className='absolute bottom-40 left-1/4 w-20 h-20 bg-primary/25 rounded-full'
+                    className='absolute bottom-40 left-1/4 w-20 h-20 bg-primary/35 rounded-full'
                     animate={{y: [0, 15, 0]}}
                     transition={{duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 2}}
                 />
@@ -59,20 +59,20 @@ const Auth = () => {
                 initial={{opacity: 0, scale: 0.9}}
                 animate={{opacity: 1, scale: 1}}
                 transition={{duration: 0.6}}
-                className='glass-dark rounded-2xl p-8 w-full max-w-md relative z-10'>
-                <FlexContainer direction='col' className='text-center mb-8'>
+                className='glass rounded-1 p-6 w-full max-w-md relative z-10 shadow'>
+                <FlexContainer direction='col' className='text-center mb-4'>
                     <FlexContainer direction='col' className='mb-6'>
                         <Text level='span' className='text-3xl font-bold text-primary'>
                             PrepYatra
                         </Text>
-                        <Text level='span' className='text-sm text-gray-400 mt-1'>
+                        <Text level='span' className='text-sm text-greyDark mt-1'>
                             by The Boring Education
                         </Text>
                     </FlexContainer>
-                    <Text level='h1' className='text-2xl font-bold text-white mb-2'>
+                    <Text level='h1' className='text-2xl font-semibold mb-2'>
                         Welcome Back!
                     </Text>
-                    <Text level='p' className='text-gray-300'>
+                    <Text level='p' className='text-sm text-greyDark'>
                         Sign in to continue your journey
                     </Text>
                 </FlexContainer>
@@ -82,9 +82,9 @@ const Auth = () => {
                     onClick={() => login()}
                     disabled={loading}
                     variant='NEUTRAL'
-                    className='w-full bg-white text-black hover:bg-gray-100 font-semibold py-1 px-4 rounded-lg transition-all duration-300 hover:scale-105 border-0'
+                    className="w-full text-lg text-white"
                     icon={
-                        <svg className='w-5 h-5 mr-3' viewBox='0 0 24 24'>
+                        <svg className='w-4 h-4 mr-2' viewBox='0 0 24 24'>
                             <path
                                 fill='#4285F4'
                                 d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'
@@ -108,7 +108,7 @@ const Auth = () => {
                 />
 
                 <FlexContainer className='mt-6 text-center'>
-                    <Text level='p' className='text-sm text-gray-400'>
+                    <Text level='p' className='text-sm text-greyDark'>
                         By signing in, you agree to our Terms of Service and
                         Privacy Policy
                     </Text>

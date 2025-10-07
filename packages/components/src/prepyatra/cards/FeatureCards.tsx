@@ -55,7 +55,7 @@ const FeatureCards = () => {
                                 icon={feature.icon}
                                 title={feature.title}
                                 description={feature.description}
-                                className='glass-dark rounded-2xl p-8 h-full border border-white/10'
+                                className='glass rounded-2xl p-8 h-full border border-greyLight'
                                 bgColor='bg-transparent'
                             />
                         </motion.div>

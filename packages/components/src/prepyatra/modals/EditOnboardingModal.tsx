@@ -188,9 +188,9 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto bg-gray-900 border-gray-700'>
+            <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 <DialogHeader>
-                    <DialogTitle className='text-white text-xl'>
+                    <DialogTitle className='text-contentLight text-xl'>
                         Edit Onboarding Details
                     </DialogTitle>
                 </DialogHeader>
@@ -198,7 +198,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                 <div className='space-y-6'>
                     {/* Social Links Section */}
                     <div className='space-y-3'>
-                        <h3 className='text-lg font-semibold text-white'>
+                        <h3 className='text-lg font-semibold text-contentLight'>
                             Social Links
                         </h3>
                         <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
@@ -206,7 +206,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                             <div>
                                 <label
                                     htmlFor='linkedInUrl'
-                                    className='block text-xs font-medium text-gray-400 mb-1 flex items-center gap-2'>
+                                    className='block text-xs font-medium text-greyDark mb-1 flex items-center gap-2'>
                                     <Linkedin className='w-4 h-4' />
                                     LinkedIn URL
                                 </label>
@@ -220,14 +220,14 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                             e.target.value
                                         )
                                     }
-                                    className='px-3 py-2 block w-full rounded-lg border border-gray-600 bg-gray-800/60 text-white focus:border-primary focus:ring-primary transition-all outline-none'
+                                    className='px-3 py-2 block w-full rounded-lg border border-greyLight bg-white text-contentLight focus:border-primary focus:ring-primary transition-all outline-none'
                                 />
                             </div>
                             {/* GitHub */}
                             <div>
                                 <label
                                     htmlFor='githubUrl'
-                                    className='block text-xs font-medium text-gray-400 mb-1 flex items-center gap-2'>
+                                    className='block text-xs font-medium text-greyDark mb-1 flex items-center gap-2'>
                                     <Github className='w-4 h-4' />
                                     GitHub URL
                                 </label>
@@ -241,14 +241,14 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                             e.target.value
                                         )
                                     }
-                                    className='px-3 py-2 block w-full rounded-lg border border-gray-600 bg-gray-800/60 text-white focus:border-primary focus:ring-primary transition-all outline-none'
+                                    className='px-3 py-2 block w-full rounded-lg border border-greyLight bg-white text-contentLight focus:border-primary focus:ring-primary transition-all outline-none'
                                 />
                             </div>
                             {/* LeetCode */}
                             <div>
                                 <label
                                     htmlFor='leetCodeUrl'
-                                    className='block text-xs font-medium text-gray-400 mb-1 flex items-center gap-2'>
+                                    className='block text-xs font-medium text-greyDark mb-1 flex items-center gap-2'>
                                     <ExternalLink className='w-4 h-4' />
                                     LeetCode URL
                                 </label>
@@ -262,7 +262,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                             e.target.value
                                         )
                                     }
-                                    className='px-3 py-2 block w-full rounded-lg border border-gray-600 bg-gray-800/60 text-white focus:border-primary focus:ring-primary transition-all outline-none'
+                                    className='px-3 py-2 block w-full rounded-lg border border-greyLight bg-white text-contentLight focus:border-primary focus:ring-primary transition-all outline-none'
                                 />
                             </div>
                         </div>
@@ -270,7 +270,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
 
                     {/* Goal Selection */}
                     <div className='space-y-3'>
-                        <h3 className='text-lg font-semibold text-white'>
+                        <h3 className='text-lg font-semibold text-contentLight'>
                             Goal Timeline 🎯
                         </h3>
                         <div className='space-y-2'>
@@ -283,8 +283,8 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                     }
                                     className={`w-full p-3 border-2 rounded-lg text-left transition-all relative ${
                                         formData.goal === goal.value as OnboardingGoalType
-                                            ? "border-primary bg-primary/20"
-                                            : "border-gray-600 hover:border-gray-500 bg-gray-800/50"
+                                            ? "border-primary bg-primary/10"
+                                            : "border-greyLight hover:border-greyDark bg-white/50"
                                     }`}>
                                     {goal.popular && (
                                         <span className='absolute top-1 right-1 bg-orange-500 text-white text-xs px-2 py-1 rounded-full'>
@@ -296,10 +296,10 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                             {goal.icon}
                                         </span>
                                         <div>
-                                            <div className='font-medium text-white'>
+                                            <div className='font-medium text-contentLight'>
                                                 {goal.label}
                                             </div>
-                                            <div className='text-sm text-gray'>
+                                            <div className='text-sm text-greyDark'>
                                                 {goal.description}
                                             </div>
                                         </div>
@@ -311,7 +311,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
 
                     {/* Target Companies */}
                     <div className='space-y-3'>
-                        <h3 className='text-lg font-semibold text-white'>
+                        <h3 className='text-lg font-semibold text-contentLight'>
                             Target Companies 🏢
                         </h3>
                         <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
@@ -329,8 +329,8 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                         formData.targetCompanies.includes(
                                             company.value as OnboardingCompanyType
                                         )
-                                            ? "border-primary bg-primary/20"
-                                            : "border-gray-600 hover:border-gray-500 bg-gray-800/50"
+                                            ? "border-primary bg-primary/10"
+                                            : "border-greyLight hover:border-greyDark bg-white/50"
                                     }`}>
                                     <div className='text-xl mb-1'>
                                         {company.icon}
@@ -344,14 +344,14 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                 </button>
                             ))}
                         </div>
-                        <div className='text-sm text-gray-400 text-center'>
+                        <div className='text-sm text-greyDark text-center'>
                             {formData.targetCompanies.length} selected
                         </div>
                     </div>
 
                     {/* Interview Categories */}
                     <div className='space-y-3'>
-                        <h3 className='text-lg font-semibold text-white'>
+                        <h3 className='text-lg font-semibold text-contentLight'>
                             Interview Category 📚
                         </h3>
                         <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
@@ -369,8 +369,8 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                         formData.preferredCategories.includes(
                                             category.value
                                         )
-                                            ? "border-primary bg-primary/20"
-                                            : "border-gray-600 hover:border-gray-500 bg-gray-800/50"
+                                            ? "border-primary bg-primary/10"
+                                            : "border-greyLight hover:border-greyDark bg-white/50"
                                     }`}>
                                     <div className='text-xl mb-1'>
                                         {category.icon}
@@ -384,7 +384,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                 </button>
                             ))}
                         </div>
-                        <div className='text-sm text-gray-400 text-center'>
+                        <div className='text-sm text-greyDark text-center'>
                             {formData.preferredCategories.length} selected
                         </div>
                     </div>
@@ -394,13 +394,13 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                         <Button
                             onClick={handleSubmit}
                             disabled={loading}
-                            className='flex-1 bg-primary text-primary-foreground hover:bg-primary/90'>
+                            className='flex-1 bg-primary text-white hover:bg-primary/90'>
                             {loading ? "Updating..." : "Update Details"}
                         </Button>
                         <Button
                             onClick={onClose}
                             variant='outline'
-                            className='flex-1 border-gray-600 text-white hover:bg-gray-800 hover:text-white'>
+                            className='flex-1 border-greyLight text-contentLight hover:bg-greyLight'>
                             Cancel
                         </Button>
                     </div>

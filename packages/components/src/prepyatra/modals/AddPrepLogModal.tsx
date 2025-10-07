@@ -119,12 +119,12 @@ const AddPrepLogModal = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
+            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 <DialogHeader>
-                    <Text level="h3" className='text-white text-lg font-semibold'>
+                    <Text level="h3" className='text-contentLight text-lg font-semibold'>
                         {editLog ? "✏️ Edit Prep Log" : "📝 Add New Prep Log"}
                     </Text>
-                    <Text level="p" className='text-gray-400 text-sm'>
+                    <Text level="p" className='text-greyDark text-sm'>
                         {editLog
                             ? "Update your existing preparation log entry."
                             : "Log your daily preparation efforts."}
@@ -136,13 +136,14 @@ const AddPrepLogModal = ({
                         label='Title'
                         field='title'
                         value={formData.title}
+                        className='bg-white border-greyLight text-contentLight' 
                         onChange={handleInputChange}
                         placeholder='E.g. Solved Leetcode Mediums'
                         required
                     />
 
                     <div className='flex flex-col gap-2'>
-                        <Text level="label" className='text-white'>
+                        <Text level="label" className='text-contentLight'>
                             Description
                         </Text>
                         <Textarea
@@ -152,7 +153,7 @@ const AddPrepLogModal = ({
                                 handleInputChange("description", e.target.value)
                             }
                             placeholder='Briefly describe your preparation work...'
-                            className='bg-gray-800 border-gray-600 text-white resize-none'
+                            className='bg-white border-greyLight text-contentLight resize-none'
                             rows={3}
                         />
                     </div>
@@ -161,6 +162,7 @@ const AddPrepLogModal = ({
                         label='Time Spent (in hours)'
                         field='timeSpent'
                         value={formData.timeSpent}
+                        className='bg-white border-greyLight text-contentLight'
                         type='number'
                         onChange={handleInputChange}
                         placeholder='E.g. 1.5'
@@ -169,13 +171,13 @@ const AddPrepLogModal = ({
 
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            variant='NEUTRAL'
+                            variant='OUTLINE'
                             text="Cancel"
                             onClick={onClose}
-                            className='rounded-md text-black hover:bg-primary/90'
+                            className='rounded-md text-contentLight border-greyLight hover:bg-greyLight'
                         />
                         <Button
-                            variant='NEUTRAL'
+                            variant='PRIMARY'
                             text={loading
                                 ? editLog
                                     ? "Updating..."
@@ -184,7 +186,7 @@ const AddPrepLogModal = ({
                                 ? "Update Log"
                                 : "Add Log"}
                             disabled={loading}
-                            className='rounded-md text-black hover:bg-primary/90'
+                            className='rounded-md text-white bg-primary hover:bg-primary/90'
                         />
                     </DialogFooter>
                 </form>

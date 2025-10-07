@@ -152,14 +152,14 @@ const AddRecruiterModal = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
+            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 <DialogHeader>
-                    <Text level="h3" className='text-white text-lg font-semibold'>
+                    <Text level="h3" className='text-contentLight text-lg font-semibold'>
                         {editContact
                             ? "Edit Recruiter Contact"
                             : "Add New Recruiter Contact"}
                     </Text>
-                    <Text level="p" className='text-gray-400 text-sm'>
+                    <Text level="p" className='text-greyDark text-sm'>
                         {editContact
                             ? "Update recruiter information and progress."
                             : "Add a new recruiter contact to your prep journey."}
@@ -170,6 +170,7 @@ const AddRecruiterModal = ({
                         <InputField
                             label='Name'
                             value={formData.recruiterName}
+                            className='bg-white border-greyLight text-contentLight'
                             field='recruiterName'
                             onChange={handleInputChange}
                             required
@@ -178,6 +179,7 @@ const AddRecruiterModal = ({
                             label='Email'
                             type='email'
                             value={formData.email}
+                            className='bg-white border-greyLight text-contentLight'
                             field='email'
                             placeholder='Optional'
                             onChange={handleInputChange}
@@ -186,6 +188,7 @@ const AddRecruiterModal = ({
                             label='Phone'
                             placeholder='Optional'
                             value={formData.phone}
+                            className='bg-white border-greyLight text-contentLight'
                             field='phone'
                             onChange={handleInputChange}
                         />
@@ -193,6 +196,7 @@ const AddRecruiterModal = ({
                             label='Company'
                             placeholder='Optional'
                             value={formData.company}
+                            className='bg-white border-greyLight text-contentLight'
                             field='company'
                             onChange={handleInputChange}
                         />
@@ -200,14 +204,14 @@ const AddRecruiterModal = ({
                             label='Applied Position'
                             placeholder='Optional'
                             value={formData.appliedPosition}
+                            className='bg-white border-greyLight text-contentLight'
                             field='appliedPosition'
                             onChange={handleInputChange}
                         />
                         <div className='flex gap-2 flex-col'>
                             <Label
                                 htmlFor='applicationStatus'
-                                className='text-white'>
-                                Status
+                                className='text-contentLight'>                                Status
                             </Label>
                             <select
                                 value={formData.applicationStatus}
@@ -217,7 +221,7 @@ const AddRecruiterModal = ({
                                         e.target.value
                                     )
                                 }
-                                className='bg-gray-800 border border-primary/20 text-white rounded-md px-2 py-2'>
+                                className='bg-white border border-greyLight text-contentLight rounded-md px-2 py-2'>
                                 <option value='Screening in Process'>
                                     Screening in Process
                                 </option>
@@ -237,6 +241,7 @@ const AddRecruiterModal = ({
                             label='Follow-up Date'
                             type='date'
                             value={formData.follow_up_date}
+                            className='bg-white border-greyLight text-contentLight'
                             field='follow_up_date'
                             onChange={handleInputChange}
                         />
@@ -244,6 +249,7 @@ const AddRecruiterModal = ({
                             label='Last Interview Date'
                             type='date'
                             value={formData.last_interview_date}
+                            className='bg-white border-greyLight text-contentLight'
                             field='last_interview_date'
                             onChange={handleInputChange}
                         />
@@ -251,12 +257,13 @@ const AddRecruiterModal = ({
                             label='Link'
                             value={formData.link}
                             placeholder='Optional'
+                            className='bg-white border-greyLight text-contentLight'
                             field='link'
                             onChange={handleInputChange}
                         />
                     </div>
                     <div>
-                        <Label htmlFor='comments' className='text-white'>
+                        <Label htmlFor='comments' className='text-contentLight'>
                             Comments
                         </Label>
                         <Textarea
@@ -266,7 +273,7 @@ const AddRecruiterModal = ({
                             onChange={(e:any) =>
                                 handleInputChange("comments", e.target.value)
                             }
-                            className='bg-gray-800 border-gray-600 text-white resize-none'
+                            className='bg-white border-greyLight text-contentLight border resize-none'
                             rows={3}
                         />
                     </div>
@@ -275,7 +282,7 @@ const AddRecruiterModal = ({
                             variant='OUTLINE'
                             text="Cancel"
                             onClick={onClose}
-                            className='border-gray-300 text-white hover:bg-gray-100'
+                            className='border-greyLight text-contentLight hover:bg-greyLight'
                         />
                         <Button
                             variant='PRIMARY'
@@ -287,7 +294,7 @@ const AddRecruiterModal = ({
                                   ? "Update Contact"
                                   : "Create Contact"}
                             disabled={loading}
-                            className='bg-primary text-primary-foreground'
+                            className='bg-primary text-white'
                         />
                     </DialogFooter>
                 </form>

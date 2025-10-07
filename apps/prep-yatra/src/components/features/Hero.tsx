@@ -14,7 +14,7 @@ const Hero = () => {
         {
             icon: (
                 <svg
-                    className='w-8 h-8 text-primary-foreground'
+                    className='w-8 h-8 text-white'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -33,7 +33,7 @@ const Hero = () => {
         {
             icon: (
                 <svg
-                    className='w-8 h-8 text-primary-foreground'
+                    className='w-8 h-8 text-white'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -52,7 +52,7 @@ const Hero = () => {
         {
             icon: (
                 <svg
-                    className='w-8 h-8 text-primary-foreground'
+                    className='w-8 h-8 text-white'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -71,21 +71,21 @@ const Hero = () => {
     ];
 
     return (
-        <section className='min-h-screen flex items-center justify-center px-4 pt-16 relative overflow-hidden'>
+        <section className='min-h-[70vh] flex items-center justify-center px-3 pt-16 relative overflow-hidden bg-lightBG'>
             {/* Background Animation Elements */}
-            <div className='absolute inset-0 opacity-10'>
+            <div className='absolute inset-0 opacity-5'>
                 <motion.div
-                    className='absolute top-20 left-10 w-32 h-32 bg-primary/20 rounded-full'
+                    className='absolute top-20 left-10 w-32 h-32 bg-primary/30 rounded-full'
                     animate={{y: [0, 20, 0]}}
                     transition={{duration: 3, repeat: Infinity, ease: "easeInOut"}}
                 />
                 <motion.div
-                    className='absolute top-60 right-20 w-24 h-24 bg-primary/30 rounded-full'
+                    className='absolute top-60 right-20 w-24 h-24 bg-secondary/40 rounded-full'
                     animate={{y: [0, -20, 0]}}
                     transition={{duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1}}
                 />
                 <motion.div
-                    className='absolute bottom-40 left-1/4 w-20 h-20 bg-primary/25 rounded-full'
+                    className='absolute bottom-40 left-1/4 w-20 h-20 bg-primary/35 rounded-full'
                     animate={{y: [0, 15, 0]}}
                     transition={{duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 2}}
                 />
@@ -96,11 +96,11 @@ const Hero = () => {
                     initial={{opacity: 0, y: 20}}
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.6}}>
-                    <Text level='h1' className='text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight'>
+                    <Text level='h1' className='text-3xl md:text-5xl font-bold mb-4 leading-tight'>
                         Turn{" "}
                         <motion.span
                             className='text-primary'
-                            animate={{opacity: [1, 0.5, 1]}}
+                            animate={{opacity: [1, 0.7, 1]}}
                             transition={{duration: 2, repeat: Infinity}}>
                             Hustle
                         </motion.span>
@@ -108,13 +108,13 @@ const Hero = () => {
                         Into{" "}
                         <motion.span
                             className='text-primary'
-                            animate={{opacity: [1, 0.5, 1]}}
+                            animate={{opacity: [1, 0.7, 1]}}
                             transition={{duration: 2, repeat: Infinity, delay: 1}}>
                             Hires
                         </motion.span>
                     </Text>
 
-                    <Text level='p' className='text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto'>
+                    <Text level='p' className='text-base md:text-lg text-greyDark mb-6 max-w-3xl mx-auto'>
                         The ultimate community platform for job hunters to store
                         recruiter contacts, share prep logs, and crowdsource
                         resources together.{" "}
@@ -123,33 +123,34 @@ const Hero = () => {
                         </span>
                     </Text>
 
-                    <FlexContainer className='mb-12 flex-col sm:flex-row gap-4'>
+                    <FlexContainer className='mb-8 flex-col sm:flex-row gap-3'>
                         <Button
                             text='🚀 Start Your Journey Free'
                             onClick={handleGetStarted}
                             variant='PRIMARY'
-                            className='bg-primary text-black rounded-sm hover:bg-primary/90 text-lg px-8 py-2 font-semibold transform transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-primary/50'
+                            className='text-sm px-4 py-2 font-semibold'
+                            animationType='BOUNCE'
                         />
                     </FlexContainer>
                 </motion.div>
 
-                <GridContainer className='md:grid-cols-3 gap-6 mt-16'>
+                <GridContainer className='md:grid-cols-3 gap-4 mt-10'>
                     {features.map((feature, index) => (
                         <motion.div
                             key={index}
                             initial={{opacity: 0, y: 20}}
                             animate={{opacity: 1, y: 0}}
                             transition={{duration: 0.6, delay: feature.delay}}
-                            whileHover={{scale: 1.05}}
-                            className='glass rounded-2xl p-6 transition-transform duration-300'>
+                            whileHover={{scale: 1.02, y: -3}}
+                            className='glass rounded-1 p-4 transition-all duration-200 shadow hover:shadow-md'>
                             <FlexContainer direction='col'>
-                                <div className='w-16 h-16 bg-primary rounded-full mx-auto mb-4 flex items-center justify-center'>
+                                <div className='w-12 h-12 bg-primary rounded-full mx-auto mb-3 flex items-center justify-center shadow'>
                                     {feature.icon}
                                 </div>
-                                <Text level='h3' className='text-white font-semibold mb-2'>
+                                <Text level='h3' className='text-lg font-semibold mb-1'>
                                     {feature.title}
                                 </Text>
-                                <Text level='p' className='text-gray-300 text-sm'>
+                                <Text level='p' className='text-sm text-greyDark'>
                                     {feature.description}
                                 </Text>
                             </FlexContainer>

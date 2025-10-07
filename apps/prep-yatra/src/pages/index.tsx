@@ -12,7 +12,7 @@ import {ResourceSharingShowcase} from "@tbe/components";
 
 const Index = () => {
     return (
-        <div className='min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900'>
+        <div className='min-h-screen bg-lightBG'>
             <PrepYatraNavigation />
             <Section className='pt-16'>
                 <InstallButton />

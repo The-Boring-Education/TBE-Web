@@ -1,47 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 0 84.2% 60.2%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 42 87% 55%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  
+  html {
+    @apply scroll-smooth;
   }
 }
 
@@ -51,23 +47,127 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    @apply bg-lightBG text-contentLight scroll-smooth font-primary;
+    background: #F8F8F8;
     min-height: 100vh;
+  }
+}
+
+/* Custom Classes */
+@layer components {
+  /* 1. Gradients */
+  .gradient-1 {
+    @apply bg-gradient-to-r from-[#F6FFBE] to-[#F99156];
+  }
+
+  .gradient-2 {
+    @apply bg-gradient-to-b from-[#2555FF] to-[#9B8BFF];
+  }
+
+  .gradient-3 {
+    @apply bg-gradient-to-b from-[#FFE259] to-[#FFA751];
+  }
+
+  .gradient-4 {
+    @apply bg-gradient-to-b from-[#FF76E1] to-[#D0AA7D];
+  }
+
+  .gradient-5 {
+    @apply bg-gradient-to-b from-[#923CFF] to-[#4E4EFF];
+  }
+
+  .gradient-6 {
+    @apply bg-gradient-to-b from-[#F0F3FF] to-[#FFA4C5];
+  }
+
+  .gradient-7 {
+    @apply bg-gradient-to-b from-[#EEFFBF] to-[#04ADC4];
+  }
+
+  .gradient-8 {
+    @apply bg-gradient-to-b from-[#F0F3FF] to-[#FFCAA4];
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-b from-[#070607] to-[#1B1B1B];
+  }
+
+  /* 2. Fonts */
+  .heading-1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-black text-contentLight;
+  }
+
+  .heading-2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-contentLight;
+  }
+
+  .heading-3 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold text-contentLight;
+  }
+
+  .heading-4,
+  .md-1 {
+    @apply text-xl md:text-2xl lg:text-3xl font-semibold text-contentLight;
+  }
+
+  .heading-5 {
+    @apply text-lg md:text-xl lg:text-2xl font-semibold text-contentLight;
+  }
+
+  .subtitle {
+    @apply text-subtitle font-normal text-contentLight;
+  }
+
+  .paragraph {
+    @apply text-paragraph font-normal text-contentLight;
+  }
+
+  .strong-text {
+    @apply text-strong-text font-semibold text-contentLight;
+  }
+
+  .pre-title {
+    @apply text-pre-title font-normal text-contentLight;
+  }
+
+  .button-text {
+    @apply text-button-text font-bold text-contentLight;
+  }
+
+  .label {
+    @apply text-label font-semibold text-greyDark;
+  }
+
+  .link {
+    @apply text-button-text text-contentLight;
+  }
+
+  .button {
+    @apply rounded-1 text-button-text font-bold text-contentLight;
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
+
+  .checkbox,
+  .radio {
+    @apply flex items-center gap-2 px-3 py-2 border label rounded-full transition-all duration-150 cursor-pointer shadow-md;
   }
 }
 
 @layer utilities {
   .glass {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .glass-dark {
-    background: rgba(17, 24, 39, 0.8);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 207, 37, 0.2);
+    border: 1px solid rgba(255, 87, 87, 0.2);
   }
 
   /* Custom animations for the showcase page */

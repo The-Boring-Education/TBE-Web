@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 
-import {prepLogsService} from "@/services/prep-logs";
+import {prepLogsService} from "@tbe/services";
 
 export interface PrepLog {
     _id: string

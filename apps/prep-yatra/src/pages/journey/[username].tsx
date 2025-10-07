@@ -12,8 +12,8 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 
-import Footer from "@/components/layout/Footer"
-import Navigation from "@/components/layout/Navigation"
+import {PrepYatraFooter} from "@tbe/components"
+import {PrepYatraNavigation} from "@tbe/components"
 import { Badge } from "@tbe/components"
 import { Button, Text, FlexContainer, Section, GridContainer, IconCard } from "@tbe/components"
 import {
@@ -168,7 +168,7 @@ const PrepLogsShowcase = () => {
     if (error || !profile) {
         return (
             <div className='min-h-screen bg-background'>
-                <Navigation />
+                <PrepYatraNavigation />
                 <Section className='container mx-auto px-4 py-16 text-center'>
                     <Text level='h1' className='text-4xl font-bold text-foreground mb-4'>
                         User Not Found
@@ -183,7 +183,7 @@ const PrepLogsShowcase = () => {
                         variant='PRIMARY'
                     />
                 </Section>
-                <Footer />
+                <PrepYatraFooter />
             </div>
         )
     }
@@ -196,7 +196,7 @@ const PrepLogsShowcase = () => {
 
     return (
         <div className='min-h-screen bg-background'>
-            <Navigation />
+            <PrepYatraNavigation />
 
             <Section className='container mx-auto px-4 mt-12 px-6 lg:px-8 py-8 md:py-12 lg:py-16'>
                 {/* Header Section */}
@@ -520,7 +520,7 @@ const PrepLogsShowcase = () => {
                 </FlexContainer>
             </Section>
 
-            <Footer />
+            <PrepYatraFooter />
         </div>
     )
 }

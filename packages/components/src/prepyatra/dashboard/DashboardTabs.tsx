@@ -57,7 +57,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
     onContactDeleted
 }) => {
     return (
-        <Tabs defaultValue="prep-logs" className="space-y-6">
+        <Tabs defaultValue="challenges" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="challenges">Challenges</TabsTrigger>
                 <TabsTrigger value="prep-logs">Prep Logs</TabsTrigger>
@@ -67,7 +67,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 
             <TabsContent value="prep-logs" className="space-y-4">
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
+                    <CardHeader className="flex flex-row items-center justify-between p-4">
                         <div>
                             <Text level="h3" className="text-lg font-semibold">Preparation Logs</Text>
                             <Text level="p" className="text-sm text-muted-foreground">
@@ -76,13 +76,13 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                         </div>
                         <Button 
                             onClick={onPrepLogModalOpen} 
-                            variant="NEUTRAL"
+                            variant="PRIMARY"
                             text="Add Log"
                             icon={<Plus className="w-4 h-4 mr-2" />}
-                            className="rounded-md text-black hover:bg-primary/90"
+                            className="rounded-1 text-sm px-3 py-1.5"
                         />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4">
                         <Suspense fallback={<ComponentLoader />}>
                             <PrepLogsList 
                                 logs={prepLogs}
@@ -103,7 +103,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 
             <TabsContent value="recruiters" className="space-y-4">
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
+                    <CardHeader className="flex flex-row items-center justify-between p-4">
                         <div>
                             <Text level="h3" className="text-lg font-semibold">Recruiter Contacts</Text>
                             <Text level="p" className="text-sm text-muted-foreground">
@@ -112,13 +112,13 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                         </div>
                         <Button 
                             onClick={onRecruiterModalOpen} 
-                            variant="NEUTRAL"
+                            variant="PRIMARY"
                             text="Add Contact"
                             icon={<Plus className="w-4 h-4 mr-2" />}
-                            className="rounded-md text-black hover:bg-primary/90"
+                            className="rounded-1 text-sm px-3 py-1.5"
                         />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4">
                         <Suspense fallback={<ComponentLoader />}>
                             <RecruiterContactsTable
                                 contacts={recruiterContacts}
@@ -132,7 +132,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 
             <TabsContent value="skills" className="space-y-4">
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
+                    <CardHeader className="flex flex-row items-center justify-between p-4">
                         <div>
                             <Text level="h3" className="text-lg font-semibold">Skills & Technologies</Text>
                             <Text level="p" className="text-sm text-muted-foreground">
@@ -141,13 +141,13 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                         </div>
                         <Button 
                             onClick={onSkillsModalOpen} 
-                            variant="NEUTRAL"
+                            variant="PRIMARY"
                             text="Add Skills"
                             icon={<Plus className="w-4 h-4 mr-2" />}
-                            className="rounded-md text-black hover:bg-primary/90"
+                            className="rounded-1 text-sm px-3 py-1.5"
                         />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4">
                         <Suspense fallback={<ComponentLoader />}>
                             <UserSkillsShowcase 
                                 userSkills={profile?.userSkills || []}

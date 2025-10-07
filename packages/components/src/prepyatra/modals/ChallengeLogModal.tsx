@@ -309,13 +309,13 @@ ${
     if (isChallengeCompleted) {
         return (
             <Dialog open={isOpen} onOpenChange={onClose}>
-                <DialogContent className='sm:max-w-[500px] glass-dark border-primary/20'>
+                <DialogContent className='sm:max-w-[500px] glass border-greyLight'>
                     <DialogHeader>
-                        <DialogTitle className='text-xl font-bold text-white flex items-center gap-2'>
+                        <DialogTitle className='text-xl font-bold text-contentLight flex items-center gap-2'>
                             <Trophy className='w-5 h-5 text-yellow-400' />
                             Challenge Completed! 🎉
                         </DialogTitle>
-                        <DialogDescription className='text-gray-300'>
+                        <DialogDescription className='text-greyDark'>
                             Congratulations! You've completed "{challenge.name}"
                         </DialogDescription>
                     </DialogHeader>
@@ -323,16 +323,16 @@ ${
                     <Card className='bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-500/30'>
                         <CardContent className='pt-6 text-center'>
                             <Trophy className='w-16 h-16 text-yellow-400 mx-auto mb-4' />
-                            <h3 className='text-lg font-semibold text-white mb-2'>
+                            <h3 className='text-lg font-semibold text-contentLight mb-2'>
                                 Amazing Achievement!
                             </h3>
-                            <p className='text-gray-300 mb-4'>
+                            <p className='text-greyDark mb-4'>
                                 You've successfully completed all{" "}
                                 {challenge.totalDays} days of your challenge.
                                 This is a testament to your dedication and
                                 consistency!
                             </p>
-                            <div className='text-sm text-gray-400'>
+                            <div className='text-sm text-greyDark'>
                                 <p>Challenge: {challenge.name}</p>
                                 <p>
                                     Category: {challenge.category || "General"}
@@ -345,7 +345,7 @@ ${
                     <DialogFooter>
                         <Button
                             onClick={handleClose}
-                            className='bg-primary text-primary-foreground hover:bg-primary/90'>
+                            className='bg-primary text-white hover:bg-primary/90'>
                             Close
                         </Button>
                     </DialogFooter>
@@ -356,15 +356,15 @@ ${
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass-dark border-primary/20'>
+            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 {!showSocialPreview ? (
                     <>
                         <DialogHeader>
-                            <DialogTitle className='text-xl font-bold text-white flex items-center gap-2'>
+                            <DialogTitle className='text-xl font-bold text-contentLight flex items-center gap-2'>
                                 <TrendingUp className='w-5 h-5 text-primary' />
                                 Log Day {nextDay + 1} Progress
                             </DialogTitle>
-                            <DialogDescription className='text-gray-300'>
+                            <DialogDescription className='text-greyDark'>
                                 Track your progress for "{challenge.name}"
                             </DialogDescription>
                         </DialogHeader>
@@ -374,7 +374,7 @@ ${
                             <div className='space-y-2'>
                                 <Label
                                     htmlFor='progressText'
-                                    className='text-white'>
+                                    className='text-contentLight'>
                                     What did you accomplish today? *
                                 </Label>
                                 <Textarea
@@ -387,7 +387,7 @@ ${
                                             e.target.value
                                         )
                                     }
-                                    className='bg-gray-800/50 border-gray-600 text-white placeholder:text-gray-400'
+                                    className='bg-white/50 border-greyLight text-contentLight placeholder:text-greyDark'
                                     rows={3}
                                 />
                             </div>
@@ -396,7 +396,7 @@ ${
                             <div className='space-y-2'>
                                 <Label
                                     htmlFor='hoursSpent'
-                                    className='text-white'>
+                                    className='text-contentLight'>
                                     How many hours did you spend? *
                                 </Label>
                                 <Input
@@ -413,13 +413,13 @@ ${
                                             e.target.value
                                         )
                                     }
-                                    className='bg-gray-800/50 border-gray-600 text-white'
+                                    className='bg-white/50 border-greyLight text-contentLight'
                                 />
                             </div>
 
                             {/* Next Goals */}
                             <div className='space-y-3'>
-                                <Label className='text-white'>
+                                <Label className='text-contentLight'>
                                     What are your goals for tomorrow?
                                 </Label>
                                 <div className='space-y-2'>
@@ -436,7 +436,7 @@ ${
                                                     e.target.value
                                                 )
                                             }
-                                            className='bg-gray-800/50 border-gray-600 text-white placeholder:text-gray-400'
+                                            className='bg-white/50 border-greyLight text-contentLight placeholder:text-greyDark'
                                         />
                                     ))}
                                 </div>
@@ -453,48 +453,48 @@ ${
                                 />
                                 <Label
                                     htmlFor='copyToPrepLogs'
-                                    className='text-white text-sm'>
+                                    className='text-contentLight text-sm'>
                                     Also add this to my Prep Logs
                                 </Label>
                             </div>
 
                             {/* Challenge Info */}
-                            <Card className='bg-gray-800/30 border-gray-600'>
+                            <Card className='bg-white/30 border-greyLight'>
                                 <CardHeader className='pb-3'>
-                                    <CardTitle className='text-sm text-white'>
+                                    <CardTitle className='text-sm text-contentLight'>
                                         Challenge Progress
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className='space-y-2 text-sm'>
                                     <div className='flex justify-between'>
-                                        <span className='text-gray-400'>
+                                        <span className='text-greyDark'>
                                             Current Day:
                                         </span>
-                                        <span className='text-white'>
+                                        <span className='text-contentLight'>
                                             {challenge.currentDay + 1}
                                         </span>
                                     </div>
                                     <div className='flex justify-between'>
-                                        <span className='text-gray-400'>
+                                        <span className='text-greyDark'>
                                             Next Day:
                                         </span>
-                                        <span className='text-white'>
+                                        <span className='text-contentLight'>
                                             {nextDay + 1}
                                         </span>
                                     </div>
                                     <div className='flex justify-between'>
-                                        <span className='text-gray-400'>
+                                        <span className='text-greyDark'>
                                             Total Days:
                                         </span>
-                                        <span className='text-white'>
+                                        <span className='text-contentLight'>
                                             {challenge.totalDays}
                                         </span>
                                     </div>
                                     <div className='flex justify-between'>
-                                        <span className='text-gray-400'>
+                                        <span className='text-greyDark'>
                                             Progress:
                                         </span>
-                                        <span className='text-white'>
+                                        <span className='text-contentLight'>
                                             {Math.round(
                                                 (nextDay /
                                                     challenge.totalDays) *
@@ -511,7 +511,7 @@ ${
                             <Button
                                 onClick={onClose}
                                 variant='outline'
-                                className='border-gray-300 text-white hover:bg-gray-100 hover:text-gray-900'>
+                                className='border-greyLight text-contentLight hover:bg-greyLight'>
                                 Cancel
                             </Button>
                             <Button
@@ -521,7 +521,7 @@ ${
                                     !formData.progressText.trim() ||
                                     !formData.hoursSpent
                                 }
-                                className='bg-primary text-primary-foreground hover:bg-primary/90'>
+                                className='bg-primary text-white hover:bg-primary/90'>
                                 {loading ? "Logging..." : "Log Progress"}
                             </Button>
                         </DialogFooter>
@@ -529,11 +529,11 @@ ${
                 ) : (
                     <>
                         <DialogHeader>
-                            <DialogTitle className='text-xl font-bold text-white flex items-center gap-2'>
+                            <DialogTitle className='text-xl font-bold text-contentLight flex items-center gap-2'>
                                 <Share2 className='w-5 h-5 text-primary' />
                                 Share Your Progress
                             </DialogTitle>
-                            <DialogDescription className='text-gray-300'>
+                            <DialogDescription className='text-greyDark'>
                                 Choose a template to share your Day{" "}
                                 {nextDay + 1} progress
                             </DialogDescription>
@@ -719,7 +719,7 @@ ${
                         <DialogFooter>
                             <Button
                                 onClick={handleClose}
-                                className='bg-primary text-primary-foreground hover:bg-primary/90'>
+                                className='bg-primary text-white hover:bg-primary/90'>
                                 Done
                             </Button>
                         </DialogFooter>
