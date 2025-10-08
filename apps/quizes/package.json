@@ -31,7 +31,6 @@
     "@tbe/hooks": "workspace:*",
     "@tbe/interface": "workspace:*",
     "@tbe/types": "workspace:*",
-    "@tbe/ui": "workspace:*",
     "@tbe/utils": "workspace:*",
     "@tbe/services": "workspace:*",
     "@tbe/config": "workspace:*",
