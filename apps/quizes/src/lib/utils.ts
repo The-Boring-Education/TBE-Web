@@ -28,7 +28,7 @@ export function isValidUser(user: User | null): user is User {
  * @returns user ID if valid, null otherwise
  */
 export function getValidUserId(user: User | null): string | null {
-  return isValidUser(user) ? user.id : null
+    return isValidUser(user) ? user.id : null
 }
 
 export function debounce<T extends (...args: unknown[]) => unknown>(
