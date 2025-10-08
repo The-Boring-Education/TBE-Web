@@ -1,14 +1,13 @@
 'use client'
 
-import { useEffect, useState } from "react"
-import { useAuth } from "@/contexts/AuthContext"
+import { useEffect } from "react"
+import { useAuth } from "@tbe/components/quizes"
 import { useRouter } from "next/navigation"
-import { config } from "@/config"
-import { getValidUserId } from "@/lib/utils"
+import { config } from "@tbe/config/quizes"
 import { Brain, Sparkles, Trophy, Users } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
+import { Button } from "@tbe/components/quizes"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
+import { useToast } from "@tbe/components/quizes"
 
 export default function Login() {
     const { signInWithGoogle, user, loading } = useAuth()
@@ -17,7 +16,7 @@ export default function Login() {
 
     useEffect(() => {
         if (user) {
-            const validUserId = getValidUserId(user)
+            const validUserId = user?.id || null
             if (!validUserId) {
                 // If user object is incomplete, stay on login page
                 return

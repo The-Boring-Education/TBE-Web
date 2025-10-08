@@ -2,18 +2,18 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Layout } from "@/components/Layout"
-import { ProtectedRoute } from "@/components/ProtectedRoute"
-import { CodeRenderer } from "@/components/common/CodeRenderer"
-import { useAuth } from "@/contexts/AuthContext"
-import { quizApi } from "@/services/api"
-import { getValidUserId } from "@/lib/utils"
+import { Card, CardContent, CardHeader, CardTitle } from "@tbe/components/quizes"
+import { Button } from "@tbe/components/quizes"
+import { Progress } from "@tbe/components/quizes"
+import { Layout } from "@tbe/components/quizes"
+import { ProtectedRoute } from "@tbe/components/quizes"
+import { CodeRenderer } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/components/quizes"
+import { quizApi } from "@tbe/services"
+import { getValidUserId } from "@tbe/utils"
 import { Clock } from "lucide-react"
 import useGamifiedAction from "@/hooks/useGamifiedAction"
-import { QuizQuestion } from "@/types/api"
+import { QuizQuestion } from "@tbe/types"
 
 interface QuizCategory {
     _id: string
@@ -116,7 +116,7 @@ function QuizContent() {
             })
 
             // Ensure user has a valid ID before submitting
-            const validUserId = getValidUserId(user)
+            const validUserId = user?._id || user?.id || null
             if (!validUserId) {
                 alert("User authentication error. Please try logging in again.")
                 router.push("/login")

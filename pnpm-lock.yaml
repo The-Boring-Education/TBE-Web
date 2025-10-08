@@ -26,9 +26,24 @@ importers:
       '@radix-ui/react-collapsible':
         specifier: ^1.1.0
         version: 1.1.12(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-progress':
+        specifier: ^1.1.7
+        version: 1.1.7(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-slot':
         specifier: ^1.1.0
         version: 1.2.3(@types/react@18.3.24)(react@18.3.1)
+      '@radix-ui/react-tabs':
+        specifier: ^1.1.0
+        version: 1.1.13(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-toast':
+        specifier: ^1.2.1
+        version: 1.2.15(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@react-oauth/google':
+        specifier: ^0.12.2
+        version: 0.12.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -38,9 +53,18 @@ importers:
       react-day-picker:
         specifier: ^8.10.1
         version: 8.10.1(date-fns@4.1.0)(react@18.3.1)
+      react-markdown:
+        specifier: ^10.1.0
+        version: 10.1.0(@types/react@18.3.24)(react@18.3.1)
       react-query:
         specifier: 3.39.3
         version: 3.39.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-syntax-highlighter:
+        specifier: ^15.6.1
+        version: 15.6.6(react@18.3.1)
+      remark-gfm:
+        specifier: ^4.0.1
+        version: 4.0.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -48,6 +72,9 @@ importers:
         specifier: ^48.1.4
         version: 48.1.6(rollup@4.52.2)
     devDependencies:
+      '@types/react-syntax-highlighter':
+        specifier: ^15.5.13
+        version: 15.5.13
       '@types/uuid':
         specifier: ^9.0.1
         version: 9.0.8
@@ -236,9 +263,6 @@ importers:
       '@tbe/constants':
         specifier: workspace:*
         version: link:../../packages/constants
-      '@tbe/database':
-        specifier: workspace:*
-        version: link:../../packages/database
       '@tbe/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -700,6 +724,21 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.90.2(react@18.3.1)
+      '@tbe/components':
+        specifier: workspace:*
+        version: link:../../packages/components
+      '@tbe/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@tbe/services':
+        specifier: workspace:*
+        version: link:../../packages/services
+      '@tbe/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@tbe/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@types/markdown-it':
         specifier: ^14.1.2
         version: 14.1.2
@@ -863,6 +902,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.0.7
         version: 1.2.8(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tbe/config':
+        specifier: workspace:*
+        version: link:../config
       '@tbe/constants':
         specifier: workspace:*
         version: link:../constants
@@ -944,6 +986,9 @@ importers:
       vaul:
         specifier: ^0.9.0
         version: 0.9.9(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
     devDependencies:
       '@tbe/eslint-config':
         specifier: workspace:*
@@ -1027,43 +1072,6 @@ importers:
         version: 18.3.24
       typescript:
         specifier: 5.9.2
-        version: 5.9.2
-
-  packages/database:
-    dependencies:
-      '@tbe/constants':
-        specifier: workspace:*
-        version: link:../constants
-      '@tbe/interface':
-        specifier: workspace:*
-        version: link:../interface
-      '@tbe/services':
-        specifier: workspace:*
-        version: link:../services
-      '@tbe/types':
-        specifier: workspace:*
-        version: link:../types
-      '@tbe/utils':
-        specifier: workspace:*
-        version: link:../utils
-      mongoose:
-        specifier: ^7.4.1
-        version: 7.8.7
-    devDependencies:
-      '@tbe/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@tbe/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/node':
-        specifier: ^22.5.5
-        version: 22.18.6
-      eslint:
-        specifier: ^8.57.1
-        version: 8.57.1
-      typescript:
-        specifier: ^5.9.2
         version: 5.9.2
 
   packages/eslint-config:
@@ -1205,12 +1213,18 @@ importers:
 
   packages/services:
     dependencies:
+      '@tbe/config':
+        specifier: workspace:*
+        version: link:../config
       '@tbe/constants':
         specifier: workspace:*
         version: link:../constants
       '@tbe/interface':
         specifier: workspace:*
         version: link:../interface
+      '@tbe/types':
+        specifier: workspace:*
+        version: link:../types
       '@tbe/utils':
         specifier: workspace:*
         version: link:../utils

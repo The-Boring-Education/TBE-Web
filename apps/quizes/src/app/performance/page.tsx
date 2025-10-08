@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Layout } from "@/components/Layout"
-import { useAuth } from "@/contexts/AuthContext"
-import { analyticsApi, APIError } from "@/services/api"
-import { PerformanceMetrics } from "@/types/api"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
+import { Button } from "@tbe/components/quizes"
+import { Layout } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/components/quizes"
+import { analyticsApi, APIError } from "@tbe/services"
+import { PerformanceMetrics } from "@tbe/types"
 import { 
   BarChart3, 
   Trophy, 
@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Calendar
 } from "lucide-react"
-import { ProtectedRoute } from "@/components/ProtectedRoute"
+import { ProtectedRoute } from "@tbe/components/quizes"
 
 // Use the PerformanceMetrics type from the API
 
@@ -37,7 +37,7 @@ const PerformanceContent = () => {
       const response = await analyticsApi.getPerformanceMetrics(user.id)
       
       if (response.success) {
-        setPerformance(response.data)
+        setPerformance(response.data || null)
       } else {
         throw new APIError(response.message || 'Failed to load performance', 500)
       }

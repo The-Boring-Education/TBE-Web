@@ -292,7 +292,7 @@ export const challengesService = {
     // Format social media message
     formatSocialMediaMessage(template: SocialMediaTemplate): string {
         const goals = template.nextGoals
-            .map((goal, index) => `${index + 1}. ${goal}`)
+            .map((goal: string, index: number) => `${index + 1}. ${goal}`)
             .join("\n")
 
         return `Today was Day ${template.currentDay} of ${template.challengeName}

@@ -2,14 +2,15 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAuth } from '@/contexts/AuthContext'
+import { useUser } from '@tbe/hooks'
+import React from 'react'
 
 interface ClientAuthProps {
   children: React.ReactNode
 }
 
 export function ClientAuth({ children }: ClientAuthProps) {
-  const { user, loading, checkAuth } = useAuth()
+    const { user, loading, updateSession } = useUser()
   const router = useRouter()
   const pathname = usePathname()
   const [authInitialized, setAuthInitialized] = useState(false)

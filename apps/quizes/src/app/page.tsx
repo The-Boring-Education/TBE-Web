@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/contexts/AuthContext"
+import { useAuth } from "@tbe/components/quizes"
 import { config } from "@/config"
-import { getValidUserId } from "@/lib/utils"
 import {
     Play,
     Brain,
@@ -27,9 +26,8 @@ export default function Landing() {
         if (loading) return // Don't redirect while loading
         
         if (user && !isRedirecting) {
-            const validUserId = getValidUserId(user)
-            
-            if (!validUserId) {
+            // Check if user has valid ID
+            if (!user.id) {
                 // Clear the incomplete user data to prevent infinite loops
                 localStorage.removeItem("quizUser")
                 localStorage.removeItem("quizToken")
@@ -50,7 +48,7 @@ export default function Landing() {
                 // Redirect to external onboarding app
                 setIsRedirecting(true)
                 const params = new URLSearchParams({
-                    userId: validUserId,
+                    userId: user.id,
                     from: "quizapp",
                     redirect: `${window.location.origin}/dashboard?onboardingComplete=true`
                 })
@@ -65,9 +63,8 @@ export default function Landing() {
 
     const handleGetStarted = () => {
         if (user && !isRedirecting) {
-            const validUserId = getValidUserId(user)
-            
-            if (!validUserId) {
+            // Check if user has valid ID
+            if (!user.id) {
                 // Clear the incomplete user data to prevent infinite loops
                 localStorage.removeItem("quizUser")
                 localStorage.removeItem("quizToken")
@@ -88,7 +85,7 @@ export default function Landing() {
                 // Redirect to external onboarding app
                 setIsRedirecting(true)
                 const params = new URLSearchParams({
-                    userId: validUserId,
+                    userId: user.id,
                     from: "quizapp",
                     redirect: `${window.location.origin}/dashboard?onboardingComplete=true`
                 })

@@ -90,6 +90,7 @@ const Button = ({
   variant,
   className = '',
   text,
+  children,
   active = true,
   isLoading = false,
   onClick,
@@ -158,7 +159,7 @@ const Button = ({
         {...getAnimationVariant()}
       >
         {loadingContainer}
-        {text}
+        {children || text}
         {icon && <span>{icon}</span>}
       </motion.button>
     </motion.div>

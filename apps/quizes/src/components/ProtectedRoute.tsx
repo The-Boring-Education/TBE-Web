@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
-import { config } from "@/config"
+import { config } from "../config"
 import { getValidUserId } from "@/lib/utils"
 
 interface ProtectedRouteProps {

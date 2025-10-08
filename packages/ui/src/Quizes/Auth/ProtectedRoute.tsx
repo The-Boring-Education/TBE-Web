@@ -2,16 +2,16 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useAuth } from "@/contexts/AuthContext"
-import { config } from "@/config"
-import { getValidUserId } from "@/lib/utils"
+import { useUser } from "@tbe/hooks"
+import { config } from "@tbe/config"
+import { getValidUserId } from "@tbe/utils"
 
 interface ProtectedRouteProps {
     children: React.ReactNode
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const { user, loading, refreshUserFromBackend } = useAuth()
+    const { user, loading, refreshUserFromBackend } = useUser()
     const router = useRouter()
     const searchParams = useSearchParams()
 

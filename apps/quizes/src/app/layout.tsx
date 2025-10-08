@@ -2,9 +2,8 @@
 
 import { Inter } from 'next/font/google'
 import { QueryProvider } from '@/providers/QueryProvider'
-import { AuthProvider } from '@/contexts/AuthContext'
-import { ClientAuth } from '@/components/ClientAuth'
-import { GamificationWrapper } from '@/components/GamificationWrapper'
+import { AuthProvider } from '@tbe/components/quizes'
+import { ClientAuth, GamificationWrapper } from '@tbe/components/quizes'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from 'sonner'
 import './globals.css'

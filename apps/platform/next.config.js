@@ -7,7 +7,6 @@ const withTM = require('next-transpile-modules')([
   '@tbe/utils',
   '@tbe/interface',
   '@tbe/services',
-  '@tbe/database',
   '@tbe/ui',
   '@tbe/types',
   '@tbe/typescript-config',
