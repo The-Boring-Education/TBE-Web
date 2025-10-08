@@ -23,7 +23,6 @@
       "@tbe/interface/*": ["../../packages/interface/src/*"],
       "@tbe/services/*": ["../../packages/services/src/*"],
       "@tbe/database/*": ["../../packages/database/src/*"],
-      "@tbe/ui/*": ["../../packages/ui/src/*"],
       "@tbe/types/*": ["../../packages/types/src/*"]
     },
     "noImplicitAny": false,

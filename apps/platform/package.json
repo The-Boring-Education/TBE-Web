@@ -26,7 +26,6 @@
     "@tbe/interface": "workspace:*",
     "@tbe/services": "workspace:*",
     "@tbe/types": "workspace:*",
-    "@tbe/ui": "workspace:*",
     "@tbe/utils": "workspace:*",
     "@tbe/config": "workspace:*",
     "@tbe/typescript-config": "workspace:*",

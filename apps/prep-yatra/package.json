@@ -53,7 +53,6 @@
     "@tbe/interface": "workspace:*",
     "@tbe/services": "workspace:*",
     "@tbe/types": "workspace:*",
-    "@tbe/ui": "workspace:*",
     "@tbe/utils": "workspace:*",
     "@types/react-datepicker": "^6.2.0",
     "class-variance-authority": "^0.7.1",
