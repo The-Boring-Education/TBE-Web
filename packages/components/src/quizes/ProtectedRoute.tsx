@@ -4,8 +4,6 @@ import React, { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "./context/AuthContext"
 import { config } from "@tbe/config/quizes"
-import { getValidUserId } from "@tbe/utils"
-import { User } from "@tbe/types"
 
 interface ProtectedRouteProps {
     children: React.ReactNode
@@ -53,8 +51,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
             if (user.isOnboarded === false || user.isOnboarded === undefined) {
                 // Only redirect if we haven't just come from onboarding
                 if (!cameFromOnboarding) {
-                    const validUserId = getValidUserId(user as User)
-                    if (!validUserId) {
+                    // Check if user has a valid ID
+                    if (!user.id) {
                         // If user object is incomplete, redirect to login to re-authenticate
                         router.push('/login')
                         return
@@ -69,7 +67,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
                     }
                     
                     const redirectParams = new URLSearchParams({
-                        userId: validUserId,
+                        userId: user.id,
                         from: "quizapp",
                         redirect: `${window.location.origin}/dashboard?onboardingComplete=true`
                     })

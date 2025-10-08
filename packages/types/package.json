@@ -14,6 +14,7 @@
         "./platform": "./src/platform.ts"
     },
     "scripts": {
+        "build": "echo 'No build step needed for types package'",
         "lint": "eslint . --max-warnings 0"
     },
     "devDependencies": {
