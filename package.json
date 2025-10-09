@@ -14,11 +14,13 @@
     "dev:quizes": "turbo run dev --filter=@tbe/quizes",
     "dev:onboarding": "turbo run dev --filter=@tbe/onboarding",
     "dev:api": "turbo run dev --filter=@tbe/api",
+    "dev:techyatra": "turbo run dev --filter=@tbe/techyatra",
     "build:platform": "turbo run build --filter=@tbe/platform",
     "build:prep-yatra": "turbo run build --filter=@tbe/prep-yatra",
     "build:quizes": "turbo run build --filter=@tbe/quizes",
     "build:onboarding": "turbo run build --filter=@tbe/onboarding",
     "build:api": "turbo run build --filter=@tbe/api",
+    "build:techyatra": "turbo run build --filter=@tbe/techyatra",
     "install:all": "pnpm install"
   },
   "devDependencies": {

@@ -13,6 +13,14 @@
         "./quizes": {
             "types": "./src/quizes/index.ts",
             "default": "./src/quizes/index.ts"
+        },
+        "./techyatra": {
+            "types": "./src/techyatra/index.ts",
+            "default": "./src/techyatra/index.ts"
+        },
+        "./ui": {
+            "types": "./src/ui/index.ts",
+            "default": "./src/ui/index.ts"
         }
     },
     "scripts": {

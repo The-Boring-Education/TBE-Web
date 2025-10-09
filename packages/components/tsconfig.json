@@ -16,6 +16,7 @@
       // 👇 Optional but useful for cleaner imports
       "paths": {
         "@/*": ["src/*"],
+        "@ui/*": ["src/ui/*"],
         "@/ui/*": ["src/prepyatra/ui/*"],
         "@/components/*": ["src/prepyatra/components/*"],
         "@/features/*": ["src/prepyatra/features/*"],

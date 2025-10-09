@@ -162,3 +162,8 @@ export { Tabs, TabsContent, TabsList, TabsTrigger } from './prepyatra/ui/tabs';
 export { Sheet, SheetContent } from './prepyatra/ui/sheet';
 export { Progress } from './prepyatra/ui/progress';
 export { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from './prepyatra/ui/tooltip';
+
+// Export all UI components from the main ui directory
+export * from './ui';
+
+export * from './techyatra';

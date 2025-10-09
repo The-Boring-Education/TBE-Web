@@ -1,6 +1,6 @@
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/24/outline';
 
-import { Text } from '@tbe/components';
+import Text from '../common/Typography/Text';
 
 interface StatCardProps {
   title: string;
