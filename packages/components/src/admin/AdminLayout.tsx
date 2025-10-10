@@ -12,7 +12,9 @@ import {
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { Button, LoadingSpinner, Text } from '@tbe/components';
+import Button from '../common/Buttons/Button';
+import LoadingSpinner from '../common/LoadingSpinner';
+import Text from '../common/Typography/Text';
 import { useAdmin } from '@tbe/hooks';
 
 interface AdminLayoutProps {

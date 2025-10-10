@@ -87,6 +87,7 @@ export interface ButtonProps {
   isFullWidth?: boolean;
   disabled?: boolean;
   animationType?: 'DEFAULT' | 'BOUNCE' | 'GLOW';
+  size?: 'SMALL' | 'MEDIUM' | 'LARGE';
 }
 
 export interface PageLayoutProps {

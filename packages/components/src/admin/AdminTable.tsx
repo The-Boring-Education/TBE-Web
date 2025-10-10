@@ -1,7 +1,8 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
-import { Button, Text } from '@tbe/components';
+import Button from '../common/Buttons/Button';
+import Text from '../common/Typography/Text';
 
 interface Column {
   key: string;

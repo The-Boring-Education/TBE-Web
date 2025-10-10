@@ -98,8 +98,16 @@ const Button = ({
   icon,
   isFullWidth = false,
   animationType = 'DEFAULT',
+  size = 'MEDIUM',
 }: ButtonProps) => {
-  let baseClasses = 'button px-2 py-1 text-sm rounded-1';
+  // Size classes mapping
+  const sizeClasses = {
+    SMALL: 'px-2 py-1 text-xs',
+    MEDIUM: 'px-3 py-2 text-sm',
+    LARGE: 'px-4 py-3 text-base',
+  };
+
+  let baseClasses = `button rounded-1 ${sizeClasses[size]}`;
   baseClasses = getButtonClasses(baseClasses, variant, active);
 
   // Hide loading spinner but keep functionality
