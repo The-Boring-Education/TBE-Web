@@ -96,23 +96,22 @@ const PrepYatraHero = () => {
                     initial={{opacity: 0, y: 20}}
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.6}}>
-                    <Text level='h1' className='text-3xl md:text-5xl font-bold text-contentLight mb-4 leading-tight'>
-                        Turn{" "}
-                        <motion.span
-                            className='text-primary'
-                            animate={{opacity: [1, 0.5, 1]}}
-                            transition={{duration: 2, repeat: Infinity}}>
-                            Hustle
-                        </motion.span>
-                        <br />
-                        Into{" "}
-                        <motion.span
-                            className='text-primary'
-                            animate={{opacity: [1, 0.5, 1]}}
-                            transition={{duration: 2, repeat: Infinity, delay: 1}}>
-                            Hires
-                        </motion.span>
-                    </Text>
+          <Text
+                level='h1'
+                className='text-3xl md:text-5xl font-bold text-[#222222] mb-4 leading-tight'
+                >
+                Turn{" "} 
+                <span className='text-[#222222] font-bold'>Hustle</span>{" "}
+                <span className='text-[#222222] font-bold'>Into</span>{" "}
+                <motion.span
+                    className='text-[#fd6d6d] font-bold'
+                    animate={{ opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                >
+                    Hires
+                </motion.span>
+           </Text>
+
 
                     <Text level='p' className='text-base md:text-lg text-greyDark mb-6 max-w-3xl mx-auto'>
                         The ultimate community platform for job hunters to store
