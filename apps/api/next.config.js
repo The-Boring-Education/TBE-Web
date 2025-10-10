@@ -6,6 +6,14 @@ const nextConfig = {
     // API-only configuration
     poweredByHeader: false,
 
+    // Enable standalone output for containerized deployments
+    output: "standalone",
+
+    // Disable image optimization for API-only apps
+    images: {
+        unoptimized: true
+    },
+
     // Transpile packages
     transpilePackages: [
         "@tbe/constants",
@@ -20,6 +28,12 @@ const nextConfig = {
     env: {
         // Add other environment variables here if needed
         // NODE_ENV is automatically handled by Next.js
+    },
+
+    // Experimental features for better containerization
+    experimental: {
+        // Reduce memory usage
+        isrMemoryCacheSize: 0
     },
 
     // Redirect all non-API routes to API documentation or health check
