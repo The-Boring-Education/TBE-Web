@@ -71,7 +71,7 @@ const PrepYatraHero = () => {
     ];
 
     return (
-        <section className='min-h-[70vh] flex items-center justify-center px-3 pt-16 relative overflow-hidden bg-lightBG'>
+        <section className='min-h-[70vh] flex items-center justify-center px-3 pt-3 relative overflow-hidden bg-lightBG'>
             {/* Background Animation Elements */}
             <div className='absolute inset-0 opacity-10'>
                 <motion.div
@@ -96,6 +96,11 @@ const PrepYatraHero = () => {
                     initial={{opacity: 0, y: 20}}
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.6}}>
+                        <img 
+                            src="/landing.png" 
+                            alt="prepping handshake (serious mode)" 
+                            className="mx-auto mb-5 w-96 md:w-[400px]"
+                        />
           <Text
                 level='h1'
                 className='text-3xl md:text-5xl font-bold text-[#222222] mb-4 leading-tight'
@@ -124,7 +129,7 @@ const PrepYatraHero = () => {
 
                     <FlexContainer className='mb-8 flex-col sm:flex-row gap-3'>
                         <Button
-                            text='🚀 Start Your Journey Free'
+                            text='Start Your Journey for Free'
                             onClick={handleGetStarted}
                             variant='PRIMARY'
                             className='text-sm px-4 py-2 font-semibold'
