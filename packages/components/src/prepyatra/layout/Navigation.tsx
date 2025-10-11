@@ -25,7 +25,7 @@ const Navigation = () => {
                             <Text level='span' className='text-2xl font-bold text-primary'>
                                 PrepYatra
                             </Text>
-                            <Text level='span' className='text-xs text-gray-400 -mt-1'>
+                            <Text level='span' className='text-xs text-gray-400 mt-0.5'>
                                 by The Boring Education
                             </Text>
                         </FlexContainer>
