@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/auth"
 import { config } from "@/config"
 import {
     Play,
@@ -18,83 +18,25 @@ import {
 
 export default function Landing() {
     const router = useRouter()
-    const { user, loading } = useAuth()
+    const { user, isAuthenticated, isLoading } = useAuth()
     const [isRedirecting, setIsRedirecting] = useState(false)
 
     // Auto-redirect authenticated users
     useEffect(() => {
-        if (loading) return // Don't redirect while loading
-        
-        if (user && !isRedirecting) {
-            // Check if user has valid ID
-            if (!user.id) {
-                // Clear the incomplete user data to prevent infinite loops
-                localStorage.removeItem("quizUser")
-                localStorage.removeItem("quizToken")
-                // If user object is incomplete, redirect to login to re-authenticate
+        if (isLoading) return // Don't redirect while loading
+
+        if (isAuthenticated && user && !isRedirecting) {
+            // Redirect to dashboard
+            if (user.id) {
                 setIsRedirecting(true)
-                setTimeout(() => {
-                    router.push("/login")
-                }, 100)
-                return
-            }
-            
-            if (user.isOnboarded) {
-                setIsRedirecting(true)
-                setTimeout(() => {
-                    router.push("/dashboard")
-                }, 100)
-            } else {
-                // Redirect to external onboarding app
-                setIsRedirecting(true)
-                const params = new URLSearchParams({
-                    userId: user.id,
-                    from: "quizapp",
-                    redirect: `${window.location.origin}/dashboard?onboardingComplete=true`
-                })
-                
-                const onboardingURL = `${config.ONBOARDING_APP_URL}/?${params.toString()}`
-                setTimeout(() => {
-                    window.location.href = onboardingURL
-                }, 100)
+                router.push("/dashboard")
             }
         }
-    }, [user, loading, router, isRedirecting])
+    }, [user, isAuthenticated, isLoading, router, isRedirecting])
 
     const handleGetStarted = () => {
-        if (user && !isRedirecting) {
-            // Check if user has valid ID
-            if (!user.id) {
-                // Clear the incomplete user data to prevent infinite loops
-                localStorage.removeItem("quizUser")
-                localStorage.removeItem("quizToken")
-                // If user object is incomplete, redirect to login to re-authenticate
-                setIsRedirecting(true)
-                setTimeout(() => {
-                    router.push("/login")
-                }, 100)
-                return
-            }
-            
-            if (user.isOnboarded) {
-                setIsRedirecting(true)
-                setTimeout(() => {
-                    router.push("/dashboard")
-                }, 100)
-            } else {
-                // Redirect to external onboarding app
-                setIsRedirecting(true)
-                const params = new URLSearchParams({
-                    userId: user.id,
-                    from: "quizapp",
-                    redirect: `${window.location.origin}/dashboard?onboardingComplete=true`
-                })
-                
-                const onboardingURL = `${config.ONBOARDING_APP_URL}/?${params.toString()}`
-                setTimeout(() => {
-                    window.location.href = onboardingURL
-                }, 100)
-            }
+        if (isAuthenticated) {
+            router.push("/dashboard")
         } else {
             router.push("/login")
         }
@@ -103,7 +45,7 @@ export default function Landing() {
     return (
         <div className='min-h-screen bg-white text-black'>
             {/* Show loading state while auth is loading */}
-            {loading && (
+            {isLoading && (
                 <div className='min-h-screen flex items-center justify-center'>
                     <div className='text-center'>
                         <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto'></div>
@@ -111,19 +53,21 @@ export default function Landing() {
                     </div>
                 </div>
             )}
-            
+
             {/* Show redirecting state */}
             {isRedirecting && (
                 <div className='min-h-screen flex items-center justify-center'>
                     <div className='text-center'>
                         <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto'></div>
-                        <p className='mt-4 text-lg text-gray-600'>Redirecting...</p>
+                        <p className='mt-4 text-lg text-gray-600'>
+                            Redirecting...
+                        </p>
                     </div>
                 </div>
             )}
-            
+
             {/* Show main content only when not loading or redirecting */}
-            {!loading && !isRedirecting && (
+            {!isLoading && !isRedirecting && (
                 <>
                     {/* Hero Section */}
                     <div className='container mx-auto px-4 py-16'>
@@ -153,10 +97,11 @@ export default function Landing() {
                                         </span>
                                     </h2>
                                     <p className='text-lg text-gray-700 mb-8 leading-relaxed'>
-                                        Practice with carefully curated questions
-                                        covering JavaScript, React, algorithms, and web
-                                        development. Get detailed explanations and track
-                                        your progress.
+                                        Practice with carefully curated
+                                        questions covering JavaScript, React,
+                                        algorithms, and web development. Get
+                                        detailed explanations and track your
+                                        progress.
                                     </p>
                                     <button
                                         onClick={handleGetStarted}
@@ -196,9 +141,9 @@ export default function Landing() {
                                         Everything You Need to Succeed
                                     </h3>
                                     <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
-                                        Our comprehensive quiz platform is designed to
-                                        help you prepare for technical interviews
-                                        effectively.
+                                        Our comprehensive quiz platform is
+                                        designed to help you prepare for
+                                        technical interviews effectively.
                                     </p>
                                 </div>
 
@@ -211,8 +156,9 @@ export default function Landing() {
                                             Curated Questions
                                         </h4>
                                         <p className='text-gray-600 leading-relaxed'>
-                                            Hand-picked questions covering the most
-                                            important topics for technical interviews.
+                                            Hand-picked questions covering the
+                                            most important topics for technical
+                                            interviews.
                                         </p>
                                     </div>
 
@@ -224,8 +170,8 @@ export default function Landing() {
                                             Timed Practice
                                         </h4>
                                         <p className='text-gray-600 leading-relaxed'>
-                                            Practice under time pressure to simulate
-                                            real interview conditions.
+                                            Practice under time pressure to
+                                            simulate real interview conditions.
                                         </p>
                                     </div>
 
@@ -237,8 +183,9 @@ export default function Landing() {
                                             Detailed Explanations
                                         </h4>
                                         <p className='text-gray-600 leading-relaxed'>
-                                            Understand the &apos;why&apos; behind every answer
-                                            with comprehensive explanations.
+                                            Understand the &apos;why&apos;
+                                            behind every answer with
+                                            comprehensive explanations.
                                         </p>
                                     </div>
                                 </div>
@@ -255,8 +202,8 @@ export default function Landing() {
                                         Proven Results
                                     </h3>
                                     <p className='text-lg text-gray-600'>
-                                        Join thousands of developers who have improved
-                                        their interview skills.
+                                        Join thousands of developers who have
+                                        improved their interview skills.
                                     </p>
                                 </div>
 
@@ -363,8 +310,9 @@ export default function Landing() {
                                     Ready to Ace Your Next Interview?
                                 </h3>
                                 <p className='text-lg text-gray-600 mb-8 max-w-2xl mx-auto'>
-                                    Start practicing today and build the confidence you
-                                    need to succeed in technical interviews.
+                                    Start practicing today and build the
+                                    confidence you need to succeed in technical
+                                    interviews.
                                 </p>
                                 <button
                                     onClick={handleGetStarted}

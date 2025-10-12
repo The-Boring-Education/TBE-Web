@@ -1,7 +1,6 @@
 import { useRouter } from "next/router"
 import React, { ReactNode, useEffect } from "react"
-
-import { useAuth } from "@/contexts/useAuth"
+import { useAuth } from "@tbe/auth"
 
 interface ProtectedRouteProps {
     children: ReactNode
@@ -12,19 +11,20 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     children,
     requireOnboarding = false
 }) => {
-    const { user, loading } = useAuth()
+    const { user, isAuthenticated, isLoading } = useAuth()
     const router = useRouter()
 
     useEffect(() => {
-        if (!loading) {
-            if (!user) {
-                // Store the intended destination for after login
-                localStorage.setItem("redirectAfterLogin", router.pathname)
-                router.push("/auth")
+        if (!isLoading) {
+            if (!isAuthenticated) {
+                // Redirect to auth with callback URL
+                router.push(
+                    `/auth?callbackUrl=${encodeURIComponent(router.asPath)}`
+                )
                 return
             }
 
-            if (requireOnboarding) {
+            if (requireOnboarding && user) {
                 // Check if user needs onboarding
                 const checkOnboarding = async () => {
                     try {
@@ -51,7 +51,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                         // On error, also redirect to external onboarding app
                         const onboardingBaseUrl =
                             process.env.NEXT_PUBLIC_ONBOARDING_URL
-                        if (onboardingBaseUrl) {
+                        if (onboardingBaseUrl && user.id) {
                             const redirectUrl = `${onboardingBaseUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
                             window.location.href = redirectUrl
                         } else {
@@ -65,9 +65,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                 checkOnboarding()
             }
         }
-    }, [user, loading, router, requireOnboarding])
+    }, [isLoading, isAuthenticated, user, router, requireOnboarding])
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className='flex items-center justify-center min-h-screen'>
                 <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary' />
@@ -75,7 +75,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         )
     }
 
-    if (!user) {
+    if (!isAuthenticated) {
         return null // Will redirect to auth
     }
 
