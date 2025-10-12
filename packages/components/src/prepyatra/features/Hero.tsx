@@ -96,11 +96,13 @@ const PrepYatraHero = () => {
                     initial={{opacity: 0, y: 20}}
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.6}}>
-                        <img 
+
+                 <img 
                             src="/landing.png" 
                             alt="prepping handshake (serious mode)" 
                             className="mx-auto mb-5 w-96 md:w-[400px]"
-                        />
+                  />
+                       
           <Text
                 level='h1'
                 className='text-3xl md:text-5xl font-bold text-[#222222] mb-4 leading-tight'

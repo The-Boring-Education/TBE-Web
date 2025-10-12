@@ -12,7 +12,7 @@ import Button from "../../common/Buttons/Button";
 const RecruiterContactsShowcase = () => {
     const recruiters = [
         {
-            name: "Sarah Johnson",
+            name: "Shivani Jha",
             company: "TechCorp",
             position: "Senior Recruiter",
             email: "sarah.j@techcorp.com",
@@ -21,7 +21,8 @@ const RecruiterContactsShowcase = () => {
             status: "Active"
         },
         {
-            name: "Mike Chen",
+
+            name: "Sharaddha Gupta",
             company: "StartupXYZ",
             position: "Talent Acquisition",
             email: "mike@startupxyz.com",
@@ -30,7 +31,7 @@ const RecruiterContactsShowcase = () => {
             status: "Follow-up"
         },
         {
-            name: "Emily Rodriguez",
+            name: "sharad Mukherjee",
             company: "BigTech Inc",
             position: "HR Manager",
             email: "e.rodriguez@bigtech.com",
@@ -38,6 +39,8 @@ const RecruiterContactsShowcase = () => {
             lastContact: "3 days ago",
             status: "Interview Scheduled"
         }
+        
+
     ];
 
     return (
@@ -55,7 +58,8 @@ const RecruiterContactsShowcase = () => {
                 </div>
 
                 <div className='max-w-6xl mx-auto animate-slide-in-left'>
-                    <Card className='glass border-greyLight'>
+                 
+                    <Card className='border border-blue-900 p-4' >
                         <CardHeader className='text-center'>
                             <CardTitle className='text-2xl text-contentLight flex items-center justify-center gap-2'>
                                 🔥 Your Recruiter Network Dashboard
