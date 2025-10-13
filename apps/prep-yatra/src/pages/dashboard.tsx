@@ -9,7 +9,7 @@ import {
     LoadingSpinner
 } from "@tbe/components"
 import { usePrepYatraGamificationContext } from "@tbe/components"
-import { useAuth } from "@tbe/components"
+import { useAuth } from "@tbe/auth"
 import { usePrepLogs } from "@tbe/hooks"
 import { recruitersService } from "@tbe/services"
 import { RecruiterContact } from "@tbe/types"
@@ -80,7 +80,7 @@ type Profile = {
 
 const Dashboard = () => {
     const router = useRouter()
-    const { user, loading: authLoading, signOut } = useAuth()
+    const { user, isLoading: authLoading, signOut } = useAuth()
     const { showCelebration } = usePrepYatraGamificationContext()
     const {
         logs: prepLogs,
@@ -105,18 +105,24 @@ const Dashboard = () => {
 
     // Data fetching functions
     const fetchProfile = async (userId: string) => {
+        console.log('fetchProfile called with userId:', userId)
         try {
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/user?userId=${userId}`
-            )
+            const base = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '')
+            const url = `${base}/user?userId=${encodeURIComponent(userId)}`
+            console.log('Fetching profile from URL:', url)
+            const response = await fetch(url)
+            console.log('Profile response status:', response.status)
             if (response.ok) {
                 const result = await response.json()
+                console.log('Profile result:', result)
                 // Extract data from the API response structure
                 if (result.status && result.data) {
                     setProfile(result.data)
                 } else {
                     setProfile(result)
                 }
+            } else {
+                console.error('Profile fetch failed with status:', response.status)
             }
         } catch (error) {
             console.error("Error fetching profile:", error)
@@ -133,16 +139,20 @@ const Dashboard = () => {
     }
 
     const initializeData = async () => {
+        console.log('initializeData called with user:', user)
         if (!user?.id) {
+            console.log('No user ID, returning from initializeData')
             return
         }
 
+        console.log('Starting data initialization for user ID:', user.id)
         setLoading(true)
         try {
             await Promise.all([
                 fetchProfile(user.id),
                 fetchRecruiterContacts(user.id)
             ])
+            console.log('Data initialization completed')
         } catch (error) {
             console.error("Error initializing data:", error)
         } finally {
@@ -152,60 +162,17 @@ const Dashboard = () => {
 
     // Effects
     useEffect(() => {
-        const checkAuthAndProfile = async () => {
-            if (authLoading) {
-                return
-            }
-
-            if (!user) {
-                router.push("/auth")
-                return
-            }
-
-            try {
-                // Check if user needs onboarding
-                const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/user?userId=${user.id}`
-                )
-                if (!response.ok) {
-                    const onboardingUrl = process.env.NEXT_PUBLIC_ONBOARDING_URL
-                    if (onboardingUrl) {
-                        const redirectUrl = `${onboardingUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
-                        window.location.href = redirectUrl
-                    } else {
-                        router.push("/onboarding")
-                    }
-                    return
-                }
-
-                const result = await response.json()
-                // Check if user is onboarded based on API response
-                if (result.status && result.data) {
-                    if (
-                        !result.data.isOnboarded &&
-                        !result.data.prepYatra?.pyOnboarded
-                    ) {
-                        const onboardingUrl =
-                            process.env.NEXT_PUBLIC_ONBOARDING_URL
-                        if (onboardingUrl) {
-                            const redirectUrl = `${onboardingUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
-                            window.location.href = redirectUrl
-                        } else {
-                            router.push("/onboarding")
-                        }
-                        return
-                    }
-                }
-
-                initializeData()
-            } catch (error) {
-                console.error("Error checking onboarding status:", error)
-                initializeData()
-            }
+        console.log('Dashboard useEffect - authLoading:', authLoading, 'user:', user)
+        if (authLoading) return
+        
+        if (user) {
+            console.log('User found, initializing data...')
+            // Initialize data (auth and onboarding checks are handled by ProtectedRoute and _app.tsx)
+            initializeData()
+        } else {
+            console.log('No user found, not initializing data')
         }
-
-        checkAuthAndProfile()
-    }, [user, router, authLoading])
+    }, [user, authLoading])
 
     // Event handlers
     const handleSignOut = async () => {

@@ -11,17 +11,26 @@ const Auth = () => {
     const { signIn, isAuthenticated, isLoading } = useAuth()
 
     useEffect(() => {
-        // Redirect if already authenticated
-        if (isAuthenticated) {
+        // Redirect if already authenticated - let _app.tsx handle onboarding check
+        if (!isLoading && isAuthenticated) {
             const callbackUrl =
                 (router.query.callbackUrl as string) || "/dashboard"
-            router.push(callbackUrl)
+            router.replace(callbackUrl)
         }
-    }, [isAuthenticated, router])
+    }, [isAuthenticated, isLoading, router])
 
     const handleSignIn = () => {
         const callbackUrl = (router.query.callbackUrl as string) || "/dashboard"
         signIn(callbackUrl)
+    }
+
+    // Show nothing while checking or redirecting
+    if (isAuthenticated) {
+        return (
+            <div className='min-h-screen flex items-center justify-center'>
+                <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary' />
+            </div>
+        )
     }
 
     return (

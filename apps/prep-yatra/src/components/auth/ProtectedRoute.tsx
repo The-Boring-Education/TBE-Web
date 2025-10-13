@@ -4,68 +4,20 @@ import { useAuth } from "@tbe/auth"
 
 interface ProtectedRouteProps {
     children: ReactNode
-    requireOnboarding?: boolean
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-    children,
-    requireOnboarding = false
-}) => {
-    const { user, isAuthenticated, isLoading } = useAuth()
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+    const { isAuthenticated, isLoading } = useAuth()
     const router = useRouter()
 
     useEffect(() => {
-        if (!isLoading) {
-            if (!isAuthenticated) {
-                // Redirect to auth with callback URL
-                router.push(
-                    `/auth?callbackUrl=${encodeURIComponent(router.asPath)}`
-                )
-                return
-            }
-
-            if (requireOnboarding && user) {
-                // Check if user needs onboarding
-                const checkOnboarding = async () => {
-                    try {
-                        const res = await fetch(
-                            `${process.env.NEXT_PUBLIC_API_URL}/user?email=${user.email}`
-                        )
-                        const data = await res.json()
-
-                        if (!data?.data?.prepYatra?.pyOnboarded) {
-                            // Redirect to external onboarding app
-                            const onboardingBaseUrl =
-                                process.env.NEXT_PUBLIC_ONBOARDING_URL
-                            if (onboardingBaseUrl) {
-                                const redirectUrl = `${onboardingBaseUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
-                                window.location.href = redirectUrl
-                            } else {
-                                // Fallback to internal onboarding if external URL is not configured
-                                router.push("/onboarding")
-                            }
-                            return
-                        }
-                    } catch (error) {
-                        console.error("Error checking onboarding:", error)
-                        // On error, also redirect to external onboarding app
-                        const onboardingBaseUrl =
-                            process.env.NEXT_PUBLIC_ONBOARDING_URL
-                        if (onboardingBaseUrl && user.id) {
-                            const redirectUrl = `${onboardingBaseUrl}?userId=${user.id}&from=prepyatra&redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
-                            window.location.href = redirectUrl
-                        } else {
-                            // Fallback to internal onboarding if external URL is not configured
-                            router.push("/onboarding")
-                        }
-                        return
-                    }
-                }
-
-                checkOnboarding()
-            }
+        if (!isLoading && !isAuthenticated) {
+            // Redirect to auth with callback URL
+            router.push(
+                `/auth?callbackUrl=${encodeURIComponent(router.asPath)}`
+            )
         }
-    }, [isLoading, isAuthenticated, user, router, requireOnboarding])
+    }, [isLoading, isAuthenticated, router])
 
     if (isLoading) {
         return (
