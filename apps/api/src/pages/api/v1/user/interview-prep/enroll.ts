@@ -9,13 +9,15 @@ import {
 } from '@/lib/database';
 import type { SheetEnrollmentRequestProps } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@/lib/utils';
+import { cors, sendAPIResponse } from '@/lib/utils';
 import { sendInterviewPrepEnrollmentEmail } from '@/lib/services';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
-
+    await cors(req, res);
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
     switch (req.method) {
       case 'POST':
         return handleSheetEnrollment(req, res);

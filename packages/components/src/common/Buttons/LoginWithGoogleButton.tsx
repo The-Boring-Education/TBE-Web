@@ -34,7 +34,8 @@ const LoginWithGoogleButton = ({ text = 'Login' }: LoginWithGoogleBtnProps) => {
         // Note: First login points will be awarded in the backend or user hook
         // when we detect it's the user's first login
 
-        signIn('google');
+        // Use GitHub provider for authentication (migrated from Google)
+        signIn('github');
       }}
     />
   );

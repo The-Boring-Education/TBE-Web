@@ -109,27 +109,31 @@ const onboardPrepYatraUserTODB = async (
     linkedInUrl: string,
     from?: string
 ): Promise<DatabaseQueryResponseType> => {
-    const updateData: any = {
-        prepYatra: {
-            workDomain,
-            linkedInUrl,
-            pyOnboarded: true
+    try {
+        const updateData: any = {
+            prepYatra: {
+                workDomain,
+                linkedInUrl,
+                pyOnboarded: true
+            }
         }
-    }
 
-    // Only add 'from' if it doesn't already exist
-    if (from) {
-        const existingUser = await User.findById(userId)
-        if (!existingUser?.from) {
-            updateData.from = from
+        // Only add 'from' if it doesn't already exist
+        if (from) {
+            const existingUser = await User.findById(userId)
+            if (!existingUser?.from) {
+                updateData.from = from
+            }
         }
+
+        const user = await User.findByIdAndUpdate(userId, updateData, { new: true })
+
+        if (!user) return { error: "User does not exist" }
+
+        return { data: user }
+    } catch (error) {
+        return { error }
     }
-
-    const user = await User.findByIdAndUpdate(userId, updateData, { new: true })
-
-    if (!user) return { error: "User does not exist" }
-
-    return { data: user }
 }
 
 const updateUserSkillsInDB = async (
