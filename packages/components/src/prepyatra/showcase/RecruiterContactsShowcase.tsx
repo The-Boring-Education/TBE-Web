@@ -15,7 +15,7 @@ const RecruiterContactsShowcase = () => {
             name: "Shivani Jha",
             company: "TechCorp",
             position: "Senior Recruiter",
-            email: "sarah.j@techcorp.com",
+            email: "shivani@corp.com",
             phone: "+1 (555) 123-4567",
             lastContact: "2 days ago",
             status: "Active"
@@ -25,7 +25,7 @@ const RecruiterContactsShowcase = () => {
             name: "Sharaddha Gupta",
             company: "StartupXYZ",
             position: "Talent Acquisition",
-            email: "mike@startupxyz.com",
+            email: "GuptaSharaddha@talent.com",
             phone: "+1 (555) 987-6543",
             lastContact: "1 week ago",
             status: "Follow-up"
@@ -34,7 +34,7 @@ const RecruiterContactsShowcase = () => {
             name: "sharad Mukherjee",
             company: "BigTech Inc",
             position: "HR Manager",
-            email: "e.rodriguez@bigtech.com",
+            email: "sharadmukherjee@bigtech.com",
             phone: "+1 (555) 456-7890",
             lastContact: "3 days ago",
             status: "Interview Scheduled"
