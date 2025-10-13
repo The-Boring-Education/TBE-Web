@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
 import { Button } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
-import { ProtectedRoute } from "@tbe/components/quizes"
+import { ProtectedRoute } from "@/components/ProtectedRoute"
 import { useQuizData } from "@/hooks/useQuizData"
-import { useAuth } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/auth"
 import { debugAPIUrls } from "@/utils/apiDebug"
 import { Play, BookOpen } from "lucide-react"
 import { gamificationApi } from "@tbe/services"
@@ -27,10 +27,18 @@ function DashboardContent() {
   }
 
   useEffect(() => {
-    gamificationApi.getuserGamificationPoints(user?._id || user?.id || '').then((res:any) => {
-     console.log(res)
-    })
- }, [user?._id, user?.id])
+    const effectiveUserId = (user as any)?._id || user?.id
+    if (!effectiveUserId) return
+
+    gamificationApi
+      .getuserGamificationPoints(effectiveUserId)
+      .then((res: any) => {
+        console.log(res)
+      })
+      .catch((err: any) => {
+        console.error('Failed to load gamification points:', err)
+      })
+  }, [user?.id])
 
   if (loading) {
     return (

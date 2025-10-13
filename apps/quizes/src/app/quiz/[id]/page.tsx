@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@tbe/components/quizes
 import { Button } from "@tbe/components/quizes"
 import { Progress } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
-import { ProtectedRoute } from "@tbe/components/quizes"
+import { ProtectedRoute } from "@/components/ProtectedRoute"
 import { CodeRenderer } from "@tbe/components/quizes"
-import { useAuth } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/auth"
 import { quizApi } from "@tbe/services"
 import { getValidUserId } from "@tbe/utils"
 import { Clock } from "lucide-react"
@@ -43,6 +43,40 @@ function QuizContent() {
         "loading" | "playing" | "completed"
     >("loading")
     const [quizStartTime] = useState(Date.now())
+    const [resolvedUserId, setResolvedUserId] = useState<string | null>(null)
+
+    // Helper: Mongo ObjectId check
+    const isMongoObjectId = (val?: string): boolean => {
+        if (!val) return false
+        return /^[a-fA-F0-9]{24}$/.test(val)
+    }
+
+    // Resolve MongoDB userId once
+    useEffect(() => {
+        const resolveUserId = async () => {
+            if (!user?.email && !user?.id) return
+            try {
+                if (isMongoObjectId(user?.id)) {
+                    setResolvedUserId(user!.id)
+                    return
+                }
+                // Fallback: fetch by email to get _id
+                const base = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '')
+                const resp = await fetch(`${base}/user?email=${encodeURIComponent(user!.email!)}`)
+                const json = await resp.json()
+                const dbId = json?.data?._id
+                if (isMongoObjectId(dbId)) {
+                    setResolvedUserId(dbId)
+                }
+            } catch (_e) {
+                // ignore
+            }
+        }
+
+        if (user && !resolvedUserId) {
+            void resolveUserId()
+        }
+    }, [user?.id, user?.email]) // Remove resolvedUserId from dependencies
 
     const loadQuiz = useCallback(async () => {
         try {
@@ -115,9 +149,9 @@ function QuizContent() {
                 }
             })
 
-            // Ensure user has a valid ID before submitting
-            const validUserId = user?._id || user?.id || null
-            if (!validUserId) {
+            // Use resolved Mongo _id if available, else abort
+            const validUserId = resolvedUserId || user?.id
+            if (!validUserId || !isMongoObjectId(validUserId)) {
                 alert("User authentication error. Please try logging in again.")
                 router.push("/login")
                 return

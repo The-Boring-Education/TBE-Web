@@ -2,7 +2,7 @@
 
 import { Navbar } from './Navbar'
 import { Footer } from './Footer'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@tbe/auth'
 
 interface LayoutProps {
     children: React.ReactNode

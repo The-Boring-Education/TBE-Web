@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
 import { Button } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
-import { useAuth } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/auth"
 import { analyticsApi, APIError } from "@tbe/services"
 import { PerformanceMetrics } from "@tbe/types"
 import { 
@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Calendar
 } from "lucide-react"
-import { ProtectedRoute } from "@tbe/components/quizes"
+import { ProtectedRoute } from "@/components/ProtectedRoute"
 
 // Use the PerformanceMetrics type from the API
 

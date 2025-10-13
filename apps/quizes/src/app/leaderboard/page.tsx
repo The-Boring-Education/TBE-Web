@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
 import { Button } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
-import { useAuth } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/auth"
 import { leaderboardApi, APIError } from "@tbe/services"
 import {
   Trophy,

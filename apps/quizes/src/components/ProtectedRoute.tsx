@@ -1,17 +1,16 @@
 'use client'
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useAuth } from "@/contexts/AuthContext"
+import { useAuth } from "@tbe/auth"
 import { config } from "../config"
-import { getValidUserId } from "@/lib/utils"
 
 interface ProtectedRouteProps {
     children: React.ReactNode
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const { user, loading, refreshUserFromBackend } = useAuth()
+    const { user, isLoading, isAuthenticated } = useAuth()
     const router = useRouter()
     const searchParams = useSearchParams()
 
@@ -19,40 +18,75 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     const [refreshingUser, setRefreshingUser] = useState(false)
     const [redirectingToOnboarding, setRedirectingToOnboarding] = useState(false)
     const [isProcessingOnboarding, setIsProcessingOnboarding] = useState(false)
+    const [resolvedUserId, setResolvedUserId] = useState<string | null>(null)
+    const [needsOnboarding, setNeedsOnboarding] = useState<boolean | null>(null)
+    const isResolvingRef = useRef(false)
 
     const cameFromOnboarding = searchParams.get("onboardingComplete") === "true"
 
+    // Helper: check 24-char hex ObjectId
+    const isMongoObjectId = (val?: string): boolean => {
+        if (!val) return false
+        return /^[a-fA-F0-9]{24}$/.test(val)
+    }
+
+    // Resolve MongoDB userId once (from session id or via API by email)
+    useEffect(() => {
+        const resolveUserId = async () => {
+            if (isResolvingRef.current) return
+            if (!user?.email && !user?.id) return
+            isResolvingRef.current = true
+            try {
+                if (isMongoObjectId(user?.id)) {
+                    setResolvedUserId(user!.id)
+                    return
+                }
+                // Fallback: fetch by email to get _id
+                const base = (config.API_BASE_URL || '').replace(/\/$/, '')
+                const resp = await fetch(`${base}/user?email=${encodeURIComponent(user!.email!)}`)
+                const json = await resp.json()
+                const dbId = json?.data?._id
+                const apiOnboarded = json?.data?.isOnboarded === true || json?.data?.quiz?.onboarded === true
+                setNeedsOnboarding(apiOnboarded ? false : true)
+                if (isMongoObjectId(dbId)) {
+                    setResolvedUserId(dbId)
+                }
+            } catch (e) {
+                // ignore; will retry on next render if needed
+            } finally {
+                isResolvingRef.current = false
+            }
+        }
+
+        if (isAuthenticated && !isLoading && user && !resolvedUserId) {
+            void resolveUserId()
+        }
+    }, [isAuthenticated, isLoading, user, resolvedUserId])
+
     // Handle onboarding redirection and refresh logic
     useEffect(() => {
-        if (!loading && user) {
+        if (!isLoading && isAuthenticated && user) {
             // Handle onboarding completion
             if (cameFromOnboarding && !hasRefreshed) {
-                setRefreshingUser(true)
-                
-                const refreshUserData = async () => {
-                    if (isProcessingOnboarding) return
-                    
+                // No explicit refresh method in new auth; do a soft reload once
+                if (!isProcessingOnboarding) {
                     setIsProcessingOnboarding(true)
-                    try {
-                        await refreshUserFromBackend?.()
-                    } catch (err) {
-                        // Failed to refresh user after onboarding
-                    } finally {
-                        setHasRefreshed(true)
+                    setHasRefreshed(true)
+                    setRefreshingUser(true)
+                    setTimeout(() => {
                         setRefreshingUser(false)
                         setIsProcessingOnboarding(false)
-                    }
+                    }, 100)
                 }
-
-                refreshUserData()
                 return
             }
 
-            // Check if user needs onboarding
-            if (user.isOnboarded === false || user.isOnboarded === undefined) {
+            // Check if user needs onboarding (API derived)
+            if (needsOnboarding === true) {
                 // Only redirect if we haven't just come from onboarding
                 if (!cameFromOnboarding) {
-                    const validUserId = getValidUserId(user)
+                    const candidateId = resolvedUserId || user?.id
+                    const validUserId = candidateId && isMongoObjectId(candidateId) ? candidateId : null
                     if (!validUserId) {
                         // If user object is incomplete, redirect to login to re-authenticate
                         router.push('/login')
@@ -84,12 +118,13 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         }
     }, [
         user,
-        loading,
+        isLoading,
+        resolvedUserId,
+        needsOnboarding,
         hasRefreshed,
         cameFromOnboarding,
         router,
-        isProcessingOnboarding,
-        refreshUserFromBackend
+        isProcessingOnboarding
     ])
 
     // Show loading state while redirecting to onboarding
@@ -111,7 +146,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     }
 
     // If user needs onboarding, show loading while redirecting
-    if (user && (user.isOnboarded === false || user.isOnboarded === undefined) && !cameFromOnboarding) {
+    if (user && needsOnboarding === true && !cameFromOnboarding) {
         return (
             <div className='min-h-screen flex items-center justify-center'>
                 <div className='text-2xl font-semibold'>Redirecting to onboarding...</div>

@@ -3,12 +3,12 @@
 import { useEffect, useRef, useMemo } from "react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
-import { useAuth } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/auth"
 import { quizApi } from "@/services/api"
 import { Question } from "@/types/quiz"
 import { ArrowLeft, Trophy, Clock, Target } from "lucide-react"
 import { MarkdownRenderer } from "@tbe/components/quizes"
-import { ProtectedRoute } from "@tbe/components/quizes"
+import { ProtectedRoute } from "@/components/ProtectedRoute"
 import { trackEvent } from "@tbe/utils"
 
 interface QuizQuestion {

@@ -1,7 +1,7 @@
 'use client'
 
 import { GamificationProvider } from '@/contexts/GamificationContext'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@tbe/auth'
 
 interface GamificationWrapperProps {
   children: React.ReactNode

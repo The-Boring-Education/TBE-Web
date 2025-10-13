@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-  import { useAuth } from '@tbe/components/quizes'
+import { useAuth } from '@tbe/auth'
 import { useGamificationContext } from '@tbe/components/quizes'
 import { gamificationApi } from '@/services/api'
 import { useToast } from '@tbe/components/quizes'
