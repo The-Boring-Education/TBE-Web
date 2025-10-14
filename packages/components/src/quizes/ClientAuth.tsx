@@ -9,7 +9,7 @@ interface ClientAuthProps {
 }
 
 export function ClientAuth({ children }: ClientAuthProps) {
-    const { user, loading } = useAuth()
+    const { user, isLoading, isAuthenticated } = useAuth()
     const router = useRouter()
     const pathname = usePathname()
     const [authInitialized, setAuthInitialized] = useState(false)
@@ -31,14 +31,14 @@ export function ClientAuth({ children }: ClientAuthProps) {
 
     // Initialize authentication state
     useEffect(() => {
-        if (!loading && !authInitialized) {
+        if (!isLoading && !authInitialized) {
             setAuthInitialized(true)
         }
-    }, [loading, authInitialized])
+    }, [isLoading, authInitialized])
 
     // Handle authentication logic
     useEffect(() => {
-        if (!authInitialized || isRedirecting) {
+        if (!authInitialized || isRedirecting || isLoading) {
             return
         }
 
@@ -73,7 +73,7 @@ export function ClientAuth({ children }: ClientAuthProps) {
         }
     }, [
         user,
-        loading,
+        isLoading,
         pathname,
         router,
         isProtectedRoute,
@@ -91,7 +91,7 @@ export function ClientAuth({ children }: ClientAuthProps) {
     }, [])
 
     // Show loading spinner during auth check for protected routes
-    if (loading || (!authInitialized && isProtectedRoute) || isRedirecting) {
+    if (isLoading || (!authInitialized && isProtectedRoute) || isRedirecting) {
         return (
             <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
                 <div className='text-center'>
@@ -105,7 +105,7 @@ export function ClientAuth({ children }: ClientAuthProps) {
     }
 
     // Don't render protected content if not authenticated
-    if (authInitialized && isProtectedRoute && !user) {
+    if (authInitialized && isProtectedRoute && !isAuthenticated) {
         return null // Will redirect in useEffect
     }
 
