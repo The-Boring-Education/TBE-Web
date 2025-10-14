@@ -94,9 +94,6 @@ prompt_for_secrets() {
     print_input "NextAuth Secret (Required - generate with: openssl rand -base64 32):"
     read -r NEXTAUTH_SECRET
     
-    print_input "Google OAuth Client Secret (Required):"
-    read -r GOOGLE_AUTH_CLIENT_SECRET
-    
     print_input "Admin Secret (Required):"
     read -r ADMIN_SECRET
     
@@ -124,7 +121,6 @@ setup_secrets() {
     # Required secrets
     create_secret "mongodb-uri" "MongoDB connection string for TBE API" "$MONGODB_URI" true
     create_secret "nextauth-secret" "NextAuth.js secret key for session encryption" "$NEXTAUTH_SECRET" true
-    create_secret "google-auth-client-secret" "Google OAuth client secret for authentication" "$GOOGLE_AUTH_CLIENT_SECRET" true
     create_secret "admin-secret" "Admin authentication secret for admin endpoints" "$ADMIN_SECRET" true
     
     # Optional secrets
@@ -144,7 +140,6 @@ show_env_vars() {
     echo "The following non-sensitive environment variables need to be set in Cloud Run:"
     echo
     echo "Required:"
-    echo "  GOOGLE_AUTH_CLIENT_ID=your_google_oauth_client_id"
     echo "  NODE_ENV=production (or staging)"
     echo
     echo "Application URLs (update with your actual URLs):"
@@ -183,8 +178,6 @@ MONGODB_URI=mongodb://localhost:27017/tbe-dev
 
 # Authentication
 NEXTAUTH_SECRET=your-nextauth-secret-key-here
-GOOGLE_AUTH_CLIENT_ID=your-google-oauth-client-id
-GOOGLE_AUTH_CLIENT_SECRET=your-google-oauth-client-secret
 
 # Admin
 ADMIN_SECRET=your-admin-secret-key

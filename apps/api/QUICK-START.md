@@ -1,89 +1,143 @@
 # TBE API - Quick Start Guide
 
-🚀 **Fast deployment to Google Cloud Run in 3 steps!**
+🚀 **Deploy to Google Cloud Run in 2 minutes with full automation!**
+
+## One-Command Deployment
+
+```bash
+cd apps/api
+./scripts/setup-and-deploy.sh
+```
+
+**That's it!** This single script handles everything:
+
+- 🛠️ Google Cloud setup (APIs, service accounts, repositories)
+- 🔐 Secret management (environment variables, API keys)
+- 🚀 Build and deploy to Cloud Run
+- 📊 Open monitoring dashboards
+- 🌐 Launch your deployed API
+
+## Alternative: Step-by-Step
+
+If you prefer individual control or already ran some steps:
+
+### Option 1: You already ran `setup-gcp.sh`
+
+```bash
+./scripts/setup-secrets.sh  # Configure secrets
+./scripts/deploy.sh         # Deploy to Cloud Run
+```
+
+### Option 2: Individual Steps
+
+```bash
+# Step 1: Google Cloud Setup
+./scripts/setup-gcp.sh
+
+# Step 2: Configure Secrets
+./scripts/setup-secrets.sh
+
+# Step 3: Deploy
+./scripts/deploy.sh --staging     # or --production
+```
 
 ## Prerequisites
 
 - Google Cloud account with billing enabled
-- `gcloud` CLI installed
-- GitHub repository access
+- `gcloud` CLI installed and authenticated
+- Docker installed
+- Node.js 20+ and pnpm 9.15.9+
 
-## Step 1: Google Cloud Setup
+## Deployment Environments
 
-Run the automated setup script:
+The scripts support multiple deployment targets:
 
-```bash
-cd apps/api
-./scripts/setup-gcp.sh
-```
+| Command                            | Environment | Service Name      | Use Case      |
+| ---------------------------------- | ----------- | ----------------- | ------------- |
+| `./scripts/deploy.sh --staging`    | Staging     | `tbe-api-staging` | Testing       |
+| `./scripts/deploy.sh --production` | Production  | `tbe-api`         | Live users    |
+| `./scripts/deploy.sh --manual`     | Development | `tbe-api-dev`     | Local testing |
 
-This script will:
+## GitHub Actions (Optional)
 
-- ✅ Enable required Google Cloud APIs
-- ✅ Create Artifact Registry repository
-- ✅ Set up service account with proper permissions
-- ✅ Configure Docker authentication
-- ✅ Generate service account key for GitHub Actions
-
-## Step 2: Configure Secrets
-
-Set up your environment variables and secrets:
-
-```bash
-./scripts/setup-secrets.sh
-```
-
-This script will:
-
-- ✅ Create secrets in Google Secret Manager
-- ✅ Generate sample `.env.example` file
-- ✅ Display environment variables reference
-
-## Step 3: GitHub Actions Setup
+For automated deployments on code changes:
 
 1. **Add GitHub Secrets** (Repository Settings → Secrets):
-    - `GCP_PROJECT_ID`: Your Google Cloud project ID
+    - `GCP_PROJECT_ID`: Your project ID (displayed by setup script)
     - `GCP_SA_KEY`: Contents of `github-actions-key.json`
 
-2. **Deploy**: Push changes to trigger automated deployment:
+2. **Push to deploy automatically**:
     ```bash
-    git add .
-    git commit -m "feat: add Cloud Run deployment"
-    git push origin development  # Deploys to staging
-    git push origin main         # Deploys to production
+    git push origin development  # → staging
+    git push origin main         # → production
     ```
 
-## That's It! 🎉
+## What Happens During Setup? 🎯
 
-Your API will be automatically deployed to:
+✅ **GCP Configuration**:
 
-- **Staging**: `https://tbe-api-staging-xxxxx-uc.a.run.app`
-- **Production**: `https://tbe-api-xxxxx-uc.a.run.app`
+- Enable Cloud Run, Artifact Registry, Secret Manager APIs
+- Create container registry for your images
+- Set up service account with proper permissions
+- Generate GitHub Actions authentication key
+
+✅ **Secret Management**:
+
+- Interactive prompts for API keys and secrets
+- Secure storage in Google Secret Manager
+- Environment variable configuration
+
+✅ **Deployment & Monitoring**:
+
+- Build and containerize your API
+- Deploy to Cloud Run with optimal settings
+- Automatic health checks and validation
+- Open monitoring dashboards in browser
+
+## Your Deployed API 🌐
+
+After deployment, you'll get:
+
+- **Service URL**: `https://tbe-api-staging-xxxxx-uc.a.run.app`
+- **Health Check**: `{SERVICE_URL}/api/health`
+- **Auto-scaling**: 0-20 instances based on traffic
+- **Monitoring**: Google Cloud Console dashboards
 
 ## Test Your Deployment
 
 ```bash
-# Health check
+# Health check (URL provided by script)
 curl https://your-service-url/api/health
 
 # Should return: {"status": "ok", "timestamp": "..."}
 ```
 
-## Need Help?
+## Troubleshooting
 
-- 📚 **Full Documentation**: [README-DEPLOYMENT.md](./README-DEPLOYMENT.md)
-- 🔧 **Troubleshooting**: See the troubleshooting section in the full docs
-- 🏗️ **Local Development**: Docker setup instructions in full docs
+**Script fails?** Check:
 
-## What's Been Configured
+- ✅ `gcloud auth login` (authenticated?)
+- ✅ `gcloud config set project PROJECT_ID` (project set?)
+- ✅ Billing enabled on your Google Cloud project
+- ✅ Required tools installed (gcloud, docker, pnpm, node)
 
-✅ **Containerization**: Dockerfile with multi-stage build  
-✅ **Auto-scaling**: 0-10 instances based on traffic  
-✅ **Security**: Secrets in Google Secret Manager  
-✅ **Monitoring**: Cloud Logging & Error Reporting  
-✅ **CI/CD**: GitHub Actions deployment pipeline  
-✅ **Environment Separation**: Staging and Production environments
+**Need detailed help?**
+
+- 📚 **Full Guide**: [README-DEPLOYMENT.md](./README-DEPLOYMENT.md)
+- 🔧 **Advanced Setup**: Manual configuration steps
+- 💬 **Support**: Contact development team
+
+## What's Been Automated 🤖
+
+✅ **Google Cloud Setup**: APIs, repositories, service accounts  
+✅ **Containerization**: Optimized Docker builds with monorepo support  
+✅ **Auto-scaling**: Smart instance management (0-20 based on traffic)  
+✅ **Security**: Encrypted secrets in Google Secret Manager  
+✅ **Monitoring**: Cloud Logging, Error Reporting, Performance metrics  
+✅ **CI/CD Ready**: GitHub Actions workflow for automated deployments  
+✅ **Multi-Environment**: Staging, Production, and Development setups  
+✅ **Browser Integration**: Auto-open monitoring and service URLs
 
 ---
 
-**Next Steps**: Update your UI applications to use the new API URLs!
+🚀 **Ready to go!** Your API is now enterprise-ready on Google Cloud Run!

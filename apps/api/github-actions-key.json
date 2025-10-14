@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "the-boring-education",
+  "private_key_id": "9b8518be8f63f4103f41999167775f576bef520b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCxJNFM7CxxZHV+\ntkm7JL92aCY2qtJuAUzEEThu5U6atEC4uydt6oSqURdWjyGlfFKhzSHUB/vi1C9b\nPwi3JcDSAceTYIUHWHQUwEwVtnYQ25drafTGO/0QE1HiCNkGq97kwvZrlAT/xns9\njaVVhiFVVHySczrub+d7kU7yLv14DFd0coirQ95Cbd2+4K/oaXbcQlorWRZSL1yh\nNyFYmCobPjAE29hSakNQvEYK3MTwyCSt2phbnYUCKkOM5Kp4Cu/090Tavs+bgW8X\nniHo9pCC/G53ksJqqmWyq1R10tK/MvaKLzor+xM9suaodidETz8/tKc9xpcunQLg\neE6IRxt/AgMBAAECggEACRjr2mheOrwrucRKn0UakIFC+SRaGZ+Q3cuumyj4M1y8\nRPoJ/KY1hi1GjNtdh7F0HIgiGFDV2eCgxmEp2IU+IYR8erA5x/AXrtsjU5G8mLTW\nUjdgt6K42XYy8Qmx4s3soARdNTAmw5LINuSLEAw+TDLb3oXzCe/1GOgtzQumi8XG\nBfQjp/Z62jQWQpVlJ0eVTnSIDT5reaXM027cw0j05h9+T7i5hXPVaZe5SsEqyTT8\nZuOQysOsmdUD/7+lzh6BuWmXGAZR3PH/ooViRhB83a+GPpAUEPmrauR8zp9HQpY2\nqeDJbTT8QWZFnx2ATqVAX2BOAQ5qoNO1jmfZ/UULAQKBgQDy6S7uXmTBP9MI4CNB\nTp6zdrQCebFsKWFTHtGtuDHMdIKKIStoUWaWli0C1N4nkBz1O0O0ZOuM7MDtN4Tk\ntlRysMvqYnnFcfQR8tgeqvmcUXygnIYyIVTtigOdqYoKAW7I1eH/phWZrNTEqL48\n6Q6HpOjmDGmLNcOSa4RGVKcRAQKBgQC6sGpTKt6Mn76ow6hrydRkyd7eR2obUYeu\nrJx9czm6AbP8am/ZuTc9S/apYNfV5p1yriPwtZLuWOg6af+Yp590YX9e0cM2Gwza\nGIyKgZJWFC+WYpDmlOnT6DFTDtD9HLslbfDlsyT5TAmheKOgzyDBO2Dpoz233hxl\nvwtKwPmsfwKBgQCwwQztVrJqDE87fh0pQFQqso1536NC2TmAikR47DcQVxdF+6zi\nU5kaqlxGWy7sCumHaIBzm5vrB7u64VNKOYJpkkxPWSjSi4DWLqckabUIEiNlm3/q\nqmZqEqte5icT8Mb0TO4OYIQHNsP79e231L5F5bGy9AU4zv5oZOPzaVXIAQKBgHvp\nWjknbB20bc0ASMp6ZQIcx1OL3Q6S19cFdL0DfN5MARXZ47GEcPi7cdXMlJXCAuE6\nWlqLeiG/WyxibKb7IygRCoR5//Lqk2YzAx1vkRyXO1q6w2h4kJb5N7vkSqylpEXc\nqhccB798S6wkMZ8ru5bl/ZY1pmJjB0A1RJ5yZYWrAoGBAI0a9rO2R6L8NKhvwM98\n7uvVZ7otTqjS/CTJ4q1TRbF88lZE4Ri8eM/cB1MqlpUNrQeqaRdMDW8hBHOdONvF\n4Eyf6hYxlBxLc+cW6qLRVBuXLLzly480Swfp1upfZ1ufqMrqxLh0y9DofqfOWk5S\nuK02OKxDHCLSBt8lzZofCGz2\n-----END PRIVATE KEY-----\n",
+  "client_email": "github-actions-sa@the-boring-education.iam.gserviceaccount.com",
+  "client_id": "118321065564840856255",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/github-actions-sa%40the-boring-education.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

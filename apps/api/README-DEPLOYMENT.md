@@ -2,16 +2,42 @@
 
 This guide covers deploying the TBE API to Google Cloud Run with automated CI/CD using GitHub Actions.
 
+## Quick Start (Automated)
+
+🚀 **Get deployed in 5 minutes with automated scripts!**
+
+```bash
+cd apps/api
+./scripts/setup-and-deploy.sh
+```
+
+The script will guide you through:
+
+1. **GCP Setup**: APIs, service accounts, repositories
+2. **Secrets Configuration**: Environment variables and API keys
+3. **Deployment**: Build and deploy to Cloud Run
+4. **Monitoring**: Open dashboards and service URLs
+
+**Already ran `setup-gcp.sh`?** Continue with:
+
+```bash
+./scripts/setup-secrets.sh  # Configure secrets
+./scripts/deploy.sh         # Deploy to Cloud Run
+```
+
+For detailed manual setup or troubleshooting, see sections below.
+
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Google Cloud Setup](#google-cloud-setup)
-3. [Environment Variables](#environment-variables)
-4. [Initial Deployment](#initial-deployment)
-5. [Automated Deployments](#automated-deployments)
-6. [Local Development](#local-development)
-7. [Troubleshooting](#troubleshooting)
-8. [Monitoring & Logging](#monitoring--logging)
+1. [Quick Start (Automated)](#quick-start-automated)
+2. [Prerequisites](#prerequisites)
+3. [Automated Setup & Deployment](#automated-setup--deployment)
+4. [Manual Setup (Advanced)](#manual-setup-advanced)
+5. [Environment Variables](#environment-variables)
+6. [GitHub Actions Integration](#github-actions-integration)
+7. [Local Development](#local-development)
+8. [Troubleshooting](#troubleshooting)
+9. [Monitoring & Logging](#monitoring--logging)
 
 ## Prerequisites
 
@@ -21,7 +47,82 @@ This guide covers deploying the TBE API to Google Cloud Run with automated CI/CD
 - Node.js 20+ and pnpm 9.15.9+
 - GitHub repository access with admin permissions
 
-## Google Cloud Setup
+## Automated Setup & Deployment
+
+### Complete Setup (Recommended)
+
+For first-time setup, use the complete automated script:
+
+```bash
+cd apps/api
+./scripts/setup-and-deploy.sh
+```
+
+**Interactive Menu Options:**
+
+1. **Complete setup** - All steps (recommended for first time)
+2. **Skip GCP setup** - If you already ran `setup-gcp.sh`
+3. **Skip to deployment** - If GCP and secrets are configured
+4. **Setup only** - No deployment
+5. **Exit**
+
+### Individual Scripts
+
+If you prefer to run steps individually:
+
+```bash
+# Step 1: Google Cloud Setup
+./scripts/setup-gcp.sh
+
+# Step 2: Configure Secrets
+./scripts/setup-secrets.sh
+
+# Step 3: Deploy Application
+./scripts/deploy.sh
+
+# Or run specific deployment environment
+./scripts/deploy.sh --staging     # Deploy to staging
+./scripts/deploy.sh --production  # Deploy to production
+./scripts/deploy.sh --manual      # Deploy current code
+```
+
+### What Gets Automated
+
+✅ **Google Cloud Setup** (`setup-gcp.sh`):
+
+- Enable required APIs (Cloud Run, Artifact Registry, Secret Manager, etc.)
+- Create Artifact Registry repository
+- Create service account with proper IAM roles
+- Generate GitHub Actions service account key
+- Configure Docker authentication
+
+✅ **Secrets Management** (`setup-secrets.sh`):
+
+- Interactive prompt for all required secrets
+- Create secrets in Google Secret Manager
+- Generate sample `.env.example` file
+- Display environment variables reference
+
+✅ **Deployment** (`deploy.sh`):
+
+- Build shared packages and API
+- Create and push Docker image
+- Deploy to Cloud Run with optimal settings
+- Run health checks
+- Open monitoring dashboards automatically
+
+✅ **Monitoring Integration**:
+
+- Automatically open Google Cloud Console dashboards
+- Display service URLs and monitoring links
+- Open deployed application in browser
+- Show deployment summary and next steps
+
+## Manual Setup (Advanced)
+
+> **Note**: For most users, the automated scripts above are recommended. Use this section for custom setups or troubleshooting.
+
+### Google Cloud Setup
 
 ### 1. Create or Select a GCP Project
 
@@ -123,28 +224,26 @@ echo "your_sentry_auth_token" | gcloud secrets create sentry-auth-token --data-f
 
 ### 2. Environment Variables Reference
 
-| Variable                    | Type    | Description                      |
-| --------------------------- | ------- | -------------------------------- |
-| `MONGODB_URI`               | Secret  | MongoDB connection string        |
-| `NEXTAUTH_SECRET`           | Secret  | NextAuth.js secret key           |
-| `GOOGLE_AUTH_CLIENT_SECRET` | Secret  | Google OAuth client secret       |
-| `ADMIN_SECRET`              | Secret  | Admin authentication secret      |
-| `OPENAI_API_KEY`            | Secret  | OpenAI API key                   |
-| `YOUTUBE_API_KEY`           | Secret  | YouTube Data API key             |
-| `CASHFREE_SECRET_KEY`       | Secret  | Cashfree payment secret          |
-| `EMAIL_API_KEY`             | Secret  | Email service API key            |
-| `SENTRY_AUTH_TOKEN`         | Secret  | Sentry authentication token      |
-| `GOOGLE_AUTH_CLIENT_ID`     | Env Var | Google OAuth client ID (public)  |
-| `API_URL`                   | Env Var | API base URL                     |
-| `AUTH_URL`                  | Env Var | Authentication service URL       |
-| `NODE_ENV`                  | Env Var | Environment (production/staging) |
-| `ADMIN_BASE_URL`            | Env Var | Admin panel base URL             |
-| `CASHFREE_BASE_URL`         | Env Var | Cashfree API base URL            |
-| `CASHFREE_CLIENT_ID`        | Env Var | Cashfree client ID               |
-| `PREPYATRA_APP_URL`         | Env Var | PrepYatra application URL        |
-| `QUIZ_APP_URL`              | Env Var | Quiz application URL             |
-| `FROM_EMAIL`                | Env Var | Default sender email address     |
-| `EMAIL_SERVICE_URL`         | Env Var | Email service endpoint URL       |
+| Variable              | Type    | Description                      |
+| --------------------- | ------- | -------------------------------- |
+| `MONGODB_URI`         | Secret  | MongoDB connection string        |
+| `NEXTAUTH_SECRET`     | Secret  | NextAuth.js secret key           |
+| `ADMIN_SECRET`        | Secret  | Admin authentication secret      |
+| `OPENAI_API_KEY`      | Secret  | OpenAI API key                   |
+| `YOUTUBE_API_KEY`     | Secret  | YouTube Data API key             |
+| `CASHFREE_SECRET_KEY` | Secret  | Cashfree payment secret          |
+| `EMAIL_API_KEY`       | Secret  | Email service API key            |
+| `SENTRY_AUTH_TOKEN`   | Secret  | Sentry authentication token      |
+| `API_URL`             | Env Var | API base URL                     |
+| `AUTH_URL`            | Env Var | Authentication service URL       |
+| `NODE_ENV`            | Env Var | Environment (production/staging) |
+| `ADMIN_BASE_URL`      | Env Var | Admin panel base URL             |
+| `CASHFREE_BASE_URL`   | Env Var | Cashfree API base URL            |
+| `CASHFREE_CLIENT_ID`  | Env Var | Cashfree client ID               |
+| `PREPYATRA_APP_URL`   | Env Var | PrepYatra application URL        |
+| `QUIZ_APP_URL`        | Env Var | Quiz application URL             |
+| `FROM_EMAIL`          | Env Var | Default sender email address     |
+| `EMAIL_SERVICE_URL`   | Env Var | Email service endpoint URL       |
 
 ### 3. Configure GitHub Secrets
 
@@ -155,15 +254,45 @@ Add these secrets to your GitHub repository:
 
 Go to: Repository Settings → Secrets and variables → Actions → New repository secret
 
-## Initial Deployment
+## GitHub Actions Integration
 
-### 1. Manual Deployment (First Time)
+### Setting Up Automated Deployments
+
+After running the setup scripts, configure GitHub Actions for automated deployments:
+
+#### 1. Add GitHub Repository Secrets
+
+Go to: **Repository Settings → Secrets and variables → Actions**
+
+Add these secrets:
+
+- **`GCP_PROJECT_ID`**: Your Google Cloud project ID
+- **`GCP_SA_KEY`**: Contents of `github-actions-key.json` (created by setup script)
+
+#### 2. Automated Deployment Triggers
+
+- **Development Branch** → `tbe-api-staging` (staging environment)
+- **Main Branch** → `tbe-api` (production environment)
+- **Manual Trigger** → Choose environment via GitHub Actions UI
+
+#### 3. Manual GitHub Actions Deployment
+
+1. Go to **Actions** tab in your GitHub repository
+2. Select **"Deploy API to Cloud Run"**
+3. Click **"Run workflow"**
+4. Choose environment (staging/production)
+5. Monitor deployment progress
+
+### Manual Cloud Run Deployment
+
+For manual deployments without GitHub Actions:
 
 ```bash
-# Navigate to the API directory
+# Use the deployment script (recommended)
 cd apps/api
+./scripts/deploy.sh --staging     # or --production
 
-# Build and deploy using gcloud
+# Or manual gcloud deployment
 gcloud run deploy tbe-api-staging \
   --source . \
   --region us-central1 \
@@ -172,16 +301,6 @@ gcloud run deploy tbe-api-staging \
   --cpu 1 \
   --min-instances 0 \
   --max-instances 10
-
-# For production deployment
-gcloud run deploy tbe-api \
-  --source . \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --memory 1Gi \
-  --cpu 1 \
-  --min-instances 1 \
-  --max-instances 20
 ```
 
 ### 2. Set Environment Variables
@@ -192,7 +311,6 @@ gcloud run services update tbe-api-staging \
   --region us-central1 \
   --set-env-vars \
   NODE_ENV=staging,\
-  GOOGLE_AUTH_CLIENT_ID=your_client_id,\
   API_URL=https://tbe-api-staging-xxxxx-uc.a.run.app,\
   AUTH_URL=https://your-auth-url.com
 
@@ -205,7 +323,25 @@ gcloud run services update tbe-api-staging \
   # ... (add other secrets as needed)
 ```
 
-## Automated Deployments
+### Monitoring and Console Access
+
+The deployment script automatically opens relevant monitoring dashboards:
+
+- **Service Dashboard**: Cloud Run metrics and configuration
+- **Application URL**: Your deployed API endpoint
+- **Logs**: Real-time application logs
+- **Error Reporting**: Error tracking and alerting
+- **Container Registry**: Docker images and versions
+
+### Deployment Environments
+
+| Environment    | Branch        | Service Name      | Min Instances | Max Instances | Memory |
+| -------------- | ------------- | ----------------- | ------------- | ------------- | ------ |
+| **Staging**    | `development` | `tbe-api-staging` | 0             | 10            | 1Gi    |
+| **Production** | `main`        | `tbe-api`         | 1             | 20            | 2Gi    |
+| **Manual/Dev** | any           | `tbe-api-dev`     | 0             | 5             | 1Gi    |
+
+## GitHub Actions CI/CD
 
 ### How It Works
 
@@ -226,14 +362,31 @@ gcloud run services update tbe-api-staging \
     - Deploys to Cloud Run
     - Runs health checks
 
-### Manual Deployment Trigger
+### Manual Deployment via Scripts
 
-You can manually trigger deployments through GitHub Actions:
+For immediate deployment without GitHub Actions:
 
-1. Go to Actions tab in your repository
-2. Select "Deploy API to Cloud Run"
-3. Click "Run workflow"
-4. Choose environment (staging/production)
+```bash
+# Interactive deployment (choose environment)
+./scripts/deploy.sh
+
+# Direct environment deployment
+./scripts/deploy.sh --staging
+./scripts/deploy.sh --production
+./scripts/deploy.sh --manual
+
+# Complete setup and deployment
+./scripts/setup-and-deploy.sh
+```
+
+### Deployment Status and Monitoring
+
+After deployment, the scripts automatically:
+
+- ✅ Test API health endpoint
+- 🌐 Open service URL in browser
+- 📊 Open Google Cloud Console monitoring
+- 📋 Display deployment summary and next steps
 
 ## Local Development
 
@@ -267,8 +420,6 @@ Create a `.env.local` file in `apps/api/`:
 NODE_ENV=development
 MONGODB_URI=mongodb://localhost:27017/tbe-dev
 NEXTAUTH_SECRET=dev-secret-key
-GOOGLE_AUTH_CLIENT_ID=your-dev-client-id
-GOOGLE_AUTH_CLIENT_SECRET=your-dev-client-secret
 # ... other development variables
 ```
 
@@ -435,5 +586,35 @@ For deployment issues:
 
 ---
 
-**Last Updated**: October 2025
-**Version**: 1.0
+## Script Reference
+
+### Available Scripts
+
+| Script                | Purpose               | Usage                                                                                 |
+| --------------------- | --------------------- | ------------------------------------------------------------------------------------- |
+| `setup-gcp.sh`        | GCP resource setup    | `./scripts/setup-gcp.sh`                                                              |
+| `setup-secrets.sh`    | Secret Manager config | `./scripts/setup-secrets.sh`                                                          |
+| `deploy.sh`           | Deploy to Cloud Run   | `./scripts/deploy.sh [--staging\|--production\|--manual]`                             |
+| `setup-and-deploy.sh` | Complete automation   | `./scripts/setup-and-deploy.sh [--complete\|--skip-gcp\|--deploy-only\|--setup-only]` |
+
+### Script Features
+
+- 🎨 **Colorized Output**: Clear status indicators and progress
+- 🔍 **Dependency Checking**: Validates required tools (gcloud, docker, pnpm)
+- 📊 **Auto-Monitoring**: Opens relevant dashboards and URLs
+- 🛠️ **Error Handling**: Graceful failure handling with helpful messages
+- 📋 **Interactive Menus**: Guided setup with clear options
+- 🚀 **Auto-Browser**: Opens monitoring dashboards and deployed app
+- 📝 **Status Reporting**: Detailed deployment summaries
+
+### Next Steps After Deployment
+
+1. **Test API Endpoints**: Visit `{SERVICE_URL}/api/health`
+2. **Update UI Applications**: Change API URLs to new Cloud Run service
+3. **Monitor Performance**: Use Google Cloud Console dashboards
+4. **Set Up Alerts**: Configure monitoring alerts for production
+5. **Custom Domain**: Configure custom domain if needed
+6. **GitHub Actions**: Set up automated deployments for continuous integration
+
+**Last Updated**: October 2025  
+**Version**: 2.0 (with automated scripts)
