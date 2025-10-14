@@ -8,7 +8,7 @@ import { quizApi } from "@/services/api"
 import { Question } from "@/types/quiz"
 import { ArrowLeft, Trophy, Clock, Target } from "lucide-react"
 import { MarkdownRenderer } from "@tbe/components/quizes"
-import { ProtectedRoute } from "@/components/ProtectedRoute"
+import { ProtectedRoute } from "@tbe/components/quizes"
 import { trackEvent } from "@tbe/utils"
 
 interface QuizQuestion {

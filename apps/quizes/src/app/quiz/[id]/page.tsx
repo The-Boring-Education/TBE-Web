@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@tbe/components/quizes
 import { Button } from "@tbe/components/quizes"
 import { Progress } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
-import { ProtectedRoute } from "@/components/ProtectedRoute"
+import { ProtectedRoute } from "@tbe/components/quizes"
 import { CodeRenderer } from "@tbe/components/quizes"
 import { useAuth } from "@tbe/auth"
 import { quizApi } from "@tbe/services"

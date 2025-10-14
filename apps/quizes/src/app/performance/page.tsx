@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Calendar
 } from "lucide-react"
-import { ProtectedRoute } from "@/components/ProtectedRoute"
+import { ProtectedRoute } from "@tbe/components/quizes"
 
 // Use the PerformanceMetrics type from the API
 

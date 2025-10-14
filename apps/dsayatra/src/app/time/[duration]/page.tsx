@@ -8,7 +8,7 @@ import { timeBasedData, Topic } from "@/data/dsaData";
 
 export default function TimeRoadmap() {
   const params = useParams();
-  const duration = params.duration as string;
+  const duration = params?.duration as string;
   const data = timeBasedData[duration as keyof typeof timeBasedData] || [];
 
   const getTitle = (duration: string) => {

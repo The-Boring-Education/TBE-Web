@@ -8,7 +8,7 @@ import { domainBasedData, Topic } from "@/data/dsaData";
 
 export default function DomainRoadmap() {
   const params = useParams();
-  const type = params.type as string;
+  const type = params?.type as string;
   const data = domainBasedData[type as keyof typeof domainBasedData] || [];
 
   const getTitle = (type: string) => {
