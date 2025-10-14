@@ -13,7 +13,7 @@
     "dev": "next dev -p 3001",
     "build": "next lint && next build",
     "start": "next start -p 3001",
-    "lint": "next lint",
+    "lint": "eslint .",
     "lint:fix": "next lint --fix",
     "export": "next export"
   },

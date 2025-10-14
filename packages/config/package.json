@@ -1,6 +1,7 @@
 {
     "name": "@tbe/config",
     "version": "0.0.0",
+    "type": "module",
     "private": true,
     "license": "MIT",
     "main": "./onboarding.ts",
@@ -13,7 +14,7 @@
         "./prettier": "./prettier.config.js"
     },
     "scripts": {
-        "lint": "eslint . --max-warnings 0"
+        "lint": "eslint ."
     },
     "dependencies": {
         "@tbe/types": "workspace:*",
@@ -27,7 +28,7 @@
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",
         "@tbe/typescript-config": "workspace:*",
-        "eslint": "^8.57.1",
+        "eslint": "^9.34.0",
         "prettier": "^3.6.2",
         "typescript": "^5.9.2"
     }

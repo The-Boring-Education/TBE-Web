@@ -1,11 +1,11 @@
 /**
  * Onboarding Types - Used across ALL TBE apps
- * 
+ *
  * Types for onboarding flows that can be used by any TBE application
  * including field configurations, product configs, and onboarding state
  */
 
-import { BaseUser } from './common'
+import type { BaseUser } from "./common"
 
 // ================================
 // ONBOARDING FIELD TYPES
@@ -182,7 +182,7 @@ export interface OnboardingAnalytics {
     userId?: string
     flowId: string
     stepId: number
-    action: 'view' | 'next' | 'back' | 'skip' | 'complete' | 'abandon'
+    action: "view" | "next" | "back" | "skip" | "complete" | "abandon"
     timestamp: string
     timeSpent: number
     formData?: Record<string, unknown>

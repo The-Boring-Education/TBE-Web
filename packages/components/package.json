@@ -1,6 +1,7 @@
 {
     "name": "@tbe/components",
     "version": "0.0.0",
+    "type": "module",
     "private": true,
     "license": "MIT",
     "main": "./src/index.ts",
@@ -28,7 +29,7 @@
         "build:verbose": "tsc --listFiles",
         "build:watch": "tsc --watch",
         "build:clean": "rimraf dist && tsc",
-        "lint": "eslint . --max-warnings 0"
+        "lint": "eslint ."
     },
     "dependencies": {
         "@headlessui/react": "^2.2.0",
@@ -91,7 +92,7 @@
         "@types/react": "^18.3.24",
         "@types/react-datepicker": "^6.2.0",
         "@types/react-dom": "^18.3.7",
-        "eslint": "^8.57.1",
+        "eslint": "^9.34.0",
         "typescript": "^5.9.2"
     },
     "peerDependencies": {

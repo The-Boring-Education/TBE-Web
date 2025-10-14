@@ -1,5 +1,6 @@
 {
   "name": "@tbe/onboarding",
+  "type": "module",
   "private": true,
   "version": "0.5.0",
   "scripts": {
@@ -24,7 +25,7 @@
     "@typescript-eslint/parser": "^5.59.8",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.14",
-    "eslint": "^8.41.0",
+    "eslint": "^9.34.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.32.2",
