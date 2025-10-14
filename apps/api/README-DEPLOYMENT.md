@@ -151,7 +151,7 @@ gcloud services enable \
 # Create repository for container images
 gcloud artifacts repositories create tbe-api-repo \
   --repository-format=docker \
-  --location=us-central1 \
+  --location=asia-south1 \
   --description="TBE API container images"
 ```
 
@@ -295,7 +295,7 @@ cd apps/api
 # Or manual gcloud deployment
 gcloud run deploy tbe-api-staging \
   --source . \
-  --region us-central1 \
+  --region asia-south1 \
   --allow-unauthenticated \
   --memory 1Gi \
   --cpu 1 \
@@ -308,7 +308,7 @@ gcloud run deploy tbe-api-staging \
 ```bash
 # Set non-sensitive environment variables
 gcloud run services update tbe-api-staging \
-  --region us-central1 \
+  --region asia-south1 \
   --set-env-vars \
   NODE_ENV=staging,\
   API_URL=https://tbe-api-staging-xxxxx-uc.a.run.app,\
@@ -316,7 +316,7 @@ gcloud run services update tbe-api-staging \
 
 # Set secrets (already configured in GitHub Actions)
 gcloud run services update tbe-api-staging \
-  --region us-central1 \
+  --region asia-south1 \
   --set-secrets \
   MONGODB_URI=mongodb-uri:latest,\
   NEXTAUTH_SECRET=nextauth-secret:latest
@@ -447,7 +447,7 @@ docker build --no-cache -t tbe-api .
 ```bash
 # Increase memory allocation
 gcloud run services update tbe-api \
-  --region us-central1 \
+  --region asia-south1 \
   --memory 2Gi
 ```
 
@@ -458,7 +458,7 @@ gcloud run services update tbe-api \
 ```bash
 # Set minimum instances
 gcloud run services update tbe-api \
-  --region us-central1 \
+  --region asia-south1 \
   --min-instances 1
 ```
 
@@ -476,17 +476,17 @@ gcloud run services update tbe-api \
 
 ```bash
 # Real-time logs
-gcloud run services logs tail tbe-api --region us-central1
+gcloud run services logs tail tbe-api --region asia-south1
 
 # Recent logs
-gcloud run services logs read tbe-api --region us-central1 --limit 100
+gcloud run services logs read tbe-api --region asia-south1 --limit 100
 ```
 
 #### 2. Service Status
 
 ```bash
 # Check service status
-gcloud run services describe tbe-api --region us-central1
+gcloud run services describe tbe-api --region asia-south1
 
 # List all services
 gcloud run services list

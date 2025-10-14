@@ -167,7 +167,7 @@ deploy_to_cloud_run() {
     # Navigate to API directory
     cd apps/api
     
-    REGION="us-central1"
+    REGION="asia-south1"
     REPOSITORY="tbe-api-repo"
     IMAGE_TAG="manual-$(date +%Y%m%d-%H%M%S)"
     IMAGE_NAME="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/tbe-api:${IMAGE_TAG}"
@@ -203,7 +203,7 @@ deploy_to_cloud_run() {
 test_deployment() {
     print_step "Testing deployment..."
     
-    SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region us-central1 --format 'value(status.url)')
+    SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region asia-south1 --format 'value(status.url)')
     
     print_status "Service URL: $SERVICE_URL"
     
