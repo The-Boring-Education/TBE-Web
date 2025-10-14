@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '@tbe/components/quizes'
+import { useAuth } from '@tbe/auth'
 import { analyticsApi, quizApi, APIError } from '@/services/api'
 import { PerformanceHistory, QuizAttempt } from '@/types/api'
 import { 
