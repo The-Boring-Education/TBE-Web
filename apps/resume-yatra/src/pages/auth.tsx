@@ -1,7 +1,6 @@
-import { signIn } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
+import { useAuth } from "@tbe/auth"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -14,27 +13,27 @@ import { FileText, Github, Loader2 } from "lucide-react"
 
 export default function AuthPage() {
     const router = useRouter()
-    const { data: session, status } = useSession()
+    const { isAuthenticated, isLoading: authLoading, signIn } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
     const { error } = router.query
 
     useEffect(() => {
-        if (session) {
+        if (isAuthenticated) {
             router.push("/builder")
         }
-    }, [session, router])
+    }, [isAuthenticated, router])
 
     const handleGitHubSignIn = async () => {
         setIsLoading(true)
         try {
-            await signIn("github", { callbackUrl: "/builder" })
+            await signIn("/builder")
         } catch (error) {
             console.error("Sign in error:", error)
             setIsLoading(false)
         }
     }
 
-    if (status === "loading") {
+    if (authLoading) {
         return (
             <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100'>
                 <Loader2 className='w-8 h-8 animate-spin text-purple-600' />

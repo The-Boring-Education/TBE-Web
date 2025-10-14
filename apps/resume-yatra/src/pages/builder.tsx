@@ -1,38 +1,19 @@
-import { useEffect } from "react"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/router"
 import { Loader2 } from "lucide-react"
+import { ProtectedRoute } from "@tbe/auth"
 import { useResumeBuilder } from "@/hooks/use-resume-builder"
 import InitialChoice from "@/components/builder/InitialChoice"
 import TemplatePrompt from "@/components/builder/TemplatePrompt"
 import BuilderMain from "@/components/builder/BuilderMain"
 import ResultScreen from "@/components/builder/ResultScreen"
 
-export default function Builder() {
-    const router = useRouter()
-    const { data: session, status } = useSession()
+const LoadingScreen = () => (
+    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100'>
+        <Loader2 className='w-8 h-8 animate-spin text-purple-600' />
+    </div>
+)
+
+function BuilderContent() {
     const builder = useResumeBuilder()
-
-    // Redirect to auth if not authenticated
-    useEffect(() => {
-        if (status === "unauthenticated") {
-            router.push("/auth")
-        }
-    }, [status, router])
-
-    // Show loading state
-    if (status === "loading") {
-        return (
-            <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100'>
-                <Loader2 className='w-8 h-8 animate-spin text-purple-600' />
-            </div>
-        )
-    }
-
-    // Not authenticated
-    if (!session) {
-        return null
-    }
 
     // Show initial choice screen
     if (builder.hasResume === null) {
@@ -51,6 +32,16 @@ export default function Builder() {
 
     // Show main builder interface
     return <BuilderMain builder={builder} />
+}
+
+export default function Builder() {
+    return (
+        <ProtectedRoute
+            redirectTo='/auth'
+            loadingComponent={<LoadingScreen />}>
+            <BuilderContent />
+        </ProtectedRoute>
+    )
 }
 
 // Force SSR for this page

@@ -3,10 +3,10 @@ import { RESUME_STEPS } from "@/constants"
 import type { ResumeStep } from "@/types/resume"
 import type { UseResumeBuilderReturn } from "@/types/builder"
 import { useResumeProgress } from "./use-resume-progress"
-import { useSession } from "next-auth/react"
+import { useAuth } from "@tbe/auth"
 
 export const useResumeBuilder = (): UseResumeBuilderReturn => {
-    const { data: session } = useSession()
+    const { session } = useAuth()
     const {
         progress: savedProgress,
         saveProgress,
