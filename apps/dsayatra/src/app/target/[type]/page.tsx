@@ -8,7 +8,7 @@ import { targetBasedData, Topic } from "@/data/dsaData";
 
 export default function TargetRoadmap() {
   const params = useParams();
-  const type = params.type as string;
+  const type = params?.type as string;
   const data = targetBasedData[type as keyof typeof targetBasedData] || [];
 
   const getTitle = (type: string) => {

@@ -33,7 +33,9 @@ const nextConfig = {
     // Experimental features for better containerization
     experimental: {
         // Reduce memory usage
-        isrMemoryCacheSize: 0
+        isrMemoryCacheSize: 0,
+        // Disable symlinks for Windows compatibility
+        esmExternals: false
     },
 
     // Redirect all non-API routes to API documentation or health check

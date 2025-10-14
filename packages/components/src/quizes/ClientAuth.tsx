@@ -9,7 +9,7 @@ interface ClientAuthProps {
 }
 
 export function ClientAuth({ children }: ClientAuthProps) {
-  const { user, loading, checkAuth } = useAuth()
+  const { user, isLoading, isAuthenticated } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
   const [authInitialized, setAuthInitialized] = useState(false)
@@ -24,10 +24,10 @@ export function ClientAuth({ children }: ClientAuthProps) {
 
   // Initialize authentication state
   useEffect(() => {
-    if (!loading && !authInitialized) {
+    if (!isLoading && !authInitialized) {
       setAuthInitialized(true)
     }
-  }, [loading, authInitialized])
+  }, [isLoading, authInitialized])
 
   // Handle authentication logic
   useEffect(() => {
@@ -36,7 +36,7 @@ export function ClientAuth({ children }: ClientAuthProps) {
     }
 
     // If accessing a protected route without authentication
-    if (isProtectedRoute && !user) {
+    if (isProtectedRoute && !isAuthenticated) {
       setIsRedirecting(true)
       redirectTimeoutRef.current = setTimeout(() => {
         router.replace('/login')
@@ -46,7 +46,7 @@ export function ClientAuth({ children }: ClientAuthProps) {
     }
 
     // If accessing login page while already authenticated
-    if (pathname === '/login' && user) {
+    if (pathname === '/login' && isAuthenticated) {
       setIsRedirecting(true)
       redirectTimeoutRef.current = setTimeout(() => {
         router.replace('/dashboard')
@@ -56,7 +56,7 @@ export function ClientAuth({ children }: ClientAuthProps) {
     }
 
     // If accessing root while authenticated, redirect to dashboard
-    if (pathname === '/' && user) {
+    if (pathname === '/' && isAuthenticated) {
       setIsRedirecting(true)
       redirectTimeoutRef.current = setTimeout(() => {
         router.replace('/dashboard')
@@ -64,7 +64,7 @@ export function ClientAuth({ children }: ClientAuthProps) {
       }, 100)
       return
     }
-  }, [user, loading, pathname, router, isProtectedRoute, authInitialized, isRedirecting])
+  }, [isAuthenticated, isLoading, pathname, router, isProtectedRoute, authInitialized, isRedirecting])
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -76,7 +76,7 @@ export function ClientAuth({ children }: ClientAuthProps) {
   }, [])
 
   // Show loading spinner during auth check for protected routes
-  if (loading || (!authInitialized && isProtectedRoute) || isRedirecting) {
+  if (isLoading || (!authInitialized && isProtectedRoute) || isRedirecting) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -90,7 +90,7 @@ export function ClientAuth({ children }: ClientAuthProps) {
   }
 
   // Don't render protected content if not authenticated
-  if (authInitialized && isProtectedRoute && !user) {
+  if (authInitialized && isProtectedRoute && !isAuthenticated) {
     return null // Will redirect in useEffect
   }
 
