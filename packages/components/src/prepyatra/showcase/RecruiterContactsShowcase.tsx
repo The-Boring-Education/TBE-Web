@@ -129,20 +129,19 @@ const RecruiterContactsShowcase = () => {
                                                     {recruiter.lastContact}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <span
-                                                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                            recruiter.status ===
-                                                            "Active"
-                                                                ? "bg-green-500/20 text-green-400"
-                                                                : recruiter.status ===
-                                                                  "Follow-up"
-                                                                ? "bg-yellow-500/20 text-yellow-400"
-                                                                : "bg-blue-500/20 text-blue-400"
-                                                        }`}>
-                                                        {recruiter.status}
-                                                    </span>
+                                                <span
+                                                    className={`px-4 py-2 rounded-full text-xs font-medium shadow-sm whitespace-nowrap ${
+                                                        recruiter.status === "Active"
+                                                            ? "bg-green-500/20 text-green-400"
+                                                            : recruiter.status === "Follow-up"
+                                                            ? "bg-yellow-500/20 text-yellow-400"
+                                                            : "bg-blue-500/20 text-blue-400"
+                                                    }`}
+                                                >
+                                                    {recruiter.status}
+                                                </span>
                                                 </TableCell>
-                                                <TableCell>
+                                                 <TableCell>
                                                     <div className='flex gap-2'>
                                                         <Button
                                                             variant='NEUTRAL'
