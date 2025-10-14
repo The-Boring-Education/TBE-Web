@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button"
 import { Github, Instagram, Linkedin } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 
 const Footer = () => {
     return (

@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button"
 import { CheckCircle, Download, Star } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 
 const ProvenTemplateSection = () => {
     const achievements = [
@@ -12,8 +13,8 @@ const ProvenTemplateSection = () => {
     return (
         <section className='py-20 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 relative overflow-hidden'>
             {/* Background Pattern */}
-            <div className='absolute inset-0 bg-black/10'></div>
-            <div className='absolute inset-0 bg-gradient-to-br from-white/5 to-transparent'></div>
+            <div className='absolute inset-0 bg-black/10' />
+            <div className='absolute inset-0 bg-gradient-to-br from-white/5 to-transparent' />
 
             <div className='container mx-auto px-6 relative z-10'>
                 <div className='max-w-6xl mx-auto'>

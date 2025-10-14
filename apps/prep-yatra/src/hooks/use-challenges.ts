@@ -1,7 +1,7 @@
-import {useState, useEffect} from "react";
+import {useEffect,useState} from "react";
 
 import {challengesService} from "@/services/challenges";
-import {Challenge, ChallengeProgress} from "@/types/challenges";
+import type {Challenge, ChallengeProgress} from "@/types/challenges";
 
 export function useChallenges(userId: string) {
   const [challenges, setChallenges] = useState<Challenge[]>([]);

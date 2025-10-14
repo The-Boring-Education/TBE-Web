@@ -1,6 +1,8 @@
+import { useAuth } from "@tbe/auth"
+import { FileText, Github, Loader2 } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { useAuth } from "@tbe/auth"
+
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -9,7 +11,6 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import { FileText, Github, Loader2 } from "lucide-react"
 
 export default function AuthPage() {
     const router = useRouter()

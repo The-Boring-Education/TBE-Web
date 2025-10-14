@@ -1,11 +1,10 @@
-import {Plus} from "lucide-react";
-import React, {Suspense} from "react";
-
 import {Button} from "@tbe/components";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@tbe/components";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@tbe/components";
-import {PrepLog} from "@tbe/types";
-import {RecruiterContact} from "@tbe/types";
+import type {PrepLog} from "@tbe/types";
+import type {RecruiterContact} from "@tbe/types";
+import {Plus} from "lucide-react";
+import React, {Suspense} from "react";
 
 // Lazy load components
 const PrepLogsList = React.lazy(() => import("@/components/features/PrepLogsList"));

@@ -1,6 +1,6 @@
-import {Calendar, Clock, Flame, TrendingUp, Plus} from "lucide-react";
+import {Button, FlexContainer,Text} from "@tbe/components";
+import {Calendar, Clock, Flame, Plus,TrendingUp} from "lucide-react";
 
-import {Button, Text, FlexContainer} from "@tbe/components";
 import {Card, CardContent} from "@/components/ui/card";
 import {useDailyPrepEncouragement} from "@/hooks/useDailyPrepEncouragement";
 
@@ -80,7 +80,7 @@ const DailyPrepEncouragement = ({
                             text={buttonText}
                             onClick={onAddPrepLog}
                             variant={hasLoggedToday ? 'SUCCESS' : 'PRIMARY'}
-                            className={`min-w-[140px] font-medium transition-all duration-300`}
+                            className="min-w-[140px] font-medium transition-all duration-300"
                             icon={<Plus className='h-4 w-4 mr-2' />}
                         />
 

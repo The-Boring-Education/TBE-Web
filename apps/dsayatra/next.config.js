@@ -5,6 +5,10 @@ const nextConfig = {
   images: {
     domains: [],
   },
+  experimental: {
+    // Disable tracing to avoid symlink issues on Windows
+    outputFileTracing: false
+  },
 }
 
 module.exports = nextConfig

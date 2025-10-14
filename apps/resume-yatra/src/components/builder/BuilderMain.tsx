@@ -1,19 +1,20 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
     ArrowLeft,
     ArrowRight,
-    Lightbulb,
-    Eye,
     CheckCircle,
+    Eye,
+    Lightbulb,
     Sparkles
 } from "lucide-react"
-import { UseResumeBuilderReturn } from "@/types/builder"
-import { getAudienceBadgeColor } from "@/lib/utils"
 import { useRouter } from "next/router"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Progress } from "@/components/ui/progress"
+import { getAudienceBadgeColor } from "@/lib/utils"
+import type { UseResumeBuilderReturn } from "@/types/builder"
 
 interface BuilderMainProps {
     builder: UseResumeBuilderReturn

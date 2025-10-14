@@ -1,10 +1,11 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Sparkles, Copy, RotateCcw } from "lucide-react"
-import { UseResumeBuilderReturn } from "@/types/builder"
+import { Copy, RotateCcw,Sparkles } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import type { UseResumeBuilderReturn } from "@/types/builder"
 
 interface ResultScreenProps {
     builder: UseResumeBuilderReturn

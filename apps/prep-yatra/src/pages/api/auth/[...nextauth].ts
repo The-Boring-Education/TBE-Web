@@ -1,5 +1,5 @@
-import NextAuth from "next-auth"
 import { createAuthOptions } from "@tbe/auth"
+import NextAuth from "next-auth"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL
 

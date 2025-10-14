@@ -1,9 +1,9 @@
+import FeatureCards from "@/components/landing/FeatureCards"
+import Footer from "@/components/landing/Footer"
 import Header from "@/components/landing/Header"
 import Hero from "@/components/landing/Hero"
-import FeatureCards from "@/components/landing/FeatureCards"
-import ProvenTemplateSection from "@/components/landing/ProvenTemplateSection"
 import InterviewPrepSection from "@/components/landing/InterviewPrepSection"
-import Footer from "@/components/landing/Footer"
+import ProvenTemplateSection from "@/components/landing/ProvenTemplateSection"
 
 export default function Index() {
     return (

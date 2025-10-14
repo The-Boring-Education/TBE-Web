@@ -32,6 +32,8 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['framer-motion'],
     scrollRestoration: true,
+    // Disable tracing to avoid symlink issues on Windows
+    outputFileTracing: false
   },
 
   compiler: {

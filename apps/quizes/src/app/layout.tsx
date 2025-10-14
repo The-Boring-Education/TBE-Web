@@ -11,7 +11,11 @@ import { useEffect } from "react"
 import { initGA, installGlobalListeners, trackPageview } from "@/lib/analytics"
 import { usePathname, useSearchParams } from "next/navigation"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ 
+    subsets: ["latin"],
+    display: 'swap',
+    fallback: ['system-ui', 'arial']
+})
 
 export default function RootLayout({
     children

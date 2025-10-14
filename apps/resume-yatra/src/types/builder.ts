@@ -1,4 +1,4 @@
-import { ResumeStep } from "./resume"
+import type { ResumeStep } from "./resume"
 
 export interface BuilderState {
     currentStep: number

@@ -1,19 +1,17 @@
-import { useRouter } from "next/router"
-import React, { useState, useEffect, Suspense, lazy } from "react"
-import { toast } from "sonner"
-import { Menu, X } from "lucide-react"
-
-import {
-    ProfileSection,
-    DashboardTabs,
-    LoadingSpinner
-} from "@tbe/components"
-import { usePrepYatraGamificationContext } from "@tbe/components"
 import { useAuth } from "@tbe/auth"
+import {
+    DashboardTabs,
+    LoadingSpinner,
+    ProfileSection} from "@tbe/components"
+import { usePrepYatraGamificationContext } from "@tbe/components"
+import { Button } from "@tbe/components"
 import { usePrepLogs } from "@tbe/hooks"
 import { recruitersService } from "@tbe/services"
-import { RecruiterContact } from "@tbe/types"
-import { Button } from "@tbe/components"
+import type { RecruiterContact } from "@tbe/types"
+import { Menu, X } from "lucide-react"
+import { useRouter } from "next/router"
+import React, { lazy,Suspense, useEffect, useState } from "react"
+import { toast } from "sonner"
 
 // Dashboard Components
 

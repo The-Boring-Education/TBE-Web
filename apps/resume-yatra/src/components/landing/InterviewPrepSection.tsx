@@ -1,5 +1,6 @@
+import { Brain, Code, ExternalLink,MessageSquare, Target } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
-import { Brain, Code, MessageSquare, Target, ExternalLink } from "lucide-react"
 
 const InterviewPrepSection = () => {
     const features = [
@@ -28,9 +29,9 @@ const InterviewPrepSection = () => {
     return (
         <section className='py-20 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-100 relative overflow-hidden'>
             {/* Animated Background Elements */}
-            <div className='absolute top-10 left-10 w-20 h-20 bg-emerald-200 rounded-full opacity-20 animate-pulse'></div>
-            <div className='absolute bottom-20 right-20 w-32 h-32 bg-cyan-200 rounded-full opacity-30 animate-bounce'></div>
-            <div className='absolute top-1/2 left-1/4 w-16 h-16 bg-teal-300 rounded-full opacity-25 animate-ping'></div>
+            <div className='absolute top-10 left-10 w-20 h-20 bg-emerald-200 rounded-full opacity-20 animate-pulse' />
+            <div className='absolute bottom-20 right-20 w-32 h-32 bg-cyan-200 rounded-full opacity-30 animate-bounce' />
+            <div className='absolute top-1/2 left-1/4 w-16 h-16 bg-teal-300 rounded-full opacity-25 animate-ping' />
 
             <div className='container mx-auto px-6 relative z-10'>
                 <div className='max-w-6xl mx-auto text-center space-y-12'>
@@ -71,7 +72,7 @@ const InterviewPrepSection = () => {
                     {/* CTA */}
                     <div className='space-y-6'>
                         <div className='bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-3xl p-8 text-white relative overflow-hidden'>
-                            <div className='absolute inset-0 bg-gradient-to-r from-emerald-600/20 to-cyan-600/20'></div>
+                            <div className='absolute inset-0 bg-gradient-to-r from-emerald-600/20 to-cyan-600/20' />
                             <div className='relative z-10 space-y-4'>
                                 <h3 className='text-3xl font-bold'>
                                     Ready to Land Your Dream Job?

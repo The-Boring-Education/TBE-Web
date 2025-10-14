@@ -17,6 +17,10 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
+  experimental: {
+    // Disable tracing to avoid symlink issues on Windows
+    outputFileTracing: false
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

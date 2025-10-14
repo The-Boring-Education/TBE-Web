@@ -1,10 +1,10 @@
-import { useRouter } from "next/router"
-import { motion } from "framer-motion"
 import { useAuth } from "@tbe/auth"
+import { Button, FlexContainer,Text } from "@tbe/components"
+import { motion } from "framer-motion"
+import { useRouter } from "next/router"
 import { useEffect } from "react"
 
 import InstallButton from "@/components/features/InstallButton"
-import { Button, Text, FlexContainer } from "@tbe/components"
 
 const Auth = () => {
     const router = useRouter()

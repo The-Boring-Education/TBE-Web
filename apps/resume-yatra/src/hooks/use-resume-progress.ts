@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "react-query"
+
 import { resumeProgressService } from "@/services/resume-progress"
 import type { SaveProgressRequest } from "@/types/resume"
 

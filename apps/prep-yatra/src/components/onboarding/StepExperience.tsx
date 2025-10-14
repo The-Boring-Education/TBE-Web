@@ -1,7 +1,7 @@
 import React from "react";
 
 import {EXPERIENCE_LEVELS} from "@/constants/onboarding";
-import {OnboardingData, ExperienceLevel} from "@/types/onboarding";
+import type {ExperienceLevel,OnboardingData} from "@/types/onboarding";
 
 type Props = {
     formData: OnboardingData

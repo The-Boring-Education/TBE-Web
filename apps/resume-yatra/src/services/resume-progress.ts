@@ -1,8 +1,7 @@
 import type {
+    GetProgressResponse,
     SaveProgressRequest,
-    SaveProgressResponse,
-    GetProgressResponse
-} from "@/types/resume"
+    SaveProgressResponse} from "@/types/resume"
 
 const API_BASE_URL = "/api/resume"
 

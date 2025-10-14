@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button"
 import { ExternalLink } from "lucide-react"
-import { UseResumeBuilderReturn } from "@/types/builder"
+
+import { Button } from "@/components/ui/button"
+import type { UseResumeBuilderReturn } from "@/types/builder"
 
 interface TemplatePromptProps {
     builder: UseResumeBuilderReturn

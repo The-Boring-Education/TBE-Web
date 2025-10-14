@@ -1,4 +1,4 @@
-import { ResumeStep } from "@/types/resume"
+import type { ResumeStep } from "@/types/resume"
 
 export const RESUME_STEPS: ResumeStep[] = [
     {

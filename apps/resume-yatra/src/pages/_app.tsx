@@ -1,14 +1,15 @@
+import "@/styles/globals.css"
+
 import { AuthProvider } from "@tbe/auth"
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 
 import { Toaster as Sonner } from "@/components/ui/sonner"
 import { Toaster } from "@/components/ui/toaster"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import "@/styles/globals.css"
 
 export default function App({
     Component,

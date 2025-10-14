@@ -1,6 +1,7 @@
-import { useRouter } from "next/router"
-import React, { ReactNode, useEffect } from "react"
 import { useAuth } from "@tbe/auth"
+import { useRouter } from "next/router"
+import type { ReactNode} from "react";
+import React, { useEffect } from "react"
 
 interface ProtectedRouteProps {
     children: ReactNode

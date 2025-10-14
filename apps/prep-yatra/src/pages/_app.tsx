@@ -1,16 +1,17 @@
+import "@/styles/globals.css"
+
 import { AuthProvider } from "@tbe/auth"
+import { useAuth } from "@tbe/auth"
+import { PrepYatraGamificationProvider } from "@tbe/components"
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useRef,useState } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
-import { useAuth } from "@tbe/auth"
 
 import { Toaster as Sonner } from "@/components/ui/sonner"
 import { Toaster } from "@/components/ui/toaster"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { PrepYatraGamificationProvider } from "@tbe/components"
-import "@/styles/globals.css"
 import { initGA, installGlobalListeners, trackPageview } from "@/lib/analytics"
 
 // Cache clearing component

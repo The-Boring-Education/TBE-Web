@@ -1,5 +1,6 @@
+import { Briefcase, Check, Edit3,Target } from "lucide-react"
+
 import { Card, CardContent } from "@/components/ui/card"
-import { Check, Target, Briefcase, Edit3 } from "lucide-react"
 
 const FeatureCards = () => {
     const features = [

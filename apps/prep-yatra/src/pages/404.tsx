@@ -1,6 +1,3 @@
-import {Home, ArrowLeft} from "lucide-react";
-import {useRouter} from "next/router";
-
 import {Button} from "@tbe/components";
 import {
     Card,
@@ -9,6 +6,7 @@ import {
     CardHeader,
     CardTitle
 } from "@tbe/components";
+import {useRouter} from "next/router";
 
 const NotFound = () => {
     const router = useRouter();
@@ -50,7 +48,7 @@ const NotFound = () => {
                         onClick={() => router.push("/")}
                         className='w-full bg-primary rounded-md text-primary-foreground hover:bg-primary/90'
                         isLoading={false}
-                        active={true}
+                        active
                         animationType='BOUNCE'
                         variant='PRIMARY'
                         text='Go to Homepage'
@@ -62,7 +60,7 @@ const NotFound = () => {
                         onClick={() => router.back()}
                         className='w-full border-gray-600 rounded-md text-gray hover:bg-gray-700'
                         isLoading={false}
-                        active={true}
+                        active
                         animationType='BOUNCE'
                         />
                        

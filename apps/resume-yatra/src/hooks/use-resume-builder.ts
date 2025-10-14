@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback, useMemo } from "react"
-import { RESUME_STEPS } from "@/constants"
-import type { ResumeStep } from "@/types/resume"
-import type { UseResumeBuilderReturn } from "@/types/builder"
-import { useResumeProgress } from "./use-resume-progress"
 import { useAuth } from "@tbe/auth"
+import { useCallback, useEffect, useMemo,useState } from "react"
+
+import { RESUME_STEPS } from "@/constants"
+import type { UseResumeBuilderReturn } from "@/types/builder"
+import type { ResumeStep } from "@/types/resume"
+
+import { useResumeProgress } from "./use-resume-progress"
 
 export const useResumeBuilder = (): UseResumeBuilderReturn => {
     const { session } = useAuth()

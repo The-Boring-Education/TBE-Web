@@ -1,4 +1,6 @@
-import { Mail, Phone, ExternalLink, Trash2, Edit2 } from "lucide-react"
+import "react-datepicker/dist/react-datepicker.css"
+
+import { Edit2,ExternalLink, Mail, Phone, Trash2 } from "lucide-react"
 import { useState } from "react"
 import DatePicker from "react-datepicker"
 
@@ -25,9 +27,7 @@ import {
     TableRow
 } from "@/components/ui/table"
 import { useToast } from "@/hooks/use-toast"
-import { RecruiterContact } from "@/types/recruiters"
-
-import "react-datepicker/dist/react-datepicker.css"
+import type { RecruiterContact } from "@/types/recruiters"
 
 interface RecruiterContactsTableProps {
     contacts: RecruiterContact[]

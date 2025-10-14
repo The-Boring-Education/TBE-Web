@@ -11,7 +11,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "build": "next lint && next build",
+    "build": "eslint . && next build",
     "start": "next start -p 3001",
     "lint": "eslint .",
     "lint:fix": "next lint --fix",

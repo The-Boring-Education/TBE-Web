@@ -1,10 +1,11 @@
-import { Loader2 } from "lucide-react"
 import { ProtectedRoute } from "@tbe/auth"
-import { useResumeBuilder } from "@/hooks/use-resume-builder"
-import InitialChoice from "@/components/builder/InitialChoice"
-import TemplatePrompt from "@/components/builder/TemplatePrompt"
+import { Loader2 } from "lucide-react"
+
 import BuilderMain from "@/components/builder/BuilderMain"
+import InitialChoice from "@/components/builder/InitialChoice"
 import ResultScreen from "@/components/builder/ResultScreen"
+import TemplatePrompt from "@/components/builder/TemplatePrompt"
+import { useResumeBuilder } from "@/hooks/use-resume-builder"
 
 const LoadingScreen = () => (
     <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100'>
