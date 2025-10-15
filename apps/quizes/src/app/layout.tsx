@@ -1,20 +1,16 @@
-"use client"
-
 import { Inter } from "next/font/google"
 import { QueryProvider } from "@/providers/QueryProvider"
 import { AuthProvider } from "@tbe/auth"
 import { GamificationWrapper } from "@tbe/components/quizes"
 import { Toaster } from "@tbe/components/quizes"
 import { Toaster as Sonner } from "sonner"
+import { AnalyticsWrapper } from "@/components/AnalyticsWrapper"
 import "./globals.css"
-import { useEffect } from "react"
-import { initGA, installGlobalListeners, trackPageview } from "@/lib/analytics"
-import { usePathname, useSearchParams } from "next/navigation"
 
-const inter = Inter({ 
+const inter = Inter({
     subsets: ["latin"],
-    display: 'swap',
-    fallback: ['system-ui', 'arial']
+    display: "swap",
+    fallback: ["system-ui", "arial"]
 })
 
 export default function RootLayout({
@@ -22,19 +18,6 @@ export default function RootLayout({
 }: {
     children: React.ReactNode
 }) {
-    const pathname = usePathname()
-    const searchParams = useSearchParams()
-
-    useEffect(() => {
-        initGA()
-        installGlobalListeners()
-    }, [])
-
-    useEffect(() => {
-        if (!pathname) return
-        const url = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ""}`
-        trackPageview(url)
-    }, [pathname, searchParams])
     return (
         <html lang='en'>
             <head>
@@ -64,11 +47,13 @@ export default function RootLayout({
             <body className={inter.className}>
                 <QueryProvider>
                     <AuthProvider>
-                        <GamificationWrapper>
-                            <div className='min-h-screen bg-background text-foreground'>
-                                {children}
-                            </div>
-                        </GamificationWrapper>
+                        <AnalyticsWrapper>
+                            <GamificationWrapper>
+                                <div className='min-h-screen bg-background text-foreground'>
+                                    {children}
+                                </div>
+                            </GamificationWrapper>
+                        </AnalyticsWrapper>
                         <Toaster />
                         <Sonner />
                     </AuthProvider>

@@ -155,7 +155,7 @@ MONGODB_URI=your_mongodb_connection_string
 **Old variables to REMOVE:**
 
 ```bash
-NEXT_PUBLIC_GOOGLE_CLIENT_ID
+GOOGLE_AUTH_CLIENT_ID
 ```
 
 **New variables to ADD:**
@@ -186,7 +186,7 @@ NEXT_PUBLIC_ONBOARDING_URL=https://onboarding.theboringeducation.com
 **Old variables to REMOVE:**
 
 ```bash
-NEXT_PUBLIC_GOOGLE_CLIENT_ID
+GOOGLE_AUTH_CLIENT_ID
 ```
 
 **New variables to ADD:**
@@ -214,7 +214,7 @@ NEXT_PUBLIC_API_URL=https://api.theboringeducation.com
 **Old variables to REMOVE:**
 
 ```bash
-NEXT_PUBLIC_GOOGLE_CLIENT_ID
+GOOGLE_AUTH_CLIENT_ID
 ```
 
 **New variables to ADD:**

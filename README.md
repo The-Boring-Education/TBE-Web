@@ -89,7 +89,7 @@ cp .env.example .env.local
 | ------------------ | ------------------------------- | --------------------------- | ------ | ------------ |
 | **Database**       | `MONGODB_URI`                   | MongoDB connection string   | ✅     |              |
 | **Authentication** | `NEXTAUTH_SECRET`               | NextAuth JWT secret         | ✅     |              |
-|                    | `NEXT_PUBLIC_GOOGLE_CLIENT_ID`  | Google OAuth client ID      | ✅     |              |
+|                    | `GOOGLE_AUTH_CLIENT_ID`         | Google OAuth client ID      | ✅     |              |
 |                    | `GOOGLE_AUTH_CLIENT_SECRET`     | Google OAuth secret         | ✅     |              |
 | **External APIs**  | `OPENAI_API_KEY`                | OpenAI API key              | ✅     |              |
 |                    | `YOUTUBE_API_KEY`               | YouTube API key             | ✅     |              |
