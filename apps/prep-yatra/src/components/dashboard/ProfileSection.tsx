@@ -1,11 +1,11 @@
-import {ExternalLink, Github, Linkedin, Edit, Copy} from "lucide-react";
+import {Button, FlexContainer} from "@tbe/components";
+import {Copy,Edit, ExternalLink, Github, Linkedin} from "lucide-react";
 import {useRouter} from "next/router";
 import React from "react";
 import {toast} from "sonner";
 
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Badge} from "@/components/ui/badge";
-import {Button, Text, FlexContainer} from "@tbe/components";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 interface Profile {

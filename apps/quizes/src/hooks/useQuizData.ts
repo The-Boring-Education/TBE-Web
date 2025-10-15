@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
-import { quizApi, APIError } from '@/services/api'
-import { QuizCategoryAPI } from '@/types/api'
+import { useEffect,useState } from 'react'
+
+import { APIError,quizApi } from '@/services/api'
+import type { QuizCategoryAPI } from '@/types/api'
 
 interface UseQuizDataReturn {
   categories: QuizCategoryAPI[]

@@ -18,7 +18,6 @@ import {
   updatePaymentStatusToDB,
   updateUserSubscriptionStatusInDB,
 } from '@/lib/database';
-import { connectDB } from '@/middleware';
 import {
   cors,
   getPYSubscriptionFeaturesByType,
@@ -26,6 +25,7 @@ import {
   validateWebhookEvent,
   verifyWebhookSignature,
 } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY;
 

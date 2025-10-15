@@ -313,7 +313,7 @@ const DSASection = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {preparationSteps.map((step, index) => (
               <Card key={step.step} className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${step.gradient}`}></div>
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${step.gradient}`} />
                 <CardHeader>
                   <div className="flex items-center mb-2">
                     <div className={`w-8 h-8 bg-gradient-to-r ${step.gradient} rounded-full flex items-center justify-center text-white font-bold text-sm mr-3`}>
@@ -470,7 +470,7 @@ const DSASection = () => {
             <Card className="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 border-0 shadow-lg">
               <CardContent className="p-6">
                 <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                  <span className="w-2 h-2 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mr-2"></span>
+                  <span className="w-2 h-2 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mr-2" />
                   💡 Success Tips for {goals.find(g => g.id === selectedGoal)?.name}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">

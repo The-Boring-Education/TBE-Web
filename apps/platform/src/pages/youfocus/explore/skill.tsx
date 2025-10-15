@@ -1,6 +1,3 @@
-import { useRouter } from 'next/router';
-import React, { Fragment } from 'react';
-
 import {
   FlexContainer,
   PlaylistSkillCard,
@@ -12,6 +9,8 @@ import {
 import { useSkillPlaylist } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
 import { getSkillPlaylistPageProps, getYoufocusSkillName } from '@tbe/utils';
+import { useRouter } from 'next/router';
+import React, { Fragment } from 'react';
 
 const Explore = ({ seoMeta }: PageProps) => {
   const router = useRouter();

@@ -115,7 +115,7 @@ const LearningSection = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {courses.map((course) => (
               <Card key={course.id} className="group relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${course.gradient}`}></div>
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${course.gradient}`} />
                 <CardHeader>
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant="outline" className="text-xs">
@@ -171,7 +171,7 @@ const LearningSection = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {interviewSheets.map((sheet) => (
               <Card key={sheet.id} className="group relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${sheet.gradient}`}></div>
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${sheet.gradient}`} />
                 <CardHeader>
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant="outline" className="text-xs">

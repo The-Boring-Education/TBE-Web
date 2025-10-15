@@ -1,6 +1,4 @@
 import { modelSelectParams } from "@/lib/constants"
-import { Course, UserCourse } from "../models"
-import { updateUserPointsInDB } from "./gamification"
 import type {
     AddChapterToCourseRequestProps,
     AddCourseRequestPayloadProps,
@@ -11,6 +9,9 @@ import type {
     UpdateCourseRequestPayloadProps,
     UpdateUserChapterInCourseRequestProps
 } from "@/lib/interfaces"
+
+import { Course, UserCourse } from "../models"
+import { updateUserPointsInDB } from "./gamification"
 
 const addACourseToDB = async (
     courseDetails: AddCourseRequestPayloadProps

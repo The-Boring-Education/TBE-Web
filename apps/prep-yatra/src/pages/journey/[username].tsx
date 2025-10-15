@@ -1,21 +1,7 @@
-import {
-    Calendar,
-    Clock,
-    User,
-    Target,
-    TrendingUp,
-    Linkedin,
-    Github,
-    ExternalLink
-} from "lucide-react"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-
 import {PrepYatraFooter} from "@tbe/components"
 import {PrepYatraNavigation} from "@tbe/components"
 import { Badge } from "@tbe/components"
-import { Button, Text, FlexContainer, Section, GridContainer, IconCard } from "@tbe/components"
+import { Button, FlexContainer, GridContainer,Section, Text } from "@tbe/components"
 import {
     Card,
     CardContent,
@@ -23,6 +9,18 @@ import {
     CardHeader,
     CardTitle
 } from "@tbe/components"
+import { motion } from "framer-motion"
+import {
+    Calendar,
+    Clock,
+    ExternalLink,
+    Github,
+    Linkedin,
+    Target,
+    TrendingUp,
+    User} from "lucide-react"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 
 interface PrepLog {
     _id: string

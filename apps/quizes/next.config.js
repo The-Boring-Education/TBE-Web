@@ -14,7 +14,9 @@ const nextConfig = {
     '@tbe/config'
   ],
   experimental: {
-    externalDir: true
+    externalDir: true,
+    // Disable tracing to avoid symlink issues on Windows
+    outputFileTracing: false
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {

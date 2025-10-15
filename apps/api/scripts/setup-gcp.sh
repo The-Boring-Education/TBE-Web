@@ -91,7 +91,7 @@ create_artifact_registry() {
     print_status "Creating Artifact Registry repository..."
     
     REPO_NAME="tbe-api-repo"
-    REGION="us-central1"
+    REGION="asia-south1"
     
     # Check if repository already exists
     if gcloud artifacts repositories describe $REPO_NAME --location=$REGION &> /dev/null; then
@@ -161,7 +161,7 @@ create_service_account() {
 configure_docker() {
     print_status "Configuring Docker authentication..."
     
-    gcloud auth configure-docker us-central1-docker.pkg.dev
+    gcloud auth configure-docker asia-south1-docker.pkg.dev
     
     print_status "Docker authentication configured ✓"
 }
@@ -206,7 +206,7 @@ spec:
             cpu: "1"
             memory: "1Gi"
 EOF
-) --region=us-central1
+) --region=asia-south1
         
         print_status "Staging service created ✓"
     fi

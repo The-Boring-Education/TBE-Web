@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import { Header, LearningSection,TabSection } from '@tbe/components/techyatra';
 import { Button } from '@ui/button';
-import { ArrowRight, Instagram, Linkedin, Github } from 'lucide-react';
-import { Header, TabSection, LearningSection } from '@tbe/components/techyatra';
+import { ArrowRight, Github,Instagram, Linkedin } from 'lucide-react';
+import React from 'react';
 
 export default function Home() {
   const scrollToSection = (sectionId: string) => {

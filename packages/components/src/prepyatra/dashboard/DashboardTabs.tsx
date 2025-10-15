@@ -6,8 +6,8 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/c
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "../ui/tabs";
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../../containers/Page/common/FlexContainer";
-import {PrepLog} from "@tbe/types";
-import {RecruiterContact} from "@tbe/types";
+import type {PrepLog} from "@tbe/types";
+import type {RecruiterContact} from "@tbe/types";
 
 // Lazy load components
 const PrepLogsList = React.lazy(() => import("../features/PrepLogsList"));

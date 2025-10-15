@@ -1,16 +1,17 @@
 'use client'
 
-  import React, { useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useAuth } from "@tbe/auth"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
 import { Button } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
-import { useQuizData } from "@/hooks/useQuizData"
-import { useAuth } from "@tbe/components/quizes"
-import { debugAPIUrls } from "@/utils/apiDebug"
-import { Play, BookOpen } from "lucide-react"
 import { gamificationApi } from "@tbe/services"
+import { BookOpen,Play } from "lucide-react"
+import { useRouter } from "next/navigation"
+  import React, { useEffect } from "react"
+
+import { useQuizData } from "@/hooks/useQuizData"
+import { debugAPIUrls } from "@/utils/apiDebug"
 
 function DashboardContent() {
   const { user } = useAuth()
@@ -27,17 +28,25 @@ function DashboardContent() {
   }
 
   useEffect(() => {
-    gamificationApi.getuserGamificationPoints(user?._id || user?.id || '').then((res:any) => {
-     console.log(res)
-    })
- }, [user?._id, user?.id])
+    const effectiveUserId = (user as any)?._id || user?.id
+    if (!effectiveUserId) return
+
+    gamificationApi
+      .getuserGamificationPoints(effectiveUserId)
+      .then((res: any) => {
+        console.log(res)
+      })
+      .catch((err: any) => {
+        console.error('Failed to load gamification points:', err)
+      })
+  }, [user?.id])
 
   if (loading) {
     return (
       <Layout>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto" />
             <p className="mt-4 text-lg text-gray-600">Loading...</p>
           </div>
         </div>

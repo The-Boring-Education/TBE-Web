@@ -2,7 +2,7 @@ import React from "react";
 
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {OnboardingData} from "@/types/onboarding";
+import type {OnboardingData} from "@/types/onboarding";
 
 type Props = {
     formData: OnboardingData

@@ -1,9 +1,10 @@
-import { Payment, PrepYatraSubscription } from "../models"
 import type {
     AddPaymentToDBRequestPayloadProps,
     DatabaseQueryResponseType,
     UpdatePaymentStatusPayloadProps
 } from "@/lib/interfaces"
+
+import { Payment, PrepYatraSubscription } from "../models"
 
 const addPaymentToDB = async ({
     userId,

@@ -1,15 +1,11 @@
 import type { ComponentPropsWithoutRef } from 'react';
 
 import type {
-  UserPointsActionType,
   UserRoleType,
 } from '@/lib/interfaces';
 
-
-
 import { JOB_DOMAIN_NORMALIZER } from './api';
 import { envConfig } from './envConfig';
-import { routes } from './routes';
 
 // Paths
 const STATIC_FILE_PATH = {

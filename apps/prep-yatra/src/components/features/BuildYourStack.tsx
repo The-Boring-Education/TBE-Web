@@ -1,9 +1,9 @@
-import {Code, Plus, AlertTriangle} from "lucide-react";
+import {Button, FlexContainer,Text} from "@tbe/components";
+import {AlertTriangle,Code, Plus} from "lucide-react";
 import React, {useState} from "react";
 
 import AddSkillsModal from "@/components/modals/AddSkillsModal";
 import {Badge} from "@/components/ui/badge";
-import {Button, Text, FlexContainer} from "@tbe/components";
 
 interface BuildYourStackProps {
     userId: string

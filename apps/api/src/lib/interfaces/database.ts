@@ -1,5 +1,6 @@
 import type { Document, Schema, Types } from "mongoose"
-import {
+
+import type {
     APIMethodTypes,
     ApplicationStatusType,
     CertificateType,

@@ -9,9 +9,9 @@ import {
   UserProject,
   UserSheet,
 } from '@/lib/database';
-import { connectDB } from '@/middleware';
 import { sendAPIResponse } from '@/lib/utils';
 import { cors } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

@@ -1,4 +1,4 @@
-import { Question, QuizCategory } from '../types/quiz';
+import type { Question, QuizCategory } from '../types/quiz';
 
 const javascriptQuestions: Question[] = [
   {

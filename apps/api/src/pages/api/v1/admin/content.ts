@@ -11,9 +11,9 @@ import {
   UserSheet,
   Webinar,
 } from '@/lib/database';
-import { connectDB } from '@/middleware/api';
 import { sendAPIResponse } from '@/lib/utils';
 import { cors } from '@/lib/utils';
+import { connectDB } from '@/middleware/api';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

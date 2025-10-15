@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react"
+import { useUser } from "@tbe/components"
+import { useEffect,useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -13,8 +14,7 @@ import { InputField } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { useUser } from "@tbe/components"
-import { RecruiterContact } from "@/types/recruiters"
+import type { RecruiterContact } from "@/types/recruiters"
 
 interface AddRecruiterModalProps {
     isOpen: boolean

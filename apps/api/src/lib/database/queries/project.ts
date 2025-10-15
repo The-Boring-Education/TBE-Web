@@ -1,6 +1,4 @@
 import { modelSelectParams } from "@/lib/constants"
-import { Project, UserProject } from "../models"
-import { updateUserPointsInDB } from "./gamification"
 import type {
     AddChapterRequestPayloadProps,
     AddProjectRequestPayloadProps,
@@ -14,6 +12,9 @@ import type {
     UpdateProjectRequestPayloadProps,
     UpdateUserChapterInProjectRequestProps
 } from "@/lib/interfaces"
+
+import { Project, UserProject } from "../models"
+import { updateUserPointsInDB } from "./gamification"
 
 const addAProjectToDB = async ({
     name,

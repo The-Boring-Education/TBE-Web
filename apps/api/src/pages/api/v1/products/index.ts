@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/lib/constants';
-import { connectDB, adminMiddleware } from '@/middleware';
-import { sendAPIResponse } from '@/lib/utils';
-import { cors } from '@/lib/utils';
-
 // Import all product models
 import {Course, InterviewSheet, Project, Webinar} from '@/lib/database';
+import { sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
+import { adminMiddleware,connectDB } from '@/middleware';
 
 interface ProductInfo {
   _id: string;

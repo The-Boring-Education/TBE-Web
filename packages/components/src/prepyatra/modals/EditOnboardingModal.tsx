@@ -15,7 +15,7 @@ import {
 } from "@tbe/constants"
 import { useAuth } from "../contexts/useAuth"
 import { useToast } from "../ui/use-toast"
-import {
+import type {
     OnboardingData,
     OnboardingGoalType,
     OnboardingCompanyType,

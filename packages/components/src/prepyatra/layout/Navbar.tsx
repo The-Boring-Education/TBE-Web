@@ -3,7 +3,7 @@ import React, { Suspense } from "react";
 import GamificationDisplay from "../gamification/GamificationDisplay";
 import NavbarDropdownLinks from "../layout/NavbarDropdownLinks";
 import {Button} from "@tbe/components";
-import {NavbarProps} from "@tbe/interface";
+import type {NavbarProps} from "@tbe/interface";
 import { SubscriptionInterestPopover } from "../popovers";
 
 const capitalize = (str: string) => {
@@ -25,8 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
                                     <SubscriptionInterestPopover />
                 <NavbarDropdownLinks />
                                     {userId && <GamificationDisplay userId={userId} />}
-                <span className='text-contentLight font-medium hidden sm:inline'>
-                </span>
+                <span className='text-contentLight font-medium hidden sm:inline' />
                                     <Button
                                         onClick={onSignOut}
                                         text='Sign Out'

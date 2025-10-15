@@ -1,4 +1,4 @@
-import { config, API_ENDPOINTS } from '@/config'
+import { API_ENDPOINTS,config } from '@/config'
 import { APIClient } from '@/services/base'
 
 // Debug utility to check API URL construction

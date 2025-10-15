@@ -8,8 +8,8 @@ import {
   handleGamificationPoints,
   updatePrepLogInDB,
 } from '@/lib/database';
-import { connectDB } from '@/middleware';
 import { cors, sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
@@ -229,7 +229,7 @@ const handleAddMentorFeedback = async (
         });
       } catch (e) {
         // Do not fail the API if email fails; just proceed
-        // eslint-disable-next-line no-console
+         
         console.error('Feedback email send failed:', e);
       }
     }

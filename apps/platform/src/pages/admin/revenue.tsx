@@ -4,9 +4,6 @@ import {
   CreditCardIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
-
 import {
   AdminAreaChart,
   AdminBarChart,
@@ -16,8 +13,10 @@ import {
   AdminStats,
   SEO,
 } from '@tbe/components';
-import { useAdminData } from '@tbe/hooks';
 import { routes } from '@tbe/constants';
+import { useAdminData } from '@tbe/hooks';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 const AdminRevenue = () => {
   const {

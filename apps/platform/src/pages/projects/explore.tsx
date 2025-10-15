@@ -1,10 +1,9 @@
-import { Fragment } from 'react';
-
 import { CardContainerB, LoadingSpinner, SEO } from '@tbe/components';
 import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
 import { useApi, useAPIResponseMapper } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps, mapProjectResponseToCard } from '@tbe/utils';
+import { Fragment } from 'react';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('projects', {

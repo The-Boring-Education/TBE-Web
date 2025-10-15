@@ -51,7 +51,7 @@ steps:
 
 # Substitution variables (can be overridden in triggers)
 substitutions:
-    _REGION: "us-central1"
+    _REGION: "asia-south1"
     _REPOSITORY: "tbe-api-repo"
     _SERVICE_NAME: "tbe-api"
 

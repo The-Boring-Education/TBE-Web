@@ -23,6 +23,8 @@ const nextConfig = {
   
     experimental: {
       // (You can add experimental options here if needed)
+      // Disable tracing to avoid symlink issues on Windows
+      outputFileTracing: false
     },
   
     compiler: {

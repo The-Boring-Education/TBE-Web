@@ -1,4 +1,4 @@
-import type { Model, Document } from 'mongoose';
+import type { Document,Model } from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 
 // DevRel Task Model Interface

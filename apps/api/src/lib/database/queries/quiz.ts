@@ -1,7 +1,8 @@
+import type { DatabaseQueryResponseType } from "@/lib/interfaces"
+
 import { Quiz, QuizAttempt } from "../models"
 import type { QuizModel } from "../models/Quiz/Quiz"
 import type { QuizAttemptModel } from "../models/Quiz/QuizAttempt"
-import type { DatabaseQueryResponseType } from "@/lib/interfaces"
 
 // Add a quiz to database
 const addAQuizToDB = async (
@@ -232,12 +233,11 @@ const getUserQuizStatsFromDB = async (
 
 export {
     addAQuizToDB,
+    appendQuestionsToQuizInDB,
     getQuizByIdFromDB,
     getQuizCategoriesFromDB,
     getQuizCategoriesWithCountsFromDB,
     getUserQuizHistoryFromDB,
     getUserQuizStatsFromDB,
     saveQuizAttemptToDB,
-    updateAQuizInDB,
-    appendQuestionsToQuizInDB
-}
+    updateAQuizInDB}

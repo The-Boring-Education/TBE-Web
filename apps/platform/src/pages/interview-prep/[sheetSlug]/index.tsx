@@ -1,6 +1,3 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { FaLock, FaStar } from 'react-icons/fa';
-
 import {
   Button,
   FeedbackPopup,
@@ -15,6 +12,7 @@ import {
   StarButton,
   Text,
 } from '@tbe/components';
+import { useGamifiedAction } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import {
   useAnalytics,
@@ -23,9 +21,10 @@ import {
   useQuestionStarred,
   useUser,
 } from '@tbe/hooks';
-import { useGamifiedAction } from '@tbe/components';
 import type { SheetPageProps } from '@tbe/interface';
 import { getSheetPageProps } from '@tbe/utils';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { FaLock, FaStar } from 'react-icons/fa';
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const [sheetMeta, setSheetMeta] = useState<string>(meta || '');

@@ -1,6 +1,3 @@
-import { useRouter } from 'next/router';
-import { Fragment, useState } from 'react';
-
 import {
   Button,
   ExplorePlaylistContainer,
@@ -15,6 +12,8 @@ import { routes } from '@tbe/constants';
 import { useApi, useUser } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
+import { useRouter } from 'next/router';
+import { Fragment, useState } from 'react';
 
 
 const Home = ({ seoMeta }: PageProps) => {

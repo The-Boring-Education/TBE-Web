@@ -1,3 +1,8 @@
+import { Schema } from "mongoose"
+
+import type { DatabaseQueryResponseType } from "@/lib/interfaces"
+
+import type { QuizSessionModel, QuizSessionQuestion } from "../models"
 import {
     Quiz,
     QuizAttempt,
@@ -5,11 +10,8 @@ import {
     UserQuestionPerformance,
     UserQuizAnalytics
 } from "../models"
-import type { QuizSessionModel, QuizSessionQuestion } from "../models"
-import type { UserQuestionPerformanceModel } from "../models/Quiz/UserQuestionPerformance"
 import type { QuizModel } from "../models/Quiz/Quiz"
-import type { DatabaseQueryResponseType } from "@/lib/interfaces"
-import { Schema } from "mongoose"
+import type { UserQuestionPerformanceModel } from "../models/Quiz/UserQuestionPerformance"
 
 // ====================
 // Quiz Session Management
@@ -730,14 +732,13 @@ const getActiveSessionsFromDB =
     }
 
 export {
-    createQuizSessionInDB,
-    submitAnswerInDB,
     completeQuizSessionInDB,
-    updateUserQuestionPerformance,
-    updateUserAnalyticsInDB,
-    getUserAnalyticsFromDB,
-    getQuizLeaderboardFromDB,
-    getUserQuizSessionsFromDB,
+    createQuizSessionInDB,
+    getActiveSessionsFromDB,
     getQuizAdminAnalyticsFromDB,
-    getActiveSessionsFromDB
-}
+    getQuizLeaderboardFromDB,
+    getUserAnalyticsFromDB,
+    getUserQuizSessionsFromDB,
+    submitAnswerInDB,
+    updateUserAnalyticsInDB,
+    updateUserQuestionPerformance}

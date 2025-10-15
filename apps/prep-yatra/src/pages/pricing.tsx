@@ -1,9 +1,4 @@
-import { Check, Star, Zap, Crown } from "lucide-react"
-import { useRouter } from "next/router"
-import React, { useEffect, useState } from "react"
-
 import {PrepYatraFooter, PrepYatraNavbar} from "@tbe/components"
-import {PrepYatraNavigation} from "@tbe/components"
 import { Badge } from "@tbe/components"
 import { Button } from "@tbe/components"
 import {
@@ -14,6 +9,10 @@ import {
     CardTitle
 } from "@tbe/components"
 import { useAuth } from "@tbe/components"
+import { Check, Crown,Star, Zap } from "lucide-react"
+import { useRouter } from "next/router"
+import React, { useEffect, useState } from "react"
+
 import useCashfreePayment from "@/hooks/useCashfreePayment"
 
 interface PricingPlan {

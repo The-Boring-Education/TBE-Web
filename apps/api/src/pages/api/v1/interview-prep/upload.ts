@@ -1,7 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next"
 import axios from "axios"
+import type { NextApiRequest, NextApiResponse } from "next"
+
 import { addAInterviewSheetToDB } from "@/lib/database"
-import { AddInterviewSheetRequestPayloadProps } from "@/lib/interfaces"
+import type { AddInterviewSheetRequestPayloadProps } from "@/lib/interfaces"
 
 /**
  * API endpoint to upload/publish completed interview sheets from The-Boring-Agents to database

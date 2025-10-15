@@ -1,4 +1,5 @@
 import type { ExternalEmailRequest } from "@/lib/interfaces"
+
 import { emailTriggerService } from "./triggers"
 
 export const sendWelcomeEmail = async (data: {

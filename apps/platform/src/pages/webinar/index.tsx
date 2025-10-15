@@ -1,5 +1,3 @@
-import { Fragment, useState } from 'react';
-
 import {
   FlexContainer,
   LandingPageHero,
@@ -13,6 +11,7 @@ import {
 import { routes, STATIC_FILE_PATH } from '@tbe/constants';
 import type { WebinarsLandingPageProps } from '@tbe/interface';
 import { getWebinarLandingPageProps } from '@tbe/utils';
+import { Fragment, useState } from 'react';
 
 const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
   const [filteredWebinars, setFilteredWebinars] = useState(webinars);

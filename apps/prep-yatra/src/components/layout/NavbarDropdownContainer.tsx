@@ -1,4 +1,4 @@
-import {NavbarDropdownContainerProps} from "@/interfaces/components";
+import type {NavbarDropdownContainerProps} from "@/interfaces/components";
 
 const NavbarDropdownContainer = ({links}: NavbarDropdownContainerProps) => (
     <div className='p-2 bg-gray-900 rounded-xl shadow-lg border border-primary z-[1000] min-w-[220px]'>
