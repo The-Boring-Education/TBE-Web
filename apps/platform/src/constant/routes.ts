@@ -1,4 +1,5 @@
 import type { GenerateSectionPathProps } from '@/interfaces';
+
 import { envConfig } from './envConfig';
 
 const routes = {

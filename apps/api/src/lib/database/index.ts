@@ -5,6 +5,5 @@ export * from "./queries"
 // Export MongoDB utilities from local utils
 export {
     connectToDatabase,
-    disconnectFromDatabase,
-    createObjectId
-} from "@/lib/utils"
+    createObjectId,
+    disconnectFromDatabase} from "@/lib/utils"

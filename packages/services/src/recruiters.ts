@@ -1,5 +1,5 @@
 import { trackEvent } from "@tbe/utils"
-import { CreateRecruiterContact, RecruiterContact } from "@tbe/types"
+import type { CreateRecruiterContact, RecruiterContact } from "@tbe/types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 

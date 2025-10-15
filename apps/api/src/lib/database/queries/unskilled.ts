@@ -1,10 +1,11 @@
-import { Job, JobAggregate } from "../models"
 import type {
     AddJobRequestPayloadProps,
     DatabaseQueryResponseType,
     UnSkilledEvaluationRequestBody
 } from "@/lib/interfaces"
 import { constrainNumberToRange } from "@/lib/utils"
+
+import { Job, JobAggregate } from "../models"
 
 // Add A Job
 const addJobToDB = async (

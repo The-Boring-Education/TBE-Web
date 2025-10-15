@@ -8,9 +8,8 @@ import {
   getUserByIdFromDB,
 } from '@/lib/database';
 import type { SheetEnrollmentRequestProps } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
-import { cors, sendAPIResponse } from '@/lib/utils';
 import { sendInterviewPrepEnrollmentEmail } from '@/lib/services';
+import { cors, sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

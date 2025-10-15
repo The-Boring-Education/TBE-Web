@@ -1,5 +1,5 @@
-import NextAuth from 'next-auth';
 import { createAuthOptions } from '@tbe/auth';
+import NextAuth from 'next-auth';
 
 import { routes } from '@/constant';
 import { createUserInDB, getUserByEmailFromDB } from '@/database/query/user';

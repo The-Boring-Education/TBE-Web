@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react'
 import { useAuth } from '@tbe/auth'
 import { useGamificationContext } from '@tbe/components/quizes'
-import { gamificationApi } from '@/services/api'
 import { useToast } from '@tbe/components/quizes'
+import { useCallback, useState } from 'react'
+
+import { gamificationApi } from '@/services/api'
 
 // User levels configuration
 const USER_LEVELS = [

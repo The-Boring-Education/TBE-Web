@@ -18,7 +18,7 @@ import {Button} from "../ui/button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card";
 import {Skeleton} from "../ui/skeleton";
 import {useChallenges} from "@tbe/hooks";
-import {Challenge} from "@tbe/types";
+import type {Challenge} from "@tbe/types";
 
 interface ChallengeSectionProps {
   userId: string;

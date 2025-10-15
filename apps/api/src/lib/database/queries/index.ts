@@ -20,24 +20,24 @@ export * from './youfocus'
 
 // Export enhanced quiz functions (keep original names for main functions)
 export {
-  createQuizSessionInDB,
-  submitAnswerInDB,
   completeQuizSessionInDB,
-  updateUserQuestionPerformance,
-  updateUserAnalyticsInDB,
-  getUserAnalyticsFromDB,
-  getQuizLeaderboardFromDB,
-  getUserQuizSessionsFromDB,
-  getQuizAdminAnalyticsFromDB,
+  createQuizSessionInDB,
   getActiveSessionsFromDB,
+  getQuizAdminAnalyticsFromDB,
+  getQuizLeaderboardFromDB,
+  getUserAnalyticsFromDB,
+  getUserQuizSessionsFromDB,
+  submitAnswerInDB,
+  updateUserAnalyticsInDB,
+  updateUserQuestionPerformance,
 } from './enhancedQuiz'
 
 // Export gamification functions (keep getLeaderboardFromDB as the main one)
 export {
   addGamificationDocInDB,
-  getUserPointsFromDB,
-  getLeaderboardFromDB,
   getActionsWithinDateRange,
+  getLeaderboardFromDB,
+  getUserPointsFromDB,
   handleGamificationPoints,
   updateUserPointsInDB,
 } from './gamification'
@@ -45,7 +45,7 @@ export {
 // Export user quiz attempt functions (alias the conflicting ones)
 export {
   addUserQuizAttemptToDB,
-  getUserQuizPerformanceFromDB,
-  getLeaderboardFromDB as getUserQuizLeaderboardFromDB,
   getQuizAdminAnalyticsFromDB as getUserQuizAdminAnalyticsFromDB,
+  getLeaderboardFromDB as getUserQuizLeaderboardFromDB,
+  getUserQuizPerformanceFromDB,
 } from './userQuizAttempt'

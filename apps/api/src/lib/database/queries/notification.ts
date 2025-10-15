@@ -1,8 +1,9 @@
-import { Notification } from "../models"
 import type {
     AddNotificationRequestPayloadProps,
     UpdateNotificationRequestPayloadProps
 } from "@/lib/interfaces"
+
+import { Notification } from "../models"
 
 const addANotificationToDB = async (
     notificationPayload: AddNotificationRequestPayloadProps

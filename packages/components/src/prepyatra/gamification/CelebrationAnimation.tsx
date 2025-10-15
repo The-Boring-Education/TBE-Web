@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 import {CONFETTI_COLORS} from "@tbe/constants";
-import {CelebrationAnimationProps} from "@tbe/interface";
+import type {CelebrationAnimationProps} from "@tbe/interface";
 
 const CelebrationAnimation = ({
     show,

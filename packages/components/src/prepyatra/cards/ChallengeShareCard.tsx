@@ -20,10 +20,12 @@ import {
     CardTitle
 } from "../ui/card"
 import Button from "../../common/Buttons/Button"
-import { Challenge } from "@tbe/types"
-import {
-    generateSocialMessage,
+import type { Challenge } from "@tbe/types"
+import type {
 SocialMediaTemplateData
+    } from "@tbe/utils";
+import {
+    generateSocialMessage
     } from "@tbe/utils"
 
 interface ChallengeShareCardProps {

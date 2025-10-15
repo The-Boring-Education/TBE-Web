@@ -1,4 +1,6 @@
-import { type Model, model, models, Schema, Types } from 'mongoose';
+import type { Types } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS } from '@/lib/constants';
 
 export interface MentorshipDocumentModel {

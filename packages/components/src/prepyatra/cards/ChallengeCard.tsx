@@ -34,7 +34,7 @@ import {
     } from "../ui/card"
 import { Progress } from "../ui/progress"
 import { challengesService } from "@tbe/services"
-import { Challenge } from "@tbe/types"
+import type { Challenge } from "@tbe/types"
 
 interface ChallengeCardProps {
     challenge: Challenge

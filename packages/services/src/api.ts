@@ -1,6 +1,7 @@
 import { apiClient, APIError } from "./base"
 import { API_ENDPOINTS } from "@tbe/config/quizes"
-import { APIResponse, QuizCategoryAPI, QuizQuestionsData, QuizAttempt, PerformanceMetrics, CategoryPerformance, PerformanceHistory, LeaderboardData, UserProfile, UserPoints } from "@tbe/types"
+import type { APIResponse, PerformanceMetrics, CategoryPerformance, PerformanceHistory, LeaderboardData, UserProfile, UserPoints } from "@tbe/types";
+import { QuizCategoryAPI, QuizQuestionsData, QuizAttempt } from "@tbe/types"
 
 // User APIs
 export const userApi = {

@@ -1,5 +1,6 @@
-import { Playlist, UserPlaylist } from "../models"
 import type { DatabaseQueryResponseType, PlaylistModel } from "@/lib/interfaces"
+
+import { Playlist, UserPlaylist } from "../models"
 
 // Add a playlist to the database
 const addPlaylistToDB = async (

@@ -48,7 +48,7 @@ const getButtonClasses = (
   return `${baseClasses} ${variantClasses[variant] || ''}`;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 const animationVariants: any = {
   DEFAULT: {
     scale: 1,

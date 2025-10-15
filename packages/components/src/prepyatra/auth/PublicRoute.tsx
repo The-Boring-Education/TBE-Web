@@ -1,5 +1,6 @@
 import {useRouter} from "next/router";
-import React, {ReactNode} from "react";
+import type {ReactNode} from "react";
+import React from "react";
 
 interface PublicRouteProps {
     children: ReactNode

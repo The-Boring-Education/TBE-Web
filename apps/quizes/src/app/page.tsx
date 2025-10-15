@@ -1,20 +1,19 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import { useAuth } from "@tbe/auth"
-import { config } from "@/config"
 import {
-    Play,
-    Brain,
-    Clock,
-    Target,
-    CheckCircle,
     ArrowRight,
+    Brain,
+    CheckCircle,
+    Clock,
     Code,
-    Users,
-    Trophy
-} from "lucide-react"
+    Play,
+    Target,
+    Trophy,
+    Users} from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+
 
 export default function Landing() {
     const router = useRouter()
@@ -48,7 +47,7 @@ export default function Landing() {
             {isLoading && (
                 <div className='min-h-screen flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto'></div>
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>Loading...</p>
                     </div>
                 </div>
@@ -58,7 +57,7 @@ export default function Landing() {
             {isRedirecting && (
                 <div className='min-h-screen flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto'></div>
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>
                             Redirecting...
                         </p>
@@ -120,7 +119,7 @@ export default function Landing() {
                                                 <CheckCircle className='w-5 h-5 text-black' />
                                             </div>
                                             <div className='w-full bg-gray-200 rounded-full h-2'>
-                                                <div className='bg-black h-2 rounded-full w-3/4'></div>
+                                                <div className='bg-black h-2 rounded-full w-3/4' />
                                             </div>
                                             <div className='text-sm text-gray-600'>
                                                 15 questions completed

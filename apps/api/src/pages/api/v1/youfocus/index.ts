@@ -9,12 +9,12 @@ import {
   updateReferredByInPlaylist,
   updateTagsInPlaylist,
 } from '@/lib/database';
-import { connectDB, cors } from '@/middleware';
 import {
   extractPlaylistId,
   fetchPlaylistData,
   sendAPIResponse,
 } from '@/lib/utils';
+import { connectDB, cors } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

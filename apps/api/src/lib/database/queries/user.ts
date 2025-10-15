@@ -1,4 +1,3 @@
-import { User } from "../models"
 import type {
     CreateUserRequestPayloadProps,
     DatabaseQueryResponseType,
@@ -6,6 +5,8 @@ import type {
     UserRoleType,
     WorkDomainType
 } from "@/lib/interfaces"
+
+import { User } from "../models"
 
 const getUserByIdFromDB = async (
     id: string
@@ -172,8 +173,7 @@ export {
     getUserByEmailFromDB,
     getUserByIdFromDB,
     getUserByUserNameFromDB,
+    getUserDataByUserNameFromDB,
     onboardPrepYatraUserTODB,
     onboardUserToDB,
-    updateUserSkillsInDB,
-    getUserDataByUserNameFromDB
-}
+    updateUserSkillsInDB}

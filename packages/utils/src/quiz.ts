@@ -1,6 +1,7 @@
 import { sendRequest } from "./api"
 import { trackEvent } from "./analytics"
-import { QuizQuestion, QuizSession, QuizResult } from "@tbe/types"
+import type { QuizSession, QuizResult } from "@tbe/types";
+import { QuizQuestion } from "@tbe/types"
 
 /**
  * Quiz Service

@@ -1,18 +1,17 @@
 import '@/styles/globals.css';
 import '@/styles/colors.css';
 
+import { Layout } from '@tbe/components';
+import { GamificationProvider } from '@tbe/components';
+import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
+import { useUser } from '@tbe/hooks';
+import { getRedirectUrl } from '@tbe/utils';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
-import { Layout } from '@tbe/components';
-import { GamificationProvider } from '@tbe/components';
-import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
-import { useUser } from '@tbe/hooks';
-import { getRedirectUrl } from '@tbe/utils';
 
 // Create a client
 const queryClient = new QueryClient();

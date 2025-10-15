@@ -9,11 +9,10 @@ import {
 import type {
   CreateUserInterestRequestProps,
   GetUserInterestsRequestProps,
-  UserInterestResponseProps,
 } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
 import { sendAPIResponse } from '@/lib/utils';
 import { cors } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 /**
  * API Handler for User Interests

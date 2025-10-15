@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext } from "react"
 import { useAuth as useNextAuth } from "@tbe/auth"
-import { User, AuthContextType } from "@tbe/types"
+import type { User, AuthContextType } from "@tbe/types"
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 

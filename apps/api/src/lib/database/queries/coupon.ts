@@ -1,5 +1,6 @@
-import Coupon from '../models/Coupon';
 import type { DatabaseQueryResponseType } from '@/lib/interfaces';
+
+import Coupon from '../models/Coupon';
 
 const findCouponByCodeFromDB = async (
   code: string
@@ -291,17 +292,16 @@ const incrementCouponUsageFromDB = async (couponId: string): Promise<DatabaseQue
 };
 
 export {
+  applyCouponToSheetsFromDB,
+  createCouponFromDB,
+  deleteCouponFromDB,
   // Public functions
   findCouponByCodeFromDB,
-  validateCouponForProductFromDB,
-  getCouponByIdFromDB,
-  incrementCouponUsageFromDB,
-  
   // Admin functions
   getAllCouponsFromDB,
-  createCouponFromDB,
-  updateCouponFromDB,
-  deleteCouponFromDB,
-  applyCouponToSheetsFromDB,
+  getCouponByIdFromDB,
+  incrementCouponUsageFromDB,
   removeCouponFromSheetFromDB,
+  updateCouponFromDB,
+  validateCouponForProductFromDB,
 };

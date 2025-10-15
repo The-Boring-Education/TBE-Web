@@ -1,5 +1,3 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
-
 import {
   Accordion,
   AccordionLinkItem,
@@ -13,11 +11,12 @@ import {
   SEO,
   Text,
 } from '@tbe/components';
-import { useAnalytics, useApi, useUser } from '@tbe/hooks';
 import { useGamifiedAction } from '@tbe/components';
+import { routes } from '@tbe/constants';
+import { useAnalytics, useApi, useUser } from '@tbe/hooks';
 import type { ProjectPageProps } from '@tbe/interface';
 import { getProjectPageProps, getSelectedProjectChapterMeta } from '@tbe/utils';
-import { routes } from '@tbe/constants';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
 const ProjectPage = ({
   project,

@@ -1,15 +1,16 @@
 'use client'
 
-import { useEffect, useRef, useMemo } from "react"
-import { useParams, useRouter, useSearchParams } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 import { useAuth } from "@tbe/auth"
-import { quizApi } from "@/services/api"
-import { Question } from "@/types/quiz"
-import { ArrowLeft, Trophy, Clock, Target } from "lucide-react"
 import { MarkdownRenderer } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { trackEvent } from "@tbe/utils"
+import { ArrowLeft, Clock, Target,Trophy } from "lucide-react"
+import { useParams, useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useMemo,useRef } from "react"
+
+import { quizApi } from "@/services/api"
+import type { Question } from "@/types/quiz"
 
 interface QuizQuestion {
     _id?: string

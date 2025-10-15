@@ -1,11 +1,13 @@
-import { Inter } from "next/font/google"
-import { QueryProvider } from "@/providers/QueryProvider"
+import "./globals.css"
+
 import { AuthProvider } from "@tbe/auth"
 import { GamificationWrapper } from "@tbe/components/quizes"
 import { Toaster } from "@tbe/components/quizes"
+import { Inter } from "next/font/google"
 import { Toaster as Sonner } from "sonner"
+
 import { AnalyticsWrapper } from "@/components/AnalyticsWrapper"
-import "./globals.css"
+import { QueryProvider } from "@/providers/QueryProvider"
 
 const inter = Inter({
     subsets: ["latin"],

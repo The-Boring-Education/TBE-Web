@@ -2,7 +2,7 @@ import ReactMarkdown from "react-markdown"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 import remarkGfm from "remark-gfm"
-import { ReactNode } from "react"
+import type { ReactNode } from "react"
 
 interface MarkdownRendererProps {
     content: string

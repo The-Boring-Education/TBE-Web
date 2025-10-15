@@ -5,8 +5,8 @@ import {
   getQuizByIdFromDB,
   updateAQuizInDB,
 } from '@/lib/database';
-import { connectDB } from '@/middleware';
 import { cors } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);

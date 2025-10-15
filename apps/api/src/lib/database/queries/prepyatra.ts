@@ -1,5 +1,11 @@
 import mongoose from "mongoose"
 
+import type {
+    AddPrepLogToDBPayloadProps,
+    AddRecruiterToDBPayloadProps,
+    DatabaseQueryResponseType
+} from "@/lib/interfaces"
+
 import {
     Challenge,
     ChallengeLog,
@@ -9,11 +15,6 @@ import {
     Recruiter,
     User
 } from "../models"
-import type {
-    AddPrepLogToDBPayloadProps,
-    AddRecruiterToDBPayloadProps,
-    DatabaseQueryResponseType
-} from "@/lib/interfaces"
 
 const getRecruitersByUserFromDB = async (
     userId: string
@@ -964,9 +965,9 @@ export {
     deleteChallengeInDB,
     deletePrepLogInDB,
     deleteRecruiterInDB,
+    getActiveSubscriptionByUserFromDB,
     getAllMenteesFromDB,
     getAllUsersWithLogsFromDB,
-    getActiveSubscriptionByUserFromDB,
     getChallengeLogsByIdFromDB,
     getChallengeProgressFromDB,
     getChallengesByUserFromDB,

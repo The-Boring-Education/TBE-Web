@@ -1,4 +1,4 @@
-import { Question } from "../types/quiz"
+import type { Question } from "../types/quiz"
 
 export const sampleMDXQuestions: Question[] = [
     {

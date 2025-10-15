@@ -1,10 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
 import { useAuth } from "@tbe/auth"
-import { useRouter } from "next/navigation"
-import { config } from "@tbe/config/quizes"
-import { Brain, Sparkles, Trophy, Users } from "lucide-react"
 import { Button } from "@tbe/components/quizes"
 import {
     Card,
@@ -14,6 +10,9 @@ import {
     CardTitle
 } from "@tbe/components/quizes"
 import { useToast } from "@tbe/components/quizes"
+import { Brain, Sparkles, Trophy, Users } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function Login() {
     const { signIn, user, isAuthenticated, isLoading } = useAuth()

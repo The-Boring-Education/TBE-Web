@@ -6,8 +6,8 @@ import {
   updateUserCourseChapterInDB,
 } from '@/lib/database';
 import type { UpdateUserChapterInCourseRequestProps } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
 import { sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

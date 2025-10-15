@@ -1,7 +1,5 @@
-import { useRouter } from 'next/router';
-import { Fragment, useState } from 'react';
-
 import {
+  FlexContainer,
   OnboardingLayout,
   OnboardingProgressBar,
   SectionHeaderContainer,
@@ -11,13 +9,13 @@ import {
   StepPhoneNumber,
   StepUsage,
   StepUsername,
-  Toast,
-  FlexContainer
-} from '@tbe/components';
+  Toast} from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useApi, useUser } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps, getRedirectUrl } from '@tbe/utils';
+import { useRouter } from 'next/router';
+import { Fragment, useState } from 'react';
 
 const steps = [StepUsername, StepOccupation, StepUsage, StepPhoneNumber];
 

@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { envConfig, apiStatusCodes } from '@/lib/constants';
-import { sendAPIResponse, cors } from '@/lib/utils';
+import { apiStatusCodes,envConfig } from '@/lib/constants';
+import { cors,sendAPIResponse } from '@/lib/utils';
 
 // Connect to DB
 const connectDB = async () => {
@@ -50,4 +50,4 @@ const adminMiddleware = async (
   }
 };
 
-export { connectDB, adminMiddleware, cors };
+export { adminMiddleware, connectDB, cors };

@@ -2,11 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/lib/constants';
 import {
-  getAllCouponsFromDB,
   createCouponFromDB,
+  getAllCouponsFromDB,
 } from '@/lib/database';
-import { connectDB, adminMiddleware } from '@/middleware';
 import { cors, sendAPIResponse } from '@/lib/utils';
+import { adminMiddleware,connectDB } from '@/middleware';
 
 interface CreateCouponRequest {
   code: string;

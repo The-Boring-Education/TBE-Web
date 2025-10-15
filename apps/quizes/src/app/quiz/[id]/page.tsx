@@ -1,19 +1,17 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
-import { useParams, useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@tbe/components/quizes"
-import { Button } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/auth"
+import { Card, CardContent, CardHeader } from "@tbe/components/quizes"
 import { Progress } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { CodeRenderer } from "@tbe/components/quizes"
-import { useAuth } from "@tbe/auth"
 import { quizApi } from "@tbe/services"
-import { getValidUserId } from "@tbe/utils"
-import { Clock } from "lucide-react"
+import type { QuizQuestion } from "@tbe/types"
+import { useParams, useRouter } from "next/navigation"
+import { useCallback,useEffect, useState } from "react"
+
 import useGamifiedAction from "@/hooks/useGamifiedAction"
-import { QuizQuestion } from "@tbe/types"
 
 interface QuizCategory {
     _id: string
@@ -208,10 +206,10 @@ function QuizContent() {
 
     if (gameState === "loading") {
         return (
-            <Layout showNavbar={true}>
+            <Layout showNavbar>
                 <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto'></div>
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>
                             Loading quiz...
                         </p>

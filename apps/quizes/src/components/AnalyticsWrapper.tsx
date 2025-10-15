@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
+import { useEffect } from "react"
+
 import { initGA, installGlobalListeners, trackPageview } from "@/lib/analytics"
 
 export function AnalyticsWrapper({ children }: { children: React.ReactNode }) {

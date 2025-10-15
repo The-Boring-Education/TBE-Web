@@ -1,4 +1,4 @@
-import type { Model, Document } from 'mongoose';
+import type { Document,Model } from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 
 import { DATABASE_MODELS } from '@/constant';

@@ -1,34 +1,32 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@tbe/auth'
-import { analyticsApi, APIError } from '@tbe/services'
-import { PerformanceMetrics, CategoryPerformance } from '@/types/api'
-import { 
-    TrendingUp, 
-    Target, 
-    Clock, 
-    Award, 
-    BarChart3, 
-    Zap, 
-    Calendar,
-    Activity,
-    Star,
-    Trophy
-} from 'lucide-react'
 import { ProtectedRoute } from '@tbe/components/quizes'
 import { DashboardNav } from '@tbe/components/quizes'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@tbe/components/quizes'
 import { Button } from '@tbe/components/quizes'
 import { useToast } from '@tbe/components/quizes'
-import { formatTimeAgo, formatDuration } from '@/lib/utils'
+import { analyticsApi, APIError } from '@tbe/services'
+import { 
+    Activity, 
+    BarChart3,
+    Clock, 
+    Star,
+    Target, 
+    TrendingUp, 
+    Trophy,
+    Zap} from 'lucide-react'
+import { useCallback,useEffect, useState } from 'react'
+
+import { formatDuration,formatTimeAgo } from '@/lib/utils'
+import type { CategoryPerformance,PerformanceMetrics } from '@/types/api'
 
 // Loading component
 const MetricLoader = () => (
     <div className="animate-pulse">
-        <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-        <div className="h-8 bg-muted rounded w-1/2"></div>
+        <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+        <div className="h-8 bg-muted rounded w-1/2" />
     </div>
 )
 
@@ -100,7 +98,7 @@ function PerformanceChart({ data }: { data: CategoryPerformance[] }) {
         <div className="space-y-4">
             {data.map((category, index) => (
                 <div key={category.categoryId} className="flex items-center space-x-4 p-4 bg-muted/30 rounded-lg">
-                    <div className="w-4 h-4 bg-primary rounded-full"></div>
+                    <div className="w-4 h-4 bg-primary rounded-full" />
                     <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium">{category.categoryName}</h4>
@@ -324,15 +322,15 @@ function StatsContent() {
                         <CardContent>
                             <div className="space-y-3">
                                 <div className="flex items-center space-x-3">
-                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div className="w-2 h-2 bg-green-500 rounded-full" />
                                     <span className="text-sm">Last active: {formatTimeAgo(metrics.lastActiveDate ?? new Date().toISOString())}</span>
                                 </div>
                                 <div className="flex items-center space-x-3">
-                                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full" />
                                     <span className="text-sm">Total points earned: {metrics.totalScore ?? 0}</span>
                                 </div>
                                 <div className="flex items-center space-x-3">
-                                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                    <div className="w-2 h-2 bg-purple-500 rounded-full" />
                                     <span className="text-sm">Questions answered: {metrics.totalAttempts * 10}</span>
                                 </div>
                             </div>
@@ -356,7 +354,7 @@ function StatsContent() {
                             <div className="space-y-4">
                                 {[1, 2, 3].map((i) => (
                                     <div key={i} className="animate-pulse">
-                                        <div className="h-16 bg-muted rounded-lg"></div>
+                                        <div className="h-16 bg-muted rounded-lg" />
                                     </div>
                                 ))}
                             </div>

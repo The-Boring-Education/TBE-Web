@@ -1,8 +1,9 @@
-  import { useState, useEffect } from 'react';
+  import { useEffect,useState } from 'react';
+
   import { getProductConfig, isValidProduct } from '../config/products';
-  import { getUserById, submitOnboarding } from '../utils/api';
-  import { User, UseOnboardingReturn } from '../types/onboarding';
+  import type { UseOnboardingReturn,User } from '../types/onboarding';
   import { trackEvent } from '../utils/analytics';
+  import { getUserById, submitOnboarding } from '../utils/api';
 
   interface UseOnboardingProps {
     userId: string;

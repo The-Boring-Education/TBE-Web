@@ -1,9 +1,3 @@
-import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
-import { FiCalendar } from 'react-icons/fi';
-import { LuClock3 } from 'react-icons/lu';
-import { SiLinkedin } from 'react-icons/si';
-
 import {
   AboutTBE,
   BackgroundImage,
@@ -26,6 +20,11 @@ import type {
   WebinarPageProps,
     } from '@tbe/interface';
 import { formatDate, getWebinarPageProps } from '@tbe/utils';
+import { useRouter } from 'next/router';
+import { Fragment, useEffect, useState } from 'react';
+import { FiCalendar } from 'react-icons/fi';
+import { LuClock3 } from 'react-icons/lu';
+import { SiLinkedin } from 'react-icons/si';
 
 const WebinarPage = ({
   seoMeta,

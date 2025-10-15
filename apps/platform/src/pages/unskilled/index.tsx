@@ -4,18 +4,6 @@ import {
   CodeBracketIcon,
   MapPinIcon,
 } from '@heroicons/react/20/solid';
-import { motion } from 'framer-motion';
-import { Fragment } from 'react';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
-
 import {
   Button,
   CheckboxButtonContainer,
@@ -41,6 +29,17 @@ import {
 import { useResumeEvaluation } from '@tbe/hooks';
 import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface';
 import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils';
+import { motion } from 'framer-motion';
+import { Fragment } from 'react';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
   {

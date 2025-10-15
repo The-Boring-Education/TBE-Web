@@ -1,33 +1,30 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@tbe/auth'
-import { leaderboardApi, userProfileApi, APIError } from '@tbe/services'
-import { LeaderboardData, UserProfile } from '@/types/api'
-import { 
-    Trophy, 
-    Medal, 
-    Crown, 
-    Star, 
-    TrendingUp, 
-    Target, 
-    Award,
-    Users,
-    Calendar,
-    Zap,
-    Eye,
-    RefreshCw,
-    Filter,
-    Clock
-} from 'lucide-react'
-import { ProtectedRoute, DashboardNav } from '@tbe/components/quizes'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@tbe/components/quizes'
+import { DashboardNav,ProtectedRoute } from '@tbe/components/quizes'
+import { Card, CardContent, CardHeader, CardTitle } from '@tbe/components/quizes'
 import { Button } from '@tbe/components/quizes'
 import { Badge } from '@tbe/components/quizes'
 import { Avatar, AvatarFallback, AvatarImage } from '@tbe/components/quizes'
 import { useToast } from '@tbe/components/quizes'
+import { APIError,leaderboardApi, userProfileApi } from '@tbe/services'
+import { 
+    Award,
+    Clock,
+    Crown, 
+    Eye,
+    Filter,
+    Medal, 
+    RefreshCw,
+    Star, 
+    Target, 
+    TrendingUp, 
+    Trophy} from 'lucide-react'
+import { useCallback,useEffect, useState } from 'react'
+
 import { formatTimeAgo } from '@/lib/utils'
+import type { LeaderboardData, UserProfile } from '@/types/api'
 
 // Rank Badge Component
 interface RankBadgeProps {
@@ -398,7 +395,7 @@ function LeaderboardContent() {
                             <div className="space-y-4">
                                 {[1, 2, 3, 4, 5].map((i) => (
                                     <div key={i} className="animate-pulse">
-                                        <div className="h-16 bg-muted rounded-lg"></div>
+                                        <div className="h-16 bg-muted rounded-lg" />
                                     </div>
                                 ))}
                             </div>

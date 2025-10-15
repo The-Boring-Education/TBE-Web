@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/lib/constants';
 import {Payment, PrepYatraSubscription} from '@/lib/database';
-import { connectDB } from '@/middleware';
 import { sendAPIResponse } from '@/lib/utils';
 import { cors } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 interface PopulatedPayment {
   _id: any;

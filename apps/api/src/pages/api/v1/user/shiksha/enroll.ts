@@ -8,9 +8,9 @@ import {
   getUserByIdFromDB,
 } from '@/lib/database';
 import type { CourseEnrollmentRequestProps } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
-import { cors, sendAPIResponse } from '@/lib/utils';
 import { sendCourseEnrollmentEmail } from '@/lib/services';
+import { cors, sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

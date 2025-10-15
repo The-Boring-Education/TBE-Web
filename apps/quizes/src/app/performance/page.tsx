@@ -1,22 +1,20 @@
 'use client'
 
-import { useState, useEffect, useCallback } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/auth"
+import { Card, CardContent } from "@tbe/components/quizes"
 import { Button } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
-import { useAuth } from "@tbe/auth"
+import { ProtectedRoute } from "@tbe/components/quizes"
 import { analyticsApi, APIError } from "@tbe/services"
-import { PerformanceMetrics } from "@tbe/types"
+import type { PerformanceMetrics } from "@tbe/types"
 import { 
-  BarChart3, 
-  Trophy, 
+  BarChart3,
   Clock, 
   Target,
   TrendingUp,
-  Calendar
-} from "lucide-react"
-import { ProtectedRoute } from "@tbe/components/quizes"
+  Trophy} from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useCallback,useEffect, useState } from "react"
 
 // Use the PerformanceMetrics type from the API
 
@@ -75,7 +73,7 @@ const PerformanceContent = () => {
       <Layout>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto" />
             <p className="mt-4 text-lg text-gray-600">Loading performance...</p>
           </div>
         </div>

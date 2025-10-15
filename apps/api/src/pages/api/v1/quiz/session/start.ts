@@ -1,8 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { Types } from 'mongoose';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+import { Quiz, QuizSession } from '@/lib/database';
 import {cors} from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { Quiz, QuizSession } from '@/lib/database';
-import { Types } from 'mongoose';
 
 interface StartSessionBody {
   userId: string;

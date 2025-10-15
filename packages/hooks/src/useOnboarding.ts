@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react"
-import {
+import type {
     UseOnboardingProps,
     UseOnboardingReturn,
-    BaseUser,
+    BaseUser} from "@tbe/types";
+import {
     OnboardingProductConfig,
     OnboardingFieldConfig
 } from "@tbe/types"
