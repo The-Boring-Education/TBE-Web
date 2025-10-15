@@ -1,5 +1,5 @@
 import { useAuth } from "@tbe/auth"
-import { Button, FlexContainer,Text } from "@tbe/components"
+import { Button, FlexContainer, Text } from "@tbe/components"
 import { motion } from "framer-motion"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -95,7 +95,7 @@ const Auth = () => {
                 </FlexContainer>
 
                 <Button
-                    text={isLoading ? "Signing in..." : "Continue with GitHub"}
+                    text={isLoading ? "Signing in..." : "Continue with Google"}
                     onClick={handleSignIn}
                     disabled={isLoading}
                     variant='NEUTRAL'

@@ -1,5 +1,5 @@
 import type { NextAuthOptions } from "next-auth"
-import { createGitHubProvider } from "../providers/github"
+import { createGoogleProvider } from "../providers/google"
 import { sessionConfig, getCookieConfig, getAuthSecret } from "./session"
 import type { AuthConfig } from "../types"
 
@@ -14,7 +14,7 @@ export const createAuthOptions = (config: AuthConfig = {}): NextAuthOptions => {
     const { pages, onSignIn, onSession } = config
 
     return {
-        providers: [createGitHubProvider()],
+        providers: [createGoogleProvider()],
 
         secret: getAuthSecret(),
 
@@ -31,7 +31,7 @@ export const createAuthOptions = (config: AuthConfig = {}): NextAuthOptions => {
             async signIn({ user, account, profile }) {
                 // If custom sign-in logic is provided, use it
                 if (onSignIn) {
-                    return await onSignIn(user as any)
+                    return await onSignIn(user as any, account)
                 }
 
                 // Default: allow sign-in

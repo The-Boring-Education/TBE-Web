@@ -8,7 +8,7 @@ const authOptions = createAuthOptions({
         signIn: "/auth",
         error: "/auth"
     },
-    onSignIn: async (user) => {
+    onSignIn: async (user, account) => {
         if (!user) return false
 
         const { name, email } = user
@@ -18,17 +18,17 @@ const authOptions = createAuthOptions({
         try {
             // Find or create the user via API
             const response = await fetch(`${API_URL}/user`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     name,
                     email,
                     image: user.image,
-                    provider: 'github',
-                    providerAccountId: user.id,
-                }),
+                    provider: account?.provider || "google",
+                    providerAccountId: account?.providerAccountId || user.id
+                })
             })
 
             const result = await response.json()
@@ -41,7 +41,7 @@ const authOptions = createAuthOptions({
 
             return false
         } catch (error) {
-            console.error('Error signing in:', error)
+            console.error("Error signing in:", error)
             return false
         }
     },
@@ -51,18 +51,21 @@ const authOptions = createAuthOptions({
 
         try {
             // Fetch user data to check onboarding status
-            const response = await fetch(`${API_URL}/user?email=${session.user.email}`)
+            const response = await fetch(
+                `${API_URL}/user?email=${session.user.email}`
+            )
             const result = await response.json()
 
             if (result.status && result.data) {
-                session.user.isOnboarded = result.data.prepYatra?.pyOnboarded || false
+                session.user.isOnboarded =
+                    result.data.prepYatra?.pyOnboarded || false
             }
         } catch (error) {
-            console.error('Error fetching user in session:', error)
+            console.error("Error fetching user in session:", error)
         }
 
         return session
-    },
+    }
 })
 
 export default NextAuth(authOptions)

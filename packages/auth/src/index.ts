@@ -8,7 +8,7 @@ export {
 } from "./config/session"
 
 // Providers
-export { createGitHubProvider } from "./providers/github"
+export { createGoogleProvider } from "./providers/google"
 
 // Hooks
 export { useAuth } from "./hooks/useAuth"

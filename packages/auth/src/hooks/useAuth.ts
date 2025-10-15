@@ -20,7 +20,7 @@ export const useAuth = () => {
         isUnauthenticated: status === "unauthenticated",
 
         signIn: (callbackUrl?: string) => {
-            return nextAuthSignIn("github", {
+            return nextAuthSignIn("google", {
                 callbackUrl: callbackUrl || "/dashboard"
             })
         },

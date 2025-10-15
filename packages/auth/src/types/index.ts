@@ -40,7 +40,7 @@ export interface AuthConfig {
         verifyRequest?: string
         newUser?: string
     }
-    onSignIn?: (user: ExtendedUser) => Promise<boolean> | boolean
+    onSignIn?: (user: ExtendedUser, account?: any) => Promise<boolean> | boolean
     onSession?: (session: any, token: any) => Promise<any> | any
 }
 

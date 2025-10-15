@@ -9,7 +9,7 @@ const authOptions = createAuthOptions({
   pages: {
     signIn: routes?.register,
   },
-  onSignIn: async (user) => {
+  onSignIn: async (user, account) => {
     if (!user) return false;
 
     const { name, email } = user;
@@ -28,8 +28,8 @@ const authOptions = createAuthOptions({
           name,
           email,
           image: user.image,
-          provider: 'github',
-          providerAccountId: user.id,
+          provider: account?.provider || 'google',
+          providerAccountId: account?.providerAccountId || user.id,
         });
 
         // Attach the MongoDB _id to the user object
