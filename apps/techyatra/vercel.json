@@ -1,5 +1,4 @@
 {
   "buildCommand": "cd ../.. && npx turbo run build --filter=@tbe/techyatra",
-  "installCommand": "cd ../.. && pnpm install"
+  "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile"
 }
-

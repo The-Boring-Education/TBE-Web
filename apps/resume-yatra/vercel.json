@@ -2,6 +2,6 @@
     "buildCommand": "cd ../.. && npx turbo run build --filter=resume-yatra",
     "outputDirectory": ".next",
     "framework": "nextjs",
-    "installCommand": "pnpm install",
+    "installCommand": "pnpm install --no-frozen-lockfile",
     "devCommand": "pnpm dev"
 }
