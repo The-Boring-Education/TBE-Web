@@ -67,11 +67,11 @@ export function Navbar() {
                         className="flex items-center cursor-pointer" 
                         onClick={() => router.push('/dashboard')}
                     >
-                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                        <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center mr-3">
                             <Brain className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">
+                            <h1 className="text-xl font-bold text-red-900">
                                 The Boring Quizes
                             </h1>
                             <p className="text-xs text-black">
