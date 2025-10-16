@@ -23,9 +23,31 @@ REGION="asia-south1"
 SERVICE_NAME="tbe-api"
 REPOSITORY="tbe-api-repo"
 
+# Check deployment status
+check_deployment_status() {
+    step "Checking deployment status..."
+    
+    local services=("tbe-api" "tbe-api-staging" "tbe-api-dev")
+    
+    for service in "${services[@]}"; do
+        log "Checking $service..."
+        SERVICE_URL=$(gcloud run services describe $service --region $REGION --format 'value(status.url)' 2>/dev/null || echo "")
+        
+        if [ -n "$SERVICE_URL" ]; then
+            log "✓ $service: $SERVICE_URL"
+            if curl -f -s "$SERVICE_URL/api/health" >/dev/null; then
+                log "  Health: ✓ OK"
+            else
+                warn "  Health: ✗ Failed"
+            fi
+        else
+            warn "✗ $service: Not deployed"
+        fi
+        echo
+}
+
 # Check prerequisites
 check_prereqs() {
-    step "Checking prerequisites..."
     
     local missing=()
     command -v gcloud >/dev/null || missing+=("gcloud")
@@ -135,26 +157,56 @@ deploy_with_cloud_build() {
     step "Deploying with Cloud Build..."
     
     # Go to monorepo root
-    cd "$(dirname "$0")/../.."
+    MONOREPO_ROOT="/Users/imsks/Public/git-repos/tbe/tbe-platform"
+    cd "$MONOREPO_ROOT"
     
     log "Submitting build to Cloud Build..."
     
     # Submit build to Cloud Build
     gcloud builds submit \
-        --config apps/api/cloudbuild.yaml \
+        --config cloudbuild.yaml \
         --substitutions=_SERVICE_NAME=$SERVICE_NAME,_ENVIRONMENT=$ENVIRONMENT,_MEMORY=$MEMORY,_MIN_INSTANCES=$MIN_INSTANCES,_MAX_INSTANCES=$MAX_INSTANCES \
         --region=$REGION \
         .
     
-    # Get service URL
-    SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
+    # Get the latest build ID and open in browser
+    BUILD_ID=$(gcloud builds list --limit=1 --format="value(id)" --project=$PROJECT_ID 2>/dev/null || echo "")
     
-    log "Deployment complete ✓"
-    log "Service URL: $SERVICE_URL"
+    if [ -n "$BUILD_ID" ]; then
+        BUILD_URL="https://console.cloud.google.com/cloud-build/builds;region=$REGION/$BUILD_ID?project=$PROJECT_ID"
+        log "Opening build logs in browser: $BUILD_URL"
+        
+        # Open in browser
+        if command -v open >/dev/null; then
+            open "$BUILD_URL"
+        elif command -v xdg-open >/dev/null; then
+            xdg-open "$BUILD_URL"
+        else
+            log "Please open this URL manually: $BUILD_URL"
+        fi
+    fi
+    
+    # Get service URL
+    SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)' 2>/dev/null || echo "")
+    
+    if [ -n "$SERVICE_URL" ]; then
+        log "Deployment complete ✓"
+        log "Service URL: $SERVICE_URL"
+        
+        # Open service URL in browser
+        log "Opening service in browser..."
+        if command -v open >/dev/null; then
+            open "$SERVICE_URL"
+        elif command -v xdg-open >/dev/null; then
+            xdg-open "$SERVICE_URL"
+        fi
+    else
+        log "Deployment in progress. Check the build logs above for status."
+    fi
     
     # Test health endpoint
     step "Testing deployment..."
-    sleep 10
+    sleep 5
     if curl -f -s "$SERVICE_URL/api/health" >/dev/null; then
         log "Health check passed ✓"
     else
@@ -203,6 +255,40 @@ main() {
     echo
     log "✅ Done! Your API is live on Cloud Run."
 }
+
+# Handle command line arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --staging) 
+            DEPLOY_ENV="staging"
+            shift
+            ;;
+        --production) 
+            DEPLOY_ENV="production"
+            shift
+            ;;
+        --manual) 
+            DEPLOY_ENV="manual"
+            shift
+            ;;
+        --status)
+            check_deployment_status
+            exit 0
+            ;;
+        -h|--help)
+            echo "Usage: $0 [--staging|--production|--manual|--status]"
+            echo "  --staging: Deploy to staging environment"
+            echo "  --production: Deploy to production environment"
+            echo "  --manual: Deploy to manual/dev environment"
+            echo "  --status: Check deployment status"
+            exit 0
+            ;;
+        *) 
+            error "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+done
 
 # Run if called directly
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
