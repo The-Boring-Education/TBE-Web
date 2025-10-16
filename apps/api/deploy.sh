@@ -44,6 +44,7 @@ check_deployment_status() {
             warn "✗ $service: Not deployed"
         fi
         echo
+    done
 }
 
 # Check prerequisites
@@ -148,6 +149,14 @@ setup_gcp() {
         --location=$REGION \
         --description="TBE API containers" \
         --quiet 2>/dev/null || log "Repository already exists"
+    
+    # Grant Secret Manager access to Cloud Run service account
+    log "Setting up Secret Manager permissions..."
+    SERVICE_ACCOUNT="183084025505-compute@developer.gserviceaccount.com"
+    gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member="serviceAccount:${SERVICE_ACCOUNT}" \
+        --role="roles/secretmanager.secretAccessor" \
+        --quiet
     
     log "GCP setup complete ✓"
 }

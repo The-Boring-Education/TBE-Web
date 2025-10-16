@@ -34,5 +34,5 @@ ENV HOSTNAME="0.0.0.0"
 # Expose port
 EXPOSE 3000
 
-# Start the application
-CMD ["node", "apps/api/server.js"]
+# Start the application using the standalone server
+CMD ["node", ".next/standalone/apps/api/server.js"]
