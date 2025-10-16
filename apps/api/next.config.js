@@ -19,7 +19,6 @@ const nextConfig = {
         "@tbe/constants",
         "@tbe/types",
         "@tbe/utils",
-        "@tbe/database",
         "@tbe/interface",
         "@tbe/services"
     ],

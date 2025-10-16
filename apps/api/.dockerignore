@@ -1,78 +1,110 @@
 # Dependencies
-node_modules
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Testing
-coverage
-.nyc_output
-
-# Next.js
+# Production builds
 .next/
 out/
-build
+dist/
+build/
 
-# Production
-dist
-
-# Misc
-.DS_Store
-*.pem
-
-# Debug
-*.log
-
-# Local env files (not committed to git)
+# Environment files
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# IDEs
+# IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+# OS files
+.DS_Store
 Thumbs.db
 
 # Git
-.git
+.git/
 .gitignore
-README.md
 
-# CI/CD
-.github/
+# Logs
+logs/
+*.log
 
-# Other apps (not needed for API build)
-../platform
-../prep-yatra  
-../quizes
-../onboarding
-../techyatra
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
 
-# Documentation
-*.md
-docs/
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
 
-# Testing
-__tests__/
-*.test.*
-*.spec.*
-jest.config.*
-cypress/
-.cypress/
+# nyc test coverage
+.nyc_output
 
-# Linting
-.eslintrc.*
-.prettierrc.*
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local development
+apps/*/node_modules/
+packages/*/node_modules/

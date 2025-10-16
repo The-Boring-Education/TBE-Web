@@ -11,8 +11,7 @@
     "lint": "eslint .",
     "docker:build": "docker build -t tbe-api .",
     "docker:run": "docker run -p 3000:3000 tbe-api",
-    "deploy:staging": "gcloud run deploy tbe-api-staging --source . --region asia-south1",
-    "deploy:production": "gcloud run deploy tbe-api --source . --region asia-south1"
+    "deploy": "./deploy.sh"
   },
   "dependencies": {
     "@sentry/nextjs": "^9.38.0",

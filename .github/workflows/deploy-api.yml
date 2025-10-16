@@ -69,7 +69,6 @@ jobs:
                   pnpm run build --filter=@tbe/constants
                   pnpm run build --filter=@tbe/types
                   pnpm run build --filter=@tbe/utils
-                  pnpm run build --filter=@tbe/database
                   pnpm run build --filter=@tbe/interface
                   pnpm run build --filter=@tbe/services
 
