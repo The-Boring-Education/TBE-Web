@@ -1,4 +1,5 @@
 {
   "buildCommand": "cd ../.. && pnpm run build:dsayatra",
-  "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile"
+  "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
+  "packageManager": "pnpm@9.15.9"
 }

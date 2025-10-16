@@ -3,6 +3,7 @@
     "outputDirectory": ".next",
     "framework": "nextjs",
     "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
+    "packageManager": "pnpm@9.15.9",
     "devCommand": "cd ../.. && pnpm run dev:api",
     "regions": [
         "iad1"
