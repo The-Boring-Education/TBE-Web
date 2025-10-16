@@ -1,5 +1,3 @@
-import GoogleProvider from "next-auth/providers/google"
-
 /**
  * Google OAuth provider configuration
  * Requires GOOGLE_AUTH_CLIENT_ID and GOOGLE_AUTH_CLIENT_SECRET environment variables
@@ -13,6 +11,9 @@ export const createGoogleProvider = () => {
             "GOOGLE_AUTH_CLIENT_ID and GOOGLE_AUTH_CLIENT_SECRET environment variables are required"
         )
     }
+
+    // Dynamic import for NextAuth providers
+    const GoogleProvider = require("next-auth/providers/google").default
 
     return GoogleProvider({
         clientId,

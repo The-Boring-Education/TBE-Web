@@ -46,22 +46,26 @@ const authOptions = createAuthOptions({
         }
     },
     onSession: async (session, token) => {
-        // Attach the MongoDB user ID to the session object
-        session.user.id = token.sub
-
         try {
-            // Fetch user data to check onboarding status
+            // Fetch user data to get MongoDB user ID and onboarding status
             const response = await fetch(
                 `${API_URL}/user?email=${session.user.email}`
             )
             const result = await response.json()
 
             if (result.status && result.data) {
+                // Set the MongoDB user ID from the API response
+                session.user.id = result.data._id
                 session.user.isOnboarded =
                     result.data.prepYatra?.pyOnboarded || false
+            } else {
+                // Fallback to token.sub if user not found in API
+                session.user.id = token.sub
             }
         } catch (error) {
             console.error("Error fetching user in session:", error)
+            // Fallback to token.sub on error
+            session.user.id = token.sub
         }
 
         return session

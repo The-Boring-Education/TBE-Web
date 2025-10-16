@@ -50,7 +50,7 @@ const Login = () => {
               transition={{ delay: 0.5 }}
             >
               <Text level='p' className='paragraph text-gray-600 mt-2'>
-                Continue with GitHub to access your account
+                Continue with Google to access your account
               </Text>
             </motion.div>
             <motion.div
@@ -61,7 +61,7 @@ const Login = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <LoginWithGoogleButton text='Continue with GitHub' />
+              <LoginWithGoogleButton text='Continue with Google' />
             </motion.div>
           </div>
 
