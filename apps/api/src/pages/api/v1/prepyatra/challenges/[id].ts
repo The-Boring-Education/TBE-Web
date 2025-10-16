@@ -1,9 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middleware';
-import { cors } from '@/lib/utils';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { apiStatusCodes } from '@/lib/constants';
+import {Challenge} from '@/lib/database';
+import { cors } from '@/lib/utils';
 import { sendAPIResponse } from '@/lib/utils';
-import {Challenge, ChallengeLog} from '@/lib/database';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

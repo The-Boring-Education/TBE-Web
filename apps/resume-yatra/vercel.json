@@ -1,0 +1,7 @@
+{
+    "buildCommand": "cd ../.. && pnpm run build:prep-yatra",
+    "outputDirectory": ".next",
+    "framework": "nextjs",
+    "installCommand": "pnpm install --no-frozen-lockfile",
+    "devCommand": "pnpm dev"
+}

@@ -3,8 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { apiStatusCodes } from '@/lib/constants';
 import {InterviewSheet} from '@/lib/database';
 import type { UpdateCompanyTypePayload } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
 import { sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 /**
  * API Handler to update company types for multiple interview questions

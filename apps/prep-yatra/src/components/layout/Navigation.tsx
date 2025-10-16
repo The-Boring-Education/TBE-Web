@@ -1,8 +1,7 @@
-import {useState} from "react";
-import {useRouter} from "next/router";
-import {motion} from "framer-motion";
-
 import {Button, FlexContainer, Text} from "@tbe/components";
+import {motion} from "framer-motion";
+import {useRouter} from "next/router";
+import {useState} from "react";
 
 const Navigation = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -1,5 +1,6 @@
+import { useCallback,useEffect, useState } from "react"
+
 import { gamificationApi } from "@/services/api"
-import { useState, useEffect, useCallback } from "react"
 
 // User levels configuration
 const USER_LEVELS = [

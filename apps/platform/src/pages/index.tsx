@@ -1,6 +1,3 @@
-import { useRouter } from 'next/router';
-import { Fragment } from 'react';
-
 import {
   Banner,
   CardContainerA,
@@ -26,6 +23,8 @@ import {
 } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
+import { useRouter } from 'next/router';
+import { Fragment } from 'react';
 
 const Home = ({ seoMeta }: PageProps) => {
   const router = useRouter();

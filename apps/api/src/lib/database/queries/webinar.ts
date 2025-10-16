@@ -1,9 +1,10 @@
-import { Webinar } from "../models"
 import type {
     AddWebinarRequestPayloadProps,
     UpdateEnrolledUsersRequestPayloadProps
 } from "@/lib/interfaces"
 import { isProgramActive } from "@/lib/utils"
+
+import { Webinar } from "../models"
 
 // Add A Webinar
 const addAWebinarToDB = async (

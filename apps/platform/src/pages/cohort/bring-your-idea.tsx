@@ -6,9 +6,6 @@ import {
   SparklesIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
-import { Fragment, useState } from 'react';
-
 import {
   Banner,
   Button,
@@ -42,6 +39,8 @@ import type {
   TestimonialCardProps,
 } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
+import { motion } from 'framer-motion';
+import { Fragment, useState } from 'react';
 
 const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   const whyUs = [

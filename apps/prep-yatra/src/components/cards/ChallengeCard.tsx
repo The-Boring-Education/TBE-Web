@@ -1,12 +1,12 @@
 import {
     Calendar,
-    Play,
-    Pause,
-    Trash2,
-    Clock,
-    TrendingUp,
     CheckCircle2,
+    Clock,
     History,
+    Pause,
+    Play,
+    Trash2,
+    TrendingUp,
     Trophy
 } from "lucide-react"
 import { useState } from "react"
@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { challengesService } from "@/services/challenges"
-import { Challenge } from "@/types/challenges"
+import type { Challenge } from "@/types/challenges"
 
 interface ChallengeCardProps {
     challenge: Challenge

@@ -1,30 +1,29 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '@tbe/components/quizes'
-import { analyticsApi, quizApi, APIError } from '@/services/api'
-import { PerformanceHistory, QuizAttempt } from '@/types/api'
-import { 
-    History, 
-    Filter, 
-    Search, 
-    Calendar, 
-    Clock, 
-    Target, 
-    TrendingUp,
-    TrendingDown,
-    Minus,
-    Eye,
-    RefreshCw,
-    Award
-} from 'lucide-react'
-import { ProtectedRoute,DashboardNav } from '@tbe/components/quizes'
-import {  Card, CardContent, CardDescription, CardHeader, CardTitle, Badge } from '@tbe/components/quizes'
+import { useAuth } from '@tbe/auth'
+import { DashboardNav,ProtectedRoute } from '@tbe/components/quizes'
+import {  Badge,Card, CardContent, CardDescription, CardHeader, CardTitle } from '@tbe/components/quizes'
 import {  Button } from '@tbe/components/quizes'
 import {  Input } from '@tbe/components/quizes'
 import { useToast } from '@tbe/components/quizes'
-import { formatTimeAgo, formatDuration } from '@/lib/utils'
+import { 
+    Award,
+    Calendar, 
+    Clock, 
+    Eye, 
+    History, 
+    Minus,
+    RefreshCw,
+    Search, 
+    Target, 
+    TrendingDown,
+    TrendingUp} from 'lucide-react'
+import { useCallback,useEffect, useState } from 'react'
+
+import { formatDuration,formatTimeAgo } from '@/lib/utils'
+import { analyticsApi, APIError,quizApi } from '@/services/api'
+import type { PerformanceHistory, QuizAttempt } from '@/types/api'
 
 // Filter component
 interface FilterBarProps {
@@ -468,7 +467,7 @@ function HistoryContent() {
                         <div className="space-y-4">
                             {[1, 2, 3].map((i) => (
                                 <div key={i} className="animate-pulse">
-                                    <div className="h-32 bg-muted rounded-lg"></div>
+                                    <div className="h-32 bg-muted rounded-lg" />
                                 </div>
                             ))}
                         </div>

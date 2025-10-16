@@ -1,7 +1,7 @@
-import {
+import type {
+    CompanyType,
     ExperienceLevel,
     GoalType,
-    CompanyType,
     InterviewCategory
 } from "../types/onboarding";
 

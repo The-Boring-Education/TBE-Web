@@ -1,0 +1,13 @@
+import { createAuthOptions } from "@tbe/auth"
+import NextAuth from "next-auth"
+
+const authOptions = createAuthOptions({
+    pages: {
+        signIn: "/login",
+        error: "/login"
+    }
+})
+
+const handler = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }

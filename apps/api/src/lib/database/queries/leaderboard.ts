@@ -1,12 +1,13 @@
 import fs from "fs"
 import path from "path"
 
-import { Gamification, Leaderboard } from "../models"
 import type {
     DatabaseQueryResponseType,
     LeaderboardModel,
     LeaderboardType
 } from "@/lib/interfaces"
+
+import { Gamification, Leaderboard } from "../models"
 
 const addLeaderboardTopperToDB = async (
     payload: Omit<LeaderboardModel, "createdAt" | "updatedAt">

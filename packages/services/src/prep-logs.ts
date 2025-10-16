@@ -1,4 +1,4 @@
-import { PrepLog, PrepLogsResponse } from "@tbe/types"
+import type { PrepLog, PrepLogsResponse } from "@tbe/types"
 import { trackEvent } from "@tbe/utils"
 
 export const prepLogsService = {

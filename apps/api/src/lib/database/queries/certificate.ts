@@ -1,8 +1,9 @@
-import Certificate from '../models/Certificate';
 import type {
   AddCertificateRequestPayloadProps,
   DatabaseQueryResponseType,
 } from '@/lib/interfaces';
+
+import Certificate from '../models/Certificate';
 
 const addACertificateToDB = async (
   certificatePayload: AddCertificateRequestPayloadProps

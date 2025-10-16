@@ -11,7 +11,7 @@ tbe-platform/
 │   ├── prep-yatra/             # 🧭 Career navigation tool (Port: 3001)
 │   ├── quizes/                 # 🧠 The Boring Quizzes app (Port: 3002)
 │   ├── onboarding/             # 🎯 The Boring Onboarding app (Port: 3003)
-│   └── tbe-api/                # 🌐 Central API service (Coming Soon)
+│   └── api/                    # 🌐 Central API service (Cloud Run)
 ├── packages/                    # 📦 Shared Packages
 │   ├── ui/                     # 💅 Shared UI components (Button, Modal, etc.)
 │   ├── utils/                  # ⚙️ Shared logic - auth, MongoDB, fetchers
@@ -89,7 +89,7 @@ cp .env.example .env.local
 | ------------------ | ------------------------------- | --------------------------- | ------ | ------------ |
 | **Database**       | `MONGODB_URI`                   | MongoDB connection string   | ✅     |              |
 | **Authentication** | `NEXTAUTH_SECRET`               | NextAuth JWT secret         | ✅     |              |
-|                    | `NEXT_PUBLIC_GOOGLE_CLIENT_ID`  | Google OAuth client ID      | ✅     |              |
+|                    | `GOOGLE_AUTH_CLIENT_ID`         | Google OAuth client ID      | ✅     |              |
 |                    | `GOOGLE_AUTH_CLIENT_SECRET`     | Google OAuth secret         | ✅     |              |
 | **External APIs**  | `OPENAI_API_KEY`                | OpenAI API key              | ✅     |              |
 |                    | `YOUTUBE_API_KEY`               | YouTube API key             | ✅     |              |
@@ -163,7 +163,6 @@ import { trackEvent, sendRequest, connectToDatabase } from "@tbe/utils"
 
 // Import types & database
 import { APIResponseType, BaseUser, Challenge } from "@tbe/types"
-import { User, Quiz, PrepLog } from "@tbe/database"
 ```
 
 ## 🏗️ Building for Production
@@ -179,6 +178,30 @@ pnpm build:quizes       # Quiz platform
 pnpm build:onboarding   # User onboarding
 pnpm build:api          # Centralized API for Cloud Run
 ```
+
+## 🚀 API Deployment
+
+Deploy the API to Google Cloud Run with one command:
+
+```bash
+cd apps/api
+./deploy.sh
+```
+
+This automatically:
+
+- Sets up GCP resources (APIs, Artifact Registry)
+- Builds monorepo packages and API
+- Creates Docker image
+- Deploys to Cloud Run
+- Tests health endpoint
+- Opens deployed API in browser
+
+**Prerequisites:**
+
+- Google Cloud account with billing enabled
+- `gcloud` CLI installed and authenticated
+- Docker installed
 
 ## 🎨 **Component Usage Guidelines**
 

@@ -1,8 +1,9 @@
-import { UserInterest } from "../models"
 import type {
     CreateUserInterestRequestProps,
     DatabaseQueryResponseType
 } from "@/lib/interfaces"
+
+import { UserInterest } from "../models"
 
 /**
  * Create a new user interest or update existing one

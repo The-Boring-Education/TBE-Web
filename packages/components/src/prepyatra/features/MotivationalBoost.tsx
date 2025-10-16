@@ -10,7 +10,7 @@ import { toast } from "sonner"
 
 import { Button } from "../ui/button"
 import { Card, CardContent } from "../ui/card"
-import { Challenge } from "@tbe/types"
+import type { Challenge } from "@tbe/types"
 
 interface MotivationalBoostProps {
     challenges: Challenge[]

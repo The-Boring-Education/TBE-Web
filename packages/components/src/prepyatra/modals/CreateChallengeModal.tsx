@@ -17,7 +17,8 @@ import {Input} from "../ui/input";
 import {Label} from "../ui/label";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "../ui/tabs";
 import {Textarea} from "../ui/textarea";
-import {PREDEFINED_CHALLENGES, PredefinedChallengeTemplate} from "@tbe/constants";
+import type { PredefinedChallengeTemplate} from "@tbe/constants";
+import {PREDEFINED_CHALLENGES} from "@tbe/constants";
 import {usePrepYatraGamificationContext} from "../contexts/GamificationContext";
 import {challengesService} from "@tbe/services";
 

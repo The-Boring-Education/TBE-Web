@@ -1,4 +1,4 @@
-import {NavbarDropdownLink} from "@/interfaces/components";
+import type {NavbarDropdownLink} from "@/interfaces/components";
 
 const socialLinks = [
     {
@@ -83,4 +83,4 @@ const links: NavbarDropdownLink[] = [
     }
 ];
 
-export {socialLinks, productLinks, CONFETTI_COLORS, links};
+export {CONFETTI_COLORS, links,productLinks, socialLinks};

@@ -1,20 +1,19 @@
 import {
     Calendar,
-    Clock,
-    Share2,
-    Copy,
-    TrendingUp,
-    Target,
     CheckCircle2,
+    Clock,
+    Copy,
     ExternalLink,
+    Share2,
+    Target,
+    TrendingUp,
     Trophy
 } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useEffect,useState } from "react"
 import { toast } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
     Dialog,
@@ -26,7 +25,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { challengesService } from "@/services/challenges"
-import { Challenge, ChallengeLog } from "@/types/challenges"
+import type { Challenge, ChallengeLog } from "@/types/challenges"
 
 interface ChallengeLogsModalProps {
     isOpen: boolean

@@ -1,5 +1,6 @@
 {
   "name": "@tbe/api",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,14 +8,14 @@
     "build": "next build",
     "start": "next start -p 3000",
     "start:cloud-run": "node server.js",
-    "lint": "next lint",
+    "lint": "eslint .",
     "docker:build": "docker build -t tbe-api .",
     "docker:run": "docker run -p 3000:3000 tbe-api",
-    "deploy:staging": "gcloud run deploy tbe-api-staging --source . --region us-central1",
-    "deploy:production": "gcloud run deploy tbe-api --source . --region us-central1"
+    "deploy": "./deploy.sh"
   },
   "dependencies": {
     "@sentry/nextjs": "^9.38.0",
+    "@tbe/auth": "workspace:*",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -37,7 +38,7 @@
     "@types/raw-body": "^2.1.4",
     "@types/react": "^18.3.24",
     "@types/uuid": "^9.0.1",
-    "eslint": "^8.36.0",
+    "eslint": "^9.34.0",
     "eslint-config-next": "^13.2.4",
     "typescript": "5.9.2"
   }

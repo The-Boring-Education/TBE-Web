@@ -1,5 +1,6 @@
 import { useRouter } from "next/router"
-import React, { ReactNode, useEffect } from "react"
+import type { ReactNode} from "react";
+import React, { useEffect } from "react"
 
     import { useAuth } from "../contexts/useAuth"
 

@@ -1,5 +1,5 @@
-import {Plus, Sparkles, Calendar, Target, Star, Clock, Zap} from "lucide-react";
-import {useState, useEffect} from "react";
+import {Calendar, Clock, Plus, Sparkles, Star, Target, Zap} from "lucide-react";
+import {useEffect,useState} from "react";
 import {toast} from "sonner";
 
 import {Badge} from "@/components/ui/badge";
@@ -17,7 +17,8 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Textarea} from "@/components/ui/textarea";
-import {PREDEFINED_CHALLENGES, PredefinedChallengeTemplate} from "@/constants/challenges";
+import type { PredefinedChallengeTemplate} from "@/constants/challenges";
+import {PREDEFINED_CHALLENGES} from "@/constants/challenges";
 import {useGamificationContext} from "@/contexts/GamificationContext";
 import {challengesService} from "@/services/challenges";
 

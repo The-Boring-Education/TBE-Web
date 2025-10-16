@@ -22,7 +22,6 @@
       "@tbe/utils/*": ["../../packages/utils/src/*"],
       "@tbe/interface/*": ["../../packages/interface/src/*"],
       "@tbe/services/*": ["../../packages/services/src/*"],
-      "@tbe/database/*": ["../../packages/database/src/*"],
       "@tbe/types/*": ["../../packages/types/src/*"]
     },
     "noImplicitAny": false,

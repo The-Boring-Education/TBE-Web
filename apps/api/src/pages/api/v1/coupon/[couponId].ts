@@ -2,12 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/lib/constants';
 import {
-  updateCouponFromDB,
   deleteCouponFromDB,
   getCouponByIdFromDB,
+  updateCouponFromDB,
 } from '@/lib/database';
-import { connectDB, adminMiddleware } from '@/middleware';
 import { cors, sendAPIResponse } from '@/lib/utils';
+import { adminMiddleware,connectDB } from '@/middleware';
 
 interface UpdateCouponRequest {
   code?: string;

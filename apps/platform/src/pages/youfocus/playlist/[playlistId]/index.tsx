@@ -1,5 +1,3 @@
-import { Fragment } from 'react';
-
 import {
   PlaylistContainer,
   ScrollToTopBottomButton,
@@ -8,6 +6,7 @@ import {
 } from '@tbe/components';
 import type { PlaylistPageProps } from '@tbe/interface';
 import { getPlaylistPageProps } from '@tbe/utils';
+import { Fragment } from 'react';
 
 const PlaylistPage = ({
   playlist: {

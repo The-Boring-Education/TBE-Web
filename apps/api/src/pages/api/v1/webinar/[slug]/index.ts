@@ -8,8 +8,8 @@ import {
   updateWebinarInDB,
 } from '@/lib/database';
 import type { UpdateEnrolledUsersRequestPayloadProps } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
 import { sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

@@ -1,10 +1,9 @@
-import { Fragment } from 'react';
-import { FaCertificate,FaClock, FaPlay, FaUsers } from 'react-icons/fa';
-
 import {CardContainerA, LinkButton, ModernLandingHero, SEO } from '@tbe/components';
 import {routes, TBSH_FEATURES } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
+import { Fragment } from 'react';
+import { FaCertificate,FaClock, FaPlay, FaUsers } from 'react-icons/fa';
 
 const Home = ({ seoMeta }: PageProps) => {
   const handlePreviewClick = () => {

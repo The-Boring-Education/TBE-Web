@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { OnboardingFieldConfig, User } from '../types/onboarding';
+import React, { useEffect,useState } from 'react';
+
+import type { OnboardingFieldConfig, User } from '../types/onboarding';
 import { checkUsernameAvailable } from '../utils/api';
 
 interface OnboardingFormProps {
@@ -115,7 +116,7 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
             autoComplete='off'
           />
           <div className='absolute inset-y-0 right-0 flex items-center pr-4'>
-            <div className='w-2 h-2 bg-red-500 rounded-full opacity-60'></div>
+            <div className='w-2 h-2 bg-red-500 rounded-full opacity-60' />
           </div>
         </div>
       );

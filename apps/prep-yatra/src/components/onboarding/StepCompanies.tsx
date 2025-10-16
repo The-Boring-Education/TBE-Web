@@ -1,7 +1,7 @@
 import React from "react";
 
 import {COMPANY_TYPES} from "@/constants/onboarding";
-import {OnboardingData, CompanyType} from "@/types/onboarding";
+import type {CompanyType,OnboardingData} from "@/types/onboarding";
 
 type Props = {
     formData: OnboardingData

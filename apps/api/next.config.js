@@ -19,7 +19,6 @@ const nextConfig = {
         "@tbe/constants",
         "@tbe/types",
         "@tbe/utils",
-        "@tbe/database",
         "@tbe/interface",
         "@tbe/services"
     ],
@@ -33,7 +32,11 @@ const nextConfig = {
     // Experimental features for better containerization
     experimental: {
         // Reduce memory usage
-        isrMemoryCacheSize: 0
+        isrMemoryCacheSize: 0,
+        // Disable symlinks for Windows compatibility
+        esmExternals: false,
+        // Disable tracing to avoid symlink issues on Windows
+        outputFileTracing: false
     },
 
     // Redirect all non-API routes to API documentation or health check
@@ -68,4 +71,4 @@ const nextConfig = {
     }
 }
 
-module.exports = nextConfig
+export default nextConfig

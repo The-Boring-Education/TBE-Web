@@ -1,8 +1,8 @@
-import React from "react";
-import {motion} from "framer-motion";
-
 import {FlexContainer, Link, Text} from "@tbe/components";
-import {socialLinks, productLinks} from "@/constants";
+import {motion} from "framer-motion";
+import React from "react";
+
+import {productLinks,socialLinks} from "@/constants";
 
 const Footer = () => {
     return (

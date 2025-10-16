@@ -1,19 +1,17 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
-import { useParams, useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@tbe/components/quizes"
-import { Button } from "@tbe/components/quizes"
+import { useAuth } from "@tbe/auth"
+import { Card, CardContent, CardHeader } from "@tbe/components/quizes"
 import { Progress } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { CodeRenderer } from "@tbe/components/quizes"
-import { useAuth } from "@tbe/components/quizes"
 import { quizApi } from "@tbe/services"
-import { getValidUserId } from "@tbe/utils"
-import { Clock } from "lucide-react"
+import type { QuizQuestion } from "@tbe/types"
+import { useParams, useRouter } from "next/navigation"
+import { useCallback,useEffect, useState } from "react"
+
 import useGamifiedAction from "@/hooks/useGamifiedAction"
-import { QuizQuestion } from "@tbe/types"
 
 interface QuizCategory {
     _id: string
@@ -43,6 +41,40 @@ function QuizContent() {
         "loading" | "playing" | "completed"
     >("loading")
     const [quizStartTime] = useState(Date.now())
+    const [resolvedUserId, setResolvedUserId] = useState<string | null>(null)
+
+    // Helper: Mongo ObjectId check
+    const isMongoObjectId = (val?: string): boolean => {
+        if (!val) return false
+        return /^[a-fA-F0-9]{24}$/.test(val)
+    }
+
+    // Resolve MongoDB userId once
+    useEffect(() => {
+        const resolveUserId = async () => {
+            if (!user?.email && !user?.id) return
+            try {
+                if (isMongoObjectId(user?.id)) {
+                    setResolvedUserId(user!.id)
+                    return
+                }
+                // Fallback: fetch by email to get _id
+                const base = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '')
+                const resp = await fetch(`${base}/user?email=${encodeURIComponent(user!.email!)}`)
+                const json = await resp.json()
+                const dbId = json?.data?._id
+                if (isMongoObjectId(dbId)) {
+                    setResolvedUserId(dbId)
+                }
+            } catch (_e) {
+                // ignore
+            }
+        }
+
+        if (user && !resolvedUserId) {
+            void resolveUserId()
+        }
+    }, [user?.id, user?.email]) // Remove resolvedUserId from dependencies
 
     const loadQuiz = useCallback(async () => {
         try {
@@ -115,9 +147,9 @@ function QuizContent() {
                 }
             })
 
-            // Ensure user has a valid ID before submitting
-            const validUserId = user?._id || user?.id || null
-            if (!validUserId) {
+            // Use resolved Mongo _id if available, else abort
+            const validUserId = resolvedUserId || user?.id
+            if (!validUserId || !isMongoObjectId(validUserId)) {
                 alert("User authentication error. Please try logging in again.")
                 router.push("/login")
                 return
@@ -174,10 +206,10 @@ function QuizContent() {
 
     if (gameState === "loading") {
         return (
-            <Layout showNavbar={true}>
+            <Layout showNavbar>
                 <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto'></div>
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>
                             Loading quiz...
                         </p>

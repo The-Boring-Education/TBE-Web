@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/lib/constants';
 import { addFeedbackToDB, updateFeedbackTextInDB } from '@/lib/database';
-import { connectDB } from '@/middleware';
 import { sendAPIResponse } from '@/lib/utils';
 import { cors } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

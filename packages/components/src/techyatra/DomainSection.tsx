@@ -256,7 +256,7 @@ const DomainSection = () => {
                     <ul className="text-sm text-gray-600 space-y-1">
                       {domain.howToLearn.map((step, index) => (
                         <li key={index} className="flex items-start">
-                          <span className="w-2 h-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+                          <span className="w-2 h-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mr-2 mt-2 flex-shrink-0" />
                           {step}
                         </li>
                       ))}
@@ -282,7 +282,7 @@ const DomainSection = () => {
                       <div className="text-sm text-gray-600 space-y-1">
                         {domain.whereToLearn.slice(domain.courseLinks?.length || 0).map((resource, index) => (
                           <div key={index} className="flex items-start">
-                            <span className="w-2 h-2 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+                            <span className="w-2 h-2 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mr-2 mt-2 flex-shrink-0" />
                             {resource}
                           </div>
                         ))}

@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { connectDB } from '@/middleware';
 import { apiStatusCodes } from '@/lib/constants';
+import {DevRelLead,User} from '@/lib/database';
 import { sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import {User, DevRelLead} from '@/lib/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

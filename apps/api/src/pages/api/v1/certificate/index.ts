@@ -11,8 +11,8 @@ import type {
     AddCertificateRequestPayloadProps,
     CertificateType
 } from "@/lib/interfaces"
+import { cors,sendAPIResponse } from "@/lib/utils"
 import { connectDB } from "@/middleware/api"
-import { sendAPIResponse, cors } from "@/lib/utils"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // Apply CORS headers

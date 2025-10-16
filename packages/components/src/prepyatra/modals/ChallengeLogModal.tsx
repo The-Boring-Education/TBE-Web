@@ -18,7 +18,7 @@ import { Label } from "../ui/label"
     import { Textarea } from "../ui/textarea"
 import { challengesService } from "@tbe/services"
 import { prepLogsService } from "@tbe/services"
-import { Challenge } from "@tbe/types"
+import type { Challenge } from "@tbe/types"
 
 interface ChallengeLogModalProps {
     isOpen: boolean

@@ -2,7 +2,7 @@
     "buildCommand": "cd ../.. && pnpm run build:quizes",
     "outputDirectory": ".next",
     "framework": "nextjs",
-    "installCommand": "cd ../.. && pnpm install",
+    "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
     "devCommand": "cd ../.. && pnpm run dev:quizes",
     "cleanUrls": true,
     "trailingSlash": false,

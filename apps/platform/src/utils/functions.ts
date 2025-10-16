@@ -1,3 +1,4 @@
+import { routes } from '@tbe/constants';
 import crypto from 'crypto';
 
 import {
@@ -11,7 +12,6 @@ import {
   YOUFOCUS_SKILL_PLAYLISTS,
   YOUTUBE_API_PATH,
 } from '@/constant';
-import { routes } from '@tbe/constants';
 import type {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
@@ -720,7 +720,6 @@ const getPYSubscriptionFeaturesByType = (
 };
 
 export {
-  type WebhookEvent,
   buildOrderPayload,
   calculateProgressPercentage,
   calculateUserPointsForAction,
@@ -761,4 +760,5 @@ export {
   setLocalStorageItem,
   validateWebhookEvent,
   verifyWebhookSignature,
+  type WebhookEvent,
 };

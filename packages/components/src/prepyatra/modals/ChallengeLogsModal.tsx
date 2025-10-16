@@ -26,7 +26,7 @@ import {
 } from "../ui/dialog"
 import { Label } from "../ui/label"
 import { challengesService } from "@tbe/services"
-import { Challenge, ChallengeLog } from "@tbe/types"
+import type { Challenge, ChallengeLog } from "@tbe/types"
 
 interface ChallengeLogsModalProps {
     isOpen: boolean

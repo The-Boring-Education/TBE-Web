@@ -1,6 +1,7 @@
 import React from 'react';
-import { OnboardingProductConfig } from '../types/onboarding';
+
 import logo from '../assets/logo.svg';
+import type { OnboardingProductConfig } from '../types/onboarding';
 
 interface OnboardingLayoutProps {
   children: React.ReactNode;
@@ -59,7 +60,7 @@ const BrandingHeader = ({
       <p className="text-gray-500 text-center max-w-md text-base leading-relaxed">
         {subtitle}
       </p>
-      <div className="mt-4 w-16 h-1 bg-gray-200 rounded-full"></div>
+      <div className="mt-4 w-16 h-1 bg-gray-200 rounded-full" />
     </div>
   );
 };
@@ -80,9 +81,9 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gray-100 rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-100 rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gray-100 rounded-full opacity-10 blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gray-100 rounded-full opacity-20 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-100 rounded-full opacity-20 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gray-100 rounded-full opacity-10 blur-3xl" />
       </div>
 
       {/* Centered onboarding card */}
@@ -194,12 +195,12 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
                             r="10"
                             stroke="currentColor"
                             strokeWidth="4"
-                          ></circle>
+                           />
                           <path
                             className="opacity-75"
                             fill="currentColor"
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
+                           />
                         </svg>
                         <span>Submitting...</span>
                       </>

@@ -67,7 +67,7 @@ const PrepLogsShowcase = () => {
                         {prepLogs.map((log, index) => (
                             <Card
                                 key={log.id}
-                                className={"glass-dark border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 animate-slide-in-right"}
+                                className="glass-dark border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 animate-slide-in-right"
                                 style={{animationDelay: `${index * 0.1}s`}}>
                                 <CardHeader className='pb-3'>
                                     <div className='flex justify-between items-start'>

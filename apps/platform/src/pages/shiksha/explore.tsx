@@ -1,5 +1,3 @@
-import { Fragment } from 'react';
-
 import {
   CardContainerB,
   FlexContainer,
@@ -12,6 +10,7 @@ import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
 import { useApi, useAPIResponseMapper } from '@tbe/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
 import { getPreFetchProps, mapCourseResponseToCard } from '@tbe/utils';
+import { Fragment } from 'react';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('shiksha', {

@@ -1,13 +1,12 @@
 import { trackEvent } from "@/lib/analytics"
-import {
+import type {
     Challenge,
     ChallengeLog,
     ChallengeProgress,
-    CreateChallengeRequest,
-    UpdateChallengeRequest,
     CreateChallengeLogRequest,
-    SocialMediaTemplate
-} from "@/types/challenges"
+    CreateChallengeRequest,
+    SocialMediaTemplate,
+    UpdateChallengeRequest} from "@/types/challenges"
 
 export const challengesService = {
     // Get all challenges for a user

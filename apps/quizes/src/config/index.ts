@@ -1,6 +1,5 @@
 export const config = {
     API_BASE_URL: process.env.NEXT_PUBLIC_API_URL as string,
-    GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
     ONBOARDING_APP_URL: process.env.NEXT_PUBLIC_ONBOARDING_URL as string
 }
 

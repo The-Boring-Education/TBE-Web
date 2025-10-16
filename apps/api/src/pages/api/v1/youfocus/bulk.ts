@@ -8,8 +8,8 @@ import {
   updateReferredByInPlaylist,
   updateTagsInPlaylist,
 } from '@/lib/database';
-import { connectDB } from '@/middleware';
 import { extractPlaylistId, fetchPlaylistData, sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

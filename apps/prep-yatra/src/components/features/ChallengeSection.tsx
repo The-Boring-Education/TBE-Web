@@ -1,13 +1,12 @@
 import { 
+  Calendar,
+  Flame,
   Plus, 
+  Share2,
+  Star,
   Target, 
   TrendingUp, 
-  Trophy,
-  Flame,
-  Star,
-  Calendar,
-  Share2
-} from "lucide-react";
+  Trophy} from "lucide-react";
 import {useState} from "react";
 
 import ChallengeCard from "@/components/cards/ChallengeCard";
@@ -18,7 +17,7 @@ import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Skeleton} from "@/components/ui/skeleton";
 import {useChallenges} from "@/hooks/use-challenges";
-import {Challenge} from "@/types/challenges";
+import type {Challenge} from "@/types/challenges";
 
 interface ChallengeSectionProps {
   userId: string;

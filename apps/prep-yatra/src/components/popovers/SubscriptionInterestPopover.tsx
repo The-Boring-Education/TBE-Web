@@ -1,15 +1,15 @@
+import { useUser } from "@tbe/components"
 import {
-    X,
+    ArrowRight,
+    CheckCircle,
+    Gift,
     Sparkles,
     Star,
-    Zap,
-    Users,
     Target,
-    Gift,
-    CheckCircle,
-    ArrowRight
-} from "lucide-react"
-import { useState, useEffect } from "react"
+    Users,
+    X,
+    Zap} from "lucide-react"
+import { useEffect,useState } from "react"
 import { toast } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
@@ -19,7 +19,6 @@ import {
     PopoverContent,
     PopoverTrigger
 } from "@/components/ui/popover"
-import { useUser } from "@tbe/components"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 

@@ -1,4 +1,4 @@
-import { ProjectDocumentModel } from "./database"
+import type { ProjectDocumentModel } from "./database"
 
 export interface APIResponse<T = any> {
     success: boolean

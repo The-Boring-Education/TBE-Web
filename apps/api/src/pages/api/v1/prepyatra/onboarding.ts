@@ -3,8 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { apiStatusCodes } from '@/lib/constants';
 import { getPYUserByIdFromDB, updatePYUserByIdInDB } from '@/lib/database';
 import type { PrepYatraOnboardingPayload } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
 import { cors, sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

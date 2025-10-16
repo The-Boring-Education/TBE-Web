@@ -1,7 +1,6 @@
-import {Users, BookOpen, Share2, Target} from "lucide-react";
+import {FlexContainer, GridContainer, IconCard, SectionHeaderContainer} from "@tbe/components";
 import {motion} from "framer-motion";
-
-import {IconCard, Text, GridContainer, FlexContainer, SectionHeaderContainer} from "@tbe/components";
+import {BookOpen, Share2, Target,Users} from "lucide-react";
 
 const features = [
     {

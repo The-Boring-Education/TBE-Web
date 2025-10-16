@@ -1,9 +1,10 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import OnboardingLayout from '../components/OnboardingLayout';
+
 import OnboardingForm from '../components/OnboardingForm';
-import { useOnboarding } from '../hooks/useOnboarding';
+import OnboardingLayout from '../components/OnboardingLayout';
 import { isValidProduct } from '../config/products';
+import { useOnboarding } from '../hooks/useOnboarding';
 
 const Onboarding: React.FC = () => {
   const [searchParams] = useSearchParams();

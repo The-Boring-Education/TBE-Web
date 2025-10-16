@@ -1,5 +1,5 @@
 import { trackEvent } from "@tbe/utils"
-import {
+import type {
     Challenge,
     ChallengeLog,
     ChallengeProgress,

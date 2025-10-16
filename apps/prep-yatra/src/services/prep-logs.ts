@@ -1,4 +1,4 @@
-import { PrepLog, PrepLogsResponse } from "@/hooks/use-prep-logs"
+import type { PrepLog, PrepLogsResponse } from "@/hooks/use-prep-logs"
 import { trackEvent } from "@/lib/analytics"
 
 export const prepLogsService = {

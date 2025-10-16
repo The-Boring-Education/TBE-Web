@@ -1,7 +1,7 @@
+import { routes } from '@tbe/constants';
 import axios, { type AxiosRequestConfig } from 'axios';
 
 import type { APIMakeRquestProps, APIResponseType } from '@/interfaces';
-import { routes } from '@tbe/constants';
 
 const apiInstance = axios.create();
 

@@ -23,10 +23,11 @@ const PrepYatraNavbarDropdownLinks: React.FC = () => {
   return (
     <div className="relative" ref={ref}>
       <Button
-        variant="NEUTRAL"
+        variant="PRIMARY"
         text="Links"
         onClick={() => setOpen((v) => !v)}
         icon={<ChevronDown className="w-4 h-4" />}
+        className="text-sm px-3 py-1.5"
       />
       {open && (
         <div

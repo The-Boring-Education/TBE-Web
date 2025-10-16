@@ -2,7 +2,7 @@ import {Star} from "lucide-react";
 
 import {Badge} from "@/components/ui/badge";
 import {useGamification} from "@/hooks/usePyGamification";
-import {GamificationBadgeProps} from "@/interfaces/components";
+import type {GamificationBadgeProps} from "@/interfaces/components";
 
 export function GamificationBadge({userId, className = ""}: GamificationBadgeProps) {
     const {points, currentLevel, loading} = useGamification(userId);

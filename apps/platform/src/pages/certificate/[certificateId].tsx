@@ -1,5 +1,3 @@
-import { Fragment, useState } from 'react';
-
 import {
   Banner,
   Button,
@@ -18,6 +16,7 @@ import {
   generateShareTemplate,
   getCertificatePageProps,
 } from '@tbe/utils';
+import { Fragment, useState } from 'react';
 
 const Home = ({
   seoMeta,

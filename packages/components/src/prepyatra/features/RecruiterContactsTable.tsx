@@ -25,7 +25,7 @@ import {
     TableRow
 } from "../ui/table"
 import { useToast } from "@tbe/hooks"
-import { RecruiterContact } from "@tbe/types"
+import type { RecruiterContact } from "@tbe/types"
 
 import "react-datepicker/dist/react-datepicker.css"
 

@@ -1,10 +1,10 @@
 import { useRouter } from "next/router"
-import { useState, useEffect } from "react"
+import { useEffect,useState } from "react"
 
 import { useAuth } from "@/contexts/useAuth"
 import { useToast } from "@/hooks/use-toast"
 import { trackEvent } from "@/lib/analytics"
-import { OnboardingData } from "@/types/onboarding"
+import type { OnboardingData } from "@/types/onboarding"
 
 // Debug function to help identify issues
 const debugOnboardingConfig = () => {
