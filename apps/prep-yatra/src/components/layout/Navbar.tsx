@@ -12,14 +12,12 @@ const capitalize = (str: string) => {
 
 const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
     return (
-        <nav className='w-full bg-white border-b border-greyLight shadow-sm px-3 py-2 flex items-center justify-between fixed top-0 left-0 right-0 z-50'>
+        <nav className='w-full bg-black border-b border-greyLight shadow-sm px-3 py-2 flex items-center justify-between fixed top-0 left-0 right-0 z-50'>
             <div className='flex flex-col gap-1'>
-                <span className='text-2xl font-bold text-primary'>
-                    PrepYatra
-                </span>
-                <span className='text-[11px] text-greyDark'>
-                    By The Boring Education
-                </span>
+                
+                <span className='text-2xl font-bold text-primary'>PrepYatra</span>
+                <span className='text-xs text-grey-400 mt-0.5'>By The Boring Education</span>
+
             </div>
             <div className='flex items-center gap-3'>
                 <SubscriptionInterestPopover />
