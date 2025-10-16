@@ -80,9 +80,9 @@ export function Navbar() {
                         </div>
                     </div>
 
-                    {/* Navigation Links */}
+                    {/* Navigation Links - Always visible for authenticated users */}
                     {user && (
-                        <nav className="hidden md:flex items-center space-x-1">
+                        <nav className="flex items-center space-x-1">
                             {navItems.map((item) => (
                                 <Button
                                     key={item.name}
@@ -95,7 +95,7 @@ export function Navbar() {
                                     }`}
                                 >
                                     <item.icon className="h-4 w-4" />
-                                    <span>{item.name}</span>
+                                    <span className="hidden sm:inline">{item.name}</span>
                                 </Button>
                             ))}
                         </nav>

@@ -3,7 +3,7 @@ import {
     signIn as nextAuthSignIn,
     signOut as nextAuthSignOut
 } from "next-auth/react"
-import type { ExtendedUser } from "../types"
+import type { ExtendedUser } from "../types/index.ts"
 
 /**
  * Unified authentication hook

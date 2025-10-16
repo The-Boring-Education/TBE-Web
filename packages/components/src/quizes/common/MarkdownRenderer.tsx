@@ -1,6 +1,4 @@
 import ReactMarkdown from "react-markdown"
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 import remarkGfm from "remark-gfm"
 import type { ReactNode } from "react"
 
@@ -18,6 +16,7 @@ export function MarkdownRenderer({
     content,
     className = ""
 }: MarkdownRendererProps) {
+
     return (
         <div className={`prose prose-sm max-w-none ${className}`}>
             <ReactMarkdown
@@ -29,13 +28,11 @@ export function MarkdownRenderer({
                         const isInline = !className
 
                         return !isInline && language ? (
-                            (SyntaxHighlighter as any)({
-                                style: oneDark,
-                                language: language,
-                                PreTag: 'div',
-                                className: 'rounded-lg text-sm',
-                                children: String(children).replace(/\n$/, "")
-                            })
+                            <pre className='bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto mb-4'>
+                                <code className={`language-${language}`}>
+                                    {String(children).replace(/\n$/, "")}
+                                </code>
+                            </pre>
                         ) : (
                             <code
                                 className='bg-gray-100 px-1 py-0.5 rounded text-sm font-mono text-red-600'
