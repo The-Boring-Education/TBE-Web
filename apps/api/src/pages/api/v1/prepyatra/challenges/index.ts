@@ -38,7 +38,34 @@ const handleGetChallenges = async (req: NextApiRequest, res: NextApiResponse) =>
       );
     }
 
-    const challenges = await Challenge.find({ user: String(queryUserId) }).sort({ createdAt: -1 });
+    // Handle both ObjectId and string user IDs
+    const userId = String(queryUserId);
+    let query: any = {};
+    
+    // Check if userId is a valid MongoDB ObjectId (24 hex characters)
+    if (/^[0-9a-fA-F]{24}$/.test(userId)) {
+      query.user = userId;
+    } else {
+      // For non-ObjectId user IDs (like Google OAuth IDs), we need to handle this differently
+      // First, try to find the user in the User collection to get their MongoDB _id
+      const { User } = require('@/lib/database');
+      const user = await User.findOne({ $or: [{ email: userId }, { providerAccountId: userId }] });
+      
+      if (user) {
+        query.user = user._id;
+      } else {
+        // If user not found, return empty array instead of error
+        return res.status(apiStatusCodes.OKAY).json(
+          sendAPIResponse({
+            status: true,
+            message: 'No challenges found for this user',
+            data: [],
+          })
+        );
+      }
+    }
+
+    const challenges = await Challenge.find(query).sort({ createdAt: -1 });
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
@@ -74,12 +101,33 @@ const handleCreateChallenge = async (req: NextApiRequest, res: NextApiResponse) 
       );
     }
 
+    // Handle user ID conversion for non-ObjectId user IDs
+    let userIdForChallenge = userField;
+    
+    // Check if userId is a valid MongoDB ObjectId
+    if (!/^[0-9a-fA-F]{24}$/.test(userField)) {
+      // For non-ObjectId user IDs, find the user in the User collection
+      const { User } = require('@/lib/database');
+      const userDoc = await User.findOne({ $or: [{ email: userField }, { providerAccountId: userField }] });
+      
+      if (!userDoc) {
+        return res.status(apiStatusCodes.BAD_REQUEST).json(
+          sendAPIResponse({
+            status: false,
+            message: 'User not found',
+          })
+        );
+      }
+      
+      userIdForChallenge = userDoc._id;
+    }
+
     const startDate = new Date();
     const endDate = new Date();
     endDate.setDate(startDate.getDate() + totalDays);
 
     const challenge = new Challenge({
-      user: userField,
+      user: userIdForChallenge,
       name,
       totalDays,
       startDate,
