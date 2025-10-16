@@ -8,7 +8,6 @@
     "start": "next start -p 3004",
     "lint": "eslint ."
   },
-  "packageManager": "pnpm@9.15.9",
   "dependencies": {
     "@tbe/typescript-config": "workspace:*",
     "@tbe/components": "workspace:*",
