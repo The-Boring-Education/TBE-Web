@@ -1,7 +1,6 @@
 {
   "buildCommand": "cd ../.. && pnpm run build:platform",
   "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
-  "packageManager": "pnpm@9.15.9",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "devCommand": "cd ../.. && pnpm run dev:platform",
