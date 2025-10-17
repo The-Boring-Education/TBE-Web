@@ -77,10 +77,7 @@ build_and_test_locally() {
     log "Installing dependencies..."
     pnpm install --frozen-lockfile
     
-    log "Building shared packages..."
-    pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services
-    
-    log "Building API..."
+    log "Building API with dependencies..."
     pnpm run build --filter=@tbe/api
     
     log "Running linter..."

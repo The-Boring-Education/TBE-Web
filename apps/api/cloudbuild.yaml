@@ -1,5 +1,5 @@
 steps:
-    # Install dependencies and build packages
+    # Install dependencies and build using Turbo
     - name: "node:20-alpine"
       entrypoint: "sh"
       args:
@@ -7,10 +7,9 @@ steps:
           - |
               npm install -g pnpm@9.15.9
               pnpm install --frozen-lockfile
-              pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services
               pnpm run build --filter=@tbe/api
 
-    # Build Docker image with explicit build context
+    # Build Docker image with optimized Dockerfile
     - name: "gcr.io/cloud-builders/docker"
       args:
           - "build"
