@@ -121,6 +121,7 @@ export default function Landing() {
                     </div>
                 </div>
             )}
+        
             
             {/* Show main content only when not loading or redirecting */}
             {!loading && !isRedirecting && (
@@ -186,208 +187,197 @@ export default function Landing() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Features Section */}
-                    <div className='bg-gray-50 py-20'>
-                        <div className='container mx-auto px-4'>
-                            <div className='max-w-6xl mx-auto'>
-                                <div className='text-center mb-16'>
-                                    <h3 className='text-3xl md:text-4xl font-bold mb-4'>
-                                        Everything You Need to Succeed
-                                    </h3>
-                                    <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
-                                        Our comprehensive quiz platform is designed to
-                                        help you prepare for technical interviews
-                                        effectively.
-                                    </p>
-                                </div>
-
-                                <div className='grid md:grid-cols-3 gap-8'>
-                                    <div className='text-center'>
-                                        <div className='w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6'>
-                                            <Target className='w-8 h-8 text-white' />
-                                        </div>
-                                        <h4 className='text-xl font-bold mb-4'>
-                                            Curated Questions
-                                        </h4>
-                                        <p className='text-gray-600 leading-relaxed'>
-                                            Hand-picked questions covering the most
-                                            important topics for technical interviews.
-                                        </p>
-                                    </div>
-
-                                    <div className='text-center'>
-                                        <div className='w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6'>
-                                            <Clock className='w-8 h-8 text-white' />
-                                        </div>
-                                        <h4 className='text-xl font-bold mb-4'>
-                                            Timed Practice
-                                        </h4>
-                                        <p className='text-gray-600 leading-relaxed'>
-                                            Practice under time pressure to simulate
-                                            real interview conditions.
-                                        </p>
-                                    </div>
-
-                                    <div className='text-center'>
-                                        <div className='w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6'>
-                                            <Brain className='w-8 h-8 text-white' />
-                                        </div>
-                                        <h4 className='text-xl font-bold mb-4'>
-                                            Detailed Explanations
-                                        </h4>
-                                        <p className='text-gray-600 leading-relaxed'>
-                                            Understand the &apos;why&apos; behind every answer
-                                            with comprehensive explanations.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Stats Section */}
-                    <div className='py-20'>
-                        <div className='container mx-auto px-4'>
-                            <div className='max-w-4xl mx-auto'>
-                                <div className='text-center mb-16'>
-                                    <h3 className='text-3xl md:text-4xl font-bold mb-4'>
-                                        Proven Results
-                                    </h3>
-                                    <p className='text-lg text-gray-600'>
-                                        Join thousands of developers who have improved
-                                        their interview skills.
-                                    </p>
-                                </div>
-
-                                <div className='grid md:grid-cols-3 gap-8 text-center'>
-                                    <div className='border-2 border-black rounded-lg p-8'>
-                                        <div className='flex items-center justify-center mb-4'>
-                                            <Code className='w-8 h-8 text-black' />
-                                        </div>
-                                        <div className='text-3xl font-bold mb-2'>
-                                            50+
-                                        </div>
-                                        <div className='text-gray-600'>
-                                            Practice Questions
-                                        </div>
-                                    </div>
-
-                                    <div className='border-2 border-black rounded-lg p-8'>
-                                        <div className='flex items-center justify-center mb-4'>
-                                            <Users className='w-8 h-8 text-black' />
-                                        </div>
-                                        <div className='text-3xl font-bold mb-2'>
-                                            1000+
-                                        </div>
-                                        <div className='text-gray-600'>
-                                            Active Learners
-                                        </div>
-                                    </div>
-
-                                    <div className='border-2 border-black rounded-lg p-8'>
-                                        <div className='flex items-center justify-center mb-4'>
-                                            <Trophy className='w-8 h-8 text-black' />
-                                        </div>
-                                        <div className='text-3xl font-bold mb-2'>
-                                            85%
-                                        </div>
-                                        <div className='text-gray-600'>
-                                            Success Rate
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Categories Preview */}
-                    <div className='bg-gray-50 py-20'>
-                        <div className='container mx-auto px-4'>
-                            <div className='max-w-6xl mx-auto'>
-                                <div className='text-center mb-16'>
-                                    <h3 className='text-3xl md:text-4xl font-bold mb-4'>
-                                        Choose Your Focus Area
-                                    </h3>
-                                    <p className='text-lg text-gray-600'>
-                                        Practice questions tailored to specific
-                                        technologies and concepts.
-                                    </p>
-                                </div>
-
-                                <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-6'>
-                                    {[
-                                        {
-                                            name: "JavaScript",
-                                            questions: "15 questions",
-                                            icon: Code
-                                        },
-                                        {
-                                            name: "React",
-                                            questions: "12 questions",
-                                            icon: Target
-                                        },
-                                        {
-                                            name: "Algorithms",
-                                            questions: "10 questions",
-                                            icon: Brain
-                                        },
-                                        {
-                                            name: "Web Dev",
-                                            questions: "8 questions",
-                                            icon: Clock
-                                        }
-                                    ].map((category, index) => (
-                                        <div
-                                            key={index}
-                                            className='bg-white border-2 border-black rounded-lg p-6 text-center hover:bg-gray-50 transition-colors duration-200'>
-                                            <category.icon className='w-8 h-8 mx-auto mb-4 text-black' />
-                                            <h4 className='font-bold text-lg mb-2'>
-                                                {category.name}
-                                            </h4>
-                                            <p className='text-gray-600 text-sm'>
-                                                {category.questions}
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* CTA Section */}
-                    <div className='py-20'>
-                        <div className='container mx-auto px-4'>
-                            <div className='max-w-4xl mx-auto text-center'>
-                                <h3 className='text-3xl md:text-4xl font-bold mb-6'>
-                                    Ready to Ace Your Next Interview?
-                                </h3>
-                                <p className='text-lg text-gray-600 mb-8 max-w-2xl mx-auto'>
-                                    Start practicing today and build the confidence you
-                                    need to succeed in technical interviews.
-                                </p>
-                                <button
-                                    onClick={handleGetStarted}
-                                    className='inline-flex items-center px-8 py-4 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors duration-200 text-lg'>
-                                    <Play className='mr-2 w-5 h-5' />
-                                    Start Your First Quiz
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </>
+                    </>
             )}
 
-            {/* Footer */}
-            <footer className='border-t-2 border-black py-8'>
-                <div className='container mx-auto px-4'>
-                    <div className='text-center'>
-                        <p className='text-gray-600'>
-                            Built with ❤️ By The Boring Education Team
-                        </p>
+        
+
+            {/* Features Section */}
+                       <div className='bg-white py-20'>
+                        <div className='container mx-auto px-4'>
+                            <div className='max-w-6xl mx-auto'>
+                            <div className='text-center mb-16'>
+                                <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black'>
+                                Everything You Need to Succeed
+                                </h3>
+                                <p className='text-lg text-[#EF4F48] max-w-2xl mx-auto'>
+                                Our comprehensive quiz platform is designed to help you prepare for technical interviews effectively.
+                                </p>
+                            </div>
+
+                            <div className='grid md:grid-cols-3 gap-8'>
+                                <div className='text-center'>
+                                <div className='w-16 h-16 border-2 border-[#F6CCCC] bg-white rounded-full flex items-center justify-center mx-auto mb-6'>
+                                    <Target className='w-8 h-8 text-[#EF4F48]' />
+                                </div>
+                                <h4 className='text-xl font-bold mb-4 text-[#EF4F48]'>
+                                    Curated Questions
+                                </h4>
+                                <p className='text-black-600 leading-relaxed'>
+                                    Hand-picked questions covering the most important topics for technical interviews.
+                                </p>
+                                </div>
+                                <div className='text-center'>
+                                <div className='w-16 h-16 border-2 border-[#F6CCCC] bg-white rounded-full flex items-center justify-center mx-auto mb-6'>
+                                    <Clock className='w-8 h-8 text-[#EF4F48]' />
+                                </div>
+                                <h4 className='text-xl font-bold mb-4 text-[#EF4F48]'>
+                                    Timed Practice
+                                </h4>
+                                <p className='text-black-600 leading-relaxed'>
+                                    Practice under time pressure to simulate real interview conditions.
+                                </p>
+                                </div>
+                                <div className='text-center'>
+                                <div className='w-16 h-16 border-2 border-[#F6CCCC] bg-white rounded-full flex items-center justify-center mx-auto mb-6'>
+                                    <Brain className='w-8 h-8 text-[#EF4F48]' />
+                                </div>
+                                <h4 className='text-xl font-bold mb-4 text-[#EF4F48]'>
+                                    Detailed Explanations
+                                </h4>
+                                <p className='text-black-600 leading-relaxed'>
+                                    Understand the &apos;why&apos; behind every answer with comprehensive explanations.
+                                </p>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        {/* Stats Section */}
+                        <div className='bg-white py-20'>
+                        <div className='container mx-auto px-4'>
+                            <div className='max-w-4xl mx-auto'>
+                            <div className='text-center mb-16'>
+                                <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black'>
+                                Proven Results
+                                </h3>
+                                <p className='text-lg text-[#EF4F48]'>
+                                Join thousands of developers who have improved their interview skills.
+                                </p>
+                            </div>
+
+                            <div className='grid md:grid-cols-3 gap-8 text-center'>
+                                <div className='border-2 border-black rounded-lg p-8 bg-white shadow'>
+                                <div className='flex items-center justify-center mb-4'>
+                                    <Code className='w-8 h-8 text-[#EF4F48]' />
+                                </div>
+                                <div className='text-3xl font-bold mb-2 text-[#EF4F48]'>
+                                    50+
+                                </div>
+                                <div className='text-black'>
+                                    Practice Questions
+                                </div>
+                                </div>
+                                <div className='border-2 border-black rounded-lg p-8 bg-white shadow'>
+                                <div className='flex items-center justify-center mb-4'>
+                                    <Users className='w-8 h-8 text-[#EF4F48]' />
+                                </div>
+                                <div className='text-3xl font-bold mb-2 text-[#EF4F48]'>
+                                    1000+
+                                </div>
+                                <div className='text-black'>
+                                    Active Learners
+                                </div>
+                                </div>
+                                <div className='border-2 border-black rounded-lg p-8 bg-white shadow'>
+                                <div className='flex items-center justify-center mb-4'>
+                                    <Trophy className='w-8 h-8 text-[#EF4F48]' />
+                                </div>
+                                <div className='text-3xl font-bold mb-2 text-[#EF4F48]'>
+                                    85%
+                                </div>
+                                <div className='text-black'>
+                                    Success Rate
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        {/* Categories Preview */}
+                        <div className='bg-white py-20'>
+                        <div className='container mx-auto px-4'>
+                            <div className='max-w-6xl mx-auto'>
+                            <div className='text-center mb-16'>
+                                <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black'>
+                                Choose Your Focus Area
+                                </h3>
+                                <p className='text-lg text-[#EF4F48]'>
+                                Practice questions tailored to specific technologies and concepts.
+                                </p>
+                            </div>
+
+                            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-6'>
+                                {[
+                                {
+                                    name: "JavaScript",
+                                    questions: "15 questions",
+                                    icon: Code
+                                },
+                                {
+                                    name: "React",
+                                    questions: "12 questions",
+                                    icon: Target
+                                },
+                                {
+                                    name: "Algorithms",
+                                    questions: "10 questions",
+                                    icon: Brain
+                                },
+                                {
+                                    name: "Web Dev",
+                                    questions: "8 questions",
+                                    icon: Clock
+                                }
+                                ].map((category, index) => (
+                                <div
+                                    key={index}
+                                    className='bg-white border-2 border-[#F6CCCC] rounded-lg p-6 text-center hover:bg-[#FFF0F0] transition-colors duration-200 shadow-sm'
+                                >
+                                    <category.icon className='w-8 h-8 mx-auto mb-4 text-[#EF4F48]' />
+                                    <h4 className='font-bold text-lg mb-2 text-black'>
+                                    {category.name}
+                                    </h4>
+                                    <p className='text-gray-600 text-sm'>
+                                    {category.questions}
+                                    </p>
+                                </div>
+                                ))}
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        {/* CTA Section */}
+                        <div className='bg-white py-20'>
+                        <div className='container mx-auto px-4'>
+                            <div className='max-w-4xl mx-auto text-center'>
+                            <h3 className='text-3xl md:text-4xl font-bold mb-6 text-black'>
+                                Ready to Ace Your Next Interview?
+                            </h3>
+                            <p className='text-lg text-[#EF4F48] mb-8 max-w-2xl mx-auto'>
+                                Start practicing today and build the confidence you need to succeed in technical interviews.
+                            </p>
+                            <button
+                                onClick={handleGetStarted}
+                                className='inline-flex items-center px-8 py-4 bg-[#EF4F48] text-white font-semibold rounded-lg hover:bg-[#ed3030] transition-colors duration-200 text-lg'
+                            >
+                                <Play className='mr-2 w-5 h-5' />
+                                Start Your First Quiz
+                            </button>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        {/* Footer */}
+                        <footer className='border-t-2 border-[#F6CCCC] bg-white py-8'>
+                        <div className='container mx-auto px-4'>
+                            <div className='text-center'>
+                            <p className='text-black'>
+                                Built with ❤️ By The Boring Education Team
+                            </p>
+                            </div>
+                        </div>
+                        </footer>
                     </div>
-                </div>
-            </footer>
-        </div>
-    )
-}
+                    )}
