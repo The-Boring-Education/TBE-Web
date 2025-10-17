@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useAuth } from "./context/AuthContext"
+import { useAuth } from '@tbe/auth'
 import { config } from "@tbe/config/quizes"
 
 interface ProtectedRouteProps {
@@ -10,7 +10,7 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const { user, loading, refreshUserFromBackend } = useAuth()
+    const { user, isLoading, isAuthenticated } = useAuth()
     const router = useRouter()
     const searchParams = useSearchParams()
 
@@ -18,41 +18,69 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     const [refreshingUser, setRefreshingUser] = useState(false)
     const [redirectingToOnboarding, setRedirectingToOnboarding] = useState(false)
     const [isProcessingOnboarding, setIsProcessingOnboarding] = useState(false)
+    const [resolvedUserId, setResolvedUserId] = useState<string | null>(null)
+    const [needsOnboarding, setNeedsOnboarding] = useState<boolean | null>(null)
+    const isResolvingRef = useRef(false)
 
     const cameFromOnboarding = searchParams.get("onboardingComplete") === "true"
 
+    // Helper: Mongo ObjectId check
+    const isMongoObjectId = (val?: string): boolean => {
+        if (!val) return false
+        return /^[a-fA-F0-9]{24}$/.test(val)
+    }
+
+    // Resolve DB user id and onboarding status
+    useEffect(() => {
+        const resolveUser = async () => {
+            if (isResolvingRef.current) return
+            if (!user?.email && !user?.id) return
+            isResolvingRef.current = true
+            try {
+                if (isMongoObjectId(user?.id)) {
+                    setResolvedUserId(user!.id)
+                }
+                const base = (config.API_BASE_URL || '').replace(/\/$/, '')
+                const resp = await fetch(`${base}/user?email=${encodeURIComponent(user!.email!)}`)
+                const json = await resp.json()
+                const dbId = json?.data?._id
+                const apiOnboarded = json?.data?.isOnboarded === true || json?.data?.quiz?.onboarded === true
+                setNeedsOnboarding(apiOnboarded ? false : true)
+                if (isMongoObjectId(dbId)) setResolvedUserId(dbId)
+            } catch (_e) {
+                // ignore
+            } finally {
+                isResolvingRef.current = false
+            }
+        }
+
+        if (isAuthenticated && !isLoading && user && !resolvedUserId) {
+            void resolveUser()
+        }
+    }, [isAuthenticated, isLoading, user, resolvedUserId])
+
     // Handle onboarding redirection and refresh logic
     useEffect(() => {
-        if (!loading && user) {
+        if (!isLoading && isAuthenticated && user) {
             // Handle onboarding completion
             if (cameFromOnboarding && !hasRefreshed) {
                 setRefreshingUser(true)
-                
-                const refreshUserData = async () => {
-                    if (isProcessingOnboarding) return
-                    
-                    setIsProcessingOnboarding(true)
-                    try {
-                        await refreshUserFromBackend?.()
-                    } catch (err) {
-                        // Failed to refresh user after onboarding
-                    } finally {
-                        setHasRefreshed(true)
-                        setRefreshingUser(false)
-                        setIsProcessingOnboarding(false)
-                    }
-                }
-
-                refreshUserData()
+                setIsProcessingOnboarding(true)
+                setHasRefreshed(true)
+                setTimeout(() => {
+                    setRefreshingUser(false)
+                    setIsProcessingOnboarding(false)
+                }, 50)
                 return
             }
 
-            // Check if user needs onboarding
-            if (user.isOnboarded === false || user.isOnboarded === undefined) {
+            // Check if user needs onboarding (via API flag)
+            if (needsOnboarding === true) {
                 // Only redirect if we haven't just come from onboarding
                 if (!cameFromOnboarding) {
-                    // Check if user has a valid ID
-                    if (!user.id) {
+                    // Use resolved Mongo _id if available, else abort
+                    const candidateId = resolvedUserId || user?.id
+                    if (!candidateId || !isMongoObjectId(candidateId)) {
                         // If user object is incomplete, redirect to login to re-authenticate
                         router.push('/login')
                         return
@@ -67,7 +95,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
                     }
                     
                     const redirectParams = new URLSearchParams({
-                        userId: user.id,
+                        userId: candidateId,
                         from: "quizapp",
                         redirect: `${window.location.origin}/dashboard?onboardingComplete=true`
                     })
@@ -83,12 +111,13 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         }
     }, [
         user,
-        loading,
+        isLoading,
+        resolvedUserId,
+        needsOnboarding,
         hasRefreshed,
         cameFromOnboarding,
         router,
-        isProcessingOnboarding,
-        refreshUserFromBackend
+        isProcessingOnboarding
     ])
 
     // Show loading state while redirecting to onboarding
@@ -110,7 +139,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     }
 
     // If user needs onboarding, show loading while redirecting
-    if (user && (user.isOnboarded === false || user.isOnboarded === undefined) && !cameFromOnboarding) {
+    if (user && needsOnboarding === true && !cameFromOnboarding) {
         return (
             <div className='min-h-screen flex items-center justify-center'>
                 <div className='text-2xl font-semibold'>Redirecting to onboarding...</div>

@@ -1,10 +1,11 @@
-import { Gamification } from "../models"
 import type {
     DatabaseQueryResponseType,
     UserPointsAction,
     UserPointsActionType
 } from "@/lib/interfaces"
 import { calculateUserPointsForAction } from "@/lib/utils"
+
+import { Gamification } from "../models"
 
 const addGamificationDocInDB = async (
     userId: string

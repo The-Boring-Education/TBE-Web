@@ -1,73 +1,55 @@
-# Multi-stage build for Next.js API in monorepo
+# Optimized Dockerfile for Next.js API in monorepo
 FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
-
 WORKDIR /app
 
 # Install pnpm
 RUN npm install -g pnpm@9.15.9
 
-# Copy package files for the entire monorepo
+# Copy only package files for dependency installation
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/*/package.json ./packages/*/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod=false
 
-# Rebuild the source code only when needed
+# Build stage
 FROM base AS builder
 WORKDIR /app
-
-# Install pnpm
-RUN npm install -g pnpm@9.15.9
-
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=deps /app/packages ./packages
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY apps/api/ ./apps/api/
 
-# Copy source code
-COPY . .
-
-# Build packages that the API depends on
-RUN pnpm run build --filter=@tbe/constants
-RUN pnpm run build --filter=@tbe/types  
-RUN pnpm run build --filter=@tbe/utils
-RUN pnpm run build --filter=@tbe/database
-RUN pnpm run build --filter=@tbe/interface
-RUN pnpm run build --filter=@tbe/services
-
-# Build the API
+# Build the application using Turbo
 RUN pnpm run build --filter=@tbe/api
 
-# Production image, copy all the files and run next
+# Production stage
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy the built application
-COPY --from=builder /app/apps/api/.next/standalone ./
-COPY --from=builder /app/apps/api/.next/static ./apps/api/.next/static
-COPY --from=builder /app/apps/api/public ./apps/api/public
+# Copy the standalone output
+COPY --from=builder --chown=nextjs:nodejs /app/apps/api/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/api/.next/static ./apps/api/.next/static
 
-# Copy package dependencies
-COPY --from=builder --chown=nextjs:nodejs /app/packages ./packages
+# Copy public assets if any
+COPY --from=builder --chown=nextjs:nodejs /app/apps/api/public ./apps/api/public
 
 USER nextjs
 
 EXPOSE 3000
-
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
 
 # Start the application
 CMD ["node", "apps/api/server.js"]

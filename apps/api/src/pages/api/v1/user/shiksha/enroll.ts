@@ -8,12 +8,17 @@ import {
   getUserByIdFromDB,
 } from '@/lib/database';
 import type { CourseEnrollmentRequestProps } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@/lib/utils';
 import { sendCourseEnrollmentEmail } from '@/lib/services';
+import { cors, sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    // CORS preflight support
+    await cors(req, res);
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
     await connectDB();
 
     switch (req.method) {
@@ -42,7 +47,17 @@ const handleCourseEnrollment = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const { userId, courseId } = req.body as CourseEnrollmentRequestProps;
+  const { userId, courseId } = (req.body || {}) as CourseEnrollmentRequestProps;
+
+  if (!userId || !courseId) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: 'userId and courseId are required',
+        error: 'MISSING_FIELDS',
+      })
+    );
+  }
 
   try {
     const { data: alreadyExists, error: fetchEnrolledCourseError } =

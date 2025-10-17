@@ -48,15 +48,15 @@ const Navbar = () => {
         <div className='w-100 flex'>
           <Logo />
         </div>
-        <div className='flex lg:hidden'>
+        <div className='flex lg:hidden gap-2 items-center'>
+          <NotificationPopover />
+          <UserPointButton />
+          <UserAvatar />
           <button
-            className='-m-2.5 flex gap-2 items-center justify-center rounded-md p-2.5 text-black'
+            className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black'
             type='button'
             onClick={() => setMobileMenuOpen(true)}
           >
-            <NotificationPopover />
-            <UserPointButton />
-            <UserAvatar />
             <Bars3Icon aria-hidden='true' className='h-6 w-6' color='black' />
           </button>
         </div>

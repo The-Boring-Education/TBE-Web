@@ -1,6 +1,6 @@
-import {useState, useEffect} from "react";
-
-import {prepStatsService, PrepStats} from "@tbe/services";
+import type {PrepStats} from "@tbe/services";
+import {prepStatsService} from "@tbe/services";
+import {useEffect,useState} from "react";
 
 export function usePrepStats(userId: string) {
     const [stats, setStats] = useState<PrepStats | null>(null);

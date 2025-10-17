@@ -19,6 +19,6 @@ export { Progress } from './ui/progress'
 export { CodeRenderer } from './common/CodeRenderer'
 export { MarkdownRenderer } from './common/MarkdownRenderer'
 
-export { useAuth, AuthProvider } from './context/AuthContext'
+// Auth exports moved to @tbe/auth package
 export { useGamificationContext } from './context/GamificationContext'
 export { GamificationWrapper } from './GamificationWrapper'

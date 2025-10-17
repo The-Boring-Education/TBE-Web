@@ -1,5 +1,5 @@
-import { Share2, Copy, TrendingUp, CheckCircle2, Trophy } from "lucide-react"
-import { useState, useRef } from "react"
+import { CheckCircle2, Copy, Share2, TrendingUp, Trophy } from "lucide-react"
+import { useRef,useState } from "react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { challengesService } from "@/services/challenges"
 import { prepLogsService } from "@/services/prep-logs"
-import { Challenge } from "@/types/challenges"
+import type { Challenge } from "@/types/challenges"
 
 interface ChallengeLogModalProps {
     isOpen: boolean

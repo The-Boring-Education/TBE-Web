@@ -10,8 +10,8 @@ import type {
   AddOnboardingPayloadProps,
   AddPrepYatraOnboardingPayloadProps,
 } from '@/lib/interfaces';  
-import { connectDB } from '@/middleware';
 import { cors, sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

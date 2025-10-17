@@ -32,7 +32,7 @@ export { default as UserProject } from './Project/UserProject'
 // Quiz models
 export { default as Quiz } from './Quiz/Quiz'
 export { default as QuizAttempt } from './Quiz/QuizAttempt'
-export { default as QuizSession, type QuizSessionQuestion, type QuizSessionModel } from './Quiz/QuizSession'
+export { default as QuizSession, type QuizSessionModel,type QuizSessionQuestion } from './Quiz/QuizSession'
 export { default as UserQuestionPerformance } from './Quiz/UserQuestionPerformance'
 export { default as UserQuizAnalytics } from './Quiz/UserQuizAnalytics'
 
@@ -41,8 +41,8 @@ export { default as Course } from './Shiksha/Course'
 export { default as UserCourse } from './Shiksha/UserCourse'
 
 // Unskilled models
-export { default as Job } from './Unskilled/Jobs'
 export { default as JobAggregate } from './Unskilled/JobAggregate'
+export { default as Job } from './Unskilled/Jobs'
 
 // YouFocus models
 export { default as Playlist } from './YouFocus/Playlist'

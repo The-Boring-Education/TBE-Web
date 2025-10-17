@@ -1,6 +1,6 @@
 import { sendRequest } from "./api"
 import { trackEvent } from "./analytics"
-import {
+import type {
     Challenge,
     ChallengeLog,
     ChallengeProgress,

@@ -2,11 +2,21 @@
 
 Next.js API application for the TBE platform, deployable to Google Cloud Run.
 
-## 🚀 Quick Deployment
+## 🚀 Quick Deploy
 
-For fast Cloud Run deployment, see: [QUICK-START.md](./QUICK-START.md)
+```bash
+cd apps/api
+./deploy.sh
+```
 
-For detailed instructions, see: [README-DEPLOYMENT.md](./README-DEPLOYMENT.md)
+That's it! One command deploys everything to Cloud Run.
+
+## Prerequisites
+
+- Google Cloud account with billing enabled
+- `gcloud` CLI installed and authenticated
+- Docker installed
+- Node.js 20+ and pnpm
 
 ## Development
 
@@ -21,7 +31,16 @@ pnpm run dev:api
 pnpm run build:api
 ```
 
-## Docker
+## What the deploy script does
+
+✅ Sets up GCP resources (APIs, Artifact Registry)  
+✅ Builds monorepo packages and API  
+✅ Creates Docker image  
+✅ Deploys to Cloud Run  
+✅ Tests health endpoint  
+✅ Opens deployed API in browser
+
+## Manual Docker
 
 ```bash
 # Build container
@@ -31,61 +50,27 @@ pnpm run docker:build
 pnpm run docker:run
 ```
 
-## Deployment
+## Environment Variables
 
-- **Staging**: Automatic deployment on push to `development` branch
-- **Production**: Automatic deployment on push to `main` branch
-- **Manual**: Use GitHub Actions workflow dispatch
+Set these in Google Secret Manager:
 
-## Architecture
-
-- **Framework**: Next.js 13 with API routes
-- **Database**: MongoDB with Mongoose
-- **Authentication**: NextAuth.js with Google OAuth
-- **Deployment**: Google Cloud Run with automated CI/CD
-- **Monitoring**: Sentry + Google Cloud Monitoring
+- `MONGODB_URI` - MongoDB connection string
+- `NEXTAUTH_SECRET` - NextAuth.js secret key
+- `ADMIN_SECRET` - Admin authentication secret
+- `OPENAI_API_KEY` - OpenAI API key
+- `YOUTUBE_API_KEY` - YouTube Data API key
+- `CASHFREE_SECRET_KEY` - Cashfree payment secret
+- `EMAIL_API_KEY` - Email service API key
+- `SENTRY_AUTH_TOKEN` - Sentry authentication token
 
 ## API Endpoints
 
-### Health Check
-
-```
-GET /api/health
-```
-
-### Authentication
-
-```
-POST /api/auth/signin
-POST /api/auth/signout
-GET  /api/auth/session
-```
-
-### User Management
-
-```
-GET    /api/v1/user
-PUT    /api/v1/user
-GET    /api/v1/user/dashboard
-POST   /api/v1/user/onboarding
-```
-
-### Admin Panel
-
-```
-GET    /api/v1/admin/users
-GET    /api/v1/admin/analytics
-POST   /api/v1/admin/content
-```
-
-For complete API documentation, see the deployed service's OpenAPI specification.
-
-## Environment Variables
-
-See [README-DEPLOYMENT.md](./README-DEPLOYMENT.md#environment-variables) for complete environment setup.
+- `GET /api/health` - Health check
+- `POST /api/auth/signin` - Authentication
+- `GET /api/v1/user` - User management
+- `GET /api/v1/admin/users` - Admin panel
 
 ## Support
 
-- 📚 Documentation: [README-DEPLOYMENT.md](./README-DEPLOYMENT.md)
 - 🐛 Issues: Create GitHub issue
 - 💬 Questions: Contact development team

@@ -1,9 +1,10 @@
-import { Feedback } from "../models"
 import type {
     AddFeedbackRequestProps,
     DatabaseQueryResponseType,
     UpdateFeedbackRequestProps
 } from "@/lib/interfaces"
+
+import { Feedback } from "../models"
 
 const addFeedbackToDB = async ({
     rating,

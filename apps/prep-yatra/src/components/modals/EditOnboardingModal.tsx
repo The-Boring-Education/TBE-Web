@@ -1,5 +1,6 @@
-import { ExternalLink, Linkedin, Github } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useAuth } from "@tbe/components"
+import { ExternalLink, Github,Linkedin } from "lucide-react"
+import { useEffect,useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -9,19 +10,17 @@ import {
     DialogTitle
 } from "@/components/ui/dialog"
 import {
-    GOALS,
     COMPANY_TYPES,
+    GOALS,
     INTERVIEW_CATEGORIES
 } from "@/constants/onboarding"
-import { useAuth } from "@tbe/components"
 import { useToast } from "@/hooks/use-toast"
-import {
-    OnboardingData,
-    GoalType,
+import type {
     CompanyType,
+    ExperienceLevel,
+    GoalType,
     InterviewCategory,
-    ExperienceLevel
-} from "@/types/onboarding"
+    OnboardingData} from "@/types/onboarding"
 
 interface EditOnboardingModalProps {
     isOpen: boolean

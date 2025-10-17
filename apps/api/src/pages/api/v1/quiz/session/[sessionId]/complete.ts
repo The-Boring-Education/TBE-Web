@@ -1,8 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+import type { QuizSessionQuestion } from '@/lib/database';
+import { completeQuizSessionInDB } from '@/lib/database';
 import {cors} from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { completeQuizSessionInDB } from '@/lib/database';
-import type { QuizSessionQuestion } from '@/lib/database';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);

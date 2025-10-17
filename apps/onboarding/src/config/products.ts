@@ -1,5 +1,5 @@
+import type { OnboardingProductConfig, User } from "../types/onboarding"
 import { config } from "."
-import { OnboardingProductConfig, User } from "../types/onboarding"
 
 const createField = (
     name: string,

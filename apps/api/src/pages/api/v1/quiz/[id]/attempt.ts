@@ -4,8 +4,8 @@ import {
   getQuizByIdFromDB,
   saveQuizAttemptToDB,
 } from '@/lib/database';
-import { connectDB } from '@/middleware';
 import { cors } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 interface SubmitQuizBody {
   userId: string;

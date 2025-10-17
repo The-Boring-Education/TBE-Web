@@ -2,8 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/lib/constants';
 import { addANotificationToDB, getUserPrepLogStats } from '@/lib/database';
-import { connectDB } from '@/middleware';
 import { cors, sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

@@ -1,10 +1,9 @@
 import { EyeIcon, UserIcon } from '@heroicons/react/24/outline';
+import { AdminLayout, AdminStats, AdminTable, SEO } from '@tbe/components';
+import { routes } from '@tbe/constants';
+import { useAdminData } from '@tbe/hooks';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-
-import { AdminLayout, AdminStats, AdminTable, SEO } from '@tbe/components';
-import { useAdminData } from '@tbe/hooks';
-import { routes } from '@tbe/constants';
 
 const AdminUsers = () => {
   const {

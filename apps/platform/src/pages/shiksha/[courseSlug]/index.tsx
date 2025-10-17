@@ -1,7 +1,3 @@
-import router from 'next/router';
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { FaLock, FaTrophy } from 'react-icons/fa';
-
 import {
   ActionBanner,
   Alert,
@@ -17,6 +13,7 @@ import {
   SEO,
   Text,
 } from '@tbe/components';
+import { useGamificationContext,useGamifiedAction } from '@tbe/components';
 import { routes, SCREEN_BREAKPOINTS } from '@tbe/constants';
 import {
   useAnalytics,
@@ -24,12 +21,14 @@ import {
   useMediaQuery,
   useUser,
 } from '@tbe/hooks';
-import { useGamifiedAction, useGamificationContext } from '@tbe/components';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,
 } from '@tbe/interface';
 import { formatDate, getCoursePageProps } from '@tbe/utils';
+import router from 'next/router';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { FaLock, FaTrophy } from 'react-icons/fa';
 
 const CoursePage = ({
   course,

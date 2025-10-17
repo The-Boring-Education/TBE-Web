@@ -1,3 +1,3 @@
+export * from "./challenges";
 export * from "./component";
 export * from "./onboarding";
-export * from "./challenges";

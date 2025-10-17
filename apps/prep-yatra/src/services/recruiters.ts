@@ -1,5 +1,5 @@
 import { trackEvent } from "@/lib/analytics"
-import { CreateRecruiterContact, RecruiterContact } from "@/types/recruiters"
+import type { CreateRecruiterContact, RecruiterContact } from "@/types/recruiters"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 

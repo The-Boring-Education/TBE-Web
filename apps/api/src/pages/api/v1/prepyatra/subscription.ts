@@ -4,8 +4,8 @@ import { apiStatusCodes } from '@/lib/constants';
 import { User } from '@/lib/database';
 import {PrepYatraSubscription} from '@/lib/database';
 import { type CreateSubscriptionPayload } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
 import { sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 /**
  * API Handler for PrepYatra subscriptions

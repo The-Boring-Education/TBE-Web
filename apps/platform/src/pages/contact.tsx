@@ -1,8 +1,7 @@
-import { Fragment } from 'react';
-
   import { ContactCard, SEO } from '@tbe/components';
 import { getSEOMeta, routes } from '@tbe/constants';
 import { getPreFetchProps } from '@tbe/utils';
+import { Fragment } from 'react';
 
 const Contact = () => {
   const seoMeta = getSEOMeta(routes.contactUs);

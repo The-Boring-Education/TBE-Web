@@ -1,5 +1,6 @@
 import { useRouter } from "next/router"
-import React, { createContext, useEffect, useState, ReactNode } from "react"
+import type { ReactNode } from "react";
+import React, { createContext, useEffect, useState } from "react"
 
 export interface GoogleUser {
     sub: string

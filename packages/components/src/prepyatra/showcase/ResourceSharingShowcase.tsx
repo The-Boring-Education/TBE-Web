@@ -95,7 +95,7 @@ const ResourceSharingShowcase = () => {
                         {resources.map((resource, index) => (
                             <Card
                                 key={resource.id}
-                                className={"glass border-greyLight hover:border-primary/40 transition-all duration-300 hover:scale-[1.02] animate-slide-in-right"}
+                                className="glass border-greyLight hover:border-primary/40 transition-all duration-300 hover:scale-[1.02] animate-slide-in-right"
                                 style={{animationDelay: `${index * 0.1}s`}}>
                                 <CardHeader className='pb-3'>
                                     <div className='flex items-start gap-4'>

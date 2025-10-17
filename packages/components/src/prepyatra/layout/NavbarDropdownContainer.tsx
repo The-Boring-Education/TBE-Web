@@ -1,4 +1,4 @@
-import {NavbarDropdownContainerProps} from "@tbe/interface";
+import type {NavbarDropdownContainerProps} from "@tbe/interface";
 
 const PrepYatraNavbarDropdownContainer = ({links}: NavbarDropdownContainerProps) => (
     <div className='p-2 glass rounded-xl shadow-lg border border-greyLight z-[1000] min-w-[220px]'>

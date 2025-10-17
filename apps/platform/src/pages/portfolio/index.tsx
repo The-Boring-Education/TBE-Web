@@ -1,6 +1,3 @@
-import { useRouter } from 'next/router';
-import { Fragment } from 'react';
-
 import {
   FlexContainer,
   Image,
@@ -21,6 +18,8 @@ import {
 } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
+import { useRouter } from 'next/router';
+import { Fragment } from 'react';
 
 const Portfolio = ({ seoMeta }: PageProps) => {
   const router = useRouter();

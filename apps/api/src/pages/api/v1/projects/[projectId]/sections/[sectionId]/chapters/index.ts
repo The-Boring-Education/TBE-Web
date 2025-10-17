@@ -8,8 +8,8 @@ import {
   getChaptersFromSectionInDB,
 } from '@/lib/database';
 import type { AddChapterRequestPayloadProps } from '@/lib/interfaces';
+import { getMDXContent,sendAPIResponse } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse, getMDXContent } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

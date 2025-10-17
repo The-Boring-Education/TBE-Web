@@ -1,4 +1,5 @@
 import { envConfig } from '@/lib/constants';
+import { emailLogger } from '@/lib/constants';
 import type {
   CourseCompletionEmailData,
   CourseEnrollmentEmailData,
@@ -9,7 +10,6 @@ import type {
   InterviewPrepEnrollmentEmailData,
   ProjectEnrollmentEmailData,
 } from '@/lib/interfaces';
-import { emailLogger } from '@/lib/constants';
 
 import { emailClient } from './client';
 import {

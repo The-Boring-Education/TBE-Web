@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getLeaderboardFromDB } from '@/lib/database';
-import { connectDB } from '@/middleware';
 import { cors } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Apply CORS headers

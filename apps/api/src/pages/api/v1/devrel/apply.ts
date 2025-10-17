@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { connectDB } from '@/middleware';
 import { apiStatusCodes } from '@/lib/constants';
-import { sendAPIResponse } from '@/lib/utils';
 import { DevRelLead } from '@/lib/database';
+import { sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 interface CreateApplicationRequest {
   name: string;

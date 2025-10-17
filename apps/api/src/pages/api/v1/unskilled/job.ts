@@ -8,12 +8,12 @@ import {
 } from '@/lib/constants';
 import { addJobToDB, getAllJobsFromDB, getJobByJobIdFromDB } from '@/lib/database';
 import type { AddJobRequestPayloadProps } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
 import {
   cleanJobSkillsData,
   normalizeAPIPayload,
   sendAPIResponse,
 } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

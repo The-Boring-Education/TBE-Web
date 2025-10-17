@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes } from '@/lib/constants';
 import type { EmailTriggerRequest } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
 import { emailTriggerService } from '@/lib/services';
 import { sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

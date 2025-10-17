@@ -61,7 +61,7 @@ const Login = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <LoginWithGoogleButton text='Login With Google' />
+              <LoginWithGoogleButton text='Continue with Google' />
             </motion.div>
           </div>
 

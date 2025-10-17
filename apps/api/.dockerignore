@@ -1,78 +1,50 @@
-# Dependencies
-node_modules
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Everything except what we need
+*
 
-# Testing
-coverage
-.nyc_output
+# Allow only specific files and directories
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!apps/api/
+!packages/
+!turbo.json
 
-# Next.js
-.next/
-out/
-build
+# But exclude node_modules everywhere
+**/node_modules/
+node_modules/
 
-# Production
-dist
+# Exclude build outputs
+**/.next/
+**/dist/
+**/build/
+**/out/
 
-# Misc
-.DS_Store
-*.pem
+# Exclude other apps completely
+apps/platform/
+apps/prep-yatra/
+apps/quizes/
+apps/onboarding/
+apps/techyatra/
+apps/dsayatra/
+apps/resume-yatra/
 
-# Debug
-*.log
+# Exclude development files
+**/.env*
+**/.git/
+**/.vscode/
+**/.idea/
+**/*.log
+**/coverage/
+**/tmp/
+**/temp/
 
-# Local env files (not committed to git)
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Exclude documentation
+**/*.md
+!apps/api/README.md
 
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-Thumbs.db
-
-# Git
-.git
-.gitignore
-README.md
-
-# CI/CD
-.github/
-
-# Other apps (not needed for API build)
-../platform
-../prep-yatra  
-../quizes
-../onboarding
-../techyatra
-
-# Documentation
-*.md
-docs/
-
-# Testing
-__tests__/
-*.test.*
-*.spec.*
-jest.config.*
-cypress/
-.cypress/
-
-# Linting
-.eslintrc.*
-.prettierrc.*
+# Exclude test files
+**/*.test.*
+**/*.spec.*
+**/__tests__/
+**/test/
+**/tests/

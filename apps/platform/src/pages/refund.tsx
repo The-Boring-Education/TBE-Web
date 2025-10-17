@@ -1,9 +1,8 @@
-import { Fragment } from 'react';
-
 import { Section, SEO, Text } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
+import { Fragment } from 'react';
 
 const RefundAndCancellationPage = ({ seoMeta }: PageProps) => (
   <Fragment>

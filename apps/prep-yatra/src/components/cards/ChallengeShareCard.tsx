@@ -1,13 +1,12 @@
 import {
-    Share2,
+    Calendar,
     Copy,
-    Twitter,
-    Linkedin,
     Facebook,
-    Trophy,
+    Linkedin,
+    Share2,
     Target,
-    Calendar
-} from "lucide-react"
+    Trophy,
+    Twitter} from "lucide-react"
 import React from "react"
 import { toast } from "sonner"
 
@@ -20,10 +19,12 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import { Challenge } from "@/types/challenges"
-import {
-    generateSocialMessage,
+import type { Challenge } from "@/types/challenges"
+import type {
     SocialMediaTemplateData
+} from "@/utils/socialMediaTemplates";
+import {
+    generateSocialMessage
 } from "@/utils/socialMediaTemplates"
 
 interface ChallengeShareCardProps {

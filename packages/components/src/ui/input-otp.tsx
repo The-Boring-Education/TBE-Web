@@ -1,5 +1,6 @@
 import * as React from "react"
-import { OTPInput, OTPInputContext, SlotProps  } from "input-otp"
+import type { SlotProps  } from "input-otp";
+import { OTPInput, OTPInputContext  } from "input-otp"
 import { Dot } from "lucide-react"
 
 import { cn } from "@tbe/utils"

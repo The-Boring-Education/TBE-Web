@@ -1,5 +1,3 @@
-import { Fragment } from 'react';
-
 import {
   CardContainerA,
   FlexContainer,
@@ -22,6 +20,7 @@ import {
 } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
+import { Fragment } from 'react';
 
 const Contribute = ({ seoMeta }: PageProps) => (
   <Fragment>

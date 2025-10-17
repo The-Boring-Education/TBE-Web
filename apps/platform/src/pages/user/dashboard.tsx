@@ -1,6 +1,3 @@
-import { useRouter } from 'next/router';
-import { Fragment } from 'react';
-
 import {
   Banner,
   CardContainerB,
@@ -24,6 +21,8 @@ import {
   mapProjectResponseToCard,
   mapUserPlaylistResponseToCard,
 } from '@tbe/utils';
+import { useRouter } from 'next/router';
+import { Fragment } from 'react';
 
 const UserDashboard = ({ seoMeta }: PageProps) => {
   const router = useRouter();

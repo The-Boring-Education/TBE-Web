@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB } from '@/middleware';
-import { cors } from '@/lib/utils';
+
 import { addUserQuizAttemptToDB, getQuizByIdFromDB } from '@/lib/database';
+import { cors } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 interface QuizAnswer {
   questionIndex: number;

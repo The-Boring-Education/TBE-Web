@@ -75,8 +75,15 @@ A comprehensive quiz platform for mastering tech interviews with detailed analyt
     Update `.env.local` with your configuration:
 
     ```env
+    # API Configuration
     NEXT_PUBLIC_API_URL=your_api_url
-    NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
+    NEXT_PUBLIC_ONBOARDING_URL=
+    NEXT_PUBLIC_GA_MEASUREMENT_ID=
+
+    # NextAuth Configuration (Server-side only)
+    GOOGLE_AUTH_CLIENT_ID=your_google_client_id
+    GOOGLE_AUTH_CLIENT_SECRET=your_google_secret
+    NEXTAUTH_SECRET=your_nextauth_secret
     ```
 
 4. **Run Development Server**

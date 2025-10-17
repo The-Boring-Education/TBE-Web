@@ -1,4 +1,5 @@
-import { type Model, model, models, Schema, Document } from 'mongoose';
+import type { Document } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
 
 // DevRel Task Model Interface
 export interface DevRelTaskModel extends Document {

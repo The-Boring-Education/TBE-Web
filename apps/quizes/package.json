@@ -6,7 +6,7 @@
     "dev": "next dev -p 3002",
     "build": "next build",
     "start": "next start -p 3002",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -24,8 +24,8 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
-    "@react-oauth/google": "^0.12.2",
     "@tanstack/react-query": "^5.83.0",
+    "@tbe/auth": "workspace:*",
     "@tbe/components": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/hooks": "workspace:*",
@@ -44,6 +44,7 @@
     "lucide-react": "^0.462.0",
     "markdown-it": "^14.1.0",
     "next": "13.5.6",
+    "next-auth": "^4.24.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",

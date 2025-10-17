@@ -1,6 +1,7 @@
-import { QuizAttempt } from "../models"
+
 import type { DatabaseQueryResponseType } from "@/lib/interfaces"
-import { Schema } from "mongoose"
+
+import { QuizAttempt } from "../models"
 
 interface QuizAttemptData {
     userId: string

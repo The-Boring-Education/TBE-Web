@@ -1,100 +1,41 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@tbe/components/quizes"
-import { config } from "@/config"
+import { useAuth } from "@tbe/auth"
 import {
-    Play,
-    Brain,
-    Clock,
-    Target,
-    CheckCircle,
     ArrowRight,
+    Brain,
+    CheckCircle,
+    Clock,
     Code,
-    Users,
-    Trophy
-} from "lucide-react"
+    Play,
+    Target,
+    Trophy,
+    Users} from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+
 
 export default function Landing() {
     const router = useRouter()
-    const { user, loading } = useAuth()
+    const { user, isAuthenticated, isLoading } = useAuth()
     const [isRedirecting, setIsRedirecting] = useState(false)
 
     // Auto-redirect authenticated users
     useEffect(() => {
-        if (loading) return // Don't redirect while loading
-        
-        if (user && !isRedirecting) {
-            // Check if user has valid ID
-            if (!user.id) {
-                // Clear the incomplete user data to prevent infinite loops
-                localStorage.removeItem("quizUser")
-                localStorage.removeItem("quizToken")
-                // If user object is incomplete, redirect to login to re-authenticate
+        if (isLoading) return // Don't redirect while loading
+
+        if (isAuthenticated && user && !isRedirecting) {
+            // Redirect to dashboard
+            if (user.id) {
                 setIsRedirecting(true)
-                setTimeout(() => {
-                    router.push("/login")
-                }, 100)
-                return
-            }
-            
-            if (user.isOnboarded) {
-                setIsRedirecting(true)
-                setTimeout(() => {
-                    router.push("/dashboard")
-                }, 100)
-            } else {
-                // Redirect to external onboarding app
-                setIsRedirecting(true)
-                const params = new URLSearchParams({
-                    userId: user.id,
-                    from: "quizapp",
-                    redirect: `${window.location.origin}/dashboard?onboardingComplete=true`
-                })
-                
-                const onboardingURL = `${config.ONBOARDING_APP_URL}/?${params.toString()}`
-                setTimeout(() => {
-                    window.location.href = onboardingURL
-                }, 100)
+                router.push("/dashboard")
             }
         }
-    }, [user, loading, router, isRedirecting])
+    }, [user, isAuthenticated, isLoading, router, isRedirecting])
 
     const handleGetStarted = () => {
-        if (user && !isRedirecting) {
-            // Check if user has valid ID
-            if (!user.id) {
-                // Clear the incomplete user data to prevent infinite loops
-                localStorage.removeItem("quizUser")
-                localStorage.removeItem("quizToken")
-                // If user object is incomplete, redirect to login to re-authenticate
-                setIsRedirecting(true)
-                setTimeout(() => {
-                    router.push("/login")
-                }, 100)
-                return
-            }
-            
-            if (user.isOnboarded) {
-                setIsRedirecting(true)
-                setTimeout(() => {
-                    router.push("/dashboard")
-                }, 100)
-            } else {
-                // Redirect to external onboarding app
-                setIsRedirecting(true)
-                const params = new URLSearchParams({
-                    userId: user.id,
-                    from: "quizapp",
-                    redirect: `${window.location.origin}/dashboard?onboardingComplete=true`
-                })
-                
-                const onboardingURL = `${config.ONBOARDING_APP_URL}/?${params.toString()}`
-                setTimeout(() => {
-                    window.location.href = onboardingURL
-                }, 100)
-            }
+        if (isAuthenticated) {
+            router.push("/dashboard")
         } else {
             router.push("/login")
         }
@@ -103,28 +44,30 @@ export default function Landing() {
     return (
         <div className='min-h-screen bg-white text-black'>
             {/* Show loading state while auth is loading */}
-            {loading && (
+            {isLoading && (
                 <div className='min-h-screen flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto'></div>
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>Loading...</p>
                     </div>
                 </div>
             )}
-            
+
             {/* Show redirecting state */}
             {isRedirecting && (
                 <div className='min-h-screen flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto'></div>
-                        <p className='mt-4 text-lg text-gray-600'>Redirecting...</p>
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto' />
+                        <p className='mt-4 text-lg text-gray-600'>
+                            Redirecting...
+                        </p>
                     </div>
                 </div>
             )}
         
             
             {/* Show main content only when not loading or redirecting */}
-            {!loading && !isRedirecting && (
+            {!isLoading && !isRedirecting && (
                 <>
                     {/* Hero Section */}
                     <div className='container mx-auto px-4 py-16'>
@@ -154,10 +97,11 @@ export default function Landing() {
                                         </span>
                                     </h2>
                                     <p className='text-lg text-gray-700 mb-8 leading-relaxed'>
-                                        Practice with carefully curated questions
-                                        covering JavaScript, React, algorithms, and web
-                                        development. Get detailed explanations and track
-                                        your progress.
+                                        Practice with carefully curated
+                                        questions covering JavaScript, React,
+                                        algorithms, and web development. Get
+                                        detailed explanations and track your
+                                        progress.
                                     </p>
                                     <button
                                         onClick={handleGetStarted}
@@ -176,7 +120,7 @@ export default function Landing() {
                                                 <CheckCircle className='w-5 h-5 text-black' />
                                             </div>
                                             <div className='w-full bg-gray-200 rounded-full h-2'>
-                                                <div className='bg-black h-2 rounded-full w-3/4'></div>
+                                                <div className='bg-black h-2 rounded-full w-3/4' />
                                             </div>
                                             <div className='text-sm text-gray-600'>
                                                 15 questions completed

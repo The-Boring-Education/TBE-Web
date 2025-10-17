@@ -1,5 +1,4 @@
 import {Section} from "@tbe/components";
-
 import {FeatureCards} from "@tbe/components";
 import {PrepYatraHero} from "@tbe/components";
 import {InstallButton} from "@tbe/components";

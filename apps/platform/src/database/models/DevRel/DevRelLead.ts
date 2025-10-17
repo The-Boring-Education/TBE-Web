@@ -1,4 +1,4 @@
-import { type Model, type Document } from 'mongoose';
+import { type Document,type Model } from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 
 // DevRel Lead Model Interface

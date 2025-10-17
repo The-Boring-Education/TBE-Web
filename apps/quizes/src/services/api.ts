@@ -1,6 +1,7 @@
-import { apiClient, APIError } from "./base"
 import { API_ENDPOINTS } from "@/config"
-import { APIResponse, QuizCategoryAPI, QuizQuestionsData, QuizAttempt, PerformanceMetrics, CategoryPerformance, PerformanceHistory, LeaderboardData, UserProfile, UserPoints } from "@/types/api"
+import type { APIResponse, CategoryPerformance, LeaderboardData, PerformanceHistory, PerformanceMetrics, QuizAttempt, QuizCategoryAPI, QuizQuestionsData, UserPoints,UserProfile } from "@/types/api"
+
+import { apiClient, APIError } from "./base"
 
 // User APIs
 export const userApi = {

@@ -1,9 +1,9 @@
-import React, { Suspense } from "react";
+import {Button} from "@tbe/components";
+import type {NavbarProps} from "@tbe/interface";
+import React from "react";
 
 import {GamificationDisplay} from "../gamification";
 import PrepYatraNavbarDropdownLinks from "../layout/NavbarDropdownLinks";
-import {Button} from "@tbe/components";
-import {NavbarProps} from "@tbe/interface";
 import { SubscriptionInterestPopover } from "../popovers";
 
 const capitalize = (str: string) => {
@@ -32,8 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
                     onClick={onSignOut}
                     variant='PRIMARY'
                     text='Sign Out'
-                    className='px-3 py-1 text-sm'>
-                </Button>
+                    className='px-3 py-1 text-sm' />
             </div>
         </nav>
     );

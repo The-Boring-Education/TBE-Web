@@ -226,7 +226,7 @@ const LanguageSection = () => {
                 <div className="mt-6 pt-4 border-t border-gray-200 space-y-4 animate-fade-in">
                   <div>
                     <h4 className="font-bold text-gray-800 mb-2 flex items-center">
-                      <span className="w-2 h-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mr-2"></span>
+                      <span className="w-2 h-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mr-2" />
                       Company Types:
                     </h4>
                     <div className="flex flex-wrap gap-1">
@@ -240,7 +240,7 @@ const LanguageSection = () => {
 
                   <div>
                     <h4 className="font-bold text-gray-800 mb-2 flex items-center">
-                      <span className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-2"></span>
+                      <span className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-2" />
                       Job Opportunities:
                     </h4>
                     <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded-md">{language.jobOpportunities}</p>

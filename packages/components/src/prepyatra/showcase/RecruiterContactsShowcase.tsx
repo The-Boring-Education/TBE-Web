@@ -8,6 +8,7 @@ import {
     TableRow
 } from "../ui/table";
 import Button from "../../common/Buttons/Button";
+import { MdCall, MdEmail } from 'react-icons/md';
 
 const RecruiterContactsShowcase = () => {
     const recruiters = [
@@ -141,18 +142,23 @@ const RecruiterContactsShowcase = () => {
                                                     {recruiter.status}
                                                 </span>
                                                 </TableCell>
-                                                 <TableCell>
+                                                <TableCell>
                                                     <div className='flex gap-2'>
                                                         <Button
                                                             variant='NEUTRAL'
-                                                            text='📞 Call'
-                                                            className='text-xs px-2 py-1'
-                                                        />
-                                                        <Button
+                                                            className='flex items-center gap-1 text-xs px-2 py-1'
+                                                            >
+                                                            <MdCall className='text-base' />
+                                                            Call
+                                                            </Button>
+                                                            <Button
                                                             variant='NEUTRAL'
-                                                            text='✉️ Email'
-                                                            className='text-xs px-2 py-1'
-                                                        />
+                                                            className='flex items-center gap-1 text-xs px-2 py-1'
+                                                            >
+                                                            <MdEmail className='text-base' />
+                                                            Email
+                                                        </Button>
+
                                                     </div>
                                                 </TableCell>
                                             </TableRow>

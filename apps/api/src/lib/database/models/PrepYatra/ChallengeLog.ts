@@ -1,4 +1,6 @@
-import { type Model, model, models, Schema, Document } from 'mongoose';
+import type { Document } from 'mongoose';
+import { type Model, model, models, Schema } from 'mongoose';
+
 import { DATABASE_MODELS } from '@/lib/constants';
 
 // Define the document interface

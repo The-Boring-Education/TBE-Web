@@ -8,10 +8,10 @@ import {
   getUserDataByUserNameFromDB,
 } from '@/lib/database';
 import type { CreateUserRequestPayloadProps } from '@/lib/interfaces';
-import { connectDB } from '@/middleware';
-import { cors, sendAPIResponse } from '@/lib/utils';
 import { sendWelcomeEmail } from '@/lib/services';
+import { cors, sendAPIResponse } from '@/lib/utils';
 import { captureAPIError, captureAuthError } from '@/lib/utils';
+import { connectDB } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

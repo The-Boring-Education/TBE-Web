@@ -1,7 +1,6 @@
-import {useRouter} from "next/router";
+import {Button, FlexContainer, GridContainer,Text} from "@tbe/components";
 import {motion} from "framer-motion";
-
-import {Button, Text, FlexContainer, GridContainer} from "@tbe/components";
+import {useRouter} from "next/router";
 
 const Hero = () => {
     const router = useRouter();
