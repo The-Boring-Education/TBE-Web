@@ -10,10 +10,11 @@ RUN npm install -g pnpm@9.15.9
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/api/package.json ./apps/api/
-COPY packages/ ./packages/
+# Copy package files first (for better caching)
+# Use explicit paths to avoid ambiguity
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
+COPY ./apps/api/package.json ./apps/api/
+COPY ./packages/ ./packages/
 
 # Install dependencies
 RUN pnpm install --no-frozen-lockfile
