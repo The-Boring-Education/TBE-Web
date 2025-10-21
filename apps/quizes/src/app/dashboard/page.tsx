@@ -123,7 +123,7 @@ function DashboardContent() {
                             </p>
                             <Button 
                               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white" 
-                              size="lg"
+                              variant="default"
                             >
                               <Play className="h-5 w-5 mr-2" />
                               Start Quiz

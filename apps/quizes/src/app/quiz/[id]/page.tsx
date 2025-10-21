@@ -38,8 +38,9 @@ function QuizContent() {
         [key: number]: number
     }>({})
     const [gameState, setGameState] = useState<
-        "loading" | "playing" | "completed"
+        "loading" | "playing" | "completed" | "submitting"
     >("loading")
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const [quizStartTime] = useState(Date.now())
     const [resolvedUserId, setResolvedUserId] = useState<string | null>(null)
 
@@ -47,6 +48,54 @@ function QuizContent() {
     const isMongoObjectId = (val?: string): boolean => {
         if (!val) return false
         return /^[a-fA-F0-9]{24}$/.test(val)
+    }
+
+    // Helper: Resolve Google ID to MongoDB user ID
+    const resolveGoogleIdToMongoId = async (googleId: string, email: string, sessionData?: any): Promise<string | null> => {
+        try {
+            console.log('🔍 Resolving Google ID to MongoDB ID:', { googleId, email })
+            
+            // First try to get user by email
+            const base = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '')
+            const response = await fetch(`${base}/user?email=${encodeURIComponent(email)}`)
+            const data = await response.json()
+            
+            console.log('📊 User lookup response:', data)
+            
+            if (data?.success && data?.data?._id && isMongoObjectId(data.data._id)) {
+                console.log('✅ Found MongoDB user ID:', data.data._id)
+                return data.data._id
+            }
+            
+            // If not found by email, try to create user or get by Google ID
+            console.log('⚠️ User not found by email, trying to create user...')
+            const createResponse = await fetch(`${base}/user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: sessionData?.user?.name || 'User',
+                    email: email,
+                    googleId: googleId,
+                    image: sessionData?.user?.image || ''
+                })
+            })
+            
+            const createData = await createResponse.json()
+            console.log('📊 User creation response:', createData)
+            
+            if (createData?.success && createData?.data?._id && isMongoObjectId(createData.data._id)) {
+                console.log('✅ Created new user with MongoDB ID:', createData.data._id)
+                return createData.data._id
+            }
+            
+            console.error('❌ Failed to resolve or create user')
+            return null
+        } catch (error) {
+            console.error('❌ Error resolving Google ID to MongoDB ID:', error)
+            return null
+        }
     }
 
     // Resolve MongoDB userId once
@@ -116,25 +165,96 @@ function QuizContent() {
         }))
 
         // Auto-navigate to next question or complete quiz
+        console.log('➡️ Answer selected, checking if last question...', { 
+            currentIndex: currentQuestionIndex, 
+            totalQuestions: quiz?.questions.length,
+            isLastQuestion: currentQuestionIndex >= (quiz?.questions.length || 0) - 1,
+            isSubmitting,
+            gameState
+        })
+        
+        if (isSubmitting || gameState === "submitting" || gameState === "completed") {
+            console.log('⚠️ Quiz already being submitted or completed, ignoring...')
+            return
+        }
+        
         if (currentQuestionIndex < (quiz?.questions.length || 0) - 1) {
             setCurrentQuestionIndex((prev) => prev + 1)
         } else {
+            console.log('🏁 Last question reached, completing quiz...')
             completeQuiz()
         }
     }
 
 
     const completeQuiz = async () => {
-        if (!quiz || !user?.id) {
+        // Prevent duplicate submissions
+        if (isSubmitting || gameState === "submitting" || gameState === "completed") {
+            console.log('⚠️ Quiz already being submitted or completed, ignoring duplicate call')
             return
         }
 
+        console.log('🎯 completeQuiz called!', { quiz: !!quiz, userId: user?.id, resolvedUserId })
+        
+        // Set submitting state immediately
+        setIsSubmitting(true)
+        setGameState("submitting")
+        
+        // Try to get user ID from multiple sources
+        const effectiveUserId = user?.id || (user as any)?._id || resolvedUserId
+        
+        if (!quiz || !effectiveUserId) {
+            console.log('❌ Cannot complete quiz - missing data:', { 
+                quiz: !!quiz, 
+                userId: user?.id, 
+                _id: (user as any)?._id,
+                resolvedUserId,
+                effectiveUserId
+            })
+            
+            // Try to get user data from session directly as fallback
+            try {
+                const sessionResponse = await fetch('/api/auth/session')
+                const sessionData = await sessionResponse.json()
+                console.log('🔍 Session data fallback:', sessionData)
+                
+                if (sessionData?.user?.id) {
+                    console.log('✅ Using session user ID as fallback:', sessionData.user.id)
+                    // Check if it's already a MongoDB ID or needs resolution
+                    if (isMongoObjectId(sessionData.user.id)) {
+                        console.log('✅ Session user ID is already MongoDB ID')
+                        await submitQuizWithUserId(sessionData.user.id)
+                        return
+                    } else {
+                        console.log('⚠️ Session user ID is Google ID, resolving to MongoDB ID')
+                        // Resolve Google ID to MongoDB user ID
+                        const mongoUserId = await resolveGoogleIdToMongoId(sessionData.user.id, sessionData.user.email, sessionData)
+                        if (mongoUserId) {
+                            await submitQuizWithUserId(mongoUserId)
+                            return
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Failed to get session data:', error)
+            }
+            
+            // Reset state on error
+            setIsSubmitting(false)
+            setGameState("playing")
+            return
+        }
+        
+        await submitQuizWithUserId(effectiveUserId)
+    }
+
+    const submitQuizWithUserId = async (userId: string) => {
         try {
             const totalTimeSpent = Math.floor(
                 (Date.now() - quizStartTime) / 1000
             )
 
-            const answers = quiz.questions.map((question, index) => {
+            const answers = quiz!.questions.map((question, index) => {
                 const selectedAnswer = selectedAnswers[index] ?? -1
                 const isCorrect = selectedAnswer === question.correctAnswer
                 const timeSpent = questionTimes[index] || 0
@@ -147,21 +267,20 @@ function QuizContent() {
                 }
             })
 
-            // Use resolved Mongo _id if available, else abort
-            const validUserId = resolvedUserId || user?.id
-            if (!validUserId || !isMongoObjectId(validUserId)) {
-                alert("User authentication error. Please try logging in again.")
-                router.push("/login")
-                return
+            // Check if userId is a valid Mongo ObjectId
+            if (!isMongoObjectId(userId)) {
+                console.log('⚠️ User ID is not a Mongo ObjectId, using as-is:', userId)
             }
 
             const submission = {
-                userId: validUserId,
+                userId: userId,
                 answers,
                 totalTimeSpent
             }
 
+            console.log('🚀 Submitting quiz with data:', submission)
             const response = await quizApi.submitQuiz(quizId, submission)
+            console.log('📊 Quiz submission response:', response)
 
             // Type guard to check if response has the expected structure
             if (
@@ -184,10 +303,17 @@ function QuizContent() {
                     }
                 })
 
+                // Set completed state
+                setGameState("completed")
+                setIsSubmitting(false)
+                
                 // Redirect to results page with answers and time data
                 const answersParam = JSON.stringify(answers.map(a => a.selectedAnswer))
                 const timeTakenParam = totalTimeSpent.toString()
-                router.push(`/results/${quizId}?answers=${encodeURIComponent(answersParam)}&timeTaken=${timeTakenParam}`)
+                console.log('✅ Quiz submitted successfully, redirecting to results...')
+                
+                // Use replace instead of push to prevent back navigation to quiz
+                router.replace(`/results/${quizId}?answers=${encodeURIComponent(answersParam)}&timeTaken=${timeTakenParam}`)
             } else {
                 const message =
                     response &&
@@ -196,10 +322,31 @@ function QuizContent() {
                     typeof response.message === "string"
                         ? response.message
                         : "Failed to submit quiz"
+                console.error('❌ Quiz submission failed:', message, response)
                 throw new Error(message)
             }
         } catch (error) {
-            alert("Failed to submit quiz. Please try again.")
+            console.error('❌ Quiz submission error:', error)
+            
+            // Set completed state even on error
+            setGameState("completed")
+            setIsSubmitting(false)
+            
+            // Even if submission fails, redirect to results with local data
+            console.log('🔄 Submission failed, redirecting to results with local data...')
+            
+            // Recreate the answers and time data for fallback redirect
+            const fallbackAnswers = quiz!.questions.map((question, index) => {
+                const selectedAnswer = selectedAnswers[index] ?? -1
+                return { selectedAnswer }
+            })
+            const fallbackTimeSpent = Math.floor((Date.now() - quizStartTime) / 1000)
+            
+            const answersParam = JSON.stringify(fallbackAnswers.map(a => a.selectedAnswer))
+            const timeTakenParam = fallbackTimeSpent.toString()
+            
+            // Use replace instead of push
+            router.replace(`/results/${quizId}?answers=${encodeURIComponent(answersParam)}&timeTaken=${timeTakenParam}`)
         }
     }
 
@@ -212,6 +359,24 @@ function QuizContent() {
                         <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>
                             Loading quiz...
+                        </p>
+                    </div>
+                </div>
+            </Layout>
+        )
+    }
+
+    if (gameState === "submitting") {
+        return (
+            <Layout showNavbar>
+                <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
+                    <div className='text-center'>
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto' />
+                        <p className='mt-4 text-lg text-gray-600'>
+                            Submitting quiz...
+                        </p>
+                        <p className='mt-2 text-sm text-gray-500'>
+                            Please wait while we process your results
                         </p>
                     </div>
                 </div>
