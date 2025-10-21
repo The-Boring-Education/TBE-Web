@@ -19,6 +19,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
     const nextAuth = useNextAuth()
 
+
     // Convert NextAuth user to quiz app user format
     const user: User | null = nextAuth.user
         ? {
