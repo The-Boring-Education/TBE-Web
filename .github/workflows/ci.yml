@@ -1,0 +1,193 @@
+name: 🚀 Continuous Integration
+
+on:
+    pull_request:
+        branches: [development, production]
+        types: [opened, synchronize, reopened, ready_for_review]
+    push:
+        branches: [development, production]
+
+# Prevent multiple workflows from running simultaneously
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    # Job 1: Code Quality Checks (Fast feedback)
+    quality:
+        name: 🔍 Code Quality
+        runs-on: ubuntu-latest
+
+        # Skip draft PRs
+        if: github.event.pull_request.draft == false || github.event_name == 'push'
+
+        outputs:
+            cache-hit: ${{ steps.cache-deps.outputs.cache-hit }}
+
+        steps:
+            - name: 📥 Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: 📦 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - name: 📦 Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9.15.9
+                  run_install: false
+
+            - name: 🔍 Get pnpm store directory
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - name: 🗂️ Setup pnpm cache
+              id: cache-deps
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ${{ env.STORE_PATH }}
+                      node_modules
+                      apps/*/node_modules
+                      packages/*/node_modules
+                  key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-
+
+            - name: 📦 Install Dependencies
+              if: steps.cache-deps.outputs.cache-hit != 'true'
+              run: pnpm install --frozen-lockfile
+
+            - name: 🔍 Run ESLint
+              run: |
+                  echo "🔍 Running ESLint across all packages and applications..."
+                  pnpm run lint
+
+            - name: 🔍 Run Type Checking
+              run: |
+                  echo "🔍 Running TypeScript type checking..."
+                  pnpm run check-types
+
+            - name: 🎨 Check Code Formatting
+              run: |
+                  echo "🎨 Checking code formatting with Prettier..."
+                  pnpm exec prettier --check "**/*.{ts,tsx,md}" || {
+                    echo "❌ Code formatting issues found!"
+                    echo "💡 Run 'pnpm run format' to fix formatting issues"
+                    exit 1
+                  }
+
+    # Job 2: Build Check (Depends on quality check)
+    build:
+        name: 🏗️ Build Check
+        runs-on: ubuntu-latest
+        needs: quality
+
+        # Skip draft PRs
+        if: github.event.pull_request.draft == false || github.event_name == 'push'
+
+        strategy:
+            matrix:
+                # Build different app groups in parallel for faster feedback
+                build-group:
+                    - name: "Shared Packages"
+                      filter: "@tbe/constants @tbe/types @tbe/utils @tbe/interface @tbe/services @tbe/components @tbe/hooks @tbe/auth"
+                    - name: "Core Apps"
+                      filter: "@tbe/platform @tbe/api"
+                    - name: "Yatra Apps"
+                      filter: "@tbe/prep-yatra @tbe/dsayatra @tbe/resume-yatra @tbe/techyatra"
+                    - name: "Other Apps"
+                      filter: "@tbe/quizes @tbe/onboarding"
+
+        steps:
+            - name: 📥 Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: 📦 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - name: 📦 Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9.15.9
+                  run_install: false
+
+            - name: 🔍 Get pnpm store directory
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - name: 🗂️ Restore pnpm cache
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ${{ env.STORE_PATH }}
+                      node_modules
+                      apps/*/node_modules
+                      packages/*/node_modules
+                  key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-
+
+            - name: 📦 Install Dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: 🏗️ Build ${{ matrix.build-group.name }}
+              run: |
+                  echo "🏗️ Building ${{ matrix.build-group.name }}..."
+                  if [ "${{ matrix.build-group.name }}" = "Shared Packages" ]; then
+                    # Build shared packages first (they're dependencies for apps)
+                    pnpm run build --filter="${{ matrix.build-group.filter }}"
+                  else
+                    # Build apps (which depend on shared packages)
+                    pnpm run build --filter="${{ matrix.build-group.filter }}"
+                  fi
+
+            - name: ✅ Build Success for ${{ matrix.build-group.name }}
+              run: |
+                  echo "✅ ${{ matrix.build-group.name }} built successfully!"
+
+    # Job 3: Final Status Check
+    ci-success:
+        name: ✅ CI Success
+        runs-on: ubuntu-latest
+        needs: [quality, build]
+        if: always()
+
+        steps:
+            - name: 📊 Check Results
+              run: |
+                  echo "Quality Check: ${{ needs.quality.result }}"
+                  echo "Build Check: ${{ needs.build.result }}"
+
+                  if [ "${{ needs.quality.result }}" != "success" ] || [ "${{ needs.build.result }}" != "success" ]; then
+                    echo "❌ CI Failed! One or more checks did not pass."
+                    echo ""
+                    echo "🔧 Common fixes:"
+                    echo "  - Fix ESLint issues: pnpm run lint"
+                    echo "  - Fix formatting: pnpm run format"
+                    echo "  - Fix TypeScript errors in your IDE"
+                    echo "  - Test build locally: pnpm run build"
+                    exit 1
+                  else
+                    echo "🎉 All CI checks passed! Ready for merge."
+                  fi
+
+            - name: 🎯 PR Status
+              if: github.event_name == 'pull_request'
+              run: |
+                  echo "✅ This PR is ready for review and merge!"
+                  echo "📋 Completed checks:"
+                  echo "  ✅ Code quality (ESLint)"
+                  echo "  ✅ Type safety (TypeScript)"
+                  echo "  ✅ Code formatting (Prettier)"
+                  echo "  ✅ Build verification (All apps)"

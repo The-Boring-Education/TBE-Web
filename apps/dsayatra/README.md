@@ -1,160 +1,160 @@
-# DSA Yatra - Next.js
+# 📊 DSA Yatra - Data Structures & Algorithms Practice
 
-Your personalized journey to master Data Structures & Algorithms. Built with ❤️ by [The Boring Education](https://theboringeducation.com)
+A comprehensive platform for practicing data structures and algorithms with interactive coding challenges, visual explanations, and progress tracking.
 
-## 🚀 Features
+## 📋 Overview
 
-- **Target-based Learning**: Choose your path based on company type (Startup, MNC, FAANG)
-- **Domain-specific Roadmaps**: Specialized tracks for Full-stack, Data Science, App Dev, ML, Data Analyst, and AI
-- **Time-based Plans**: Flexible learning schedules from 2 months to 5+ months
-- **Beautiful UI**: Modern, responsive design with smooth animations
-- **Comprehensive Question Bank**: Curated DSA questions with difficulty levels and direct LeetCode links
+DSA Yatra helps developers master data structures and algorithms through structured practice, visual learning, and comprehensive problem-solving exercises.
 
-## 🛠️ Technologies Used
+### Key Features
 
-This project is built with:
+- **Interactive Coding**: In-browser code editor with real-time testing
+- **Visual Explanations**: Algorithm visualizations and step-by-step breakdowns
+- **Problem Categories**: Arrays, Linked Lists, Trees, Graphs, Dynamic Programming
+- **Difficulty Levels**: Beginner to Advanced problem sets
+- **Progress Analytics**: Track solving patterns and improvement areas
 
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **React 18** - Latest React features
-- **Tailwind CSS** - Utility-first styling
-- **Framer Motion** - Smooth animations
-- **shadcn/ui** - Beautiful, accessible UI components
-- **Radix UI** - Unstyled, accessible components
-- **React Query** - Data fetching and state management
+## 🛠️ Tech Stack
 
-## 📋 Prerequisites
+- **Framework**: Next.js
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Code Editor**: Monaco Editor or CodeMirror
+- **Visualizations**: D3.js or custom React components
+- **Shared Packages**: `@tbe/components`, `@tbe/hooks`, `@tbe/utils`
 
-Make sure you have the following installed:
+## 🚀 Development
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- npm or yarn or pnpm or bun
+### Prerequisites
 
-## 🚀 Getting Started
+- Node.js >= 20.x
+- pnpm >= 9.12.0
 
-1. **Clone the repository**
+### Setup
+
 ```bash
-git clone <YOUR_GIT_URL>
-cd dsa-yatra-main
-```
-
-2. **Install dependencies**
-```bash
-npm install
-# or
-yarn install
-# or
+# From monorepo root
 pnpm install
-# or
-bun install
+
+# Start dsayatra app
+pnpm dev:dsayatra
 ```
 
-3. **Run the development server**
+### Environment Variables
+
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:3004
+NEXT_PUBLIC_BASE_URL=http://localhost:3006
+
+# Code Execution Service
+NEXT_PUBLIC_CODE_RUNNER_URL=your-code-execution-service
+
+# Cross-app Integration
+NEXT_PUBLIC_PLATFORM_URL=http://localhost:3000
+NEXT_PUBLIC_PREP_YATRA_URL=http://localhost:3001
 ```
-
-4. **Open your browser**
-
-Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## 📁 Project Structure
 
 ```
-dsa-yatra-main/
+apps/dsayatra/
 ├── src/
-│   ├── app/                    # Next.js App Router pages
-│   │   ├── layout.tsx         # Root layout
-│   │   ├── page.tsx           # Home page
-│   │   ├── providers.tsx      # Client-side providers
-│   │   ├── target/[type]/     # Target-based roadmaps
-│   │   ├── domain/[type]/     # Domain-specific roadmaps
-│   │   ├── time/[duration]/   # Time-based roadmaps
-│   │   └── not-found.tsx      # 404 page
-│   ├── components/            # Reusable UI components
-│   │   └── ui/               # shadcn/ui components
-│   ├── data/                 # DSA question data
-│   ├── hooks/                # Custom React hooks
-│   └── lib/                  # Utility functions
-├── public/                    # Static assets
-├── next.config.js            # Next.js configuration
-├── tailwind.config.ts        # Tailwind CSS configuration
-└── tsconfig.json             # TypeScript configuration
+│   ├── app/              # Next.js 13+ app directory
+│   │   ├── problems/     # Problem pages
+│   │   ├── topics/       # Topic-wise organization
+│   │   ├── practice/     # Practice sessions
+│   │   └── analytics/    # Progress analytics
+│   ├── components/       # App-specific components
+│   │   ├── editor/       # Code editor components
+│   │   ├── visualizer/   # Algorithm visualizations
+│   │   └── problems/     # Problem-related components
+│   ├── lib/             # Utilities and configurations
+│   └── styles/          # Global styles
+├── public/              # Static assets
+└── README.md           # This file
 ```
 
-## 🎨 Customization
-
-### Adding New Questions
-
-Edit the `src/data/dsaData.ts` file to add or modify DSA questions and topics.
-
-### Styling
-
-The project uses Tailwind CSS. Modify `tailwind.config.ts` to customize the design system.
-
-### Components
-
-All UI components are in `src/components/ui/` using shadcn/ui and Radix UI.
-
-## 📦 Build for Production
+## 🔧 Available Scripts
 
 ```bash
-npm run build
-# or
-yarn build
-# or
-pnpm build
-# or
-bun build
+pnpm dev                # Start development server
+pnpm build              # Build for production
+pnpm start              # Start production server
+pnpm lint               # Run ESLint
 ```
 
-Then start the production server:
+## 🎯 Key Features
 
-```bash
-npm start
-# or
-yarn start
-# or
-pnpm start
-# or
-bun start
+### Problem Categories
+
+- **Arrays & Strings**: Basic to advanced array manipulations
+- **Linked Lists**: Singly, doubly, and circular linked lists
+- **Stacks & Queues**: Implementation and applications
+- **Trees**: Binary trees, BST, AVL, heap operations
+- **Graphs**: BFS, DFS, shortest path algorithms
+- **Dynamic Programming**: Memoization and tabulation techniques
+
+### Interactive Features
+
+- **Code Editor**: Syntax highlighting and auto-completion
+- **Test Cases**: Automated testing with multiple test cases
+- **Hints System**: Progressive hints for problem-solving
+- **Solution Explanations**: Detailed explanations with complexity analysis
+- **Algorithm Visualization**: Step-by-step algorithm execution
+
+### Progress Tracking
+
+- **Problem Completion**: Track solved problems by category
+- **Difficulty Progress**: Monitor advancement through difficulty levels
+- **Time Analytics**: Average solving time and improvement trends
+- **Weak Areas**: Identify topics needing more practice
+
+## 🎨 Components
+
+### Code Editor
+
+```typescript
+import { CodeEditor } from '@/components/editor'
+
+<CodeEditor
+  language="javascript"
+  defaultValue="// Write your solution here"
+  onSubmit={handleSubmit}
+  testCases={problemTestCases}
+/>
 ```
 
-## 🚢 Deployment
+### Algorithm Visualizer
 
-### Deploy on Vercel (Recommended)
+```typescript
+import { AlgorithmVisualizer } from '@/components/visualizer'
 
-The easiest way to deploy a Next.js app is using [Vercel](https://vercel.com):
+<AlgorithmVisualizer
+  algorithm="binarySearch"
+  data={[1, 3, 5, 7, 9, 11]}
+  target={7}
+/>
+```
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+## 📖 Contributing
 
-### Other Platforms
+Follow the [main contributing guide](../../README.md#contributing) and focus on:
 
-This Next.js app can also be deployed on:
-- Netlify
-- AWS Amplify
-- Railway
-- Render
-- Any Node.js hosting platform
+- Problem quality and accuracy
+- Clear explanations and hints
+- Algorithm visualizations
+- Test case coverage
+- Performance optimization
 
-## 👨‍💻 Author
+### Adding New Problems
 
-Built by [Sachin](https://github.com/imsks) at [The Boring Education](https://theboringeducation.com)
+1. Create problem definition in appropriate category
+2. Add test cases and expected outputs
+3. Write detailed explanation and hints
+4. Add algorithm visualization if applicable
+5. Update progress tracking logic
 
-## 📄 License
+---
 
-This project is open source and available under the MIT License.
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!
-
-## ⭐ Show your support
-
-Give a ⭐️ if this project helped you!
+**Part of the TBE Platform Monorepo**

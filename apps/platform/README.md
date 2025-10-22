@@ -1,177 +1,293 @@
-# The Boring Education
+# 🏠 TBE Platform - Main Application
 
-Welcome to **The Boring Education**! This is an open-source educational platform built with **Next.js** and **MongoDB**. Our goal is to provide a simple, engaging way to learn web development and product design.
+The core platform application for The Boring Education, featuring courses, projects, interview preparation, and user management.
 
-## Project Overview
+## 📋 Overview
 
-This project is designed to help students and developers improve their programming skills through interactive tutorials, examples, and challenges. We're building a community where learning is fun and accessible to everyone.
+This is the main TBE platform built with Next.js, serving as the central hub for all educational content and user interactions.
 
-## Getting Started
+### Key Features
 
-To set up this project locally and start developing, follow these steps:
+- **Shiksha**: Free bite-sized tech courses
+- **Projects**: Real-world project building with peers
+- **Interview Prep**: Tech interview question sheets
+- **Roadmaps**: Personalized learning paths
+- **Portfolio**: Personal portfolio builder
+- **YouFocus**: Distraction-free YouTube learning
+- **Open Source**: Contribution opportunities
 
-### 1. Clone the Repository
+## 🛠️ Tech Stack
 
-First, clone the repository to your local machine:
+- **Framework**: Next.js 13.5.6
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Authentication**: NextAuth.js
+- **Database**: MongoDB (via Mongoose)
+- **State Management**: React Query
+- **UI Components**: Shared `@tbe/components`
+- **Analytics**: Custom analytics system
+- **Monitoring**: Sentry
 
-```bash
-git clone https://github.com/your-userName/TBE-Web.git
-cd the-boring-education
-```
+## 🚀 Development
 
-### 2. Install Dependencies
+### Prerequisites
 
-```
-npm install
-```
+- Node.js >= 20.x
+- pnpm >= 9.12.0
+- MongoDB connection
 
-### 3. Set Up Environment Variables
-
-You will need to create a `.env.local` file to configure the environment:
-
-```bash
-# Create .env.local file
-touch .env.local
-```
-
-Add environment variables to your `.env.local` file as needed:
-
-```bash
-# Add environment variables here as needed
-# API_URL=http://localhost:3000
-```
-
-### 4. Start the Development Server
-
-```
-npm run dev
-```
-
-## Building & Deployment
-
-### Development Build
+### Setup
 
 ```bash
-npm run build
+# From monorepo root
+pnpm install
+
+# Start platform app only
+pnpm dev:platform
+
+# Or start all apps
+pnpm dev
 ```
 
-### Production Build
+The app will be available at `http://localhost:3000`
+
+### Environment Variables
+
+Create `.env.local` in the app directory or use the shared root `.env.local`:
 
 ```bash
-NODE_ENV=production npm run build
+# Database
+MONGODB_URI=mongodb://localhost:27017/tbe-platform
+
+# Authentication
+NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=http://localhost:3000
+GOOGLE_AUTH_CLIENT_ID=your-google-client-id
+GOOGLE_AUTH_CLIENT_SECRET=your-google-client-secret
+
+# External APIs
+OPENAI_API_KEY=your-openai-key
+YOUTUBE_API_KEY=your-youtube-key
+
+# App URLs (for cross-app navigation)
+NEXT_PUBLIC_PREP_YATRA_URL=http://localhost:3001
+NEXT_PUBLIC_QUIZ_URL=http://localhost:3002
+NEXT_PUBLIC_API_URL=http://localhost:3004
+
+# Analytics & Monitoring
+NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
 ```
 
-**That's it!** The build automatically configures the correct URLs for your environment.
+## 📁 Project Structure
 
-# Want to contribute?
-
-Please refer to our [Contribution Guidelines](CONTRIBUTING.md) for detailed information on how to contribute to this project.
-
-## 🧪 Testing & Quality Assurance
-
-Our automated quality gates cover everything from isolated units to full browser flows.
-
-1. **Unit & Integration Tests (Jest)** – Located under `src/**/__tests__` or `tests/`. Run locally with:
-   ```bash
-   npm test         # quick feedback
-   npm run test:ci  # generates coverage report in ./coverage
-   ```
-2. **API Route Tests** – Powered by `next-test-api-route-handler`, executed together with Jest. See `tests/api/*` for examples.
-3. **End-to-End (E2E) Tests** – Headless browser checks written with Playwright and stored in `e2e/`.
-   ```bash
-   npm run test:e2e
-   ```
-4. **Continuous Integration** – Every Pull Request triggers `.github/workflows/ci-tests.yml` which:
-   - installs dependencies
-   - runs all Jest suites & publishes coverage artifacts
-   - spins up the dev server and executes Playwright scenarios
-
-Feel free to add more tests; any file that matches `*.test.{js,ts,tsx}` will be picked up automatically.
-
-### Mocking patterns
-
-#### Component / Module
-
-```ts
-import { render } from '@testing-library/react';
-
-// Mock the next/router for deterministic navigation
-jest.mock('next/router', () => require('next-router-mock'));
-
-// Mock a utility module
-jest.mock('@/utils/api', () => ({
-  fetcher: jest.fn(() => Promise.resolve({ data: 'fake' })),
-}));
-
-// Now render your component and assert
+```
+apps/platform/
+├── src/
+│   ├── components/          # App-specific components
+│   ├── pages/              # Next.js pages and API routes
+│   │   ├── api/            # API endpoints
+│   │   ├── shiksha/        # Course pages
+│   │   ├── projects/       # Project pages
+│   │   ├── interview-prep/ # Interview prep pages
+│   │   └── user/           # User dashboard pages
+│   ├── constant/           # App constants and configurations
+│   ├── hooks/              # App-specific hooks
+│   ├── interfaces/         # TypeScript interfaces
+│   ├── lib/                # Utility functions and configurations
+│   └── styles/             # Global styles
+├── public/                 # Static assets
+├── next.config.js          # Next.js configuration
+├── tailwind.config.js      # Tailwind configuration
+└── tsconfig.json          # TypeScript configuration
 ```
 
-#### API mocking with MSW
+## 🔧 Available Scripts
 
-```ts
-// tests/msw/handlers.ts
-import { rest } from 'msw';
-export const handlers = [
-  rest.get('/api/user/:id', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ id: req.params.id, name: 'Mocky' }));
-  }),
-];
+```bash
+# Development
+pnpm dev                    # Start development server (port 3000)
+
+# Building
+pnpm build                  # Build for production
+pnpm start                  # Start production server
+
+# Code Quality
+pnpm lint                   # Run ESLint
+pnpm lint:fix              # Fix ESLint issues
+pnpm typecheck             # Run TypeScript checks
+pnpm format                # Format code with Prettier
+
+# Release
+pnpm pre-release           # Lint and build
+pnpm release               # Full release process
 ```
 
-The server is auto-started in `jest.setup.js` making network calls deterministic.
+## 📚 Key Pages & Routes
 
-### Advanced Patterns
+### Public Routes
 
-1. **Testing Framer-Motion components** – Wrap expectations in `await waitFor` if animation influences DOM timing.
-2. **Mocking child components** – Use `jest.mock('@/components', () => ({ ... }))` to isolate the unit under test (see `Navbar.test.tsx`).
-3. **Using MSW in component tests** – Component fetches data:
-   ```ts
-   rest.get('/api/v1/posts', (_req, res, ctx) =>
-     res(ctx.json([{ id: 1, title: 'Demo' }]))
-   );
-   ```
-   Push local handler inside test via `server.use()` to override default behaviour.
-4. **Playwright fixtures** – Add file `e2e/fixtures.ts` exporting custom fixtures for signed-in state, reducing boilerplate across specs.
+- `/` - Homepage with product overview
+- `/shiksha` - Course catalog
+- `/projects` - Project showcase
+- `/interview-prep` - Interview preparation resources
+- `/roadmaps` - Learning roadmaps
+- `/contribute` - Open source contribution guide
 
-## 📧 Email System
+### Protected Routes
 
-The TBE Email System provides a robust, scalable email sending solution with support for multiple email types and external API integration.
+- `/user/dashboard` - User dashboard
+- `/user/profile` - User profile management
+- `/shiksha/my-courses` - User's enrolled courses
+- `/projects/my-projects` - User's projects
+- `/interview-prep/my-sheets` - User's interview sheets
 
-### Features
+### API Routes
 
-- ✅ Multiple email types (Welcome, Course Enrollment, Project Enrollment, Interview Prep, Course Completion)
-- ✅ External API support for third-party integrations
-- ✅ Comprehensive logging and error tracking
-- ✅ Template-based email generation
-- ✅ Request tracking with unique IDs
+- `/api/auth/*` - Authentication endpoints
+- `/api/user/*` - User management
+- `/api/shiksha/*` - Course management
+- `/api/projects/*` - Project management
+- `/api/analytics/*` - Analytics tracking
 
-### Quick Start
+## 🎨 UI Components
 
-```javascript
-// Send a welcome email
-const response = await fetch('/api/v1/email/external', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    emailType: 'WELCOME',
-    userData: {
-      email: 'user@example.com',
-      name: 'John Doe',
-      id: 'user123',
-    },
-  }),
+The app uses shared components from `@tbe/components`:
+
+```typescript
+// Standardized components
+import { StandardizedNavbar, StandardizedFooter } from '@tbe/components';
+
+// Feature-specific components
+import {
+  CourseCard,
+  ProjectCard,
+  InterviewSheet,
+  UserDashboard,
+} from '@tbe/components';
+```
+
+## 🔐 Authentication
+
+Authentication is handled via NextAuth.js with multiple providers:
+
+```typescript
+// Check authentication status
+import { useAuth } from '@tbe/hooks';
+
+const { user, isLoading, isAuthenticated } = useAuth();
+
+// Protect routes
+import { ProtectedRoute } from '@tbe/components';
+
+<ProtectedRoute>
+  <YourProtectedComponent />
+</ProtectedRoute>;
+```
+
+## 📊 Analytics
+
+Custom analytics system for tracking user interactions:
+
+```typescript
+import { useAnalytics } from '@tbe/hooks';
+
+const { trackEvent } = useAnalytics();
+
+// Track events
+trackEvent('course_started', {
+  courseId: 'javascript-basics',
+  userId: user.id,
 });
 ```
 
-### API Endpoints
+## 🗄️ Database Schema
 
-- `POST /api/v1/email/send` - Send custom emails
-- `POST /api/v1/email/triggers` - Send trigger-based emails
-- `POST /api/v1/email/external` - Simplified API for external products
+Key MongoDB collections:
 
-### Documentation
+- **users** - User profiles and authentication
+- **courses** - Course content and metadata
+- **projects** - Project information and submissions
+- **userProgress** - Learning progress tracking
+- **analytics** - Event tracking data
 
-For detailed documentation and integration examples, see:
+## 🚀 Deployment
 
-- [Email Service Documentation](src/services/email/README.md)
-- [External Integration Examples](examples/external-email-usage.md)
+### Vercel (Recommended)
+
+```bash
+# Build and deploy
+vercel --prod
+
+# Environment variables are configured in Vercel dashboard
+```
+
+### Manual Deployment
+
+```bash
+# Build the application
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+## 🧪 Testing
+
+```bash
+# Run tests
+pnpm test
+
+# Run tests with coverage
+pnpm test:coverage
+
+# Run specific test file
+pnpm test components/CourseCard.test.tsx
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Authentication Issues:**
+
+- Verify `NEXTAUTH_SECRET` and `NEXTAUTH_URL` are set
+- Check Google OAuth credentials
+- Ensure MongoDB connection is working
+
+**Build Failures:**
+
+- Clear `.next` directory: `rm -rf .next`
+- Reinstall dependencies: `pnpm install`
+- Check for TypeScript errors: `pnpm typecheck`
+
+**Styling Issues:**
+
+- Ensure Tailwind classes are properly imported
+- Check for conflicting CSS
+- Verify shared component imports
+
+## 📖 Contributing
+
+1. Follow the [main contributing guide](../../README.md#contributing)
+2. Focus on the specific area you're working on
+3. Test thoroughly with different user roles
+4. Update documentation for new features
+
+### Development Tips
+
+- Use shared components from `@tbe/components` when possible
+- Follow the established routing patterns
+- Implement proper error handling
+- Add analytics tracking for user interactions
+- Ensure responsive design across devices
+
+## 🔗 Related Apps
+
+- [Prep Yatra](../prep-yatra/README.md) - Interview preparation
+- [Quizes](../quizes/README.md) - Quiz platform
+- [API](../api/README.md) - Backend services
+
+---
+
+**Part of the TBE Platform Monorepo**
