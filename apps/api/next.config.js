@@ -34,9 +34,7 @@ const nextConfig = {
         // Reduce memory usage
         isrMemoryCacheSize: 0,
         // Disable symlinks for Windows compatibility
-        esmExternals: false,
-        // Disable tracing to avoid symlink issues on Windows
-        outputFileTracing: false
+        esmExternals: false
     },
 
     // Redirect all non-API routes to API documentation or health check

@@ -9,8 +9,9 @@
     "start": "next start -p 3000",
     "start:cloud-run": "node server.js",
     "lint": "eslint .",
-    "docker:build": "docker build -t tbe-api .",
+    "docker:build": "cd ../.. && docker build -f apps/api/Dockerfile -t tbe-api .",
     "docker:run": "docker run -p 3000:3000 tbe-api",
+    "docker:test": "./test-docker-build.sh",
     "deploy": "./deploy.sh"
   },
   "dependencies": {

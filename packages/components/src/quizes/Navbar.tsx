@@ -17,7 +17,7 @@ import { useToast } from './ui/use-toast'
 import { PointsDisplay } from './PointsDisplay'
 
 export function Navbar() {
-    const { user, signOut } = useAuth()
+    const { user, signOut, isLoading } = useAuth()
     const router = useRouter()
     const pathname = usePathname()
     const { toast } = useToast()
@@ -107,7 +107,11 @@ export function Navbar() {
                     )}
 
                     {/* User Menu */}
-                    {user ? (
+                    {isLoading ? (
+                        <div className="flex items-center space-x-4">
+                            <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+                        </div>
+                    ) : user ? (
                         <div className="flex items-center space-x-4">
                             {/* Mobile Navigation */}
                             <div className="md:hidden">

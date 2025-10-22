@@ -1,108 +1,102 @@
-# TechYatra 🚀
+# 🛠️ Tech Yatra - Technology Learning Journey
 
-**Your personalized tech learning roadmap for Bharat**
+A comprehensive technology learning roadmap platform that guides developers through structured learning paths and skill development journeys.
 
-TechYatra helps students and professionals find their perfect tech learning path. Whether you want to learn web development, DSA, or choose a tech domain - we provide curated roadmaps and free resources.
+## 📋 Overview
 
-## 🌟 Features
+Tech Yatra provides curated learning roadmaps, technology guides, and structured paths for developers to master various technologies and frameworks.
 
-- **Personalized Learning Paths**: Choose your role, domain, or focus area
-- **DSA Preparation**: Complete roadmaps for placements and competitive coding
-- **Domain Selection**: Explore Web Dev, Mobile, AI/ML, Backend, and more
-- **Language Guides**: Start with Python, JavaScript, Java, or C++
-- **Free Resources**: Curated free learning materials
-- **Student & Professional Tracks**: Different paths based on your stage
+### Key Features
 
-## 🚀 Getting Started
+- **Learning Roadmaps**: Structured paths for different technologies
+- **Progress Tracking**: Monitor learning journey and milestones
+- **Resource Curation**: Handpicked learning materials and tutorials
+- **Skill Assessment**: Evaluate current knowledge and gaps
+- **Community Features**: Connect with other learners
 
-### Development
+## 🛠️ Tech Stack
 
-From the monorepo root:
-
-```bash
-# Install dependencies
-pnpm install
-
-# Run dev server (runs on port 3003)
-pnpm run dev:techyatra
-```
-
-Or from the app directory:
-
-```bash
-cd apps/techyatra
-pnpm dev
-```
-
-Open [http://localhost:3003](http://localhost:3003) in your browser.
-
-### Build
-
-```bash
-# From root
-pnpm run build:techyatra
-
-# From app directory
-pnpm build
-```
-
-## 🛠 Tech Stack
-
-- **Framework**: Next.js 13 (App Router)
+- **Framework**: Next.js
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **UI Components**: Radix UI + Custom UI library
-- **Icons**: Lucide React
-- **State Management**: React Query (TanStack Query)
-- **Notifications**: Sonner
+- **Shared Packages**: `@tbe/components`, `@tbe/hooks`, `@tbe/utils`
 
-## 📦 Shared Packages
+## 🚀 Development
 
-This app is part of the TBE monorepo and uses:
-- `@tbe/components` - Shared UI components and layouts
-- `@tbe/constants` - App constants and configurations
-- `@tbe/hooks` - Reusable React hooks
-- `@tbe/interface` - TypeScript interfaces
-- `@tbe/types` - Shared types
-- `@tbe/utils` - Utility functions
-- `@tbe/services` - API services
-- `@tbe/config` - Configuration files
+### Prerequisites
 
-## 🌐 Deployment
+- Node.js >= 20.x
+- pnpm >= 9.12.0
 
-This app is configured for Vercel deployment. The `vercel.json` includes:
-- Turbo build command for monorepo
-- Proper install command using pnpm
+### Setup
 
-## 📝 Project Structure
+```bash
+# From monorepo root
+pnpm install
+
+# Start techyatra app
+pnpm dev:techyatra
+```
+
+### Environment Variables
+
+```bash
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:3004
+NEXT_PUBLIC_BASE_URL=http://localhost:3005
+
+# Cross-app Integration
+NEXT_PUBLIC_PLATFORM_URL=http://localhost:3000
+```
+
+## 📁 Project Structure
 
 ```
 apps/techyatra/
-├── public/              # Static assets
-│   ├── favicon.ico
-│   ├── manifest.json
-│   ├── robots.txt
-│   └── sitemap.xml
 ├── src/
-│   └── app/            # Next.js App Router
-│       ├── globals.css
-│       ├── layout.tsx
-│       ├── page.tsx
-│       ├── providers.tsx
-│       ├── not-found.tsx
-│       ├── robots.ts
-│       └── sitemap.ts
-├── next.config.js
-├── tailwind.config.js
-├── tsconfig.json
-└── package.json
+│   ├── app/              # Next.js 13+ app directory
+│   ├── components/       # App-specific components
+│   ├── lib/             # Utilities and configurations
+│   └── styles/          # Global styles
+├── public/              # Static assets
+└── README.md           # This file
 ```
 
-## 🤝 Contributing
+## 🔧 Available Scripts
 
-This is part of The Boring Education monorepo. See the main repo README for contribution guidelines.
+```bash
+pnpm dev                # Start development server
+pnpm build              # Build for production
+pnpm start              # Start production server
+pnpm lint               # Run ESLint
+```
 
-## 📄 License
+## 🎯 Key Features
 
-MIT License - The Boring Education
+### Learning Roadmaps
 
+- Frontend Development Path
+- Backend Development Path
+- DevOps Journey
+- Mobile Development
+- Data Science Track
+
+### Progress Tracking
+
+- Milestone completion
+- Skill level assessment
+- Learning analytics
+- Achievement badges
+
+## 📖 Contributing
+
+Follow the [main contributing guide](../../README.md#contributing) and focus on:
+
+- Learning path accuracy
+- Resource quality
+- User experience
+- Progress tracking features
+
+---
+
+**Part of the TBE Platform Monorepo**
