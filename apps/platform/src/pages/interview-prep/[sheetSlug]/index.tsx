@@ -3,6 +3,7 @@ import {
   FeedbackPopup,
   FlexContainer,
   LinerProgressBar,
+  LoadingSpinner,
   MDXRenderer,
   PaymentCard,
   QuestionLink,
@@ -222,6 +223,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     }
   };
 
+  // Show small loader if data is not ready
+  const isDataLoading = !sheet || !questions || questions.length === 0;
+
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
@@ -234,6 +238,17 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           isPurchased={!!isPurchased} // Ensure boolean
         />
       </Section>
+
+      {isDataLoading && (
+        <Section className='md:p-2 p-2'>
+          <div className='flex items-center justify-center py-8'>
+            <LoadingSpinner height={8} width={8} />
+            <Text level='p' className='ml-3 text-gray-600'>Loading interview questions...</Text>
+          </div>
+        </Section>
+      )}
+
+      {!isDataLoading && (
       <Section className='md:p-2 p-2'>
         <FlexContainer className='w-full gap-4' itemCenter={false}>
           {/* Left Sidebar (Questions) */}
@@ -388,6 +403,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           </FlexContainer>
         </FlexContainer>
       </Section>
+      )}
+
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type='INTERVIEW_SHEET' />
       )}
