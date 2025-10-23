@@ -8,6 +8,7 @@ import {
   FeedbackPopup,
   FlexContainer,
   LinerProgressBar,
+  LoadingSpinner,
   MDXRenderer,
   Section,
   SEO,
@@ -345,6 +346,9 @@ const CoursePage = ({
     />
   );
 
+  // Show small loader if data is not ready
+  const isDataLoading = !course || !chapters || chapters.length === 0;
+
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
@@ -358,6 +362,16 @@ const CoursePage = ({
         />
       </Section>
 
+      {isDataLoading && (
+        <Section className='md:p-2 p-2'>
+          <div className='flex items-center justify-center py-8'>
+            <LoadingSpinner height={8} width={8} />
+            <Text level='p' className='ml-3 text-gray-600'>Loading course content...</Text>
+          </div>
+        </Section>
+      )}
+
+      {!isDataLoading && (
       <Section id='course-content' className='md:p-2 p-2'>
         <div ref={contentSectionRef}>
           <FlexContainer className='w-full gap-4' itemCenter={false}>
@@ -515,6 +529,7 @@ const CoursePage = ({
           </FlexContainer>
         </div>
       </Section>
+      )}
 
       {showChapterFeedback && (
         <FeedbackPopup 
