@@ -275,7 +275,7 @@ const Dashboard = () => {
                 <div className='flex gap-6'>
                     {/* Profile Section - Collapsible Sidebar */}
                     <div
-                        className={`${isSidebarCollapsed ? "hidden" : "block"} w-full lg:w-1/3 transition-all duration-300`}>
+                        className={`${isSidebarCollapsed ? "hidden" : "block"} w-full lg:w-1/3 transition-all duration-300 mt-3`}>
                         <ProfileSection
                             user={user}
                             profile={profile}
@@ -294,7 +294,7 @@ const Dashboard = () => {
 
                     {/* Main Content */}
                     <div
-                        className={`${isSidebarCollapsed ? "w-full" : "w-full lg:w-2/3"} transition-all duration-300`}>
+                        className={`${isSidebarCollapsed ? "w-full" : "w-full lg:w-2/3"} transition-all duration-300 mt-3`}>
                         {/* Daily Prep Check-in above tabs */}
                         <Suspense fallback={<ComponentLoader />}>
                             <div className='mb-4'>
