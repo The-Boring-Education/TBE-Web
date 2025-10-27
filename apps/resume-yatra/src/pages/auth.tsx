@@ -1,5 +1,5 @@
 import { useAuth } from "@tbe/auth"
-import { FileText, Github, Loader2 } from "lucide-react"
+import { FileText, Loader2 } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
@@ -78,8 +78,7 @@ export default function AuthPage() {
                             </>
                         ) : (
                             <>
-                                <Github className='w-5 h-5 mr-2' />
-                                Continue with GitHub
+                                Continue with Google
                             </>
                         )}
                     </Button>
