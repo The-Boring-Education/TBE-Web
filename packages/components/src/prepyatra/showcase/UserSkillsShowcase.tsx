@@ -1,7 +1,7 @@
 import {Award, Sparkles} from "lucide-react";
 import React from "react";
 
-import {Badge} from "../ui/badge";
+import Button from "../../common/Buttons/Button";
 
 interface UserSkillsShowcaseProps {
   userSkills: string[];
@@ -17,30 +17,31 @@ const formatDate = (dateString?: string) => {
 
 const UserSkillsShowcase: React.FC<UserSkillsShowcaseProps> = ({userSkills, lastUpdated, title}) => {
   return (
-    <div className="w-full bg-gray-900/80 border border-yellow-400/40 rounded-1 p-4 mb-4 mt-2 shadow">
-      <h3 className="text-base font-semibold text-primary/90 mb-4 flex items-center gap-2 justify-center">
-        <Sparkles className="w-5 h-5 text-primary/70" />
+    <div className="w-full bg-white border border-greyLight rounded-2xl p-4 mb-4 mt-2 shadow">
+      <h3 className="text-base font-semibold text-primary mb-4 flex items-center gap-2 justify-center">
+        <Sparkles className="w-5 h-5 text-primary" />
         {title || "Skills Showcase"}
       </h3>
       {userSkills.length === 0 ? (
-        <div className="text-center text-gray-400 text-sm py-3">
-          <Award className="inline w-6 h-6 text-gray-600 mb-1" />
+        <div className="text-center text-greyDark text-sm py-3">
+          <Award className="inline w-6 h-6 text-greyDark mb-1" />
           <div>No skills added yet. Check back soon!</div>
         </div>
       ) : (
         <div className="flex flex-wrap gap-2 justify-start">
           {userSkills.map((skill) => (
-            <Badge
+            <Button
               key={skill}
-              className="bg-gray-800 border border-gray-700 text-gray-200 font-medium px-3 py-1.5 text-sm rounded-full shadow-sm hover:bg-primary/10 transition-colors duration-200"
+              variant="OUTLINE"
+              className="font-medium px-3 py-1.5 text-sm rounded-full text-black"
             >
               {skill}
-            </Badge>
+            </Button>
           ))}
         </div>
       )}
       {lastUpdated && (
-        <div className="text-[11px] text-gray-400 text-center mt-3">
+        <div className="text-[11px] text-greyDark text-center mt-3">
           Last updated: {formatDate(lastUpdated)}
         </div>
       )}

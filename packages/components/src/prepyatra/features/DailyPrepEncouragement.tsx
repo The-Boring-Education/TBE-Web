@@ -82,9 +82,10 @@ const DailyPrepEncouragement = ({
                             onClick={onAddPrepLog}
                             variant="PRIMARY"
                             text={buttonText}
-                            icon={<Plus className='h-4 w-4 mr-2' />}
+                            size="SMALL"
+                            icon={<Plus className='h-2 w-2 mr-2' />}
                             className={`
-                                min-w-[120px] font-medium transition-all rounded-1 duration-200 text-sm px-3 py-1.5
+                                 duration-200 text-sm
                                 ${hasLoggedToday ? "bg-green-600 hover:bg-green-700" : ""}
                             `}
                         />

@@ -17,6 +17,7 @@ import type { RecruiterContact } from "@tbe/types"
 import Button from "../../common/Buttons/Button"
 import Text from "../../common/Typography/Text"
 import FlexContainer from "../../containers/Page/common/FlexContainer"
+import { Plus } from "lucide-react"
 
 interface AddRecruiterModalProps {
     isOpen: boolean
@@ -279,13 +280,15 @@ const AddRecruiterModal = ({
                     </div>
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            variant='OUTLINE'
+                            variant="OUTLINE"
+                            size="SMALL"
                             text="Cancel"
                             onClick={onClose}
-                            className='border-greyLight text-contentLight hover:bg-greyLight'
+                            className='text-sm h-5'
                         />
                         <Button
-                            variant='PRIMARY'
+                            variant="PRIMARY"
+                            size="SMALL"
                             text={loading
                                 ? editContact
                                     ? "Updating..."
@@ -294,7 +297,7 @@ const AddRecruiterModal = ({
                                   ? "Update Contact"
                                   : "Create Contact"}
                             disabled={loading}
-                            className='bg-primary text-white'
+                            className='text-sm h-5'
                         />
                     </DialogFooter>
                 </form>

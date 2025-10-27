@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
                                         onClick={onSignOut}
                                         text='Sign Out'
                                         variant='PRIMARY'
-                                        className='text-sm px-3 py-1.5'
+                                             className='text-sm h-2 '
                                         isLoading={false}
                                         animationType='BOUNCE'
                                         />

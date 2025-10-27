@@ -1,7 +1,6 @@
 import { X, Plus, Code, AlertTriangle } from "lucide-react"
 import React, { useState, useRef } from "react"
 
-import { Badge } from "../ui/badge"
 import {
     Dialog,
     DialogContent,
@@ -166,36 +165,41 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
                             </Text>
                         )}
                         {skills.map((skill) => (
-                            <Badge
-                                key={skill}
-                                className='flex items-center gap-2 bg-primary/20 text-primary font-semibold px-4 py-1.5 rounded-full border border-primary/40 transition hover:bg-primary/40 hover:border-primary hover:text-primary-foreground cursor-pointer shadow-none'>
-                                <Code className='w-4 h-4 text-primary' />
-                                <Text level="span">{skill}</Text>
+                            <div key={skill} className='relative inline-flex items-center'>
+                                <Button
+                                    variant="OUTLINE"
+                                    size="SMALL"
+                                    text={skill}
+                                    className='font-medium px-4 py-1.5 text-sm rounded-full text-black pr-8'
+                                />
                                 <button
                                     type='button'
-                                    className='ml-2 text-primary/70 hover:text-red-400 focus:outline-none'
+                                    className='absolute right-2 text-primary hover:text-red-500 focus:outline-none transition-colors'
                                     onClick={() => handleRemoveSkill(skill)}
                                     disabled={removing === skill}>
-                                    <X className='w-3 h-3' />
+                                    <X className='w-3.5 h-3.5' />
                                 </button>
-                            </Badge>
+                            </div>
                         ))}
                     </div>
 
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            variant='NEUTRAL'
+                            variant="OUTLINE"
+                            size="SMALL"
                             text="Cancel"
                             onClick={onClose}
-                            className='border-greyLight rounded-md text-contentLight hover:bg-greyLight border-2'
+                            className='text-sm h-5'
                             isLoading={loading}
                             animationType='BOUNCE'
                             />
                         <Button
-                            variant='NEUTRAL'
+                            variant="PRIMARY"
+                            size="SMALL"
                             text={loading ? "Adding..." : "Add Skill"}
                             disabled={loading || !inputValue.trim()}
-                            className='bg-primary rounded-md text-white border-2'
+                            className='text-sm h-5'
+                            icon={<Plus className="w-4 h-4 mr-1" />}
                             isLoading={loading}
                             animationType='BOUNCE'
                         />

@@ -220,8 +220,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         {profile?.userName && (
             <Button
               onClick={handleShareJourneyClick}
-              variant="NEUTRAL"
+              variant="PRIMARY"
               text="Share Your Journey"
+              size="SMALL"
               className="w-full"
               icon={<Copy className="w-2 h-2 mr-2" />}
             />
@@ -232,6 +233,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               onClick={onEditClick}
               variant="OUTLINE"
               text="Edit Onboarding Details"
+              size="SMALL"
               className="w-full"
               icon={<Edit className="w-2 h-2 mr-2" />}
             />

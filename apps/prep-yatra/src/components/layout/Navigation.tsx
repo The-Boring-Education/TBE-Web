@@ -35,6 +35,7 @@ const Navigation = () => {
                             text='Get Started'
                             onClick={handleGetStarted}
                             variant='PRIMARY'
+                            size="SMALL"
                             className='bg-primary rounded-md text-black hover:bg-primary/90 font-semibold px-6 transform transition-transform hover:scale-105'
                         />
                     </div>

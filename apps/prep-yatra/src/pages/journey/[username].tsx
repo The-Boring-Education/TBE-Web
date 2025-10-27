@@ -179,6 +179,8 @@ const PrepLogsShowcase = () => {
                         text='Start Your Own Journey'
                         onClick={handleGetStarted}
                         variant='PRIMARY'
+                        size='MEDIUM'
+                        className='w-full sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base'
                     />
                 </Section>
                 <PrepYatraFooter />
@@ -303,12 +305,13 @@ const PrepLogsShowcase = () => {
                             <CardContent className='px-4 sm:px-6 pb-6 sm:pb-8'>
                                 <div className='flex flex-wrap justify-center gap-2 sm:gap-3'>
                                     {profile.userSkills.map((skill, index) => (
-                                        <Badge
+                                        <Button
                                             key={index}
-                                            variant='secondary'
-                                            className='px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 transition-colors duration-200'>
-                                            {skill}
-                                        </Badge>
+                                            variant='OUTLINE'
+                                            size='SMALL'
+                                            text={skill}
+                                            className='font-medium px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-full text-black'
+                                        />
                                     ))}
                                 </div>
                             </CardContent>
@@ -511,7 +514,8 @@ const PrepLogsShowcase = () => {
                                 text='Get Started for Free'
                                 onClick={handleGetStarted}
                                 variant='PRIMARY'
-                                className='px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg hover:scale-105 transition-transform duration-200'
+                                size='MEDIUM'
+                                className='w-full sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg hover:scale-105 transition-transform duration-200'
                             />
                         </CardContent>
                     </Card>
