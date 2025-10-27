@@ -1,8 +1,7 @@
-import { Share2, Copy, TrendingUp, CheckCircle2, Trophy } from "lucide-react"
+import { Share2, Copy, TrendingUp, CheckCircle2, Trophy, Linkedin, Twitter, Facebook, X, LogOut } from "lucide-react"
 import { useState, useRef } from "react"
 import { toast } from "sonner"
 
-import { Button } from "../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { Checkbox } from "../ui/checkbox"
 import {
@@ -13,13 +12,14 @@ import {
     DialogHeader,
     DialogTitle
 } from "../ui/dialog"
-import { Input } from "../ui/input"
+import { InputField  } from "../ui/input"
 import { Label } from "../ui/label"
     import { Textarea } from "../ui/textarea"
 import { challengesService } from "@tbe/services"
 import { prepLogsService } from "@tbe/services"
 import type { Challenge } from "@tbe/types"
-
+import Button from "../../common/Buttons/Button"    
+import Text from "../../common/Typography/Text"
 interface ChallengeLogModalProps {
     isOpen: boolean
     onClose: () => void
@@ -345,9 +345,12 @@ ${
                     <DialogFooter>
                         <Button
                             onClick={handleClose}
-                            className='bg-primary text-white hover:bg-primary/90'>
-                            Close
-                        </Button>
+                            variant="PRIMARY"
+                            size="SMALL"
+                            text="Close"
+                            icon={<X className="w-4 h-4 mr-1" />}
+                            className='text-sm h-5'
+                        />
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
@@ -361,7 +364,6 @@ ${
                     <>
                         <DialogHeader>
                             <DialogTitle className='text-xl font-bold text-contentLight flex items-center gap-2'>
-                                <TrendingUp className='w-5 h-5 text-primary' />
                                 Log Day {nextDay + 1} Progress
                             </DialogTitle>
                             <DialogDescription className='text-greyDark'>
@@ -394,24 +396,13 @@ ${
 
                             {/* Hours Spent */}
                             <div className='space-y-2'>
-                                <Label
-                                    htmlFor='hoursSpent'
-                                    className='text-contentLight'>
-                                    How many hours did you spend? *
-                                </Label>
-                                <Input
-                                    id='hoursSpent'
+                                <InputField
+                                    field='hoursSpent'
+                                    label='How many hours did you spend? *'
                                     type='number'
-                                    min='0.5'
-                                    max='24'
-                                    step='0.5'
-                                    placeholder='2.5'
                                     value={formData.hoursSpent}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "hoursSpent",
-                                            e.target.value
-                                        )
+                                    onChange={(field, value) =>
+                                        handleInputChange(field, value)
                                     }
                                     className='bg-white/50 border-greyLight text-contentLight'
                                 />
@@ -424,17 +415,13 @@ ${
                                 </Label>
                                 <div className='space-y-2'>
                                     {formData.nextGoals.map((goal, index) => (
-                                        <Input
+                                        <InputField
+                                            field={`nextGoal-${index}`}
+                                            label={`Goal ${index + 1} (optional)`}
                                             key={index}
-                                            placeholder={`Goal ${
-                                                index + 1
-                                            } (optional)`}
                                             value={goal}
-                                            onChange={(e) =>
-                                                handleNextGoalChange(
-                                                    index,
-                                                    e.target.value
-                                                )
+                                            onChange={(field, value) =>
+                                                handleNextGoalChange(index, value)
                                             }
                                             className='bg-white/50 border-greyLight text-contentLight placeholder:text-greyDark'
                                         />
@@ -510,10 +497,11 @@ ${
                         <DialogFooter>
                             <Button
                                 onClick={onClose}
-                                variant='outline'
-                                className='border-greyLight text-contentLight hover:bg-greyLight'>
-                                Cancel
-                            </Button>
+                                variant="OUTLINE"
+                                size="SMALL"
+                                text="Cancel"
+                                className='text-sm h-5'
+                            />
                             <Button
                                 onClick={handleSubmit}
                                 disabled={
@@ -521,9 +509,11 @@ ${
                                     !formData.progressText.trim() ||
                                     !formData.hoursSpent
                                 }
-                                className='bg-primary text-white hover:bg-primary/90'>
-                                {loading ? "Logging..." : "Log Progress"}
-                            </Button>
+                                variant="PRIMARY"
+                                size="SMALL"
+                                text={loading ? "Logging..." : "Log Progress"}
+                                className='text-sm h-5'
+                            />
                         </DialogFooter>
                     </>
                 ) : (
@@ -636,12 +626,12 @@ ${
                                             )
                                         copyToClipboard(message || "")
                                     }}
-                                    variant='outline'
-                                    size='sm'
-                                    className='border-gray-600 text-white hover:bg-gray-700'>
-                                    <Copy className='w-4 h-4 mr-2' />
-                                    Copy Message
-                                </Button>
+                                    variant="OUTLINE"
+                                    size="SMALL"
+                                    text="Copy Message"
+                                    icon={<Copy className="w-4 h-4 mr-1" />}
+                                    className='text-sm h-5'
+                                />
 
                                 <Button
                                     onClick={() => {
@@ -653,12 +643,12 @@ ${
                                         copyToClipboard(message || "")
                                         toast.success("Ready to share! 📱")
                                     }}
-                                    variant='outline'
-                                    size='sm'
-                                    className='border-primary/30 text-primary hover:bg-primary/10'>
-                                    <Share2 className='w-4 h-4 mr-2' />
-                                    Copy & Share
-                                </Button>
+                                    variant="OUTLINE"
+                                    size="SMALL"
+                                    text="Copy & Share"
+                                    icon={<Share2 className="w-4 h-4 mr-1" />}
+                                    className='text-sm h-5'
+                                />
                             </div>
 
                             {/* Direct Social Media Posting */}
@@ -669,49 +659,34 @@ ${
                                 <div className='flex flex-wrap gap-2'>
                                     <Button
                                         onClick={() => shareToSocial("twitter")}
-                                        variant='outline'
-                                        size='sm'
-                                        className='border-blue-500/50 text-blue-400 hover:bg-blue-500/10'>
-                                        <svg
-                                            className='w-4 h-4 mr-2'
-                                            viewBox='0 0 24 24'
-                                            fill='currentColor'>
-                                            <path d='M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z' />
-                                        </svg>
-                                        Twitter
-                                    </Button>
+                                        variant="OUTLINE"
+                                        size="SMALL"
+                                        text="Twitter"
+                                        icon={<Twitter className="w-4 h-4 mr-1" />}
+                                        className='text-sm h-5'
+                                    />
 
                                     <Button
                                         onClick={() =>
                                             shareToSocial("linkedin")
                                         }
-                                        variant='outline'
-                                        size='sm'
-                                        className='border-blue-600/50 text-blue-500 hover:bg-blue-600/10'>
-                                        <svg
-                                            className='w-4 h-4 mr-2'
-                                            viewBox='0 0 24 24'
-                                            fill='currentColor'>
-                                            <path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' />
-                                        </svg>
-                                        LinkedIn
-                                    </Button>
+                                                variant="OUTLINE"
+                                        size="SMALL"
+                                        text="LinkedIn"
+                                        icon={<Linkedin className="w-4 h-4 mr-1" />}
+                                        className='text-sm h-5'
+                                    />
 
                                     <Button
                                         onClick={() =>
                                             shareToSocial("facebook")
                                         }
-                                        variant='outline'
-                                        size='sm'
-                                        className='border-blue-700/50 text-blue-600 hover:bg-blue-700/10'>
-                                        <svg
-                                            className='w-4 h-4 mr-2'
-                                            viewBox='0 0 24 24'
-                                            fill='currentColor'>
-                                            <path d='M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' />
-                                        </svg>
-                                        Facebook
-                                    </Button>
+                                                variant="OUTLINE"
+                                        size="SMALL"
+                                        text="Facebook"
+                                        icon={<Facebook className="w-4 h-4 mr-1" />}
+                                        className='text-sm h-5'
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -719,9 +694,12 @@ ${
                         <DialogFooter>
                             <Button
                                 onClick={handleClose}
-                                className='bg-primary text-white hover:bg-primary/90'>
-                                Done
-                            </Button>
+                                variant="PRIMARY"
+                                size="SMALL"
+                                text="Done"
+                                icon={<CheckCircle2 className="w-4 h-4 mr-1" />}
+                                className='text-sm h-5'
+                            />
                         </DialogFooter>
                     </>
                 )}

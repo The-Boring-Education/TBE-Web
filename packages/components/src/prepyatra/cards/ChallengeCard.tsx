@@ -222,6 +222,7 @@ const ChallengeCard = ({
                             onClick={() => onLogProgress(challenge)}
                             variant='PRIMARY'
                             text='Log Progress'
+                            size="SMALL"
                             icon={<TrendingUp className='w-2 h-2' />}
                             className='flex-1 text-sm px-3 py-1'
                         />
@@ -232,6 +233,7 @@ const ChallengeCard = ({
                             onClick={handlePauseResume}
                             variant='OUTLINE'
                             text={challenge.isActive ? 'Pause' : 'Resume'}
+                            size="SMALL"
                             icon={challenge.isActive ? <Pause className='w-2 h-2' /> : <Play className='w-2 h-2' />}
                             active={!loading}
                             className='text-sm px-3 py-1 border-gray-300 text-contentLight hover:border-black'
@@ -243,6 +245,7 @@ const ChallengeCard = ({
                             onClick={() => onViewLogs(challenge)}
                             variant='OUTLINE'
                             text='View Logs'
+                            size="SMALL"
                             icon={<History className='w-2 h-2' />}
                             className='text-sm px-3 py-1 border-blue-500 text-blue-600 hover:border-blue-600'
                         />
@@ -253,6 +256,7 @@ const ChallengeCard = ({
                             <Button
                                 variant='OUTLINE'
                                 text=''
+                                size="SMALL"
                                 icon={<Trash2 className='w-2 h-2' />}
                                 active={!loading}
                                 className='text-sm px-2 py-1 border-red-500 text-red-500 hover:border-red-600'

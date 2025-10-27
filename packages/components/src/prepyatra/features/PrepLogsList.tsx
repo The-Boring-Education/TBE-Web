@@ -19,6 +19,7 @@ import Button from "../../common/Buttons/Button";
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../../containers/Page/common/FlexContainer";
 
+
 type PrepLog = {
     _id: string
     title: string
@@ -136,22 +137,24 @@ const PrepLogCard = ({logs, onLogUpdated, onLogDeleted, mongoUserId}: Props) => 
                                      </div>
                                  )}
                                 <div className='flex gap-2 justify-start'>
-                                <button
-                                                className='inline-flex items-center justify-center px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground border border-input rounded-1 hover:bg-accent hover:text-accent-foreground'
+                                <Button
+                                                variant="PRIMARY"
+                                                size="SMALL"
+                                                text="Edit"
                                                 onClick={() =>
                                                     openEditModal(log)
-                                                }>
-                                                ✏️ Edit
-                                            </button>
+                                                }
+                                            />
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
-                                            <button
-                                                className='inline-flex items-center justify-center px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground border border-input rounded-1 hover:bg-accent hover:text-accent-foreground'
+                                            <Button
+                                                variant="OUTLINE"
+                                                size="SMALL"
+                                                text="Delete"
                                                 onClick={() =>
                                                     setDeleteId(log._id)
-                                                }>
-                                                ❌ Delete
-                                            </button>
+                                                }
+                                            />
                                         </AlertDialogTrigger>
                                         <AlertDialogContent className='bg-white'>
                                             <AlertDialogHeader>

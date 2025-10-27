@@ -151,7 +151,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
             <Button
               onClick={() => setIsCreateModalOpen(true)}
               className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-              size="lg"
+              size="sm"
             >
               <Plus className="w-5 h-5 mr-2" />
               Create Your First Challenge
@@ -185,10 +185,12 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
         </div>
         <Button
           onClick={() => setIsCreateModalOpen(true)}
-          className="bg-primary hover:bg-primary/90 text-white"
+          variant="default"
+          className="text-sm h-5"
         >
-          <Plus className="w-4 h-4 mr-2" />
           New Challenge
+          <Plus className="w-1 h-1" />
+
         </Button>
       </div>
 

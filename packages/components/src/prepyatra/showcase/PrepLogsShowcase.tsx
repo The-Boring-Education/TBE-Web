@@ -61,6 +61,7 @@ const PrepLogsShowcase = () => {
                         <Button 
                             variant='PRIMARY'
                             text='+ Add New Log'
+                            size="SMALL"
                             className='bg-primary text-white hover:bg-primary/90 text-sm px-4 py-2'
                         />
                     </div>
@@ -120,16 +121,19 @@ const PrepLogsShowcase = () => {
                                         <Button
                                             variant='NEUTRAL'
                                             text='✏️ Edit'
+                                            size="SMALL"
                                             className='text-sm px-3 py-1.5'
                                         />
                                         <Button
                                             variant='NEUTRAL'
                                             text='🔄 Continue'
+                                            size="SMALL"
                                             className='text-sm px-3 py-1.5'
                                         />
                                         <Button
                                             variant='NEUTRAL'
                                             text='📤 Share'
+                                            size="SMALL"
                                             className='text-sm px-3 py-1.5'
                                         />
                                     </div>

@@ -122,7 +122,7 @@ const AddPrepLogModal = ({
             <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 <DialogHeader>
                     <Text level="h3" className='text-contentLight text-lg font-semibold'>
-                        {editLog ? "✏️ Edit Prep Log" : "📝 Add New Prep Log"}
+                        {editLog ? "Edit Prep Log" : "Add New Prep Log"}
                     </Text>
                     <Text level="p" className='text-greyDark text-sm'>
                         {editLog
@@ -171,13 +171,14 @@ const AddPrepLogModal = ({
 
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            variant='OUTLINE'
+                            variant="OUTLINE"
                             text="Cancel"
                             onClick={onClose}
-                            className='rounded-md text-contentLight border-greyLight hover:bg-greyLight'
+                            className='text-sm h-5'
+                            size="SMALL"
                         />
                         <Button
-                            variant='PRIMARY'
+                            variant="PRIMARY"
                             text={loading
                                 ? editLog
                                     ? "Updating..."
@@ -186,7 +187,8 @@ const AddPrepLogModal = ({
                                 ? "Update Log"
                                 : "Add Log"}
                             disabled={loading}
-                            className='rounded-md text-white bg-primary hover:bg-primary/90'
+                            size="SMALL"
+                            className='text-sm h-5'
                         />
                     </DialogFooter>
                 </form>

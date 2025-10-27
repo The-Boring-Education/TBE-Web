@@ -8,7 +8,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 
-import { Button } from "../ui/button"
+import Button from "../../common/Buttons/Button"
 import { Card, CardContent } from "../ui/card"
 import type { Challenge } from "@tbe/types"
 
@@ -225,13 +225,13 @@ ${process.env.NEXT_PUBLIC_BASE_URL}
                             </div>
                         </div>
                         <Button
-                            variant='outline'
-                            size='sm'
+                            variant="PRIMARY"
+                            size="SMALL"
+                            text="Share"
+                            icon={<Share2 className="w-4 h-4 mr-1" />}
                             onClick={shareAchievement}
-                            className='border-primary/30 text-primary hover:bg-primary/10'>
-                            <Share2 className='w-4 h-4 mr-1' />
-                            Share
-                        </Button>
+                            className='text-sm h-5'
+                        />
                     </div>
 
                     {/* Stats Grid */}

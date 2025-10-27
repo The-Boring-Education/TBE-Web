@@ -414,7 +414,7 @@ const RecruiterContactsTable = ({
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        <div className='flex gap-2'>
+                                        <div className='flex gap-1'>
                                             {contact.email && (
                                                 <Button
                                                     size='sm'
@@ -422,9 +422,9 @@ const RecruiterContactsTable = ({
                                                     onClick={() =>
                                                         openEmail(contact.email)
                                                     }
-                                                    className='h-8 w-8 p-0 hover:bg-primary/20'
+                                                    className='h-6 w-6 p-0 hover:bg-primary/20'
                                                     title='Send Email'>
-                                                    <Mail className='h-4 w-4 text-primary' />
+                                                    <Mail className='h-3.5 w-3.5 text-primary' />
                                                 </Button>
                                             )}
                                             {contact.phone && (
@@ -434,9 +434,9 @@ const RecruiterContactsTable = ({
                                                     onClick={() =>
                                                         openPhone(contact.phone)
                                                     }
-                                                    className='h-8 w-8 p-0 hover:bg-primary/20'
+                                                    className='h-6 w-6 p-0 hover:bg-primary/20'
                                                     title='Call'>
-                                                    <Phone className='h-4 w-4 text-primary' />
+                                                    <Phone className='h-3.5 w-3.5 text-primary' />
                                                 </Button>
                                             )}
                                             {contact.link && (
@@ -446,9 +446,9 @@ const RecruiterContactsTable = ({
                                                     onClick={() =>
                                                         openLink(contact.link)
                                                     }
-                                                    className='h-8 w-8 p-0 hover:bg-primary/20'
+                                                    className='h-6 w-6 p-0 hover:bg-primary/20'
                                                     title='Open Link'>
-                                                    <ExternalLink className='h-4 w-4 text-primary' />
+                                                    <ExternalLink className='h-3.5 w-3.5 text-primary' />
                                                 </Button>
                                             )}
                                             <Button
@@ -457,18 +457,18 @@ const RecruiterContactsTable = ({
                                                 onClick={() =>
                                                     handleEdit(contact)
                                                 }
-                                                className='h-8 w-8 p-0 hover:bg-primary/20'
+                                                className='h-6 w-6 p-0 hover:bg-primary/20'
                                                 title='Edit Contact'>
-                                                <Edit2 className='h-4 w-4 text-primary' />
+                                                <Edit2 className='h-3.5 w-3.5 text-primary' />
                                             </Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button
                                                         size='sm'
                                                         variant='ghost'
-                                                        className='h-8 w-8 p-0 hover:bg-red-500/20'
+                                                        className='h-6 w-6 p-0 hover:bg-red-500/20'
                                                         title='Delete Contact'>
-                                                        <Trash2 className='h-4 w-4 text-red-500' />
+                                                        <Trash2 className='h-3.5 w-3.5 text-red-500' />
                                                     </Button>
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent className='glass border-greyLight'>

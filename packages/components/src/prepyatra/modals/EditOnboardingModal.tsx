@@ -394,12 +394,14 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                         <Button
                             onClick={handleSubmit}
                             disabled={loading}
+                            size="sm"
                             className='flex-1 bg-primary text-white hover:bg-primary/90'>
                             {loading ? "Updating..." : "Update Details"}
                         </Button>
                         <Button
                             onClick={onClose}
                             variant='outline'
+                            size="sm"
                             className='flex-1 border-greyLight text-contentLight hover:bg-greyLight'>
                             Cancel
                         </Button>

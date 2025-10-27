@@ -66,10 +66,11 @@ const BuildYourStack: React.FC<BuildYourStackProps> = ({
             </div>
             <Button
                 onClick={() => setModalOpen(true)}
-                variant="NEUTRAL"
+                variant="PRIMARY"
+                size="SMALL"
                 text="Add Skills"
                 icon={<Plus className='w-4 h-4' />}
-                className='rounded-1 bg-primary text-white hover:bg-primary/90 text-sm px-3 py-1.5'
+                className='text-sm h-5'
             />
             <AddSkillsModal
                 isOpen={modalOpen}

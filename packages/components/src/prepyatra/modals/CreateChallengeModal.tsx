@@ -1,9 +1,9 @@
-import {Plus, Sparkles, Calendar, Target, Star, Clock, Zap} from "lucide-react";
+import {Plus, Sparkles, Calendar, Target, Star, Clock, Zap, X, ArrowLeft, Play} from "lucide-react";
 import {useState, useEffect} from "react";
 import {toast} from "sonner";
 
 import {Badge} from "../ui/badge";
-import {Button} from "../ui/button";
+import Button from "../../common/Buttons/Button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card";
 import {
   Dialog,
@@ -186,7 +186,6 @@ const CreateChallengeModal = ({
         <DialogContent className="sm:max-w-[900px] max-h-[85vh] overflow-y-auto glass border-greyLight">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-contentLight flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-primary" />
               Create Your Challenge
             </DialogTitle>
             <DialogDescription className="text-greyDark">
@@ -201,7 +200,7 @@ const CreateChallengeModal = ({
                 Popular Challenges
               </TabsTrigger>
               <TabsTrigger value="custom" className="data-[state=active]:bg-primary">
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-2 h- mr-2" />
                 Create Custom
               </TabsTrigger>
             </TabsList>
@@ -223,10 +222,10 @@ const CreateChallengeModal = ({
                           <div className="flex-1">
                             <CardTitle className="text-lg text-contentLight">{template.name}</CardTitle>
                             <div className="flex items-center gap-2 mt-2">
-                              <Badge variant="secondary" className={`bg-${template.color}-500/20 text-${template.color}-300 border-${template.color}-500/30`}>
+                              <div className={`bg-${template.color}-500/20 text-${template.color}-300 border-${template.color}-500/30 text-sm h-5 px-2 py-1 rounded-full`}>
                                 <Calendar className="w-3 h-3 mr-1" />
                                 {template.totalDays} days
-                              </Badge>
+                              </div>
                               <Badge className={getDifficultyColor(template.difficulty)}>
                                 <Star className="w-3 h-3 mr-1" />
                                 {template.difficulty}
@@ -347,20 +346,21 @@ const CreateChallengeModal = ({
 
                 <DialogFooter className="flex flex-col-reverse md:flex-row gap-2 mt-6">
                   <Button
-                    type="button"
-                    variant="outline"
+                    variant="OUTLINE"
                     onClick={onClose}
-                    className="border-greyLight text-contentLight hover:bg-greyLight"
-                  >
-                    Cancel
-                  </Button>
+                    size="SMALL"
+                    text="Cancel"
+                    icon={<X className="w-2 h-2 mr-2" />}
+                    className="text-sm h-5"
+                  />
                   <Button
-                    type="submit"
+                    variant="PRIMARY"
                     disabled={loading}
-                    className="bg-primary text-white hover:bg-primary/90"
-                  >
-                    {loading ? "Creating..." : "Create Challenge"}
-                  </Button>
+                    size="SMALL"
+                    text={loading ? "Creating..." : "Create Challenge"}
+                    icon={<Plus className="w-2 h-2 mr-2" />}
+                    className="text-sm h-5"
+                  />
                 </DialogFooter>
               </form>
             </TabsContent>
@@ -455,20 +455,22 @@ const CreateChallengeModal = ({
 
             <DialogFooter className="flex flex-col-reverse md:flex-row gap-2 mt-6">
               <Button
-                type="button"
-                variant="outline"
+                variant="OUTLINE"
                 onClick={() => setShowCustomizeModal(false)}
-                className="border-greyLight text-contentLight hover:bg-greyLight"
-              >
-                Back
-              </Button>
+                size="SMALL"
+                text="Back"
+                icon={<ArrowLeft className="w-2 h-2 mr-2" />}
+                className="text-sm h-5"
+              />
               <Button
                 onClick={handlePredefinedChallengeCreate}
+                variant="PRIMARY"
                 disabled={loading}
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
-              >
-                {loading ? "Creating..." : "Start Challenge"}
-              </Button>
+                size="SMALL"
+                text={loading ? "Creating..." : "Start Challenge"}
+                icon={<Play className="w-2 h-2 mr-2" />}
+                className="text-sm h-5"
+              />
             </DialogFooter>
           </DialogContent>
         </Dialog>

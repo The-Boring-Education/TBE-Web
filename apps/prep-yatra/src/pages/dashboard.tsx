@@ -258,18 +258,20 @@ const Dashboard = () => {
                 <Button
                     variant='PRIMARY'
                     text=""
-                    className='fixed top-[76px] left-3 z-50 lg:hidden bg-primary text-primary-foreground shadow border border-primary/30 text-sm px-2 py-2'
+                    size="SMALL"
+                    className='fixed top-[76px] left-3 z-50 lg:hidden bg-primary text-primary-foreground shadow border border-primary/30 !px-1.5 !py-1.5 !h-7 !min-h-0'
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                    icon={isSidebarCollapsed ? <Menu className='w-4 h-4' /> : <X className='w-4 h-4' />}
+                    icon={isSidebarCollapsed ? <Menu className='w-3 h-3' /> : <X className='w-3 h-3' />}
                 />
 
                 {/* Sidebar Toggle Button - Desktop */}
                 <Button
                     variant='PRIMARY'
                     text=""
-                    className='hidden lg:flex fixed top-[76px] left-3 z-50 bg-primary text-primary-foreground shadow border border-primary/30 text-sm px-2 py-2'
+                    size="SMALL"
+                    className='hidden lg:flex fixed top-[76px] left-3 z-50 bg-primary text-primary-foreground shadow border border-primary/30 !px-1.5 !py-1.5 !h-7 !min-h-0'
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                    icon={isSidebarCollapsed ? <Menu className='w-4 h-4' /> : <X className='w-4 h-4' />}
+                    icon={isSidebarCollapsed ? <Menu className='w-3 h-3' /> : <X className='w-3 h-3' />}
                 />
 
                 <div className='flex gap-6'>

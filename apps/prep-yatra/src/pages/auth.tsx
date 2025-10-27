@@ -99,6 +99,7 @@ const Auth = () => {
                     onClick={handleSignIn}
                     disabled={isLoading}
                     variant='NEUTRAL'
+                    size="SMALL"
                     className='w-full text-lg text-white'
                     icon={
                         <svg

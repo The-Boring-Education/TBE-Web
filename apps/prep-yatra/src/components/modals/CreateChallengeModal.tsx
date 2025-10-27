@@ -201,7 +201,7 @@ const CreateChallengeModal = ({
                 Popular Challenges
               </TabsTrigger>
               <TabsTrigger value="custom" className="data-[state=active]:bg-primary">
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-2 h- mr-2" />
                 Create Custom
               </TabsTrigger>
             </TabsList>

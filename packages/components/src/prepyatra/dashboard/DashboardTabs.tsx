@@ -78,6 +78,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                             onClick={onPrepLogModalOpen} 
                             variant="PRIMARY"
                             text="Add Log"
+                            size="SMALL"
                             icon={<Plus className="w-4 h-4 mr-2" />}
                             className="rounded-1 text-sm px-3 py-1.5"
                         />
@@ -114,8 +115,9 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                             onClick={onRecruiterModalOpen} 
                             variant="PRIMARY"
                             text="Add Contact"
-                            icon={<Plus className="w-4 h-4 mr-2" />}
-                            className="rounded-1 text-sm px-3 py-1.5"
+                            size="SMALL"
+                            icon={<Plus className="w-4 h-4 mr-1" />}
+                            className="text-sm h-5"
                         />
                     </CardHeader>
                     <CardContent className="p-4">
@@ -143,8 +145,9 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                             onClick={onSkillsModalOpen} 
                             variant="PRIMARY"
                             text="Add Skills"
+                            size="SMALL"
                             icon={<Plus className="w-4 h-4 mr-2" />}
-                            className="rounded-1 text-sm px-3 py-1.5"
+                            className="text-sm h-5"
                         />
                     </CardHeader>
                     <CardContent className="p-4">

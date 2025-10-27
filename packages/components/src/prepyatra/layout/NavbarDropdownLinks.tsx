@@ -25,9 +25,10 @@ const PrepYatraNavbarDropdownLinks: React.FC = () => {
       <Button
         variant="PRIMARY"
         text="Links"
+        size="SMALL"
         onClick={() => setOpen((v) => !v)}
         icon={<ChevronDown className="w-4 h-4" />}
-        className="text-sm px-3 py-1.5"
+        className="text-sm h-5"
       />
       {open && (
         <div

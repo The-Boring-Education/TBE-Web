@@ -80,6 +80,7 @@ const DailyPrepEncouragement = ({
                             text={buttonText}
                             onClick={onAddPrepLog}
                             variant={hasLoggedToday ? 'SUCCESS' : 'PRIMARY'}
+                            size="SMALL"
                             className="min-w-[140px] font-medium transition-all duration-300"
                             icon={<Plus className='h-4 w-4 mr-2' />}
                         />
