@@ -42,10 +42,10 @@ export function PointsDisplay({ userId, variant = 'navbar' }: PointsDisplayProps
   if (variant === 'navbar') {
     return (
       <div className="relative" ref={containerRef}>
-        {/* Simple red circle with points */}
+        {/* Simple red circle with white text */}
         <button
           onClick={handlePointsClick}
-          className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+          className="w-12 h-12 bg-[#ef4444] rounded-full flex items-center justify-center hover:bg-[#dc2626] transition-colors shadow-md"
         >
           <span className="text-white font-bold text-sm">
             {loading ? '...' : points}
@@ -64,38 +64,28 @@ export function PointsDisplay({ userId, variant = 'navbar' }: PointsDisplayProps
     )
   }
 
-  // Dashboard variant - more detailed display
+  // Dashboard variant - simple red circle
   return (
     <>
-      <div className="flex items-center space-x-2">
-        {/* Points circle */}
+      <div className="relative" ref={containerRef}>
+        {/* Simple red circle with white text */}
         <button
           onClick={handlePointsClick}
-          className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+          className="w-14 h-14 bg-[#ef4444] rounded-full flex items-center justify-center hover:bg-[#dc2626] transition-colors shadow-lg"
         >
-          <span className="text-white font-bold">
+          <span className="text-white font-bold text-base">
             {loading ? '...' : points}
           </span>
         </button>
         
-        {/* Level info */}
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-gray-700">
-            Level {currentLevel.level}: {currentLevel.name}
-          </span>
-          {pointsToNextLevel > 0 && (
-            <span className="text-xs text-gray-500">
-              {pointsToNextLevel} to next level
-            </span>
-          )}
-        </div>
+        {showCard && (
+          <GamificationCard 
+            userId={userId}
+            isOpen={showCard}
+            onClose={handleCloseCard}
+          />
+        )}
       </div>
-      
-      <GamificationCard 
-        userId={userId}
-        isOpen={showCard}
-        onClose={handleCloseCard}
-      />
     </>
   )
 }

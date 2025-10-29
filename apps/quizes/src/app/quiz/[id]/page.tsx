@@ -290,30 +290,24 @@ function QuizContent() {
                 response.success &&
                 "data" in response
             ) {
-                // Trigger gamification action for completing quiz
-                await gamifiedAction.triggerGamifiedAction({
+                // Trigger gamification action for completing quiz (don't await to speed up)
+                gamifiedAction.triggerGamifiedAction({
                     actionType: "COMPLETE_QUIZ",
                     customMessage: "Quiz completed! Great job!",
                     metadata: {
                         quizId,
                         totalTimeSpent,
-                        correctAnswers: answers.filter((a) => a.isCorrect)
-                            .length,
+                        correctAnswers: answers.filter((a) => a.isCorrect).length,
                         totalQuestions: answers.length
                     }
-                })
-
-                // Set completed state
-                setGameState("completed")
-                setIsSubmitting(false)
+                }).catch(() => {}) // Ignore errors
                 
-                // Redirect to results page with answers and time data
+                // Redirect immediately using window.location for instant navigation
                 const answersParam = JSON.stringify(answers.map(a => a.selectedAnswer))
                 const timeTakenParam = totalTimeSpent.toString()
-                console.log('✅ Quiz submitted successfully, redirecting to results...')
+                console.log('✅ Quiz submitted successfully, redirecting immediately...')
                 
-                // Use replace instead of push to prevent back navigation to quiz
-                router.replace(`/results/${quizId}?answers=${encodeURIComponent(answersParam)}&timeTaken=${timeTakenParam}`)
+                window.location.href = `/results/${quizId}?answers=${encodeURIComponent(answersParam)}&timeTaken=${timeTakenParam}`
             } else {
                 const message =
                     response &&
@@ -328,25 +322,20 @@ function QuizContent() {
         } catch (error) {
             console.error('❌ Quiz submission error:', error)
             
-            // Set completed state even on error
-            setGameState("completed")
-            setIsSubmitting(false)
+            // Even on error, redirect to results with local data immediately
+            console.log('🔄 Submission failed, redirecting with local data...')
             
-            // Even if submission fails, redirect to results with local data
-            console.log('🔄 Submission failed, redirecting to results with local data...')
-            
-            // Recreate the answers and time data for fallback redirect
             const fallbackAnswers = quiz!.questions.map((question, index) => {
                 const selectedAnswer = selectedAnswers[index] ?? -1
-                return { selectedAnswer }
+                return selectedAnswer
             })
             const fallbackTimeSpent = Math.floor((Date.now() - quizStartTime) / 1000)
             
-            const answersParam = JSON.stringify(fallbackAnswers.map(a => a.selectedAnswer))
+            const answersParam = JSON.stringify(fallbackAnswers)
             const timeTakenParam = fallbackTimeSpent.toString()
             
-            // Use replace instead of push
-            router.replace(`/results/${quizId}?answers=${encodeURIComponent(answersParam)}&timeTaken=${timeTakenParam}`)
+            // Use window.location for instant redirect
+            window.location.href = `/results/${quizId}?answers=${encodeURIComponent(answersParam)}&timeTaken=${timeTakenParam}`
         }
     }
 
@@ -356,7 +345,7 @@ function QuizContent() {
             <Layout showNavbar>
                 <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto' />
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-[#ef4444] mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>
                             Loading quiz...
                         </p>
@@ -371,7 +360,7 @@ function QuizContent() {
             <Layout showNavbar>
                 <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto' />
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-[#ef4444] mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>
                             Submitting quiz...
                         </p>
@@ -383,7 +372,6 @@ function QuizContent() {
             </Layout>
         )
     }
-
 
     if (!quiz || gameState !== "playing") {
         return null
@@ -439,14 +427,14 @@ function QuizContent() {
                                             onClick={() => selectAnswer(index)}
                                             className={`p-6 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
                                                 selectedAnswer === index
-                                                    ? "border-indigo-500 bg-indigo-50"
-                                                    : "border-gray-200 hover:border-indigo-300 hover:bg-indigo-25"
+                                                    ? "border-[#ef4444] bg-[#ef4444]/10"
+                                                    : "border-gray-200 hover:border-[#ef4444]/50 hover:bg-[#ef4444]/5"
                                             }`}>
                                             <div className='flex items-center space-x-4'>
                                                 <div
                                                     className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-lg font-medium ${
                                                         selectedAnswer === index
-                                                            ? "border-indigo-500 bg-indigo-500 text-white"
+                                                            ? "border-[#ef4444] bg-[#ef4444] text-white"
                                                             : "border-gray-300 text-gray-500"
                                                     }`}>
                                                     {String.fromCharCode(

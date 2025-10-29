@@ -55,10 +55,10 @@ export function GamificationCard({
     if (variant === "dashboard") {
         // Dashboard version - always visible, no popup styling
         return (
-            <div className='bg-white rounded-2xl shadow-lg p-6 w-full'>
-                <div className='flex items-center space-x-6'>
+            <div className='bg-white rounded-2xl shadow-lg p-6 max-w-lg border border-gray-100'>
+                <div className='flex items-center gap-6'>
                     {/* Left side - Progress Circle */}
-                    <div className='relative'>
+                    <div className='relative flex-shrink-0'>
                         <div className='w-24 h-24 relative'>
                             {/* Background circle */}
                             <svg
@@ -67,25 +67,25 @@ export function GamificationCard({
                                 <circle
                                     cx='50'
                                     cy='50'
-                                    r='45'
-                                    stroke='#e5e7eb'
+                                    r='40'
+                                    stroke='#f3f4f6'
                                     strokeWidth='8'
-                                    fill='none'
+                                    fill='white'
                                 />
                                 {/* Progress circle */}
                                 <circle
                                     cx='50'
                                     cy='50'
-                                    r='45'
+                                    r='40'
                                     stroke='#ef4444'
                                     strokeWidth='8'
                                     fill='none'
                                     strokeLinecap='round'
-                                    strokeDasharray={`${2 * Math.PI * 45}`}
+                                    strokeDasharray={`${2 * Math.PI * 40}`}
                                     strokeDashoffset={`${
                                         2 *
                                         Math.PI *
-                                        45 *
+                                        40 *
                                         (1 - progressPercentage / 100)
                                     }`}
                                     className='transition-all duration-500 ease-out'
@@ -102,35 +102,33 @@ export function GamificationCard({
                     </div>
 
                     {/* Right side - Level Info */}
-                    <div className='flex-1'>
+                    <div className='flex-1 min-w-0'>
                         <div className='space-y-3'>
                             {/* "YOU'RE AT" text */}
-                            <p className='text-xs uppercase text-gray-500 font-medium tracking-wide'>
-                                You&apos;re at
+                            <p className='text-xs uppercase text-gray-500 font-semibold tracking-wider'>
+                                YOU&apos;RE AT
                             </p>
 
                             {/* Level info */}
-                            <div className='space-y-1'>
-                                <p className='text-lg font-bold text-red-600'>
-                                    Level {currentLevel.level} :{" "}
-                                    {currentLevel.name}
+                            <div>
+                                <p className='text-xl font-bold text-[#ef4444] leading-tight'>
+                                    Level {currentLevel.level} : {currentLevel.name}
                                 </p>
                             </div>
 
                             {/* Points to next level */}
                             {nextLevel && pointsToNextLevel > 0 && (
-                                <div className='bg-gradient-to-r from-pink-400 to-yellow-400 rounded-lg px-3 py-2'>
-                                    <p className='text-sm font-bold text-black text-center'>
-                                        {pointsToNextLevel} Points to{" "}
-                                        {nextLevel.name}
+                                <div className='bg-gradient-to-r from-pink-400 to-yellow-400 rounded-lg px-4 py-2.5'>
+                                    <p className='text-sm font-bold text-white text-center leading-tight'>
+                                        {pointsToNextLevel} Points to {nextLevel.name}
                                     </p>
                                 </div>
                             )}
 
                             {/* Max level message */}
                             {currentLevel.level === 10 && (
-                                <div className='bg-gradient-to-r from-purple-400 to-pink-400 rounded-lg px-3 py-2'>
-                                    <p className='text-sm font-bold text-white text-center'>
+                                <div className='bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg px-4 py-2.5'>
+                                    <p className='text-sm font-bold text-white text-center leading-tight'>
                                         🏆 Max Level Achieved!
                                     </p>
                                 </div>
@@ -144,11 +142,11 @@ export function GamificationCard({
 
     // Popup version
     return (
-        <div className='absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 opacity-0 animate-[fadeIn_0.2s_ease-out_forwards]'>
-            <div className='bg-white rounded-xl shadow-lg p-5 w-72 relative border border-gray-100'>
-                <div className='flex items-center space-x-5'>
+        <div className='absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50 opacity-0 animate-[fadeIn_0.2s_ease-out_forwards]'>
+            <div className='bg-white rounded-xl shadow-xl p-6 w-96 relative border border-gray-200'>
+                <div className='flex items-center gap-5'>
                     {/* Left side - Progress Circle */}
-                    <div className='relative'>
+                    <div className='relative flex-shrink-0'>
                         <div className='w-20 h-20 relative'>
                             {/* Background circle */}
                             <svg
@@ -158,9 +156,9 @@ export function GamificationCard({
                                     cx='50'
                                     cy='50'
                                     r='40'
-                                    stroke='#e5e7eb'
-                                    strokeWidth='6'
-                                    fill='none'
+                                    stroke='#f3f4f6'
+                                    strokeWidth='8'
+                                    fill='white'
                                 />
                                 {/* Progress circle */}
                                 <circle
@@ -168,7 +166,7 @@ export function GamificationCard({
                                     cy='50'
                                     r='40'
                                     stroke='#ef4444'
-                                    strokeWidth='4'
+                                    strokeWidth='8'
                                     fill='none'
                                     strokeLinecap='round'
                                     strokeDasharray={`${2 * Math.PI * 40}`}
@@ -184,7 +182,7 @@ export function GamificationCard({
 
                             {/* Points text in center */}
                             <div className='absolute inset-0 flex items-center justify-center'>
-                                <span className='text-base font-bold text-gray-800'>
+                                <span className='text-lg font-bold text-gray-900'>
                                     {loading ? "..." : points}
                                 </span>
                             </div>
@@ -192,35 +190,33 @@ export function GamificationCard({
                     </div>
 
                     {/* Right side - Level Info */}
-                    <div className='flex-1'>
-                        <div className='space-y-2'>
+                    <div className='flex-1 min-w-0'>
+                        <div className='space-y-2.5'>
                             {/* "YOU'RE AT" text */}
-                            <p className='text-xs uppercase text-gray-600 font-semibold tracking-wider'>
+                            <p className='text-xs uppercase text-gray-500 font-semibold tracking-wider'>
                                 YOU&apos;RE AT
                             </p>
 
                             {/* Level info */}
-                            <div className='space-y-1'>
-                                <p className='text-base font-bold text-red-600'>
-                                    Level {currentLevel.level}:{" "}
-                                    {currentLevel.name}
+                            <div>
+                                <p className='text-lg font-bold text-[#ef4444] leading-tight'>
+                                    Level {currentLevel.level}: {currentLevel.name}
                                 </p>
                             </div>
 
                             {/* Points to next level */}
                             {nextLevel && pointsToNextLevel > 0 && (
-                                <div className='bg-gradient-to-r from-pink-400 to-orange-400 rounded-md px-3 py-2'>
-                                    <p className='text-sm font-bold text-white text-center'>
-                                        {pointsToNextLevel} Points to{" "}
-                                        {nextLevel.name}
+                                <div className='bg-gradient-to-r from-pink-400 to-yellow-400 rounded-lg px-3 py-2 mt-2'>
+                                    <p className='text-xs font-bold text-white text-center leading-tight'>
+                                        {pointsToNextLevel} Points to {nextLevel.name}
                                     </p>
                                 </div>
                             )}
 
                             {/* Max level message */}
                             {currentLevel.level === 10 && (
-                                <div className='bg-gradient-to-r from-purple-400 to-pink-400 rounded-md px-3 py-2'>
-                                    <p className='text-sm font-bold text-white text-center'>
+                                <div className='bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg px-3 py-2 mt-2'>
+                                    <p className='text-xs font-bold text-white text-center leading-tight'>
                                         🏆 Max Level Achieved!
                                     </p>
                                 </div>

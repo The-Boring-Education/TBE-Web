@@ -47,7 +47,7 @@ export default function Landing() {
             {isLoading && (
                 <div className='min-h-screen flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto' />
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>Loading...</p>
                     </div>
                 </div>
@@ -57,7 +57,7 @@ export default function Landing() {
             {isRedirecting && (
                 <div className='min-h-screen flex items-center justify-center'>
                     <div className='text-center'>
-                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-black mx-auto' />
+                        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-[#ef4444] mx-auto' />
                         <p className='mt-4 text-lg text-gray-600'>
                             Redirecting...
                         </p>
