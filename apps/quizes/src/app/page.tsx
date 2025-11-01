@@ -79,7 +79,8 @@ export default function Landing() {
                                         <Brain className='w-6 h-6 text-white' />
                                     </div>
                                 </div>
-                                <h1 className='text-6xl md:text-8xl font-black mb-2 leading-none'>
+                                <h1 className='text-6xl md:text-8xl text-[#FF5757] font-black mb-2 leading-none'>
+
                                     Quizes
                                 </h1>
                                 <p className='text-xl md:text-2xl text-gray-600 font-medium'>
@@ -90,9 +91,12 @@ export default function Landing() {
                             {/* Value Proposition */}
                             <div className='grid lg:grid-cols-2 gap-16 items-center mb-20'>
                                 <div>
-                                    <h2 className='text-4xl md:text-5xl font-bold mb-6 leading-tight'>
+                                    {/* <h2 className='text-4xl md:text-5xl font-bold mb-6 leading-tight'> */}
+                                    <h2 className='text-4xl md:text-5xl font-extrabold mb-6 leading-tight text-black'>
+
                                         Master Tech Interviews with
-                                        <span className='block text-gray-600'>
+                                        <span className='block text-[#FF5757]'>
+
                                             Confidence
                                         </span>
                                     </h2>
@@ -105,22 +109,27 @@ export default function Landing() {
                                     </p>
                                     <button
                                         onClick={handleGetStarted}
-                                        className='inline-flex items-center px-8 py-4 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors duration-200 text-lg'>
+                                        className='inline-flex items-center px-8 py-4 bg-[#EF4F48] text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors duration-200 text-lg'>
                                         Start Practicing
                                         <ArrowRight className='ml-2 w-5 h-5' />
                                     </button>
                                 </div>
                                 <div className='relative'>
-                                    <div className='bg-gray-50 rounded-2xl p-8 border-2 border-black'>
+                                    <div className='bg-gray-50 rounded-2xl p-8 border-2 border-[#FF5757]'>
+
                                         <div className='space-y-4'>
                                             <div className='flex items-center justify-between'>
                                                 <span className='font-semibold'>
                                                     JavaScript Fundamentals
                                                 </span>
-                                                <CheckCircle className='w-5 h-5 text-black' />
+                                                {/* <CheckCircle className='w-5 h-5 text-black' /> */}
+                                                <CheckCircle className='w-5 h-5 text-[#FF5757]' />
+
                                             </div>
                                             <div className='w-full bg-gray-200 rounded-full h-2'>
-                                                <div className='bg-black h-2 rounded-full w-3/4' />
+                                                {/* <div className='bg-black h-2 rounded-full w-3/4' /> */}
+                                            <div className='bg-[#FF5757] h-2 rounded-full w-3/4' />
+
                                             </div>
                                             <div className='text-sm text-gray-600'>
                                                 15 questions completed
@@ -141,117 +150,129 @@ export default function Landing() {
                         <div className='container mx-auto px-4'>
                             <div className='max-w-6xl mx-auto'>
                             <div className='text-center mb-16'>
-                                <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black'>
-                                Everything You Need to Succeed
+                               <h3 className="text-3xl md:text-4xl font-bold text-center text-black mb-2">
+                                Everything You Need to <span className="text-[#FF5757]">Succeed</span>
                                 </h3>
-                                <p className='text-lg text-[#EF4F48] max-w-2xl mx-auto'>
+
+                               <p className="text-[#848484] text-lg text-center mb-8">
                                 Our comprehensive quiz platform is designed to help you prepare for technical interviews effectively.
                                 </p>
                             </div>
 
-                            <div className='grid md:grid-cols-3 gap-8'>
-                                <div className='text-center'>
-                                <div className='w-16 h-16 border-2 border-[#F6CCCC] bg-white rounded-full flex items-center justify-center mx-auto mb-6'>
-                                    <Target className='w-8 h-8 text-[#EF4F48]' />
+                            <div className="container mx-auto px-4">
+                            <div className="grid md:grid-cols-3 gap-8 my-8">
+                                {/* Curated Questions Card */}
+                                <div className="bg-white rounded-xl shadow-lg border border-[#F6CCCC] p-8 flex flex-col items-center text-center">
+                                <div className="w-16 h-16 border-2 border-[#F6CCCC] bg-white rounded-full flex items-center justify-center mb-6">
+                                    <Target className="w-8 h-8 text-[#FF5757]" />
                                 </div>
-                                <h4 className='text-xl font-bold mb-4 text-[#EF4F48]'>
+                                <h4 className="text-xl font-bold mb-4 text-black">
                                     Curated Questions
                                 </h4>
-                                <p className='text-black-600 leading-relaxed'>
+                                <p className="text-[#848484] leading-relaxed">
                                     Hand-picked questions covering the most important topics for technical interviews.
                                 </p>
                                 </div>
-                                <div className='text-center'>
-                                <div className='w-16 h-16 border-2 border-[#F6CCCC] bg-white rounded-full flex items-center justify-center mx-auto mb-6'>
-                                    <Clock className='w-8 h-8 text-[#EF4F48]' />
+                                {/* Timed Practice Card */}
+                                <div className="bg-white rounded-xl shadow-lg border border-[#F6CCCC] p-8 flex flex-col items-center text-center">
+                                <div className="w-16 h-16 border-2 border-[#F6CCCC] bg-white rounded-full flex items-center justify-center mb-6">
+                                    <Clock className="w-8 h-8 text-[#FF5757]" />
                                 </div>
-                                <h4 className='text-xl font-bold mb-4 text-[#EF4F48]'>
+                                <h4 className="text-xl font-bold mb-4 text-black">
                                     Timed Practice
                                 </h4>
-                                <p className='text-black-600 leading-relaxed'>
+                                <p className="text-[#848484] leading-relaxed">
                                     Practice under time pressure to simulate real interview conditions.
                                 </p>
                                 </div>
-                                <div className='text-center'>
-                                <div className='w-16 h-16 border-2 border-[#F6CCCC] bg-white rounded-full flex items-center justify-center mx-auto mb-6'>
-                                    <Brain className='w-8 h-8 text-[#EF4F48]' />
+                                {/* Detailed Explanations Card */}
+                                <div className="bg-white rounded-xl shadow-lg border border-[#F6CCCC] p-8 flex flex-col items-center text-center">
+                                <div className="w-16 h-16 border-2 border-[#F6CCCC] bg-white rounded-full flex items-center justify-center mb-6">
+                                    <Brain className="w-8 h-8 text-[#FF5757]" />
                                 </div>
-                                <h4 className='text-xl font-bold mb-4 text-[#EF4F48]'>
+                                <h4 className="text-xl font-bold mb-4 text-black">
                                     Detailed Explanations
                                 </h4>
-                                <p className='text-black-600 leading-relaxed'>
-                                    Understand the &apos;why&apos; behind every answer with comprehensive explanations.
+                                <p className="text-[#848484] leading-relaxed">
+                                    Understand the 'why' behind every answer with comprehensive explanations.
                                 </p>
                                 </div>
                             </div>
+                            </div>
+
                             </div>
                         </div>
                         </div>
                         {/* Stats Section */}
-                        <div className='bg-white py-20'>
-                        <div className='container mx-auto px-4'>
-                            <div className='max-w-4xl mx-auto'>
-                            <div className='text-center mb-16'>
-                                <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black'>
-                                Proven Results
-                                </h3>
-                                <p className='text-lg text-[#EF4F48]'>
-                                Join thousands of developers who have improved their interview skills.
-                                </p>
-                            </div>
+                      
+    <div className="bg-white py-20">
+      <div className="container mx-auto px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h3 className="text-3xl md:text-4xl font-bold mb-4 text-black">
+              Proven <span className="text-[#FF5757]">Results</span>
+            </h3>
+            <p className="text-lg text-[#848484]">
+              Join thousands of developers who have improved their interview skills.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-xl shadow-lg border border-[#1E3A8A] p-8 flex flex-col items-center text-center">
+              <div className="flex items-center justify-center mb-4">
+                <Code className="w-8 h-8 text-[#FF5757]" />
+              </div>
+              <div className="text-3xl font-bold mb-2 text-[#FF5757]">
+                50+
+              </div>
+              <div className="text-[#848484]">
+                Practice Questions
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow-lg border border-[#1E3A8A] p-8 flex flex-col items-center text-center">
+              <div className="flex items-center justify-center mb-4">
+                <Users className="w-8 h-8 text-[#FF5757]" />
+              </div>
+              <div className="text-3xl font-bold mb-2 text-[#FF5757]">
+                1000+
+              </div>
+              <div className="text-[#848484]">
+                Active Learners
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow-lg border border-[#1E3A8A] p-8 flex flex-col items-center text-center">
+              <div className="flex items-center justify-center mb-4">
+                <Trophy className="w-8 h-8 text-[#FF5757]" />
+              </div>
+              <div className="text-3xl font-bold mb-2 text-[#FF5757]">
+                85%
+              </div>
+              <div className="text-[#848484]">
+                Success Rate
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
-                            <div className='grid md:grid-cols-3 gap-8 text-center'>
-                                <div className='border-2 border-black rounded-lg p-8 bg-white shadow'>
-                                <div className='flex items-center justify-center mb-4'>
-                                    <Code className='w-8 h-8 text-[#EF4F48]' />
-                                </div>
-                                <div className='text-3xl font-bold mb-2 text-[#EF4F48]'>
-                                    50+
-                                </div>
-                                <div className='text-black'>
-                                    Practice Questions
-                                </div>
-                                </div>
-                                <div className='border-2 border-black rounded-lg p-8 bg-white shadow'>
-                                <div className='flex items-center justify-center mb-4'>
-                                    <Users className='w-8 h-8 text-[#EF4F48]' />
-                                </div>
-                                <div className='text-3xl font-bold mb-2 text-[#EF4F48]'>
-                                    1000+
-                                </div>
-                                <div className='text-black'>
-                                    Active Learners
-                                </div>
-                                </div>
-                                <div className='border-2 border-black rounded-lg p-8 bg-white shadow'>
-                                <div className='flex items-center justify-center mb-4'>
-                                    <Trophy className='w-8 h-8 text-[#EF4F48]' />
-                                </div>
-                                <div className='text-3xl font-bold mb-2 text-[#EF4F48]'>
-                                    85%
-                                </div>
-                                <div className='text-black'>
-                                    Success Rate
-                                </div>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
+
                         {/* Categories Preview */}
-                        <div className='bg-white py-20'>
-                        <div className='container mx-auto px-4'>
-                            <div className='max-w-6xl mx-auto'>
-                            <div className='text-center mb-16'>
-                                <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black'>
-                                Choose Your Focus Area
+                      
+
+                        <div className="bg-white py-20">
+                        <div className="container mx-auto px-4">
+                            <div className="max-w-6xl mx-auto">
+                            <div className="text-center mb-16">
+                                <h3 className="text-3xl md:text-4xl font-bold mb-4 text-black">
+                                Choose Your <span className="text-[#FF5757]">Focus Area</span>
                                 </h3>
-                                <p className='text-lg text-[#EF4F48]'>
+                                <p className="text-lg text-[#848484]">
                                 Practice questions tailored to specific technologies and concepts.
                                 </p>
                             </div>
 
-                            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-6'>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {[
                                 {
                                     name: "JavaScript",
@@ -276,13 +297,13 @@ export default function Landing() {
                                 ].map((category, index) => (
                                 <div
                                     key={index}
-                                    className='bg-white border-2 border-[#F6CCCC] rounded-lg p-6 text-center hover:bg-[#FFF0F0] transition-colors duration-200 shadow-sm'
+                                    className="bg-white border border-[#1E3A8A] rounded-xl p-8 flex flex-col items-center text-center shadow-lg"
                                 >
-                                    <category.icon className='w-8 h-8 mx-auto mb-4 text-[#EF4F48]' />
-                                    <h4 className='font-bold text-lg mb-2 text-black'>
+                                    <category.icon className="w-8 h-8 mb-4 text-[#FF5757]" />
+                                    <h4 className="font-bold text-lg mb-2 text-black">
                                     {category.name}
                                     </h4>
-                                    <p className='text-gray-600 text-sm'>
+                                    <p className="text-[#848484] text-sm">
                                     {category.questions}
                                     </p>
                                 </div>
@@ -292,26 +313,30 @@ export default function Landing() {
                         </div>
                         </div>
 
+
                         {/* CTA Section */}
-                        <div className='bg-white py-20'>
-                        <div className='container mx-auto px-4'>
-                            <div className='max-w-4xl mx-auto text-center'>
-                            <h3 className='text-3xl md:text-4xl font-bold mb-6 text-black'>
-                                Ready to Ace Your Next Interview?
+                      
+
+                        <div className="bg-white py-20">
+                        <div className="container mx-auto px-4">
+                            <div className="max-w-4xl mx-auto text-center">
+                            <h3 className="text-3xl md:text-4xl font-bold mb-6 text-black">
+                                Ready to Ace Your Next <span className="text-[#FF5757]">Interview?</span>
                             </h3>
-                            <p className='text-lg text-[#EF4F48] mb-8 max-w-2xl mx-auto'>
+                            <p className="text-lg text-[#848484] mb-8 max-w-2xl mx-auto">
                                 Start practicing today and build the confidence you need to succeed in technical interviews.
                             </p>
                             <button
                                 onClick={handleGetStarted}
-                                className='inline-flex items-center px-8 py-4 bg-[#EF4F48] text-white font-semibold rounded-lg hover:bg-[#ed3030] transition-colors duration-200 text-lg'
+                                className="inline-flex items-center px-8 py-4 bg-[#FF5757] text-white font-semibold rounded-lg hover:bg-[#ed3030] transition-colors duration-200 text-lg"
                             >
-                                <Play className='mr-2 w-5 h-5' />
+                                <Play className="mr-2 w-5 h-5" />
                                 Start Your First Quiz
                             </button>
                             </div>
                         </div>
                         </div>
+
                         
                         {/* Footer */}
                         <footer className='border-t-2 border-[#F6CCCC] bg-white py-8'>

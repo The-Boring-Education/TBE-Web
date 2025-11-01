@@ -35,7 +35,7 @@ export default function RootLayout({
                 <link rel='icon' href='/favicon.ico' />
 
                 {/* PWA meta tags */}
-                <meta name='theme-color' content='#000000' />
+                <meta name='theme-color' content='#eb4d4dff' />
                 <meta name='apple-mobile-web-app-capable' content='yes' />
                 <meta
                     name='apple-mobile-web-app-status-bar-style'
