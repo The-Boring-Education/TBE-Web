@@ -39,6 +39,7 @@ const SubscriptionInterestPopover = lazy(
     () => import("@tbe/components").then(module => ({ default: module.SubscriptionInterestPopover }))
 )
 const AddSkillsModal = lazy(() => import("@tbe/components").then(module => ({ default: module.AddSkillsModal })))
+const PrepYatraFooter = lazy(() => import("@tbe/components").then(module => ({ default: module.PrepYatraFooter })))
 
 
 
@@ -328,6 +329,11 @@ const Dashboard = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Footer */}
+            <Suspense fallback={<ComponentLoader />}>
+                <PrepYatraFooter />
+            </Suspense>
 
             {/* Modals */}
             <Suspense fallback={null}>

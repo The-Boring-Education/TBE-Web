@@ -48,7 +48,7 @@ const RecruiterContactsShowcase = () => {
         <section className='py-20 px-4 bg-lightBG'>
             <div className='container mx-auto'>
                 <div className='text-center mb-16 animate-fade-in'>
-                    <h2 className='text-4xl md:text-5xl font-bold text-contentLight mb-6'>
+                    <h2 className='text-3xl md:text-4xl font-bold text-contentLight mb-6'>
                         📞{" "}
                         <span className='text-primary'>Recruiter Contacts</span>
                     </h2>
@@ -76,8 +76,9 @@ const RecruiterContactsShowcase = () => {
                                 </div>
                                 <Button 
                                     variant='PRIMARY'
-                                    text='+ Add New Contact'
-                                    className='bg-primary text-white hover:bg-primary/90 text-sm px-4 py-2'
+                                    text='Add New Contact'
+                                    size="SMALL"
+                                    className='bg-primary text-white hover:bg-primary/90 text-sm'
                                 />
                             </div>
 
@@ -145,14 +146,14 @@ const RecruiterContactsShowcase = () => {
                                                 <TableCell>
                                                     <div className='flex gap-2'>
                                                         <Button
-                                                            variant='NEUTRAL'
+                                                            variant='PRIMARY'
                                                             className='flex items-center gap-1 text-xs px-2 py-1'
                                                             >
                                                             <MdCall className='text-base' />
                                                             Call
                                                             </Button>
                                                             <Button
-                                                            variant='NEUTRAL'
+                                                            variant='PRIMARY'
                                                             className='flex items-center gap-1 text-xs px-2 py-1'
                                                             >
                                                             <MdEmail className='text-base' />

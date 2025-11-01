@@ -33,10 +33,11 @@ const Navigation = () => {
 
                     <div className='hidden md:flex items-center space-x-4'>
                         <Button
-                            text='Get Started'
+                            text='Get Started '
                             onClick={handleGetStarted}
-                            variant='NEUTRAL'
-                            className='bg-primary rounded-md text-black hover:bg-primary/90 font-semibold px-6 transform transition-transform hover:scale-105'
+                            variant='PRIMARY'
+                            size="SMALL"
+                            className='bg-primary rounded-md text-white  hover:bg-primary/90 font-semibold px-6 transform transition-transform hover:scale-105'
                         />
                     </div>
 
@@ -68,12 +69,12 @@ const Navigation = () => {
                         exit={{opacity: 0, y: -20}}
                         className='md:hidden'>
                         <div className='px-2 pt-2 pb-3 space-y-2 sm:px-3'>
-                            <Button
-                                text='Get Started'
-                                onClick={handleGetStarted}
-                                variant='NEUTRAL'   
-                                className='w-full bg-primary rounded-full text-black hover:bg-primary/90 font-semibold transform transition-transform hover:scale-105'
-                            />
+                        <Button
+                            text='Start Your Journey for Free'
+                            onClick={handleGetStarted}
+                            variant='PRIMARY'   
+                            className='text-sm px-4 py-2 font-semibold'
+                        />
                         </div>
                     </motion.div>
                 )}

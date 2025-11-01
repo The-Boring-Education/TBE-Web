@@ -47,8 +47,8 @@ const GamificationDisplay = ({userId}: { userId: string }) => {
 
             {open && (
                 <div className='absolute z-50 mt-2 left-1/2 -translate-x-1/2'>
-                    <div className='bg-white rounded-2xl shadow-lg border px-4 py-4 w-[260px]'>
-                        <div className='flex items-center gap-4 justify-between'>
+                    <div className='bg-white rounded-2xl shadow-lg border w-[260px]'>
+                        <div className='flex items-center  justify-between'>
                             {/* Progress Circle */}
                             <div className='w-[64px] h-[64px] flex items-center justify-center'>
                                 <svg width={64} height={64}>
@@ -95,14 +95,14 @@ const GamificationDisplay = ({userId}: { userId: string }) => {
 
                             {/* Info */}
                             <div className='flex flex-col items-start'>
-                                <span className='text-sm text-gray-500 font-medium'>
+                                <span className='text-sm text-black font-medium'>
                                     YOU'RE AT
                                 </span>
                                 <span className='text-base font-semibold text-primary'>
                                     Level {currentLevel} : {currentLevelName}
                                 </span>
                                 {nextLevelName && (
-                                    <span className='mt-2 text-sm font-semibold text-white px-2 py-1 rounded-md bg-gradient-to-r from-pink-500 to-yellow-400'>
+                                    <span className='mt-2 text-sm font-semibold text-black px-2 py-1 rounded-md bg-gradient-to-r from-pink-500 to-yellow-400'>
                                         {pointsNeededForNextLevel} Points to{" "}
                                         {nextLevelName}
                                     </span>
