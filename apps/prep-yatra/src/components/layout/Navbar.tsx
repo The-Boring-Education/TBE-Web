@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
                 <Button
                     onClick={onSignOut}
                     variant='PRIMARY'
-                    text='Sign Outs'
+                    text='Sign Out'
                     className='px-2 py-2 text-sm' />
             </div>
         </nav>
