@@ -102,9 +102,9 @@ export function Navbar() {
                     )}
 
                     {/* Points Display */}
-                    {user && (
+                    {/* {user && (
                         <PointsDisplay userId={user.id} variant="navbar" />
-                    )}
+                    )} */}
 
                     {/* User Menu */}
                     {isLoading ? (

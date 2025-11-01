@@ -14,14 +14,31 @@ export default {
     theme: {
         container: {
             center: true,
-            padding: "2rem",
+            padding: "1rem",
             screens: {
-                "2xl": "1400px"
+                sm: '480px',
+                md: '768px',
+                lg: '976px',
+                xl: '1280px',
+                "2xl": "1280px"
             }
         },
         extend: {
             fontFamily: {
                 primary: ["Inter", ...fontFamily.sans]
+            },
+            fontSize: {
+                'header-1': '4rem',
+                'header-2': '2.75rem',
+                'header-3': '2rem',
+                'header-4': '1.5rem',
+                'header-5': '1.25rem',
+                subtitle: '1.25rem',
+                paragraph: '1rem',
+                'strong-text': '1rem',
+                'pre-title': '0.875rem',
+                'button-text': '0.875rem',
+                label: '0.875rem',
             },
             colors: {
                 border: "hsl(var(--border))",
@@ -30,13 +47,25 @@ export default {
                 background: "hsl(var(--background))",
                 foreground: "hsl(var(--foreground))",
                 primary: {
-                    DEFAULT: "hsl(var(--primary))",
-                    foreground: "hsl(var(--primary-foreground))"
+                    DEFAULT: "#ef4444",
+                    foreground: "#FFFFFF"
                 },
                 secondary: {
-                    DEFAULT: "hsl(var(--secondary))",
-                    foreground: "hsl(var(--secondary-foreground))"
+                    DEFAULT: "#E0B034",
+                    foreground: "#FFFFFF"
                 },
+                dark: '#040505',
+                success: '#31ad6b',
+                contentLight: '#19191B',
+                contentDark: '#FDFDFD',
+                grey: '#B0B0B0',
+                greyLight: '#e3e3e3',
+                greyDark: '#848484',
+                accent: {
+                    DEFAULT: "#ECF1F4",
+                    foreground: "#19191B"
+                },
+                lightBG: '#F8F8F8',
                 destructive: {
                     DEFAULT: "hsl(var(--destructive))",
                     foreground: "hsl(var(--destructive-foreground))"
@@ -44,10 +73,6 @@ export default {
                 muted: {
                     DEFAULT: "hsl(var(--muted))",
                     foreground: "hsl(var(--muted-foreground))"
-                },
-                accent: {
-                    DEFAULT: "hsl(var(--accent))",
-                    foreground: "hsl(var(--accent-foreground))"
                 },
                 popover: {
                     DEFAULT: "hsl(var(--popover))",
@@ -70,10 +95,41 @@ export default {
                     ring: "hsl(var(--sidebar-ring))"
                 }
             },
+            spacing: {
+                1: '8px',
+                2: '16px',
+                3: '24px',
+                4: '32px',
+                5: '40px',
+                6: '48px',
+                7: '56px',
+                8: '64px',
+            },
+            padding: {
+                1: '10px',
+                2: '16px',
+                4: '32px',
+                6: '48px',
+                8: '64px',
+                10: '80px',
+                12: '96px',
+                14: '112px',
+                16: '128px',
+            },
             borderRadius: {
                 lg: "var(--radius)",
                 md: "calc(var(--radius) - 2px)",
-                sm: "calc(var(--radius) - 4px)"
+                sm: "calc(var(--radius) - 4px)",
+                1: '5px',
+                2: '10px',
+            },
+            borderColor: {
+                borderColor1: '#F6FFBE',
+                borderColor2: '#2555FF',
+                borderColor3: '#FFE259',
+                borderColor4: '#FF76E1',
+                borderColor5: '#923CFF',
+                borderColor6: '#F0F3FF',
             },
             keyframes: {
                 "accordion-down": {
@@ -149,6 +205,9 @@ export default {
                 "slide-in-right": "slide-in-right 0.6s ease-out",
                 "scale-in": "scale-in 0.5s ease-out",
                 float: "float 3s ease-in-out infinite"
+            },
+            backdropBlur: {
+                xs: "2px"
             }
         }
     },

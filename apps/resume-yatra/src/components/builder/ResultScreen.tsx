@@ -67,7 +67,7 @@ export default function ResultScreen({ builder }: ResultScreenProps) {
 
             <div className='container mx-auto px-6 py-16'>
                 <div className='max-w-4xl mx-auto text-center space-y-8 animate-fade-in'>
-                    <Card className='bg-gradient-to-r from-purple-500 to-blue-500 text-white border-0 transition-all duration-500'>
+                    <Card className='bg-primary text-white border-0 transition-all duration-500'>
                         <CardContent className='p-12'>
                             <div className='space-y-6'>
                                 <Sparkles className='w-16 h-16 mx-auto text-yellow-400 animate-pulse' />
@@ -78,21 +78,17 @@ export default function ResultScreen({ builder }: ResultScreenProps) {
                                     {calculateOverallScore()}%
                                 </div>
                                 <p className='text-xl mb-6'>
-                                    You've built a world-class resume that
-                                    recruiters will love!
+                                    You've built a world-class resume that recruiters will love!
                                 </p>
                                 <div className='space-y-2 text-left max-w-md mx-auto'>
                                     <p className='text-sm'>
-                                        • Your resume now follows industry best
-                                        practices
+                                        • Your resume now follows industry best practices
                                     </p>
                                     <p className='text-sm'>
-                                        • You've included recruiter-approved
-                                        content
+                                        • You've included recruiter-approved content
                                     </p>
                                     <p className='text-sm'>
-                                        • You're ready to apply for top
-                                        companies
+                                        • You're ready to apply for top companies
                                     </p>
                                 </div>
                             </div>
@@ -102,21 +98,21 @@ export default function ResultScreen({ builder }: ResultScreenProps) {
                     <div className='flex flex-wrap justify-center gap-4'>
                         <Button
                             onClick={handleShareResult}
-                            className='bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 transition-all duration-300 hover:scale-105'>
+                            className='bg-gray-800 hover:bg-gray-900 text-white flex items-center gap-2 transition-all duration-300'>
                             <Copy className='w-4 h-4' />
                             Share with Friends
                         </Button>
                         <Button
                             onClick={handleStartFresh}
                             variant='outline'
-                            className='border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white flex items-center gap-2 transition-all duration-300 hover:scale-105'>
+                            className='border-primary text-primary hover:bg-primary hover:text-white flex items-center gap-2 transition-all duration-300'>
                             <RotateCcw className='w-4 h-4' />
                             Start Fresh
                         </Button>
                         <Button
                             onClick={() => router.push("/")}
                             variant='outline'
-                            className='border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white transition-all duration-300 hover:scale-105'>
+                            className='border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white transition-all duration-300'>
                             Back to Home
                         </Button>
                     </div>

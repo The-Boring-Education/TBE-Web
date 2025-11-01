@@ -8,8 +8,8 @@ import TemplatePrompt from "@/components/builder/TemplatePrompt"
 import { useResumeBuilder } from "@/hooks/use-resume-builder"
 
 const LoadingScreen = () => (
-    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100'>
-        <Loader2 className='w-8 h-8 animate-spin text-purple-600' />
+    <div className='min-h-screen flex items-center justify-center bg-white'>
+        <Loader2 className='w-8 h-8 animate-spin text-primary' />
     </div>
 )
 
