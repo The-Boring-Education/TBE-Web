@@ -258,14 +258,56 @@ vercel
 
 ### Environment Variables (Production)
 
-Set these in your deployment platform:
+**⚠️ CRITICAL:** All these environment variables MUST be set in Vercel/Production:
 
 ```bash
-NEXTAUTH_SECRET=production-secret
-NEXTAUTH_URL=https://prepyatra.theboringeducation.com
-NEXT_PUBLIC_API_URL=https://api.theboringeducation.com
+# NextAuth Configuration (REQUIRED) ⚠️
+# Generate with: openssl rand -base64 32
+NEXTAUTH_SECRET=your-production-secret-here
+NEXTAUTH_URL=https://prep-yatra-git-development-tbe.vercel.app
+
+# API Configuration (REQUIRED) ⚠️
+NEXT_PUBLIC_API_URL=https://api.theboringeducation.com/api/v1
+API_URL=https://api.theboringeducation.com/api/v1
+
+# Google OAuth (REQUIRED) ⚠️
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Optional - Cross-subdomain SSO
+COOKIE_DOMAIN=.theboringeducation.com
+
+# Database (if using direct connection)
 MONGODB_URI=mongodb+srv://...
+
+# External Services
+NEXT_PUBLIC_PLATFORM_URL=https://platform.theboringeducation.com
+NEXT_PUBLIC_QUIZ_URL=https://quiz.theboringeducation.com
+
+# Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+
+# Node Environment
+NODE_ENV=production
 ```
+
+#### How to Generate NEXTAUTH_SECRET:
+
+```bash
+# Using OpenSSL (recommended)
+openssl rand -base64 32
+
+# Using Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+#### Setting Environment Variables in Vercel:
+
+1. Go to: `https://vercel.com/your-team/prep-yatra/settings/environment-variables`
+2. Add each variable above
+3. Select environment: **Production**, **Preview**, and **Development**
+4. Click "Save"
+5. **Redeploy** the application
 
 ## 🧪 Testing
 
@@ -295,6 +337,40 @@ pnpm lint
 - Verify NextAuth configuration
 - Check environment variables
 - Ensure API endpoints are accessible
+
+**Production NextAuth 500 Error:**
+
+If you see these errors in production console:
+```
+Failed to load resource: the server responded with a status of 500
+[next-auth][error][CLIENT_FETCH_ERROR]
+Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+```
+
+**Causes & Solutions:**
+
+1. **Missing `NEXTAUTH_SECRET`** ❌
+   - Error: `NEXTAUTH_SECRET environment variable is required`
+   - Solution: Add `NEXTAUTH_SECRET` in Vercel environment variables
+   - Generate: `openssl rand -base64 32`
+
+2. **Missing `NEXTAUTH_URL`** ❌
+   - Error: Session endpoint returns HTML instead of JSON
+   - Solution: Set `NEXTAUTH_URL=https://your-production-url.vercel.app`
+
+3. **Missing `API_URL`** ❌
+   - Error: User creation/fetch fails in callbacks
+   - Solution: Add both `API_URL` and `NEXT_PUBLIC_API_URL`
+
+4. **Missing Google OAuth credentials** ❌
+   - Error: Provider authentication fails
+   - Solution: Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+
+**Quick Fix Steps:**
+1. Go to Vercel → Settings → Environment Variables
+2. Add all REQUIRED variables (marked with ⚠️ above)
+3. Click "Redeploy" button
+4. Clear browser cache and test again
 
 **Styling Issues:**
 

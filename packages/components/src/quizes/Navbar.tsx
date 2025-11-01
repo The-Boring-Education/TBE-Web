@@ -67,14 +67,14 @@ export function Navbar() {
                         className="flex items-center cursor-pointer" 
                         onClick={() => router.push('/dashboard')}
                     >
-                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
-                            <Brain className="w-5 h-5 text-white" />
+                        <div className="w-10 h-10 bg-[#ef4444] rounded-lg flex items-center justify-center mr-4">
+                            <Brain className="w-6 h-6 text-white" />
                         </div>
                         <div>
                             <h1 className="text-xl font-bold text-gray-900">
                                 The Boring Quizes
                             </h1>
-                            <p className="text-xs text-black">
+                            <p className="text-xs text-gray-500">
                                 By The Boring Education
                             </p>
                         </div>
@@ -82,15 +82,15 @@ export function Navbar() {
 
                     {/* Navigation Links - Always visible for authenticated users */}
                     {user && (
-                        <nav className="flex items-center space-x-1">
+                        <nav className="flex items-center space-x-4">
                             {navItems.map((item) => (
                                 <Button
                                     key={item.name}
                                     variant={isActive(item.href) ? "PRIMARY" : "GHOST"}
                                     onClick={() => router.push(item.href)}
-                                    className={`flex items-center space-x-2 ${
+                                    className={`flex items-center space-x-2 rounded-md ${
                                         isActive(item.href) 
-                                            ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
+                                            ? 'bg-primary text-white ' 
                                             : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                                     }`}
                                 >
@@ -131,19 +131,19 @@ export function Navbar() {
                                 <Button
                                     variant="OUTLINE"
                                     onClick={() => setShowUserMenu(!showUserMenu)}
-                                    className="flex items-center space-x-3 h-10 border-gray-200"
+                                    className="flex items-center space-x-3 h-10 border-gray-200 hover:border-[#ef4444]"
                                     disabled={loading}
                                 >
                                     <Avatar className="h-6 w-6">
                                         <AvatarImage src={user?.image} alt={user?.name} />
-                                        <AvatarFallback className="text-xs bg-indigo-100 text-indigo-600">
+                                        <AvatarFallback className="text-xs bg-red-100 text-[#ef4444] font-bold">
                                             {user?.name ? getInitials(user.name) : "U"}
                                         </AvatarFallback>
                                     </Avatar>
                                     <span className="font-medium hidden sm:block text-gray-700">
                                         {user?.name}
                                     </span>
-                                    <ChevronDown className="h-4 w-4" />
+                                    <ChevronDown className="h-4 w-4 text-gray-500" />
                                 </Button>
 
                                 {showUserMenu && (
@@ -159,7 +159,7 @@ export function Navbar() {
                                                         setShowUserMenu(false)
                                                     }}
                                                     className={`w-full justify-start ${
-                                                        isActive(item.href) ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600'
+                                                        isActive(item.href) ? 'bg-red-50 text-[#ef4444] font-semibold' : 'text-gray-600'
                                                     }`}
                                                 >
                                                     <item.icon className="w-4 h-4 mr-2" />

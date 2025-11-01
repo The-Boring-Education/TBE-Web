@@ -207,18 +207,18 @@ function ResultsContent() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className='flex flex-col sm:flex-row gap-4'>
-                        <button
-                            onClick={() => router.push(`/quiz/${id}`)}
-                            className='flex-1 bg-black text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors'>
-                            Try Again
-                        </button>
-                        <button
-                            onClick={() => router.push("/dashboard")}
-                            className='flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors'>
-                            Back to Dashboard
-                        </button>
-                    </div>
+                            <div className='flex flex-col sm:flex-row gap-4'>
+                                <button
+                                    onClick={() => router.push(`/quiz/${id}`)}
+                                    className='flex-1 bg-[#ef4444] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#dc2626] transition-colors'>
+                                    Try Again
+                                </button>
+                                <button
+                                    onClick={() => router.push("/dashboard")}
+                                    className='flex-1 border-2 border-[#ef4444] text-[#ef4444] py-3 px-6 rounded-lg font-semibold hover:bg-[#ef4444]/10 transition-colors'>
+                                    Back to Dashboard
+                                </button>
+                            </div>
                 </div>
 
                 {/* Detailed Results */}

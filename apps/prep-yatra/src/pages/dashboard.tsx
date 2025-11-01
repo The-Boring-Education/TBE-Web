@@ -256,29 +256,25 @@ const Dashboard = () => {
                 )}
 
                 {/* Sidebar Toggle Button - Mobile */}
-                <Button
-                    variant='PRIMARY'
-                    text=""
-                    size="SMALL"
-                    className='fixed top-[76px] left-3 z-50 lg:hidden bg-primary text-primary-foreground shadow border border-primary/30 !px-1.5 !py-1.5 !h-7 !min-h-0'
+                <button
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                    icon={isSidebarCollapsed ? <Menu className='w-3 h-3' /> : <X className='w-3 h-3' />}
-                />
+                    className='fixed top-[78px] left-3 z-50 lg:hidden bg-primary text-white shadow-lg hover:shadow-xl border-2 border-primary hover:bg-primary/90 flex items-center justify-center h-9 w-9 rounded-full transition-all duration-200 hover:scale-110'
+                >
+                    {isSidebarCollapsed ? <Menu className='w-3.5 h-3.5' /> : <X className='w-3.5 h-3.5' />}
+                </button>
 
                 {/* Sidebar Toggle Button - Desktop */}
-                <Button
-                    variant='PRIMARY'
-                    text=""
-                    size="SMALL"
-                    className='hidden lg:flex fixed top-[76px] left-3 z-50 bg-primary text-primary-foreground shadow border border-primary/30 !px-1.5 !py-1.5 !h-7 !min-h-0'
+                <button
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                    icon={isSidebarCollapsed ? <Menu className='w-3 h-3' /> : <X className='w-3 h-3' />}
-                />
+                    className='hidden lg:flex fixed top-[78px] left-3 z-50 bg-primary text-white shadow-lg hover:shadow-xl border-2 border-primary hover:bg-primary/90 items-center justify-center h-9 w-9 rounded-full transition-all duration-200 hover:scale-110'
+                >
+                    {isSidebarCollapsed ? <Menu className='w-3.5 h-3.5' /> : <X className='w-3.5 h-3.5' />}
+                </button>
 
                 <div className='flex gap-6'>
                     {/* Profile Section - Collapsible Sidebar */}
                     <div
-                        className={`${isSidebarCollapsed ? "hidden" : "block"} w-full lg:w-1/3 transition-all duration-300 mt-3`}>
+                        className={`${isSidebarCollapsed ? "hidden" : "block"} w-full lg:w-1/3 transition-all duration-300`}>
                         <ProfileSection
                             user={user}
                             profile={profile}
@@ -297,7 +293,7 @@ const Dashboard = () => {
 
                     {/* Main Content */}
                     <div
-                        className={`${isSidebarCollapsed ? "w-full" : "w-full lg:w-2/3"} transition-all duration-300 mt-3`}>
+                        className={`${isSidebarCollapsed ? "w-full" : "w-full lg:w-2/3"} transition-all duration-300`}>
                         {/* Daily Prep Check-in above tabs */}
                         <Suspense fallback={<ComponentLoader />}>
                             <div className='mb-4'>

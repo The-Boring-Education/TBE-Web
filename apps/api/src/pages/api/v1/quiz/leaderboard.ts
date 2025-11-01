@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { getLeaderboardFromDB } from '@/lib/database';
+import { getLeaderboardFromDB } from '@/lib/database/queries/userQuizAttempt';
 import { cors } from '@/lib/utils';
 import { connectDB } from '@/middleware';
 

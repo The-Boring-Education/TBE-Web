@@ -215,12 +215,12 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         </div>
 
         {/* ✅ Action Buttons */}
-        <FlexContainer className="flex flex-col gap-1.5 mt-3">
+        <div className="flex flex-col gap-1.5 mt-3 items-stretch w-full">
 
         {profile?.userName && (
             <Button
               onClick={handleShareJourneyClick}
-              variant="PRIMARY"
+              variant="OUTLINE"
               text="Share Your Journey"
               size="SMALL"
               className="w-full"
@@ -240,7 +240,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           )}
 
          
-        </FlexContainer>
+        </div>
       </CardContent>
     </Card>
   );

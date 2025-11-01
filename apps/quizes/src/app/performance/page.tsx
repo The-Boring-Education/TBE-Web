@@ -2,7 +2,7 @@
 
 import { useAuth } from "@tbe/auth"
 import { Card, CardContent } from "@tbe/components/quizes"
-import { Button } from "@tbe/components/quizes"
+import { Button } from "@tbe/components"
 import { Layout } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { analyticsApi, APIError } from "@tbe/services"
@@ -73,7 +73,7 @@ const PerformanceContent = () => {
       <Layout>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto" />
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto" />
             <p className="mt-4 text-lg text-gray-600">Loading performance...</p>
           </div>
         </div>
@@ -87,7 +87,7 @@ const PerformanceContent = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-600 mb-4">{error}</p>
-            <Button onClick={loadPerformance}>Try Again</Button>
+            <Button onClick={loadPerformance} variant="PRIMARY" className="rounded-md" size="LARGE">Try Again</Button>
           </div>
         </div>
       </Layout>
@@ -100,7 +100,7 @@ const PerformanceContent = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <p className="text-gray-600 mb-4">No performance data available</p>
-            <Button onClick={() => router.push('/dashboard')}>
+            <Button onClick={() => router.push('/dashboard')} variant="PRIMARY" className="rounded-md" size="LARGE">
               Take Your First Quiz
             </Button>
           </div>
@@ -199,16 +199,17 @@ const PerformanceContent = () => {
           <div className="flex justify-center space-x-4 mt-12">
             <Button 
               onClick={() => router.push('/dashboard')}
-              className="bg-indigo-600 hover:bg-indigo-700"
-              size="lg"
+              className="rounded-md"
+              variant="PRIMARY"
+              size="LARGE"
             >
               Take Another Quiz
             </Button>
             <Button 
-              variant="outline" 
+                variant="OUTLINE" 
               onClick={() => router.push('/leaderboard')}
-              className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
-              size="lg"
+              className="rounded-md"
+              size="LARGE"
             >
               View Leaderboard
             </Button>

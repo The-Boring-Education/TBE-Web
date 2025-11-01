@@ -2,7 +2,7 @@
 
 import { useAuth } from "@tbe/auth"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
-import { Button } from "@tbe/components/quizes"
+import { Button } from "@tbe/components"
 import { Layout } from "@tbe/components/quizes"
 import { APIError,leaderboardApi } from "@tbe/services"
 import {
@@ -43,26 +43,62 @@ function LeaderboardContent() {
       setLoading(true)
       setError(null)
 
-      const response = await leaderboardApi.getLeaderboard()
+      console.log('🔄 Fetching leaderboard data from API...')
+      const response = await leaderboardApi.getLeaderboard(100)
+      console.log('📊 Raw leaderboard response:', JSON.stringify(response, null, 2))
 
-      if (response.success) {
-        // Transform LeaderboardData to LeaderboardEntry
-        const transformedData: LeaderboardEntry[] = response.data?.map((item, index) => ({
-          _id: item._id || '',
-          username: item.username || 'Unknown User',
-          image: item.image || '',
-          bestScore: item.bestScore || 0,
-          totalAttempts: item.totalAttempts || 0,
-          averageScore: item.averageScore || 0,
-          totalTimeSpent: item.totalTimeSpent || 0,
-          rank: index + 1
-        })) || []
+      // Check if response has data
+      if (!response) {
+        throw new Error('No response from API')
+      }
+
+      // Check if response.data exists and is an array
+      if (response.success && response.data && Array.isArray(response.data)) {
+        console.log(`✅ Received ${response.data.length} leaderboard entries`)
+        
+        // Transform quiz leaderboard data to LeaderboardEntry
+        const transformedData: LeaderboardEntry[] = response.data.map((item: any, index) => {
+          // API returns quiz stats directly
+          const username = item.username || 'Unknown User'
+          const image = item.image || ''
+          
+          console.log(`📍 User #${index + 1}:`, {
+            id: item._id,
+            username,
+            bestScore: item.bestScore,
+            totalAttempts: item.totalAttempts,
+            averageScore: item.averageScore
+          })
+          
+          return {
+            _id: item._id || `user-${index}`,
+            username,
+            image,
+            bestScore: typeof item.bestScore === 'number' ? Math.round(item.bestScore) : 0,
+            totalAttempts: typeof item.totalAttempts === 'number' ? item.totalAttempts : 0,
+            averageScore: typeof item.averageScore === 'number' ? Math.round(item.averageScore) : 0,
+            totalTimeSpent: typeof item.totalTimeSpent === 'number' ? item.totalTimeSpent : 0,
+            rank: index + 1
+          }
+        })
+        
+        console.log('✅ Transformed leaderboard data:', transformedData.length, 'entries')
         setLeaderboard(transformedData)
+      } else if (response.success === false) {
+        console.error('❌ API returned error:', response.message)
+        setError(response.message || 'Failed to load leaderboard')
+      } else if (!response.data || !Array.isArray(response.data)) {
+        console.error('❌ Invalid data format:', typeof response.data, response.data)
+        setError('Invalid leaderboard data format received from server')
       } else {
-        throw new APIError(response.message || 'Failed to load leaderboard', 500)
+        console.error('❌ Unexpected response structure:', response)
+        setError('Unexpected response from server')
       }
     } catch (err) {
-      // Failed to load leaderboard data
+      console.error('❌ Error loading leaderboard:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load leaderboard data'
+      console.error('Error details:', errorMessage)
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -113,7 +149,7 @@ function LeaderboardContent() {
       <Layout>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto" />
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#ef4444] mx-auto" />
             <p className="mt-4 text-lg text-gray-600">Loading leaderboard...</p>
           </div>
         </div>
@@ -127,7 +163,7 @@ function LeaderboardContent() {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-600 mb-4">{error}</p>
-            <Button onClick={loadLeaderboard}>Try Again</Button>
+            <Button onClick={loadLeaderboard} variant="PRIMARY" className="rounded-md" size="LARGE">Try Again</Button>
           </div>
         </div>
       </Layout>
@@ -191,7 +227,7 @@ function LeaderboardContent() {
                   <div className="text-center py-12">
                     <Trophy className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-500 mb-4">No leaderboard data available yet</p>
-                    <Button onClick={() => router.push('/dashboard')}>
+                    <Button onClick={() => router.push('/dashboard')} className="rounded-md" variant="PRIMARY" size="LARGE">
                       Take Your First Quiz
                     </Button>
                   </div>
@@ -268,16 +304,16 @@ function LeaderboardContent() {
             <div className="flex justify-center space-x-4 mt-12">
               <Button
                 onClick={() => router.push('/dashboard')}
-                className="bg-indigo-600 hover:bg-indigo-700"
-                size="lg"
+                variant="PRIMARY"
+                className="rounded-md"
+                size="LARGE"
               >
                 Take a Quiz
               </Button>
               <Button
-                variant="outline"
+                variant="OUTLINE"
                 onClick={() => router.push('/performance')}
-                className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
-                size="lg"
+                size="LARGE"
               >
                 View Your Performance
               </Button>
