@@ -58,11 +58,11 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 }) => {
     return (
         <Tabs defaultValue="challenges" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="challenges">Challenges</TabsTrigger>
-                <TabsTrigger value="prep-logs">Prep Logs</TabsTrigger>
-                <TabsTrigger value="recruiters">Recruiters</TabsTrigger>
-                <TabsTrigger value="skills">Skills</TabsTrigger>
+            <TabsList className="grid w-full gap-2 grid-cols-4">
+                <TabsTrigger className="border-2 border-primary" value="challenges">Challenges</TabsTrigger>
+                <TabsTrigger className="border-2 border-primary" value="prep-logs">Prep Logs</TabsTrigger>
+                <TabsTrigger className="border-2 border-primary" value="recruiters">Recruiters</TabsTrigger>
+                <TabsTrigger className="border-2 border-primary" value="skills">Skills</TabsTrigger>
             </TabsList>
 
             <TabsContent value="prep-logs" className="space-y-4">

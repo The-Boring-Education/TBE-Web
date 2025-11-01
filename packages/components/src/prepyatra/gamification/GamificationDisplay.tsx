@@ -38,7 +38,7 @@ const GamificationDisplay = ({userId}: { userId: string }) => {
     return (
         <div className='relative' ref={popoverRef}>
             <button
-                className='flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary font-bold'
+                className='flex w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary font-bold'
                 onClick={() => setOpen((v) => !v)}>
                 <span className='w-full h-full flex text-xs items-center justify-center'>
                     {points}
@@ -47,31 +47,31 @@ const GamificationDisplay = ({userId}: { userId: string }) => {
 
             {open && (
             <div className='absolute z-50 mt-2 left-1/2 -translate-x-1/2'>
-                    <div className='bg-white rounded-xl shadow-lg border px-5 py-4 w-[340px]'>
-                        <div className='flex items-center gap-4 justify-between'>
+                    <div className='bg-white rounded-2xl shadow-lg border px-4 py-3 w-[280px]'>
+                        <div className='flex items-center gap-3'>
                             {/* Progress Circle */}
-                            <div className='w-[64px] h-[64px] flex items-center justify-center'>
-                                <svg width={64} height={64}>
+                            <div className='w-[70px] h-[70px] flex items-center justify-center flex-shrink-0'>
+                                <svg width={70} height={70}>
                                     <circle
-                                        cx={32}
-                                        cy={32}
-                                        r={28}
+                                        cx={35}
+                                        cy={35}
+                                        r={30}
                                         stroke='#e5e7eb'
-                                        strokeWidth={5}
+                                        strokeWidth={7}
                                         fill='none'
                                     />
                                     <circle
-                                        cx={32}
-                                        cy={32}
-                                        r={28}
-                                        stroke='#f97316'
-                                        strokeWidth={5}
+                                        cx={35}
+                                        cy={35}
+                                        r={30}
+                                        stroke='#ef4444'
+                                        strokeWidth={7}
                                         fill='none'
-                                        strokeDasharray={2 * Math.PI * 28}
+                                        strokeDasharray={2 * Math.PI * 30}
                                         strokeDashoffset={
                                             2 *
                                             Math.PI *
-                                            28 *
+                                            30 *
                                             (1 - percentageProgress / 100)
                                         }
                                         strokeLinecap='round'
@@ -85,8 +85,8 @@ const GamificationDisplay = ({userId}: { userId: string }) => {
                                         y='50%'
                                         textAnchor='middle'
                                         dy='.3em'
-                                        fontSize='14px'
-                                        fill='#f97316'
+                                        fontSize='15px'
+                                        fill='#ef4444'
                                         fontWeight='bold'>
                                         {points}
                                     </text>
@@ -94,16 +94,16 @@ const GamificationDisplay = ({userId}: { userId: string }) => {
                             </div>
 
                             {/* Info */}
-                            <div className='flex flex-col items-start'>
-                                <span className='text-sm text-gray-500 font-medium'>
+                            <div className='flex flex-col items-start flex-1 min-w-0'>
+                                <span className='text-sm text-gray-500 font-medium uppercase'>
                                     YOU'RE AT
                                 </span>
-                                <span className='text-base font-semibold text-primary'>
+                                <span className='text-base font-semibold text-primary leading-tight'>
                                     Level {currentLevel} : {currentLevelName}
                                 </span>
                                 {nextLevelName && (
-                                    <span className='mt-2 text-sm font-semibold text-white px-2 py-1 rounded-md bg-gradient-to-r from-pink-500 to-yellow-400'>
-                                        {pointsNeededForNextLevel} Points to{" "}
+                                    <span className='mt-2 text-sm font-semibold text-black px-2.5 py-1 rounded-md bg-gradient-to-r from-pink-500 to-yellow-400 whitespace-nowrap'>
+                                        {pointsNeededForNextLevel} to{" "}
                                         {nextLevelName}
                                     </span>
                                 )}

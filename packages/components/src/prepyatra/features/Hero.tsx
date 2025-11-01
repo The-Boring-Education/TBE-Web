@@ -149,7 +149,7 @@ const PrepYatraHero = () => {
                             whileHover={{scale: 1.02, y: -3}}
                             className='glass rounded-1 p-4 transition-transform duration-200 shadow hover:shadow-md'>
                             <FlexContainer direction='col'>
-                                <div className='w-12 h-12 bg-primary rounded-full mx-auto mb-3 flex items-center justify-center'>
+                                <div className='w-12 h-12 bg-primary rounded-full mx-auto mb-3 flex items-center p-1 justify-center'>
                                     {feature.icon}
                                 </div>
                                 <Text level='h3' className='text-lg font-semibold mb-1 text-contentLight'>

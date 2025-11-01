@@ -1,5 +1,6 @@
 import {Card, CardContent, CardHeader, CardTitle} from "../ui/card";
 import Button from "../../common/Buttons/Button";
+import { PlusIcon } from "lucide-react";
 
 const PrepLogsShowcase = () => {
     const prepLogs = [
@@ -39,7 +40,7 @@ const PrepLogsShowcase = () => {
         <section className='py-20 px-4 bg-white'>
             <div className='container mx-auto'>
                 <div className='text-center mb-16 animate-fade-in'>
-                    <h2 className='text-4xl md:text-5xl font-bold text-contentLight mb-6'>
+                    <h2 className='text-3xl md:text-4xl font-bold text-contentLight mb-6'>
                         📝 <span className='text-primary'>Prep Logs</span>
                     </h2>
                     <p className='text-xl text-greyDark max-w-3xl mx-auto'>
@@ -60,9 +61,9 @@ const PrepLogsShowcase = () => {
                         </div>
                         <Button 
                             variant='PRIMARY'
-                            text='+ Add New Log'
+                            text='Add New Log'
                             size="SMALL"
-                            className='bg-primary text-white hover:bg-primary/90 text-sm px-4 py-2'
+                            className='bg-primary text-white hover:bg-primary/90 text-sm'
                         />
                     </div>
 
@@ -82,10 +83,10 @@ const PrepLogsShowcase = () => {
                                                 <span className='px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium'>
                                                     {log.category}
                                                 </span>
-                                                <span className='px-3 py-1 bg-greyLight text-greyDark rounded-full text-sm'>
+                                                <span className='px-3 py-1 bg-primary text-white rounded-full text-sm'>
                                                     ⏱️ {log.duration}
                                                 </span>
-                                                <span className='px-3 py-1 bg-greyLight text-greyDark rounded-full text-sm'>
+                                                <span className='px-3 py-1 bg-primary text-white rounded-full text-sm'>
                                                     📅 {log.date}
                                                 </span>
                                             </div>
@@ -119,20 +120,20 @@ const PrepLogsShowcase = () => {
                                     </div>
                                     <div className='flex gap-2'>
                                         <Button
-                                            variant='NEUTRAL'
-                                            text='✏️ Edit'
+                                            variant='PRIMARY'
+                                            text=' Edit'
                                             size="SMALL"
                                             className='text-sm px-3 py-1.5'
                                         />
                                         <Button
-                                            variant='NEUTRAL'
-                                            text='🔄 Continue'
+                                            variant='PRIMARY'
+                                            text=' Continue'
                                             size="SMALL"
                                             className='text-sm px-3 py-1.5'
                                         />
                                         <Button
-                                            variant='NEUTRAL'
-                                            text='📤 Share'
+                                            variant='PRIMARY'
+                                            text=' Share'
                                             size="SMALL"
                                             className='text-sm px-3 py-1.5'
                                         />

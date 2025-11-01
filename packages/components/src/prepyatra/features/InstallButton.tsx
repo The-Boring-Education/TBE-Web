@@ -1,4 +1,4 @@
-import {Download} from "lucide-react";
+import {Download, DownloadIcon} from "lucide-react";
 
 import {Button} from "../ui/button";
 import {useInstallPrompt} from "@tbe/hooks";
@@ -27,8 +27,8 @@ export default function InstallButton() {
             className='fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all'
             title='Install this app'
             style={{boxShadow: "0 4px 24px 0 rgba(0,0,0,0.15)"}}>
-            <Download className='w-5 h-5 mr-2' />
-            <span className='font-semibold'>Install App</span>
+            <DownloadIcon className='w-2 h-2' />
+            <span className='font-semibold text-sm'>Install App</span>
         </Button>
     );
 }
