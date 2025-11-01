@@ -43,7 +43,7 @@ export default function BuilderMain({ builder }: BuilderMainProps) {
                         <span className='text-sm font-medium text-gray-600'>
                             Step {currentStep + 1} of {builder.stepData.length}
                         </span>
-                        <span className='text-sm font-medium text-purple-600'>
+                        <span className='text-sm font-medium text-primary'>
                             Overall Score: {calculateOverallScore()}%
                         </span>
                     </div>
@@ -59,7 +59,7 @@ export default function BuilderMain({ builder }: BuilderMainProps) {
                 <div className='max-w-4xl mx-auto'>
                     {/* Step Header */}
                     <div className='text-center mb-8 animate-fade-in'>
-                        <h1 className='text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent'>
+                        <h1 className='text-4xl font-bold mb-4 text-gray-900'>
                             {currentStepData.title}
                         </h1>
                         <p className='text-xl text-gray-600 mb-4'>
@@ -246,7 +246,7 @@ export default function BuilderMain({ builder }: BuilderMainProps) {
                         {isLastStep ? (
                             <Button
                                 onClick={() => setShowResult(true)}
-                                className='bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white flex items-center gap-2 transition-all duration-300 hover:scale-105'>
+                                className='bg-primary hover:bg-red-600 text-white flex items-center gap-2 transition-all duration-300'>
                                 Show Result
                                 <Sparkles className='w-4 h-4' />
                             </Button>
@@ -260,7 +260,7 @@ export default function BuilderMain({ builder }: BuilderMainProps) {
                                         )
                                     )
                                 }
-                                className='bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white flex items-center gap-2 transition-all duration-300 hover:scale-105'>
+                                className='bg-primary hover:bg-red-600 text-white flex items-center gap-2 transition-all duration-300'>
                                 Next
                                 <ArrowRight className='w-4 h-4' />
                             </Button>

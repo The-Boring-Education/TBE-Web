@@ -36,25 +36,24 @@ export default function AuthPage() {
 
     if (authLoading) {
         return (
-            <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100'>
-                <Loader2 className='w-8 h-8 animate-spin text-purple-600' />
+            <div className='min-h-screen flex items-center justify-center bg-white'>
+                <Loader2 className='w-8 h-8 animate-spin text-primary' />
             </div>
         )
     }
 
     return (
-        <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 p-4'>
+        <div className='min-h-screen flex items-center justify-center bg-gray-50 p-4'>
             <Card className='w-full max-w-md shadow-xl'>
                 <CardHeader className='space-y-4 text-center'>
-                    <div className='mx-auto w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center'>
+                    <div className='mx-auto w-16 h-16 bg-primary rounded-2xl flex items-center justify-center'>
                         <FileText className='w-8 h-8 text-white' />
                     </div>
-                    <CardTitle className='text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent'>
+                    <CardTitle className='text-3xl font-bold text-primary'>
                         Welcome to Resume Yatra
                     </CardTitle>
                     <CardDescription className='text-base'>
-                        Sign in to save your progress and build your perfect
-                        resume
+                        Sign in to save your progress and build your perfect resume
                     </CardDescription>
                 </CardHeader>
                 <CardContent className='space-y-4'>
@@ -69,7 +68,7 @@ export default function AuthPage() {
                     <Button
                         onClick={handleGitHubSignIn}
                         disabled={isLoading}
-                        className='w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-6 text-lg font-semibold transition-all duration-300 hover:scale-105'
+                        className='w-full bg-primary hover:bg-red-600 text-white py-6 text-lg font-semibold transition-all duration-300'
                         size='lg'>
                         {isLoading ? (
                             <>

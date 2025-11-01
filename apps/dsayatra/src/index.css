@@ -98,6 +98,8 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background: linear-gradient(to bottom right, #581c87, #1e3a8a, #312e81);
+    min-height: 100vh;
   }
 }
