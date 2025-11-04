@@ -1,7 +1,10 @@
 // Export all utilities
 export * from "./analytics"
 export * from "./api"
-export * from "./auth"
+// NOTE: auth.ts is NOT exported here because it imports next-auth/react
+// which uses Babel regenerator runtime and breaks Edge Runtime (middleware)
+// If you need auth functions, import directly: import { ... } from "@tbe/utils/src/auth"
+// export * from "./auth"
 export * from "./onboarding"
 export * from "./challenges"
 export * from "./prepLogs"

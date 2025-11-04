@@ -4,8 +4,8 @@ import './polyfills';
 import * as Sentry from '@sentry/nextjs';
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { routes } from './constant';
-import { isAdmin, isUserAuthenticated, sendAPIResponse } from './utils';
+import { routes } from '@tbe/constants';
+import { isAdmin, isUserAuthenticated, sendAPIResponse } from '@tbe/utils';
 
 const protectedAPIRoutes = [
   {
