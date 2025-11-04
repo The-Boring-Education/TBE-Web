@@ -13,7 +13,7 @@ import { Check, Crown,Star, Zap } from "lucide-react"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 
-import useCashfreePayment from "@/hooks/useCashfreePayment"
+import {useCashfreePayment} from "@tbe/hooks"
 
 interface PricingPlan {
     id: string
