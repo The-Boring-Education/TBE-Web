@@ -9,10 +9,10 @@ import { useRouter } from "next/router"
 import React, { useEffect, useRef,useState } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 
-import { Toaster as Sonner } from "@/components/ui/sonner"
-import { Toaster } from "@/components/ui/toaster"
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { initGA, installGlobalListeners, trackPageview } from "@/lib/analytics"
+import { Toaster as Sonner } from "@tbe/components"
+import { Toaster } from "@tbe/components"
+import { TooltipProvider } from "@tbe/components"
+import { initGA, trackPageview } from "@tbe/utils"
 
 // Cache clearing component
 const CacheManager = () => {
@@ -54,7 +54,6 @@ const AppContent = ({ Component, pageProps }: { Component: AppProps['Component']
 
     useEffect(() => {
         initGA()
-        installGlobalListeners()
         trackPageview(router.asPath)
         const handleRouteChange = (url: string) => trackPageview(url)
         router.events.on("routeChangeComplete", handleRouteChange)

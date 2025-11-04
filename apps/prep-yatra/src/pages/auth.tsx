@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 
-import InstallButton from "@/components/features/InstallButton"
+import {InstallButton} from "@tbe/components"
 
 const Auth = () => {
     const router = useRouter()

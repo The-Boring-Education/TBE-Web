@@ -1,1 +1,0 @@
-export { usePrepYatraGamificationContext as useGamificationContext } from "@tbe/components";
