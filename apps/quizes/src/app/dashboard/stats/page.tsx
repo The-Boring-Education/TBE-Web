@@ -7,7 +7,7 @@ import { DashboardNav } from '@tbe/components/quizes'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@tbe/components/quizes'
 import { Button } from '@tbe/components/quizes'
 import { useToast } from '@tbe/components/quizes'
-import { analyticsApi, APIError } from '@tbe/services'
+import { APIError, quizApi } from '@tbe/services'
 import { 
     Activity, 
     BarChart3,
@@ -19,8 +19,8 @@ import {
     Zap} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
 
-import { formatDuration,formatTimeAgo } from '@/lib/utils'
-import type { CategoryPerformance,PerformanceMetrics } from '@/types/api'
+import { formatDate } from '@tbe/utils'
+import type { CategoryPerformance,PerformanceMetrics } from '@tbe/types'
 
 // Loading component
 const MetricLoader = () => (
@@ -109,7 +109,7 @@ function PerformanceChart({ data }: { data: CategoryPerformance[] }) {
                         <div className="flex items-center space-x-6 text-sm">
                             <span>Best: <strong>{category.bestScore}%</strong></span>
                             <span>Avg: <strong>{category.averageScore}%</strong></span>
-                            <span>Time: <strong>{formatDuration(category.totalTimeSpent)}</strong></span>
+                            <span>Time: <strong>{category.totalTimeSpent} seconds</strong></span>
                         </div>
                     </div>
                     <div className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -138,11 +138,11 @@ function StatsContent() {
         queryKey: ['performance-metrics', user?.id, timeRange],
         queryFn: async (): Promise<PerformanceMetrics> => {
             if (!user?.id) throw new Error('User not authenticated')
-            const response = await analyticsApi.getPerformanceMetrics(user.id)
-            if (!response.data) {
+            const response = await quizApi.getUserAnalytics(user.id)
+            if (!response.success) {
                 throw new Error('No data received from API')
             }
-            return response.data
+            return response.data as PerformanceMetrics
         },
         enabled: !!user?.id
     })
@@ -155,11 +155,11 @@ function StatsContent() {
         queryKey: ['category-performance', user?.id, timeRange],
         queryFn: async (): Promise<CategoryPerformance[]> => {
             if (!user?.id) throw new Error('User not authenticated')
-            const response = await analyticsApi.getCategoryPerformance(user.id)
-            if (!response.data) {
+            const response = await quizApi.getUserSessions(user.id)
+            if (!response.success) {
                 throw new Error('No data received from API')
             }
-            return response.data
+            return response.data as CategoryPerformance[]
         },
         enabled: !!user?.id
     })
@@ -288,13 +288,13 @@ function StatsContent() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="text-center p-4 bg-muted/30 rounded-lg">
                                     <p className="text-2xl font-bold text-foreground">
-                                        {metricsLoading ? '...' : formatDuration(metrics.totalTimeSpent)}
+                                        {metricsLoading ? '...' : metrics.totalTimeSpent} seconds
                                     </p>
                                     <p className="text-sm text-muted-foreground">Total Time</p>
                                 </div>
                                 <div className="text-center p-4 bg-muted/30 rounded-lg">
                                     <p className="text-2xl font-bold text-foreground">
-                                        {metricsLoading ? '...' : formatDuration(metrics.averageTimePerQuiz ?? 0)}
+                                        {metricsLoading ? '...' : metrics.averageTimePerQuiz ?? 0} seconds
                                     </p>
                                     <p className="text-sm text-muted-foreground">Avg per Quiz</p>
                                 </div>
@@ -323,7 +323,7 @@ function StatsContent() {
                             <div className="space-y-3">
                                 <div className="flex items-center space-x-3">
                                     <div className="w-2 h-2 bg-green-500 rounded-full" />
-                                    <span className="text-sm">Last active: {formatTimeAgo(metrics.lastActiveDate ?? new Date().toISOString())}</span>
+                                    <span className="text-sm">Last active: {formatDate({ dateAndTime: metrics.lastActiveDate ?? new Date().toISOString() }).date}</span>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <div className="w-2 h-2 bg-blue-500 rounded-full" />

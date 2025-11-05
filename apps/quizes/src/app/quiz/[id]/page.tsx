@@ -6,12 +6,12 @@ import { Progress } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { CodeRenderer } from "@tbe/components/quizes"
-import { quizApi } from "@tbe/services"
+import { gamificationApi, quizApi } from "@tbe/services"
 import type { QuizQuestion } from "@tbe/types"
 import { useParams, useRouter } from "next/navigation"
 import { useCallback,useEffect, useState } from "react"
 
-import useGamifiedAction from "@/hooks/useGamifiedAction"
+import {useGamification} from "@tbe/hooks"
 
 interface QuizCategory {
     _id: string
@@ -26,7 +26,7 @@ function QuizContent() {
     const router = useRouter()
     const { user } = useAuth()
     const quizId = params.id as string
-    const gamifiedAction = useGamifiedAction()
+    const gamifiedAction = useGamification()
 
     const [quiz, setQuiz] = useState<QuizCategory | null>(null)
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -291,15 +291,9 @@ function QuizContent() {
                 "data" in response
             ) {
                 // Trigger gamification action for completing quiz (don't await to speed up)
-                gamifiedAction.triggerGamifiedAction({
-                    actionType: "COMPLETE_QUIZ",
-                    customMessage: "Quiz completed! Great job!",
-                    metadata: {
-                        quizId,
-                        totalTimeSpent,
-                        correctAnswers: answers.filter((a) => a.isCorrect).length,
-                        totalQuestions: answers.length
-                    }
+                gamificationApi.updateuserGamificationPoints({
+                    userId: userId,
+                    actionType: "COMPLETE_QUIZ"
                 }).catch(() => {}) // Ignore errors
                 
                 // Redirect immediately using window.location for instant navigation

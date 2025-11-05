@@ -2,7 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect,useState } from 'react'
 
-import { gamificationApi } from '@/services/api'
+import { gamificationApi } from '@tbe/services'
 
 // User levels configuration
 const USER_LEVELS = [

@@ -3,15 +3,15 @@
 import { usePathname, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
 
-import { initGA, installGlobalListeners, trackPageview } from "@/lib/analytics"
+import { initGA, installGlobalAnalyticsListeners, trackPageview } from "@tbe/utils"
 
-export function AnalyticsWrapper({ children }: { children: React.ReactNode }) {
+const AnalyticsWrapper = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname()
     const searchParams = useSearchParams()
 
     useEffect(() => {
         initGA()
-        installGlobalListeners()
+        installGlobalAnalyticsListeners()
     }, [])
 
     useEffect(() => {
@@ -21,4 +21,7 @@ export function AnalyticsWrapper({ children }: { children: React.ReactNode }) {
     }, [pathname, searchParams])
 
     return <>{children}</>
-}
+};
+
+
+export default AnalyticsWrapper

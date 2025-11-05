@@ -22,3 +22,5 @@ export { MarkdownRenderer } from './common/MarkdownRenderer'
 // Auth exports moved to @tbe/auth package
 export { useGamificationContext } from './context/GamificationContext'
 export { GamificationWrapper } from './GamificationWrapper'
+
+export { default as QueryProvider } from './QueryProvider'

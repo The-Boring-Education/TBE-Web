@@ -54,7 +54,7 @@ export { default as TabComponent } from './common/Tab';
 export { default as Toast } from './common/Toast';
 export { default as Link } from './common/Typography/Link';
 export { default as Text } from './common/Typography/Text';
-
+export {default as AnalyticsWrapper} from './common/Analytics/AnalyticsWrapper';
 // Container Components - Cards
 export { default as AboutTBE } from './containers/Cards/AboutTBE';
 export { default as CardContainerA } from './containers/Cards/CardContainerA';

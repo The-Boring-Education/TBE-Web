@@ -9,8 +9,9 @@ import { ArrowLeft, Clock, Target,Trophy } from "lucide-react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useMemo,useRef } from "react"
 
-import { quizApi } from "@/services/api"
-import type { Question } from "@/types/quiz"
+import { quizApi } from "@tbe/services"
+
+import {Question} from "@tbe/types"
 
 interface QuizQuestion {
     _id?: string
@@ -59,7 +60,7 @@ function ResultsContent() {
             explanation: q.explanation,
             detailedExplanation: q.detailedExplanation || q.explanation,
             category: quizData?.data?.categoryName || "",
-            difficulty: q.difficulty || "medium"
+            difficulty: (q.difficulty || "medium") as 'easy' | 'medium' | 'hard'
         })) || []
 
     // Analytics: results view

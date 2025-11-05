@@ -1,4 +1,5 @@
-import { config } from "@tbe/config/quizes"
+import { API_ENDPOINTS, config } from "@tbe/config/quizes"
+import { apiClient } from "./api"
 
 export interface QuizQuestion {
   question: string
@@ -149,5 +150,24 @@ export const quizApi = {
     })
     if (!response.ok) throw new Error('Failed to submit quiz')
     return response.json()
-  }
+  },
+
+  submitAttempt: async (
+    id: string, 
+    data: {
+        userId: string
+        answers: number[]
+        timeTaken: number
+    }
+) => {
+    try {
+        return await apiClient.post(
+            `${API_ENDPOINTS.QUIZ_QUESTIONS(id)}/attempt`, 
+            data
+        )
+    } catch (error) {
+        console.error("Error submitting quiz attempt:", error)
+        throw error
+    }
+},
 }
