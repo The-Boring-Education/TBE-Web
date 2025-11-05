@@ -1,5 +1,5 @@
-import { API_ENDPOINTS,config } from '@/config'
-import { APIClient } from '@/services/base'
+import { API_ENDPOINTS,config } from '@tbe/config/quizes'
+import { APIClient } from '@tbe/services'
 
 // Debug utility to check API URL construction
 export function debugAPIUrls() {

@@ -23,8 +23,8 @@ import {
     Trophy} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
 
-import { formatTimeAgo } from '@/lib/utils'
-import type { LeaderboardData, UserProfile } from '@/types/api'
+import { formatDate, formatTime } from '@tbe/utils'
+import type { LeaderboardData, UserProfile } from '@tbe/types'
 
 // Rank Badge Component
 interface RankBadgeProps {
@@ -208,7 +208,7 @@ function UserProfileModal({ profile, isOpen, onClose }: UserProfileModalProps) {
                         </div>
                         <div className="flex justify-between text-sm">
                             <span>Last active:</span>
-                            <span className="font-medium">{formatTimeAgo(profile.lastActiveDate)}</span>
+                            <span className="font-medium">{formatDate({ dateAndTime: profile.lastActiveDate }).date}</span>
                         </div>
                     </div>
                     

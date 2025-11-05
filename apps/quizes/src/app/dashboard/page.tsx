@@ -10,7 +10,7 @@ import { BookOpen,Play } from "lucide-react"
 import { useRouter } from "next/navigation"
   import React, { useEffect } from "react"
 
-import { useQuizData } from "@/hooks/useQuizData"
+import { useQuizData } from "@tbe/hooks"
 import { debugAPIUrls } from "@/utils/apiDebug"
 
 function DashboardContent() {

@@ -200,7 +200,7 @@ export interface QuizCategory {
     icon: string
     questions: Question[]
     color: string
-    difficulty: 'easy' | 'medium' | 'hard'
+    difficulty?: 'easy' | 'medium' | 'hard'
     estimatedTime: number
     questionsCount: number
     isActive: boolean

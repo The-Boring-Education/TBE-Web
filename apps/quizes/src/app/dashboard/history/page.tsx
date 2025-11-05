@@ -21,9 +21,9 @@ import {
     TrendingUp} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
 
-import { formatDuration,formatTimeAgo } from '@/lib/utils'
-import { analyticsApi, APIError,quizApi } from '@/services/api'
-import type { PerformanceHistory, QuizAttempt } from '@/types/api'
+import { formatDate, formatTime } from '@tbe/utils'
+import { analyticsApi, APIError,quizApi } from '@tbe/services'
+import type { PerformanceHistory, QuizAttempt } from '@tbe/types'
 
 // Filter component
 interface FilterBarProps {
@@ -156,11 +156,11 @@ function AttemptCard({ attempt, showDetails = false }: AttemptCardProps) {
                             </div>
                             <div className="flex items-center space-x-2">
                                 <Clock className="w-4 h-4" />
-                                <span>{formatDuration(attempt.timeTaken)}</span>
+                                    <span>{attempt.timeTaken} seconds</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <Calendar className="w-4 h-4" />
-                                <span>{formatTimeAgo(attempt.completedAt)}</span>
+                                <span>{formatDate({ dateAndTime: attempt.completedAt }).date}</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <TrendingUp className="w-4 h-4" />
@@ -239,7 +239,7 @@ function HistoryContent() {
         queryKey: ['quiz-attempts', user?.id],
         queryFn: async () => {
             if (!user?.id) return []
-            const response = await quizApi.getUserAttempts(user.id)
+            const response = await quizApi.getUserSessions(user.id)
             return response.data
         },
         enabled: !!user?.id
@@ -255,7 +255,7 @@ function HistoryContent() {
         queryFn: async () => {
             if (!user?.id) return []
             const days = selectedTimeRange === 'all' ? 365 : parseInt(selectedTimeRange)
-            const response = await analyticsApi.getPerformanceHistory(user.id, days)
+            const response = await quizApi.getUserAnalytics(user.id)
             return response.data
         },
         enabled: !!user?.id
@@ -383,7 +383,7 @@ function HistoryContent() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-muted-foreground">Total Time</p>
-                                    <p className="text-2xl font-bold">{formatDuration(totalTimeSpent)}</p>
+                                    <p className="text-2xl font-bold">{totalTimeSpent} seconds</p>
                                 </div>
                             </div>
                         </CardContent>
