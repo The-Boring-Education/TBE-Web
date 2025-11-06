@@ -9,3 +9,4 @@ export * from './routes';
 export * from './challenges';
 export * from './onboarding';
 export * from './component';
+export * from './analytics';
