@@ -1,5 +1,3 @@
-'use client'
-
 import { useAuth } from "@tbe/auth"
 import { Card, CardContent } from "@tbe/components/quizes"
 import { Button } from "@tbe/components"

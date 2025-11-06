@@ -1,5 +1,3 @@
-'use client'
-
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@tbe/auth'
 import { ProtectedRoute } from '@tbe/components/quizes'
@@ -374,4 +372,11 @@ export default function StatsPage() {
             <StatsContent />
         </ProtectedRoute>
     )
+}
+
+// Force SSR to prevent static generation with React Query
+export async function getServerSideProps() {
+    return {
+        props: {}
+    }
 } 

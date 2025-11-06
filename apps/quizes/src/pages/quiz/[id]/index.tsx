@@ -1,5 +1,3 @@
-"use client"
-
 import { useAuth } from "@tbe/auth"
 import { Card, CardContent, CardHeader } from "@tbe/components/quizes"
 import { Progress } from "@tbe/components/quizes"
@@ -8,7 +6,7 @@ import { ProtectedRoute } from "@tbe/components/quizes"
 import { CodeRenderer } from "@tbe/components/quizes"
 import { gamificationApi, quizApi } from "@tbe/services"
 import type { QuizQuestion } from "@tbe/types"
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/router"
 import { useCallback,useEffect, useState } from "react"
 
 import {useGamification} from "@tbe/hooks"
@@ -22,10 +20,9 @@ interface QuizCategory {
 }
 
 function QuizContent() {
-    const params = useParams()
     const router = useRouter()
     const { user } = useAuth()
-    const quizId = params.id as string
+    const quizId = router.query.id as string
     const gamifiedAction = useGamification()
 
     const [quiz, setQuiz] = useState<QuizCategory | null>(null)
@@ -463,4 +460,19 @@ export default function QuizPage() {
             <QuizContent />
         </ProtectedRoute>
     )
+}
+
+// Disable static generation for this dynamic route
+export async function getStaticPaths() {
+    return {
+        paths: [],
+        fallback: 'blocking'
+    }
+}
+
+export async function getStaticProps() {
+    return {
+        props: {},
+        revalidate: 1 // ISR: revalidate every second
+    }
 }
