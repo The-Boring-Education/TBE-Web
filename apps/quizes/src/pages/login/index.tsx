@@ -1,5 +1,3 @@
-"use client"
-
 import { useAuth } from "@tbe/auth"
 import { Button } from "@tbe/components/quizes"
 import {
@@ -11,7 +9,7 @@ import {
 } from "@tbe/components/quizes"
 import { useToast } from "@tbe/components/quizes"
 import { Brain, Sparkles, Trophy, Users } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/router"
 import { useEffect } from "react"
 
 export default function Login() {

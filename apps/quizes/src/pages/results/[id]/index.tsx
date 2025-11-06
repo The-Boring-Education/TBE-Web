@@ -1,12 +1,10 @@
-'use client'
-
 import { useQuery } from "@tanstack/react-query"
 import { useAuth } from "@tbe/auth"
 import { MarkdownRenderer } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { trackEvent } from "@tbe/utils"
 import { ArrowLeft, Clock, Target,Trophy } from "lucide-react"
-import { useParams, useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/router"
 import { useEffect, useMemo,useRef } from "react"
 
 import { quizApi } from "@tbe/services"
@@ -25,14 +23,12 @@ interface QuizQuestion {
 
 
 function ResultsContent() {
-    const params = useParams()
     const router = useRouter()
-    const searchParams = useSearchParams()
     const { user } = useAuth()
 
-    const id = params.id as string
-    const answersParam = searchParams.get('answers')
-    const timeTakenParam = searchParams.get('timeTaken')
+    const id = router.query.id as string
+    const answersParam = router.query.answers as string
+    const timeTakenParam = router.query.timeTaken as string
 
     const answers: (number | null)[] = useMemo(() => 
         answersParam ? JSON.parse(answersParam) : [], [answersParam])
@@ -337,4 +333,19 @@ export default function Results() {
             <ResultsContent />
         </ProtectedRoute>
     )
+}
+
+// Disable static generation for this dynamic route
+export async function getStaticPaths() {
+    return {
+        paths: [],
+        fallback: 'blocking'
+    }
+}
+
+export async function getStaticProps() {
+    return {
+        props: {},
+        revalidate: 1 // ISR: revalidate every second
+    }
 }

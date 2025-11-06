@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   images: {
     domains: ['lh3.googleusercontent.com'],
   },
@@ -13,11 +14,6 @@ const nextConfig = {
     '@tbe/interface',
     '@tbe/config'
   ],
-  experimental: {
-    externalDir: true,
-    // Disable tracing to avoid symlink issues on Windows
-    outputFileTracing: false
-  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

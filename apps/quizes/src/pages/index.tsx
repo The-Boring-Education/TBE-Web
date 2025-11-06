@@ -1,5 +1,3 @@
-"use client"
-
 import { useAuth } from "@tbe/auth"
 import {
     ArrowRight,
@@ -11,7 +9,7 @@ import {
     Target,
     Trophy,
     Users} from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
 

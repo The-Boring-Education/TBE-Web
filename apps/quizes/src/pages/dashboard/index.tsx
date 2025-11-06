@@ -1,5 +1,3 @@
-'use client'
-
 import { useAuth } from "@tbe/auth"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
 import { Button } from "@tbe/components"
@@ -7,7 +5,7 @@ import { Layout } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { gamificationApi } from "@tbe/services"
 import { BookOpen,Play } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/router"
   import React, { useEffect } from "react"
 
 import { useQuizData } from "@tbe/hooks"
