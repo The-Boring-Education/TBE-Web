@@ -20,3 +20,4 @@ export * from "./discount";
 export * from "./global";
 // Re-exporting only default export to avoid name conflicts
 export * from "./socialMediaTemplates";
+export * from "./health";

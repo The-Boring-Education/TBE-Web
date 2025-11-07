@@ -40,9 +40,7 @@ export const getCookieConfig = () => {
 export const getAuthUrl = () => {
     return (
         process.env.NEXTAUTH_URL ||
-        process.env.NEXT_PUBLIC_APP_URL ||
-        "http://localhost:3000"
-    )
+        process.env.NEXT_PUBLIC_APP_URL    )
 }
 
 /**
