@@ -19,6 +19,8 @@
     },
     "dependencies": {
         "@tbe/types": "workspace:*",
+        "@tbe/typescript-config": "workspace:*",
+        "@types/node": "^20.0.0",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/typography": "^0.5.15",
         "autoprefixer": "^10.4.20",
@@ -29,8 +31,6 @@
     },
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",
-        "@tbe/typescript-config": "workspace:*",
-        "@types/node": "^20.0.0",
         "eslint": "^9.34.0",
         "prettier": "^3.6.2"
     }
