@@ -6,9 +6,17 @@ export {
     getAuthUrl,
     getAuthSecret
 } from "./config/session"
+export {
+    defaultSignInCallback,
+    defaultSessionCallback,
+    defaultJwtCallback
+} from "./config/callbacks"
 
 // Providers
 export { createGoogleProvider } from "./providers/google"
+
+// Services
+export { createOrFindUser, getUserByEmail, getUserById } from "./services"
 
 // Hooks
 export { useAuth } from "./hooks/useAuth"
