@@ -4,34 +4,27 @@
     "type": "module",
     "private": true,
     "license": "MIT",
-    "main": "./onboarding.ts",
-    "types": "./onboarding.ts",
+    "main": "./src/onboarding.ts",
+    "types": "./src/onboarding.ts",
     "exports": {
-        ".": "./onboarding.ts",
-        "./quizes": "./quizes.ts",
+        ".": "./src/onboarding.ts",
+        "./quizes": "./src/quizes.ts",
         "./tailwind": "./tailwind.config.js",
         "./postcss": "./postcss.config.js",
         "./prettier": "./prettier.config.js"
     },
     "scripts": {
-        "build": "tsc",
+        "build": "echo 'No build step needed for config package'",
         "lint": "eslint ."
     },
     "dependencies": {
         "@tbe/types": "workspace:*",
-        "@tbe/typescript-config": "workspace:*",
-        "@types/node": "^20.0.0",
-        "@types/react": "^18.3.24",
-        "@types/react-dom": "^18.3.7",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/typography": "^0.5.15",
         "autoprefixer": "^10.4.20",
         "postcss": "^8.4.47",
         "tailwindcss": "^3.4.11",
-        "tailwindcss-animate": "^1.0.7",
-        "typescript": "^5.9.2",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1"
+        "tailwindcss-animate": "^1.0.7"
     },
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",
