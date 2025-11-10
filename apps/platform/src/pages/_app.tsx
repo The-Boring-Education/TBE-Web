@@ -3,9 +3,12 @@ import '@/styles/colors.css';
 
 import { Layout } from '@tbe/components';
 import { GamificationProvider } from '@tbe/components';
-// import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
 import { envConfig, routes } from '@tbe/constants';
-import { initGA, trackPageview, installGlobalAnalyticsListeners } from '@tbe/components/analytics';
+import {
+  initGA,
+  trackPageview,
+  installGlobalAnalyticsListeners,
+} from '@tbe/components/analytics';
 
 import { useUser } from '@tbe/hooks';
 import { getRedirectUrl } from '@tbe/utils';
@@ -29,12 +32,13 @@ const AppContent = ({
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const userData = useUser();
-  const { user, isOnboarded, isAuth, loading, updateSession } = (userData as any) || {
-    user: null,
-    isOnboarded: false,
-    isAuth: false,
-    loading: true,
-  };
+  const { user, isOnboarded, isAuth, loading, updateSession } =
+    (userData as any) || {
+      user: null,
+      isOnboarded: false,
+      isAuth: false,
+      loading: true,
+    };
   const [isSyncingSession, setIsSyncingSession] = useState(false);
 
   // Ensure we're on the client side before accessing window
@@ -42,7 +46,7 @@ const AppContent = ({
     setIsClient(true);
   }, []);
 
-    // ✅ Initialize Google Analytics
+  // ✅ Initialize Google Analytics
   useEffect(() => {
     initGA();
     installGlobalAnalyticsListeners();
@@ -51,7 +55,6 @@ const AppContent = ({
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [router.events]);
-
 
   useEffect(() => {
     // Only run on client side
@@ -62,7 +65,9 @@ const AppContent = ({
       if (!isOnboarded && router.pathname !== routes.onboarding) {
         try {
           if (user?.id) {
-            const resp = await fetch(`${envConfig.API_URL}/api/v1/user?userId=${user.id}`);
+            const resp = await fetch(
+              `${envConfig.API_URL}/api/v1/user?userId=${user.id}`
+            );
             const json = await resp.json();
             const dbIsOnboarded = json?.data?.isOnboarded === true;
             if (dbIsOnboarded) {
@@ -110,9 +115,19 @@ const AppContent = ({
     };
 
     void ensureOnboardingAndSession();
-  }, [isClient, isAuth, isOnboarded, loading, router, router.pathname, user, updateSession, isSyncingSession]);
+  }, [
+    isClient,
+    isAuth,
+    isOnboarded,
+    loading,
+    router,
+    router.pathname,
+    user,
+    updateSession,
+    isSyncingSession,
+  ]);
 
-    return (
+  return (
     <QueryClientProvider client={queryClient}>
       <GamificationProvider>
         <Layout>
