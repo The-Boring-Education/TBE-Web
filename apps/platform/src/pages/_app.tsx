@@ -3,7 +3,10 @@ import '@/styles/colors.css';
 
 import { Layout } from '@tbe/components';
 import { GamificationProvider } from '@tbe/components';
-import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
+// import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
+import { envConfig, routes } from '@tbe/constants';
+import { initGA, trackPageview, installGlobalAnalyticsListeners } from '@tbe/components/analytics';
+
 import { useUser } from '@tbe/hooks';
 import { getRedirectUrl } from '@tbe/utils';
 import type { AppProps } from 'next/app';
@@ -38,6 +41,17 @@ const AppContent = ({
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+    // ✅ Initialize Google Analytics
+  useEffect(() => {
+    initGA();
+    installGlobalAnalyticsListeners();
+
+    const handleRouteChange = (url: string) => trackPageview(url);
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => router.events.off('routeChangeComplete', handleRouteChange);
+  }, [router.events]);
+
 
   useEffect(() => {
     // Only run on client side
@@ -98,7 +112,7 @@ const AppContent = ({
     void ensureOnboardingAndSession();
   }, [isClient, isAuth, isOnboarded, loading, router, router.pathname, user, updateSession, isSyncingSession]);
 
-  return (
+    return (
     <QueryClientProvider client={queryClient}>
       <GamificationProvider>
         <Layout>
@@ -108,16 +122,11 @@ const AppContent = ({
     </QueryClientProvider>
   );
 };
-
 const TheBoringEducation = ({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) => (
   <Fragment>
-    <Script async src={gtag} strategy='lazyOnload' />
-    <Script id='google-analytics' strategy='lazyOnload'>
-      {googleAnalyticsScript}
-    </Script>
     <SessionProvider session={session}>
       <AppContent Component={Component} pageProps={pageProps} />
     </SessionProvider>
