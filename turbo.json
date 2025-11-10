@@ -35,10 +35,69 @@
         ".env.production",
         ".env"
       ],
+      "outputs": []
+    },
+    "@tbe/config#build": {
+      "outputs": [
+        "dist/**"
+      ]
+    },
+    "@tbe/components#build": {
+      "outputs": [
+        "dist/**"
+      ]
+    },
+    "@tbe/services#build": {
+      "outputs": [
+        "dist/**"
+      ]
+    },
+    "@tbe/platform#build": {
       "outputs": [
         ".next/**",
-        "!.next/cache/**",
-        "dist/**"
+        "!.next/cache/**"
+      ]
+    },
+    "@tbe/prep-yatra#build": {
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "@tbe/quizes#build": {
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "@tbe/onboarding#build": {
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "@tbe/api#build": {
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "@tbe/techyatra#build": {
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "@tbe/dsayatra#build": {
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "@tbe/resume-yatra#build": {
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
       ]
     },
     "build:cloud-run": {
