@@ -139,16 +139,22 @@ const AppContent = ({
 const TheBoringEducation = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps) => (
-  <Fragment>
-    <SessionProvider
-      session={session}
-      refetchInterval={5 * 60}
-      refetchOnWindowFocus
-    >
-      <AppContent Component={Component} pageProps={pageProps} />
-    </SessionProvider>
-  </Fragment>
-);
+}: AppProps) => {
+  // Use centralized auth service if AUTH_URL is set, otherwise use default /api/auth
+  const authBasePath = envConfig.AUTH_URL || '/api/auth';
+
+  return (
+    <Fragment>
+      <SessionProvider
+        session={session}
+        basePath={authBasePath}
+        refetchInterval={5 * 60}
+        refetchOnWindowFocus
+      >
+        <AppContent Component={Component} pageProps={pageProps} />
+      </SessionProvider>
+    </Fragment>
+  );
+};
 
 export default TheBoringEducation;
