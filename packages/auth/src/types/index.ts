@@ -9,6 +9,11 @@ export interface ExtendedUser extends DefaultUser {
     email: string
     name?: string
     image?: string
+    isOnboarded?: boolean
+    userName?: string
+    occupation?: string
+    purpose?: string[]
+    contactNo?: string
 }
 
 /**
@@ -42,6 +47,7 @@ export interface AuthConfig {
     }
     onSignIn?: (user: ExtendedUser, account?: any) => Promise<boolean> | boolean
     onSession?: (session: any, token: any) => Promise<any> | any
+    useDefaultCallbacks?: boolean // Enable/disable default auth callbacks
 }
 
 /**

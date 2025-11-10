@@ -5,10 +5,16 @@ import { routes } from "@/lib/constants"
 import { createUserInDB, getUserByEmailFromDB } from "@/lib/database"
 import { connectDB } from "@/middleware/api"
 
+/**
+ * NextAuth configuration for API app
+ * Uses custom callbacks to interact directly with MongoDB
+ * (Since this IS the API service, it doesn't call itself)
+ */
 const authOptions = createAuthOptions({
     pages: {
         signIn: routes?.register
     },
+    useDefaultCallbacks: false, // Use custom callbacks for direct DB access
     onSignIn: async (user, account) => {
         if (!user) return false
 
