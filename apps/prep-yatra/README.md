@@ -57,7 +57,7 @@ Create `.env.local` in the app directory:
 ```bash
 # Authentication
 NEXTAUTH_SECRET=your-secret-key
-NEXTAUTH_URL=http://localhost:3001
+NEXT_PUBLIC_AUTH_URL=http://localhost:3001
 
 # API Configuration
 NEXT_PUBLIC_API_URL=http://localhost:3004
@@ -264,7 +264,7 @@ vercel
 # NextAuth Configuration (REQUIRED) ⚠️
 # Generate with: openssl rand -base64 32
 NEXTAUTH_SECRET=your-production-secret-here
-NEXTAUTH_URL=https://prep-yatra-git-development-tbe.vercel.app
+NEXT_PUBLIC_AUTH_URL=https://prep-yatra-git-development-tbe.vercel.app
 
 # API Configuration (REQUIRED) ⚠️
 NEXT_PUBLIC_API_URL=https://api.theboringeducation.com/api/v1
@@ -341,6 +341,7 @@ pnpm lint
 **Production NextAuth 500 Error:**
 
 If you see these errors in production console:
+
 ```
 Failed to load resource: the server responded with a status of 500
 [next-auth][error][CLIENT_FETCH_ERROR]
@@ -350,23 +351,24 @@ Unexpected token '<', "<!DOCTYPE "... is not valid JSON
 **Causes & Solutions:**
 
 1. **Missing `NEXTAUTH_SECRET`** ❌
-   - Error: `NEXTAUTH_SECRET environment variable is required`
-   - Solution: Add `NEXTAUTH_SECRET` in Vercel environment variables
-   - Generate: `openssl rand -base64 32`
+    - Error: `NEXTAUTH_SECRET environment variable is required`
+    - Solution: Add `NEXTAUTH_SECRET` in Vercel environment variables
+    - Generate: `openssl rand -base64 32`
 
-2. **Missing `NEXTAUTH_URL`** ❌
-   - Error: Session endpoint returns HTML instead of JSON
-   - Solution: Set `NEXTAUTH_URL=https://your-production-url.vercel.app`
+2. **Missing `NEXT_PUBLIC_AUTH_URL`** ❌
+    - Error: Session endpoint returns HTML instead of JSON
+    - Solution: Set `NEXT_PUBLIC_AUTH_URL=https://your-production-url.vercel.app`
 
 3. **Missing `API_URL`** ❌
-   - Error: User creation/fetch fails in callbacks
-   - Solution: Add both `API_URL` and `NEXT_PUBLIC_API_URL`
+    - Error: User creation/fetch fails in callbacks
+    - Solution: Add both `API_URL` and `NEXT_PUBLIC_API_URL`
 
 4. **Missing Google OAuth credentials** ❌
-   - Error: Provider authentication fails
-   - Solution: Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+    - Error: Provider authentication fails
+    - Solution: Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
 
 **Quick Fix Steps:**
+
 1. Go to Vercel → Settings → Environment Variables
 2. Add all REQUIRED variables (marked with ⚠️ above)
 3. Click "Redeploy" button

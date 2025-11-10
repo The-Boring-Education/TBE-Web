@@ -56,8 +56,7 @@ const authOptions = createAuthOptions({
             if (result.status && result.data) {
                 // Set the MongoDB user ID from the API response
                 session.user.id = result.data._id
-                session.user.isOnboarded =
-                    result.data.quiz?.onboarded || false
+                session.user.isOnboarded = result.data.quiz?.onboarded || false
             } else {
                 // Fallback to token.sub if user not found in API
                 session.user.id = token.sub
@@ -72,8 +71,8 @@ const authOptions = createAuthOptions({
     }
 })
 
-// Note: NextAuth will use NEXTAUTH_URL environment variable automatically
-// Make sure NEXTAUTH_URL=http://localhost:3002 is set in your .env.local
+// Note: NextAuth will use NEXT_PUBLIC_AUTH_URL environment variable automatically
+// Make sure NEXT_PUBLIC_AUTH_URL=http://localhost:3002 is set in your .env.local
 
 // Add redirect callback to prevent redirect loops
 authOptions.callbacks = {
