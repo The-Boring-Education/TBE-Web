@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect } from 'react';
-import { initGA, trackPageView } from './analytics';
+import { initGA, trackPageView } from '@tbe/components/analytics';
+
 interface NavbarDropdownLink {
   id: string;
   name: string;

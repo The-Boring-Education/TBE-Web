@@ -3,6 +3,7 @@ export const GA_TRACKING_ID = 'G-SR3M17B588';
 
 // Initialize GA
 export const initGA = () => {
+  console.log("Initializing Google Analytics...");
   if (typeof window !== 'undefined') {
     const script1 = document.createElement('script');
     script1.async = true;
@@ -19,16 +20,21 @@ export const initGA = () => {
       });
     `;
     document.head.appendChild(script2);
+     console.log("✅ GA scripts added to DOM");
   }
 };
 
 // Track page views
 export const trackPageView = (url: string) => {
+  console.log("📄 Tracking page view:", url);
+
   if (typeof window !== 'undefined' && (window as any).gtag) {
     (window as any).gtag('config', GA_TRACKING_ID, {
       page_path: url,
     });
   }
+  
+
 };
 
 // Track custom events
@@ -42,3 +48,17 @@ export const trackEvent = (action: string, category: string, label?: string, val
   }
 };
 
+// export {
+//   initGA,
+//   trackPageview,
+//   trackEvent,
+//   installGlobalAnalyticsListeners
+// };
+export function installGlobalAnalyticsListeners() {
+  if (typeof window !== "undefined") {
+    window.addEventListener("click", (event) => {
+      // Example: custom analytics tracking for global clicks
+      console.log("Global click event tracked:", event.target);
+    });
+  }
+};

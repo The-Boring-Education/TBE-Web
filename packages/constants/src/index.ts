@@ -9,4 +9,5 @@ export * from './routes';
 export * from './challenges';
 export * from './onboarding';
 export * from './component';
-export * from './analytics';
+// export * from './analytics';
+export * from '@tbe/components/analytics';
