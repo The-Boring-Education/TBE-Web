@@ -14,14 +14,14 @@
     "@tbe/constants": "workspace:*",
     "@tbe/interface": "workspace:*",
     "@tbe/utils": "workspace:*",
-    "@tbe/types": "workspace:*"
+    "@tbe/types": "workspace:*",
+    "@tbe/typescript-config": "workspace:*",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.9.2"
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
-    "@tbe/typescript-config": "workspace:*",
-    "@types/node": "^20.0.0",
     "axios": "^1.4.0",
-    "eslint": "^9.34.0",
-    "typescript": "^5.9.2"
+    "eslint": "^9.34.0"
   }
 }
