@@ -13,6 +13,7 @@ import { Toaster as Sonner } from "@tbe/components"
 import { Toaster } from "@tbe/components"
 import { TooltipProvider } from "@tbe/components"
 import { initGA, trackPageview } from "@tbe/utils"
+import { AnalyticsProvider, trackPageView, trackEvent } from '@tbe-web/constants';
 
 // Cache clearing component
 const CacheManager = () => {

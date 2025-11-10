@@ -1,4 +1,6 @@
 import React from "react";
+import { useEffect } from 'react';
+import { initGA, trackPageView } from '@tbe/components/analytics';
 
 interface NavbarDropdownLink {
   id: string;
@@ -72,3 +74,10 @@ const links: NavbarDropdownLink[] = [
 ];
 
 export {socialLinks, productLinks, CONFETTI_COLORS, links};
+export const AnalyticsProvider = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    initGA();
+  }, []);
+
+  return <>{children}</>;
+};

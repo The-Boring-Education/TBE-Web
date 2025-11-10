@@ -22,7 +22,11 @@
         "./ui": {
             "types": "./src/ui/index.ts",
             "default": "./src/ui/index.ts"
-        }
+        },
+          "./analytics": {
+            "import": "./src/analytics.ts",
+            "require": "./src/analytics.ts"
+        } 
     },
     "scripts": {
         "build": "echo 'Building @tbe/components...' && tsc && echo 'Build completed successfully!'",
