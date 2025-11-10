@@ -141,7 +141,7 @@ const TheBoringEducation = ({
   pageProps: { session, ...pageProps },
 }: AppProps) => {
   // Use centralized auth service if AUTH_URL is set, otherwise use default /api/auth
-  const authBasePath = envConfig.AUTH_URL || '/api/auth';
+  const authBasePath = envConfig.AUTH_URL;
 
   return (
     <Fragment>
