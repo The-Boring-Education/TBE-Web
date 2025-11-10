@@ -26,7 +26,9 @@
         "EMAIL_API_KEY",
         "FROM_EMAIL",
         "EMAIL_SERVICE_URL",
-        "SENTRY_AUTH_TOKEN"
+        "SENTRY_AUTH_TOKEN",
+        "ONBOARDING_APP_URL",
+        "QUIZZES_APP_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
@@ -35,69 +37,10 @@
         ".env.production",
         ".env"
       ],
-      "outputs": []
-    },
-    "@tbe/config#build": {
       "outputs": [
+        ".next/**",
+        "!.next/cache/**",
         "dist/**"
-      ]
-    },
-    "@tbe/components#build": {
-      "outputs": [
-        "dist/**"
-      ]
-    },
-    "@tbe/services#build": {
-      "outputs": [
-        "dist/**"
-      ]
-    },
-    "@tbe/platform#build": {
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
-    },
-    "@tbe/prep-yatra#build": {
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
-    },
-    "@tbe/quizes#build": {
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
-    },
-    "@tbe/onboarding#build": {
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
-    },
-    "@tbe/api#build": {
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
-    },
-    "@tbe/techyatra#build": {
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
-    },
-    "@tbe/dsayatra#build": {
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
-    },
-    "@tbe/resume-yatra#build": {
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
       ]
     },
     "build:cloud-run": {
@@ -124,7 +67,9 @@
         "EMAIL_API_KEY",
         "FROM_EMAIL",
         "EMAIL_SERVICE_URL",
-        "SENTRY_AUTH_TOKEN"
+        "SENTRY_AUTH_TOKEN",
+        "ONBOARDING_APP_URL",
+        "QUIZZES_APP_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
