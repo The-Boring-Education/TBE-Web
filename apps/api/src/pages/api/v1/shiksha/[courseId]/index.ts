@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   deleteACourseFromDBById,
   getACourseForUserFromDB,
   getACourseFromDBById,
   updateACourseInDB,
-} from '@tbe/database';
-import type { AddCourseRequestPayloadProps } from '@tbe/interface';
+} from '@/lib/database';
+import type { AddCourseRequestPayloadProps } from '@/lib/interfaces';
+import { sendAPIResponse } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

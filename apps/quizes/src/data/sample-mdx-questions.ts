@@ -1,4 +1,4 @@
-import { Question } from "../types/quiz"
+import type { Question } from "@tbe/types"
 
 export const sampleMDXQuestions: Question[] = [
     {

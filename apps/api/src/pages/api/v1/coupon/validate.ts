@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import { validateCouponForProductFromDB } from '@tbe/database';
+import { apiStatusCodes } from '@/lib/constants';
+import { validateCouponForProductFromDB } from '@/lib/database';
+import type { APIResponseType } from '@/lib/interfaces';
 import { connectDB } from '@/middleware';
-import type { APIResponseType } from '@tbe/interface';
 
 interface ValidateCouponRequest {
   code: string;

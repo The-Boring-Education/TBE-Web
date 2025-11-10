@@ -1,14 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   addGamificationDocInDB,
   getUserPointsFromDB,
   updateUserPointsInDB,
-} from '@tbe/database';
-import type { UserPointsActionType } from '@tbe/interface';
-import { connectDB } from '@/middleware';
-import { cors } from '@tbe/utils';
+} from '@/lib/database';
+import type { UserPointsActionType } from '@/lib/interfaces';
+import { connectDB, cors } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

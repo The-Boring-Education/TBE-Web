@@ -3,9 +3,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   getQuizByIdFromDB,
   saveQuizAttemptToDB,
-} from '@tbe/database';
+} from '@/lib/database';
+import { cors } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { cors } from '@tbe/utils';
 
 interface SubmitQuizBody {
   userId: string;

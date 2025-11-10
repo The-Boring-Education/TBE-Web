@@ -14,13 +14,10 @@ import type {
   PrimaryCardWithCTAProps,
 } from '@tbe/types';
 
-
-
-import { JOB_DOMAIN_NORMALIZER } from './api';
 import { envConfig } from './envConfig';
 import { routes } from './routes';
 
-// Paths
+// Paths  
 const STATIC_FILE_PATH = {
   svg: 'https://ik.imagekit.io/tbe/webapp',
   webp: 'https://ik.imagekit.io/tbe/webapp',
@@ -476,10 +473,6 @@ const COUNTRY_CODES = [
   { code: '+46', country: 'SWEDEN' },
 ];
 
-const JOB_DOMAINS = JOB_DOMAIN_NORMALIZER.map(({ value }) => ({
-  label: value,
-  value,
-})).splice(0, 10);
 
 const JOB_EXPERIENCE_LEVEL: {
   label: string;
@@ -523,7 +516,6 @@ export {
   IN_DEV_PAGES,
   isDevelopmentEnv,
   isProductionEnv,
-  JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
   LEADERBOARD_TABS,
   LINKS,

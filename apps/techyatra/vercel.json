@@ -1,0 +1,4 @@
+{
+  "buildCommand": "cd ../.. && pnpm run build:techyatra",
+  "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile"
+}

@@ -1,10 +1,12 @@
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
+import { routes } from '@tbe/constants';
 
 const ADMIN_EMAIL = 'theboringeducation@gmail.com';
 
 export const useAdmin = () => {
-  const { data: session, status } = useSession();
+  const sessionResult = useSession();
+  const { data: session, status } = sessionResult || { data: null, status: 'loading' };
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -34,7 +36,8 @@ export const useAdminData = () => {
       setError(null);
 
       try {
-        const url = new URL(endpoint, window.location.origin);
+        const baseUrl = routes.api.base;
+        const url = new URL(endpoint, baseUrl);
         if (params) {
           Object.entries(params).forEach(([key, value]) => {
             if (value !== undefined && value !== null) {

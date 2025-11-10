@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
-  updateCouponFromDB,
   deleteCouponFromDB,
   getCouponByIdFromDB,
-} from '@tbe/database';
-import { connectDB, adminMiddleware } from '@/middleware';
-import { cors, sendAPIResponse } from '@tbe/utils';
+  updateCouponFromDB,
+} from '@/lib/database';
+import { cors, sendAPIResponse } from '@/lib/utils';
+import { adminMiddleware,connectDB } from '@/middleware';
 
 interface UpdateCouponRequest {
   code?: string;

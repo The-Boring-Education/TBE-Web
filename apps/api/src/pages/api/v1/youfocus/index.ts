@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   addPlaylistToDB,
   addUserPlaylistToDB,
@@ -8,14 +8,13 @@ import {
   getPlaylistsFromDB,
   updateReferredByInPlaylist,
   updateTagsInPlaylist,
-} from '@tbe/database';
-import { connectDB } from '@/middleware';
+} from '@/lib/database';
 import {
   extractPlaylistId,
   fetchPlaylistData,
   sendAPIResponse,
-} from '@tbe/utils';
-import { cors } from '@tbe/utils';
+} from '@/lib/utils';
+import { connectDB, cors } from '@/middleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

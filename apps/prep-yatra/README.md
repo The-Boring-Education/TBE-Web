@@ -1,45 +1,422 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🧭 Prep Yatra - Interview Preparation Platform
 
-## Getting Started
+A comprehensive interview preparation platform designed to help developers ace their tech interviews with structured challenges, mentorship, and progress tracking.
 
-First, run the development server:
+## 📋 Overview
+
+Prep Yatra is a Next.js application focused on providing a complete interview preparation experience with challenges, coding practice, mentorship opportunities, and detailed progress analytics.
+
+### Key Features
+
+- **Structured Challenges**: Curated coding challenges by difficulty and topic
+- **Progress Tracking**: Detailed analytics and performance insights
+- **Mentorship Program**: Connect with industry mentors
+- **Interview Simulation**: Mock interview sessions
+- **Company-Specific Prep**: Targeted preparation for specific companies
+- **Coding Practice**: Interactive coding environment
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 15.5.3
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Authentication**: NextAuth.js
+- **State Management**: React Query
+- **Forms**: React Hook Form + Zod validation
+- **UI Components**: Radix UI primitives
+- **Charts**: Recharts
+- **Themes**: next-themes
+
+## 🚀 Development
+
+### Prerequisites
+
+- Node.js >= 20.x
+- pnpm >= 9.12.0
+- Access to TBE API services
+
+### Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# From monorepo root
+pnpm install
+
+# Start prep-yatra app only
+pnpm dev:prep-yatra
+
+# Or start all apps
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at `http://localhost:3001`
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Create `.env.local` in the app directory:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```bash
+# Authentication
+NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=http://localhost:3001
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:3004
+NEXT_PUBLIC_BASE_URL=http://localhost:3001
 
-## Learn More
+# External Services
+NEXT_PUBLIC_PLATFORM_URL=http://localhost:3000
+NEXT_PUBLIC_QUIZ_URL=http://localhost:3002
 
-To learn more about Next.js, take a look at the following resources:
+# Database (if using direct connection)
+MONGODB_URI=mongodb://localhost:27017/prep-yatra
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 📁 Project Structure
 
-## Deploy on Vercel
+```
+apps/prep-yatra/
+├── src/
+│   ├── app/                # Next.js 13+ app directory
+│   │   ├── (auth)/         # Authentication pages
+│   │   ├── challenges/     # Challenge pages
+│   │   ├── dashboard/      # User dashboard
+│   │   ├── mentorship/     # Mentorship features
+│   │   └── progress/       # Progress tracking
+│   ├── components/         # App-specific components
+│   │   ├── ui/            # shadcn/ui components
+│   │   ├── challenges/    # Challenge-related components
+│   │   ├── dashboard/     # Dashboard components
+│   │   └── forms/         # Form components
+│   ├── hooks/             # App-specific hooks
+│   ├── lib/               # Utilities and configurations
+│   ├── types/             # TypeScript type definitions
+│   └── styles/            # Global styles
+├── public/                # Static assets
+├── components.json        # shadcn/ui configuration
+├── tailwind.config.ts     # Tailwind configuration
+└── tsconfig.json         # TypeScript configuration
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔧 Available Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+# Development
+pnpm dev                   # Start development server (port 3001)
 
-## Analytics
+# Building
+pnpm build                 # Build for production (includes linting)
+pnpm start                 # Start production server
 
-- Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in `.env.local` to enable GA4 tracking.
-- Events tracked include page views, clicks, form submissions, onboarding steps, skills add/remove, and prep log CRUD.
+# Code Quality
+pnpm lint                  # Run ESLint
+pnpm lint:fix             # Fix ESLint issues
+
+# Export
+pnpm export               # Export static site
+```
+
+## 📚 Key Features & Components
+
+### Challenge System
+
+```typescript
+// Challenge types
+interface Challenge {
+    id: string
+    title: string
+    difficulty: "Easy" | "Medium" | "Hard"
+    category: string
+    description: string
+    testCases: TestCase[]
+    solution?: string
+}
+
+// Usage
+import { ChallengeCard, ChallengeList } from "@/components/challenges"
+```
+
+### Progress Tracking
+
+```typescript
+// Progress analytics
+import { ProgressChart, StatsCard } from "@/components/dashboard"
+
+// Track user progress
+const { progress, stats } = useProgress()
+```
+
+### Mentorship Features
+
+```typescript
+// Mentorship components
+import { MentorCard, BookingForm } from "@/components/mentorship"
+
+// Connect with mentors
+const { mentors, bookSession } = useMentorship()
+```
+
+## 🎨 UI Components
+
+Built with shadcn/ui and Radix UI:
+
+```typescript
+// Import UI components
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Dialog } from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form"
+
+// Feature components from shared packages
+import { ChallengeCard, PrepYatraHero, PrepLogsList } from "@tbe/components"
+```
+
+## 🔐 Authentication & Authorization
+
+```typescript
+// Authentication hook
+import { useAuth } from '@tbe/hooks'
+
+const { user, isLoading, signIn, signOut } = useAuth()
+
+// Protected routes
+import { ProtectedRoute } from '@tbe/components'
+
+<ProtectedRoute requiredRole="student">
+  <ChallengesPage />
+</ProtectedRoute>
+```
+
+## 📊 Data Management
+
+### API Integration
+
+```typescript
+// API hooks
+import { useChallenges, useProgress } from "@/hooks/api"
+
+// Fetch challenges
+const { data: challenges, isLoading } = useChallenges({
+    difficulty: "Medium",
+    category: "Arrays"
+})
+
+// Submit solution
+const { mutate: submitSolution } = useSubmitSolution()
+```
+
+### Form Handling
+
+```typescript
+// Form with validation
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+
+const schema = z.object({
+    solution: z.string().min(1, "Solution is required"),
+    language: z.enum(["javascript", "python", "java"])
+})
+
+const form = useForm({
+    resolver: zodResolver(schema)
+})
+```
+
+## 🎯 Key Pages & Routes
+
+### Public Routes
+
+- `/` - Landing page and hero section
+- `/challenges` - Browse available challenges
+- `/mentors` - View available mentors
+- `/pricing` - Subscription plans
+
+### Protected Routes
+
+- `/dashboard` - User dashboard with progress
+- `/challenges/[id]` - Individual challenge page
+- `/progress` - Detailed progress analytics
+- `/mentorship/sessions` - Booked mentorship sessions
+- `/profile` - User profile and settings
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+The app is configured for automatic deployment on Vercel:
+
+```bash
+# Deploy to production
+vercel --prod
+
+# Preview deployment
+vercel
+```
+
+### Environment Variables (Production)
+
+**⚠️ CRITICAL:** All these environment variables MUST be set in Vercel/Production:
+
+```bash
+# NextAuth Configuration (REQUIRED) ⚠️
+# Generate with: openssl rand -base64 32
+NEXTAUTH_SECRET=your-production-secret-here
+NEXTAUTH_URL=https://prep-yatra-git-development-tbe.vercel.app
+
+# API Configuration (REQUIRED) ⚠️
+NEXT_PUBLIC_API_URL=https://api.theboringeducation.com/api/v1
+API_URL=https://api.theboringeducation.com/api/v1
+
+# Google OAuth (REQUIRED) ⚠️
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Optional - Cross-subdomain SSO
+COOKIE_DOMAIN=.theboringeducation.com
+
+# Database (if using direct connection)
+MONGODB_URI=mongodb+srv://...
+
+# External Services
+NEXT_PUBLIC_PLATFORM_URL=https://platform.theboringeducation.com
+NEXT_PUBLIC_QUIZ_URL=https://quiz.theboringeducation.com
+
+# Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+
+# Node Environment
+NODE_ENV=production
+```
+
+#### How to Generate NEXTAUTH_SECRET:
+
+```bash
+# Using OpenSSL (recommended)
+openssl rand -base64 32
+
+# Using Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+#### Setting Environment Variables in Vercel:
+
+1. Go to: `https://vercel.com/your-team/prep-yatra/settings/environment-variables`
+2. Add each variable above
+3. Select environment: **Production**, **Preview**, and **Development**
+4. Click "Save"
+5. **Redeploy** the application
+
+## 🧪 Testing
+
+```bash
+# Run tests (when implemented)
+pnpm test
+
+# Type checking
+pnpm type-check
+
+# Lint checking
+pnpm lint
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Build Failures:**
+
+- Ensure all TypeScript errors are resolved
+- Check ESLint configuration
+- Verify all imports are correct
+
+**Authentication Issues:**
+
+- Verify NextAuth configuration
+- Check environment variables
+- Ensure API endpoints are accessible
+
+**Production NextAuth 500 Error:**
+
+If you see these errors in production console:
+```
+Failed to load resource: the server responded with a status of 500
+[next-auth][error][CLIENT_FETCH_ERROR]
+Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+```
+
+**Causes & Solutions:**
+
+1. **Missing `NEXTAUTH_SECRET`** ❌
+   - Error: `NEXTAUTH_SECRET environment variable is required`
+   - Solution: Add `NEXTAUTH_SECRET` in Vercel environment variables
+   - Generate: `openssl rand -base64 32`
+
+2. **Missing `NEXTAUTH_URL`** ❌
+   - Error: Session endpoint returns HTML instead of JSON
+   - Solution: Set `NEXTAUTH_URL=https://your-production-url.vercel.app`
+
+3. **Missing `API_URL`** ❌
+   - Error: User creation/fetch fails in callbacks
+   - Solution: Add both `API_URL` and `NEXT_PUBLIC_API_URL`
+
+4. **Missing Google OAuth credentials** ❌
+   - Error: Provider authentication fails
+   - Solution: Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+
+**Quick Fix Steps:**
+1. Go to Vercel → Settings → Environment Variables
+2. Add all REQUIRED variables (marked with ⚠️ above)
+3. Click "Redeploy" button
+4. Clear browser cache and test again
+
+**Styling Issues:**
+
+- Check Tailwind configuration
+- Verify shadcn/ui component imports
+- Ensure CSS classes are properly applied
+
+### Development Tips
+
+- Use the shared component library when possible
+- Follow the established design system
+- Implement proper error boundaries
+- Add loading states for better UX
+- Ensure responsive design
+
+## 📖 Contributing
+
+1. Follow the [main contributing guide](../../README.md#contributing)
+2. Focus on interview preparation features
+3. Maintain consistency with the design system
+4. Test with different user scenarios
+5. Update documentation for new features
+
+### Feature Development
+
+When adding new features:
+
+1. **Challenges**: Add to `/challenges` with proper categorization
+2. **Analytics**: Integrate with existing progress tracking
+3. **UI Components**: Use shadcn/ui and maintain consistency
+4. **API Integration**: Follow established patterns
+5. **Testing**: Add appropriate test coverage
+
+## 🔗 Integration with Other Apps
+
+- **Platform**: User authentication and profile sync
+- **API**: Challenge data and progress tracking
+- **Quizes**: Cross-platform analytics and user data
+
+## 📈 Performance Considerations
+
+- **Code Splitting**: Implemented via Next.js automatic splitting
+- **Image Optimization**: Use Next.js Image component
+- **Caching**: React Query for API response caching
+- **Bundle Analysis**: Regular bundle size monitoring
+
+---
+
+**Part of the TBE Platform Monorepo**

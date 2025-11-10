@@ -1,11 +1,9 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { FaLock, FaStar } from 'react-icons/fa';
-
 import {
   Button,
   FeedbackPopup,
   FlexContainer,
   LinerProgressBar,
+  LoadingSpinner,
   MDXRenderer,
   PaymentCard,
   QuestionLink,
@@ -14,18 +12,20 @@ import {
   SheetHeroContainer,
   StarButton,
   Text,
-} from '@/components';
-import { routes } from '@/constant';
+} from '@tbe/components';
+import { useGamifiedAction } from '@tbe/components';
+import { routes } from '@tbe/constants';
 import {
   useAnalytics,
   useApi,
-  useGamifiedAction,
   usePaymentStatus,
   useQuestionStarred,
   useUser,
-} from '@/hooks';
-import type { SheetPageProps } from '@/interfaces';
-import { getSheetPageProps } from '@/utils';
+} from '@tbe/hooks';
+import type { SheetPageProps } from '@tbe/interface';
+import { getSheetPageProps } from '@tbe/utils';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { FaLock, FaStar } from 'react-icons/fa';
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const [sheetMeta, setSheetMeta] = useState<string>(meta || '');
@@ -223,6 +223,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     }
   };
 
+  // Show small loader if data is not ready
+  const isDataLoading = !sheet || !questions || questions.length === 0;
+
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
@@ -235,6 +238,17 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           isPurchased={!!isPurchased} // Ensure boolean
         />
       </Section>
+
+      {isDataLoading && (
+        <Section className='md:p-2 p-2'>
+          <div className='flex items-center justify-center py-8'>
+            <LoadingSpinner height={8} width={8} />
+            <Text level='p' className='ml-3 text-gray-600'>Loading interview questions...</Text>
+          </div>
+        </Section>
+      )}
+
+      {!isDataLoading && (
       <Section className='md:p-2 p-2'>
         <FlexContainer className='w-full gap-4' itemCenter={false}>
           {/* Left Sidebar (Questions) */}
@@ -389,6 +403,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           </FlexContainer>
         </FlexContainer>
       </Section>
+      )}
+
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type='INTERVIEW_SHEET' />
       )}

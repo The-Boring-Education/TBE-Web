@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import { getAllEnrolledSheetsFromDB } from '@tbe/database';
+import { apiStatusCodes } from '@/lib/constants';
+import { getAllEnrolledSheetsFromDB } from '@/lib/database';
+import { sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { cors } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

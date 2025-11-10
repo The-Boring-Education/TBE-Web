@@ -1,6 +1,3 @@
-import { useRouter } from 'next/router';
-import { Fragment } from 'react';
-
 import {
   Banner,
   CardContainerB,
@@ -13,17 +10,19 @@ import {
   Section,
   SEO,
   Text,
-} from '@/components';
-import { LINKS, routes, STATIC_FILE_PATH } from '@/constant';
-import { useApi, useAPIResponseMapper, useUser } from '@/hooks';
-import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
+} from '@tbe/components';
+import { LINKS, routes, STATIC_FILE_PATH } from '@tbe/constants';
+import { useApi, useAPIResponseMapper, useUser } from '@tbe/hooks';
+import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
 import {
   getPreFetchProps,
   mapCourseResponseToCard,
   mapInterviewSheetResponseToCard,
   mapProjectResponseToCard,
   mapUserPlaylistResponseToCard,
-} from '@/utils';
+} from '@tbe/utils';
+import { useRouter } from 'next/router';
+import { Fragment } from 'react';
 
 const UserDashboard = ({ seoMeta }: PageProps) => {
   const router = useRouter();

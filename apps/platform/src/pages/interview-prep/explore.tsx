@@ -1,5 +1,3 @@
-import { Fragment, useEffect, useMemo, useState } from 'react';
-
 import {
   CardContainerB,
   FlexContainer,
@@ -8,11 +6,12 @@ import {
   Section,
   SEO,
   Text,
-} from '@/components';
-import { PAGE_REFRESH_TIMEOUT, routes } from '@/constant';
-import { useApi, useUser } from '@/hooks';
-import type { PageProps, PrimaryCardWithCTAProps } from '@/interfaces';
-import { getPreFetchProps, mapInterviewSheetResponseToCard } from '@/utils';
+} from '@tbe/components';
+import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
+import { useApi, useUser } from '@tbe/hooks';
+import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
+import { getPreFetchProps, mapInterviewSheetResponseToCard } from '@tbe/utils';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('interview-prep', {

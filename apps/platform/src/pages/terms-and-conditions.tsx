@@ -1,9 +1,8 @@
+import { Section, SEO, Text } from '@tbe/components';
+import { routes } from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps } from '@tbe/utils';
 import { Fragment } from 'react';
-
-import { Section, SEO, Text } from '@/components';
-import { routes } from '@/constant';
-import type { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
 
 const TERMS_CONDITION_CONTENT = [
   {

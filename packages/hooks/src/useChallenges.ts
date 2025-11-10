@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { challengesService } from '@tbe/utils'
-import { Challenge, ChallengeProgress } from '@tbe/types'
+import type { Challenge, ChallengeProgress } from '@tbe/types'
 
 /**
  * useChallenges Hook

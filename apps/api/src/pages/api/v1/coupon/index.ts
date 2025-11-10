@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
-  getAllCouponsFromDB,
   createCouponFromDB,
-} from '@tbe/database';
-import { connectDB, adminMiddleware } from '@/middleware';
-import { cors, sendAPIResponse } from '@tbe/utils';
+  getAllCouponsFromDB,
+} from '@/lib/database';
+import { cors, sendAPIResponse } from '@/lib/utils';
+import { adminMiddleware,connectDB } from '@/middleware';
 
 interface CreateCouponRequest {
   code: string;

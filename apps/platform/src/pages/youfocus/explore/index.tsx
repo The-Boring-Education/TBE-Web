@@ -1,9 +1,8 @@
+import { ExplorePlaylistContainer, Section, SEO } from '@tbe/components';
+import { routes } from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps } from '@tbe/utils';
 import { Fragment } from 'react';
-
-import { ExplorePlaylistContainer, Section, SEO } from '@/components';
-import { routes } from '@/constant';
-import type { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
 
 const Home = ({ seoMeta }: PageProps) => (
   <Fragment>

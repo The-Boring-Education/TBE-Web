@@ -1,7 +1,3 @@
-import router from 'next/router';
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { FaLock, FaTrophy } from 'react-icons/fa';
-
 import {
   ActionBanner,
   Alert,
@@ -12,25 +8,28 @@ import {
   FeedbackPopup,
   FlexContainer,
   LinerProgressBar,
+  LoadingSpinner,
   MDXRenderer,
   Section,
   SEO,
   Text,
-} from '@/components';
-import { useGamificationContext } from '@/components/layout/GamificationProvider';
-import { routes, SCREEN_BREAKPOINTS } from '@/constant';
+} from '@tbe/components';
+import { useGamificationContext,useGamifiedAction } from '@tbe/components';
+import { routes, SCREEN_BREAKPOINTS } from '@tbe/constants';
 import {
   useAnalytics,
   useApi,
-  useGamifiedAction,
   useMediaQuery,
   useUser,
-} from '@/hooks';
+} from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,
-} from '@/interfaces';
-import { formatDate, getCoursePageProps } from '@/utils';
+} from '@tbe/interface';
+import { formatDate, getCoursePageProps } from '@tbe/utils';
+import router from 'next/router';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { FaLock, FaTrophy } from 'react-icons/fa';
 
 const CoursePage = ({
   course,
@@ -347,6 +346,9 @@ const CoursePage = ({
     />
   );
 
+  // Show small loader if data is not ready
+  const isDataLoading = !course || !chapters || chapters.length === 0;
+
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
@@ -360,6 +362,16 @@ const CoursePage = ({
         />
       </Section>
 
+      {isDataLoading && (
+        <Section className='md:p-2 p-2'>
+          <div className='flex items-center justify-center py-8'>
+            <LoadingSpinner height={8} width={8} />
+            <Text level='p' className='ml-3 text-gray-600'>Loading course content...</Text>
+          </div>
+        </Section>
+      )}
+
+      {!isDataLoading && (
       <Section id='course-content' className='md:p-2 p-2'>
         <div ref={contentSectionRef}>
           <FlexContainer className='w-full gap-4' itemCenter={false}>
@@ -517,6 +529,7 @@ const CoursePage = ({
           </FlexContainer>
         </div>
       </Section>
+      )}
 
       {showChapterFeedback && (
         <FeedbackPopup 

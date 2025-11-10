@@ -1,9 +1,8 @@
+import { LoginCard, SEO } from '@tbe/components';
+import { routes } from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps } from '@tbe/utils';
 import { Fragment } from 'react';
-
-import { LoginCard, SEO } from '@/components';
-import { routes } from '@/constant';
-import type { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
 
 const Login = ({ seoMeta }: PageProps) => (
   <Fragment>

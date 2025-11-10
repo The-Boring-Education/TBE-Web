@@ -29,7 +29,7 @@ const useAnalytics = () => {
     sendEvent(action, {
       category,
       label,
-      value,
+      value: value as number,
     });
   };
 

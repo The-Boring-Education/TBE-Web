@@ -1,25 +1,28 @@
-import FeatureCards from "@/components/cards/FeatureCards";
-import Hero from "@/components/features/Hero";
-import InstallButton from "@/components/features/InstallButton";
-import Footer from "@/components/layout/Footer";
-import Navigation from "@/components/layout/Navigation";
-import PrepLogsShowcase from "@/components/showcase/PrepLogsShowcase";
-import ProfileShowcase from "@/components/showcase/ProfileShowcase";
-import RecruiterContactsShowcase from "@/components/showcase/RecruiterContactsShowcase";
-import ResourceSharingShowcase from "@/components/showcase/ResourceSharingShowcase";
+import {Section} from "@tbe/components";
+import {FeatureCards} from "@tbe/components";
+import {PrepYatraHero} from "@tbe/components";
+import {InstallButton} from "@tbe/components";
+import {PrepYatraFooter} from "@tbe/components";
+import {PrepYatraNavigation} from "@tbe/components";
+import {PrepLogsShowcase} from "@tbe/components";
+import {ProfileShowcase} from "@tbe/components";
+import {RecruiterContactsShowcase} from "@tbe/components";
+import {ResourceSharingShowcase} from "@tbe/components";
 
 const Index = () => {
     return (
-        <div className='min-h-screen'>
-            <Navigation />
-            <InstallButton />
-            <Hero />
-            <FeatureCards />
-            <RecruiterContactsShowcase />
-            <PrepLogsShowcase />
-            <ResourceSharingShowcase />
-            <ProfileShowcase />
-            <Footer />
+        <div className='min-h-screen bg-lightBG'>
+            <PrepYatraNavigation />
+            <Section className='pt-16'>
+                <InstallButton />
+                <PrepYatraHero />
+                <FeatureCards />
+                <RecruiterContactsShowcase />
+                <PrepLogsShowcase />
+                <ResourceSharingShowcase />
+                <ProfileShowcase />
+            </Section>
+            <PrepYatraFooter />
         </div>
     );
 };

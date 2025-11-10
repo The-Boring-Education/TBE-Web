@@ -3,8 +3,6 @@ import {
   ChartBarIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
-
 import {
   AdminAreaChart,
   AdminBarChart,
@@ -14,8 +12,11 @@ import {
   AdminStats,
   SEO,
   TabComponent,
-} from '@/components';
-import { useAdminData } from '@/hooks/useAdmin';
+} from '@tbe/components';
+import { routes } from '@tbe/constants';
+import { useAdminData } from '@tbe/hooks';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 const AdminAnalytics = () => {
   const {
@@ -42,16 +43,16 @@ const AdminAnalytics = () => {
 
   useEffect(() => {
     const params = { period: dateRange };
-    fetchRevenue('/api/v1/admin/analytics', { type: 'revenue', ...params });
-    fetchEngagement('/api/v1/admin/analytics', {
+    fetchRevenue(`${routes.api.base}/admin/analytics`, { type: 'revenue', ...params });
+    fetchEngagement(`${routes.api.base}/admin/analytics`, {
       type: 'user-engagement',
       ...params,
     });
-    fetchContent('/api/v1/admin/analytics', {
+    fetchContent(`${routes.api.base}/admin/analytics`, {
       type: 'content-performance',
       ...params,
     });
-    fetchGamification('/api/v1/admin/analytics', {
+    fetchGamification(`${routes.api.base}/admin/analytics`, {
       type: 'gamification',
       ...params,
     });
@@ -285,4 +286,6 @@ const AdminAnalytics = () => {
   );
 };
 
-export default AdminAnalytics;
+export default dynamic(() => Promise.resolve(AdminAnalytics), {
+  ssr: false,
+});

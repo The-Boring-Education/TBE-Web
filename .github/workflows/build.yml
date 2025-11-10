@@ -1,0 +1,80 @@
+name: 🏗️ Build Check
+
+on:
+    pull_request:
+        branches: [development, production]
+        types: [opened, synchronize, reopened, ready_for_review]
+
+# Prevent multiple workflows from running simultaneously
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    build:
+        name: Build Monorepo
+        runs-on: ubuntu-latest
+
+        # Skip draft PRs
+        if: github.event.pull_request.draft == false
+
+        steps:
+            - name: 📥 Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: 📦 Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9.15.9
+                  run_install: false
+
+            - name: 📦 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "pnpm"
+
+            - name: 🔍 Get pnpm store directory
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - name: 🗂️ Setup pnpm cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{ env.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+
+            - name: 📦 Install Dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: 🏗️ Build Packages
+              run: |
+                  echo "Building shared packages first..."
+                  pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth
+
+            - name: 🏗️ Build Applications
+              run: |
+                  echo "Building all applications..."
+                  pnpm run build
+
+            - name: ✅ Build Success
+              run: |
+                  echo "✅ All builds completed successfully!"
+                  echo "📦 Built packages and applications:"
+                  echo "  - Shared packages (constants, types, utils, interface, services, components, hooks, auth)"
+                  echo "  - Platform applications (platform, prep-yatra, quizes, onboarding, api, techyatra, dsayatra, resume-yatra)"
+
+            - name: 📊 Build Summary
+              if: always()
+              run: |
+                  if [ ${{ job.status }} == 'success' ]; then
+                    echo "🎉 Build completed successfully! Ready for merge."
+                  else
+                    echo "❌ Build failed! Please fix the issues before merging."
+                    exit 1
+                  fi

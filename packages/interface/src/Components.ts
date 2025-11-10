@@ -75,9 +75,10 @@ export interface LinkButtonProps extends LinkProps {
 }
 
 export interface ButtonProps {
-  variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY';
+    variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY' | 'NEUTRAL';
   className?: string;
-  text: string;
+  text?: string;
+  children?: React.ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   active?: boolean;
   isLoading?: boolean;
@@ -86,6 +87,7 @@ export interface ButtonProps {
   isFullWidth?: boolean;
   disabled?: boolean;
   animationType?: 'DEFAULT' | 'BOUNCE' | 'GLOW';
+  size?: 'SMALL' | 'MEDIUM' | 'LARGE';
 }
 
 export interface PageLayoutProps {
@@ -576,7 +578,7 @@ export interface IconCardProps {
   description: string;
   className?: string;
   bgColor?: string;
-  key: number;
+  index?: number;
 }
 
 export interface HeaderLabelProps {

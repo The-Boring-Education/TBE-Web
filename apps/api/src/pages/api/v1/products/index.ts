@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import { connectDB, adminMiddleware } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { cors } from '@tbe/utils';
-
+import { apiStatusCodes } from '@/lib/constants';
 // Import all product models
-import {Course, InterviewSheet, Project, Webinar} from '@tbe/database';
+import {Course, InterviewSheet, Project, Webinar} from '@/lib/database';
+import { sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
+import { adminMiddleware,connectDB } from '@/middleware';
 
 interface ProductInfo {
   _id: string;

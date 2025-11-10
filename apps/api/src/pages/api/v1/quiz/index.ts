@@ -2,12 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import {
   addAQuizToDB,
+  appendQuestionsToQuizInDB,
   getQuizCategoriesFromDB,
   getQuizCategoriesWithCountsFromDB,
-  appendQuestionsToQuizInDB,
-} from '@tbe/database';
+} from '@/lib/database';
+import { cors } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { cors } from '@tbe/utils';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);

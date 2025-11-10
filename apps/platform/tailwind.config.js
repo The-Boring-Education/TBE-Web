@@ -8,6 +8,8 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx}',
     './src/layouts/**/*.{js,ts,jsx,tsx}',
     './src/utils/**/*.{js,ts,jsx,tsx}',
+    '../../packages/components/src/**/*.{js,ts,jsx,tsx}',
+    
   ],
   theme: {
     extend: {

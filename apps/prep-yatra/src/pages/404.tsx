@@ -1,14 +1,12 @@
-import {Home, ArrowLeft} from "lucide-react";
-import {useRouter} from "next/router";
-
-import {Button} from "@/components/ui/button";
+import {Button} from "@tbe/components";
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle
-} from "@/components/ui/card";
+} from "@tbe/components";
+import {useRouter} from "next/router";
 
 const NotFound = () => {
     const router = useRouter();
@@ -48,18 +46,24 @@ const NotFound = () => {
                 <CardContent className='space-y-4'>
                     <Button
                         onClick={() => router.push("/")}
-                        className='w-full bg-primary text-primary-foreground hover:bg-primary/90'>
-                        <Home className='w-4 h-4 mr-2' />
-                        Go to Homepage
-                    </Button>
-
+                        className='w-full bg-primary rounded-md text-primary-foreground hover:bg-primary/90'
+                        isLoading={false}
+                        active
+                        animationType='BOUNCE'
+                        variant='PRIMARY'
+                        text='Go to Homepage'
+                        />
+            
                     <Button
-                        variant='outline'
+                        variant='OUTLINE'
+                        text='Go Back'
                         onClick={() => router.back()}
-                        className='w-full border-gray-600 text-gray hover:bg-gray-700'>
-                        <ArrowLeft className='w-4 h-4 mr-2' />
-                        Go Back
-                    </Button>
+                        className='w-full border-gray-600 rounded-md text-gray hover:bg-gray-700'
+                        isLoading={false}
+                        active
+                        animationType='BOUNCE'
+                        />
+                       
 
                     <div className='text-center pt-4'>
                         <p className='text-sm text-gray-400'>

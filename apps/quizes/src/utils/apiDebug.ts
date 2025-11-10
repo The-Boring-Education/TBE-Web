@@ -1,5 +1,5 @@
-import { config, API_ENDPOINTS } from '@/config'
-import { APIClient } from '@/services/base'
+import { API_ENDPOINTS,config } from '@tbe/config/quizes'
+import { APIClient } from '@tbe/services'
 
 // Debug utility to check API URL construction
 export function debugAPIUrls() {
@@ -18,13 +18,13 @@ export function debugAPIUrls() {
   console.log('')
   
   console.log('✅ Expected Endpoints:')
-  console.log('Categories: http://localhost:3000/api/v1/quiz')
-  console.log('Quiz Questions: http://localhost:3000/api/v1/quiz/test-id')
-  console.log('Quiz Submit: http://localhost:3000/api/v1/quiz/test-id/submit')
-  console.log('Performance: http://localhost:3000/api/v1/quiz/performance/test-user')
-  console.log('Leaderboard: http://localhost:3000/api/v1/quiz/leaderboard')
-  console.log('User Create: http://localhost:3000/api/v1/user')
-  console.log('User Onboarding: http://localhost:3000/api/v1/user/onboarding')
+  console.log('Categories: http://localhost:3004/api/v1/quiz')
+  console.log('Quiz Questions: http://localhost:3004/api/v1/quiz/test-id')
+  console.log('Quiz Submit: http://localhost:3004/api/v1/quiz/test-id/submit')
+  console.log('Performance: http://localhost:3004/api/v1/quiz/performance/test-user')
+  console.log('Leaderboard: http://localhost:3004/api/v1/quiz/leaderboard')
+  console.log('User Create: http://localhost:3004/api/v1/user')
+  console.log('User Onboarding: http://localhost:3004/api/v1/user/onboarding')
 }
 
 // Test the APIClient URL construction

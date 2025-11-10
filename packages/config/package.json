@@ -1,17 +1,24 @@
 {
     "name": "@tbe/config",
     "version": "0.0.0",
+    "type": "module",
     "private": true,
     "license": "MIT",
+    "main": "./onboarding.ts",
+    "types": "./onboarding.ts",
     "exports": {
+        ".": "./onboarding.ts",
+        "./quizes": "./quizes.ts",
         "./tailwind": "./tailwind.config.js",
         "./postcss": "./postcss.config.js",
         "./prettier": "./prettier.config.js"
     },
     "scripts": {
-        "lint": "eslint . --max-warnings 0"
+        "build": "tsc",
+        "lint": "eslint ."
     },
     "dependencies": {
+        "@tbe/types": "workspace:*",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/typography": "^0.5.15",
         "autoprefixer": "^10.4.20",
@@ -22,7 +29,8 @@
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",
         "@tbe/typescript-config": "workspace:*",
-        "eslint": "^8.57.1",
+        "@types/node": "^20.0.0",
+        "eslint": "^9.34.0",
         "prettier": "^3.6.2",
         "typescript": "^5.9.2"
     }

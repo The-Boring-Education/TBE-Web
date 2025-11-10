@@ -5,8 +5,6 @@ import {
   TrophyIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { useEffect } from 'react';
-
 import {
   AdminAreaChart,
   AdminBarChart,
@@ -15,20 +13,23 @@ import {
   AdminPieChart,
   AdminStats,
   SEO,
-} from '@/components';
-import { useAdminData } from '@/hooks/useAdmin';
+} from '@tbe/components';
+import { routes } from '@tbe/constants';
+import { useAdminData } from '@tbe/hooks';
+import dynamic from 'next/dynamic';
+import { useEffect } from 'react';
 
 const AdminDashboard = () => {
   const {
     data: overviewData,
     loading: overviewLoading,
     fetchData: fetchOverview,
-  } = useAdminData();
+  } = useAdminData(); // Overview data
   const {
     data: analyticsData,
     loading: analyticsLoading,
     fetchData: fetchAnalytics,
-  } = useAdminData();
+  } = useAdminData(); // Analytics data
   const {
     data: revenueData,
     loading: revenueLoading,
@@ -41,10 +42,10 @@ const AdminDashboard = () => {
   } = useAdminData();
 
   useEffect(() => {
-    fetchOverview('/api/v1/admin/dashboard', { type: 'overview' });
-    fetchAnalytics('/api/v1/admin/analytics', { type: 'user-engagement' });
-    fetchRevenue('/api/v1/admin/analytics', { type: 'revenue' });
-    fetchUserGrowth('/api/v1/admin/users', { action: 'growth' });
+    fetchOverview(`${routes.api.base}/admin/dashboard`, { type: 'overview' });
+    fetchAnalytics(`${routes.api.base}/admin/analytics`, { type: 'user-engagement' });
+    fetchRevenue(`${routes.api.base}/admin/analytics`, { type: 'revenue' });
+    fetchUserGrowth(`${routes.api.base}/admin/users`, { action: 'growth' });
   }, [fetchOverview, fetchAnalytics, fetchRevenue, fetchUserGrowth]);
 
   const stats = overviewData
@@ -225,4 +226,6 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default dynamic(() => Promise.resolve(AdminDashboard), {
+  ssr: false,
+});

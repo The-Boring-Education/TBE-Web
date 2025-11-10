@@ -1,21 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   enrollInASheet,
   getEnrolledSheetFromDB,
   getInterviewSheetByIDFromDB,
   getUserByIdFromDB,
-} from '@tbe/database';
-import type { SheetEnrollmentRequestProps } from '@tbe/interface';
-import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { sendInterviewPrepEnrollmentEmail } from '@tbe/services';
+} from '@/lib/database';
+import type { SheetEnrollmentRequestProps } from '@/lib/interfaces';
+import { sendInterviewPrepEnrollmentEmail } from '@/lib/services';
+import { cors, sendAPIResponse } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
-
+    await cors(req, res);
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
     switch (req.method) {
       case 'POST':
         return handleSheetEnrollment(req, res);

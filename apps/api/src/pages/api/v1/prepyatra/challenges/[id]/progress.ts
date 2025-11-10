@@ -1,12 +1,19 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+import { apiStatusCodes } from '@/lib/constants';
+import {Challenge, ChallengeLog} from '@/lib/database';
+import { cors } from '@/lib/utils';
+import { sendAPIResponse } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { cors } from '@tbe/utils';
-import { apiStatusCodes } from '@tbe/constants';
-import { sendAPIResponse } from '@tbe/utils';
-import {Challenge, ChallengeLog} from '@tbe/database';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
+
+  // Handle OPTIONS request for CORS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   await connectDB();
   const { method } = req;
 

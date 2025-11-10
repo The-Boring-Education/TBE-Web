@@ -1,8 +1,9 @@
 import { EyeIcon, UserIcon } from '@heroicons/react/24/outline';
+import { AdminLayout, AdminStats, AdminTable, SEO } from '@tbe/components';
+import { routes } from '@tbe/constants';
+import { useAdminData } from '@tbe/hooks';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-
-import { AdminLayout, AdminStats, AdminTable, SEO } from '@/components';
-import { useAdminData } from '@/hooks/useAdmin';
 
 const AdminUsers = () => {
   const {
@@ -22,12 +23,12 @@ const AdminUsers = () => {
   const [selectedSegment, setSelectedSegment] = useState('all');
 
   useEffect(() => {
-    fetchUsers('/api/v1/admin/dashboard', {
+    fetchUsers(`${routes.api.base}/admin/dashboard`, {
       type: 'users',
       page: currentPage,
       limit: 20,
     });
-    fetchSegments('/api/v1/admin/users', { action: 'segments' });
+    fetchSegments(`${routes.api.base}/admin/users`, { action: 'segments' });
   }, [fetchUsers, fetchSegments, currentPage]);
 
   const handlePageChange = (page: number) => {
@@ -39,7 +40,7 @@ const AdminUsers = () => {
     setOrder(newOrder);
     setCurrentPage(1);
 
-    fetchUsers('/api/v1/admin/dashboard', {
+    fetchUsers(`${routes.api.base}/admin/dashboard`, {
       type: 'users',
       page: 1,
       limit: 20,
@@ -212,7 +213,7 @@ const AdminUsers = () => {
             }}
             actions={{
               onRefresh: () =>
-                fetchUsers('/api/v1/admin/dashboard', {
+                fetchUsers(`${routes.api.base}/admin/dashboard`, {
                   type: 'users',
                   page: currentPage,
                   limit: 20,
@@ -229,4 +230,6 @@ const AdminUsers = () => {
   );
 };
 
-export default AdminUsers;
+export default dynamic(() => Promise.resolve(AdminUsers), {
+  ssr: false,
+});

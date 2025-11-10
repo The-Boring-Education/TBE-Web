@@ -1,20 +1,17 @@
 {
-  "extends": "@tbe/typescript-config/nextjs.json",
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
-    "forceConsistentCasingInFileNames": true
-  }
+    "extends": "@tbe/typescript-config/nextjs.json",
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    "exclude": ["node_modules"],
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"],
+            "@/lib/constants": ["./src/lib/constants"],
+            "@/lib/database": ["./src/lib/database"],
+            "@/lib/interfaces": ["./src/lib/interfaces"],
+            "@/lib/services": ["./src/lib/services"],
+            "@/lib/utils": ["./src/lib/utils"]
+        },
+        "forceConsistentCasingInFileNames": true
+    }
 }

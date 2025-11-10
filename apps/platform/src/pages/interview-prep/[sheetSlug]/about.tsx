@@ -1,8 +1,7 @@
+import type { SheetPageProps } from '@tbe/interface';
+import { getSheetPageProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-
-import type { SheetPageProps } from '@/interfaces';
-import { getSheetPageProps } from '@/utils';
 
 const SheetAboutPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();

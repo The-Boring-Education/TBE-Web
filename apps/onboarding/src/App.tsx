@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import Onboarding from './pages/Onboarding';
 import { useEffect } from 'react';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+
+import Onboarding from './pages/Onboarding';
 import { initGA, installGlobalListeners, trackPageview } from './utils/analytics';
 
 function RouterAnalytics() {

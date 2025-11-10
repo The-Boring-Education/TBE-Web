@@ -1,175 +1,63 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { envConfig } from '@/constant/envConfig';
+import type { EnvHealthResponse, EnvVarCheck } from '@tbe/utils';
+import { buildEnvHealthResponse } from '@tbe/utils';
 
-interface ServiceHealthStatus {
-  status: 'healthy' | 'unhealthy' | 'unknown';
-  responseTime?: number;
-  url: string;
-  error?: string;
-}
+const envChecks: EnvVarCheck[] = [
+    // Authentication & core URLs (required)
+    { name: 'NEXTAUTH_SECRET' },
+    { name: 'NEXT_PUBLIC_API_URL' },
+    { name: 'NEXT_PUBLIC_AUTH_URL' },
+    { name: 'GOOGLE_AUTH_CLIENT_ID' },
+    { name: 'GOOGLE_AUTH_CLIENT_SECRET' },
 
-interface OverallHealthResponse {
-  status: 'healthy' | 'degraded' | 'unhealthy';
-  timestamp: string;
-  services: {
-    quizzes: ServiceHealthStatus;
-    onboarding: ServiceHealthStatus;
-  };
-  summary: {
-    total: number;
-    healthy: number;
-    unhealthy: number;
-    unknown: number;
-  };
-}
+    // Database & admin
+    { name: 'MONGODB_URI' },
+    { name: 'ADMIN_SECRET' },
+    { name: 'ADMIN_BASE_URL' },
 
-async function checkServiceHealth(
-  serviceName: string,
-  serviceUrl: string,
-  timeout = 5000
-): Promise<ServiceHealthStatus> {
-  const startTime = Date.now();
+    // App URLs
+    { name: 'NEXT_PUBLIC_PLATFORM_URL', optional: true },
+    { name: 'NEXT_PUBLIC_PREPYATRA_URL', optional: true },
+    { name: 'NEXT_PUBLIC_QUIZES_URL', optional: true },
+    { name: 'NEXT_PUBLIC_ONBOARDING_APP_URL', optional: true },
 
-  if (!serviceUrl) {
-    return {
-      status: 'unknown',
-      url: 'not-configured',
-      error: `${serviceName.toUpperCase()}_APP_URL environment variable not configured`,
-    };
-  }
+    // External APIs / AI integrations
+    { name: 'OPENAI_API_KEY', optional: true },
+    { name: 'YOUTUBE_API_KEY', optional: true },
 
-  try {
-    // Try health endpoint first, then fallback to root
-    const healthUrl = `${serviceUrl}/api/health`;
-    const fallbackUrl = serviceUrl;
+    // Payment gateway
+    { name: 'CASHFREE_BASE_URL', optional: true },
+    { name: 'CASHFREE_CLIENT_ID', optional: true },
+    { name: 'CASHFREE_SECRET_KEY', optional: true },
 
-    let response;
-    try {
-      response = await fetch(healthUrl, {
-        method: 'GET',
-        timeout,
-        headers: {
-          'User-Agent': 'TBE-Health-Check/1.0',
-        },
-      } as RequestInit);
-    } catch (healthError) {
-      response = await fetch(fallbackUrl, {
-        method: 'GET',
-        timeout,
-        headers: {
-          'User-Agent': 'TBE-Health-Check/1.0',
-        },
-      } as RequestInit);
-    }
+    // Monitoring & analytics
+    { name: 'NEXT_PUBLIC_GA_MEASUREMENT_ID', optional: true },
+    { name: 'NEXT_PUBLIC_SENTRY_DSN', optional: true },
+    { name: 'SENTRY_AUTH_TOKEN', optional: true },
 
-    const responseTime = Date.now() - startTime;
+    // Email service
+    { name: 'EMAIL_SERVICE_URL', optional: true },
+    { name: 'EMAIL_API_KEY', optional: true },
+    { name: 'FROM_EMAIL', optional: true },
 
-    if (response.ok) {
-      return {
-        status: 'healthy',
-        responseTime,
-        url: serviceUrl,
-      };
-    } else {
-      return {
-        status: 'unhealthy',
-        responseTime,
-        url: serviceUrl,
-        error: `HTTP ${response.status}: ${response.statusText}`,
-      };
-    }
-  } catch (error) {
-    const responseTime = Date.now() - startTime;
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error';
+    // Environment flag
+    { name: 'NODE_ENV', optional: true },
+];
 
-    return {
-      status: 'unhealthy',
-      responseTime,
-      url: serviceUrl,
-      error: errorMessage,
-    };
-  }
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<OverallHealthResponse>
+export default function handler(
+    req: NextApiRequest,
+    res: NextApiResponse<EnvHealthResponse>,
 ) {
-  // Only allow GET requests
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', ['GET']);
-    return res.status(405).end();
-  }
-
-  try {
-    // Check all services in parallel
-    const [quizzesHealth, onboardingHealth] = await Promise.all([
-      checkServiceHealth('quizzes', envConfig.QUIZ_APP_URL),
-      checkServiceHealth(
-        'onboarding',
-        envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL
-      ),
-    ]);
-
-    const services = {
-      quizzes: quizzesHealth,
-      onboarding: onboardingHealth,
-    };
-
-    // Calculate summary
-    const statuses = Object.values(services).map((service) => service.status);
-    const summary = {
-      total: statuses.length,
-      healthy: statuses.filter((status) => status === 'healthy').length,
-      unhealthy: statuses.filter((status) => status === 'unhealthy').length,
-      unknown: statuses.filter((status) => status === 'unknown').length,
-    };
-
-    // Determine overall status
-    let overallStatus: 'healthy' | 'degraded' | 'unhealthy';
-    if (summary.healthy === summary.total) {
-      overallStatus = 'healthy';
-    } else if (summary.healthy > 0) {
-      overallStatus = 'degraded';
-    } else {
-      overallStatus = 'unhealthy';
+    if (req.method !== 'GET') {
+        res.setHeader('Allow', ['GET']);
+        return res.status(405).end();
     }
 
-    // Set appropriate HTTP status code
-    const httpStatus =
-      overallStatus === 'healthy'
-        ? 200
-        : overallStatus === 'degraded'
-        ? 207
-        : 503;
-
-    const response: OverallHealthResponse = {
-      status: overallStatus,
-      timestamp: new Date().toISOString(),
-      services,
-      summary,
-    };
-
-    res.status(httpStatus).json(response);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error';
-
-    res.status(500).json({
-      status: 'unhealthy',
-      timestamp: new Date().toISOString(),
-      services: {
-        quizzes: { status: 'unknown', url: 'error', error: errorMessage },
-        onboarding: { status: 'unknown', url: 'error', error: errorMessage },
-      },
-      summary: {
-        total: 3,
-        healthy: 0,
-        unhealthy: 0,
-        unknown: 3,
-      },
+    const { httpStatus, report } = buildEnvHealthResponse(envChecks, {
+        serviceName: 'environment',
     });
-  }
+
+    return res.status(httpStatus).json(report);
 }
+

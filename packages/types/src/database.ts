@@ -1,36 +1,38 @@
 /**
- * Database Models & Schema Types
+ * Database Types & Model Interfaces
  * 
- * All database models and schema-related types used across TBE platform apps.
- * Includes User models, Project models, Course models, and all MongoDB document interfaces.
+ * All database-related types including model interfaces,
+ * schema types, and database-specific enums used across TBE platform apps.
  */
 
-import type { Document, Schema, Types } from 'mongoose';
+// ================================
+// BASIC TYPES
+// ================================
 
-// ================================
-// SHARED DATABASE TYPES
-// ================================
+export type CertificateType = 'WEBINAR' | 'SHIKSHA';
+
+export type QuestionFrequencyType =
+  | 'Most Asked'
+  | 'Asked Frequently'
+  | 'Asked Sometimes';
+
+export type DifficultyType = 'Beginner' | 'Intermediate' | 'Advanced';
+
+export type RoadmapsType = 'Frontend' | 'Backend' | 'Fullstack' | 'Tech';
 
 export type SkillsType =
+  | 'React'
+  | 'JavaScript'
   | 'HTML'
   | 'CSS'
-  | 'JavaScript'
-  | 'React'
+  | 'Python'
+  | 'Java'
   | 'TypeScript'
   | 'NodeJS'
   | 'ExpressJS'
   | 'MongoDB'
   | 'TailwindCSS'
   | 'NextJS';
-
-export type RoadmapsType = 'Frontend' | 'Backend' | 'Fullstack' | 'Tech';
-
-export type DifficultyType = 'Beginner' | 'Intermediate' | 'Advanced';
-
-export type QuestionFrequencyType =
-  | 'Most Asked'
-  | 'Asked Frequently'
-  | 'Asked Sometimes';
 
 export type UserRoleType =
   | 'TECH_STUDENT'
@@ -55,50 +57,32 @@ export type WorkDomainType =
   | 'App Development'
   | 'Others';
 
-export type CertificateType = 'WEBINAR' | 'SHIKSHA';
+export type GoalType =
+  | 'GET_JOB'
+  | 'SWITCH_CAREER'
+  | 'LEARN_NEW_SKILL'
+  | 'BUILD_PORTFOLIO'
+  | 'PREPARE_FOR_INTERVIEWS'
+  | 'START_FREELANCING';
 
-export type CompanyType = 'Startup' | 'MidSize' | 'MNC' | 'FAANG';
-
-export type PriorityType = 'High' | 'Medium' | 'Low';
-
-export type GoalType = '3Months' | '6Months' | '1Year';
-
-export type SubscriptionStatus = 'Active' | 'Expired' | 'Trial' | 'Cancelled';
-
-export type SubscriptionType = '3Months' | '5Months' | 'Lifetime';
+export type CompanyType =
+  | 'FAANG'
+  | 'STARTUP'
+  | 'MNC'
+  | 'CONSULTING'
+  | 'FINANCE'
+  | 'EDTECH'
+  | 'E-COMMERCE'
+  | 'HEALTHCARE'
+  | 'OTHER';
 
 export type InterviewCategoryType =
-  | 'MNC'
-  | 'MERN'
-  | 'CollegePlacement'
-  | 'DSA'
-  | 'SystemDesign'
-  | 'GeneralTech';
-
-export type SubscriptionFeature =
-  | 'InterviewQuestions'
-  | 'SystemDesignResources'
-  | 'DSAResources'
-  | 'ResumeWorkshop'
-  | 'JobApplicationWorkshop'
-  | 'ColdEmailAutomation'
-  | 'LinkedInAutomation';
-
-export type ApplicationStatusType = 'Applied' | 'Interview' | 'Rejected' | 'Offer' | 'Joined';
-
-// Align with platform FEEDBACK_TYPES constant
-export type FeedbackType =
-  | 'GENERAL'
-  | 'SHIKSHA_CHAPTER'
-  | 'SHIKSHA_COURSE'
-  | 'INTERVIEW_SHEET'
-  | 'CERTIFICATE';
-
-export type ProductType = 'COURSE' | 'PROJECT' | 'SHEET' | 'WEBINAR' | 'SUBSCRIPTION';
-
-export type InterestEventType = 'SUBSCRIPTION_INTEREST' | 'FEATURE_REQUEST' | 'BETA_ACCESS';
-
-export type LeaderboardEnum = 'DAILY' | 'WEEKLY' | 'MONTHLY';
+  | 'TECHNICAL'
+  | 'BEHAVIORAL'
+  | 'SYSTEM_DESIGN'
+  | 'CODING'
+  | 'PROJECT_DISCUSSION'
+  | 'CULTURE_FIT';
 
 export type NotificationType =
   | 'WEBINAR'
@@ -113,521 +97,173 @@ export type NotificationType =
   | 'RESUME YATRA'
   | 'TOOLS';
 
-export type UserPointsActionType =
-  | 'ENROLL_COURSE'
-  | 'ENROLL_SHEET'
-  | 'ENROLL_PROJECT'
-  | 'COMPLETE_COURSE_CHAPTER'
-  | 'COMPLETE_PROJECT_CHAPTER'
-  | 'COMPLETE_QUESTION'
-  | 'COMPLETE_COURSE_CERTIFICATE'
-  | 'COMPLETE_PROJECT'
-  | 'COMPLETE_INTERVIEW_SHEET'
-  | 'PROFILE_COMPLETION'
-  | 'SOCIAL_SHARE'
-  | 'FEEDBACK_SUBMIT'
-  | 'VIDEO_WATCH_COMPLETE'
-  | 'FIRST_LOGIN'
-  | 'DAILY_VISIT'
-  | 'STREAK'
-  | 'REFER'
-  | 'WEBINAR_ATTEND'
-  | 'DOWNLOAD_CERTIFICATE'
-  | 'HELP_COMMUNITY'
-  | 'RECRUITER_ADDED'
-  | 'PREPLOG_CREATED'
-  | 'PREPLOG_STREAK_3'
-  | 'PREPLOG_STREAK_7'
-  | 'PREPLOG_STREAK_15'
-  | 'PREPLOG_STREAK_30'
-  | 'COMPLETE_QUIZ'
-  | 'QUIZ_PERFECT_SCORE'
-  | 'QUIZ_STREAK';
+export type SubscriptionType =
+  | 'FREE'
+  | 'BASIC'
+  | 'PREMIUM'
+  | 'ENTERPRISE';
+
+export type InterestEventType =
+  | 'COURSE_VIEW'
+  | 'COURSE_ENROLL'
+  | 'PROJECT_VIEW'
+  | 'PROJECT_ENROLL'
+  | 'SHEET_VIEW'
+  | 'SHEET_ENROLL'
+  | 'WEBINAR_VIEW'
+  | 'WEBINAR_ENROLL'
+  | 'QUIZ_ATTEMPT'
+  | 'CERTIFICATE_DOWNLOAD'
+  | 'PAYMENT_SUCCESS'
+  | 'FEEDBACK_SUBMIT';
 
 // ================================
-// USER MODELS
+// MODEL INTERFACES
 // ================================
 
-export interface UserModel {
+export interface CompanyDetails {
   name: string;
-  userName?: string;
-  email: string;
-  image?: string;
-  provider: string;
-  providerAccountId?: string;
-  occupation?: UserRoleType;
-  purpose?: PlatformUsageType[];
-  contactNo?: string;
-  isOnboarded?: boolean;
-  linkedInUrl?: string;
-  githubUrl?: string;
-  leetCodeUrl?: string;
-  userSkills?: string[];
-  userSkillsLastUpdated?: Date;
-  from?: string;
-  prepYatra?: {
-    pyOnboarded?: boolean;
-    experienceLevel?: string;
-    workDomain?: WorkDomainType;
-    goal?: GoalType;
-    targetCompanies?: CompanyType[];
-    preferences: {
-      interviewCategories?: InterviewCategoryType[];
-      focusAreas?: string[];
-    };
-    prepLog?: {
-      currentStreak?: number;
-      longestStreak?: number;
-      lastLoggedDate?: Date;
-      totalLogs?: number;
-    };
-  };
+  logo?: string;
+  website?: string;
+  description?: string;
 }
-
-export interface WebinarEnrolledUsersProps {
-  name: string;
-  email: string;
-}
-
-// ================================
-// PROJECT MODELS
-// ================================
 
 export interface ProjectChapter {
-  isCompleted?: boolean;
   chapterId: string;
   chapterName: string;
   content: string;
   isOptional?: boolean;
-  toObject: any;
-}
-
-export interface ProjectSection {
-  sectionId: string;
-  sectionName: string;
-  chapters: ProjectChapter[];
-  toObject: any;
-}
-
-export interface ProjectDocumentModel extends Document {
-  name: string;
-  meta: string;
-  slug: string;
-  description: string;
-  coverImageURL: string;
-  sections: ProjectSection[];
-  requiredSkills: SkillsType[];
-  roadmap: RoadmapsType;
-  difficultyLevel: DifficultyType;
-  isActive: boolean;
-}
-
-export interface UserProjectModel extends Document {
-  userId: typeof Schema.Types.ObjectId;
-  projectId: typeof Schema.Types.ObjectId;
-  sections: UserProjectSectionModel[];
-}
-
-export interface UserProjectSectionModel {
-  sectionId: string;
-  chapters: UserProjectChapterModel[];
-}
-
-export interface UserProjectChapterModel {
-  chapterId: string;
-  isCompleted?: boolean;
-}
-
-// ================================
-// COURSE MODELS
-// ================================
-
-export interface CourseModel extends Document {
-  name: string;
-  meta: string;
-  slug: string;
-  description: string;
-  isPremium: boolean;
-  price: number;
-  coverImageURL: string;
-  liveOn: Date;
-  chapters: CourseChapterModel[];
-  roadmap: RoadmapsType;
-  difficultyLevel: DifficultyType;
-  features: string[];
+  isCompleted: boolean;
 }
 
 export interface CourseChapterModel {
-  _id: typeof Schema.Types.ObjectId;
-  name: string;
+  chapterId: string;
+  chapterName: string;
   content: string;
   isOptional?: boolean;
-  toObject: () => UserCourseModel;
-}
-
-export interface UserCourseModel {
-  userId: typeof Schema.Types.ObjectId;
-  courseId: typeof Schema.Types.ObjectId;
-  course: CourseModel;
-  chapters: UserCourseChapterModel[];
   isCompleted: boolean;
-  certificateId: string;
 }
 
-export interface UserCourseChapterModel {
-  chapterId: string;
-  isCompleted?: boolean;
-}
-
-// ================================
-// INTERVIEW SHEET MODELS
-// ================================
-
-export interface InterviewSheetModel extends Document {
-  name: string;
-  meta: string;
-  slug: string;
+export interface CourseModel {
+  _id: string;
+  title: string;
   description: string;
   coverImageURL: string;
-  liveOn: Date;
-  isPremium: boolean;
-  price: number;
-  discountPercentage: number;
-  appliedCoupon?: typeof Schema.Types.ObjectId;
-  questions: InterviewSheetQuestionModel[];
+  liveOn: string;
+  slug: string;
+  meta?: string;
   roadmap: RoadmapsType;
-  features: string[];
+  isPremium?: boolean;
+  price?: number;
+  features?: string[];
+  chapters?: CourseChapterModel[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectDocumentModel {
+  _id: string;
+  name: string;
+  description: string;
+  coverImageURL: string;
+  slug: string;
+  meta?: string;
+  roadmap: RoadmapsType;
+  difficultyLevel: DifficultyType;
+  requiredSkills: SkillsType[];
+  sections: Array<{
+    sectionId: string;
+    sectionName: string;
+    chapters: ProjectChapter[];
+  }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InterviewSheetModel {
+  _id: string;
+  title: string;
+  description: string;
+  coverImageURL: string;
+  liveOn: string;
+  slug: string;
+  meta?: string;
+  roadmap: RoadmapsType;
+  isPremium?: boolean;
+  price?: number;
+  features?: string[];
+  questions?: InterviewSheetQuestionModel[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface InterviewSheetQuestionModel {
-  _id: typeof Schema.Types.ObjectId;
+  questionId: string;
   title: string;
   question: string;
   answer: string;
   frequency: QuestionFrequencyType;
-  companyTypes?: CompanyType[];
-  priority: PriorityType;
-  toObject: () => UserCourseModel;
-}
-
-export interface UserSheetModel extends Document {
-  userId: typeof Schema.Types.ObjectId;
-  sheetId: typeof Schema.Types.ObjectId;
-  sheet: InterviewSheetModel;
-  questions: UserSheetQuestionModel[];
-}
-
-export interface UserSheetQuestionModel {
-  questionId: typeof Schema.Types.ObjectId;
-  isCompleted?: boolean;
+  isCompleted: boolean;
   isStarred?: boolean;
 }
 
-// ================================
-// COUPON & PAYMENT MODELS
-// ================================
-
-export interface CouponModel extends Document {
-  code: string;
-  discountPercentage: number;
-  description: string;
-  isActive: boolean;
-  expiryDate: Date;
-  maxUsage?: number;
-  currentUsage: number;
-  applicableProducts: string[];
-  minimumAmount: number;
-  createdBy: typeof Schema.Types.ObjectId;
-  isExpired: boolean;
-  isUsageLimitReached: boolean;
-  isValid: boolean;
-}
-
-export interface PaymentModel extends Document {
-  _id: Types.ObjectId;
-  user: Types.ObjectId;
-  amount: number;
-  productId: string;
-  productType: ProductType;
-  orderId: string;
-  paymentId?: string;
-  paymentLink: string;
-  isPaid: boolean;
-  subscriptionType?: SubscriptionType;
-  subscriptionDuration?: number;
-  expiresAt?: Date;
-  appliedCoupon?: typeof Schema.Types.ObjectId;
-  couponCode?: string;
-}
-
-export interface WebhookEvent {
-  order_id: string;
-  payment_id?: string;
-  isPaid: boolean;
-  payment_status: 'SUCCESS' | 'FAILED';
-}
-
-// ================================
-// PLAYLIST & VIDEO MODELS
-// ================================
-
-export interface Video {
-  title: string;
-  videoId: string;
-  thumbnail: string;
-}
-
 export interface PlaylistModel {
-  playlistId: string;
+  _id: string;
   playlistName: string;
   description: string;
-  referrerBy?: number;
   thumbnail: string;
-  tags?: string[];
-  videos: Video[];
+  tags: string[];
+  videos: Array<{
+    title: string;
+    thumbnail: string;
+    videoId: string;
+  }>;
+  referrerBy: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface UserPlaylistModel {
-  _id: typeof Schema.Types.ObjectId;
-  userId: typeof Schema.Types.ObjectId;
-  playlistId: typeof Schema.Types.ObjectId;
-  playlist: PlaylistModel;
-  isPublic: boolean;
-  learningTime: number;
-  isRecommended?: boolean;
-}
-
-// ================================
-// WEBINAR MODELS
-// ================================
-
-export interface WebinarModel {
-  _id: typeof Schema.Types.ObjectId;
-  slug: string;
-  name: string;
-  description: string;
-  isFree: boolean;
-  about: string[];
-  learnings: string[];
-  host: {
-    name: string;
-    imageUrl: string;
-    role: string;
-    about: string[];
-    linkedInUrl: string;
-  };
-  registrationUrl: string;
-  dateAndTime: string;
-  whatYoullLearn: string[];
-  enrolledUsersList: WebinarEnrolledUsersProps[];
-  recordedVideoUrl: string;
-  coverImageURL: string;
-  toObject: () => WebinarModel;
-}
-
-// ================================
-// CERTIFICATE & NOTIFICATION MODELS
-// ================================
-
-export interface CertificateModel extends Document {
-  _id: typeof Schema.Types.ObjectId;
-  type: CertificateType;
-  userName: string;
+export interface WebinarEnrolledUsersProps {
   userId: string;
-  date: string;
-  programName: string;
-  programId: typeof Schema.Types.ObjectId;
-}
-
-export interface NotificationModel extends Document {
-  type: string;
-  text: string;
-  isHTML: boolean;
-  link?: string;
-  isExternalLink: boolean;
-}
-
-// ================================
-// JOB & COMPANY MODELS
-// ================================
-
-export interface CompanyDetails {
-  id: string;
   name: string;
-  email?: string;
-  location?: string;
-  linkedIn?: string;
-  website?: string;
-  description: string;
-  logo: string;
-  emp_count?: number;
-  company_founded?: number;
-}
-
-export interface JobModel extends Document {
-  job_id: string;
-  job_title: string;
-  job_description: string;
-  company: CompanyDetails;
-  skills: string[];
-  role: string[];
-  location: string;
-  experience?: {
-    min?: number;
-    max?: number;
-  };
-  jobUrl: string;
-  salary?: {
-    min?: number;
-    max?: number;
-  };
-  isInternship?: boolean;
-  platform: string;
-  postedAt: Date;
-}
-
-export interface UnskilledLandingGraphDataProps {
-  name: string;
-  count: number;
-}
-
-export interface JobAggregateModel extends Document {
-  trendingSkills: UnskilledLandingGraphDataProps[];
-  topLocations: UnskilledLandingGraphDataProps[];
-  jobDomains: UnskilledLandingGraphDataProps[];
-  companyTypes: UnskilledLandingGraphDataProps[];
+  email: string;
+  enrolledAt: string;
 }
 
 // ================================
-// GAMIFICATION MODELS
+// USER POINTS ACTION TYPES
 // ================================
 
-export interface UserPointsAction {
-  actionType: UserPointsActionType;
-  pointsEarned: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+const UserPointsActionType = [
+  'ENROLL_COURSE',
+  'ENROLL_SHEET',
+  'ENROLL_PROJECT',
+  'COMPLETE_COURSE_CHAPTER',
+  'COMPLETE_PROJECT_CHAPTER',
+  'COMPLETE_QUESTION',
+  'COMPLETE_COURSE_CERTIFICATE',
+  'COMPLETE_PROJECT',
+  'COMPLETE_INTERVIEW_SHEET',
+  'PROFILE_COMPLETION',
+  'SOCIAL_SHARE',
+  'FEEDBACK_SUBMIT',
+  'VIDEO_WATCH_COMPLETE',
+  'FIRST_LOGIN',
+  'DAILY_VISIT',
+  'STREAK',
+  'REFER',
+  'WEBINAR_ATTEND',
+  'DOWNLOAD_CERTIFICATE',
+  'HELP_COMMUNITY',
+  'RECRUITER_ADDED',
+  'PREPLOG_CREATED',
+  'PREPLOG_STREAK_3',
+  'PREPLOG_STREAK_7',
+  'PREPLOG_STREAK_15',
+  'PREPLOG_STREAK_30',
+  'COMPLETE_QUIZ',
+  'QUIZ_PERFECT_SCORE',
+  'QUIZ_STREAK',
+] as const;
 
-export interface GamificationModel {
-  userId: Schema.Types.ObjectId;
-  points: number;
-  actions: UserPointsAction[];
-}
-
-export interface LeaderboardModel extends Document {
-  type: LeaderboardEnum;
-  date: Date;
-  entries: {
-    userId: Types.ObjectId;
-    points: number;
-  }[];
-}
-
-// ================================
-// FEEDBACK MODELS
-// ================================
-
-export interface FeedbackModel extends Document {
-  _id: typeof Schema.Types.ObjectId;
-  rating: number;
-  feedback?: string;
-  type: FeedbackType;
-  ref?: typeof Schema.Types.ObjectId;
-  user: typeof Schema.Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-// ================================
-// PREP YATRA MODELS
-// ================================
-
-export interface PrepYatraUserModel extends Document {
-  _id: Types.ObjectId;
-  userId: string;
-  goal: GoalType;
-  targetCompanies: CompanyType[];
-  subscriptionStatus: SubscriptionStatus;
-  subscriptionExpiry?: Date;
-  preferences: {
-    interviewCategories: InterviewCategoryType[];
-    focusAreas: string[];
-  };
-}
-
-export interface PrepYatraSubscriptionModel extends Document {
-  _id: Types.ObjectId;
-  userId: Types.ObjectId;
-  type: SubscriptionType;
-  amount: number;
-  duration: number;
-  startDate: Date;
-  expiryDate: Date;
-  isActive: boolean;
-  features: SubscriptionFeature[];
-}
-
-export interface RecruiterModel extends Document {
-  user: Types.ObjectId;
-  recruiterName: string;
-  email?: string;
-  phone?: string;
-  company?: string;
-  appliedPosition?: string;
-  applicationStatus?: ApplicationStatusType;
-  lastContacted?: string;
-  follow_up_date?: string;
-  last_interview_date?: string;
-  link?: string;
-  comments?: string;
-}
-
-export interface PrepLogModel extends Document {
-  user: Types.ObjectId;
-  title: string;
-  timeSpent: number;
-  description?: string;
-  mentorFeedback?: string;
-}
-
-export interface ChallengeModel extends Document {
-  user: Types.ObjectId;
-  name: string;
-  description?: string;
-  totalDays: number;
-  currentDay: number;
-  status: 'active' | 'completed' | 'paused' | 'cancelled';
-  startDate: Date;
-  endDate: Date;
-  isPredefined: boolean;
-  predefinedType?: '21DaysPython' | '21DaysJava' | '50DaysInternship';
-  gamificationPoints: number;
-}
-
-export interface ChallengeLogModel extends Document {
-  challenge: Types.ObjectId;
-  user: Types.ObjectId;
-  day: number;
-  progressText: string;
-  hoursSpent: number;
-  date: Date;
-  copiedToPrepLogs: boolean;
-  prepLogId?: Types.ObjectId;
-  gamificationPoints: number;
-}
-
-// ================================
-// USER INTEREST MODELS
-// ================================
-
-export interface UserInterestModel {
-  userId: Types.ObjectId;
-  eventType: InterestEventType;
-  eventDescription?: string;
-  metadata?: Record<string, any>;
-  isActive: boolean;
-  source: 'WEBAPP' | 'PREPYATRA' | 'ADMIN' | 'API';
-  ipAddress?: string;
-  userAgent?: string;
-}
+export type UserPointsActionType = (typeof UserPointsActionType)[number];

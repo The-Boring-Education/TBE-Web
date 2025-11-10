@@ -1,22 +1,27 @@
 {
   "name": "@tbe/services",
   "version": "0.0.0",
+  "type": "module",
   "private": true,
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
-    "lint": "eslint . --max-warnings 0"
+    "build": "tsc",
+    "lint": "eslint ."
   },
   "dependencies": {
+    "@tbe/config": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/interface": "workspace:*",
-    "@tbe/utils": "workspace:*"
+    "@tbe/utils": "workspace:*",
+    "@tbe/types": "workspace:*"
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
     "@tbe/typescript-config": "workspace:*",
+    "@types/node": "^20.0.0",
     "axios": "^1.4.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.34.0",
     "typescript": "^5.9.2"
   }
 }

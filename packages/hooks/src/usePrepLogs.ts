@@ -1,167 +1,126 @@
-import { useState, useEffect } from 'react'
-import { sendRequest, trackEvent } from '@tbe/utils'
+import {useState, useEffect} from "react";
 
-/**
- * usePrepLogs Hook
- * 
- * Extracted from prep-yatra and made reusable
- * Handles prep log management and fetching
- */
+import {prepLogsService} from "@tbe/services";
 
 export interface PrepLog {
     _id: string
     user: string
-    day: number
-    progress: string
+    title: string
+    description?: string
     timeSpent: number
-    nextGoals: string[]
-    date: string
+    mentorFeedback?: string
     createdAt: string
     updatedAt: string
+    __v: number
 }
 
-export interface CreatePrepLogRequest {
-    day: number
-    progress: string
-    timeSpent: number
-    nextGoals: string[]
+export interface PrepLogsResponse {
+    status: boolean
+    data: PrepLog[]
 }
 
-export default function usePrepLogs(userId: string) {
-    const [prepLogs, setPrepLogs] = useState<PrepLog[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
-    const [refreshTrigger, setRefreshTrigger] = useState(0)
+export function usePrepLogs(userId: string) {
+    const [logs, setLogs] = useState<PrepLog[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     const fetchPrepLogs = async () => {
         if (!userId) {
-            setError('User ID is required')
-            setLoading(false)
-            return
+            setError("User ID is required");
+            setLoading(false);
+            return;
         }
 
         try {
-            setLoading(true)
-            setError(null)
+            setLoading(true);
+            setError(null);
 
-            const response = await sendRequest({
-                url: `/api/v1/prepyatra/prep-logs?userId=${userId}`,
-                method: 'GET'
-            })
-
-            if (!response.success) {
-                throw new Error('Failed to fetch prep logs')
-            }
-
-            setPrepLogs(response.data || [])
+            const data = await prepLogsService.getByUserId(userId);
+            setLogs(data);
         } catch (err) {
-            console.error('Error fetching prep logs:', err)
+            console.error("Error fetching prep logs:", err);
             setError(
                 err instanceof Error
                     ? err.message
-                    : 'Failed to fetch prep logs'
-            )
+                    : "Failed to fetch prep logs"
+            );
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
-        fetchPrepLogs()
-    }, [userId, refreshTrigger])
+        fetchPrepLogs();
+    }, [userId, refreshTrigger]);
 
-    // Create a new prep log
-    const createPrepLog = async (data: CreatePrepLogRequest): Promise<PrepLog> => {
-        try {
-            const response = await sendRequest({
-                url: `/api/v1/prepyatra/prep-logs`,
-                method: 'POST',
-                data: {
-                    ...data,
-                    user: userId
-                }
-            })
-
-            if (!response.success) {
-                throw new Error('Failed to create prep log')
-            }
-
-            // Analytics
-            try {
-                trackEvent({
-                    action: 'prep_log_create',
-                    category: 'prep_yatra',
-                    value: data.timeSpent,
-                    day: data.day
-                })
-            } catch {}
-
-            // Refresh the list
-            setRefreshTrigger(prev => prev + 1)
-
-            return response.data
-        } catch (error) {
-            console.error('Error creating prep log:', error)
-            throw error
-        }
-    }
+    // Debounced refetch function to prevent excessive API calls
+    const refetch = () => {
+        setRefreshTrigger(prev => prev + 1);
+    };
 
     // Calculate statistics
-    const totalLogs = prepLogs.length
-    const totalTimeSpent = prepLogs.reduce((acc, log) => acc + log.timeSpent, 0)
-    const averageTimePerDay = totalLogs > 0 ? Math.round(totalTimeSpent / totalLogs) : 0
-    
-    // Get recent logs (last 7 days)
-    const getRecentLogs = () => {
-        const sevenDaysAgo = new Date()
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+    const totalTimeSpent = logs.reduce(
+        (acc, log) => acc + (log.timeSpent || 0),
+        0
+    );
+    const totalLogs = logs.length;
 
-        return prepLogs
-            .filter(log => new Date(log.createdAt) >= sevenDaysAgo)
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    }
+    // Calculate streak (consecutive days with logs)
+    const calculateStreak = () => {
+        if (logs.length === 0) {return 0;}
 
-    const recentLogs = getRecentLogs()
-    
-    // Get current streak
-    const getCurrentStreak = () => {
-        if (prepLogs.length === 0) return 0
-        
-        const sortedLogs = [...prepLogs].sort(
-            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        )
-        
-        let streak = 0
-        const today = new Date()
-        
+        const sortedLogs = [...logs].sort(
+            (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+        );
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        let streak = 0;
+        let currentDate = new Date(today);
+
         for (const log of sortedLogs) {
-            const logDate = new Date(log.createdAt)
-            const diffDays = Math.floor((today.getTime() - logDate.getTime()) / (1000 * 60 * 60 * 24))
-            
-            if (diffDays === streak) {
-                streak++
+            const logDate = new Date(log.createdAt);
+            logDate.setHours(0, 0, 0, 0);
+
+            const diffTime = currentDate.getTime() - logDate.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays <= 1) {
+                streak++;
+                currentDate = logDate;
             } else {
-                break
+                break;
             }
         }
-        
-        return streak
-    }
 
-    const currentStreak = getCurrentStreak()
+        return streak;
+    };
+
+    const streak = calculateStreak();
+
+    // Get recent activity (last 7 days)
+    const getRecentActivity = () => {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        return logs.filter((log) => new Date(log.createdAt) >= sevenDaysAgo);
+    };
+
+    const recentActivity = getRecentActivity();
 
     return {
-        prepLogs,
-        totalLogs,
-        totalTimeSpent,
-        averageTimePerDay,
-        recentLogs,
-        currentStreak,
+        logs,
+        setLogs,
         loading,
         error,
-        createPrepLog,
-        refetch: () => {
-            setRefreshTrigger(prev => prev + 1)
-        }
-    }
+        totalTimeSpent,
+        totalLogs,
+        streak,
+        recentActivity,
+        refetch
+    };
 }

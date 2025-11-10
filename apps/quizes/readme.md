@@ -1,309 +1,457 @@
-# The Boring Quizes 🧠
+# 🧠 The Boring Quizes - Interactive Quiz Platform
 
-A comprehensive quiz platform for mastering tech interviews with detailed analytics, performance tracking, and competitive leaderboards.
+A comprehensive quiz platform for mastering tech interviews with detailed analytics, performance tracking, competitive leaderboards, and gamification features.
 
-## ✨ Features
+## 📋 Overview
 
-### 🎯 Core Quiz System
+The Boring Quizes is a Next.js application designed to help developers prepare for technical interviews through interactive quizzes, detailed performance analytics, and competitive features.
 
--   **Multiple Categories**: JavaScript, React, Algorithms, Web Development, and more
--   **Interactive Questions**: Multiple choice with detailed explanations
--   **Real-time Scoring**: Immediate feedback and performance tracking
--   **Progress Tracking**: Save attempts and track improvement over time
+### Key Features
 
-### 📊 Enhanced Dashboard
+- **Multiple Quiz Categories**: JavaScript, React, Algorithms, Web Development, and more
+- **Interactive Questions**: Multiple choice with detailed explanations
+- **Real-time Analytics**: Performance tracking and improvement insights
+- **Competitive Leaderboards**: Global rankings and achievements
+- **Gamification**: Points, badges, and reward systems
+- **Progress Tracking**: Comprehensive attempt history and trends
 
--   **Unified Navigation**: Clean, intuitive navigation across all features
--   **Quick Stats**: Overview of total attempts, average scores, and time spent
--   **Category Progress**: Visual progress indicators for each quiz category
--   **Performance Insights**: Detailed analytics and improvement tracking
+## 🛠️ Tech Stack
 
-### 📈 Stats & Analytics
+- **Framework**: Next.js 13.5.6
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Authentication**: NextAuth.js (inherited from platform)
+- **State Management**: React Query
+- **UI Components**: Shared `@tbe/components`
+- **Charts**: Recharts for analytics
+- **Database**: MongoDB (via shared API)
 
--   **Performance Metrics**: Comprehensive performance overview
--   **Time Range Filtering**: 7 days, 30 days, 90 days, or all time
--   **Category Performance**: Detailed breakdown by quiz category
--   **Trend Analysis**: Performance improvement tracking and insights
--   **Accuracy Metrics**: Time management and accuracy statistics
-
-### 📚 Performance History
-
--   **Detailed Attempt Tracking**: Complete history of all quiz attempts
--   **Advanced Filtering**: Search by category, time range, and keywords
--   **Performance Trends**: Compare recent vs. previous performance
--   **Detailed Insights**: Expandable attempt details with metrics
--   **Export & Analysis**: Comprehensive performance data for review
-
-### 🏆 Leaderboard & Competition
-
--   **Global Rankings**: Compete with learners worldwide
--   **Achievement System**: Unlock badges and rewards
--   **User Profiles**: View detailed profiles and achievements
--   **Ranking Tiers**: Top 25, 50, or 100 learners
--   **Personal Ranking**: Track your position globally
-
-## 🚀 Getting Started
+## 🚀 Development
 
 ### Prerequisites
 
--   Node.js 18+
--   npm or yarn
+- Node.js >= 20.x
+- pnpm >= 9.12.0
+- Access to TBE API services
 
-### Installation
-
-1. **Clone the repository**
-
-    ```bash
-    git clone <repository-url>
-    cd The-Boring-Quizes
-    ```
-
-2. **Install dependencies**
+### Setup
 
     ```bash
-    npm install
-    # or
-    yarn install
-    ```
 
-3. **Environment Setup**
+# From monorepo root
+
+pnpm install
+
+# Start quizes app only
+
+pnpm dev:quizes
+
+# Or start all apps
+
+pnpm dev
+
+````
+
+The app will be available at `http://localhost:3002`
+
+### Environment Variables
+
+Create `.env.local` in the app directory:
 
     ```bash
-    cp .env.example .env.local
-    ```
+# Authentication (inherited from platform)
+NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=http://localhost:3002
 
-    Update `.env.local` with your configuration:
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:3004
+NEXT_PUBLIC_BASE_URL=http://localhost:3002
 
-    ```env
-    NEXT_PUBLIC_TBE_WEBAPP_API_URL=your_api_url
-    NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
-    ```
+# Cross-app URLs
+NEXT_PUBLIC_PLATFORM_URL=http://localhost:3000
+NEXT_PUBLIC_PREP_YATRA_URL=http://localhost:3001
 
-4. **Run Development Server**
+# Analytics & Tracking
+NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
+
+# Quiz Configuration
+NEXT_PUBLIC_QUIZ_TIME_LIMIT=1800  # 30 minutes default
+NEXT_PUBLIC_LEADERBOARD_SIZE=100
+````
+
+## 📁 Project Structure
+
+```
+apps/quizes/
+├── src/
+│   ├── app/                # Next.js 13+ app directory
+│   │   ├── dashboard/      # User dashboard
+│   │   ├── quiz/          # Quiz pages
+│   │   ├── leaderboard/   # Leaderboard pages
+│   │   ├── analytics/     # Analytics pages
+│   │   └── history/       # Attempt history
+│   ├── components/        # App-specific components
+│   │   ├── quiz/         # Quiz-related components
+│   │   ├── dashboard/    # Dashboard components
+│   │   ├── analytics/    # Analytics components
+│   │   └── leaderboard/  # Leaderboard components
+│   ├── hooks/            # App-specific hooks
+│   ├── lib/              # Utilities and configurations
+│   ├── types/            # TypeScript type definitions
+│   └── styles/           # Global styles
+├── public/               # Static assets
+├── next.config.js        # Next.js configuration
+├── tailwind.config.js    # Tailwind configuration
+└── tsconfig.json        # TypeScript configuration
+```
+
+## 🔧 Available Scripts
 
     ```bash
-    npm run dev
-    # or
-    yarn dev
-    ```
 
-    Open [http://localhost:3002](http://localhost:3002) in your browser.
+# Development
 
-### Production Build
+pnpm dev # Start development server (port 3002)
+
+# Building
+
+pnpm build # Build for production
+pnpm start # Start production server
+
+# Code Quality
+
+pnpm lint # Run ESLint
+pnpm lint:fix # Fix ESLint issues
+pnpm typecheck # TypeScript type checking
+
+# Export
+
+pnpm export # Export static site
+
+````
+
+## 🎯 Core Features
+
+### Quiz System
+
+```typescript
+// Quiz types
+interface Quiz {
+  id: string
+  title: string
+  category: QuizCategory
+  questions: Question[]
+  timeLimit: number
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced'
+}
+
+interface Question {
+  id: string
+  question: string
+  options: string[]
+  correctAnswer: number
+  explanation: string
+  difficulty: number
+}
+
+// Usage
+import { QuizCard, QuestionCard } from '@/components/quiz'
+````
+
+### Analytics Dashboard
+
+```typescript
+// Analytics components
+import {
+    PerformanceChart,
+    CategoryBreakdown,
+    TrendAnalysis,
+    AccuracyMetrics
+} from "@/components/analytics"
+
+// Analytics hooks
+const { performanceData, categoryStats, timeSpentData } =
+    useQuizAnalytics(userId)
+```
+
+### Leaderboard System
+
+```typescript
+// Leaderboard types
+interface LeaderboardEntry {
+    userId: string
+    username: string
+    totalScore: number
+    averageScore: number
+    quizzesCompleted: number
+    rank: number
+    badges: Badge[]
+}
+
+// Components
+import {
+    GlobalLeaderboard,
+    CategoryLeaderboard,
+    UserRankCard
+} from "@/components/leaderboard"
+```
+
+## 🎨 UI Components
+
+### Quiz Components
+
+```typescript
+// Import shared components
+import {
+    QuizGamificationCard,
+    CodeRenderer,
+    MarkdownRenderer,
+    PointsDisplay,
+    DashboardNav
+} from "@tbe/components"
+
+// App-specific components
+import {
+    QuizTimer,
+    ProgressBar,
+    AnswerOptions,
+    ResultsModal
+} from "@/components/quiz"
+```
+
+### Dashboard Components
+
+```typescript
+// Dashboard layout
+import {
+    StatsOverview,
+    RecentAttempts,
+    CategoryProgress,
+    AchievementBadges
+} from "@/components/dashboard"
+```
+
+## 🔐 Authentication & User Management
+
+```typescript
+// Authentication (inherited from platform)
+import { useAuth } from "@tbe/hooks"
+
+const { user, isAuthenticated } = useAuth()
+
+// User progress tracking
+import { useUserProgress } from "@/hooks/useUserProgress"
+
+const { totalAttempts, averageScore, categoryProgress, achievements } =
+    useUserProgress(user?.id)
+```
+
+## 📊 Data Management & API Integration
+
+### Quiz Data
+
+```typescript
+// Fetch quizzes
+import { useQuizzes, useQuizById } from "@/hooks/api"
+
+const { data: quizzes, isLoading } = useQuizzes({
+    category: "javascript",
+    difficulty: "intermediate"
+})
+
+// Submit quiz attempt
+import { useSubmitQuizAttempt } from "@/hooks/api"
+
+const { mutate: submitAttempt } = useSubmitQuizAttempt()
+```
+
+### Analytics API
+
+```typescript
+// Performance analytics
+import { usePerformanceAnalytics } from "@/hooks/analytics"
+
+const {
+    data: analytics,
+    timeRange,
+    setTimeRange
+} = usePerformanceAnalytics({
+    userId: user.id,
+    timeRange: "30d"
+})
+```
+
+## 🎮 Gamification Features
+
+### Points System
+
+```typescript
+// Points calculation
+const calculatePoints = (
+    correctAnswers: number,
+    totalQuestions: number,
+    timeSpent: number,
+    difficulty: string
+) => {
+    const basePoints = (correctAnswers / totalQuestions) * 100
+    const difficultyMultiplier = getDifficultyMultiplier(difficulty)
+    const timeBonus = calculateTimeBonus(timeSpent)
+
+    return Math.round(basePoints * difficultyMultiplier + timeBonus)
+}
+```
+
+### Achievement System
+
+```typescript
+// Achievement types
+interface Achievement {
+    id: string
+    name: string
+    description: string
+    icon: string
+    condition: AchievementCondition
+    points: number
+}
+
+// Check achievements
+import { useAchievements } from "@/hooks/useAchievements"
+
+const { unlockedAchievements, checkForNewAchievements } = useAchievements(
+    user.id
+)
+```
+
+## 📈 Analytics & Reporting
+
+### Performance Metrics
+
+- **Accuracy Rate**: Percentage of correct answers
+- **Average Time**: Time spent per question
+- **Category Performance**: Breakdown by quiz category
+- **Improvement Trends**: Performance over time
+- **Comparative Analysis**: Performance vs. other users
+
+### Data Visualization
+
+```typescript
+// Charts and visualizations
+import { LineChart, BarChart, PieChart, RadarChart } from "recharts"
+
+// Custom chart components
+import {
+    PerformanceTrendChart,
+    CategoryComparisonChart,
+    AccuracyOverTimeChart
+} from "@/components/charts"
+```
+
+## 🏆 Leaderboard Features
+
+### Global Rankings
+
+- **Overall Leaderboard**: Top performers across all categories
+- **Category Leaderboards**: Category-specific rankings
+- **Weekly/Monthly**: Time-based leaderboards
+- **Achievement Rankings**: Based on badges and achievements
+
+### Competitive Features
+
+```typescript
+// Leaderboard hooks
+import { useLeaderboard } from "@/hooks/useLeaderboard"
+
+const { globalRankings, categoryRankings, userRank, nearbyUsers } =
+    useLeaderboard({
+        category: "javascript",
+        timeframe: "monthly"
+    })
+```
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
 
 ```bash
-npm run build
-npm start
+# Deploy to production
+vercel --prod
+
+# Environment variables configured in Vercel dashboard
 ```
 
-## 🏗️ Architecture
+### Performance Optimization
 
-### Frontend Structure
-
-```
-src/
-├── app/                    # Next.js app router
-│   ├── dashboard/         # Dashboard pages
-│   │   ├── page.tsx      # Main dashboard
-│   │   ├── stats/        # Stats & Analytics
-│   │   ├── history/      # Performance History
-│   │   └── leaderboard/  # Leaderboard
-│   └── quiz/             # Quiz taking interface
-├── components/            # Reusable components
-│   ├── layout/           # Layout components
-│   │   └── DashboardNav.tsx
-│   └── ui/               # UI components
-├── services/             # API services
-├── types/                # TypeScript types
-└── lib/                  # Utilities and helpers
-```
-
-### Key Components
-
-#### DashboardNav
-
--   **Unified Navigation**: Consistent navigation across all dashboard pages
--   **Responsive Design**: Mobile-friendly with collapsible menu
--   **Active States**: Visual feedback for current page
--   **User Management**: Profile menu and sign out functionality
-
-#### Stats & Analytics
-
--   **Performance Metrics**: Key performance indicators
--   **Time Range Filtering**: Flexible date range selection
--   **Category Breakdown**: Performance by quiz category
--   **Trend Analysis**: Improvement tracking over time
-
-#### Performance History
-
--   **Attempt Tracking**: Complete history of quiz attempts
--   **Advanced Filtering**: Search and filter capabilities
--   **Performance Trends**: Comparative analysis
--   **Detailed Insights**: Expandable attempt information
-
-#### Leaderboard
-
--   **Global Rankings**: Worldwide competition
--   **User Profiles**: Detailed user information
--   **Achievement System**: Badges and rewards
--   **Ranking Tiers**: Multiple leaderboard views
-
-## 🔧 API Integration
-
-### Endpoints
-
--   **Quiz Management**: Categories, questions, and submissions
--   **Analytics**: Performance metrics and category analysis
--   **User Management**: Profiles, authentication, and preferences
--   **Leaderboard**: Rankings and achievements
-
-### Data Flow
-
-1. **Quiz Attempts**: Track user performance and time
-2. **Analytics Processing**: Calculate metrics and trends
-3. **Leaderboard Updates**: Real-time ranking calculations
-4. **Achievement Unlocking**: Automatic badge assignment
-
-## 🎨 UI/UX Features
-
-### Design Principles
-
--   **Clean & Modern**: Minimalist design with clear hierarchy
--   **Responsive**: Mobile-first responsive design
--   **Accessible**: WCAG compliant with proper contrast
--   **Interactive**: Smooth animations and micro-interactions
-
-### Visual Elements
-
--   **Glass Morphism**: Modern backdrop blur effects
--   **Gradient Accents**: Subtle color gradients
--   **Icon System**: Consistent Lucide React icons
--   **Animation**: Smooth transitions and loading states
-
-## 📱 Responsive Design
-
-### Breakpoints
-
--   **Mobile**: 320px - 768px
--   **Tablet**: 768px - 1024px
--   **Desktop**: 1024px+
-
-### Mobile Features
-
--   **Collapsible Navigation**: Hamburger menu for mobile
--   **Touch-Friendly**: Optimized for touch interactions
--   **Adaptive Layouts**: Responsive grid systems
--   **Mobile-First**: Designed for mobile devices first
-
-## 🚀 Performance
-
-### Optimization
-
--   **React Query**: Efficient data fetching and caching
--   **Code Splitting**: Lazy loading of components
--   **Image Optimization**: Next.js image optimization
--   **Bundle Analysis**: Optimized bundle sizes
-
-### Caching Strategy
-
--   **Client-Side**: React Query cache management
--   **Server-Side**: API response caching
--   **Static Assets**: CDN optimization for static files
-
-## 🔒 Security
-
-### Authentication
-
--   **Google OAuth**: Secure third-party authentication
--   **JWT Tokens**: Secure session management
--   **Protected Routes**: Route-level authentication
--   **User Isolation**: Secure data separation
-
-### Data Protection
-
--   **Input Validation**: Client and server-side validation
--   **XSS Prevention**: Sanitized user inputs
--   **CSRF Protection**: Cross-site request forgery prevention
--   **Rate Limiting**: API abuse prevention
+- **Code Splitting**: Automatic via Next.js
+- **Image Optimization**: Next.js Image component
+- **Caching**: React Query for API responses
+- **Bundle Analysis**: Regular monitoring
 
 ## 🧪 Testing
 
-### Testing Strategy
-
--   **Unit Tests**: Component and utility testing
--   **Integration Tests**: API integration testing
--   **E2E Tests**: End-to-end user flow testing
--   **Performance Tests**: Load and stress testing
-
-### Test Commands
-
 ```bash
-npm run test          # Run unit tests
-npm run test:e2e      # Run end-to-end tests
-npm run test:coverage # Generate coverage report
+# Run tests (when implemented)
+pnpm test
+
+# Test specific components
+pnpm test quiz/QuizCard.test.tsx
+
+# Integration tests
+pnpm test:integration
 ```
 
-## 📈 Monitoring & Analytics
+## 🐛 Troubleshooting
 
-<<<<<<< HEAD
+### Common Issues
 
--   `POST /user` - Create/find user after Google auth
--   `GET /user/onbording?userName={username}` - Check username availability
--   `POST /user/onbording?userId={userId}` - Complete user onboarding
--   `GET /quiz` - Get available quiz categories
--   `GET /quiz/{categoryId}` - Get questions for a category
--   # `POST /quiz/{categoryId}/attempt` - Submit quiz attempt
+**Quiz Loading Issues:**
 
-### Performance Monitoring
+- Check API connectivity
+- Verify quiz data format
+- Ensure authentication is working
 
--   **Core Web Vitals**: LCP, FID, CLS tracking
--   **Error Tracking**: Sentry integration for error monitoring
--   **User Analytics**: Google Analytics integration
--   **Performance Metrics**: Real-time performance tracking
-    > > > > > > > eea263a45a6a795009639f422308aa2962dcf4cd
+**Timer Issues:**
 
-### User Behavior
+- Check browser permissions
+- Verify timer logic
+- Handle page refresh scenarios
 
--   **Quiz Completion Rates**: Track user engagement
--   **Performance Trends**: Monitor learning progress
--   **Feature Usage**: Understand user preferences
--   **Conversion Funnel**: Optimize user journey
+**Leaderboard Sync:**
 
-## 🤝 Contributing
+- Verify real-time updates
+- Check WebSocket connections
+- Handle network interruptions
 
-### Development Workflow
+## 📖 Contributing
 
-1. **Fork** the repository
-2. **Create** a feature branch
-3. **Make** your changes
-4. **Test** thoroughly
-5. **Submit** a pull request
+### Development Guidelines
 
-### Code Standards
+1. **Quiz Content**: Follow established question formats
+2. **Analytics**: Maintain data consistency
+3. **Performance**: Optimize for real-time features
+4. **Accessibility**: Ensure quiz accessibility
+5. **Testing**: Add comprehensive test coverage
 
--   **TypeScript**: Strict type checking
--   **ESLint**: Code quality enforcement
--   **Prettier**: Consistent code formatting
--   **Conventional Commits**: Standardized commit messages
+### Adding New Features
 
-## 📄 License
+1. **New Quiz Categories**: Update category constants and UI
+2. **Analytics Features**: Extend analytics hooks and components
+3. **Gamification**: Add new achievement types and point systems
+4. **Leaderboard Features**: Implement new ranking algorithms
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🔗 Integration Points
 
-## 🙏 Acknowledgments
+- **Platform**: User authentication and profile data
+- **API**: Quiz data, user progress, and analytics
+- **Prep Yatra**: Cross-platform progress tracking
 
--   **Next.js Team**: For the amazing React framework
--   **Tailwind CSS**: For the utility-first CSS framework
--   **Lucide Icons**: For the beautiful icon set
--   **React Query**: For efficient data management
+## 📊 Monitoring & Analytics
 
-## 📞 Support
-
--   **Documentation**: [Wiki](link-to-wiki)
--   **Issues**: [GitHub Issues](link-to-issues)
--   **Discussions**: [GitHub Discussions](link-to-discussions)
--   **Email**: support@theboringquizes.com
+- **User Engagement**: Quiz completion rates
+- **Performance Metrics**: Response times and accuracy
+- **Error Tracking**: Sentry integration
+- **Usage Analytics**: Google Analytics
 
 ---
 
-**Built with ❤️ by The Boring Team**
+**Part of the TBE Platform Monorepo**

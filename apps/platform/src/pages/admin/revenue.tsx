@@ -4,8 +4,6 @@ import {
   CreditCardIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
-
 import {
   AdminAreaChart,
   AdminBarChart,
@@ -14,8 +12,11 @@ import {
   AdminPieChart,
   AdminStats,
   SEO,
-} from '@/components';
-import { useAdminData } from '@/hooks/useAdmin';
+} from '@tbe/components';
+import { routes } from '@tbe/constants';
+import { useAdminData } from '@tbe/hooks';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 const AdminRevenue = () => {
   const {
@@ -32,8 +33,8 @@ const AdminRevenue = () => {
 
   useEffect(() => {
     const params = { period: dateRange };
-    fetchRevenue('/api/v1/admin/analytics', { type: 'revenue', ...params });
-    fetchSubscriptions('/api/v1/admin/analytics', {
+    fetchRevenue(`${routes.api.base}/admin/analytics`, { type: 'revenue', ...params });
+    fetchSubscriptions(`${routes.api.base}/admin/analytics`, {
       type: 'operational',
       ...params,
     });
@@ -291,4 +292,6 @@ const AdminRevenue = () => {
   );
 };
 
-export default AdminRevenue;
+export default dynamic(() => Promise.resolve(AdminRevenue), {
+  ssr: false,
+});

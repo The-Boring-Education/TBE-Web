@@ -1,0 +1,349 @@
+# 🚀 TBE Platform - Cursor AI Rules
+
+You are an expert full-stack developer working on The Boring Education (TBE) Platform - a comprehensive educational technology ecosystem built with modern web technologies.
+
+## 🏗️ Architecture Overview
+
+This is a **Turborepo monorepo** containing:
+
+- **8+ Next.js applications** (platform, prep-yatra, quizes, onboarding, api, techyatra, dsayatra, resume-yatra)
+- **Shared packages** system (`@tbe/*` packages for components, hooks, utils, types, etc.)
+- **Centralized API** service (the-boring-apis)
+- **TypeScript-first** development with strict type safety
+- **MongoDB + Mongoose** for database operations
+- **NextAuth.js** for authentication across all apps
+- **Tailwind CSS + Radix UI** for consistent styling
+- **pnpm workspaces** for package management
+
+## 🎯 Core Development Principles
+
+### 1. **Understand First, Build Second**
+
+- Always analyze existing patterns before writing new code
+- Maintain consistency with established conventions
+- Leverage shared packages instead of duplicating code
+- Follow the monorepo structure and dependencies
+
+### 2. **TypeScript Excellence**
+
+- Use strict TypeScript with proper type definitions
+- Import types from `@tbe/types` package when available
+- Create new types in appropriate shared packages
+- Never use `any` - always define proper interfaces
+
+### 3. **Shared Package Strategy**
+
+- **ALWAYS** check `@tbe/components` before creating new UI components
+- Use `@tbe/hooks` for shared React hooks
+- Import utilities from `@tbe/utils`
+- Use `@tbe/services` for API calls
+- Import constants from `@tbe/constants`
+- Use `@tbe/auth` for authentication logic
+
+## 📦 Package Import Rules
+
+### Required Import Patterns
+
+```typescript
+// UI Components (check @tbe/components first)
+import { Button, Card, Modal } from "@tbe/components"
+import { QuizCard, QuizTimer } from "@tbe/components/quizes"
+import { PrepCard, ChallengeCard } from "@tbe/components/prepyatra"
+
+// Hooks and Utilities
+import { useAuth, useApi, useAnalytics } from "@tbe/hooks"
+import { connectToDatabase, sendRequest, formatDate } from "@tbe/utils"
+
+// Types and Interfaces
+import type { User, APIResponse, QuizAttempt } from "@tbe/types"
+
+// Constants and Configuration
+import { API_ROUTES, APP_URLS, DATABASE_COLLECTIONS } from "@tbe/constants"
+
+// Services
+import { authService, quizService, userService } from "@tbe/services"
+```
+
+### Environment Variables
+
+- Use `VITE_BASE_API_URL` for API calls (not Agents URL)
+- Follow the established environment variable patterns
+- Check `turbo.json` for required environment variables
+
+## 🔧 Code Style & Standards
+
+### ESLint Configuration
+
+Follow the established ESLint rules:
+
+```typescript
+// Use single quotes, semicolons, 4-space indentation
+const apiResponse = await fetch("/api/v1/user")
+const userData = await apiResponse.json()
+
+// Prefer const over let, use meaningful names
+const isUserAuthenticated = Boolean(user?.id)
+
+// Use proper TypeScript interfaces
+interface UserDashboardProps {
+    userId: string
+    showAnalytics?: boolean
+}
+```
+
+### Component Patterns
+
+```typescript
+// Functional components with TypeScript
+interface ComponentProps {
+    title: string;
+    children?: ReactNode;
+    className?: string;
+}
+
+export const Component: React.FC<ComponentProps> = ({
+    title,
+    children,
+    className
+}) => {
+    return (
+        <div className={cn("default-styles", className)}>
+            <h2>{title}</h2>
+            {children}
+        </div>
+    );
+};
+
+// Export as default for main components
+export default Component;
+```
+
+## 🌐 API Development Patterns
+
+### API Route Structure (for the-boring-apis)
+
+```typescript
+import type { NextApiRequest, NextApiResponse } from "next"
+import { apiStatusCodes } from "@/config/constants"
+import { sendAPIResponse } from "@/utils"
+import { connectDB, cors } from "@/middleware"
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    // Apply CORS headers
+    await cors(req, res)
+
+    if (req.method === "OPTIONS") {
+        res.status(200).end()
+        return
+    }
+
+    await connectDB()
+    const { method } = req
+
+    switch (method) {
+        case "GET":
+            return handleGet(req, res)
+        case "POST":
+            return handlePost(req, res)
+        case "PATCH":
+            return handlePatch(req, res)
+        case "DELETE":
+            return handleDelete(req, res)
+        default:
+            return res.status(apiStatusCodes.BAD_REQUEST).json(
+                sendAPIResponse({
+                    status: false,
+                    message: `Method ${method} Not Allowed`
+                })
+            )
+    }
+}
+
+export default handler
+```
+
+### Database Operations
+
+```typescript
+// Use existing database query functions
+import { getUserByIdFromDB, createUserInDB, updateUserInDB } from "@/database"
+
+// Follow the established error handling pattern
+try {
+    const user = await getUserByIdFromDB(userId)
+    return res.status(200).json(
+        sendAPIResponse({
+            status: true,
+            data: user
+        })
+    )
+} catch (error) {
+    return res.status(500).json(
+        sendAPIResponse({
+            status: false,
+            message: "Internal server error"
+        })
+    )
+}
+```
+
+## 🎨 UI/UX Guidelines
+
+### Styling Approach
+
+- Use **Tailwind CSS** for all styling
+- Leverage **Radix UI** components from `@tbe/components`
+- Follow the established design system
+- Use `cn()` utility for conditional classes
+- Maintain responsive design patterns
+
+### Component Composition
+
+```typescript
+// Use shared UI components
+import { Button, Card, Badge } from "@tbe/components/ui"
+
+// Compose complex components from shared ones
+const QuizCard = ({ quiz }: { quiz: Quiz }) => (
+    <Card className="p-6">
+        <div className="flex justify-between items-start">
+            <h3 className="text-lg font-semibold">{quiz.title}</h3>
+            <Badge variant="secondary">{quiz.difficulty}</Badge>
+        </div>
+        <p className="text-muted-foreground mt-2">{quiz.description}</p>
+        <Button className="mt-4 w-full">Start Quiz</Button>
+    </Card>
+);
+```
+
+## 🔐 Authentication Patterns
+
+### NextAuth.js Integration
+
+```typescript
+// Use the established auth patterns
+import { useSession } from "next-auth/react"
+import { authService } from "@tbe/services"
+
+// Component-level auth
+const ProtectedComponent = () => {
+    const { data: session, status } = useSession();
+
+    if (status === "loading") return <LoadingSpinner />;
+    if (!session) return <LoginPrompt />;
+
+    return <DashboardContent user={session.user} />;
+};
+
+// API route auth
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/config/auth"
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session) {
+        return res.status(401).json(sendAPIResponse({
+            status: false,
+            message: 'Unauthorized'
+        }));
+    }
+
+    // Continue with authenticated logic
+};
+```
+
+## 📱 Cross-App Integration
+
+### App URLs and Navigation
+
+```typescript
+// Use constants for cross-app navigation
+import { APP_URLS } from "@tbe/constants"
+
+// Navigate between apps
+const navigateToQuiz = (quizId: string) => {
+    window.location.href = `${APP_URLS.QUIZ}/${quizId}`
+}
+
+// API calls to centralized service
+const apiCall = async (endpoint: string) => {
+    const response = await fetch(`${process.env.VITE_BASE_API_URL}${endpoint}`)
+    return response.json()
+}
+```
+
+## 🚫 What NOT to Do
+
+### Avoid These Patterns
+
+- ❌ Don't create duplicate components that exist in `@tbe/components`
+- ❌ Don't use `fetch` directly - use `@tbe/services` or `@tbe/utils`
+- ❌ Don't hardcode API URLs - use environment variables
+- ❌ Don't create custom auth flows - use NextAuth.js patterns
+- ❌ Don't use polling except for real-time progress updates
+- ❌ Don't create new utility functions without checking `@tbe/utils`
+- ❌ Don't use `any` type - always define proper interfaces
+- ❌ Don't ignore ESLint rules - fix them or ask for guidance
+
+### Memory-Based Preferences
+
+- Prefer axios over fetch for HTTP requests (consistency with existing codebase)
+- Use Next.js native routing and authentication over custom solutions
+- Use DB API URL (not Agentic URL) for database operations
+- Remove polling everywhere except real-time progress updates
+- Keep APIs simple and extensible
+- Provide clear README instructions for development vs production
+
+## 🔄 Development Workflow
+
+### Adding New Features
+
+1. **Check existing patterns** in similar apps/components
+2. **Use shared packages** instead of creating new utilities
+3. **Follow TypeScript** strict typing
+4. **Test locally** with proper environment setup
+5. **Update documentation** if adding new patterns
+
+### Package Management
+
+```bash
+# Install dependencies for specific app
+pnpm --filter @tbe/platform add <package>
+
+# Install workspace dependency
+pnpm add -w <package>
+
+# Development commands
+pnpm dev                    # All apps
+pnpm dev:platform          # Specific app
+pnpm lint                   # Lint all
+pnpm build                  # Build all
+```
+
+## 🎯 Quality Checklist
+
+Before completing any task, ensure:
+
+- ✅ Used appropriate shared packages
+- ✅ Followed TypeScript best practices
+- ✅ Maintained existing code style
+- ✅ Used proper error handling
+- ✅ Added proper type definitions
+- ✅ Followed authentication patterns
+- ✅ Used environment variables correctly
+- ✅ Maintained responsive design
+- ✅ Added proper imports and exports
+- ✅ Tested integration with other apps
+
+## 🚀 Remember
+
+You're building for a **production educational platform** serving thousands of users. Every line of code should be:
+
+- **Maintainable** - Easy for other developers to understand
+- **Scalable** - Ready for future growth and features
+- **Consistent** - Following established patterns
+- **Type-safe** - Leveraging TypeScript fully
+- **Performant** - Optimized for user experience
+
+When in doubt, **examine existing similar implementations** in the codebase and follow those patterns. The goal is consistency and maintainability across the entire TBE ecosystem.

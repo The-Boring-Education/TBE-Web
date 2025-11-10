@@ -1,6 +1,6 @@
 import { sendRequest } from "./api"
 import { trackEvent } from "./analytics"
-import {
+import type {
     Challenge,
     ChallengeLog,
     ChallengeProgress,
@@ -22,7 +22,7 @@ export const challengesService = {
     async getByUserId(userId: string): Promise<Challenge[]> {
         try {
             const response = await sendRequest({
-                url: `/api/v1/prepyatra/challenges?userId=${userId}`,
+                url: `/prepyatra/challenges?userId=${userId}`,
                 method: "GET"
             })
 
@@ -43,7 +43,7 @@ export const challengesService = {
     ): Promise<Challenge> {
         try {
             const response = await sendRequest({
-                url: `/api/v1/prepyatra/challenges`,
+                url: `/prepyatra/challenges`,
                 method: "POST",
                 body: data
             })
@@ -73,7 +73,7 @@ export const challengesService = {
     async update(data: UpdateChallengeRequest): Promise<Challenge> {
         try {
             const response = await sendRequest({
-                url: `/api/v1/prepyatra/challenges/${data.challengeId}`,
+                url: `/prepyatra/challenges/${data.challengeId}`,
                 method: "PUT",
                 body: {
                     name: data.name,
@@ -109,7 +109,7 @@ export const challengesService = {
     async delete(challengeId: string): Promise<void> {
         try {
             const response = await sendRequest({
-                url: `/api/v1/prepyatra/challenges/${challengeId}`,
+                url: `/prepyatra/challenges/${challengeId}`,
                 method: "DELETE"
             })
 
@@ -134,7 +134,7 @@ export const challengesService = {
     async getLogs(challengeId: string): Promise<ChallengeLog[]> {
         try {
             const response = await sendRequest({
-                url: `/api/v1/prepyatra/challenges/${challengeId}/logs`,
+                url: `/prepyatra/challenges/${challengeId}/logs`,
                 method: "GET"
             })
 
@@ -153,7 +153,7 @@ export const challengesService = {
     async createLog(data: CreateChallengeLogRequest): Promise<ChallengeLog> {
         try {
             const response = await sendRequest({
-                url: `/api/v1/prepyatra/challenges/${data.challengeId}/logs`,
+                url: `/prepyatra/challenges/${data.challengeId}/logs`,
                 method: "POST",
                 body: data
             })
@@ -183,7 +183,7 @@ export const challengesService = {
     async getProgress(challengeId: string): Promise<ChallengeProgress> {
         try {
             const response = await sendRequest({
-                url: `/api/v1/prepyatra/challenges/${challengeId}/progress`,
+                url: `/prepyatra/challenges/${challengeId}/progress`,
                 method: "GET"
             })
 

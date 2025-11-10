@@ -1,20 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v4 } from 'uuid';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   addSectionToProjectInDB,
   deleteSectionFromProjectInDB,
   getSectionsFromProjectInDB,
   updateSectionInProjectInDB,
-} from '@tbe/database';
+} from '@/lib/database';
 import type {
   AddSectionRequestPayloadProps,
   DeleteSectionRequestPayloadProps,
   UpateSectionRequestPayloadProps,
-} from '@tbe/interface';
+} from '@/lib/interfaces';
+import { sendAPIResponse } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();

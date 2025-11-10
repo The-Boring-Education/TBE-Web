@@ -1,4 +1,4 @@
-import { Question, QuizCategory } from '../types/quiz';
+import type { Question, QuizCategory } from '@tbe/types';
 
 const javascriptQuestions: Question[] = [
   {
@@ -164,7 +164,10 @@ export const quizCategories: QuizCategory[] = [
     description: 'Test your core JavaScript knowledge including types, operators, and language quirks',
     icon: 'Code',
     questions: javascriptQuestions,
-    color: 'yellow'
+    color: 'yellow',
+    estimatedTime: 10,
+    questionsCount: javascriptQuestions.length,
+    isActive: true
   },
   {
     id: 'react',
@@ -172,7 +175,10 @@ export const quizCategories: QuizCategory[] = [
     description: 'Explore React hooks, components, and modern React patterns',
     icon: 'Zap',
     questions: reactQuestions,
-    color: 'blue'
+    color: 'blue',
+    estimatedTime: 10,
+    questionsCount: reactQuestions.length,
+    isActive: true
   },
   {
     id: 'algorithms',
@@ -180,7 +186,10 @@ export const quizCategories: QuizCategory[] = [
     description: 'Challenge yourself with algorithm complexity and data structure concepts',
     icon: 'Brain',
     questions: algorithmQuestions,
-    color: 'purple'
+    color: 'purple',
+    estimatedTime: 10,
+    questionsCount: algorithmQuestions.length,
+    isActive: true
   },
   {
     id: 'webdev',
@@ -188,7 +197,10 @@ export const quizCategories: QuizCategory[] = [
     description: 'Cover HTTP, APIs, and general web development concepts',
     icon: 'Globe',
     questions: webDevQuestions,
-    color: 'green'
+    color: 'green',
+    estimatedTime: 10,
+    questionsCount: webDevQuestions.length,
+    isActive: true
   }
 ];
 

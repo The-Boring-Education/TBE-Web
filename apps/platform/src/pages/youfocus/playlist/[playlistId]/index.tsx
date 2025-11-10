@@ -1,13 +1,12 @@
-import { Fragment } from 'react';
-
 import {
   PlaylistContainer,
   ScrollToTopBottomButton,
   Section,
   SEO,
-} from '@/components';
-import type { PlaylistPageProps } from '@/interfaces';
-import { getPlaylistPageProps } from '@/utils';
+} from '@tbe/components';
+import type { PlaylistPageProps } from '@tbe/interface';
+import { getPlaylistPageProps } from '@tbe/utils';
+import { Fragment } from 'react';
 
 const PlaylistPage = ({
   playlist: {

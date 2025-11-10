@@ -1,5 +1,6 @@
 // Export all hooks
 export { useAdmin } from "./useAdmin"
+export { useAdminData } from "./useAdmin"
 export { default as useAnalytics } from "./useAnalytics"
 export { default as useApi } from "./useApi"
 export { default as useAPIResponseMapper } from "./useAPIResponseMapper"
@@ -7,7 +8,8 @@ export { default as useCashfreePayment } from "./useCashfreePayment"
 export { default as useCertificate } from "./useCertificate"
 export { default as useFeedback } from "./useFeedback"
 export { default as useGamification } from "./useGamification"
-export { default as useGamifiedAction } from "./useGamifiedAction"
+// useGamifiedAction moved to @tbe/components package
+// GamificationProvider moved to @tbe/components package
 export { default as useLeaderboard } from "./useLeaderboard"
 export { default as useMediaQuery } from "./useMediaQuery"
 export { default as useNotifications } from "./useNotifications"
@@ -24,8 +26,11 @@ export { default as useUsername } from "./useUsername"
 export { default as useOnboarding } from "./useOnboarding"
 export { default as useChallenges } from "./useChallenges"
 export { useChallengeProgress } from "./useChallenges"
-export { default as usePrepLogs } from "./usePrepLogs"
+export { usePrepLogs } from "./usePrepLogs"
 export { default as useQuizData } from "./useQuizData"
-
-// Export types
-export type * from "@tbe/types"
+export { usePyGamification } from "./usePyGamification"
+export { useDailyPrepEncouragement } from "./useDailyPrepEncouragement"
+export { usePrepStats } from "./usePrepStats"
+export * from "./use-mobile"
+export * from "./use-toast"
+export * from "./useInstallPrompt"

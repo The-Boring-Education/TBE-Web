@@ -6,9 +6,6 @@ import {
   SparklesIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
-import { Fragment, useState } from 'react';
-
 import {
   Banner,
   Button,
@@ -28,20 +25,22 @@ import {
   SEO,
   SessionDetailsSection,
   Text,
-} from '@/components';
+} from '@tbe/components';
 import {
   BYI_USER_CATEGORIES,
   LINKS,
   routes,
   STATIC_FILE_PATH,
   TESTIMONIALS,
-} from '@/constant';
+} from '@tbe/constants';
 import type {
   CohortUserCategoryProps,
   PageProps,
   TestimonialCardProps,
-} from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
+} from '@tbe/interface';
+import { getPreFetchProps } from '@tbe/utils';
+import { motion } from 'framer-motion';
+import { Fragment, useState } from 'react';
 
 const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   const whyUs = [

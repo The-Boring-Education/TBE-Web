@@ -1,7 +1,8 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import {cors} from '@tbe/utils';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+import { getUserAnalyticsFromDB } from '@/lib/database';
+import {cors} from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { getUserAnalyticsFromDB } from '@tbe/database';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await cors(req, res);

@@ -1,5 +1,5 @@
-import { APIResponse, User } from "../types/onboarding"
 import { getProductConfig } from "../config/products"
+import type { APIResponse, User } from "../types/onboarding"
 
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 

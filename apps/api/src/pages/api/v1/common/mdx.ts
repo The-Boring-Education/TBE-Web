@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import { sendAPIResponse } from '@tbe/utils';
-import { cors } from '@tbe/utils';
-import { getMDXContent } from '@tbe/utils';
+import { apiStatusCodes } from '@/lib/constants';
+import { sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
+import { getMDXContent } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers

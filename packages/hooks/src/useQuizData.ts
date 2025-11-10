@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { sendRequest } from '@tbe/utils'
-import { QuizCategoryAPI } from '@tbe/types'
+import type { QuizCategoryAPI } from '@tbe/types'
 
 /**
  * useQuizData Hook

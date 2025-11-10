@@ -1,20 +1,22 @@
 {
   "name": "@tbe/api",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3004",
     "build": "next build",
-    "start": "next start -p 3004",
-    "lint": "next lint"
+    "start": "next start -p 3000",
+    "start:cloud-run": "node server.js",
+    "lint": "eslint .",
+    "docker:build": "cd ../.. && docker build -f apps/api/Dockerfile -t tbe-api .",
+    "docker:run": "docker run -p 3000:3000 tbe-api",
+    "docker:test": "./test-docker-build.sh",
+    "deploy": "./deploy.sh"
   },
   "dependencies": {
-    "@tbe/constants": "workspace:*",
-    "@tbe/database": "workspace:*",
-    "@tbe/interface": "workspace:*",
-    "@tbe/services": "workspace:*",
-    "@tbe/types": "workspace:*",
-    "@tbe/utils": "workspace:*",
+    "@sentry/nextjs": "^9.38.0",
+    "@tbe/auth": "workspace:*",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -30,7 +32,6 @@
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
-    "@tbe/interface": "workspace:*",
     "@tbe/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/markdown-it": "^14.0.1",
@@ -38,7 +39,7 @@
     "@types/raw-body": "^2.1.4",
     "@types/react": "^18.3.24",
     "@types/uuid": "^9.0.1",
-    "eslint": "^8.36.0",
+    "eslint": "^9.34.0",
     "eslint-config-next": "^13.2.4",
     "typescript": "5.9.2"
   }

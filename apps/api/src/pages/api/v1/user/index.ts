@@ -1,17 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   createUserInDB,
   getUserByEmailFromDB,
   getUserByIdFromDB,
   getUserDataByUserNameFromDB,
-} from '@tbe/database';
-import type { CreateUserRequestPayloadProps } from '@tbe/interface';
+} from '@/lib/database';
+import type { CreateUserRequestPayloadProps } from '@/lib/interfaces';
+import { sendWelcomeEmail } from '@/lib/services';
+import { cors, sendAPIResponse } from '@/lib/utils';
+import { captureAPIError, captureAuthError } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { cors, sendAPIResponse } from '@tbe/utils';
-import { sendWelcomeEmail } from '@tbe/services';
-import { captureAPIError, captureAuthError } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);

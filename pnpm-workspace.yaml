@@ -1,3 +1,10 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+    - "apps/api"
+    - "apps/platform"
+    # - "apps/prep-yatra"
+    # - "apps/quizes"
+    # - "apps/onboarding"
+    # - "apps/techyatra"
+    # - "apps/dsayatra"
+    # - "apps/resume-yatra"
+    - "packages/*"

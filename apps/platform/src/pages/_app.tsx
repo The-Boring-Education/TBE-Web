@@ -1,18 +1,20 @@
 import '@/styles/globals.css';
 import '@/styles/colors.css';
 
+import { Layout } from '@tbe/components';
+import { GamificationProvider } from '@tbe/components';
+// import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
+import { envConfig, routes } from '@tbe/constants';
+import { initGA, trackPageview, installGlobalAnalyticsListeners } from '@tbe/components/analytics';
+
+import { useUser } from '@tbe/hooks';
+import { getRedirectUrl } from '@tbe/utils';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { SessionProvider } from 'next-auth/react';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
-import { PageLayout } from '@/components';
-import { GamificationProvider } from '@/components/layout/GamificationProvider';
-import { envConfig, googleAnalyticsScript, gtag, routes } from '@/constant';
-import { useUser } from '@/hooks';
-import { getRedirectUrl } from '@/utils';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -25,53 +27,106 @@ const AppContent = ({
   pageProps: any;
 }) => {
   const router = useRouter();
-  const { user, isOnboarded, isAuth, loading } = useUser();
+  const [isClient, setIsClient] = useState(false);
+  const userData = useUser();
+  const { user, isOnboarded, isAuth, loading, updateSession } = (userData as any) || {
+    user: null,
+    isOnboarded: false,
+    isAuth: false,
+    loading: true,
+  };
+  const [isSyncingSession, setIsSyncingSession] = useState(false);
+
+  // Ensure we're on the client side before accessing window
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+    // ✅ Initialize Google Analytics
+  useEffect(() => {
+    initGA();
+    installGlobalAnalyticsListeners();
+
+    const handleRouteChange = (url: string) => trackPageview(url);
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => router.events.off('routeChangeComplete', handleRouteChange);
+  }, [router.events]);
+
 
   useEffect(() => {
-    if (loading || !isAuth) return;
+    // Only run on client side
+    if (!isClient || loading || !isAuth || isSyncingSession) return;
 
-    if (!isOnboarded && isAuth && router.pathname !== routes.onboarding) {
-      // Redirect to external onboarding app
-      const onboardingBaseUrl = envConfig.NEXT_PUBLIC_ONBOARDING_APP_URL;
-      const params = new URLSearchParams({
-        userId: user?.id || '',
-        from: 'webapp',
-        redirect: window.location.href,
-      });
-      // If token is available, add it
-      if (user && (user as any).token) {
-        params.append('token', (user as any).token);
+    const ensureOnboardingAndSession = async () => {
+      // If session says not onboarded, verify with API once to avoid stale session loop
+      if (!isOnboarded && router.pathname !== routes.onboarding) {
+        try {
+          if (user?.id) {
+            const resp = await fetch(`${envConfig.API_URL}/api/v1/user?userId=${user.id}`);
+            const json = await resp.json();
+            const dbIsOnboarded = json?.data?.isOnboarded === true;
+            if (dbIsOnboarded) {
+              // Refresh session so callbacks pull latest isOnboarded
+              setIsSyncingSession(true);
+              try {
+                if (typeof updateSession === 'function') {
+                  await updateSession();
+                } else {
+                  // Fallback: hard reload to force session refetch
+                  window.location.reload();
+                }
+              } finally {
+                setIsSyncingSession(false);
+              }
+              return; // Skip redirect since user is actually onboarded
+            }
+          }
+        } catch {
+          // ignore and proceed to onboarding redirect
+        }
+
+        // Redirect to external onboarding app (only if URL configured)
+        const onboardingBaseUrl = envConfig.ONBOARDING_URL;
+        if (onboardingBaseUrl) {
+          const params = new URLSearchParams({
+            userId: user?.id || '',
+            email: user?.email || '',
+            from: 'webapp',
+            redirect: window.location.href,
+          });
+          if (user && (user as any).token) {
+            params.append('token', (user as any).token);
+          }
+          window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
+          return;
+        }
       }
-      window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
-      return;
-    }
-    // Redirect to dashboard if onboarded and authenticated
-    else if (isOnboarded && router.pathname === routes.onboarding) {
-      const redirectTo = getRedirectUrl();
-      router.push(redirectTo);
-    }
-  }, [isAuth, isOnboarded, loading, router, router.pathname, user]);
 
-  return (
+      // Redirect to dashboard if onboarded and authenticated
+      if (isOnboarded && router.pathname === routes.onboarding) {
+        const redirectTo = getRedirectUrl();
+        router.push(redirectTo);
+      }
+    };
+
+    void ensureOnboardingAndSession();
+  }, [isClient, isAuth, isOnboarded, loading, router, router.pathname, user, updateSession, isSyncingSession]);
+
+    return (
     <QueryClientProvider client={queryClient}>
       <GamificationProvider>
-        <PageLayout>
+        <Layout>
           <Component {...pageProps} />
-        </PageLayout>
+        </Layout>
       </GamificationProvider>
     </QueryClientProvider>
   );
 };
-
 const TheBoringEducation = ({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) => (
   <Fragment>
-    <Script async src={gtag} strategy='lazyOnload' />
-    <Script id='google-analytics' strategy='lazyOnload'>
-      {googleAnalyticsScript}
-    </Script>
     <SessionProvider session={session}>
       <AppContent Component={Component} pageProps={pageProps} />
     </SessionProvider>

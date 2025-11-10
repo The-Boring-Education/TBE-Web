@@ -1,0 +1,50 @@
+# Everything except what we need
+*
+
+# Allow only specific files and directories
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!apps/api/
+!packages/
+!turbo.json
+
+# But exclude node_modules everywhere
+**/node_modules/
+node_modules/
+
+# Exclude build outputs
+**/.next/
+**/dist/
+**/build/
+**/out/
+
+# Exclude other apps completely
+apps/platform/
+apps/prep-yatra/
+apps/quizes/
+apps/onboarding/
+apps/techyatra/
+apps/dsayatra/
+apps/resume-yatra/
+
+# Exclude development files
+**/.env*
+**/.git/
+**/.vscode/
+**/.idea/
+**/*.log
+**/coverage/
+**/tmp/
+**/temp/
+
+# Exclude documentation
+**/*.md
+!apps/api/README.md
+
+# Exclude test files
+**/*.test.*
+**/*.spec.*
+**/__tests__/
+**/test/
+**/tests/

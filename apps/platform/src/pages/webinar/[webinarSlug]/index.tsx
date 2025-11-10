@@ -1,9 +1,3 @@
-import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
-import { FiCalendar } from 'react-icons/fi';
-import { LuClock3 } from 'react-icons/lu';
-import { SiLinkedin } from 'react-icons/si';
-
 import {
   AboutTBE,
   BackgroundImage,
@@ -18,14 +12,19 @@ import {
   TestimonialCard,
   Text,
   WebinarHeroContainer,
-} from '@/components';
-import { routes, TESTIMONIALS } from '@/constant';
-import { useAnalytics, useApi, useUser } from '@/hooks';
+} from '@tbe/components';
+import { routes, TESTIMONIALS } from '@tbe/constants';
+import { useAnalytics, useApi, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   WebinarPageProps,
-} from '@/interfaces';
-import { formatDate, getWebinarPageProps } from '@/utils';
+    } from '@tbe/interface';
+import { formatDate, getWebinarPageProps } from '@tbe/utils';
+import { useRouter } from 'next/router';
+import { Fragment, useEffect, useState } from 'react';
+import { FiCalendar } from 'react-icons/fi';
+import { LuClock3 } from 'react-icons/lu';
+import { SiLinkedin } from 'react-icons/si';
 
 const WebinarPage = ({
   seoMeta,

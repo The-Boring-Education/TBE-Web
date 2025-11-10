@@ -1,19 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   addRecruiterToDB,
   deleteRecruiterInDB,
   getRecruitersByUserFromDB,
   handleGamificationPoints,
   updateRecruiterInDB,
-} from '@tbe/database';
+} from '@/lib/database';
+import { sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { cors } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
+
+  // Handle OPTIONS request for CORS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   await connectDB();
 
   switch (req.method) {

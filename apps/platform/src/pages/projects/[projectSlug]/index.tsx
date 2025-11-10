@@ -1,5 +1,3 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
-
 import {
   Accordion,
   AccordionLinkItem,
@@ -7,16 +5,18 @@ import {
   FeedbackPopup,
   FlexContainer,
   LinerProgressBar,
-  MDXRenderer,
+  MDXRenderer,  
   ProjectHeroContainer,
   Section,
   SEO,
   Text,
-} from '@/components';
-import { routes } from '@/constant';
-import { useAnalytics, useApi, useGamifiedAction, useUser } from '@/hooks';
-import type { ProjectPageProps } from '@/interfaces';
-import { getProjectPageProps, getSelectedProjectChapterMeta } from '@/utils';
+} from '@tbe/components';
+import { useGamifiedAction } from '@tbe/components';
+import { routes } from '@tbe/constants';
+import { useAnalytics, useApi, useUser } from '@tbe/hooks';
+import type { ProjectPageProps } from '@tbe/interface';
+import { getProjectPageProps, getSelectedProjectChapterMeta } from '@tbe/utils';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
 const ProjectPage = ({
   project,

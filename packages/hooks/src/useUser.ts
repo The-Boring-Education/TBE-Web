@@ -1,11 +1,13 @@
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 
-import type { User, UseUserReturnType } from "@tbe/types"
+
+import type { UseUserReturnType, User } from "@tbe/interface"
 
 const useUser = (): UseUserReturnType => {
-    const { data: session, status, update } = useSession()
-    const [user, setUser] = useState<User>(session?.user as User)
+    const sessionData = useSession()
+    const { data: session, status, update } = sessionData || { data: null, status: "loading", update: null }
+    const [user, setUser] = useState<User | null>(null)
     const [isAuth, setIsAuth] = useState(false)
     const [isOnboarded, setIsOnboarded] = useState(false)
     const [loading, setLoading] = useState(true)
@@ -24,6 +26,7 @@ const useUser = (): UseUserReturnType => {
             setIsAuth(true)
         } else {
             setIsAuth(false)
+            setUser(null)
         }
     }, [session, status])
 

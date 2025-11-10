@@ -2,5 +2,5 @@
     "version": 2,
     "monorepo": true,
     "buildCommand": "pnpm run build",
-    "installCommand": "pnpm install"
+    "installCommand": "pnpm install --no-frozen-lockfile"
 }

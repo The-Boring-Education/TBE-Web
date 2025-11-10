@@ -1,5 +1,3 @@
-import { Fragment, useState } from 'react';
-
 import {
   FlexContainer,
   LandingPageHero,
@@ -9,10 +7,11 @@ import {
   Text,
   ToggleButton,
   WebibarCard,
-} from '@/components';
-import { routes, STATIC_FILE_PATH } from '@/constant';
-import type { WebinarsLandingPageProps } from '@/interfaces';
-import { getWebinarLandingPageProps } from '@/utils';
+} from '@tbe/components';
+import { routes, STATIC_FILE_PATH } from '@tbe/constants';
+import type { WebinarsLandingPageProps } from '@tbe/interface';
+import { getWebinarLandingPageProps } from '@tbe/utils';
+import { Fragment, useState } from 'react';
 
 const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
   const [filteredWebinars, setFilteredWebinars] = useState(webinars);

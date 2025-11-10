@@ -1,0 +1,17 @@
+{
+    "extends": "@tbe/typescript-config/base.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "./src",
+        "declaration": true,
+        "declarationMap": true,
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "jsx": "react-jsx",
+        "types": ["node"]
+    },
+    "include": ["./src/**/*"],
+    "exclude": ["node_modules", "dist"]
+}

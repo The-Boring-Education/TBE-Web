@@ -1,13 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
-import { getPYUserByIdFromDB, updatePYUserByIdInDB } from '@tbe/database';
-import type { PrepYatraOnboardingPayload } from '@tbe/interface';
+import { apiStatusCodes } from '@/lib/constants';
+import { getPYUserByIdFromDB, updatePYUserByIdInDB } from '@/lib/database';
+import type { PrepYatraOnboardingPayload } from '@/lib/interfaces';
+import { cors, sendAPIResponse } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { cors, sendAPIResponse } from '@tbe/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
+
+  // Handle OPTIONS request for CORS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   await connectDB();
   const { method } = req;
 

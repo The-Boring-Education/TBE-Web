@@ -1,6 +1,7 @@
 {
     "name": "@tbe/types",
     "version": "0.0.0",
+    "type": "module",
     "private": true,
     "license": "MIT",
     "main": "./src/index.ts",
@@ -14,14 +15,16 @@
         "./platform": "./src/platform.ts"
     },
     "scripts": {
+        "build": "echo 'No build step needed for types package'",
         "lint": "eslint . --max-warnings 0"
     },
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",
         "@tbe/typescript-config": "workspace:*",
+        "@types/node": "^18.19.0",
         "@types/react": "^18.3.24",
         "@types/react-dom": "^18.3.7",
-        "eslint": "^8.57.1",
+        "eslint": "^9.34.0",
         "typescript": "^5.9.2"
     },
     "dependencies": {

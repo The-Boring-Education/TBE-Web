@@ -1,16 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { apiStatusCodes } from '@tbe/constants';
+import { apiStatusCodes } from '@/lib/constants';
 import {
   enrollInAProject,
   getEnrolledProjectFromDB,
   getProjectByIDFromDB,
   getUserByIdFromDB,
-} from '@tbe/database';
-import type { ProjectEnrollmentRequestProps } from '@tbe/interface';
+} from '@/lib/database';
+import type { ProjectEnrollmentRequestProps } from '@/lib/interfaces';
+import { sendProjectEnrollmentEmail } from '@/lib/services';
+import { sendAPIResponse } from '@/lib/utils';
 import { connectDB } from '@/middleware';
-import { sendAPIResponse } from '@tbe/utils';
-import { sendProjectEnrollmentEmail } from '@tbe/services';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

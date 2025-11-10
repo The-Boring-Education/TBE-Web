@@ -1,9 +1,8 @@
+import { CardContainerA, LandingPageHero, LinkButton, SEO } from '@tbe/components';
+import { routes, STATIC_FILE_PATH, YOUFOCUS_FEATURES } from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps } from '@tbe/utils';
 import { Fragment } from 'react';
-
-import { CardContainerA, LandingPageHero, LinkButton, SEO } from '@/components';
-import { routes, STATIC_FILE_PATH, YOUFOCUS_FEATURES } from '@/constant';
-import type { PageProps } from '@/interfaces';
-import { getPreFetchProps } from '@/utils';
 
 const Home = ({ seoMeta }: PageProps) => (
   <Fragment>

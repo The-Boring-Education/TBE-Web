@@ -2,7 +2,7 @@
     "buildCommand": "cd ../.. && pnpm run build:onboarding",
     "outputDirectory": "dist",
     "framework": "vite",
-    "installCommand": "cd ../.. && pnpm install",
+    "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
     "devCommand": "cd ../.. && pnpm run dev:onboarding",
     "regions": [
         "iad1"
