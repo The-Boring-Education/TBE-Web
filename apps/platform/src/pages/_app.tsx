@@ -3,18 +3,17 @@ import '@/styles/colors.css';
 
 import { Layout } from '@tbe/components';
 import { GamificationProvider } from '@tbe/components';
-import { envConfig, routes } from '@tbe/constants';
 import {
   initGA,
-  trackPageview,
   installGlobalAnalyticsListeners,
+  trackPageview,
 } from '@tbe/components/analytics';
-
+// import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
+import { envConfig, routes } from '@tbe/constants';
 import { useUser } from '@tbe/hooks';
 import { getRedirectUrl } from '@tbe/utils';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -142,7 +141,11 @@ const TheBoringEducation = ({
   pageProps: { session, ...pageProps },
 }: AppProps) => (
   <Fragment>
-    <SessionProvider session={session}>
+    <SessionProvider
+      session={session}
+      refetchInterval={5 * 60}
+      refetchOnWindowFocus
+    >
       <AppContent Component={Component} pageProps={pageProps} />
     </SessionProvider>
   </Fragment>
