@@ -73,7 +73,7 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
       }),
     ],
     api: {
-      endpoint: (userId: string) => `/api/v1/user/onboarding?userId=${userId}`,
+      endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
       transformPayload: (form: any, _userId: string, from?: string) => ({
         userName: form.userName,

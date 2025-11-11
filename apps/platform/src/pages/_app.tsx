@@ -65,7 +65,7 @@ const AppContent = ({
         try {
           if (user?.id) {
             const resp = await fetch(
-              `${envConfig.API_URL}/api/v1/user?userId=${user.id}`
+              `${envConfig.API_URL}/user?userId=${user.id}`
             );
             const json = await resp.json();
             const dbIsOnboarded = json?.data?.isOnboarded === true;
