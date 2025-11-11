@@ -5,7 +5,7 @@ import { apiStatusCodes } from '@/lib/constants';
 import {Course, InterviewSheet, Project, Webinar} from '@/lib/database';
 import { sendAPIResponse } from '@/lib/utils';
 import { cors } from '@/lib/utils';
-import { adminMiddleware,connectDB } from '@/middleware';
+import { adminMiddleware, connectDB } from '@/middleware/api';
 
 interface ProductInfo {
   _id: string;

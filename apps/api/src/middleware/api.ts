@@ -50,4 +50,4 @@ const adminMiddleware = async (
   }
 };
 
-export { adminMiddleware, connectDB, cors };
+export { adminMiddleware, connectDB };

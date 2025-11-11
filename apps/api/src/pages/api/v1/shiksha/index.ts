@@ -13,8 +13,8 @@ import type {
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,
 } from '@/lib/interfaces';
-import { sendAPIResponse } from '@/lib/utils';
-import { connectDB, cors } from '@/middleware';
+import { cors, sendAPIResponse } from '@/lib/utils';
+import { connectDB } from '@/middleware/api';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers
