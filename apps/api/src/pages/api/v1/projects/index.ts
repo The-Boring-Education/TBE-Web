@@ -1,139 +1,142 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next"
 
-import { apiStatusCodes } from '@/lib/constants';
+import { apiStatusCodes } from "@/lib/constants"
 import {
-  addAProjectToDB,
-  getProjectBySlugFromDB,
-  getProjectBySlugWithUserFromDB,
-  getProjectsFromDB,
-} from '@/lib/database';
-import type { AddProjectRequestPayloadProps } from '@/lib/interfaces';
-import { sendAPIResponse } from '@/lib/utils';
-import { cors } from '@/lib/utils';
-import { connectDB } from '@/middleware';
+    addAProjectToDB,
+    getProjectBySlugFromDB,
+    getProjectBySlugWithUserFromDB,
+    getProjectsFromDB
+} from "@/lib/database"
+import type { AddProjectRequestPayloadProps } from "@/lib/interfaces"
+import { sendAPIResponse } from "@/lib/utils"
+import { cors } from "@/lib/utils"
+import { connectDB } from "@/middleware/api"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
+    // Apply CORS headers
+    await cors(req, res)
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+    if (req.method === "OPTIONS") {
+        res.status(200).end()
+        return
+    }
 
-  await connectDB();
+    await connectDB()
 
-  switch (req.method) {
-    case 'POST':
-      return handleAddProject(req, res);
-    case 'GET':
-      return handleGetProjects(req, res);
-    default:
-      return res.status(apiStatusCodes.BAD_REQUEST).json(
-        sendAPIResponse({
-          status: false,
-          message: `Method ${req.method} Not Allowed`,
-        })
-      );
-  }
-};
+    switch (req.method) {
+        case "POST":
+            return handleAddProject(req, res)
+        case "GET":
+            return handleGetProjects(req, res)
+        default:
+            return res.status(apiStatusCodes.BAD_REQUEST).json(
+                sendAPIResponse({
+                    status: false,
+                    message: `Method ${req.method} Not Allowed`
+                })
+            )
+    }
+}
 
 const handleAddProject = async (req: NextApiRequest, res: NextApiResponse) => {
-  const {
-    name,
-    slug,
-    description,
-    coverImageURL,
-    requiredSkills,
-    roadmap,
-    difficultyLevel,
-  } = req.body as AddProjectRequestPayloadProps;
+    const {
+        name,
+        slug,
+        description,
+        coverImageURL,
+        requiredSkills,
+        roadmap,
+        difficultyLevel
+    } = req.body as AddProjectRequestPayloadProps
 
-  const { error: projectAlreadyExist } = await getProjectBySlugFromDB(slug);
+    const { error: projectAlreadyExist } = await getProjectBySlugFromDB(slug)
 
-  if (!projectAlreadyExist) {
-    return res.status(apiStatusCodes.BAD_REQUEST).json(
-      sendAPIResponse({
-        status: false,
-        message: 'Project already exists',
-      })
-    );
-  }
+    if (!projectAlreadyExist) {
+        return res.status(apiStatusCodes.BAD_REQUEST).json(
+            sendAPIResponse({
+                status: false,
+                message: "Project already exists"
+            })
+        )
+    }
 
-  const { data, error } = await addAProjectToDB({
-    name,
-    slug,
-    description,
-    coverImageURL,
-    requiredSkills,
-    roadmap,
-    difficultyLevel,
-  });
-
-  if (error) {
-    return res.status(apiStatusCodes.BAD_REQUEST).json(
-      sendAPIResponse({
-        status: false,
-        message: 'Project not added',
-        error,
-      })
-    );
-  }
-
-  return res.status(apiStatusCodes.RESOURCE_CREATED).json(
-    sendAPIResponse({
-      status: true,
-      message: 'Project Added!',
-      data,
+    const { data, error } = await addAProjectToDB({
+        name,
+        slug,
+        description,
+        coverImageURL,
+        requiredSkills,
+        roadmap,
+        difficultyLevel
     })
-  );
-};
+
+    if (error) {
+        return res.status(apiStatusCodes.BAD_REQUEST).json(
+            sendAPIResponse({
+                status: false,
+                message: "Project not added",
+                error
+            })
+        )
+    }
+
+    return res.status(apiStatusCodes.RESOURCE_CREATED).json(
+        sendAPIResponse({
+            status: true,
+            message: "Project Added!",
+            data
+        })
+    )
+}
 
 const handleGetProjects = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, userId } = req.query as { slug: string; userId: string };
+    const { slug, userId } = req.query as { slug: string; userId: string }
 
-  // If slug is provided, fetch specific project by slug with user data
-  if (slug) {
-    const { data: project, error } = await getProjectBySlugWithUserFromDB(slug, userId);
+    // If slug is provided, fetch specific project by slug with user data
+    if (slug) {
+        const { data: project, error } = await getProjectBySlugWithUserFromDB(
+            slug,
+            userId
+        )
 
-    if (error || !project) {
-      return res.status(apiStatusCodes.NOT_FOUND).json(
-        sendAPIResponse({
-          status: false,
-          message: 'Project not found',
-          error,
-        })
-      );
+        if (error || !project) {
+            return res.status(apiStatusCodes.NOT_FOUND).json(
+                sendAPIResponse({
+                    status: false,
+                    message: "Project not found",
+                    error
+                })
+            )
+        }
+
+        return res.status(apiStatusCodes.OKAY).json(
+            sendAPIResponse({
+                status: true,
+                data: project
+            })
+        )
+    }
+
+    // No slug? Return all projects (existing logic)
+    const { data, error } = await getProjectsFromDB()
+
+    if (error) {
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+            sendAPIResponse({
+                status: false,
+                message: "Error fetching projects",
+                error: error.message
+            })
+        )
     }
 
     return res.status(apiStatusCodes.OKAY).json(
-      sendAPIResponse({
-        status: true,
-        data: project,
-      })
-    );
-  }
+        sendAPIResponse({
+            status: true,
+            message: "Projects fetched successfully",
+            data
+        })
+    )
+}
 
-  // No slug? Return all projects (existing logic)
-  const { data, error } = await getProjectsFromDB();
-
-  if (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-      sendAPIResponse({
-        status: false,
-        message: 'Error fetching projects',
-        error: error.message,
-      })
-    );
-  }
-
-  return res.status(apiStatusCodes.OKAY).json(
-    sendAPIResponse({
-      status: true,
-      message: 'Projects fetched successfully',
-      data,
-    })
-  );
-};
-
-export default handler;
+export default handler

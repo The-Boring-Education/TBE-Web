@@ -1,37 +1,52 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next"
 
-import { apiStatusCodes } from '@/lib/constants';
-import { emailClient } from '@/lib/services';
-import { sendAPIResponse } from '@/lib/utils';
-import { cors } from '@/lib/utils';
-import { connectDB } from '@/middleware';
+import { apiStatusCodes } from "@/lib/constants"
+import { emailClient } from "@/lib/services"
+import { sendAPIResponse } from "@/lib/utils"
+import { cors } from "@/lib/utils"
+import { connectDB } from "@/middleware/api"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
+    await cors(req, res)
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
-
-  if (req.method !== 'POST') {
-    return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
-      sendAPIResponse({ status: false, message: `Method ${req.method} not allowed` })
-    );
-  }
-
-  try {
-    const { userId, userEmail, userName } = req.body as { userId: string; userEmail: string; userName: string };
-
-    if (!userId || !userEmail || !userName) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json(
-        sendAPIResponse({ status: false, message: 'Missing required fields: userId, userEmail, userName' })
-      );
+    if (req.method === "OPTIONS") {
+        res.status(200).end()
+        return
     }
 
-    const html = `
+    await connectDB()
+
+    if (req.method !== "POST") {
+        return res
+            .status(apiStatusCodes.METHOD_NOT_ALLOWED)
+            .json(
+                sendAPIResponse({
+                    status: false,
+                    message: `Method ${req.method} not allowed`
+                })
+            )
+    }
+
+    try {
+        const { userId, userEmail, userName } = req.body as {
+            userId: string
+            userEmail: string
+            userName: string
+        }
+
+        if (!userId || !userEmail || !userName) {
+            return res
+                .status(apiStatusCodes.BAD_REQUEST)
+                .json(
+                    sendAPIResponse({
+                        status: false,
+                        message:
+                            "Missing required fields: userId, userEmail, userName"
+                    })
+                )
+        }
+
+        const html = `
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -85,32 +100,49 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         </div>
       </body>
       </html>
-    `;
+    `
 
-    const result = await emailClient.sendEmail({
-      from_email: 'theboringeducation@gmail.com',
-      from_name: 'TBE',
-      to_email: userEmail,
-      to_name: userName,
-      subject: 'You are selected for Prep Yatra Async Mentorship 🎉',
-      html_content: html,
-    });
+        const result = await emailClient.sendEmail({
+            from_email: "theboringeducation@gmail.com",
+            from_name: "TBE",
+            to_email: userEmail,
+            to_name: userName,
+            subject: "You are selected for Prep Yatra Async Mentorship 🎉",
+            html_content: html
+        })
 
-    if (!result.success) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-        sendAPIResponse({ status: false, message: 'Failed to send email', error: result.error })
-      );
+        if (!result.success) {
+            return res
+                .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+                .json(
+                    sendAPIResponse({
+                        status: false,
+                        message: "Failed to send email",
+                        error: result.error
+                    })
+                )
+        }
+
+        return res
+            .status(apiStatusCodes.OKAY)
+            .json(
+                sendAPIResponse({
+                    status: true,
+                    message: "Notification email sent",
+                    data: result
+                })
+            )
+    } catch (error) {
+        return res
+            .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+            .json(
+                sendAPIResponse({
+                    status: false,
+                    message: "Unexpected error",
+                    error
+                })
+            )
     }
+}
 
-    return res.status(apiStatusCodes.OKAY).json(
-      sendAPIResponse({ status: true, message: 'Notification email sent', data: result })
-    );
-  } catch (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-      sendAPIResponse({ status: false, message: 'Unexpected error', error })
-    );
-  }
-};
-
-export default handler;
-
+export default handler
