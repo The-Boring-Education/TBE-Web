@@ -51,9 +51,10 @@ export const config = [
             // Import sorting and management
             "simple-import-sort/exports": "warn",
             "simple-import-sort/imports": "warn",
-            "unused-imports/no-unused-imports": "warn",
+            // Remove unused imports and unused vars on --fix
+            "unused-imports/no-unused-imports": "error",
             "unused-imports/no-unused-vars": [
-                "warn",
+                "error",
                 {
                     vars: "all",
                     varsIgnorePattern: "^_",
@@ -61,8 +62,13 @@ export const config = [
                     argsIgnorePattern: "^_"
                 }
             ],
+            // Remove unused functions/variables (with --fix)
             "no-unused-vars": "off",
             "@typescript-eslint/no-unused-vars": "off",
+            "no-unused-labels": "error", // removes unused labels
+            "no-unused-private-class-members": "error", // removes unused private members (ES2022+ only)
+            // Prefer using ESLint/TypeScript suggestions for unused functions:
+            "no-unused-expressions": "warn",
             // React-specific rules
             "react/display-name": "off",
             "react/jsx-curly-brace-presence": [
@@ -75,7 +81,12 @@ export const config = [
             // TypeScript-specific rules
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/consistent-type-imports": "warn",
-            "@typescript-eslint/no-unused-expressions": "off" // Disable problematic rule
+            "@typescript-eslint/no-unused-expressions": "off", // Disable problematic rule
+            // Strict rule for unused functions (TS/ES only, --fix removes them if possible)
+            "@typescript-eslint/no-unused-vars-experimental": [
+                "error",
+                { ignoreArgsIfArgsAfterAreUsed: true }
+            ]
         }
     },
     {

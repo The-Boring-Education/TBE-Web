@@ -1,16 +1,12 @@
-import React, { Suspense } from "react";
+import React from "react"
 
-import GamificationDisplay from "../gamification/GamificationDisplay";
-import NavbarDropdownLinks from "../layout/NavbarDropdownLinks";
-import {Button} from "@tbe/components";
-import type {NavbarProps} from "@tbe/interface";
-import { SubscriptionInterestPopover } from "../popovers";
+import GamificationDisplay from "../gamification/GamificationDisplay"
+import NavbarDropdownLinks from "../layout/NavbarDropdownLinks"
+import { Button } from "@tbe/components"
+import type { NavbarProps } from "@tbe/interface"
+import { SubscriptionInterestPopover } from "../popovers"
 
-const capitalize = (str: string) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-};
-
-const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
+const Navbar = ({ onSignOut, userId }: NavbarProps) => {
     return (
         <nav className='fixed top-0 left-0 right-0 z-50 w-full bg-white border-b border-greyLight shadow-sm px-4 py-2.5 flex items-center justify-between'>
             <div className='flex flex-col gap-0'>
@@ -20,23 +16,23 @@ const Navbar: React.FC<NavbarProps> = ({username, onSignOut, userId}) => {
                 <span className='text-[10px] text-greyDark -mt-0.5'>
                     By The Boring Education
                 </span>
-                    </div>
+            </div>
             <div className='flex items-center gap-3'>
-                                    <SubscriptionInterestPopover />
+                <SubscriptionInterestPopover />
                 <NavbarDropdownLinks />
-                                    {userId && <GamificationDisplay userId={userId} />}
+                {userId && <GamificationDisplay userId={userId} />}
                 <span className='text-contentLight font-medium hidden sm:inline' />
-                                    <Button
-                                        onClick={onSignOut}
-                                        text='Sign Out'
-                                        variant='PRIMARY'
-                                             className='text-sm h-2 '
-                                        isLoading={false}
-                                        animationType='BOUNCE'
-                                        />
+                <Button
+                    onClick={onSignOut}
+                    text='Sign Out'
+                    variant='PRIMARY'
+                    className='text-sm h-2 '
+                    isLoading={false}
+                    animationType='BOUNCE'
+                />
             </div>
         </nav>
-    );
-};
+    )
+}
 
-export default Navbar;  
+export default Navbar

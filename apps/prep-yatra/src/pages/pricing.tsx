@@ -9,11 +9,10 @@ import {
     CardTitle
 } from "@tbe/components"
 import { useAuth } from "@tbe/components"
+import {useCashfreePayment} from "@tbe/hooks"
 import { Check, Crown,Star, Zap } from "lucide-react"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
-
-import {useCashfreePayment} from "@tbe/hooks"
 
 interface PricingPlan {
     id: string

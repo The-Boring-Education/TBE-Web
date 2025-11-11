@@ -37,14 +37,13 @@ function isOlderThan60Days(dateString: string | undefined) {
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 
-const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
+const AddSkillsModal = ({
     isOpen,
     onClose,
     userId,
     userSkills,
-    lastUpdated,
     onSkillsUpdated
-}) => {
+}: AddSkillsModalProps) => {
     const [skills, setSkills] = useState<string[]>(userSkills)
     const [inputValue, setInputValue] = useState("")
     const [loading, setLoading] = useState(false)
@@ -129,10 +128,12 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className='sm:max-w-[700px] max-h-[85vh] overflow-y-auto glass p-6 border-greyLight rounded-xl'>
                 <DialogHeader>
-                    <Text level="h3" className='text-contentLight text-lg font-semibold'>
+                    <Text
+                        level='h3'
+                        className='text-contentLight text-lg font-semibold'>
                         ✨ Add Skills
                     </Text>
-                    <Text level="p" className='text-greyDark text-sm'>
+                    <Text level='p' className='text-greyDark text-sm'>
                         Build your skills stack to showcase your expertise
                     </Text>
                 </DialogHeader>
@@ -140,7 +141,7 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
                 {showWarning && (
                     <FlexContainer className='items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-lg px-4 py-3 mb-4'>
                         <AlertTriangle className='w-5 h-5 text-yellow-400' />
-                        <Text level="span">
+                        <Text level='span'>
                             You haven't added any skills yet. Please add your
                             skills to build your stack!
                         </Text>
@@ -160,15 +161,19 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
 
                     <div className='flex flex-wrap gap-2 justify-start items-start'>
                         {skills.length === 0 && (
-                            <Text level="span" className='text-greyDark text-sm'>
+                            <Text
+                                level='span'
+                                className='text-greyDark text-sm'>
                                 No skills added yet. Start building your stack!
                             </Text>
                         )}
                         {skills.map((skill) => (
-                            <div key={skill} className='relative inline-flex items-center'>
+                            <div
+                                key={skill}
+                                className='relative inline-flex items-center'>
                                 <Button
-                                    variant="OUTLINE"
-                                    size="SMALL"
+                                    variant='OUTLINE'
+                                    size='SMALL'
                                     text={skill}
                                     className='font-medium px-4 py-1.5 text-sm rounded-full text-black pr-8'
                                 />
@@ -185,21 +190,21 @@ const AddSkillsModal: React.FC<AddSkillsModalProps> = ({
 
                     <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
                         <Button
-                            variant="OUTLINE"
-                            size="SMALL"
-                            text="Cancel"
+                            variant='OUTLINE'
+                            size='SMALL'
+                            text='Cancel'
                             onClick={onClose}
                             className='text-sm h-5'
                             isLoading={loading}
                             animationType='BOUNCE'
-                            />
+                        />
                         <Button
-                            variant="PRIMARY"
-                            size="SMALL"
+                            variant='PRIMARY'
+                            size='SMALL'
                             text={loading ? "Adding..." : "Add Skill"}
                             disabled={loading || !inputValue.trim()}
                             className='text-sm h-5'
-                            icon={<Plus className="w-4 h-4 mr-1" />}
+                            icon={<Plus className='w-4 h-4 mr-1' />}
                             isLoading={loading}
                             animationType='BOUNCE'
                         />
