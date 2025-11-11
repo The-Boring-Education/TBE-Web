@@ -1,173 +1,177 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next"
 
-import { apiStatusCodes } from '@/lib/constants';
+import { apiStatusCodes } from "@/lib/constants"
 import {
-  addPlaylistToDB,
-  addUserPlaylistToDB,
-  checkPlaylistExistsByID,
-  getPlaylistsFromDB,
-  updateReferredByInPlaylist,
-  updateTagsInPlaylist,
-} from '@/lib/database';
+    addPlaylistToDB,
+    addUserPlaylistToDB,
+    checkPlaylistExistsByID,
+    getPlaylistsFromDB,
+    updateReferredByInPlaylist,
+    updateTagsInPlaylist
+} from "@/lib/database"
 import {
-  extractPlaylistId,
-  fetchPlaylistData,
-  sendAPIResponse,
-} from '@/lib/utils';
-import { connectDB, cors } from '@/middleware';
+    cors,
+    extractPlaylistId,
+    fetchPlaylistData,
+    sendAPIResponse
+} from "@/lib/utils"
+import { connectDB } from "@/middleware/api"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
+    // Apply CORS headers
+    await cors(req, res)
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+    if (req.method === "OPTIONS") {
+        res.status(200).end()
+        return
+    }
 
-  await connectDB();
-  const { query } = req;
-  const { userId } = query as { userId: string };
+    await connectDB()
+    const { query } = req
+    const { userId } = query as { userId: string }
 
-  switch (req.method) {
-    case 'POST':
-      return handleAddPlaylist(req, res, userId);
-    case 'GET':
-      return handleGetPlaylists(req, res);
-    default:
-      return res.status(apiStatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: `Method ${req.method} not allowed`,
-      });
-  }
-};
+    switch (req.method) {
+        case "POST":
+            return handleAddPlaylist(req, res, userId)
+        case "GET":
+            return handleGetPlaylists(req, res)
+        default:
+            return res.status(apiStatusCodes.BAD_REQUEST).json({
+                success: false,
+                message: `Method ${req.method} not allowed`
+            })
+    }
+}
 
 const handleAddPlaylist = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
-  userId: string
+    req: NextApiRequest,
+    res: NextApiResponse,
+    userId: string
 ) => {
-  const { playlistUrl, tags } = req.body;
+    const { playlistUrl, tags } = req.body
 
-  const playlistId = extractPlaylistId(playlistUrl);
+    const playlistId = extractPlaylistId(playlistUrl)
 
-  if (!playlistId) {
-    return res.status(apiStatusCodes.BAD_REQUEST).json({
-      success: false,
-      message: 'Invalid playlist URL',
-    });
-  }
-
-  const { data: existingPlaylist } = await checkPlaylistExistsByID(playlistId);
-
-  if (existingPlaylist) {
-    // 1. Add playlist to user
-    if (userId) await addUserPlaylistToDB(userId, existingPlaylist._id);
-
-    // 2. Increment referredBy in playlist
-    await updateReferredByInPlaylist(existingPlaylist._id, true);
-
-    // 3. If Tags exist, update tags in playlist
-    if (tags) {
-      const { data } = await updateTagsInPlaylist(existingPlaylist._id, tags);
-
-      return res.status(apiStatusCodes.RESOURCE_CREATED).json(
-        sendAPIResponse({
-          status: true,
-          message: 'Playlist already exists',
-          data,
+    if (!playlistId) {
+        return res.status(apiStatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: "Invalid playlist URL"
         })
-      );
     }
 
-    return res.status(apiStatusCodes.RESOURCE_CREATED).json(
-      sendAPIResponse({
-        status: true,
-        message: 'Playlist already exists',
-        data: existingPlaylist,
-      })
-    );
-  }
+    const { data: existingPlaylist } = await checkPlaylistExistsByID(playlistId)
 
-  // Fetch playlist data from YouTube
-  try {
-    const playlistData = await fetchPlaylistData(playlistId);
+    if (existingPlaylist) {
+        // 1. Add playlist to user
+        if (userId) await addUserPlaylistToDB(userId, existingPlaylist._id)
 
-    if (!playlistData) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: 'Failed to fetch playlist data from YouTube',
-      });
+        // 2. Increment referredBy in playlist
+        await updateReferredByInPlaylist(existingPlaylist._id, true)
+
+        // 3. If Tags exist, update tags in playlist
+        if (tags) {
+            const { data } = await updateTagsInPlaylist(
+                existingPlaylist._id,
+                tags
+            )
+
+            return res.status(apiStatusCodes.RESOURCE_CREATED).json(
+                sendAPIResponse({
+                    status: true,
+                    message: "Playlist already exists",
+                    data
+                })
+            )
+        }
+
+        return res.status(apiStatusCodes.RESOURCE_CREATED).json(
+            sendAPIResponse({
+                status: true,
+                message: "Playlist already exists",
+                data: existingPlaylist
+            })
+        )
     }
 
-    // Add playlist to the database
-    const { error, data: playlist } = await addPlaylistToDB({
-      ...playlistData,
-      tags,
-    });
+    // Fetch playlist data from YouTube
+    try {
+        const playlistData = await fetchPlaylistData(playlistId)
 
-    if (error) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-        sendAPIResponse({
-          status: false,
-          message: 'Failed to add playlist',
-          error,
+        if (!playlistData) {
+            return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: "Failed to fetch playlist data from YouTube"
+            })
+        }
+
+        // Add playlist to the database
+        const { error, data: playlist } = await addPlaylistToDB({
+            ...playlistData,
+            tags
         })
-      );
-    }
 
-    if (userId) {
-      const { error: userPlaylistError } = await addUserPlaylistToDB(
-        userId,
-        playlist._id
-      );
+        if (error) {
+            return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+                sendAPIResponse({
+                    status: false,
+                    message: "Failed to add playlist",
+                    error
+                })
+            )
+        }
 
-      if (userPlaylistError) {
+        if (userId) {
+            const { error: userPlaylistError } = await addUserPlaylistToDB(
+                userId,
+                playlist._id
+            )
+
+            if (userPlaylistError) {
+                return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
+                    status: false,
+                    message: "Failed to link user and playlist",
+                    error: userPlaylistError
+                })
+            }
+        }
+
+        return res.status(apiStatusCodes.RESOURCE_CREATED).json(
+            sendAPIResponse({
+                status: true,
+                message: "Playlist added successfully!",
+                data: playlist
+            })
+        )
+    } catch (error) {
         return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-          status: false,
-          message: 'Failed to link user and playlist',
-          error: userPlaylistError,
-        });
-      }
+            success: false,
+            message: `We can't fetch this playlist. Try another one.`,
+            error
+        })
     }
-
-    return res.status(apiStatusCodes.RESOURCE_CREATED).json(
-      sendAPIResponse({
-        status: true,
-        message: 'Playlist added successfully!',
-        data: playlist,
-      })
-    );
-  } catch (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: `We can't fetch this playlist. Try another one.`,
-      error,
-    });
-  }
-};
+}
 
 const handleGetPlaylists = async (
-  req: NextApiRequest,
-  res: NextApiResponse
+    req: NextApiRequest,
+    res: NextApiResponse
 ) => {
-  const { data, error } = await getPlaylistsFromDB();
+    const { data, error } = await getPlaylistsFromDB()
 
-  if (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: 'Error fetching playlists',
-      error,
-    });
-  }
+    if (error) {
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: "Error fetching playlists",
+            error
+        })
+    }
 
-  return res.status(apiStatusCodes.OKAY).json(
-    sendAPIResponse({
-      status: true,
-      message: 'playlists fetched successfully',
-      data,
-    })
-  );
-};
+    return res.status(apiStatusCodes.OKAY).json(
+        sendAPIResponse({
+            status: true,
+            message: "playlists fetched successfully",
+            data
+        })
+    )
+}
 
-export default handler;
+export default handler

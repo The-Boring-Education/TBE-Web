@@ -2,15 +2,10 @@ import { useState, useEffect } from "react"
 import type {
     UseOnboardingProps,
     UseOnboardingReturn,
-    BaseUser} from "@tbe/types";
-import {
-    OnboardingProductConfig,
-    OnboardingFieldConfig
+    BaseUser
 } from "@tbe/types"
-import {
-    getOnboardingConfig,
-    isValidOnboardingProduct
-} from "@tbe/config" // FIXME: REFACTOR
+import { OnboardingProductConfig, OnboardingFieldConfig } from "@tbe/types"
+import { getOnboardingConfig, isValidOnboardingProduct } from "@tbe/config" // FIXME: REFACTOR
 import { sendRequest, trackEvent } from "@tbe/utils"
 
 /**
@@ -67,7 +62,7 @@ export default function useOnboarding({
 
             try {
                 const response = await sendRequest({
-                    url: `/api/v1/user?userId=${userId}`,
+                    url: `/user?userId=${userId}`,
                     method: "GET",
                     headers: token ? { Authorization: `Bearer ${token}` } : {}
                 })

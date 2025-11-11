@@ -611,7 +611,9 @@ const extractSkillsFromText = (text: string): string[] => {
     JOB_SKILL_NORMALIZER.forEach(({ label, value }) => {
         if (Array.isArray(label)) {
             if (
-                label.some((alt: string) => lowerText.includes(alt.toLowerCase()))
+                label.some((alt: string) =>
+                    lowerText.includes(alt.toLowerCase())
+                )
             ) {
                 matchedSkills.add(value)
             }
@@ -757,55 +759,52 @@ const getPYSubscriptionFeaturesByType = (
 }
 
 const cn = (...inputs: ClassValue[]) => {
-  return twMerge(clsx(inputs));
+    return twMerge(clsx(inputs))
 }
-
-
-
 
 // Utility functions migrated from original project
 export function debounce<T extends (...args: unknown[]) => unknown>(
     func: T,
     wait: number
 ): (...args: Parameters<T>) => void {
-    let timeout: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout
     return (...args: Parameters<T>): void => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    };
+        clearTimeout(timeout)
+        timeout = setTimeout(() => func(...args), wait)
+    }
 }
 
 export function throttle<T extends (...args: unknown[]) => unknown>(
     func: T,
     limit: number
 ): (...args: Parameters<T>) => void {
-    let inThrottle: boolean;
+    let inThrottle: boolean
     return (...args: Parameters<T>): void => {
         if (!inThrottle) {
-            func(...args);
-            inThrottle = true;
-            setTimeout(() => (inThrottle = false), limit);
+            func(...args)
+            inThrottle = true
+            setTimeout(() => (inThrottle = false), limit)
         }
-    };
+    }
 }
 
 export function memoize<T extends (...args: unknown[]) => ReturnType<T>>(
     fn: T,
     getKey?: (...args: Parameters<T>) => string
 ): T {
-    const cache = new Map<string, ReturnType<T>>();
-    
+    const cache = new Map<string, ReturnType<T>>()
+
     return ((...args: Parameters<T>): ReturnType<T> => {
-        const key = getKey ? getKey(...args) : JSON.stringify(args);
-        
+        const key = getKey ? getKey(...args) : JSON.stringify(args)
+
         if (cache.has(key)) {
-            return cache.get(key)!;
+            return cache.get(key)!
         }
-        
-        const result = fn(...args);
-        cache.set(key, result);
-        return result;
-    }) as T;
+
+        const result = fn(...args)
+        cache.set(key, result)
+        return result
+    }) as T
 }
 
 export function createIntersectionObserver(
@@ -813,54 +812,57 @@ export function createIntersectionObserver(
     options: IntersectionObserverInit = {}
 ): IntersectionObserver {
     if (typeof IntersectionObserver === "undefined") {
-        throw new Error("IntersectionObserver is not supported in this environment");
+        throw new Error(
+            "IntersectionObserver is not supported in this environment"
+        )
     }
-    
+
     return new IntersectionObserver(callback, {
         rootMargin: "0px",
         threshold: 0.1,
         ...options
-    });
+    })
 }
 
 export function preloadResource(href: string, as: string = "script") {
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.href = href;
-    link.as = as;
-    document.head.appendChild(link);
+    const link = document.createElement("link")
+    link.rel = "preload"
+    link.href = href
+    link.as = as
+    document.head.appendChild(link)
 }
 
 export function chunkArray<T>(array: T[], size: number): T[][] {
-    const chunks: T[][] = [];
+    const chunks: T[][] = []
     for (let i = 0; i < array.length; i += size) {
-        chunks.push(array.slice(i, i + size));
+        chunks.push(array.slice(i, i + size))
     }
-    return chunks;
+    return chunks
 }
 
-
 const isValidUser = (user: User | null): user is User => {
-    return user !== null && 
-           typeof user === 'object' && 
-           typeof user.id === 'string' && 
-           user.id.length > 0 &&
-           typeof user.name === 'string' && 
-           user.name.length > 0 &&
-           typeof user.email === 'string' && 
-           user.email.length > 0
-  }
-  
-  /**
-   * Safely gets user ID with validation
-   * @param user - The user object
-   * @returns user ID if valid, null otherwise
-   */
-  const getValidUserId = (user: User | null): string | null => {
-    return isValidUser(user) ? user.id : null
-  }
+    return (
+        user !== null &&
+        typeof user === "object" &&
+        typeof user.id === "string" &&
+        user.id.length > 0 &&
+        typeof user.name === "string" &&
+        user.name.length > 0 &&
+        typeof user.email === "string" &&
+        user.email.length > 0
+    )
+}
 
-export {    
+/**
+ * Safely gets user ID with validation
+ * @param user - The user object
+ * @returns user ID if valid, null otherwise
+ */
+const getValidUserId = (user: User | null): string | null => {
+    return isValidUser(user) ? user.id : null
+}
+
+export {
     isValidUser,
     getValidUserId,
     cn,

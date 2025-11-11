@@ -6,7 +6,7 @@ import {
   getCouponByIdFromDB,
 } from '@/lib/database';
 import { cors, sendAPIResponse  } from '@/lib/utils';
-import { adminMiddleware,connectDB } from '@/middleware';
+import { adminMiddleware, connectDB } from '@/middleware/api';
 
 interface BulkApplyRequest {
   sheetIds: string[];

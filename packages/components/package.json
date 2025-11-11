@@ -23,16 +23,13 @@
             "types": "./src/ui/index.ts",
             "default": "./src/ui/index.ts"
         },
-          "./analytics": {
+        "./analytics": {
             "import": "./src/analytics.ts",
             "require": "./src/analytics.ts"
-        } 
+        }
     },
     "scripts": {
-        "build": "echo 'Building @tbe/components...' && tsc && echo 'Build completed successfully!'",
-        "build:verbose": "tsc --listFiles",
-        "build:watch": "tsc --watch",
-        "build:clean": "rimraf dist && tsc",
+        "build": "echo 'No build step needed for components package'",
         "lint": "eslint ."
     },
     "dependencies": {
@@ -92,13 +89,7 @@
     },
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",
-        "@tbe/typescript-config": "workspace:*",
-        "@types/markdown-it": "^14.1.2",
-        "@types/react": "^18.3.24",
-        "@types/react-datepicker": "^6.2.0",
-        "@types/react-dom": "^18.3.7",
-        "eslint": "^9.34.0",
-        "typescript": "^5.9.2"
+        "eslint": "^9.34.0"
     },
     "peerDependencies": {
         "react": "^18.0.0",

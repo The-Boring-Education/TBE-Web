@@ -5,7 +5,7 @@ import { buildEnvHealthResponse } from "@tbe/utils"
 
 const envChecks: EnvVarCheck[] = [
     { name: "NEXT_PUBLIC_API_URL" },
-    { name: "NEXTAUTH_URL" },
+    { name: "NEXT_PUBLIC_AUTH_URL" },
     { name: "GOOGLE_AUTH_CLIENT_ID" },
     { name: "GOOGLE_AUTH_CLIENT_SECRET" }
 ]

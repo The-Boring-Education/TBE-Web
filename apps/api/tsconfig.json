@@ -10,7 +10,8 @@
             "@/lib/database": ["./src/lib/database"],
             "@/lib/interfaces": ["./src/lib/interfaces"],
             "@/lib/services": ["./src/lib/services"],
-            "@/lib/utils": ["./src/lib/utils"]
+            "@/lib/utils": ["./src/lib/utils"],
+            "@/middleware": ["./src/middleware"]
         },
         "forceConsistentCasingInFileNames": true
     }

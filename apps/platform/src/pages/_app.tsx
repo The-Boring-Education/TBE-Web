@@ -3,15 +3,17 @@ import '@/styles/colors.css';
 
 import { Layout } from '@tbe/components';
 import { GamificationProvider } from '@tbe/components';
+import {
+  initGA,
+  installGlobalAnalyticsListeners,
+  trackPageview,
+} from '@tbe/components/analytics';
 // import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
 import { envConfig, routes } from '@tbe/constants';
-import { initGA, trackPageview, installGlobalAnalyticsListeners } from '@tbe/components/analytics';
-
 import { useUser } from '@tbe/hooks';
 import { getRedirectUrl } from '@tbe/utils';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -29,12 +31,13 @@ const AppContent = ({
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const userData = useUser();
-  const { user, isOnboarded, isAuth, loading, updateSession } = (userData as any) || {
-    user: null,
-    isOnboarded: false,
-    isAuth: false,
-    loading: true,
-  };
+  const { user, isOnboarded, isAuth, loading, updateSession } =
+    (userData as any) || {
+      user: null,
+      isOnboarded: false,
+      isAuth: false,
+      loading: true,
+    };
   const [isSyncingSession, setIsSyncingSession] = useState(false);
 
   // Ensure we're on the client side before accessing window
@@ -42,7 +45,7 @@ const AppContent = ({
     setIsClient(true);
   }, []);
 
-    // ✅ Initialize Google Analytics
+  // ✅ Initialize Google Analytics
   useEffect(() => {
     initGA();
     installGlobalAnalyticsListeners();
@@ -51,7 +54,6 @@ const AppContent = ({
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [router.events]);
-
 
   useEffect(() => {
     // Only run on client side
@@ -62,7 +64,9 @@ const AppContent = ({
       if (!isOnboarded && router.pathname !== routes.onboarding) {
         try {
           if (user?.id) {
-            const resp = await fetch(`${envConfig.API_URL}/api/v1/user?userId=${user.id}`);
+            const resp = await fetch(
+              `${envConfig.API_URL}/user?userId=${user.id}`
+            );
             const json = await resp.json();
             const dbIsOnboarded = json?.data?.isOnboarded === true;
             if (dbIsOnboarded) {
@@ -110,9 +114,19 @@ const AppContent = ({
     };
 
     void ensureOnboardingAndSession();
-  }, [isClient, isAuth, isOnboarded, loading, router, router.pathname, user, updateSession, isSyncingSession]);
+  }, [
+    isClient,
+    isAuth,
+    isOnboarded,
+    loading,
+    router,
+    router.pathname,
+    user,
+    updateSession,
+    isSyncingSession,
+  ]);
 
-    return (
+  return (
     <QueryClientProvider client={queryClient}>
       <GamificationProvider>
         <Layout>
@@ -125,12 +139,18 @@ const AppContent = ({
 const TheBoringEducation = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps) => (
-  <Fragment>
-    <SessionProvider session={session}>
-      <AppContent Component={Component} pageProps={pageProps} />
-    </SessionProvider>
-  </Fragment>
-);
+}: AppProps) => {
+  return (
+    <Fragment>
+      <SessionProvider
+        session={session}
+        refetchInterval={5 * 60}
+        refetchOnWindowFocus
+      >
+        <AppContent Component={Component} pageProps={pageProps} />
+      </SessionProvider>
+    </Fragment>
+  );
+};
 
 export default TheBoringEducation;

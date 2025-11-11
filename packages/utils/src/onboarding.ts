@@ -12,7 +12,7 @@ export async function checkUsernameAvailable(
 ): Promise<boolean> {
     try {
         const response = await sendRequest({
-            url: `/api/v1/user/username-check?username=${username}`,
+            url: `/user/username-check?username=${username}`,
             method: "GET",
             headers: token ? { Authorization: `Bearer ${token}` } : {}
         })
@@ -30,7 +30,7 @@ export async function getOnboardingUser(
 ): Promise<any> {
     try {
         const response = await sendRequest({
-            url: `/api/v1/user?userId=${userId}`,
+            url: `/user?userId=${userId}`,
             method: "GET",
             headers: token ? { Authorization: `Bearer ${token}` } : {}
         })
