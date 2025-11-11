@@ -2,7 +2,7 @@ packages:
     - "apps/api"
     - "apps/onboarding"
     - "apps/platform"
-    # - "apps/prep-yatra"
+    - "apps/prep-yatra"
     # - "apps/quizes"
     # - "apps/techyatra"
     # - "apps/dsayatra"
