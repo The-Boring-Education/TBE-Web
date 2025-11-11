@@ -9,7 +9,6 @@ import { useRouter } from "next/router"
   import React, { useEffect } from "react"
 
 import { useQuizData } from "@tbe/hooks"
-import { debugAPIUrls } from "@/utils/apiDebug"
 
 function DashboardContent() {
   const { user } = useAuth()
@@ -17,9 +16,6 @@ function DashboardContent() {
   const { categories, loading, error, refetch } = useQuizData()
 
   // Debug API URLs on dashboard load
-  React.useEffect(() => {
-    debugAPIUrls()
-  }, [])
 
   const startQuiz = (categoryId: string) => {
     router.push(`/quiz/${categoryId}`)

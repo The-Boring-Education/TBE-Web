@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from 'react-query'
 import { useAuth } from '@tbe/auth'
 import { DashboardNav,ProtectedRoute } from '@tbe/components/quizes'
 import {  Badge,Card, CardContent, CardDescription, CardHeader, CardTitle } from '@tbe/components/quizes'
@@ -233,31 +233,35 @@ function HistoryContent() {
         isLoading: attemptsLoading,
         error: attemptsError,
         refetch: refetchAttempts
-    } = useQuery<QuizAttempt[]>({
-        queryKey: ['quiz-attempts', user?.id],
-        queryFn: async () => {
+    } = useQuery<QuizAttempt[]>(
+        ['quiz-attempts', user?.id],
+        async () => {
             if (!user?.id) return []
             const response = await quizApi.getUserSessions(user.id)
             return response.data
         },
-        enabled: !!user?.id
-    })
+        {
+            enabled: !!user?.id
+        }
+    )
 
     // Fetch performance history
     const {
         data: historyData,
         isLoading: historyLoading,
         error: historyError
-    } = useQuery<PerformanceHistory[]>({
-        queryKey: ['performance-history', user?.id, selectedTimeRange],
-        queryFn: async () => {
+    } = useQuery<PerformanceHistory[]>(
+        ['performance-history', user?.id, selectedTimeRange],
+        async () => {
             if (!user?.id) return []
             const days = selectedTimeRange === 'all' ? 365 : parseInt(selectedTimeRange)
             const response = await quizApi.getUserAnalytics(user.id)
             return response.data
         },
-        enabled: !!user?.id
-    })
+        {
+            enabled: !!user?.id
+        }
+    )
 
     const handleError = useCallback((error: unknown) => {
         if (error instanceof APIError) {

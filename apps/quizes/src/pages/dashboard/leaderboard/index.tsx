@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from 'react-query'
 import { useAuth } from '@tbe/auth'
 import { DashboardNav,ProtectedRoute } from '@tbe/components/quizes'
 import { Card, CardContent, CardHeader, CardTitle } from '@tbe/components/quizes'
@@ -247,9 +247,9 @@ function LeaderboardContent() {
         isLoading: leaderboardLoading,
         error: leaderboardError,
         refetch: refetchLeaderboard
-    } = useQuery<(LeaderboardData & { rank: number })[]>({
-        queryKey: ['leaderboard', leaderboardLimit],
-        queryFn: async () => {
+    } = useQuery<(LeaderboardData & { rank: number })[]>(
+        ['leaderboard', leaderboardLimit],
+        async () => {
             const response = await leaderboardApi.getLeaderboard(leaderboardLimit)
             // Add rank to each entry based on position
             return response.data?.map((entry, index) => ({
@@ -257,20 +257,22 @@ function LeaderboardContent() {
                 rank: index + 1
             })) || []
         }
-    })
+    )
 
     const {
         data: userRankData,
         isLoading: userRankLoading
-    } = useQuery<{ rank: number }>({
-        queryKey: ['user-rank', user?.id],
-        queryFn: async () => {
+    } = useQuery<{ rank: number }>(
+        ['user-rank', user?.id],
+        async () => {
             if (!user?.id) return { rank: 0 }
             const response = await leaderboardApi.getUserRank(user.id)
             return response.data || { rank: 0 }
         },
-        enabled: !!user?.id
-    })
+        {
+            enabled: !!user?.id
+        }
+    )
 
     const handleError = useCallback((error: unknown) => {
         if (error instanceof APIError) {

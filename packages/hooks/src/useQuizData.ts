@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { sendRequest } from '@tbe/utils'
-import type { QuizCategoryAPI } from '@tbe/types'
+import { quizApi } from '@tbe/services'
+import type { APIResponse, QuizCategoryAPI } from '@tbe/types'
 
 /**
  * useQuizData Hook
@@ -26,15 +26,16 @@ export default function useQuizData(): UseQuizDataReturn {
             setLoading(true)
             setError(null)
 
-            const response = await sendRequest({
-                url: '/api/v1/quiz/categories',
-                method: 'GET'
-            })
+            const response = (await quizApi.getCategories()) as APIResponse<
+                QuizCategoryAPI[]
+            >
 
-            if (response.success) {
-                setCategories(response.data || [])
+            if (response?.success ?? response?.status) {
+                setCategories(response?.data || [])
             } else {
-                throw new Error(response.error || 'Failed to load categories')
+                throw new Error(
+                    response?.message || "Failed to load categories"
+                )
             }
         } catch (err) {
             console.error('Error loading categories:', err)
