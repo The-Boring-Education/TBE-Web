@@ -1,6 +1,6 @@
 import { useAuth } from "@tbe/auth"
-import { Card, CardContent } from "@tbe/components/quizes"
 import { Button } from "@tbe/components"
+import { Card, CardContent } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { analyticsApi, APIError } from "@tbe/services"

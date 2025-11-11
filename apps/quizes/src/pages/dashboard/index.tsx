@@ -1,14 +1,13 @@
 import { useAuth } from "@tbe/auth"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
 import { Button } from "@tbe/components"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
+import { useQuizData } from "@tbe/hooks"
 import { gamificationApi } from "@tbe/services"
 import { BookOpen,Play } from "lucide-react"
 import { useRouter } from "next/router"
   import React, { useEffect } from "react"
-
-import { useQuizData } from "@tbe/hooks"
 
 function DashboardContent() {
   const { user } = useAuth()

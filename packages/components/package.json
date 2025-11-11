@@ -89,6 +89,10 @@
     },
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",
+        "@types/markdown-it": "^14.1.2",
+        "@types/react": "^18.3.24",
+        "@types/react-datepicker": "^6.2.0",
+        "@types/react-dom": "^18.3.7",
         "eslint": "^9.34.0"
     },
     "peerDependencies": {

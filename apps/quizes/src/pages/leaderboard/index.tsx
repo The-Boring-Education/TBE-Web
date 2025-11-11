@@ -1,8 +1,8 @@
 import { useAuth } from "@tbe/auth"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
 import { Button } from "@tbe/components"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
-import { APIError,leaderboardApi } from "@tbe/services"
+import {leaderboardApi } from "@tbe/services"
 import {
   Award,
   Clock,

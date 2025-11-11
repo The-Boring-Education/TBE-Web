@@ -30,8 +30,6 @@ const ToggleGroup = React.forwardRef<
         <ToggleGroupPrimitive.Root
             ref={ref}
             className={cn("flex items-center justify-center gap-1", className)}
-            // Ensure required 'type' prop is provided (default to 'single', could also be customized as needed)
-            type={(props as any).type ?? "single"}
             {...props}>
             <ToggleGroupContext.Provider value={{ variant, size }}>
                 {children}
@@ -52,7 +50,6 @@ const ToggleGroupItem = React.forwardRef<
     return (
         <ToggleGroupPrimitive.Item
             ref={ref}
-            value=''
             className={cn(
                 toggleVariants({
                     variant: context.variant || variant,

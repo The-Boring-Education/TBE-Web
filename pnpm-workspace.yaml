@@ -3,7 +3,7 @@ packages:
     - "apps/onboarding"
     - "apps/platform"
     - "apps/prep-yatra"
-    # - "apps/quizes"
+    - "apps/quizes"
     # - "apps/techyatra"
     # - "apps/dsayatra"
     # - "apps/resume-yatra"

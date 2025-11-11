@@ -1,4 +1,3 @@
-import { useQuery } from 'react-query'
 import { useAuth } from '@tbe/auth'
 import { ProtectedRoute } from '@tbe/components/quizes'
 import { DashboardNav } from '@tbe/components/quizes'
@@ -6,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@tbe/
 import { Button } from '@tbe/components/quizes'
 import { useToast } from '@tbe/components/quizes'
 import { APIError, quizApi } from '@tbe/services'
+import type { CategoryPerformance,PerformanceMetrics } from '@tbe/types'
+import { formatDate } from '@tbe/utils'
 import { 
     Activity, 
     BarChart3,
@@ -16,9 +17,7 @@ import {
     Trophy,
     Zap} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
-
-import { formatDate } from '@tbe/utils'
-import type { CategoryPerformance,PerformanceMetrics } from '@tbe/types'
+import { useQuery } from 'react-query'
 
 // Loading component
 const MetricLoader = () => (

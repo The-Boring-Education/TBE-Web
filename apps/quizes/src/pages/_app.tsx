@@ -1,16 +1,13 @@
 import "./globals.css"
 
 import { AuthProvider } from "@tbe/auth"
+import { AnalyticsWrapper } from "@tbe/components"
 import { GamificationWrapper } from "@tbe/components/quizes"
 import { Toaster } from "@tbe/components/quizes"
-import { Toaster as Sonner } from "sonner"
-import { AnalyticsWrapper } from "@tbe/components"
 import { QueryProvider } from "@tbe/components/quizes"
-
 import type { AppProps } from "next/app"
-import Head from "next/head"
-
 import { Inter } from "next/font/google"
+import { Toaster as Sonner } from "sonner"
 
 const inter = Inter({
   subsets: ["latin"],

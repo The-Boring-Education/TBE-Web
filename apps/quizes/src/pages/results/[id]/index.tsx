@@ -1,15 +1,13 @@
-import { useQuery } from "react-query"
 import { useAuth } from "@tbe/auth"
 import { MarkdownRenderer } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
+import { quizApi } from "@tbe/services"
+import type {Question} from "@tbe/types"
 import { trackEvent } from "@tbe/utils"
 import { ArrowLeft, Clock, Target,Trophy } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useMemo,useRef } from "react"
-
-import { quizApi } from "@tbe/services"
-
-import {Question} from "@tbe/types"
+import { useQuery } from "react-query"
 
 interface QuizQuestion {
     _id?: string

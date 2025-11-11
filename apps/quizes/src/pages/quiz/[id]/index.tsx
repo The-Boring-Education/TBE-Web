@@ -4,12 +4,11 @@ import { Progress } from "@tbe/components/quizes"
 import { Layout } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { CodeRenderer } from "@tbe/components/quizes"
+import {useGamification} from "@tbe/hooks"
 import { gamificationApi, quizApi } from "@tbe/services"
 import type { QuizQuestion } from "@tbe/types"
 import { useRouter } from "next/router"
 import { useCallback,useEffect, useState } from "react"
-
-import {useGamification} from "@tbe/hooks"
 
 interface QuizCategory {
     _id: string
