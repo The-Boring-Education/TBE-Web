@@ -9,7 +9,7 @@ import { connectDB } from "@/middleware/api"
 /**
  * NextAuth configuration for API app
  * Uses direct MongoDB access (not centralized callbacks)
- * 
+ *
  * NOTE: This app IS the API service, so it directly accesses MongoDB
  * instead of calling external APIs.
  */
@@ -73,7 +73,7 @@ const authOptions: NextAuthOptions = {
                     const { data: result } = await createUserInDB({
                         name,
                         email,
-                        image: user.image,
+                        image: user.image || undefined,
                         provider: account?.provider || "google",
                         providerAccountId: account?.providerAccountId || user.id
                     })
@@ -98,7 +98,7 @@ const authOptions: NextAuthOptions = {
                 token.sub = user.id
                 token.email = user.email
                 token.name = user.name
-                token.picture = user.image
+                token.picture = user.image || undefined
             }
 
             // Attach provider info on initial sign in
@@ -137,9 +137,7 @@ const authOptions: NextAuthOptions = {
         },
 
         async signOut({ session }) {
-            console.log(
-                `User signed out: ${session?.user?.email || "unknown"}`
-            )
+            console.log(`User signed out: ${session?.user?.email || "unknown"}`)
         }
     },
 
