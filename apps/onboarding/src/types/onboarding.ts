@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+ 
 // Base types for all onboarding products
 export interface BaseOnboardingFields {
   [key: string]: unknown;
@@ -116,7 +116,7 @@ export interface UseOnboardingReturn extends OnboardingState {
   handleBack: () => void;
   handleFinish: () => Promise<void>;
   isFieldValid: boolean;
-  // eslint-disable-next-line no-unused-vars
+   
   setForm: (form: unknown) => void;
   setUsernameAvailability: (available: boolean) => void;
   setUsernameChecking: (checking: boolean) => void;

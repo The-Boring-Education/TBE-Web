@@ -171,14 +171,39 @@ const getSelectedSheetQuestionMeta = (
 
 const isUserAuthenticated = async (req: any): Promise<User | null> => {
     const cookie = req.headers.cookie
+    const authBaseUrl = envConfig.AUTH_URL?.replace(/\/$/, "") ?? ""
+
+    if (!authBaseUrl) {
+        console.error("Error fetching session: NEXT_PUBLIC_AUTH_URL is missing")
+        return null
+    }
+
+    const sessionUrl = authBaseUrl.includes("/api/auth")
+        ? `${authBaseUrl}/session`
+        : `${authBaseUrl}/api/auth/session`
 
     try {
-        const response = await fetch(`${envConfig.AUTH_URL}/session`, {
+        const response = await fetch(sessionUrl, {
             headers: {
                 "Content-Type": "application/json",
                 Cookie: cookie || ""
             }
         })
+
+        if (!response.ok) {
+            console.error(
+                `Error fetching session: received status ${response.status}`
+            )
+            return null
+        }
+
+        const contentType = response.headers.get("content-type") || ""
+        if (!contentType.includes("application/json")) {
+            console.error(
+                `Error fetching session: expected JSON, received ${contentType}`
+            )
+            return null
+        }
 
         const session = await response.json()
         return session && session.user ? session.user : null

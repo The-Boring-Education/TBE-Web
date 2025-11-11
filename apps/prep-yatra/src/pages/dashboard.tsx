@@ -1,47 +1,59 @@
 import { useAuth } from "@tbe/auth"
-import {
-    DashboardTabs,
-    LoadingSpinner,
-    ProfileSection} from "@tbe/components"
+import { DashboardTabs, LoadingSpinner, ProfileSection } from "@tbe/components"
 import { usePrepYatraGamificationContext } from "@tbe/components"
-import { Button } from "@tbe/components"
 import { usePrepLogs } from "@tbe/hooks"
 import { recruitersService } from "@tbe/services"
 import type { RecruiterContact } from "@tbe/types"
 import { Menu, X } from "lucide-react"
 import { useRouter } from "next/router"
-import React, { lazy,Suspense, useEffect, useState } from "react"
+import React, { lazy, Suspense, useEffect, useState } from "react"
 import { toast } from "sonner"
 
 // Dashboard Components
 
 // Lazy load components for better performance
-const PrepYatraNavbar = lazy(() => import("@tbe/components").then(module => ({ default: module.PrepYatraNavbar })))
-const AddPrepLogModal = lazy(
-    () => import("@tbe/components").then(module => ({ default: module.AddPrepLogModal }))
+const PrepYatraNavbar = lazy(() =>
+    import("@tbe/components").then((module) => ({
+        default: module.PrepYatraNavbar
+    }))
 )
-const AddRecruiterModal = lazy(
-    () => import("@tbe/components").then(module => ({ default: module.AddRecruiterModal }))
+const AddPrepLogModal = lazy(() =>
+    import("@tbe/components").then((module) => ({
+        default: module.AddPrepLogModal
+    }))
 )
-const EditOnboardingModal = lazy(
-    () => import("@tbe/components").then(module => ({ default: module.EditOnboardingModal }))
+const AddRecruiterModal = lazy(() =>
+    import("@tbe/components").then((module) => ({
+        default: module.AddRecruiterModal
+    }))
 )
-const GamificationDisplay = lazy(
-    () => import("@tbe/components").then(module => ({ default: module.GamificationDisplay }))
+const EditOnboardingModal = lazy(() =>
+    import("@tbe/components").then((module) => ({
+        default: module.EditOnboardingModal
+    }))
 )
-const BuildYourStack = lazy(
-    () => import("@tbe/components").then(module => ({ default: module.BuildYourStack }))
-)
-const DailyPrepEncouragement = lazy(
-    () => import("@tbe/components").then(module => ({ default: module.DailyPrepEncouragement }))
-)
-const SubscriptionInterestPopover = lazy(
-    () => import("@tbe/components").then(module => ({ default: module.SubscriptionInterestPopover }))
-)
-const AddSkillsModal = lazy(() => import("@tbe/components").then(module => ({ default: module.AddSkillsModal })))
-const PrepYatraFooter = lazy(() => import("@tbe/components").then(module => ({ default: module.PrepYatraFooter })))
 
+const BuildYourStack = lazy(() =>
+    import("@tbe/components").then((module) => ({
+        default: module.BuildYourStack
+    }))
+)
+const DailyPrepEncouragement = lazy(() =>
+    import("@tbe/components").then((module) => ({
+        default: module.DailyPrepEncouragement
+    }))
+)
 
+const AddSkillsModal = lazy(() =>
+    import("@tbe/components").then((module) => ({
+        default: module.AddSkillsModal
+    }))
+)
+const PrepYatraFooter = lazy(() =>
+    import("@tbe/components").then((module) => ({
+        default: module.PrepYatraFooter
+    }))
+)
 
 // Loading component for Suspense fallback
 const ComponentLoader = () => (
@@ -104,16 +116,19 @@ const Dashboard = () => {
 
     // Data fetching functions
     const fetchProfile = async (userId: string) => {
-        console.log('fetchProfile called with userId:', userId)
+        console.log("fetchProfile called with userId:", userId)
         try {
-            const base = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '')
+            const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(
+                /\/$/,
+                ""
+            )
             const url = `${base}/user?userId=${encodeURIComponent(userId)}`
-            console.log('Fetching profile from URL:', url)
+            console.log("Fetching profile from URL:", url)
             const response = await fetch(url)
-            console.log('Profile response status:', response.status)
+            console.log("Profile response status:", response.status)
             if (response.ok) {
                 const result = await response.json()
-                console.log('Profile result:', result)
+                console.log("Profile result:", result)
                 // Extract data from the API response structure
                 if (result.status && result.data) {
                     setProfile(result.data)
@@ -121,7 +136,10 @@ const Dashboard = () => {
                     setProfile(result)
                 }
             } else {
-                console.error('Profile fetch failed with status:', response.status)
+                console.error(
+                    "Profile fetch failed with status:",
+                    response.status
+                )
             }
         } catch (error) {
             console.error("Error fetching profile:", error)
@@ -138,20 +156,20 @@ const Dashboard = () => {
     }
 
     const initializeData = async () => {
-        console.log('initializeData called with user:', user)
+        console.log("initializeData called with user:", user)
         if (!user?.id) {
-            console.log('No user ID, returning from initializeData')
+            console.log("No user ID, returning from initializeData")
             return
         }
 
-        console.log('Starting data initialization for user ID:', user.id)
+        console.log("Starting data initialization for user ID:", user.id)
         setLoading(true)
         try {
             await Promise.all([
                 fetchProfile(user.id),
                 fetchRecruiterContacts(user.id)
             ])
-            console.log('Data initialization completed')
+            console.log("Data initialization completed")
         } catch (error) {
             console.error("Error initializing data:", error)
         } finally {
@@ -161,15 +179,20 @@ const Dashboard = () => {
 
     // Effects
     useEffect(() => {
-        console.log('Dashboard useEffect - authLoading:', authLoading, 'user:', user)
+        console.log(
+            "Dashboard useEffect - authLoading:",
+            authLoading,
+            "user:",
+            user
+        )
         if (authLoading) return
-        
+
         if (user) {
-            console.log('User found, initializing data...')
+            console.log("User found, initializing data...")
             // Initialize data (auth and onboarding checks are handled by ProtectedRoute and _app.tsx)
             initializeData()
         } else {
-            console.log('No user found, not initializing data')
+            console.log("No user found, not initializing data")
         }
     }, [user, authLoading])
 
@@ -239,11 +262,7 @@ const Dashboard = () => {
     return (
         <div className='min-h-screen bg-gray-100'>
             <Suspense fallback={<ComponentLoader />}>
-                <PrepYatraNavbar
-                    username={user?.name || ""}
-                    onSignOut={handleSignOut}
-                    userId={user?.id}
-                />
+                <PrepYatraNavbar onSignOut={handleSignOut} userId={user?.id} />
             </Suspense>
 
             <main className='w-full px-2 md:px-4 pt-[72px] pb-6'>
@@ -258,17 +277,23 @@ const Dashboard = () => {
                 {/* Sidebar Toggle Button - Mobile */}
                 <button
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                    className='fixed top-[78px] left-3 z-50 lg:hidden bg-primary text-white shadow-lg hover:shadow-xl border-2 border-primary hover:bg-primary/90 flex items-center justify-center h-9 w-9 rounded-full transition-all duration-200 hover:scale-110'
-                >
-                    {isSidebarCollapsed ? <Menu className='w-3.5 h-3.5' /> : <X className='w-3.5 h-3.5' />}
+                    className='fixed top-[78px] left-3 z-50 lg:hidden bg-primary text-white shadow-lg hover:shadow-xl border-2 border-primary hover:bg-primary/90 flex items-center justify-center h-9 w-9 rounded-full transition-all duration-200 hover:scale-110'>
+                    {isSidebarCollapsed ? (
+                        <Menu className='w-3.5 h-3.5' />
+                    ) : (
+                        <X className='w-3.5 h-3.5' />
+                    )}
                 </button>
 
                 {/* Sidebar Toggle Button - Desktop */}
                 <button
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                    className='hidden lg:flex fixed top-[78px] left-3 z-50 bg-primary text-white shadow-lg hover:shadow-xl border-2 border-primary hover:bg-primary/90 items-center justify-center h-9 w-9 rounded-full transition-all duration-200 hover:scale-110'
-                >
-                    {isSidebarCollapsed ? <Menu className='w-3.5 h-3.5' /> : <X className='w-3.5 h-3.5' />}
+                    className='hidden lg:flex fixed top-[78px] left-3 z-50 bg-primary text-white shadow-lg hover:shadow-xl border-2 border-primary hover:bg-primary/90 items-center justify-center h-9 w-9 rounded-full transition-all duration-200 hover:scale-110'>
+                    {isSidebarCollapsed ? (
+                        <Menu className='w-3.5 h-3.5' />
+                    ) : (
+                        <X className='w-3.5 h-3.5' />
+                    )}
                 </button>
 
                 <div className='flex gap-6'>
@@ -284,7 +309,7 @@ const Dashboard = () => {
                         {/* Additional components */}
                         <Suspense fallback={<ComponentLoader />}>
                             <BuildYourStack
-                                userId={user?.id || ""}
+                                userId={user.id}
                                 userSkills={profile?.userSkills || []}
                                 lastUpdated={profile?.userSkillsLastUpdated}
                             />

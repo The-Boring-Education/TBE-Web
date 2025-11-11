@@ -1,6 +1,6 @@
+import type { NextAuthOptions } from "next-auth"
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-import type { NextAuthOptions } from "next-auth"
 
 import { routes } from "@/lib/constants"
 import { createUserInDB, getUserByEmailFromDB } from "@/lib/database"

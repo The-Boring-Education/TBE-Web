@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
 import { envConfig } from '@tbe/constants';
+import axios from 'axios';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 /**
  * Proxy API route to forward requests to the actual API server

@@ -1,7 +1,7 @@
- interface OutlineCardProps {
-  icon?: React.ReactNode;
-  title: string;
-  description: string;
+interface OutlineCardProps {
+    icon?: React.ReactNode
+    title: string
+    description: string
 }
 
 interface CelebrationAnimationProps {
@@ -16,20 +16,19 @@ interface GamificationBadgeProps {
 }
 
 interface NavbarDropdownLink {
-  id: string;
-  name: string;
-  href: string;
-  description: string;
-  target?: '_blank';
-  isDevelopment?: boolean;
+    id: string
+    name: string
+    href: string
+    description: string
+    target?: "_blank"
+    isDevelopment?: boolean
 }
 
 interface NavbarDropdownContainerProps {
-  links: NavbarDropdownLink[];
+    links: NavbarDropdownLink[]
 }
 
 interface NavbarProps {
-    username: string
     onSignOut: () => void
     userId?: string
 }
@@ -41,4 +40,4 @@ export type {
     NavbarDropdownLink,
     NavbarProps,
     OutlineCardProps
-};
+}

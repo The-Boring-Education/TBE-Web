@@ -49,7 +49,7 @@ const handleGetChallenges = async (
 
         // Handle both ObjectId and string user IDs
         const userId = String(queryUserId)
-        let query: any = {}
+        const query: any = {}
 
         // Check if userId is a valid MongoDB ObjectId (24 hex characters)
         if (/^[0-9a-fA-F]{24}$/.test(userId)) {

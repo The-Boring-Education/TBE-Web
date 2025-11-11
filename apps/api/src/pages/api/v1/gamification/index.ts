@@ -7,7 +7,7 @@ import {
   updateUserPointsInDB,
 } from '@/lib/database';
 import type { UserPointsActionType } from '@/lib/interfaces';
-import { cors, sendAPIResponse } from '@/lib/utils';
+import { cors } from '@/lib/utils';
 import { connectDB } from '@/middleware/api';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
