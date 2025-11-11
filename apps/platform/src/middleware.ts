@@ -19,33 +19,18 @@ const protectedAPIRoutes = [
 
 const protectedUIRoutes = [{ path: /^\/shiksha\/(?:\/|$)/ }];
 
-const addCorsHeaders = (res: NextResponse, origin: string | null) => {
-  res.headers.set('Access-Control-Allow-Origin', '*');
-  res.headers.set('Vary', 'Origin');
-  res.headers.set('Access-Control-Allow-Credentials', 'true');
-  res.headers.set(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-  );
-  res.headers.set(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, X-Requested-With, x-admin-secret'
-  );
-  return res;
-};
+// CORS headers removed - using proxy pattern for API calls
 
 const middleware = async (req: NextRequest) => {
   try {
     const currentUrl = req.nextUrl.pathname;
     const method = req.method;
     const adminHeader = req.headers.get('x-admin-secret') || '';
-    const origin = req.headers.get('origin');
     const isAPI = currentUrl.startsWith('/api/');
 
-    // Handle CORS preflight early
+    // Handle OPTIONS requests for API routes
     if (method === 'OPTIONS' && isAPI) {
-      const preflight = new NextResponse(null, { status: 204 });
-      return addCorsHeaders(preflight, origin);
+      return new NextResponse(null, { status: 204 });
     }
 
     // Add request context to Sentry
@@ -71,7 +56,7 @@ const middleware = async (req: NextRequest) => {
         }),
         { status: 401 }
       );
-      return isAPI ? addCorsHeaders(res, origin) : res;
+      return res;
     }
 
     // Check API restrictions
@@ -93,7 +78,7 @@ const middleware = async (req: NextRequest) => {
             }),
             { status: 401 }
           );
-          return isAPI ? addCorsHeaders(res, origin) : res;
+          return res;
         }
       }
     }
@@ -117,8 +102,7 @@ const middleware = async (req: NextRequest) => {
       }
     }
 
-    const next = NextResponse.next();
-    return isAPI ? addCorsHeaders(next, origin) : next;
+    return NextResponse.next();
   } catch (error) {
     // Capture middleware errors
     Sentry.captureException(error, {

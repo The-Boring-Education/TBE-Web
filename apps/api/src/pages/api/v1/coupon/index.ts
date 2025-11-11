@@ -6,7 +6,7 @@ import {
   getAllCouponsFromDB,
 } from '@/lib/database';
 import { cors, sendAPIResponse } from '@/lib/utils';
-import { adminMiddleware,connectDB } from '@/middleware';
+import { adminMiddleware, connectDB } from '@/middleware/api';
 
 interface CreateCouponRequest {
   code: string;

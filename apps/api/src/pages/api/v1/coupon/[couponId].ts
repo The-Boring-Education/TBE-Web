@@ -7,7 +7,7 @@ import {
   updateCouponFromDB,
 } from '@/lib/database';
 import { cors, sendAPIResponse } from '@/lib/utils';
-import { adminMiddleware,connectDB } from '@/middleware';
+import { adminMiddleware, connectDB } from '@/middleware/api';
 
 interface UpdateCouponRequest {
   code?: string;
