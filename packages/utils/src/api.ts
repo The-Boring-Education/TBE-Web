@@ -70,9 +70,16 @@ export const sendRequest = async ({
     let finalUrl: string
     
     if (shouldUseProxy) {
-        // Use the proxy route - remove /api prefix if it exists
-        const cleanUrl = url.startsWith('/api/') ? url.substring(4) : url
-        finalUrl = `/api/proxy${cleanUrl}`
+        // Use the proxy route - keep absolute URLs untouched
+        if (/^https?:\/\//i.test(url)) {
+            finalUrl = url
+        } else {
+            // remove leading slashes
+            const cleanUrl = url.startsWith("/")
+                ? url.slice(1)
+                : url
+            finalUrl = `/api/proxy/${cleanUrl}`
+        }
     } else {
         // Use direct API URL (for server-side or custom baseURL)
         const defaultBaseURL = envConfig.API_URL
