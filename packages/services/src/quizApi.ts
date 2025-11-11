@@ -40,9 +40,12 @@ export interface QuizResult {
 export const quizApi = {
   // Get quiz categories
   getCategories: async () => {
-    const response = await fetch(`${config.API_BASE_URL}/quiz`)
-    if (!response.ok) throw new Error('Failed to fetch quiz categories')
-    return response.json()
+    try {
+      return await apiClient.get(API_ENDPOINTS.QUIZ_CATEGORIES)
+    } catch (error) {
+      console.error("Error fetching quiz categories:", error)
+      throw error
+    }
   },
 
   // Get quiz questions for a category

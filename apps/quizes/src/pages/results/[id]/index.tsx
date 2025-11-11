@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery } from "react-query"
 import { useAuth } from "@tbe/auth"
 import { MarkdownRenderer } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
@@ -39,13 +39,15 @@ function ResultsContent() {
         data: quizData,
         isLoading,
         error
-    } = useQuery({
-        queryKey: ["quiz", id],
-        queryFn: () => quizApi.getQuestions(id!),
-        enabled: !!id,
-        staleTime: 0, // Always fetch fresh data
-        gcTime: 0  // Don't cache the data
-    })
+    } = useQuery(
+        ["quiz", id],
+        () => quizApi.getQuestions(id!),
+        {
+            enabled: !!id,
+            staleTime: 0, // Always fetch fresh data
+            cacheTime: 0 // Don't cache the data
+        }
+    )
 
     const questions: Question[] =
         quizData?.data?.questions?.map((q: QuizQuestion) => ({
