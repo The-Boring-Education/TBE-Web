@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiStatusCodes,envConfig } from '@/lib/constants';
-import { cors,sendAPIResponse } from '@/lib/utils';
+import { sendAPIResponse } from '@/lib/utils';
 
 // Connect to DB
 const connectDB = async () => {

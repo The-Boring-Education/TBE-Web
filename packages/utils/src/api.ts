@@ -17,7 +17,38 @@ export interface APIResponseType {
     data?: any
 }
 
-const apiInstance = axios.create()
+// Create axios instance with default configuration to handle CORS
+const apiInstance = axios.create({
+    headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+    },
+    withCredentials: false, // Important for CORS - don't send cookies cross-origin
+    timeout: 30000 // 30 second timeout
+})
+
+// Add response interceptor to handle errors
+apiInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        // Check if it's a network error (often CORS)
+        if (!error.response) {
+            console.error("Network Error (possibly CORS):", {
+                message: error.message,
+                config: {
+                    url: error.config?.url,
+                    method: error.config?.method,
+                    baseURL: error.config?.baseURL
+                }
+            })
+
+            // Provide more helpful error message
+            error.message =
+                "Network error: Unable to reach the API. This may be a CORS issue if calling from browser."
+        }
+        return Promise.reject(error)
+    }
+)
 
 /**
  * Universal API request utility for TBE apps
@@ -30,10 +61,27 @@ export const sendRequest = async ({
     body,
     baseURL
 }: APIMakeRequestProps): Promise<APIResponseType> => {
-    const defaultBaseURL = envConfig.API_URL
+    // Check if we're in the browser
+    const isBrowser = typeof window !== "undefined"
+    
+    // If we're in the browser and no custom baseURL is provided, use the proxy
+    const shouldUseProxy = isBrowser && !baseURL
+    
+    let finalUrl: string
+    
+    if (shouldUseProxy) {
+        // Use the proxy route - remove /api prefix if it exists
+        const cleanUrl = url.startsWith('/api/') ? url.substring(4) : url
+        finalUrl = `/api/proxy${cleanUrl}`
+    } else {
+        // Use direct API URL (for server-side or custom baseURL)
+        const defaultBaseURL = envConfig.API_URL
+        finalUrl = baseURL ? `${baseURL}${url}` : `${defaultBaseURL}${url}`
+    }
+    
     const config: AxiosRequestConfig = {
         method,
-        url: baseURL ? `${baseURL}${url}` : `${defaultBaseURL}${url}`,
+        url: finalUrl,
         headers: {
             ...headers,
             cache: "no-store"
