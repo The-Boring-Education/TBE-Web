@@ -6,12 +6,6 @@
     "devCommand": "cd ../.. && pnpm run dev:quizes",
     "cleanUrls": true,
     "trailingSlash": false,
-    "rewrites": [
-        {
-            "source": "/((?!api|_next|_vercel|.*\\..*).*)",
-            "destination": "/index.html"
-        }
-    ],
     "headers": [
         {
             "source": "/(.*)",
