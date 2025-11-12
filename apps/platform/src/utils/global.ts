@@ -1,4 +1,11 @@
-import { getSEOMeta, IN_DEV_PAGES, routes, seoCommonMeta } from '@/constant';
+/* eslint-disable no-console */
+import {
+  envConfig,
+  getSEOMeta,
+  IN_DEV_PAGES,
+  routes,
+  seoCommonMeta,
+} from '@/constant';
 import type {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
@@ -85,9 +92,13 @@ const getProjectPageProps = async (context: any) => {
         }
       } else {
         // No specific chapter requested - find the first incomplete chapter or first chapter
-        const allChapters = project.sections.flatMap((section) => section.chapters);
-        const firstIncompleteChapter = allChapters.find((chapter) => !chapter.isCompleted);
-        
+        const allChapters = project.sections.flatMap(
+          (section) => section.chapters
+        );
+        const firstIncompleteChapter = allChapters.find(
+          (chapter) => !chapter.isCompleted
+        );
+
         if (firstIncompleteChapter) {
           // Show first incomplete chapter
           currentChapterId = firstIncompleteChapter.chapterId.toString();
@@ -364,25 +375,44 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
 
   const seoMeta = getSEOMeta(slug);
 
-  const { status, data: jobData } = await fetchAPIData(routes.api.unskilled);
+  // Fetch graph data directly from Python backend
+  try {
+    const response = await fetch(
+      `${envConfig.PYTHON_BACKEND_URL}/api/v1/unskilled/graph-data`
+    );
 
-  if (!status) {
+    if (!response.ok) {
+      throw new Error(`API responded with status ${response.status}`);
+    }
+
+    const apiResponse = await response.json();
+    const jobData = apiResponse.data || null;
+
+    if (!jobData) {
+      return {
+        redirect: {
+          destination: routes.home,
+        },
+      };
+    }
+
+    const isDev = IN_DEV_PAGES.some((page) => page === slug);
+
+    return {
+      props: {
+        seoMeta,
+        jobData,
+        isDev,
+      },
+    };
+  } catch (error) {
+    // If Python backend is down or returns error, redirect to home
     return {
       redirect: {
         destination: routes.home,
       },
     };
   }
-
-  const isDev = IN_DEV_PAGES.some((page) => page === slug);
-
-  return {
-    props: {
-      seoMeta,
-      jobData,
-      isDev,
-    },
-  };
 };
 
 const getCertificatePageProps = async ({ query: { certificateId } }: any) => {

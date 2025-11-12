@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import crypto from 'crypto';
 
 import {
@@ -28,9 +29,24 @@ import type {
 } from '@/interfaces';
 
 const fetchAPIData = async (url: string) => {
-  const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
+  try {
+    const response = await fetch(`${envConfig.BASE_API_URL}/${url}`);
+    let data: any = null;
+    try {
+      data = await response.json();
+    } catch (e) {
+      // ignore JSON parse errors and keep data as null
+    }
 
-  return await response.json();
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    // Network or other fetch-level error
+    return { ok: false, status: 0, data: null };
+  }
 };
 
 const formatDate = ({
