@@ -4,6 +4,8 @@ import tseslint from "typescript-eslint"
 import pluginReactHooks from "eslint-plugin-react-hooks"
 import pluginReact from "eslint-plugin-react"
 import globals from "globals"
+import simpleImportSort from "eslint-plugin-simple-import-sort"
+import unusedImports from "eslint-plugin-unused-imports"
 import { config as baseConfig } from "./base.js"
 
 /**
@@ -28,7 +30,9 @@ export const config = [
     },
     {
         plugins: {
-            "react-hooks": pluginReactHooks
+            "react-hooks": pluginReactHooks,
+            "simple-import-sort": simpleImportSort,
+            "unused-imports": unusedImports
         },
         settings: { react: { version: "detect" } },
         rules: {
@@ -44,8 +48,29 @@ export const config = [
             "react/no-unescaped-entities": "off",
             "react/jsx-boolean-value": ["warn", "never"],
             "react/self-closing-comp": "warn",
+            // Import sorting and management
+            "simple-import-sort/exports": "warn",
+            "simple-import-sort/imports": "warn",
+            "unused-imports/no-unused-imports": "warn",
+            "unused-imports/no-unused-vars": [
+                "warn",
+                {
+                    vars: "all",
+                    varsIgnorePattern: "^_",
+                    args: "after-used",
+                    argsIgnorePattern: "^_"
+                }
+            ],
             // TypeScript-specific rules
-            "@typescript-eslint/no-unused-vars": "warn",
+            "@typescript-eslint/no-unused-vars": [
+                "warn",
+                {
+                    vars: "all",
+                    varsIgnorePattern: "^_",
+                    args: "after-used",
+                    argsIgnorePattern: "^_"
+                }
+            ],
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/consistent-type-imports": "warn",
             "@typescript-eslint/no-unused-expressions": "off" // Disable problematic rule

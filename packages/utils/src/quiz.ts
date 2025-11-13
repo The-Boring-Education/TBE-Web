@@ -15,7 +15,7 @@ export const quizService = {
     async getCategories() {
         try {
             const response = await sendRequest({
-                url: "/api/v1/quiz/categories",
+                url: "/api/v1/quiz",
                 method: "GET"
             })
 
