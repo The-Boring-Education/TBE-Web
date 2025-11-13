@@ -378,7 +378,7 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
   // Fetch graph data directly from Python backend
   try {
     const response = await fetch(
-      `${envConfig.PYTHON_BACKEND_URL}/api/v1/unskilled/graph-data`
+      `${envConfig.UNSKILLED_API_URL}/unskilled/graph-data`
     );
 
     if (!response.ok) {
@@ -388,28 +388,24 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
     const apiResponse = await response.json();
     const jobData = apiResponse.data || null;
 
-    if (!jobData) {
-      return {
-        redirect: {
-          destination: routes.home,
-        },
-      };
-    }
-
     const isDev = IN_DEV_PAGES.some((page) => page === slug);
 
     return {
       props: {
         seoMeta,
-        jobData,
+        jobData: jobData || null,
         isDev,
       },
     };
   } catch (error) {
-    // If Python backend is down or returns error, redirect to home
+    // If Python backend is down or returns error, show page with no data
+    const isDev = IN_DEV_PAGES.some((page) => page === slug);
+
     return {
-      redirect: {
-        destination: routes.home,
+      props: {
+        seoMeta,
+        jobData: null,
+        isDev,
       },
     };
   }

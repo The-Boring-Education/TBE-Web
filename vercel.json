@@ -1,6 +1,5 @@
 {
-    "version": 2,
-    "monorepo": true,
-    "buildCommand": "pnpm run build",
-    "installCommand": "pnpm install"
+  "version": 2,
+  "buildCommand": "pnpm run build",
+  "installCommand": "pnpm install"
 }

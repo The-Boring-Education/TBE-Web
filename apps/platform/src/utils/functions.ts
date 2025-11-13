@@ -35,7 +35,7 @@ const fetchAPIData = async (url: string) => {
     try {
       data = await response.json();
     } catch (e) {
-      // ignore JSON parse errors and keep data as null
+      console.log('No JSON response body', e);
     }
 
     return {

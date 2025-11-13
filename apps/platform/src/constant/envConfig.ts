@@ -21,7 +21,7 @@ const NEXT_PUBLIC_ONBOARDING_APP_URL = process.env
 const QUIZ_APP_URL = process.env.QUIZ_APP_URL as string;
 
 // Python Backend (Unskilled Platform)
-const PYTHON_BACKEND_URL = process.env.PYTHON_BACKEND_URL as string;
+const UNSKILLED_API_URL = process.env.UNSKILLED_API_URL as string;
 
 // Email Service Configuration
 const EMAIL_SERVICE_URL = process.env.EMAIL_SERVICE_URL as string;
@@ -51,7 +51,7 @@ const envConfig = {
   FROM_EMAIL,
   NEXT_PUBLIC_ONBOARDING_APP_URL,
   QUIZ_APP_URL,
-  PYTHON_BACKEND_URL,
+  UNSKILLED_API_URL,
 };
 
 export { envConfig };
