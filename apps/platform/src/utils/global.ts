@@ -375,7 +375,7 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
 
   const seoMeta = getSEOMeta(slug);
 
-  // Fetch graph data directly from Python backend
+  // Fetch graph data directly from Unskilled Platform
   try {
     const response = await fetch(
       `${envConfig.UNSKILLED_API_URL}/unskilled/graph-data`

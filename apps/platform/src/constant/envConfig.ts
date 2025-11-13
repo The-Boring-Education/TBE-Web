@@ -19,8 +19,6 @@ const PREPYATRA_APP_URL = process.env.PREPYATRA_APP_URL as string;
 const NEXT_PUBLIC_ONBOARDING_APP_URL = process.env
   .NEXT_PUBLIC_ONBOARDING_APP_URL as string;
 const QUIZ_APP_URL = process.env.QUIZ_APP_URL as string;
-
-// Python Backend (Unskilled Platform)
 const UNSKILLED_API_URL = process.env.UNSKILLED_API_URL as string;
 
 // Email Service Configuration
