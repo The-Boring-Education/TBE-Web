@@ -1,6 +1,7 @@
 import { ExternalLink, Linkedin, Github } from "lucide-react"
 import { useState, useEffect } from "react"
 
+
 import { Button } from "../ui/button"
 import {
     Dialog,
@@ -51,6 +52,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
         preferredCategories: [] as InterviewCategory[]
     })
     const [loading, setLoading] = useState(false)
+    const [activeBtn, setActiveBtn] = useState("")
 
     useEffect(() => {
         if (currentData) {
@@ -370,7 +372,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                                         key={category.value}
                                         type='button'
                                         onClick={() => {
-                                            // Toggle selection: add if not present, remove if present
+                                            
                                             const selected = formData.preferredCategories.includes(category.value);
                                             let updatedCategories;
                                             if (selected) {
@@ -410,20 +412,29 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
 
                     {/* Action Buttons */}
                     <div className='flex gap-3 pt-4'>
-                        <Button
-                            onClick={handleSubmit}
-                            disabled={loading}
-                            size="sm"
-                            className='flex-1 bg-primary text-white hover:bg-primary/90'>
-                            {loading ? "Updating..." : "Update Details"}
-                        </Button>
-                        <Button
-                            onClick={onClose}
-                            variant='outline'
-                            size="sm"
-                            className='flex-1 border-greyLight text-contentLight hover:bg-greyLight'>
-                            Cancel
-                        </Button>
+                    <Button
+                        onClick={() => { setActiveBtn("update"); handleSubmit(); }}
+                        disabled={loading}
+                        size="sm"
+                        className={`flex-1 border border-red-600 transition-colors duration-200 font-semibold
+                        ${activeBtn === "update" 
+                            ? "bg-white text-red-600" 
+                            : "bg-red-600 text-white"}
+                        hover:bg-white hover:text-red-600`}
+                    >
+                        {loading ? "Updating..." : "Update Details"}
+                    </Button>
+                    <Button
+                        onClick={() => { setActiveBtn("cancel"); onClose(); }}
+                        size="sm"
+                        className={`flex-1 border border-red-600 transition-colors duration-200 font-semibold
+                        ${activeBtn === "cancel" 
+                            ? "bg-white text-red-600" 
+                            : "bg-red-600 text-white"}
+                        hover:bg-white hover:text-red-600`}
+                    >
+                        Cancel
+                    </Button>
                     </div>
                 </div>
             </DialogContent>
