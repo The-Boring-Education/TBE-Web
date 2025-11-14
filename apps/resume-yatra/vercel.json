@@ -2,6 +2,6 @@
     "buildCommand": "cd ../.. && pnpm run build:resume-yatra",
     "outputDirectory": ".next",
     "framework": "nextjs",
-    "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
+    "installCommand": "cd ../.. && corepack enable && corepack prepare pnpm@9.15.9 --activate && pnpm install --no-frozen-lockfile",
     "devCommand": "cd ../.. && pnpm run dev:resume-yatra"
 }
