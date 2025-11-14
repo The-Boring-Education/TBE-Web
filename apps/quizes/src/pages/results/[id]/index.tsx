@@ -7,7 +7,7 @@ import { trackEvent } from "@tbe/utils"
 import { ArrowLeft, Clock, Target,Trophy } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useMemo,useRef } from "react"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 
 interface QuizQuestion {
     _id?: string
@@ -37,15 +37,13 @@ function ResultsContent() {
         data: quizData,
         isLoading,
         error
-    } = useQuery(
-        ["quiz", id],
-        () => quizApi.getQuestions(id!),
-        {
-            enabled: !!id,
-            staleTime: 0, // Always fetch fresh data
-            cacheTime: 0 // Don't cache the data
-        }
-    )
+    } = useQuery({
+        queryKey: ["quiz", id],
+        queryFn: () => quizApi.getQuestions(id!),
+        enabled: !!id,
+        staleTime: 0, // Always fetch fresh data
+        gcTime: 0 // Don't cache the data (cacheTime renamed to gcTime in v5)
+    })
 
     const questions: Question[] =
         quizData?.data?.questions?.map((q: QuizQuestion) => ({
