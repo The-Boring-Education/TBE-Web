@@ -30,11 +30,9 @@ const nextConfig = {
         return config
     },
 
-    experimental: {
-        // Add experimental options here if needed
-        // Disable tracing to avoid symlink issues on Windows
-        outputFileTracing: false
-    },
+    // Removed experimental.outputFileTracing: false
+    // This was preventing routes-manifest.json from being generated in Next.js 15
+    // Next.js 15 handles file tracing automatically for Vercel deployments
 
     compiler: {
         // Remove console logs in production

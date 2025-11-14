@@ -1,7 +1,7 @@
 {
-    "buildCommand": "cd ../.. && pnpm run build:prep-yatra",
+    "buildCommand": "cd ../.. && pnpm run build:resume-yatra",
     "outputDirectory": ".next",
     "framework": "nextjs",
-    "installCommand": "pnpm install --no-frozen-lockfile",
-    "devCommand": "pnpm dev"
+    "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
+    "devCommand": "cd ../.. && pnpm run dev:resume-yatra"
 }
