@@ -17,7 +17,7 @@ import {
     Trophy,
     Zap} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 // Loading component
 const MetricLoader = () => (
@@ -131,9 +131,9 @@ function StatsContent() {
         data: metricsData,
         isLoading: metricsLoading,
         error: metricsError
-    } = useQuery<PerformanceMetrics>(
-        ['performance-metrics', user?.id, timeRange],
-        async (): Promise<PerformanceMetrics> => {
+    } = useQuery<PerformanceMetrics>({
+        queryKey: ['performance-metrics', user?.id, timeRange],
+        queryFn: async (): Promise<PerformanceMetrics> => {
             if (!user?.id) throw new Error('User not authenticated')
             const response = await quizApi.getUserAnalytics(user.id)
             if (!response.success) {
@@ -141,18 +141,16 @@ function StatsContent() {
             }
             return response.data as PerformanceMetrics
         },
-        {
-            enabled: !!user?.id
-        }
-    )
+        enabled: !!user?.id
+    })
 
     const {
         data: categoryData,
         isLoading: categoryLoading,
         error: categoryError
-    } = useQuery<CategoryPerformance[]>(
-        ['category-performance', user?.id, timeRange],
-        async (): Promise<CategoryPerformance[]> => {
+    } = useQuery<CategoryPerformance[]>({
+        queryKey: ['category-performance', user?.id, timeRange],
+        queryFn: async (): Promise<CategoryPerformance[]> => {
             if (!user?.id) throw new Error('User not authenticated')
             const response = await quizApi.getUserSessions(user.id)
             if (!response.success) {
@@ -160,10 +158,8 @@ function StatsContent() {
             }
             return response.data as CategoryPerformance[]
         },
-        {
-            enabled: !!user?.id
-        }
-    )
+        enabled: !!user?.id
+    })
 
     const handleError = useCallback((error: unknown) => {
         if (error instanceof APIError) {
