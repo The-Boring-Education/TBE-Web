@@ -103,18 +103,19 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
     return (
       <div className={`space-y-6 ${className}`}>
         {/* Simple Hero Card */}
-        <Card className="bg-gradient-to-br from-primary/20 to-purple-600/20 border-primary/30">
+        <Card className="bg-white border border-black/10 shadow-md">
           <CardHeader className="text-center pb-4">
             <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 bg-[#FF5757] rounded-full flex items-center justify-center shadow-lg">
                 <Target className="w-8 h-8 text-white" />
               </div>
             </div>
             
-            <CardTitle className="text-2xl font-bold text-white mb-3">
+            <CardTitle className="text-2xl font-bold text-black mb-3">
+
               Ready to Transform Your Skills?
             </CardTitle>
-            <CardDescription className="text-gray-300 text-base max-w-lg mx-auto">
+            <CardDescription className="text-gray-600 text-base max-w-lg mx-auto">
               Create structured learning challenges to stay consistent, track progress, and share your journey with the world.
             </CardDescription>
           </CardHeader>
@@ -123,34 +124,34 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
             {/* Key Benefits */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div className="flex flex-col items-center space-y-2">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-blue-400" />
+               <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
+                  <Calendar className="w-6 h-6 text-[#FF5757]" />
                 </div>
-                <div className="text-white font-medium">Daily Consistency</div>
-                <div className="text-gray-400 text-xs">Build lasting habits</div>
+                <div className="text-black font-medium">Daily Consistency</div>
+                <div className="text-gray-600 text-xs">Build lasting habits</div>
               </div>
               
               <div className="flex flex-col items-center space-y-2">
-                <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-green-400" />
+               <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-[#FF5757]" />
                 </div>
-                <div className="text-white font-medium">Track Progress</div>
-                <div className="text-gray-400 text-xs">See your growth</div>
+                <div className="text-Black font-medium">Track Progress</div>
+                <div className="text-gray-600 text-xs">See your growth</div>
               </div>
               
               <div className="flex flex-col items-center space-y-2">
-                <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
-                  <Share2 className="w-6 h-6 text-purple-400" />
+              <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
+                  <Share2 className="w-6 h-6 text-[#FF5757]" />
                 </div>
-                <div className="text-white font-medium">Share Journey</div>
-                <div className="text-gray-400 text-xs">Inspire others</div>
+                <div className="text-Black font-medium">Share Journey</div>
+                <div className="text-gray-600 text-xs">Inspire others</div>
               </div>
             </div>
 
             {/* CTA Button */}
             <Button
               onClick={() => setIsCreateModalOpen(true)}
-              className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="bg-[#FF5757] hover:bg-[#e64f4f] text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
               size="sm"
             >
               <Plus className="w-5 h-5 mr-2" />
@@ -175,18 +176,18 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
       {/* Header with Stats */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-contentLight flex items-center gap-2">
-            <Target className="w-6 h-6 text-primary" />
+        <h2 className="text-2xl font-bold text-black flex items-center gap-2">
+            <Target className="w-6 h-6 text-[#FF5757]" />
             My Challenges
           </h2>
-          <p className="text-greyDark mt-1">
+          <p className="text-gray-600 mt-1">
             {activeChallenges.length} active • {completedChallenges.length} completed
           </p>
         </div>
         <Button
           onClick={() => setIsCreateModalOpen(true)}
-          variant="default"
-          className="text-sm h-5"
+          className="text-sm h-8 bg-[#FF5757] hover:bg-[#e64f4f] text-white"
+
         >
           New Challenge
           <Plus className="w-1 h-1" />
@@ -196,13 +197,14 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="glass border-greyLight">
+        <Card className="bg-white border border-black/10 shadow-sm">
+
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-yellow-500" />
+              <Trophy className="w-5 h-5 text-[#FF5757]" />
               <div>
-                <div className="text-xl font-bold text-contentLight">{challenges.length}</div>
-                <div className="text-xs text-greyDark">Total Challenges</div>
+                <div className="text-xl font-bold text-black">{challenges.length}</div>
+                <div className="text-xs text-gray-600">Total Challenges</div>
               </div>
             </div>
           </CardContent>
@@ -211,7 +213,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
         <Card className="glass border-greyLight">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Flame className="w-5 h-5 text-orange-500" />
+              <Flame className="w-5 h-5 text-[#FF5757]" />
               <div>
                 <div className="text-xl font-bold text-contentLight">{activeChallenges.length}</div>
                 <div className="text-xs text-greyDark">Active Now</div>
@@ -223,7 +225,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
         <Card className="glass border-greyLight">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-blue-500" />
+              <Calendar className="w-5 h-5 text-[#FF5757]" />
               <div>
                 <div className="text-xl font-bold text-contentLight">{totalDaysCommitted}</div>
                 <div className="text-xs text-greyDark">Days Committed</div>
@@ -235,7 +237,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
         <Card className="glass border-greyLight">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Star className="w-5 h-5 text-green-600" />
+              <Star className="w-5 h-5 text-[#FF5757]" />
               <div>
                 <div className="text-xl font-bold text-contentLight">{completionRate}%</div>
                 <div className="text-xs text-greyDark">Success Rate</div>
@@ -247,7 +249,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
 
       {/* All Challenges Grid */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-contentLight">All Challenges</h3>
+        <h3 className="text-lg font-semibold text-black">All Challenges</h3>
         <div className="grid gap-4 md:grid-cols-2">
           {challenges.map((challenge) => (
             <ChallengeCard
