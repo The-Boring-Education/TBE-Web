@@ -37,18 +37,18 @@
   }
   
   html {
-    @apply scroll-smooth;
-  }
+  @apply scroll-smooth;
+  background: #FFD5D5;
+}
 }
 
 @layer base {
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-lightBG text-contentLight scroll-smooth font-primary;
-    background: #F8F8F8;
+    @apply text-contentLight scroll-smooth font-primary;
+    background: #FFF0F0;
     min-height: 100vh;
   }
 }
