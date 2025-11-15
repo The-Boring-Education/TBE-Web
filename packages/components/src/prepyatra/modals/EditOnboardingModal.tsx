@@ -192,7 +192,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 <DialogHeader>
-                    <DialogTitle className='text-contentLight text-xl'>
+                    <DialogTitle className='text-contentLight text-[#FF5757] text-xl'>
                         Edit Onboarding Details
                     </DialogTitle>
                 </DialogHeader>
@@ -272,143 +272,150 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
 
                     {/* Goal Selection */}
                     <div className='space-y-3'>
-                        <h3 className='text-lg font-semibold text-contentLight'>
-                            Goal Timeline 🎯
-                        </h3>
-                        <div className='space-y-2'>
-                            {GOALS.map((goal) => (
-                                <button
-                                    key={goal.value}
-                                    type='button'
-                                    onClick={() =>
-                                        handleInputChange("goal", goal.value)
-                                    }
-                                    className={`w-full p-3 border-2 rounded-lg text-left transition-all relative ${
-                                        formData.goal === goal.value as OnboardingGoalType
-                                            ? "border-primary bg-primary/10"
-                                            : "border-greyLight hover:border-greyDark bg-white/50"
-                                    }`}>
-                                    {goal.popular && (
-                                        <span className='absolute top-1 right-1 bg-orange-500 text-white text-xs px-2 py-1 rounded-full'>
-                                            Popular
-                                        </span>
-                                    )}
-                                    <div className='flex items-center space-x-3'>
-                                        <span className='text-xl'>
-                                            {goal.icon}
-                                        </span>
-                                        <div>
-                                            <div className='font-medium text-contentLight'>
-                                                {goal.label}
-                                            </div>
-                                            <div className='text-sm text-greyDark'>
-                                                {goal.description}
-                                            </div>
+                    <h3 className='text-lg font-semibold text-contentLight'>
+                        Goal Timeline 🎯
+                    </h3>
+                    <div className='space-y-2'>
+                        {GOALS.map((goal) => (
+                            <button
+                                key={goal.value}
+                                type='button'
+                                onClick={() =>
+                                    handleInputChange("goal", goal.value)
+                                }
+                                className={`w-full p-3 border-2 rounded-lg text-left transition-all relative ${
+                                    formData.goal === goal.value as OnboardingGoalType
+                                        ? "bg-[#FF5757] border-[#FF5757] text-white"
+                                        : "bg-white border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757]/10"
+                                }`}>
+                                {goal.popular && (
+                                    <span className='absolute top-1 right-1 bg-orange-500 text-white text-xs px-2 py-1 rounded-full'>
+                                        Popular
+                                    </span>
+                                )}
+                                <div className='flex items-center space-x-3'>
+                                    <span className='text-xl'>
+                                        {goal.icon}
+                                    </span>
+                                    <div>
+                                        <div className={`font-medium ${
+                                            formData.goal === goal.value as OnboardingGoalType
+                                                ? "text-white"
+                                                : "text-contentLight"
+                                        }`}>
+                                            {goal.label}
+                                        </div>
+                                        <div className={`text-sm ${
+                                            formData.goal === goal.value as OnboardingGoalType
+                                                ? "text-white/80"
+                                                : "text-greyDark"
+                                        }`}>
+                                            {goal.description}
                                         </div>
                                     </div>
-                                </button>
-                            ))}
-                        </div>
+                                </div>
+                            </button>
+                        ))}
                     </div>
+                </div>
 
                     
                     {/* Target Companies */}
-                    <div className='space-y-3'>
-                        <h3 className='text-lg font-semibold text-contentLight'>
-                            Target Companies 🏢
-                        </h3>
-
-                        <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
-                            {COMPANY_TYPES.map((company) => {
-                                const value = company.value as OnboardingCompanyType;
-                                const isSelected = formData.targetCompanies.includes(value);
-
-                                return (
-                                    <button
-                                        key={company.value}
-                                        type='button'
-                                        onClick={() => {
-                                            const exists = formData.targetCompanies.includes(value);
-
-                                            const updated = exists
-                                                ? formData.targetCompanies.filter((v) => v !== value)
-                                                : [...formData.targetCompanies, value];
-
-                                            handleInputChange("targetCompanies", updated);
-                                        }}
-                                        className={`p-3 border-2 rounded-lg text-left transition-all
-                                            ${
-                                                isSelected
-                                                    ? "bg-[#FF5757] border-[#FF5757] text-white"
-                                                    : "bg-white border-[#FF5757] text-[#FF5757]"
-                                            }
-                                        `}
-                                    >
-                                        <div className='text-xl mb-1'>{company.icon}</div>
-                                        <div className='font-medium text-sm mb-1'>{company.label}</div>
-                                        <div className='text-xs opacity-80'>{company.description}</div>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                         <div className='text-sm text-greyDark text-center'>
-                           {formData.targetCompanies.length} selected
-                         </div>
-                    </div>
-
-                      {/* Interview Categories */}
-                   <div className='space-y-3'>
+                  <div className='space-y-3'>
                     <h3 className='text-lg font-semibold text-contentLight'>
-                        Interview Category 📚
+                        Target Companies 🏢
                     </h3>
 
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
-                        {INTERVIEW_CATEGORIES.map((category) => {
-                            const isSelected = formData.preferredCategories.includes(category.value);
+                        {COMPANY_TYPES.map((company) => {
+                            const value = company.value as OnboardingCompanyType;
+                            const isSelected = formData.targetCompanies.includes(value);
 
                             return (
                                 <button
-                                    key={category.value}
+                                    key={company.value}
                                     type='button'
                                     onClick={() => {
-                                        const alreadySelected =
-                                            formData.preferredCategories.includes(category.value);
+                                        const exists = formData.targetCompanies.includes(value);
 
-                                        const updated = alreadySelected
-                                            ? formData.preferredCategories.filter(
-                                                (val) => val !== category.value
-                                            )
-                                            : [...formData.preferredCategories, category.value];
+                                        const updated = exists
+                                            ? formData.targetCompanies.filter((v) => v !== value)
+                                            : [...formData.targetCompanies, value];
 
-                                        handleInputChange("preferredCategories", updated);
+                                        handleInputChange("targetCompanies", updated);
                                     }}
                                     className={`p-3 border-2 rounded-lg text-left transition-all
                                         ${
                                             isSelected
                                                 ? "bg-[#FF5757] border-[#FF5757] text-white"
-                                                : "bg-white border-[#FF5757] text-[#FF5757]"
+                                                : "bg-white border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757]/10"
                                         }
                                     `}
                                 >
-                                    <div className='text-xl mb-1'>{category.icon}</div>
-
-                                    <div className='font-medium text-sm mb-1'>
-                                        {category.label}
-                                    </div>
-
-                                    <div className='text-xs opacity-80'>
-                                        {category.description}
-                                    </div>
+                                    <div className='text-xl mb-1'>{company.icon}</div>
+                                    <div className='font-medium text-sm mb-1'>{company.label}</div>
+                                    <div className='text-xs opacity-80'>{company.description}</div>
                                 </button>
                             );
                         })}
                     </div>
-
                     <div className='text-sm text-greyDark text-center'>
-                        {formData.preferredCategories.length} selected
+                        {formData.targetCompanies.length} selected
                     </div>
                 </div>
 
+                      {/* Interview Categories */}
+                      <div className='space-y-3'>
+                        <h3 className='text-lg font-semibold text-contentLight'>
+                            Interview Category 📚
+                        </h3>
+
+                        <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+                            {INTERVIEW_CATEGORIES.map((category) => {
+                                const isSelected = formData.preferredCategories.includes(category.value);
+
+                                return (
+                                    <button
+                                        key={category.value}
+                                        type='button'
+                                        onClick={() => {
+                                            const alreadySelected =
+                                                formData.preferredCategories.includes(category.value);
+
+                                            const updated = alreadySelected
+                                                ? formData.preferredCategories.filter(
+                                                    (val) => val !== category.value
+                                                )
+                                                : [...formData.preferredCategories, category.value];
+
+                                            handleInputChange("preferredCategories", updated);
+                                        }}
+                                        className={`p-3 border-2 rounded-lg text-left transition-all
+                                            ${
+                                                isSelected
+                                                    ? "bg-[#FF5757] border-[#FF5757] text-white"
+                                                    : "bg-white border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757]/10"
+                                            }
+                                        `}
+                                    >
+                                        <div className='text-xl mb-1'>{category.icon}</div>
+
+                                        <div className='font-medium text-sm mb-1'>
+                                            {category.label}
+                                        </div>
+
+                                        <div className='text-xs opacity-80'>
+                                            {category.description}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        <div className='text-sm text-greyDark text-center'>
+                            {formData.preferredCategories.length} selected
+                        </div>
+                    </div>
 
                     {/* Action Buttons */}
                     <div className='flex gap-3 pt-4'>
