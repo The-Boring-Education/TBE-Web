@@ -7,7 +7,7 @@ interface OnboardingData {
   experienceLevel: string;
   linkedInUrl?: string;
   goal: '3Months' | '6Months' | '1Year';
-  targetCompanies: ('Startup' | 'MidSize' | 'MNC' | 'FAANG')[];
+  targetCompanies: ('Startup' | 'MID_SIZE' | 'MNC' | 'FAANG')[];
   preferredCategories: (
     | 'MNC'
     | 'MERN'
@@ -76,7 +76,7 @@ const EnhancedOnboarding: React.FC<EnhancedOnboardingProps> = ({
       description: 'Fast-paced, innovative companies',
     },
     {
-      value: 'MidSize' as const,
+      value: 'MID_SIZE' as const,
       label: 'Mid-size Companies',
       icon: '🏢',
       description: 'Established growing companies',
