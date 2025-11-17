@@ -103,8 +103,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
   };
 
   return (
-    <Card className="mb-1">
-      <CardHeader className="text-center p-2">
+    <Card className="mb-1 hover:border-[#FF5757]/60 transition-all duration-200  ">
+      <CardHeader className="text-center p-2 ">
         <Avatar className="w-20 h-20 mx-auto mb-3 ring-2 ring-[#FF5757]/20 ring-offset-2">
             <AvatarImage
               src={profile?.image || user?.picture}
@@ -169,7 +169,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               </div>
               Experience
             </Text>
-            <Badge variant="default" className="bg-[#FF5757] text-white border-0 text-xs px-3 py-1">
+            <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1">
               {profile?.prepYatra?.experienceLevel || "Not set"}
             </Badge>
           </FlexContainer>
@@ -183,7 +183,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             </div>
             Goal
           </Text>
-          <Badge variant="default" className="bg-[#FF5757] text-white border-0 text-xs px-3 py-1">
+          <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1">
             {profile?.prepYatra?.goal || "Not set"}
           </Badge>
         </FlexContainer>
@@ -197,7 +197,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             </div>
             Occupation
           </Text>
-          <Badge variant="default" className="bg-[#FF5757] text-white border-0 text-xs px-3 py-1">
+          <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1">
             {profile?.occupation ? profile.occupation.replace("_", " ") : "Not set"}
           </Badge>
         </FlexContainer>
@@ -211,7 +211,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               </div>
               Purpose
             </Text>
-              <Badge variant="default" className="bg-[#FF5757] text-white border-0 text-xs px-3 py-1 max-w-[65%] text-right">
+              <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1 max-w-[65%] text-right">
                 {profile?.purpose?.length
                   ? profile.purpose.map((p) => String(p).replace("_", " ")).join(", ")
                   : "Not set"}
@@ -229,7 +229,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               </div>
               Joined
             </Text>
-             <Badge variant="default" className="bg-[#FF5757] text-white border-0 text-xs px-3 py-1">
+             <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200  text-xs px-3 py-1">
                 {profile?.createdAt
                   ? new Date(profile.createdAt).toLocaleDateString()
                   : "Unknown"}
@@ -237,33 +237,31 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           </FlexContainer>
         </div>
 
-        {/* ✅ Action Buttons */}
-        <div className="flex flex-col gap-2 mt-2 items-stretch w-full">
+       {/* ✅ Action Buttons */}
+          <div className="flex flex-row justify-center gap-4 mt-2 w-full max-w-md mx-auto">
+            {profile?.userName && (
+              <Button
+                onClick={handleShareJourneyClick}
+                variant="OUTLINE"
+                text="Share Your Journey"
+                size="SMALL"
+                className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] text-centre hover:text-white transition-all duration-200 font-semibold"
+                icon={<Copy className="w-2 h-2 mr-2" />}
+              />
+            )}
 
-        {profile?.userName && (
-            <Button
-              onClick={handleShareJourneyClick}
-              variant="OUTLINE"
-              text="Share Your Journey"
-              size="SMALL"
-              className="w-full border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] hover:text-white transition-all duration-200 font-semibold"
-              icon={<Copy className="w-2 h-2 mr-2" />}
-            />
-          )}
-          
-          {onEditClick && (
-            <Button
-              onClick={onEditClick}
-              variant="OUTLINE"
-              text="Edit Onboarding Details"
-              size="SMALL"
-              className="w-full border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] hover:text-white transition-all duration-200 font-semibold"
-              icon={<Edit className="w-2 h-2 mr-2" />}
-            />
-          )}
+            {onEditClick && (
+              <Button
+                onClick={onEditClick}
+                variant="OUTLINE"
+                text="Edit Your Details"
+                size="SMALL"
+                className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] hover:text-white transition-all duration-200 font-semibold"
+                icon={<Edit className="w-3 h-2 mr-2" />}
+              />
+            )}
+          </div>
 
-         
-        </div>
       </CardContent>
     </Card>
   );

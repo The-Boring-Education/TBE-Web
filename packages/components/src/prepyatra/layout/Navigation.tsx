@@ -17,7 +17,7 @@ const Navigation = () => {
             initial={{y: -100}}
             animate={{y: 0}}
             transition={{duration: 0.5}}
-            className='fixed top-0 left-0 right-0 z-50 glass-dark backdrop-blur-md'>
+            className='fixed top-0 left-0 right-0 z-40 glass-dark backdrop-blur-md'>
             <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
                 <FlexContainer className='h-16' justifyCenter={false}>
                     <FlexContainer className='flex-1' justifyCenter={false}>
