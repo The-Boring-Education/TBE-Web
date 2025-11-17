@@ -3,16 +3,15 @@ import "@/styles/globals.css"
 import { AuthProvider } from "@tbe/auth"
 import { useAuth } from "@tbe/auth"
 import { PrepYatraGamificationProvider } from "@tbe/components"
-import type { AppProps } from "next/app"
-import Head from "next/head"
-import { useRouter } from "next/router"
-import React, { useEffect, useRef,useState } from "react"
-import { QueryClient, QueryClientProvider } from "react-query"
-
 import { Toaster as Sonner } from "@tbe/components"
 import { Toaster } from "@tbe/components"
 import { TooltipProvider } from "@tbe/components"
 import { initGA, trackPageview } from "@tbe/utils"
+import type { AppProps } from "next/app"
+import Head from "next/head"
+import { useRouter } from "next/router"
+import React, { useEffect, useRef, useState } from "react"
+import { QueryClient, QueryClientProvider } from "react-query"
 
 // Cache clearing component
 const CacheManager = () => {
@@ -41,7 +40,13 @@ const CacheManager = () => {
 }
 
 // App Content Component with onboarding logic
-const AppContent = ({ Component, pageProps }: { Component: AppProps['Component']; pageProps: any }) => {
+const AppContent = ({
+    Component,
+    pageProps
+}: {
+    Component: AppProps["Component"]
+    pageProps: any
+}) => {
     const router = useRouter()
     const { user, isAuthenticated, isLoading } = useAuth()
     const [isClient, setIsClient] = useState(false)
@@ -64,10 +69,11 @@ const AppContent = ({ Component, pageProps }: { Component: AppProps['Component']
 
     useEffect(() => {
         // Only run on client side
-        if (!isClient || isLoading || !isAuthenticated || isCheckingOnboarding) return
+        if (!isClient || isLoading || !isAuthenticated || isCheckingOnboarding)
+            return
 
         // Skip check for public pages
-        const publicPages = ['/auth', '/']
+        const publicPages = ["/auth", "/"]
         if (publicPages.includes(router.pathname)) return
 
         // Skip if already checked
@@ -79,27 +85,33 @@ const AppContent = ({ Component, pageProps }: { Component: AppProps['Component']
             hasCheckedOnboarding.current = true
             setIsCheckingOnboarding(true)
             try {
-                const base = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '')
-                const resp = await fetch(`${base}/user?email=${encodeURIComponent(user.email)}`)
+                const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(
+                    /\/$/,
+                    ""
+                )
+                const resp = await fetch(
+                    `${base}/user?email=${encodeURIComponent(user.email)}`
+                )
                 const json = await resp.json()
                 const isOnboarded = json?.data?.prepYatra?.pyOnboarded === true
 
                 if (!isOnboarded) {
                     // Redirect to external onboarding app
-                    const onboardingBaseUrl = process.env.NEXT_PUBLIC_ONBOARDING_URL
+                    const onboardingBaseUrl =
+                        process.env.NEXT_PUBLIC_ONBOARDING_URL
                     if (onboardingBaseUrl) {
                         const params = new URLSearchParams({
-                            userId: user?.id || '',
-                            email: user?.email || '',
-                            productId: 'prepyatra',
-                            from: 'prepyatra',
-                            redirect: `${window.location.origin}/dashboard`,
+                            userId: user?.id || "",
+                            email: user?.email || "",
+                            productId: "prepyatra",
+                            from: "prepyatra",
+                            redirect: `${window.location.origin}/dashboard`
                         })
                         window.location.href = `${onboardingBaseUrl}/?${params.toString()}`
                     }
                 }
             } catch (error) {
-                console.error('Error checking onboarding:', error)
+                console.error("Error checking onboarding:", error)
             } finally {
                 setIsCheckingOnboarding(false)
             }
@@ -107,16 +119,32 @@ const AppContent = ({ Component, pageProps }: { Component: AppProps['Component']
 
         // Run check only once when landing on protected pages
         void checkOnboardingStatus()
-    }, [isClient, isAuthenticated, isLoading, router.pathname, user?.id, isCheckingOnboarding])
+    }, [
+        isClient,
+        isAuthenticated,
+        isLoading,
+        router.pathname,
+        user?.id,
+        isCheckingOnboarding
+    ])
 
     // Show loading spinner while checking onboarding on protected pages
-    const publicPages = ['/auth', '/']
+    const publicPages = ["/auth", "/"]
     const isProtectedPage = !publicPages.includes(router.pathname)
-    
-    console.log('AppContent render - isAuthenticated:', isAuthenticated, 'user:', user, 'isCheckingOnboarding:', isCheckingOnboarding, 'pathname:', router.pathname)
-    
+
+    console.log(
+        "AppContent render - isAuthenticated:",
+        isAuthenticated,
+        "user:",
+        user,
+        "isCheckingOnboarding:",
+        isCheckingOnboarding,
+        "pathname:",
+        router.pathname
+    )
+
     if (isProtectedPage && isAuthenticated && isCheckingOnboarding) {
-        console.log('Showing onboarding check spinner')
+        console.log("Showing onboarding check spinner")
         return (
             <div className='min-h-screen flex items-center justify-center'>
                 <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary' />
@@ -174,7 +202,10 @@ export default function App({
                     <TooltipProvider>
                         <Toaster />
                         <Sonner />
-                        <AppContent Component={Component} pageProps={pageProps} />
+                        <AppContent
+                            Component={Component}
+                            pageProps={pageProps}
+                        />
                     </TooltipProvider>
                 </QueryClientProvider>
             </AuthProvider>

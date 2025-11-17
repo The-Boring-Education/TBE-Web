@@ -20,7 +20,7 @@ Create `.env.local` in `apps/resume-yatra/`:
 
 ```env
 # NextAuth Configuration
-NEXTAUTH_URL=http://localhost:3002
+NEXT_PUBLIC_AUTH_URL=http://localhost:3002
 NEXTAUTH_SECRET=generate-a-random-secret-here
 
 # GitHub OAuth (for authentication)
@@ -281,7 +281,7 @@ The `vercel.json` is pre-configured for monorepo deployment.
 ### Environment Variables for Production
 
 ```env
-NEXTAUTH_URL=https://your-domain.com
+NEXT_PUBLIC_AUTH_URL=https://your-domain.com
 NEXTAUTH_SECRET=your-production-secret
 GITHUB_CLIENT_ID=your-github-client-id
 GITHUB_CLIENT_SECRET=your-github-secret

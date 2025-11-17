@@ -1,15 +1,13 @@
-import { useQuery } from "@tanstack/react-query"
 import { useAuth } from "@tbe/auth"
 import { MarkdownRenderer } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
+import { quizApi } from "@tbe/services"
+import type {Question} from "@tbe/types"
 import { trackEvent } from "@tbe/utils"
 import { ArrowLeft, Clock, Target,Trophy } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useMemo,useRef } from "react"
-
-import { quizApi } from "@tbe/services"
-
-import {Question} from "@tbe/types"
+import { useQuery } from "@tanstack/react-query"
 
 interface QuizQuestion {
     _id?: string
@@ -44,7 +42,7 @@ function ResultsContent() {
         queryFn: () => quizApi.getQuestions(id!),
         enabled: !!id,
         staleTime: 0, // Always fetch fresh data
-        gcTime: 0  // Don't cache the data
+        gcTime: 0 // Don't cache the data (cacheTime renamed to gcTime in v5)
     })
 
     const questions: Question[] =

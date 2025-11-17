@@ -6,7 +6,7 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "echo 'No build step needed for services package'",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -14,14 +14,11 @@
     "@tbe/constants": "workspace:*",
     "@tbe/interface": "workspace:*",
     "@tbe/utils": "workspace:*",
-    "@tbe/types": "workspace:*"
+    "@tbe/types": "workspace:*",
+    "axios": "^1.4.0"
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
-    "@tbe/typescript-config": "workspace:*",
-    "@types/node": "^20.0.0",
-    "axios": "^1.4.0",
-    "eslint": "^9.34.0",
-    "typescript": "^5.9.2"
+    "eslint": "^9.34.0"
   }
 }

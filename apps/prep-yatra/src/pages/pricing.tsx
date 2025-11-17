@@ -1,4 +1,4 @@
-import {PrepYatraFooter, PrepYatraNavbar} from "@tbe/components"
+import { PrepYatraFooter, PrepYatraNavbar } from "@tbe/components"
 import { Badge } from "@tbe/components"
 import { Button } from "@tbe/components"
 import {
@@ -9,11 +9,10 @@ import {
     CardTitle
 } from "@tbe/components"
 import { useAuth } from "@tbe/components"
-import { Check, Crown,Star, Zap } from "lucide-react"
+import { useCashfreePayment } from "@tbe/hooks"
+import { Check, Crown, Star, Zap } from "lucide-react"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
-
-import {useCashfreePayment} from "@tbe/hooks"
 
 interface PricingPlan {
     id: string
@@ -175,11 +174,7 @@ const PricingPage: React.FC = () => {
 
     return (
         <div className='min-h-screen bg-background'>
-            <PrepYatraNavbar
-                username={user?.name || ""}
-                onSignOut={handleSignOut}
-                userId={user?.id}
-            />
+            <PrepYatraNavbar onSignOut={handleSignOut} userId={user?.id} />
 
             <main className='container mx-auto px-4 py-16'>
                 <div className='text-center mb-16'>
@@ -245,17 +240,19 @@ const PricingPage: React.FC = () => {
                             </CardHeader>
 
                             <CardContent className='space-y-4'>
-                                    <Button
-                                    variant={plan.popular
-                                        ? "PRIMARY"
-                                        : "SECONDARY"}
-                                    className="w-full"
+                                <Button
+                                    variant={
+                                        plan.popular ? "PRIMARY" : "SECONDARY"
+                                    }
+                                    className='w-full'
                                     onClick={() => handleSelectPlan(plan.id)}
                                     disabled={loading || plan.id === "free"}
-                                    text={loading
-                                        ? "Processing..."
-                                        : plan.buttonText}
-                                    />
+                                    text={
+                                        loading
+                                            ? "Processing..."
+                                            : plan.buttonText
+                                    }
+                                />
 
                                 <div className='space-y-3'>
                                     <h4 className='font-semibold text-sm'>

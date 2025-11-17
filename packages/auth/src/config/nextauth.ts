@@ -2,6 +2,11 @@ import type { NextAuthOptions } from "next-auth"
 import { createGoogleProvider } from "../providers/google"
 import { sessionConfig, getCookieConfig, getAuthSecret } from "./session"
 import type { AuthConfig } from "../types"
+import {
+    defaultSignInCallback,
+    defaultSessionCallback,
+    defaultJwtCallback
+} from "./callbacks"
 
 /**
  * Factory function to create NextAuth configuration
@@ -11,7 +16,7 @@ import type { AuthConfig } from "../types"
  * @returns NextAuth configuration object
  */
 export const createAuthOptions = (config: AuthConfig = {}): NextAuthOptions => {
-    const { pages, onSignIn, onSession } = config
+    const { pages, onSignIn, onSession, useDefaultCallbacks = true } = config
 
     return {
         providers: [createGoogleProvider()],
@@ -28,10 +33,15 @@ export const createAuthOptions = (config: AuthConfig = {}): NextAuthOptions => {
         },
 
         callbacks: {
-            async signIn({ user, account, profile }) {
+            async signIn({ user, account }) {
                 // If custom sign-in logic is provided, use it
                 if (onSignIn) {
                     return await onSignIn(user as any, account)
+                }
+
+                // Use default callback if enabled
+                if (useDefaultCallbacks) {
+                    return await defaultSignInCallback(user as any, account)
                 }
 
                 // Default: allow sign-in
@@ -39,7 +49,12 @@ export const createAuthOptions = (config: AuthConfig = {}): NextAuthOptions => {
             },
 
             async jwt({ token, user, account }) {
-                // Initial sign in
+                // Use default JWT callback if enabled
+                if (useDefaultCallbacks) {
+                    return await defaultJwtCallback({ token, user, account })
+                }
+
+                // Fallback: Basic JWT handling
                 if (account && user) {
                     return {
                         ...token,
@@ -60,6 +75,11 @@ export const createAuthOptions = (config: AuthConfig = {}): NextAuthOptions => {
                     if (onSession) {
                         return await onSession(session, token)
                     }
+
+                    // Use default callback if enabled
+                    if (useDefaultCallbacks) {
+                        return await defaultSessionCallback(session, token)
+                    }
                 }
 
                 return session
@@ -67,13 +87,13 @@ export const createAuthOptions = (config: AuthConfig = {}): NextAuthOptions => {
         },
 
         events: {
-            async signIn({ user, account, profile, isNewUser }) {
+            async signIn({ user, account }) {
                 console.log(
                     `User signed in: ${user.email} via ${account?.provider}`
                 )
             },
 
-            async signOut({ session, token }) {
+            async signOut({ session }) {
                 console.log(
                     `User signed out: ${session?.user?.email || "unknown"}`
                 )

@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@tbe/auth'
 import { DashboardNav,ProtectedRoute } from '@tbe/components/quizes'
 import { Card, CardContent, CardHeader, CardTitle } from '@tbe/components/quizes'
@@ -7,6 +6,8 @@ import { Badge } from '@tbe/components/quizes'
 import { Avatar, AvatarFallback, AvatarImage } from '@tbe/components/quizes'
 import { useToast } from '@tbe/components/quizes'
 import { APIError,leaderboardApi, userProfileApi } from '@tbe/services'
+import type { LeaderboardData, UserProfile } from '@tbe/types'
+import { formatDate } from '@tbe/utils'
 import { 
     Award,
     Clock,
@@ -20,9 +21,7 @@ import {
     TrendingUp, 
     Trophy} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
-
-import { formatDate, formatTime } from '@tbe/utils'
-import type { LeaderboardData, UserProfile } from '@tbe/types'
+import { useQuery } from '@tanstack/react-query'
 
 // Rank Badge Component
 interface RankBadgeProps {

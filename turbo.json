@@ -26,7 +26,10 @@
         "EMAIL_API_KEY",
         "FROM_EMAIL",
         "EMAIL_SERVICE_URL",
-        "SENTRY_AUTH_TOKEN"
+        "SENTRY_AUTH_TOKEN",
+        "ONBOARDING_APP_URL",
+        "QUIZZES_APP_URL",
+        "NEXTAUTH_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
@@ -65,7 +68,10 @@
         "EMAIL_API_KEY",
         "FROM_EMAIL",
         "EMAIL_SERVICE_URL",
-        "SENTRY_AUTH_TOKEN"
+        "SENTRY_AUTH_TOKEN",
+        "ONBOARDING_APP_URL",
+        "QUIZZES_APP_URL",
+        "NEXTAUTH_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",

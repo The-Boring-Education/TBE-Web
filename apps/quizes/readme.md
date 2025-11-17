@@ -61,7 +61,7 @@ Create `.env.local` in the app directory:
     ```bash
 # Authentication (inherited from platform)
 NEXTAUTH_SECRET=your-secret-key
-NEXTAUTH_URL=http://localhost:3002
+NEXT_PUBLIC_AUTH_URL=http://localhost:3002
 
 # API Configuration
 NEXT_PUBLIC_API_URL=http://localhost:3004

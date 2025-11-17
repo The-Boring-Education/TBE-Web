@@ -29,12 +29,12 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
 
-  experimental: {
+  // experimental: {
     optimizePackageImports: ['framer-motion'],
     scrollRestoration: true,
     // Disable tracing to avoid symlink issues on Windows
-    outputFileTracing: false
-  },
+  //   outputFileTracing: false
+  // },
 
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',

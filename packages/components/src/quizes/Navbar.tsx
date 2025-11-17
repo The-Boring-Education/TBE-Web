@@ -109,7 +109,7 @@ export function Navbar() {
                     {/* User Menu */}
                     {isLoading ? (
                         <div className="flex items-center space-x-4">
-                            <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+                            <div className="animate-pulse bg-gray-200 h-8 w-20 rounded" />
                         </div>
                     ) : user ? (
                         <div className="flex items-center space-x-4">

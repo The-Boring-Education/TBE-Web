@@ -61,8 +61,24 @@ export const config = [
                     argsIgnorePattern: "^_"
                 }
             ],
-            "no-unused-vars": "off",
-            "@typescript-eslint/no-unused-vars": "off",
+            "no-unused-vars": [
+                "warn",
+                {
+                    vars: "all",
+                    varsIgnorePattern: "^_",
+                    args: "after-used",
+                    argsIgnorePattern: "^_"
+                }
+            ],
+            "@typescript-eslint/no-unused-vars": [
+                "warn",
+                {
+                    vars: "all",
+                    varsIgnorePattern: "^_",
+                    args: "after-used",
+                    argsIgnorePattern: "^_"
+                }
+            ],
             // React-specific rules
             "react/display-name": "off",
             "react/jsx-curly-brace-presence": [
