@@ -8,7 +8,7 @@ import { SubscriptionInterestPopover } from "../popovers"
 
 const Navbar = ({ onSignOut, userId }: NavbarProps) => {
     return (
-        <nav className='fixed top-0 left-0 right-0 z-50 w-full bg-white border-b border-greyLight shadow-sm px-4 py-2.5 flex items-center justify-between'>
+        <nav className='fixed top-0 left-0 right-0 z-40 w-full bg-black border-b border-greyLight shadow-sm px-4 py-2.5 flex items-center justify-between'>
             <div className='flex flex-col gap-0'>
                 <span className='text-2xl font-bold text-primary leading-tight'>
                     PrepYatra
@@ -22,14 +22,14 @@ const Navbar = ({ onSignOut, userId }: NavbarProps) => {
                 <NavbarDropdownLinks />
                 {userId && <GamificationDisplay userId={userId} />}
                 <span className='text-contentLight font-medium hidden sm:inline' />
-                <Button
-                    onClick={onSignOut}
-                    text='Sign Out'
-                    variant='PRIMARY'
-                    className='text-sm h-2 '
-                    isLoading={false}
-                    animationType='BOUNCE'
-                />
+                                    <Button
+                                        onClick={onSignOut}
+                                        text='Sign Out'
+                                        variant='PRIMARY'
+                                             className='text-sm h-1'
+                                        isLoading={false}
+                                        animationType='BOUNCE'
+                                        />
             </div>
         </nav>
     )

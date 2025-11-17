@@ -68,6 +68,7 @@ export type GoalType =
 export type CompanyType =
   | 'FAANG'
   | 'STARTUP'
+  | 'MID_SIZE'
   | 'MNC'
   | 'CONSULTING'
   | 'FINANCE'
