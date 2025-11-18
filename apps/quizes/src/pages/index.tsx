@@ -77,7 +77,7 @@ export default function Landing() {
                                         <Brain className='w-6 h-6 text-white' />
                                     </div>
                                 </div>
-                                <h1 className='text-6xl md:text-8xl font-black mb-2 leading-none'>
+                                <h1 className='text-6xl md:text-8xl font-bold text-primary mb-2 leading-none'>
                                     Quizes
                                 </h1>
                                 <p className='text-xl md:text-2xl text-gray-600 font-medium'>
@@ -90,7 +90,7 @@ export default function Landing() {
                                 <div>
                                     <h2 className='text-4xl md:text-5xl font-bold mb-6 leading-tight'>
                                         Master Tech Interviews with
-                                        <span className='block text-gray-600'>
+                                        <span className='block text-primary'>
                                             Confidence
                                         </span>
                                     </h2>
@@ -103,22 +103,23 @@ export default function Landing() {
                                     </p>
                                     <button
                                         onClick={handleGetStarted}
-                                        className='inline-flex items-center px-8 py-4 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors duration-200 text-lg'>
+                                        className='inline-flex items-center px-8 py-4 bg-primary text-white font-semibold rounded-lg hover:scale-110 hover:bg-primary/90 transition-transform  hover:text-white
+                                         duration-200 ease-in-out text-lg'>
                                         Start Practicing
                                         <ArrowRight className='ml-2 w-5 h-5' />
                                     </button>
                                 </div>
                                 <div className='relative'>
-                                    <div className='bg-gray-50 rounded-2xl p-8 border-2 border-black'>
+                                    <div className='bg-gray-50 rounded-2xl p-8 border-2 border-primary'>
                                         <div className='space-y-4'>
                                             <div className='flex items-center justify-between'>
                                                 <span className='font-semibold'>
                                                     JavaScript Fundamentals
                                                 </span>
-                                                <CheckCircle className='w-5 h-5 text-black' />
+                                                <CheckCircle className='w-5 h-5 text-primary' />
                                             </div>
                                             <div className='w-full bg-gray-200 rounded-full h-2'>
-                                                <div className='bg-black h-2 rounded-full w-3/4' />
+                                                <div className='bg-primary h-2 rounded-full w-3/4' />
                                             </div>
                                             <div className='text-sm text-gray-600'>
                                                 15 questions completed
