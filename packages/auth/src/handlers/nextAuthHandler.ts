@@ -4,43 +4,11 @@ import { createAuthOptions } from "../config/nextauth"
 import { getUserByEmail } from "../services"
 import type { AppAuthConfig } from "../types"
 
-/**
- * Helper function to get nested property value from object using dot notation
- * Example: getNestedValue(user, "prepYatra.pyOnboarded")
- */
+
 const getNestedValue = (obj: any, path: string): any => {
     return path.split(".").reduce((current, key) => current?.[key], obj)
 }
 
-/**
- * Creates a plug-and-play NextAuth handler with minimal configuration
- *
- * @param config - Optional app-specific configuration
- * @returns NextAuth handler and authOptions
- *
- * @example
- * // Simple usage (default setup)
- * export default createNextAuthHandler()
- *
- * @example
- * // With custom pages
- * export default createNextAuthHandler({
- *   pages: { signIn: "/login", error: "/login" }
- * })
- *
- * @example
- * // With app-specific onboarding field
- * export default createNextAuthHandler({
- *   onboardingField: "prepYatra.pyOnboarded"
- * })
- *
- * @example
- * // With redirect logic enabled
- * export default createNextAuthHandler({
- *   pages: { signIn: "/login" },
- *   enableRedirectLogic: true
- * })
- */
 export const createNextAuthHandler = (config: AppAuthConfig = {}) => {
     const {
         pages = { signIn: "/auth", error: "/auth" },
@@ -57,6 +25,13 @@ export const createNextAuthHandler = (config: AppAuthConfig = {}) => {
             try {
                 // Always attach the token sub (user ID) as fallback
                 session.user.id = token.sub
+
+                // Validate session and email before fetching user data
+                if (!session?.user?.email) {
+                    console.error("Session or user email is missing in session callback")
+                    // Return session with basic info from token
+                    return session
+                }
 
                 // Fetch fresh user data from the database
                 const userData = await getUserByEmail(session.user.email)
@@ -75,12 +50,26 @@ export const createNextAuthHandler = (config: AppAuthConfig = {}) => {
                     session.user.contactNo = userData.contactNo
 
                     // Call custom session callback if provided
+                    // The callback can modify or extend the session, and any returned
+                    // properties will be merged with the existing session
                     if (customSessionCallback) {
-                        return await customSessionCallback(
+                        const customResult = await customSessionCallback(
                             session,
                             token,
                             userData
                         )
+                        
+                        // Merge custom callback result with existing session
+                        if (customResult && typeof customResult === "object") {
+                            return {
+                                ...session,
+                                ...customResult,
+                                user: {
+                                    ...session.user,
+                                    ...customResult.user
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -114,11 +103,6 @@ export const createNextAuthHandler = (config: AppAuthConfig = {}) => {
     return handler
 }
 
-/**
- * Helper function to extract authOptions from handler
- * @param handler - NextAuth handler created by createNextAuthHandler
- * @returns authOptions
- */
 export const getAuthOptions = (handler: any): NextAuthOptions => {
     return handler.authOptions
 }
