@@ -72,7 +72,11 @@ export default function Login() {
                     </div>
 
                     <p className='text-2xl font-semibold text-gray-800'>
-                        Master tech interviews with confidence
+                        Master tech interviews with
+                    </p>
+                    
+                    <p className='text-2xl font-semibold text-#FF5757'>
+                        Confidence
                     </p>
 
                     <div className='grid grid-cols-2 gap-4'>
