@@ -3,8 +3,15 @@ import {
   BackgroundImage,
   Button,
   CardSectionContainer,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
   FlexContainer,
   Image,
+  InputField,
   LinkButton,
   Pill,
   Section,
@@ -18,7 +25,7 @@ import { useAnalytics, useApi, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   WebinarPageProps,
-    } from '@tbe/interface';
+} from '@tbe/interface';
 import { formatDate, getWebinarPageProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
@@ -48,6 +55,8 @@ const WebinarPage = ({
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [certificateName, setCertificateName] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [registrationErrorMessage, setRegistrationErrorMessage] = useState<
     null | string
   >();
@@ -56,6 +65,7 @@ const WebinarPage = ({
     if (user) {
       setUserName(user.name);
       setUserEmail(user.email);
+      setCertificateName(user.name); // Pre-fill with user's name
     }
   }, [user]);
 
@@ -76,6 +86,7 @@ const WebinarPage = ({
 
       if (!status || error) {
         setRegistrationErrorMessage('Certificate generation failed');
+        return;
       }
 
       if (isRegistered) {
@@ -85,7 +96,7 @@ const WebinarPage = ({
           body: {
             type: 'WEBINAR',
             userId: user?.id,
-            userName: user?.name,
+            userName: certificateName || user?.name, // Use edited name or fallback to user name
             programId: webinarId,
             programName: name,
             date: formatDate({
@@ -109,6 +120,7 @@ const WebinarPage = ({
             },
           });
 
+          setIsModalOpen(false); // Close modal on success
           router.push(`/certificate/${data._id}`);
         }
       } else {
@@ -116,7 +128,16 @@ const WebinarPage = ({
       }
     } catch (error) {
       console.error('Detailed error while generating certificate: ', error);
+      setRegistrationErrorMessage(
+        'Failed to generate certificate. Please try again.'
+      );
     }
+  };
+
+  const handleOpenModal = () => {
+    setCertificateName(userName); // Reset to current user name when opening
+    setRegistrationErrorMessage(null); // Clear any previous errors
+    setIsModalOpen(true);
   };
 
   let certificateContainer, generateCertificateCard, recordingVideoContainer;
@@ -188,7 +209,7 @@ const WebinarPage = ({
               animationClasses='w-fit'
               text='Generate Certificate'
               variant='SUCCESS'
-              onClick={onGenerateCertificate}
+              onClick={handleOpenModal}
             />
           </FlexContainer>
 
@@ -203,6 +224,67 @@ const WebinarPage = ({
       </FlexContainer>
     );
   }
+
+  // Certificate Name Edit Modal
+  const certificateModal = (
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogContent
+        className='sm:max-w-[500px] gradient-8 p-4 md:p-6 w-[calc(100%-2rem)] sm:w-full'
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        <DialogHeader>
+          <DialogTitle>Edit Certificate Name</DialogTitle>
+          <DialogDescription>
+            You can edit your name as it will appear on the certificate. Your
+            email will remain the same.
+          </DialogDescription>
+        </DialogHeader>
+        <FlexContainer
+          className='gap-4 py-4 px-2 md:px-0'
+          direction='col'
+          fullWidth
+        >
+          <InputField
+            label='Name on Certificate'
+            field='certificateName'
+            value={certificateName}
+            onChange={(field, value) => setCertificateName(value)}
+            placeholder='Enter your preferred name'
+            className='bg-white border-gray-300 text-gray-900'
+            required
+          />
+          <FlexContainer className='gap-2' direction='col' itemCenter={false}>
+            <Text className='pre-title' level='label'>
+              Email
+            </Text>
+            <Text className='w-full strong-text' level='p'>
+              {userEmail}
+            </Text>
+          </FlexContainer>
+          {registrationErrorMessage && (
+            <Text level='p' className='text-red-500'>
+              {registrationErrorMessage}
+            </Text>
+          )}
+        </FlexContainer>
+        <DialogFooter className='flex-col gap-2 sm:gap-0 sm:justify-center'>
+          <Button
+            text='Cancel'
+            variant='SECONDARY'
+            onClick={() => setIsModalOpen(false)}
+            className='w-full sm:w-auto'
+          />
+          <Button
+            text='Generate Certificate'
+            variant='SUCCESS'
+            onClick={onGenerateCertificate}
+            disabled={!certificateName.trim()}
+            className='w-full sm:w-auto'
+          />
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 
   const registerationContainer = !isWebinarStarted && (
     <FlexContainer
@@ -308,6 +390,7 @@ const WebinarPage = ({
         {registerationContainer}
         {certificateContainer}
         {recordingVideoContainer}
+        {certificateModal}
 
         <FlexContainer className='m-auto' direction='col'>
           <FlexContainer
