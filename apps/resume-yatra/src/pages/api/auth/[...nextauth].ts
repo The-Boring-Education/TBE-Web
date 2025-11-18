@@ -1,17 +1,15 @@
-import { createAuthOptions } from "@tbe/auth"
-import NextAuth from "next-auth"
+import { createNextAuthHandler, getAuthOptions } from "@tbe/auth"
 
 /**
  * NextAuth configuration for Resume Yatra app
- * Uses centralized auth with default callbacks
+ * 🚀 Plug-and-play setup with default configuration
  */
-const authOptions = createAuthOptions({
+const handler = createNextAuthHandler({
     pages: {
         signIn: "/auth",
         error: "/auth"
-    },
-    useDefaultCallbacks: true // Use centralized auth logic
+    }
 })
 
-export default NextAuth(authOptions)
-export { authOptions }
+export default handler
+export const authOptions = getAuthOptions(handler)

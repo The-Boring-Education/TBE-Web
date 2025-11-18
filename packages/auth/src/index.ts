@@ -28,5 +28,8 @@ export { ProtectedRoute } from "./components/ProtectedRoute"
 // Middleware
 export { withAuth, withAdminAuth } from "./middleware/withAuth"
 
+// Plug-and-Play Handler
+export { createNextAuthHandler, getAuthOptions } from "./handlers/nextAuthHandler"
+
 // Types
-export type { ExtendedUser, AuthConfig, CreateUserData } from "./types"
+export type { ExtendedUser, AuthConfig, CreateUserData, AppAuthConfig } from "./types"
