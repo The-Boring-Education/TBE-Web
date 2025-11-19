@@ -58,12 +58,69 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 }) => {
     return (
         <Tabs defaultValue="challenges" className="space-y-6">
-            <TabsList className="grid w-full gap-2 grid-cols-4">
-                <TabsTrigger className="border-2 border-primary" value="challenges">Challenges</TabsTrigger>
-                <TabsTrigger className="border-2 border-primary" value="prep-logs">Prep Logs</TabsTrigger>
-                <TabsTrigger className="border-2 border-primary" value="recruiters">Recruiters</TabsTrigger>
-                <TabsTrigger className="border-2 border-primary" value="skills">Skills</TabsTrigger>
+           <TabsList className="grid w-full gap-2 grid-cols-4">
+            <TabsTrigger
+                value="challenges"
+                className="
+                bg-primary text-white
+                border-2 border-primary
+                transition-all duration-300
+
+                data-[state=active]:bg-white
+                data-[state=active]:text-primary
+                data-[state=active]:border-primary
+                "
+            >
+                Challenges
+            </TabsTrigger>
+
+            <TabsTrigger
+                value="prep-logs"
+                className="
+                bg-primary text-white
+                border-2 border-primary
+                transition-all duration-300
+
+                data-[state=active]:bg-white
+                data-[state=active]:text-primary
+                data-[state=active]:border-primary
+                "
+            >
+                Prep Logs
+            </TabsTrigger>
+
+            <TabsTrigger
+                value="recruiters"
+                className="
+                bg-primary text-white
+                border-2 border-primary
+                transition-all duration-300
+
+                data-[state=active]:bg-white
+                data-[state=active]:text-primary
+                data-[state=active]:border-primary
+                "
+            >
+                Recruiters
+            </TabsTrigger>
+
+            <TabsTrigger
+                value="skills"
+                className="
+                bg-primary text-white
+                border-2 border-primary
+                transition-all duration-300
+
+                data-[state=active]:bg-white
+                data-[state=active]:text-primary
+                data-[state=active]:border-primary
+                "
+            >
+                Skills
+            </TabsTrigger>
             </TabsList>
+
+
 
             <TabsContent value="prep-logs" className="space-y-4">
                 <Card>
