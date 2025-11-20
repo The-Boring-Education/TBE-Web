@@ -45,6 +45,7 @@ export { default as LoadingIndicator } from './common/LoadingIndicator';
 export { default as LoadingSpinner } from './common/LoadingSpinner';
 export { default as MDXRenderer } from './common/MDXRenderer';
 export { default as Modal } from './common/Modal';
+export { default as CertificateModal } from './common/CertificateModal';
 export { default as NotificationPopover } from './common/Notification';
 export { default as IconPill } from './common/Pill/IconPill';
 export { default as Pill } from './common/Pill';

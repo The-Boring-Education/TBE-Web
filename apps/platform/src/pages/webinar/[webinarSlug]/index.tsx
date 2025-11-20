@@ -3,15 +3,9 @@ import {
   BackgroundImage,
   Button,
   CardSectionContainer,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+  CertificateModal,
   FlexContainer,
   Image,
-  InputField,
   LinkButton,
   Pill,
   Section,
@@ -55,7 +49,6 @@ const WebinarPage = ({
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [certificateName, setCertificateName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [registrationErrorMessage, setRegistrationErrorMessage] = useState<
     null | string
@@ -65,7 +58,6 @@ const WebinarPage = ({
     if (user) {
       setUserName(user.name);
       setUserEmail(user.email);
-      setCertificateName(user.name); // Pre-fill with user's name
     }
   }, [user]);
 
@@ -73,8 +65,9 @@ const WebinarPage = ({
     url: `${routes.api.webinar}/${slug}`,
   });
 
-  const onGenerateCertificate = async () => {
+  const onGenerateCertificate = async (certificateName: string) => {
     try {
+      setRegistrationErrorMessage(null);
       const {
         status,
         error,
@@ -135,9 +128,13 @@ const WebinarPage = ({
   };
 
   const handleOpenModal = () => {
-    setCertificateName(userName); // Reset to current user name when opening
     setRegistrationErrorMessage(null); // Clear any previous errors
     setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setRegistrationErrorMessage(null);
   };
 
   let certificateContainer, generateCertificateCard, recordingVideoContainer;
@@ -224,67 +221,6 @@ const WebinarPage = ({
       </FlexContainer>
     );
   }
-
-  // Certificate Name Edit Modal
-  const certificateModal = (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <DialogContent
-        className='sm:max-w-[500px] gradient-8 p-4 md:p-6 w-[calc(100%-2rem)] sm:w-full'
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
-        <DialogHeader>
-          <DialogTitle>Edit Certificate Name</DialogTitle>
-          <DialogDescription>
-            You can edit your name as it will appear on the certificate. Your
-            email will remain the same.
-          </DialogDescription>
-        </DialogHeader>
-        <FlexContainer
-          className='gap-4 py-4 px-2 md:px-0'
-          direction='col'
-          fullWidth
-        >
-          <InputField
-            label='Name on Certificate'
-            field='certificateName'
-            value={certificateName}
-            onChange={(field, value) => setCertificateName(value)}
-            placeholder='Enter your preferred name'
-            className='bg-white border-gray-300 text-gray-900'
-            required
-          />
-          <FlexContainer className='gap-2' direction='col' itemCenter={false}>
-            <Text className='pre-title' level='label'>
-              Email
-            </Text>
-            <Text className='w-full strong-text' level='p'>
-              {userEmail}
-            </Text>
-          </FlexContainer>
-          {registrationErrorMessage && (
-            <Text level='p' className='text-red-500'>
-              {registrationErrorMessage}
-            </Text>
-          )}
-        </FlexContainer>
-        <DialogFooter className='flex-col gap-2 sm:gap-0 sm:justify-center'>
-          <Button
-            text='Cancel'
-            variant='SECONDARY'
-            onClick={() => setIsModalOpen(false)}
-            className='w-full sm:w-auto'
-          />
-          <Button
-            text='Generate Certificate'
-            variant='SUCCESS'
-            onClick={onGenerateCertificate}
-            disabled={!certificateName.trim()}
-            className='w-full sm:w-auto'
-          />
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
 
   const registerationContainer = !isWebinarStarted && (
     <FlexContainer
@@ -390,7 +326,14 @@ const WebinarPage = ({
         {registerationContainer}
         {certificateContainer}
         {recordingVideoContainer}
-        {certificateModal}
+        <CertificateModal
+          isOpen={isModalOpen}
+          closeModal={handleCloseModal}
+          userName={userName}
+          userEmail={userEmail}
+          onGenerateCertificate={onGenerateCertificate}
+          errorMessage={registrationErrorMessage}
+        />
 
         <FlexContainer className='m-auto' direction='col'>
           <FlexContainer
