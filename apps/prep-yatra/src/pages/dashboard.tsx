@@ -255,7 +255,7 @@ const Dashboard = () => {
         }
     }
 
-    if (loading || authLoading) {
+    if (loading || authLoading || !user) {
         return <LoadingSpinner />
     }
 
@@ -309,8 +309,8 @@ const Dashboard = () => {
                         {/* Additional components */}
                         <Suspense fallback={<ComponentLoader />}>
                             <BuildYourStack
-                                userId={user.id || ""}  
-                                userSkills={profile?.userSkills || []}
+                               userId={user.id || ""}  
+                               userSkills={profile?.userSkills || []}                               
                                 lastUpdated={profile?.userSkillsLastUpdated}
                             />
                         </Suspense>

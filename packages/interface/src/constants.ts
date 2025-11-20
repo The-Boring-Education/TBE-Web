@@ -34,16 +34,22 @@ interface NavbarProps {
 }
 
 
+export type NavbarVariant = 'default' | 'transparent' | 'prepyatra' | 'quizes' | 'techyatra' | 'dsayatra' | 'resume-yatra';
+
 interface MainNavbarProps extends Partial<NavbarProps> {
-    variant?: 'default' | 'transparent' | 'prepyatra';
+    variant?: NavbarVariant;
     showFullNavigation?: boolean;
-    // Custom branding component (replaces Logo) - only used if variant doesn't provide it
     customBranding?: React.ReactNode;
-    // Custom actions/components to show in navbar (right side) - only used if variant doesn't provide it
     customActions?: React.ReactNode[];
-    // Dashboard route for UserAvatar - only used if variant doesn't provide it
     dashboardRoute?: string;
 }
+interface VariantConfig {
+    branding: React.ReactNode;
+    dashboardRoute: string;
+    borderClass?: string;
+    requiresAuth?: boolean; // If false, hides UserPointButton and UserAvatar
+    showGamification?: boolean; // If false, hides UserPointButton (gamification)
+  }
 
 export type {
     CelebrationAnimationProps,
@@ -53,4 +59,5 @@ export type {
     NavbarProps,
     MainNavbarProps,
     OutlineCardProps,
+    VariantConfig,
 }

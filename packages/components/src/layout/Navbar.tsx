@@ -1,12 +1,12 @@
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
-import { LINKS, TOP_NAVIGATION } from '@tbe/constants';
+import { getNavbarVariantConfig, LINKS, TOP_NAVIGATION } from '@tbe/constants';
 import { useScrollDirection } from '@tbe/hooks';
-import type { MainNavbarProps } from '@tbe/interface';
+import type { MainNavbarProps, VariantConfig } from '@tbe/interface';
 
 import {
   Button,
@@ -45,8 +45,11 @@ const Navbar = ({
     setMobileMenuOpen(false);
   };
 
-  // Variant-based configuration
-  const isPrepYatraVariant = variant === 'prepyatra';
+  // Get variant configuration - memoized for performance
+  const VARIANT_CONFIG = useMemo(() => getNavbarVariantConfig(Logo), []);
+  const variantConfig = useMemo(() => {
+    return VARIANT_CONFIG[variant] || VARIANT_CONFIG.default;
+  }, [variant, VARIANT_CONFIG]) as VariantConfig;
 
   // Determine background class based on variant
   const getBackgroundClass = () => {
@@ -56,33 +59,18 @@ const Navbar = ({
     return 'bg-white';
   };
 
-  // Determine dashboard route based on variant or provided prop
-  const getDashboardRoute = () => {
-    if (isPrepYatraVariant) {
-      return '/dashboard';
-    }
-    return dashboardRoute || '/user/dashboard';
-  };
+  const finalDashboardRoute = dashboardRoute || variantConfig.dashboardRoute;
 
-  const finalDashboardRoute = getDashboardRoute();
+  const finalBranding = customBranding || variantConfig.branding;
 
-  // Prep-yatra branding component
-  const getPrepYatraBranding = () => (
-    <div className='flex flex-col gap-0'>
-      <span className='text-2xl font-bold text-primary leading-tight'>
-        PrepYatra
-      </span>
-      <span className='text-[10px] text-greyDark -mt-0.5'>
-        By The Boring Education
-      </span>
-    </div>
-  );
-
-  // Determine branding - variant takes precedence over customBranding
-  const finalBranding = isPrepYatraVariant ? getPrepYatraBranding() : (customBranding || <Logo />);
-
-  // Check if we should use custom actions or default navigation
-  const shouldUseCustomActions = customActions && customActions.length > 0 && !isPrepYatraVariant;
+  const borderClass = variantConfig.borderClass || 'border';
+  const shouldUseCustomActions = customActions && customActions.length > 0;
+  
+  // Check if variant requires authentication (defaults to true)
+  const requiresAuth = variantConfig.requiresAuth !== false;
+  
+  // Check if variant should show gamification (defaults to true if requiresAuth is true)
+  const showGamification = requiresAuth && variantConfig.showGamification !== false;
 
   return (
     <motion.header
@@ -91,7 +79,7 @@ const Navbar = ({
       initial={{ y: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
-      <nav className={`flex items-center justify-between p-2 lg:px-8 ${isPrepYatraVariant ? 'border-b border-greyLight' : 'border'}`}>
+      <nav className={`flex items-center justify-between p-2 lg:px-8 ${borderClass}`}>
         <div className='w-100 flex'>
           {finalBranding}
         </div>
@@ -118,9 +106,9 @@ const Navbar = ({
         ) : (
           <>
             <div className='flex lg:hidden gap-2 items-center'>
-              <NotificationPopover />
-              <UserPointButton />
-              <UserAvatar dashboardRoute={finalDashboardRoute} />
+              {requiresAuth && <NotificationPopover />}
+              {showGamification && <UserPointButton />}
+              {requiresAuth && <UserAvatar dashboardRoute={finalDashboardRoute} />}
               <button
                 className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black'
                 type='button'
@@ -170,10 +158,10 @@ const Navbar = ({
                   <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
                 </PopoverContainer>
 
-                <NotificationPopover />
-                <UserPointButton />
+                {requiresAuth && <NotificationPopover />}
+                {showGamification && <UserPointButton />}
                 <LoginRedirectButton text='Login' />
-                <UserAvatar dashboardRoute={finalDashboardRoute} />
+                {requiresAuth && <UserAvatar dashboardRoute={finalDashboardRoute} />}
               </div>
             )}
           </>

@@ -1,4 +1,6 @@
 import React from "react";
+import type { ComponentType } from 'react';
+
 
 interface NavbarDropdownLink {
   id: string;
@@ -71,4 +73,105 @@ const links: NavbarDropdownLink[] = [
   },
 ];
 
-export { socialLinks, productLinks, CONFETTI_COLORS, links };
+
+interface VariantConfig {
+  branding: React.ReactNode;
+  dashboardRoute: string;
+  borderClass?: string;
+  requiresAuth?: boolean; 
+  showGamification?: boolean;
+}
+
+ const getNavbarVariantConfig = (
+    Logo: ComponentType<any>
+): Record<string, VariantConfig> => ({
+    default: {
+        branding: <Logo />,
+        dashboardRoute: '/user/dashboard',
+        borderClass: 'border',
+        requiresAuth: true,
+    },
+    transparent: {
+        branding: <Logo />,
+        dashboardRoute: '/user/dashboard',
+        borderClass: 'border',
+        requiresAuth: true,
+    },
+    prepyatra: {
+        branding: (
+            <div className='flex flex-col gap-0'>
+                <span className='text-2xl font-bold text-primary leading-tight'>
+                    PrepYatra
+                </span>
+                <span className='text-[10px] text-greyDark -mt-0.5'>
+                    By The Boring Education
+                </span>
+            </div>
+        ),
+        dashboardRoute: '/dashboard',
+        borderClass: 'border-b border-greyLight',
+        requiresAuth: true,
+    },
+    quizes: {
+        branding: (
+            <div className='flex flex-col gap-0'>
+                <span className='text-2xl font-bold text-primary leading-tight'>
+                    The Boring Quizes
+                </span>
+                <span className='text-[10px] text-greyDark -mt-0.5'>
+                    By The Boring Education
+                </span>
+            </div>
+        ),
+        dashboardRoute: '/dashboard',
+        borderClass: 'border',
+        requiresAuth: true,
+    },
+    techyatra: {
+        branding: (
+            <div className='flex flex-col gap-0'>
+                <span className='text-2xl font-bold text-primary leading-tight'>
+                    TechYatra
+                </span>
+                <span className='text-[10px] text-greyDark -mt-0.5'>
+                    By The Boring Education
+                </span>
+            </div>
+        ),
+        dashboardRoute: '/',
+        borderClass: 'border',
+        requiresAuth: false, // Non-auth app
+    },
+    dsayatra: {
+        branding: (
+            <div className='flex flex-col gap-0'>
+                <span className='text-2xl font-bold text-primary leading-tight'>
+                    DSAYatra
+                </span>
+                <span className='text-[10px] text-greyDark -mt-0.5'>
+                    By The Boring Education
+                </span>
+            </div>
+        ),
+        dashboardRoute: '/',
+        borderClass: 'border',
+        requiresAuth: false, // Non-auth app
+    },
+    'resume-yatra': {
+        branding: (
+            <div className='flex flex-col gap-0'>
+                <span className='text-2xl font-bold text-primary leading-tight'>
+                    ResumeYatra
+                </span>
+                <span className='text-[10px] text-greyDark -mt-0.5'>
+                    By The Boring Education
+                </span>
+            </div>
+        ),
+        dashboardRoute: '/builder',
+        borderClass: 'border',
+        requiresAuth: true,
+        showGamification: false, 
+    },
+});
+export { socialLinks, productLinks, CONFETTI_COLORS, links, getNavbarVariantConfig };
