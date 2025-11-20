@@ -9,10 +9,7 @@ import type {
 
 import type { FeedbackType } from '@tbe/constants';
 // Import these types from the api module to avoid duplication
-import type {
-  BaseInterviewSheetResponseProps,
-  BaseShikshaCourseResponseProps,
-} from './api';
+import type { BaseInterviewSheetResponseProps, BaseShikshaCourseResponseProps } from './api';
 
 // Import CertificateType from the global module to avoid duplication
 import type { CertificateType } from './global';
@@ -75,7 +72,7 @@ export interface LinkButtonProps extends LinkProps {
 }
 
 export interface ButtonProps {
-    variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY' | 'NEUTRAL';
+  variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY' | 'NEUTRAL';
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -484,8 +481,10 @@ export interface ModalProps {
 export interface CertificateModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  courseName: string;
-  certificateId: string;
+  userName: string;
+  userEmail: string;
+  onGenerateCertificate: (certificateName: string) => Promise<void>;
+  errorMessage?: string | null;
 }
 
 export interface ToggleButtonProps {
