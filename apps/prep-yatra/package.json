@@ -55,6 +55,7 @@
     "@tbe/types": "workspace:*",
     "@tbe/utils": "workspace:*",
     "@types/react-datepicker": "^6.2.0",
+    "axios": "^1.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",

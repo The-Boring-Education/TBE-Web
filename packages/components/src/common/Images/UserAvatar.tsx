@@ -5,11 +5,29 @@ import { Fragment } from 'react';
 import { Image, Link } from '@tbe/components';
 import { TOP_NAVIGATION } from '@tbe/constants';
 
-const UserAvatar = () => {
+interface UserAvatarProps {
+  dashboardRoute?: string;
+}
+
+const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
   const session = useSession();
 
   if (session.status === 'loading') return null;
   if (session.status !== 'authenticated') return null;
+
+  // Use provided dashboard route or default to platform app route
+  const finalDashboardRoute = dashboardRoute || '/user/dashboard';
+
+  // Map user navigation links with correct dashboard route
+  const userNavLinks = TOP_NAVIGATION.user.map((link) => {
+    if (link.href.includes('/user/dashboard') || link.href.includes('/dashboard')) {
+      return {
+        ...link,
+        href: finalDashboardRoute,
+      };
+    }
+    return link;
+  });
 
   return (
     <div>
@@ -41,7 +59,7 @@ const UserAvatar = () => {
               >
                 <div className='overflow-hidden rounded-2 bg-white text-sm shadow-lg ring-1 ring-gray-900/5 min-w-[200px]'>
                   <div className='flex flex-col p-1'>
-                    {TOP_NAVIGATION.user.map(({ id, name, href, target }) => (
+                    {userNavLinks.map(({ id, name, href, target }) => (
                       <Link
                         key={id}
                         className='text-base text-left font-semibold text-gray-600 p-1 hover:bg-gray-100 rounded-md'

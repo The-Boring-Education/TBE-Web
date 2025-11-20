@@ -12,9 +12,9 @@ import { toast } from "sonner"
 // Dashboard Components
 
 // Lazy load components for better performance
-const PrepYatraNavbar = lazy(() =>
+const Navbar = lazy(() =>
     import("@tbe/components").then((module) => ({
-        default: module.PrepYatraNavbar
+        default: module.Navbar
     }))
 )
 const AddPrepLogModal = lazy(() =>
@@ -262,7 +262,7 @@ const Dashboard = () => {
     return (
         <div className='min-h-screen bg-gray-100'>
             <Suspense fallback={<ComponentLoader />}>
-                <PrepYatraNavbar onSignOut={handleSignOut} userId={user?.id} />
+                <Navbar variant='prepyatra' />
             </Suspense>
 
             <main className='w-full px-2 md:px-4 pt-[72px] pb-6'>
@@ -309,7 +309,7 @@ const Dashboard = () => {
                         {/* Additional components */}
                         <Suspense fallback={<ComponentLoader />}>
                             <BuildYourStack
-                                userId={user.id}
+                                userId={user.id || ""}  
                                 userSkills={profile?.userSkills || []}
                                 lastUpdated={profile?.userSkillsLastUpdated}
                             />

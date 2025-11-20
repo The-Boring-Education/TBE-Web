@@ -1,5 +1,5 @@
 {
-    "extends": "@tbe/typescript-config/react-library.json",
+    "extends": "../typescript-config/react-library.json",
     "compilerOptions": {
         "outDir": "dist",
         "rootDir": "./src",
@@ -9,34 +9,75 @@
         "declaration": true,
         "declarationMap": true,
         "jsx": "react-jsx",
-
         // 👇 Add these lines
         "module": "esnext",
         "moduleResolution": "bundler",
-
         // 👇 Optional but useful for cleaner imports
         "paths": {
-            "@/*": ["src/*"],
-            "@ui/*": ["src/ui/*"],
-            "@/ui/*": ["src/prepyatra/ui/*"],
-            "@/components/*": ["src/prepyatra/components/*"],
-            "@/features/*": ["src/prepyatra/features/*"],
-            "@/dashboard/*": ["src/prepyatra/dashboard/*"],
-            "@/contexts/*": ["src/prepyatra/contexts/*"],
-            "@/showcase/*": ["src/prepyatra/showcase/*"],
-            "@/cards/*": ["src/prepyatra/cards/*"],
-            "@/auth/*": ["src/prepyatra/auth/*"],
-            "@/utils/*": ["src/prepyatra/utils/*"],
-            "@/hooks/*": ["src/prepyatra/hooks/*"],
-            "@/types/*": ["src/prepyatra/types/*"],
-            "@/services/*": ["src/prepyatra/services/*"],
-            "@/gamification/*": ["src/prepyatra/gamification/*"],
-            "@/layout/*": ["src/prepyatra/layout/*"],
-            "@/modals/*": ["src/prepyatra/modals/*"],
-            "@/onboarding/*": ["src/prepyatra/onboarding/*"],
-            "@/popovers/*": ["src/prepyatra/popovers/*"]
+            "@/*": [
+                "src/*"
+            ],
+            "@ui/*": [
+                "src/ui/*"
+            ],
+            "@/ui/*": [
+                "src/prepyatra/ui/*"
+            ],
+            "@/components/*": [
+                "src/prepyatra/components/*"
+            ],
+            "@/features/*": [
+                "src/prepyatra/features/*"
+            ],
+            "@/dashboard/*": [
+                "src/prepyatra/dashboard/*"
+            ],
+            "@/contexts/*": [
+                "src/prepyatra/contexts/*"
+            ],
+            "@/showcase/*": [
+                "src/prepyatra/showcase/*"
+            ],
+            "@/cards/*": [
+                "src/prepyatra/cards/*"
+            ],
+            "@/auth/*": [
+                "src/prepyatra/auth/*"
+            ],
+            "@/utils/*": [
+                "src/prepyatra/utils/*"
+            ],
+            "@/hooks/*": [
+                "src/prepyatra/hooks/*"
+            ],
+            "@/types/*": [
+                "src/prepyatra/types/*"
+            ],
+            "@/services/*": [
+                "src/prepyatra/services/*"
+            ],
+            "@/gamification/*": [
+                "src/prepyatra/gamification/*"
+            ],
+            "@/layout/*": [
+                "src/prepyatra/layout/*"
+            ],
+            "@/modals/*": [
+                "src/prepyatra/modals/*"
+            ],
+            "@/onboarding/*": [
+                "src/prepyatra/onboarding/*"
+            ],
+            "@/popovers/*": [
+                "src/prepyatra/popovers/*"
+            ]
         }
     },
-    "include": ["./src/**/*"],
-    "exclude": ["node_modules", "dist"]
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
 }

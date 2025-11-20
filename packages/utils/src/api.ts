@@ -72,7 +72,7 @@ export const sendRequest = async ({
     if (shouldUseProxy) {
         // Use the proxy route - keep absolute URLs untouched
         if (/^https?:\/\//i.test(url)) {
-            finalUrl = url
+            finalUrl = url  
         } else {
             // remove leading slashes
             const cleanUrl = url.startsWith("/")

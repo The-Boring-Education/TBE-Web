@@ -33,11 +33,24 @@ interface NavbarProps {
     userId?: string
 }
 
+
+interface MainNavbarProps extends Partial<NavbarProps> {
+    variant?: 'default' | 'transparent' | 'prepyatra';
+    showFullNavigation?: boolean;
+    // Custom branding component (replaces Logo) - only used if variant doesn't provide it
+    customBranding?: React.ReactNode;
+    // Custom actions/components to show in navbar (right side) - only used if variant doesn't provide it
+    customActions?: React.ReactNode[];
+    // Dashboard route for UserAvatar - only used if variant doesn't provide it
+    dashboardRoute?: string;
+}
+
 export type {
     CelebrationAnimationProps,
     GamificationBadgeProps,
     NavbarDropdownContainerProps,
     NavbarDropdownLink,
     NavbarProps,
-    OutlineCardProps
+    MainNavbarProps,
+    OutlineCardProps,
 }

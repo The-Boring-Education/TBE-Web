@@ -6,8 +6,10 @@ import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 import { LINKS, TOP_NAVIGATION } from '@tbe/constants';
 import { useScrollDirection } from '@tbe/hooks';
+import type { MainNavbarProps } from '@tbe/interface';
 
 import {
+  Button,
   FlexContainer,
   Link,
   LoginRedirectButton,
@@ -22,9 +24,15 @@ import {
 
 import NotificationPopover from '../common/Notification/index';
 
-
-
-const Navbar = () => {
+const Navbar = ({ 
+  onSignOut, 
+  userId, 
+  variant = 'default',
+  showFullNavigation = true,
+  customBranding,
+  customActions = [],
+  dashboardRoute
+}: MainNavbarProps = {}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const { isVisible } = useScrollDirection(100);
@@ -37,74 +45,139 @@ const Navbar = () => {
     setMobileMenuOpen(false);
   };
 
+  // Variant-based configuration
+  const isPrepYatraVariant = variant === 'prepyatra';
+
+  // Determine background class based on variant
+  const getBackgroundClass = () => {
+    if (variant === 'transparent') {
+      return 'glass-dark backdrop-blur-md';
+    }
+    return 'bg-white';
+  };
+
+  // Determine dashboard route based on variant or provided prop
+  const getDashboardRoute = () => {
+    if (isPrepYatraVariant) {
+      return '/dashboard';
+    }
+    return dashboardRoute || '/user/dashboard';
+  };
+
+  const finalDashboardRoute = getDashboardRoute();
+
+  // Prep-yatra branding component
+  const getPrepYatraBranding = () => (
+    <div className='flex flex-col gap-0'>
+      <span className='text-2xl font-bold text-primary leading-tight'>
+        PrepYatra
+      </span>
+      <span className='text-[10px] text-greyDark -mt-0.5'>
+        By The Boring Education
+      </span>
+    </div>
+  );
+
+  // Determine branding - variant takes precedence over customBranding
+  const finalBranding = isPrepYatraVariant ? getPrepYatraBranding() : (customBranding || <Logo />);
+
+  // Check if we should use custom actions or default navigation
+  const shouldUseCustomActions = customActions && customActions.length > 0 && !isPrepYatraVariant;
+
   return (
     <motion.header
       animate={{ y: isVisible ? 0 : -100 }}
-      className='fixed top-0 left-0 right-0 z-40 bg-white shadow-sm'
+      className={`fixed top-0 left-0 right-0 z-40 ${getBackgroundClass()} shadow-sm`}
       initial={{ y: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
-      <nav className='flex items-center justify-between p-2 lg:px-8 border'>
+      <nav className={`flex items-center justify-between p-2 lg:px-8 ${isPrepYatraVariant ? 'border-b border-greyLight' : 'border'}`}>
         <div className='w-100 flex'>
-          <Logo />
+          {finalBranding}
         </div>
-        <div className='flex lg:hidden gap-2 items-center'>
-          <NotificationPopover />
-          <UserPointButton />
-          <UserAvatar />
-          <button
-            className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black'
-            type='button'
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Bars3Icon aria-hidden='true' className='h-6 w-6' color='black' />
-          </button>
-        </div>
-        <div className='hidden items-center lg:flex lg:gap-x-4'>
-        <FlexContainer direction='col' itemCenter={false}>
-              <Link
-                className='text-base text-black hover:text-primary'
-                href={TOP_NAVIGATION.issues[0]?.href || ''}
-                target={TOP_NAVIGATION.issues[0]?.target}
+        {shouldUseCustomActions ? (
+          <>
+            <div className='flex lg:hidden gap-2 items-center'>
+              {customActions.map((action: React.ReactNode, index: number) => (
+                <div key={index}>{action}</div>
+              ))}
+              <button
+                className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black'
+                type='button'
+                onClick={() => setMobileMenuOpen(true)}
               >
-                {TOP_NAVIGATION.issues[0]?.name}
-            </Link>
-          </FlexContainer>
-          <PopoverContainer
-            isOpen={openPopover === 'cohorts'}
-            label='Cohorts'
-            onToggle={() => handleSetOpen('cohorts')}
-          >
-            <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
-          </PopoverContainer>
-          <PopoverContainer
-            isOpen={openPopover === 'products'}
-            label='Learn'
-            onToggle={() => handleSetOpen('products')}
-          >
-            <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
-          </PopoverContainer>
-          <PopoverContainer
-            isOpen={openPopover === 'tools'}
-            label='Tools'
-            onToggle={() => handleSetOpen('tools')}
-          >
-            <NavbarDropdownContainer links={TOP_NAVIGATION.tools} />
-          </PopoverContainer>
-          <PopoverContainer
-            isOpen={openPopover === 'links'}
-            label='Links'
-            panelClasses='-left-6'
-            onToggle={() => handleSetOpen('links')}
-          >
-            <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
-          </PopoverContainer>
+                <Bars3Icon aria-hidden='true' className='h-6 w-6' color='black' />
+              </button>
+            </div>
+            <div className='hidden items-center lg:flex lg:gap-3'>
+              {customActions.map((action: React.ReactNode, index: number) => (
+                <div key={index}>{action}</div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className='flex lg:hidden gap-2 items-center'>
+              <NotificationPopover />
+              <UserPointButton />
+              <UserAvatar dashboardRoute={finalDashboardRoute} />
+              <button
+                className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black'
+                type='button'
+                onClick={() => setMobileMenuOpen(true)}
+              >
+                <Bars3Icon aria-hidden='true' className='h-6 w-6' color='black' />
+              </button>
+            </div>
+            {showFullNavigation && (
+              <div className='hidden items-center lg:flex lg:gap-x-4'>
+                <FlexContainer direction='col' itemCenter={false}>
+                  <Link
+                    className='text-base text-black hover:text-primary'
+                    href={TOP_NAVIGATION.issues[0]?.href || ''}
+                    target={TOP_NAVIGATION.issues[0]?.target}
+                  >
+                    {TOP_NAVIGATION.issues[0]?.name}
+                  </Link>
+                </FlexContainer>
+                <PopoverContainer
+                  isOpen={openPopover === 'cohorts'}
+                  label='Cohorts'
+                  onToggle={() => handleSetOpen('cohorts')}
+                >
+                  <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
+                </PopoverContainer>
+                <PopoverContainer
+                  isOpen={openPopover === 'products'}
+                  label='Learn'
+                  onToggle={() => handleSetOpen('products')}
+                >
+                  <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
+                </PopoverContainer>
+                <PopoverContainer
+                  isOpen={openPopover === 'tools'}
+                  label='Tools'
+                  onToggle={() => handleSetOpen('tools')}
+                >
+                  <NavbarDropdownContainer links={TOP_NAVIGATION.tools} />
+                </PopoverContainer>
+                <PopoverContainer
+                  isOpen={openPopover === 'links'}
+                  label='Links'
+                  panelClasses='-left-6'
+                  onToggle={() => handleSetOpen('links')}
+                >
+                  <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
+                </PopoverContainer>
 
-          <NotificationPopover />
-          <UserPointButton />
-          <LoginRedirectButton text='Login' />
-          <UserAvatar />
-        </div>
+                <NotificationPopover />
+                <UserPointButton />
+                <LoginRedirectButton text='Login' />
+                <UserAvatar dashboardRoute={finalDashboardRoute} />
+              </div>
+            )}
+          </>
+        )}
       </nav>
 
       {/* Mobile Navigation */}
@@ -117,7 +190,7 @@ const Navbar = () => {
         <div className='fixed inset-0 z-50' />
         <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-2 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
           <div className='flex items-center justify-between'>
-            <Logo />
+            {finalBranding}
             <button
               className='-m-2.5 rounded-md p-2.5 text-black'
               type='button'
