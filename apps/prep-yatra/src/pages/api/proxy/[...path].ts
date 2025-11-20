@@ -14,7 +14,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // Get the API URL from environment
-  const apiUrl = envConfig.API_URL || process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   if (!apiUrl) {
     return res.status(500).json({
