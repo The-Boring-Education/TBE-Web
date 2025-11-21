@@ -75,16 +75,8 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                     transition={{ duration: 0.5 }}
                 >
                     {/* Left Section - Login Form */}
-                    <div className='w-full md:w-1/2 p-6 md:p-4 flex flex-col items-start justify-start text-left bg-white'>
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            <Logo className='w-12 h-12' />
-                        </motion.div>
-
-                        <motion.div
+                    <div className='w-full md:w-1/2 p-6 md:p-4 flex border-1 border-gray-200 flex-col items-start justify-start text-left bg-white'>
+                       <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
