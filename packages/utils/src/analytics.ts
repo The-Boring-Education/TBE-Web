@@ -1,4 +1,11 @@
 export const GA_TRACKING_ID = 'G-SR3M17B588';
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+export {};
+
 
 /* -----------------------------
     LOAD GA
