@@ -99,7 +99,7 @@ const PricingPage: React.FC = () => {
 
     useEffect(() => {
         if (!user) {
-            router.push("/auth")
+            router.push("/login")
         }
     }, [user, router])
 
@@ -109,7 +109,7 @@ const PricingPage: React.FC = () => {
         }
 
         if (!user?.id) {
-            router.push("/auth")
+            router.push("/login")
             return
         }
 

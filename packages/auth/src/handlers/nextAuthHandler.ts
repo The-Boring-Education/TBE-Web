@@ -26,6 +26,11 @@ export const createNextAuthHandler = (config: AppAuthConfig = {}) => {
                 // Always attach the token sub (user ID) as fallback
                 session.user.id = token.sub
 
+                // Preserve user image from token (comes from OAuth provider)
+                if (token.picture) {
+                    session.user.image = token.picture
+                }
+
                 // Validate session and email before fetching user data
                 if (!session?.user?.email) {
                     console.error("Session or user email is missing in session callback")
@@ -48,6 +53,10 @@ export const createNextAuthHandler = (config: AppAuthConfig = {}) => {
                     session.user.occupation = userData.occupation
                     session.user.purpose = userData.purpose
                     session.user.contactNo = userData.contactNo
+                    // Use database image if available, otherwise keep token image
+                    if (userData.image) {
+                        session.user.image = userData.image
+                    }
 
                     // Call custom session callback if provided
                     // The callback can modify or extend the session, and any returned
@@ -78,6 +87,10 @@ export const createNextAuthHandler = (config: AppAuthConfig = {}) => {
                 console.error("Error in session callback:", error)
                 // Return session with basic info on error
                 session.user.id = token.sub
+                // Preserve image from token even on error
+                if (token.picture) {
+                    session.user.image = token.picture
+                }
                 return session
             }
         }

@@ -1,5 +1,6 @@
 import React from "react";
 import type { ComponentType } from 'react';
+import { Map, BookOpen, TrendingUp, Rocket, Brain, Trophy, Users, Sparkles, FileText, Briefcase, Target, Award } from 'lucide-react';
 
 
 interface NavbarDropdownLink {
@@ -174,4 +175,157 @@ interface VariantConfig {
         showGamification: false, 
     },
 });
+
+// LoginCard Feature Interface
+export interface LoginCardFeature {
+    icon: ComponentType<{ className?: string }>;
+    title: string;
+    description: string;
+}
+
+// LoginCard Variant Configuration Interface
+export interface LoginCardVariantConfig {
+    title: string;
+    subtitle: string;
+    rightSectionTitle?: string;
+    features: LoginCardFeature[];
+    redirectPath?: string;
+    termsHref?: string;
+    privacyHref?: string;
+}
+
+// Get LoginCard Variant Configuration
+export const getLoginCardVariantConfig = (): Record<string, LoginCardVariantConfig> => ({
+    default: {
+        title: 'Welcome Back!',
+        subtitle: 'Sign in to continue your tech learning journey',
+        rightSectionTitle: 'Why TBE?',
+        features: [
+            {
+                icon: Map,
+                title: 'Personalized Roadmaps',
+                description: 'Get customized learning paths based on your goals'
+            },
+            {
+                icon: BookOpen,
+                title: 'Curated Resources',
+                description: 'Access handpicked tutorials and guides'
+            },
+            {
+                icon: TrendingUp,
+                title: 'Track Progress',
+                description: 'Monitor your learning journey and achievements'
+            }
+        ],
+        redirectPath: '/',
+        termsHref: '/terms-and-conditions',
+        privacyHref: '/privacy'
+    },
+    platform: {
+        title: 'Welcome Back!',
+        subtitle: 'Sign in to continue your tech learning journey',
+        rightSectionTitle: 'Why TBE?',
+        features: [
+            {
+                icon: Map,
+                title: 'Personalized Roadmaps',
+                description: 'Get customized learning paths based on your goals'
+            },
+            {
+                icon: BookOpen,
+                title: 'Curated Resources',
+                description: 'Access handpicked tutorials and guides'
+            },
+            {
+                icon: TrendingUp,
+                title: 'Track Progress',
+                description: 'Monitor your learning journey and achievements'
+            }
+        ],
+        redirectPath: '/',
+        termsHref: '/terms-and-conditions',
+        privacyHref: '/privacy'
+    },
+    prepyatra: {
+        title: 'Welcome Back!',
+        subtitle: 'Sign in to continue your interview preparation journey',
+        rightSectionTitle: 'Why PrepYatra?',
+        features: [
+            {
+                icon: Briefcase,
+                title: 'Track Applications',
+                description: 'Manage all your job applications in one place'
+            },
+            {
+                icon: Target,
+                title: 'Interview Prep',
+                description: 'Prepare for interviews with curated resources'
+            },
+            {
+                icon: TrendingUp,
+                title: 'Progress Tracking',
+                description: 'Monitor your interview preparation progress'
+            }
+        ],
+        redirectPath: '/dashboard',
+        termsHref: '/terms-and-conditions',
+        privacyHref: '/privacy'
+    },
+    quizes: {
+        title: 'Welcome Back!',
+        subtitle: 'Sign in to continue your quiz journey',
+        rightSectionTitle: 'Why TBE Quizes?',
+        features: [
+            {
+                icon: Brain,
+                title: 'Smart Learning',
+                description: 'AI-powered questions tailored to your skill level'
+            },
+            {
+                icon: Trophy,
+                title: 'Track Progress',
+                description: 'Monitor your improvement with detailed analytics'
+            },
+            {
+                icon: Users,
+                title: 'Compete',
+                description: 'Challenge yourself on the global leaderboard'
+            },
+            {
+                icon: Sparkles,
+                title: 'Expert Content',
+                description: 'Curated by industry professionals'
+            }
+        ],
+        redirectPath: '/dashboard',
+        termsHref: '/terms-and-conditions',
+        privacyHref: '/privacy'
+    },
+    'resume-yatra': {
+        title: 'Welcome to Resume Yatra',
+        subtitle: 'Sign in to save your progress and build your perfect resume',
+        rightSectionTitle: 'Why Resume Yatra?',
+        features: [
+            {
+                icon: FileText,
+                title: 'Build Resumes',
+                description: 'Create professional resumes with ease'
+            },
+            {
+                icon: Award,
+                title: 'Track Score',
+                description: 'Get your resume score and improve it'
+            },
+            {
+                icon: TrendingUp,
+                title: 'Save Progress',
+                description: 'Auto-save your work and access from anywhere'
+            }
+        ],
+        redirectPath: '/builder',
+        termsHref: '/terms-and-conditions',
+        privacyHref: '/privacy'
+    }
+});
+
 export { socialLinks, productLinks, CONFETTI_COLORS, links, getNavbarVariantConfig };

@@ -73,7 +73,7 @@ const AppContent = ({
             return
 
         // Skip check for public pages
-        const publicPages = ["/auth", "/"]
+        const publicPages = ["/login", "/"]
         if (publicPages.includes(router.pathname)) return
 
         // Skip if already checked
@@ -129,7 +129,7 @@ const AppContent = ({
     ])
 
     // Show loading spinner while checking onboarding on protected pages
-    const publicPages = ["/auth", "/"]
+    const publicPages = ["/login", "/auth", "/"]
     const isProtectedPage = !publicPages.includes(router.pathname)
 
     console.log(

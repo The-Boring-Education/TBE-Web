@@ -797,3 +797,8 @@ export interface StarButtonProps {
   className?: string;
   label?: string;
 }
+
+export interface LoginCardNewProps {
+  variant?: 'default' | 'platform' | 'prepyatra' | 'quizes' | 'resume-yatra';
+  customRedirectPath?: string;
+}

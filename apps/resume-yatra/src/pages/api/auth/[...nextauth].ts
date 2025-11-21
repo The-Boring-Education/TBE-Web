@@ -6,8 +6,8 @@ import { createNextAuthHandler, getAuthOptions } from "@tbe/auth"
  */
 const handler = createNextAuthHandler({
     pages: {
-        signIn: "/auth",
-        error: "/auth"
+        signIn: "/login",
+        error: "/login"
     }
 })
 

@@ -63,6 +63,7 @@ export { default as FeedbackPopup } from './containers/Cards/FeedbackPopup';
 export { default as GitHubIssuesContainer } from './containers/Cards/GitHubIssuesContainer';
 export { default as Leaderboard } from './containers/Cards/Leaderboard';
 export { default as LoginCard } from './containers/Cards/LoginCard';
+export { default as LoginCardNew } from './containers/Cards/LoginCardNew';
 export { default as MentorshipCard } from './containers/Cards/MentorshipCard';
 export { default as NotificationContainer } from './containers/Cards/NotificationContainer';
 export { default as PaymentCard } from './containers/Cards/PaymentCard';

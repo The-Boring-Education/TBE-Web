@@ -97,7 +97,7 @@ const PrepLogsShowcase = () => {
     }
 
     const handleGetStarted = () => {
-        router.push("/auth")
+        router.push("/login")
     }
 
     useEffect(() => {
