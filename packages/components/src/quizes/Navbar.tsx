@@ -14,7 +14,7 @@ import {
 import { Button } from '@tbe/components'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useToast } from './ui/use-toast'
-import { PointsDisplay } from './PointsDisplay'
+
 
 export function Navbar() {
     const { user, signOut, isLoading } = useAuth()
