@@ -41,14 +41,15 @@ export function Navbar() {
         }
     }
 
-    const getInitials = (name: string) => {
+        const getInitials = (name: string = "") => {
         return name
+            .trim()
             .split(" ")
             .map((n) => n[0])
             .join("")
-            .toUpperCase()
-            .slice(0, 2)
-    }
+            .toUpperCase();
+        };
+
 
     const navItems = [
         { name: 'Dashboard', href: '/dashboard', icon: Home },
