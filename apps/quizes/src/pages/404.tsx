@@ -1,15 +1,17 @@
 import { NotFoundPage } from "@tbe/components";
 
-export default function NotFound() {
+const NotFound = () => {
   return (
     <NotFoundPage
       config={{
-        brandName: "TechYatra",
-        description:
-          "The page you're looking for doesn't exist or has been moved.",
+        brandName: "Quizes",
+        enableSEO: true,
         showBackButton: false,
         showSupport: true,
+        homeUrl: "https://theboringeducation.com",
       }}
     />
   );
-}
+};
+
+export default NotFound;
