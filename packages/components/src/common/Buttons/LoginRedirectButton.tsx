@@ -12,6 +12,17 @@ const LoginRedirectButton = ({
   const router = useRouter();
   const { status } = useSession();
 
+  // Determine the correct auth route based on current pathname
+  // Prep-yatra uses /auth, platform uses /login
+  const getAuthRoute = () => {
+    // Check if we're in prep-yatra app (has /auth route)
+    if (router.pathname === '/auth' || router.pathname.startsWith('/dashboard') || router.pathname.startsWith('/pricing') || router.pathname.startsWith('/journey')) {
+      return '/auth';
+    }
+    // Default to /login for platform app
+    return '/login';
+  };
+
   const handleLoginRedirect = () => {
     if (status === 'unauthenticated') {
       try {
@@ -22,11 +33,14 @@ const LoginRedirectButton = ({
       } catch {
         /* ignore analytics errors */
       }
-      router.push(`/login?redirect=${encodeURIComponent(router.asPath)}`);
+      const authRoute = getAuthRoute();
+      const redirectParam = authRoute === '/auth' ? 'callbackUrl' : 'redirect';
+      router.push(`${authRoute}?${redirectParam}=${encodeURIComponent(router.asPath)}`);
     }
   };
 
-  if (status === 'authenticated' || router.pathname === '/login') {
+  const authRoute = getAuthRoute();
+  if (status === 'authenticated' || router.pathname === '/login' || router.pathname === '/auth') {
     return null;
   }
 

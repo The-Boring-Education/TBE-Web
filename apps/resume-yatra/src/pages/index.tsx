@@ -4,11 +4,12 @@ import Header from "@/components/landing/Header"
 import Hero from "@/components/landing/Hero"
 import InterviewPrepSection from "@/components/landing/InterviewPrepSection"
 import ProvenTemplateSection from "@/components/landing/ProvenTemplateSection"
+import { Navbar } from "@tbe/components"
 
 export default function Index() {
     return (
         <div className='min-h-screen'>
-            <Header />
+            <Navbar variant='resume-yatra' />
             <Hero />
             <FeatureCards />
             <ProvenTemplateSection />
@@ -16,4 +17,4 @@ export default function Index() {
             <Footer />
         </div>
     )
-}
+}   

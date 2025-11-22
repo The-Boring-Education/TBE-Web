@@ -6,6 +6,7 @@ import InitialChoice from "@/components/builder/InitialChoice"
 import ResultScreen from "@/components/builder/ResultScreen"
 import TemplatePrompt from "@/components/builder/TemplatePrompt"
 import { useResumeBuilder } from "@/hooks/use-resume-builder"
+import { Navbar } from "@tbe/components"
 
 const LoadingScreen = () => (
     <div className='min-h-screen flex items-center justify-center bg-white'>
@@ -40,6 +41,7 @@ export default function Builder() {
         <ProtectedRoute
             redirectTo='/auth'
             loadingComponent={<LoadingScreen />}>
+                <Navbar variant='resume-yatra' />
             <BuilderContent />
         </ProtectedRoute>
     )

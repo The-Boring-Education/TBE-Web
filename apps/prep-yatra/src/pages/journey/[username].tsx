@@ -1,5 +1,4 @@
-import {PrepYatraFooter} from "@tbe/components"
-import {PrepYatraNavigation} from "@tbe/components"
+import {PrepYatraFooter, Navbar} from "@tbe/components"
 import { Badge } from "@tbe/components"
 import { Button, FlexContainer, GridContainer,Section, Text } from "@tbe/components"
 import {
@@ -98,7 +97,7 @@ const PrepLogsShowcase = () => {
     }
 
     const handleGetStarted = () => {
-        router.push("/auth")
+        router.push("/login")
     }
 
     useEffect(() => {
@@ -166,7 +165,7 @@ const PrepLogsShowcase = () => {
     if (error || !profile) {
         return (
             <div className='min-h-screen bg-background'>
-                <PrepYatraNavigation />
+                <Navbar variant='prepyatra' />
                 <Section className='container mx-auto px-4 py-16 text-center'>
                     <Text level='h1' className='text-4xl font-bold text-foreground mb-4'>
                         User Not Found
@@ -196,7 +195,7 @@ const PrepLogsShowcase = () => {
 
     return (
         <div className='min-h-screen bg-background'>
-            <PrepYatraNavigation />
+            <Navbar variant='prepyatra' />
 
             <Section className='container mx-auto px-4 mt-12 px-6 lg:px-8 py-8 md:py-12 lg:py-16'>
                 {/* Header Section */}

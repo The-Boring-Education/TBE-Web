@@ -51,6 +51,44 @@ export interface AuthConfig {
 }
 
 /**
+ * Simplified app-specific auth configuration for plug-and-play setup
+ */
+export interface AppAuthConfig {
+    /**
+     * Custom pages configuration
+     * Default: { signIn: "/auth", error: "/auth" }
+     */
+    pages?: {
+        signIn?: string
+        signOut?: string
+        error?: string
+        verifyRequest?: string
+        newUser?: string
+    }
+
+    /**
+     * App-specific onboarding field path in user object
+     * Examples:
+     * - "prepYatra.pyOnboarded" for Prep Yatra
+     * - "quiz.onboarded" for Quizes
+     * - "isOnboarded" for simple onboarding (default)
+     */
+    onboardingField?: string
+
+    /**
+     * Whether to add custom redirect logic to prevent redirect loops
+     * Default: false
+     */
+    enableRedirectLogic?: boolean
+
+    /**
+     * Custom session callback for advanced use cases
+     * If provided, will be called after default session logic
+     */
+    customSessionCallback?: (session: any, token: any, userData: any) => Promise<any> | any
+}
+
+/**
  * User data structure for API operations
  */
 export interface CreateUserData {
