@@ -37,8 +37,7 @@ export function Navbar() {
             setLoading(false)
         }
     }
-
-    const getInitials = (name) => {
+    const getInitials = (name: string) => {
         return name
             .split(" ")
             .map((n) => n[0])
@@ -53,7 +52,7 @@ export function Navbar() {
         { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
     ]
 
-    const isActive = (href) => pathname === href
+    const isActive = (href: string) => pathname === href
 
     return (
         <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
