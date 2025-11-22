@@ -6,7 +6,11 @@ import { PrepYatraGamificationProvider } from "@tbe/components"
 import { Toaster as Sonner } from "@tbe/components"
 import { Toaster } from "@tbe/components"
 import { TooltipProvider } from "@tbe/components"
-import { initGA, trackPageview } from "@tbe/utils"
+import {
+  initGA,
+  installGlobalAnalyticsListeners,
+  trackPageview,
+} from '@tbe/components/analytics';
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { useRouter } from "next/router"
