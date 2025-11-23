@@ -32,7 +32,6 @@ import type {
 
 const fetchAPIData = async (url: string) => {
     const response = await fetch(`${envConfig.API_URL}/${url}`)
-
     return await response.json()
 }
 

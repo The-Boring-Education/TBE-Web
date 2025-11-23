@@ -67,6 +67,7 @@ export const defaultSessionCallback = async (
             session.user.contactNo = userData.contactNo
         }
 
+
         return session
     } catch (error) {
         console.error("Error in defaultSessionCallback:", error)

@@ -1,4 +1,4 @@
 {
   "buildCommand": "cd ../.. && pnpm run build:techyatra",
-  "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile"
+  "installCommand": "cd ../.. && corepack enable && corepack prepare pnpm@9.15.9 --activate && pnpm install --no-frozen-lockfile"
 }

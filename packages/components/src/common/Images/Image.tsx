@@ -13,7 +13,7 @@ const ImageContainer = ({
   <div
     className={`${className} ${fullWidth && 'w-full'} ${
       fullHeight && 'h-full'
-    }`}
+    } relative`}
   >
     <Image
       alt={alt}
@@ -21,6 +21,7 @@ const ImageContainer = ({
       fill
       loading={loading}
       src={src}
+      style={{ objectFit: 'cover' }}
     />
   </div>
 );

@@ -33,11 +33,31 @@ interface NavbarProps {
     userId?: string
 }
 
+
+export type NavbarVariant = 'default' | 'transparent' | 'prepyatra' | 'quizes' | 'techyatra' | 'dsayatra' | 'resume-yatra';
+
+interface MainNavbarProps extends Partial<NavbarProps> {
+    variant?: NavbarVariant;
+    showFullNavigation?: boolean;
+    customBranding?: React.ReactNode;
+    customActions?: React.ReactNode[];
+    dashboardRoute?: string;
+}
+interface VariantConfig {
+    branding: React.ReactNode;
+    dashboardRoute: string;
+    borderClass?: string;
+    requiresAuth?: boolean; // If false, hides UserPointButton and UserAvatar
+    showGamification?: boolean; // If false, hides UserPointButton (gamification)
+  }
+
 export type {
     CelebrationAnimationProps,
     GamificationBadgeProps,
     NavbarDropdownContainerProps,
     NavbarDropdownLink,
     NavbarProps,
-    OutlineCardProps
+    MainNavbarProps,
+    OutlineCardProps,
+    VariantConfig,
 }

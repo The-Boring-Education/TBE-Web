@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query"
 import { useAuth } from "@tbe/auth"
 import { DashboardNav, ProtectedRoute } from "@tbe/components/quizes"
 import {
@@ -28,7 +29,6 @@ import {
     TrendingUp
 } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
-import { useQuery } from "react-query"
 
 // Filter component
 interface FilterBarProps {
@@ -280,36 +280,32 @@ function HistoryContent() {
         isLoading: attemptsLoading,
         error: attemptsError,
         refetch: refetchAttempts
-    } = useQuery<QuizAttempt[]>(
-        ["quiz-attempts", user?.id],
-        async () => {
+    } = useQuery<QuizAttempt[]>({
+        queryKey: ["quiz-attempts", user?.id],
+        queryFn: async () => {
             if (!user?.id) return []
             const response = await quizApi.getUserSessions(user.id)
             return response.data
         },
-        {
-            enabled: !!user?.id
-        }
-    )
+        enabled: !!user?.id
+    })
 
     // Fetch performance history
     const {
         data: historyData,
         isLoading: historyLoading,
         error: historyError
-    } = useQuery<PerformanceHistory[]>(
-        ["performance-history", user?.id, selectedTimeRange],
-        async () => {
+    } = useQuery<PerformanceHistory[]>({
+        queryKey: ["performance-history", user?.id, selectedTimeRange],
+        queryFn: async () => {
             if (!user?.id) return []
             const days =
                 selectedTimeRange === "all" ? 365 : parseInt(selectedTimeRange)
             const response = await quizApi.getUserAnalytics(user.id)
             return response.data
         },
-        {
-            enabled: !!user?.id
-        }
-    )
+        enabled: !!user?.id
+    })
 
     const handleError = useCallback(
         (error: unknown) => {

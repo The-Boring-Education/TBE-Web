@@ -45,36 +45,37 @@ export const GOALS: {
 ];
 
 export const COMPANY_TYPES: {
-    value: CompanyType
-    label: string
-    icon: string
-    description: string
+    value: CompanyType;
+    label: string;
+    icon: string;
+    description: string;
 }[] = [
     {
         value: "STARTUP",
         label: "Startups",
         icon: "🚀",
-        description: "Fast-paced, innovative companies"
+        description: "Fast-paced, innovative companies",
     },
     {
-        value: "FAANG",
+        value: "MID_SIZE",
         label: "Mid-size Companies",
         icon: "🏢",
-        description: "Established growing companies"
+        description: "Established growing companies",
     },
     {
         value: "MNC",
         label: "MNCs",
         icon: "🌍",
-        description: "Large multinational corporations"
+        description: "Large multinational corporations",
     },
     {
         value: "FAANG",
         label: "FAANG",
         icon: "⭐",
-        description: "Top tech giants (Meta, Apple, Amazon, Netflix, Google)"
-    }
+        description: "Top tech giants (Meta, Apple, Amazon, Netflix, Google)",
+    },
 ];
+
 
 export const INTERVIEW_CATEGORIES: {
     value: InterviewCategory

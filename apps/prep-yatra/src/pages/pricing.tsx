@@ -1,4 +1,4 @@
-import { PrepYatraFooter, PrepYatraNavbar } from "@tbe/components"
+import { PrepYatraFooter, Navbar } from "@tbe/components"
 import { Badge } from "@tbe/components"
 import { Button } from "@tbe/components"
 import {
@@ -99,7 +99,7 @@ const PricingPage: React.FC = () => {
 
     useEffect(() => {
         if (!user) {
-            router.push("/auth")
+            router.push("/login")
         }
     }, [user, router])
 
@@ -109,7 +109,7 @@ const PricingPage: React.FC = () => {
         }
 
         if (!user?.id) {
-            router.push("/auth")
+            router.push("/login")
             return
         }
 
@@ -174,7 +174,7 @@ const PricingPage: React.FC = () => {
 
     return (
         <div className='min-h-screen bg-background'>
-            <PrepYatraNavbar onSignOut={handleSignOut} userId={user?.id} />
+            <Navbar variant='prepyatra' />
 
             <main className='container mx-auto px-4 py-16'>
                 <div className='text-center mb-16'>
