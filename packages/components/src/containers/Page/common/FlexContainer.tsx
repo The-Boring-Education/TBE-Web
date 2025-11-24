@@ -1,6 +1,5 @@
-import { motion } from 'framer-motion';
-
 import type { FlexContainerProps } from '@tbe/interface';
+import { motion } from 'framer-motion';
 
 const FlexContainer = ({
   children,
