@@ -1,4 +1,4 @@
-import {Flame, Calendar, Target, Award} from "lucide-react";
+import {Award, Calendar, Flame, Target} from "lucide-react";
 
 const ProfileShowcase = () => {
     return (

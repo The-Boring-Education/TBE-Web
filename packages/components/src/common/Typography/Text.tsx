@@ -1,22 +1,22 @@
-import type { TextProps } from '@tbe/interface';
+import type { TextProps } from "@tbe/interface";
 
 const Text = ({
   level,
   children,
   variant,
   textCenter,
-  className = '',
+  className = "",
 }: TextProps) => {
   const HeadingTag = level;
-  let variantClasses = '';
+  let variantClasses = "";
 
-  if (variant === 'SUCCESS') variantClasses = 'text-success';
-  else if (variant === 'ERROR') variantClasses = 'text-primary';
+  if (variant === "SUCCESS") variantClasses = "text-success";
+  else if (variant === "ERROR") variantClasses = "text-primary";
 
   return (
     <HeadingTag
       className={`${className} ${variantClasses} ${
-        textCenter ? 'text-center' : ''
+        textCenter ? "text-center" : ""
       }`}
     >
       {children}
