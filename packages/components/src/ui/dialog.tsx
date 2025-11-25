@@ -1,8 +1,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import {cn} from "@tbe/utils";
 import {X} from "lucide-react";
 import * as React from "react";
-
-import {cn} from "@tbe/utils";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -108,13 +107,12 @@ DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {
   Dialog,
-  DialogPortal,
-  DialogOverlay,
   DialogClose,
-  DialogTrigger,
   DialogContent,
-  DialogHeader,
+  DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
   DialogTitle,
-  DialogDescription
-};
+  DialogTrigger};

@@ -1,6 +1,5 @@
-import { createElement } from 'react';
-
 import type { CertificateBannerProps } from '@tbe/interface';
+import { createElement } from 'react';
 
 const CertificateBanner = ({
   backgroundColor,

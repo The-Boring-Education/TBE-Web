@@ -1,8 +1,6 @@
+import type { User,UseUserReturnType } from "@tbe/interface"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
-
-
-import type { UseUserReturnType, User } from "@tbe/interface"
 
 const useUser = (): UseUserReturnType => {
     const sessionData = useSession()

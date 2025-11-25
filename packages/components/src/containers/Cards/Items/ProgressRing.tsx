@@ -1,7 +1,6 @@
-import React from 'react';
-
 import { Text } from '@tbe/components';
 import type { ProgressRingProps } from '@tbe/interface';
+import React from 'react';
 
 const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
   const radius = 42;

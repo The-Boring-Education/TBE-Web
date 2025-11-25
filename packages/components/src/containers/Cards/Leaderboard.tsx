@@ -1,13 +1,12 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { FiUser } from 'react-icons/fi';
-
 import { FlexContainer, Section, Text } from '@tbe/components';
 import { LEADERBOARD_TABS } from '@tbe/constants';
 import { useLeaderboard, useUser } from '@tbe/hooks';
 import type { LeaderboardType } from '@tbe/interface';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { FiUser } from 'react-icons/fi';
 
 const rankCircleStyles: Record<number, string> = {
   1: 'bg-yellow-500 text-white shadow-sm',

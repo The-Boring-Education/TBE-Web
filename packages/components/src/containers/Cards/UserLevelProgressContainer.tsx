@@ -1,7 +1,6 @@
-import React from 'react';
-
 import { FlexContainer, ProgressRing, Text } from '@tbe/components';
 import type { LevelProgressCardProps } from '@tbe/interface';
+import React from 'react';
 
 const UserLevelProgressContainer = ({
   points,

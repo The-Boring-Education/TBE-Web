@@ -1,8 +1,8 @@
 "use client";
-import { Navbar, Footer } from "@tbe/components";
-import { Header, LearningSection, TabSection } from "@tbe/components/techyatra";
+import { Footer,Navbar } from "@tbe/components";
+import { LearningSection, TabSection } from "@tbe/components/techyatra";
 import { Button } from "@ui/button";
-import { ArrowRight, Github, Instagram, Linkedin } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import React from "react";
 
 export default function Home() {

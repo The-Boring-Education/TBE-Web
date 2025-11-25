@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
+
 import { Button } from '../ui/button';
 import DomainSection from './DomainSection';
-import LanguageSection from './LanguageSection';
 import DSASection from './DSASection';
+import LanguageSection from './LanguageSection';
 
 const TabSection = () => {
   const [activeTab, setActiveTab] = useState<string | null>(null);

@@ -1,10 +1,10 @@
-import {Calendar, Clock, Flame, TrendingUp, Plus} from "lucide-react";
-
-import {Card, CardContent} from "../ui/card";
 import {useDailyPrepEncouragement} from "@tbe/hooks";
+import {Calendar, Clock, Flame, Plus,TrendingUp} from "lucide-react";
+
 import Button from "../../common/Buttons/Button";
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../../containers/Page/common/FlexContainer";
+import {Card, CardContent} from "../ui/card";
 
 interface DailyPrepEncouragementProps {
     userId: string

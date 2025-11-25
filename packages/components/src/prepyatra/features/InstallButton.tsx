@@ -1,7 +1,7 @@
-import {Download, DownloadIcon} from "lucide-react";
+import {useInstallPrompt} from "@tbe/hooks";
+import { DownloadIcon} from "lucide-react";
 
 import {Button} from "../ui/button";
-import {useInstallPrompt} from "@tbe/hooks";
 
 export default function InstallButton() {
     const {isInstallable, deferredPrompt} = useInstallPrompt();

@@ -1,6 +1,5 @@
-import React from 'react';
-
 import type { CheckboxButtonProps } from '@tbe/interface';
+import React from 'react';
 
 const CheckboxButton = ({
   label,

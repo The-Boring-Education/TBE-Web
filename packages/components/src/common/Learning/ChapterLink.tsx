@@ -1,9 +1,8 @@
+import type { ChapterLinkProps } from '@tbe/interface';
+import { trackEvent } from '@tbe/utils';
 import Link from 'next/link';
 import { FaLock, FaRegCircle } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
-
-import type { ChapterLinkProps } from '@tbe/interface';
-import { trackEvent } from '@tbe/utils';
 
 const ChapterLink = ({
   href,

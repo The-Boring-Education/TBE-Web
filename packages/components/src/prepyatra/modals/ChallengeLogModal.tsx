@@ -1,7 +1,11 @@
-import { Share2, Copy, TrendingUp, CheckCircle2, Trophy, Linkedin, Twitter, Facebook, X, LogOut } from "lucide-react"
-import { useState, useRef } from "react"
+import { challengesService } from "@tbe/services"
+import { prepLogsService } from "@tbe/services"
+import type { Challenge } from "@tbe/types"
+import { CheckCircle2, Copy, Facebook, Linkedin,Share2, Trophy, Twitter, X } from "lucide-react"
+import { useRef,useState } from "react"
 import { toast } from "sonner"
 
+import Button from "../../common/Buttons/Button"    
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { Checkbox } from "../ui/checkbox"
 import {
@@ -15,11 +19,6 @@ import {
 import { InputField  } from "../ui/input"
 import { Label } from "../ui/label"
     import { Textarea } from "../ui/textarea"
-import { challengesService } from "@tbe/services"
-import { prepLogsService } from "@tbe/services"
-import type { Challenge } from "@tbe/types"
-import Button from "../../common/Buttons/Button"    
-import Text from "../../common/Typography/Text"
 interface ChallengeLogModalProps {
     isOpen: boolean
     onClose: () => void

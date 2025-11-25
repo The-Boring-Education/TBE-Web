@@ -1,7 +1,6 @@
-import { useState } from 'react';
-
 import { Button, FlexContainer } from '@tbe/components';
 import type { ToggleButtonProps } from '@tbe/interface';
+import { useState } from 'react';
 
 const ToggleButton = ({
   options,

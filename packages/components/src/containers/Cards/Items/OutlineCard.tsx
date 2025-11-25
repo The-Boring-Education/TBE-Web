@@ -1,6 +1,5 @@
-import { motion } from 'framer-motion';
-
 import type { OutlineCardProps } from '@tbe/interface';
+import { motion } from 'framer-motion';
 
 const OutlineCard = ({ icon, title, description }: OutlineCardProps) => (
   <motion.div

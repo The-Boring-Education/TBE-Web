@@ -1,10 +1,10 @@
 import {type DialogProps} from "@radix-ui/react-dialog";
+import {cn} from "@tbe/utils";
 import {Command as CommandPrimitive} from "cmdk";
 import {Search} from "lucide-react";
 import * as React from "react";
 
 import {Dialog, DialogContent} from "../ui/dialog";
-import {cn} from "@tbe/utils";
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -143,11 +143,10 @@ CommandShortcut.displayName = "CommandShortcut";
 export {
   Command,
   CommandDialog,
-  CommandInput,
-  CommandList,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
-  CommandShortcut,
-  CommandSeparator
-};
+  CommandList,
+  CommandSeparator,
+  CommandShortcut};

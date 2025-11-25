@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query"
 import { useAuth } from "@tbe/auth"
 import { MarkdownRenderer } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
@@ -7,7 +8,6 @@ import { trackEvent } from "@tbe/utils"
 import { ArrowLeft, Clock, Target,Trophy } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useMemo,useRef } from "react"
-import { useQuery } from "@tanstack/react-query"
 
 interface QuizQuestion {
     _id?: string

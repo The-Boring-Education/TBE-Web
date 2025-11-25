@@ -1,9 +1,8 @@
-import { usePathname, useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-
 import { Button } from '@tbe/components';
 import type { LoginRedirectButtonProps } from '@tbe/interface';
 import { trackEvent } from '@tbe/utils';
+import { usePathname, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const LoginRedirectButton = ({
   text = 'Login to Start',

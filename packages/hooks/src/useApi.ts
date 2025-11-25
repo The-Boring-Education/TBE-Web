@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
-
 import type { APIMakeRequestProps, APIResponseType } from '@tbe/types';
 import { sendRequest } from '@tbe/utils';
+import { useEffect, useState } from 'react';
+import { useQueryClient } from 'react-query';
 
 const useApi = (
   queryKey: string,

@@ -1,6 +1,5 @@
-import React from 'react';
-
 import type { RadioButtonProps } from '@tbe/interface';
+import React from 'react';
 
 const RadioButton = ({
   label,

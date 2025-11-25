@@ -1,14 +1,14 @@
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 
-import FlexContainer from '../Page/common/FlexContainer';
-import Image from '../../common/Images/Image';
 import LoginWithGoogleButton from '../../common/Buttons/LoginWithGoogleButton';
+import Image from '../../common/Images/Image';
 import Logo from '../../common/Images/Logo';
-import Section from '../../layout/Section';
 import Text from '../../common/Typography/Text';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { motion } from 'framer-motion';
+import Section from '../../layout/Section';
+import FlexContainer from '../Page/common/FlexContainer';
 
 const Login = () => {
   const { status } = useSession();

@@ -1,6 +1,5 @@
-import { motion } from 'framer-motion';
-
 import type { HeaderLabelProps } from '@tbe/interface';
+import { motion } from 'framer-motion';
 
 const HeaderLabel = ({
   label,

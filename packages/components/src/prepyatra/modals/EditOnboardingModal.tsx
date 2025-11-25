@@ -1,7 +1,19 @@
-import { ExternalLink, Linkedin, Github } from "lucide-react"
-import { useState, useEffect } from "react"
+import {
+    COMPANY_TYPES,
+    GOALS,
+    INTERVIEW_CATEGORIES
+} from "@tbe/constants"
+import type {
+    ExperienceLevel,
+    InterviewCategory,
+    OnboardingCompanyType,
+    OnboardingData,
+    OnboardingGoalType,
+} from "@tbe/types"
+import { ExternalLink, Github,Linkedin } from "lucide-react"
+import { useEffect,useState } from "react"
 
-
+import { useAuth } from "../contexts/useAuth"
 import { Button } from "../ui/button"
 import {
     Dialog,
@@ -9,20 +21,7 @@ import {
     DialogHeader,
     DialogTitle
 } from "../ui/dialog"
-import {
-    GOALS,
-    COMPANY_TYPES,
-    INTERVIEW_CATEGORIES
-} from "@tbe/constants"
-import { useAuth } from "../contexts/useAuth"
 import { useToast } from "../ui/use-toast"
-import type {
-    OnboardingData,
-    OnboardingGoalType,
-    OnboardingCompanyType,
-    InterviewCategory,
-    ExperienceLevel,
-} from "@tbe/types"
 
 interface EditOnboardingModalProps {
     isOpen: boolean
@@ -197,9 +196,9 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                         Edit Onboarding Details
                     </DialogTitle>
                     <div className='flex justify-center gap-2 mt-4'>
-                    <div className='w-1 h-1 rounded-full bg-[#FF5757]'></div>
-                    <div className='w-1 h-1 rounded-full bg-[#FF5757]'></div>
-                    <div className='w-1 h-1 rounded-full bg-[#FF5757]'></div>
+                    <div className='w-1 h-1 rounded-full bg-[#FF5757]' />
+                    <div className='w-1 h-1 rounded-full bg-[#FF5757]' />
+                    <div className='w-1 h-1 rounded-full bg-[#FF5757]' />
                 </div>
                 </DialogHeader>
                 <div className='space-y-4'>
@@ -281,7 +280,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                             </div>
                         </div>
                     </div>
-                     <div className='border-t border-[#FF5757]/30'></div>
+                     <div className='border-t border-[#FF5757]/30' />
                     {/* Goal Selection */}
                     <div className='space-y-2'>
                         <h3 className='text-lg font-semibold text-contentLight'>
@@ -330,7 +329,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                             ))}
                         </div>
                     </div>
-                    <div className='border-t border-[#FF5757]/30'></div>
+                    <div className='border-t border-[#FF5757]/30' />
                     {/* Target Companies */}
                   <div className='space-y-3'>
                     <h3 className='text-lg font-semibold text-contentLight'>
@@ -375,7 +374,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                     </div>
                 </div>
 
-                <div className='border-t border-[#FF5757]/30'></div>
+                <div className='border-t border-[#FF5757]/30' />
                       {/* Interview Categories */}
                       <div className='space-y-3'>
                         <h3 className='text-lg font-semibold text-contentLight'>
@@ -432,7 +431,7 @@ const EditOnboardingModal: React.FC<EditOnboardingModalProps> = ({
                         </p>
                     </div>
 
-                    <div className='border-t border-[#FF5757]/30'></div>
+                    <div className='border-t border-[#FF5757]/30' />
                     {/* Action Buttons */}
                     <div className='flex gap-3 pt-0.01'>
                     <Button

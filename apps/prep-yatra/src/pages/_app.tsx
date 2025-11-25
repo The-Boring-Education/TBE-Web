@@ -8,7 +8,6 @@ import { Toaster } from "@tbe/components"
 import { TooltipProvider } from "@tbe/components"
 import {
   initGA,
-  installGlobalAnalyticsListeners,
   trackPageview,
 } from '@tbe/components/analytics';
 import type { AppProps } from "next/app"

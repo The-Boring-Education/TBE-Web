@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-
 import { Button, FlexContainer, InputField, Text } from '@tbe/components';
+import type { CertificateModalProps } from '@tbe/interface';
+import React, { useEffect,useState } from 'react';
+
 import Modal from '../Modal';
-import { CertificateModalProps } from '@tbe/interface';
 
 const CertificateModal: React.FC<CertificateModalProps> = ({
   isOpen,

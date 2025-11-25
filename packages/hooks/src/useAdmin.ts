@@ -1,6 +1,6 @@
+import { routes } from '@tbe/constants';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
-import { routes } from '@tbe/constants';
 
 const ADMIN_EMAIL = 'theboringeducation@gmail.com';
 

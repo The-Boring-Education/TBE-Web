@@ -1,7 +1,6 @@
-import React from "react";
-
 import {COMPANY_TYPES} from "@tbe/constants";
-import type {OnboardingData,  OnboardingCompanyType} from "@tbe/types";
+import type {OnboardingCompanyType,OnboardingData} from "@tbe/types";
+import React from "react";
 
 type Props = {
     formData: OnboardingData

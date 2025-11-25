@@ -8,6 +8,8 @@ import {
     CardTitle,
     NotFound
 } from "@tbe/components";
+import type { PrepLog, UserProfile } from "@tbe/interface";
+import { getTimeOfDay, withProtocol } from "@tbe/utils";
 import {
     Calendar,
     Clock,
@@ -18,8 +20,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { PrepLog, UserProfile } from "@tbe/interface";
-import { getTimeOfDay, withProtocol } from "@tbe/utils";
 
 const PrepLogsShowcase = () => {
     const router = useRouter();

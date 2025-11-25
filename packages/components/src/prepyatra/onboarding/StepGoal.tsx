@@ -1,7 +1,6 @@
-import React from "react";
-
 import {GOALS} from "@tbe/constants";
 import type {OnboardingData,  OnboardingGoalType} from "@tbe/types";
+import React from "react";
 
 type Props = {
     formData: OnboardingData

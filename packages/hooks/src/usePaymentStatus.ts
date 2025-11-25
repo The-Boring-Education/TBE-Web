@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
-
 import { routes } from '@tbe/constants';
 import type { usePaymentStatusProps } from '@tbe/interface';
+import { useEffect, useState } from 'react';
 
 const usePaymentStatus = ({
   userId,

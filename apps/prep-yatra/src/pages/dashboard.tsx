@@ -1,28 +1,25 @@
-import React, { Suspense, useEffect, useState } from "react";
-import { toast } from "sonner";
-import { Menu, X } from "lucide-react";
-import { useRouter } from "next/router";
-
+import { useAuth } from "@tbe/auth";
 import {
-    Navbar,
     AddPrepLogModal,
     AddRecruiterModal,
-    EditOnboardingModal,
+    AddSkillsModal,
     BuildYourStack,
     DailyPrepEncouragement,
     DashboardTabs,
-    ProfileSection,
-    AddSkillsModal,
+    EditOnboardingModal,
     Footer,
-    usePrepYatraGamificationContext,
-    LoadingSpinner
-} from "@tbe/components";
-
-import { useAuth } from "@tbe/auth";
+    LoadingSpinner,
+    Navbar,
+    ProfileSection,
+    usePrepYatraGamificationContext} from "@tbe/components";
 import { usePrepLogs } from "@tbe/hooks";
+import type { UserProfile } from "@tbe/interface";
 import { recruitersService, userService } from "@tbe/services";
 import type { RecruiterContact } from "@tbe/types";
-import type { UserProfile } from "@tbe/interface";
+import { Menu, X } from "lucide-react";
+import { useRouter } from "next/router";
+import React, { Suspense, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Dashboard = () => {
     const router = useRouter();

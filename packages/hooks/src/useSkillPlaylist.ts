@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
-
 import { routes } from '@tbe/constants';
 import { useApi } from '@tbe/hooks';
 import type { PlaylistSkillCardProps } from '@tbe/interface';
+import { useEffect, useState } from 'react';
 
 const useSkillPlaylist = (q: string) => {
   const { makeRequest, loading } = useApi('fetchPlaylists');

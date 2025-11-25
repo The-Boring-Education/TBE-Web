@@ -1,9 +1,8 @@
-import { useRouter } from 'next/navigation';
-import React from 'react';
-
 import { FlexContainer, Image, Text } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import type { PlaylistSkillCardProps } from '@tbe/interface';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 const SkillCard = ({
   thumbnail,
