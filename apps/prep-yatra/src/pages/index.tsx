@@ -1,17 +1,24 @@
-import {Section} from "@tbe/components";
-import {FeatureCards} from "@tbe/components";
-import {PrepYatraHero} from "@tbe/components";
-import {InstallButton} from "@tbe/components";
-import {PrepYatraFooter} from "@tbe/components";
-import {PrepLogsShowcase} from "@tbe/components";
-import {ProfileShowcase} from "@tbe/components";
-import {RecruiterContactsShowcase} from "@tbe/components";
-import {ResourceSharingShowcase} from "@tbe/components";
-import {Navbar} from "@tbe/components";
+import { SEO, Section,
+        FeatureCards,
+        PrepYatraHero, 
+        InstallButton,
+        PrepYatraFooter,
+        PrepLogsShowcase,
+        ProfileShowcase, 
+        RecruiterContactsShowcase,
+        ResourceSharingShowcase,
+        Navbar } from "@tbe/components";
+import { getPreFetchProps } from "@tbe/utils";
+import { routes, PAGE_REFRESH_TIMEOUT } from "@tbe/constants";
+import type { PageProps } from "@tbe/interface";
 
-const Index = () => {
+
+
+const Index = ({ seoMeta }: PageProps) => {
+
     return (
-        <div className='min-h-screen bg-lightBG'>
+        <> <SEO seoMeta={seoMeta} />
+         <div className='min-h-screen bg-lightBG'>
             <Navbar variant='prepyatra' />
             <Section className='pt-16'>
                 <InstallButton />
@@ -24,7 +31,12 @@ const Index = () => {
             </Section>
             <PrepYatraFooter />
         </div>
+        </>
     );
 };
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.prepYatra })),
+  revalidate: PAGE_REFRESH_TIMEOUT.medium,
+});
 
 export default Index;
