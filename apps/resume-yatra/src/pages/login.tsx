@@ -1,4 +1,4 @@
-import { LoginCardNew, Navbar, Footer } from "@tbe/components"
+import { Footer,LoginCardNew, Navbar } from "@tbe/components"
 
 export default function AuthPage() {
     return (

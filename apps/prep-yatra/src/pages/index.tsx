@@ -1,13 +1,15 @@
-import {Section} from "@tbe/components";
-import {FeatureCards} from "@tbe/components";
-import {PrepYatraHero} from "@tbe/components";
-import {InstallButton} from "@tbe/components";
-import {PrepYatraFooter} from "@tbe/components";
-import {PrepLogsShowcase} from "@tbe/components";
-import {ProfileShowcase} from "@tbe/components";
-import {RecruiterContactsShowcase} from "@tbe/components";
-import {ResourceSharingShowcase} from "@tbe/components";
-import {Navbar} from "@tbe/components";
+import {
+  FeatureCards,
+  Footer,
+  InstallButton,
+  Navbar,
+  PrepLogsShowcase,
+  PrepYatraHero,
+  ProfileShowcase,
+  RecruiterContactsShowcase,
+  ResourceSharingShowcase,
+  Section,
+} from "@tbe/components";
 
 const Index = () => {
     return (
@@ -22,7 +24,7 @@ const Index = () => {
                 <ResourceSharingShowcase />
                 <ProfileShowcase />
             </Section>
-            <PrepYatraFooter />
+            <Footer variant="prepyatra"/>
         </div>
     );
 };

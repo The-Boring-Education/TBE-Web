@@ -1,6 +1,5 @@
-import {PrepYatraFooter, Navbar} from "@tbe/components"
-import { Badge } from "@tbe/components"
-import { Button, FlexContainer, GridContainer,Section, Text } from "@tbe/components"
+import { Footer, Navbar } from "@tbe/components";
+import { Badge } from "@tbe/components";
 import {
     Card,
     CardContent,
@@ -25,21 +24,28 @@ import { PrepLog, UserProfile } from "@tbe/interface"
 import { formatDate, formatTimeSpent, getTimeOfDay, withProtocol } from "@tbe/utils"
 
 const PrepLogsShowcase = () => {
-    const router = useRouter()
-    const { username } = router.query
-    const [prepLogs, setPrepLogs] = useState<PrepLog[]>([])
-    const [profile, setProfile] = useState<UserProfile | null>(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState("")
+  const router = useRouter();
+  const { username } = router.query;
+  const [prepLogs, setPrepLogs] = useState<PrepLog[]>([]);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString)
-        return date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-        })
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const formatTimeSpent = (hours: number) => {
+    if (hours < 1) {
+      return `${Math.round(hours * 60)} minutes`;
     }
+    return `${hours} hour${hours !== 1 ? "s" : ""}`;
+  };
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -47,61 +53,58 @@ const PrepLogsShowcase = () => {
                 return
             }
 
-            try {
-                setLoading(true)
+        // Fetch user profile by username
+        const profileResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/user?username=${username}`
+        );
 
-                // Fetch user profile by username
-                const profileResponse = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/user?username=${username}`
-                )
-
-                if (!profileResponse.ok) {
-                    throw new Error("User not found")
-                }
-
-                const profileData = await profileResponse.json()
-                // Extract data from the API response structure
-                if (profileData.status && profileData.data) {
-                    setProfile(profileData.data)
-                } else {
-                    setProfile(profileData)
-                }
-
-                // Fetch prep logs using the userId from the profile data
-                if (profileData.data?._id || profileData._id) {
-                    const userId = profileData.data?._id || profileData._id
-                    const logsResponse = await fetch(
-                        `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/prep-log?userId=${userId}`
-                    )
-
-                    if (logsResponse.ok) {
-                        const logsData = await logsResponse.json()
-                        // Extract data from the API response structure
-                        if (logsData.status && logsData.data) {
-                            setPrepLogs(logsData.data || [])
-                        } else {
-                            setPrepLogs(logsData || [])
-                        }
-                    }
-                }
-            } catch (err) {
-                setError("Failed to load user profile")
-                console.error("Error fetching data:", err)
-            } finally {
-                setLoading(false)
-            }
+        if (!profileResponse.ok) {
+          throw new Error("User not found");
         }
 
-        fetchProfile()
-    }, [username])
+        const profileData = await profileResponse.json();
+        // Extract data from the API response structure
+        if (profileData.status && profileData.data) {
+          setProfile(profileData.data);
+        } else {
+          setProfile(profileData);
+        }
 
-    if (loading) {
-        return (
-            <div className='min-h-screen flex items-center justify-center'>
-                <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary' />
-            </div>
-        )
-    }
+        // Fetch prep logs using the userId from the profile data
+        if (profileData.data?._id || profileData._id) {
+          const userId = profileData.data?._id || profileData._id;
+          const logsResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/prep-log?userId=${userId}`
+          );
+
+          if (logsResponse.ok) {
+            const logsData = await logsResponse.json();
+            // Extract data from the API response structure
+            if (logsData.status && logsData.data) {
+              setPrepLogs(logsData.data || []);
+            } else {
+              setPrepLogs(logsData || []);
+            }
+          }
+        }
+      } catch (err) {
+        setError("Failed to load user profile");
+        console.error("Error fetching data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [username]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+      </div>
+    );
+  }
 
     if (error || !profile) {
         return (
@@ -137,17 +140,74 @@ const PrepLogsShowcase = () => {
                 </FlexContainer>
 
 
-                {/* Profile Info */}
-                <Card className='max-w-2xl mx-auto mb-8 sm:mb-12 hover:shadow-lg transition-shadow duration-300'>
-                    <CardHeader className='text-center pb-4 sm:pb-6'>
-                        <div className='w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6'>
-                            <User className='w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-primary' />
-                        </div>
-                        <CardTitle className='text-xl sm:text-2xl lg:text-3xl mb-3 sm:mb-4'>
-                            {profile.name}
+            {/* Additional Profile Info */}
+            {(profile.occupation || profile.purpose) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-sm sm:text-base pt-4 sm:pt-6">
+                {profile.occupation && (
+                  <div className="bg-gray-50/5 rounded-lg p-3 sm:p-4">
+                    <span className="font-medium text-foreground">
+                      Occupation:
+                    </span>
+                    <br />
+                    <span className="text-muted-foreground">
+                      {profile.occupation.replace("_", " ")}
+                    </span>
+                  </div>
+                )}
+                {profile.purpose && profile.purpose.length > 0 && (
+                  <div className="bg-gray-50/5 rounded-lg p-3 sm:p-4">
+                    <span className="font-medium text-foreground">
+                      Purpose:
+                    </span>
+                    <br />
+                    <span className="text-muted-foreground">
+                      {profile.purpose
+                        .map((p) => p.replace("_", " "))
+                        .join(", ")}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Recent Prep Logs */}
+        <div className="max-w-5xl mx-auto mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-6 sm:mb-8">
+            Recent Preparation Sessions
+          </h2>
+
+          {prepLogs.length === 0 ? (
+            <Card className="hover:shadow-lg transition-shadow duration-300">
+              <CardContent className="text-center py-12 sm:py-16">
+                <p className="text-muted-foreground text-base sm:text-lg">
+                  No preparation logs shared yet. Check back later!
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid gap-4 sm:gap-6">
+              {prepLogs.slice(0, 10).map((log) => (
+                <Card
+                  key={log._id}
+                  className="hover:shadow-lg transition-shadow duration-300"
+                >
+                  <CardHeader className="pb-3 sm:pb-4">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
+                      <div className="flex-1">
+                        <CardTitle className="text-base sm:text-lg lg:text-xl mb-2 sm:mb-3">
+                          {log.title}
                         </CardTitle>
-                        <CardDescription className='text-base sm:text-lg mb-4 sm:mb-6'>
-                            @{profile.userName}
+                        <CardDescription className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+                          <div className="flex items-center">
+                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                            {formatDate(log.createdAt)}
+                          </div>
+                          <div className="flex items-center">
+                            <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                            {formatTimeSpent(log.timeSpent)}
+                          </div>
                         </CardDescription>
 
                         {/* Social Media Links */}
@@ -249,6 +309,7 @@ const PrepLogsShowcase = () => {
                             </div>
                         )}
                     </CardContent>
+                  )}
                 </Card>
 
                 {/* User Skills Section */}
@@ -374,7 +435,41 @@ const PrepLogsShowcase = () => {
             </Section>
 
         </div>
-    )
-}
 
-export default PrepLogsShowcase
+        {/* CTA Section */}
+        <FlexContainer className="text-center mt-12 sm:mt-16 lg:mt-20">
+          <Card className="max-w-3xl mx-auto hover:shadow-lg transition-shadow duration-300">
+            <CardContent className="p-6 sm:p-8 lg:p-10">
+              <Text
+                level="h3"
+                className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6"
+              >
+                Start Your Own PrepYatra Journey
+              </Text>
+              <Text
+                level="p"
+                className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed"
+              >
+                Track your interview preparation, connect with recruiters, and
+                showcase your progress just like{" "}
+                <span className="text-primary font-medium">{profile.name}</span>
+                !
+              </Text>
+              <Button
+                text="Get Started for Free"
+                onClick={handleGetStarted}
+                variant="PRIMARY"
+                size="MEDIUM"
+                className="w-full sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg hover:scale-105 transition-transform duration-200"
+              />
+            </CardContent>
+          </Card>
+        </FlexContainer>
+      </Section>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default PrepLogsShowcase;
