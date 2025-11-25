@@ -49,9 +49,9 @@ const AddSkillsModal = lazy(() =>
         default: module.AddSkillsModal
     }))
 )
-const PrepYatraFooter = lazy(() =>
+const Footer = lazy(() =>
     import("@tbe/components").then((module) => ({
-        default: module.PrepYatraFooter
+        default: module.Footer
     }))
 )
 
@@ -353,7 +353,7 @@ const Dashboard = () => {
 
             {/* Footer */}
             <Suspense fallback={<ComponentLoader />}>
-                <PrepYatraFooter />
+                <Footer />
             </Suspense>
 
             {/* Modals */}
