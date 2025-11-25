@@ -2,7 +2,7 @@ import { SEO, Section,
         FeatureCards,
         PrepYatraHero, 
         InstallButton,
-        PrepYatraFooter,
+        
         PrepLogsShowcase,
         ProfileShowcase, 
         RecruiterContactsShowcase,
@@ -29,7 +29,7 @@ const Index = ({ seoMeta }: PageProps) => {
                 <ResourceSharingShowcase />
                 <ProfileShowcase />
             </Section>
-            <Footer variant="prepyatra"/>
+           
         </div>
         </>
     );
