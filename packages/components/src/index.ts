@@ -149,7 +149,7 @@ export { default as ResumeEvaluationSection } from "./containers/Page/UnSkilled/
 export { default as WebinarHeroContainer } from "./containers/Page/Webinar/WebinarHeroContainer";
 export { default as ExplorePlaylistContainer } from "./containers/Page/YouFocus/ExplorePlaylistContainer";
 export { default as PlaylistContainer } from "./containers/Page/YouFocus/PlaylistContainer";
-
+export { default as NotFound } from "./containers/Cards/NotFound";
 // Layout Components
 export {
   GamificationProvider,
