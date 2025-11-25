@@ -75,12 +75,11 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                     transition={{ duration: 0.5 }}
                 >
                     {/* Left Section - Login Form */}
-                    <div className='w-full md:w-1/2 p-6 md:p-4 flex border-1 border-gray-200 flex-col items-start justify-start text-left bg-white'>
+                    <div className='w-full md:w-1/2 p-4 md:p-3 flex border-1 border-gray-200 flex-col items-center justify-center text-center bg-white'>
                        <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
-                            className='mt-6'
                         >
                             <Text level='h1' className='text-2xl md:text-3xl font-bold text-gray-900'>
                                 {variantConfig.title}
@@ -99,7 +98,7 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                         </motion.div>
 
                         <motion.button
-                            className='mt-6 w-full flex items-center justify-center border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-colors cursor-pointer px-3 py-3 text-gray-700 font-medium'
+                            className='mt-4 w-full flex items-center justify-center border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-colors cursor-pointer px-3 py-2 text-gray-700 font-medium'
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.5 }}
@@ -109,7 +108,7 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                             disabled={isAuthenticated || isLoading}
                         >
                             <svg
-                                className='w-4 mr-1 h-4'
+                                className='w-4 mr-2 h-4'
                                 viewBox='0 0 24 24'
                                 fill='none'
                                 xmlns='http://www.w3.org/2000/svg'
@@ -131,14 +130,14 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                                     fill='#EA4335'
                                 />
                             </svg>
-                            <span className='text-lg'>Continue with Google</span>
+                            <span className='text-sm'>Continue with Google</span>
                         </motion.button>
 
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.6 }}
-                            className='mt-6 text-sm text-gray-500'
+                            className='mt-4 text-sm text-gray-500'
                         >
                             <Text level='p' className='text-xs text-gray-500'>
                                 By signing in, you agree to our{' '}

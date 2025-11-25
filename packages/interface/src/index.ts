@@ -1,10 +1,19 @@
-export * from './api';
-export * from './Components';
+export * from "./api";
+export * from "./Components";
 // Avoid re-exporting conflicting member from constants; explicitly export required types
-export type { CelebrationAnimationProps, GamificationBadgeProps, MainNavbarProps, NavbarDropdownLink, NavbarProps, OutlineCardProps, VariantConfig } from './constants';
-export * from './database';
-export * from './email';
-export * from './github';
-export * from './global';
-export * from './hooks';
-export * from './page';
+export type {
+  CelebrationAnimationProps,
+  FooterProps,
+  GamificationBadgeProps,
+  MainNavbarProps,
+  NavbarDropdownLink,
+  NavbarProps,
+  OutlineCardProps,
+  VariantConfig,
+} from "./constants";
+export * from "./database";
+export * from "./email";
+export * from "./github";
+export * from "./global";
+export * from "./hooks";
+export * from "./page";

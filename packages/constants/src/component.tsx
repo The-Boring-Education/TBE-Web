@@ -1,7 +1,19 @@
 import React from "react";
-import type { ComponentType } from 'react';
-import { Map, BookOpen, TrendingUp, Rocket, Brain, Trophy, Users, Sparkles, FileText, Briefcase, Target, Award } from 'lucide-react';
-
+import type { ComponentType } from "react";
+import {
+  Map,
+  BookOpen,
+  TrendingUp,
+  Rocket,
+  Brain,
+  Trophy,
+  Users,
+  Sparkles,
+  FileText,
+  Briefcase,
+  Target,
+  Award,
+} from "lucide-react";
 
 interface NavbarDropdownLink {
   id: string;
@@ -74,258 +86,358 @@ const links: NavbarDropdownLink[] = [
   },
 ];
 
-
 interface VariantConfig {
   branding: React.ReactNode;
   dashboardRoute: string;
   borderClass?: string;
-  requiresAuth?: boolean; 
+  requiresAuth?: boolean;
   showGamification?: boolean;
 }
 
- const getNavbarVariantConfig = (
-    Logo: ComponentType<any>
+const getNavbarVariantConfig = (
+  Logo: ComponentType<any>
 ): Record<string, VariantConfig> => ({
-    default: {
-        branding: <Logo />,
-        dashboardRoute: '/user/dashboard',
-        borderClass: 'border',
-        requiresAuth: true,
-    },
-    transparent: {
-        branding: <Logo />,
-        dashboardRoute: '/user/dashboard',
-        borderClass: 'border',
-        requiresAuth: true,
-    },
-    prepyatra: {
-        branding: (
-            <div className='flex flex-col gap-0'>
-                <span className='text-2xl font-bold text-primary leading-tight'>
-                    PrepYatra
-                </span>
-                <span className='text-[10px] text-greyDark -mt-0.5'>
-                    By The Boring Education
-                </span>
-            </div>
-        ),
-        dashboardRoute: '/dashboard',
-        borderClass: 'border-b border-greyLight',
-        requiresAuth: true,
-    },
-    quizes: {
-        branding: (
-            <div className='flex flex-col gap-0'>
-                <span className='text-2xl font-bold text-primary leading-tight'>
-                    The Boring Quizes
-                </span>
-                <span className='text-[10px] text-greyDark -mt-0.5'>
-                    By The Boring Education
-                </span>
-            </div>
-        ),
-        dashboardRoute: '/dashboard',
-        borderClass: 'border',
-        requiresAuth: true,
-    },
-    techyatra: {
-        branding: (
-            <div className='flex flex-col gap-0'>
-                <span className='text-2xl font-bold text-primary leading-tight'>
-                    TechYatra
-                </span>
-                <span className='text-[10px] text-greyDark -mt-0.5'>
-                    By The Boring Education
-                </span>
-            </div>
-        ),
-        dashboardRoute: '/',
-        borderClass: 'border',
-        requiresAuth: false, // Non-auth app
-    },
-    dsayatra: {
-        branding: (
-            <div className='flex flex-col gap-0'>
-                <span className='text-2xl font-bold text-primary leading-tight'>
-                    DSAYatra
-                </span>
-                <span className='text-[10px] text-greyDark -mt-0.5'>
-                    By The Boring Education
-                </span>
-            </div>
-        ),
-        dashboardRoute: '/',
-        borderClass: 'border',
-        requiresAuth: false, // Non-auth app
-    },
-    'resume-yatra': {
-        branding: (
-            <div className='flex flex-col gap-0'>
-                <span className='text-2xl font-bold text-primary leading-tight'>
-                    ResumeYatra
-                </span>
-                <span className='text-[10px] text-greyDark -mt-0.5'>
-                    By The Boring Education
-                </span>
-            </div>
-        ),
-        dashboardRoute: '/builder',
-        borderClass: 'border',
-        requiresAuth: true,
-        showGamification: false, 
-    },
+  default: {
+    branding: <Logo />,
+    dashboardRoute: "/user/dashboard",
+    borderClass: "border",
+    requiresAuth: true,
+  },
+  transparent: {
+    branding: <Logo />,
+    dashboardRoute: "/user/dashboard",
+    borderClass: "border",
+    requiresAuth: true,
+  },
+  prepyatra: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          PrepYatra
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    dashboardRoute: "/dashboard",
+    borderClass: "border-b border-greyLight",
+    requiresAuth: true,
+  },
+  quizes: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          The Boring Quizes
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    dashboardRoute: "/dashboard",
+    borderClass: "border",
+    requiresAuth: true,
+  },
+  techyatra: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          TechYatra
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    dashboardRoute: "/",
+    borderClass: "border",
+    requiresAuth: false, // Non-auth app
+  },
+  dsayatra: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          DSAYatra
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    dashboardRoute: "/",
+    borderClass: "border",
+    requiresAuth: false, // Non-auth app
+  },
+  "resume-yatra": {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          ResumeYatra
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    dashboardRoute: "/builder",
+    borderClass: "border",
+    requiresAuth: true,
+    showGamification: false,
+  },
+});
+
+// Footer Variant Configuration Interface
+export interface FooterVariantConfig {
+  branding: React.ReactNode;
+  subtitle: string;
+}
+
+// Get Footer Variant Configuration
+export const getFooterVariantConfig = (
+  Logo: ComponentType<any>
+): Record<string, FooterVariantConfig> => ({
+  default: {
+    branding: <Logo />,
+    subtitle:
+      "Making tech education accessible for everyone. Learn, build, and grow with our comprehensive platform designed for students and professionals.",
+  },
+  prepyatra: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          PrepYatra
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    subtitle:
+      "Your Interview Prep Companion. Ace your tech interviews with curated resources, practice problems, and expert guidance.",
+  },
+  quizes: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          The Boring Quizes
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    subtitle:
+      "Test your knowledge with interactive quizzes designed to reinforce your learning and track your progress.",
+  },
+  techyatra: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          TechYatra
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    subtitle:
+      "Navigate your tech career journey with curated roadmaps, resources, and industry insights.",
+  },
+  dsayatra: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          DSAYatra
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    subtitle:
+      "Master Data Structures and Algorithms with structured practice and comprehensive explanations.",
+  },
+  resumeyatra: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          ResumeYatra
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    subtitle:
+      "Build professional resumes that stand out. Create, customize, and download your perfect resume in minutes.",
+  },
+  platform: {
+    branding: <Logo />,
+    subtitle:
+      "Your complete tech education platform. Access courses, projects, webinars, and career resources all in one place.",
+  },
 });
 
 // LoginCard Feature Interface
 export interface LoginCardFeature {
-    icon: ComponentType<{ className?: string }>;
-    title: string;
-    description: string;
+  icon: ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
 }
 
 // LoginCard Variant Configuration Interface
 export interface LoginCardVariantConfig {
-    title: string;
-    subtitle: string;
-    rightSectionTitle?: string;
-    features: LoginCardFeature[];
-    redirectPath?: string;
-    termsHref?: string;
-    privacyHref?: string;
+  title: string;
+  subtitle: string;
+  rightSectionTitle?: string;
+  features: LoginCardFeature[];
+  redirectPath?: string;
+  termsHref?: string;
+  privacyHref?: string;
 }
 
 // Get LoginCard Variant Configuration
-export const getLoginCardVariantConfig = (): Record<string, LoginCardVariantConfig> => ({
-    default: {
-        title: 'Welcome Back!',
-        subtitle: 'Sign in to continue your tech learning journey',
-        rightSectionTitle: 'Why TBE?',
-        features: [
-            {
-                icon: Map,
-                title: 'Personalized Roadmaps',
-                description: 'Get customized learning paths based on your goals'
-            },
-            {
-                icon: BookOpen,
-                title: 'Curated Resources',
-                description: 'Access handpicked tutorials and guides'
-            },
-            {
-                icon: TrendingUp,
-                title: 'Track Progress',
-                description: 'Monitor your learning journey and achievements'
-            }
-        ],
-        redirectPath: '/',
-        termsHref: '/terms-and-conditions',
-        privacyHref: '/privacy'
-    },
-    platform: {
-        title: 'Welcome Back!',
-        subtitle: 'Sign in to continue your tech learning journey',
-        rightSectionTitle: 'Why TBE?',
-        features: [
-            {
-                icon: Map,
-                title: 'Personalized Roadmaps',
-                description: 'Get customized learning paths based on your goals'
-            },
-            {
-                icon: BookOpen,
-                title: 'Curated Resources',
-                description: 'Access handpicked tutorials and guides'
-            },
-            {
-                icon: TrendingUp,
-                title: 'Track Progress',
-                description: 'Monitor your learning journey and achievements'
-            }
-        ],
-        redirectPath: '/',
-        termsHref: '/terms-and-conditions',
-        privacyHref: '/privacy'
-    },
-    prepyatra: {
-        title: 'Welcome Back!',
-        subtitle: 'Sign in to continue your interview preparation journey',
-        rightSectionTitle: 'Why PrepYatra?',
-        features: [
-            {
-                icon: Briefcase,
-                title: 'Track Applications',
-                description: 'Manage all your job applications in one place'
-            },
-            {
-                icon: Target,
-                title: 'Interview Prep',
-                description: 'Prepare for interviews with curated resources'
-            },
-            {
-                icon: TrendingUp,
-                title: 'Progress Tracking',
-                description: 'Monitor your interview preparation progress'
-            }
-        ],
-        redirectPath: '/dashboard',
-        termsHref: '/terms-and-conditions',
-        privacyHref: '/privacy'
-    },
-    quizes: {
-        title: 'Welcome Back!',
-        subtitle: 'Sign in to continue your quiz journey',
-        rightSectionTitle: 'Why TBE Quizes?',
-        features: [
-            {
-                icon: Brain,
-                title: 'Smart Learning',
-                description: 'AI-powered questions tailored to your skill level'
-            },
-            {
-                icon: Trophy,
-                title: 'Track Progress',
-                description: 'Monitor your improvement with detailed analytics'
-            },
-            {
-                icon: Users,
-                title: 'Compete',
-                description: 'Challenge yourself on the global leaderboard'
-            },
-            {
-                icon: Sparkles,
-                title: 'Expert Content',
-                description: 'Curated by industry professionals'
-            }
-        ],
-        redirectPath: '/dashboard',
-        termsHref: '/terms-and-conditions',
-        privacyHref: '/privacy'
-    },
-    'resume-yatra': {
-        title: 'Welcome to Resume Yatra',
-        subtitle: 'Sign in to save your progress and build your perfect resume',
-        rightSectionTitle: 'Why Resume Yatra?',
-        features: [
-            {
-                icon: FileText,
-                title: 'Build Resumes',
-                description: 'Create professional resumes with ease'
-            },
-            {
-                icon: Award,
-                title: 'Track Score',
-                description: 'Get your resume score and improve it'
-            },
-            {
-                icon: TrendingUp,
-                title: 'Save Progress',
-                description: 'Auto-save your work and access from anywhere'
-            }
-        ],
-        redirectPath: '/builder',
-        termsHref: '/terms-and-conditions',
-        privacyHref: '/privacy'
-    }
+export const getLoginCardVariantConfig = (): Record<
+  string,
+  LoginCardVariantConfig
+> => ({
+  default: {
+    title: "Welcome Back!",
+    subtitle: "Sign in to continue your tech learning journey",
+    rightSectionTitle: "Why TBE?",
+    features: [
+      {
+        icon: Map,
+        title: "Personalized Roadmaps",
+        description: "Get customized learning paths based on your goals",
+      },
+      {
+        icon: BookOpen,
+        title: "Curated Resources",
+        description: "Access handpicked tutorials and guides",
+      },
+      {
+        icon: TrendingUp,
+        title: "Track Progress",
+        description: "Monitor your learning journey and achievements",
+      },
+    ],
+    redirectPath: "/",
+    termsHref: "/terms-and-conditions",
+    privacyHref: "/privacy",
+  },
+  platform: {
+    title: "Welcome Back!",
+    subtitle: "Sign in to continue your tech learning journey",
+    rightSectionTitle: "Why TBE?",
+    features: [
+      {
+        icon: Map,
+        title: "Personalized Roadmaps",
+        description: "Get customized learning paths based on your goals",
+      },
+      {
+        icon: BookOpen,
+        title: "Curated Resources",
+        description: "Access handpicked tutorials and guides",
+      },
+      {
+        icon: TrendingUp,
+        title: "Track Progress",
+        description: "Monitor your learning journey and achievements",
+      },
+    ],
+    redirectPath: "/",
+    termsHref: "/terms-and-conditions",
+    privacyHref: "/privacy",
+  },
+  prepyatra: {
+    title: "Welcome Back!",
+    subtitle: "Sign in to continue your interview preparation journey",
+    rightSectionTitle: "Why PrepYatra?",
+    features: [
+      {
+        icon: Briefcase,
+        title: "Track Applications",
+        description: "Manage all your job applications in one place",
+      },
+      {
+        icon: Target,
+        title: "Interview Prep",
+        description: "Prepare for interviews with curated resources",
+      },
+      {
+        icon: TrendingUp,
+        title: "Progress Tracking",
+        description: "Monitor your interview preparation progress",
+      },
+    ],
+    redirectPath: "/dashboard",
+    termsHref: "/terms-and-conditions",
+    privacyHref: "/privacy",
+  },
+  quizes: {
+    title: "Welcome Back!",
+    subtitle: "Sign in to continue your quiz journey",
+    rightSectionTitle: "Why TBE Quizes?",
+    features: [
+      {
+        icon: Brain,
+        title: "Smart Learning",
+        description: "AI-powered questions tailored to your skill level",
+      },
+      {
+        icon: Trophy,
+        title: "Track Progress",
+        description: "Monitor your improvement with detailed analytics",
+      },
+      {
+        icon: Users,
+        title: "Compete",
+        description: "Challenge yourself on the global leaderboard",
+      },
+      {
+        icon: Sparkles,
+        title: "Expert Content",
+        description: "Curated by industry professionals",
+      },
+    ],
+    redirectPath: "/dashboard",
+    termsHref: "/terms-and-conditions",
+    privacyHref: "/privacy",
+  },
+  "resume-yatra": {
+    title: "Welcome to Resume Yatra",
+    subtitle: "Sign in to save your progress and build your perfect resume",
+    rightSectionTitle: "Why Resume Yatra?",
+    features: [
+      {
+        icon: FileText,
+        title: "Build Resumes",
+        description: "Create professional resumes with ease",
+      },
+      {
+        icon: Award,
+        title: "Track Score",
+        description: "Get your resume score and improve it",
+      },
+      {
+        icon: TrendingUp,
+        title: "Save Progress",
+        description: "Auto-save your work and access from anywhere",
+      },
+    ],
+    redirectPath: "/builder",
+    termsHref: "/terms-and-conditions",
+    privacyHref: "/privacy",
+  },
 });
 
-export { socialLinks, productLinks, CONFETTI_COLORS, links, getNavbarVariantConfig };
+export {
+  socialLinks,
+  productLinks,
+  CONFETTI_COLORS,
+  links,
+  getNavbarVariantConfig,
+};

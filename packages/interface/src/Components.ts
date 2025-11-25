@@ -9,10 +9,7 @@ import type {
 
 import type { FeedbackType } from '@tbe/constants';
 // Import these types from the api module to avoid duplication
-import type {
-  BaseInterviewSheetResponseProps,
-  BaseShikshaCourseResponseProps,
-} from './api';
+import type { BaseInterviewSheetResponseProps, BaseShikshaCourseResponseProps } from './api';
 
 // Import CertificateType from the global module to avoid duplication
 import type { CertificateType } from './global';
@@ -75,7 +72,7 @@ export interface LinkButtonProps extends LinkProps {
 }
 
 export interface ButtonProps {
-    variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY' | 'NEUTRAL';
+  variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY' | 'NEUTRAL';
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -484,8 +481,10 @@ export interface ModalProps {
 export interface CertificateModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  courseName: string;
-  certificateId: string;
+  userName: string;
+  userEmail: string;
+  onGenerateCertificate: (certificateName: string) => Promise<void>;
+  errorMessage?: string | null;
 }
 
 export interface ToggleButtonProps {
@@ -801,4 +800,36 @@ export interface StarButtonProps {
 export interface LoginCardNewProps {
   variant?: 'default' | 'platform' | 'prepyatra' | 'quizes' | 'resume-yatra';
   customRedirectPath?: string;
+}
+
+export interface PrepLog {
+  _id: string
+  title: string
+  description?: string
+  timeSpent: number
+  createdAt: string
+}
+
+
+export interface UserProfile {
+  name: string
+  userName: string
+  createdAt: string
+  linkedInUrl?: string
+  githubUrl?: string
+  leetCodeUrl?: string
+  userSkills?: string[]
+  userSkillsLastUpdated?: string
+  occupation?: string
+  purpose?: string[]
+  prepYatra: {
+      goal?: string
+      experienceLevel?: string
+      pyOnboarded?: boolean
+      targetCompanies?: string[]
+      preferences?: {
+          interviewCategories?: string[]
+          focusAreas?: string[]
+      }
+  }
 }

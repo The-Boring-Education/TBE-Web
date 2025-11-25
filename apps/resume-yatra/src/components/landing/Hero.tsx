@@ -1,5 +1,5 @@
-import { ArrowRight, CheckCircle2, FileText, Zap } from "lucide-react"
 import { Button } from "@tbe/components"
+import { ArrowRight, CheckCircle2, FileText, Zap } from "lucide-react"
 import { useRouter } from "next/router";
 
 const Hero = () => {

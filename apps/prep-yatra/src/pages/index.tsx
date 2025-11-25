@@ -29,7 +29,7 @@ const Index = ({ seoMeta }: PageProps) => {
                 <ResourceSharingShowcase />
                 <ProfileShowcase />
             </Section>
-            <PrepYatraFooter />
+            <Footer variant="prepyatra"/>
         </div>
         </>
     );

@@ -18,6 +18,11 @@ const nextConfig = {
         "@tbe/types"
     ],
 
+    // Disable ESLint during Next.js build (we run it separately in package.json)
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
         // Handle Canvas for client-side (if using any Canvas libraries)
         if (!isServer) {
