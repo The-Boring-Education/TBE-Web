@@ -1,5 +1,5 @@
-import { Brain, Code, ExternalLink, MessageSquare, Target } from "lucide-react"
 import { Button } from "@tbe/components"
+import { Brain, Code, ExternalLink, MessageSquare, Target } from "lucide-react"
 
 const InterviewPrepSection = () => {
     const features = [

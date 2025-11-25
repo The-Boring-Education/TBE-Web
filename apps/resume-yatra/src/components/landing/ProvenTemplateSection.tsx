@@ -1,5 +1,5 @@
-import { CheckCircle, Download, Star } from "lucide-react"
 import { Button } from "@tbe/components"
+import { CheckCircle, Download, Star } from "lucide-react"
 import router from "next/router"
 
 const ProvenTemplateSection = () => {
