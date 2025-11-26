@@ -148,6 +148,41 @@ const getAppSpecificSEOMeta = (
         return dsaMeta[basePath] || null
     }
 
+    // Quizes specific routes
+    if (appId === "quizes") {
+        const quizesMeta: Record<string, GetSEOMetaResponseType> = {
+            [routes.home]: {
+                title: "Quizes | Practice Technical Questions | The Boring Education",
+                siteName: "Quizes",
+                description: "Practice curated technical quizzes across JavaScript, React, algorithms and web development to prepare for interviews.",
+                url: routes.home,
+                keywords: "Quizes, Practice Questions, Interview Prep, JavaScript, React, Algorithms, The Boring Education",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.login]: {
+                title: "Login | Quizes",
+                siteName: "Quizes",
+                description: "Login to Quizes and continue practicing curated technical questions.",
+                url: routes.login,
+                keywords: "Quizes Login, Practice, Interview Prep",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.projects]: {
+                title: "Quizes - Topics & Categories | The Boring Education",
+                siteName: "Quizes",
+                description: "Explore quiz categories and focus areas to sharpen your skills.",
+                url: routes.projects,
+                keywords: "Quizes Topics, Categories, Practice Areas",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            }
+        }
+
+        return quizesMeta[basePath] || null
+    }
+
     // Add other app-specific metadata here as needed
     return null
 }
