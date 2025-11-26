@@ -816,6 +816,7 @@ export interface UserProfile {
   userName: string
   createdAt: string
   linkedInUrl?: string
+  image?: string
   githubUrl?: string
   leetCodeUrl?: string
   userSkills?: string[]

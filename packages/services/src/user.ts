@@ -6,6 +6,7 @@ export const userService = {
         try {
             const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
             const url = `/user?userId=${encodeURIComponent(userId)}`;
+
             
             const response = await sendRequest({
                 method: "GET",
