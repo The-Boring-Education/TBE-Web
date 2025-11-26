@@ -102,6 +102,52 @@ const getAppSpecificSEOMeta = (
         return prepYatraMeta[basePath] || null
     }
 
+    // DSAYatra specific routes
+    if (appId === "dsayatra") {
+        const dsaMeta: Record<string, GetSEOMetaResponseType> = {
+            [routes.dsayatra.home]: {
+                title: "DSAYatra - Master Data Structures & Algorithms | The Boring Education",
+                siteName: "DSAYatra",
+                description:
+                    "Master Data Structures & Algorithms with DSAYatra. Practice problems, curated tracks, and mock interviews to level up your DSA skills.",
+                url: routes.dsayatra.home,
+                keywords:
+                    "DSA Yatra, Data Structures, Algorithms, Practice, Interview Prep, Competitive Programming, The Boring Education, DSA",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.dsayatra.login]: {
+                title: "Login | DSAYatra",
+                siteName: "DSAYatra",
+                description: "Login to DSAYatra and continue your DSA practice journey.",
+                url: routes.dsayatra.login,
+                keywords: "DSAYatra Login, DSA Practice, Interview Prep",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.dsayatra.dashboard]: {
+                title: "Dashboard | DSAYatra",
+                siteName: "DSAYatra",
+                description: "Track your progress, solve challenges, and prepare for interviews with DSAYatra.",
+                url: routes.dsayatra.dashboard,
+                keywords: "DSAYatra Dashboard, DSA Progress, Interview Prep",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.dsayatra.pricing]: {
+                title: "Pricing | DSAYatra",
+                siteName: "DSAYatra",
+                description: "Choose a DSAYatra plan that suits your pace and goals.",
+                url: routes.dsayatra.pricing,
+                keywords: "DSAYatra Pricing, DSA Plans, Interview Prep Plans",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            }
+        }
+
+        return dsaMeta[basePath] || null
+    }
+
     // Add other app-specific metadata here as needed
     return null
 }
