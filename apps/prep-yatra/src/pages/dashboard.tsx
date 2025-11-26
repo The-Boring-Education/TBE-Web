@@ -1,25 +1,28 @@
-import { useAuth } from "@tbe/auth";
+import React, { Suspense, useEffect, useState, useRef } from "react";
+import { toast } from "sonner";
+import { Menu, X } from "lucide-react";
+import { useRouter } from "next/router";
+
 import {
+    Navbar,
     AddPrepLogModal,
     AddRecruiterModal,
-    AddSkillsModal,
+    EditOnboardingModal,
     BuildYourStack,
     DailyPrepEncouragement,
     DashboardTabs,
-    EditOnboardingModal,
-    Footer,
-    LoadingSpinner,
-    Navbar,
     ProfileSection,
-    usePrepYatraGamificationContext} from "@tbe/components";
+    AddSkillsModal,
+    Footer,
+    usePrepYatraGamificationContext,
+    LoadingSpinner
+} from "@tbe/components";
+
+import { useAuth } from "@tbe/auth";
 import { usePrepLogs } from "@tbe/hooks";
-import type { UserProfile } from "@tbe/interface";
 import { recruitersService, userService } from "@tbe/services";
 import type { RecruiterContact } from "@tbe/types";
-import { Menu, X } from "lucide-react";
-import { useRouter } from "next/router";
-import React, { Suspense, useEffect, useState } from "react";
-import { toast } from "sonner";
+import type { UserProfile } from "@tbe/interface";
 
 const Dashboard = () => {
     const router = useRouter();
@@ -37,6 +40,10 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
+    // Track if data has been initialized to prevent unnecessary re-fetches
+    const hasInitialized = useRef(false);
+    const initializedUserId = useRef<string | null>(null);
+
     // Modal states
     const [isPrepLogModalOpen, setIsPrepLogModalOpen] = useState(false);
     const [isRecruiterModalOpen, setIsRecruiterModalOpen] = useState(false);
@@ -47,8 +54,11 @@ const Dashboard = () => {
     const fetchProfile = async (userId: string) => {
         try {
             const profileData = await userService.getProfile(userId);
+            console.log("Fetched profile data:", profileData);
             if (profileData) {
                 setProfile(profileData);
+            } else {
+                console.warn("No profile data received for userId:", userId);
             }
         } catch (error) {
             console.error("Error fetching profile:", error);
@@ -69,12 +79,19 @@ const Dashboard = () => {
             return;
         }
 
+        // Prevent re-fetching if already initialized for this user
+        if (hasInitialized.current && initializedUserId.current === user.id) {
+            return;
+        }
+
         setLoading(true);
         try {
             await Promise.all([
                 fetchProfile(user.id),
                 fetchRecruiterContacts(user.id)
             ]);
+            hasInitialized.current = true;
+            initializedUserId.current = user.id;
         } catch (error) {
             console.error("Error initializing data:", error);
         } finally {
@@ -82,14 +99,22 @@ const Dashboard = () => {
         }
     };
 
-    // Effects
+    // Effects - Only initialize once when user ID is available
     useEffect(() => {
         if (authLoading) return;
 
-        if (user) {
+        if (user?.id) {
+            // Reset initialization flag if user ID changes
+            if (initializedUserId.current !== user.id) {
+                hasInitialized.current = false;
+            }
             initializeData();
+        } else {
+            // Reset when user logs out
+            hasInitialized.current = false;
+            initializedUserId.current = null;
         }
-    }, [user, authLoading]);
+    }, [user?.id, authLoading]);
 
     // Event handlers
     const handleLogAdded = () => {
