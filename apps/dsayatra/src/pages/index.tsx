@@ -1,10 +1,15 @@
-"use client";
-
+import { Fragment } from 'react';
 import { motion } from "framer-motion";
-import { Brain, Clock, Sparkles,Target } from "lucide-react";
+import { Brain, Clock, Sparkles, Target } from "lucide-react";
 import Link from "next/link";
+import { SEO } from '@tbe/components';
+import { getPreFetchProps } from '@tbe/utils';
+import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
 
-export default function Home() {
+function DsaClient() {
+  "use client";
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -200,4 +205,20 @@ export default function Home() {
     </div>
   );
 }
+
+const Home = ({ seoMeta }: PageProps) => {
+  return (
+    <Fragment>
+      <SEO seoMeta={seoMeta} />
+      <DsaClient />
+    </Fragment>
+  );
+}
+
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.dsayatra.home, appId: "dsayatra" })),
+  revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
+});
+
+export default Home;
 

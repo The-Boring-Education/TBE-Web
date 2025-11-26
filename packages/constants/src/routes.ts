@@ -48,6 +48,14 @@ const routes = {
         journey: (username: string) => `/journey/${username}`,
         baseUrl: "https://prepyatra.theboringeducation.com"
     },
+    // DSAYatra
+    dsayatra: {
+        home: "/",
+        login: "/login",
+        dashboard: "/dashboard",
+        pricing: "/pricing",
+        baseUrl: "https://dsayatra.theboringeducation.com"
+    },
     devRels: "https://devrel.theboringeducation.com/",
 
     certificate: "/certificate",
