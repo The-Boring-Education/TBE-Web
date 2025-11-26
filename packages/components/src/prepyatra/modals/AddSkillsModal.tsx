@@ -1,20 +1,18 @@
-import { X, Plus, Code, AlertTriangle } from "lucide-react"
-import React, { useState, useRef } from "react"
-
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
-} from "../ui/dialog"
-import { InputField } from "../ui/input"
 import { useToast } from "@tbe/hooks"
 import { trackEvent } from "@tbe/utils"
+import { AlertTriangle, Plus, X } from "lucide-react"
+import React, { useRef,useState } from "react"
+
 import Button from "../../common/Buttons/Button"
 import Text from "../../common/Typography/Text"
 import FlexContainer from "../../containers/Page/common/FlexContainer"
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader
+} from "../ui/dialog"
+import { InputField } from "../ui/input"
 
 interface AddSkillsModalProps {
     isOpen: boolean

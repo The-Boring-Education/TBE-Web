@@ -1,15 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@tbe/auth'
-import { 
-    Brain, 
-    BarChart3,
-    Trophy,
-    Home
-} from 'lucide-react'
 import { Button } from '@tbe/components'
+import { 
+    BarChart3,
+    Brain, 
+    Home,
+    Trophy} from 'lucide-react'
+import { usePathname,useRouter } from 'next/navigation'
+import { useState } from 'react'
+
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useToast } from './ui/use-toast'
 

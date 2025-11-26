@@ -109,6 +109,7 @@ export { default as RadioButtonContainer } from "./containers/Forms/RadioButtonC
 export { default as UploadFileInput } from "./containers/Forms/UploadFileInput";
 
 // Container Components - Page
+export { default as NotFound } from "./containers/Cards/NotFound";
 export { default as CohortJourneyContainer } from "./containers/Page/Cohort/CohortJourneyContainer";
 export { default as FAQSection } from "./containers/Page/Cohort/FAQSection";
 export { default as InterviewPrepSection } from "./containers/Page/Cohort/InterviewPrepSection";
@@ -149,7 +150,6 @@ export { default as ResumeEvaluationSection } from "./containers/Page/UnSkilled/
 export { default as WebinarHeroContainer } from "./containers/Page/Webinar/WebinarHeroContainer";
 export { default as ExplorePlaylistContainer } from "./containers/Page/YouFocus/ExplorePlaylistContainer";
 export { default as PlaylistContainer } from "./containers/Page/YouFocus/PlaylistContainer";
-export { default as NotFound } from "./containers/Cards/NotFound";
 // Layout Components
 export {
   GamificationProvider,
@@ -161,6 +161,7 @@ export { default as Navbar } from "./layout/Navbar";
 export { default as Layout } from "./layout/Page";
 export { default as Section } from "./layout/Section";
 export { default as SEO } from "./layout/SEO";
+export { PageSEO,default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./prepyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names
 // Note: We do not re-export prepyatra `Button` to avoid clashing with existing common Button export.

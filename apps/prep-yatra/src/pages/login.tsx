@@ -1,7 +1,6 @@
 import { useAuth } from "@tbe/auth"
-import { Button, FlexContainer, Text, LoginCardNew, Navbar, Footer } from "@tbe/components"
+import { Footer,LoginCardNew, Navbar } from "@tbe/components"
 import {InstallButton} from "@tbe/components"
-import { motion } from "framer-motion"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 

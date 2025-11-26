@@ -1,7 +1,6 @@
-import React from "react";
-
 import {INTERVIEW_CATEGORIES} from "@tbe/constants";
-import type {OnboardingData, InterviewCategory} from "@tbe/types";
+import type {InterviewCategory,OnboardingData} from "@tbe/types";
+import React from "react";
 
 type Props = {
     formData: OnboardingData

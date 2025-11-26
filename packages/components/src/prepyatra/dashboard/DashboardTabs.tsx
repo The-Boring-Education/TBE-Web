@@ -1,14 +1,14 @@
+import type { UserProfile } from "@tbe/interface";
+import type { PrepLog } from "@tbe/types";
+import type { RecruiterContact } from "@tbe/types";
 import { Plus } from "lucide-react";
 import React, { Suspense } from "react";
 
 import Button from "../../common/Buttons/Button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import Text from "../../common/Typography/Text";
-import type { PrepLog } from "@tbe/types";
-import type { RecruiterContact } from "@tbe/types";
-import type { UserProfile } from "@tbe/interface";
 import LoadingSpinner from "../../common/LoadingSpinner";
+import Text from "../../common/Typography/Text";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 // Lazy load components
 const PrepLogsList = React.lazy(() => import("../features/PrepLogsList"));

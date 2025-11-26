@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 import {
   FlexContainer,
   GradientContainer,
@@ -9,6 +7,7 @@ import {
   Text,
 } from '@tbe/components';
 import { OPEN_SOURCE_BENEFITS, OPEN_SOURCE_STATS } from '@tbe/constants';
+import { motion } from 'framer-motion';
 
 const OpenSourceStatsSection = () => (
   <GradientContainer className='border-borderColor2 p-8'>

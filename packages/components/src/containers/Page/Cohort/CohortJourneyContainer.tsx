@@ -1,7 +1,6 @@
-import { motion } from 'framer-motion';
-
 import { Section } from '@tbe/components';
 import type { CohortJourneySectionProps } from '@tbe/interface';
+import { motion } from 'framer-motion';
 
 const CohortJourneyContainer = ({ weeks }: CohortJourneySectionProps) => (
   <Section className='bg-white'>

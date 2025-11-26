@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
 import { quizApi } from '@tbe/services'
 import type { APIResponse, QuizCategoryAPI } from '@tbe/types'
+import { useEffect,useState } from 'react'
 
 /**
  * useQuizData Hook

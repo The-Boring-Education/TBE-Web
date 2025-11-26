@@ -40,7 +40,14 @@ const routes = {
         dsaInterviewSheet: "/interview-prep/dsa-interview-questions"
     },
     // PrepYatra
-    prepYatra: "https://prepyatra.theboringeducation.com/",
+    prepYatra: {
+        home: "/",
+        login: "/login",
+        dashboard: "/dashboard",
+        pricing: "/pricing",
+        journey: (username: string) => `/journey/${username}`,
+        baseUrl: "https://prepyatra.theboringeducation.com"
+    },
     devRels: "https://devrel.theboringeducation.com/",
 
     certificate: "/certificate",

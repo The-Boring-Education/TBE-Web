@@ -1,11 +1,11 @@
-import { Code, Plus, AlertTriangle } from "lucide-react"
+import { AlertTriangle,Code, Plus } from "lucide-react"
 import React, { useState } from "react"
 
-import AddSkillsModal from "../modals/AddSkillsModal"
-import { Badge } from "../ui/badge"
 import Button from "../../common/Buttons/Button"
 import Text from "../../common/Typography/Text"
 import FlexContainer from "../../containers/Page/common/FlexContainer"
+import AddSkillsModal from "../modals/AddSkillsModal"
+import { Badge } from "../ui/badge"
 
 interface BuildYourStackProps {
     userId: string

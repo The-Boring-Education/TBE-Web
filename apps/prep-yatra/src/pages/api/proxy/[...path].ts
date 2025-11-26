@@ -1,4 +1,3 @@
-import { envConfig } from '@tbe/constants';
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

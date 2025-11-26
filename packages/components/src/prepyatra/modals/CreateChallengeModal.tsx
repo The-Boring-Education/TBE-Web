@@ -1,9 +1,13 @@
-import {Plus, Sparkles, Calendar, Target, Star, Clock, Zap, X, ArrowLeft, Play} from "lucide-react";
-import {useState, useEffect} from "react";
+import type { PredefinedChallengeTemplate} from "@tbe/constants";
+import {PREDEFINED_CHALLENGES} from "@tbe/constants";
+import {challengesService} from "@tbe/services";
+import {ArrowLeft, Calendar, Clock, Play,Plus, Sparkles, Star, Target, X, Zap} from "lucide-react";
+import {useEffect,useState} from "react";
 import {toast} from "sonner";
 
-import {Badge} from "../ui/badge";
 import Button from "../../common/Buttons/Button";
+import {usePrepYatraGamificationContext} from "../contexts/GamificationContext";
+import {Badge} from "../ui/badge";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card";
 import {
   Dialog,
@@ -17,10 +21,6 @@ import {Input} from "../ui/input";
 import {Label} from "../ui/label";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "../ui/tabs";
 import {Textarea} from "../ui/textarea";
-import type { PredefinedChallengeTemplate} from "@tbe/constants";
-import {PREDEFINED_CHALLENGES} from "@tbe/constants";
-import {usePrepYatraGamificationContext} from "../contexts/GamificationContext";
-import {challengesService} from "@tbe/services";
 
 interface CreateChallengeModalProps {
   isOpen: boolean;

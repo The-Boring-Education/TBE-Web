@@ -1,7 +1,7 @@
+import {cn} from "@tbe/utils";
 import * as React from "react";
 
 import {Label} from "../ui/label";
-import {cn} from "@tbe/utils";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
     ({className, type, ...props}, ref) => {

@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from '@tbe/auth'
 import { config } from "@tbe/config/quizes"
+import { useRouter, useSearchParams } from "next/navigation"
+import React, { useEffect, useRef, useState } from "react"
 
 interface ProtectedRouteProps {
     children: React.ReactNode

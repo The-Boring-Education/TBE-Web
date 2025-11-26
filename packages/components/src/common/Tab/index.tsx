@@ -1,5 +1,4 @@
 import { Tab } from '@headlessui/react';
-
 import type { TabProps } from '@tbe/interface';
 
 const TabComponent = ({ tabLabels, tabPanels, vertical = false }: TabProps) => (

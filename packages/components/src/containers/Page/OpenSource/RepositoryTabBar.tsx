@@ -1,8 +1,7 @@
-import { motion } from 'framer-motion';
-
 import { FlexContainer, Text } from '@tbe/components';
 import { REPOSITORY_TAB_CONFIG } from '@tbe/constants';
 import type { RepositoryTabBarProps } from '@tbe/interface';
+import { motion } from 'framer-motion';
 
 const RepositoryTabBar = ({
   repositories,

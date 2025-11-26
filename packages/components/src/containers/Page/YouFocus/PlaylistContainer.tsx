@@ -1,6 +1,3 @@
-import { signIn } from 'next-auth/react';
-import React, { useState } from 'react';
-
 import {
   Button,
   FlexContainer,
@@ -9,6 +6,8 @@ import {
 } from '@tbe/components';
 import { useUser } from '@tbe/hooks';
 import type { PlaylistCantainerCardProps } from '@tbe/interface';
+import { signIn } from 'next-auth/react';
+import React, { useState } from 'react';
 
 import PlaylistRecommend from '../../Cards/Items/PlaylistRecommend';
 import PlaylistVideoTimeCard from '../../Cards/Items/PlaylistVideoTimeCard';

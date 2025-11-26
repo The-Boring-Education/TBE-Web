@@ -1,9 +1,10 @@
 
+import { BookOpen, ExternalLink, FileText } from 'lucide-react';
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { ExternalLink, BookOpen, FileText } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 const LearningSection = () => {
   const courses = [

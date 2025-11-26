@@ -1,6 +1,6 @@
 import { Link } from '@tbe/components'
-import { RiAlarmWarningFill } from 'react-icons/ri'
 import React from 'react'
+import { RiAlarmWarningFill } from 'react-icons/ri'
 
 const NotFound = () => {
   return (

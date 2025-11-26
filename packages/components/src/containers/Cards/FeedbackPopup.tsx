@@ -1,7 +1,5 @@
   'use client';
 
-import React, { Fragment } from 'react';
-
 import {
   Button,
   FlexContainer,
@@ -9,9 +7,10 @@ import {
   StarRatingCard,
   Toast,
 } from '@tbe/components';
-import { useFeedback } from '@tbe/hooks';
 import { useGamifiedAction } from '@tbe/components';
+import { useFeedback } from '@tbe/hooks';
 import type { FeedbackPopupProps } from '@tbe/interface';
+import React, { Fragment } from 'react';
 
 const FeedbackPopup = ({
   type,

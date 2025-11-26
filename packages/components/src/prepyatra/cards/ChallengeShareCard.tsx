@@ -1,16 +1,23 @@
+import type { Challenge } from "@tbe/types"
+import type {
+SocialMediaTemplateData
+    } from "@tbe/utils";
 import {
-    Share2,
+    generateSocialMessage
+    } from "@tbe/utils"
+import {
+    Calendar,
     Copy,
-    Twitter,
-    Linkedin,
     Facebook,
-    Trophy,
+    Linkedin,
+    Share2,
     Target,
-    Calendar
-} from "lucide-react"
+    Trophy,
+    Twitter} from "lucide-react"
 import React from "react"
 import { toast } from "sonner"
 
+import Button from "../../common/Buttons/Button"
 import { Badge } from "../ui/badge"
 import {
     Card,
@@ -19,14 +26,6 @@ import {
     CardHeader,
     CardTitle
 } from "../ui/card"
-import Button from "../../common/Buttons/Button"
-import type { Challenge } from "@tbe/types"
-import type {
-SocialMediaTemplateData
-    } from "@tbe/utils";
-import {
-    generateSocialMessage
-    } from "@tbe/utils"
 
 interface ChallengeShareCardProps {
     challenge: Challenge

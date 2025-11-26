@@ -4,10 +4,9 @@ import {
   PopoverPanel,
   Transition,
 } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
-
 import { UserLevelProgressContainer } from '@tbe/components';
 import { useGamification, useUser } from '@tbe/hooks';
+import { Fragment, useEffect, useState } from 'react';
 
 const UserPointButton = () => {
   const [isClient, setIsClient] = useState(false);

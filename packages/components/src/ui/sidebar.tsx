@@ -1,4 +1,6 @@
 import { Slot } from "@radix-ui/react-slot"
+import { useIsMobile } from "@tbe/hooks"
+import { cn } from "@tbe/utils"
 import type { VariantProps } from "class-variance-authority"
 import { cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
@@ -15,8 +17,6 @@ import {
     TooltipProvider,
     TooltipTrigger
 } from "../ui/tooltip"
-import { useIsMobile } from "@tbe/hooks"
-import { cn } from "@tbe/utils"
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7

@@ -1,17 +1,17 @@
 import {
-    X,
+    ArrowRight,
+    CheckCircle,
+    Gift,
     Sparkles,
     Star,
-    Zap,
-    Users,
     Target,
-    Gift,
-    CheckCircle,
-    ArrowRight
-} from "lucide-react"
-import { useState, useEffect } from "react"
+    Users,
+    X,
+    Zap} from "lucide-react"
+import { useEffect,useState } from "react"
 import { toast } from "sonner"
 
+import { useUser } from "../contexts/useAuth"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import {
@@ -19,7 +19,6 @@ import {
     PopoverContent,
     PopoverTrigger
 } from "../ui/popover"
-import { useUser } from "../contexts/useAuth"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 

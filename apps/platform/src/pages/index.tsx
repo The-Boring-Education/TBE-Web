@@ -98,9 +98,7 @@ const Home = ({ seoMeta }: PageProps) => {
         title='Bring Your Idea Cohort 2 Starts Soon'
         variant='VARIANT_A'
       />
-      
 
-      
       <Community />
       <CardContainerA
         cards={USP}
@@ -115,7 +113,7 @@ const Home = ({ seoMeta }: PageProps) => {
 
 export const getStaticProps = async () => ({
   ...(await getPreFetchProps({ slug: routes.home })),
-  revalidate: PAGE_REFRESH_TIMEOUT.medium,
+  revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
 });
 
 export default Home;

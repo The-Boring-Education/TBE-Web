@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 import {
   Button,
   FlexContainer,
@@ -9,6 +7,7 @@ import {
 import { routes } from '@tbe/constants';
 import {useApi} from '@tbe/hooks';
 import type { PlaylistRecommendProps } from '@tbe/interface';
+import React, { useState } from 'react';
 
 const PlaylistRecommend = ({
   playlistId,

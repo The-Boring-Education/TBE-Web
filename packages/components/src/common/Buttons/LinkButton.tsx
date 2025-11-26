@@ -1,6 +1,5 @@
-import { useState } from 'react';
-
 import type { LinkButtonProps } from '@tbe/interface';
+import { useState } from 'react';
 
 import { Button, Link } from '../..';
 

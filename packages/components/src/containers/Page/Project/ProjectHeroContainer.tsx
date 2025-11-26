@@ -1,5 +1,3 @@
-import { FaBolt,FaCode, FaRocket } from 'react-icons/fa';
-
 import {
   Button,
   LinkButton,
@@ -7,10 +5,11 @@ import {
   Section,
   Text,
 } from '@tbe/components';
+import { useGamifiedAction } from '@tbe/components';
 import { projectGroupWhatsapp, routes } from '@tbe/constants';
 import { useAnalytics, useApi, useUser } from '@tbe/hooks';
-import { useGamifiedAction } from '@tbe/components';
 import type { ProjectHeroContainerProps } from '@tbe/interface';
+import { FaBolt,FaCode, FaRocket } from 'react-icons/fa';
 
 const ProjectHeroContainer = ({
   id,

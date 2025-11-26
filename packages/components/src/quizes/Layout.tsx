@@ -1,8 +1,9 @@
 'use client'
 
-import { Navbar } from './Navbar'
-import { Footer } from './Footer'
 import { useAuth } from '@tbe/auth'
+
+import { Footer } from './Footer'
+import { Navbar } from './Navbar'
 
 interface LayoutProps {
     children: React.ReactNode

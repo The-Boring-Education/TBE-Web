@@ -1,6 +1,6 @@
+import { Button, FlexContainer, Text } from '@tbe/components';
 import { useState } from 'react';
 
-import { Button, FlexContainer, Text } from '@tbe/components';
 import { useGamificationContext } from './GamificationProvider';
 import useGamifiedAction from './useGamifiedAction';
 

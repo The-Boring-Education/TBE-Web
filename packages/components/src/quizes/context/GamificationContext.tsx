@@ -1,7 +1,7 @@
 'use client'
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import { gamificationApi } from '@tbe/services'
+import React, { createContext, useCallback, useContext, useEffect,useState } from 'react'
 
 // User levels configuration
 const USER_LEVELS = [

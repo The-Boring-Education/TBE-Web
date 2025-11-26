@@ -1,7 +1,6 @@
-import {useRouter} from "next/router";
+import {Button, FlexContainer,Text} from "@tbe/components";
 import {motion} from "framer-motion";
-
-import {Button, Text, FlexContainer} from "@tbe/components";
+import {useRouter} from "next/router";
 
 const PrepYatraHero = () => {
     const router = useRouter();

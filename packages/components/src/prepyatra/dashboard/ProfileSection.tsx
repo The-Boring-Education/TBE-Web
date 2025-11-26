@@ -1,16 +1,16 @@
 "use client";
 
-import React from "react";
+import { Copy,Edit, ExternalLink, Github, Linkedin } from "lucide-react";
 import { useRouter } from "next/router";
+import React from "react";
 import { toast } from "sonner";
-import { ExternalLink, Github, Linkedin, Edit, Copy } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Badge } from "../ui/badge";
-import { Card, CardContent, CardHeader } from "../ui/card";
 import Button from "../../common/Buttons/Button";
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../../containers/Page/common/FlexContainer";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Badge } from "../ui/badge";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 interface Profile {
   _id?: string;
@@ -174,7 +174,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             </Badge>
           </FlexContainer>
 
-          <div className="border-t border-[#FF5757]/10"></div>
+          <div className="border-t border-[#FF5757]/10" />
 
           <FlexContainer className="justify-between text-xs items-center">
           <Text level="h1" className="text-muted-foreground text-sm flex items-center gap-2">
@@ -188,7 +188,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           </Badge>
         </FlexContainer>
          
-          <div className="border-t border-[#FF5757]/10"></div>
+          <div className="border-t border-[#FF5757]/10" />
 
          <FlexContainer className="justify-between text-xs items-center">
           <Text level="h1" className="text-muted-foreground text-sm flex items-center gap-2">
@@ -202,7 +202,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           </Badge>
         </FlexContainer>
          
-         <div className="border-t border-[#FF5757]/10"></div>
+         <div className="border-t border-[#FF5757]/10" />
 
           <FlexContainer className="justify-between text-xs items-center">
             <Text level="h1" className="text-muted-foreground text-sm flex items-center gap-2">
@@ -220,7 +220,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           
           </FlexContainer>
 
-          <div className="border-t border-[#FF5757]/10"></div>
+          <div className="border-t border-[#FF5757]/10" />
 
           <FlexContainer className="justify-between text-xs items-center">
             <Text level="h1" className="text-muted-foreground text-sm flex items-center gap-2">

@@ -1,9 +1,8 @@
 import { Popover, Transition } from '@headlessui/react';
-import { signOut, useSession } from 'next-auth/react';
-import { Fragment, useEffect } from 'react';
-
 import { Image, Link } from '@tbe/components';
 import { TOP_NAVIGATION } from '@tbe/constants';
+import { signOut, useSession } from 'next-auth/react';
+import { Fragment } from 'react';
 
 interface UserAvatarProps {
   dashboardRoute?: string;
@@ -68,7 +67,7 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
               leaveTo='opacity-0 translate-y-1'
             >
               <Popover.Panel
-                className={`absolute z-50 mt-1 right-0 flex w-screen max-w-max`}
+                className="absolute z-50 mt-1 right-0 flex w-screen max-w-max"
               >
                 <div className='overflow-hidden rounded-2 bg-white text-sm shadow-lg ring-1 ring-gray-900/5 min-w-[200px]'>
                   <div className='flex flex-col p-1'>

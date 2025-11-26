@@ -1,8 +1,7 @@
-import { useState } from 'react';
-
 import { Button,FlexContainer, Image, Section, Text, Toast } from '@tbe/components';
 import { STATIC_FILE_PATH } from '@tbe/constants';
 import { useApi, useUser } from '@tbe/hooks';
+import { useState } from 'react';
 
 interface ComingSoonProps {
   className?: string;

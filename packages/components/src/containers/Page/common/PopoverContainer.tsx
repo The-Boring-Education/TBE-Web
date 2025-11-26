@@ -5,10 +5,9 @@ import {
   Transition,
 } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import type { PopoverContainerProps } from '@tbe/interface';
 import { usePathname } from 'next/navigation';
 import { Fragment, useEffect, useRef } from 'react';
-
-import type { PopoverContainerProps } from '@tbe/interface';
 
 const PopoverContainer = ({
   label,

@@ -1,4 +1,3 @@
-import React from "react"
 export const GA_TRACKING_ID = "G-SR3M17B588"
 
 // Initialize GA

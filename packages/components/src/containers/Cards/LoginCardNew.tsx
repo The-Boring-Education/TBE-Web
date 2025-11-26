@@ -1,17 +1,16 @@
-import { useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/router';
-import { Rocket } from 'lucide-react';
-
-import FlexContainer from '../Page/common/FlexContainer';
-import Logo from '../../common/Images/Logo';
-import Section from '../../layout/Section';
-import Text from '../../common/Typography/Text';
-import { useAnalytics } from '@tbe/hooks';
-import { trackEvent as sendEvent } from '@tbe/utils';
 import { useAuth } from '@tbe/auth';
 import { getLoginCardVariantConfig } from '@tbe/constants';
-import { LoginCardNewProps } from '@tbe/interface';
+import { useAnalytics } from '@tbe/hooks';
+import type { LoginCardNewProps } from '@tbe/interface';
+import { trackEvent as sendEvent } from '@tbe/utils';
+import { motion } from 'framer-motion';
+import { Rocket } from 'lucide-react';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo } from 'react';
+
+import Text from '../../common/Typography/Text';
+import Section from '../../layout/Section';
+import FlexContainer from '../Page/common/FlexContainer';
 
 const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewProps) => {
     const router = useRouter();
@@ -67,7 +66,7 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
 
     return (
         <Section className='md:px-4 md:py-4 px-2 py-2'>
-            <FlexContainer className='m-auto' justifyCenter={true} itemCenter={true}>
+            <FlexContainer className='m-auto' justifyCenter itemCenter>
                 <motion.div
                     className='flex w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden'
                     initial={{ opacity: 0, scale: 0.95 }}

@@ -1,6 +1,3 @@
-import { Fragment, useMemo, useRef, useState } from 'react';
-import { FaCheckCircle, FaClock, FaLock, FaPercentage,FaPlay, FaStar, FaTags, FaUsers } from 'react-icons/fa';
-
 import {
   Button,
   LinkButton,
@@ -11,11 +8,13 @@ import {
   SEO,
   Text,
 } from '@tbe/components';
+import { useGamifiedAction } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useAnalytics, useApi, usePaymentStatus, useUser } from '@tbe/hooks';
-import { useGamifiedAction } from '@tbe/components';
 import type { CouponModel,SheetPageProps } from '@tbe/interface';
 import { calculatePriceBreakdown, formatPrice, getDiscountDisplayInfo, getSavingsPercentage } from '@tbe/utils';
+import { Fragment, useMemo, useRef, useState } from 'react';
+import { FaCheckCircle, FaClock, FaLock, FaPercentage,FaPlay, FaStar, FaTags, FaUsers } from 'react-icons/fa';
 
 interface SheetLandingPageProps {
   sheet: SheetPageProps['sheet'];

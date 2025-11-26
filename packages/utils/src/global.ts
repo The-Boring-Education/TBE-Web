@@ -4,6 +4,7 @@ import {
   routes,
   seoCommonMeta,
   envConfig,
+  type AppIdentifier,
 } from "@tbe/constants";
 import type {
   BaseInterviewSheetResponseProps,
@@ -21,14 +22,27 @@ import {
   isUserAuthenticated,
 } from ".";
 
-const getPreFetchProps = async ({ slug }: any) => {
+/**
+ * Get pre-fetch props for Next.js pages with SEO support
+ *
+ * @param slug - Route slug (e.g., routes.home, routes.login)
+ * @param appId - App identifier (optional, defaults to 'platform')
+ * @returns Next.js getStaticProps/getServerSideProps compatible object
+ */
+const getPreFetchProps = async ({
+  slug,
+  appId = "platform" as AppIdentifier,
+}: {
+  slug?: string;
+  appId?: AppIdentifier;
+}) => {
   let baseSlug = routes.home;
 
   if (slug) {
-    baseSlug = slug.split("?")[0];
+    baseSlug = slug.split("?")[0] || routes.home;
   }
 
-  const seoMeta = getSEOMeta(baseSlug);
+  const seoMeta = getSEOMeta(baseSlug, appId);
 
   const redirect = !seoMeta && {
     destination: routes.home,
@@ -378,9 +392,7 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
 
   // Fetch graph data directly from Unskilled Platfrom API
   try {
-    const response = await fetch(
-      `${envConfig.UNSKILLED_API_URL}/unskilled/graph-data`
-    );
+    const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`);
 
     if (!response.ok) {
       throw new Error(`API responded with status ${response.status}`);

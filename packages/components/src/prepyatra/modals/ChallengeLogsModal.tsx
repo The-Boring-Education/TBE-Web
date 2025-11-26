@@ -1,27 +1,26 @@
-import {
-    Calendar,
-    Clock,
-    Share2,
-    TrendingUp,
-    Target,
-    Trophy,
-    Check,
-    Copy,
-    Linkedin,
-    Facebook,
-    ArrowLeft,
-    X
-} from "lucide-react"
-import { useState, useEffect } from "react"
-import { toast } from "sonner"
-
-import { Badge } from "../ui/badge"
-import Button from "../../common/Buttons/Button"
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
 import { challengesService } from "@tbe/services"
 import type { Challenge, ChallengeLog } from "@tbe/types"
-import Text from "../../common/Typography/Text"
+import {
+    ArrowLeft,
+    Calendar,
+    Check,
+    Clock,
+    Copy,
+    Facebook,
+    Linkedin,
+    Share2,
+    Target,
+    TrendingUp,
+    Trophy,
+    X
+} from "lucide-react"
+import { useEffect,useState } from "react"
+import { toast } from "sonner"
+
+import Button from "../../common/Buttons/Button"
+import { Badge } from "../ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
 
 interface ChallengeLogsModalProps {
     isOpen: boolean

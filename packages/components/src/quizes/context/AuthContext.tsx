@@ -1,8 +1,8 @@
 "use client"
 
-import React, { createContext, useContext } from "react"
 import { useAuth as useNextAuth } from "@tbe/auth"
-import type { User, AuthContextType } from "@tbe/types"
+import type { AuthContextType,User } from "@tbe/types"
+import React, { createContext, useContext } from "react"
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 

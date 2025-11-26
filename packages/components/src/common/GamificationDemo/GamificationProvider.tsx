@@ -1,7 +1,6 @@
+import { CelebrationAnimation, GamificationToast } from '@tbe/components';
 import type { ReactNode } from 'react';
 import React, { createContext, useContext, useState } from 'react';
-
-import { CelebrationAnimation, GamificationToast } from '@tbe/components';
 
 interface GamificationContextType {
   triggerCelebration: (data: CelebrationData) => void;

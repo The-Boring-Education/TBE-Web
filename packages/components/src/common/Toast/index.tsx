@@ -1,8 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/20/solid';
+import type { ToastProps } from '@tbe/interface';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
-
-import type { ToastProps } from '@tbe/interface';
 
 const Toast = ({
   message,

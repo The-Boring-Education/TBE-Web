@@ -1,7 +1,6 @@
-import React from 'react';
-
 import { FlexContainer, Image, Text } from '@tbe/components';
 import type { PlaylistVideoCardProps } from '@tbe/interface';
+import React from 'react';
 
 const PlaylistVideoCard = ({
   title,
