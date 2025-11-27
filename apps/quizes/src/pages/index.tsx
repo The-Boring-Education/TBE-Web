@@ -10,10 +10,14 @@ import {
     Trophy,
     Users} from "lucide-react"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Fragment } from "react"
+import { SEO } from '@tbe/components'
+import { getPreFetchProps } from '@tbe/utils'
+import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants'
+import type { PageProps } from '@tbe/interface'
 
-
-export default function Landing() {
+function QuizesClient() {
+    "use client"
     const router = useRouter()
     const { user, isAuthenticated, isLoading } = useAuth()
     const [isRedirecting, setIsRedirecting] = useState(false)
@@ -62,8 +66,7 @@ export default function Landing() {
                     </div>
                 </div>
             )}
-        
-            
+
             {/* Show main content only when not loading or redirecting */}
             {!isLoading && !isRedirecting && (
                 <>
@@ -130,13 +133,9 @@ export default function Landing() {
                             </div>
                         </div>
                     </div>
-                    </>
-            )}
 
-        
-
-            {/* Features Section */}
-                       <div className='bg-white py-20'>
+                    {/* Features Section */}
+                    <div className='bg-white py-20'>
                         <div className='container mx-auto px-4'>
                             <div className='max-w-6xl mx-auto'>
                             <div className='text-center mb-16'>
@@ -185,9 +184,10 @@ export default function Landing() {
                             </div>
                             </div>
                         </div>
-                        </div>
-                        {/* Stats Section */}
-                        <div className='bg-white py-20'>
+                    </div>
+
+                    {/* Stats Section */}
+                    <div className='bg-white py-20'>
                         <div className='container mx-auto px-4'>
                             <div className='max-w-4xl mx-auto'>
                             <div className='text-center mb-16'>
@@ -236,9 +236,10 @@ export default function Landing() {
                             </div>
                             </div>
                         </div>
-                        </div>
-                        {/* Categories Preview */}
-                        <div className='bg-white py-20'>
+                    </div>
+
+                    {/* Categories Preview */}
+                    <div className='bg-white py-20'>
                         <div className='container mx-auto px-4'>
                             <div className='max-w-6xl mx-auto'>
                             <div className='text-center mb-16'>
@@ -289,10 +290,10 @@ export default function Landing() {
                             </div>
                             </div>
                         </div>
-                        </div>
+                    </div>
 
-                        {/* CTA Section */}
-                        <div className='bg-white py-20'>
+                    {/* CTA Section */}
+                    <div className='bg-white py-20'>
                         <div className='container mx-auto px-4'>
                             <div className='max-w-4xl mx-auto text-center'>
                             <h3 className='text-3xl md:text-4xl font-bold mb-6 text-black'>
@@ -310,10 +311,10 @@ export default function Landing() {
                             </button>
                             </div>
                         </div>
-                        </div>
-                        
-                        {/* Footer */}
-                        <footer className='border-t-2 border-[#F6CCCC] bg-white py-8'>
+                    </div>
+                    
+                    {/* Footer */}
+                    <footer className='border-t-2 border-[#F6CCCC] bg-white py-8'>
                         <div className='container mx-auto px-4'>
                             <div className='text-center'>
                             <p className='text-black'>
@@ -321,6 +322,26 @@ export default function Landing() {
                             </p>
                             </div>
                         </div>
-                        </footer>
-                    </div>
-                    )}
+                    </footer>
+                </>
+            )}
+        </div>
+    )
+}
+
+const Landing = ({ seoMeta }: PageProps) => {
+    return (
+        <Fragment>
+            <SEO seoMeta={seoMeta} />
+            <QuizesClient />
+        </Fragment>
+    )
+}
+
+export const getStaticProps = async () => ({
+  ...(await getPreFetchProps({ slug: routes.home, appId: "quizes" })),
+  revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
+});
+
+export default Landing
+

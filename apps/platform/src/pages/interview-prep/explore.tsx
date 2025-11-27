@@ -12,7 +12,7 @@ import { useApi, useUser } from '@tbe/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
 import { getPreFetchProps, mapInterviewSheetResponseToCard } from '@tbe/utils';
 import { Fragment, useEffect, useMemo, useState } from 'react';
-
+import Image from 'next/image';
 const Home = ({ seoMeta }: PageProps) => {
   const { response, loading } = useApi('interview-prep', {
     url: routes.api.interviewPrep,
@@ -106,11 +106,12 @@ const Home = ({ seoMeta }: PageProps) => {
       <SEO seoMeta={seoMeta} />
 
       {/* Header Section */}
-      <Section className='bg-gradient-to-r from-blue-50 to-purple-50 py-8'>
+      <Section className='bg-lightBG py-5'>
         <div className='max-w-6xl mx-auto px-4 text-center'>
-          <Text className='text-3xl font-bold text-gray-900 mb-4' level='h1'>
-            Explore Interview Prep Sheets
-          </Text>
+          <div className='text-3xl font-bold mb-4'>
+            <Text className='text-gray-900 inline' level='span'>Explore </Text>
+            <Text className='text-primary inline' level='span'>Interview Prep Sheets</Text>
+          </div>
           <Text className='text-lg text-gray-600' level='p'>
             Choose from our carefully curated collection of interview questions,
             organized by technology domains
@@ -122,6 +123,16 @@ const Home = ({ seoMeta }: PageProps) => {
       <Section className='py-8'>
         {Object.entries(groupedByRoadmap).length > 0 ? (
           <div className='space-y-12'>
+          <div className='max-w-7xl mx-auto px-4 flex justify-center mb-8'>
+            <Image
+              src='/svg/undraw_interview_yz52.svg'
+              alt='Interview Preparation'
+              width={400}
+              height={400}
+              priority
+            />
+          </div>
+
             {Object.entries(groupedByRoadmap).map(([roadmap, cards]) => (
               <div key={roadmap} className='max-w-7xl mx-auto px-4'>
                 {/* Domain Header */}
