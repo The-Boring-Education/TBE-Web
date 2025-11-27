@@ -1,32 +1,32 @@
+import React, { useState } from "react";
 
-import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import DomainSection from './DomainSection';
-import LanguageSection from './LanguageSection';
-import DSASection from './DSASection';
+import { Button } from "../ui/button";
+import DomainSection from "./DomainSection";
+import DSASection from "./DSASection";
+import LanguageSection from "./LanguageSection";
 
 const TabSection = () => {
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
   const tabs = [
-    { 
-      id: 'domains', 
-      label: 'Explore by Domain', 
-      description: 'Choose your career path',
-      gradient: 'from-blue-500 to-cyan-500'
+    {
+      id: "domains",
+      label: "Explore by Domain",
+      description: "Choose your career path",
+      gradient: "from-blue-500 to-cyan-500",
     },
-    { 
-      id: 'languages', 
-      label: 'Explore by Language', 
-      description: 'Pick your coding language',
-      gradient: 'from-purple-500 to-pink-500'
+    {
+      id: "languages",
+      label: "Explore by Language",
+      description: "Pick your coding language",
+      gradient: "from-purple-500 to-pink-500",
     },
-    { 
-      id: 'dsa', 
-      label: 'DSA Learning Path', 
-      description: 'Master problem solving',
-      gradient: 'from-green-500 to-emerald-500'
-    }
+    {
+      id: "dsa",
+      label: "DSA Learning Path",
+      description: "Master problem solving",
+      gradient: "from-green-500 to-emerald-500",
+    },
   ];
 
   return (
@@ -50,8 +50,8 @@ const TabSection = () => {
               variant={activeTab === tab.id ? "default" : "outline"}
               className={`flex-1 py-6 px-6 min-h-[80px] flex flex-col items-start justify-center transition-all duration-300 ${
                 activeTab === tab.id
-                  ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg'
-                  : 'border-2 border-gray-300 text-gray-700 hover:border-red-600 hover:text-red-600 bg-white'
+                  ? "bg-red-600 hover:bg-red-700 text-white shadow-lg"
+                  : "border-2 border-gray-300 text-gray-700 hover:border-red-600 hover:text-red-600 bg-white"
               }`}
             >
               <span className="font-bold text-base mb-1">{tab.label}</span>
@@ -61,23 +61,13 @@ const TabSection = () => {
         </div>
 
         {/* Tab Content with smooth transitions */}
-        <div className="min-h-[400px]">
-          {activeTab === 'domains' && (
-            <div className="animate-fade-in">
-              <DomainSection />
-            </div>
-          )}
-          {activeTab === 'languages' && (
-            <div className="animate-fade-in">
-              <LanguageSection />
-            </div>
-          )}
-          {activeTab === 'dsa' && (
-            <div className="animate-fade-in">
-              <DSASection />
-            </div>
-          )}
-        </div>
+        {activeTab && (
+          <div className="mt-8 animate-fade-in">
+            {activeTab === "domains" && <DomainSection />}
+            {activeTab === "languages" && <LanguageSection />}
+            {activeTab === "dsa" && <DSASection />}
+          </div>
+        )}
       </div>
     </section>
   );
