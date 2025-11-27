@@ -1,7 +1,6 @@
 "use client";
-import { Footer,Navbar } from "@tbe/components";
+import { Button, Footer, Navbar } from "@tbe/components";
 import { LearningSection, TabSection } from "@tbe/components/techyatra";
-import { Button } from "@ui/button";
 import { ArrowRight } from "lucide-react";
 import React from "react";
 
@@ -38,15 +37,18 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
               onClick={() => scrollToSection("learning-paths")}
-              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-10 py-4 text-xl font-semibold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105"
+              variant="PRIMARY"
+              size="LARGE"
+              className="w-full sm:w-auto"
             >
-              Start Exploring <ArrowRight className="ml-2" size={24} />
+              Start Exploring 🎯
             </Button>
 
             <Button
               onClick={() => scrollToSection("free-learning")}
-              variant="outline"
-              className="border-2 border-green-500 text-green-600 hover:bg-green-50 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
+              variant="OUTLINE"
+              size="LARGE"
+              className="w-full sm:w-auto"
             >
               Learn Tech Free 📚
             </Button>
@@ -71,7 +73,7 @@ export default function Home() {
       <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t shadow-2xl md:hidden z-40">
         <div className="flex justify-around py-3">
           <Button
-            variant="ghost"
+            variant="GHOST"
             onClick={() => scrollToSection("learning-paths")}
             className="flex flex-col items-center px-2 text-gray-600 hover:text-blue-600 h-auto"
           >
@@ -79,7 +81,7 @@ export default function Home() {
             <span className="text-xs font-medium">Explore</span>
           </Button>
           <Button
-            variant="ghost"
+            variant="GHOST"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex flex-col items-center px-2 text-gray-600 hover:text-purple-600 h-auto"
           >
@@ -87,7 +89,7 @@ export default function Home() {
             <span className="text-xs font-medium">Home</span>
           </Button>
           <Button
-            variant="ghost"
+            variant="GHOST"
             onClick={() => scrollToSection("free-learning")}
             className="flex flex-col items-center px-2 text-gray-600 hover:text-green-600 h-auto"
           >
