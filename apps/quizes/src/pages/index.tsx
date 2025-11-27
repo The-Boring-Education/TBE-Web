@@ -339,7 +339,7 @@ const Landing = ({ seoMeta }: PageProps) => {
 }
 
 export const getStaticProps = async () => ({
-  ...(await getPreFetchProps({ slug: routes.home, appId: "quizes" })),
+  ...(await getPreFetchProps({ slug: routes.quizes.home, appId: "quizes" })),
   revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
 });
 

@@ -13,7 +13,7 @@ export default function Home() {
     <div className="min-h-screen">
       <Navbar variant="techyatra" />
       {/* Hero Section */}
-      <section className="px-4 py-24 text-center bg-gradient-to-br from-slate-50 via-blue-50 via-purple-50 to-pink-50 mt-16">
+      <section className="px-4 py-24 text-center bg-gradient-to-br from-slate-50 via-blue-50 to-pink-50 mt-16">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
