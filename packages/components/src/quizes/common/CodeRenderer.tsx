@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
 import MarkdownIt from 'markdown-it'
+import { useEffect, useRef } from 'react'
 
 interface CodeRendererProps {
   content: string

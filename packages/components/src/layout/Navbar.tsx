@@ -1,15 +1,13 @@
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { getNavbarVariantConfig, LINKS, TOP_NAVIGATION } from '@tbe/constants';
+import { useScrollDirection } from '@tbe/hooks';
+import type { MainNavbarProps, VariantConfig } from '@tbe/interface';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
-import { getNavbarVariantConfig, LINKS, TOP_NAVIGATION } from '@tbe/constants';
-import { useScrollDirection } from '@tbe/hooks';
-import type { MainNavbarProps, VariantConfig } from '@tbe/interface';
-
 import {
-  Button,
   FlexContainer,
   Link,
   LoginRedirectButton,
@@ -21,7 +19,6 @@ import {
   UserAvatar,
   UserPointButton,
 } from '..';
-
 import NotificationPopover from '../common/Notification/index';
 
 const Navbar = ({ 

@@ -1,7 +1,6 @@
+import { useAnalytics } from '@tbe/hooks';
 import { toPng } from 'html-to-image';
 import { useRef } from 'react';
-
-import { useAnalytics } from '@tbe/hooks';
 
 import useUser from './useUser';
 

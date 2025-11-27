@@ -1,5 +1,3 @@
-import { FaCertificate,FaPlay, FaUsers } from 'react-icons/fa';
-
 import {
   Button,
   LinkButton,
@@ -7,10 +5,11 @@ import {
   Section,
   Text,
 } from '@tbe/components';
+import { useGamifiedAction } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useAnalytics, useApi, useUser } from '@tbe/hooks';
-import { useGamifiedAction } from '@tbe/components';
 import type { CourseHeroContainerProps } from '@tbe/interface';
+import { FaCertificate,FaPlay, FaUsers } from 'react-icons/fa';
 
 const CourseHeroContainer = ({
   id,

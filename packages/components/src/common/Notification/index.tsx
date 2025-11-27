@@ -5,10 +5,9 @@ import {
   Transition,
 } from '@headlessui/react';
 import { BellIcon, LinkIcon } from '@heroicons/react/20/solid';
-import { Fragment } from 'react';
-
 import { FlexContainer, Link, Text } from '@tbe/components';
 import { useNotifications } from '@tbe/hooks';
+import { Fragment } from 'react';
 
 const NotificationPopover = () => {
   const { notifications } = useNotifications();

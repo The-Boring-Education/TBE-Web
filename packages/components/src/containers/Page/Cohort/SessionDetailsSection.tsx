@@ -7,7 +7,6 @@ import {
   UserGroupIcon,
   UsersIcon,
 } from '@heroicons/react/24/solid';
-
 import { FlexContainer, Text } from '@tbe/components';
 
 const sessions = [

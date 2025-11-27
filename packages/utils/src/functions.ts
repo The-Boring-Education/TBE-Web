@@ -861,6 +861,33 @@ const getValidUserId = (user: User | null): string | null => {
     return isValidUser(user) ? user.id : null
 }
 
+const formatTimeSpent = (hours: number) => {
+    if (hours < 1) {
+        return `${Math.round(hours * 60)} minutes`
+    }
+    return `${hours} hour${hours !== 1 ? "s" : ""}`
+}
+
+const getTimeOfDay = () => {
+    const hour = new Date().getHours()
+    if (hour < 12) {
+        return "Good morning"
+    }
+    if (hour < 17) {
+        return "Good afternoon"
+    }
+    return "Good evening"
+}
+
+// Utility function to add protocol to URLs
+function withProtocol(url: string | undefined) {
+    if (!url) {
+        return undefined
+    }
+
+    return url.startsWith("http") ? url : `https://${url}`
+}
+
 export {
     isValidUser,
     getValidUserId,
@@ -905,5 +932,8 @@ export {
     removeLocalStorageItem,
     setLocalStorageItem,
     validateWebhookEvent,
-    verifyWebhookSignature
+    verifyWebhookSignature,
+    formatTimeSpent,
+    getTimeOfDay,
+    withProtocol
 }

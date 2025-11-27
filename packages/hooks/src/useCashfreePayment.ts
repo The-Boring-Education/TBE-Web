@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-
 import { isProductionEnv } from '@tbe/constants';
+import { useCallback, useEffect, useState } from 'react';
 
 declare global {
   interface Window {

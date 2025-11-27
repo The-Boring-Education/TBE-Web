@@ -1,8 +1,8 @@
 import {
-    useSession,
     signIn as nextAuthSignIn,
-    signOut as nextAuthSignOut
-} from "next-auth/react"
+    signOut as nextAuthSignOut,
+    useSession} from "next-auth/react"
+
 import type { ExtendedUser } from "../types/index.ts"
 
 /**

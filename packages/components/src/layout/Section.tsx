@@ -1,7 +1,6 @@
+import type { SectionProps } from '@tbe/interface';
 import { motion } from 'framer-motion';
 import { Fragment } from 'react';
-
-import type { SectionProps } from '@tbe/interface';
 
 import { FlexContainer, Text } from '..';
 

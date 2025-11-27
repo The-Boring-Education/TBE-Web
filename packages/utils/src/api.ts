@@ -91,7 +91,7 @@ export const sendRequest = async ({
         url: finalUrl,
         headers: {
             ...headers,
-            cache: "no-store"
+            "Cache-Control": "no-store"
         },
         data: body
     }

@@ -1,9 +1,8 @@
 import { Disclosure } from '@headlessui/react';
 import { ChevronUpIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
-
 import { FlexContainer, Text } from '@tbe/components';
 import type { AccordionProps } from '@tbe/interface';
+import { useState } from 'react';
 
 const Accordion = ({ title, children, open = false }: AccordionProps) => {
   const [isSelected, setIsSelected] = useState(open);

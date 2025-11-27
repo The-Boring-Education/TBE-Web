@@ -801,3 +801,36 @@ export interface LoginCardNewProps {
   variant?: 'default' | 'platform' | 'prepyatra' | 'quizes' | 'resume-yatra';
   customRedirectPath?: string;
 }
+
+export interface PrepLog {
+  _id: string
+  title: string
+  description?: string
+  timeSpent: number
+  createdAt: string
+}
+
+
+export interface UserProfile {
+  name: string
+  userName: string
+  createdAt: string
+  linkedInUrl?: string
+  image?: string
+  githubUrl?: string
+  leetCodeUrl?: string
+  userSkills?: string[]
+  userSkillsLastUpdated?: string
+  occupation?: string
+  purpose?: string[]
+  prepYatra: {
+      goal?: string
+      experienceLevel?: string
+      pyOnboarded?: boolean
+      targetCompanies?: string[]
+      preferences?: {
+          interviewCategories?: string[]
+          focusAreas?: string[]
+      }
+  }
+}

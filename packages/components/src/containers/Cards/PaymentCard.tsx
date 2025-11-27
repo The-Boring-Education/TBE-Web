@@ -9,12 +9,11 @@ import {
   UserIcon,
   XMarkIcon,
 } from '@heroicons/react/20/solid';
-import React, { useState } from 'react';
-
 import { Button, FlexContainer, Text } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useCashfreePayment, useUser } from '@tbe/hooks';
 import type { PaymentCardProps } from '@tbe/interface';
+import React, { useState } from 'react';
 
 const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
   const { user } = useUser();

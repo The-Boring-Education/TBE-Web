@@ -1,11 +1,10 @@
-import { motion } from 'framer-motion';
-import { FaPlay } from 'react-icons/fa';
-
 import {
   Button,
   Section,
   Text,
 } from '@tbe/components';
+import { motion } from 'framer-motion';
+import { FaPlay } from 'react-icons/fa';
 
 interface ModernLandingHeroProps {
   heading: string;

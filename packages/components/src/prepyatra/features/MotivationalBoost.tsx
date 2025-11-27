@@ -1,16 +1,15 @@
+import type { Challenge } from "@tbe/types"
 import {
     Flame,
-    TrendingUp,
-    Trophy,
-    Target,
+    Share2,
     Sparkles,
-    Share2
-} from "lucide-react"
+    Target,
+    TrendingUp,
+    Trophy} from "lucide-react"
 import { toast } from "sonner"
 
 import Button from "../../common/Buttons/Button"
 import { Card, CardContent } from "../ui/card"
-import type { Challenge } from "@tbe/types"
 
 interface MotivationalBoostProps {
     challenges: Challenge[]

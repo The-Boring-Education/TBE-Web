@@ -9,4 +9,5 @@ export { emailTriggerService } from './triggers';
 export * from './challenges';   
 export * from './prep-stats';
 export * from "./prep-logs";
-export * from "./recruiters"
+export * from "./recruiters";
+export * from "./user";

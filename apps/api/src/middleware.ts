@@ -15,7 +15,7 @@ export function middleware(request: NextRequest) {
                 "Access-Control-Allow-Methods":
                     "GET, POST, PUT, DELETE, PATCH, OPTIONS",
                 "Access-Control-Allow-Headers":
-                    "Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version",
+                    "Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, cache, Cache-Control",
                 "Access-Control-Max-Age": "86400"
             }
         })
@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
     )
     response.headers.set(
         "Access-Control-Allow-Headers",
-        "Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version"
+        "Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, cache, Cache-Control"
     )
 
     return response

@@ -1,13 +1,14 @@
+import {useChallenges} from "@tbe/hooks";
+import type {Challenge} from "@tbe/types";
 import { 
+  Calendar,
+  Flame,
   Plus, 
+  Share2,
+  Star,
   Target, 
   TrendingUp, 
-  Trophy,
-  Flame,
-  Star,
-  Calendar,
-  Share2
-} from "lucide-react";
+  Trophy} from "lucide-react";
 import {useState} from "react";
 
 import ChallengeCard from "../cards/ChallengeCard";
@@ -17,8 +18,6 @@ import CreateChallengeModal from "../modals/CreateChallengeModal";
 import {Button} from "../ui/button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card";
 import {Skeleton} from "../ui/skeleton";
-import {useChallenges} from "@tbe/hooks";
-import type {Challenge} from "@tbe/types";
 
 interface ChallengeSectionProps {
   userId: string;

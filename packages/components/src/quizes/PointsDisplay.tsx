@@ -1,7 +1,8 @@
 'use client'
 
+import { useEffect, useRef,useState } from 'react'
+
 import { useGamificationContext } from './context/GamificationContext'
-import { useState, useEffect, useRef } from 'react'
 import { GamificationCard } from './GamificationCard'
 
 interface PointsDisplayProps {

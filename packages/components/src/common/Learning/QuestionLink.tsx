@@ -1,10 +1,9 @@
-import Link from 'next/link';
-import { FaLock, FaRegCircle } from 'react-icons/fa';
-import { IoIosCheckmarkCircle } from 'react-icons/io';
-
 import { useAnalytics } from '@tbe/hooks';
 import type { QuestionLinkProps } from '@tbe/interface';
 import { trackEvent as sendEvent } from '@tbe/utils';
+import Link from 'next/link';
+import { FaLock, FaRegCircle } from 'react-icons/fa';
+import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 const QuestionLink = ({
   href,

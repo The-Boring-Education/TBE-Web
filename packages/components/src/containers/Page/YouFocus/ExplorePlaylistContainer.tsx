@@ -1,6 +1,3 @@
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-
 import {
   Button,
   FlexContainer,
@@ -9,6 +6,8 @@ import {
 } from '@tbe/components';
 import { routes, YOUFOCUS_SKILL_PLAYLISTS } from '@tbe/constants';
 import type { ExploreCantainerCardProps } from '@tbe/interface';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
 const ExplorePlaylistContainer = ({
   heading,

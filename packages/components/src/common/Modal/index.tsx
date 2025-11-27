@@ -1,5 +1,4 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-
 import type { ModalProps } from '@tbe/interface';
 
 const Modal = ({ isOpen, closeModal, title, children }: ModalProps) => (

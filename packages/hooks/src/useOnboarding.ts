@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react"
-import type {
-    UseOnboardingProps,
-    UseOnboardingReturn,
-    BaseUser
-} from "@tbe/types"
-import { OnboardingProductConfig, OnboardingFieldConfig } from "@tbe/types"
 import { getOnboardingConfig, isValidOnboardingProduct } from "@tbe/config" // FIXME: REFACTOR
+import type {
+    BaseUser,
+    UseOnboardingProps,
+    UseOnboardingReturn} from "@tbe/types"
 import { sendRequest, trackEvent } from "@tbe/utils"
+import { useEffect,useState } from "react"
 
 /**
  * useOnboarding Hook

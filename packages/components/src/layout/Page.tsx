@@ -1,10 +1,9 @@
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-
 import { Footer, Navbar } from '@tbe/components';
 import { envConfig } from '@tbe/constants';
 import type { PageLayoutProps } from '@tbe/interface';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const PageLayout = ({ children }: PageLayoutProps) => {
   const router = useRouter();

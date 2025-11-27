@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@tbe/auth'
 import { ProtectedRoute } from '@tbe/components/quizes'
 import { DashboardNav } from '@tbe/components/quizes'
@@ -17,7 +18,6 @@ import {
     Trophy,
     Zap} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 
 // Loading component
 const MetricLoader = () => (

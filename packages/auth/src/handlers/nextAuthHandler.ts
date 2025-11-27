@@ -1,5 +1,6 @@
-import NextAuth from "next-auth"
 import type { NextAuthOptions } from "next-auth"
+import NextAuth from "next-auth"
+
 import { createAuthOptions } from "../config/nextauth"
 import { getUserByEmail } from "../services"
 import type { AppAuthConfig } from "../types"

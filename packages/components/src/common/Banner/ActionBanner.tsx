@@ -1,6 +1,5 @@
-import React, { createElement } from 'react';
-
 import type { ActionBannerProps } from '@tbe/interface';
+import React, { createElement } from 'react';
 
 const ActionBanner = ({
   backgroundColor,

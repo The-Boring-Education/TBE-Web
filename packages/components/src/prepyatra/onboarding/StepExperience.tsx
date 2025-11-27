@@ -1,7 +1,6 @@
-import React from "react";
-
 import {EXPERIENCE_LEVELS} from "@tbe/constants";
-import type {OnboardingData, ExperienceLevel} from "@tbe/types";
+import type {ExperienceLevel,OnboardingData} from "@tbe/types";
+import React from "react";
 
 type Props = {
     formData: OnboardingData

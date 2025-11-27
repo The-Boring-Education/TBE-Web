@@ -1,12 +1,12 @@
 import type { NextAuthOptions } from "next-auth"
+
 import { createGoogleProvider } from "../providers/google"
-import { sessionConfig, getCookieConfig, getAuthSecret } from "./session"
 import type { AuthConfig } from "../types"
 import {
-    defaultSignInCallback,
+    defaultJwtCallback,
     defaultSessionCallback,
-    defaultJwtCallback
-} from "./callbacks"
+    defaultSignInCallback} from "./callbacks"
+import { getAuthSecret,getCookieConfig, sessionConfig } from "./session"
 
 /**
  * Factory function to create NextAuth configuration

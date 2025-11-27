@@ -1,5 +1,4 @@
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/24/solid';
-
 import { FloatingActionButton } from '@tbe/components';
 import { useScrollPosition } from '@tbe/hooks';
 

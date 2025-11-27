@@ -1,6 +1,5 @@
-import {useRef, useState, useEffect} from "react";
-
 import {usePyGamification} from "@tbe/hooks";
+import {useEffect,useRef, useState} from "react";
 
 const GamificationDisplay = ({userId}: { userId: string }) => {
     const {

@@ -1,5 +1,6 @@
 import type * as LabelPrimitive from "@radix-ui/react-label";
 import {Slot} from "@radix-ui/react-slot";
+import {cn} from "@tbe/utils";
 import * as React from "react";
 import type {
   ControllerProps,
@@ -12,7 +13,6 @@ import {
 } from "react-hook-form";
 
 import {Label} from "../ui/label";
-import {cn} from "@tbe/utils";
 
 const Form = FormProvider;
 
@@ -166,12 +166,11 @@ const FormMessage = React.forwardRef<
 FormMessage.displayName = "FormMessage";
 
 export {
-  useFormField,
   Form,
-  FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
   FormMessage,
-  FormField
-};
+  useFormField};

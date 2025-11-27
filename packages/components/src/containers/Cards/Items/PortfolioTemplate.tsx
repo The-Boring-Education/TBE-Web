@@ -5,9 +5,10 @@ import {
   LoginRedirectButton,
   Text,
 } from '@tbe/components';
-import LinkText from '../../../common/Typography/Link';
 import { useUser } from '@tbe/hooks';
 import type { PortfolioTemplateProps } from '@tbe/interface';
+
+import LinkText from '../../../common/Typography/Link';
 
 const PortfolioTemplate = ({
   repo,

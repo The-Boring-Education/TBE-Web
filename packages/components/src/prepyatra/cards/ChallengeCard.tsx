@@ -1,12 +1,15 @@
+import { Button } from "@tbe/components"
+import { challengesService } from "@tbe/services"
+import type { Challenge } from "@tbe/types"
 import {
     Calendar,
-    Play,
-    Pause,
-    Trash2,
-    Clock,
-    TrendingUp,
     CheckCircle2,
+    Clock,
     History,
+    Pause,
+    Play,
+    Trash2,
+    TrendingUp,
     Trophy
 } from "lucide-react"
 import { useState } from "react"
@@ -24,7 +27,6 @@ import {
     AlertDialogTrigger
 } from "../ui/alert-dialog"
 import { Badge } from "../ui/badge"
-import { Button } from "@tbe/components"
 import {
     Card,
     CardContent,
@@ -33,8 +35,6 @@ import {
     CardTitle
     } from "../ui/card"
 import { Progress } from "../ui/progress"
-import { challengesService } from "@tbe/services"
-import type { Challenge } from "@tbe/types"
 
 interface ChallengeCardProps {
     challenge: Challenge

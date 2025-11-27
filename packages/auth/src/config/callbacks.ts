@@ -1,5 +1,5 @@
-import type { ExtendedUser } from "../types"
 import { createOrFindUser, getUserByEmail } from "../services"
+import type { ExtendedUser } from "../types"
 
 /**
  * Default signIn callback

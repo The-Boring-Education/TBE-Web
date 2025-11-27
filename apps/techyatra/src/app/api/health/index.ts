@@ -1,7 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next"
-
 import type { EnvHealthResponse, EnvVarCheck } from "@tbe/utils"
 import { buildEnvHealthResponse } from "@tbe/utils"
+import type { NextApiRequest, NextApiResponse } from "next"
 
 const envChecks: EnvVarCheck[] = [
     { name: "NEXT_PUBLIC_API_URL" },

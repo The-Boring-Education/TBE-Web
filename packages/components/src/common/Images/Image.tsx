@@ -1,6 +1,5 @@
-import Image from 'next/image';
-
 import type { ImageContainerProps } from '@tbe/interface';
+import Image from 'next/image';
 
 const ImageContainer = ({
   src,
