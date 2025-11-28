@@ -151,36 +151,135 @@ const getAppSpecificSEOMeta = (
     // Quizes specific routes
     if (appId === "quizes") {
         const quizesMeta: Record<string, GetSEOMetaResponseType> = {
-            [routes.home]: {
+            [routes.quizes.home]: {
                 title: "Quizes | Practice Technical Questions | The Boring Education",
                 siteName: "Quizes",
                 description: "Practice curated technical quizzes across JavaScript, React, algorithms and web development to prepare for interviews.",
-                url: routes.home,
+                url: routes.quizes.home,
                 keywords: "Quizes, Practice Questions, Interview Prep, JavaScript, React, Algorithms, The Boring Education",
                 ...seoCommonMeta,
                 image: appConfig.defaultImage || seoCommonMeta.image
             },
-            [routes.login]: {
+            [routes.quizes.login]: {
                 title: "Login | Quizes",
                 siteName: "Quizes",
                 description: "Login to Quizes and continue practicing curated technical questions.",
-                url: routes.login,
+                url: routes.quizes.login,
                 keywords: "Quizes Login, Practice, Interview Prep",
                 ...seoCommonMeta,
                 image: appConfig.defaultImage || seoCommonMeta.image
             },
-            [routes.projects]: {
-                title: "Quizes - Topics & Categories | The Boring Education",
+            [routes.quizes.dashboard]: {
+                title: "Dashboard | Quizes",
                 siteName: "Quizes",
-                description: "Explore quiz categories and focus areas to sharpen your skills.",
-                url: routes.projects,
-                keywords: "Quizes Topics, Categories, Practice Areas",
+                description: "Track your progress and manage your quiz practice sessions.",
+                url: routes.quizes.dashboard,
+                keywords: "Quizes Dashboard, Practice Progress, Interview Prep",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.quizes.pricing]: {
+                title: "Pricing | Quizes",
+                siteName: "Quizes",
+                description: "Choose the right plan for your quiz practice journey.",
+                url: routes.quizes.pricing,
+                keywords: "Quizes Pricing, Practice Plans, Interview Prep Plans",
                 ...seoCommonMeta,
                 image: appConfig.defaultImage || seoCommonMeta.image
             }
         }
 
         return quizesMeta[basePath] || null
+    }
+
+    // TechYatra specific routes
+    if (appId === "techyatra") {
+        const techyatraMeta: Record<string, GetSEOMetaResponseType> = {
+            [routes.techyatra.home]: {
+                title: "TechYatra - Tech Learning Journey & Roadmaps | The Boring Education",
+                siteName: "TechYatra",
+                description: "Embark on your tech learning journey with TechYatra. Explore comprehensive learning paths, tech roadmaps, and skill development guides.",
+                url: routes.techyatra.home,
+                keywords:
+                    "TechYatra, Tech Learning, Tech Roadmaps, Learning Paths, Career Development, The Boring Education, Tech Education",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.techyatra.login]: {
+                title: "Login | TechYatra",
+                siteName: "TechYatra",
+                description: "Login to TechYatra and continue your tech learning journey.",
+                url: routes.techyatra.login,
+                keywords: "TechYatra Login, Tech Learning, Career Development",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.techyatra.dashboard]: {
+                title: "Dashboard | TechYatra",
+                siteName: "TechYatra",
+                description: "Manage your tech learning progress and track your roadmap completion.",
+                url: routes.techyatra.dashboard,
+                keywords: "TechYatra Dashboard, Tech Learning Progress, Roadmap Tracking",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.techyatra.pricing]: {
+                title: "Pricing | TechYatra",
+                siteName: "TechYatra",
+                description: "Choose the right TechYatra plan for your learning journey.",
+                url: routes.techyatra.pricing,
+                keywords: "TechYatra Pricing, Tech Learning Plans, Career Development Plans",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            }
+        }
+
+        return techyatraMeta[basePath] || null
+    }
+
+    // ResumeYatra specific routes
+    if (appId === "resume-yatra") {
+        const resumeyatraMeta: Record<string, GetSEOMetaResponseType> = {
+            [routes.resumeYatra.home]: {
+                title: "ResumeYatra - Build Your Professional Resume | The Boring Education",
+                siteName: "ResumeYatra",
+                description: "Create a professional resume that stands out with ResumeYatra. Get expert guidance, templates, and AI-powered suggestions.",
+                url: routes.resumeYatra.home,
+                keywords:
+                    "ResumeYatra, Resume Builder, Professional Resume, Job Applications, Career Development, The Boring Education, Resume Templates",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.resumeYatra.login]: {
+                title: "Login | ResumeYatra",
+                siteName: "ResumeYatra",
+                description: "Login to ResumeYatra and continue building your professional resume.",
+                url: routes.resumeYatra.login,
+                keywords: "ResumeYatra Login, Resume Builder, Job Applications",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.resumeYatra.dashboard]: {
+                title: "Dashboard | ResumeYatra",
+                siteName: "ResumeYatra",
+                description: "Manage your resumes, templates, and job application documents.",
+                url: routes.resumeYatra.dashboard,
+                keywords: "ResumeYatra Dashboard, Resume Management, Job Applications",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            },
+            [routes.resumeYatra.pricing]: {
+                title: "Pricing | ResumeYatra",
+                siteName: "ResumeYatra",
+                description: "Choose the right ResumeYatra plan to build your dream resume.",
+                url: routes.resumeYatra.pricing,
+                keywords: "ResumeYatra Pricing, Resume Builder Plans, Job Application Plans",
+                ...seoCommonMeta,
+                image: appConfig.defaultImage || seoCommonMeta.image
+            }
+        }
+
+        return resumeyatraMeta[basePath] || null
     }
 
     // Add other app-specific metadata here as needed

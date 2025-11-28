@@ -56,6 +56,30 @@ const routes = {
         pricing: "/pricing",
         baseUrl: "https://dsayatra.theboringeducation.com"
     },
+    // Quizes
+    quizes: {
+        home: "/",
+        login: "/login",
+        dashboard: "/dashboard",
+        pricing: "/pricing",
+        baseUrl: "https://quizes.theboringeducation.com"
+    },
+    // TechYatra
+    techyatra: {
+        home: "/",
+        login: "/login",
+        dashboard: "/dashboard",
+        pricing: "/pricing",
+        baseUrl: "https://techyatra.theboringeducation.com"
+    },
+    // ResumeYatra
+    resumeYatra: {
+        home: "/",
+        login: "/login",
+        dashboard: "/dashboard",
+        pricing: "/pricing",
+        baseUrl: "https://resumeyatra.theboringeducation.com"
+    },
     devRels: "https://devrel.theboringeducation.com/",
 
     certificate: "/certificate",
