@@ -1,7 +1,6 @@
-import React, { Suspense, useEffect, useState, useRef } from "react";
+import React, { Suspense, useEffect, useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import { Menu, X } from "lucide-react";
-import { useRouter } from "next/router";
 
 import {
     Navbar,
@@ -25,7 +24,6 @@ import type { RecruiterContact } from "@tbe/types";
 import type { UserProfile } from "@tbe/interface";
 
 const Dashboard = () => {
-    const router = useRouter();
     const { user, isLoading: authLoading } = useAuth();
     const { showCelebration } = usePrepYatraGamificationContext();
     const {
@@ -74,7 +72,7 @@ const Dashboard = () => {
         }
     };
 
-    const initializeData = async () => {
+    const initializeData = useCallback(async () => {
         if (!user?.id) {
             return;
         }
@@ -97,7 +95,7 @@ const Dashboard = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [user?.id]);
 
     // Effects - Only initialize once when user ID is available
     useEffect(() => {
@@ -114,7 +112,7 @@ const Dashboard = () => {
             hasInitialized.current = false;
             initializedUserId.current = null;
         }
-    }, [user?.id, authLoading]);
+    }, [user?.id, authLoading, initializeData]);
 
     // Event handlers
     const handleLogAdded = () => {

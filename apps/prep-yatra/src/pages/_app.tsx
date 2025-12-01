@@ -128,6 +128,7 @@ const AppContent = ({
         isLoading,
         router.pathname,
         user?.id,
+        user?.email,
         isCheckingOnboarding
     ])
 
@@ -187,6 +188,7 @@ export default function App({
 
                 {/* PWA meta tags */}
                 <meta name='theme-color' content='#FF5757' />
+                <meta name='mobile-web-app-capable' content='yes' />
                 <meta name='apple-mobile-web-app-capable' content='yes' />
                 <meta
                     name='apple-mobile-web-app-status-bar-style'

@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -14,7 +16,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+  webpack: (config, { isServer }) => {
     // Handle Canvas for client-side (if using any Canvas libraries)
     if (!isServer) {
       config.resolve.fallback = {
@@ -23,13 +25,21 @@ const nextConfig = {
       };
     }
 
-    return config;
-  },
+    // Fix for multiple React instances issue
+    // Ensure single React instance is used across all packages
+    // This prevents "Cannot read properties of null (reading 'useState')" errors
+    
+    // Ensure webpack resolves from the app's node_modules first
+    // This ensures all packages use the same React instance
+    const appNodeModules = path.resolve(__dirname, 'node_modules');
+    if (!Array.isArray(config.resolve.modules)) {
+      config.resolve.modules = ['node_modules'];
+    }
+    if (!config.resolve.modules.includes(appNodeModules)) {
+      config.resolve.modules.unshift(appNodeModules);
+    }
 
-  experimental: {
-    // (You can add experimental options here if needed)
-    // Disable tracing to avoid symlink issues on Windows
-    outputFileTracing: false,
+    return config;
   },
 
   compiler: {
