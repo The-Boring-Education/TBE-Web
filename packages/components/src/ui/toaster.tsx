@@ -1,3 +1,5 @@
+import {useToast} from "@tbe/hooks";
+
 import {
   Toast,
   ToastClose,
@@ -6,7 +8,6 @@ import {
   ToastTitle,
   ToastViewport
 } from "../ui/toast";
-import {useToast} from "@tbe/hooks";
 
 export function Toaster() {
   const {toasts} = useToast();

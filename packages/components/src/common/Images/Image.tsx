@@ -1,6 +1,5 @@
-import Image from 'next/image';
-
 import type { ImageContainerProps } from '@tbe/interface';
+import Image from 'next/image';
 
 const ImageContainer = ({
   src,
@@ -13,7 +12,7 @@ const ImageContainer = ({
   <div
     className={`${className} ${fullWidth && 'w-full'} ${
       fullHeight && 'h-full'
-    }`}
+    } relative`}
   >
     <Image
       alt={alt}
@@ -21,6 +20,7 @@ const ImageContainer = ({
       fill
       loading={loading}
       src={src}
+      style={{ objectFit: 'cover' }}
     />
   </div>
 );

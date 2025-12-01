@@ -1,6 +1,5 @@
-import Link from 'next/link';
-
 import type { LinkProps } from '@tbe/interface';
+import Link from 'next/link';
 
 const LinkText = ({
   href,

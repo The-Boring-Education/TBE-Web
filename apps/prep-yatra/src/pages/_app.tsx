@@ -6,7 +6,10 @@ import { PrepYatraGamificationProvider } from "@tbe/components"
 import { Toaster as Sonner } from "@tbe/components"
 import { Toaster } from "@tbe/components"
 import { TooltipProvider } from "@tbe/components"
-import { initGA, trackPageview } from "@tbe/utils"
+import {
+  initGA,
+  trackPageview,
+} from '@tbe/components/analytics';
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -73,7 +76,7 @@ const AppContent = ({
             return
 
         // Skip check for public pages
-        const publicPages = ["/auth", "/"]
+        const publicPages = ["/login", "/"]
         if (publicPages.includes(router.pathname)) return
 
         // Skip if already checked
@@ -125,11 +128,12 @@ const AppContent = ({
         isLoading,
         router.pathname,
         user?.id,
+        user?.email,
         isCheckingOnboarding
     ])
 
     // Show loading spinner while checking onboarding on protected pages
-    const publicPages = ["/auth", "/"]
+    const publicPages = ["/login", "/auth", "/"]
     const isProtectedPage = !publicPages.includes(router.pathname)
 
     console.log(
@@ -184,6 +188,7 @@ export default function App({
 
                 {/* PWA meta tags */}
                 <meta name='theme-color' content='#FF5757' />
+                <meta name='mobile-web-app-capable' content='yes' />
                 <meta name='apple-mobile-web-app-capable' content='yes' />
                 <meta
                     name='apple-mobile-web-app-status-bar-style'

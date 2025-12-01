@@ -5,10 +5,9 @@ import {
   Transition,
 } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-  import { useRouter } from 'next/router';
-import { Fragment, useEffect, useRef } from 'react';
-
 import type { PopoverContainerProps } from '@tbe/interface';
+import { usePathname } from 'next/navigation';
+import { Fragment, useEffect, useRef } from 'react';
 
 const PopoverContainer = ({
   label,
@@ -17,20 +16,17 @@ const PopoverContainer = ({
   isOpen: open,
   onToggle,
 }: PopoverContainerProps) => {
-  const router = useRouter();
+  const pathname = usePathname();
   const popoverButtonRef = useRef<HTMLButtonElement>(null);
+  const previousPathname = useRef(pathname);
 
   useEffect(() => {
-    const handleRouteChange = () => {
-      if (open) onToggle();
-    };
-
-    router.events.on('routeChangeStart', handleRouteChange);
-
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
-    };
-  }, [router, open, onToggle]);
+    // Close popover when route changes (works with both Pages and App Router)
+    if (pathname !== previousPathname.current && open) {
+      onToggle();
+      previousPathname.current = pathname;
+    }
+  }, [pathname, open, onToggle]);
 
   return (
     <Popover className='relative'>

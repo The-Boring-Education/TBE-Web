@@ -1,7 +1,6 @@
 import { Button } from '@headlessui/react';
-import { FaStar } from 'react-icons/fa';
-
 import type { StarButtonProps } from '@tbe/interface';
+import { FaStar } from 'react-icons/fa';
 
 const StarButton = ({
   isStarred,

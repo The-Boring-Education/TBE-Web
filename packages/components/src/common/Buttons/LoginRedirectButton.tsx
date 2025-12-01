@@ -1,16 +1,27 @@
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-
 import { Button } from '@tbe/components';
 import type { LoginRedirectButtonProps } from '@tbe/interface';
 import { trackEvent } from '@tbe/utils';
+import { usePathname, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const LoginRedirectButton = ({
   text = 'Login to Start',
   className = '',
 }: LoginRedirectButtonProps) => {
   const router = useRouter();
+  const pathname = usePathname();
   const { status } = useSession();
+
+  // Determine the correct auth route based on current pathname
+  // Prep-yatra uses /auth, platform uses /login
+  const getAuthRoute = () => {
+    // Check if we're in prep-yatra app (has /auth route)
+    if (pathname === '/auth' || pathname.startsWith('/dashboard') || pathname.startsWith('/pricing') || pathname.startsWith('/journey')) {
+      return '/auth';
+    }
+    // Default to /login for platform app
+    return '/login';
+  };
 
   const handleLoginRedirect = () => {
     if (status === 'unauthenticated') {
@@ -22,11 +33,14 @@ const LoginRedirectButton = ({
       } catch {
         /* ignore analytics errors */
       }
-      router.push(`/login?redirect=${encodeURIComponent(router.asPath)}`);
+      const authRoute = getAuthRoute();
+      const redirectParam = authRoute === '/auth' ? 'callbackUrl' : 'redirect';
+      router.push(`${authRoute}?${redirectParam}=${encodeURIComponent(pathname)}`);
     }
   };
 
-  if (status === 'authenticated' || router.pathname === '/login') {
+  const authRoute = getAuthRoute();
+  if (status === 'authenticated' || pathname === '/login' || pathname === '/auth') {
     return null;
   }
 

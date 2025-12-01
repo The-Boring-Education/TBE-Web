@@ -1,8 +1,7 @@
-import * as React from "react"
 import * as MenubarPrimitive from "@radix-ui/react-menubar"
-import { Check, ChevronRight, Circle } from "lucide-react"
-
 import { cn } from "@tbe/utils"
+import { Check, ChevronRight, Circle } from "lucide-react"
+import * as React from "react"
 
 const MenubarMenu = MenubarPrimitive.Menu as React.ElementRef<
     typeof MenubarPrimitive.Menu
@@ -221,19 +220,18 @@ MenubarShortcut.displayname = "MenubarShortcut"
 
 export {
     Menubar,
-    MenubarMenu,
-    MenubarTrigger,
-    MenubarContent,
-    MenubarItem,
-    MenubarSeparator,
-    MenubarLabel,
     MenubarCheckboxItem,
+    MenubarContent,
+    MenubarGroup,
+    MenubarItem,
+    MenubarLabel,
+    MenubarMenu,
+    MenubarPortal,
     MenubarRadioGroup,
     MenubarRadioItem,
-    MenubarPortal,
+    MenubarSeparator,
+    MenubarShortcut,
+    MenubarSub,
     MenubarSubContent,
     MenubarSubTrigger,
-    MenubarGroup,
-    MenubarSub,
-    MenubarShortcut
-}
+    MenubarTrigger}

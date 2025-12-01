@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
-
 import { FlexContainer, InputFieldContainer, Text } from '@tbe/components';
 import { useUsername } from '@tbe/hooks';
 import type { StepUsernameProps } from '@tbe/interface';
+import { useEffect } from 'react';
 
 const StepUsername = ({
   userName,

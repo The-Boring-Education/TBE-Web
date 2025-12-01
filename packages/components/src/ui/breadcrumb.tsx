@@ -1,8 +1,7 @@
 import {Slot} from "@radix-ui/react-slot";
+import {cn} from "@tbe/utils";
 import {ChevronRight, MoreHorizontal} from "lucide-react";
 import * as React from "react";
-
-import {cn} from "@tbe/utils";
 
 const Breadcrumb = React.forwardRef<
   HTMLElement,
@@ -106,10 +105,9 @@ BreadcrumbEllipsis.displayName = "BreadcrumbElipssis";
 
 export {
   Breadcrumb,
-  BreadcrumbList,
+  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
+  BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
-  BreadcrumbEllipsis
-};
+  BreadcrumbSeparator};

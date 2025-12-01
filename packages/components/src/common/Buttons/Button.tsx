@@ -1,7 +1,7 @@
+import type { ButtonProps } from '@tbe/interface';
 import { motion } from 'framer-motion';
 
 import LoadingSpinner from '../LoadingSpinner';
-import type { ButtonProps } from '@tbe/interface';
 
 /**
  * Button component with enhanced hover animations

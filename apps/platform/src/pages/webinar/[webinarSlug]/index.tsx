@@ -3,6 +3,7 @@ import {
   BackgroundImage,
   Button,
   CardSectionContainer,
+  CertificateModal,
   FlexContainer,
   Image,
   LinkButton,
@@ -18,7 +19,7 @@ import { useAnalytics, useApi, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   WebinarPageProps,
-    } from '@tbe/interface';
+} from '@tbe/interface';
 import { formatDate, getWebinarPageProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
@@ -48,6 +49,7 @@ const WebinarPage = ({
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [registrationErrorMessage, setRegistrationErrorMessage] = useState<
     null | string
   >();
@@ -63,8 +65,9 @@ const WebinarPage = ({
     url: `${routes.api.webinar}/${slug}`,
   });
 
-  const onGenerateCertificate = async () => {
+  const onGenerateCertificate = async (certificateName: string) => {
     try {
+      setRegistrationErrorMessage(null);
       const {
         status,
         error,
@@ -76,6 +79,7 @@ const WebinarPage = ({
 
       if (!status || error) {
         setRegistrationErrorMessage('Certificate generation failed');
+        return;
       }
 
       if (isRegistered) {
@@ -85,7 +89,7 @@ const WebinarPage = ({
           body: {
             type: 'WEBINAR',
             userId: user?.id,
-            userName: user?.name,
+            userName: certificateName || user?.name, // Use edited name or fallback to user name
             programId: webinarId,
             programName: name,
             date: formatDate({
@@ -109,6 +113,7 @@ const WebinarPage = ({
             },
           });
 
+          setIsModalOpen(false); // Close modal on success
           router.push(`/certificate/${data._id}`);
         }
       } else {
@@ -116,7 +121,20 @@ const WebinarPage = ({
       }
     } catch (error) {
       console.error('Detailed error while generating certificate: ', error);
+      setRegistrationErrorMessage(
+        'Failed to generate certificate. Please try again.'
+      );
     }
+  };
+
+  const handleOpenModal = () => {
+    setRegistrationErrorMessage(null); // Clear any previous errors
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setRegistrationErrorMessage(null);
   };
 
   let certificateContainer, generateCertificateCard, recordingVideoContainer;
@@ -188,7 +206,7 @@ const WebinarPage = ({
               animationClasses='w-fit'
               text='Generate Certificate'
               variant='SUCCESS'
-              onClick={onGenerateCertificate}
+              onClick={handleOpenModal}
             />
           </FlexContainer>
 
@@ -308,6 +326,14 @@ const WebinarPage = ({
         {registerationContainer}
         {certificateContainer}
         {recordingVideoContainer}
+        <CertificateModal
+          isOpen={isModalOpen}
+          closeModal={handleCloseModal}
+          userName={userName}
+          userEmail={userEmail}
+          onGenerateCertificate={onGenerateCertificate}
+          errorMessage={registrationErrorMessage}
+        />
 
         <FlexContainer className='m-auto' direction='col'>
           <FlexContainer

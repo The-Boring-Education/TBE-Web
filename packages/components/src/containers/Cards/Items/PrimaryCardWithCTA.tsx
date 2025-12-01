@@ -20,7 +20,7 @@ const PrimaryCardWithCTA = ({
   return (
     <GradientContainer
       childrenClassName='p-2 h-full flex flex-col relative'
-      className={`md:w-[45%] lg:w-[30%] max-w-md ${border} flex-1`}
+      className={`md:w-[45%] lg:w-[30%] max-w-md ${border} flex-1 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer`}
     >
       {isPurchased ? (
         <div className='absolute top-3 right-3 bg-green-100 text-green-600 text-[12px] font-medium px-3 py-[4px] rounded-full border border-green-300 shadow-sm z-10'>

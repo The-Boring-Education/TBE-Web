@@ -1,13 +1,14 @@
-import {Plus} from "lucide-react";
-import React, {Suspense} from "react";
+import type { UserProfile } from "@tbe/interface";
+import type { PrepLog } from "@tbe/types";
+import type { RecruiterContact } from "@tbe/types";
+import { Plus } from "lucide-react";
+import React, { Suspense } from "react";
 
 import Button from "../../common/Buttons/Button";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "../ui/tabs";
+import LoadingSpinner from "../../common/LoadingSpinner";
 import Text from "../../common/Typography/Text";
-import FlexContainer from "../../containers/Page/common/FlexContainer";
-import type {PrepLog} from "@tbe/types";
-import type {RecruiterContact} from "@tbe/types";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 // Lazy load components
 const PrepLogsList = React.lazy(() => import("../features/PrepLogsList"));
@@ -16,39 +17,27 @@ const ChallengeSection = React.lazy(() => import("../features/ChallengeSection")
 const UserSkillsShowcase = React.lazy(() => import("../showcase/UserSkillsShowcase"));
 
 interface DashboardTabsProps {
-    prepLogs: PrepLog[]
-    recruiterContacts: RecruiterContact[]
+    prepLogs: PrepLog[];
+    recruiterContacts: RecruiterContact[];
     user?: {
-        id?: string
-        name?: string
-        email?: string
-    }
-    profile?: {
-        userSkills?: string[]
-        userSkillsLastUpdated?: string
-        prepYatra?: {
-            skills?: string[]
-        }
-    }
-    onPrepLogModalOpen: () => void
-    onRecruiterModalOpen: () => void
-    onSkillsModalOpen: () => void
-    onContactUpdated: () => void
-    onLogDeleted: (deletedLogId: string) => void
-    onContactDeleted: (deletedContactId: string) => void
+        id?: string;
+        name?: string;
+        email?: string;
+    };
+    userProfile?: UserProfile;
+    onPrepLogModalOpen: () => void;
+    onRecruiterModalOpen: () => void;
+    onSkillsModalOpen: () => void;
+    onContactUpdated: () => void;
+    onLogDeleted: (deletedLogId: string) => void;
+    onContactDeleted: (deletedContactId: string) => void;
 }
-
-const ComponentLoader = () => (
-    <div className="flex items-center justify-center h-32">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-    </div>
-);
 
 const DashboardTabs: React.FC<DashboardTabsProps> = ({
     prepLogs,
     recruiterContacts,
     user,
-    profile,
+    userProfile,
     onPrepLogModalOpen,
     onRecruiterModalOpen,
     onSkillsModalOpen,
@@ -58,12 +47,69 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 }) => {
     return (
         <Tabs defaultValue="challenges" className="space-y-6">
-            <TabsList className="grid w-full gap-2 grid-cols-4">
-                <TabsTrigger className="border-2 border-primary" value="challenges">Challenges</TabsTrigger>
-                <TabsTrigger className="border-2 border-primary" value="prep-logs">Prep Logs</TabsTrigger>
-                <TabsTrigger className="border-2 border-primary" value="recruiters">Recruiters</TabsTrigger>
-                <TabsTrigger className="border-2 border-primary" value="skills">Skills</TabsTrigger>
+           <TabsList className="grid w-full gap-2 grid-cols-4">
+            <TabsTrigger
+                value="challenges"
+                className="
+                bg-primary text-white
+                border-2 border-primary
+                transition-all duration-300
+
+                data-[state=active]:bg-white
+                data-[state=active]:text-primary
+                data-[state=active]:border-primary
+                "
+            >
+                Challenges
+            </TabsTrigger>
+
+            <TabsTrigger
+                value="prep-logs"
+                className="
+                bg-primary text-white
+                border-2 border-primary
+                transition-all duration-300
+
+                data-[state=active]:bg-white
+                data-[state=active]:text-primary
+                data-[state=active]:border-primary
+                "
+            >
+                Prep Logs
+            </TabsTrigger>
+
+            <TabsTrigger
+                value="recruiters"
+                className="
+                bg-primary text-white
+                border-2 border-primary
+                transition-all duration-300
+
+                data-[state=active]:bg-white
+                data-[state=active]:text-primary
+                data-[state=active]:border-primary
+                "
+            >
+                Recruiters
+            </TabsTrigger>
+
+            <TabsTrigger
+                value="skills"
+                className="
+                bg-primary text-white
+                border-2 border-primary
+                transition-all duration-300
+
+                data-[state=active]:bg-white
+                data-[state=active]:text-primary
+                data-[state=active]:border-primary
+                "
+            >
+                Skills
+            </TabsTrigger>
             </TabsList>
+
+
 
             <TabsContent value="prep-logs" className="space-y-4">
                 <Card>
@@ -84,7 +130,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                         />
                     </CardHeader>
                     <CardContent className="p-4">
-                        <Suspense fallback={<ComponentLoader />}>
+                        <Suspense fallback={<LoadingSpinner />}>
                             <PrepLogsList 
                                 logs={prepLogs}
                                 onLogUpdated={() => {}} 
@@ -97,7 +143,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
             </TabsContent>
 
             <TabsContent value="challenges" className="space-y-4">
-                <Suspense fallback={<ComponentLoader />}>
+                <Suspense fallback={<LoadingSpinner />}>
                     <ChallengeSection userId={user?.id || ""} />
                 </Suspense>
             </TabsContent>
@@ -121,7 +167,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                         />
                     </CardHeader>
                     <CardContent className="p-4">
-                        <Suspense fallback={<ComponentLoader />}>
+                        <Suspense fallback={<LoadingSpinner />}>
                             <RecruiterContactsTable
                                 contacts={recruiterContacts}
                                 onContactUpdated={onContactUpdated}
@@ -151,10 +197,10 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
                         />
                     </CardHeader>
                     <CardContent className="p-4">
-                        <Suspense fallback={<ComponentLoader />}>
+                        <Suspense fallback={<LoadingSpinner />}>
                             <UserSkillsShowcase 
-                                userSkills={profile?.userSkills || []}
-                                lastUpdated={profile?.userSkillsLastUpdated}
+                                userSkills={userProfile?.userSkills || []}
+                                lastUpdated={userProfile?.userSkillsLastUpdated}
                             />
                         </Suspense>
                     </CardContent>

@@ -1,23 +1,19 @@
-import { useState, useEffect } from "react"
+import { useToast } from "@tbe/hooks"
+import type { RecruiterContact } from "@tbe/types"
+import { useEffect,useState } from "react"
 
+import Button from "../../common/Buttons/Button"
+import Text from "../../common/Typography/Text"
+import { useUser } from "../contexts/useAuth"
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
-    DialogHeader,
-    DialogTitle
+    DialogHeader
 } from "../ui/dialog"
 import { InputField } from "../ui/input"
 import { Label } from "../ui/label"
 import { Textarea } from "../ui/textarea"
-import { useToast } from "@tbe/hooks"
-import { useUser } from "../contexts/useAuth"
-import type { RecruiterContact } from "@tbe/types"
-import Button from "../../common/Buttons/Button"
-import Text from "../../common/Typography/Text"
-import FlexContainer from "../../containers/Page/common/FlexContainer"
-import { Plus } from "lucide-react"
 
 interface AddRecruiterModalProps {
     isOpen: boolean

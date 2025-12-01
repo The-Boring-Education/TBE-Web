@@ -9,13 +9,13 @@ import {
     UserGroupIcon,
     UsersIcon
 } from "@heroicons/react/24/outline"
+import { useAdmin } from "@tbe/hooks"
 import { useRouter } from "next/router"
 import React from "react"
 
 import Button from "../common/Buttons/Button"
 import LoadingSpinner from "../common/LoadingSpinner"
 import Text from "../common/Typography/Text"
-import { useAdmin } from "@tbe/hooks"
 
 interface AdminLayoutProps {
     children: React.ReactNode

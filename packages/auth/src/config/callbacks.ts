@@ -1,5 +1,5 @@
-import type { ExtendedUser } from "../types"
 import { createOrFindUser, getUserByEmail } from "../services"
+import type { ExtendedUser } from "../types"
 
 /**
  * Default signIn callback
@@ -66,6 +66,7 @@ export const defaultSessionCallback = async (
             session.user.purpose = userData.purpose
             session.user.contactNo = userData.contactNo
         }
+
 
         return session
     } catch (error) {

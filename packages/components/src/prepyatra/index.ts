@@ -1,6 +1,3 @@
-// Layout Components
-export * from "./layout";
-
 // Modal Components  
 export * from "./modals";
 
@@ -20,9 +17,8 @@ export * from "./gamification";
 export * from "./features";
 
 // Popover Components
-export * from "./popovers";
-
 export * from "./contexts";
+export * from "./popovers";
 
 
 // UI Components are imported directly from their paths when needed

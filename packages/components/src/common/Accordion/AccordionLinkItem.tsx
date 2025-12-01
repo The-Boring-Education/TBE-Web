@@ -1,9 +1,8 @@
 import { Disclosure } from '@headlessui/react';
-import { FaRegCircle } from 'react-icons/fa';
-import { IoIosCheckmarkCircle } from 'react-icons/io';
-
 import { Link } from '@tbe/components';
 import type { AccordionLinkItemProps } from '@tbe/interface';
+import { FaRegCircle } from 'react-icons/fa';
+import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 const AccordionLinkItem = ({
   label,

@@ -38,7 +38,6 @@ const AppContent = ({
       isAuth: false,
       loading: true,
     };
-  const [isSyncingSession, setIsSyncingSession] = useState(false);
 
   // Ensure we're on the client side before accessing window
   useEffect(() => {
@@ -54,6 +53,8 @@ const AppContent = ({
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [router.events]);
+
+  const [isSyncingSession, setIsSyncingSession] = useState(false);
 
   useEffect(() => {
     // Only run on client side

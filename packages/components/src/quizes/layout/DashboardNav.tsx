@@ -1,18 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useAuth } from '@tbe/auth'
+import { Button } from '@tbe/components'
 import { 
     Brain, 
-    LogOut, 
-    ChevronDown
-} from 'lucide-react'
+    ChevronDown,
+    LogOut} from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import React from 'react'
-import { Button } from '@tbe/components'
+
+import { PointsDisplay } from '../PointsDisplay'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { useToast } from '../ui/use-toast'
-import { PointsDisplay } from '../PointsDisplay'
 
 
 

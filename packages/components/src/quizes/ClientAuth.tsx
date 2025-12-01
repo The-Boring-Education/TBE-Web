@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
-import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@tbe/auth"
+import { usePathname,useRouter } from "next/navigation"
+import { useEffect, useRef,useState } from "react"
 
 interface ClientAuthProps {
     children: React.ReactNode

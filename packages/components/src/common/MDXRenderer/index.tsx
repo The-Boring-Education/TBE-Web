@@ -1,7 +1,6 @@
+import type { MDXRendererProps } from '@tbe/interface';
 import MarkdownIt from 'markdown-it';
 import { Fragment, useEffect, useRef } from 'react';
-
-import type { MDXRendererProps } from '@tbe/interface';
 
 const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
   const md = new MarkdownIt({

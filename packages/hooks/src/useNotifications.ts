@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
-
 import { routes } from '@tbe/constants';
 import type { NotificationItemProps } from '@tbe/interface';
+import { useEffect, useState } from 'react';
 
 import useApi from './useApi';
 

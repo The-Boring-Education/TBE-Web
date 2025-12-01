@@ -1,4 +1,5 @@
 import { ProtectedRoute } from "@tbe/auth"
+import { Navbar } from "@tbe/components"
 import { Loader2 } from "lucide-react"
 
 import BuilderMain from "@/components/builder/BuilderMain"
@@ -40,6 +41,7 @@ export default function Builder() {
         <ProtectedRoute
             redirectTo='/auth'
             loadingComponent={<LoadingScreen />}>
+                <Navbar variant='resume-yatra' />
             <BuilderContent />
         </ProtectedRoute>
     )

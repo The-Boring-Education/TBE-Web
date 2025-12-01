@@ -6,9 +6,9 @@ import {
   PageHeroMetaContainer,
   Text,
 } from '@tbe/components';
+import { useGamifiedAction } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useAnalytics, useApi, useUser } from '@tbe/hooks';
-import { useGamifiedAction } from '@tbe/components';
 import type { SheetHeroContainerProps } from '@tbe/interface';
 
 const SheetHeroContainer = ({

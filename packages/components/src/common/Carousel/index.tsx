@@ -1,10 +1,9 @@
 'use client'
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
+import type { CarouselProps } from '@tbe/interface';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-
-import type { CarouselProps } from '@tbe/interface';
 
 const Carousel = ({ items, renderItem }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);

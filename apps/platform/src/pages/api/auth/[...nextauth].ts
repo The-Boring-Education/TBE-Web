@@ -1,26 +1,16 @@
-import { createAuthOptions } from '@tbe/auth';
-import NextAuth from 'next-auth';
+import { createNextAuthHandler, getAuthOptions } from "@tbe/auth"
 
 /**
  * NextAuth configuration for Platform app
- * Uses centralized auth with default callbacks
+ * 🚀 Plug-and-play setup with redirect logic enabled
  */
-const authOptions = createAuthOptions({
-  pages: {
-    signIn: '/login',
-    error: '/login',
-  },
-  useDefaultCallbacks: true, // Use centralized auth logic
-});
+const handler = createNextAuthHandler({
+    pages: {
+        signIn: "/login",
+        error: "/login"
+    },
+    enableRedirectLogic: true
+})
 
-// Add custom redirect logic if needed
-if (authOptions.callbacks) {
-  authOptions.callbacks.redirect = async ({ url, baseUrl }) => {
-    if (url.startsWith('/')) return `${baseUrl}${url}`;
-    if (new URL(url).origin === baseUrl) return url;
-    return baseUrl;
-  };
-}
-
-export default NextAuth(authOptions);
-export { authOptions };
+export default handler
+export const authOptions = getAuthOptions(handler)

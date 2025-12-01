@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@tbe/auth'
 import { DashboardNav,ProtectedRoute } from '@tbe/components/quizes'
 import { Card, CardContent, CardHeader, CardTitle } from '@tbe/components/quizes'
@@ -21,7 +22,6 @@ import {
     TrendingUp, 
     Trophy} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 
 // Rank Badge Component
 interface RankBadgeProps {

@@ -1,9 +1,8 @@
 import { Button } from '@headlessui/react';
-import React from 'react';
-import { FaStar } from 'react-icons/fa';
-
 import { FlexContainer } from '@tbe/components';
 import type { StarRatingCardProps } from '@tbe/interface';
+import React from 'react';
+import { FaStar } from 'react-icons/fa';
 
 const StarRatingCard = ({ rating, onClick }: StarRatingCardProps) => (
   <FlexContainer className='mb-2'>

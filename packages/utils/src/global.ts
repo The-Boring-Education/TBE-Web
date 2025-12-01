@@ -1,9 +1,16 @@
-import { getSEOMeta, IN_DEV_PAGES, routes, seoCommonMeta } from '@tbe/constants';
+import {
+  getSEOMeta,
+  IN_DEV_PAGES,
+  routes,
+  seoCommonMeta,
+  envConfig,
+  type AppIdentifier,
+} from "@tbe/constants";
 import type {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
   ProjectPickedPageProps,
-} from '@tbe/interface';
+} from "@tbe/interface";
 
 import {
   fetchAPIData,
@@ -13,16 +20,29 @@ import {
   getYoufocusSkillName,
   isProgramActive,
   isUserAuthenticated,
-} from '.';
+} from ".";
 
-const getPreFetchProps = async ({ slug }: any) => {
+/**
+ * Get pre-fetch props for Next.js pages with SEO support
+ *
+ * @param slug - Route slug (e.g., routes.home, routes.login)
+ * @param appId - App identifier (optional, defaults to 'platform')
+ * @returns Next.js getStaticProps/getServerSideProps compatible object
+ */
+const getPreFetchProps = async ({
+  slug,
+  appId = "platform" as AppIdentifier,
+}: {
+  slug?: string;
+  appId?: AppIdentifier;
+}) => {
   let baseSlug = routes.home;
 
   if (slug) {
-    baseSlug = slug.split('?')[0];
+    baseSlug = slug.split("?")[0] || routes.home;
   }
 
-  const seoMeta = getSEOMeta(baseSlug);
+  const seoMeta = getSEOMeta(baseSlug, appId);
 
   const redirect = !seoMeta && {
     destination: routes.home,
@@ -67,8 +87,8 @@ const getProjectPageProps = async (context: any) => {
       const seoMeta = getSEOMeta(slug);
 
       // Determine which chapter to show
-      let meta = project.meta || '';
-      let currentChapterId = '';
+      let meta = project.meta || "";
+      let currentChapterId = "";
 
       // If section and chapter IDs are provided in URL, use those
       if (sectionId && chapterId) {
@@ -85,9 +105,13 @@ const getProjectPageProps = async (context: any) => {
         }
       } else {
         // No specific chapter requested - find the first incomplete chapter or first chapter
-        const allChapters = project.sections.flatMap((section) => section.chapters);
-        const firstIncompleteChapter = allChapters.find((chapter) => !chapter.isCompleted);
-        
+        const allChapters = project.sections.flatMap(
+          (section) => section.chapters
+        );
+        const firstIncompleteChapter = allChapters.find(
+          (chapter) => !chapter.isCompleted
+        );
+
         if (firstIncompleteChapter) {
           // Show first incomplete chapter
           currentChapterId = firstIncompleteChapter.chapterId.toString();
@@ -112,7 +136,7 @@ const getProjectPageProps = async (context: any) => {
         },
       };
     } catch (error) {
-      console.error('Error fetching project data:', error);
+      console.error("Error fetching project data:", error);
     }
   }
 
@@ -223,18 +247,18 @@ const getCoursePageProps = async (context: any) => {
 
       const seoMeta = {
         title: `${name} | Shiksha | The Boring Education`,
-        siteName: 'Shiksha The Boring Education',
+        siteName: "Shiksha The Boring Education",
         description,
         url: `${routes.shiksha}/${courseSlug}`,
         keywords:
-          'Shiksha online courses, advanced programming tutorials, free tech education, career development for professionals, skill enhancement programs, coding bootcamps, tech webinars, online learning for college students, GitHub projects, tech career growth, free certifications, free courses',
+          "Shiksha online courses, advanced programming tutorials, free tech education, career development for professionals, skill enhancement programs, coding bootcamps, tech webinars, online learning for college students, GitHub projects, tech career growth, free certifications, free courses",
         ...seoCommonMeta,
       };
 
       // Always show the first chapter by default
       const firstChapter = course.chapters?.[0];
-      let meta = course.meta || '';
-      let currentChapterId = '';
+      let meta = course.meta || "";
+      let currentChapterId = "";
 
       if (firstChapter) {
         currentChapterId = firstChapter._id.toString();
@@ -251,7 +275,7 @@ const getCoursePageProps = async (context: any) => {
         },
       };
     } catch (error) {
-      console.error('Error fetching course data:', error);
+      console.error("Error fetching course data:", error);
     }
   }
 
@@ -294,8 +318,8 @@ const getSheetPageProps = async (context: any) => {
 
       const sheet: BaseInterviewSheetResponseProps = data;
 
-      let meta = sheet.meta ?? '';
-      let currentQuestionId = '';
+      let meta = sheet.meta ?? "";
+      let currentQuestionId = "";
 
       const firstQuestion = sheet.questions?.[0];
       if (firstQuestion && firstQuestion._id) {
@@ -312,13 +336,13 @@ const getSheetPageProps = async (context: any) => {
           slug,
           seoMeta,
           sheet,
-          meta: meta ?? '',
+          meta: meta ?? "",
           currentQuestionId,
           isEnrolled: sheet.isEnrolled ?? null,
         },
       };
     } catch (error) {
-      console.error('Error fetching sheet data:', error);
+      console.error("Error fetching sheet data:", error);
     }
   }
 
@@ -366,27 +390,37 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
 
   const seoMeta = getSEOMeta(slug);
 
-  const { status, data: jobData } = await fetchAPIData(routes.api.unskilled);
+  // Fetch graph data directly from Unskilled Platfrom API
+  try {
+    const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`);
 
-  if (!status) {
+    if (!response.ok) {
+      throw new Error(`API responded with status ${response.status}`);
+    }
+
+    const apiResponse = await response.json();
+    const jobData = apiResponse.data || null;
+
+    const isDev = IN_DEV_PAGES.some((page) => page === slug);
+
     return {
-      redirect: {
-        destination: routes.home,
+      props: {
+        seoMeta,
+        jobData,
+        isDev,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching Unskilled data:", error);
+    return {
+      props: {
+        seoMeta,
+        jobData: null,
+        isDev: false,
       },
     };
   }
-
-  const isDev = IN_DEV_PAGES.some((page) => page === slug);
-
-  return {
-    props: {
-      seoMeta,
-      jobData,
-      isDev,
-    },
-  };
 };
-
 const getCertificatePageProps = async ({ query: { certificateId } }: any) => {
   const { status, data: certificate } = await fetchAPIData(
     routes.api.certificateById(certificateId)
@@ -402,11 +436,11 @@ const getCertificatePageProps = async ({ query: { certificateId } }: any) => {
 
   const seoMeta = {
     title: `${certificate.programName} | Certificate | The Boring Education`,
-    siteName: 'The Boring Education',
-    description: 'Certificate',
+    siteName: "The Boring Education",
+    description: "Certificate",
     url: `${routes.certificate}/${certificateId}`,
     keywords:
-      'Certificate, The Boring Education, Tech Education, Online Learning',
+      "Certificate, The Boring Education, Tech Education, Online Learning",
     ...seoCommonMeta,
   };
 
@@ -445,7 +479,7 @@ const getWebinarPageProps = async (context: any) => {
     learnings,
     registrationUrl,
     host,
-    recordedVideoUrl = '',
+    recordedVideoUrl = "",
   } = webinar;
 
   const { date, time } = formatDate({
@@ -456,11 +490,11 @@ const getWebinarPageProps = async (context: any) => {
 
   const seoMeta = {
     title: `${name} | The Boring Webinars`,
-    siteName: 'The Boring Education',
+    siteName: "The Boring Education",
     description,
     url: `${routes.webinar}/${slug}`,
     keywords:
-      'Tech Education, Online Learning, Programming, Free Courses, Open Source, Webinars, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      "Tech Education, Online Learning, Programming, Free Courses, Open Source, Webinars, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn",
     ...seoCommonMeta,
   };
 
@@ -482,7 +516,7 @@ const getWebinarPageProps = async (context: any) => {
       registrationUrl,
       recordedVideoUrl,
       bannerImageUrl:
-        'https://wallpapers.com/images/hd/coding-background-9izlympnd0ovmpli.jpg',
+        "https://wallpapers.com/images/hd/coding-background-9izlympnd0ovmpli.jpg",
     },
   };
 };
@@ -490,7 +524,7 @@ const getWebinarPageProps = async (context: any) => {
 const getSkillPlaylistPageProps = async (context: any) => {
   const { query } = context;
   const { q } = query;
-  const skillQuery = typeof q === 'string' ? q : '';
+  const skillQuery = typeof q === "string" ? q : "";
 
   const { status, data: playlists } = await fetchAPIData(
     routes.api.playlistByQuery(skillQuery)
@@ -508,11 +542,11 @@ const getSkillPlaylistPageProps = async (context: any) => {
     title: `${getYoufocusSkillName(
       skillQuery
     )} Playlists | YouFocus| The Boring Education`,
-    siteName: 'YouFocus The Boring Education',
+    siteName: "YouFocus The Boring Education",
     description: `Explore ${skillQuery} playlists and start learning`,
     url: `${routes.explorePlaylistSkill}?q=${skillQuery}`,
     keywords:
-      'Tech Education, Online Learning, Programming, Free Courses, Open Source, Webinars, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn',
+      "Tech Education, Online Learning, Programming, Free Courses, Open Source, Webinars, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn",
     ...seoCommonMeta,
   };
 

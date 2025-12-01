@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
 import { ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+
+import { Badge } from '../ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 const DomainSection = () => {
   const [expandedDomain, setExpandedDomain] = useState<string | null>(null);

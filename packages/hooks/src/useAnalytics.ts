@@ -1,8 +1,7 @@
+import type { TrackEventProps } from '@tbe/types';
+import { installGlobalAnalyticsListeners,trackEvent as sendEvent } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-
-import { trackEvent as sendEvent, installGlobalAnalyticsListeners } from '@tbe/utils';
-import type { TrackEventProps } from '@tbe/types';
 
 const useAnalytics = () => {
   const router = useRouter();

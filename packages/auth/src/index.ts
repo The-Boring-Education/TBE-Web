@@ -1,16 +1,14 @@
 // Configuration
+export {
+    defaultJwtCallback,
+    defaultSessionCallback,
+    defaultSignInCallback} from "./config/callbacks"
 export { createAuthOptions } from "./config/nextauth"
 export {
-    sessionConfig,
-    getCookieConfig,
+    getAuthSecret,
     getAuthUrl,
-    getAuthSecret
-} from "./config/session"
-export {
-    defaultSignInCallback,
-    defaultSessionCallback,
-    defaultJwtCallback
-} from "./config/callbacks"
+    getCookieConfig,
+    sessionConfig} from "./config/session"
 
 // Providers
 export { createGoogleProvider } from "./providers/google"
@@ -26,7 +24,10 @@ export { AuthProvider } from "./components/AuthProvider"
 export { ProtectedRoute } from "./components/ProtectedRoute"
 
 // Middleware
-export { withAuth, withAdminAuth } from "./middleware/withAuth"
+export { withAdminAuth,withAuth } from "./middleware/withAuth"
+
+// Plug-and-Play Handler
+export { createNextAuthHandler, getAuthOptions } from "./handlers/nextAuthHandler"
 
 // Types
-export type { ExtendedUser, AuthConfig, CreateUserData } from "./types"
+export type { AppAuthConfig,AuthConfig, CreateUserData, ExtendedUser } from "./types"

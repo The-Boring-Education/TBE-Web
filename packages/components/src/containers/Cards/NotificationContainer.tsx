@@ -1,5 +1,4 @@
 import { LinkIcon } from '@heroicons/react/20/solid';
-
 import { FlexContainer, Link, Section, Text } from '@tbe/components';
 import { useNotifications } from '@tbe/hooks';
 

@@ -1,7 +1,6 @@
-import { motion } from 'framer-motion';
-
 import { FlexContainer, Text } from '@tbe/components';
 import type { OnboardingProgressBarProps } from '@tbe/interface';
+import { motion } from 'framer-motion';
 
 const OnboardingProgressBar = ({
   currentStep,
