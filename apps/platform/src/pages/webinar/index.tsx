@@ -44,8 +44,8 @@ const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
           />
         }
         sectionHeaderProps={{
-          heading: 'Learn Industry Skills',
-          focusText: 'with Live Workshops',
+          heading: 'Learn Industry Skills with',
+          focusText: 'Live Workshops',
         }}
       />
       <Section id={routes.internals.landing.webinar}>

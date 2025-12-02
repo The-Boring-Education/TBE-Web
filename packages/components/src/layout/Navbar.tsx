@@ -77,7 +77,7 @@ const Navbar = ({
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <nav className={`flex items-center justify-between p-2 lg:px-8 ${borderClass}`}>
-        <div className='w-100 flex'>
+        <div className='flex items-center'>
           {finalBranding}
         </div>
         {shouldUseCustomActions ? (
@@ -157,7 +157,7 @@ const Navbar = ({
 
                 {requiresAuth && <NotificationPopover />}
                 {showGamification && <UserPointButton />}
-                <LoginRedirectButton text='Login' />
+                {requiresAuth && <LoginRedirectButton text='Login' />}
                 {requiresAuth && <UserAvatar dashboardRoute={finalDashboardRoute} />}
               </div>
             )}
@@ -199,14 +199,16 @@ const Navbar = ({
                     direction='col'
                     itemCenter={false}
                   >
-                    <FlexContainer
-                      className='gap-1'
-                      direction='col'
-                      itemCenter={false}
-                      justifyCenter={false}
-                    >
-                      <LoginRedirectButton text='Login' />
-                    </FlexContainer>
+                    {requiresAuth && (
+                      <FlexContainer
+                        className='gap-1'
+                        direction='col'
+                        itemCenter={false}
+                        justifyCenter={false}
+                      >
+                        <LoginRedirectButton text='Login' />
+                      </FlexContainer>
+                    )}
 
                     <MobileNavbarLinksContainer
                       links={TOP_NAVIGATION.cohorts}

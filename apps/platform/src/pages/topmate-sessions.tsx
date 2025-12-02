@@ -1,5 +1,6 @@
-import { FlexContainer, Image,LandingPageHero, LinkButton, Section, SectionHeaderContainer, SEO, Text } from '@tbe/components';
-import { getSEOMeta, MENTORSHIP_SERVICES_CARDS, routes,STATIC_FILE_PATH } from '@tbe/constants';
+import { CardContainerA, FlexContainer, Image,LandingPageHero, LinkButton, Section, SectionHeaderContainer, SEO, Text } from '@tbe/components';
+import { generateSectionPath, getSEOMeta, LINKS, MENTORSHIP_SERVICES_CARDS, routes,STATIC_FILE_PATH } from '@tbe/constants';
+import router from 'next/router';
 import { Fragment } from 'react';
 
 // Custom card component specifically for topmate-sessions
@@ -46,16 +47,15 @@ const TopmateServiceCard = ({ card }: { card: any }) => (
 
 const TopmateSessionsPage = () => {
   const seoMeta = getSEOMeta(routes.home);
-
+  
   // Debug: Log the data being used
-  console.log('MENTORSHIP_SERVICES_CARDS:', MENTORSHIP_SERVICES_CARDS);
 
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <LandingPageHero
-        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/mentorship.svg`}
-        heroText='Connect with industry professionals for personalized guidance on your tech career journey'
+        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/hero-image.svg`}
+        heroText='Get Personalized Guidance for your Tech Career.'
         primaryButton={
           <LinkButton
             buttonProps={{
@@ -80,10 +80,10 @@ const TopmateSessionsPage = () => {
           />
         }
         sectionHeaderProps={{
-          heading: 'Get',
-          focusText: 'Personalized Mentorship',
+          heading: 'Get Personalized',
+          focusText: ' Mentorship',
         }}
-      />
+      />  
       
       {/* Custom Services Section */}
       <Section className='md:px-8 md:py-16 px-2 py-8'>
@@ -104,39 +104,14 @@ const TopmateSessionsPage = () => {
       </Section>
 
       {/* Why Choose Us Section */}
-      <Section className='md:px-8 md:py-16 px-2 py-8 bg-lightBG'>
-        <FlexContainer className='gap-8' direction='col'>
-          <SectionHeaderContainer
-            focusText='Why Choose Us'
-            heading='Expert Mentorship'
-            headingLevel={2}
-            subtext='Get personalized guidance from industry professionals who have walked the same path'
-          />
-          <FlexContainer className='gap-6 md:flex-row flex-col'>
-            <div className='flex-1 bg-white p-6 rounded-2 shadow-sm'>
-              <div className='w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4'>
-                <span className='text-2xl'>🎯</span>
-              </div>
-              <Text level='h4' className='font-bold mb-2'>Personalized Approach</Text>
-              <Text level='p' className='text-grey'>Every session is tailored to your specific needs, goals, and current skill level</Text>
-            </div>
-            <div className='flex-1 bg-white p-6 rounded-2 shadow-sm'>
-              <div className='w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mb-4'>
-                <span className='text-2xl'>💼</span>
-              </div>
-              <Text level='h4' className='font-bold mb-2'>Industry Experience</Text>
-              <Text level='p' className='text-grey'>Learn from professionals working at top tech companies with real-world insights</Text>
-            </div>
-            <div className='flex-1 bg-white p-6 rounded-2 shadow-sm'>
-              <div className='w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center mb-4'>
-                <span className='text-2xl'>🚀</span>
-              </div>
-              <Text level='h4' className='font-bold mb-2'>Proven Results</Text>
-              <Text level='p' className='text-grey'>Join hundreds of students who have successfully landed their dream tech jobs</Text>
-            </div>
-          </FlexContainer>
-        </FlexContainer>
-      </Section>
+      <div id='features-section'>
+        <CardContainerA
+          borderColour={4}
+          cards={MENTORSHIP_SERVICES_CARDS}
+          focusText='Differently'
+          heading='How It Works'
+        />
+      </div>
 
       {/* How It Works Section */}
       <Section className='md:px-8 md:py-16 px-2 py-8'>
