@@ -404,19 +404,19 @@ const DSASection = () => {
                   🤔 New to DSA? Understanding the Basics
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
+                  <div className="bg-white p-4 rounded-lg shadow-sm border borderColor2 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:border-purple-400">
                     <h4 className="font-semibold text-blue-600 mb-2">Data Structures</h4>
                     <p className="text-gray-600">
                       Ways to organize and store data (Arrays, Trees, Graphs, etc.). Think of them as containers with specific rules.
                     </p>
                   </div>
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
+                  <div className="bg-white p-4 rounded-lg shadow-sm border borderColor2 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:border-purple-400">
                     <h4 className="font-semibold text-green-600 mb-2">Algorithms</h4>
                     <p className="text-gray-600">
                       Step-by-step procedures to solve problems (Sorting, Searching, Dynamic Programming, etc.).
                     </p>
                   </div>
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
+                  <div className="bg-white p-4 rounded-lg shadow-sm border borderColor2 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:border-purple-400">
                     <h4 className="font-semibold text-purple-600 mb-2">Patterns</h4>
                     <p className="text-gray-600">
                       Common problem-solving techniques (Two Pointers, Sliding Window, etc.) that work across multiple problems.
