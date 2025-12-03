@@ -50,20 +50,24 @@ const generatePaymentOrderId = (): string =>
     userId,
     customerName,
     customerEmail,
-  }: BuildOrderPayloadProps) => ({
-    order_id: orderId,
-    order_amount: amount,
-    order_currency: 'INR',
-    customer_details: {
-      customer_id: userId,
-      customer_name: customerName,
-      customer_email: customerEmail,
-      customer_phone: '0000000000',
-    },
-    order_meta: {
-      return_url: `${envConfig.PLATFORM_URL}/payment/status?order_id=${orderId}`,
-    },
-  });
+  }: BuildOrderPayloadProps) => {
+    
+
+    return {
+      order_id: orderId,
+      order_amount: amount,
+      order_currency: 'INR',
+      customer_details: {
+        customer_id: userId,
+        customer_name: customerName,
+        customer_email: customerEmail,
+        customer_phone: '0000000000',
+      },
+      order_meta: {
+        return_url: `${envConfig.PLATFORM_URL}/payment/status?order_id=${orderId}`,
+      },
+    };
+  };
   
   const createCashfreeOrder = async (
     orderPayload: ReturnType<typeof buildOrderPayload>

@@ -35,10 +35,12 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
 
-  const { isPurchased } = usePaymentStatus({
+  //checking payemnt status for interview sheet
+    const { isPurchased } = usePaymentStatus({
     userId: user?.id,
     productId: sheet?._id,
     isPremium: sheet?.isPremium,
+    productType: 'INTERVIEW_SHEET',
   });
 
   const { makeRequest, loading } = useApi('interview-prep/enrollSheet');
@@ -65,7 +67,9 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
     return getDiscountDisplayInfo(sheetModel, appliedCoupon || undefined);
   }, [sheet, appliedCoupon]);
 
+  //checking if the interview sheet is locked
   const isLocked = sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
+  //checking if the user can start now
   const canStartNow = sheet?.isEnrolled || (!sheet?.isPremium) || isPurchased;
 
   const enrollSheet = () => {

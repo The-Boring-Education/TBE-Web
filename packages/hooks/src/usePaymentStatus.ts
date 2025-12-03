@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 const usePaymentStatus = ({
   userId,
   productId,
+  productType,
   isPremium,
 }: usePaymentStatusProps) => {
   const [isPurchased, setIsPurchased] = useState<boolean | null>(null);
@@ -12,8 +13,18 @@ const usePaymentStatus = ({
   useEffect(() => {
     const checkPaymentStatus = async () => {
       try {
+        // Build query string with optional productType
+        const queryParams = new URLSearchParams({
+          userId: userId || '',
+          productId: productId,
+        });
+        
+        if (productType) {
+          queryParams.append('productType', productType);
+        }
+
         const response = await fetch(
-          `${routes.api.base}${routes.api.checkStatus}?userId=${userId}&productId=${productId}`,
+          `${routes.api.base}${routes.api.checkStatus}?${queryParams.toString()}`,
           {
             method: 'GET',
           }
@@ -40,7 +51,7 @@ const usePaymentStatus = ({
     } else {
       setIsPurchased(true);
     }
-  }, [userId, productId, isPremium]);
+  }, [userId, productId, productType, isPremium]);
 
   const isLocked = isPremium && isPurchased === false;
 

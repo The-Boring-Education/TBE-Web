@@ -95,12 +95,16 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
+
+  //checking payemnt status for interview sheet
   const { isPurchased } = usePaymentStatus({
     userId: user?.id,
     productId: sheet?._id,
+    productType: 'INTERVIEW_SHEET',
     isPremium: sheet?.isPremium,
   });
 
+  //checking if the interview sheet is locked
   const isLocked =
     sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
 

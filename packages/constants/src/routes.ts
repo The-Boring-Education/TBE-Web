@@ -120,7 +120,7 @@ const routes = {
     unskilled: "/unskilled",
     404: "/404",
     api: {
-        base: `${envConfig.API_URL}/api/v1`,
+        base: envConfig.API_URL,
         projects: "/projects",
         webinar: "/webinar",
         project: (project: string) => `/projects/${project}`,
