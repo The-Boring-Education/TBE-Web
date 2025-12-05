@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const { withSentryConfig } = require('@sentry/nextjs');
 const withTM = require('next-transpile-modules')([
   '@tbe/auth',
@@ -30,9 +29,9 @@ const nextConfig = {
   compress: true,
 
   // experimental: {
-    optimizePackageImports: ['framer-motion'],
-    scrollRestoration: true,
-    // Disable tracing to avoid symlink issues on Windows
+  optimizePackageImports: ['framer-motion'],
+  scrollRestoration: true,
+  // Disable tracing to avoid symlink issues on Windows
   //   outputFileTracing: false
   // },
 

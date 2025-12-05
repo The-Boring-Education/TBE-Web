@@ -229,7 +229,6 @@ const UnskilledLandingPage = ({
       <Section
         className='bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20 md:px-10 px-4'
         id={`${routes.internals.landing.upload}`}
-        
       >
         <motion.div
           className='relative max-w-5xl mx-auto'
