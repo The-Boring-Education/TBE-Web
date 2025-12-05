@@ -1,5 +1,5 @@
-import { CircularProgressBar, FlexContainer, Text } from '@tbe/components';
-import type { ResumeEvaluationSectionProps } from '@tbe/interface';
+import { CircularProgressBar, FlexContainer, Text } from "@tbe/components";
+import type { ResumeEvaluationSectionProps } from "@tbe/interface";
 
 const ResumeEvaluationSection = ({
   title,
@@ -7,21 +7,21 @@ const ResumeEvaluationSection = ({
   items,
   colorScheme,
 }: ResumeEvaluationSectionProps) => (
-  <FlexContainer className='gap-4' direction='col'>
-    <FlexContainer className='gap-1' direction='col'>
-      <Text className='heading-5' level='h5'>
+  <FlexContainer className="gap-4" direction="col">
+    <FlexContainer className="gap-1" direction="col">
+      <Text className="heading-5" level="h5">
         {title}
       </Text>
-      <Text className='pre-title' level='p'>
+      <Text className="pre-title" level="p">
         {subtitle}
       </Text>
     </FlexContainer>
-    <FlexContainer wrap className='gap-4'>
+    <FlexContainer wrap className="gap-4">
       {items.map((item: any) => (
         <FlexContainer
           key={item.skill || item.name}
           itemCenter
-          className='gap-3'
+          className="gap-3"
         >
           <CircularProgressBar
             bg={colorScheme.bg}
@@ -32,23 +32,23 @@ const ResumeEvaluationSection = ({
           >
             <Text
               className={`text-xs font-bold ${colorScheme.text}`}
-              level='span'
+              level="span"
             >
               {item.percentage}%
             </Text>
           </CircularProgressBar>
           <FlexContainer
-            className='gap-0.5 justify-start'
-            direction='col'
+            className="gap-0.5 justify-start"
+            direction="col"
             itemCenter={false}
           >
             <Text
               className={`strong-text capitalize ${colorScheme.text}`}
-              level='span'
+              level="span"
             >
               {item.skill || item.name}
             </Text>
-            <Text className='pre-title text-gray-500' level='span'>
+            <Text className="pre-title text-gray-500" level="span">
               Seen in {item.jobCount || item.frequency || item.count} jobs
             </Text>
           </FlexContainer>
