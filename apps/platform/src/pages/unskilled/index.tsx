@@ -27,7 +27,10 @@ import {
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
 } from '@tbe/constants';
 import { useResumeEvaluation } from '@tbe/hooks';
-import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface';
+import type {
+  OutlineCardProps,
+  UnskilledLandingPageProps,
+} from '@tbe/interface';
 import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils';
 import { motion } from 'framer-motion';
 import { Fragment } from 'react';
@@ -75,6 +78,7 @@ const UnskilledLandingPage = ({
     selectedExperience,
     setSelectedExperience,
     isEvaluating,
+    isExtracting,
     evaluationData,
     handleResumeEvaluation,
   } = useResumeEvaluation();
@@ -225,7 +229,7 @@ const UnskilledLandingPage = ({
       <Section
         className='bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20 md:px-10 px-4'
         id={`${routes.internals.landing.upload}`}
-        isDev={isDev}
+        
       >
         <motion.div
           className='relative max-w-5xl mx-auto'
@@ -251,6 +255,7 @@ const UnskilledLandingPage = ({
                 accept='pdf'
                 file={file}
                 onChange={handleFileUpload}
+                isProcessing={isExtracting}
               />
             </FlexContainer>
             <FlexContainer className='gap-6' direction='col'>

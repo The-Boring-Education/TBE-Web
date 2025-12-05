@@ -114,7 +114,7 @@ const useResumeEvaluation = () => {
   );
   const [error, setError] = useState<string>('');
 
-  const { extractedSkills, file, handleFileUpload } = usePDFFile();
+  const { extractedSkills, file, handleFileUpload, isExtracting } = usePDFFile();
 
   const { makeRequest, loading: isEvaluating } = useApi('evaluateResume');
 
@@ -125,6 +125,18 @@ const useResumeEvaluation = () => {
       setError('Please upload resume, select domain and experience');
       return;
     }
+
+    if (extractedSkills.length === 0) {
+      setError('No skills found in your resume. Please upload a valid resume with programming skills.');
+      console.warn('⚠️ No skills extracted from PDF');
+      return;
+    }
+
+    console.log('🚀 Starting evaluation with:', {
+      skills: extractedSkills,
+      domains: selectedDomains,
+      experience: selectedExperience
+    });
 
     try {
       const response = await makeRequest({
@@ -151,9 +163,11 @@ const useResumeEvaluation = () => {
     selectedExperience,
     setSelectedExperience,
     isEvaluating,
+    isExtracting,
     evaluationData,
     handleResumeEvaluation,
     error,
+    extractedSkills, // Expose for debugging
   };
 };
 

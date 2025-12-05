@@ -8,13 +8,20 @@ const UploadFileInput = ({
   accept = '*',
   className = '',
   placeholder = '📄 Click or drag your file here to upload',
-}: UploadFileInputProps) => (
+  isProcessing = false,
+}: UploadFileInputProps & { isProcessing?: boolean }) => (
   <label
-    className={`border-2 border-dashed border-primary px-8 py-10 rounded-lg w-full max-w-xl text-center cursor-pointer bg-white hover:bg-primary/5 transition-all ${className}`}
+    className={`border-2 border-dashed border-primary px-8 py-10 rounded-lg w-full max-w-xl text-center ${isProcessing ? 'cursor-wait opacity-70' : 'cursor-pointer hover:bg-primary/5'} bg-white transition-all ${className}`}
   >
-    <input accept={accept} className='hidden' type='file' onChange={onChange} />
+    <input 
+      accept={accept === 'pdf' ? '.pdf,application/pdf' : accept} 
+      className='hidden' 
+      type='file' 
+      onChange={onChange}
+      disabled={isProcessing}
+    />
     <Text className='paragraph text-gray-500' level='p'>
-      {file ? `✅ ${label}: ${file.name}` : placeholder}
+      {isProcessing ? '⏳ Extracting skills from PDF...' : file ? `✅ ${label}: ${file.name}` : placeholder}
     </Text>
   </label>
 );
