@@ -5,26 +5,29 @@ import type {
   MouseEventHandler,
   ReactNode,
   RefObject,
-} from 'react';
+} from "react";
 
-import type { FeedbackType } from '@tbe/constants';
+import type { FeedbackType } from "@tbe/constants";
 // Import these types from the api module to avoid duplication
-import type { BaseInterviewSheetResponseProps, BaseShikshaCourseResponseProps } from './api';
+import type {
+  BaseInterviewSheetResponseProps,
+  BaseShikshaCourseResponseProps,
+} from "./api";
 
 // Import CertificateType from the global module to avoid duplication
-import type { CertificateType } from './global';
+import type { CertificateType } from "./global";
 
 // Import CohortRoadmapProps from the page module to avoid duplication
-import type { CohortRoadmapProps } from './page';
+import type { CohortRoadmapProps } from "./page";
 
 // Import GetSEOMetaResponseType from the global module to avoid duplication
-import type { GetSEOMetaResponseType } from './global';
+import type { GetSEOMetaResponseType } from "./global";
 
 // Import QuestionFrequencyType from the api module to avoid duplication
-import type { QuestionFrequencyType } from './api';
+import type { QuestionFrequencyType } from "./api";
 
 // Import TopNavbarLinkProps from the global module to avoid duplication
-import type { TopNavbarLinkProps } from './global';
+import type { TopNavbarLinkProps } from "./global";
 
 export interface SectionProps {
   children: ReactNode;
@@ -37,16 +40,16 @@ export interface LinkProps {
   children?: ReactNode;
   className?: string;
   href: string;
-  target?: '_blank' | '';
+  target?: "_blank" | "";
   active?: boolean;
   scroll?: boolean;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
 export interface TextProps {
-  level: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'label';
+  level: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "label";
   children: ReactNode;
-  variant?: 'SUCCESS' | 'ERROR';
+  variant?: "SUCCESS" | "ERROR";
   className?: string;
   textCenter?: boolean;
 }
@@ -55,7 +58,7 @@ export interface ImageContainerProps {
   src: string;
   alt: string;
   className?: string;
-  loading?: 'lazy' | 'eager';
+  loading?: "lazy" | "eager";
   fullHeight?: boolean;
   fullWidth?: boolean;
 }
@@ -72,7 +75,13 @@ export interface LinkButtonProps extends LinkProps {
 }
 
 export interface ButtonProps {
-  variant: 'PRIMARY' | 'OUTLINE' | 'GHOST' | 'SUCCESS' | 'SECONDARY' | 'NEUTRAL';
+  variant:
+    | "PRIMARY"
+    | "OUTLINE"
+    | "GHOST"
+    | "SUCCESS"
+    | "SECONDARY"
+    | "NEUTRAL";
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -83,8 +92,8 @@ export interface ButtonProps {
   icon?: React.ReactNode;
   isFullWidth?: boolean;
   disabled?: boolean;
-  animationType?: 'DEFAULT' | 'BOUNCE' | 'GLOW';
-  size?: 'SMALL' | 'MEDIUM' | 'LARGE';
+  animationType?: "DEFAULT" | "BOUNCE" | "GLOW";
+  size?: "SMALL" | "MEDIUM" | "LARGE";
 }
 
 export interface PageLayoutProps {
@@ -148,7 +157,7 @@ export interface FlexContainerProps {
   itemCenter?: boolean;
   justifyCenter?: boolean;
   className?: string;
-  direction?: 'row' | 'col';
+  direction?: "row" | "col";
   wrap?: boolean;
   fullWidth?: boolean;
   id?: string;
@@ -168,7 +177,7 @@ export interface FooterLinkProps {
   id?: string;
   label: string;
   href: string;
-  target?: '_blank';
+  target?: "_blank";
 }
 
 export interface FooterLinksContainerProps {
@@ -192,7 +201,7 @@ export interface SEOProps {
 
 export interface PillProps {
   text: string;
-  variant: 'PRIMARY' | 'SECONDARY' | 'GHOST';
+  variant: "PRIMARY" | "SECONDARY" | "GHOST";
   textStyleClasses?: string;
   containerClasses?: string;
   widthFull?: boolean;
@@ -270,7 +279,7 @@ export interface PrimaryCardWithCTAProps {
   active?: boolean;
   ctaText?: string;
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
-  target?: '_blank';
+  target?: "_blank";
   launchingOn?: string;
   isPremium?: boolean;
   isPurchased?: boolean;
@@ -422,7 +431,7 @@ export interface MDXRendererProps {
 
 export interface AlertProps {
   message: string;
-  type: 'SUCCESS' | 'ERROR' | 'INFO';
+  type: "SUCCESS" | "ERROR" | "INFO";
   className?: string;
 }
 
@@ -459,7 +468,7 @@ export interface BannerProps {
   buttonText: string;
   buttonLink: string;
   imageSrc: string;
-  variant?: 'VARIANT_A' | 'VARIANT_B' | 'VARIANT_C';
+  variant?: "VARIANT_A" | "VARIANT_B" | "VARIANT_C";
 }
 
 export interface ActionBannerProps {
@@ -511,7 +520,7 @@ export interface PrimaryLongCardProps {
   href?: string;
   active?: boolean;
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
-  target?: '_blank';
+  target?: "_blank";
   launchingOn?: string;
 }
 
@@ -563,7 +572,7 @@ export interface TopmateServiceCardProps {
   originalPrice: number;
   currentPrice: number;
   topmateLink: string;
-  category: 'mentorship' | 'ebooks' | 'events' | 'templates' | 'bootcamps';
+  category: "mentorship" | "ebooks" | "events" | "templates" | "bootcamps";
 }
 
 export interface CarouselProps {
@@ -593,8 +602,8 @@ export interface PlaylistRecommendProps {
 
 export interface ToastProps {
   message: string;
-  type?: 'success' | 'error' | 'info' | 'warning';
-  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  type?: "success" | "error" | "info" | "warning";
+  position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
   duration?: number;
   onClose?: () => void;
 }
@@ -720,14 +729,14 @@ export interface StarRatingCardProps {
 export interface FeedbackPopupProps {
   type: FeedbackType;
   refId?: string;
-  position?: 'bottom-right' | 'bottom-center';
+  position?: "bottom-right" | "bottom-center";
   onSubmit?: () => void;
 }
 export interface UploadFileInputProps {
   label?: string;
   file?: File | null;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  accept?: '*' | 'pdf';
+  accept?: "*" | "pdf";
   className?: string;
   placeholder?: string;
 }
@@ -751,12 +760,36 @@ export interface ResumeEvaluationSectionProps {
     percentage: number;
     frequency?: number;
     count?: number;
+    jobCount?: number; // New field from API
   }[];
   colorScheme: {
     text: string;
     ring: string;
     bg: string;
   };
+}
+
+export interface ResumeEvaluationData {
+  resumeScore: number;
+  skillsMatched: number;
+  skillsMissing: number;
+  remoteJobs: number;
+  jobsAnalyzed: number;
+  matchingSkills: {
+    skill: string;
+    percentage: number;
+    jobCount: number;
+  }[];
+  missingSkills: {
+    skill: string;
+    percentage: number;
+    jobCount: number;
+  }[];
+  companyTypeDistribution: {
+    type: string;
+    percentage: number;
+    jobCount: number;
+  }[];
 }
 
 export interface PaymentCardProps {
@@ -798,39 +831,38 @@ export interface StarButtonProps {
 }
 
 export interface LoginCardNewProps {
-  variant?: 'default' | 'platform' | 'prepyatra' | 'quizes' | 'resume-yatra';
+  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra";
   customRedirectPath?: string;
 }
 
 export interface PrepLog {
-  _id: string
-  title: string
-  description?: string
-  timeSpent: number
-  createdAt: string
+  _id: string;
+  title: string;
+  description?: string;
+  timeSpent: number;
+  createdAt: string;
 }
 
-
 export interface UserProfile {
-  name: string
-  userName: string
-  createdAt: string
-  linkedInUrl?: string
-  image?: string
-  githubUrl?: string
-  leetCodeUrl?: string
-  userSkills?: string[]
-  userSkillsLastUpdated?: string
-  occupation?: string
-  purpose?: string[]
+  name: string;
+  userName: string;
+  createdAt: string;
+  linkedInUrl?: string;
+  image?: string;
+  githubUrl?: string;
+  leetCodeUrl?: string;
+  userSkills?: string[];
+  userSkillsLastUpdated?: string;
+  occupation?: string;
+  purpose?: string[];
   prepYatra: {
-      goal?: string
-      experienceLevel?: string
-      pyOnboarded?: boolean
-      targetCompanies?: string[]
-      preferences?: {
-          interviewCategories?: string[]
-          focusAreas?: string[]
-      }
-  }
+    goal?: string;
+    experienceLevel?: string;
+    pyOnboarded?: boolean;
+    targetCompanies?: string[];
+    preferences?: {
+      interviewCategories?: string[];
+      focusAreas?: string[];
+    };
+  };
 }

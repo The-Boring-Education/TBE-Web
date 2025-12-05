@@ -400,13 +400,12 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
         jobData: null,
         isDev,
       },
-      revalidate: 3600,
     };
   }
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
     const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`, {
       signal: controller.signal,
@@ -430,7 +429,6 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
         jobData,
         isDev,
       },
-      revalidate: 3600, // Regenerate page every hour (ISR)
     };
   } catch (error) {
     // Silently fail during build, log in development
@@ -447,7 +445,6 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
         jobData: null,
         isDev,
       },
-      revalidate: 3600,
     };
   }
 };

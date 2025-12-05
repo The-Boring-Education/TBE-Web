@@ -81,6 +81,7 @@ const UnskilledLandingPage = ({
     isExtracting,
     evaluationData,
     handleResumeEvaluation,
+    error,
   } = useResumeEvaluation();
 
   const onSelectSkills = (value: string[]) => {
@@ -299,7 +300,20 @@ const UnskilledLandingPage = ({
                 text={isEvaluating ? 'Evaluating...' : 'Start Evaluation'}
                 variant='PRIMARY'
                 onClick={handleResumeEvaluation}
+                disabled={isEvaluating || isExtracting}
               />
+              {error && (
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className='mt-4 bg-red-50 border border-red-200 rounded-lg p-4'
+                  initial={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Text className='paragraph text-red-600' level='p'>
+                    ❌ {error}
+                  </Text>
+                </motion.div>
+              )}
               {evaluationData && (
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
@@ -316,7 +330,7 @@ const UnskilledLandingPage = ({
                         className='paragraph text-sm text-gray-500 text-center mt-2'
                         level='p'
                       >
-                        {evaluationData.totalJobsAnalyzed} Jobs Analyzed
+                        {evaluationData.jobsAnalyzed || evaluationData.totalJobsAnalyzed} Jobs Analyzed
                       </Text>
                     </FlexContainer>
                     <FlexContainer wrap className='gap-6'>
@@ -343,7 +357,7 @@ const UnskilledLandingPage = ({
                         direction='col'
                       >
                         <Text className='heading-4 text-green-600' level='h4'>
-                          {evaluationData.matchedSkills.length}
+                          {evaluationData.skillsMatched || evaluationData.matchedSkills?.length || evaluationData.matchingSkills?.length}
                         </Text>
                         <Text
                           className='strong-text text-gray-500'
@@ -359,7 +373,7 @@ const UnskilledLandingPage = ({
                         direction='col'
                       >
                         <Text className='heading-4 text-red-600' level='h4'>
-                          {evaluationData.missingSkills.length}
+                          {evaluationData.skillsMissing || evaluationData.missingSkills?.length}
                         </Text>
                         <Text
                           className='strong-text text-gray-500'
@@ -389,7 +403,7 @@ const UnskilledLandingPage = ({
 
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.match}
-                    items={evaluationData.matchedSkills}
+                    items={evaluationData.matchingSkills || evaluationData.matchedSkills}
                     subtitle='Skills that Match with Your Resume'
                     title='✅ Matching Skills'
                   />

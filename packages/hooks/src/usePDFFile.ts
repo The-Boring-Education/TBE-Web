@@ -1,235 +1,123 @@
-import { useState } from "react";
+/**
+ * useResumeParser Hook
+ * Handles resume file upload and parsing - extracts skills only
+ * Follows TBE pattern with proper error handling and loading states
+ */
 
-// Common programming skills to look for
-const PROGRAMMING_SKILLS = [
-  // Languages
-  "javascript",
-  "typescript",
-  "python",
-  "java",
-  "c++",
-  "c#",
-  "ruby",
-  "php",
-  "swift",
-  "kotlin",
-  "go",
-  "rust",
-  "scala",
-  "r",
-  "matlab",
-  "perl",
-  "shell",
-  "bash",
-  "powershell",
-  // Frontend
-  "react",
-  "reactjs",
-  "react.js",
-  "vue",
-  "vuejs",
-  "vue.js",
-  "angular",
-  "angularjs",
-  "nextjs",
-  "next.js",
-  "nuxt",
-  "svelte",
-  "jquery",
-  "html",
-  "html5",
-  "css",
-  "css3",
-  "sass",
-  "scss",
-  "less",
-  "tailwind",
-  "tailwindcss",
-  "bootstrap",
-  "material-ui",
-  "mui",
-  // Backend
-  "node",
-  "nodejs",
-  "node.js",
-  "express",
-  "expressjs",
-  "nestjs",
-  "fastapi",
-  "flask",
-  "django",
-  "spring",
-  "spring boot",
-  "springboot",
-  ".net",
-  "dotnet",
-  "asp.net",
-  "laravel",
-  "rails",
-  // Databases
-  "mongodb",
-  "mysql",
-  "postgresql",
-  "postgres",
-  "redis",
-  "cassandra",
-  "dynamodb",
-  "sqlite",
-  "oracle",
-  "mssql",
-  "sql server",
-  "firebase",
-  "firestore",
-  "elasticsearch",
-  // Cloud & DevOps
-  "aws",
-  "azure",
-  "gcp",
-  "google cloud",
-  "docker",
-  "kubernetes",
-  "k8s",
-  "jenkins",
-  "gitlab",
-  "github actions",
-  "ci/cd",
-  "terraform",
-  "ansible",
-  "nginx",
-  "apache",
-  // Mobile
-  "react native",
-  "flutter",
-  "android",
-  "ios",
-  "swift",
-  "kotlin",
-  // Tools & Others
-  "git",
-  "github",
-  "gitlab",
-  "bitbucket",
-  "jira",
-  "webpack",
-  "vite",
-  "babel",
-  "graphql",
-  "rest api",
-  "restful",
-  "grpc",
-  "websocket",
-  "microservices",
-  "agile",
-  "scrum",
-  "tdd",
-  "jest",
-  "mocha",
-  "cypress",
-  "selenium",
-  "redux",
-  "mobx",
-  "zustand",
-  "rxjs",
-  "socket.io",
-];
+import { useState } from 'react';
+import type { ResumeFileState, ParseResumeResponse } from '@tbe/types';
 
-const usePDFFile = () => {
-  const [extractedSkills, setExtractedSkills] = useState<string[]>([]);
-  const [file, setFile] = useState<File | null>(null);
-  const [isExtracting, setIsExtracting] = useState(false);
+const useResumeParser = () => {
+  const [state, setState] = useState<ResumeFileState>({
+    file: null,
+    extractedSkills: [],
+    isLoading: false,
+    error: null,
+  });
 
-  const extractSkillsFromText = (text: string): string[] => {
-    const lowerText = text.toLowerCase();
-    const foundSkills = new Set<string>();
+  /**
+   * Parse resume file using Next.js API route
+   */
+  const parseResume = async (file: File): Promise<string[]> => {
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-    PROGRAMMING_SKILLS.forEach((skill) => {
-      const skillLower = skill.toLowerCase();
-      // Use word boundary regex to match whole words
-      const regex = new RegExp(
-        `\\b${skillLower.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
-        "i"
-      );
-      if (regex.test(lowerText)) {
-        foundSkills.add(skill);
+    try {
+      const formData = new FormData();
+      formData.append('resume', file);
+
+      const response = await fetch('/api/resume/parse', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result: ParseResumeResponse = await response.json();
+
+      // Check HTTP status first
+      if (!response.ok) {
+        throw new Error(result.message || result.error || 'Failed to parse resume');
       }
-    });
 
-    return Array.from(foundSkills);
+      if (!result.status || !result.data) {
+        throw new Error(result.message || 'Failed to parse resume');
+      }
+
+      const { skills } = result.data;
+      
+      setState({
+        file,
+        extractedSkills: skills,
+        isLoading: false,
+        error: null,
+      });
+
+      return skills;
+    } catch (error: any) {
+      const errorMessage = error.message || 'Failed to parse resume';
+      setState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: errorMessage,
+      }));
+      throw error;
+    }
   };
 
-  const extractTextFromPDF = async (file: File) => {
-    console.log(
-      "🔍 extractTextFromPDF called with:",
-      file.name,
-      file.type,
-      file.size
-    );
+  /**
+   * Handle file upload from input
+   */
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    
+    if (!file) return;
 
-    // Only run on client side
-    if (typeof window === "undefined") {
-      console.error("❌ PDF extraction only works on client side");
+    // Validate file type
+    const validTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+
+    if (!validTypes.includes(file.type)) {
+      setState((prev) => ({
+        ...prev,
+        error: 'Invalid file type. Please upload PDF or DOCX file.',
+      }));
       return;
     }
 
-    console.log("✅ Client-side check passed, starting extraction...");
-    setIsExtracting(true);
-    try {
-      console.log("📦 Attempting to dynamically import pdfjs-dist...");
-      // Dynamic import to avoid server-side rendering issues
-      const pdfjs = await import("pdfjs-dist");
-      console.log(
-        "✅ pdfjs-dist imported successfully, version:",
-        pdfjs.version
-      );
-
-      // Configure worker for client-side
-      pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-      console.log("✅ Worker configured");
-
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
-
-      let fullText = "";
-
-      // Extract text from all pages
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items
-          .map((item: any) => item.str)
-          .join(" ");
-        fullText += pageText + " ";
-      }
-
-      // Extract skills from the full text
-      const skills = extractSkillsFromText(fullText);
-
-      console.log("📄 Extracted Text Preview:", fullText.substring(0, 500));
-      console.log("🎯 Found Programming Skills:", skills);
-      console.log("📊 Total Skills Found:", skills.length);
-
-      setExtractedSkills(skills);
-    } catch (error) {
-      console.error("❌ Failed to extract text from PDF:", error);
-      setExtractedSkills([]);
-    } finally {
-      setIsExtracting(false);
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      setState((prev) => ({
+        ...prev,
+        error: 'File too large. Maximum size is 5MB.',
+      }));
+      return;
     }
+
+    await parseResume(file);
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFile = event.target.files?.[0];
-    console.log("📂 File upload triggered:", uploadedFile?.name);
-    if (uploadedFile) {
-      console.log("✅ File selected, starting extraction...");
-      setFile(uploadedFile);
-      extractTextFromPDF(uploadedFile);
-    } else {
-      console.warn("⚠️ No file selected");
-    }
+  /**
+   * Reset state
+   */
+  const reset = () => {
+    setState({
+      file: null,
+      extractedSkills: [],
+      isLoading: false,
+      error: null,
+    });
   };
 
-  return { extractedSkills, file, handleFileUpload, isExtracting };
+  return {
+    file: state.file,
+    extractedSkills: state.extractedSkills,
+    isLoading: state.isLoading,
+    error: state.error,
+    handleFileUpload,
+    parseResume,
+    reset,
+  };
 };
 
-export default usePDFFile;
+export default useResumeParser;

@@ -187,9 +187,8 @@ export const SUBSCRIPTION_FEATURES = [
 
 export const YOUTUBE_API_PATH = "https://www.googleapis.com/youtube/v3";
 
-// Resume Evaluation Constants (internal use only - deprecated)
-// Use JOB_EXPERIENCE_LEVEL from global.ts instead
-const EXPERIENCE_LEVEL_LABELS = [
+// Resume Evaluation Constants (deprecated - use JOB_EXPERIENCE_LEVEL from global.ts)
+const EXPERIENCE_LEVEL_STRINGS = [
   "Fresher (0 yrs)",
   "Early Career (1-2 yrs)",
   "Mid-Level (2-4 yrs)",
@@ -198,7 +197,7 @@ const EXPERIENCE_LEVEL_LABELS = [
   "Principal Engineer (10+ yrs)",
 ] as const;
 
-export type ExperienceLevelType = (typeof EXPERIENCE_LEVEL_LABELS)[number];
+export type ExperienceLevelType = (typeof EXPERIENCE_LEVEL_STRINGS)[number];
 
 export const JOB_DOMAIN_NORMALIZER = [
   {
