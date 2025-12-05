@@ -196,7 +196,8 @@ const routes = {
         userDashboard: "/user/dashboard",
         notification: "/notification",
         unskilled: "/unskilled",
-        unskilledEvaluation: "/unskilled/evaluation",
+        unskilledEvaluation: "/api/v1/evaluate",
+        unskilledEvaluationHealth: "/api/v1/evaluate/health",
         markSheetQuestionAsStarred: "/user/interview-prep/starred",
         leaderboard: "/leaderboard"
     }

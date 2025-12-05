@@ -49,7 +49,7 @@ const ResumeEvaluationSection = ({
               {item.skill || item.name}
             </Text>
             <Text className='pre-title text-gray-500' level='span'>
-              Seen in {item.frequency || item.count} jobs
+              Seen in {item.jobCount || item.frequency || item.count} jobs
             </Text>
           </FlexContainer>
         </FlexContainer>

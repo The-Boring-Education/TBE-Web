@@ -3,51 +3,110 @@ import { routes } from "@tbe/constants";
 import { useApi, usePDFFile } from "@tbe/hooks";
 import { useState } from "react";
 
-// FIXME: REFACTOR
+// FIXME: REFACTOR - Updated to match new API response structure
 const DUMMY_EVALUATION_DATA = {
-  matchedSkills: [
+  resumeScore: 86,
+  skillsMatched: 12,
+  skillsMissing: 3,
+  jobsAnalyzed: 1030,
+  remoteJobs: 89,
+  matchingSkills: [
     {
       skill: "javascript",
-      frequency: 467,
+      jobCount: 467,
       percentage: 45,
     },
     {
       skill: "mysql",
-      frequency: 291,
+      jobCount: 291,
       percentage: 28,
     },
     {
-      skill: "react.js",
-      frequency: 276,
+      skill: "react",
+      jobCount: 276,
       percentage: 27,
     },
     {
       skill: "html",
-      frequency: 242,
+      jobCount: 242,
       percentage: 23,
     },
     {
       skill: "java",
-      frequency: 193,
+      jobCount: 193,
       percentage: 19,
     },
     {
-      skill: "node.js",
-      frequency: 172,
+      skill: "nodejs",
+      jobCount: 172,
       percentage: 17,
     },
     {
       skill: "css",
-      frequency: 165,
+      jobCount: 165,
       percentage: 16,
     },
     {
       skill: "python",
-      frequency: 143,
+      jobCount: 143,
       percentage: 14,
     },
     {
       skill: "git",
+      jobCount: 136,
+      percentage: 13,
+    },
+    {
+      skill: "php",
+      jobCount: 133,
+      percentage: 13,
+    },
+    {
+      skill: "mongodb",
+      jobCount: 101,
+      percentage: 10,
+    },
+    {
+      skill: "postgresql",
+      jobCount: 88,
+      percentage: 9,
+    },
+  ],
+  missingSkills: [
+    {
+      skill: "jquery",
+      jobCount: 180,
+      percentage: 17,
+    },
+    {
+      skill: "angular",
+      jobCount: 122,
+      percentage: 12,
+    },
+    {
+      skill: "spring boot",
+      jobCount: 87,
+      percentage: 8,
+    },
+  ],
+  companyTypeDistribution: [
+    {
+      type: "MNC",
+      jobCount: 59,
+      percentage: 6,
+    },
+    {
+      type: "Mid-Size",
+      jobCount: 27,
+      percentage: 3,
+    },
+    {
+      type: "Startup",
+      jobCount: 944,
+      percentage: 92,
+    },
+  ],
+};
       frequency: 136,
       percentage: 13,
     },
@@ -136,9 +195,9 @@ const useResumeEvaluation = () => {
     }
 
     console.log("🚀 Starting evaluation with:", {
-      skills: extractedSkills,
+      resumeSkills: extractedSkills,
       domains: selectedDomains,
-      experience: selectedExperience,
+      experienceLevel: selectedExperience,
     });
 
     try {
@@ -146,15 +205,18 @@ const useResumeEvaluation = () => {
         method: "POST",
         url: `${routes.api.unskilledEvaluation}`,
         body: {
-          skills: extractedSkills,
+          resumeSkills: extractedSkills.map(s => s.toLowerCase().trim()),
           domains: selectedDomains,
-          experience: { min: 0, max: parseInt(selectedExperience) || 2 },
+          experienceLevel: selectedExperience,
         },
       });
 
-      setEvaluationData(response.data);
-    } catch (err) {
-      setError("Evaluation failed. Please try again.");
+      // New API returns data wrapped in response.data.data
+      setEvaluationData(response.data?.data || response.data);
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.detail || err?.message || "Evaluation failed. Please try again.";
+      setError(errorMessage);
+      console.error("❌ Evaluation error:", err);
     }
   };
 

@@ -751,12 +751,36 @@ export interface ResumeEvaluationSectionProps {
     percentage: number;
     frequency?: number;
     count?: number;
+    jobCount?: number; // New field from API
   }[];
   colorScheme: {
     text: string;
     ring: string;
     bg: string;
   };
+}
+
+export interface ResumeEvaluationData {
+  resumeScore: number;
+  skillsMatched: number;
+  skillsMissing: number;
+  remoteJobs: number;
+  jobsAnalyzed: number;
+  matchingSkills: {
+    skill: string;
+    percentage: number;
+    jobCount: number;
+  }[];
+  missingSkills: {
+    skill: string;
+    percentage: number;
+    jobCount: number;
+  }[];
+  companyTypeDistribution: {
+    type: string;
+    percentage: number;
+    jobCount: number;
+  }[];
 }
 
 export interface PaymentCardProps {
