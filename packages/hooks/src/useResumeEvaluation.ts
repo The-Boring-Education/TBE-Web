@@ -107,63 +107,6 @@ const DUMMY_EVALUATION_DATA = {
     },
   ],
 };
-      frequency: 136,
-      percentage: 13,
-    },
-    {
-      skill: "php",
-      frequency: 133,
-      percentage: 13,
-    },
-    {
-      skill: "mongodb",
-      frequency: 101,
-      percentage: 10,
-    },
-    {
-      skill: "postgresql",
-      frequency: 88,
-      percentage: 9,
-    },
-  ],
-  missingSkills: [
-    {
-      skill: "jquery",
-      frequency: 180,
-      percentage: 17,
-    },
-    {
-      skill: "angular",
-      frequency: 122,
-      percentage: 12,
-    },
-    {
-      skill: "spring boot",
-      frequency: 87,
-      percentage: 8,
-    },
-  ],
-  resumeScore: 86,
-  totalJobsAnalyzed: 1030,
-  companyTypeDistribution: [
-    {
-      name: "MNC",
-      count: 59,
-      percentage: 6,
-    },
-    {
-      name: "Mid-Size",
-      count: 27,
-      percentage: 3,
-    },
-    {
-      name: "Startup",
-      count: 944,
-      percentage: 92,
-    },
-  ],
-  remoteJobs: 89,
-};
 
 const useResumeEvaluation = () => {
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
@@ -173,7 +116,7 @@ const useResumeEvaluation = () => {
   );
   const [error, setError] = useState<string>("");
 
-  const { extractedSkills, file, handleFileUpload, isExtracting } =
+  const { extractedSkills, file, handleFileUpload, isLoading: isExtracting } =
     usePDFFile();
 
   const { makeRequest, loading: isEvaluating } = useApi("evaluateResume");
