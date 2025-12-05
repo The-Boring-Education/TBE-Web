@@ -1,85 +1,85 @@
 // hooks/useResumeEvaluation.ts
-import { routes } from '@tbe/constants';
-import { useApi, usePDFFile } from '@tbe/hooks';
-import { useState } from 'react';
+import { routes } from "@tbe/constants";
+import { useApi, usePDFFile } from "@tbe/hooks";
+import { useState } from "react";
 
 // FIXME: REFACTOR
 const DUMMY_EVALUATION_DATA = {
   matchedSkills: [
     {
-      skill: 'javascript',
+      skill: "javascript",
       frequency: 467,
       percentage: 45,
     },
     {
-      skill: 'mysql',
+      skill: "mysql",
       frequency: 291,
       percentage: 28,
     },
     {
-      skill: 'react.js',
+      skill: "react.js",
       frequency: 276,
       percentage: 27,
     },
     {
-      skill: 'html',
+      skill: "html",
       frequency: 242,
       percentage: 23,
     },
     {
-      skill: 'java',
+      skill: "java",
       frequency: 193,
       percentage: 19,
     },
     {
-      skill: 'node.js',
+      skill: "node.js",
       frequency: 172,
       percentage: 17,
     },
     {
-      skill: 'css',
+      skill: "css",
       frequency: 165,
       percentage: 16,
     },
     {
-      skill: 'python',
+      skill: "python",
       frequency: 143,
       percentage: 14,
     },
     {
-      skill: 'git',
+      skill: "git",
       frequency: 136,
       percentage: 13,
     },
     {
-      skill: 'php',
+      skill: "php",
       frequency: 133,
       percentage: 13,
     },
     {
-      skill: 'mongodb',
+      skill: "mongodb",
       frequency: 101,
       percentage: 10,
     },
     {
-      skill: 'postgresql',
+      skill: "postgresql",
       frequency: 88,
       percentage: 9,
     },
   ],
   missingSkills: [
     {
-      skill: 'jquery',
+      skill: "jquery",
       frequency: 180,
       percentage: 17,
     },
     {
-      skill: 'angular',
+      skill: "angular",
       frequency: 122,
       percentage: 12,
     },
     {
-      skill: 'spring boot',
+      skill: "spring boot",
       frequency: 87,
       percentage: 8,
     },
@@ -88,17 +88,17 @@ const DUMMY_EVALUATION_DATA = {
   totalJobsAnalyzed: 1030,
   companyTypeDistribution: [
     {
-      name: 'MNC',
+      name: "MNC",
       count: 59,
       percentage: 6,
     },
     {
-      name: 'Mid-Size',
+      name: "Mid-Size",
       count: 27,
       percentage: 3,
     },
     {
-      name: 'Startup',
+      name: "Startup",
       count: 944,
       percentage: 92,
     },
@@ -108,27 +108,42 @@ const DUMMY_EVALUATION_DATA = {
 
 const useResumeEvaluation = () => {
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
-  const [selectedExperience, setSelectedExperience] = useState<string>('');
+  const [selectedExperience, setSelectedExperience] = useState<string>("");
   const [evaluationData, setEvaluationData] = useState<any>(
     DUMMY_EVALUATION_DATA
   );
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
-  const { extractedSkills, file, handleFileUpload } = usePDFFile();
+  const { extractedSkills, file, handleFileUpload, isExtracting } =
+    usePDFFile();
 
-  const { makeRequest, loading: isEvaluating } = useApi('evaluateResume');
+  const { makeRequest, loading: isEvaluating } = useApi("evaluateResume");
 
   const handleResumeEvaluation = async () => {
-    setError('');
+    setError("");
 
     if (!file || selectedDomains.length === 0 || !selectedExperience) {
-      setError('Please upload resume, select domain and experience');
+      setError("Please upload resume, select domain and experience");
       return;
     }
 
+    if (extractedSkills.length === 0) {
+      setError(
+        "No skills found in your resume. Please upload a valid resume with programming skills."
+      );
+      console.warn("⚠️ No skills extracted from PDF");
+      return;
+    }
+
+    console.log("🚀 Starting evaluation with:", {
+      skills: extractedSkills,
+      domains: selectedDomains,
+      experience: selectedExperience,
+    });
+
     try {
       const response = await makeRequest({
-        method: 'POST',
+        method: "POST",
         url: `${routes.api.unskilledEvaluation}`,
         body: {
           skills: extractedSkills,
@@ -139,7 +154,7 @@ const useResumeEvaluation = () => {
 
       setEvaluationData(response.data);
     } catch (err) {
-      setError('Evaluation failed. Please try again.');
+      setError("Evaluation failed. Please try again.");
     }
   };
 
@@ -151,9 +166,11 @@ const useResumeEvaluation = () => {
     selectedExperience,
     setSelectedExperience,
     isEvaluating,
+    isExtracting,
     evaluationData,
     handleResumeEvaluation,
     error,
+    extractedSkills, // Expose for debugging
   };
 };
 
