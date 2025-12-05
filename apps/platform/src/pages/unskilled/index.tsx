@@ -444,6 +444,6 @@ const UnskilledLandingPage = ({
   );
 };
 
-export const getServerSideProps = getUnskilledLandingPageProps;
+export const getStaticProps = getUnskilledLandingPageProps;
 
 export default UnskilledLandingPage;

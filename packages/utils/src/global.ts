@@ -389,10 +389,33 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
   }
 
   const seoMeta = getSEOMeta(slug);
+  const isDev = IN_DEV_PAGES.some((page) => page === slug);
 
-  // Fetch graph data directly from Unskilled Platfrom API
+  // Fetch graph data directly from Unskilled Platform API
+  // Skip API call during build if URL is not available
+  if (!envConfig.UNSKILLED_API_URL) {
+    return {
+      props: {
+        seoMeta,
+        jobData: null,
+        isDev,
+      },
+      revalidate: 3600,
+    };
+  }
+
   try {
-    const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+    const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`, {
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`API responded with status ${response.status}`);
@@ -401,23 +424,30 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
     const apiResponse = await response.json();
     const jobData = apiResponse.data || null;
 
-    const isDev = IN_DEV_PAGES.some((page) => page === slug);
-
     return {
       props: {
         seoMeta,
         jobData,
         isDev,
       },
+      revalidate: 3600, // Regenerate page every hour (ISR)
     };
   } catch (error) {
-    console.error("Error fetching Unskilled data:", error);
+    // Silently fail during build, log in development
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "Could not fetch Unskilled data (API may not be running):",
+        error instanceof Error ? error.message : error
+      );
+    }
+
     return {
       props: {
         seoMeta,
         jobData: null,
-        isDev: false,
+        isDev,
       },
+      revalidate: 3600,
     };
   }
 };
