@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const { withSentryConfig } = require('@sentry/nextjs');
 const withTM = require('next-transpile-modules')([
   '@tbe/auth',
@@ -30,9 +29,9 @@ const nextConfig = {
   compress: true,
 
   // experimental: {
-    optimizePackageImports: ['framer-motion'],
-    scrollRestoration: true,
-    // Disable tracing to avoid symlink issues on Windows
+  optimizePackageImports: ['framer-motion'],
+  scrollRestoration: true,
+  // Disable tracing to avoid symlink issues on Windows
   //   outputFileTracing: false
   // },
 
@@ -68,6 +67,16 @@ const nextConfig = {
         },
       ],
     });
+
+    // Exclude pdfjs-dist from server bundle (browser-only library)
+    if (isServer) {
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push('pdfjs-dist');
+      } else {
+        config.externals = [config.externals, 'pdfjs-dist'];
+      }
+    }
 
     // Add comprehensive fallbacks for Node.js modules in both client and server
     config.resolve.fallback = {

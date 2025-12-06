@@ -11,3 +11,4 @@ export * from './prep-stats';
 export * from "./prep-logs";
 export * from "./recruiters";
 export * from "./user";
+export * from "./resumeService";

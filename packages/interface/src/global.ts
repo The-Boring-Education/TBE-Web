@@ -1,4 +1,4 @@
-import type { FooterLinksContainerProps, WebinarModel } from '.';
+import type { FooterLinksContainerProps, WebinarModel } from ".";
 
 export interface FooterNavigationDataProps extends FooterLinksContainerProps {
   id: string;
@@ -16,22 +16,22 @@ export type GetSEOMetaResponseType = {
 };
 
 export type ProductLabelType =
-  | 'Roadmaps'
-  | 'Projects'
-  | 'Shiksha'
-  | 'Interview Prep'
-  | 'Webinar'
-  | 'Open Source'
-  | 'Interview Prep'
-  | 'Portfolio'
-  | 'YouFocus'
-  | 'UnSkilled'
-  | 'Prep Yatra'
-  | 'Tech Yatra'
-  | 'DSA Yatra'
-  | 'Resume Yatra';
+  | "Roadmaps"
+  | "Projects"
+  | "Shiksha"
+  | "Interview Prep"
+  | "Webinar"
+  | "Open Source"
+  | "Interview Prep"
+  | "Portfolio"
+  | "YouFocus"
+  | "UnSkilled"
+  | "Prep Yatra"
+  | "Tech Yatra"
+  | "DSA Yatra"
+  | "Resume Yatra";
 
-export type CohortLabelType = 'Bring Your Idea';
+export type CohortLabelType = "Bring Your Idea";
 
 export interface ProductDataProps {
   [key: string]: {
@@ -54,7 +54,7 @@ export interface TopNavbarLinkProps {
   name: string;
   href: string;
   description?: string;
-  target?: '_blank';
+  target?: "_blank";
   isDevelopment?: boolean;
 }
 
@@ -85,77 +85,77 @@ export interface WebinarPageProps extends WebinarModel {
   webinarId: string;
 }
 
-export type CertificateType = 'WEBINAR' | 'SHIKSHA';
+export type CertificateType = "WEBINAR" | "SHIKSHA";
 
 const UserPointsActionType = [
-  'ENROLL_COURSE',
-  'ENROLL_SHEET',
-  'ENROLL_PROJECT',
-  'COMPLETE_COURSE_CHAPTER',
-  'COMPLETE_PROJECT_CHAPTER',
-  'COMPLETE_QUESTION',
-  'COMPLETE_COURSE_CERTIFICATE',
-  'COMPLETE_PROJECT',
-  'COMPLETE_INTERVIEW_SHEET',
-  'PROFILE_COMPLETION',
-  'SOCIAL_SHARE',
-  'FEEDBACK_SUBMIT',
-  'VIDEO_WATCH_COMPLETE',
-  'FIRST_LOGIN',
-  'DAILY_VISIT',
-  'STREAK',
-  'REFER',
-  'WEBINAR_ATTEND',
-  'DOWNLOAD_CERTIFICATE',
-  'HELP_COMMUNITY',
-  'RECRUITER_ADDED',
-  'PREPLOG_CREATED',
-  'PREPLOG_STREAK_3',
-  'PREPLOG_STREAK_7',
-  'PREPLOG_STREAK_15',
-  'PREPLOG_STREAK_30',
-  'COMPLETE_QUIZ',
-  'QUIZ_PERFECT_SCORE',
-  'QUIZ_STREAK',
+  "ENROLL_COURSE",
+  "ENROLL_SHEET",
+  "ENROLL_PROJECT",
+  "COMPLETE_COURSE_CHAPTER",
+  "COMPLETE_PROJECT_CHAPTER",
+  "COMPLETE_QUESTION",
+  "COMPLETE_COURSE_CERTIFICATE",
+  "COMPLETE_PROJECT",
+  "COMPLETE_INTERVIEW_SHEET",
+  "PROFILE_COMPLETION",
+  "SOCIAL_SHARE",
+  "FEEDBACK_SUBMIT",
+  "VIDEO_WATCH_COMPLETE",
+  "FIRST_LOGIN",
+  "DAILY_VISIT",
+  "STREAK",
+  "REFER",
+  "WEBINAR_ATTEND",
+  "DOWNLOAD_CERTIFICATE",
+  "HELP_COMMUNITY",
+  "RECRUITER_ADDED",
+  "PREPLOG_CREATED",
+  "PREPLOG_STREAK_3",
+  "PREPLOG_STREAK_7",
+  "PREPLOG_STREAK_15",
+  "PREPLOG_STREAK_30",
+  "COMPLETE_QUIZ",
+  "QUIZ_PERFECT_SCORE",
+  "QUIZ_STREAK",
 ] as const;
 
 export type UserPointsActionType = (typeof UserPointsActionType)[number];
 
 export type NotificationType =
-  | 'WEBINAR'
-  | 'SHIKSHA'
-  | 'PROJECT'
-  | 'INTERVIEW PREP'
-  | 'UPDATE'
-  | 'COHORT'
-  | 'PREP YATRA'
-  | 'TECH YATRA'
-  | 'DSA YATRA'
-  | 'RESUME YATRA'
-  | 'TOOLS';
+  | "WEBINAR"
+  | "SHIKSHA"
+  | "PROJECT"
+  | "INTERVIEW PREP"
+  | "UPDATE"
+  | "COHORT"
+  | "PREP YATRA"
+  | "TECH YATRA"
+  | "DSA YATRA"
+  | "RESUME YATRA"
+  | "TOOLS";
 
 export type UserRoleType =
-  | 'TECH_STUDENT'
-  | 'WORKING_PROFESSIONAL'
-  | 'NON_TECH_STUDENT'
-  | 'DEVREL_ADVOCATE'
-  | 'DEVREL_LEAD';
+  | "TECH_STUDENT"
+  | "WORKING_PROFESSIONAL"
+  | "NON_TECH_STUDENT"
+  | "DEVREL_ADVOCATE"
+  | "DEVREL_LEAD";
 
 export type PlatformUsageType =
-  | 'LEARNING_TECH'
-  | 'BUILDING_PROJECTS'
-  | 'INTERVIEW_PREP'
-  | 'JOB_SEARCH';
+  | "LEARNING_TECH"
+  | "BUILDING_PROJECTS"
+  | "INTERVIEW_PREP"
+  | "JOB_SEARCH";
 
 export type WorkDomainType =
-  | 'MERN Full-stack'
-  | 'Java Full-stack'
-  | 'Python Full-stack'
-  | 'Data Analysis'
-  | 'Machine Learning'
-  | 'AI'
-  | 'App Development'
-  | 'Others';
+  | "MERN Full-stack"
+  | "Java Full-stack"
+  | "Python Full-stack"
+  | "Data Analysis"
+  | "Machine Learning"
+  | "AI"
+  | "App Development"
+  | "Others";
 
 export type FormatDateType = {
   dateAndTime?: string;
@@ -172,10 +172,18 @@ export interface UnskilledLandingGraphDataProps {
   count: number;
 }
 
-export type LeaderboardType = 'DAILY' | 'WEEKLY' | 'MONTHLY';
+export interface UnskilledGraphData {
+  jobDomains: UnskilledLandingGraphDataProps[];
+  trendingSkills: UnskilledLandingGraphDataProps[];
+  companyTypes: UnskilledLandingGraphDataProps[];
+  topLocations: UnskilledLandingGraphDataProps[];
+  updatedAt?: string;
+}
+
+export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY";
 
 export const LEADERBOARD_TYPES: LeaderboardType[] = [
-  'DAILY',
-  'WEEKLY',
-  'MONTHLY',
+  "DAILY",
+  "WEEKLY",
+  "MONTHLY",
 ];

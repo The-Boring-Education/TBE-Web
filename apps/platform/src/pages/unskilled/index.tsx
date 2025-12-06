@@ -1,3 +1,4 @@
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   ArrowRightIcon,
   ArrowTrendingUpIcon,
@@ -26,11 +27,10 @@ import {
   STATIC_FILE_PATH,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
 } from '@tbe/constants';
-import { useResumeEvaluation } from '@tbe/hooks';
+import { useResumeEvaluation, useUnskilledGraphData } from '@tbe/hooks';
 import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface';
 import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils';
 import { motion } from 'framer-motion';
-import { Fragment } from 'react';
 import {
   Bar,
   BarChart,
@@ -64,9 +64,12 @@ const UNSKILLED_FEATURES: OutlineCardProps[] = [
 
 const UnskilledLandingPage = ({
   seoMeta,
-  jobData,
+  jobData: _initialJobData, // Not used - data fetched client-side
   isDev,
 }: UnskilledLandingPageProps) => {
+  // Fetch graph data on client-side after page loads
+  const { data: jobData, loading: graphLoading, error: graphError } = useUnskilledGraphData();
+
   const {
     file,
     handleFileUpload,
@@ -77,6 +80,7 @@ const UnskilledLandingPage = ({
     isEvaluating,
     evaluationData,
     handleResumeEvaluation,
+    error,
   } = useResumeEvaluation();
 
   const onSelectSkills = (value: string[]) => {
@@ -129,7 +133,19 @@ const UnskilledLandingPage = ({
     </ResponsiveContainer>,
   ];
 
-  const jobGraphContainer = jobMarketPanels ? (
+  const jobGraphContainer = graphLoading ? (
+    <FlexContainer className='py-12' direction='col' itemCenter>
+      <Text className='text-gray-500 animate-pulse' level='p'>
+        Loading market insights...
+      </Text>
+    </FlexContainer>
+  ) : graphError ? (
+    <FlexContainer className='py-12' direction='col' itemCenter>
+      <Text className='text-red-500' level='p'>
+        Unable to load graph data. Please try again later.
+      </Text>
+    </FlexContainer>
+  ) : jobMarketPanels ? (
     <TabComponent
       tabLabels={UNSKILLED_LANDING_GRAPH_TAB_PARAMS}
       tabPanels={jobMarketPanels}
@@ -161,9 +177,19 @@ const UnskilledLandingPage = ({
     },
   };
 
-  const dateAndTime = formatDate({
-    dateAndTime: jobData?.updatedAt,
-  });
+  const [dateDisplay, setDateDisplay] = useState<{
+    date: string;
+    time: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (jobData?.updatedAt) {
+      const formatted = formatDate({
+        dateAndTime: jobData.updatedAt,
+      });
+      setDateDisplay(formatted);
+    }
+  }, [jobData?.updatedAt]);
 
   return (
     <Fragment>
@@ -225,7 +251,7 @@ const UnskilledLandingPage = ({
       <Section
         className='bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20 md:px-10 px-4'
         id={`${routes.internals.landing.upload}`}
-        isDev={isDev}
+        // isDev={isDev}
       >
         <motion.div
           className='relative max-w-5xl mx-auto'
@@ -296,6 +322,13 @@ const UnskilledLandingPage = ({
                 variant='PRIMARY'
                 onClick={handleResumeEvaluation}
               />
+              
+              {error && (
+                <Text className='text-red-600 text-sm text-center' level='p'>
+                  {error}
+                </Text>
+              )}
+
               {evaluationData && (
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
@@ -312,7 +345,7 @@ const UnskilledLandingPage = ({
                         className='paragraph text-sm text-gray-500 text-center mt-2'
                         level='p'
                       >
-                        {evaluationData.totalJobsAnalyzed} Jobs Analyzed
+                        {evaluationData.jobsAnalyzed} Jobs Analyzed
                       </Text>
                     </FlexContainer>
                     <FlexContainer wrap className='gap-6'>
@@ -339,7 +372,7 @@ const UnskilledLandingPage = ({
                         direction='col'
                       >
                         <Text className='heading-4 text-green-600' level='h4'>
-                          {evaluationData.matchedSkills.length}
+                          {evaluationData.skillsMatched}
                         </Text>
                         <Text
                           className='strong-text text-gray-500'
@@ -355,7 +388,7 @@ const UnskilledLandingPage = ({
                         direction='col'
                       >
                         <Text className='heading-4 text-red-600' level='h4'>
-                          {evaluationData.missingSkills.length}
+                          {evaluationData.skillsMissing}
                         </Text>
                         <Text
                           className='strong-text text-gray-500'
@@ -385,19 +418,31 @@ const UnskilledLandingPage = ({
 
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.match}
-                    items={evaluationData.matchedSkills}
+                    items={evaluationData.matchingSkills.map(skill => ({
+                      skill: skill.skill,
+                      percentage: skill.percentage,
+                      frequency: skill.jobCount,
+                    }))}
                     subtitle='Skills that Match with Your Resume'
                     title='✅ Matching Skills'
                   />
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.missing}
-                    items={evaluationData.missingSkills}
+                    items={evaluationData.missingSkills.map(skill => ({
+                      skill: skill.skill,
+                      percentage: skill.percentage,
+                      frequency: skill.jobCount,
+                    }))}
                     subtitle='Some Skills maybe not relevant to your profile. You can skip them'
                     title='❌ Missing Skills'
                   />
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.company}
-                    items={evaluationData.companyTypeDistribution}
+                    items={evaluationData.companyTypeDistribution.map(company => ({
+                      name: company.type,
+                      percentage: company.percentage,
+                      count: company.jobCount,
+                    }))}
                     subtitle='You should focus on applying at these companies'
                     title='🏢 Companies Hiring'
                   />
@@ -424,9 +469,11 @@ const UnskilledLandingPage = ({
             <Text className='heading-3' level='h3'>
               Job Market Insights
             </Text>
-            <Text className='pre-title text-gray-500' level='p'>
-              Last Updated on: {dateAndTime.date} at {dateAndTime.time}
-            </Text>
+            {dateDisplay && (
+              <Text className='pre-title text-gray-500' level='p'>
+                Last Updated on: {dateDisplay.date} at {dateDisplay.time}
+              </Text>
+            )}
           </FlexContainer>
 
           {jobGraphContainer}
