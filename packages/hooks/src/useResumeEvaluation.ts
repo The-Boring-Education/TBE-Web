@@ -1,181 +1,105 @@
-// hooks/useResumeEvaluation.ts
-import { routes } from "@tbe/constants";
-import { useApi, usePDFFile } from "@tbe/hooks";
-import { useState } from "react";
+/**
+ * useResumeEvaluation Hook
+ * Handles complete resume evaluation flow with new backend integration
+ */
 
-// FIXME: REFACTOR - Updated to match new API response structure
-const DUMMY_EVALUATION_DATA = {
-  resumeScore: 86,
-  skillsMatched: 12,
-  skillsMissing: 3,
-  jobsAnalyzed: 1030,
-  remoteJobs: 89,
-  matchingSkills: [
-    {
-      skill: "javascript",
-      jobCount: 467,
-      percentage: 45,
-    },
-    {
-      skill: "mysql",
-      jobCount: 291,
-      percentage: 28,
-    },
-    {
-      skill: "react",
-      jobCount: 276,
-      percentage: 27,
-    },
-    {
-      skill: "html",
-      jobCount: 242,
-      percentage: 23,
-    },
-    {
-      skill: "java",
-      jobCount: 193,
-      percentage: 19,
-    },
-    {
-      skill: "nodejs",
-      jobCount: 172,
-      percentage: 17,
-    },
-    {
-      skill: "css",
-      jobCount: 165,
-      percentage: 16,
-    },
-    {
-      skill: "python",
-      jobCount: 143,
-      percentage: 14,
-    },
-    {
-      skill: "git",
-      jobCount: 136,
-      percentage: 13,
-    },
-    {
-      skill: "php",
-      jobCount: 133,
-      percentage: 13,
-    },
-    {
-      skill: "mongodb",
-      jobCount: 101,
-      percentage: 10,
-    },
-    {
-      skill: "postgresql",
-      jobCount: 88,
-      percentage: 9,
-    },
-  ],
-  missingSkills: [
-    {
-      skill: "jquery",
-      jobCount: 180,
-      percentage: 17,
-    },
-    {
-      skill: "angular",
-      jobCount: 122,
-      percentage: 12,
-    },
-    {
-      skill: "spring boot",
-      jobCount: 87,
-      percentage: 8,
-    },
-  ],
-  companyTypeDistribution: [
-    {
-      type: "MNC",
-      jobCount: 59,
-      percentage: 6,
-    },
-    {
-      type: "Mid-Size",
-      jobCount: 27,
-      percentage: 3,
-    },
-    {
-      type: "Startup",
-      jobCount: 944,
-      percentage: 92,
-    },
-  ],
-};
+import { EXPERIENCE_LEVELS } from '@tbe/constants';
+import { resumeEvaluationService } from '@tbe/services';
+import type { ResumeEvaluationData } from '@tbe/types';
+import { useState } from 'react';
+import useResumeParser from './usePDFFile';
 
 const useResumeEvaluation = () => {
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
-  const [selectedExperience, setSelectedExperience] = useState<string>("");
-  const [evaluationData, setEvaluationData] = useState<any>(
-    DUMMY_EVALUATION_DATA
-  );
-  const [error, setError] = useState<string>("");
+  const [selectedExperience, setSelectedExperience] = useState<string>('');
+  const [evaluationData, setEvaluationData] = useState<ResumeEvaluationData | null>(null);
+  const [error, setError] = useState<string>('');
+  const [isEvaluating, setIsEvaluating] = useState(false);
 
-  const { extractedSkills, file, handleFileUpload, isLoading: isExtracting } =
-    usePDFFile();
-
-  const { makeRequest, loading: isEvaluating } = useApi("evaluateResume");
+  // Use new resume parser hook
+  const { file, extractedSkills, handleFileUpload, isLoading: isParsing } = useResumeParser();
 
   const handleResumeEvaluation = async () => {
-    setError("");
+    setError('');
 
-    if (!file || selectedDomains.length === 0 || !selectedExperience) {
-      setError("Please upload resume, select domain and experience");
+    // Validation
+    if (!file) {
+      setError('Please upload your resume');
+      return;
+    }
+
+    if (selectedDomains.length === 0) {
+      setError('Please select at least one domain');
+      return;
+    }
+
+    if (selectedDomains.length > 2) {
+      setError('Please select maximum 2 domains');
+      return;
+    }
+
+    if (!selectedExperience) {
+      setError('Please select your experience level');
       return;
     }
 
     if (extractedSkills.length === 0) {
-      setError(
-        "No skills found in your resume. Please upload a valid resume with programming skills."
-      );
-      console.warn("⚠️ No skills extracted from PDF");
+      setError('No skills found in resume. Please upload a valid resume.');
       return;
     }
 
-    console.log("🚀 Starting evaluation with:", {
-      resumeSkills: extractedSkills,
-      domains: selectedDomains,
-      experienceLevel: selectedExperience,
-    });
+    // Validate experience level
+    if (!EXPERIENCE_LEVELS.includes(selectedExperience as any)) {
+      setError('Invalid experience level selected');
+      return;
+    }
 
     try {
-      const response = await makeRequest({
-        method: "POST",
-        url: `${routes.api.unskilledEvaluation}`,
-        body: {
-          resumeSkills: extractedSkills.map(s => s.toLowerCase().trim()),
-          domains: selectedDomains,
-          experienceLevel: selectedExperience,
-        },
+      setIsEvaluating(true);
+
+      // Call new backend API
+      const response = await resumeEvaluationService.evaluateResume({
+        resumeSkills: extractedSkills,
+        domains: selectedDomains,
+        experienceLevel: selectedExperience,
       });
 
-      // New API returns data wrapped in response.data.data
-      setEvaluationData(response.data?.data || response.data);
+      if (response.status && response.data) {
+        setEvaluationData(response.data);
+        setError('');
+      } else {
+        setError(response.message || 'Evaluation failed');
+      }
     } catch (err: any) {
-      const errorMessage = err?.response?.data?.detail || err?.message || "Evaluation failed. Please try again.";
-      setError(errorMessage);
-      console.error("❌ Evaluation error:", err);
+      console.error('Resume evaluation error:', err);
+      setError(err.message || 'Evaluation failed. Please try again.');
+    } finally {
+      setIsEvaluating(false);
     }
   };
 
   return {
+    // File upload
     file,
     handleFileUpload,
+    isParsing,
+    
+    // Skills extracted
+    extractedSkills,
+    
+    // Domain & experience selection
     selectedDomains,
     setSelectedDomains,
     selectedExperience,
     setSelectedExperience,
+    
+    // Evaluation
     isEvaluating,
-    isExtracting,
     evaluationData,
     handleResumeEvaluation,
+    
+    // Error handling
     error,
-    extractedSkills, // Expose for debugging
   };
 };
 

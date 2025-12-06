@@ -26,11 +26,8 @@ import {
   STATIC_FILE_PATH,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
 } from '@tbe/constants';
-import { useResumeEvaluation } from '@tbe/hooks';
-import type {
-  OutlineCardProps,
-  UnskilledLandingPageProps,
-} from '@tbe/interface';
+import { useResumeEvaluation, useUnskilledGraphData } from '@tbe/hooks';
+import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface';
 import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils';
 import { motion } from 'framer-motion';
 import { Fragment } from 'react';
@@ -67,9 +64,12 @@ const UNSKILLED_FEATURES: OutlineCardProps[] = [
 
 const UnskilledLandingPage = ({
   seoMeta,
-  jobData,
+  jobData: _initialJobData, // Not used - data fetched client-side
   isDev,
 }: UnskilledLandingPageProps) => {
+  // Fetch graph data on client-side after page loads
+  const { data: jobData, loading: graphLoading, error: graphError } = useUnskilledGraphData();
+
   const {
     file,
     handleFileUpload,
@@ -78,7 +78,6 @@ const UnskilledLandingPage = ({
     selectedExperience,
     setSelectedExperience,
     isEvaluating,
-    isExtracting,
     evaluationData,
     handleResumeEvaluation,
     error,
@@ -134,7 +133,19 @@ const UnskilledLandingPage = ({
     </ResponsiveContainer>,
   ];
 
-  const jobGraphContainer = jobMarketPanels ? (
+  const jobGraphContainer = graphLoading ? (
+    <FlexContainer className='py-12' direction='col' itemCenter>
+      <Text className='text-gray-500 animate-pulse' level='p'>
+        Loading market insights...
+      </Text>
+    </FlexContainer>
+  ) : graphError ? (
+    <FlexContainer className='py-12' direction='col' itemCenter>
+      <Text className='text-red-500' level='p'>
+        Unable to load graph data. Please try again later.
+      </Text>
+    </FlexContainer>
+  ) : jobMarketPanels ? (
     <TabComponent
       tabLabels={UNSKILLED_LANDING_GRAPH_TAB_PARAMS}
       tabPanels={jobMarketPanels}
@@ -230,6 +241,7 @@ const UnskilledLandingPage = ({
       <Section
         className='bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20 md:px-10 px-4'
         id={`${routes.internals.landing.upload}`}
+        // isDev={isDev}
       >
         <motion.div
           className='relative max-w-5xl mx-auto'
@@ -255,7 +267,6 @@ const UnskilledLandingPage = ({
                 accept='pdf'
                 file={file}
                 onChange={handleFileUpload}
-                isProcessing={isExtracting}
               />
             </FlexContainer>
             <FlexContainer className='gap-6' direction='col'>
@@ -300,20 +311,14 @@ const UnskilledLandingPage = ({
                 text={isEvaluating ? 'Evaluating...' : 'Start Evaluation'}
                 variant='PRIMARY'
                 onClick={handleResumeEvaluation}
-                disabled={isEvaluating || isExtracting}
               />
+              
               {error && (
-                <motion.div
-                  animate={{ opacity: 1, y: 0 }}
-                  className='mt-4 bg-red-50 border border-red-200 rounded-lg p-4'
-                  initial={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Text className='paragraph text-red-600' level='p'>
-                    ❌ {error}
-                  </Text>
-                </motion.div>
+                <Text className='text-red-600 text-sm text-center' level='p'>
+                  {error}
+                </Text>
               )}
+
               {evaluationData && (
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
@@ -330,7 +335,7 @@ const UnskilledLandingPage = ({
                         className='paragraph text-sm text-gray-500 text-center mt-2'
                         level='p'
                       >
-                        {evaluationData.jobsAnalyzed || evaluationData.totalJobsAnalyzed} Jobs Analyzed
+                        {evaluationData.jobsAnalyzed} Jobs Analyzed
                       </Text>
                     </FlexContainer>
                     <FlexContainer wrap className='gap-6'>
@@ -357,7 +362,7 @@ const UnskilledLandingPage = ({
                         direction='col'
                       >
                         <Text className='heading-4 text-green-600' level='h4'>
-                          {evaluationData.skillsMatched || evaluationData.matchedSkills?.length || evaluationData.matchingSkills?.length}
+                          {evaluationData.skillsMatched}
                         </Text>
                         <Text
                           className='strong-text text-gray-500'
@@ -373,7 +378,7 @@ const UnskilledLandingPage = ({
                         direction='col'
                       >
                         <Text className='heading-4 text-red-600' level='h4'>
-                          {evaluationData.skillsMissing || evaluationData.missingSkills?.length}
+                          {evaluationData.skillsMissing}
                         </Text>
                         <Text
                           className='strong-text text-gray-500'
@@ -403,19 +408,31 @@ const UnskilledLandingPage = ({
 
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.match}
-                    items={evaluationData.matchingSkills || evaluationData.matchedSkills}
+                    items={evaluationData.matchingSkills.map(skill => ({
+                      skill: skill.skill,
+                      percentage: skill.percentage,
+                      frequency: skill.jobCount,
+                    }))}
                     subtitle='Skills that Match with Your Resume'
                     title='✅ Matching Skills'
                   />
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.missing}
-                    items={evaluationData.missingSkills}
+                    items={evaluationData.missingSkills.map(skill => ({
+                      skill: skill.skill,
+                      percentage: skill.percentage,
+                      frequency: skill.jobCount,
+                    }))}
                     subtitle='Some Skills maybe not relevant to your profile. You can skip them'
                     title='❌ Missing Skills'
                   />
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.company}
-                    items={evaluationData.companyTypeDistribution}
+                    items={evaluationData.companyTypeDistribution.map(company => ({
+                      name: company.type,
+                      percentage: company.percentage,
+                      count: company.jobCount,
+                    }))}
                     subtitle='You should focus on applying at these companies'
                     title='🏢 Companies Hiring'
                   />
@@ -458,6 +475,6 @@ const UnskilledLandingPage = ({
   );
 };
 
-export const getStaticProps = getUnskilledLandingPageProps;
+export const getServerSideProps = getUnskilledLandingPageProps;
 
 export default UnskilledLandingPage;
