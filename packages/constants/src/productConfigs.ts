@@ -11,11 +11,22 @@ import {
 } from '@heroicons/react/20/solid';
 
 import type { ProductType  } from './database';
-import {ProductConfigProps} from '@tbe/interface';
 
-// export type ProductType = 'INTERVIEW_SHEET' | 'SHIKSHA' | 'PROJECTS' | 'PREPYATRA' | 'GENERAL';
-
-
+export interface ProductConfigProps {
+  name: string;
+  icon: React.ComponentType<{ className?: string }>;
+  reasonsToBuy: Array<{
+    icon: React.ComponentType<{ className?: string }>;
+    title: string;
+    description: string;
+  }>;
+  defaultFeatures?: string[];
+  lockedMessage?: {
+    title: string;
+    description: string;
+    buttonText: string;
+  };
+}
 
 export const PRODUCT_CONFIGS: Record<ProductType, ProductConfigProps> = {
   INTERVIEW_SHEET: {

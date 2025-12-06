@@ -848,18 +848,3 @@ export interface UserProfile {
   }
 }
 
-export interface ProductConfigProps {
-  name: string;
-  icon: React.ComponentType<{ className?: string }>;
-  reasonsToBuy: Array<{
-    icon: React.ComponentType<{ className?: string }>;
-    title: string;
-    description: string;
-  }>;
-  defaultFeatures?: string[];
-  lockedMessage?: {
-    title: string;
-    description: string;
-    buttonText: string;
-  };
-}

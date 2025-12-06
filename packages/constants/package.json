@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@tbe/types": "workspace:*",
-    "@tbe/interface": "workspace:*",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
