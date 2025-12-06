@@ -2,8 +2,6 @@ import {
   BanknotesIcon,
   BookOpenIcon,
   CheckCircleIcon,
-  ClockIcon,
-  LightBulbIcon,
   ShieldCheckIcon,
   StarIcon,
   UserIcon,
@@ -14,6 +12,7 @@ import { routes } from '@tbe/constants';
 import { useCashfreePayment, useUser } from '@tbe/hooks';
 import type { PaymentCardProps } from '@tbe/interface';
 import React, { useState } from 'react';
+import { getProductConfig } from './productConfigs';
 
 const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
   const { user } = useUser();
@@ -26,62 +25,11 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Product type specific content
-  const isInterviewSheet = productType === 'INTERVIEW_SHEET';
-  const productName = isInterviewSheet ? 'Interview Sheet' : 'Course';
-  const productIcon = isInterviewSheet ? ShieldCheckIcon : BookOpenIcon;
-
-  // Dynamic reasons to buy based on product type
-  const reasonsToBuy = isInterviewSheet
-    ? [
-        {
-          icon: ShieldCheckIcon,
-          title: 'Real Interview Questions',
-          description: 'Questions asked in actual FAANG and top-tier companies',
-        },
-        {
-          icon: StarIcon,
-          title: 'Expert Solutions',
-          description:
-            'Detailed explanations and optimal approaches for each question',
-        },
-        {
-          icon: LightBulbIcon,
-          title: 'Interview Insights',
-          description:
-            'Pro tips and common mistakes to avoid during interviews',
-        },
-        {
-          icon: ClockIcon,
-          title: 'Save 100+ Hours',
-          description:
-            'Curated content saves months of research and preparation',
-        },
-      ]
-    : [
-        {
-          icon: BookOpenIcon,
-          title: 'Comprehensive Learning',
-          description: 'Complete hands-on course with practical projects',
-        },
-        {
-          icon: StarIcon,
-          title: 'Industry Relevant',
-          description:
-            'Latest technologies and best practices used in industry',
-        },
-        {
-          icon: CheckCircleIcon,
-          title: 'Completion Certificate',
-          description: 'Get verified certificate upon successful completion',
-        },
-        {
-          icon: ClockIcon,
-          title: 'Lifetime Access',
-          description:
-            'Learn at your own pace with permanent access to content',
-        },
-      ];
+  // Get product configuration based on product type
+  const productConfig = getProductConfig(productType);
+  const productName = productConfig.name;
+  const ProductIcon = productConfig.icon;
+  const reasonsToBuy = productConfig.reasonsToBuy;
 
   const createPaymentOrder = async (): Promise<string> => {
     const response = await fetch(
@@ -153,7 +101,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
           <FlexContainer className='justify-between items-center'>
           <div className='flex items-center gap-2 sm:gap-3'>
             <div className='w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center'>
-              <BookOpenIcon className='w-4 h-4 sm:w-5 sm:h-5 text-blue-600' />
+              <ProductIcon className='w-4 h-4 sm:w-5 sm:h-5 text-blue-600' />
             </div>
             <Text level='h3' className='text-lg sm:text-xl font-bold text-gray-800'>
               Complete Your Purchase
@@ -173,9 +121,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
         <div className='bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-3 sm:p-4 border border-blue-200'>
           <div className='flex flex-col sm:flex-row items-start gap-3'>
             <div className='p-2 bg-blue-100 rounded-lg self-center sm:self-start'>
-              {React.createElement(productIcon, {
-                className: 'w-6 h-6 sm:w-8 sm:h-8 text-blue-600',
-              })}
+              <ProductIcon className='w-6 h-6 sm:w-8 sm:h-8 text-blue-600' />
             </div>
             <div className='flex-1 text-center sm:text-left'>
               <Text level='h3' className='font-bold text-gray-900 mb-2 text-base sm:text-lg'>
@@ -221,7 +167,8 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
         </div>
 
         {/* What's Included */}
-        {course.features && course.features.length > 0 && (
+        {(course.features && course.features.length > 0) ||
+        (productConfig.defaultFeatures && productConfig.defaultFeatures.length > 0) ? (
           <div>
             <Text
               level='h4'
@@ -232,7 +179,10 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
             </Text>
             <div className='bg-gray-50 rounded-lg p-3'>
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-2'>
-                {course.features.map((feature, index) => (
+                {(course.features && course.features.length > 0
+                  ? course.features
+                  : productConfig.defaultFeatures || []
+                ).map((feature, index) => (
                   <div
                     key={index}
                     className='flex items-center gap-2 bg-white border border-gray-200 rounded-md px-3 py-2'
@@ -246,7 +196,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
               </div>
             </div>
           </div>
-        )}
+        ) : null}
 
 
 

@@ -10,7 +10,7 @@ import {
 } from '@tbe/components';
 import { useGamifiedAction } from '@tbe/components';
 import { routes } from '@tbe/constants';
-import { useAnalytics, useApi, usePaymentStatus, useUser } from '@tbe/hooks';
+import { useAnalytics, useApi, usePaymentAccess, useUser } from '@tbe/hooks';
 import type { CouponModel,SheetPageProps } from '@tbe/interface';
 import { calculatePriceBreakdown, formatPrice, getDiscountDisplayInfo, getSavingsPercentage } from '@tbe/utils';
 import { Fragment, useMemo, useRef, useState } from 'react';
@@ -35,12 +35,12 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
 
-  //checking payemnt status for interview sheet
-    const { isPurchased } = usePaymentStatus({
-    userId: user?.id,
+  // Universal payment access hook - handles all payment status and locked logic
+  const { isLocked, isPurchased, hasAccess } = usePaymentAccess({
     productId: sheet?._id,
-    isPremium: sheet?.isPremium,
     productType: 'INTERVIEW_SHEET',
+    isPremium: sheet?.isPremium,
+    isEnrolled: sheet?.isEnrolled,
   });
 
   const { makeRequest, loading } = useApi('interview-prep/enrollSheet');
@@ -67,10 +67,8 @@ const SheetLandingPage = ({ sheet, meta, slug, seoMeta }: SheetLandingPageProps)
     return getDiscountDisplayInfo(sheetModel, appliedCoupon || undefined);
   }, [sheet, appliedCoupon]);
 
-  //checking if the interview sheet is locked
-  const isLocked = sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
-  //checking if the user can start now
-  const canStartNow = sheet?.isEnrolled || (!sheet?.isPremium) || isPurchased;
+  // User can start if they have access
+  const canStartNow = hasAccess;
 
   const enrollSheet = () => {
     makeRequest({
