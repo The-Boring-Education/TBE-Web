@@ -3,7 +3,6 @@
  * Handles complete resume evaluation flow with new backend integration
  */
 
-import { EXPERIENCE_LEVELS } from '@tbe/constants';
 import { resumeEvaluationService } from '@tbe/services';
 import type { ResumeEvaluationData } from '@tbe/types';
 import { useState } from 'react';
@@ -45,12 +44,6 @@ const useResumeEvaluation = () => {
 
     if (extractedSkills.length === 0) {
       setError('No skills found in resume. Please upload a valid resume.');
-      return;
-    }
-
-    // Validate experience level
-    if (!EXPERIENCE_LEVELS.includes(selectedExperience as any)) {
-      setError('Invalid experience level selected');
       return;
     }
 

@@ -1,3 +1,4 @@
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   ArrowRightIcon,
   ArrowTrendingUpIcon,
@@ -30,7 +31,6 @@ import { useResumeEvaluation, useUnskilledGraphData } from '@tbe/hooks';
 import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface';
 import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils';
 import { motion } from 'framer-motion';
-import { Fragment } from 'react';
 import {
   Bar,
   BarChart,
@@ -177,9 +177,19 @@ const UnskilledLandingPage = ({
     },
   };
 
-  const dateAndTime = formatDate({
-    dateAndTime: jobData?.updatedAt,
-  });
+  const [dateDisplay, setDateDisplay] = useState<{
+    date: string;
+    time: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (jobData?.updatedAt) {
+      const formatted = formatDate({
+        dateAndTime: jobData.updatedAt,
+      });
+      setDateDisplay(formatted);
+    }
+  }, [jobData?.updatedAt]);
 
   return (
     <Fragment>
@@ -459,9 +469,11 @@ const UnskilledLandingPage = ({
             <Text className='heading-3' level='h3'>
               Job Market Insights
             </Text>
-            <Text className='pre-title text-gray-500' level='p'>
-              Last Updated on: {dateAndTime.date} at {dateAndTime.time}
-            </Text>
+            {dateDisplay && (
+              <Text className='pre-title text-gray-500' level='p'>
+                Last Updated on: {dateDisplay.date} at {dateDisplay.time}
+              </Text>
+            )}
           </FlexContainer>
 
           {jobGraphContainer}

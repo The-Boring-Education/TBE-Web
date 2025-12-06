@@ -174,17 +174,6 @@ export const SUBSCRIPTION_FEATURES = [
 export const YOUTUBE_API_PATH = 'https://www.googleapis.com/youtube/v3';
 
 // Resume Evaluation Constants
-export const EXPERIENCE_LEVELS = [
-  'Fresher (0 yrs)',
-  'Early Career (1-2 yrs)',
-  'Mid-Level (2-4 yrs)',
-  'Senior (4-7 yrs)',
-  'Staff Engineer (7-10 yrs)',
-  'Principal Engineer (10+ yrs)',
-] as const;
-
-export type ExperienceLevelType = (typeof EXPERIENCE_LEVELS)[number];
-
 export const JOB_DOMAIN_NORMALIZER = [
   {
     label: [
