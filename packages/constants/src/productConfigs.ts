@@ -10,25 +10,14 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/20/solid';
 
-export type ProductType = 'INTERVIEW_SHEET' | 'SHIKSHA' | 'PROJECTS' | 'PREPYATRA' | 'GENERAL';
+import type { ProductType  } from './database';
+import {ProductConfigProps} from '@tbe/interface';
 
-export interface ProductConfig {
-  name: string;
-  icon: React.ComponentType<{ className?: string }>;
-  reasonsToBuy: Array<{
-    icon: React.ComponentType<{ className?: string }>;
-    title: string;
-    description: string;
-  }>;
-  defaultFeatures?: string[];
-  lockedMessage?: {
-    title: string;
-    description: string;
-    buttonText: string;
-  };
-}
+// export type ProductType = 'INTERVIEW_SHEET' | 'SHIKSHA' | 'PROJECTS' | 'PREPYATRA' | 'GENERAL';
 
-export const PRODUCT_CONFIGS: Record<ProductType, ProductConfig> = {
+
+
+export const PRODUCT_CONFIGS: Record<ProductType, ProductConfigProps> = {
   INTERVIEW_SHEET: {
     name: 'Interview Sheet',
     icon: ShieldCheckIcon,
@@ -221,8 +210,8 @@ export const PRODUCT_CONFIGS: Record<ProductType, ProductConfig> = {
   },
 };
 
-export const getProductConfig = (productType: ProductType | string): ProductConfig => {
+export const getProductConfig = (productType: ProductType | string): ProductConfigProps => {
   const config = PRODUCT_CONFIGS[productType as ProductType];
-  return config || PRODUCT_CONFIGS.GENERAL;
+  return config || PRODUCT_CONFIGS.GENERAL as ProductConfigProps;
 };
 

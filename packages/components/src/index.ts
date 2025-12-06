@@ -78,8 +78,6 @@ export { default as LoginCardNew } from "./containers/Cards/LoginCardNew";
 export { default as MentorshipCard } from "./containers/Cards/MentorshipCard";
 export { default as NotificationContainer } from "./containers/Cards/NotificationContainer";
 export { default as PaymentCard } from "./containers/Cards/PaymentCard";
-export { getProductConfig, PRODUCT_CONFIGS } from "./containers/Cards/productConfigs";
-export type { ProductType, ProductConfig } from "./containers/Cards/productConfigs";
 export { default as PlaylistSkillCard } from "./containers/Cards/PlaylistSkillCard";
 export { default as QuizSection } from "./containers/Cards/QuizSection";
 export { default as Testimonials } from "./containers/Cards/Testimonials";

@@ -132,3 +132,10 @@ export interface useQuestionStarredProps {
   questionId: string;
   initialIsStarred: boolean;
 }
+
+export interface UsePaymentAccessProps {
+  productId: string;
+  productType?: string;
+  isPremium?: boolean;
+  isEnrolled?: boolean;
+}

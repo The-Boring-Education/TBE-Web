@@ -1724,6 +1724,9 @@ importers:
 
   packages/constants:
     dependencies:
+      '@tbe/interface':
+        specifier: workspace:*
+        version: link:../interface
       '@tbe/types':
         specifier: workspace:*
         version: link:../types

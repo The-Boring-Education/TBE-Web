@@ -12,7 +12,7 @@ import { routes } from '@tbe/constants';
 import { useCashfreePayment, useUser } from '@tbe/hooks';
 import type { PaymentCardProps } from '@tbe/interface';
 import React, { useState } from 'react';
-import { getProductConfig } from './productConfigs';
+import { getProductConfig } from '@tbe/constants';
 
 const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
   const { user } = useUser();

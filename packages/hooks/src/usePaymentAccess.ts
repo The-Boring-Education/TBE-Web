@@ -1,13 +1,9 @@
-import { useUser } from '@tbe/hooks';
+import useUser  from './useUser';
 import type { usePaymentStatusProps } from '@tbe/interface';
 import usePaymentStatus from './usePaymentStatus';
+import type { UsePaymentAccessProps } from '@tbe/interface';
 
-export interface UsePaymentAccessProps {
-  productId: string;
-  productType?: string;
-  isPremium?: boolean;
-  isEnrolled?: boolean;
-}
+
 
 const usePaymentAccess = ({
   productId,
