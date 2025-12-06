@@ -7,24 +7,18 @@ import {
     envConfig,
     isDevelopmentEnv,
     isProductionEnv,
-    planTypeMap
 } from "@/lib/constants"
 import {
-    createSubscriptionInDB,
-    enrollInACourse,
-    getActiveSubscriptionByUserFromDB,
-    getEnrolledCourseFromDB,
     getPaymentByOrderIdFromDB,
     updatePaymentStatusToDB,
-    updateUserSubscriptionStatusInDB
 } from "@/lib/database"
 import {
     cors,
-    getPYSubscriptionFeaturesByType,
     sendAPIResponse,
     validateWebhookEvent,
     verifyWebhookSignature
 } from "@/lib/utils"
+import { processPostPaymentEnrollment } from "@/lib/services/payment"
 import { connectDB } from "@/middleware/api"
 
 const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY
@@ -155,100 +149,21 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
             )
         }
 
+        // Process enrollment if payment successful
         if (webhookEvent.payment_status === "SUCCESS") {
-            if (_payment.productType === "SHIKSHA") {
-                const { data: alreadyEnrolled } = await getEnrolledCourseFromDB(
-                    {
-                        userId: _payment.user,
-                        courseId: _payment.productId
-                    }
+            const enrollmentResult =
+                await processPostPaymentEnrollment(_payment)
+
+            if (!enrollmentResult.success) {
+                console.error(
+                    `Post-payment enrollment failed for ${_payment.productType}:`,
+                    enrollmentResult.error
                 )
-
-                if (!alreadyEnrolled) {
-                    const { error: enrollError } = await enrollInACourse({
-                        userId: _payment.user,
-                        courseId: _payment.productId
-                    })
-
-                    if (enrollError) {
-                        console.error(
-                            "Course enrollment failed after payment:",
-                            enrollError
-                        )
-                    }
-                }
-            }
-
-            if (_payment.productType === "PREPYATRA") {
-                const plan = planTypeMap[
-                    String(_payment.productId) as keyof typeof planTypeMap
-                ] || {
-                    type: "3Months",
-                    duration: 1
-                }
-
-                // Calculate expiry date
-                const expiryDate =
-                    plan.type === "Lifetime"
-                        ? new Date("2099-12-31")
-                        : new Date(
-                              Date.now() +
-                                  plan.duration * 30 * 24 * 60 * 60 * 1000
-                          )
-
-                // Check for existing active subscription
-                const { data: existingSubscription } =
-                    await getActiveSubscriptionByUserFromDB(
-                        _payment.user,
-                        plan.type
-                    )
-
-                if (!existingSubscription) {
-                    // Get features based on subscription type
-                    const features = getPYSubscriptionFeaturesByType(plan.type)
-
-                    // Create subscription
-                    const { error: createError } = await createSubscriptionInDB(
-                        {
-                            userId: _payment.user,
-                            type: plan.type,
-                            amount: _payment.amount,
-                            duration: plan.duration,
-                            expiryDate,
-                            features
-                        }
-                    )
-
-                    if (createError) {
-                        console.error(
-                            "Failed to create subscription:",
-                            createError
-                        )
-                    } else {
-                        // Update user subscription status
-                        const { error: updateError } =
-                            await updateUserSubscriptionStatusInDB({
-                                userId: _payment.user,
-                                subscriptionStatus: "Active",
-                                subscriptionExpiry: expiryDate
-                            })
-
-                        if (updateError) {
-                            console.error(
-                                "Failed to update user subscription status:",
-                                updateError
-                            )
-                        } else {
-                            console.log(
-                                `Successfully created ${plan.type} subscription for user ${_payment.user}`
-                            )
-                        }
-                    }
-                } else {
-                    console.log(
-                        `User ${_payment.user} already has an active ${plan.type} subscription`
-                    )
-                }
+                // Don't fail webhook - payment is successful, enrollment can be retried
+            } else {
+                console.log(
+                    `Successfully processed enrollment for ${_payment.productType} - Order: ${webhookEvent.order_id}`
+                )
             }
         }
 

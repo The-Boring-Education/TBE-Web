@@ -43,7 +43,7 @@ const checkPaymentStatus = async (
     req: NextApiRequest,
     res: NextApiResponse
 ) => {
-    const { userId, productId } = req.query
+    const { userId, productId, productType } = req.query
 
     if (!userId || !productId) {
         return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -54,9 +54,12 @@ const checkPaymentStatus = async (
         )
     }
 
+    // productType is optional - if provided, it helps filter payments more accurately
+    // Works for all product types: INTERVIEW_SHEET, SHIKSHA, PROJECTS, PREPYATRA, GENERAL
     const { data, error } = await checkPaymentStatusFromDB(
         userId as string,
-        productId as string
+        productId as string,
+        productType as string | undefined
     )
 
     return res.status(apiStatusCodes.OKAY).json(

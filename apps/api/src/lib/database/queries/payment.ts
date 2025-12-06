@@ -75,9 +75,12 @@ const updatePaymentStatusToDB = async ({
 
 const checkPaymentStatusFromDB = async (
     userId: string,
-    productId: string
+    productId: string,
+    productType?: string
 ): Promise<DatabaseQueryResponseType> => {
     try {
+        // Step 1: Check if user has active PrepYatra subscription
+        // PrepYatra subscribers get access to all products
         const activeSubscription = await PrepYatraSubscription.findOne({
             userId,
             isActive: true
@@ -85,11 +88,20 @@ const checkPaymentStatusFromDB = async (
 
         if (activeSubscription) {
             return {
-                data: { purchased: true }
+                data: { 
+                    purchased: true,
+                    accessType: "PREPYATRA_SUBSCRIPTION"
+                }
             }
         }
 
-        const payment = await Payment.findOne({ user: userId, productId })
+        // Step 2: Check specific payment for this product
+        // This works for all product types: INTERVIEW_SHEET, SHIKSHA, PROJECTS, etc.
+        const payment = await Payment.findOne({ 
+            user: userId, 
+            productId,
+            ...(productType && { productType })
+        })
 
         if (!payment) {
             return {
@@ -99,7 +111,12 @@ const checkPaymentStatusFromDB = async (
         }
 
         if (payment.isPaid) {
-            return { data: { purchased: true } }
+            return { 
+                data: { 
+                    purchased: true,
+                    accessType: "DIRECT_PAYMENT"
+                } 
+            }
         } else {
             return {
                 data: { purchased: false },

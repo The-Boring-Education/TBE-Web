@@ -18,7 +18,7 @@ import { routes } from '@tbe/constants';
 import {
   useAnalytics,
   useApi,
-  usePaymentStatus,
+  usePaymentAccess,
   useQuestionStarred,
   useUser,
 } from '@tbe/hooks';
@@ -95,14 +95,14 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
-  const { isPurchased } = usePaymentStatus({
-    userId: user?.id,
-    productId: sheet?._id,
-    isPremium: sheet?.isPremium,
-  });
 
-  const isLocked =
-    sheet?.isPremium && !sheet?.isEnrolled && isPurchased === false;
+  // Universal payment access hook - handles all payment status and locked logic
+  const { isLocked, isPurchased } = usePaymentAccess({
+    productId: sheet?._id,
+    productType: 'INTERVIEW_SHEET',
+    isPremium: sheet?.isPremium,
+    isEnrolled: sheet?.isEnrolled,
+  });
 
   const {
     isStarred,
