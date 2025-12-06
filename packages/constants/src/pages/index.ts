@@ -50,6 +50,13 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: products.resumeYatra!.slug,
       target: '_blank',
     },
+    {
+      id: v4(),
+      name: products.prepYatra!.label,
+      description: products.prepYatra!.description,
+      href: products.prepYatra!.slug,
+      target: '_blank',
+    },
   ],
   products: [
     {

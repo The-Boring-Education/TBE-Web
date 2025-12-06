@@ -18,7 +18,7 @@ const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN as string;
 const PREPYATRA_APP_URL = process.env.PREPYATRA_APP_URL as string;
 const ONBOARDING_URL = process.env.NEXT_PUBLIC_ONBOARDING_APP_URL as string;
 const QUIZ_APP_URL = process.env.QUIZ_APP_URL as string;
-const UNSKILLED_API_URL = process.env.UNSKILLED_API_URL as string;
+const UNSKILLED_API_URL = process.env.NEXT_PUBLIC_UNSKILLED_API_URL as string;
 
 // Email Service Configuration
 const EMAIL_SERVICE_URL = process.env.EMAIL_SERVICE_URL as string;

@@ -48,6 +48,9 @@ export type {
     UserLevel
 } from "./components"
 
+// Resume evaluation types
+export * from "./resume"
+
 // Platform-specific shared types (with explicit exports to avoid conflicts)
 export type {
     // Re-export all platform types except conflicting ones
