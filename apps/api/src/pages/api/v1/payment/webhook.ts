@@ -2,23 +2,23 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import getRawBody from "raw-body"
 
 import {
-    ALLOWED_IPS,
     apiStatusCodes,
     envConfig,
     isDevelopmentEnv,
-    isProductionEnv,
 } from "@/lib/constants"
+
 import {
     getPaymentByOrderIdFromDB,
     updatePaymentStatusToDB,
 } from "@/lib/database"
+
 import {
     cors,
-    isVercelInternalIP,
     sendAPIResponse,
     validateWebhookEvent,
     verifyWebhookSignature
 } from "@/lib/utils"
+
 import { processPostPaymentEnrollment } from "@/lib/services/payment"
 import { connectDB } from "@/middleware/api"
 
@@ -58,32 +58,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-        if (isProductionEnv) {
-            const clientIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-            const ipAddress = Array.isArray(clientIp)
-                ? clientIp[0]
-                : clientIp?.split(",")[0];
-        
-            // Allow Cashfree IPs + allow Vercel internal proxy IPs
-            const allowed =
-                isVercelInternalIP(ipAddress) || ALLOWED_IPS.includes(ipAddress || "");
-        
-            if (!allowed) {
-                return res.status(apiStatusCodes.UNAUTHORIZED).json(
-                    sendAPIResponse({
-                        status: false,
-                        message: "Unauthorized IP address",
-                        error: ipAddress || "Unknown IP address"
-                    })
-                );
-            }
-        }
-        
+
         const rawBody = await getRawBody(req)
         const payloadString = rawBody.toString("utf8")
 
+        // Signature from headers
         const webhookSignature = req.headers["x-webhook-signature"]
 
+        // Signature validation
         if (process.env.NODE_ENV !== "development") {
             if (!webhookSignature || typeof webhookSignature !== "string") {
                 return res.status(apiStatusCodes.UNAUTHORIZED).json(
@@ -154,7 +136,6 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
             )
         }
 
-        // Process enrollment if payment successful
         if (webhookEvent.payment_status === "SUCCESS") {
             const enrollmentResult =
                 await processPostPaymentEnrollment(_payment)
@@ -164,7 +145,6 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
                     `Post-payment enrollment failed for ${_payment.productType}:`,
                     enrollmentResult.error
                 )
-                // Don't fail webhook - payment is successful, enrollment can be retried
             } else {
                 console.log(
                     `Successfully processed enrollment for ${_payment.productType} - Order: ${webhookEvent.order_id}`
