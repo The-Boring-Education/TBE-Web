@@ -94,23 +94,25 @@ const generatePaymentOrderId = (): string =>
   
     return { data, ok: response.ok };
   };
+
+
+  // local helper to verify signature exactly per Cashfree docs
+const verifyWebhookSignature = (
+  rawPayload: string,
+  signature: string | undefined,
+  webhookSecret: string,
+  timestamp: string | undefined
+): { isValid: boolean; error?: string } => {
+  if (!signature) return { isValid: false, error: "Missing webhook signature" };
+  if (!timestamp || typeof timestamp !== "string")
+    return { isValid: false, error: "Missing webhook timestamp" };
+
+  // signed string = timestamp + rawBody (no separators)
+  const signedString = timestamp + rawPayload;
+  const generatedSignature = crypto.createHmac("sha256", webhookSecret).update(signedString).digest("base64");
+  return { isValid: signature === generatedSignature, error: signature === generatedSignature ? undefined : "Invalid webhook signature" };
+};
   
-  const verifyWebhookSignature = (
-    payloadString: string,
-    signature: string | undefined,
-    webhookSecret: string
-  ): { isValid: boolean; error?: string } => {
-    if (!signature) {
-      return { isValid: false, error: 'Missing webhook signature' };
-    }
-  
-    const generatedSignature = crypto
-      .createHmac('sha256', webhookSecret)
-      .update(payloadString)
-      .digest('base64');
-  
-    return { isValid: signature === generatedSignature };
-  };
   
   const validateWebhookEvent = (
     event: any
