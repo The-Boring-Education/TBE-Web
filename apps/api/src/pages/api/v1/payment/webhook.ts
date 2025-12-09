@@ -14,6 +14,7 @@ import {
 } from "@/lib/database"
 import {
     cors,
+    isVercelInternalIP,
     sendAPIResponse,
     validateWebhookEvent,
     verifyWebhookSignature
@@ -58,22 +59,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         if (isProductionEnv) {
-            const clientIp =
-                req.headers["x-forwarded-for"] || req.socket.remoteAddress
+            const clientIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             const ipAddress = Array.isArray(clientIp)
                 ? clientIp[0]
-                : clientIp?.split(",")[0]
-
-            if (!ipAddress || !ALLOWED_IPS.includes(ipAddress)) {
+                : clientIp?.split(",")[0];
+        
+            // Allow Cashfree IPs + allow Vercel internal proxy IPs
+            const allowed =
+                isVercelInternalIP(ipAddress) || ALLOWED_IPS.includes(ipAddress || "");
+        
+            if (!allowed) {
                 return res.status(apiStatusCodes.UNAUTHORIZED).json(
                     sendAPIResponse({
                         status: false,
-                        message: "Unauthorized IP address"
+                        message: "Unauthorized IP address",
+                        error: ipAddress || "Unknown IP address"
                     })
-                )
+                );
             }
         }
-
+        
         const rawBody = await getRawBody(req)
         const payloadString = rawBody.toString("utf8")
 
