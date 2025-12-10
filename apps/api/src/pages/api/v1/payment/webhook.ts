@@ -1,267 +1,167 @@
-import type { NextApiRequest, NextApiResponse } from "next"
-import getRawBody from "raw-body"
+import type { NextApiRequest, NextApiResponse } from "next";
+import getRawBody from "raw-body";
+import crypto from "crypto";
 
 import {
-    ALLOWED_IPS,
-    apiStatusCodes,
-    envConfig,
-    isDevelopmentEnv,
-    isProductionEnv,
-    planTypeMap
-} from "@/lib/constants"
-import {
-    createSubscriptionInDB,
-    enrollInACourse,
-    getActiveSubscriptionByUserFromDB,
-    getEnrolledCourseFromDB,
-    getPaymentByOrderIdFromDB,
-    updatePaymentStatusToDB,
-    updateUserSubscriptionStatusInDB
-} from "@/lib/database"
-import {
-    cors,
-    getPYSubscriptionFeaturesByType,
-    sendAPIResponse,
-    validateWebhookEvent,
-    verifyWebhookSignature
-} from "@/lib/utils"
-import { connectDB } from "@/middleware/api"
+  apiStatusCodes,
+  envConfig,
+  isDevelopmentEnv,
+} from "@/lib/constants";
 
-const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY
+import { getPaymentByOrderIdFromDB, updatePaymentStatusToDB } from "@/lib/database";
+import { cors, sendAPIResponse, verifyWebhookSignature } from "@/lib/utils"; // note: verifyWebhookSignature moved below
+import { processPostPaymentEnrollment } from "@/lib/services/payment";
+import { connectDB } from "@/middleware/api";
+
+const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY;
 
 export const config = {
-    api: {
-        bodyParser: false
-    }
-}
+  api: {
+    bodyParser: false,
+  },
+};
+
+type WebhookEvent = {
+  order_id: string;
+  payment_status: "SUCCESS" | "FAILED" | string;
+  payment_id?: string | number;
+  raw?: any;
+};
+
+const validateAndExtract = (payload: any): { isValid: boolean; error?: string; data?: WebhookEvent } => {
+  if (!payload || typeof payload !== "object") {
+    return { isValid: false, error: "Invalid payload format" };
+  }
+
+  const data = payload.data;
+  if (!data) return { isValid: false, error: "Missing data object in payload" };
+
+  const order = data.order;
+  const payment = data.payment;
+  if (!order || !payment) {
+    return { isValid: false, error: "Missing order or payment in payload.data" };
+  }
+
+  const order_id = order.order_id || order.orderId || null;
+  const payment_status = (payment.payment_status || payment.status || null) as string | null;
+  const payment_id = payment.cf_payment_id || payment.gateway_payment_id || payment.payment_id || null;
+
+  if (!order_id || !payment_status) {
+    return { isValid: false, error: "Missing order_id or payment_status in webhook payload" };
+  }
+
+  return {
+    isValid: true,
+    data: {
+      order_id,
+      payment_status,
+      payment_id,
+      raw: payload,
+    },
+  };
+};
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    await cors(req, res)
-    await connectDB()
+  try {
+    const rawBodyBuffer = await getRawBody(req);
+    const payloadString = rawBodyBuffer.toString("utf8");
+
+    await cors(req, res);
+    await connectDB();
 
     if (!WEBHOOK_SECRET) {
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-            sendAPIResponse({
-                status: false,
-                message: "Webhook secret configuration missing"
-            })
-        )
-    }
-
-    switch (req.method) {
-        case "POST":
-            return handleWebhook(req, res)
-        default:
-            return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
-                sendAPIResponse({
-                    status: false,
-                    message: `Method ${req.method} Not Allowed`
-                })
-            )
-    }
-}
-
-const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
-    try {
-        if (isProductionEnv) {
-            const clientIp =
-                req.headers["x-forwarded-for"] || req.socket.remoteAddress
-            const ipAddress = Array.isArray(clientIp)
-                ? clientIp[0]
-                : clientIp?.split(",")[0]
-
-            if (!ipAddress || !ALLOWED_IPS.includes(ipAddress)) {
-                return res.status(apiStatusCodes.UNAUTHORIZED).json(
-                    sendAPIResponse({
-                        status: false,
-                        message: "Unauthorized IP address"
-                    })
-                )
-            }
-        }
-
-        const rawBody = await getRawBody(req)
-        const payloadString = rawBody.toString("utf8")
-
-        const webhookSignature = req.headers["x-webhook-signature"]
-
-        if (process.env.NODE_ENV !== "development") {
-            if (!webhookSignature || typeof webhookSignature !== "string") {
-                return res.status(apiStatusCodes.UNAUTHORIZED).json(
-                    sendAPIResponse({
-                        status: false,
-                        message: "Missing webhook signature"
-                    })
-                )
-            }
-
-            const { isValid: isSignatureValid, error: signatureError } =
-                verifyWebhookSignature(
-                    payloadString,
-                    webhookSignature,
-                    WEBHOOK_SECRET
-                )
-
-            if (!isSignatureValid) {
-                return res.status(apiStatusCodes.UNAUTHORIZED).json(
-                    sendAPIResponse({
-                        status: false,
-                        message: signatureError || "Invalid webhook signature"
-                    })
-                )
-            }
-        }
-
-        const event = JSON.parse(payloadString)
-        const {
-            isValid: isEventValid,
-            error: eventError,
-            data: webhookEvent
-        } = validateWebhookEvent(event)
-
-        if (!isEventValid || !webhookEvent) {
-            return res.status(apiStatusCodes.BAD_REQUEST).json(
-                sendAPIResponse({
-                    status: false,
-                    message: eventError || "Invalid webhook event"
-                })
-            )
-        }
-
-        const { data: _payment, error: findError } =
-            await getPaymentByOrderIdFromDB(webhookEvent.order_id)
-
-        if (findError) {
-            return res.status(apiStatusCodes.NOT_FOUND).json(
-                sendAPIResponse({
-                    status: false,
-                    message: findError
-                })
-            )
-        }
-
-        const { error: updateError } = await updatePaymentStatusToDB({
-            orderId: webhookEvent.order_id,
-            paymentId: webhookEvent.payment_id,
-            status: webhookEvent.payment_status as "SUCCESS" | "FAILED"
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: "Webhook secret configuration missing",
         })
-
-        if (updateError) {
-            return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-                sendAPIResponse({
-                    status: false,
-                    message: updateError
-                })
-            )
-        }
-
-        if (webhookEvent.payment_status === "SUCCESS") {
-            if (_payment.productType === "SHIKSHA") {
-                const { data: alreadyEnrolled } = await getEnrolledCourseFromDB(
-                    {
-                        userId: _payment.user,
-                        courseId: _payment.productId
-                    }
-                )
-
-                if (!alreadyEnrolled) {
-                    const { error: enrollError } = await enrollInACourse({
-                        userId: _payment.user,
-                        courseId: _payment.productId
-                    })
-
-                    if (enrollError) {
-                        console.error(
-                            "Course enrollment failed after payment:",
-                            enrollError
-                        )
-                    }
-                }
-            }
-
-            if (_payment.productType === "PREPYATRA") {
-                const plan = planTypeMap[
-                    String(_payment.productId) as keyof typeof planTypeMap
-                ] || {
-                    type: "3Months",
-                    duration: 1
-                }
-
-                // Calculate expiry date
-                const expiryDate =
-                    plan.type === "Lifetime"
-                        ? new Date("2099-12-31")
-                        : new Date(
-                              Date.now() +
-                                  plan.duration * 30 * 24 * 60 * 60 * 1000
-                          )
-
-                // Check for existing active subscription
-                const { data: existingSubscription } =
-                    await getActiveSubscriptionByUserFromDB(
-                        _payment.user,
-                        plan.type
-                    )
-
-                if (!existingSubscription) {
-                    // Get features based on subscription type
-                    const features = getPYSubscriptionFeaturesByType(plan.type)
-
-                    // Create subscription
-                    const { error: createError } = await createSubscriptionInDB(
-                        {
-                            userId: _payment.user,
-                            type: plan.type,
-                            amount: _payment.amount,
-                            duration: plan.duration,
-                            expiryDate,
-                            features
-                        }
-                    )
-
-                    if (createError) {
-                        console.error(
-                            "Failed to create subscription:",
-                            createError
-                        )
-                    } else {
-                        // Update user subscription status
-                        const { error: updateError } =
-                            await updateUserSubscriptionStatusInDB({
-                                userId: _payment.user,
-                                subscriptionStatus: "Active",
-                                subscriptionExpiry: expiryDate
-                            })
-
-                        if (updateError) {
-                            console.error(
-                                "Failed to update user subscription status:",
-                                updateError
-                            )
-                        } else {
-                            console.log(
-                                `Successfully created ${plan.type} subscription for user ${_payment.user}`
-                            )
-                        }
-                    }
-                } else {
-                    console.log(
-                        `User ${_payment.user} already has an active ${plan.type} subscription`
-                    )
-                }
-            }
-        }
-
-        return res.status(apiStatusCodes.OKAY).json({ status: "OK" })
-    } catch (error) {
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-            sendAPIResponse({
-                status: false,
-                message: "Webhook processing failed",
-                error: isDevelopmentEnv && error
-            })
-        )
+      );
     }
-}
 
-export default handler
+    if (req.method !== "POST") {
+      return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${req.method} Not Allowed`,
+        })
+      );
+    }
+
+    const rawSignature = req.headers["x-webhook-signature"];
+    const rawTimestamp = req.headers["x-webhook-timestamp"];
+    const webhookSignature = Array.isArray(rawSignature) ? rawSignature[0] : rawSignature;
+    const webhookTimestamp = Array.isArray(rawTimestamp) ? rawTimestamp[0] : rawTimestamp;
+
+    if (process.env.NODE_ENV !== "development") {
+      const { isValid, error } = verifyWebhookSignature(payloadString, webhookSignature as string | undefined, WEBHOOK_SECRET as string, webhookTimestamp as string | undefined);
+      if (!isValid) {
+        return res.status(apiStatusCodes.UNAUTHORIZED).json(
+          sendAPIResponse({
+            status: false,
+            message: error || "Invalid webhook signature",
+          })
+        );
+      }
+    }
+
+    let parsed: any;
+    try {
+      parsed = JSON.parse(payloadString);
+    } catch (err) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Invalid JSON payload",
+        })
+      );
+    }
+
+        const { isValid: ok, error: validationError, data: webhookEvent } = validateAndExtract(parsed);
+    if (!ok || !webhookEvent) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: validationError || "Invalid webhook event",
+        })
+      );
+    }
+
+    const { data: _payment, error: findError } = await getPaymentByOrderIdFromDB(webhookEvent.order_id);
+    if (findError) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(sendAPIResponse({ status: false, message: findError }));
+    }
+
+    const { error: updateError } = await updatePaymentStatusToDB({
+      orderId: webhookEvent.order_id,
+      paymentId: webhookEvent.payment_id as string,
+      status: webhookEvent.payment_status as "SUCCESS" | "FAILED",
+    });
+
+    if (updateError) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(sendAPIResponse({ status: false, message: updateError }));
+    }
+
+    if (webhookEvent.payment_status === "SUCCESS") {
+      const enrollmentResult = await processPostPaymentEnrollment(_payment);
+      if (!enrollmentResult.success) {
+        console.error(`Post-payment enrollment failed for ${_payment.productType}:`, enrollmentResult.error);
+        // do not fail webhook
+      } else {
+        console.log(`Successfully processed enrollment for ${_payment.productType} - Order: ${webhookEvent.order_id}`);
+      }
+    }
+
+    return res.status(apiStatusCodes.OKAY).json({ status: "OK" });
+  } catch (error) {
+    console.error("Webhook handler error:", error);
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "Webhook processing failed",
+        error: isDevelopmentEnv && (error as any).message,
+      })
+    );
+  }
+};
+
+export default handler;

@@ -120,6 +120,7 @@ export interface useFeedbackProps {
 export interface usePaymentStatusProps {
   userId?: string;
   productId: string;
+  productType?: string; // Optional: INTERVIEW_SHEET, SHIKSHA, PROJECTS, PREPYATRA, GENERAL
   isPremium?: boolean;
 }
 
@@ -130,4 +131,11 @@ export interface useQuestionStarredProps {
   sheetId: string;
   questionId: string;
   initialIsStarred: boolean;
+}
+
+export interface UsePaymentAccessProps {
+  productId: string;
+  productType?: string;
+  isPremium?: boolean;
+  isEnrolled?: boolean;
 }

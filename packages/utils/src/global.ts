@@ -389,38 +389,19 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
   }
 
   const seoMeta = getSEOMeta(slug);
+  const isDev = IN_DEV_PAGES.some((page) => page === slug);
 
-  // Fetch graph data directly from Unskilled Platfrom API
-  try {
-    const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`);
-
-    if (!response.ok) {
-      throw new Error(`API responded with status ${response.status}`);
-    }
-
-    const apiResponse = await response.json();
-    const jobData = apiResponse.data || null;
-
-    const isDev = IN_DEV_PAGES.some((page) => page === slug);
-
-    return {
-      props: {
-        seoMeta,
-        jobData,
-        isDev,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching Unskilled data:", error);
-    return {
-      props: {
-        seoMeta,
-        jobData: null,
-        isDev: false,
-      },
-    };
-  }
+  // Graph data is now fetched client-side after page load
+  // This improves build performance and allows for dynamic updates
+  return {
+    props: {
+      seoMeta,
+      jobData: null, // Will be fetched on client
+      isDev,
+    },
+  };
 };
+
 const getCertificatePageProps = async ({ query: { certificateId } }: any) => {
   const { status, data: certificate } = await fetchAPIData(
     routes.api.certificateById(certificateId)

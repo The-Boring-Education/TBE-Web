@@ -45,6 +45,7 @@ const FeatureCards = () => {
               whileInView={{opacity: 1, y: 0}}
               viewport={{once: true}}
               transition={{duration: 0.6, delay: index * 0.15}}
+              className='hover:shadow-xl transition-all duration-300 hover:scale-105 border-borderColor2 bg-gradient-to-br from-white to-gray-100'
             >
               <IconCard
                 icon={feature.icon}

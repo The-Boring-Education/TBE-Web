@@ -1,7 +1,9 @@
 import {
+  CardContainerA,
   FlexContainer,
   Image,
   LinkButton,
+  ModernLandingHero,
   PortfolioCard,
   PortfolioTemplate,
   Section,
@@ -12,73 +14,84 @@ import {
   LINKS,
   PAGE_REFRESH_TIMEOUT,
   PORTFOLIO_CARDS,
+  PORTFOLIO_FEATURES,
   PORTFOLIO_TEMPLATES,
   routes,
   STATIC_FILE_PATH,
+  TBSH_FEATURES,
 } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
+import { FaCertificate, FaClock, FaUsers } from 'react-icons/fa';
 
+
+const stats = [
+  {
+    icon: <FaCertificate />,
+    text: '4+ Free Templates',
+    color: 'text-green-400',
+  },
+  {
+    icon: <FaClock />,
+    text: 'Customizable',
+    color: 'text-yellow-400',
+  },
+  {
+    icon: <FaUsers />,
+    text: 'Showcase Your Skills',
+    color: 'text-blue-400',
+  },
+  {
+    icon: <FaCertificate />,
+    text: 'Showcase Your Projects',
+    color: 'text-purple-400',
+  },
+];
+
+const previewContent = {
+  title: 'Preview Our Portfolio',
+  description: 'See how our portfolio templates can help you showcase your projects',
+  buttonText: 'Explore Portfolio',
+  onPreviewClick: () => {
+    document.getElementById('portfolio-section')?.scrollIntoView({ behavior: 'smooth' });
+  },
+};
 const Portfolio = ({ seoMeta }: PageProps) => {
   const router = useRouter();
 
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <Section>
-        <FlexContainer
-          className='max-w-screen-xl flex-col md:flex-row md:justify-around gradient-6 p-2 md:p-4 py-4 md:py-6 rounded-2 gap-4 md:gap-4'
-          fullWidth
-          wrap={false}
-        >
-          <Image
-            alt='portfolio-img'
-            className='md:min-w-[40%] lg:min-w-[20%] lg:w-[30%]'
-            src={`${STATIC_FILE_PATH.svg}/the-boring-portfolio-hero.svg`}
-          />
-          <FlexContainer className='gap-1' direction='col'>
-            <FlexContainer className='gap-1' direction='col'>
-              <Text className='heading-3' level='h1' textCenter>
-                Don't Just Have A Resume Own a Portfolio.
-              </Text>
-              <Text level='p' textCenter>
-                Create Your Portfolio Websites in Minutes and Show your skills
-                and projects to the world.
-              </Text>
-            </FlexContainer>
-            <LinkButton
-              buttonProps={{
-                variant: 'PRIMARY',
-                text: 'Get Started',
-                className: 'px-5 mt-2 lg:mt-3',
-              }}
-              className=''
-              href={`${router.asPath}#${routes.internals.landing.portfolio}`}
+            <ModernLandingHero
+        heading='Get a Portfolio'
+        focusText='In Minutes'
+        heroText='Create Your Portfolio Websites in Minutes and Show your skills and projects to the world.'
+        gradientFrom='from-emerald-600'
+        gradientTo='to-blue-700'
+        stats={stats}
+        previewContent={previewContent}
+        primaryButton={
+          <LinkButton
+            buttonProps={{
+              variant: 'PRIMARY',
+              text: 'Explore Portfolio',
+              className: 'bg-red hover:bg-gray-100 hover:text-black px-4 py-2 text-base font-semibold w-full sm:w-auto',
+            }}
+            className='w-full sm:w-fit'
+            href={`${router.asPath}#${routes.internals.landing.portfolio}`}
             />
-          </FlexContainer>
-        </FlexContainer>
-      </Section>
-      <Section className='flex flex-col items-center p-2 gap-3 my-4'>
-        <Text className='heading-3' level='h2' textCenter>
-          Why Own A{' '}
-          <Text className='text-primary' level='span'>
-            Portfolio?
-          </Text>
-        </Text>
-        <FlexContainer className='max-w-screen-xl gap-3 md:flex-row' fullWidth>
-          {PORTFOLIO_CARDS.map((card) => (
-            <PortfolioCard
-              key={card.id}
-              description={card.description}
-              imageUrl={card.imageUrl}
-              index={card.id}
-              title={card.title}
-            />
-          ))}
-        </FlexContainer>
-      </Section>
+        }
+      />
+      <div id='features-section'>
+        <CardContainerA
+          borderColour={4}
+          cards={PORTFOLIO_FEATURES}
+          focusText='Differently'
+          heading='What We Do'
+        />
+      </div>
       <Section
         className='flex flex-col items-center bg-black p-2'
         id={routes.internals.landing.portfolio}

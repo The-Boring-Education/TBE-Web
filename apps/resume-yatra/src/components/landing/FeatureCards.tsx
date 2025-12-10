@@ -37,7 +37,7 @@ const FeatureCards = () => {
                     {features.map((feature, index) => (
                         <Card
                             key={index}
-                            className='hover:shadow-xl transition-all duration-300 hover:scale-105 border-0 bg-gradient-to-br from-white to-gray-50'>
+                            className='hover:shadow-xl transition-all duration-300 hover:scale-105 border-borderColor2 bg-gradient-to-br from-white to-gray-100'>
                             <CardContent className='p-6 text-center'>
                                 <div className='mb-4 flex justify-center'>
                                     {feature.icon}
