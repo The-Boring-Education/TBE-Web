@@ -17,6 +17,7 @@
     "dev:techyatra": "turbo run dev --filter=@tbe/techyatra",
     "dev:dsayatra": "turbo run dev --filter=@tbe/dsayatra",
     "dev:resume-yatra": "turbo run dev --filter=@tbe/resume-yatra",
+    "dev:oncampus": "turbo run dev --filter=@tbe/oncampus",
     "build:platform": "turbo run build --filter=@tbe/platform",
     "build:prep-yatra": "turbo run build --filter=@tbe/prep-yatra",
     "build:quizes": "turbo run build --filter=@tbe/quizes",
@@ -25,6 +26,7 @@
     "build:techyatra": "turbo run build --filter=@tbe/techyatra",
     "build:dsayatra": "turbo run build --filter=@tbe/dsayatra",
     "build:resume-yatra": "turbo run build --filter=@tbe/resume-yatra",
+    "build:oncampus": "turbo run build --filter=@tbe/oncampus",
     "install:all": "pnpm install"
   },
   "devDependencies": {
