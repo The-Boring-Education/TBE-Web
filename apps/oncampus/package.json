@@ -1,0 +1,35 @@
+{
+  "name": "@tbe/oncampus",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3007",
+    "build": "next build",
+    "start": "next start -p 3007",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "^18",
+    "react-dom": "^18",
+    "next": "13.5.6",
+    "@tbe/components": "workspace:*",
+    "@tbe/hooks": "workspace:*",
+    "@tbe/utils": "workspace:*",
+    "@tbe/types": "workspace:*",
+    "@tbe/services": "workspace:*",
+    "@tbe/constants": "workspace:*",
+    "@tbe/auth": "workspace:*",
+    "@tbe/config": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10",
+    "postcss": "^8",
+    "tailwindcss": "^3",
+    "eslint": "^8",
+    "@tbe/eslint-config": "workspace:*"
+  }
+}
