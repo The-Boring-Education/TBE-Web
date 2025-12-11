@@ -36,15 +36,15 @@ export default function CampusPrepLanding() {
 
               {/* Center: Nav Links */}
               <div className="hidden md:flex items-center gap-8">
-                <a href="#learn" className="text-white/80 hover:text-white transition-colors text-sm">
+                <span className="text-white/80 hover:text-white transition-colors text-sm cursor-pointer">
                   Learn
-                </a>
-                <a href="#tools" className="text-white/80 hover:text-white transition-colors text-sm">
+                </span>
+                <span className="text-white/80 hover:text-white transition-colors text-sm cursor-pointer">
                   Tools
-                </a>
-                <a href="#links" className="text-white/80 hover:text-white transition-colors text-sm">
+                </span>
+                <span className="text-white/80 hover:text-white transition-colors text-sm cursor-pointer">
                   Links
-                </a>
+                </span>
               </div>
 
               {/* Right: Notification + Login */}
