@@ -127,6 +127,7 @@ export default function CampusPrepLanding() {
                   width={600}
                   height={500}
                   className="w-full h-auto"
+                  priority
                 />
               </div>
             </motion.div>
