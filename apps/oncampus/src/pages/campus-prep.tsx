@@ -1,8 +1,10 @@
-import { Button } from "@tbe/components";
-import { motion } from "framer-motion";
-import { useRouter } from "next/router";
 import { Fragment } from "react";
+
+import { Button } from "@tbe/components";
 import { Bell } from "lucide-react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function CampusPrepLanding() {
   const router = useRouter();
@@ -119,9 +121,11 @@ export default function CampusPrepLanding() {
               className="flex items-center justify-center"
             >
               <div className="w-full max-w-lg">
-                <img
+                <Image
                   src="/landing.svg"
                   alt="Students studying with laptops"
+                  width={600}
+                  height={500}
                   className="w-full h-auto"
                 />
               </div>
