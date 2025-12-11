@@ -11,14 +11,14 @@ import {
     LoadingSpinner,
     Navbar,
     ProfileSection,
-    usePrepYatraGamificationContext} from "@tbe/components";
+    usePrepYatraGamificationContext } from "@tbe/components";
 import { usePrepLogs } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import { recruitersService, userService } from "@tbe/services";
 import type { RecruiterContact } from "@tbe/types";
 import { Menu, X } from "lucide-react";
 import { useRouter } from "next/router";
-import React, { Suspense, useCallback,useEffect, useRef, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const Dashboard = () => {
