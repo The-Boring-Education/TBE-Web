@@ -23,11 +23,11 @@ const PrimaryCardWithCTA = ({
       className={`md:w-[45%] lg:w-[30%] max-w-md ${border} flex-1 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer`}
     >
       {isPurchased ? (
-        <div className='absolute top-3 right-3 bg-green-100 text-green-600 text-[12px] font-medium px-3 py-[4px] rounded-full border border-green-300 shadow-sm z-10'>
+        <div className='absolute top-3 right-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 text-[12px] font-medium px-3 py-[4px] rounded-full border border-green-300 dark:border-green-700 shadow-sm z-10'>
           ✅ Purchased
         </div>
       ) : isPremium ? (
-        <div className='absolute top-3 right-3 bg-yellow-100 text-red-600 text-[12px] font-medium px-3 py-[4px] rounded-full border border-yellow-300 shadow-sm z-10'>
+        <div className='absolute top-3 right-3 bg-yellow-100 dark:bg-yellow-900 text-red-600 dark:text-red-300 text-[12px] font-medium px-3 py-[4px] rounded-full border border-yellow-300 dark:border-yellow-700 shadow-sm z-10'>
           🔒 Premium
         </div>
       ) : null}
@@ -40,14 +40,14 @@ const PrimaryCardWithCTA = ({
         />
       )}
       <div className='mt-2'>
-        <Text className='heading-5 truncate' level='h5'>
+        <Text className='heading-5 truncate text-gray-900 dark:text-white' level='h5'>
           {title}
         </Text>
-        <Text className='pre-title mt-1 text-grey line-clamp-1' level='p'>
+        <Text className='pre-title mt-1 text-grey dark:text-gray-400 line-clamp-1' level='p'>
           {content}
         </Text>
         {launchingOn && (
-          <Text className='pre-title mt-1 text-primary' level='p'>
+          <Text className='pre-title mt-1 text-primary dark:text-red-400' level='p'>
             {launchingOn}
           </Text>
         )}

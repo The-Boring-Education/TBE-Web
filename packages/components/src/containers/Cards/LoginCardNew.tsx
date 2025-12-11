@@ -68,19 +68,19 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
         <Section className='md:px-4 md:py-4 px-2 py-2'>
             <FlexContainer className='m-auto' justifyCenter itemCenter>
                 <motion.div
-                    className='flex w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden'
+                    className='flex w-full max-w-4xl bg-white dark:bg-gray-900 rounded-lg shadow-xl overflow-hidden'
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
                 >
                     {/* Left Section - Login Form */}
-                    <div className='w-full md:w-1/2 p-4 md:p-3 flex border-1 border-gray-200 flex-col items-center justify-center text-center bg-white'>
+                    <div className='w-full md:w-1/2 p-4 md:p-3 flex border-1 border-gray-200 dark:border-gray-700 flex-col items-center justify-center text-center bg-white dark:bg-gray-900'>
                        <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
                         >
-                            <Text level='h1' className='text-2xl md:text-3xl font-bold text-gray-900'>
+                            <Text level='h1' className='text-2xl md:text-3xl font-bold text-gray-900 dark:text-white'>
                                 {variantConfig.title}
                             </Text>
                         </motion.div>
@@ -91,13 +91,13 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                             transition={{ delay: 0.4 }}
                             className='mt-2'
                         >
-                            <Text level='p' className='text-sm text-gray-600'>
+                            <Text level='p' className='text-sm text-gray-600 dark:text-gray-300'>
                                 {variantConfig.subtitle}
                             </Text>
                         </motion.div>
 
                         <motion.button
-                            className='mt-4 w-full flex items-center justify-center border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-colors cursor-pointer px-3 py-2 text-gray-700 font-medium'
+                            className='mt-4 w-full flex items-center justify-center border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer px-3 py-2 text-gray-700 dark:text-gray-200 font-medium'
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.5 }}
@@ -138,11 +138,11 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                             transition={{ delay: 0.6 }}
                             className='mt-4 text-sm text-gray-500'
                         >
-                            <Text level='p' className='text-xs text-gray-500'>
+                            <Text level='p' className='text-xs text-gray-500 dark:text-gray-400'>
                                 By signing in, you agree to our{' '}
                                 <a 
                                     href={variantConfig.termsHref || '/terms-and-conditions'} 
-                                    className='text-purple-600 hover:text-purple-700 underline'
+                                    className='text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 underline'
                                 >
                                     Terms and Conditions
                                 </a>
@@ -151,7 +151,7 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                                         {' '}and{' '}
                                         <a 
                                             href={variantConfig.privacyHref} 
-                                            className='text-purple-600 hover:text-purple-700 underline'
+                                            className='text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 underline'
                                         >
                                             Privacy Policy
                                         </a>

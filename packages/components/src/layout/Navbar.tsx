@@ -53,7 +53,7 @@ const Navbar = ({
     if (variant === 'transparent') {
       return 'glass-dark backdrop-blur-md';
     }
-    return 'bg-white';
+    return 'bg-white dark:bg-gray-900';
   };
 
   const finalDashboardRoute = dashboardRoute || variantConfig.dashboardRoute;
@@ -87,11 +87,11 @@ const Navbar = ({
                 <div key={index}>{action}</div>
               ))}
               <button
-                className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black'
+                className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black dark:text-white'
                 type='button'
                 onClick={() => setMobileMenuOpen(true)}
               >
-                <Bars3Icon aria-hidden='true' className='h-6 w-6' color='black' />
+                <Bars3Icon aria-hidden='true' className='h-6 w-6 text-black dark:text-white' />
               </button>
             </div>
             <div className='hidden items-center lg:flex lg:gap-3'>
@@ -107,18 +107,18 @@ const Navbar = ({
               {showGamification && <UserPointButton />}
               {requiresAuth && <UserAvatar dashboardRoute={finalDashboardRoute} />}
               <button
-                className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black'
+                className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black dark:text-white'
                 type='button'
                 onClick={() => setMobileMenuOpen(true)}
               >
-                <Bars3Icon aria-hidden='true' className='h-6 w-6' color='black' />
+                <Bars3Icon aria-hidden='true' className='h-6 w-6 text-black dark:text-white' />
               </button>
             </div>
             {showFullNavigation && (
               <div className='hidden items-center lg:flex lg:gap-x-4'>
                 <FlexContainer direction='col' itemCenter={false}>
                   <Link
-                    className='text-base text-black hover:text-primary'
+                    className='text-base text-black dark:text-white hover:text-primary'
                     href={TOP_NAVIGATION.issues[0]?.href || ''}
                     target={TOP_NAVIGATION.issues[0]?.target}
                   >
@@ -173,11 +173,11 @@ const Navbar = ({
         onClose={setMobileMenuOpen}
       >
         <div className='fixed inset-0 z-50' />
-        <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-2 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
+        <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-gray-900 p-2 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:sm:ring-gray-100/10'>
           <div className='flex items-center justify-between'>
             {finalBranding}
             <button
-              className='-m-2.5 rounded-md p-2.5 text-black'
+              className='-m-2.5 rounded-md p-2.5 text-black dark:text-white'
               type='button'
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -236,7 +236,7 @@ const Navbar = ({
                       itemCenter={false}
                       justifyCenter={false}
                     >
-                      <Text className='pre-title text-greyDark' level='span'>
+                      <Text className='pre-title text-greyDark dark:text-gray-400' level='span'>
                         Connect with us
                       </Text>
                       <FlexContainer
@@ -245,13 +245,13 @@ const Navbar = ({
                         justifyCenter={false}
                       >
                         <Link href={LINKS.instagram} target='_blank'>
-                          <FaInstagram color='black' size='2em' />
+                          <FaInstagram className='text-black dark:text-white' size='2em' />
                         </Link>
                         <Link href={LINKS.youtube} target='_blank'>
-                          <FaYoutube color='black' size='2em' />
+                          <FaYoutube className='text-black dark:text-white' size='2em' />
                         </Link>
                         <Link href={LINKS.officialLinkedIn} target='_blank'>
-                          <FaLinkedin color='black' size='2em' />
+                          <FaLinkedin className='text-black dark:text-white' size='2em' />
                         </Link>
                       </FlexContainer>
                     </FlexContainer>
