@@ -124,19 +124,19 @@ const PrepLogsShowcase = () => {
                   <div className="flex gap-2">
                     <Button
                       variant="PRIMARY"
-                      text=" Edit"
+                      text="Edit"
                       size="SMALL"
                       className="text-sm px-3 py-1.5"
                     />
                     <Button
                       variant="PRIMARY"
-                      text=" Continue"
+                      text="Continue"
                       size="SMALL"
                       className="text-sm px-3 py-1.5"
                     />
                     <Button
                       variant="PRIMARY"
-                      text=" Share"
+                      text="Share"
                       size="SMALL"
                       className="text-sm px-3 py-1.5"
                     />

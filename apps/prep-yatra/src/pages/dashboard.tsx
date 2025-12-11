@@ -1,6 +1,7 @@
 import React, { Suspense, useEffect, useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import { Menu, X } from "lucide-react";
+import { useRouter } from "next/router";
 
 import {
     Navbar,
@@ -24,7 +25,8 @@ import type { RecruiterContact } from "@tbe/types";
 import type { UserProfile } from "@tbe/interface";
 
 const Dashboard = () => {
-    const { user, isLoading: authLoading } = useAuth();
+    const router = useRouter();
+    const { user, isLoading: authLoading, isAuthenticated } = useAuth();
     const { showCelebration } = usePrepYatraGamificationContext();
     const {
         logs: prepLogs,
@@ -164,7 +166,19 @@ const Dashboard = () => {
         }
     };
 
-    if (loading || authLoading || !user) {
+    // Redirect unauthenticated users to login
+    useEffect(() => {
+        if (!authLoading && !isAuthenticated) {
+            toast.error('Please sign in to access your dashboard');
+            router.push('/login?callbackUrl=/dashboard');
+        }
+    }, [authLoading, isAuthenticated, router]);
+
+    if (loading || authLoading) {
+        return <LoadingSpinner />;
+    }
+
+    if (!user) {
         return <LoadingSpinner />;
     }
 

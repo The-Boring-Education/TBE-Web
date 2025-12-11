@@ -6,7 +6,7 @@ const PrepYatraHero = () => {
     const router = useRouter();
 
     const handleGetStarted = () => {
-        router.push("/auth");
+        router.push("/login");
     };
 
 
