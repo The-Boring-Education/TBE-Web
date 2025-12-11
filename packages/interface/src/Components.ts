@@ -844,7 +844,7 @@ export interface StarButtonProps {
 }
 
 export interface LoginCardNewProps {
-  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra";
+    variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus";
   customRedirectPath?: string;
 }
 

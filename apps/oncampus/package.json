@@ -12,6 +12,7 @@
     "react": "^18",
     "react-dom": "^18",
     "next": "13.5.6",
+    "react-query": "^3.39.3",
     "@tbe/components": "workspace:*",
     "@tbe/hooks": "workspace:*",
     "@tbe/utils": "workspace:*",
@@ -29,6 +30,8 @@
     "autoprefixer": "^10",
     "postcss": "^8",
     "tailwindcss": "^3",
+    "@tailwindcss/typography": "^0.5.9",
+    "@tailwindcss/forms": "^0.5.3",
     "eslint": "^8",
     "@tbe/eslint-config": "workspace:*"
   }

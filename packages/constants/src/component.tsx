@@ -185,6 +185,22 @@ const getNavbarVariantConfig = (
     requiresAuth: true,
     showGamification: false,
   },
+  oncampus: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          OnCampus
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    dashboardRoute: "/",
+    borderClass: "border",
+    requiresAuth: true, // Non-auth app
+    showGamification: false,
+  },
 });
 
 // Footer Variant Configuration Interface
@@ -431,6 +447,26 @@ export const getLoginCardVariantConfig = (): Record<
     redirectPath: "/builder",
     termsHref: "/terms-and-conditions",
     privacyHref: "/privacy",
+  },
+  oncampus: {
+    title: "Welcome to OnCampus",
+    subtitle: "Sign in to continue your oncampus learning journey",
+    rightSectionTitle: "Why OnCampus?",
+    features: [
+      {
+        icon: Map,
+        title: "Personalized Roadmaps",
+        description: "Get customized learning paths based on your goals",
+      },
+      {
+        icon: BookOpen,
+        title: "Curated Resources",
+        description: "Access handpicked tutorials and guides",
+      },
+    ],
+    redirectPath: "/",
+    termsHref: "/",
+    privacyHref: "/",
   },
 });
 

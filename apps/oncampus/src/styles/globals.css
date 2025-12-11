@@ -2,26 +2,176 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+@layer base {
+  html {
+    @apply scroll-smooth;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-} */
+/* Custom Classes */
+@layer components {
+  body {
+    @apply scroll-smooth font-primary;
+  }
+
+  /* 1. Gradients */
+  .gradient-1 {
+    @apply bg-gradient-to-r from-[#F6FFBE] to-[#F99156];
+  }
+
+  .gradient-2 {
+    @apply bg-gradient-to-b from-[#2555FF] to-[#9B8BFF];
+  }
+
+  .gradient-3 {
+    @apply bg-gradient-to-b from-[#FFE259] to-[#FFA751];
+  }
+
+  .gradient-4 {
+    @apply bg-gradient-to-b from-[#FF76E1] to-[#D0AA7D];
+  }
+
+  .gradient-5 {
+    @apply bg-gradient-to-b from-[#923CFF] to-[#4E4EFF];
+  }
+
+  .gradient-6 {
+    @apply bg-gradient-to-b from-[#F0F3FF] to-[#FFA4C5];
+  }
+
+  .gradient-7 {
+    @apply bg-gradient-to-b from-[#EEFFBF] to-[#04ADC4];
+  }
+
+  .gradient-8 {
+    @apply bg-gradient-to-b from-[#F0F3FF] to-[#FFCAA4];
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-b from-[#070607] to-[#1B1B1B];
+  }
+
+  /* 2. Fonts */
+  .heading-1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-black text-contentLight;
+  }
+
+  .heading-2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-contentLight;
+  }
+
+  .heading-3 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold text-contentLight;
+  }
+
+  .heading-4,
+  .md-1 {
+    @apply text-xl md:text-2xl lg:text-3xl font-semibold text-contentLight;
+  }
+
+  .heading-5 {
+    @apply text-lg md:text-xl lg:text-2xl font-semibold text-contentLight;
+  }
+
+  .subtitle {
+    @apply text-subtitle font-normal text-contentLight;
+  }
+
+  .paragraph {
+    @apply text-paragraph font-normal text-contentLight;
+  }
+
+  .strong-text {
+    @apply text-strong-text font-semibold text-contentLight;
+  }
+
+  .pre-title {
+    @apply text-pre-title font-normal text-contentLight;
+  }
+
+  .button-text {
+    @apply text-button-text font-bold text-contentLight;
+  }
+
+  .label {
+    @apply text-label font-semibold text-greyDark;
+  }
+
+  /* Image */
+  .image {
+    object-fit: contain;
+    width: 100%;
+    position: relative !important;
+  }
+
+  /* Link */
+  .link {
+    @apply text-button-text text-contentLight;
+  }
+
+  .button {
+    @apply rounded-1 text-button-text font-bold text-contentLight;
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
+
+  .md-list {
+    @apply list-disc;
+  }
+
+  .error {
+    @apply text-grey text-contentLight font-semibold;
+  }
+
+  .text-accent {
+    color: #ecf1f4;
+  }
+
+  .checkbox,
+  .radio {
+    @apply flex items-center gap-2 px-3 py-2 border label rounded-full transition-all duration-150 cursor-pointer shadow-md;
+  }
+}
+
+/* Add performance optimizations for better button responsiveness */
+.button {
+  /* Optimize for better performance */
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Optimize framer-motion animations */
+[data-framer-motion] {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Improve button click responsiveness */
+button:active {
+  transform: scale(0.98) !important;
+  transition: transform 0.05s ease-out !important;
+}
+
+/* Optimize page transitions */
+.page-transition {
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
