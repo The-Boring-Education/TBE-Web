@@ -40,7 +40,8 @@ export type NavbarVariant =
   | "quizes"
   | "techyatra"
   | "dsayatra"
-  | "resume-yatra";
+  | "resume-yatra"
+  | "oncampus";
 
 interface MainNavbarProps extends Partial<NavbarProps> {
   variant?: NavbarVariant;
@@ -64,7 +65,8 @@ export type FooterVariant =
   | "techyatra"
   | "dsayatra"
   | "resumeyatra"
-  | "platform";
+  | "platform"
+  | "oncampus";
 
 interface FooterProps {
   variant?: FooterVariant;

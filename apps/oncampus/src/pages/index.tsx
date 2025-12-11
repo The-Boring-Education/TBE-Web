@@ -1,7 +1,10 @@
+import { Navbar } from "@tbe/components";
+import { Fragment } from "react";
+
 export default function Home() {
   return (
-   <div>
-    <h1> welcome to oncampus</h1>
-   </div>
+    <Fragment>
+      <Navbar variant="oncampus" />
+    </Fragment>
   )
 }
