@@ -1,5 +1,5 @@
 import type { LinkButtonProps } from '@tbe/interface';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button, Link } from '../..';
 
@@ -18,6 +18,11 @@ const LinkButton = ({
       setIsLoading(true);
     }
   };
+
+  // Reset loading state when href changes (in case navigation is cancelled or same-page navigation)
+  useEffect(() => {
+    setIsLoading(false);
+  }, [href]);
 
   return (
     <Link active={active} className={className} href={href} target={target} onClick={handleClick}>
