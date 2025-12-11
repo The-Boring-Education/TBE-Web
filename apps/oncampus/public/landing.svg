@@ -1,0 +1,77 @@
+<svg width="600" height="500" viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Students illustration with laptop setup -->
+  
+  <!-- Background elements -->
+  <rect x="150" y="100" width="300" height="200" rx="20" fill="#FFFFFF"/>
+  
+  <!-- Laptop screen -->
+  <rect x="200" y="120" width="200" height="140" rx="10" fill="#1A1A1A"/>
+  
+  <!-- Code lines on screen -->
+  <rect x="220" y="140" width="80" height="8" rx="4" fill="#6366F1"/>
+  <rect x="220" y="155" width="120" height="8" rx="4" fill="#6366F1"/>
+  <rect x="220" y="170" width="60" height="8" rx="4" fill="#6366F1"/>
+  <rect x="220" y="185" width="100" height="8" rx="4" fill="#6366F1"/>
+  <rect x="220" y="200" width="80" height="8" rx="4" fill="#6366F1"/>
+  <rect x="220" y="215" width="140" height="8" rx="4" fill="#6366F1"/>
+  <rect x="220" y="230" width="70" height="8" rx="4" fill="#6366F1"/>
+  
+  <!-- Laptop base -->
+  <rect x="190" y="260" width="220" height="10" rx="2" fill="#E5E5E5"/>
+  <rect x="170" y="268" width="260" height="4" rx="2" fill="#CCCCCC"/>
+  
+  <!-- Browser controls -->
+  <circle cx="215" cy="132" r="4" fill="#FF5F56"/>
+  <circle cx="227" cy="132" r="4" fill="#FFBD2E"/>
+  <circle cx="239" cy="132" r="4" fill="#27C93F"/>
+  
+  <!-- Left student -->
+  <g transform="translate(120, 280)">
+    <!-- Head -->
+    <circle cx="40" cy="30" r="25" fill="#6366F1"/>
+    <!-- Body -->
+    <path d="M15 55 Q15 45 25 45 L55 45 Q65 45 65 55 L65 100 L15 100 Z" fill="#6366F1"/>
+    <!-- Arm reaching for laptop -->
+    <path d="M65 55 Q80 50 95 60 L105 70 Q110 75 105 80 L95 75 Q85 70 75 75 Z" fill="#E8B4F8"/>
+  </g>
+  
+  <!-- Right student -->
+  <g transform="translate(380, 280)">
+    <!-- Head -->
+    <circle cx="40" cy="30" r="25" fill="#EC4899"/>
+    <!-- Body -->
+    <path d="M15 55 Q15 45 25 45 L55 45 Q65 45 65 55 L65 100 L15 100 Z" fill="#EC4899"/>
+    <!-- Arm reaching for laptop -->
+    <path d="M15 55 Q0 50 -15 60 L-25 70 Q-30 75 -25 80 L-15 75 Q-5 70 5 75 Z" fill="#FBB6CE"/>
+  </g>
+  
+  <!-- Floating elements around setup -->
+  <!-- Coffee cup -->
+  <g transform="translate(120, 200)">
+    <rect x="0" y="10" width="25" height="30" rx="3" fill="#8B4513"/>
+    <ellipse cx="12.5" cy="10" rx="12.5" ry="4" fill="#6B3410"/>
+    <path d="M25 20 Q35 20 35 28 Q35 36 25 36" stroke="#8B4513" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Book -->
+  <g transform="translate(450, 190)">
+    <rect x="0" y="0" width="40" height="50" rx="2" fill="#FF5757"/>
+    <rect x="5" y="5" width="30" height="40" rx="1" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+  
+  <!-- Light bulb idea -->
+  <g transform="translate(280, 40)">
+    <circle cx="0" cy="0" r="20" fill="#FDE047"/>
+    <rect x="-8" y="20" width="16" height="15" rx="2" fill="#E5E5E5"/>
+    <line x1="-25" y1="-5" x2="-35" y2="-10" stroke="#FDE047" stroke-width="3"/>
+    <line x1="25" y1="-5" x2="35" y2="-10" stroke="#FDE047" stroke-width="3"/>
+    <line x1="0" y1="-25" x2="0" y2="-35" stroke="#FDE047" stroke-width="3"/>
+  </g>
+  
+  <!-- Stars/sparkles -->
+  <circle cx="100" cy="80" r="3" fill="#FF5757"/>
+  <circle cx="520" cy="120" r="3" fill="#6366F1"/>
+  <circle cx="480" cy="60" r="3" fill="#EC4899"/>
+  <circle cx="140" cy="120" r="3" fill="#FDE047"/>
+  <circle cx="500" cy="280" r="3" fill="#FF5757"/>
+</svg>
