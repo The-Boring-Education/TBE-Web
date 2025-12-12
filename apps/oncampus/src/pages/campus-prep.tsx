@@ -72,19 +72,19 @@ export default function CampusPrepLanding() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-6"
+              className="space-y-3"
             >
               {/* Small tagline */}
-              <p className="text-white/60 text-sm">For students preparing for placements</p>
+              <p className="text-white/60 text-sm mb-0">For students preparing for placements</p>
 
               {/* Main Heading */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              <h1 className="text-4xl md:text-4xl lg:text-4xl font-bold leading-tight">
                 <span className="text-white">Advance Your Career with </span>
                 <span className="text-[#FF5757]">Campus Prep</span>
               </h1>
 
               {/* Supporting paragraph */}
-              <p className="text-white/70 text-lg leading-relaxed">
+              <p className="text-white/70 text-sm leading-relaxed">
                 Master DSA, Aptitude, Resume, Interviews, and Projects in one dashboard. 
                 Everything you need to ace your campus placements, all in one place.
               </p>
@@ -108,7 +108,7 @@ export default function CampusPrepLanding() {
               </div>
 
               {/* Helper text */}
-              <p className="text-white/40 text-xs pt-2">
+              <p className="text-white/40 text-xs -mt-1">
                 Built for campus schedules
               </p>
             </motion.div>
