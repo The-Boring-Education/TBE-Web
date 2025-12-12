@@ -41,14 +41,21 @@ const CampusPrepDashboard = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
-  // For demo purposes, we'll show the dashboard even without auth
-  // In production, uncomment the redirect logic below
-  // if (!isLoading && !user) {
-  //   router.push("/login");
-  //   return null;
-  // }
+  // Redirect to login if not authenticated
+  if (!isLoading && !user) {
+    router.push("/login");
+    return null;
+  }
 
-  const userName = user?.name || user?.email?.split('@')[0] || "Shivani";
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A]">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  const userName = user?.name || user?.email?.split('@')[0] || "Student";
 
   // Mock data for demonstration
   const progressData = {
@@ -208,7 +215,7 @@ const CampusPrepDashboard = () => {
                           {progressData.coursesActive}
                         </div>
                         <p className="text-xs text-gray-400">
-                          7 courses completion
+                          7 courses completed
                         </p>
                       </div>
                     </CardContent>
