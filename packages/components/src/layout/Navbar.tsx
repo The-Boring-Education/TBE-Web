@@ -28,7 +28,8 @@ const Navbar = ({
   showFullNavigation = true,
   customBranding,
   customActions = [],
-  dashboardRoute
+  dashboardRoute,
+  theme
 }: MainNavbarProps = {}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
@@ -48,19 +49,25 @@ const Navbar = ({
     return VARIANT_CONFIG[variant] || VARIANT_CONFIG.default;
   }, [variant, VARIANT_CONFIG]) as VariantConfig;
 
-  // Determine background class based on variant
+  // Determine background class based on variant and theme
   const getBackgroundClass = () => {
     if (variant === 'transparent') {
       return 'glass-dark backdrop-blur-md';
     }
-    return 'bg-white dark:bg-gray-900';
+    if (theme === 'dark') {
+      return 'bg-[#0A0A0A]';
+    }
+    return 'bg-white';
   };
 
   const finalDashboardRoute = dashboardRoute || variantConfig.dashboardRoute;
 
   const finalBranding = customBranding || variantConfig.branding;
 
-  const borderClass = variantConfig.borderClass || 'border';
+  // Determine border class based on theme
+  const borderClass = theme === 'dark' 
+    ? 'border-0' 
+    : (variantConfig.borderClass || 'border');
   const shouldUseCustomActions = customActions && customActions.length > 0;
   
   // Check if variant requires authentication (defaults to true)
@@ -87,11 +94,11 @@ const Navbar = ({
                 <div key={index}>{action}</div>
               ))}
               <button
-                className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black dark:text-white'
+                className={`-m-2.5 flex items-center justify-center rounded-md p-2.5 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
                 type='button'
                 onClick={() => setMobileMenuOpen(true)}
               >
-                <Bars3Icon aria-hidden='true' className='h-6 w-6 text-black dark:text-white' />
+                <Bars3Icon aria-hidden='true' className={`h-6 w-6 ${theme === 'dark' ? 'text-white' : 'text-black'}`} />
               </button>
             </div>
             <div className='hidden items-center lg:flex lg:gap-3'>
@@ -107,18 +114,18 @@ const Navbar = ({
               {showGamification && <UserPointButton />}
               {requiresAuth && <UserAvatar dashboardRoute={finalDashboardRoute} />}
               <button
-                className='-m-2.5 flex items-center justify-center rounded-md p-2.5 text-black dark:text-white'
+                className={`-m-2.5 flex items-center justify-center rounded-md p-2.5 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
                 type='button'
                 onClick={() => setMobileMenuOpen(true)}
               >
-                <Bars3Icon aria-hidden='true' className='h-6 w-6 text-black dark:text-white' />
+                <Bars3Icon aria-hidden='true' className={`h-6 w-6 ${theme === 'dark' ? 'text-white' : 'text-black'}`} />
               </button>
             </div>
             {showFullNavigation && (
               <div className='hidden items-center lg:flex lg:gap-x-4'>
                 <FlexContainer direction='col' itemCenter={false}>
                   <Link
-                    className='text-base text-black dark:text-white hover:text-primary'
+                    className={`text-base ${theme === 'dark' ? 'text-white' : 'text-black'} hover:text-primary`}
                     href={TOP_NAVIGATION.issues[0]?.href || ''}
                     target={TOP_NAVIGATION.issues[0]?.target}
                   >
@@ -129,6 +136,7 @@ const Navbar = ({
                   isOpen={openPopover === 'cohorts'}
                   label='Cohorts'
                   onToggle={() => handleSetOpen('cohorts')}
+                  theme={theme}
                 >
                   <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
                 </PopoverContainer>
@@ -136,6 +144,7 @@ const Navbar = ({
                   isOpen={openPopover === 'products'}
                   label='Learn'
                   onToggle={() => handleSetOpen('products')}
+                  theme={theme}
                 >
                   <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
                 </PopoverContainer>
@@ -143,6 +152,7 @@ const Navbar = ({
                   isOpen={openPopover === 'tools'}
                   label='Tools'
                   onToggle={() => handleSetOpen('tools')}
+                  theme={theme}
                 >
                   <NavbarDropdownContainer links={TOP_NAVIGATION.tools} />
                 </PopoverContainer>
@@ -151,6 +161,7 @@ const Navbar = ({
                   label='Links'
                   panelClasses='-left-6'
                   onToggle={() => handleSetOpen('links')}
+                  theme={theme}
                 >
                   <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
                 </PopoverContainer>
@@ -173,11 +184,11 @@ const Navbar = ({
         onClose={setMobileMenuOpen}
       >
         <div className='fixed inset-0 z-50' />
-        <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-gray-900 p-2 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:sm:ring-gray-100/10'>
+        <Dialog.Panel className={`fixed inset-y-0 right-0 z-50 w-full overflow-y-auto ${theme === 'dark' ? 'bg-[#0A0A0A]' : 'bg-white'} p-2 sm:max-w-sm sm:ring-1 ${theme === 'dark' ? 'sm:ring-gray-100/10' : 'sm:ring-gray-900/10'}`}>
           <div className='flex items-center justify-between'>
             {finalBranding}
             <button
-              className='-m-2.5 rounded-md p-2.5 text-black dark:text-white'
+              className={`-m-2.5 rounded-md p-2.5 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
               type='button'
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -236,7 +247,7 @@ const Navbar = ({
                       itemCenter={false}
                       justifyCenter={false}
                     >
-                      <Text className='pre-title text-greyDark dark:text-gray-400' level='span'>
+                      <Text className={`pre-title ${theme === 'dark' ? 'text-gray-400' : 'text-greyDark'}`} level='span'>
                         Connect with us
                       </Text>
                       <FlexContainer
@@ -245,13 +256,13 @@ const Navbar = ({
                         justifyCenter={false}
                       >
                         <Link href={LINKS.instagram} target='_blank'>
-                          <FaInstagram className='text-black dark:text-white' size='2em' />
+                          <FaInstagram className={theme === 'dark' ? 'text-white' : 'text-black'} size='2em' />
                         </Link>
                         <Link href={LINKS.youtube} target='_blank'>
-                          <FaYoutube className='text-black dark:text-white' size='2em' />
+                          <FaYoutube className={theme === 'dark' ? 'text-white' : 'text-black'} size='2em' />
                         </Link>
                         <Link href={LINKS.officialLinkedIn} target='_blank'>
-                          <FaLinkedin className='text-black dark:text-white' size='2em' />
+                          <FaLinkedin className={theme === 'dark' ? 'text-white' : 'text-black'} size='2em' />
                         </Link>
                       </FlexContainer>
                     </FlexContainer>

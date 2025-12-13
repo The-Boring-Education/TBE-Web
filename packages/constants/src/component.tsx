@@ -197,7 +197,7 @@ const getNavbarVariantConfig = (
       </div>
     ),
     dashboardRoute: "/",
-    borderClass: "border",
+    borderClass: "border-0 dark:border-0",
     requiresAuth: true, // Non-auth app
     showGamification: false,
   },

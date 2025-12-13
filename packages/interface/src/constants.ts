@@ -49,6 +49,7 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   customBranding?: React.ReactNode;
   customActions?: React.ReactNode[];
   dashboardRoute?: string;
+  theme?: "light" | "dark";
 }
 interface VariantConfig {
   branding: React.ReactNode;

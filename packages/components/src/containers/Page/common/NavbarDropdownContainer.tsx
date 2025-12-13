@@ -6,13 +6,13 @@ const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => (
     {links.map(({ name, href, description, target, isDevelopment }) => (
       <FlexContainer
         key={name}
-        className='relative rounded-lg p-2 hover:bg-gray-100 max-w-sm'
+        className='relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-50 max-w-sm'
         direction='col'
         itemCenter={false}
       >
         <FlexContainer direction='col' itemCenter={false}>
           <Link
-            className='text-base font-semibold text-black hover:text-primary'
+            className='text-base font-semibold text-black dark:text-gray-900 hover:text-primary dark:hover:text-primary'
             href={href}
             target={target}
           >
@@ -20,7 +20,7 @@ const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => (
             {isDevelopment && <span className='text-secondary'>(In Dev)</span>}
             <span className='absolute inset-0' />
           </Link>
-          <p className='text-gray-600 break-words'>{description}</p>
+          <p className='text-gray-600 dark:text-gray-700 break-words'>{description}</p>
         </FlexContainer>
       </FlexContainer>
     ))}
