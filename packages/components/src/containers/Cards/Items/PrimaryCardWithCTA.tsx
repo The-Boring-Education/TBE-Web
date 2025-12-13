@@ -40,17 +40,17 @@ const PrimaryCardWithCTA = ({
         />
       )}
       <div className='mt-2'>
-        <Text className='heading-5 truncate text-gray-900 dark:text-white' level='h5'>
+        <Text className='heading-5 truncate text-gray-900' level='h5'>
           {title}
         </Text>
-        <Text className='pre-title mt-1 text-grey dark:text-gray-400 line-clamp-1' level='p'>
+        <Text className='pre-title mt-1 text-grey  line-clamp-1' level='p'>
           {content}
         </Text>
         {launchingOn && (
-          <Text className='pre-title mt-1 text-primary dark:text-red-400' level='p'>
+          <Text className='pre-title mt-1 text-primary s' level='p'>
             {launchingOn}
           </Text>
-        )}
+        )}  
         <LinkButton
           active={active}
           buttonProps={{
