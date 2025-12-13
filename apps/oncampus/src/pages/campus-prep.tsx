@@ -21,48 +21,7 @@ export default function CampusPrepLanding() {
   return (
     <Fragment>
       {/* Pure black background */}
-      <div className="min-h-screen bg-[#0A0A0A]">
-        {/* Navbar */}
-        <nav className="w-full border-b border-white/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              {/* Left: Logo */}
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-[#FF5757] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">CP</span>
-                </div>
-                <span className="text-white font-semibold text-lg">Campus Prep</span>
-              </div>
-
-              {/* Center: Nav Links */}
-              <div className="hidden md:flex items-center gap-8">
-                <span className="text-white/80 hover:text-white transition-colors text-sm cursor-pointer">
-                  Learn
-                </span>
-                <span className="text-white/80 hover:text-white transition-colors text-sm cursor-pointer">
-                  Tools
-                </span>
-                <span className="text-white/80 hover:text-white transition-colors text-sm cursor-pointer">
-                  Links
-                </span>
-              </div>
-
-              {/* Right: Notification + Login */}
-              <div className="flex items-center gap-3">
-                <button className="p-2 text-white/80 hover:text-white transition-colors">
-                  <Bell size={20} />
-                </button>
-                <Button
-                  text="Login"
-                  onClick={handleGetStarted}
-                  variant="PRIMARY"
-                  className="text-sm px-4 py-2 font-semibold bg-[#FF5757] hover:bg-[#FF5757]/90"
-                  size="SMALL"
-                />
-              </div>
-            </div>
-          </div>
-        </nav>
+      <div className="min-h-screen mt-20 bg-[#0A0A0A]">
 
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -75,7 +34,6 @@ export default function CampusPrepLanding() {
               className="space-y-3"
             >
               {/* Small tagline */}
-              <p className="text-white/60 text-sm mb-0">For students preparing for placements</p>
 
               {/* Main Heading */}
               <h1 className="text-4xl md:text-4xl lg:text-4xl font-bold leading-tight">

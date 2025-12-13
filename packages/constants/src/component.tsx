@@ -191,13 +191,13 @@ const getNavbarVariantConfig = (
         <span className="text-2xl font-bold text-primary leading-tight">
           OnCampus
         </span>
-        <span className="text-[10px] text-greyDark -mt-0.5">
+        <span className="text-[10px] text-greyDark dark:text-gray-400 -mt-0.5">
           By The Boring Education
         </span>
       </div>
     ),
     dashboardRoute: "/",
-    borderClass: "border",
+    borderClass: "border-0 dark:border-0",
     requiresAuth: true, // Non-auth app
     showGamification: false,
   },

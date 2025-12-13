@@ -15,7 +15,8 @@ const PopoverContainer = ({
   panelClasses,
   isOpen: open,
   onToggle,
-}: PopoverContainerProps) => {
+  theme,
+}: PopoverContainerProps & { theme?: "light" | "dark" }) => {
   const pathname = usePathname();
   const popoverButtonRef = useRef<HTMLButtonElement>(null);
   const previousPathname = useRef(pathname);
@@ -34,11 +35,11 @@ const PopoverContainer = ({
         <Fragment>
           <PopoverButton
             ref={popoverButtonRef}
-            className='inline-flex items-center text-base text-black outline-none'
+            className={`inline-flex items-center text-base ${theme === 'dark' ? 'text-white hover:text-white/80' : 'text-black hover:text-primary'} outline-none`}
             onClick={onToggle}
           >
             <span>{label}</span>
-            <ChevronDownIcon aria-hidden='true' className='h-3 w-3' />
+            <ChevronDownIcon aria-hidden='true' className='h-3 w-3 ml-1' />
           </PopoverButton>
 
           <Transition
@@ -54,7 +55,7 @@ const PopoverContainer = ({
             <PopoverPanel
               className={`absolute z-10 mt-2 flex w-screen max-w-max -translate-x-1/2 ${panelClasses}`}
             >
-              <div className='overflow-hidden rounded-2 bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5'>
+              <div className='overflow-hidden rounded-2 bg-white dark:bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5 dark:ring-gray-100/10'>
                 {children}
               </div>
             </PopoverPanel>
