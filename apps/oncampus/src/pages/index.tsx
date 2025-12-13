@@ -1,6 +1,7 @@
 import { Navbar } from "@tbe/components";
 import { Fragment } from "react";
 import { ThemeToggle } from "../components/ThemeToggle";
+import CampusPrepLanding from "./campus-prep";
 
 export default function Home() {
   return (
