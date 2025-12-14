@@ -769,6 +769,19 @@ export interface ResumeEvaluationSectionProps {
   };
 }
 
+// Generic product interface for PaymentCard
+export interface BaseProductProps {
+  _id: string;
+  name: string;
+  description?: string;
+  price?: number;
+  features?: string[];
+  isPremium?: boolean;
+  isEnrolled?: boolean;
+  // Allow additional properties for different product types
+  [key: string]: any;
+}
+
 export interface ResumeEvaluationData {
   resumeScore: number;
   skillsMatched: number;
@@ -793,7 +806,7 @@ export interface ResumeEvaluationData {
 }
 
 export interface PaymentCardProps {
-  course: BaseShikshaCourseResponseProps | BaseInterviewSheetResponseProps;
+  course: BaseShikshaCourseResponseProps | BaseInterviewSheetResponseProps | BaseProductProps;
   onClose: () => void;
   productType: string;
 }
@@ -831,8 +844,9 @@ export interface StarButtonProps {
 }
 
 export interface LoginCardNewProps {
-  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra";
+    variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus";
   customRedirectPath?: string;
+  theme?: "light" | "dark";
 }
 
 export interface PrepLog {
@@ -866,3 +880,4 @@ export interface UserProfile {
     };
   };
 }
+

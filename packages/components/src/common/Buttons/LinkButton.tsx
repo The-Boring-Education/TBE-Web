@@ -1,5 +1,5 @@
 import type { LinkButtonProps } from '@tbe/interface';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button, Link } from '../..';
 
@@ -13,16 +13,20 @@ const LinkButton = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = () => {
-    // Show immediate loading feedback (hidden from user)
-    setIsLoading(true);
-    
-    // Reset loading state after a short delay
-    setTimeout(() => setIsLoading(false), 200);
+    // Show loading spinner when navigating
+    if (active) {
+      setIsLoading(true);
+    }
   };
+
+  // Reset loading state when href changes (in case navigation is cancelled or same-page navigation)
+  useEffect(() => {
+    setIsLoading(false);
+  }, [href]);
 
   return (
     <Link active={active} className={className} href={href} target={target} onClick={handleClick}>
-      <Button {...buttonProps} isLoading={false} />
+      <Button {...buttonProps} isLoading={isLoading} />
     </Link>
   );
 };
