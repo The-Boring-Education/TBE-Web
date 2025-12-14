@@ -110,8 +110,8 @@ const Button = ({
   let baseClasses = `button rounded-1 ${sizeClasses[size]}`;
   baseClasses = getButtonClasses(baseClasses, variant, active);
 
-  // Hide loading spinner but keep functionality
-  const loadingContainer = false && isLoading && (
+  // Show loading spinner when isLoading is true
+  const loadingContainer = isLoading && (
     <LoadingSpinner borderColour='white' height={3} width={3} />
   );
 
