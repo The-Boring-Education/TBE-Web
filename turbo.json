@@ -105,6 +105,65 @@
         ".env.development",
         ".env"
       ]
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": true,
+      "outputs": [
+        "coverage/**",
+        "test-results/**"
+      ],
+      "inputs": [
+        "src/**/*.{ts,tsx}",
+        "src/**/*.test.{ts,tsx}",
+        "src/**/*.spec.{ts,tsx}",
+        ".env.test"
+      ]
+    },
+    "test:unit": {
+      "cache": true,
+      "outputs": [
+        "coverage/**"
+      ],
+      "inputs": [
+        "src/unit/**/*.{ts,tsx}",
+        "src/test-utils/**/*.{ts,tsx}"
+      ]
+    },
+    "test:api": {
+      "cache": true,
+      "outputs": [
+        "coverage/**"
+      ],
+      "inputs": [
+        "src/api/**/*.{ts,tsx}",
+        "src/test-utils/**/*.{ts,tsx}"
+      ]
+    },
+    "test:e2e": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": false,
+      "outputs": [
+        "playwright-report/**",
+        "test-results/**"
+      ]
+    },
+    "test:coverage": {
+      "cache": true,
+      "outputs": [
+        "coverage/**"
+      ]
+    },
+    "test:ci": {
+      "dependsOn": [
+        "test:unit",
+        "test:api"
+      ],
+      "cache": false
     }
   }
 }

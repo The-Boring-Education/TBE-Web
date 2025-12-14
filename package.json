@@ -25,7 +25,15 @@
     "build:techyatra": "turbo run build --filter=@tbe/techyatra",
     "build:dsayatra": "turbo run build --filter=@tbe/dsayatra",
     "build:resume-yatra": "turbo run build --filter=@tbe/resume-yatra",
-    "install:all": "pnpm install"
+    "install:all": "pnpm install",
+    "test": "turbo run test",
+    "test:unit": "turbo run test:unit --filter=@tbe/testing",
+    "test:unit:watch": "turbo run test:unit:watch --filter=@tbe/testing",
+    "test:api": "turbo run test:api --filter=@tbe/testing",
+    "test:e2e": "turbo run test:e2e --filter=@tbe/testing",
+    "test:e2e:ui": "turbo run test:e2e:ui --filter=@tbe/testing",
+    "test:coverage": "turbo run test:coverage --filter=@tbe/testing",
+    "test:ci": "turbo run test:ci --filter=@tbe/testing"
   },
   "devDependencies": {
     "@types/react-syntax-highlighter": "^15.5.13",
