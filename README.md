@@ -14,7 +14,8 @@ tbe-platform/
 │   ├── api/                    # 🌐 Centralized API service (Port: 3004)
 │   ├── techyatra/              # 🛠️ Tech learning journey
 │   ├── dsayatra/               # 📊 DSA practice platform
-│   └── resume-yatra/           # 📄 Resume builder
+│   ├── resume-yatra/           # 📄 Resume builder
+│   └── testing/                # 🧪 Testing suite (unit, API, E2E)
 ├── packages/                    # 📦 Shared Packages
 │   ├── components/             # 💅 Shared UI components
 │   ├── hooks/                  # 🎣 Shared React hooks
@@ -213,16 +214,26 @@ Each app can override shared variables with its own `.env.local` file.
 
 ## 🧪 Testing
 
+Comprehensive testing suite with **Vitest**, **Playwright**, and **MSW** located in `apps/testing/`.
+
 ```bash
 # Run all tests
 pnpm test
 
-# Run tests for specific app
-pnpm --filter @tbe/platform test
-
-# Run tests with coverage
-pnpm test:coverage
+# Development workflow
+pnpm test:unit:watch     # Watch mode (fast feedback)
+pnpm test:unit           # Unit tests (components, hooks, utils)
+pnpm test:api            # API endpoint tests
+pnpm test:e2e            # End-to-end tests (cross-browser)
+pnpm test:e2e:ui         # E2E with visual debugger
+pnpm test:coverage       # Generate coverage report
 ```
+
+**Coverage Requirements:** 70% statements, 65% branches
+
+**CI/CD:** Tests run automatically on PRs to `development` and `production` branches.
+
+**Documentation:** See [`apps/testing/README.md`](apps/testing/README.md) for detailed guide
 
 ## 📖 Contributing
 
