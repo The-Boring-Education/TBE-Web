@@ -281,127 +281,38 @@ Tests run automatically on:
 
 ## 📚 Best Practices
 
-### Unit Tests
-
 ✅ **DO:**
-- Test user behavior, not implementation details
-- Use semantic queries (`getByRole`, `getByLabelText`)
-- Mock external dependencies (API calls, database)
-- Keep tests fast (<100ms per test)
-- Test edge cases and error states
+- Test behavior, not implementation
+- Keep tests simple and focused
+- Mock external dependencies
+- Clean up test data
+- Use descriptive test names
 
 ❌ **DON'T:**
 - Test third-party libraries
-- Test implementation details (internal state)
-- Use `data-testid` unless necessary
-- Write slow tests with unnecessary delays
-
-### API Tests
-
-✅ **DO:**
-- Test all HTTP methods (GET, POST, PATCH, DELETE)
-- Test authentication and authorization
-- Test validation errors
-- Test rate limiting (if applicable)
-- Clean up test data after each test
-
-❌ **DON'T:**
-- Test database internals
-- Leave test data in database
-- Skip error case testing
-- Use production APIs in tests
-
-### E2E Tests
-
-✅ **DO:**
-- Test critical user journeys
-- Use Page Object Model pattern
-- Run tests in parallel
-- Take screenshots on failure
-- Test across multiple browsers (production)
-- Use explicit waits, not arbitrary timeouts
-
-❌ **DON'T:**
-- Test every edge case (use unit tests)
 - Make tests dependent on each other
-- Use `page.waitForTimeout()` (use auto-wait)
-- Test UI minutiae (pixel-perfect layouts)
+- Use arbitrary timeouts
+- Over-complicate tests
 
 ## 🧰 Test Utilities
 
-### Mock Factories
+Available in `src/test-utils/`:
 
-Create test data easily:
-
-```typescript
-import { createMockUser, createMockQuiz } from '@test-utils/mock-factories';
-
-const user = createMockUser({ email: 'custom@example.com' });
-const quiz = createMockQuiz({ difficulty: 'hard' });
-```
-
-### Custom Matchers
-
-TBE-specific assertions:
-
-```typescript
-expect('test@example.com').toBeValidEmail();
-expect('507f1f77bcf86cd799439011').toBeValidMongoId();
-expect(apiResponse).toHaveValidAPIResponse();
-```
-
-### Test Helpers
-
-```typescript
-import { renderWithProviders, createMockSession } from '@test-utils/test-helpers';
-
-// Render with providers
-renderWithProviders(<MyComponent />);
-
-// Create mock session
-const session = createMockSession({ user: { role: 'admin' } });
-
-// Mock fetch
-mockFetch({ status: true, data: { id: '123' } });
-```
+- **`mock-factories.ts`** - Create mock data (`createMockUser`)
+- **`test-helpers.tsx`** - Helper functions (`createMockSession`, `createMockAPIResponse`)
+- **`custom-matchers.ts`** - Custom assertions (`toHaveValidAPIResponse`)
+- **`setup.ts`** - Global test configuration (auto-loaded)
 
 ## 🐛 Troubleshooting
 
-### Tests Failing Locally
-
+**Tests not working?**
 ```bash
-# Clear test cache
-rm -rf node_modules/.vitest
-
-# Rebuild packages
+pnpm install
 pnpm run build
-
-# Re-run tests
 pnpm test:unit
 ```
 
-### E2E Tests Timing Out
-
-```bash
-# Increase timeout in playwright.config.ts
-timeout: 60000 // 60 seconds
-
-# Or run in debug mode
-pnpm test:e2e:debug
-```
-
-### Coverage Not Generated
-
-```bash
-# Ensure coverage directory exists
-mkdir -p coverage
-
-# Run with coverage flag
-pnpm test:coverage
-```
-
-### Playwright Browsers Not Found
-
+**E2E browsers missing?**
 ```bash
 cd apps/testing
 pnpm playwright:install
@@ -409,52 +320,19 @@ pnpm playwright:install
 
 ## 📊 Coverage Requirements
 
-Minimum thresholds enforced in CI:
+Minimum thresholds (enforced in CI):
+- Statements: **70%**
+- Branches: **65%**
+- Functions: **70%**
+- Lines: **70%**
 
-- **Statements:** 70%
-- **Branches:** 65%
-- **Functions:** 70%
-- **Lines:** 70%
+## 📝 Adding New Tests
 
-Priority areas for coverage:
-1. Authentication flows
-2. Payment processing
-3. Quiz evaluation logic
-4. User data handling
-5. API middleware
-
-## 🔗 Resources
-
-- [Vitest Documentation](https://vitest.dev/)
-- [React Testing Library](https://testing-library.com/react)
-- [Playwright Documentation](https://playwright.dev/)
-- [MSW Documentation](https://mswjs.io/)
-
-## 🤝 Contributing
-
-When adding new features to TBE Platform:
-
-1. **Write tests first** (TDD approach recommended)
-2. **Ensure tests pass** locally before committing
-3. **Maintain coverage** above minimum thresholds
-4. **Update documentation** if adding new test patterns
-5. **Add E2E tests** for critical user flows
-
-## 📝 Example Test Checklist
-
-When implementing a new feature:
-
-- [ ] Unit tests for new components
-- [ ] Unit tests for new hooks
-- [ ] Unit tests for new utilities
-- [ ] API tests for new endpoints
-- [ ] E2E tests for critical flows
-- [ ] Coverage meets minimum threshold
-- [ ] Tests pass in CI/CD
-- [ ] Documentation updated
+1. Look at example files in `src/unit/`, `src/api/`, `src/e2e/`
+2. Copy the pattern and adapt for your feature
+3. Run tests locally before committing
+4. Ensure coverage meets thresholds
 
 ---
 
-**Happy Testing! 🎉**
-
-For questions or issues, reach out to the TBE Platform team.
+**Happy Testing! 🚀** Start with `pnpm test:unit:watch` for fast feedback.
