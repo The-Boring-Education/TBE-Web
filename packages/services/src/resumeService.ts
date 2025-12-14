@@ -18,9 +18,7 @@ export const evaluateResume = async (
   payload: ResumeEvaluationRequest
 ): Promise<ResumeEvaluationResponse> => {
   try {
-    const apiUrl = `${envConfig.UNSKILLED_API_URL}/evaluate`;
-    console.log("Calling resume evaluation API:", apiUrl);
-    console.log("Payload:", payload);
+    const apiUrl = `${envConfig.UNSKILLED_API_URL}/resume/evaluate`;
 
     const response = await fetch(apiUrl, {
       method: "POST",

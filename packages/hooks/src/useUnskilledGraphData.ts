@@ -34,7 +34,6 @@ const useUnskilledGraphData = (): UseUnskilledGraphDataReturn => {
       try {
         setLoading(true);
         setError(null);
-        console.log("[Graph Data] Fetching from:", `${envConfig.UNSKILLED_API_URL}/graph`);
 
         const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`, {
           headers: {
