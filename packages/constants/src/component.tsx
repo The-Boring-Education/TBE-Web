@@ -196,7 +196,7 @@ const getNavbarVariantConfig = (
         </span>
       </div>
     ),
-    dashboardRoute: "/",
+    dashboardRoute: "/dashboard",
     borderClass: "border-0 dark:border-0",
     requiresAuth: true, // Non-auth app
     showGamification: false,
@@ -464,7 +464,7 @@ export const getLoginCardVariantConfig = (): Record<
         description: "Access handpicked tutorials and guides",
       },
     ],
-    redirectPath: "/",
+    redirectPath: "/dashboard",
     termsHref: "/",
     privacyHref: "/",
   },

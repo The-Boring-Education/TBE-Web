@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "@tbe/auth";
+import { useUser } from "@tbe/hooks";
 import { useRouter } from "next/router";
 import { 
   SidebarProvider, 
@@ -22,6 +22,8 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Button,
+  Navbar,
 } from "@tbe/components";
 import { 
   Home, 
@@ -37,17 +39,17 @@ import {
 } from "lucide-react";
 
 const CampusPrepDashboard = () => {
-  const { user, isLoading } = useAuth();
+  const { user, loading, isAuth } = useUser();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
   // Redirect to login if not authenticated
-  if (!isLoading && !user) {
+  if (!loading && !isAuth) {
     router.push("/login");
     return null;
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A]">
         <div className="text-white">Loading...</div>
@@ -89,29 +91,18 @@ const CampusPrepDashboard = () => {
   ];
 
   return (
-    <div className="dark">
+    <div className="">
       <SidebarProvider>
-        <div className="flex min-h-screen w-full bg-[#0A0A0A]">
+        <div className="flex min-h-screen w-full">
           {/* Left Sidebar */}
-          <Sidebar className="bg-[#141414] border-r border-gray-800">
-            <SidebarHeader className="border-b border-gray-800 p-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#FF5757] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">CP</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-white font-semibold text-sm">Campus Prep</span>
-                  <span className="text-gray-400 text-xs">Interview Platform</span>
-                </div>
-              </div>
-            </SidebarHeader>
-            <SidebarContent className="p-2">
+          <Sidebar className="border-r border-gray-800">
+            <SidebarContent className="pt-10">
               <SidebarMenu>
                 {sidebarItems.map((item) => (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton
                       isActive={item.href === "/dashboard"}
-                      className="text-gray-300 hover:text-white hover:bg-gray-800 data-[active=true]:bg-[#FF5757] data-[active=true]:text-white"
+                      className="text-gray-300 p-2 hover:text-white hover:bg-gray-800 data-[active=true]:bg-[#FF5757] data-[active=true]:text-white"
                     >
                       <item.icon className="w-4 h-4" />
                       <span>{item.name}</span>
@@ -125,36 +116,15 @@ const CampusPrepDashboard = () => {
           {/* Main Content Area */}
           <SidebarInset className="bg-[#0A0A0A]">
             {/* Top Header Bar */}
-            <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b border-gray-800 bg-[#141414] px-6">
-              <SidebarTrigger className="text-white" />
-              
-              {/* Global Search */}
-              <div className="flex-1 max-w-xl">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <Input
-                    type="search"
-                    placeholder="Search Campus Prep..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 bg-[#1A1A1A] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#FF5757]"
-                  />
-                </div>
-              </div>
-
-              {/* User Profile Icon */}
-              <Avatar className="h-8 w-8 cursor-pointer">
-                <AvatarImage src={user?.image || undefined} alt={userName} />
-                <AvatarFallback className="bg-[#FF5757] text-white text-sm">
-                  {userName.substring(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            </header>
+                <Navbar
+                  variant="oncampus"
+                  theme="dark"
+                />
 
             {/* Main Content */}
-            <main className="flex-1 p-6 space-y-6">
+            <main className="flex-1 p-16 space-y-6">
               {/* Welcome Card */}
-              <Card className="bg-[#141414] border-gray-800">
+              <Card className=" border-gray-800">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -163,12 +133,11 @@ const CampusPrepDashboard = () => {
                       </h1>
                       <p className="text-gray-400">Ready to prepare today?</p>
                     </div>
-                    <UIButton 
-                      variant="default"
-                      className="bg-[#FF5757] hover:bg-[#FF5757]/90 text-white"
-                    >
-                      Continue learning
-                    </UIButton>
+                    <Button 
+                      variant="PRIMARY"
+                      text="Continue learning"
+                      size="MEDIUM"
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -178,7 +147,7 @@ const CampusPrepDashboard = () => {
                 <h2 className="text-xl font-semibold text-white mb-4">Your progress</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Weekly Study Hours */}
-                  <Card className="bg-[#141414] border-gray-800">
+                  <Card className=" border-gray-800">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-sm font-medium text-gray-400 flex items-center gap-2">
                         <Clock className="w-4 h-4" />
@@ -202,7 +171,7 @@ const CampusPrepDashboard = () => {
                   </Card>
 
                   {/* Courses Active */}
-                  <Card className="bg-[#141414] border-gray-800">
+                  <Card className=" border-gray-800">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-sm font-medium text-gray-400 flex items-center gap-2">
                         <BookOpen className="w-4 h-4" />
@@ -222,7 +191,7 @@ const CampusPrepDashboard = () => {
                   </Card>
 
                   {/* Practice Streak */}
-                  <Card className="bg-[#141414] border-gray-800">
+                  <Card className=" border-gray-800">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-sm font-medium text-gray-400 flex items-center gap-2">
                         <Trophy className="w-4 h-4" />
@@ -242,7 +211,7 @@ const CampusPrepDashboard = () => {
                   </Card>
 
                   {/* Interviews Prepared */}
-                  <Card className="bg-[#141414] border-gray-800">
+                  <Card className=" border-gray-800">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-sm font-medium text-gray-400 flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
@@ -266,7 +235,7 @@ const CampusPrepDashboard = () => {
               {/* Daily Challenge and Continue Learning Side by Side */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Daily Challenge Card */}
-                <Card className="bg-[#141414] border-gray-800">
+                <Card className=" border-gray-800">
                   <CardHeader>
                     <CardTitle className="text-white">Daily challenge</CardTitle>
                     <CardDescription className="text-gray-400">
@@ -274,18 +243,17 @@ const CampusPrepDashboard = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <UIButton 
-                      variant="default"
-                      className="w-full bg-[#FF5757] hover:bg-[#FF5757]/90 text-white"
-                    >
-                      Start challenge
-                    </UIButton>
+                    <Button 
+                      variant="PRIMARY"
+                      text="Start challenge"
+                      size="LARGE"
+                    />
                     <p className="text-sm text-gray-500">Status: Not started</p>
                   </CardContent>
                 </Card>
 
                 {/* Continue Learning Card */}
-                <Card className="bg-[#141414] border-gray-800">
+                  <Card className=" border-gray-800">
                   <CardHeader>
                     <CardTitle className="text-white">Continue learning</CardTitle>
                   </CardHeader>
@@ -303,13 +271,12 @@ const CampusPrepDashboard = () => {
                             {session.module}
                           </p>
                         </div>
-                        <UIButton
-                          variant="outline"
-                          size="sm"
+                        <Button
+                          variant="OUTLINE"
+                          size="SMALL"
                           className="border-gray-700 text-white hover:bg-gray-800"
-                        >
-                          Resume
-                        </UIButton>
+                          text="Resume"
+                        />
                       </div>
                     ))}
                   </CardContent>
