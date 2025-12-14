@@ -21,7 +21,7 @@ export default function CampusPrepLanding() {
   return (
     <Fragment>
       {/* Pure black background */}
-      <div className="min-h-screen mt-20 bg-[#0A0A0A]">
+      <div className="min-h-screen pt-20 bg-[#0A0A0A]">
 
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -53,16 +53,11 @@ export default function CampusPrepLanding() {
                   text="Get Started for Free"
                   onClick={handleGetStarted}
                   variant="PRIMARY"
-                  className="text-sm px-6 py-3 font-semibold bg-[#FF5757] hover:bg-[#FF5757]/90 text-white"
+                  className="text-sm  font-semibold bg-[#FF5757] hover:bg-[#FF5757]/90 text-white"
                   size="MEDIUM"
                   animationType="BOUNCE"
                 />
-                <button
-                  onClick={handleExploreGuest}
-                  className="px-6 py-3 text-sm font-semibold text-white border-2 border-white/20 rounded-1 hover:bg-white/5 transition-colors"
-                >
-                  Explore as Guest
-                </button>
+                
               </div>
 
               {/* Helper text */}
