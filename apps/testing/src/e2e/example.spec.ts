@@ -21,3 +21,4 @@ test.describe('Example E2E Test', () => {
         await expect(mainContent).toBeVisible();
     });
 });
+
