@@ -11,8 +11,8 @@ import {
   Section,
   SEO,
 } from "@tbe/components";
-import type { PageProps } from '@tbe/interface';
 import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
 import { Fragment } from 'react';
 
