@@ -1,0 +1,50 @@
+{
+    "name": "@tbe/testing",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Comprehensive testing suite for TBE Platform",
+    "scripts": {
+        "test": "vitest run",
+        "test:unit": "vitest run --config vitest.config.ts",
+        "test:unit:watch": "vitest watch --config vitest.config.ts",
+        "test:api": "vitest run --config vitest.config.ts src/api",
+        "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui",
+        "test:e2e:debug": "playwright test --debug",
+        "test:coverage": "vitest run --coverage",
+        "test:ci": "pnpm run test:unit && pnpm run test:api && pnpm run test:e2e",
+        "playwright:install": "playwright install --with-deps"
+    },
+    "dependencies": {
+        "@tbe/auth": "workspace:*",
+        "@tbe/components": "workspace:*",
+        "@tbe/constants": "workspace:*",
+        "@tbe/hooks": "workspace:*",
+        "@tbe/interface": "workspace:*",
+        "@tbe/services": "workspace:*",
+        "@tbe/types": "workspace:*",
+        "@tbe/utils": "workspace:*",
+        "next": "^13.2.4",
+        "next-auth": "^4.24.7",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.48.0",
+        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/react": "^16.1.0",
+        "@testing-library/user-event": "^14.5.2",
+        "@types/node": "^18.19.0",
+        "@types/react": "^18.3.24",
+        "@types/react-dom": "^18.3.7",
+        "@vitejs/plugin-react": "^4.3.4",
+        "@vitest/coverage-v8": "^2.1.8",
+        "jsdom": "^25.0.1",
+        "msw": "^2.6.8",
+        "node-mocks-http": "^1.16.1",
+        "playwright": "^1.48.0",
+        "supertest": "^7.0.0",
+        "typescript": "5.9.2",
+        "vitest": "^2.1.8"
+    }
+}
