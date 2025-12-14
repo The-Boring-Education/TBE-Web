@@ -120,20 +120,13 @@ apps/testing/
 ├── playwright.config.ts        # E2E test config
 ├── src/
 │   ├── unit/                   # Unit tests
-│   │   ├── components/         # Component tests
-│   │   ├── hooks/             # Hook tests
-│   │   ├── utils/             # Utility tests
-│   │   └── services/          # Service tests
+│   │   └── example.test.ts    # Example unit test
 │   ├── api/                    # API tests
-│   │   ├── auth/              # Auth endpoint tests
-│   │   ├── user/              # User endpoint tests
-│   │   ├── quiz/              # Quiz endpoint tests
+│   │   ├── example.test.ts    # Example API test
 │   │   └── mocks/             # MSW mock handlers
 │   ├── e2e/                    # E2E tests
-│   │   ├── platform/          # Platform app flows
-│   │   ├── quizes/            # Quiz app flows
-│   │   ├── prep-yatra/        # Prep Yatra flows
-│   │   └── fixtures/          # Test data & setup
+│   │   ├── example.spec.ts    # Example E2E test
+│   │   └── fixtures/          # Test data
 │   └── test-utils/             # Shared test utilities
 │       ├── setup.ts           # Global test setup
 │       ├── test-helpers.tsx   # Helper functions
@@ -210,103 +203,49 @@ pnpm test:ci
 
 ## ✍️ Writing Tests
 
-### Unit Tests
+Check the example test files in `src/` for simple starting points:
 
-#### Testing Components
+- **Unit Test:** `src/unit/example.test.ts`
+- **API Test:** `src/api/example.test.ts`  
+- **E2E Test:** `src/e2e/example.spec.ts`
 
+### Quick Examples
+
+**Unit Test (Components, Utils, Hooks):**
 ```typescript
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Button } from '@tbe/components';
 
-describe('Button Component', () => {
-    it('should render with text', () => {
-        render(<Button>Click me</Button>);
-        expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();
-    });
-
-    it('should handle click events', async () => {
-        const handleClick = vi.fn();
-        const user = userEvent.setup();
-
-        render(<Button onClick={handleClick}>Click me</Button>);
-        await user.click(screen.getByRole('button'));
-
-        expect(handleClick).toHaveBeenCalledTimes(1);
+describe('My Feature', () => {
+    it('should work correctly', () => {
+        expect(2 + 2).toBe(4);
     });
 });
 ```
 
-#### Testing Hooks
-
-```typescript
-import { renderHook, waitFor } from '@testing-library/react';
-import { useAuth } from '@tbe/hooks';
-
-describe('useAuth Hook', () => {
-    it('should return authenticated user', () => {
-        const { result } = renderHook(() => useAuth());
-        
-        expect(result.current.isAuthenticated).toBe(true);
-        expect(result.current.user).toBeDefined();
-    });
-});
-```
-
-#### Testing Utilities
-
-```typescript
-import { formatDate } from '@tbe/utils';
-
-describe('formatDate Utility', () => {
-    it('should format date correctly', () => {
-        const date = new Date('2024-01-15');
-        expect(formatDate(date)).toBe('1/15/2024');
-    });
-
-    it('should handle invalid dates', () => {
-        expect(formatDate('invalid')).toBe('Invalid Date');
-    });
-});
-```
-
-### API Tests
-
+**API Test:**
 ```typescript
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { server } from '../mocks/server';
+import { server } from './mocks/server';
 
-describe('User API', () => {
+describe('API Endpoint', () => {
     beforeAll(() => server.listen());
     afterAll(() => server.close());
 
-    it('should get user by id', async () => {
-        const response = await fetch('http://localhost:3004/api/v1/user/123');
-        const data = await response.json();
-
+    it('should fetch data', async () => {
+        const res = await fetch('http://localhost:3004/api/endpoint');
+        const data = await res.json();
         expect(data.status).toBe(true);
-        expect(data.data.id).toBe('123');
     });
 });
 ```
 
-### E2E Tests
-
+**E2E Test:**
 ```typescript
 import { test, expect } from '@playwright/test';
 
-test.describe('User Login', () => {
-    test('should login successfully', async ({ page }) => {
-        await page.goto('http://localhost:3000/login');
-        
-        await page.fill('input[name="email"]', 'test@example.com');
-        await page.fill('input[type="password"]', 'password123');
-        await page.click('button[type="submit"]');
-        
-        await page.waitForURL(/.*dashboard.*/);
-        expect(page.url()).toContain('dashboard');
-    });
+test('user flow', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+    expect(page).toHaveTitle(/TBE/i);
 });
 ```
 
@@ -321,16 +260,13 @@ Tests run automatically on:
 ### Test Strategy by Branch
 
 #### Development Branch
-- ✅ All unit tests
-- ✅ Critical API tests
-- ✅ Smoke E2E tests (key flows only, Chromium only)
-- 📊 Coverage report
+- ✅ Unit tests (fast feedback)
+- ✅ API tests
+- ✅ Smoke E2E tests (Chromium only)
 
 #### Production Branch
-- ✅ Complete unit test suite
-- ✅ Complete API test suite
-- ✅ Full E2E regression (all browsers)
-- 📊 Comprehensive coverage
+- ✅ Complete test suite
+- ✅ Multi-browser E2E (Chromium, Firefox, WebKit)
 - 🚫 Blocks merge if tests fail
 
 ### Workflow Steps

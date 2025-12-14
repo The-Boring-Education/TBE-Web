@@ -233,7 +233,7 @@ pnpm test:coverage       # Generate coverage report
 
 **CI/CD:** Tests run automatically on PRs to `development` and `production` branches.
 
-**Documentation:** See [`apps/testing/README.md`](apps/testing/README.md) and [`doc/TESTING_GUIDE.md`](doc/TESTING_GUIDE.md)
+**Documentation:** See [`apps/testing/README.md`](apps/testing/README.md) for detailed guide
 
 ## 📖 Contributing
 
