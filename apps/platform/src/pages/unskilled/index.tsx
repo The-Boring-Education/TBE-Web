@@ -1,4 +1,3 @@
-import React, { Fragment, useEffect, useState } from 'react';
 import {
   ArrowRightIcon,
   ArrowTrendingUpIcon,
@@ -31,6 +30,7 @@ import { useResumeEvaluation, useUnskilledGraphData } from '@tbe/hooks';
 import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface';
 import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils';
 import { motion } from 'framer-motion';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -321,6 +321,7 @@ const UnskilledLandingPage = ({
                 text={isEvaluating ? 'Evaluating...' : 'Start Evaluation'}
                 variant='PRIMARY'
                 onClick={handleResumeEvaluation}
+                disabled={isEvaluating}
               />
               
               {error && (
