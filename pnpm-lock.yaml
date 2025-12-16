@@ -477,6 +477,9 @@ importers:
       '@tbe/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@tbe/interface':
+        specifier: workspace:*
+        version: link:../../packages/interface
       '@tbe/services':
         specifier: workspace:*
         version: link:../../packages/services

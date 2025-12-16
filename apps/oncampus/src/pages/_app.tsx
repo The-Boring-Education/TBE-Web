@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import DashboardLayout from '@/components/DashboardLayout';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -49,11 +50,23 @@ const AppContent = ({
     return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [router.events]);
 
+  const isDashboardRoute = router.pathname.startsWith('/dashboard');
+
+  const pageContent = (
+    <Component {...pageProps} />
+  );
+
   return (
     <QueryClientProvider client={queryClient}>
       <GamificationProvider>
         <div className="bg-[#0A0A0A] min-h-screen">
-          <Component {...pageProps} />
+          {isDashboardRoute ? (
+            <DashboardLayout>
+              {pageContent}
+            </DashboardLayout>
+          ) : (
+            pageContent
+          )}
         </div>
       </GamificationProvider>
     </QueryClientProvider>
