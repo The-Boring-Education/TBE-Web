@@ -13,11 +13,6 @@ export default function CampusPrepLanding() {
     router.push("/login");
   };
 
-  const handleExploreGuest = () => {
-    // TODO: Implement guest exploration
-    console.log("Explore as guest");
-  };
-
   return (
     <Fragment>
       {/* Pure black background */}
@@ -33,7 +28,6 @@ export default function CampusPrepLanding() {
               transition={{ duration: 0.6 }}
               className="space-y-3"
             >
-              {/* Small tagline */}
 
               {/* Main Heading */}
               <h1 className="text-4xl md:text-4xl lg:text-4xl font-bold leading-tight">

@@ -43,6 +43,7 @@ export interface APIMakeRequestProps {
     headers?: { [key: string]: string }
     body?: any
     timeout?: number
+    baseURL?: string
 }
 
 export interface ClientAPIResponseProps {

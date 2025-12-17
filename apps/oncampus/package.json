@@ -19,6 +19,7 @@
     "@tbe/types": "workspace:*",
     "@tbe/services": "workspace:*",
     "@tbe/constants": "workspace:*",
+    "@tbe/interface": "workspace:*",
     "@tbe/auth": "workspace:*",
     "@tbe/config": "workspace:*"
   },
