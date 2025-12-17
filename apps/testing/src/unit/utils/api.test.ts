@@ -25,7 +25,7 @@ describe('API', () => {
     describe('sendRequest', () => {
         it('should send request and return a promise', async () => {
             // Arrange
-            const url = '/api/v1/users';
+            const url = '/users';
             const method = 'GET';
             const headers = { 'Content-Type': 'application/json' };
             const baseURL = TEST_API_URL;
@@ -40,7 +40,7 @@ describe('API', () => {
 
         it('should handle request parameters', () => {
             // Arrange
-            const url = '/api/v1/users';
+            const url = '/users';
             const method = 'POST';
             const headers = { 'Content-Type': 'application/json' };
             const body = { key: 'value' };
