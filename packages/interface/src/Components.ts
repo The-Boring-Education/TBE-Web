@@ -422,11 +422,13 @@ export interface QuestionLinkProps {
   currentQuestionId: string;
   handleQuestionClick: (question: string, questionId: string) => void;
   frequency: QuestionFrequencyType;
+  theme?: 'light' | 'dark';
 }
 
 export interface MDXRendererProps {
   mdxSource: string;
   actions?: ReactNode[];
+  theme?: 'light' | 'dark';
 }
 
 export interface AlertProps {

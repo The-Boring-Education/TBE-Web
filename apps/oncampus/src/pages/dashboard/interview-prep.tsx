@@ -67,6 +67,7 @@ const InterviewPrepDashboardPage = () => {
 
       return {
         ...baseCard,
+        href: `/dashboard/interview-prep/${sheet.slug}`, // Override href to use dashboard route
         isPurchased: sheet.isPremium ? isPurchased : false,
         isPremium: sheet.isPremium && !isPurchased,
       };

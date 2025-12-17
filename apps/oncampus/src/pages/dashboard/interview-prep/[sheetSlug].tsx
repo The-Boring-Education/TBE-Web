@@ -54,6 +54,33 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     (question) => question.isCompleted
   ).length;
 
+  const { makeRequest } = useApi(`interview-prep/${slug}`);
+  const { user } = useUser();
+  const { trackEvent } = useAnalytics();
+  const gamifiedAction = useGamifiedAction();
+
+  // Universal payment access hook - handles all payment status and locked logic
+  const { isLocked, isPurchased } = usePaymentAccess({
+    productId: sheet?._id,
+    productType: 'INTERVIEW_SHEET',
+    isPremium: sheet?.isPremium,
+    isEnrolled: sheet?.isEnrolled,
+  });
+
+  const {
+    isStarred,
+    isLoading: isStarLoading,
+    toggleStar,
+    setIsStarred,
+  } = useQuestionStarred({
+    userId: user?.id || '',
+    sheetId: sheet._id?.toString() || '',
+    questionId: currentQuestionId || '',
+    initialIsStarred:
+      questions.find((q) => q._id.toString() === currentQuestionId)
+        ?.isStarred || false,
+  });
+
   useEffect(() => {
     const currentQuestion = questions.find(
       (question) => question._id.toString() === currentQuestionId
@@ -91,34 +118,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     }
 
     setShowFeedback(allCompleted);
-  }, [currentQuestionId, questions]);
-
-  const { makeRequest } = useApi(`interview-prep/${slug}`);
-  const { user } = useUser();
-  const { trackEvent } = useAnalytics();
-  const gamifiedAction = useGamifiedAction();
-
-  // Universal payment access hook - handles all payment status and locked logic
-  const { isLocked, isPurchased } = usePaymentAccess({
-    productId: sheet?._id,
-    productType: 'INTERVIEW_SHEET',
-    isPremium: sheet?.isPremium,
-    isEnrolled: sheet?.isEnrolled,
-  });
-
-  const {
-    isStarred,
-    isLoading: isStarLoading,
-    toggleStar,
-    setIsStarred,
-  } = useQuestionStarred({
-    userId: user?.id || '',
-    sheetId: sheet._id?.toString() || '',
-    questionId: currentQuestionId || '',
-    initialIsStarred:
-      questions.find((q) => q._id.toString() === currentQuestionId)
-        ?.isStarred || false,
-  });
+  }, [currentQuestionId, questions, gamifiedAction, setIsStarred]);
 
   if (!sheet) return null;
 
@@ -242,24 +242,22 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       </Section>
 
       {isDataLoading && (
-        <Section className='md:p-2 p-2'>
-          <div className='flex items-center justify-center py-8'>
-            <LoadingSpinner height={8} width={8} />
-            <Text level='p' className='ml-3 text-gray-600'>Loading interview questions...</Text>
-          </div>
-        </Section>
+        <div className='min-h-screen bg-[#0A0A0A] flex items-center justify-center py-8'>
+          <LoadingSpinner height={8} width={8} />
+          <Text level='p' className='ml-3 text-contentDark'>Loading interview questions...</Text>
+        </div>
       )}
 
       {!isDataLoading && (
-      <Section className='md:p-2 p-2'>
-        <FlexContainer className='w-full gap-4' itemCenter={false}>
+      <div className='min-h-screen bg-[#0A0A0A] p-4 flex items-start'>
+        <FlexContainer className='w-full max-w-[1600px] mx-auto gap-4' itemCenter={false}>
           {/* Left Sidebar (Questions) */}
           <FlexContainer
-            className='border md:w-3/12 w-full px-2 gap-1 rounded self-baseline max-h-[80vh] overflow-y-auto bg-white'
+            className='border md:w-3/12 w-full px-2 gap-1 rounded self-baseline max-h-[calc(100vh-2rem)] overflow-y-auto bg-[#0A0A0A] border-gray-800'
             itemCenter={false}
           >
-            <div className='w-full sticky top-0 bg-inherit py-2'>
-              <Text className='heading-5' level='h5'>
+            <div className='w-full sticky top-0 bg-[#0A0A0A] py-2 z-10'>
+              <Text className='heading-5 text-contentDark' level='h5'>
                 Questions
               </Text>
 
@@ -303,6 +301,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                         questionId={questionId}
                         title={title}
                         isLocked={isLocked}
+                        theme='dark'
                       />
                       {isStarred && (
                         <FaStar
@@ -320,16 +319,16 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
 
           {/* Main Content Area */}
           <FlexContainer
-            className='border md:w-8/12 w-full p-2 rounded'
+            className='border md:w-8/12 w-full p-2 rounded bg-[#0A0A0A] border-gray-800 max-h-[calc(100vh-2rem)] overflow-y-auto'
             itemCenter={false}
             justifyCenter={false}
           >
             {isLocked ? (
               <div className='w-full'>
-                <Text level='h2' className='heading-4 mb-4'>
+                <Text level='h2' className='heading-4 mb-4 text-contentDark'>
                   Interview Sheet Overview
                 </Text>
-                <MDXRenderer mdxSource={sheet.meta || ''} />
+                <MDXRenderer theme='dark' mdxSource={sheet.meta || ''} />
                 <div className='mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm'>
                   <Text level='h4' className='mb-2 flex items-center gap-2'>
                     <FaLock className='text-yellow-600' />
@@ -361,6 +360,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
               </div>
             ) : (
               <MDXRenderer
+                theme='dark'
                 actions={[
                   currentQuestionId && (
                     <Button
@@ -404,7 +404,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
             )}
           </FlexContainer>
         </FlexContainer>
-      </Section>
+      </div>
       )}
 
       {showFeedback && (
@@ -417,3 +417,4 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
 export const getServerSideProps = getSheetPageProps;
 
 export default SheetPage;
+

@@ -51,6 +51,10 @@ const AppContent = ({
   }, [router.events]);
 
   const isDashboardRoute = router.pathname.startsWith('/dashboard');
+  // Exclude slug pages from DashboardLayout (they should be full-screen study view)
+  // router.pathname for dynamic routes is the pattern like '/dashboard/interview-prep/[sheetSlug]'
+  const isStudyRoute = router.pathname.includes('[sheetSlug]');
+  const shouldUseDashboardLayout = isDashboardRoute && !isStudyRoute;
 
   const pageContent = (
     <Component {...pageProps} />
@@ -60,7 +64,7 @@ const AppContent = ({
     <QueryClientProvider client={queryClient}>
       <GamificationProvider>
         <div className="bg-[#0A0A0A] min-h-screen">
-          {isDashboardRoute ? (
+          {shouldUseDashboardLayout ? (
             <DashboardLayout>
               {pageContent}
             </DashboardLayout>

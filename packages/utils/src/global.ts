@@ -343,6 +343,7 @@ const getSheetPageProps = async (context: any) => {
       };
     } catch (error) {
       console.error("Error fetching sheet data:", error);
+      // Continue to return redirect even on error
     }
   }
 
