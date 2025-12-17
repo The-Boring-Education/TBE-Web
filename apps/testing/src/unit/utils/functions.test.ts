@@ -6,7 +6,12 @@ import {
     setLocalStorageItem,
     getLocalStorageItem,
     removeLocalStorageItem,
-    cn
+    cn,
+    calculatePriceBreakdown,
+    getDiscountDisplayInfo,
+    validateCouponForSheet,
+    formatPrice,
+    getSavingsPercentage
 } from '@tbe/utils';
 
 describe('Utility Functions', () => {
@@ -550,6 +555,98 @@ describe('Utility Functions', () => {
             expect(result).toContain('bg-blue-500');
             expect(result).toContain('text-white');
             expect(result).toContain('p-4');
+        });
+    });
+
+    describe('calculatePriceBreakdown', () => {
+        it('should calculate price breakdown correctly', () => {
+            // Arrange - use partial mock with type assertion
+            const sheet = { price: 1000, discountPercentage: 10 } as Parameters<typeof calculatePriceBreakdown>[0];
+            const appliedCoupon = { discountPercentage: 5 } as Parameters<typeof calculatePriceBreakdown>[1];
+            
+            // Act
+            const result = calculatePriceBreakdown(sheet, appliedCoupon);
+            expect(result).toBeDefined();
+            expect(result.originalPrice).toBe(1000);
+            expect(result.discountPercentage).toBe(10);
+            expect(result.discountAmount).toBe(100);
+        });
+    });
+
+    describe('getDiscountDisplayInfo', () => {
+        it('should return discount display info correctly', () => {
+            // Arrange
+            const sheet = { price: 1000, discountPercentage: 10 } as Parameters<typeof getDiscountDisplayInfo>[0];
+            const appliedCoupon = { discountPercentage: 5 } as Parameters<typeof getDiscountDisplayInfo>[1];
+            
+            // Act
+            const result = getDiscountDisplayInfo(sheet, appliedCoupon);
+            expect(result).toBeDefined();
+            expect(result.hasDiscount).toBe(true);
+            expect(result.showDiscountBadge).toBe(true);
+            expect(result.discountText).toBe('10% OFF');
+        });
+    });
+
+    describe('validateCouponForSheet', () => {
+        it('should validate coupon for sheet correctly - coupon is inactive', () => {
+            // Arrange
+            const coupon = { discountPercentage: 5, isActive: false } as Parameters<typeof validateCouponForSheet>[0];
+            const sheet = { price: 1000, discountPercentage: 10 } as Parameters<typeof validateCouponForSheet>[1];
+            const currentPrice = 1000;
+            
+            // Act
+            const result = validateCouponForSheet(coupon, sheet, currentPrice);
+            expect(result).toBeDefined();
+            expect(result.isValid).toBe(false);
+            expect(result.reason).toBe('Coupon is inactive');
+        });
+
+        it('should validate coupon for sheet correctly - coupon is expired', () => {
+            // Arrange
+            const coupon = { discountPercentage: 5, isExpired: true } as Parameters<typeof validateCouponForSheet>[0];
+            const sheet = { price: 1000, discountPercentage: 10 } as Parameters<typeof validateCouponForSheet>[1];
+            const currentPrice = 1000;
+            
+            // Act
+            const result = validateCouponForSheet(coupon, sheet, currentPrice);
+            expect(result).toBeDefined();
+            expect(result.isValid).toBe(false);
+        });
+    });
+
+    describe('formatPrice', () => {
+        it('should format price correctly', () => {
+            // Arrange
+            const price = 1000;
+            
+            // Act
+            const result = formatPrice(price);
+            expect(result).toBeDefined();
+            expect(result).toBe('₹1,000');
+        });
+
+        it('should format price correctly - price is 0', () => {
+            // Arrange
+            const price = 0;
+            
+            // Act
+            const result = formatPrice(price);
+            expect(result).toBeDefined();
+            expect(result).toBe('₹0');
+        });
+    });
+
+    describe('getSavingsPercentage', () => {
+        it('should get savings percentage correctly', () => {
+            // Arrange
+            const originalPrice = 1000;
+            const finalPrice = 800;
+            
+            // Act
+            const result = getSavingsPercentage(originalPrice, finalPrice);
+            expect(result).toBeDefined();
+            expect(result).toBe(20);
         });
     });
 });
