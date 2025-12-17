@@ -1,15 +1,20 @@
 import { envConfig } from '@tbe/constants'
-import { sendAPIResponse, sendRequest } from '@tbe/utils'
+import { sendRequest } from '@tbe/utils'
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Mock axios to avoid real network requests
+// Must include interceptors since api.ts calls interceptors.response.use at module load
 vi.mock('axios', () => ({
     default: {
         create: () => ({
             request: vi.fn().mockResolvedValue({
                 data: { success: true, data: 'value', message: 'Success' },
                 status: 200
-            })
+            }),
+            interceptors: {
+                request: { use: vi.fn(), eject: vi.fn() },
+                response: { use: vi.fn(), eject: vi.fn() }
+            }
         })
     }
 }));
