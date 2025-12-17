@@ -4,6 +4,10 @@ import path from 'path';
 
 export default defineConfig({
     plugins: [react()],
+    esbuild: {
+        // Skip tsconfig resolution for workspace packages
+        tsconfigRaw: '{}'
+    },
     test: {
         globals: true,
         environment: 'jsdom',
@@ -31,12 +35,29 @@ export default defineConfig({
             }
         },
         testTimeout: 10000,
-        hookTimeout: 10000
+        hookTimeout: 10000,
+        deps: {
+            // Handle workspace packages properly
+            optimizer: {
+                web: {
+                    include: ['@tbe/*']
+                }
+            }
+        }
     },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
-            '@test-utils': path.resolve(__dirname, './src/test-utils')
+            '@test-utils': path.resolve(__dirname, './src/test-utils'),
+            // Map workspace packages to their source
+            '@tbe/components': path.resolve(__dirname, '../../packages/components/src'),
+            '@tbe/utils': path.resolve(__dirname, '../../packages/utils/src'),
+            '@tbe/constants': path.resolve(__dirname, '../../packages/constants/src'),
+            '@tbe/types': path.resolve(__dirname, '../../packages/types/src'),
+            '@tbe/interface': path.resolve(__dirname, '../../packages/interface/src'),
+            '@tbe/hooks': path.resolve(__dirname, '../../packages/hooks/src'),
+            '@tbe/services': path.resolve(__dirname, '../../packages/services/src'),
+            '@tbe/auth': path.resolve(__dirname, '../../packages/auth/src')
         }
     }
 });
