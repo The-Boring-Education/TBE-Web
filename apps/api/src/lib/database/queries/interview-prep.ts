@@ -49,8 +49,8 @@ const getAllInterviewSheetsFromDB =
           isPremium: sheetObj.isPremium || false,
           question_count: sheetObj.questions?.length || 0,
           questions: sheetObj.questions || [],
-          created_at: sheetObj.createdAt ? new Date(sheetObj.createdAt).toISOString() : new Date().toISOString(),
-          updated_at: sheetObj.updatedAt ? new Date(sheetObj.updatedAt).toISOString() : new Date().toISOString(),
+          created_at: (sheetObj as any).createdAt ? new Date((sheetObj as any).createdAt).toISOString() : new Date().toISOString(),
+          updated_at: (sheetObj as any).updatedAt ? new Date((sheetObj as any).updatedAt).toISOString() : new Date().toISOString(),
         };
       });
 

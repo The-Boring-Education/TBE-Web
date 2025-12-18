@@ -173,6 +173,8 @@ export interface InterviewSheetModel extends Document {
     questions: InterviewSheetQuestionModel[]
     roadmap: RoadmapsType
     features: string[]
+    createdAt?: Date
+    updatedAt?: Date
 }
 
 export interface InterviewSheetQuestionModel {
