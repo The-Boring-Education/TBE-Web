@@ -45,12 +45,18 @@ const getAllInterviewSheetsFromDB =
           slug: sheetObj.slug,
           coverImageURL: sheetObj.coverImageURL,
           description: sheetObj.description,
-          liveOn: sheetObj.liveOn ? new Date(sheetObj.liveOn).toISOString() : new Date().toISOString(),
+          liveOn: sheetObj.liveOn
+            ? new Date(sheetObj.liveOn).toISOString()
+            : new Date().toISOString(),
           isPremium: sheetObj.isPremium || false,
           question_count: sheetObj.questions?.length || 0,
           questions: sheetObj.questions || [],
-          created_at: (sheetObj as any).createdAt ? new Date((sheetObj as any).createdAt).toISOString() : new Date().toISOString(),
-          updated_at: (sheetObj as any).updatedAt ? new Date((sheetObj as any).updatedAt).toISOString() : new Date().toISOString(),
+          created_at: (sheetObj as any).createdAt
+            ? new Date((sheetObj as any).createdAt).toISOString()
+            : new Date().toISOString(),
+          updated_at: (sheetObj as any).updatedAt
+            ? new Date((sheetObj as any).updatedAt).toISOString()
+            : new Date().toISOString(),
         };
       });
 
@@ -99,7 +105,7 @@ const getInterviewSheetBySlugFromDB = async (
     }
 
     const sheetObj = sheet.toObject();
-    
+
     // Format response with ISO 8601 dates
     const formattedSheet = {
       id: sheetObj._id,
@@ -108,14 +114,20 @@ const getInterviewSheetBySlugFromDB = async (
       slug: sheetObj.slug,
       coverImageURL: sheetObj.coverImageURL,
       description: sheetObj.description,
-      liveOn: sheetObj.liveOn ? new Date(sheetObj.liveOn).toISOString() : new Date().toISOString(),
+      liveOn: sheetObj.liveOn
+        ? new Date(sheetObj.liveOn).toISOString()
+        : new Date().toISOString(),
       isPremium: sheetObj.isPremium || false,
       price: sheetObj.price || 0,
       question_count: mappedQuestions.length,
       questions: mappedQuestions,
       isEnrolled,
-      created_at: sheetObj.createdAt ? new Date(sheetObj.createdAt).toISOString() : new Date().toISOString(),
-      updated_at: sheetObj.updatedAt ? new Date(sheetObj.updatedAt).toISOString() : new Date().toISOString(),
+      created_at: sheetObj.createdAt
+        ? new Date(sheetObj.createdAt).toISOString()
+        : new Date().toISOString(),
+      updated_at: sheetObj.updatedAt
+        ? new Date(sheetObj.updatedAt).toISOString()
+        : new Date().toISOString(),
     };
 
     return {
@@ -467,7 +479,8 @@ const deleteInterviewSheetFromDB = async (
     // Update coupons that reference this sheet
     if (global.mongoose?.connection?.db) {
       try {
-        const couponsCollection = global.mongoose.connection.db.collection("coupons");
+        const couponsCollection =
+          global.mongoose.connection.db.collection("coupons");
         if (couponsCollection) {
           await couponsCollection.updateMany(
             { applicableProducts: toObjectId(sheetId) },
