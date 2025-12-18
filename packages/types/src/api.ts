@@ -251,6 +251,7 @@ export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
 
 export interface AddInterviewSheetRequestPayloadProps {
     title: string
+    topic: string
     description: string
     coverImageURL: string
     liveOn: string

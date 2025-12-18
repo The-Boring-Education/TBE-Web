@@ -160,6 +160,7 @@ export interface UserCourseChapterModel {
 
 export interface InterviewSheetModel extends Document {
     name: string
+    topic: string
     meta: string
     slug: string
     description: string
@@ -578,7 +579,8 @@ export interface AddCourseRequestPayloadProps {
 }
 
 export interface AddInterviewSheetRequestPayloadProps {
-    title: string
+    name: string
+    topic: string
     description: string
     coverImageURL: string
     liveOn: string

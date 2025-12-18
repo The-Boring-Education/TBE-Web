@@ -78,6 +78,7 @@ export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 const modelSelectParams = {
   coursePreview: '_id name slug coverImageURL description liveOn isPremium',
   projectPreview: '_id name slug coverImageURL description isActive',
+  interviewSheetPreview: '_id name topic slug coverImageURL description liveOn isPremium questions createdAt updatedAt',
 };
 
 export { DATABASE_MODELS, modelSelectParams };

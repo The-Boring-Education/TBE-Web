@@ -8,9 +8,10 @@ import {
 } from '@/lib/database';
 import type { AddInterviewSheetRequestPayloadProps } from '@/lib/interfaces';
 import { cors, sendAPIResponse } from '@/lib/utils';
-import { connectDB } from '@/middleware/api';
+import { connectDB, logRequest } from '@/middleware/api';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  logRequest(req, res);
   await cors(req, res);
   await connectDB();
   const { method } = req;
@@ -107,7 +108,7 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
     // No slug? Return all sheets
     const { data: allSheets, error } = await getAllInterviewSheetsFromDB();
 
-    if (error || !allSheets) {
+    if (error) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
@@ -120,7 +121,7 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        data: allSheets,
+        data: allSheets || [],
       })
     );
   } catch (error) {

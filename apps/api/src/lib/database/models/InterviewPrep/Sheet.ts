@@ -52,6 +52,10 @@ const InterviewSheetSchema = new Schema<InterviewSheetModel>(
       type: String,
       required: [true, 'InterviewSheet name is required'],
     },
+    topic: {
+      type: String,
+      required: [true, 'Topic is required'],
+    },
     meta: { type: String },
     slug: {
       type: String,

@@ -2,23 +2,37 @@ import type { NextApiRequest, NextApiResponse } from "next"
 
 import { apiStatusCodes } from "@/lib/constants"
 import {
+    deleteInterviewSheetFromDB,
     getASheetForUserFromDB,
     updateInterviewSheetInDB
 } from "@/lib/database"
 import type { AddInterviewSheetRequestPayloadProps } from "@/lib/interfaces"
 import { sendAPIResponse } from "@/lib/utils"
-import { connectDB } from "@/middleware/api"
+import { connectDB, logRequest } from "@/middleware/api"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    logRequest(req, res)
     await connectDB()
     const { method, query } = req
     const { sheetId, userId } = query as { sheetId: string; userId: string }
+
+    // Validate sheetId format
+    if (!sheetId || sheetId === 'undefined') {
+        return res.status(apiStatusCodes.BAD_REQUEST).json(
+            sendAPIResponse({
+                status: false,
+                message: "Invalid sheet ID provided"
+            })
+        )
+    }
 
     switch (method) {
         case "GET":
             return handleGetSheetById(req, res, userId, sheetId)
         case "PATCH":
             return handleUpdateSheet(req, res, sheetId)
+        case "DELETE":
+            return handleDeleteSheet(req, res, sheetId)
         default:
             return res.status(apiStatusCodes.BAD_REQUEST).json(
                 sendAPIResponse({
@@ -103,6 +117,55 @@ const handleUpdateSheet = async (
                 status: false,
                 message: "Failed while updating sheet",
                 error
+            })
+        )
+    }
+}
+
+const handleDeleteSheet = async (
+    req: NextApiRequest,
+    res: NextApiResponse,
+    sheetId: string
+) => {
+    try {
+        const { data, error } = await deleteInterviewSheetFromDB(sheetId)
+
+        if (error) {
+            if (error === "Interview sheet not found") {
+                console.warn(`Sheet ${sheetId} not found for deletion`)
+                return res.status(apiStatusCodes.NOT_FOUND).json(
+                    sendAPIResponse({
+                        status: false,
+                        message: "Interview sheet not found",
+                        statusCode: 404
+                    })
+                )
+            }
+
+            console.error(`Error deleting sheet ${sheetId}:`, error)
+            return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+                sendAPIResponse({
+                    status: false,
+                    message: "Failed to delete interview sheet",
+                    error
+                })
+            )
+        }
+
+        return res.status(apiStatusCodes.OKAY).json(
+            sendAPIResponse({
+                success: true,
+                message: "Interview sheet deleted successfully",
+                data
+            })
+        )
+    } catch (error) {
+        console.error(`Exception deleting sheet ${sheetId}:`, error)
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+            sendAPIResponse({
+                status: false,
+                message: "Failed to delete interview sheet",
+                error: String(error)
             })
         )
     }
