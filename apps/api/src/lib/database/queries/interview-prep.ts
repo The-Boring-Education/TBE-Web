@@ -9,6 +9,8 @@ import type {
 } from "@/lib/interfaces";
 
 import { InterviewSheet, UserSheet } from "../models";
+import mongoose from "mongoose";
+import type { ObjectId as MongoObjectId } from "mongodb";
 import { toObjectId } from "./common";
 import { updateUserPointsInDB } from "./gamification";
 
@@ -477,14 +479,17 @@ const deleteInterviewSheetFromDB = async (
     await InterviewSheet.findByIdAndDelete(sheetId);
 
     // Update coupons that reference this sheet
-    if (global.mongoose?.connection?.db) {
+    if (mongoose.connection?.db) {
       try {
+        type CouponDoc = {
+          applicableProducts?: Array<mongoose.Types.ObjectId | MongoObjectId>;
+        };
         const couponsCollection =
-          global.mongoose.connection.db.collection("coupons");
+          mongoose.connection.db.collection<CouponDoc>("coupons");
         if (couponsCollection) {
           await couponsCollection.updateMany(
-            { applicableProducts: toObjectId(sheetId) },
-            { $pull: { applicableProducts: toObjectId(sheetId) } }
+            { applicableProducts: { $in: [toObjectId(sheetId) as any] } },
+            { $pull: { applicableProducts: toObjectId(sheetId) as any } }
           );
         }
       } catch (couponError) {
