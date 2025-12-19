@@ -199,7 +199,7 @@ const updateInterviewQuestionInDB = async (
 
     return { data: course };
   } catch (error) {
-    return { error: "Failed to update chapter to course" };
+    return { error: "Failed to update question in interview sheet" };
   }
 };
 
