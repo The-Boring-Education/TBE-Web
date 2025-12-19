@@ -414,7 +414,7 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
       } as BaseInterviewSheetResponseProps,
     };
   } catch (error) {
-    return { error: "Failed to fetch courses with chapter status" };
+    return { error: "Failed to fetch interview sheet for user" };
   }
 };
 
