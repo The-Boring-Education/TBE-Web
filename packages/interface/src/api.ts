@@ -135,7 +135,7 @@ export interface AddCourseRequestPayloadProps {
 }
 
 export interface AddInterviewSheetRequestPayloadProps {
-    title: string
+    name: string
     topic: string
     description: string
     coverImageURL: string
