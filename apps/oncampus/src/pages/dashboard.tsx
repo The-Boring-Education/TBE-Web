@@ -16,10 +16,13 @@ import {
   BookMarked,
   Calendar,
   BookOpen,
+  ClipboardList,
 } from "lucide-react";
+import { useRouter } from "next/router";
 const CampusPrepDashboard = () => {
   const { user, loading, isAuth } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
 
   // Redirect to login if not authenticated
   if (!loading && !isAuth) {
@@ -219,6 +222,52 @@ const CampusPrepDashboard = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Practice Section */}
+        <Card className="border-gray-800">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <ClipboardList className="w-4 h-4 text-[#FF5757]" />
+              Practice
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Quick practice modules to keep your streak going
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-center justify-between p-4 bg-[#1A1A1A] rounded-lg border border-gray-800">
+              <div>
+                <p className="text-white font-semibold">Quizzes</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Topic-wise MCQs with instant results
+                </p>
+              </div>
+              <Button
+                variant="OUTLINE"
+                size="SMALL"
+                className="border-gray-700 text-white hover:bg-gray-800"
+                text="Explore"
+                onClick={() => router.push("/dashboard/quizzes")}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-[#1A1A1A] rounded-lg border border-gray-800">
+              <div>
+                <p className="text-white font-semibold">Interview Sheets</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Practice interview questions and mark progress
+                </p>
+              </div>
+              <Button
+                variant="OUTLINE"
+                size="SMALL"
+                className="border-gray-700 text-white hover:bg-gray-800"
+                text="Open"
+                onClick={() => router.push("/dashboard/interview-prep")}
+              />
+            </div>
+          </CardContent>
+        </Card>
       </div>
   );
 };
