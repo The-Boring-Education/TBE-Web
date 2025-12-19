@@ -35,15 +35,6 @@ const connectDB = async () => {
       minPoolSize: 2,
     });
     console.log("Connected to MongoDB");
-
-    // Wait for connection to be fully ready
-    await new Promise((resolve) => {
-      if (mongoose.connection.readyState === 1) {
-        resolve(undefined);
-      } else {
-        mongoose.connection.once("connected", () => resolve(undefined));
-      }
-    });
   } catch (error) {
     console.error("Error connecting to MongoDB:", error, envConfig.MONGODB_URI);
     throw error;
