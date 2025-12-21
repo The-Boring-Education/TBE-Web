@@ -20,12 +20,18 @@ const SENSITIVE_QUERY_KEYS = [
   "id_token",
 ];
 
-const sanitizeQuery = (query: NextApiRequest["query"]): Record<string, unknown> => {
+const sanitizeQuery = (
+  query: NextApiRequest["query"]
+): Record<string, unknown> => {
   const sanitized: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(query)) {
     const lowerKey = key.toLowerCase();
-    if (SENSITIVE_QUERY_KEYS.some((sensitiveKey) => lowerKey.includes(sensitiveKey))) {
+    if (
+      SENSITIVE_QUERY_KEYS.some((sensitiveKey) =>
+        lowerKey.includes(sensitiveKey)
+      )
+    ) {
       sanitized[key] = "[REDACTED]";
     } else {
       sanitized[key] = value;
@@ -68,16 +74,17 @@ const anonymizeIp = (ip: string): string => {
 
 const logRequest = (req: NextApiRequest, res: NextApiResponse) => {
   const { method, url, headers, query } = req;
-  const rawIp =
-    ((headers["x-forwarded-for"] as string)?.split(",")[0] ||
-      headers["x-real-ip"] ||
-      "unknown") as string;
+  const rawIp = ((headers["x-forwarded-for"] as string)?.split(",")[0] ||
+    headers["x-real-ip"] ||
+    "unknown") as string;
   const safeIp = anonymizeIp(rawIp);
 
   // Log incoming request
   const safeQuery = sanitizeQuery(query);
   const queryStr =
-    Object.keys(safeQuery).length > 0 ? ` | Query: ${JSON.stringify(safeQuery)}` : "";
+    Object.keys(safeQuery).length > 0
+      ? ` | Query: ${JSON.stringify(safeQuery)}`
+      : "";
   console.log(
     `📨 [${new Date().toISOString()}] ${method} ${url}${queryStr} | IP: ${safeIp}`
   );
