@@ -41,7 +41,7 @@ const anonymizeIp = (ip: string): string => {
   }
 
   // Handle potential multiple IPs in x-forwarded-for
-  const baseIp = ip.split(",")[0].trim();
+  const baseIp = (ip.split(",")[0] || "").trim();
 
   if (baseIp.includes(".")) {
     // IPv4: mask the last octet
