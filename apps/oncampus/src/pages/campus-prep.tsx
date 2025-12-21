@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 
 import { Button } from "@tbe/components";
-import { Bell, BookOpen, Code, FileText, Clipboard, Users, Briefcase } from "lucide-react";
+import { Bell, BookOpen, Code, FileText, Clipboard, Users, Briefcase, ClipboardList } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -95,6 +95,7 @@ export default function CampusPrepLanding() {
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { title: "Aptitude Practice", desc: "Daily challenges, streak tracking & top practice links for Quant, Verbal, DI, and Reasoning.", href: "/aptitude", Icon: BookOpen },
+              { title: "Quizzes", desc: "Topic-wise quizzes with instant results and performance tracking.", href: "/dashboard/quizzes", Icon: ClipboardList },
               { title: "Interview Prep", desc: "CS Fundamentals, HR tips, mock interview questions, and more.", href: "/interview-prep", Icon: Code },
               { title: "DSA Preparation", desc: "Playlists, coding sites, and problem sets for hands-on algorithm practice.", href: "/dsa", Icon: FileText },
               { title: "Resume Zone", desc: "Live preview builder and free templates for standout resumes.", href: "/resume", Icon: Clipboard },
