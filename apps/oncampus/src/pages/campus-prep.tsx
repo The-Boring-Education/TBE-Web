@@ -96,7 +96,7 @@ export default function CampusPrepLanding() {
             {[
               { title: "Aptitude Practice", desc: "Daily challenges, streak tracking & top practice links for Quant, Verbal, DI, and Reasoning.", href: "/aptitude", Icon: BookOpen },
               { title: "Interview Prep", desc: "CS Fundamentals, HR tips, mock interview questions, and more.", href: "/interview-prep", Icon: Code },
-              { title: "DSA Preparation", desc: "Playlists, coding sites, and problem sets for hands-on algorithm practice.", href: "/dsa", Icon: FileText },
+              { title: "DSA Preparation", desc: "Playlists, coding sites, and problem sets for hands-on algorithm practice.", href: "/dashboard/dsa-prep", Icon: FileText },
               { title: "Resume Zone", desc: "Live preview builder and free templates for standout resumes.", href: "/resume", Icon: Clipboard },
               { title: "Interview Experiences", desc: "Real candidate stories and advice from recent interviews.", href: "/experiences", Icon: Users },
               { title: "Company Hub", desc: "Practice company-specific questions, get campus ready.", href: "/companies", Icon: Briefcase },
