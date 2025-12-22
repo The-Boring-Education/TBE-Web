@@ -24,6 +24,8 @@ export const DASHBOARD_SIDEBAR_ITEMS = [
   { name: "Dashboard", icon: Home, href: "/dashboard" },
   { name: "Interview Sheets", icon: Target, href: "/dashboard/interview-prep" },
   { name: "DSA PREP", icon: BookOpen, href: "/dashboard/dsa-prep" },
+  { name: "Quizzes", icon: ClipboardList, href: "/dashboard/quizzes" },
+
 ];
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {

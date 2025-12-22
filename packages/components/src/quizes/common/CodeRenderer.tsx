@@ -6,10 +6,12 @@ import { useEffect, useRef } from 'react'
 interface CodeRendererProps {
   content: string
   className?: string
+  theme?: 'light' | 'dark'
 }
 
-export function CodeRenderer({ content, className = "" }: CodeRendererProps) {
+export function CodeRenderer({ content, className = "", theme = 'light' }: CodeRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const isDark = theme === 'dark'
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -86,12 +88,20 @@ export function CodeRenderer({ content, className = "" }: CodeRendererProps) {
       // No syntax highlighting - just escape HTML
       const escapedCode = md.utils.escapeHtml(code || '')
 
+      const preClass = isDark
+        ? "bg-gray-950 overflow-x-auto hover:bg-gray-900 transition border border-gray-800 px-4 py-6 rounded-lg whitespace-pre-wrap"
+        : "bg-gray-100 overflow-x-auto hover:bg-gray-200 transition border px-4 py-6 rounded-lg whitespace-pre-wrap"
+      const codeClass = isDark ? "text-sm font-mono text-gray-100" : "text-sm font-mono text-gray-800"
+      const buttonClass = isDark
+        ? "copy-button absolute top-2 right-2 px-2 py-1 bg-gray-900 text-gray-100 text-xs rounded border border-gray-700 hover:bg-gray-800 hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100"
+        : "copy-button absolute top-2 right-2 px-2 py-1 bg-white text-gray-800 text-xs rounded border border-gray-300 hover:bg-gray-100 hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100"
+
       return (
         `<div class="relative mb-4 group">` +
-        `<pre class="bg-gray-100 overflow-x-auto hover:bg-gray-200 transition border px-4 py-6 rounded-lg whitespace-pre-wrap">` +
-        `<code class="text-sm font-mono text-gray-800">${escapedCode}</code>` +
+        `<pre class="${preClass}">` +
+        `<code class="${codeClass}">${escapedCode}</code>` +
         `</pre>` +
-        `<button class="copy-button absolute top-2 right-2 px-2 py-1 bg-white text-gray-800 text-xs rounded border border-gray-300 hover:bg-gray-100 hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100">Copy</button>` +
+        `<button class="${buttonClass}">Copy</button>` +
         `</div>`
       )
     }
@@ -100,7 +110,10 @@ export function CodeRenderer({ content, className = "" }: CodeRendererProps) {
     md.renderer.rules.code_inline = (tokens, idx) => {
       const token = tokens[idx]
       const code = token?.content
-      return `<code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800 border">${md.utils.escapeHtml(code || '')}</code>`
+      const inlineClass = isDark
+        ? "bg-gray-900 px-2 py-1 rounded text-sm font-mono text-gray-100 border border-gray-800"
+        : "bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800 border"
+      return `<code class="${inlineClass}">${md.utils.escapeHtml(code || '')}</code>`
     }
 
     // Render the content
@@ -137,12 +150,16 @@ export function CodeRenderer({ content, className = "" }: CodeRendererProps) {
       block.classList.add('group')
     })
 
-  }, [content])
+  }, [content, isDark])
 
   return (
     <div 
       ref={containerRef} 
-      className={`prose prose-sm max-w-none ${className}`}
+      className={[
+        "prose prose-sm max-w-none",
+        isDark ? "prose-invert" : "",
+        className
+      ].join(" ")}
     />
   )
 }
