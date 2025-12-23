@@ -44,7 +44,7 @@ const PROJECT_SKILLS: SkillsType[] = [
     "TailwindCSS"
 ]
 
-const ROADMAPS: RoadmapsType[] = ["Frontend", "Backend", "Fullstack", "Tech"]
+const ROADMAPS: RoadmapsType[] = ["Frontend", "Backend", "Fullstack", "Tech", "DSA"]
 const INTERVIEW_QUESTION_FREQUENCY: QuestionFrequencyType[] = [
     "Most Asked",
     "Asked Frequently",

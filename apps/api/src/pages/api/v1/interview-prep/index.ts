@@ -1,14 +1,14 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from '@/lib/constants';
+import { apiStatusCodes } from "@/lib/constants";
 import {
   addAInterviewSheetToDB,
   getAllInterviewSheetsFromDB,
   getInterviewSheetBySlugFromDB,
-} from '@/lib/database';
-import type { AddInterviewSheetRequestPayloadProps } from '@/lib/interfaces';
-import { cors, sendAPIResponse } from '@/lib/utils';
-import { connectDB } from '@/middleware/api';
+} from "@/lib/database";
+import type { AddInterviewSheetRequestPayloadProps } from "@/lib/interfaces";
+import { cors, sendAPIResponse } from "@/lib/utils";
+import { connectDB } from "@/middleware/api";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
@@ -16,9 +16,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
 
   switch (method) {
-    case 'POST':
+    case "POST":
       return handleAddASheet(req, res);
-    case 'GET':
+    case "GET":
       return handleAllGetSheet(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -42,34 +42,36 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'Sheet already exists',
+          message: "Sheet already exists",
         })
       );
     }
 
     const { data, error } = await addAInterviewSheetToDB(sheetPayload);
 
-    if (error)
+    if (error) {
+      console.log("Error:", error);
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: 'Sheet not added',
+          message: "Sheet not added",
           error,
         })
       );
+    }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
         data,
-        message: 'Sheet added successfully',
+        message: "Sheet added successfully",
       })
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Failed while adding sheet',
+        message: "Failed while adding sheet",
         error,
       })
     );
@@ -90,7 +92,7 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(apiStatusCodes.NOT_FOUND).json(
           sendAPIResponse({
             status: false,
-            message: 'Sheet not found',
+            message: "Sheet not found",
             error,
           })
         );
@@ -111,7 +113,7 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: 'Failed while fetching sheets',
+          message: "Failed while fetching sheets",
           error,
         })
       );
@@ -127,7 +129,7 @@ const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Unexpected error while fetching sheets',
+        message: "Unexpected error while fetching sheets",
         error,
       })
     );
