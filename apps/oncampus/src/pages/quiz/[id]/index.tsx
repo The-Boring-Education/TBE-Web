@@ -242,7 +242,7 @@ export default function QuizPage() {
                   type="button"
                   onClick={() => selectAnswer(index)}
                   className={[
-                    "w-full text-left p-4 rounded-lg border transition-all",
+                    "w-full text-left px-1 py-1 rounded-lg border transition-all",
                     isSelected
                       ? "border-[#FF5757] bg-[#FF5757]/10"
                       : "border-gray-800 hover:border-[#FF5757]/50 hover:bg-[#FF5757]/5",
