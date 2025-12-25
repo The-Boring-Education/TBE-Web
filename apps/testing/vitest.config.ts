@@ -57,7 +57,14 @@ export default defineConfig({
             '@tbe/interface': path.resolve(__dirname, '../../packages/interface/src'),
             '@tbe/hooks': path.resolve(__dirname, '../../packages/hooks/src'),
             '@tbe/services': path.resolve(__dirname, '../../packages/services/src'),
-            '@tbe/auth': path.resolve(__dirname, '../../packages/auth/src')
+            '@tbe/auth': path.resolve(__dirname, '../../packages/auth/src'),
+            // API app path aliases for testing API routes
+            '@/lib/constants': path.resolve(__dirname, '../../api/src/lib/constants'),
+            '@/lib/database': path.resolve(__dirname, '../../api/src/lib/database'),
+            '@/lib/interfaces': path.resolve(__dirname, '../../api/src/lib/interfaces'),
+            '@/lib/services': path.resolve(__dirname, '../../api/src/lib/services'),
+            '@/lib/utils': path.resolve(__dirname, '../../api/src/lib/utils'),
+            '@/middleware': path.resolve(__dirname, '../../api/src/middleware')
         }
     }
 });
