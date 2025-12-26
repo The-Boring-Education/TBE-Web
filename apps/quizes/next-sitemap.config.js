@@ -5,7 +5,7 @@
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-    siteUrl: process.env.SITE_URL || 'https://quizes.theboringeducation.com',
+    siteUrl: process.env.SITE_URL || 'https://quiz.theboringeducation.com',
     generateRobotsTxt: true,
     generateIndexSitemap: false,
 

@@ -159,7 +159,7 @@ export default function ValidatePage() {
                                 {[
                                     'https://theboringeducation.com/',
                                     'https://prepyatra.theboringeducation.com/',
-                                    'https://quizes.theboringeducation.com/'
+                                    'https://quiz.theboringeducation.com/'
                                 ].map((testUrl) => (
                                     <button
                                         key={testUrl}

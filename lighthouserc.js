@@ -40,8 +40,8 @@ const PRODUCTION_URLS = {
         'https://prepyatra.theboringeducation.com/pricing'
     ],
     quizes: [
-        'https://quizes.theboringeducation.com/',
-        'https://quizes.theboringeducation.com/leaderboard'
+        'https://quiz.theboringeducation.com/',
+        'https://quiz.theboringeducation.com/leaderboard'
     ],
     resumeYatra: ['https://resumeyatra.theboringeducation.com/'],
     dsayatra: [
