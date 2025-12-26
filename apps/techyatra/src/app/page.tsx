@@ -1,7 +1,6 @@
 "use client";
 import { Button, Footer, Navbar } from "@tbe/components";
 import { LearningSection, TabSection } from "@tbe/components/techyatra";
-import { ArrowRight } from "lucide-react";
 import React from "react";
 
 export default function Home() {
