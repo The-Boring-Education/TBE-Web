@@ -55,16 +55,22 @@ const Home = ({ seoMeta }: PageProps) => {
   const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
     if (!response?.data) return [];
 
-    return response.data.map((sheet: any) => {
-      const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
-      const isPurchased = purchaseStatuses[sheet._id] || false;
+    // Filter out DSA sheets - they have their own section
+    return response.data
+      .filter((sheet: any) => {
+        const roadmap = sheet?.roadmap || '';
+        return roadmap.toLowerCase() !== 'dsa';
+      })
+      .map((sheet: any) => {
+        const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
+        const isPurchased = purchaseStatuses[sheet._id] || false;
 
-      return {
-        ...baseCard,
-        isPurchased: sheet.isPremium ? isPurchased : false, // Only premium sheets can be purchased
-        isPremium: sheet.isPremium && !isPurchased, // Only show premium if not purchased
-      };
-    });
+        return {
+          ...baseCard,
+          isPurchased: sheet.isPremium ? isPurchased : false, // Only premium sheets can be purchased
+          isPremium: sheet.isPremium && !isPurchased, // Only show premium if not purchased
+        };
+      });
   }, [response?.data, purchaseStatuses]);
 
   // Group by roadmap/domain for structured sections
@@ -72,16 +78,18 @@ const Home = ({ seoMeta }: PageProps) => {
     const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
     
     (response?.data || []).forEach((sheet: any) => {
-      // Use roadmap directly from API response (now included in select params)
-      const roadmap = sheet?.roadmap || 'Tech';
+      // Filter out DSA sheets - they have their own section
+      const roadmap = sheet?.roadmap || '';
+      if (roadmap.toLowerCase() === 'dsa') return;
       
-      if (!groups[roadmap]) {
-        groups[roadmap] = [];
+      const normalizedRoadmap = roadmap || 'Tech';
+      if (!groups[normalizedRoadmap]) {
+        groups[normalizedRoadmap] = [];
       }
       
       const card = (sheets || []).find((c) => c.id === sheet._id);
       if (card) {
-        groups[roadmap].push(card);
+        groups[normalizedRoadmap].push(card);
       }
     });
     

@@ -61,26 +61,36 @@ const InterviewPrepDashboardPage = () => {
   const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
     if (!response?.data) return [];
 
-    return response.data.map((sheet: any) => {
-      const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
-      const isPurchased = purchaseStatuses[sheet._id] || false;
+    // Filter out DSA sheets - they have their own section at /dsa-prep
+    return response.data
+      .filter((sheet: any) => {
+        const roadmap = sheet?.roadmap || '';
+        return roadmap.toLowerCase() !== 'dsa';
+      })
+      .map((sheet: any) => {
+        const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
+        const isPurchased = purchaseStatuses[sheet._id] || false;
 
-      return {
-        ...baseCard,
-        href: `/dashboard/interview-prep/${sheet.slug}`, // Override href to use dashboard route
-        isPurchased: sheet.isPremium ? isPurchased : false,
-        isPremium: sheet.isPremium && !isPurchased,
-      };
-    });
+        return {
+          ...baseCard,
+          href: `/dashboard/interview-prep/${sheet.slug}`, // Override href to use dashboard route
+          isPurchased: sheet.isPremium ? isPurchased : false,
+          isPremium: sheet.isPremium && !isPurchased,
+        };
+      });
   }, [response?.data, purchaseStatuses]);
 
   const groupedByRoadmap = useMemo(() => {
     const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
     (response?.data || []).forEach((sheet: any) => {
-      const roadmap = sheet?.roadmap || "Tech";
-      if (!groups[roadmap]) groups[roadmap] = [];
+      // Filter out DSA sheets - they have their own section at /dsa-prep
+      const roadmap = sheet?.roadmap || '';
+      if (roadmap.toLowerCase() === 'dsa') return;
+      
+      const normalizedRoadmap = roadmap || 'Tech';
+      if (!groups[normalizedRoadmap]) groups[normalizedRoadmap] = [];
       const card = (sheets || []).find((c) => c.id === sheet._id);
-      if (card) groups[roadmap].push(card);
+      if (card) groups[normalizedRoadmap].push(card);
     });
     return groups;
   }, [response?.data, sheets]);
