@@ -12,7 +12,7 @@ import {
   CardContainerB,
 } from "@tbe/components";
 
-const InterviewPrepDashboardPage = () => {
+const DSAPrepPage = () => {
   const router = useRouter();
   const { user, loading: userLoading, isAuth } = useUser();
 
@@ -58,14 +58,15 @@ const InterviewPrepDashboardPage = () => {
     }
   }, [response?.data, user?.id]);
 
-  const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
+  // Filter only DSA roadmap sheets
+  const dsaSheets: PrimaryCardWithCTAProps[] = useMemo(() => {
     if (!response?.data) return [];
 
-    // Filter out DSA sheets - they have their own section at /dsa-prep
     return response.data
       .filter((sheet: any) => {
-        const roadmap = sheet?.roadmap || '';
-        return roadmap.toLowerCase() !== 'dsa';
+        // Filter sheets where roadmap is "DSA" (case-insensitive)
+        const roadmap = sheet?.roadmap || "";
+        return roadmap.toLowerCase() === "dsa";
       })
       .map((sheet: any) => {
         const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
@@ -73,66 +74,57 @@ const InterviewPrepDashboardPage = () => {
 
         return {
           ...baseCard,
-          href: `/dashboard/interview-prep/${sheet.slug}`, // Override href to use dashboard route
+          href: `/dsa-prep/${sheet.slug}`, // Use dsa-prep route
           isPurchased: sheet.isPremium ? isPurchased : false,
           isPremium: sheet.isPremium && !isPurchased,
         };
       });
   }, [response?.data, purchaseStatuses]);
 
-  const groupedByRoadmap = useMemo(() => {
-    const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
-    (response?.data || []).forEach((sheet: any) => {
-      // Filter out DSA sheets - they have their own section at /dsa-prep
-      const roadmap = sheet?.roadmap || '';
-      if (roadmap.toLowerCase() === 'dsa') return;
-      
-      const normalizedRoadmap = roadmap || 'Tech';
-      if (!groups[normalizedRoadmap]) groups[normalizedRoadmap] = [];
-      const card = (sheets || []).find((c) => c.id === sheet._id);
-      if (card) groups[normalizedRoadmap].push(card);
-    });
-    return groups;
-  }, [response?.data, sheets]);
+  const hasSheets = dsaSheets && dsaSheets.length > 0;
 
-  const hasSheets = sheets && sheets.length > 0;
+  if (sheetsLoading || userLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[40vh]">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
-      <div className="space-y-6">
-        {!hasSheets && (
-          <div className="flex items-center justify-center min-h-[40vh]">
-            <Text level="p" className="text-gray-400">
-              No interview sheets are available right now.
-            </Text>
-          </div>
-        )}
-
-        {hasSheets && (
-          <div className="space-y-10">
-            {Object.entries(groupedByRoadmap).map(([roadmap, cards]) => (
-              <section key={roadmap} className="space-y-4">
-                <Text level="h3" className="text-lg font-semibold text-white">
-                  {roadmap} Sheets
-                </Text>
-
-                <CardContainerB
-                  borderColour={2}
-                  cards={cards || []}
-                  focusText={`${cards?.length || 0} Sheet${
-                    (cards?.length || 0) > 1 ? "s" : ""
-                  } Available`}
-                  heading=""
-                  sectionClassName="px-0"
-                  subtext=""
-                />
-              </section>
-            ))}
-          </div>
-        )}
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="space-y-2">
+        <Text level="h1" className="text-3xl font-bold text-white">
+          DSA Interview Sheets
+        </Text>
+        <Text level="p" className="text-gray-400">
+          Master Data Structures and Algorithms with real interview questions asked by top companies
+        </Text>
       </div>
+
+      {!hasSheets && (
+        <div className="flex items-center justify-center min-h-[40vh]">
+          <Text level="p" className="text-gray-400">
+            No DSA interview sheets are available right now.
+          </Text>
+        </div>
+      )}
+
+      {hasSheets && (
+        <div className="space-y-2">
+          <CardContainerB
+            borderColour={2}
+            cards={dsaSheets}
+            heading=""
+            sectionClassName="px-0"
+            subtext=""
+          />
+        </div>
+      )}
+    </div>
   );
 };
 
-export default InterviewPrepDashboardPage;
-
+export default DSAPrepPage;
 
