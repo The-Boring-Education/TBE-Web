@@ -70,12 +70,21 @@ const Home = ({ seoMeta }: PageProps) => {
   // Group by roadmap/domain for structured sections
   const groupedByRoadmap = useMemo(() => {
     const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
+    
     (response?.data || []).forEach((sheet: any) => {
+      // Use roadmap directly from API response (now included in select params)
       const roadmap = sheet?.roadmap || 'Tech';
-      if (!groups[roadmap]) groups[roadmap] = [];
+      
+      if (!groups[roadmap]) {
+        groups[roadmap] = [];
+      }
+      
       const card = (sheets || []).find((c) => c.id === sheet._id);
-      if (card) groups[roadmap].push(card);
+      if (card) {
+        groups[roadmap].push(card);
+      }
     });
+    
     return groups;
   }, [response?.data, sheets]);
 
@@ -145,6 +154,10 @@ const Home = ({ seoMeta }: PageProps) => {
                         ? 'bg-green-100 text-green-800'
                         : roadmap === 'Fullstack'
                         ? 'bg-purple-100 text-purple-800'
+                        : roadmap === 'DSA'
+                        ? 'bg-orange-100 text-orange-800'
+                        : roadmap === 'Tech'
+                        ? 'bg-indigo-100 text-indigo-800'
                         : 'bg-gray-100 text-gray-800'
                     }`}
                   >
@@ -155,6 +168,10 @@ const Home = ({ seoMeta }: PageProps) => {
                         ? '⚙️'
                         : roadmap === 'Fullstack'
                         ? '🚀'
+                        : roadmap === 'DSA'
+                        ? '📊'
+                        : roadmap === 'Tech'
+                        ? '💻'
                         : '💻'}
                     </span>
                     <Text level='h3' className='text-lg font-semibold'>

@@ -282,6 +282,7 @@ export interface PrimaryCardWithCTAProps {
   target?: "_blank";
   launchingOn?: string;
   isPremium?: boolean;
+  roadmap?: string;
   isPurchased?: boolean;
 }
 
@@ -295,7 +296,7 @@ export interface LandingPageHeroProps {
 
 interface BaseCardContainerProps {
   heading: string;
-  focusText: string;
+  focusText?: string;
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
   subtext?: string;
 }
