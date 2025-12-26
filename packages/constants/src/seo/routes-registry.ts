@@ -616,8 +616,3 @@ export const getSitemapTransformConfig = (
     return { loc: path, priority: 0.7, changefreq: "weekly" as const }
 }
 
-/**
- * Export type for use in other packages
- */
-export type { AppSEOConfig, SEORouteConfig }
-
