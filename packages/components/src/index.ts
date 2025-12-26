@@ -161,6 +161,21 @@ export { default as Navbar } from "./layout/Navbar";
 export { default as Layout } from "./layout/Page";
 export { default as Section } from "./layout/Section";
 export { default as SEO } from "./layout/SEO";
+export {
+    getOrganizationSchema,
+    getWebSiteSchema,
+    getCourseSchema,
+    getFAQSchema,
+    getArticleSchema,
+    getBreadcrumbSchema
+} from "./layout/SEO";
+export type {
+    SchemaType,
+    CourseSchema,
+    FAQItem,
+    ArticleSchema,
+    BreadcrumbItem
+} from "./layout/SEO";
 export { PageSEO,default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./prepyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names

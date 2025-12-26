@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3005",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start -p 3005",
     "lint": "eslint ."
   },
@@ -73,6 +74,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "next-sitemap": "^4.2.3",
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^18.19.124",
     "@types/react": "^18.3.24",

@@ -35,9 +35,13 @@
     "test:e2e": "turbo run test:e2e --filter=@tbe/testing",
     "test:e2e:ui": "turbo run test:e2e:ui --filter=@tbe/testing",
     "test:coverage": "turbo run test:coverage --filter=@tbe/testing",
-    "test:ci": "turbo run test:ci --filter=@tbe/testing"
+    "test:ci": "turbo run test:ci --filter=@tbe/testing",
+    "seo:audit": "lhci autorun",
+    "seo:audit:prod": "LHCI_ENV=production lhci autorun",
+    "seo:audit:app": "LHCI_ENV=production lhci autorun"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.13.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^9.0.1",
     "prettier": "^3.6.2",

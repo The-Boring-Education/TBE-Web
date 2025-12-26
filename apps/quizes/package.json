@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3002",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start -p 3002",
     "lint": "eslint ."
   },
@@ -58,6 +59,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "next-sitemap": "^4.2.3",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^18.19.124",
     "@types/react": "^18.3.24",
