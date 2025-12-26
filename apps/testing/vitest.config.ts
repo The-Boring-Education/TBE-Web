@@ -47,7 +47,13 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './src'),
+            // API app @ alias - must come first for proper resolution
+            '@/lib/constants': path.resolve(__dirname, '../api/src/lib/constants'),
+            '@/lib/database': path.resolve(__dirname, '../api/src/lib/database'),
+            '@/lib/interfaces': path.resolve(__dirname, '../api/src/lib/interfaces'),
+            '@/lib/services': path.resolve(__dirname, '../api/src/lib/services'),
+            '@/lib/utils': path.resolve(__dirname, '../api/src/lib/utils'),
+            '@/middleware': path.resolve(__dirname, '../api/src/middleware'),
             '@test-utils': path.resolve(__dirname, './src/test-utils'),
             // Map workspace packages to their source
             '@tbe/components': path.resolve(__dirname, '../../packages/components/src'),
@@ -59,12 +65,7 @@ export default defineConfig({
             '@tbe/services': path.resolve(__dirname, '../../packages/services/src'),
             '@tbe/auth': path.resolve(__dirname, '../../packages/auth/src'),
             // API app path aliases for testing API routes
-            '@/lib/constants': path.resolve(__dirname, '../../api/src/lib/constants'),
-            '@/lib/database': path.resolve(__dirname, '../../api/src/lib/database'),
-            '@/lib/interfaces': path.resolve(__dirname, '../../api/src/lib/interfaces'),
-            '@/lib/services': path.resolve(__dirname, '../../api/src/lib/services'),
-            '@/lib/utils': path.resolve(__dirname, '../../api/src/lib/utils'),
-            '@/middleware': path.resolve(__dirname, '../../api/src/middleware')
+            '@api': path.resolve(__dirname, '../api/src')
         }
     }
 });

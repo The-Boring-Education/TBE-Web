@@ -55,7 +55,13 @@ export async function executeHandler(
     await handler(req, res);
 
     const statusCode = res.statusCode || 200;
-    const data = (res as any)._getJSONData?.() || {};
+    let data = {};
+    try {
+        data = (res as any)._getJSONData?.() || {};
+    } catch {
+        // Empty response body (e.g., OPTIONS request)
+        data = {};
+    }
     const headers = (res as any)._getHeaders?.() || {};
 
     return { statusCode, data, headers };
