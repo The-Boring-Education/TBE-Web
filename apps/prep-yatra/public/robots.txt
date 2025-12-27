@@ -1,0 +1,16 @@
+# *
+User-agent: *
+Allow: /
+Allow: /pricing
+
+# *
+User-agent: *
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /journey/
+
+# Host
+Host: https://prepyatra.theboringeducation.com
+
+# Sitemaps
+Sitemap: https://prepyatra.theboringeducation.com/sitemap.xml
