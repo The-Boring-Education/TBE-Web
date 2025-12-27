@@ -8,7 +8,19 @@ import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Safely get base URL - always return a valid URL
+const getMetadataBase = (): URL => {
+  const baseUrl = "https://techyatra.theboringeducation.com";
+  try {
+    return new URL(baseUrl);
+  } catch (error) {
+    // Fallback to a guaranteed valid URL
+    return new URL("https://techyatra.theboringeducation.com");
+  }
+};
+
 export const metadata: Metadata = {
+  metadataBase: getMetadataBase(),
   title: "TechYatra - Your Tech Learning Roadmap",
   description: "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
   keywords: ["tech learning", "programming", "web development", "dsa", "interview prep", "career guidance"],
@@ -16,7 +28,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: "TechYatra - Your Tech Learning Roadmap",
     description: "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
-    url: "https://techyatra.theboringeducation.com",
     siteName: "TechYatra",
     locale: "hi_IN",
     type: "website",
@@ -26,7 +37,6 @@ export const metadata: Metadata = {
     title: "TechYatra - Your Tech Learning Roadmap",
     description: "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
   },
-  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -35,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="hi">
+    <html lang="en">
       <body className={inter.className}>
         <Providers>
           {children}

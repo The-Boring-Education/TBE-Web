@@ -1,12 +1,16 @@
-"use client";
-import { Button, Footer, Navbar } from "@tbe/components";
-import { LearningSection, TabSection } from "@tbe/components/techyatra";
-import React from "react";
+"use client"
+import { Button, Footer, Navbar } from "@tbe/components"
+import { LearningSection, TabSection } from "@tbe/components/techyatra"
+import React from "react"
 
-export default function Home() {
+// Disable static generation to avoid prerendering issues
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+const Home = () => {
   const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-  };
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
+  }
 
   return (
     <div className="min-h-screen">
@@ -98,5 +102,7 @@ export default function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }
+
+export default Home
