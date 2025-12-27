@@ -198,6 +198,12 @@ export interface InterviewSheetModel {
   updatedAt: string;
 }
 
+export interface QuestionResourcesModel {
+  youtubeURL?: string;
+  leetcodeURL?: string;
+  blogURL?: string;
+}
+
 export interface InterviewSheetQuestionModel {
   questionId: string;
   title: string;
@@ -206,6 +212,7 @@ export interface InterviewSheetQuestionModel {
   frequency: QuestionFrequencyType;
   isCompleted: boolean;
   isStarred?: boolean;
+  resources?: QuestionResourcesModel;
 }
 
 export interface PlaylistModel {

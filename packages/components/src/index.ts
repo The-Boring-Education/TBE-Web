@@ -53,6 +53,8 @@ export { default as Logo } from "./common/Images/Logo";
 export { default as UserAvatar } from "./common/Images/UserAvatar";
 export { default as ChapterLink } from "./common/Learning/ChapterLink";
 export { default as QuestionLink } from "./common/Learning/QuestionLink";
+export { default as ResourceTooltip } from "./common/ResourceTooltip";
+export type { QuestionResources, ResourceTooltipProps } from "./common/ResourceTooltip";
 export { default as LoadingIndicator } from "./common/LoadingIndicator";
 export { default as LoadingSpinner } from "./common/LoadingSpinner";
 export { default as MDXRenderer } from "./common/MDXRenderer";
