@@ -123,15 +123,17 @@ const Navbar = ({
             </div>
             {showFullNavigation && (
               <div className='hidden items-center lg:flex lg:gap-x-4'>
-                <FlexContainer direction='col' itemCenter={false}>
-                  <Link
-                    className={`text-base ${theme === 'dark' ? 'text-white' : 'text-black'} hover:text-primary`}
-                    href={TOP_NAVIGATION.issues[0]?.href || ''}
-                    target={TOP_NAVIGATION.issues[0]?.target}
-                  >
-                    {TOP_NAVIGATION.issues[0]?.name}
-                  </Link>
-                </FlexContainer>
+                {TOP_NAVIGATION.issues[0]?.href && (
+                  <FlexContainer direction='col' itemCenter={false}>
+                    <Link
+                      className={`text-base ${theme === 'dark' ? 'text-white' : 'text-black'} hover:text-primary`}
+                      href={TOP_NAVIGATION.issues[0].href}
+                      target={TOP_NAVIGATION.issues[0]?.target}
+                    >
+                      {TOP_NAVIGATION.issues[0]?.name}
+                    </Link>
+                  </FlexContainer>
+                )}
                 <PopoverContainer
                   isOpen={openPopover === 'cohorts'}
                   label='Cohorts'

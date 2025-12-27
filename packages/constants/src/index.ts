@@ -35,6 +35,7 @@ export {
 export * from "./pages"
 export * from "./pages/seo"
 export * from "./routes"
+export * from "./seo"
 export * from "./challenges"
 export * from "./onboarding"
 export * from "./component"

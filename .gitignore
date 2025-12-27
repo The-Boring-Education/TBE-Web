@@ -15,6 +15,11 @@ node_modules
 # Testing
 coverage
 
+# Lighthouse CI Reports
+.lighthouseci
+.lhci
+apps/testing/.lhci
+
 # Turbo
 .turbo
 

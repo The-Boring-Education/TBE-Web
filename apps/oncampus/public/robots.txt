@@ -1,0 +1,14 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /api/
+Disallow: /dashboard/
+
+# Host
+Host: https://oncampus.theboringeducation.com
+
+# Sitemaps
+Sitemap: https://oncampus.theboringeducation.com/sitemap.xml

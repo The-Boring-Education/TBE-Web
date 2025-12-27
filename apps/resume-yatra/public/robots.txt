@@ -1,4 +1,15 @@
-# https://www.robotstxt.org/robotstxt.html
+# *
 User-agent: *
-Disallow:
+Allow: /
 
+# *
+User-agent: *
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /builder/
+
+# Host
+Host: https://resumeyatra.theboringeducation.com
+
+# Sitemaps
+Sitemap: https://resumeyatra.theboringeducation.com/sitemap.xml
