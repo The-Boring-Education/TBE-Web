@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
-    "postbuild": "next-sitemap",
+    "postbuild": "npx next-sitemap",
     "start": "next start -p 3000",
     "lint": "eslint .",
     "pre-release": "npx eslint src --fix --ext .ts,.tsx,.js,.jsx && npm run build",
