@@ -142,6 +142,12 @@ export interface InterviewSheetModel extends Document {
   features: string[];
 }
 
+export interface QuestionResourcesModel {
+  youtubeURL?: string;
+  leetcodeURL?: string;
+  blogURL?: string;
+}
+
 export interface InterviewSheetQuestionModel {
   _id: typeof Schema.Types.ObjectId;
   title: string;
@@ -151,6 +157,7 @@ export interface InterviewSheetQuestionModel {
   companyTypes?: CompanyType[];
   priority: PriorityType;
   toObject: () => UserCourseModel;
+  resources?: QuestionResourcesModel;
 }
 
 export interface CouponModel extends Document {
