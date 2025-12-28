@@ -245,7 +245,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 variant="OUTLINE"
                 text="Share Your Journey"
                 size="SMALL"
-                className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] text-centre hover:text-white transition-all duration-200 font-semibold"
+                className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] text-center hover:text-white transition-all duration-200 font-semibold"
                 icon={<Copy className="w-2 h-2 mr-2" />}
               />
             )}

@@ -28,13 +28,14 @@ const useUnskilledGraphData = (): UseUnskilledGraphDataReturn => {
         return;
       }
 
+      console.log("[Graph Data] API URL:", envConfig.UNSKILLED_API_URL);
+
       const controller = new AbortController();
       const startTime = performance.now();
 
       try {
         setLoading(true);
         setError(null);
-        console.log("[Graph Data] Fetching from:", `${envConfig.UNSKILLED_API_URL}/graph`);
 
         const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`, {
           headers: {

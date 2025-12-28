@@ -50,12 +50,12 @@ export const APP_CONFIGS: Record<AppIdentifier, AppConfig> = {
     quizes: {
         identifier: "quizes",
         name: "TBE Quizes",
-        domain: "https://quizes.theboringeducation.com",
+        domain: "https://quiz.theboringeducation.com",
         defaultTitle: "TBE Quizes | Test Your Knowledge",
         defaultDescription:
             "Test your knowledge with interactive quizzes on various tech topics.",
         defaultImage:
-            "https://quizes.theboringeducation.com/images/og-image.png"
+            "https://quiz.theboringeducation.com/images/og-image.png"
     },
     onboarding: {
         identifier: "onboarding",

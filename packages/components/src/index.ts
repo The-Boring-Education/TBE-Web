@@ -53,6 +53,8 @@ export { default as Logo } from "./common/Images/Logo";
 export { default as UserAvatar } from "./common/Images/UserAvatar";
 export { default as ChapterLink } from "./common/Learning/ChapterLink";
 export { default as QuestionLink } from "./common/Learning/QuestionLink";
+export { default as ResourceTooltip } from "./common/ResourceTooltip";
+export type { QuestionResources, ResourceTooltipProps } from "./common/ResourceTooltip";
 export { default as LoadingIndicator } from "./common/LoadingIndicator";
 export { default as LoadingSpinner } from "./common/LoadingSpinner";
 export { default as MDXRenderer } from "./common/MDXRenderer";
@@ -161,6 +163,29 @@ export { default as Navbar } from "./layout/Navbar";
 export { default as Layout } from "./layout/Page";
 export { default as Section } from "./layout/Section";
 export { default as SEO } from "./layout/SEO";
+export {
+    getOrganizationSchema,
+    getWebSiteSchema,
+    getCourseSchema,
+    getFAQSchema,
+    getArticleSchema,
+    getBreadcrumbSchema
+} from "./layout/SEO";
+export {
+    GTMScript,
+    GTMNoScript,
+    pushToDataLayer,
+    trackGTMPageView,
+    trackGTMEvent,
+    GTM_ID
+} from "./gtm";
+export type {
+    SchemaType,
+    CourseSchema,
+    FAQItem,
+    ArticleSchema,
+    BreadcrumbItem
+} from "./layout/SEO";
 export { PageSEO,default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./prepyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names

@@ -150,12 +150,24 @@ const Footer = ({ variant = "default" }: FooterProps = {}) => {
             <ul className="space-y-2">
               {footerSections.products.map(({ name, href, description }) => (
                 <li key={name}>
-                  <Link
-                    href={href || ""}
-                    className="text-gray-300 hover:text-white transition-colors group"
-                  >
-                    <div>
-                      <Text className="group-hover:text-primary" level="span">
+                  {href ? (
+                    <Link
+                      href={href}
+                      className="text-gray-300 hover:text-white transition-colors group"
+                    >
+                      <div>
+                        <Text className="group-hover:text-primary" level="span">
+                          {name}
+                        </Text>
+                        <br />
+                        <Text className="text-xs text-gray-400" level="span">
+                          {description}
+                        </Text>
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="text-gray-300">
+                      <Text level="span">
                         {name}
                       </Text>
                       <br />
@@ -163,7 +175,7 @@ const Footer = ({ variant = "default" }: FooterProps = {}) => {
                         {description}
                       </Text>
                     </div>
-                  </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -177,22 +189,34 @@ const Footer = ({ variant = "default" }: FooterProps = {}) => {
             <ul className="space-y-2">
               {footerSections.tools.map((item: any) => (
                 <li key={item.name}>
-                  <Link
-                    href={item.href || ""}
-                    target={item.external ? "_blank" : undefined}
-                    className="text-gray-300 hover:text-white transition-colors group"
-                  >
-                    <div>
-                      <Text className="group-hover:text-primary" level="span">
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      target={item.external ? "_blank" : undefined}
+                      className="text-gray-300 hover:text-white transition-colors group"
+                    >
+                      <div>
+                        <Text className="group-hover:text-primary" level="span">
+                          {item.name}
+                          {item.external && " ↗"}
+                        </Text>
+                        <br />
+                        <Text className="text-xs text-gray-400" level="span">
+                          {item.description}
+                        </Text>
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="text-gray-300">
+                      <Text level="span">
                         {item.name}
-                        {item.external && " ↗"}
                       </Text>
                       <br />
                       <Text className="text-xs text-gray-400" level="span">
                         {item.description}
                       </Text>
                     </div>
-                  </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -206,22 +230,34 @@ const Footer = ({ variant = "default" }: FooterProps = {}) => {
             <ul className="space-y-2">
               {footerSections.company.map((item: any) => (
                 <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    target={item.external ? "_blank" : undefined}
-                    className="text-gray-300 hover:text-white transition-colors group"
-                  >
-                    <div>
-                      <Text className="group-hover:text-primary" level="span">
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      target={item.external ? "_blank" : undefined}
+                      className="text-gray-300 hover:text-white transition-colors group"
+                    >
+                      <div>
+                        <Text className="group-hover:text-primary" level="span">
+                          {item.name}
+                          {item.external && " ↗"}
+                        </Text>
+                        <br />
+                        <Text className="text-xs text-gray-400" level="span">
+                          {item.description}
+                        </Text>
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="text-gray-300">
+                      <Text level="span">
                         {item.name}
-                        {item.external && " ↗"}
                       </Text>
                       <br />
                       <Text className="text-xs text-gray-400" level="span">
                         {item.description}
                       </Text>
                     </div>
-                  </Link>
+                  )}
                 </li>
               ))}
             </ul>

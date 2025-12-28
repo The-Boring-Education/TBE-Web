@@ -2,8 +2,19 @@
 User-agent: *
 Allow: /
 
+# *
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /user/
+Disallow: /onboarding
+
+# Googlebot
+User-agent: Googlebot
+Allow: /
+
 # Host
-Host: https://theboringeducation.com/
+Host: https://theboringeducation.com
 
 # Sitemaps
 Sitemap: https://theboringeducation.com/sitemap.xml

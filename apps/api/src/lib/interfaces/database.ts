@@ -174,6 +174,12 @@ export interface InterviewSheetModel extends Document {
     features: string[]
 }
 
+export interface QuestionResourcesModel {
+    youtubeURL?: string
+    leetcodeURL?: string
+    blogURL?: string
+}
+
 export interface InterviewSheetQuestionModel {
     _id: typeof Schema.Types.ObjectId
     title: string
@@ -183,6 +189,7 @@ export interface InterviewSheetQuestionModel {
     companyTypes?: CompanyType[]
     priority: PriorityType
     toObject: () => UserCourseModel
+    resources?: QuestionResourcesModel
 }
 
 export interface UserSheetModel extends Document {
@@ -578,15 +585,18 @@ export interface AddCourseRequestPayloadProps {
 }
 
 export interface AddInterviewSheetRequestPayloadProps {
-    title: string
+    name: string
+    meta: string
+    slug: string
     description: string
     coverImageURL: string
     liveOn: string
-    slug: string
-    meta?: string
-    roadmap: RoadmapsType
     isPremium?: boolean
     price?: number
+    discountPercentage?: number
+    appliedCoupon?: typeof Schema.Types.ObjectId
+    questions: InterviewSheetQuestionModel[]
+    roadmap: RoadmapsType
     features?: string[]
 }
 

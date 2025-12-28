@@ -1,30 +1,29 @@
-import React, { Suspense, useEffect, useState, useRef, useCallback } from "react";
-import { toast } from "sonner";
-import { Menu, X } from "lucide-react";
-
+import { useAuth } from "@tbe/auth";
 import {
-    Navbar,
     AddPrepLogModal,
     AddRecruiterModal,
-    EditOnboardingModal,
+    AddSkillsModal,
     BuildYourStack,
     DailyPrepEncouragement,
     DashboardTabs,
-    ProfileSection,
-    AddSkillsModal,
+    EditOnboardingModal,
     Footer,
-    usePrepYatraGamificationContext,
-    LoadingSpinner
-} from "@tbe/components";
-
-import { useAuth } from "@tbe/auth";
+    LoadingSpinner,
+    Navbar,
+    ProfileSection,
+    usePrepYatraGamificationContext } from "@tbe/components";
 import { usePrepLogs } from "@tbe/hooks";
+import type { UserProfile } from "@tbe/interface";
 import { recruitersService, userService } from "@tbe/services";
 import type { RecruiterContact } from "@tbe/types";
-import type { UserProfile } from "@tbe/interface";
+import { Menu, X } from "lucide-react";
+import { useRouter } from "next/router";
+import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 const Dashboard = () => {
-    const { user, isLoading: authLoading } = useAuth();
+    const router = useRouter();
+    const { user, isLoading: authLoading, isAuthenticated } = useAuth();
     const { showCelebration } = usePrepYatraGamificationContext();
     const {
         logs: prepLogs,
@@ -164,7 +163,19 @@ const Dashboard = () => {
         }
     };
 
-    if (loading || authLoading || !user) {
+    // Redirect unauthenticated users to login
+    useEffect(() => {
+        if (!authLoading && !isAuthenticated) {
+            toast.error('Please sign in to access your dashboard');
+            router.push('/login?callbackUrl=/dashboard');
+        }
+    }, [authLoading, isAuthenticated, router]);
+
+    if (loading || authLoading) {
+        return <LoadingSpinner />;
+    }
+
+    if (!user) {
         return <LoadingSpinner />;
     }
 

@@ -62,7 +62,7 @@ const routes = {
         login: "/login",
         dashboard: "/dashboard",
         pricing: "/pricing",
-        baseUrl: "https://quizes.theboringeducation.com"
+        baseUrl: "https://quiz.theboringeducation.com"
     },
     // TechYatra
     techyatra: {

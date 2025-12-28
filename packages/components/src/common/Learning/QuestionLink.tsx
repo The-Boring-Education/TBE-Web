@@ -15,16 +15,30 @@ const QuestionLink = ({
   frequency,
   isLocked = false,
   handleQuestionClick,
+  theme = 'light',
 }: QuestionLinkProps) => {
   const { trackEvent } = useAnalytics();
+  
+  // Theme-based styling
+  const isDark = theme === 'dark';
+  const defaultTextColor = isDark ? 'text-contentDark' : '';
+  const hoverBgClass = isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-200';
+  const hoverTextClass = isDark ? 'hover:text-contentDark' : 'hover:text-contentLight';
+  
   let additionalClasses =
     currentQuestionId === questionId
       ? isCompleted
-        ? 'text-dark font-semibold bg-green-200'
-        : 'text-dark font-semibold bg-gray-200'
+        ? isDark
+          ? 'text-contentDark font-semibold bg-green-800'
+          : 'text-dark font-semibold bg-green-200'
+        : isDark
+          ? 'text-contentDark font-semibold bg-gray-800'
+          : 'text-dark font-semibold bg-gray-200'
       : '';
 
-  const iconColor = isCompleted ? 'text-green-500' : 'text-greyDark';
+  const iconColor = isCompleted 
+    ? (isDark ? 'text-green-400' : 'text-green-500')
+    : (isDark ? 'text-gray-400' : 'text-greyDark');
 
   if (frequency === 'Most Asked') {
     additionalClasses += ' border-l-4 border-primary';
@@ -39,8 +53,10 @@ const QuestionLink = ({
       key={questionId}
       className={`flex items-center gap-1 w-full p-2 mb-1 rounded text-left pre-title ${
         isLocked
-          ? 'text-gray-700 cursor-not-allowed'
-          : `hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`
+          ? isDark
+            ? 'text-gray-500 cursor-not-allowed'
+            : 'text-gray-700 cursor-not-allowed'
+          : `${defaultTextColor} ${hoverBgClass} ${hoverTextClass} ${additionalClasses}`
       }`}
       href={href}
       data-analytics
@@ -80,7 +96,7 @@ const QuestionLink = ({
     >
       <div className='flex-shrink-0'>
         {isLocked ? (
-          <FaLock className='text-gray-400' size={20} />
+          <FaLock className={isDark ? 'text-gray-500' : 'text-gray-400'} size={20} />
         ) : isCompleted ? (
           <IoIosCheckmarkCircle className={iconColor} size={24} />
         ) : (

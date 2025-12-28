@@ -413,9 +413,39 @@ const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
     }
 }
 
+const deleteInterviewSheetFromDB = async (
+  sheetId: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const sheet = await InterviewSheet.findById(sheetId);
+    if (!sheet) {
+      return { error: "Interview sheet not found" };
+    }
+    const questionsCount = sheet.questions?.length || 0;
+    const sheetName = sheet.name;
+    await InterviewSheet.findByIdAndDelete(sheetId);
+
+    console.log(
+      `Interview sheet "${sheetName}" (${sheetId}) deleted successfully | Questions removed: ${questionsCount}`
+    );
+    return {
+      data: {
+        deletedSheetId: sheetId,
+        deletedSheetName: sheetName,
+        questionsDeleted: questionsCount,
+        timestamp: new Date().toISOString(),
+      },
+    };
+  } catch (error) {
+    console.error("Error deleting interview sheet:", error);
+    return { error: String(error) };
+  }
+};
+
 export {
     addAInterviewSheetToDB,
     addQuestionToInterviewSheetInDB,
+    deleteInterviewSheetFromDB,
     deleteQuestionFromSheetInDB,
     enrollInASheet,
     getAllEnrolledSheetsFromDB,
