@@ -37,7 +37,6 @@ const PRODUCTION_URLS = {
     ],
     prepYatra: [
         'https://prepyatra.theboringeducation.com/',
-        'https://prepyatra.theboringeducation.com/pricing'
     ],
     quizes: [
         'https://quiz.theboringeducation.com/',
@@ -46,10 +45,10 @@ const PRODUCTION_URLS = {
     resumeYatra: ['https://resumeyatra.theboringeducation.com/'],
     dsayatra: [
         'https://dsayatra.theboringeducation.com/',
-        'https://dsayatra.theboringeducation.com/pricing'
     ],
     techyatra: ['https://techyatra.theboringeducation.com/'],
-    oncampus: ['https://oncampus.theboringeducation.com/']
+    //  TODO: Update
+    // oncampus: ['https://oncampus.theboringeducation.com/']
 };
 
 /**

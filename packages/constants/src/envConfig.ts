@@ -9,6 +9,7 @@ const GOOGLE_AUTH_CLIENT_SECRET = process.env
 const ADMIN_SECRET = process.env.ADMIN_SECRET as string;
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string;
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS as string;
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID as string;
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY as string;
 const ADMIN_BASE_URL = process.env.ADMIN_BASE_URL as string;
 const CASHFREE_BASE_URL = process.env.CASHFREE_BASE_URL as string;
@@ -37,6 +38,7 @@ const envConfig = {
   NEXTAUTH_SECRET,
   AUTH_URL,
   GA_TRACKING_ID,
+  GTM_ID,
   ADMIN_BASE_URL,
   CASHFREE_BASE_URL,
   CASHFREE_SECRET_KEY,

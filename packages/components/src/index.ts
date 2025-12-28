@@ -169,6 +169,14 @@ export {
     getArticleSchema,
     getBreadcrumbSchema
 } from "./layout/SEO";
+export {
+    GTMScript,
+    GTMNoScript,
+    pushToDataLayer,
+    trackGTMPageView,
+    trackGTMEvent,
+    GTM_ID
+} from "./gtm";
 export type {
     SchemaType,
     CourseSchema,
