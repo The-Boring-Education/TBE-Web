@@ -2,7 +2,7 @@ import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { getNavbarVariantConfig, LINKS, TOP_NAVIGATION } from '@tbe/constants';
 import { useScrollDirection } from '@tbe/hooks';
-import type { MainNavbarProps, VariantConfig } from '@tbe/interface';
+import type { MainNavbarProps, NavbarVariantConfig } from '@tbe/interface';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
@@ -21,9 +21,9 @@ import {
 } from '..';
 import NotificationPopover from '../common/Notification/index';
 
-const Navbar = ({ 
-  onSignOut, 
-  userId, 
+const Navbar = ({
+  onSignOut,
+  userId,
   variant = 'default',
   showFullNavigation = true,
   customBranding,
@@ -47,7 +47,7 @@ const Navbar = ({
   const VARIANT_CONFIG = useMemo(() => getNavbarVariantConfig(Logo), []);
   const variantConfig = useMemo(() => {
     return VARIANT_CONFIG[variant] || VARIANT_CONFIG.default;
-  }, [variant, VARIANT_CONFIG]) as VariantConfig;
+  }, [variant, VARIANT_CONFIG]) as NavbarVariantConfig;
 
   // Determine background class based on variant and theme
   const getBackgroundClass = () => {
@@ -65,16 +65,22 @@ const Navbar = ({
   const finalBranding = customBranding || variantConfig.branding;
 
   // Determine border class based on theme
-  const borderClass = theme === 'dark' 
-    ? 'border-0' 
+  const borderClass = theme === 'dark'
+    ? 'border-0'
     : (variantConfig.borderClass || 'border');
   const shouldUseCustomActions = customActions && customActions.length > 0;
-  
+
   // Check if variant requires authentication (defaults to true)
   const requiresAuth = variantConfig.requiresAuth !== false;
-  
+
   // Check if variant should show gamification (defaults to true if requiresAuth is true)
   const showGamification = requiresAuth && variantConfig.showGamification !== false;
+
+  // Check if variant should show Cohorts section (defaults to true)
+  const showCohorts = variantConfig.showCohorts !== false;
+
+  // Check if variant should show Learn section (defaults to true)
+  const showLearn = variantConfig.showLearn !== false;
 
   return (
     <motion.header
@@ -134,22 +140,26 @@ const Navbar = ({
                     </Link>
                   </FlexContainer>
                 )}
-                <PopoverContainer
-                  isOpen={openPopover === 'cohorts'}
-                  label='Cohorts'
-                  onToggle={() => handleSetOpen('cohorts')}
-                  theme={theme}
-                >
-                  <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
-                </PopoverContainer>
-                <PopoverContainer
-                  isOpen={openPopover === 'products'}
-                  label='Learn'
-                  onToggle={() => handleSetOpen('products')}
-                  theme={theme}
-                >
-                  <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
-                </PopoverContainer>
+                {showCohorts && (
+                  <PopoverContainer
+                    isOpen={openPopover === 'cohorts'}
+                    label='Cohorts'
+                    onToggle={() => handleSetOpen('cohorts')}
+                    theme={theme}
+                  >
+                    <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
+                  </PopoverContainer>
+                )}
+                {showLearn && (
+                  <PopoverContainer
+                    isOpen={openPopover === 'products'}
+                    label='Learn'
+                    onToggle={() => handleSetOpen('products')}
+                    theme={theme}
+                  >
+                    <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
+                  </PopoverContainer>
+                )}
                 <PopoverContainer
                   isOpen={openPopover === 'tools'}
                   label='Tools'
@@ -223,16 +233,20 @@ const Navbar = ({
                       </FlexContainer>
                     )}
 
-                    <MobileNavbarLinksContainer
-                      links={TOP_NAVIGATION.cohorts}
-                      title='Cohorts'
-                      onLinkClick={handleCloseMobileMenu}
-                    />
-                    <MobileNavbarLinksContainer
-                      links={TOP_NAVIGATION.products}
-                      title='Learn'
-                      onLinkClick={handleCloseMobileMenu}
-                    />
+                    {showCohorts && (
+                      <MobileNavbarLinksContainer
+                        links={TOP_NAVIGATION.cohorts}
+                        title='Cohorts'
+                        onLinkClick={handleCloseMobileMenu}
+                      />
+                    )}
+                    {showLearn && (
+                      <MobileNavbarLinksContainer
+                        links={TOP_NAVIGATION.products}
+                        title='Learn'
+                        onLinkClick={handleCloseMobileMenu}
+                      />
+                    )}
                     <MobileNavbarLinksContainer
                       links={TOP_NAVIGATION.tools}
                       title='Tools'
