@@ -16,7 +16,7 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath, theme }: LoginC
     const router = useRouter();
     const { trackEvent } = useAnalytics();
     const { signIn, isAuthenticated, isLoading } = useAuth();
-    
+
     // Get variant configuration
     const variantConfig = useMemo(() => {
         const configs = getLoginCardVariantConfig();
@@ -75,7 +75,7 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath, theme }: LoginC
                 >
                     {/* Left Section - Login Form */}
                     <div className={`w-full md:w-1/2 p-4 md:p-3 flex border-1 ${theme === 'dark' ? 'border-gray-700 bg-[#0A0A0A]' : 'border-gray-200 bg-white'} flex-col items-center justify-center text-center`}>
-                       <motion.div
+                        <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
@@ -140,8 +140,8 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath, theme }: LoginC
                         >
                             <Text level='p' className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                 By signing in, you agree to our{' '}
-                                <a 
-                                    href={variantConfig.termsHref || '/terms-and-conditions'} 
+                                <a
+                                    href={variantConfig.termsHref || '/terms-and-conditions'}
                                     className={`${theme === 'dark' ? 'text-purple-400 hover:text-purple-300' : 'text-purple-600 hover:text-purple-700'} underline`}
                                 >
                                     Terms and Conditions
@@ -149,8 +149,8 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath, theme }: LoginC
                                 {variantConfig.privacyHref && (
                                     <>
                                         {' '}and{' '}
-                                        <a 
-                                            href={variantConfig.privacyHref} 
+                                        <a
+                                            href={variantConfig.privacyHref}
                                             className={`${theme === 'dark' ? 'text-purple-400 hover:text-purple-300' : 'text-purple-600 hover:text-purple-700'} underline`}
                                         >
                                             Privacy Policy

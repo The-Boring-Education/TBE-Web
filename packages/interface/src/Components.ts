@@ -72,6 +72,7 @@ export interface LinkButtonProps extends LinkProps {
   buttonProps: ButtonProps;
   href: string;
   className?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface ButtonProps {
@@ -347,6 +348,7 @@ export interface ProjectHeroMetaContainerProps {
   subtitle: string;
   title: string;
   titleClassName?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface ProjectHeroContainerProps {
@@ -377,6 +379,7 @@ export interface SheetHeroContainerProps {
   isPremium?: boolean;
   isPurchased?: boolean;
   redirectTo?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface AccordionProps {

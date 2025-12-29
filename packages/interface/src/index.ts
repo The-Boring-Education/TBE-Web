@@ -9,7 +9,7 @@ export type {
   NavbarDropdownLink,
   NavbarProps,
   OutlineCardProps,
-  VariantConfig,
+  NavbarVariantConfig,
 } from "./constants";
 export * from "./database";
 export * from "./email";
