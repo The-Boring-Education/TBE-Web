@@ -238,15 +238,15 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         </div>
 
         {/* ✅ Action Buttons */}
-        <div className="flex flex-row justify-center gap-3 mt-2 w-full max-w-md mx-auto">
+        <div className="flex justify-center gap-3 mt-2 w-full max-w-md mx-auto">
           {profile?.userName && (
             <Button
               onClick={handleShareJourneyClick}
               variant="OUTLINE"
               text="Share Your Journey"
               size="SMALL"
-              className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] text-center hover:text-white transition-all duration-200 font-semibold"
-              icon={<Copy className="w-2 h-2 mr-2" />}
+              className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] text-center hover:text-white transition-all duration-200 font-semibold flex items-center justify-center gap-1 px- 3 whitespace-nowrap text-sm"
+              icon={<Copy className="w-2 h-2 flex-shrink-0" />}
             />
           )}
 
@@ -256,8 +256,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               variant="OUTLINE"
               text="Edit Your Details"
               size="SMALL"
-              className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] hover:text-white transition-all duration-200 font-semibold"
-              icon={<Edit className="w-3 h-2 mr-2" />}
+              className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] hover:text-white transition-all duration-200 font-semibold flex items-center justify-center gap-1 px-3 whitespace-nowrap text-sm"
+              icon={<Edit className="w-2 h-2 flex-shrink-0" />}
             />
           )}
         </div>
