@@ -1,10 +1,10 @@
-import {useDailyPrepEncouragement} from "@tbe/hooks";
-import {Calendar, Clock, Flame, Plus,TrendingUp} from "lucide-react";
+import { useDailyPrepEncouragement } from "@tbe/hooks";
+import { Calendar, Clock, Flame, Plus, TrendingUp } from "lucide-react";
 
 import Button from "../../common/Buttons/Button";
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../../containers/Page/common/FlexContainer";
-import {Card, CardContent} from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 
 interface DailyPrepEncouragementProps {
     userId: string
@@ -29,8 +29,8 @@ const DailyPrepEncouragement = ({
 
     return (
         <Card
-            className={`glass border-greyLight hover:border-primary/30 transition-all duration-200 ${className}`}>
-            <CardContent className='p-3'>
+            className={`mt-4 glass border-greyLight hover:border-primary/30 transition-all duration-200 ${className}`}>
+            <CardContent className='p-1'>
                 <div className='flex flex-col md:flex-row items-start justify-between gap-3'>
                     {/* Main Content */}
                     <div className='flex-1 w-full'>

@@ -1,6 +1,6 @@
 import { FlexContainer, GridContainer, IconCard, SectionHeaderContainer } from "@tbe/components";
 import { motion } from "framer-motion";
-import { BookOpen, Share2, Target,Users } from "lucide-react";
+import { BookOpen, Share2, Target, Users } from "lucide-react";
 
 const features = [
   {
@@ -27,7 +27,7 @@ const features = [
 
 const FeatureCards = () => {
   return (
-    <section className='py-20 px-4'>
+    <section className='py-5 pb-8 px-4'>
       <FlexContainer direction='col' className='container mx-auto'>
         <SectionHeaderContainer
           heading='Everything You Need to '
@@ -41,10 +41,10 @@ const FeatureCards = () => {
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              initial={{opacity: 0, y: 30}}
-              whileInView={{opacity: 1, y: 0}}
-              viewport={{once: true}}
-              transition={{duration: 0.6, delay: index * 0.15}}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.15 }}
               className='hover:shadow-xl transition-all duration-300 hover:scale-105 border-borderColor2 bg-gradient-to-br from-white to-gray-100'
             >
               <IconCard

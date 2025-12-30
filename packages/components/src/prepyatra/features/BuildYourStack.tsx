@@ -1,4 +1,4 @@
-import { AlertTriangle,Code, Plus } from "lucide-react"
+import { AlertTriangle, Code, Plus } from "lucide-react"
 import React, { useState } from "react"
 
 import Button from "../../common/Buttons/Button"
@@ -26,9 +26,9 @@ const BuildYourStack = ({
     const showWarning = userSkills.length === 0
 
     return (
-        <div className='glass rounded-1 p-5 mb-6 shadow border border-greyLight'>
-            <div className='flex items-center gap-2 mb-3 justify-start'>
-                <Plus className='w-4 h-4 text-primary' />
+        <div className='mt-1 max-w-md mx-auto rounded-1 p-3 mb-4 shadow border border-greyLight hover:border-[#FF5757]/60 transition-all duration-200 bg-gradient-to-b from-white to-[#FF5757]/10'>
+            <div className='flex items-center gap-2 mb-2 justify-start'>
+                <Plus className='mt-1 w-4 h-4 text-primary' />
                 <Text
                     level='h3'
                     className='text-base font-semibold text-contentLight'>
@@ -36,7 +36,7 @@ const BuildYourStack = ({
                 </Text>
             </div>
             {showWarning && (
-                <FlexContainer className='items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-md px-3 py-1.5 mb-3'>
+                <FlexContainer className='items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-md px-3 py-1 mb-2'>
                     <AlertTriangle className='w-4 h-4 text-yellow-400' />
                     <Text level='span'>
                         You haven't added any skills yet. Please add your skills
@@ -44,7 +44,7 @@ const BuildYourStack = ({
                     </Text>
                 </FlexContainer>
             )}
-            <div className='flex flex-wrap gap-2 mb-3 justify-start items-start'>
+            <div className='flex flex-wrap gap-1.5 mb-2 justify-start items-start'>
                 {userSkills.length === 0 && (
                     <Text level='span' className='text-greyDark text-xs'>
                         No skills added yet. Start building your stack!
