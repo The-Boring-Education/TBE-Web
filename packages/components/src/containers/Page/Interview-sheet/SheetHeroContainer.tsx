@@ -18,6 +18,7 @@ const SheetHeroContainer = ({
   isPremium,
   isPurchased,
   redirectTo,
+  theme,
 }: SheetHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -106,16 +107,19 @@ const SheetHeroContainer = ({
     );
   }
 
+  const isDark = theme === 'dark';
+
   return (
     <FlexContainer>
-      <FlexContainer className='border md:w-4/5 gap-4 w-full p-2 justify-between rounded'>
+      <FlexContainer className={`border md:w-4/5 gap-4 w-full p-2 justify-between rounded ${isDark ? 'border-gray-700 bg-[#0A0A0A]' : 'border-gray-200 bg-white'}`}>
         {/* Back Button */}
         <LinkButton
           buttonProps={{
             variant: 'GHOST',
             text: 'Back',
           }}
-          href={routes.user.sheets}
+          href={routes.home}
+          theme={theme}
         />
 
         {/* Heading and Subheading */}
@@ -124,10 +128,10 @@ const SheetHeroContainer = ({
           direction='col'
           itemCenter={false}
         >
-          <Text className='heading-4' level='h4'>
+          <Text className={`heading-4 ${isDark ? 'text-white' : 'text-gray-900'}`} level='h4'>
             Hello {user?.name ?? 'there'}!
           </Text>
-          <Text className='paragraph text-greyDark' level='p'>
+          <Text className={`paragraph ${isDark ? 'text-gray-400' : 'text-greyDark'}`} level='p'>
             Ready to prepare for interviews?
           </Text>
         </FlexContainer>
@@ -137,7 +141,7 @@ const SheetHeroContainer = ({
           itemCenter={false}
           justifyCenter={false}
         >
-          <PageHeroMetaContainer subtitle="YOU'RE PRACTICING" title={name} />
+          <PageHeroMetaContainer subtitle="YOU'RE PRACTICING" title={name} theme={theme} />
         </FlexContainer>
 
         {headerActionButton}

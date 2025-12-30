@@ -86,17 +86,19 @@ const links: NavbarDropdownLink[] = [
   },
 ];
 
-interface VariantConfig {
+interface NavbarVariantConfig {
   branding: React.ReactNode;
   dashboardRoute: string;
   borderClass?: string;
   requiresAuth?: boolean;
   showGamification?: boolean;
+  showCohorts?: boolean; // If false, hides Cohorts section
+  showLearn?: boolean; // If false, hides Learn section
 }
 
 const getNavbarVariantConfig = (
   Logo: ComponentType<any>
-): Record<string, VariantConfig> => ({
+): Record<string, NavbarVariantConfig> => ({
   default: {
     branding: <Logo />,
     dashboardRoute: "/user/dashboard",
@@ -200,6 +202,8 @@ const getNavbarVariantConfig = (
     borderClass: "border-0 dark:border-0",
     requiresAuth: true, // Non-auth app
     showGamification: false,
+    showCohorts: false, // Hide Cohorts section
+    showLearn: false, // Hide Learn section
   },
 });
 

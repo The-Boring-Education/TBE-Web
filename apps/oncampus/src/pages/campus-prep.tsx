@@ -37,7 +37,7 @@ export default function CampusPrepLanding() {
 
               {/* Supporting paragraph */}
               <p className="text-white/70 text-sm leading-relaxed">
-                Master DSA, Aptitude, Resume, Interviews, and Projects in one dashboard. 
+                Master DSA, Aptitude, Resume, Interviews, and Projects in one dashboard.
                 Everything you need to ace your campus placements, all in one place.
               </p>
 
@@ -51,7 +51,7 @@ export default function CampusPrepLanding() {
                   size="MEDIUM"
                   animationType="BOUNCE"
                 />
-                
+
               </div>
 
               {/* Helper text */}
