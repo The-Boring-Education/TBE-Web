@@ -180,6 +180,22 @@ export interface UnskilledGraphData {
   updatedAt?: string;
 }
 
+export interface UnskilledTrendData {
+  metric_type: string;
+  metric_name: string;
+  periods: {
+    "1D": number;
+    "7D": number;
+    "14D": number;
+    "30D": number;
+  };
+  topLocations: string[];
+  jobDomains: string[];
+  companyTypes: string[];
+  experienceLevels: string[];
+  generated_at: string;
+}
+
 export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY";
 
 export const LEADERBOARD_TYPES: LeaderboardType[] = [

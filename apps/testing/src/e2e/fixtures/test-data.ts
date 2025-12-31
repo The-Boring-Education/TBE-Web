@@ -9,6 +9,6 @@ export const testUser = {
 };
 
 export const testURLs = {
-    platform: process.env.NEXTAUTH_URL || 'http://localhost:3000',
+    platform: process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000',
     api: process.env.API_URL || 'http://localhost:3004'
 };

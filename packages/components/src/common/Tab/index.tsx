@@ -1,8 +1,17 @@
 import { Tab } from '@headlessui/react';
+import { useState } from 'react';
 import type { TabProps } from '@tbe/interface';
 
-const TabComponent = ({ tabLabels, tabPanels, vertical = false }: TabProps) => (
-  <Tab.Group className='w-full'>
+const TabComponent = ({ tabLabels, tabPanels, vertical = false, onTabChange }: TabProps) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleTabChange = (index: number) => {
+    setSelectedIndex(index);
+    onTabChange?.(index);
+  };
+
+  return (
+    <Tab.Group selectedIndex={selectedIndex} onChange={handleTabChange} className='w-full'>
     <div className={`${vertical ? 'flex flex-col gap-6' : ''} flex-wrap`}>
       <Tab.List
         className={`${
@@ -44,6 +53,7 @@ const TabComponent = ({ tabLabels, tabPanels, vertical = false }: TabProps) => (
       </div>
     </div>
   </Tab.Group>
-);
+  );
+};
 
 export default TabComponent;

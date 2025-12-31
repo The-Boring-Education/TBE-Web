@@ -744,6 +744,7 @@ export interface TabProps {
     tabLabels: string[]
     tabPanels: React.ReactNode[]
     vertical?: boolean
+    onTabChange?: (index: number) => void
 }
 
 export interface RepositoryTabBarProps {

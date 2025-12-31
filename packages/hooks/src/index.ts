@@ -21,8 +21,8 @@ export { default as useMediaQuery } from "./useMediaQuery";
 export { default as useNotifications } from "./useNotifications";
 export { default as useOnboarding } from "./useOnboarding";
 export { default as useOptimizedNavigation } from "./useOptimizedNavigation";
-export { default as usePaymentStatus } from "./usePaymentStatus";
 export { default as usePaymentAccess } from "./usePaymentAccess"
+export { default as usePaymentStatus } from "./usePaymentStatus";
 export { default as usePDFFile } from "./usePDFFile";
 export { default as useResumeParser } from "./usePDFFile";
 export { usePrepLogs } from "./usePrepLogs";
@@ -35,5 +35,6 @@ export { default as useScrollDirection } from "./useScrollDirection";
 export { default as useScrollPosition } from "./useScrollPosition";
 export { default as useSkillPlaylist } from "./useSkillPlaylist";
 export { default as useUnskilledGraphData } from "./useUnskilledGraphData";
+export { default as useUnskilledTrendData } from "./useUnskilledTrendData";
 export { default as useUser } from "./useUser";
 export { default as useUsername } from "./useUsername";

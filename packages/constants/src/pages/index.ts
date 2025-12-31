@@ -641,6 +641,21 @@ const UNSKILLED_LANDING_GRAPH_TAB_PARAMS = [
   'Locations',
 ];
 
+// Mapping from tab names to metric types for Perspective API
+const UNSKILLED_TAB_TO_METRIC_TYPE = {
+  'Domains': 'domain',
+  'Skills': 'skill',
+  'Companies': 'company_type',
+  'Locations': 'location',
+} as const;
+
+export type UnskilledTabName = keyof typeof UNSKILLED_TAB_TO_METRIC_TYPE;
+export type UnskilledMetricType = typeof UNSKILLED_TAB_TO_METRIC_TYPE[UnskilledTabName];
+
+const getMetricTypeFromTab = (tabName: string): string | null => {
+  return UNSKILLED_TAB_TO_METRIC_TYPE[tabName as UnskilledTabName] || null;
+};
+
 const BYI_BEGINNER_ROADMAP: CohortRoadmapProps[] = [
   {
     week: 'Week 1',
@@ -1004,6 +1019,8 @@ export {
   TESTIMONIALS,
   TOP_NAVIGATION,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
+  getMetricTypeFromTab,
+  UNSKILLED_TAB_TO_METRIC_TYPE,
   USP,
   YATRA_TOOLS,
   YOUFOCUS_FEATURES,

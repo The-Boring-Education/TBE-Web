@@ -29,7 +29,7 @@
         "SENTRY_AUTH_TOKEN",
         "ONBOARDING_APP_URL",
         "QUIZZES_APP_URL",
-        "NEXTAUTH_URL",
+        "NEXT_PUBLIC_AUTH_URL",
         "NEXT_PUBLIC_UNSKILLED_API_URL"
       ],
       "inputs": [
@@ -72,7 +72,7 @@
         "SENTRY_AUTH_TOKEN",
         "ONBOARDING_APP_URL",
         "QUIZZES_APP_URL",
-        "NEXTAUTH_URL",
+        "NEXT_PUBLIC_AUTH_URL",
         "NEXT_PUBLIC_UNSKILLED_API_URL"
       ],
       "inputs": [

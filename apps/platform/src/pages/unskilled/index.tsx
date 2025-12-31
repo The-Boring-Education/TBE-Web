@@ -1,9 +1,11 @@
+"use client"
+
 import {
   ArrowRightIcon,
   ArrowTrendingUpIcon,
   CodeBracketIcon,
   MapPinIcon,
-} from '@heroicons/react/20/solid';
+} from '@heroicons/react/20/solid'
 import {
   Button,
   CheckboxButtonContainer,
@@ -18,28 +20,32 @@ import {
   TabComponent,
   Text,
   UploadFileInput,
-} from '@tbe/components';
+} from '@tbe/components'
 import {
+  getMetricTypeFromTab,
   JOB_DOMAINS,
   JOB_EXPERIENCE_LEVEL,
   routes,
   STATIC_FILE_PATH,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
-} from '@tbe/constants';
-import { useResumeEvaluation, useUnskilledGraphData } from '@tbe/hooks';
-import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface';
-import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils';
-import { motion } from 'framer-motion';
-import React, { Fragment, useEffect, useState } from 'react';
+} from '@tbe/constants'
+import { useResumeEvaluation, useUnskilledGraphData, useUnskilledTrendData } from '@tbe/hooks'
+import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface'
+import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils'
+import { motion } from 'framer-motion'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from 'recharts'
+
+import TrendDataPanel from '../../components/unskilled/TrendDataPanel'
 
 const UNSKILLED_FEATURES: OutlineCardProps[] = [
   {
@@ -60,15 +66,29 @@ const UNSKILLED_FEATURES: OutlineCardProps[] = [
     description:
       'Find the most sought-after software engineering domains and roles to focus your learning journey.',
   },
-];
+]
 
 const UnskilledLandingPage = ({
   seoMeta,
-  jobData: _initialJobData, // Not used - data fetched client-side
-  isDev,
 }: UnskilledLandingPageProps) => {
   // Fetch graph data on client-side after page loads
-  const { data: jobData, loading: graphLoading, error: graphError } = useUnskilledGraphData();
+  const { data: jobData, loading: graphLoading, error: graphError } = useUnskilledGraphData()
+
+  // State for trend data
+  const [activeTabIndex, setActiveTabIndex] = useState(0)
+  const [selectedBar, setSelectedBar] = useState<{ type: string; name: string } | null>(null)
+  const graphContainerRef = useRef<HTMLDivElement>(null)
+  const trendPanelRef = useRef<HTMLDivElement>(null)
+
+  // Get metric type from active tab
+  const activeTabName = UNSKILLED_LANDING_GRAPH_TAB_PARAMS[activeTabIndex]
+  const currentMetricType = getMetricTypeFromTab(activeTabName)
+
+  // Fetch trend data when bar is selected
+  const { data: trendData, loading: trendLoading, error: trendError } = useUnskilledTrendData({
+    perspective_type: selectedBar?.type || null,
+    perspective_name: selectedBar?.name || null,
+  })
 
   const {
     file,
@@ -81,57 +101,122 @@ const UnskilledLandingPage = ({
     evaluationData,
     handleResumeEvaluation,
     error,
-  } = useResumeEvaluation();
+  } = useResumeEvaluation()
 
   const onSelectSkills = (value: string[]) => {
-    setSelectedDomains(value);
-  };
+    setSelectedDomains(value)
+  }
 
   const onSelectExperience = (value: string) => {
-    setSelectedExperience(value);
-  };
+    setSelectedExperience(value)
+  }
+
+  // Handle tab change
+  const handleTabChange = (index: number) => {
+    setActiveTabIndex(index)
+    // Clear selected bar when switching tabs
+    setSelectedBar(null)
+  }
+
+  // Handle bar click/hover
+  const handleBarInteraction = (barName: string, metricType: string) => {
+    setSelectedBar({ type: metricType, name: barName })
+  }
+
+  // Click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        selectedBar &&
+        graphContainerRef.current &&
+        trendPanelRef.current &&
+        !graphContainerRef.current.contains(event.target as Node) &&
+        !trendPanelRef.current.contains(event.target as Node)
+      ) {
+        setSelectedBar(null)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [selectedBar])
+
+  // Custom tooltip component
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+          <p className="text-sm font-semibold text-gray-900">{payload[0].payload.name}</p>
+          <p className="text-sm text-primary font-medium">{`${payload[0].value.toLocaleString()} jobs`}</p>
+        </div>
+      )
+    }
+    return null
+  }
+
+  // Create enhanced chart component
+  const createEnhancedChart = (
+    data: Array<{ name: string; count: number }>,
+    metricType: string,
+    color: string
+  ) => {
+    const selectedBarName = selectedBar?.type === metricType ? selectedBar.name : null
+
+    return (
+      <ResponsiveContainer height={400} width="100%">
+        <BarChart data={data} layout="horizontal" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <XAxis
+            type="number"
+            label={{ value: 'Job Count', position: 'insideBottom', offset: -5 }}
+            tick={{ fontSize: 12 }}
+            tickFormatter={(value) => value.toLocaleString()}
+          />
+          <YAxis
+            dataKey="name"
+            type="category"
+            width={120}
+            tick={{ fontSize: 12 }}
+            label={{ value: 'Category', angle: -90, position: 'insideLeft' }}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar
+            dataKey="count"
+            fill={color}
+            radius={[0, 4, 4, 0]}
+            onClick={(data: any) => {
+              if (data && data.activePayload && data.activePayload[0] && data.activePayload[0].payload) {
+                handleBarInteraction(data.activePayload[0].payload.name, metricType)
+              }
+            }}
+            onMouseEnter={(data: any) => {
+              if (data && data.activePayload && data.activePayload[0] && data.activePayload[0].payload) {
+                handleBarInteraction(data.activePayload[0].payload.name, metricType)
+              }
+            }}
+          >
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={entry.name === selectedBarName ? color : color}
+                opacity={entry.name === selectedBarName ? 1 : 0.7}
+                style={{ cursor: 'pointer' }}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    )
+  }
 
   const jobMarketPanels = jobData && [
-    <ResponsiveContainer key={0} height={400} width='100%'>
-      <BarChart data={jobData.jobDomains} layout='horizontal'>
-        <CartesianGrid strokeDasharray='3 3' />
-        <YAxis type='number' />
-        <XAxis dataKey='name' type='category' width={100} />
-        <Tooltip />
-        <Bar dataKey='count' fill='bg-primary' />
-      </BarChart>
-    </ResponsiveContainer>,
-
-    <ResponsiveContainer key={1} height={400} width='100%'>
-      <BarChart data={jobData.trendingSkills} layout='horizontal'>
-        <CartesianGrid strokeDasharray='3 3' />
-        <YAxis type='number' />
-        <XAxis dataKey='name' type='category' width={100} />
-        <Tooltip />
-        <Bar dataKey='count' fill='hsl(var(--chart-1))' />
-      </BarChart>
-    </ResponsiveContainer>,
-
-    <ResponsiveContainer key={3} height={400} width='100%'>
-      <BarChart data={jobData.companyTypes} layout='horizontal'>
-        <CartesianGrid strokeDasharray='3 3' />
-        <YAxis type='number' />
-        <XAxis dataKey='name' type='category' width={100} />
-        <Tooltip />
-        <Bar dataKey='count' fill='hsl(var(--chart-1))' />
-      </BarChart>
-    </ResponsiveContainer>,
-
-    <ResponsiveContainer key={4} height={400} width='100%'>
-      <BarChart data={jobData.topLocations} layout='horizontal'>
-        <CartesianGrid strokeDasharray='3 3' />
-        <YAxis type='number' />
-        <XAxis dataKey='name' type='category' width={100} />
-        <Tooltip />
-        <Bar dataKey='count' fill='hsl(var(--chart-1))' />
-      </BarChart>
-    </ResponsiveContainer>,
-  ];
+    createEnhancedChart(jobData.jobDomains, 'domain', 'hsl(var(--chart-1))'),
+    createEnhancedChart(jobData.trendingSkills, 'skill', 'hsl(var(--chart-1))'),
+    createEnhancedChart(jobData.companyTypes, 'company_type', 'hsl(var(--chart-1))'),
+    createEnhancedChart(jobData.topLocations, 'location', 'hsl(var(--chart-1))'),
+  ]
 
   const jobGraphContainer = graphLoading ? (
     <FlexContainer className='py-12' direction='col' itemCenter>
@@ -146,17 +231,30 @@ const UnskilledLandingPage = ({
       </Text>
     </FlexContainer>
   ) : jobMarketPanels ? (
-    <TabComponent
-      tabLabels={UNSKILLED_LANDING_GRAPH_TAB_PARAMS}
-      tabPanels={jobMarketPanels}
-    />
+    <div ref={graphContainerRef}>
+      <TabComponent
+        tabLabels={UNSKILLED_LANDING_GRAPH_TAB_PARAMS}
+        tabPanels={jobMarketPanels}
+        onTabChange={handleTabChange}
+      />
+      {selectedBar && (
+        <div ref={trendPanelRef}>
+          <TrendDataPanel
+            data={trendData}
+            loading={trendLoading}
+            error={trendError}
+            currentMetricType={currentMetricType}
+          />
+        </div>
+      )}
+    </div>
   ) : (
     <FlexContainer>
       <Text className='text-gray-500' level='p'>
         No data available
       </Text>
     </FlexContainer>
-  );
+  )
 
   // Define color schemes for the evaluation sections
   const colorSchemes = {
@@ -175,21 +273,21 @@ const UnskilledLandingPage = ({
       ring: '#6366f1',
       bg: '#e0e7ff',
     },
-  };
+  }
 
   const [dateDisplay, setDateDisplay] = useState<{
-    date: string;
-    time: string;
-  } | null>(null);
+    date: string
+    time: string
+  } | null>(null)
 
   useEffect(() => {
     if (jobData?.updatedAt) {
       const formatted = formatDate({
         dateAndTime: jobData.updatedAt,
-      });
-      setDateDisplay(formatted);
+      })
+      setDateDisplay(formatted)
     }
-  }, [jobData?.updatedAt]);
+  }, [jobData?.updatedAt])
 
   return (
     <Fragment>
@@ -251,7 +349,7 @@ const UnskilledLandingPage = ({
       <Section
         className='bg-gradient-to-r from-white via-blue-50 to-violet-100 py-20 md:px-10 px-4'
         id={`${routes.internals.landing.upload}`}
-        // isDev={isDev}
+      // isDev={isDev}
       >
         <motion.div
           className='relative max-w-5xl mx-auto'
@@ -323,7 +421,7 @@ const UnskilledLandingPage = ({
                 onClick={handleResumeEvaluation}
                 disabled={isEvaluating}
               />
-              
+
               {error && (
                 <Text className='text-red-600 text-sm text-center' level='p'>
                   {error}
@@ -485,9 +583,9 @@ const UnskilledLandingPage = ({
         </FlexContainer>
       </Section>
     </Fragment>
-  );
-};
+  )
+}
 
-export const getServerSideProps = getUnskilledLandingPageProps;
+export const getServerSideProps = getUnskilledLandingPageProps
 
-export default UnskilledLandingPage;
+export default UnskilledLandingPage

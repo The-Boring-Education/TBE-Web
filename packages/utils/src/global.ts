@@ -3,7 +3,6 @@ import {
   IN_DEV_PAGES,
   routes,
   seoCommonMeta,
-  envConfig,
   type AppIdentifier,
 } from "@tbe/constants";
 import type {
@@ -392,63 +391,14 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
   const seoMeta = getSEOMeta(slug);
   const isDev = IN_DEV_PAGES.some((page) => page === slug);
 
-  // Fetch graph data directly from Unskilled Platform API
-  // Skip API call during build if URL is not available
-  if (!envConfig.UNSKILLED_API_URL) {
-    return {
-      props: {
-        seoMeta,
-        jobData: null,
-        isDev,
-      },
-    };
-  }
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-
-    const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`, {
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`API responded with status ${response.status}`);
-    }
-
-    const apiResponse = await response.json();
-    const jobData = apiResponse.data || null;
-
-    return {
-      props: {
-        seoMeta,
-        jobData,
-        isDev,
-      },
-    };
-  } catch (error) {
-    // Silently fail during build, log in development
-    if (process.env.NODE_ENV === "development") {
-      console.warn(
-        "Could not fetch Unskilled data (API may not be running):",
-        error instanceof Error ? error.message : error
-      );
-    }
-
-    return {
-      props: {
-        seoMeta,
-        jobData: null,
-        isDev,
-      },
-    };
-  }
+  return {
+    props: {
+      seoMeta,
+      isDev,
+    },
+  };
 };
+
 const getCertificatePageProps = async ({ query: { certificateId } }: any) => {
   const { status, data: certificate } = await fetchAPIData(
     routes.api.certificateById(certificateId)
