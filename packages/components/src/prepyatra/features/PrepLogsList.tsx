@@ -116,9 +116,11 @@ const PrepLogCard = ({ logs, onLogUpdated, onLogDeleted, mongoUserId }: Props) =
 
                 <div className='grid gap-3 md:grid-cols-2 xl:grid-cols-3'>
                     {logsToShow.map((log) => (
+
                         <Card
                             key={log._id}
-                            className='glass rounded-1 border border-greyLight transition-all'>
+                            className='glass rounded-1 border border-greyLight transition-all duration-200 hover:border-[#ff5757] hover:shadow-[0_0_20px_rgba(255,87,87,0.3)] hover:shadow-[#ff5757]/20'>
+
                             <CardHeader className='p-3 pb-2'>
                                 <CardTitle className='text-contentLight text-base'>
                                     {log.title}
