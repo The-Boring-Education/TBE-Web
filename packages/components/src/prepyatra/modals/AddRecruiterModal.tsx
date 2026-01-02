@@ -1,10 +1,10 @@
 import { useToast } from "@tbe/hooks"
 import type { RecruiterContact } from "@tbe/types"
-import { useEffect,useState } from "react"
-
+import { useEffect, useState } from "react"
+import { Toaster } from "sonner";
 import Button from "../../common/Buttons/Button"
 import Text from "../../common/Typography/Text"
-import { useUser } from "../contexts/useAuth"
+import { useAuth } from "@tbe/auth"
 import {
     Dialog,
     DialogContent,
@@ -33,7 +33,7 @@ const AddRecruiterModal = ({
     mongoUserId
 }: AddRecruiterModalProps) => {
     const { toast } = useToast()
-        const { isAuthenticated } = useUser()
+    const { isAuthenticated } = useAuth()
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         recruiterName: "",
@@ -85,9 +85,10 @@ const AddRecruiterModal = ({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
-
+        console.log("🚀 SUBMITTING:", formData, "userId:", mongoUserId);
         try {
             if (!isAuthenticated) {
+                console.error("❌ NOT AUTHENTICATED");
                 toast({
                     title: "Error",
                     description: "User not authenticated.",
@@ -99,7 +100,9 @@ const AddRecruiterModal = ({
             const payload = {
                 ...formData,
                 userId: mongoUserId
-            }
+            };
+            console.log("📡 API URL:", `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/recruiter`);
+            console.log("📦 SENDING PAYLOAD:", editContact ? { recruiterId: editContact._id, ...formData } : payload);
 
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/prepyatra/recruiter`,
@@ -114,19 +117,22 @@ const AddRecruiterModal = ({
                             : payload
                     )
                 }
-            )
+            );
+            console.log("📥 RESPONSE STATUS:", response.status, response.statusText);
+            console.log("📥 RESPONSE HEADERS:", Object.fromEntries(response.headers));
 
             const result = await response.json()
+            console.log("📄 RESULT:", result);
 
             if (!result.status) {
+                console.error("❌ API ERROR:", result.message);
                 throw new Error(result.message)
             }
 
             toast({
                 title: "Success",
-                description: `Recruiter ${
-                    editContact ? "updated" : "added"
-                } successfully!`
+                description: `Recruiter ${editContact ? "updated" : "added"
+                    } successfully!`
             })
 
             if (editContact && onContactUpdated) {
@@ -136,10 +142,10 @@ const AddRecruiterModal = ({
             }
             onClose()
         } catch (err) {
-            console.error(err)
+            console.error("💥 FULL ERROR:", err);
             toast({
                 title: "Error",
-                        description: err instanceof Error ? err.message : "Something went wrong",
+                description: err instanceof Error ? err.message : "Something went wrong",
                 variant: "destructive"
             })
         } finally {
@@ -151,17 +157,17 @@ const AddRecruiterModal = ({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass border-greyLight'>
                 <DialogHeader>
+                    <h2 className="sr-only">Recruiter Contact</h2>
                     <Text level="h3" className='text-contentLight text-lg font-semibold'>
-                        {editContact
-                            ? "Edit Recruiter Contact"
-                            : "Add New Recruiter Contact"}
+                        {editContact ? "Edit Recruiter Contact" : "Add New Recruiter Contact"}
                     </Text>
-                    <Text level="p" className='text-greyDark text-sm'>
+                    <p className='text-greyDark text-sm sr-only'>
                         {editContact
                             ? "Update recruiter information and progress."
                             : "Add a new recruiter contact to your prep journey."}
-                    </Text>
+                    </p>
                 </DialogHeader>
+
                 <form onSubmit={handleSubmit} className='space-y-4'>
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                         <InputField
@@ -267,7 +273,7 @@ const AddRecruiterModal = ({
                             id='comments'
                             placeholder='Optional'
                             value={formData.comments}
-                            onChange={(e:any) =>
+                            onChange={(e: any) =>
                                 handleInputChange("comments", e.target.value)
                             }
                             className='bg-white border-greyLight text-contentLight border resize-none'
@@ -290,8 +296,8 @@ const AddRecruiterModal = ({
                                     ? "Updating..."
                                     : "Creating..."
                                 : editContact
-                                  ? "Update Contact"
-                                  : "Create Contact"}
+                                    ? "Update Contact"
+                                    : "Create Contact"}
                             disabled={loading}
                             className='text-sm h-5'
                         />
