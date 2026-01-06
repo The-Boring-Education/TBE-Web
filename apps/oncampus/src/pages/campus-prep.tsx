@@ -37,7 +37,7 @@ export default function CampusPrepLanding() {
 
               {/* Supporting paragraph */}
               <p className="text-white/70 text-sm leading-relaxed">
-                Master DSA, Aptitude, Resume, Interviews, and Projects in one dashboard. 
+                Master DSA, Aptitude, Resume, Interviews, and Projects in one dashboard.
                 Everything you need to ace your campus placements, all in one place.
               </p>
 
@@ -51,7 +51,7 @@ export default function CampusPrepLanding() {
                   size="MEDIUM"
                   animationType="BOUNCE"
                 />
-                
+
               </div>
 
               {/* Helper text */}
@@ -104,24 +104,46 @@ export default function CampusPrepLanding() {
             ].map((item) => (
               <motion.a
                 key={item.title}
-                whileHover={{ scale: 1.02, y: -6, boxShadow: "0 20px 40px rgba(255,87,87,0.18), 0 0 0 6px rgba(255,87,87,0.08)" }}
+                whileHover={{
+                  scale: 1.02,
+                  y: -6,
+                  boxShadow:
+                    "0 20px 40px rgba(255,87,87,0.28), 0 0 0 8px rgba(255,87,87,0.12)",
+                }}
                 transition={{ type: "spring", stiffness: 300 }}
                 href={item.href}
-                style={{ boxShadow: "0 8px 20px rgba(255,87,87,0.06)" }}
-                className="block bg-white/95 rounded-2xl p-6 shadow-md border border-white/5 transform transition duration-200 cursor-pointer focus:outline-none focus:ring-4 focus:ring-[#FF5757]/20"
+                className="
+                  block rounded-2xl p-6
+                  bg-[#0c0c10]                
+                  border border-[#ff5757]/40
+                  shadow-[0_0_40px_rgba(255,87,87,0.16)] 
+                  transform transition duration-200
+                  cursor-pointer
+                  focus:outline-none focus:ring-4 focus:ring-[#FF5757]/30
+                "
               >
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-md bg-[#FF5757] text-white flex items-center justify-center flex-shrink-0">
                     <item.Icon className="w-5 h-5" />
                   </div>
+
                   <div className="flex-1">
-                    <h3 className="text-slate-900 font-semibold text-sm">{item.title}</h3>
-                    <p className="text-slate-600 text-[13px] mt-2">{item.desc}</p>
+                    <h3 className="text-slate-100 font-semibold text-sm">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-slate-400 text-[13px] mt-2">
+                      {item.desc}
+                    </p>
+
                     <div className="mt-3">
-                      <span className="text-[#FF5757] text-sm font-medium underline">See {item.title.split(" ")[0]}</span>
+                      <span className="text-[#FF5757] text-sm font-medium underline">
+                        See {item.title.split(" ")[0]}
+                      </span>
                     </div>
                   </div>
                 </div>
+
               </motion.a>
             ))}
           </div>
