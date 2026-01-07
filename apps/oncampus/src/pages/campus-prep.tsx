@@ -55,7 +55,7 @@ export default function CampusPrepLanding() {
               </div>
 
               {/* Helper text */}
-              <p className="text-white/40 text-xs -mt-1">
+              <p className="text-white/40 text-xs -mt-0.5">
                 Built for campus schedules
               </p>
             </motion.div>
@@ -82,20 +82,20 @@ export default function CampusPrepLanding() {
         </section>
 
         {/* Resources Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-1 pb-3">
           <h2 className="text-center text-2xl font-semibold">
             <span className="text-white">Our </span>
             <span className="text-[#FF5757]">Resources</span>
           </h2>
 
-          <p className="text-center text-white/70 mt-3 max-w-2xl mx-auto text-sm">
-            Hand-picked resources to help you prepare for placements — practice, learn, and apply.
+          <p className="text-center text-white/70 mt-4 max-w-2xl mx-auto text-sm">
+            Hand-picked resources to help you prepare for placements: practice, learn, and apply.
           </p>
 
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { title: "Aptitude Practice", desc: "Daily challenges, streak tracking & top practice links for Quant, Verbal, DI, and Reasoning.", href: "/aptitude", Icon: BookOpen },
-              { title: "Quizzes", desc: "Topic-wise quizzes with instant results and performance tracking.", href: "/dashboard/quizzes", Icon: ClipboardList },
+              { title: "Quizes", desc: "Topic-wise quizes with instant results and performance tracking.", href: "/dashboard/quizzes", Icon: ClipboardList },
               { title: "Interview Prep", desc: "CS Fundamentals, HR tips, mock interview questions, and more.", href: "/interview-prep", Icon: Code },
               { title: "DSA Preparation", desc: "Playlists, coding sites, and problem sets for hands-on algorithm practice.", href: "/dsa", Icon: FileText },
               { title: "Resume Zone", desc: "Live preview builder and free templates for standout resumes.", href: "/resume", Icon: Clipboard },
@@ -113,7 +113,7 @@ export default function CampusPrepLanding() {
                 transition={{ type: "spring", stiffness: 300 }}
                 href={item.href}
                 className="
-                  block rounded-2xl p-6
+                  block rounded-2xl p-5
                   bg-[#0c0c10]                
                   border border-[#ff5757]/40
                   shadow-[0_0_40px_rgba(255,87,87,0.16)] 
@@ -122,9 +122,9 @@ export default function CampusPrepLanding() {
                   focus:outline-none focus:ring-4 focus:ring-[#FF5757]/30
                 "
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-md bg-[#FF5757] text-white flex items-center justify-center flex-shrink-0">
-                    <item.Icon className="w-5 h-5" />
+                <div className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-md bg-[#FF5757] text-white flex items-center justify-center flex-shrink-0">
+                    <item.Icon className="w-4 h-4" />
                   </div>
 
                   <div className="flex-1">
@@ -137,8 +137,8 @@ export default function CampusPrepLanding() {
                     </p>
 
                     <div className="mt-3">
-                      <span className="text-[#FF5757] text-sm font-medium underline">
-                        See {item.title.split(" ")[0]}
+                      <span className="text-[#FF5757] text-sm font-medium ">
+                        Explore {item.title.split(" ")[0]}
                       </span>
                     </div>
                   </div>

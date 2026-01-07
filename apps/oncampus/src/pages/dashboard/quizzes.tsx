@@ -20,7 +20,7 @@ const QuizzesDashboardPage = () => {
   if (loading) {
     return (
       <div className="min-h-[40vh] flex items-center justify-center">
-        <div className="text-gray-300">Loading quizzes...</div>
+        <div className="text-gray-300">Loading quizes...</div>
       </div>
     );
   }
@@ -45,14 +45,14 @@ const QuizzesDashboardPage = () => {
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white mb-2">Available Quizzes</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">Available Quizes</h1>
           <p className="text-sm text-gray-400">Pick a category to start</p>
         </div>
 
         {/* Quiz Cards Grid */}
         {categories.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-400 text-sm mb-4">No quizzes available right now.</p>
+            <p className="text-gray-400 text-sm mb-4">No quizes available right now.</p>
             <Button
               onClick={refetch}
               variant="OUTLINE"
