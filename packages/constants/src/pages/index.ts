@@ -57,6 +57,13 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: products.prepYatra!.slug,
       target: '_blank',
     },
+    {
+      id: v4(),
+      name: 'OnCampus',
+      description: 'Campus-focused learning platform for students',
+      href: 'https://oncampus.theboringeducation.com/',
+      target: '_blank',
+    },
   ],
   products: [
     {

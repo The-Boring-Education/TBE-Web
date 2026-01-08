@@ -244,15 +244,36 @@ const getAllEnrolledSheetsFromDB = async (
         const enrolledSheets = await UserSheet.find({ userId })
             .populate({
                 path: "sheet",
-                select: modelSelectParams.coursePreview
+                select: `${modelSelectParams.coursePreview} questions`
             })
+            .sort({ updatedAt: -1 }) // Sort by last updated, most recent first
             .exec()
 
         return {
-            data: enrolledSheets.map((sheet) => ({
-                ...sheet.sheet.toObject(),
-                isEnrolled: true
-            }))
+            data: enrolledSheets.map((userSheet) => {
+                const sheet = userSheet.sheet as any
+                const totalQuestions = sheet?.questions?.length || 0
+                const completedQuestions = userSheet.questions?.filter(
+                    (q: any) => q.isCompleted
+                ).length || 0
+                const progressPercentage = totalQuestions > 0
+                    ? Math.round((completedQuestions / totalQuestions) * 100)
+                    : 0
+
+                // Access updatedAt from the document (Mongoose adds it via timestamps)
+                const userSheetObj = userSheet.toObject() as any
+
+                return {
+                    ...sheet.toObject(),
+                    isEnrolled: true,
+                    lastUpdated: userSheetObj.updatedAt || userSheetObj.createdAt,
+                    progress: {
+                        completed: completedQuestions,
+                        total: totalQuestions,
+                        percentage: progressPercentage
+                    }
+                }
+            })
         }
     } catch (error) {
         return { error: "Failed while fetching enrolled sheets" }
