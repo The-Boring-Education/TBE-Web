@@ -155,7 +155,6 @@ const AddRecruiterModal = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            {/* <DialogContent className='  fixed left-1/2 top-1/2-translate-x-1/2-translate-y-1/2 sm:max-w-[560px] max-h-[85vh] overflow-hidden glass border-greyLight p-4 translate-y-0'> */}
             <DialogContent
                 className="
     fixed
