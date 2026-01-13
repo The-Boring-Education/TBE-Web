@@ -155,10 +155,26 @@ const AddRecruiterModal = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-y-auto glass border-greyLight'>
-                <DialogHeader>
+            {/* <DialogContent className='  fixed left-1/2 top-1/2-translate-x-1/2-translate-y-1/2 sm:max-w-[560px] max-h-[85vh] overflow-hidden glass border-greyLight p-4 translate-y-0'> */}
+            <DialogContent
+                className="
+    fixed
+    left-1/2
+    top-1/2
+    -translate-x-1/2
+    -translate-y-1/2
+    sm:max-w-[560px]
+    w-full
+    max-h-[85vh]
+    overflow-hidden
+    glass
+    border-greyLight
+    p-4
+  "
+            >
+                <DialogHeader pb-2 pt-1>
                     <h2 className="sr-only">Recruiter Contact</h2>
-                    <Text level="h3" className='text-contentLight text-lg font-semibold'>
+                    <Text level="h3" className='text-contentLight text-base font-semibold leading-tight'>
                         {editContact ? "Edit Recruiter Contact" : "Add New Recruiter Contact"}
                     </Text>
                     <p className='text-greyDark text-sm sr-only'>
@@ -168,12 +184,12 @@ const AddRecruiterModal = ({
                     </p>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className='space-y-4'>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <form onSubmit={handleSubmit} className='space-y-1'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-1'>
                         <InputField
                             label='Name'
                             value={formData.recruiterName}
-                            className='bg-white border-greyLight text-contentLight'
+                            className='bg-white border-greyLight text-contentLight h-4 text-sm placeholder:text-greyDark'
                             field='recruiterName'
                             onChange={handleInputChange}
                             required
@@ -182,7 +198,7 @@ const AddRecruiterModal = ({
                             label='Email'
                             type='email'
                             value={formData.email}
-                            className='bg-white border-greyLight text-contentLight'
+                            className='bg-white border-greyLight text-contentLight h-4 text-sm  placeholder:text-greyDark'
                             field='email'
                             placeholder='Optional'
                             onChange={handleInputChange}
@@ -191,7 +207,7 @@ const AddRecruiterModal = ({
                             label='Phone'
                             placeholder='Optional'
                             value={formData.phone}
-                            className='bg-white border-greyLight text-contentLight'
+                            className='bg-white border-greyLight text-contentLight h-4 text-sm placeholder:text-greyDark'
                             field='phone'
                             onChange={handleInputChange}
                         />
@@ -199,7 +215,7 @@ const AddRecruiterModal = ({
                             label='Company'
                             placeholder='Optional'
                             value={formData.company}
-                            className='bg-white border-greyLight text-contentLight'
+                            className='bg-white border-greyLight text-contentLight h-4 text-sm  placeholder:text-greyDark'
                             field='company'
                             onChange={handleInputChange}
                         />
@@ -207,7 +223,7 @@ const AddRecruiterModal = ({
                             label='Applied Position'
                             placeholder='Optional'
                             value={formData.appliedPosition}
-                            className='bg-white border-greyLight text-contentLight'
+                            className='bg-white border-greyLight text-contentLight h-4 text-sm  placeholder:text-greyDark'
                             field='appliedPosition'
                             onChange={handleInputChange}
                         />
@@ -224,7 +240,7 @@ const AddRecruiterModal = ({
                                         e.target.value
                                     )
                                 }
-                                className='bg-white border border-greyLight text-contentLight rounded-md px-2 py-2'>
+                                className='bg-white border border-greyLight text-contentLight rounded-md px-0.5 py-0.5 text-sm h-4'>
                                 <option value='Screening in Process'>
                                     Screening in Process
                                 </option>
@@ -244,7 +260,7 @@ const AddRecruiterModal = ({
                             label='Follow-up Date'
                             type='date'
                             value={formData.follow_up_date}
-                            className='bg-white border-greyLight text-contentLight'
+                            className='bg-white border-greyLight text-contentLight h-4 text-sm  placeholder:text-greyDark'
                             field='follow_up_date'
                             onChange={handleInputChange}
                         />
@@ -252,7 +268,7 @@ const AddRecruiterModal = ({
                             label='Last Interview Date'
                             type='date'
                             value={formData.last_interview_date}
-                            className='bg-white border-greyLight text-contentLight'
+                            className='bg-white border-greyLight text-contentLight h-4 text-sm  placeholder:text-greyDark'
                             field='last_interview_date'
                             onChange={handleInputChange}
                         />
@@ -260,14 +276,13 @@ const AddRecruiterModal = ({
                             label='Link'
                             value={formData.link}
                             placeholder='Optional'
-                            className='bg-white border-greyLight text-contentLight'
+                            className='bg-white border-greyLight text-contentLight h-4 text-sm  placeholder:text-greyDark'
                             field='link'
                             onChange={handleInputChange}
                         />
                     </div>
                     <div>
-                        <Label htmlFor='comments' className='text-contentLight'>
-                            Comments
+                        <Label htmlFor='comments' className='text-contentLight'>Comments
                         </Label>
                         <Textarea
                             id='comments'
@@ -276,17 +291,17 @@ const AddRecruiterModal = ({
                             onChange={(e: any) =>
                                 handleInputChange("comments", e.target.value)
                             }
-                            className='bg-white border-greyLight text-contentLight border resize-none'
+                            className='bg-white border-greyLight text-contentLight border resize-none h-5 text-sm  placeholder:text-greyDark'
                             rows={3}
                         />
                     </div>
-                    <DialogFooter className='flex flex-col-reverse md:flex-row gap-2'>
+                    <DialogFooter className='flex flex-col-reverse md:flex-row gap-1'>
                         <Button
                             variant="OUTLINE"
                             size="SMALL"
                             text="Cancel"
                             onClick={onClose}
-                            className='text-sm h-5'
+                            className='text-sm h-5 px-3'
                         />
                         <Button
                             variant="PRIMARY"
@@ -299,7 +314,7 @@ const AddRecruiterModal = ({
                                     ? "Update Contact"
                                     : "Create Contact"}
                             disabled={loading}
-                            className='text-sm h-5'
+                            className='text-sm h-5 px-3'
                         />
                     </DialogFooter>
                 </form>
