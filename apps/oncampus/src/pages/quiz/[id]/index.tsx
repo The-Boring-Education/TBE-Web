@@ -132,7 +132,7 @@ export default function QuizPage() {
         // gamification: best-effort
         gamificationApi
           .updateuserGamificationPoints({ userId: mongoUserId, actionType: "COMPLETE_QUIZ" } as any)
-          .catch(() => {});
+          .catch(() => { });
       }
     } catch {
       // ignore submit errors, still show local results
@@ -233,7 +233,7 @@ export default function QuizPage() {
           </div>
 
           {/* Options */}
-          <div className="p-6 space-y-3">
+          <div className="p-4 space-y-2">
             {currentQuestion.options.map((option, index) => {
               const isSelected = selectedAnswer === index;
               return (
@@ -242,25 +242,25 @@ export default function QuizPage() {
                   type="button"
                   onClick={() => selectAnswer(index)}
                   className={[
-                    "w-full text-left px-1 py-1 rounded-lg border transition-all",
+                    "w-full text-left px-1 py-1 rounded-lg border transition-all flex items-center",
                     isSelected
                       ? "border-[#FF5757] bg-[#FF5757]/10"
                       : "border-gray-800 hover:border-[#FF5757]/50 hover:bg-[#FF5757]/5",
                   ].join(" ")}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-center gap-3">
                     <div
                       className={[
-                        "mt-0.5 w-8 h-8 rounded-full border flex items-center justify-center text-sm font-semibold flex-shrink-0",
+                        " w-7 h-7 rounded-full border flex items-center justify-center text-sm font-semibold flex-shrink-0",
                         isSelected ? "border-[#FF5757] bg-[#FF5757] text-white" : "border-gray-700 text-gray-300",
                       ].join(" ")}
                     >
                       {String.fromCharCode(65 + index)}
                     </div>
-                    <div className="flex-1 text-gray-100">
+                    <div className="ml-3 flex-1 text-gray-100 flex items-center">
                       <CodeRenderer content={option} theme="dark" className="max-w-none" />
                     </div>
-                    {isSelected && <CheckCircle2 className="w-5 h-5 text-[#FF5757]" />}
+                    {isSelected && <CheckCircle2 className="w-5 h-5 text-[#FF5757] ml-3 flex-shrink-0" />}
                   </div>
                 </button>
               );
