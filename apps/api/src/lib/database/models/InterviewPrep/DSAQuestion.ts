@@ -60,6 +60,12 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
   }
 );
 
+// Create indexes for efficient querying
+DSAQuestionSchema.index({ domain: 1 });
+DSAQuestionSchema.index({ difficulty: 1 });
+DSAQuestionSchema.index({ topics: 1 });
+DSAQuestionSchema.index({ companyTypes: 1 });
+
 const DSAQuestion: Model<DSAQuestionModel> =
   models?.DSAQuestion ||
   model<DSAQuestionModel>(
