@@ -31,7 +31,8 @@ const DATABASE_MODELS = {
   USER_QUIZ_ANALYTICS: 'UserQuizAnalytics',
   LEADERBOARD: 'Leaderboard',
   USER_INTEREST: 'UserInterest',
-  COUPON: 'Coupon'
+  COUPON: 'Coupon',
+  DSA_QUESTION: 'DSAQuestion'
 };
 
 export const FEEDBACK_TYPES = [
