@@ -251,13 +251,13 @@ export default function QuizPage() {
                   <div className="flex items-center gap-3">
                     <div
                       className={[
-                        " w-7 h-7 rounded-full border flex items-center justify-center text-sm font-semibold flex-shrink-0",
+                        " w-6 h-6 rounded-full border flex items-center justify-center text-sm font-semibold flex-shrink-0",
                         isSelected ? "border-[#FF5757] bg-[#FF5757] text-white" : "border-gray-700 text-gray-300",
                       ].join(" ")}
                     >
                       {String.fromCharCode(65 + index)}
                     </div>
-                    <div className="ml-3 flex-1 text-primary flex items-center">
+                    <div className="ml-3 flex-1 text-primary text-base font-bold flex items-center">
                       <CodeRenderer content={option} theme="dark" className="max-w-none" />
                     </div>
                     {isSelected && <CheckCircle2 className="w-5 h-5 text-[#FF5757] ml-3 flex-shrink-0" />}
