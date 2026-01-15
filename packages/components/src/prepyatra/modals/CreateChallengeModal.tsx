@@ -185,7 +185,7 @@ const CreateChallengeModal = ({
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[900px] max-h-[85vh] overflow-y-auto glass border-greyLight">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-contentLight flex items-center gap-2">
+            <DialogTitle className="text-2xl font-bold text-contentLight flex items-center gap-1">
               Create Your Challenge
             </DialogTitle>
             <DialogDescription className="text-greyDark">
@@ -205,7 +205,7 @@ const CreateChallengeModal = ({
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="predefined" className="space-y-4 mt-6">
+            <TabsContent value="predefined" className="space-y-4 mt-5">
               <div className="grid gap-4">
                 {PREDEFINED_CHALLENGES.map((template) => (
                   <Card
@@ -246,7 +246,7 @@ const CreateChallengeModal = ({
                       </CardDescription>
                       <div className="flex flex-wrap gap-1">
                         {template.tags.slice(0, 3).map((tag, index) => (
-                          <Badge key={index} variant="outline" className="text-xs border-primary/40 text-primary/30 mt-1">
+                          <Badge key={index} variant="outline" className="text-xs border-primary/70 text-primary/70 mt-1">
                             {tag}
                           </Badge>
                         ))}
