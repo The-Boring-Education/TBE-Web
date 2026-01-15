@@ -1,14 +1,14 @@
-import type { PredefinedChallengeTemplate} from "@tbe/constants";
-import {PREDEFINED_CHALLENGES} from "@tbe/constants";
-import {challengesService} from "@tbe/services";
-import {ArrowLeft, Calendar, Clock, Play,Plus, Sparkles, Star, Target, X, Zap} from "lucide-react";
-import {useEffect,useState} from "react";
-import {toast} from "sonner";
+import type { PredefinedChallengeTemplate } from "@tbe/constants";
+import { PREDEFINED_CHALLENGES } from "@tbe/constants";
+import { challengesService } from "@tbe/services";
+import { ArrowLeft, Calendar, Clock, Play, Plus, Sparkles, Star, Target, X, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import Button from "../../common/Buttons/Button";
-import {usePrepYatraGamificationContext} from "../contexts/GamificationContext";
-import {Badge} from "../ui/badge";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card";
+import { usePrepYatraGamificationContext } from "../contexts/GamificationContext";
+import { Badge } from "../ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import {
   Dialog,
   DialogContent,
@@ -16,11 +16,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-  } from "../ui/dialog";
-import {Input} from "../ui/input";
-import {Label} from "../ui/label";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "../ui/tabs";
-import {Textarea} from "../ui/textarea";
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Textarea } from "../ui/textarea";
 
 interface CreateChallengeModalProps {
   isOpen: boolean;
@@ -35,7 +35,7 @@ const CreateChallengeModal = ({
   onChallengeCreated,
   userId
 }: CreateChallengeModalProps) => {
-  const {showCelebration} = usePrepYatraGamificationContext();
+  const { showCelebration } = usePrepYatraGamificationContext();
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState("predefined");
   const [selectedTemplate, setSelectedTemplate] = useState<PredefinedChallengeTemplate | null>(null);
@@ -60,8 +60,8 @@ const CreateChallengeModal = ({
   // Reset form when modal opens/closes
   useEffect(() => {
     if (isOpen) {
-      setCustomForm({name: "", description: "", totalDays: "", category: ""});
-      setCustomizeForm({name: "", description: "", totalDays: "", category: ""});
+      setCustomForm({ name: "", description: "", totalDays: "", category: "" });
+      setCustomizeForm({ name: "", description: "", totalDays: "", category: "" });
       setSelectedTab("predefined");
       setSelectedTemplate(null);
       setShowCustomizeModal(false);
@@ -70,14 +70,14 @@ const CreateChallengeModal = ({
 
   const handleCustomInputChange = (field: string, value: string) => {
     setCustomForm(prev => {
-      const newState = {...prev, [field]: value};
+      const newState = { ...prev, [field]: value };
       return newState;
     });
   };
 
   const handleCustomizeInputChange = (field: string, value: string) => {
     setCustomizeForm(prev => {
-      const newState = {...prev, [field]: value};
+      const newState = { ...prev, [field]: value };
       return newState;
     });
   };
@@ -94,7 +94,7 @@ const CreateChallengeModal = ({
   };
 
   const handlePredefinedChallengeCreate = async () => {
-    if (!selectedTemplate) {return;}
+    if (!selectedTemplate) { return; }
 
     setLoading(true);
     try {
@@ -127,9 +127,9 @@ const CreateChallengeModal = ({
 
     // More specific validation
     const missingFields = [];
-    if (!customForm.name?.trim()) {missingFields.push("Challenge Name");}
-    if (!customForm.totalDays?.trim()) {missingFields.push("Duration");}
-    if (!customForm.category?.trim()) {missingFields.push("Category");}
+    if (!customForm.name?.trim()) { missingFields.push("Challenge Name"); }
+    if (!customForm.totalDays?.trim()) { missingFields.push("Duration"); }
+    if (!customForm.category?.trim()) { missingFields.push("Category"); }
 
     if (missingFields.length > 0) {
       toast.error(`Missing required fields: ${missingFields.join(", ")}`);
@@ -194,13 +194,13 @@ const CreateChallengeModal = ({
           </DialogHeader>
 
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full py-4">
-            <TabsList className="grid w-full grid-cols-2 bg-white/50">
-              <TabsTrigger value="predefined" className="data-[state=active]:bg-primary">
-                <Sparkles className="w-4 h-4 mr-2" />
+            <TabsList className="grid w-full grid-cols-2 ">
+              <TabsTrigger value="predefined" className="text-[#FF5757] data-[state=active]:text-white data-[state=active]:bg-[#FF5757] border-b-2 border-transparent data-[state=active]:border-[#FF5757] transition-all bg-transparent hover:text-[#FF5757] hover:bg-[#FF5757]/5">
+                <Sparkles className="w-4 h-4 mr-2 text-inherit transition-colors" />
                 Popular Challenges
               </TabsTrigger>
-              <TabsTrigger value="custom" className="data-[state=active]:bg-primary">
-                <Plus className="w-2 h- mr-2" />
+              <TabsTrigger value="custom" className="text-[#FF5757] data-[state=active]:text-white data-[state=active]:bg-[#FF5757] border-b-2 border-transparent data-[state=active]:border-[#FF5757] transition-all bg-transparent hover:text-[#FF5757] hover:bg-[#FF5757]/5">
+                <Plus className="w-4 h-4 mr-2 text-inherit transition-colors" />
                 Create Custom
               </TabsTrigger>
             </TabsList>
@@ -215,29 +215,29 @@ const CreateChallengeModal = ({
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
                           <div className={`p-3 rounded-lg bg-gradient-to-br ${template.gradient} bg-opacity-20`}>
                             <span className="text-2xl">{template.icon}</span>
                           </div>
                           <div className="flex-1">
                             <CardTitle className="text-lg text-contentLight">{template.name}</CardTitle>
-                            <div className="flex items-center gap-2 mt-2">
-                              <div className={`bg-${template.color}-500/20 text-${template.color}-300 border-${template.color}-500/30 text-sm h-5 px-2 py-1 rounded-full`}>
-                                <Calendar className="w-3 h-3 mr-1" />
+                            <div className="flex items-center gap-2 ">
+                              <Badge className={`bg-white/80 text-[#FF5757] hover:bg-[#FF5757] hover:text-white border-[#FF5757]/30 hover:border-[#FF5757] text-xs h-5 px-2 py-0.5 rounded-full  flex-shrink-0 whitespace-nowrap transition-all`}>
+                                <Calendar className="w-3 h-3 mr-1 inline" />
                                 {template.totalDays} days
-                              </div>
-                              <Badge className={getDifficultyColor(template.difficulty)}>
-                                <Star className="w-3 h-3 mr-1" />
+                              </Badge>
+                              <Badge className={`bg-white/80 text-[#FF5757] hover:bg-[#FF5757] hover:text-white border-[#FF5757]/30 hover:border-[#FF5757] text-xs h-5 px-2 py-0.5 flex-shrink-0 whitespace-nowrap transition-all`}>
+                                <Star className="w-3 h-3 mr-1 flex-shrink-0" />
                                 {template.difficulty}
                               </Badge>
-                              <Badge variant="outline" className="border-greyLight text-greyDark">
+                              <Badge variant="outline" className="bg-white/80 text-[#FF5757] hover:bg-[#FF5757] hover:text-white border-[#FF5757]/30 hover:border-[#FF5757] text-xs h-5 px-2 py-0.5 flex-shrink-0 whitespace-nowrap transition-all">
                                 <Clock className="w-3 h-3 mr-1" />
                                 ~{template.estimatedHoursPerDay}h/day
                               </Badge>
                             </div>
                           </div>
                         </div>
-                        <Target className="w-5 h-5 text-gray-400" />
+                        <Target className="w-5 h-5 text-gray-400 hover:text-primary transition-all" />
                       </div>
                     </CardHeader>
                     <CardContent>
@@ -288,7 +288,7 @@ const CreateChallengeModal = ({
                     className="bg-white border-greyLight text-contentLight border resize-none focus:border-primary"
                     rows={3}
                     maxLength={500}
-                    
+
                   />
                 </div>
 
@@ -314,8 +314,8 @@ const CreateChallengeModal = ({
                     <Label htmlFor="category" className="text-contentLight">
                       Category <span className="text-red-400">*</span>
                     </Label>
-                    <select 
-                      value={customForm.category} 
+                    <select
+                      value={customForm.category}
                       onChange={(e) => {
                         handleCustomInputChange("category", e.target.value);
                       }}
@@ -328,7 +328,7 @@ const CreateChallengeModal = ({
                         </option>
                       ))}
                     </select>
-                      
+
                     {customForm.category && (
                       <div className="flex items-center gap-2 text-sm text-green-600">
                         <div className="w-2 h-2 bg-green-600 rounded-full" />
@@ -366,115 +366,117 @@ const CreateChallengeModal = ({
             </TabsContent>
           </Tabs>
         </DialogContent>
-      </Dialog>
+      </Dialog >
 
       {/* Customize Predefined Challenge Modal */}
-      {selectedTemplate && (
-        <Dialog open={showCustomizeModal} onOpenChange={setShowCustomizeModal}>
-          <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto glass border-greyLight">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-bold text-contentLight flex items-center gap-2">
-                <Zap className="w-5 h-5 text-primary" />
-                Customize Your Challenge
-              </DialogTitle>
-              <DialogDescription className="text-greyDark">
-                Personalize "{selectedTemplate.name}" before starting
-              </DialogDescription>
-            </DialogHeader>
+      {
+        selectedTemplate && (
+          <Dialog open={showCustomizeModal} onOpenChange={setShowCustomizeModal}>
+            <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto glass border-greyLight">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold text-contentLight flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-primary" />
+                  Customize Your Challenge
+                </DialogTitle>
+                <DialogDescription className="text-greyDark">
+                  Personalize "{selectedTemplate.name}" before starting
+                </DialogDescription>
+              </DialogHeader>
 
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="customize-name" className="text-contentLight">
-                  Challenge Name <span className="text-red-400">*</span>
-                </Label>
-                <Input
-                  id="customize-name"
-                  value={customizeForm.name}
-                  onChange={(e) => handleCustomizeInputChange("name", e.target.value)}
-                  className="bg-white border-greyLight text-contentLight focus:border-primary"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="customize-description" className="text-contentLight">
-                  Description
-                </Label>
-                <Textarea
-                  id="customize-description"
-                  value={customizeForm.description}
-                  onChange={(e) => handleCustomizeInputChange("description", e.target.value)}
-                  className="bg-white border-greyLight text-contentLight focus:border-primary resize-none"
-                  rows={3}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="customize-days" className="text-contentLight">
-                    Duration (Days) <span className="text-red-400">*</span>
+                  <Label htmlFor="customize-name" className="text-contentLight">
+                    Challenge Name <span className="text-red-400">*</span>
                   </Label>
                   <Input
-                    id="customize-days"
-                    type="number"
-                    value={customizeForm.totalDays}
-                    onChange={(e) => handleCustomizeInputChange("totalDays", e.target.value)}
+                    id="customize-name"
+                    value={customizeForm.name}
+                    onChange={(e) => handleCustomizeInputChange("name", e.target.value)}
                     className="bg-white border-greyLight text-contentLight focus:border-primary"
-                    min="1"
-                    max="365"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="customize-category" className="text-contentLight">
-                    Category
+                  <Label htmlFor="customize-description" className="text-contentLight">
+                    Description
                   </Label>
-                  <Input
-                    id="customize-category"
-                    value={customizeForm.category}
-                    onChange={(e) => handleCustomizeInputChange("category", e.target.value)}
-                    className="bg-white border-greyLight text-contentLight focus:border-primary"
+                  <Textarea
+                    id="customize-description"
+                    value={customizeForm.description}
+                    onChange={(e) => handleCustomizeInputChange("description", e.target.value)}
+                    className="bg-white border-greyLight text-contentLight focus:border-primary resize-none"
+                    rows={3}
                   />
                 </div>
-              </div>
 
-              {/* Learning Path Preview */}
-              <div className="space-y-2">
-                <Label className="text-contentLight">Learning Path Preview</Label>
-                <div className="bg-white/50 p-3 rounded-lg border border-greyLight">
-                  <div className="text-sm text-greyDark">
-                    {selectedTemplate.learningPath.map((item, index) => (
-                      <div key={index} className="flex items-center gap-2 mb-1">
-                        <span className="text-primary">•</span>
-                        <span>{item}</span>
-                      </div>
-                    ))}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="customize-days" className="text-contentLight">
+                      Duration (Days) <span className="text-red-400">*</span>
+                    </Label>
+                    <Input
+                      id="customize-days"
+                      type="number"
+                      value={customizeForm.totalDays}
+                      onChange={(e) => handleCustomizeInputChange("totalDays", e.target.value)}
+                      className="bg-white border-greyLight text-contentLight focus:border-primary"
+                      min="1"
+                      max="365"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="customize-category" className="text-contentLight">
+                      Category
+                    </Label>
+                    <Input
+                      id="customize-category"
+                      value={customizeForm.category}
+                      onChange={(e) => handleCustomizeInputChange("category", e.target.value)}
+                      className="bg-white border-greyLight text-contentLight focus:border-primary"
+                    />
+                  </div>
+                </div>
+
+                {/* Learning Path Preview */}
+                <div className="space-y-2">
+                  <Label className="text-contentLight">Learning Path Preview</Label>
+                  <div className="bg-white/50 p-3 rounded-lg border border-greyLight">
+                    <div className="text-sm text-greyDark">
+                      {selectedTemplate.learningPath.map((item, index) => (
+                        <div key={index} className="flex items-center gap-2 mb-1">
+                          <span className="text-primary">•</span>
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <DialogFooter className="flex flex-col-reverse md:flex-row gap-2 mt-6">
-              <Button
-                variant="OUTLINE"
-                onClick={() => setShowCustomizeModal(false)}
-                size="SMALL"
-                text="Back"
-                icon={<ArrowLeft className="w-2 h-2 mr-2" />}
-                className="text-sm h-5"
-              />
-              <Button
-                onClick={handlePredefinedChallengeCreate}
-                variant="PRIMARY"
-                disabled={loading}
-                size="SMALL"
-                text={loading ? "Creating..." : "Start Challenge"}
-                icon={<Play className="w-2 h-2 mr-2" />}
-                className="text-sm h-5"
-              />
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
+              <DialogFooter className="flex flex-col-reverse md:flex-row gap-2 mt-6">
+                <Button
+                  variant="OUTLINE"
+                  onClick={() => setShowCustomizeModal(false)}
+                  size="SMALL"
+                  text="Back"
+                  icon={<ArrowLeft className="w-2 h-2 mr-2" />}
+                  className="text-sm h-5"
+                />
+                <Button
+                  onClick={handlePredefinedChallengeCreate}
+                  variant="PRIMARY"
+                  disabled={loading}
+                  size="SMALL"
+                  text={loading ? "Creating..." : "Start Challenge"}
+                  icon={<Play className="w-2 h-2 mr-2" />}
+                  className="text-sm h-5"
+                />
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )
+      }
     </>
   );
 };

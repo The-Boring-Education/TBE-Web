@@ -245,7 +245,7 @@ export default function QuizPage() {
                     "w-full text-left px-1 py-1 rounded-lg border transition-all flex items-center",
                     isSelected
                       ? "border-[#FF5757] bg-[#FF5757]/10"
-                      : "border-gray-800 hover:border-[#FF5757]/50 hover:bg-[#FF5757]/5",
+                      : "border-gray-800 hover:border-[#FF5757] hover:bg-[#FF5757]/5",
                   ].join(" ")}
                 >
                   <div className="flex items-center gap-3">
@@ -257,7 +257,7 @@ export default function QuizPage() {
                     >
                       {String.fromCharCode(65 + index)}
                     </div>
-                    <div className="ml-3 flex-1 text-gray-100 flex items-center">
+                    <div className="ml-3 flex-1 text-primary flex items-center">
                       <CodeRenderer content={option} theme="dark" className="max-w-none" />
                     </div>
                     {isSelected && <CheckCircle2 className="w-5 h-5 text-[#FF5757] ml-3 flex-shrink-0" />}
