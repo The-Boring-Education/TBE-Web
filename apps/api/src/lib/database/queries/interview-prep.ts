@@ -4,11 +4,13 @@ import type {
     AddInterviewSheetRequestPayloadProps,
     BaseInterviewSheetResponseProps,
     DatabaseQueryResponseType,
+    DSADifficultyType,
+    DSADomainType,
     SheetEnrollmentRequestProps,
     UpdateInterviewSheetRequestPayloadProps
 } from "@/lib/interfaces"
 
-import { InterviewSheet, UserSheet } from "../models"
+import { DSAQuestion, InterviewSheet, UserSheet } from "../models"
 import { toObjectId } from "./common"
 import { updateUserPointsInDB } from "./gamification"
 
@@ -122,7 +124,7 @@ const updateInterviewSheetInDB = async ({
 
         return { data: updatedCourse }
     } catch (error) {
-        return { error: "Failed while updating sheet" }
+        return { error: "Failed while updating sheet", details: error }
     }
 }
 
@@ -152,7 +154,7 @@ const updateInterviewQuestionInDB = async (
 
         return { data: course }
     } catch (error) {
-        return { error: "Failed to update chapter to course" }
+        return { error: "Failed to update chapter to course", details: error }
     }
 }
 
@@ -170,7 +172,7 @@ const deleteQuestionFromSheetInDB = async (
 
         return { data: course }
     } catch (error) {
-        return { error: "Failed to delete question from sheet" }
+        return { error: "Failed to delete question from sheet", details: error }
     }
 }
 
@@ -191,7 +193,7 @@ const addQuestionToInterviewSheetInDB = async (
 
         return { data: updatedSheet }
     } catch (error) {
-        return { error: "Failed to add question to interview sheet" }
+        return { error: "Failed to add question to interview sheet", details: error }
     }
 }
 
@@ -221,7 +223,7 @@ const enrollInASheet = async ({
 
         return { data: userSheet }
     } catch (error) {
-        return { error: "Failed while enrolling in a sheet" }
+        return { error: "Failed while enrolling in a sheet", details: error }
     }
 }
 
@@ -233,7 +235,7 @@ const getEnrolledSheetFromDB = async ({
         const enrolledSheet = await UserSheet.findOne({ userId, sheetId })
         return { data: enrolledSheet }
     } catch (error) {
-        return { error: "Failed while fetching enrolled sheet" }
+        return { error: "Failed while fetching enrolled sheet", details: error }
     }
 }
 
@@ -244,18 +246,39 @@ const getAllEnrolledSheetsFromDB = async (
         const enrolledSheets = await UserSheet.find({ userId })
             .populate({
                 path: "sheet",
-                select: modelSelectParams.coursePreview
+                select: `${modelSelectParams.coursePreview} questions`
             })
+            .sort({ updatedAt: -1 }) // Sort by last updated, most recent first
             .exec()
 
         return {
-            data: enrolledSheets.map((sheet) => ({
-                ...sheet.sheet.toObject(),
-                isEnrolled: true
-            }))
+            data: enrolledSheets.map((userSheet) => {
+                const sheet = userSheet.sheet as any
+                const totalQuestions = sheet?.questions?.length || 0
+                const completedQuestions = userSheet.questions?.filter(
+                    (q: any) => q.isCompleted
+                ).length || 0
+                const progressPercentage = totalQuestions > 0
+                    ? Math.round((completedQuestions / totalQuestions) * 100)
+                    : 0
+
+                // Access updatedAt from the document (Mongoose adds it via timestamps)
+                const userSheetObj = userSheet.toObject() as any
+
+                return {
+                    ...sheet.toObject(),
+                    isEnrolled: true,
+                    lastUpdated: userSheetObj.updatedAt || userSheetObj.createdAt,
+                    progress: {
+                        completed: completedQuestions,
+                        total: totalQuestions,
+                        percentage: progressPercentage
+                    }
+                }
+            })
         }
     } catch (error) {
-        return { error: "Failed while fetching enrolled sheets" }
+        return { error: "Failed while fetching enrolled sheets", details: error }
     }
 }
 
@@ -278,7 +301,7 @@ const markQuestionCompletedByUser = async (
 
         return { data: updatedSheet }
     } catch (error) {
-        return { error: "Failed to mark question as completed" }
+        return { error: "Failed to mark question as completed", details: error }
     }
 }
 
@@ -294,11 +317,11 @@ const getAllQuestionsByUser = async (userId: string) => {
 
         const allQuestions = userSheets.flatMap((sheet) => sheet.questions)
 
-        return { data: allQuestions, error: null }
+        return { data: allQuestions }
     } catch (error) {
         return {
-            data: null,
-            error: "Error fetching questions from the database"
+            error: "Error fetching questions from the database",
+            details: error
         }
     }
 }
@@ -327,7 +350,7 @@ const getASheetFromDBById = async (
 
         return { data: sheet }
     } catch (error) {
-        return { error: `Failed while fetching a sheet ${error}` }
+        return { error: `Failed while fetching a sheet`, details: error }
     }
 }
 
@@ -367,7 +390,7 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
             } as BaseInterviewSheetResponseProps
         }
     } catch (error) {
-        return { error: "Failed to fetch courses with chapter status" }
+        return { error: "Failed to fetch courses with chapter status", details: error }
     }
 }
 
@@ -392,7 +415,7 @@ const markQuestionStarredByUser = async (
 
         return { data: updatedSheet }
     } catch (error) {
-        return { error: "Failed to mark question as starred" }
+        return { error: "Failed to mark question as starred", details: error }
     }
 }
 
@@ -401,7 +424,7 @@ const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
         const userSheet = await UserSheet.findOne({ userId, sheetId })
 
         if (!userSheet) {
-            return { data: [], error: "UserSheet not found" }
+            return { error: "UserSheet not found" }
         }
 
         const starredQuestions = userSheet.questions.filter(
@@ -409,7 +432,7 @@ const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
         )
         return { data: starredQuestions }
     } catch (error) {
-        return { error: "Failed to get starred questions" }
+        return { error: "Failed to get starred questions", details: error }
     }
 }
 
@@ -442,6 +465,72 @@ const deleteInterviewSheetFromDB = async (
   }
 };
 
+const getDSAQuestionsGroupedByTopic = async (
+  domain: DSADomainType = "GENERAL",
+  difficulty?: DSADifficultyType,
+  companyType?: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    // Build match stage for filtering
+    const matchStage: any = {
+      domain: { $in: [domain] }
+    };
+
+    if (difficulty) {
+      matchStage.difficulty = difficulty;
+    }
+
+    if (companyType) {
+      matchStage.companyTypes = { $in: [companyType] };
+    }
+
+    // Fetch all matching questions first
+    const allQuestions = await DSAQuestion.find(matchStage).lean();
+
+    // Group questions by each topic they belong to
+    const groupedQuestions: Record<string, any[]> = {};
+    
+    allQuestions.forEach((question: any) => {
+      const questionTopics = question.topics || [];
+      questionTopics.forEach((topic: string) => {
+        if (!groupedQuestions[topic]) {
+          groupedQuestions[topic] = [];
+        }
+        // Check if question already exists in this topic group (avoid duplicates)
+        const exists = groupedQuestions[topic].some(
+          (q: any) => q._id.toString() === question._id.toString()
+        );
+        if (!exists) {
+          groupedQuestions[topic].push({
+            _id: question._id,
+            title: question.title,
+            content: question.content,
+            domain: question.domain,
+            difficulty: question.difficulty,
+            companyTypes: question.companyTypes,
+            topics: question.topics, // Preserve full topics array
+            createdAt: question.createdAt,
+            updatedAt: question.updatedAt
+          });
+        }
+      });
+    });
+
+    // Sort topics alphabetically and questions within each topic
+    const sortedGroupedQuestions: Record<string, any[]> = {};
+    Object.keys(groupedQuestions)
+      .sort()
+      .forEach((topic) => {
+        sortedGroupedQuestions[topic] = groupedQuestions[topic] || [];
+      });
+
+    return { data: sortedGroupedQuestions };
+  } catch (error) {
+    console.error("Error fetching DSA questions grouped by topic:", error);
+    return { error: "Failed to fetch DSA questions grouped by topic", details: error };
+  }
+};
+
 export {
     addAInterviewSheetToDB,
     addQuestionToInterviewSheetInDB,
@@ -452,6 +541,7 @@ export {
     getAllInterviewSheetsFromDB,
     getAllQuestionsByUser,
     getASheetForUserFromDB,
+    getDSAQuestionsGroupedByTopic,
     getEnrolledSheetFromDB,
     getInterviewSheetByIDFromDB,
     getInterviewSheetBySlugFromDB,

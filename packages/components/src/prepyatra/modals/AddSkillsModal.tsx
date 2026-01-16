@@ -1,7 +1,7 @@
 import { useToast } from "@tbe/hooks"
 import { trackEvent } from "@tbe/utils"
 import { AlertTriangle, Plus, X } from "lucide-react"
-import React, { useRef,useState } from "react"
+import React, { useRef, useState } from "react"
 
 import Button from "../../common/Buttons/Button"
 import Text from "../../common/Typography/Text"
@@ -78,7 +78,7 @@ const AddSkillsModal = ({
                 })
                 try {
                     trackEvent("skill_add", { category: "skills", skill })
-                } catch {}
+                } catch { }
                 if (onSkillsUpdated) {
                     onSkillsUpdated()
                 }
@@ -113,7 +113,7 @@ const AddSkillsModal = ({
             })
             try {
                 trackEvent("skill_remove", { category: "skills", skill })
-            } catch {}
+            } catch { }
             if (onSkillsUpdated) {
                 onSkillsUpdated()
             }
@@ -152,7 +152,7 @@ const AddSkillsModal = ({
                         field='skill'
                         value={inputValue}
                         onChange={(field, value) => setInputValue(value)}
-                        placeholder='Type a skill and press Enter...'
+                        placeholder='Type a skill and press Add Skill...'
                         className='bg-white border-greyLight text-contentLight'
                         required
                     />
@@ -173,7 +173,8 @@ const AddSkillsModal = ({
                                     variant='OUTLINE'
                                     size='SMALL'
                                     text={skill}
-                                    className='font-medium px-4 py-1.5 text-sm rounded-full text-black pr-8'
+                                    className='font-medium px-4 py-2 text-sm rounded-full text-black pr-6'
+
                                 />
                                 <button
                                     type='button'
@@ -202,7 +203,7 @@ const AddSkillsModal = ({
                             text={loading ? "Adding..." : "Add Skill"}
                             disabled={loading || !inputValue.trim()}
                             className='text-sm h-5'
-                            icon={<Plus className='w-4 h-4 mr-1' />}
+                            icon={<Plus className='w-4 h-4' />}
                             isLoading={loading}
                             animationType='BOUNCE'
                         />
