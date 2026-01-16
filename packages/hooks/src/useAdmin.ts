@@ -36,17 +36,31 @@ export const useAdminData = () => {
       setError(null);
 
       try {
-        const baseUrl = routes.api.base;
-        const url = new URL(endpoint, baseUrl);
-        if (params) {
-          Object.entries(params).forEach(([key, value]) => {
-            if (value !== undefined && value !== null) {
-              url.searchParams.append(key, value.toString());
-            }
-          });
+        const baseUrl = routes.api.base || 'http://localhost:3000/api/v1';
+        let fullUrl: string;
+        
+        try {
+          const url = new URL(endpoint, baseUrl);
+          if (params) {
+            Object.entries(params).forEach(([key, value]) => {
+              if (value !== undefined && value !== null) {
+                url.searchParams.append(key, value.toString());
+              }
+            });
+          }
+          fullUrl = url.toString();
+        } catch {
+          // Fallback for invalid URLs (e.g., during SSG/build time)
+          const queryString = params
+            ? '?' + Object.entries(params)
+                .filter(([, value]) => value !== undefined && value !== null)
+                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value.toString())}`)
+                .join('&')
+            : '';
+          fullUrl = `${baseUrl}${endpoint}${queryString}`;
         }
 
-        const response = await fetch(url.toString());
+        const response = await fetch(fullUrl);
         const result = await response.json();
 
         if (!response.ok) {

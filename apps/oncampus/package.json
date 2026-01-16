@@ -1,0 +1,41 @@
+{
+  "name": "@tbe/oncampus",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3007",
+    "build": "next build",
+    "postbuild": "next-sitemap",
+    "start": "next start -p 3007",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "^18",
+    "react-dom": "^18",
+    "next": "13.5.6",
+    "react-query": "^3.39.3",
+    "@tbe/components": "workspace:*",
+    "@tbe/hooks": "workspace:*",
+    "@tbe/utils": "workspace:*",
+    "@tbe/types": "workspace:*",
+    "@tbe/services": "workspace:*",
+    "@tbe/constants": "workspace:*",
+    "@tbe/interface": "workspace:*",
+    "@tbe/auth": "workspace:*",
+    "@tbe/config": "workspace:*"
+  },
+  "devDependencies": {
+    "next-sitemap": "^4.2.3",
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10",
+    "postcss": "^8",
+    "tailwindcss": "^3",
+    "@tailwindcss/typography": "^0.5.9",
+    "@tailwindcss/forms": "^0.5.3",
+    "eslint": "^8",
+    "@tbe/eslint-config": "workspace:*"
+  }
+}

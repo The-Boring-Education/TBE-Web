@@ -72,6 +72,7 @@ export interface LinkButtonProps extends LinkProps {
   buttonProps: ButtonProps;
   href: string;
   className?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface ButtonProps {
@@ -282,6 +283,7 @@ export interface PrimaryCardWithCTAProps {
   target?: "_blank";
   launchingOn?: string;
   isPremium?: boolean;
+  roadmap?: string;
   isPurchased?: boolean;
 }
 
@@ -295,7 +297,7 @@ export interface LandingPageHeroProps {
 
 interface BaseCardContainerProps {
   heading: string;
-  focusText: string;
+  focusText?: string;
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
   subtext?: string;
 }
@@ -346,6 +348,7 @@ export interface ProjectHeroMetaContainerProps {
   subtitle: string;
   title: string;
   titleClassName?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface ProjectHeroContainerProps {
@@ -376,6 +379,7 @@ export interface SheetHeroContainerProps {
   isPremium?: boolean;
   isPurchased?: boolean;
   redirectTo?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface AccordionProps {
@@ -422,11 +426,13 @@ export interface QuestionLinkProps {
   currentQuestionId: string;
   handleQuestionClick: (question: string, questionId: string) => void;
   frequency: QuestionFrequencyType;
+  theme?: 'light' | 'dark';
 }
 
 export interface MDXRendererProps {
   mdxSource: string;
   actions?: ReactNode[];
+  theme?: 'light' | 'dark';
 }
 
 export interface AlertProps {
@@ -844,8 +850,9 @@ export interface StarButtonProps {
 }
 
 export interface LoginCardNewProps {
-  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra";
+    variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus";
   customRedirectPath?: string;
+  theme?: "light" | "dark";
 }
 
 export interface PrepLog {

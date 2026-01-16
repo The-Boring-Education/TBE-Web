@@ -212,6 +212,91 @@ NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
 
 Each app can override shared variables with its own `.env.local` file.
 
+## 🔍 SEO & Indexability
+
+Automated SEO tooling for all TBE apps.
+
+### SEO Auditing
+
+```bash
+# Run Lighthouse SEO audit locally (requires apps running)
+pnpm seo:audit
+
+# Run against production URLs
+pnpm seo:audit:prod
+```
+
+### Sitemap Generation
+
+Sitemaps and robots.txt are automatically generated during build via `next-sitemap`:
+
+```bash
+# Build any app - sitemap is generated in postbuild
+pnpm build:platform
+# Output: public/sitemap.xml, public/robots.txt
+```
+
+### SEO Inspector
+
+Visual dashboard for monitoring SEO health across all apps:
+
+```bash
+# Start the SEO Inspector
+cd apps/testing
+pnpm dev
+# Open http://localhost:3099/seo
+```
+
+Features:
+- View Lighthouse scores for all apps
+- Validate meta tags for any URL
+- Monitor route priorities and indexing status
+- Track SEO improvements over time
+
+### JSON-LD Structured Data
+
+The SEO component supports rich snippets via JSON-LD:
+
+```tsx
+import { SEO } from "@tbe/components"
+
+// Course page with structured data
+<SEO
+  seoMeta={seoMeta}
+  schema={{
+    type: "Course",
+    course: {
+      name: "JavaScript Basics",
+      description: "Learn JavaScript from scratch",
+      skillLevel: "Beginner"
+    }
+  }}
+/>
+
+// FAQ page
+<SEO
+  seoMeta={seoMeta}
+  schema={{
+    type: "FAQPage",
+    faq: [
+      { question: "What is React?", answer: "A JavaScript library..." }
+    ]
+  }}
+/>
+```
+
+### CI/CD Integration
+
+Lighthouse audits run automatically:
+- On every push to `production` branch
+- Weekly on Monday at 6 AM UTC
+- Manual trigger via GitHub Actions
+
+Thresholds:
+- SEO: 85% minimum (fails build if below)
+- Accessibility: 80% warning
+- Best Practices: 75% warning
+
 ## 🧪 Testing
 
 Comprehensive testing suite with **Vitest**, **Playwright**, and **MSW** located in `apps/testing/`.

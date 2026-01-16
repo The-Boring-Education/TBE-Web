@@ -114,7 +114,7 @@ const PrepLogsShowcase = () => {
     }
 
     const handleGetStarted = () => {
-        router.push("/login");
+        router.push("/");
     };
 
     const totalTimeSpent = prepLogs.reduce(

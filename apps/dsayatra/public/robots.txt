@@ -1,14 +1,15 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# *
 User-agent: *
 Allow: /
+Allow: /pricing
+
+# *
+User-agent: *
+Disallow: /api/
+Disallow: /dashboard/
+
+# Host
+Host: https://dsayatra.theboringeducation.com
+
+# Sitemaps
+Sitemap: https://dsayatra.theboringeducation.com/sitemap.xml

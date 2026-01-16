@@ -80,7 +80,7 @@ const ResourceSharingShowcase = () => {
             </div>
             <Button
               variant="PRIMARY"
-              text=" Share Resource"
+              text="Share Resource"
               size="MEDIUM"
               className="bg-primary text-white hover:bg-primary/90 text-sm"
             />
@@ -186,7 +186,7 @@ const ResourceSharingShowcase = () => {
 
                     <Button
                       variant="PRIMARY"
-                      text=" View Resource"
+                      text="View Resource"
                       size="SMALL"
                       className="text-sm"
                     />

@@ -7,5 +7,6 @@ packages:
     - "apps/techyatra"
     - "apps/dsayatra"
     - "apps/resume-yatra"
+    - "apps/oncampus"
     - "apps/testing"
     - "packages/*"

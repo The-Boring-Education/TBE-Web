@@ -86,17 +86,19 @@ const links: NavbarDropdownLink[] = [
   },
 ];
 
-interface VariantConfig {
+interface NavbarVariantConfig {
   branding: React.ReactNode;
   dashboardRoute: string;
   borderClass?: string;
   requiresAuth?: boolean;
   showGamification?: boolean;
+  showCohorts?: boolean; // If false, hides Cohorts section
+  showLearn?: boolean; // If false, hides Learn section
 }
 
 const getNavbarVariantConfig = (
   Logo: ComponentType<any>
-): Record<string, VariantConfig> => ({
+): Record<string, NavbarVariantConfig> => ({
   default: {
     branding: <Logo />,
     dashboardRoute: "/user/dashboard",
@@ -184,6 +186,24 @@ const getNavbarVariantConfig = (
     borderClass: "border",
     requiresAuth: true,
     showGamification: false,
+  },
+  oncampus: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          OnCampus
+        </span>
+        <span className="text-[10px] text-greyDark dark:text-gray-400 -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    dashboardRoute: "/dashboard",
+    borderClass: "border-0 dark:border-0",
+    requiresAuth: true, // Non-auth app
+    showGamification: false,
+    showCohorts: false, // Hide Cohorts section
+    showLearn: false, // Hide Learn section
   },
 });
 
@@ -431,6 +451,26 @@ export const getLoginCardVariantConfig = (): Record<
     redirectPath: "/builder",
     termsHref: "/terms-and-conditions",
     privacyHref: "/privacy",
+  },
+  oncampus: {
+    title: "Welcome to OnCampus",
+    subtitle: "Sign in to continue your oncampus learning journey",
+    rightSectionTitle: "Why OnCampus?",
+    features: [
+      {
+        icon: Map,
+        title: "Personalized Roadmaps",
+        description: "Get customized learning paths based on your goals",
+      },
+      {
+        icon: BookOpen,
+        title: "Curated Resources",
+        description: "Access handpicked tutorials and guides",
+      },
+    ],
+    redirectPath: "/dashboard",
+    termsHref: "/",
+    privacyHref: "/",
   },
 });
 

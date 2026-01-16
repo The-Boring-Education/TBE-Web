@@ -12,11 +12,11 @@ import Text from '../../common/Typography/Text';
 import Section from '../../layout/Section';
 import FlexContainer from '../Page/common/FlexContainer';
 
-const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewProps) => {
+const LoginCardNew = ({ variant = 'default', customRedirectPath, theme }: LoginCardNewProps) => {
     const router = useRouter();
     const { trackEvent } = useAnalytics();
     const { signIn, isAuthenticated, isLoading } = useAuth();
-    
+
     // Get variant configuration
     const variantConfig = useMemo(() => {
         const configs = getLoginCardVariantConfig();
@@ -68,19 +68,19 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
         <Section className='md:px-4 md:py-4 px-2 py-2'>
             <FlexContainer className='m-auto' justifyCenter itemCenter>
                 <motion.div
-                    className='flex w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden'
+                    className={`flex w-full max-w-4xl ${theme === 'dark' ? 'bg-[#0A0A0A]' : 'bg-white'} rounded-lg shadow-xl overflow-hidden`}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
                 >
                     {/* Left Section - Login Form */}
-                    <div className='w-full md:w-1/2 p-4 md:p-3 flex border-1 border-gray-200 flex-col items-center justify-center text-center bg-white'>
-                       <motion.div
+                    <div className={`w-full md:w-1/2 p-4 md:p-3 flex border-1 ${theme === 'dark' ? 'border-gray-700 bg-[#0A0A0A]' : 'border-gray-200 bg-white'} flex-col items-center justify-center text-center`}>
+                        <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
                         >
-                            <Text level='h1' className='text-2xl md:text-3xl font-bold text-gray-900'>
+                            <Text level='h1' className={`text-2xl md:text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                                 {variantConfig.title}
                             </Text>
                         </motion.div>
@@ -91,13 +91,13 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                             transition={{ delay: 0.4 }}
                             className='mt-2'
                         >
-                            <Text level='p' className='text-sm text-gray-600'>
+                            <Text level='p' className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                                 {variantConfig.subtitle}
                             </Text>
                         </motion.div>
 
                         <motion.button
-                            className='mt-4 w-full flex items-center justify-center border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-colors cursor-pointer px-3 py-2 text-gray-700 font-medium'
+                            className={`mt-4 w-full flex items-center justify-center border ${theme === 'dark' ? 'border-gray-600 bg-gray-800 hover:bg-gray-700 text-gray-200' : 'border-gray-300 bg-white hover:bg-gray-50 text-gray-700'} rounded-lg transition-colors cursor-pointer px-3 py-2 font-medium`}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.5 }}
@@ -138,20 +138,20 @@ const LoginCardNew = ({ variant = 'default', customRedirectPath }: LoginCardNewP
                             transition={{ delay: 0.6 }}
                             className='mt-4 text-sm text-gray-500'
                         >
-                            <Text level='p' className='text-xs text-gray-500'>
+                            <Text level='p' className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                 By signing in, you agree to our{' '}
-                                <a 
-                                    href={variantConfig.termsHref || '/terms-and-conditions'} 
-                                    className='text-purple-600 hover:text-purple-700 underline'
+                                <a
+                                    href={variantConfig.termsHref || '/terms-and-conditions'}
+                                    className={`${theme === 'dark' ? 'text-purple-400 hover:text-purple-300' : 'text-purple-600 hover:text-purple-700'} underline`}
                                 >
                                     Terms and Conditions
                                 </a>
                                 {variantConfig.privacyHref && (
                                     <>
                                         {' '}and{' '}
-                                        <a 
-                                            href={variantConfig.privacyHref} 
-                                            className='text-purple-600 hover:text-purple-700 underline'
+                                        <a
+                                            href={variantConfig.privacyHref}
+                                            className={`${theme === 'dark' ? 'text-purple-400 hover:text-purple-300' : 'text-purple-600 hover:text-purple-700'} underline`}
                                         >
                                             Privacy Policy
                                         </a>

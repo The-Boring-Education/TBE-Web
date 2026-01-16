@@ -1,5 +1,5 @@
 import type { LinkButtonProps } from '@tbe/interface';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button, Link } from '../..';
 
@@ -9,20 +9,32 @@ const LinkButton = ({
   buttonProps,
   target,
   active = true,
+  theme,
 }: LinkButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const isDark = theme === 'dark';
 
   const handleClick = () => {
-    // Show immediate loading feedback (hidden from user)
-    setIsLoading(true);
-    
-    // Reset loading state after a short delay
-    setTimeout(() => setIsLoading(false), 200);
+    // Show loading spinner when navigating
+    if (active) {
+      setIsLoading(true);
+    }
+  };
+
+  // Reset loading state when href changes (in case navigation is cancelled or same-page navigation)
+  useEffect(() => {
+    setIsLoading(false);
+  }, [href]);
+
+  // Merge theme-based className with existing buttonProps className
+  const themedButtonProps = {
+    ...buttonProps,
+    className: `${buttonProps.className || ''} ${isDark ? 'bg-gray-800 text-white border-gray-600 hover:bg-gray-700' : ''}`.trim(),
   };
 
   return (
     <Link active={active} className={className} href={href} target={target} onClick={handleClick}>
-      <Button {...buttonProps} isLoading={false} />
+      <Button {...themedButtonProps} isLoading={isLoading} />
     </Link>
   );
 };

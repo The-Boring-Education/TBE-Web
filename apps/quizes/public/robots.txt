@@ -1,9 +1,18 @@
 # *
 User-agent: *
 Allow: /
+Allow: /leaderboard
+
+# *
+User-agent: *
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /quiz/
+Disallow: /results/
+Disallow: /performance/
 
 # Host
-Host: http:/quiz.theboringeducation.com/
+Host: https://quiz.theboringeducation.com
 
 # Sitemaps
-Sitemap: http:/quiz.theboringeducation.com/sitemap.xml
+Sitemap: https://quiz.theboringeducation.com/sitemap.xml

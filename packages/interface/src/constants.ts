@@ -40,7 +40,8 @@ export type NavbarVariant =
   | "quizes"
   | "techyatra"
   | "dsayatra"
-  | "resume-yatra";
+  | "resume-yatra"
+  | "oncampus";
 
 interface MainNavbarProps extends Partial<NavbarProps> {
   variant?: NavbarVariant;
@@ -48,13 +49,16 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   customBranding?: React.ReactNode;
   customActions?: React.ReactNode[];
   dashboardRoute?: string;
+  theme?: "light" | "dark";
 }
-interface VariantConfig {
+interface NavbarVariantConfig {
   branding: React.ReactNode;
   dashboardRoute: string;
   borderClass?: string;
   requiresAuth?: boolean; // If false, hides UserPointButton and UserAvatar
   showGamification?: boolean; // If false, hides UserPointButton (gamification)
+  showCohorts?: boolean; // If false, hides Cohorts section
+  showLearn?: boolean; // If false, hides Learn section
 }
 
 export type FooterVariant =
@@ -64,7 +68,8 @@ export type FooterVariant =
   | "techyatra"
   | "dsayatra"
   | "resumeyatra"
-  | "platform";
+  | "platform"
+  | "oncampus";
 
 interface FooterProps {
   variant?: FooterVariant;
@@ -78,6 +83,6 @@ export type {
   NavbarProps,
   MainNavbarProps,
   OutlineCardProps,
-  VariantConfig,
+  NavbarVariantConfig,
   FooterProps,
 };

@@ -1,30 +1,31 @@
-import {useChallenges} from "@tbe/hooks";
-import type {Challenge} from "@tbe/types";
-import { 
+import { useChallenges } from "@tbe/hooks";
+import type { Challenge } from "@tbe/types";
+import {
   Calendar,
   Flame,
-  Plus, 
+  Plus,
   Share2,
   Star,
-  Target, 
-  TrendingUp, 
-  Trophy} from "lucide-react";
-import {useState} from "react";
+  Target,
+  TrendingUp,
+  Trophy
+} from "lucide-react";
+import { useState } from "react";
 
 import ChallengeCard from "../cards/ChallengeCard";
 import ChallengeLogModal from "../modals/ChallengeLogModal";
 import ChallengeLogsModal from "../modals/ChallengeLogsModal";
 import CreateChallengeModal from "../modals/CreateChallengeModal";
-import {Button} from "../ui/button";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card";
-import {Skeleton} from "../ui/skeleton";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
 
 interface ChallengeSectionProps {
   userId: string;
   className?: string;
 }
 
-const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
+const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   const [isLogsModalOpen, setIsLogsModalOpen] = useState(false);
@@ -109,7 +110,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
                 <Target className="w-8 h-8 text-white" />
               </div>
             </div>
-            
+
             <CardTitle className="text-2xl font-bold text-black mb-3">
 
               Ready to Transform Your Skills?
@@ -123,23 +124,23 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
             {/* Key Benefits */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div className="flex flex-col items-center space-y-2">
-               <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-[#FF5757]" />
                 </div>
                 <div className="text-black font-medium">Daily Consistency</div>
                 <div className="text-gray-600 text-xs">Build lasting habits</div>
               </div>
-              
+
               <div className="flex flex-col items-center space-y-2">
-               <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-[#FF5757]" />
                 </div>
                 <div className="text-Black font-medium">Track Progress</div>
                 <div className="text-gray-600 text-xs">See your growth</div>
               </div>
-              
+
               <div className="flex flex-col items-center space-y-2">
-              <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
                   <Share2 className="w-6 h-6 text-[#FF5757]" />
                 </div>
                 <div className="text-Black font-medium">Share Journey</div>
@@ -175,7 +176,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
       {/* Header with Stats */}
       <div className="flex items-center justify-between">
         <div>
-        <h2 className="text-2xl font-bold text-black flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-black flex items-center gap-2">
             <Target className="w-6 h-6 text-[#FF5757]" />
             My Challenges
           </h2>
@@ -196,20 +197,20 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="bg-white border border-black/10 shadow-sm">
+        <Card className="glass border-greyLight hover:border-[#FF5757] transition-all hover:shadow-md">
 
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Trophy className="w-5 h-5 text-[#FF5757]" />
               <div>
-                <div className="text-xl font-bold text-black">{challenges.length}</div>
-                <div className="text-xs text-gray-600">Total Challenges</div>
+                <div className="text-xl font-bold text-contentLight">{challenges.length}</div>
+                <div className="text-xs text-greyDark">Total Challenges</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="glass border-greyLight">
+        <Card className="glass border-greyLight  hover:border-[#FF5757] transition-all hover:shadow-md">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Flame className="w-5 h-5 text-[#FF5757]" />
@@ -221,7 +222,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
           </CardContent>
         </Card>
 
-        <Card className="glass border-greyLight">
+        <Card className="glass border-greyLight  hover:border-[#FF5757] transition-all hover:shadow-md">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#FF5757]" />
@@ -233,7 +234,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
           </CardContent>
         </Card>
 
-        <Card className="glass border-greyLight">
+        <Card className="glass border-greyLight  hover:border-[#FF5757] transition-all hover:shadow-md">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Star className="w-5 h-5 text-[#FF5757]" />
@@ -279,7 +280,7 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
             challenge={selectedChallenge}
             userId={userId}
           />
-          
+
           <ChallengeLogsModal
             isOpen={isLogsModalOpen}
             onClose={() => setIsLogsModalOpen(false)}
@@ -289,6 +290,6 @@ const ChallengeSection = ({userId, className = ""}: ChallengeSectionProps) => {
       )}
     </div>
   );
-  };
-  
-  export default ChallengeSection;
+};
+
+export default ChallengeSection;

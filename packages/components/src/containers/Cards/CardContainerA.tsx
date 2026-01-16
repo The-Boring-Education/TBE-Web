@@ -17,7 +17,7 @@ const CardContainerA = ({
   <Section>
     <FlexContainer className='gap-4' direction='col'>
       <SectionHeaderContainer
-        focusText={focusText}
+        focusText={focusText || ''}
         heading={heading}
         subtext={subtext}
       />

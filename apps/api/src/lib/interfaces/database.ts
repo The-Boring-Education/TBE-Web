@@ -6,6 +6,9 @@ import type {
     CertificateType,
     CompanyType,
     DifficultyType,
+    DSADifficultyType,
+    DSADomainType,
+    DSATopicType,
     FeedbackType,
     GoalType,
     InterestEventType,
@@ -174,6 +177,12 @@ export interface InterviewSheetModel extends Document {
     features: string[]
 }
 
+export interface QuestionResourcesModel {
+    youtubeURL?: string
+    leetcodeURL?: string
+    blogURL?: string
+}
+
 export interface InterviewSheetQuestionModel {
     _id: typeof Schema.Types.ObjectId
     title: string
@@ -183,6 +192,7 @@ export interface InterviewSheetQuestionModel {
     companyTypes?: CompanyType[]
     priority: PriorityType
     toObject: () => UserCourseModel
+    resources?: QuestionResourcesModel
 }
 
 export interface UserSheetModel extends Document {
@@ -196,6 +206,18 @@ export interface UserSheetQuestionModel {
     questionId: typeof Schema.Types.ObjectId
     isCompleted?: boolean
     isStarred?: boolean
+}
+
+export interface DSAQuestionModel extends Document {
+    _id: typeof Schema.Types.ObjectId
+    title: string
+    content: string
+    domain: DSADomainType[]
+    difficulty: DSADifficultyType
+    companyTypes: CompanyType[]
+    topics: DSATopicType[]
+    createdAt: Date
+    updatedAt: Date
 }
 
 export interface CouponModel extends Document {
@@ -578,15 +600,18 @@ export interface AddCourseRequestPayloadProps {
 }
 
 export interface AddInterviewSheetRequestPayloadProps {
-    title: string
+    name: string
+    meta: string
+    slug: string
     description: string
     coverImageURL: string
     liveOn: string
-    slug: string
-    meta?: string
-    roadmap: RoadmapsType
     isPremium?: boolean
     price?: number
+    discountPercentage?: number
+    appliedCoupon?: typeof Schema.Types.ObjectId
+    questions: InterviewSheetQuestionModel[]
+    roadmap: RoadmapsType
     features?: string[]
 }
 
@@ -901,7 +926,7 @@ export interface CreateUserInterestRequestProps {
 
 export interface GetUserInterestsRequestProps {
     userId?: string
-    eventType?: import("@/lib/constants").InterestEventType
+    eventType?: InterestEventType
     source?: "WEBAPP" | "PREPYATRA" | "ADMIN" | "API"
     isActive?: boolean
     page?: number
@@ -911,7 +936,7 @@ export interface GetUserInterestsRequestProps {
 export interface UserInterestResponseProps {
     _id: string
     userId: string
-    eventType: import("@/lib/constants").InterestEventType
+    eventType: InterestEventType
     eventDescription?: string
     metadata?: Record<string, any>
     isActive: boolean

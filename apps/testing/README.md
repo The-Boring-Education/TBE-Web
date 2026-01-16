@@ -1,338 +1,278 @@
-# 🧪 TBE Platform Testing Suite
+# 🧪 TBE Platform - Comprehensive Testing Suite
 
-Comprehensive testing infrastructure for The Boring Education Platform - ensuring quality, reliability, and bug-free deployments.
+This directory contains a robust testing suite for the TBE Platform, covering both API endpoints and React components.
 
-## 📋 Table of Contents
+## 📋 Overview
 
-- [Overview](#overview)
-- [Quick Start](#quick-start)
-- [Testing Stack](#testing-stack)
-- [Project Structure](#project-structure)
-- [Running Tests](#running-tests)
-- [Writing Tests](#writing-tests)
-- [CI/CD Integration](#cicd-integration)
-- [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
+The testing suite is designed with the following principles:
+- **Simple & Focused**: Test simple endpoints thoroughly, skip complex ones
+- **Robust Component Tests**: Ensure components are bulletproof and can't be easily broken
+- **Maintainable**: Easy to understand and extend
+- **Fast**: Quick feedback during development
 
-## 🎯 Overview
-
-This testing app provides a centralized, independent testing suite for the entire TBE Platform monorepo, covering:
-
-- **Unit Tests** - Components, hooks, utilities, and services
-- **API Tests** - REST API endpoints and integrations
-- **E2E Tests** - Complete user flows across all apps
-
-### Why This Approach?
-
-✅ **Independent** - Doesn't interfere with production apps  
-✅ **Centralized** - All tests in one place, easy to manage  
-✅ **Scalable** - Easy to add tests for new features  
-✅ **Fast** - Parallel execution, smart caching  
-✅ **CI/CD Ready** - Integrated into deployment pipeline
-
-## 🚀 Quick Start
-
-### 1. Install Dependencies
-
-From the monorepo root:
-
-```bash
-pnpm install
-```
-
-### 2. Install Playwright Browsers (for E2E tests)
-
-```bash
-cd apps/testing
-pnpm playwright:install
-```
-
-### 3. Run Tests
-
-```bash
-# Run all tests
-pnpm test
-
-# Run unit tests only (fast)
-pnpm test:unit
-
-# Run unit tests in watch mode (for development)
-pnpm test:unit:watch
-
-# Run API tests
-pnpm test:api
-
-# Run E2E tests
-pnpm test:e2e
-
-# Run E2E tests with UI (debugging)
-pnpm test:e2e:ui
-
-# Generate coverage report
-pnpm test:coverage
-```
-
-## 🛠️ Testing Stack
-
-### Unit Testing
-
-- **Vitest** - Fast, modern test runner with native ESM support
-- **React Testing Library** - Test React components as users interact with them
-- **@testing-library/user-event** - Simulate user interactions
-- **jsdom** - DOM environment for Node.js
-
-**Why Vitest?**
-- 5-10x faster than Jest
-- Zero config for TypeScript
-- Built-in watch mode with HMR
-- Perfect for monorepos
-
-### API Testing
-
-- **MSW (Mock Service Worker)** - API mocking at network level
-- **Supertest** - HTTP assertion library for API routes
-
-**Why MSW?**
-- Realistic API mocking
-- Works in both Node.js and browser
-- Reusable mock handlers
-
-### E2E Testing
-
-- **Playwright** - Modern browser automation
-- Multi-browser support (Chromium, Firefox, WebKit)
-- Auto-wait, no flaky tests
-- Built-in trace viewer and screenshot diffing
-
-**Why Playwright?**
-- Faster than Cypress
-- True cross-browser testing
-- Better debugging tools
-- Free parallelization
-
-## 📁 Project Structure
+## 🏗️ Structure
 
 ```
 apps/testing/
-├── package.json                 # Testing dependencies
-├── tsconfig.json               # TypeScript config
-├── vitest.config.ts            # Unit test config
-├── playwright.config.ts        # E2E test config
 ├── src/
-│   ├── unit/                   # Unit tests
-│   │   └── example.test.ts    # Example unit test
-│   ├── api/                    # API tests
-│   │   ├── example.test.ts    # Example API test
-│   │   └── mocks/             # MSW mock handlers
-│   ├── e2e/                    # E2E tests
-│   │   ├── example.spec.ts    # Example E2E test
-│   │   └── fixtures/          # Test data
-│   └── test-utils/             # Shared test utilities
-│       ├── setup.ts           # Global test setup
-│       ├── test-helpers.tsx   # Helper functions
-│       ├── mock-factories.ts  # Test data factories
-│       └── custom-matchers.ts # Custom assertions
+│   ├── api/                    # API endpoint tests
+│   │   ├── quiz/              # Quiz API tests
+│   │   ├── interview-prep/     # Interview Prep API tests
+│   │   ├── shiksha/           # Shiksha API tests
+│   │   ├── utils/             # API test utilities
+│   │   └── mocks/             # Mock handlers and server
+│   ├── unit/                  # Unit tests
+│   │   ├── components/        # Component tests
+│   │   ├── hooks/            # Hook tests
+│   │   ├── services/         # Service tests
+│   │   └── utils/            # Utility tests
+│   ├── e2e/                   # End-to-end tests (Playwright)
+│   └── test-utils/            # Shared test utilities
 └── README.md
 ```
 
-## 🏃 Running Tests
+## 🚀 Running Tests
 
-### Local Development
-
-#### Unit Tests (Fastest - Use During Development)
-
+### All Tests
 ```bash
-# Watch mode - re-runs tests on file changes
-pnpm test:unit:watch
+pnpm test
+```
 
-# Run once
+### Unit Tests Only
+```bash
 pnpm test:unit
-
-# Run specific test file
-pnpm test:unit src/unit/components/Button.test.tsx
-
-# Run tests matching pattern
-pnpm test:unit -- --grep="Button"
 ```
 
-#### API Tests
-
+### API Tests Only
 ```bash
-# Run all API tests
 pnpm test:api
-
-# Run specific API test suite
-pnpm test:api src/api/auth/login.test.ts
 ```
 
-#### E2E Tests
-
+### Watch Mode
 ```bash
-# Run all E2E tests (all browsers)
-pnpm test:e2e
-
-# Run E2E tests for specific browser
-pnpm test:e2e --project=chromium
-
-# Run E2E in UI mode (great for debugging)
-pnpm test:e2e:ui
-
-# Run E2E in debug mode
-pnpm test:e2e:debug
-
-# Run specific test file
-pnpm test:e2e src/e2e/platform/login.spec.ts
+pnpm test:unit:watch
 ```
 
-#### Coverage Reports
-
+### Coverage
 ```bash
-# Generate coverage report
 pnpm test:coverage
-
-# View coverage in browser
-open coverage/index.html
 ```
 
-### CI/CD Execution
-
+### E2E Tests
 ```bash
-# Run all tests as CI would
-pnpm test:ci
+pnpm test:e2e
 ```
 
-## ✍️ Writing Tests
+## 📝 API Testing
 
-Check the example test files in `src/` for simple starting points:
+### Tested Endpoints
 
-- **Unit Test:** `src/unit/example.test.ts`
-- **API Test:** `src/api/example.test.ts`  
-- **E2E Test:** `src/e2e/example.spec.ts`
+#### Quiz API (`/api/v1/quiz`)
+- ✅ `GET /api/v1/quiz` - Get quiz categories
+- ✅ `POST /api/v1/quiz` - Create new quiz
+- ✅ Quiz validation and error handling
 
-### Quick Examples
+#### Interview Prep API (`/api/v1/interview-prep`)
+- ✅ `GET /api/v1/interview-prep` - Get all sheets or by slug
+- ✅ `POST /api/v1/interview-prep` - Create new interview sheet
+- ✅ User-specific data handling
 
-**Unit Test (Components, Utils, Hooks):**
+#### Shiksha API (`/api/v1/shiksha`)
+- ✅ `GET /api/v1/shiksha` - Get all courses or by slug
+- ✅ `POST /api/v1/shiksha` - Create new course
+- ✅ Enrollment status handling
+
+### API Test Utilities
+
+Located in `src/api/utils/api-test-helpers.ts`:
+
+- `createMockRequest()` - Create mock Next.js API request
+- `createMockResponse()` - Create mock Next.js API response
+- `executeHandler()` - Execute API handler and get response
+- `mockDatabaseConnection()` - Mock database connection
+- `createMockDBQuery()` - Mock database query functions
+
+### Example API Test
+
+```typescript
+import { describe, it, expect, vi } from 'vitest';
+import { createMockRequest, createMockResponse, executeHandler } from '../utils/api-test-helpers';
+import handler from '../../../../api/src/pages/api/v1/quiz/index';
+
+describe('Quiz API', () => {
+    it('should return quiz categories', async () => {
+        const req = createMockRequest('GET');
+        const res = createMockResponse();
+        const result = await executeHandler(handler, req, res);
+        
+        expect(result.statusCode).toBe(200);
+        expect(result.data.success).toBe(true);
+    });
+});
+```
+
+## 🧩 Component Testing
+
+### Tested Components
+
+#### Button Component
+- ✅ All variants (PRIMARY, SECONDARY, OUTLINE, GHOST, SUCCESS, NEUTRAL)
+- ✅ All sizes (SMALL, MEDIUM, LARGE)
+- ✅ Active/disabled states
+- ✅ Loading states
+- ✅ Click handling
+- ✅ Icon support
+- ✅ Full width option
+- ✅ Animation types
+- ✅ Accessibility
+
+#### LoadingSpinner Component
+- ✅ Size customization (height, width)
+- ✅ Border color customization
+- ✅ Margin classes
+- ✅ Custom classes
+- ✅ Animation classes
+
+#### Modal Component
+- ✅ Open/close states
+- ✅ Title rendering
+- ✅ Children content
+- ✅ Close functionality
+- ✅ Backdrop handling
+- ✅ Styling and layout
+- ✅ Accessibility
+
+#### Card Components
+- ✅ Base Card component
+- ✅ CardHeader
+- ✅ CardTitle
+- ✅ CardDescription
+- ✅ CardContent
+- ✅ CardFooter
+- ✅ Complete card structure
+- ✅ Custom classes
+- ✅ Accessibility
+
+### Component Test Utilities
+
+Located in `src/test-utils/`:
+
+- `renderWithProviders()` - Render with React providers
+- `createMockSession()` - Create mock session data
+- `createMockAPIResponse()` - Create mock API response
+
+### Example Component Test
+
 ```typescript
 import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import Button from '@tbe/components/common/Buttons/Button';
 
-describe('My Feature', () => {
-    it('should work correctly', () => {
-        expect(2 + 2).toBe(4);
+describe('Button Component', () => {
+    it('should render button with text', () => {
+        render(<Button text="Click Me" variant="PRIMARY" />);
+        expect(screen.getByText('Click Me')).toBeInTheDocument();
     });
 });
 ```
 
-**API Test:**
-```typescript
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { server } from './mocks/server';
+## 🎯 Testing Philosophy
 
-describe('API Endpoint', () => {
-    beforeAll(() => server.listen());
-    afterAll(() => server.close());
+### API Tests
+- **Simple Endpoints**: Test thoroughly with all edge cases
+- **Complex Endpoints**: Skip if too complex (as per requirements)
+- **Error Handling**: Always test error scenarios
+- **Validation**: Test input validation
+- **Database Mocking**: Mock all database operations
 
-    it('should fetch data', async () => {
-        const res = await fetch('http://localhost:3004/api/endpoint');
-        const data = await res.json();
-        expect(data.status).toBe(true);
-    });
-});
-```
+### Component Tests
+- **Robustness**: Make tests so robust that components can't be easily broken
+- **Edge Cases**: Test all edge cases and error states
+- **Accessibility**: Ensure components are accessible
+- **Props Validation**: Test all prop combinations
+- **User Interactions**: Test all user interactions
 
-**E2E Test:**
-```typescript
-import { test, expect } from '@playwright/test';
+## 📊 Coverage Goals
 
-test('user flow', async ({ page }) => {
-    await page.goto('http://localhost:3000');
-    expect(page).toHaveTitle(/TBE/i);
-});
-```
+- **Statements**: 70%
+- **Branches**: 65%
+- **Functions**: 70%
+- **Lines**: 70%
 
-## 🔄 CI/CD Integration
+## 🔧 Configuration
 
-### GitHub Actions Workflow
+### Vitest Config
+Located in `vitest.config.ts`:
+- Environment: `jsdom` for React components
+- Setup files: `src/test-utils/setup.ts`
+- Coverage provider: `v8`
+- Test timeout: 10 seconds
 
-Tests run automatically on:
-- Pull requests to `development` and `production` branches
-- Direct pushes to `development` and `production` branches
+### Test Setup
+Located in `src/test-utils/setup.ts`:
+- React Testing Library cleanup
+- Next.js router mocking
+- NextAuth mocking
+- Global mocks (ResizeObserver, IntersectionObserver, matchMedia)
 
-### Test Strategy by Branch
+## 🚫 What NOT to Test
 
-#### Development Branch
-- ✅ Unit tests (fast feedback)
-- ✅ API tests
-- ✅ Smoke E2E tests (Chromium only)
-
-#### Production Branch
-- ✅ Complete test suite
-- ✅ Multi-browser E2E (Chromium, Firefox, WebKit)
-- 🚫 Blocks merge if tests fail
-
-### Workflow Steps
-
-1. **Install Dependencies** - pnpm install with caching
-2. **Build Shared Packages** - Required for testing
-3. **Run Unit Tests** - Fast feedback (~2-3 min)
-4. **Run API Tests** - Integration testing (~3-5 min)
-5. **Run E2E Tests** - Full user flows (~10-15 min)
-6. **Generate Coverage** - Code coverage reports
-7. **Upload Artifacts** - Test results, screenshots, videos
+As per requirements:
+- ❌ Complex API endpoints (skip them)
+- ❌ Third-party library internals
+- ❌ Implementation details (test behavior, not implementation)
+- ❌ Already tested dependencies
 
 ## 📚 Best Practices
 
-✅ **DO:**
-- Test behavior, not implementation
-- Keep tests simple and focused
-- Mock external dependencies
-- Clean up test data
-- Use descriptive test names
+1. **Test Behavior, Not Implementation**: Focus on what the component/API does, not how it does it
+2. **Use Descriptive Test Names**: Test names should clearly describe what is being tested
+3. **Arrange-Act-Assert**: Follow the AAA pattern
+4. **Mock External Dependencies**: Always mock database, external APIs, etc.
+5. **Test Edge Cases**: Don't just test happy paths
+6. **Keep Tests Fast**: Tests should run quickly for fast feedback
+7. **Maintain Tests**: Update tests when code changes
 
-❌ **DON'T:**
-- Test third-party libraries
-- Make tests dependent on each other
-- Use arbitrary timeouts
-- Over-complicate tests
+## 🐛 Debugging Tests
 
-## 🧰 Test Utilities
-
-Available in `src/test-utils/`:
-
-- **`mock-factories.ts`** - Create mock data (`createMockUser`)
-- **`test-helpers.tsx`** - Helper functions (`createMockSession`, `createMockAPIResponse`)
-- **`custom-matchers.ts`** - Custom assertions (`toHaveValidAPIResponse`)
-- **`setup.ts`** - Global test configuration (auto-loaded)
-
-## 🐛 Troubleshooting
-
-**Tests not working?**
+### Run Single Test File
 ```bash
-pnpm install
-pnpm run build
-pnpm test:unit
+pnpm test src/api/quiz/quiz.test.ts
 ```
 
-**E2E browsers missing?**
+### Run Tests in Watch Mode
 ```bash
-cd apps/testing
-pnpm playwright:install
+pnpm test:unit:watch
 ```
 
-## 📊 Coverage Requirements
+### Debug with VS Code
+Add breakpoints and use the VS Code debugger with the "Debug Jest Tests" configuration.
 
-Minimum thresholds (enforced in CI):
-- Statements: **70%**
-- Branches: **65%**
-- Functions: **70%**
-- Lines: **70%**
+## 📈 Continuous Integration
 
-## 📝 Adding New Tests
+Tests run automatically in CI/CD pipeline:
+- All unit tests
+- All API tests
+- Coverage reports
+- E2E tests (optional, can be run separately)
 
-1. Look at example files in `src/unit/`, `src/api/`, `src/e2e/`
-2. Copy the pattern and adapt for your feature
-3. Run tests locally before committing
-4. Ensure coverage meets thresholds
+## 🤝 Contributing
+
+When adding new tests:
+1. Follow existing patterns
+2. Use provided utilities
+3. Mock external dependencies
+4. Test edge cases
+5. Update this README if adding new test categories
+
+## 📝 Notes
+
+- Tests use Vitest as the test runner
+- React Testing Library for component tests
+- node-mocks-http for API route testing
+- MSW (Mock Service Worker) available for API mocking
+- Playwright for E2E tests
 
 ---
 
-**Happy Testing! 🚀** Start with `pnpm test:unit:watch` for fast feedback.
+**Remember**: The goal is to have robust, maintainable tests that catch bugs early and prevent regressions. Keep tests simple, focused, and fast! 🚀

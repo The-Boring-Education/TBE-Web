@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "next dev -p 3006",
     "build": "eslint . && next build",
+    "postbuild": "next-sitemap",
     "start": "next start -p 3002",
     "lint": "eslint .",
     "lint:fix": "next lint --fix",
@@ -79,6 +80,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "next-sitemap": "^4.2.3",
     "@eslint/js": "^9.9.0",
     "@tbe/eslint-config": "workspace:*",
     "@tailwindcss/typography": "^0.5.15",

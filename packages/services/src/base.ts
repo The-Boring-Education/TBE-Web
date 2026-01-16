@@ -16,11 +16,14 @@ class APIError extends Error {
   }
 }
 
+// Default fallback URL to prevent build-time errors when env var is not set
+const DEFAULT_API_URL = "http://localhost:3000/api/v1"
+
 export class APIClient {
   private baseURL: string
 
-  constructor(baseURL: string = config.API_BASE_URL) {
-    this.baseURL = baseURL
+  constructor(baseURL: string = config.API_BASE_URL || DEFAULT_API_URL) {
+    this.baseURL = baseURL || DEFAULT_API_URL
   }
 
   private getAuthHeaders(): Record<string, string> {
@@ -41,15 +44,27 @@ export class APIClient {
   private buildURL(endpoint: string, params?: Record<string, string>): string {
     // Ensure endpoint doesn't start with / to avoid double slashes
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint
-    const fullUrl = `${this.baseURL}/${cleanEndpoint}`
+    const baseUrl = this.baseURL || DEFAULT_API_URL
+    const fullUrl = `${baseUrl}/${cleanEndpoint}`
     
-    const url = new URL(fullUrl)
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        url.searchParams.append(key, value)
-      })
+    try {
+      const url = new URL(fullUrl)
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          url.searchParams.append(key, value)
+        })
+      }
+      return url.toString()
+    } catch {
+      // Fallback for invalid URLs (e.g., during SSG/build time)
+      let queryString = ''
+      if (params) {
+        queryString = '?' + Object.entries(params)
+          .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+          .join('&')
+      }
+      return `${fullUrl}${queryString}`
     }
-    return url.toString()
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {

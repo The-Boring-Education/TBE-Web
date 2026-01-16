@@ -29,7 +29,8 @@
         "SENTRY_AUTH_TOKEN",
         "ONBOARDING_APP_URL",
         "QUIZZES_APP_URL",
-        "NEXTAUTH_URL"
+        "NEXTAUTH_URL",
+        "NEXT_PUBLIC_UNSKILLED_API_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
@@ -71,7 +72,8 @@
         "SENTRY_AUTH_TOKEN",
         "ONBOARDING_APP_URL",
         "QUIZZES_APP_URL",
-        "NEXTAUTH_URL"
+        "NEXTAUTH_URL",
+        "NEXT_PUBLIC_UNSKILLED_API_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",

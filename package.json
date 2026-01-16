@@ -1,7 +1,7 @@
 {
   "name": "tbe-platform",
   "private": true,
-  "version": "2.7.1",
+  "version": "2.9.1",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -17,6 +17,7 @@
     "dev:techyatra": "turbo run dev --filter=@tbe/techyatra",
     "dev:dsayatra": "turbo run dev --filter=@tbe/dsayatra",
     "dev:resume-yatra": "turbo run dev --filter=@tbe/resume-yatra",
+    "dev:oncampus": "turbo run dev --filter=@tbe/oncampus",
     "build:platform": "turbo run build --filter=@tbe/platform",
     "build:prep-yatra": "turbo run build --filter=@tbe/prep-yatra",
     "build:quizes": "turbo run build --filter=@tbe/quizes",
@@ -25,6 +26,7 @@
     "build:techyatra": "turbo run build --filter=@tbe/techyatra",
     "build:dsayatra": "turbo run build --filter=@tbe/dsayatra",
     "build:resume-yatra": "turbo run build --filter=@tbe/resume-yatra",
+    "build:oncampus": "turbo run build --filter=@tbe/oncampus",
     "install:all": "pnpm install",
     "test": "turbo run test",
     "test:unit": "turbo run test:unit --filter=@tbe/testing",
@@ -33,11 +35,16 @@
     "test:e2e": "turbo run test:e2e --filter=@tbe/testing",
     "test:e2e:ui": "turbo run test:e2e:ui --filter=@tbe/testing",
     "test:coverage": "turbo run test:coverage --filter=@tbe/testing",
-    "test:ci": "turbo run test:ci --filter=@tbe/testing"
+    "test:ci": "turbo run test:ci --filter=@tbe/testing",
+    "seo:audit": "lhci autorun",
+    "seo:audit:prod": "LHCI_ENV=production lhci autorun",
+    "seo:audit:app": "LHCI_ENV=production lhci autorun"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.13.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^9.0.1",
+    "baseline-browser-mapping": "^2.9.11",
     "prettier": "^3.6.2",
     "turbo": "^2.5.6"
   },

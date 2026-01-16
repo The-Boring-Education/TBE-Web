@@ -31,7 +31,8 @@ const DATABASE_MODELS = {
   USER_QUIZ_ANALYTICS: 'UserQuizAnalytics',
   LEADERBOARD: 'Leaderboard',
   USER_INTEREST: 'UserInterest',
-  COUPON: 'Coupon'
+  COUPON: 'Coupon',
+  DSA_QUESTION: 'DSAQuestion'
 };
 
 export const FEEDBACK_TYPES = [
@@ -76,7 +77,7 @@ export const INTEREST_EVENT_TYPES = [
 export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 
 const modelSelectParams = {
-  coursePreview: '_id name slug coverImageURL description liveOn isPremium',
+  coursePreview: '_id name slug coverImageURL description liveOn isPremium roadmap price discountPercentage',
   projectPreview: '_id name slug coverImageURL description isActive',
 };
 

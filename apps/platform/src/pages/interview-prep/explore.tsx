@@ -55,27 +55,44 @@ const Home = ({ seoMeta }: PageProps) => {
   const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
     if (!response?.data) return [];
 
-    return response.data.map((sheet: any) => {
-      const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
-      const isPurchased = purchaseStatuses[sheet._id] || false;
+    // Filter out DSA sheets - they have their own section
+    return response.data
+      .filter((sheet: any) => {
+        const roadmap = sheet?.roadmap || '';
+        return roadmap.toLowerCase() !== 'dsa';
+      })
+      .map((sheet: any) => {
+        const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
+        const isPurchased = purchaseStatuses[sheet._id] || false;
 
-      return {
-        ...baseCard,
-        isPurchased: sheet.isPremium ? isPurchased : false, // Only premium sheets can be purchased
-        isPremium: sheet.isPremium && !isPurchased, // Only show premium if not purchased
-      };
-    });
+        return {
+          ...baseCard,
+          isPurchased: sheet.isPremium ? isPurchased : false, // Only premium sheets can be purchased
+          isPremium: sheet.isPremium && !isPurchased, // Only show premium if not purchased
+        };
+      });
   }, [response?.data, purchaseStatuses]);
 
   // Group by roadmap/domain for structured sections
   const groupedByRoadmap = useMemo(() => {
     const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
+    
     (response?.data || []).forEach((sheet: any) => {
-      const roadmap = sheet?.roadmap || 'Tech';
-      if (!groups[roadmap]) groups[roadmap] = [];
+      // Filter out DSA sheets - they have their own section
+      const roadmap = sheet?.roadmap || '';
+      if (roadmap.toLowerCase() === 'dsa') return;
+      
+      const normalizedRoadmap = roadmap || 'Tech';
+      if (!groups[normalizedRoadmap]) {
+        groups[normalizedRoadmap] = [];
+      }
+      
       const card = (sheets || []).find((c) => c.id === sheet._id);
-      if (card) groups[roadmap].push(card);
+      if (card) {
+        groups[normalizedRoadmap].push(card);
+      }
     });
+    
     return groups;
   }, [response?.data, sheets]);
 
@@ -145,6 +162,10 @@ const Home = ({ seoMeta }: PageProps) => {
                         ? 'bg-green-100 text-green-800'
                         : roadmap === 'Fullstack'
                         ? 'bg-purple-100 text-purple-800'
+                        : roadmap === 'DSA'
+                        ? 'bg-orange-100 text-orange-800'
+                        : roadmap === 'Tech'
+                        ? 'bg-indigo-100 text-indigo-800'
                         : 'bg-gray-100 text-gray-800'
                     }`}
                   >
@@ -155,6 +176,10 @@ const Home = ({ seoMeta }: PageProps) => {
                         ? '⚙️'
                         : roadmap === 'Fullstack'
                         ? '🚀'
+                        : roadmap === 'DSA'
+                        ? '📊'
+                        : roadmap === 'Tech'
+                        ? '💻'
                         : '💻'}
                     </span>
                     <Text level='h3' className='text-lg font-semibold'>

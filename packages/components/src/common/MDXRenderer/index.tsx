@@ -2,7 +2,14 @@ import type { MDXRendererProps } from '@tbe/interface';
 import MarkdownIt from 'markdown-it';
 import { Fragment, useEffect, useRef } from 'react';
 
-const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
+const MDXRenderer = ({ mdxSource, actions, theme = 'light' }: MDXRendererProps) => {
+  // Determine text color based on theme
+  // Dark theme uses contentDark (light/white text), Light theme uses contentLight (dark text)
+  const textColorClass = theme === 'dark' ? 'text-contentDark' : 'text-contentLight';
+  // Code block styling based on theme
+  const codeBgClass = theme === 'dark' ? 'bg-[#0A0A0A]' : 'bg-accent';
+  const codeTextClass = theme === 'dark' ? 'text-contentDark' : 'text-contentLight';
+
   const md = new MarkdownIt({
     html: true,
   });
@@ -27,7 +34,7 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
 
   md.renderer.rules.list_open = () => `<ol class="md-list bg-red">`;
 
-  md.renderer.rules.paragraph_open = () => '<p class="mb-2">';
+  md.renderer.rules.paragraph_open = () => `<p class="mb-2 ${textColorClass}">`;
 
   md.renderer.rules.link_open = (tokens: any, idx: any) => {
     const token = tokens[idx];
@@ -61,10 +68,11 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
     
     const lang = token.info?.trim() || '';
     const code = token.content || '';
+    const hoverBgClass = theme === 'dark' ? 'hover:bg-[#1A1A1A]' : 'hover:bg-greyLight';
 
     return (
       `<div class="relative mb-4">` +
-      `<pre class="bg-accent overflow-x-auto hover:bg-greyLight transition border px-4 py-6 rounded">` +
+      `<pre class="${codeBgClass} ${codeTextClass} overflow-x-auto ${hoverBgClass} transition border px-4 py-6 rounded">` +
       `<code class="language-${lang}">${md.utils.escapeHtml(code)}</code>` +
       `</pre>` +
       `</div>`
@@ -87,7 +95,9 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
       btn.innerText = 'Copy';
       btn.type = 'button';
       btn.className =
-        'copy-button absolute top-2 right-2 px-2 py-1 bg-white text-gray-800 text-sm rounded border border-gray-300 hover:bg-gray-100 hover:scale-105 transition-all z-10 max-sm:top-1 max-sm:right-1 max-sm:px-1 max-sm:py-0.5 max-sm:text-xs';
+        theme === 'dark'
+          ? 'copy-button absolute top-2 right-2 px-2 py-1 bg-gray-800 text-white text-sm rounded border border-gray-700 hover:bg-gray-700 hover:scale-105 transition-all z-10 max-sm:top-1 max-sm:right-1 max-sm:px-1 max-sm:py-0.5 max-sm:text-xs'
+          : 'copy-button absolute top-2 right-2 px-2 py-1 bg-white text-gray-800 text-sm rounded border border-gray-300 hover:bg-gray-100 hover:scale-105 transition-all z-10 max-sm:top-1 max-sm:right-1 max-sm:px-1 max-sm:py-0.5 max-sm:text-xs';
       btn.onclick = () => {
         const textToCopy = codeElem.textContent || '';
         navigator.clipboard.writeText(textToCopy).then(() => {
@@ -99,7 +109,7 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
       };
       wrapperDiv.appendChild(btn);
     });
-  }, [mdxHTML]);
+  }, [mdxHTML, theme]);
 
   const actionContainer = actions && (
     <div className='flex justify-start gap-2'>
@@ -114,7 +124,7 @@ const MDXRenderer = ({ mdxSource, actions }: MDXRendererProps) => {
       <div
         dangerouslySetInnerHTML={{ __html: mdxHTML }}
         ref={containerRef}
-        className='break-all'
+        className={`break-all ${textColorClass} [&_*]:${textColorClass}`}
       />
       {actionContainer}
     </div>

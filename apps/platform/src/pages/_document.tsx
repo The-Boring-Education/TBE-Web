@@ -1,13 +1,18 @@
-import { Head, Html, Main, NextScript } from 'next/document';
+import { GTMNoScript, GTMScript } from '@tbe/components'
+import { Head, Html, Main, NextScript } from 'next/document'
 
-export default function Document() {
+const TheBoringEducation = () => {
   return (
     <Html lang='en'>
-      <Head />
+      <Head>
+        <GTMScript />
+      </Head>
       <body>
+        <GTMNoScript />
         <Main />
         <NextScript />
       </body>
     </Html>
-  );
+  )
 }
+export default TheBoringEducation

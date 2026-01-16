@@ -21,23 +21,40 @@ const MobileNavbarLinksContainer = ({
       itemCenter={false}
       justifyCenter={false}
     >
-      {links.map(({ name, href, target, description }, index) => (
-        <Link
-          key={index}
-          className='text-base font-semibold text-black'
-          href={href}
-          target={target}
-          onClick={onLinkClick}
-        >
-          <Text className='strong-text' level='span'>
-            {name}
-          </Text>
-          <br />
-          <Text className='pre-title text-greyDark' level='span'>
-            {description}
-          </Text>
-        </Link>
-      ))}
+      {links.map(({ name, href, target, description }, index) => {
+        // Skip rendering Link if href is empty or undefined
+        if (!href || (typeof href === 'string' && href.trim() === '')) {
+          return (
+            <div key={index} className='text-base font-semibold text-black'>
+              <Text className='strong-text' level='span'>
+                {name}
+              </Text>
+              <br />
+              <Text className='pre-title text-greyDark' level='span'>
+                {description}
+              </Text>
+            </div>
+          );
+        }
+
+        return (
+          <Link
+            key={index}
+            className='text-base font-semibold text-black'
+            href={href}
+            target={target}
+            onClick={onLinkClick}
+          >
+            <Text className='strong-text' level='span'>
+              {name}
+            </Text>
+            <br />
+            <Text className='pre-title text-greyDark' level='span'>
+              {description}
+            </Text>
+          </Link>
+        );
+      })}
     </FlexContainer>
   </FlexContainer>
 );
