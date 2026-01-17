@@ -55,7 +55,7 @@ const getInterviewSheetBySlugFromDB = async (
         }
 
         let isEnrolled = false
-        let mappedQuestions = sheet.questions.map((q) => q.toObject())
+        let mappedQuestions = (sheet.questions || []).map((q) => q.toObject())
 
         if (userId) {
             const userSheet = await UserSheet.findOne({
@@ -66,7 +66,7 @@ const getInterviewSheetBySlugFromDB = async (
             isEnrolled = !!userSheet
 
             if (userSheet) {
-                mappedQuestions = sheet.questions.map((question) => {
+                mappedQuestions = (sheet.questions || []).map((question) => {
                     const userQuestion = userSheet.questions.find(
                         (uq) =>
                             uq.questionId.toString() === question._id.toString()
@@ -207,7 +207,7 @@ const enrollInASheet = async ({
             return { error: "Sheet not found" }
         }
 
-        const questions = sheet.questions.map((question: any) => ({
+        const questions = (sheet.questions || []).map((question: any) => ({
             questionId: question._id,
             isCompleted: false
         }))
@@ -367,7 +367,7 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
             return { data: { ...sheet.toObject(), isEnrolled: false } }
         }
 
-        const mappedQuestions = userSheet.sheet.questions.map((question) => {
+        const mappedQuestions = (userSheet.sheet.questions || []).map((question) => {
             const userQuestion = userSheet.questions.find(
                 (uc) => uc.questionId.toString() === question._id.toString()
             )
@@ -574,6 +574,70 @@ const addDSAQuestionToDB = async (
   }
 };
 
+const getDSAQuestionsGroupedByTopic = async (
+  domain: DSADomainType,
+  difficulty?: DSADifficultyType,
+  companyType?: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    // Build match stage for filtering
+    const matchStage: any = {
+      domain: { $in: [domain] }
+    };
+
+    if (difficulty) {
+      matchStage.difficulty = difficulty;
+    }
+
+    if (companyType) {
+      matchStage.companyTypes = { $in: [companyType] };
+    }
+
+    // Use aggregation to group questions by topic
+    const groupedQuestions = await DSAQuestion.aggregate([
+      { $match: matchStage },
+      { $unwind: "$topics" },
+      {
+        $group: {
+          _id: "$topics",
+          questions: {
+            $push: {
+              _id: "$_id",
+              title: "$title",
+              content: "$content",
+              domain: "$domain",
+              difficulty: "$difficulty",
+              companyTypes: "$companyTypes",
+              topics: "$topics"
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    // Transform to a more usable format
+    const result = {
+      domain,
+      filters: {
+        difficulty,
+        companyType
+      },
+      topics: groupedQuestions.map((group) => ({
+        topic: group._id,
+        questions: group.questions,
+        count: group.count
+      })),
+      totalQuestions: groupedQuestions.reduce((sum, g) => sum + g.count, 0)
+    };
+
+    return { data: result };
+  } catch (error) {
+    return { error: "Failed to fetch DSA questions by topic", details: error };
+  }
+};
+
 export {
     // Interview Sheet functions
     addAInterviewSheetToDB,
@@ -597,6 +661,7 @@ export {
     // DSA Question functions
     addDSAQuestionToDB,
     getAllDSAQuestionsFromDB,
+    getDSAQuestionsGroupedByTopic,
     getDSASheetMetadataFromDB
 }
 
