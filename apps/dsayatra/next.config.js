@@ -5,9 +5,11 @@ const nextConfig = {
   images: {
     domains: [],
   },
+  // Handle ESM packages like date-fns used by react-datepicker
+  serverComponentsExternalPackages: ['date-fns'],
   experimental: {
-    // Disable tracing to avoid symlink issues on Windows
-    outputFileTracing: false
+    // Disable ESM externals to handle date-fns properly
+    esmExternals: false,
   },
 }
 
