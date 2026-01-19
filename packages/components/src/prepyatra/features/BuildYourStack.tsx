@@ -53,8 +53,8 @@ const BuildYourStack = ({
                 {userSkills.map((skill) => (
                     <Badge
                         key={skill}
-                        className='flex items-center gap-1.5 bg-primary/20 text-primary font-medium px-3 py-1 rounded-full border border-primary/40 shadow-none text-xs'>
-                        <Code className='w-3.5 h-3.5 text-primary' />
+                        className='flex items-center gap-1.5 bg-white text-[#FF5757] font-medium px-3 py-1 rounded-full border border-[#FF5757]/40 hover:bg-[#FF5757] hover:text-white hover:border-[#FF5757] transition-all duration-200 shadow-none text-xs'>
+                        <Code className='w-3.5 h-3.5 text-inherit transition-colors' />
                         <Text level='span'>{skill}</Text>
                     </Badge>
                 ))}
@@ -64,8 +64,8 @@ const BuildYourStack = ({
                 variant='PRIMARY'
                 size='SMALL'
                 text='Add Skills'
-                icon={<Plus className='w-4 h-4' />}
-                className='text-sm h-5'
+                icon={<Plus className='w-3 h-3 -ml-1' />}
+                className='text-xs h-4 pr-1'
             />
             <AddSkillsModal
                 isOpen={modalOpen}
