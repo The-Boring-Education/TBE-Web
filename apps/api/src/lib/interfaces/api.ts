@@ -199,7 +199,7 @@ export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY";
 
 export type DSADomainType = "FRONTEND" | "BACKEND" | "GENERAL" | "FULLSTACK";
 
-export type DSADifficultyType = "Easy" | "Medium" | "Hard";
+export type DSADifficultyType = "EASY" | "MEDIUM" | "HARD";
 
 export type DSATopicType =
   | "ARRAY"

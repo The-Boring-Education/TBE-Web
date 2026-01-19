@@ -31,21 +31,6 @@ const handleAddQuestion = async (
 ) => {
   const questionData = req.body as AddInterviewQuestionRequestPayloadProps;
 
-  // Validate required fields
-  const requiredFields = ["title", "question", "answer"];
-  const missingFields = requiredFields.filter(
-    (field) => !questionData[field as keyof AddInterviewQuestionRequestPayloadProps]
-  );
-
-  if (missingFields.length > 0) {
-    return res.status(apiStatusCodes.BAD_REQUEST).json(
-      sendAPIResponse({
-        status: false,
-        message: `Missing required fields: ${missingFields.join(", ")}`,
-      })
-    );
-  }
-
   try {
     const { data, error } = await addQuestionToInterviewSheetInDB(
       sheetId,
