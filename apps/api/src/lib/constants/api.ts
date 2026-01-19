@@ -2725,7 +2725,7 @@ const LEADERBOARD_TYPES: LeaderboardType[] = ["DAILY", "WEEKLY", "MONTHLY"]
 
 const DSA_DOMAIN: DSADomainType[] = ["FRONTEND", "BACKEND", "GENERAL", "FULLSTACK"]
 
-const DSA_DIFFICULTY: DSADifficultyType[] = ["EASY", "MEDIUM", "HARD"]
+const DSA_DIFFICULTY: DSADifficultyType[] = ["Easy", "Medium", "Hard"]
 
 const DSA_TOPICS: DSATopicType[] = [
     "ARRAY",
