@@ -172,7 +172,8 @@ export interface InterviewSheetModel extends Document {
     price: number
     discountPercentage: number
     appliedCoupon?: typeof Schema.Types.ObjectId
-    questions: InterviewSheetQuestionModel[]
+    questions?: InterviewSheetQuestionModel[]
+    dsaQuestions?: DSAQuestionModel[]
     roadmap: RoadmapsType
     features: string[]
 }
@@ -216,6 +217,48 @@ export interface DSAQuestionModel extends Document {
     difficulty: DSADifficultyType
     companyTypes: CompanyType[]
     topics: DSATopicType[]
+    createdAt: Date
+    updatedAt: Date
+}
+
+export interface DSASheetModel extends Document {
+    _id: typeof Schema.Types.ObjectId
+    name: string
+    meta?: string
+    slug: string
+    coverImageURL: string
+    description: string
+    liveOn: Date
+    isPremium: boolean
+    price: number
+    discountPercentage: number
+    appliedCoupon?: typeof Schema.Types.ObjectId
+    questions: typeof Schema.Types.ObjectId[]
+    targetDomains: DSADomainType[]
+    targetDifficulties: DSADifficultyType[]
+    targetCompanyTypes: CompanyType[]
+    targetTopics: DSATopicType[]
+    features: string[]
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+}
+
+export interface UserDSASheetQuestionModel {
+    questionId: typeof Schema.Types.ObjectId
+    isCompleted: boolean
+    isStarred: boolean
+    notes?: string
+    completedAt?: Date
+}
+
+export interface UserDSASheetModel extends Document {
+    _id: typeof Schema.Types.ObjectId
+    userId: typeof Schema.Types.ObjectId
+    sheetId: typeof Schema.Types.ObjectId
+    sheet?: DSASheetModel
+    questions: UserDSASheetQuestionModel[]
+    lastAccessedAt: Date
     createdAt: Date
     updatedAt: Date
 }

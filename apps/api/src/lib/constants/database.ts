@@ -32,7 +32,7 @@ const DATABASE_MODELS = {
   LEADERBOARD: 'Leaderboard',
   USER_INTEREST: 'UserInterest',
   COUPON: 'Coupon',
-  DSA_QUESTION: 'DSAQuestion'
+  DSA_QUESTION: 'DSAQuestion',
 };
 
 export const FEEDBACK_TYPES = [
