@@ -3,10 +3,6 @@ import { Button, Footer, Navbar } from "@tbe/components"
 import { LearningSection, TabSection } from "@tbe/components/techyatra"
 import React from "react"
 
-// Disable static generation to avoid prerendering issues
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
-
 const Home = () => {
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
