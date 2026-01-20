@@ -225,5 +225,6 @@ export * from "./techyatra";
 export * from "./ui";
 
 export { default as QuestionDetails } from "./layout/QuestionDetails";
-export type { Question } from "./layout/QuestionDetails";
 export { default as QuestionSidebar } from "./layout/QuestionSidebar";
+export { default as PageHeader } from "./layout/PageHeader";
+export type { PageHeaderProps } from "./layout/PageHeader";

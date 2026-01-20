@@ -1,20 +1,9 @@
 import { ArrowLeft } from "lucide-react";
+import type { DSAQuestion, DSAQuestionDetailsProps } from "@tbe/types";
 
-export interface Question {
-    id: string;
-    title: string;
-    difficulty: "Easy" | "Medium" | "Hard";
-    tags: string[];
-    description: string;
-}
+export type { DSAQuestion };
 
-interface Props {
-    question: Question;
-    className?: string;
-    onBack?: () => void;
-}
-
-export default function QuestionDetails({ question, className = "", onBack }: Props) {
+export default function QuestionDetails({ question, className = "", onBack }: DSAQuestionDetailsProps) {
     return (
         <div className={`flex-1 p-6 md:p-8 overflow-y-auto ${className}`}>
             {onBack && (
@@ -41,9 +30,9 @@ export default function QuestionDetails({ question, className = "", onBack }: Pr
                     {question.difficulty}
                 </span>
 
-                {question.tags.map((tag, i) => (
+                {question.tags.map((tag, index) => (
                     <span
-                        key={i}
+                        key={index}
                         className="bg-zinc-800 text-zinc-400 px-3 py-1 text-xs rounded-full"
                     >
                         {tag}
@@ -57,3 +46,4 @@ export default function QuestionDetails({ question, className = "", onBack }: Pr
         </div>
     );
 }
+

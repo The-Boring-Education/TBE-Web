@@ -2,22 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useUser } from "@tbe/hooks";
+import { useApi, useUser } from "@tbe/hooks";
+import { routes } from "@tbe/constants";
+import type { DSAQuestion } from "@tbe/types";
 import {
   LoadingSpinner,
+  PageHeader,
   QuestionDetails,
   QuestionSidebar,
 } from "@tbe/components";
-import { ArrowLeft } from "lucide-react";
-import axios from "axios";
-
-export interface Question {
-  id: string;
-  title: string;
-  difficulty: "Easy" | "Medium" | "Hard";
-  tags: string[];
-  description: string;
-}
 
 interface BackendQuestion {
   _id: string;
@@ -25,54 +18,90 @@ interface BackendQuestion {
   content: string;
   domain: string[];
   difficulty: "EASY" | "MEDIUM" | "HARD";
+  isPremium?: boolean;
+}
+
+interface BackendSheet {
+  _id: string;
+  questions: BackendQuestion[];
+  isPremium?: boolean;
 }
 
 const DSAPrepPage = () => {
   const router = useRouter();
   const { user, loading: userLoading, isAuth } = useUser();
 
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [selected, setSelected] = useState<Question | null>(null);
-  const [loading, setLoading] = useState(true);
-  // Mobile view state: 'list' shows questions, 'details' shows selected question
+  const [questions, setQuestions] = useState<DSAQuestion[]>([]);
+  const [selected, setSelected] = useState<DSAQuestion | null>(null);
+  const [purchaseStatuses, setPurchaseStatuses] = useState<Record<string, boolean>>({});
   const [mobileView, setMobileView] = useState<"list" | "details">("list");
 
+  const { response, loading: sheetsLoading } = useApi("dsa-prep", {
+    url: `${routes.api.base}/interview-prep/dsa-sheet`,
+  });
+
+  // Check purchase status for premium content
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          "http://localhost:3004/api/v1/interview-prep/dsa-sheet"
-        );
+    if (response?.data && user?.id) {
+      const checkPurchaseStatuses = async () => {
+        const statuses: Record<string, boolean> = {};
+        const sheetData = response.data as BackendSheet;
 
-        const backendQuestions: BackendQuestion[] =
-          response.data.data.questions;
+        if (sheetData.isPremium) {
+          try {
+            const res = await fetch(
+              `${routes.api.base}${routes.api.checkStatus}?userId=${user.id}&productId=${sheetData._id}`,
+              { method: "GET" }
+            );
+            const result = await res.json();
+            statuses[sheetData._id] = result.status && result.data?.purchased;
+          } catch {
+            statuses[sheetData._id] = false;
+          }
+        }
 
-        const formatted: Question[] = backendQuestions.map((q) => ({
-          id: q._id,
-          title: q.title,
-          description: q.content,
-          tags: q.domain ?? [],
-          difficulty:
-            q.difficulty === "EASY"
-              ? "Easy"
-              : q.difficulty === "MEDIUM"
-                ? "Medium"
-                : "Hard",
-        }));
+        setPurchaseStatuses(statuses);
+      };
 
-        setQuestions(formatted);
+      checkPurchaseStatuses();
+    }
+  }, [response?.data, user?.id]);
+
+  // Format the backend response into DSAQuestion format
+  useEffect(() => {
+    if (response?.data?.questions) {
+      const backendQuestions: BackendQuestion[] = response.data.questions;
+
+      const formatted: DSAQuestion[] = backendQuestions.map((question) => ({
+        id: question._id,
+        title: question.title,
+        description: question.content,
+        tags: question.domain ?? [],
+        difficulty:
+          question.difficulty === "EASY"
+            ? "Easy"
+            : question.difficulty === "MEDIUM"
+              ? "Medium"
+              : "Hard",
+      }));
+
+      setQuestions(formatted);
+      if (formatted.length > 0 && !selected) {
         setSelected(formatted[0]);
-      } catch (error) {
-        console.error("Error fetching questions:", error);
-      } finally {
-        setLoading(false);
       }
     }
+  }, [response?.data?.questions, selected]);
 
-    fetchData();
-  }, []);
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!userLoading && !isAuth) {
+      router.push("/login");
+    }
+  }, [userLoading, isAuth, router]);
 
-  if (userLoading || loading || !selected) {
+  const loading = userLoading || sheetsLoading;
+
+  if (loading || !selected) {
     return (
       <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
         <LoadingSpinner />
@@ -81,31 +110,22 @@ const DSAPrepPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white">
-      {/* Sticky Header with Back Button */}
-      <header className="sticky top-0 z-10 bg-[#0A0A0A]/90 backdrop-blur border-b border-gray-800">
-        <div className="max-w-[1600px] mx-auto px-3 md:px-4 py-2 md:py-3 flex items-center justify-between">
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="flex items-center gap-2 text-gray-300 hover:text-primary transition-all"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Back to Dashboard</span>
-          </button>
-          <div className="text-right">
-            <h1 className="text-base md:text-lg font-semibold text-white">DSA Practice</h1>
-            <p className="text-xs text-gray-500">{questions.length} Questions</p>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#0A0A0A] text-white flex flex-col">
+      {/* Reusable Sticky Header Component */}
+      <PageHeader
+        title="DSA Practice"
+        subtitle={`${questions.length} Questions`}
+        backHref="/dashboard"
+        backText="Back to Dashboard"
+      />
 
-      {/* Two-Column Layout */}
-      <div className="flex h-[calc(100vh-57px)]">
+      {/* Two-Column Layout - using flex-1 for dynamic height */}
+      <div className="flex flex-1 overflow-hidden">
         <QuestionSidebar
           questions={questions}
           selected={selected}
-          onSelect={(q) => {
-            setSelected(q);
+          onSelect={(question) => {
+            setSelected(question);
             setMobileView("details");
           }}
           className={mobileView === "details" ? "hidden md:block" : ""}
