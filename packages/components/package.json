@@ -26,6 +26,10 @@
     "./analytics": {
       "import": "./src/analytics.ts",
       "require": "./src/analytics.ts"
+    },
+    "./layout/QuestionDetails": {
+      "types": "./src/layout/QuestionDetails.tsx",
+      "default": "./src/layout/QuestionDetails.tsx"
     }
   },
   "scripts": {

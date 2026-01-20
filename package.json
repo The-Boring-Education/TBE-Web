@@ -75,12 +75,14 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.3.0",
+    "lucide-react": "^0.562.0",
     "react-day-picker": "^8.10.1",
     "react-markdown": "^10.1.0",
     "react-query": "3.39.3",
     "react-syntax-highlighter": "^15.6.1",
     "remark-gfm": "^4.0.1",
     "sonner": "^1.5.0",
+    "styled-jsx": "^5.1.7",
     "tailwind-merge": "^2.5.2",
     "vercel": "^48.1.4"
   }
