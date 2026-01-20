@@ -10,15 +10,17 @@ interface Props {
     questions: Question[];
     selected: Question;
     onSelect: (question: Question) => void;
+    className?: string;
 }
 
 export default function QuestionSidebar({
     questions,
     selected,
     onSelect,
+    className = "",
 }: Props) {
     return (
-        <div className="w-[320px] border-r border-zinc-800 p-3 space-y-3 overflow-y-auto">
+        <div className={`w-full md:w-[320px] border-r border-zinc-800 p-3 space-y-3 overflow-y-auto ${className}`}>
             {questions.map((q) => (
                 <div
                     key={q.id}

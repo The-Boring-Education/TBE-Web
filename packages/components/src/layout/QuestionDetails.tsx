@@ -1,3 +1,5 @@
+import { ArrowLeft } from "lucide-react";
+
 export interface Question {
     id: string;
     title: string;
@@ -8,12 +10,23 @@ export interface Question {
 
 interface Props {
     question: Question;
+    className?: string;
+    onBack?: () => void;
 }
 
-export default function QuestionDetails({ question }: Props) {
+export default function QuestionDetails({ question, className = "", onBack }: Props) {
     return (
-        <div className="flex-1 p-8 overflow-y-auto">
-            <h1 className="text-2xl font-bold mb-3">{question.title}</h1>
+        <div className={`flex-1 p-6 md:p-8 overflow-y-auto ${className}`}>
+            {onBack && (
+                <button
+                    onClick={onBack}
+                    className="flex items-center gap-2 text-gray-400 hover:text-white mb-4 md:hidden"
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Questions
+                </button>
+            )}
+            <h1 className="text-xl md:text-2xl font-bold mb-3">{question.title}</h1>
 
             <div className="flex gap-2 mb-6">
                 <span
