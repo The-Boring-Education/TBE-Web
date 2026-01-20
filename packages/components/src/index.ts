@@ -223,3 +223,7 @@ export {
 // Export all UI components from the main ui directory
 export * from "./techyatra";
 export * from "./ui";
+
+export { default as QuestionDetails } from "./layout/QuestionDetails";
+export type { Question } from "./layout/QuestionDetails";
+export { default as QuestionSidebar } from "./layout/QuestionSidebar";
