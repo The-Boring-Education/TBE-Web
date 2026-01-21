@@ -248,7 +248,7 @@ const CampusPrepDashboard = () => {
               <p className="text-2xl font-bold text-white">
                 {quizLoading ? "..." : totalQuizAttempts}
               </p>
-              <p className="text-xs text-gray-500 mt-1">Quizzes completed</p>
+              <p className="text-xs text-gray-500 mt-1">Quizes completed</p>
             </div>
 
             <div className="p-4 bg-[#1A1A1A] rounded-lg border border-gray-800">
@@ -309,7 +309,7 @@ const CampusPrepDashboard = () => {
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center justify-between p-4 bg-[#1A1A1A] rounded-lg border border-gray-800">
             <div>
-              <p className="text-white font-semibold">Quizzes</p>
+              <p className="text-white font-semibold">Quizes</p>
               <p className="text-xs text-gray-400 mt-1">
                 Topic-wise MCQs with instant results
               </p>
