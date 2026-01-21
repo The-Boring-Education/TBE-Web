@@ -1,4 +1,5 @@
 import { useAuth } from "@tbe/auth";
+import { cleanOptionText } from "@tbe/utils";
 import { config } from "@tbe/config/quizes";
 import { quizApi } from "@tbe/services";
 import { MarkdownRenderer } from "@tbe/components/quizes";
@@ -281,7 +282,7 @@ export default function ResultsPage() {
                               {String.fromCharCode(65 + optionIndex)}.
                             </span>
                             <div className="flex-1">
-                              <MarkdownRenderer content={option.replace(/^[A-Z0-9][.)\s]\s*/, "")} theme="dark" className="text-gray-100" />
+                              <MarkdownRenderer content={cleanOptionText(option)} theme="dark" className="text-gray-100" />
                             </div>
                           </div>
 

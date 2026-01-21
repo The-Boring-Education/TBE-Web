@@ -4,7 +4,7 @@ import { MarkdownRenderer } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { quizApi } from "@tbe/services"
 import type {Question} from "@tbe/types"
-import { trackEvent } from "@tbe/utils"
+import { trackEvent, cleanOptionText } from "@tbe/utils"
 import { ArrowLeft, Clock, Target,Trophy } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useMemo,useRef } from "react"
@@ -233,8 +233,8 @@ function ResultsContent() {
                                     key={question.id}
                                     className={`border-2 rounded-lg p-6 ${
                                         isCorrect
-                                            ? "border-green-200 bg-green-50"
-                                            : "border-red-200 bg-red-50"
+                                        ? "border-green-200 bg-green-50"
+                                        : "border-red-200 bg-red-50"
                                         }`}>
                                     <div className='flex items-start justify-between mb-4'>
                                         <h3 className='text-lg font-semibold text-gray-900'>
@@ -243,8 +243,8 @@ function ResultsContent() {
                                         <span
                                             className={`px-3 py-1 rounded-full text-sm font-semibold ${
                                                 isCorrect
-                                                    ? "bg-green-100 text-green-800"
-                                                    : "bg-red-100 text-red-800"
+                                                ? "bg-green-100 text-green-800"
+                                                : "bg-red-100 text-red-800"
                                                 }`}>
                                             {isCorrect
                                                 ? "Correct"
@@ -266,13 +266,13 @@ function ResultsContent() {
                                                     key={optionIndex}
                                                     className={`p-3 rounded-lg border-2 ${
                                                         optionIndex ===
-                                                            question.correctAnswer
-                                                            ? "border-green-500 bg-green-100"
-                                                            : optionIndex ===
-                                                                userAnswer &&
-                                                                !isCorrect
-                                                                ? "border-red-500 bg-red-100"
-                                                                : "border-gray-200 bg-white"
+                                                        question.correctAnswer
+                                                        ? "border-green-500 bg-green-100"
+                                                        : optionIndex ===
+                                                            userAnswer &&
+                                                            !isCorrect
+                                                            ? "border-red-500 bg-red-100"
+                                                            : "border-gray-200 bg-white"
                                                         }`}>
                                                     <div className='flex items-start'>
                                                         <span className='font-semibold mr-2 mt-1 flex-shrink-0'>
@@ -283,10 +283,7 @@ function ResultsContent() {
                                                         </span>
                                                         <div className='flex-1'>
                                                             <MarkdownRenderer
-                                                                content={option.replace(
-                                                                    /^[A-Z0-9][.)\s]\s*/,
-                                                                    ""
-                                                                )}
+                                                                content={cleanOptionText(option)}
                                                                 className='text-left'
                                                             />
                                                         </div>
