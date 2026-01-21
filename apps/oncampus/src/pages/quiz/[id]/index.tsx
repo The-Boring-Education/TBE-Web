@@ -258,7 +258,7 @@ export default function QuizPage() {
                       {String.fromCharCode(65 + index)}
                     </div>
                     <div className="ml-1 flex-1 text-primary text-base font-bold flex items-center">
-                      <CodeRenderer content={option} theme="dark" className="max-w-none" />
+                      <CodeRenderer content={option.replace(/^[A-Z0-9][.)\s]\s*/, "")} theme="dark" className="max-w-none" />
                     </div>
                     {isSelected && <CheckCircle2 className="w-5 h-5 text-[#FF5757] ml-3 flex-shrink-0" />}
                   </div>

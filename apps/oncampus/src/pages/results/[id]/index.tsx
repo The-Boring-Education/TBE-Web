@@ -281,7 +281,7 @@ export default function ResultsPage() {
                               {String.fromCharCode(65 + optionIndex)}.
                             </span>
                             <div className="flex-1">
-                              <MarkdownRenderer content={option} theme="dark" className="text-gray-100" />
+                              <MarkdownRenderer content={option.replace(/^[A-Z0-9][.)\s]\s*/, "")} theme="dark" className="text-gray-100" />
                             </div>
                           </div>
 
