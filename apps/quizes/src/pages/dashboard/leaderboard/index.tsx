@@ -9,17 +9,17 @@ import { useToast } from '@tbe/components/quizes'
 import { APIError,leaderboardApi, userProfileApi } from '@tbe/services'
 import type { LeaderboardData, UserProfile } from '@tbe/types'
 import { formatDate } from '@tbe/utils'
-import {
+import { 
     Award,
     Clock,
-    Crown,
+    Crown, 
     Eye,
     Filter,
-    Medal,
+    Medal, 
     RefreshCw,
-    Star,
-    Target,
-    TrendingUp,
+    Star, 
+    Target, 
+    TrendingUp, 
     Trophy} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
 
@@ -85,12 +85,12 @@ function LeaderboardEntry({ entry, isCurrentUser, onViewProfile }: LeaderboardEn
 
     return (
         <div className={`flex items-center space-x-4 p-4 rounded-lg transition-all duration-200 ${
-            isCurrentUser
-                ? 'bg-primary/10 border border-primary/20'
+            isCurrentUser 
+                ? 'bg-primary/10 border border-primary/20' 
                 : 'hover:bg-muted/50'
-            }`}>
+        }`}>
             <RankBadge rank={entry.rank} />
-
+            
             <div className="flex items-center space-x-3 flex-1">
                 <Avatar className="h-10 w-10">
                     <AvatarImage src={entry.image} alt={entry.username} />
@@ -98,7 +98,7 @@ function LeaderboardEntry({ entry, isCurrentUser, onViewProfile }: LeaderboardEn
                         {getInitials(entry.username)}
                     </AvatarFallback>
                 </Avatar>
-
+                
                 <div className="flex-1">
                     <div className="flex items-center space-x-2">
                         <h3 className={`font-semibold ${isCurrentUser ? 'text-primary' : ''}`}>
@@ -126,14 +126,14 @@ function LeaderboardEntry({ entry, isCurrentUser, onViewProfile }: LeaderboardEn
                     </div>
                 </div>
             </div>
-
+            
             <div className="text-right">
                 <div className="text-2xl font-bold text-primary">
                     {entry.bestScore}%
                 </div>
                 <div className="text-sm text-muted-foreground">best score</div>
             </div>
-
+            
             <Button
                 variant="ghost"
                 size="sm"
@@ -175,7 +175,7 @@ function UserProfileModal({ profile, isOpen, onClose }: UserProfileModalProps) {
                             ×
                         </Button>
                     </div>
-
+                    
                     <div className="text-center mb-6">
                         <Avatar className="h-20 w-20 mx-auto mb-4">
                             <AvatarImage src={profile.userImage} alt={profile.userName} />
@@ -186,7 +186,7 @@ function UserProfileModal({ profile, isOpen, onClose }: UserProfileModalProps) {
                         <h3 className="text-lg font-semibold">{profile.userName}</h3>
                         <p className="text-muted-foreground">{profile.userEmail}</p>
                     </div>
-
+                    
                     <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="text-center p-3 bg-muted/30 rounded-lg">
                             <p className="text-2xl font-bold text-primary">{profile.totalPoints}</p>
@@ -197,7 +197,7 @@ function UserProfileModal({ profile, isOpen, onClose }: UserProfileModalProps) {
                             <p className="text-sm text-muted-foreground">Rank</p>
                         </div>
                     </div>
-
+                    
                     <div className="space-y-3 mb-6">
                         <div className="flex justify-between text-sm">
                             <span>Member since:</span>
@@ -208,7 +208,7 @@ function UserProfileModal({ profile, isOpen, onClose }: UserProfileModalProps) {
                             <span className="font-medium">{formatDate({ dateAndTime: profile.lastActiveDate }).date}</span>
                         </div>
                     </div>
-
+                    
                     {profile.achievements.length > 0 && (
                         <div>
                             <h4 className="font-semibold mb-3">Achievements</h4>
@@ -311,7 +311,7 @@ function LeaderboardContent() {
     return (
         <div className="min-h-screen bg-background">
             <DashboardNav />
-
+            
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header */}
                 <div className="mb-8">
@@ -401,24 +401,24 @@ function LeaderboardContent() {
                                 <Trophy className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                                 <h3 className="text-lg font-semibold mb-2">No rankings available</h3>
                                 <p className="text-muted-foreground">
-                                    Start taking quizes to appear on the leaderboard
+                                    Start taking quizzes to appear on the leaderboard
                                 </p>
                             </div>
                         ) : (
                             <div className="space-y-2">
-                                {leaderboard.map((entry, index) => (
-                                    <div
-                                        key={entry._id}
-                                        className="animate-fade-in"
-                                        style={{ animationDelay: `${index * 0.1}s` }}
-                                    >
-                                        <LeaderboardEntry
-                                            entry={entry}
-                                            isCurrentUser={entry._id === user?.id}
-                                            onViewProfile={handleViewProfile}
-                                        />
-                                    </div>
-                                ))}
+                                                        {leaderboard.map((entry, index) => (
+                            <div
+                                key={entry._id}
+                                className="animate-fade-in"
+                                style={{ animationDelay: `${index * 0.1}s` }}
+                            >
+                                <LeaderboardEntry
+                                    entry={entry}
+                                    isCurrentUser={entry._id === user?.id}
+                                    onViewProfile={handleViewProfile}
+                                />
+                            </div>
+                        ))}
                             </div>
                         )}
                     </CardContent>

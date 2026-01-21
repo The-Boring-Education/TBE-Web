@@ -232,7 +232,7 @@ function AttemptCard({ attempt, showDetails = false }: AttemptCardProps) {
                                             {Math.round(
                                                 (attempt.pointsEarned /
                                                     attempt.timeTaken) *
-                                                60
+                                                    60
                                             )}{" "}
                                             pts/min
                                         </span>
@@ -359,9 +359,9 @@ function HistoryContent() {
     const averageScore =
         attempts.length > 0
             ? Math.round(
-                attempts.reduce((sum, attempt) => sum + attempt.score, 0) /
-                attempts.length
-            )
+                  attempts.reduce((sum, attempt) => sum + attempt.score, 0) /
+                      attempts.length
+              )
             : 0
     const totalTimeSpent = attempts.reduce(
         (sum, attempt) => sum + attempt.timeTaken,
@@ -378,20 +378,20 @@ function HistoryContent() {
     const recentAverage =
         recentAttempts.length > 0
             ? Math.round(
-                recentAttempts.reduce(
-                    (sum, attempt) => sum + attempt.score,
-                    0
-                ) / recentAttempts.length
-            )
+                  recentAttempts.reduce(
+                      (sum, attempt) => sum + attempt.score,
+                      0
+                  ) / recentAttempts.length
+              )
             : 0
     const previousAverage =
         previousAttempts.length > 0
             ? Math.round(
-                previousAttempts.reduce(
-                    (sum, attempt) => sum + attempt.score,
-                    0
-                ) / previousAttempts.length
-            )
+                  previousAttempts.reduce(
+                      (sum, attempt) => sum + attempt.score,
+                      0
+                  ) / previousAttempts.length
+              )
             : 0
 
     return (
@@ -591,7 +591,7 @@ function HistoryContent() {
                                 <p className='text-muted-foreground'>
                                     {searchTerm || selectedCategory
                                         ? "Try adjusting your filters or search terms"
-                                        : "Start taking quizes to see your performance history here"}
+                                        : "Start taking quizzes to see your performance history here"}
                                 </p>
                             </CardContent>
                         </Card>

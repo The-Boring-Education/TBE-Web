@@ -166,7 +166,7 @@ export default function ResultsPage() {
             className="flex items-center gap-2 text-gray-300 hover:text-white"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Quizes
+            Back to Quizzes
           </button>
         </div>
       </header>
@@ -224,7 +224,7 @@ export default function ResultsPage() {
               onClick={() => router.push("/dashboard/quizzes")}
               className="flex-1 border border-[#FF5757] text-[#FF5757] py-3 px-6 rounded-lg font-semibold hover:bg-[#FF5757]/10 transition-colors"
             >
-              Back to Quizes
+              Back to Quizzes
             </button>
           </div>
         </div>

@@ -7,7 +7,7 @@ import { useQuizData } from "@tbe/hooks"
 import { gamificationApi } from "@tbe/services"
 import { BookOpen,Play } from "lucide-react"
 import { useRouter } from "next/router"
-import React, { useEffect } from "react"
+  import React, { useEffect } from "react"
 
 function DashboardContent() {
   const { user } = useAuth()
@@ -80,7 +80,7 @@ function DashboardContent() {
               <CardHeader className="bg-white">
                 <CardTitle className="flex items-center space-x-2 text-2xl">
                   <BookOpen className="h-6 w-6 text-[#ef4444]" />
-                  <span>Available Quizes</span>
+                  <span>Available Quizzes</span>
                 </CardTitle>
                 <CardDescription className="text-lg">
                   Choose a quiz category to start testing your knowledge
@@ -90,7 +90,7 @@ function DashboardContent() {
                 {categories.length === 0 ? (
                   <div className="text-center py-16">
                     <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500 text-lg mb-6">No quizes available</p>
+                    <p className="text-gray-500 text-lg mb-6">No quizzes available</p>
                     <Button onClick={refetch} variant="OUTLINE" size="LARGE">
                       Refresh
                     </Button>
@@ -114,8 +114,8 @@ function DashboardContent() {
                             <p className="text-gray-600 mb-6 line-clamp-3">
                               {category.categoryDescription}
                             </p>
-                            <Button
-                              className="w-full rounded-md text-white"
+                            <Button 
+                              className="w-full rounded-md text-white" 
                               variant="PRIMARY"
 
                               icon={<Play className="h-5 w-5 mr-2" />}
