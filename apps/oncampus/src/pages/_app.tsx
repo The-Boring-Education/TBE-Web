@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { Toaster } from 'sonner';
 import DashboardLayout from '@/components/DashboardLayout';
 
 // Create a client
@@ -90,6 +91,7 @@ const OnCampusApp = ({
         refetchOnWindowFocus
       >
         <AppContent Component={Component} pageProps={pageProps} />
+        <Toaster position="top-center" richColors />
       </SessionProvider>
     </Fragment>
   );

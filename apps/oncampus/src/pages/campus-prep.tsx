@@ -1,7 +1,8 @@
 import { Fragment } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@tbe/components";
-import { Bell, BookOpen, Code, FileText, Clipboard, Users, Briefcase, ClipboardList } from "lucide-react";
+import { CAMPUS_PREP_RESOURCES, type ResourceItem } from "@tbe/constants";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -11,6 +12,17 @@ export default function CampusPrepLanding() {
 
   const handleGetStarted = () => {
     router.push("/login");
+  };
+
+  const handleResourceClick = (resource: ResourceItem) => {
+    if (!resource.isAvailable) {
+      toast.info("Stay tuned, coming soon...", {
+        description: `${resource.title} will be available soon. We're working hard to bring this feature to you!`,
+        duration: 3000,
+      });
+      return;
+    }
+    router.push(resource.href);
   };
 
   return (
@@ -93,15 +105,7 @@ export default function CampusPrepLanding() {
           </p>
 
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { title: "Aptitude Practice", desc: "Daily challenges, streak tracking & top practice links for Quant, Verbal, DI, and Reasoning.", href: "/aptitude", Icon: BookOpen },
-              { title: "Quizes", desc: "Topic-wise quizes with instant results and performance tracking.", href: "/dashboard/quizzes", Icon: ClipboardList },
-              { title: "Interview Prep", desc: "CS Fundamentals, HR tips, mock interview questions, and more.", href: "/interview-prep", Icon: Code },
-              { title: "DSA Preparation", desc: "Playlists, coding sites, and problem sets for hands-on algorithm practice.", href: "/dsa", Icon: FileText },
-              { title: "Resume Zone", desc: "Live preview builder and free templates for standout resumes.", href: "/resume", Icon: Clipboard },
-              { title: "Interview Experiences", desc: "Real candidate stories and advice from recent interviews.", href: "/experiences", Icon: Users },
-              { title: "Company Hub", desc: "Practice company-specific questions, get campus ready.", href: "/companies", Icon: Briefcase },
-            ].map((item) => (
+            {CAMPUS_PREP_RESOURCES.map((item) => (
               <motion.a
                 key={item.title}
                 whileHover={{
@@ -111,7 +115,21 @@ export default function CampusPrepLanding() {
                     "0 20px 40px rgba(255,87,87,0.28), 0 0 0 8px rgba(255,87,87,0.12)",
                 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                href={item.href}
+                href={item.isAvailable ? item.href : undefined}
+                onClick={(e) => {
+                  if (!item.isAvailable) {
+                    e.preventDefault();
+                    toast.info("Stay tuned, coming soon...", {
+                      description: `${item.title} will be available soon. We're working hard to bring this feature to you!`,
+                      duration: 3000,
+                      style: {
+                        background: 'rgba(255, 87, 87, 0.6)',
+                        color: '#FFFFFF',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                      },
+                    });
+                  }
+                }}
                 className="
                   block rounded-2xl p-5
                   bg-[#0c0c10]                
