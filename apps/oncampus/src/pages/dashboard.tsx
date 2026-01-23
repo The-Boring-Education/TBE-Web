@@ -158,7 +158,7 @@ const CampusPrepDashboard = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Card */}
-      <Card className=" border-gray-800">
+      <Card className="rounded-lg border border-gray-800 transition-all duration-00 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -177,7 +177,7 @@ const CampusPrepDashboard = () => {
       </Card>
 
       {/* Continue Learning Card - Last Sheets Studied */}
-      <Card className=" border-gray-800">
+      <Card className="rounded-lg border border-gray-800 transition-all duration-00 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
         <CardHeader>
           <CardTitle className="text-white">Continue where you left off</CardTitle>
           <CardDescription className="text-gray-400">
@@ -197,7 +197,7 @@ const CampusPrepDashboard = () => {
             enrolledSheets.map((sheet) => (
               <div
                 key={sheet._id}
-                className="flex items-center justify-between p-3 bg-[#1A1A1A] rounded-lg border border-gray-800"
+                className="flex items-center justify-between p-3 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg"
               >
                 <div className="flex-1">
                   <h4 className="text-sm font-medium text-white mb-1">
@@ -229,7 +229,7 @@ const CampusPrepDashboard = () => {
       </Card>
 
       {/* Quiz Insights Section */}
-      <Card className="border-gray-800">
+      <Card className="rounded-lg border border-gray-800 transition-all duration-00 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             Quiz Insights
@@ -240,7 +240,8 @@ const CampusPrepDashboard = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-[#1A1A1A] rounded-lg border border-gray-800">
+            {/* Total Attempts Card */}
+            <div className="p-4 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-sm text-gray-400">Total Attempts</p>
                 <Trophy className="w-4 h-4 text-yellow-500" />
@@ -248,10 +249,11 @@ const CampusPrepDashboard = () => {
               <p className="text-2xl font-bold text-white">
                 {quizLoading ? "..." : totalQuizAttempts}
               </p>
-              <p className="text-xs text-gray-500 mt-1">Quizzes completed</p>
+              <p className="text-xs text-gray-500 mt-1">Quizes completed</p>
             </div>
 
-            <div className="p-4 bg-[#1A1A1A] rounded-lg border border-gray-800">
+            {/* Average Score Card */}
+            <div className="p-4 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-sm text-gray-400">Average Score</p>
                 <TrendingUp className="w-4 h-4 text-green-500" />
@@ -259,7 +261,9 @@ const CampusPrepDashboard = () => {
               <p className="text-2xl font-bold text-white">
                 {quizLoading ? "..." : averageScore}%
               </p>
-              <p className="text-xs text-gray-500 mt-1">Based on recent attempts</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Based on recent attempts
+              </p>
             </div>
           </div>
 
@@ -270,7 +274,7 @@ const CampusPrepDashboard = () => {
                 {quizAttempts.slice(0, 3).map((attempt) => (
                   <div
                     key={attempt._id}
-                    className="flex items-center justify-between p-3 bg-[#1A1A1A] rounded-lg border border-gray-800"
+                    className="p-3 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between"
                   >
                     <div className="flex-1">
                       <p className="text-sm text-white">
@@ -295,9 +299,8 @@ const CampusPrepDashboard = () => {
           )}
         </CardContent>
       </Card>
-
       {/* Practice Section */}
-      <Card className="border-gray-800">
+      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             Practice
@@ -307,7 +310,7 @@ const CampusPrepDashboard = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center justify-between p-4 bg-[#1A1A1A] rounded-lg border border-gray-800">
+          <div className="p-3 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between">
             <div>
               <p className="text-white font-semibold">Quizzes</p>
               <p className="text-xs text-gray-400 mt-1">
@@ -323,7 +326,7 @@ const CampusPrepDashboard = () => {
             />
           </div>
 
-          <div className="flex items-center justify-between p-4 bg-[#1A1A1A] rounded-lg border border-gray-800">
+          <div className="p-3 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between">
             <div>
               <p className="text-white font-semibold">Interview Sheets</p>
               <p className="text-xs text-gray-400 mt-1">
@@ -333,7 +336,7 @@ const CampusPrepDashboard = () => {
             <Button
               variant="OUTLINE"
               size="SMALL"
-              className="border-gray-700 text-white hover:bg-gray-800"
+              className="border-gray-700 text-white hover:bg-gray-800 w-20 h-15"
               text="Open"
               onClick={() => router.push("/dashboard/interview-prep")}
             />
