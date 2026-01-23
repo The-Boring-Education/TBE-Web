@@ -99,8 +99,8 @@ const QuizzesDashboardPage = () => {
                       <Button
                         variant="PRIMARY"
                         size="SMALL"
-                        className="rounded-md mx-auto text-white bg-[#FF5757] hover:bg-[#FF5757]/90"
-                        icon={<Play className="h-4 w-4 " />}
+                        className="rounded-md text-white bg-[#FF5757] hover:bg-[#FF5757]/90 ml-1 flex items-center justify-center px-2"
+                        icon={<Play className="h-3 w-3 " />}
                         text="Start Quiz"
                       />
                     </div>
