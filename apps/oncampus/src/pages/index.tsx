@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <Fragment>
       <Navbar variant="oncampus" theme="dark" />
-        <CampusPrepLanding />
+      <CampusPrepLanding />
       <Footer variant="oncampus" />
     </Fragment>
   )

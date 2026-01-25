@@ -76,7 +76,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <SidebarInset className="bg-[#0A0A0A] flex flex-col min-h-screen">
           <Navbar variant="oncampus" theme="dark" />
 
-          <main className="flex-1 p-16 space-y-6">{children}</main>
+          <main className="flex-1 py-16 px-8 space-y-6">{children}</main>
 
         </SidebarInset>
       </div>
