@@ -1,22 +1,7 @@
 import { DsaQuestionCard } from "./DsaQuestionCard";
-
-export interface DsaQuestion {
-    name: string;
-    difficultyLevel: "EASY" | "MEDIUM" | "HARD";
-    id?: string | number;
-    content?: string;
-    domain?: string[];
-    companyType?: string[];
-    topics?: string[]
-}
+import { DsaQuestionListProps } from "@tbe/interface";
 
 
-interface DsaQuestionListProps {
-    questions: DsaQuestion[];
-    selectedQuestionId?: string | number;
-    onQuestionClick?: (question: DsaQuestion) => void;
-    className?: string;
-}
 
 const DsaQuestionList = ({
     questions,

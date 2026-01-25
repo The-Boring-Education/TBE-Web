@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { DsaQuestion } from "./DsaQuestionList";
+import { DsaQuestion, DsaSectionTabs } from "@tbe/interface";
 import { FlexContainer } from "@tbe/components";
 
 interface Props {
     question: DsaQuestion | null;
 }
 
-type Tab = "description" | "topics" | "companies";
 
 const QuestionDetailPanel = ({ question }: Props) => {
-    const [activeTab, setActiveTab] = useState<Tab>("description");
+    const [activeTab, setActiveTab] = useState<DsaSectionTabs>("description");
 
     if (!question) {
         return (
@@ -27,7 +26,7 @@ const QuestionDetailPanel = ({ question }: Props) => {
                 {["description", "topics", "companies",].map((tab) => (
                     <button
                         key={tab}
-                        onClick={() => setActiveTab(tab as Tab)}
+                        onClick={() => setActiveTab(tab as DsaSectionTabs)}
                         className={`px-2 py-1.5 text-sm rounded-full border transition ${activeTab === tab
                             ? "border-red-500 text-red-400 bg-red-950/30"
                             : "border-gray-600 text-gray-300 hover:border-gray-400"

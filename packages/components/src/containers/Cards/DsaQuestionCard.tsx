@@ -1,11 +1,7 @@
-interface DsaQuestionCardProps {
-    name: string;
-    difficultyLevel: "EASY" | "MEDIUM" | "HARD";
-    isSelected?: boolean;
-    onClick?: () => void;
-}
+import { DsaQuestionCardProps } from "@tbe/interface";
+import { QuestionDifficulty } from "node_modules/@tbe/interface/src/constants";
 
-const getDifficultyColor = (difficultyLevel: "EASY" | "MEDIUM" | "HARD") => {
+const getDifficultyColor = (difficultyLevel: QuestionDifficulty) => {
     const colors = {
         EASY: "text-green-400",
         MEDIUM: "text-orange-400",
