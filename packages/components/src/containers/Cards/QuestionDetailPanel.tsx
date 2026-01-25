@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { DsaQuestion, DsaSectionTabs } from "@tbe/interface";
+import { DsaQuestion } from "@tbe/interface";
+import type { DsaSectionTabs } from "@tbe/interface"
 import { FlexContainer } from "@tbe/components";
 
 interface Props {

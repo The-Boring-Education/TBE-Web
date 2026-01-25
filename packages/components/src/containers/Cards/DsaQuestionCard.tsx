@@ -1,5 +1,5 @@
 import { DsaQuestionCardProps } from "@tbe/interface";
-import { QuestionDifficulty } from "node_modules/@tbe/interface/src/constants";
+import { QuestionDifficulty } from "@tbe/interface";
 
 const getDifficultyColor = (difficultyLevel: QuestionDifficulty) => {
     const colors = {
