@@ -4,6 +4,16 @@ import type { QuizSession, QuizResult } from "@tbe/types";
 import { QuizQuestion } from "@tbe/types"
 
 /**
+ * Cleanup quiz option text by removing prefixes . "
+ * reusable utility for both oncampus and quizes apps
+ */
+export const cleanOptionText = (text: string): string => {
+    if (!text) return ""
+    // Regex matches uppercase letters or numbers followed by dot/paren/space and optional extra whitespace
+    return text.replace(/^[A-Z0-9][.)\s]\s*/, "").trim()
+}
+
+/**
  * Quiz Service
  *
  * Extracted from quizes app and made reusable

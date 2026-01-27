@@ -8,6 +8,7 @@ import {useGamification} from "@tbe/hooks"
 import { gamificationApi, quizApi } from "@tbe/services"
 import type { QuizQuestion } from "@tbe/types"
 import { useRouter } from "next/router"
+import { cleanOptionText } from "@tbe/utils"
 import { useCallback,useEffect, useState } from "react"
 
 interface QuizCategory {
@@ -49,22 +50,18 @@ function QuizContent() {
     // Helper: Resolve Google ID to MongoDB user ID
     const resolveGoogleIdToMongoId = async (googleId: string, email: string, sessionData?: any): Promise<string | null> => {
         try {
-            console.log('🔍 Resolving Google ID to MongoDB ID:', { googleId, email })
-            
+
             // First try to get user by email
             const base = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '')
             const response = await fetch(`${base}/user?email=${encodeURIComponent(email)}`)
             const data = await response.json()
-            
-            console.log('📊 User lookup response:', data)
-            
+
+
             if (data?.success && data?.data?._id && isMongoObjectId(data.data._id)) {
-                console.log('✅ Found MongoDB user ID:', data.data._id)
                 return data.data._id
             }
-            
+
             // If not found by email, try to create user or get by Google ID
-            console.log('⚠️ User not found by email, trying to create user...')
             const createResponse = await fetch(`${base}/user`, {
                 method: 'POST',
                 headers: {
@@ -77,19 +74,15 @@ function QuizContent() {
                     image: sessionData?.user?.image || ''
                 })
             })
-            
+
             const createData = await createResponse.json()
-            console.log('📊 User creation response:', createData)
-            
+
             if (createData?.success && createData?.data?._id && isMongoObjectId(createData.data._id)) {
-                console.log('✅ Created new user with MongoDB ID:', createData.data._id)
                 return createData.data._id
             }
-            
-            console.error('❌ Failed to resolve or create user')
+
             return null
         } catch (error) {
-            console.error('❌ Error resolving Google ID to MongoDB ID:', error)
             return null
         }
     }
@@ -161,23 +154,14 @@ function QuizContent() {
         }))
 
         // Auto-navigate to next question or complete quiz
-        console.log('➡️ Answer selected, checking if last question...', { 
-            currentIndex: currentQuestionIndex, 
-            totalQuestions: quiz?.questions.length,
-            isLastQuestion: currentQuestionIndex >= (quiz?.questions.length || 0) - 1,
-            isSubmitting,
-            gameState
-        })
-        
+
         if (isSubmitting || gameState === "submitting" || gameState === "completed") {
-            console.log('⚠️ Quiz already being submitted or completed, ignoring...')
             return
         }
-        
+
         if (currentQuestionIndex < (quiz?.questions.length || 0) - 1) {
             setCurrentQuestionIndex((prev) => prev + 1)
         } else {
-            console.log('🏁 Last question reached, completing quiz...')
             completeQuiz()
         }
     }
@@ -186,43 +170,30 @@ function QuizContent() {
     const completeQuiz = async () => {
         // Prevent duplicate submissions
         if (isSubmitting || gameState === "submitting" || gameState === "completed") {
-            console.log('⚠️ Quiz already being submitted or completed, ignoring duplicate call')
             return
         }
 
-        console.log('🎯 completeQuiz called!', { quiz: !!quiz, userId: user?.id, resolvedUserId })
-        
+
         // Set submitting state immediately
         setIsSubmitting(true)
         setGameState("submitting")
-        
+
         // Try to get user ID from multiple sources
         const effectiveUserId = user?.id || (user as any)?._id || resolvedUserId
-        
+
         if (!quiz || !effectiveUserId) {
-            console.log('❌ Cannot complete quiz - missing data:', { 
-                quiz: !!quiz, 
-                userId: user?.id, 
-                _id: (user as any)?._id,
-                resolvedUserId,
-                effectiveUserId
-            })
-            
+
             // Try to get user data from session directly as fallback
             try {
                 const sessionResponse = await fetch('/api/auth/session')
                 const sessionData = await sessionResponse.json()
-                console.log('🔍 Session data fallback:', sessionData)
-                
+
                 if (sessionData?.user?.id) {
-                    console.log('✅ Using session user ID as fallback:', sessionData.user.id)
                     // Check if it's already a MongoDB ID or needs resolution
                     if (isMongoObjectId(sessionData.user.id)) {
-                        console.log('✅ Session user ID is already MongoDB ID')
                         await submitQuizWithUserId(sessionData.user.id)
                         return
                     } else {
-                        console.log('⚠️ Session user ID is Google ID, resolving to MongoDB ID')
                         // Resolve Google ID to MongoDB user ID
                         const mongoUserId = await resolveGoogleIdToMongoId(sessionData.user.id, sessionData.user.email, sessionData)
                         if (mongoUserId) {
@@ -232,15 +203,14 @@ function QuizContent() {
                     }
                 }
             } catch (error) {
-                console.error('❌ Failed to get session data:', error)
             }
-            
+
             // Reset state on error
             setIsSubmitting(false)
             setGameState("playing")
             return
         }
-        
+
         await submitQuizWithUserId(effectiveUserId)
     }
 
@@ -265,7 +235,6 @@ function QuizContent() {
 
             // Check if userId is a valid Mongo ObjectId
             if (!isMongoObjectId(userId)) {
-                console.log('⚠️ User ID is not a Mongo ObjectId, using as-is:', userId)
             }
 
             const submission = {
@@ -274,9 +243,7 @@ function QuizContent() {
                 totalTimeSpent
             }
 
-            console.log('🚀 Submitting quiz with data:', submission)
             const response = await quizApi.submitQuiz(quizId, submission)
-            console.log('📊 Quiz submission response:', response)
 
             // Type guard to check if response has the expected structure
             if (
@@ -291,39 +258,35 @@ function QuizContent() {
                     userId: userId,
                     actionType: "COMPLETE_QUIZ"
                 }).catch(() => {}) // Ignore errors
-                
+
                 // Redirect immediately using window.location for instant navigation
                 const answersParam = JSON.stringify(answers.map(a => a.selectedAnswer))
                 const timeTakenParam = totalTimeSpent.toString()
-                console.log('✅ Quiz submitted successfully, redirecting immediately...')
-                
+
                 window.location.href = `/results/${quizId}?answers=${encodeURIComponent(answersParam)}&timeTaken=${timeTakenParam}`
             } else {
                 const message =
                     response &&
-                    typeof response === "object" &&
-                    "message" in response &&
-                    typeof response.message === "string"
+                        typeof response === "object" &&
+                        "message" in response &&
+                        typeof response.message === "string"
                         ? response.message
                         : "Failed to submit quiz"
-                console.error('❌ Quiz submission failed:', message, response)
                 throw new Error(message)
             }
         } catch (error) {
-            console.error('❌ Quiz submission error:', error)
-            
+
             // Even on error, redirect to results with local data immediately
-            console.log('🔄 Submission failed, redirecting with local data...')
-            
+
             const fallbackAnswers = quiz!.questions.map((question, index) => {
                 const selectedAnswer = selectedAnswers[index] ?? -1
                 return selectedAnswer
             })
             const fallbackTimeSpent = Math.floor((Date.now() - quizStartTime) / 1000)
-            
+
             const answersParam = JSON.stringify(fallbackAnswers)
             const timeTakenParam = fallbackTimeSpent.toString()
-            
+
             // Use window.location for instant redirect
             window.location.href = `/results/${quizId}?answers=${encodeURIComponent(answersParam)}&timeTaken=${timeTakenParam}`
         }
@@ -417,16 +380,16 @@ function QuizContent() {
                                             onClick={() => selectAnswer(index)}
                                             className={`p-6 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
                                                 selectedAnswer === index
-                                                    ? "border-[#ef4444] bg-[#ef4444]/10"
-                                                    : "border-gray-200 hover:border-[#ef4444]/50 hover:bg-[#ef4444]/5"
-                                            }`}>
+                                                ? "border-[#ef4444] bg-[#ef4444]/10"
+                                                : "border-gray-200 hover:border-[#ef4444]/50 hover:bg-[#ef4444]/5"
+                                                }`}>
                                             <div className='flex items-center space-x-4'>
                                                 <div
                                                     className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-lg font-medium ${
                                                         selectedAnswer === index
-                                                            ? "border-[#ef4444] bg-[#ef4444] text-white"
-                                                            : "border-gray-300 text-gray-500"
-                                                    }`}>
+                                                        ? "border-[#ef4444] bg-[#ef4444] text-white"
+                                                        : "border-gray-300 text-gray-500"
+                                                        }`}>
                                                     {String.fromCharCode(
                                                         65 + index
                                                     )}
@@ -434,7 +397,7 @@ function QuizContent() {
 
                                                 <div className='flex-1 text-lg'>
                                                     <CodeRenderer
-                                                        content={option}
+                                                        content={cleanOptionText(option)}
                                                     />
                                                 </div>
 
