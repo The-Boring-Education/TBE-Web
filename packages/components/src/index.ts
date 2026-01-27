@@ -88,8 +88,8 @@ export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaught
 export { default as WebibarCard } from "./containers/Cards/WebibarCard";
 export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
 export { DsaQuestionCard} from "./containers/Cards/DsaQuestionCard"
-export type { DsaQuestion } from "./containers/Cards/DsaQuestionList";
-export {default as QuestionDetailPanle} from "./containers/Cards/QuestionDetailPanel"
+export {default as QuestionDetailPanel} from "./containers/Cards/QuestionDetailPanel"
+
 
 // Container Components - Card Items
 export { default as ContactCard } from "./containers/Cards/Items/ContactCard";

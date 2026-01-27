@@ -912,3 +912,7 @@ export interface DsaQuestionCardProps {
   onClick?: () => void;
 }
 
+export interface QuestionDetailProps {
+    question: DsaQuestion | null;
+}
+

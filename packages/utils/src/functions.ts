@@ -29,6 +29,7 @@ import type {
     Video,
     WebhookEvent
 } from "@tbe/interface"
+import { QuestionDifficulty } from "@tbe/interface";
 
 const fetchAPIData = async (url: string) => {
     const response = await fetch(`${envConfig.API_URL}/${url}`)
@@ -888,6 +889,16 @@ function withProtocol(url: string | undefined) {
     return url.startsWith("http") ? url : `https://${url}`
 }
 
+
+const getDifficultyColor = (difficultyLevel: QuestionDifficulty) => {
+    const colors = {
+        EASY: "text-green-400",
+        MEDIUM: "text-orange-400",
+        HARD: "text-red-500",
+    };
+    return colors[difficultyLevel] || "text-gray-400";
+};
+
 export {
     isValidUser,
     getValidUserId,
@@ -935,5 +946,6 @@ export {
     verifyWebhookSignature,
     formatTimeSpent,
     getTimeOfDay,
-    withProtocol
+    withProtocol,
+    getDifficultyColor
 }

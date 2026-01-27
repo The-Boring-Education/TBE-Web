@@ -1,14 +1,9 @@
 import { useState } from "react";
-import { DsaQuestion } from "@tbe/interface";
 import type { DsaSectionTabs } from "@tbe/interface"
 import { FlexContainer } from "@tbe/components";
+import { QuestionDetailProps } from "@tbe/interface"
 
-interface Props {
-    question: DsaQuestion | null;
-}
-
-
-const QuestionDetailPanel = ({ question }: Props) => {
+const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
     const [activeTab, setActiveTab] = useState<DsaSectionTabs>("description");
 
     if (!question) {

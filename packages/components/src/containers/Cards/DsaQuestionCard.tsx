@@ -1,14 +1,5 @@
 import { DsaQuestionCardProps } from "@tbe/interface";
-import { QuestionDifficulty } from "@tbe/interface";
-
-const getDifficultyColor = (difficultyLevel: QuestionDifficulty) => {
-    const colors = {
-        EASY: "text-green-400",
-        MEDIUM: "text-orange-400",
-        HARD: "text-red-500",
-    };
-    return colors[difficultyLevel] || "text-gray-400";
-};
+import { getDifficultyColor } from "@tbe/utils";
 
 export const DsaQuestionCard = ({
     name,

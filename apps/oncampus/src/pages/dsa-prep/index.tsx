@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useApi, useUser } from "@tbe/hooks";
 import { routes } from "@tbe/constants";
-import { LoadingSpinner, DsaQuestionList, type DsaQuestion } from "@tbe/components";
-import QuestionDetailPanel from "../../../../../packages/components/src/containers/Cards/QuestionDetailPanel";
+import { LoadingSpinner, DsaQuestionList, QuestionDetailPanel } from "@tbe/components";
+import { DsaQuestion } from "@tbe/interface";
 
 
 const DSAPrepPage = () => {
