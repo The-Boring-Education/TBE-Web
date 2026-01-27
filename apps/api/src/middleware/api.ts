@@ -21,7 +21,21 @@ const adminMiddleware = async (
 ): Promise<boolean> => {
   try {
     const adminHeader = req.headers["x-admin-secret"];
-    const expectedSecret = process.env.ADMIN_SECRET || "TBEAdmin";
+    const expectedSecret = process.env.ADMIN_SECRET;
+
+    // Security: Require ADMIN_SECRET to be set in environment
+    if (!expectedSecret) {
+      console.error("ADMIN_SECRET environment variable is not set");
+      res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          success: false,
+          status: apiStatusCodes.INTERNAL_SERVER_ERROR,
+          error: true,
+          message: "Server configuration error",
+        })
+      );
+      return false;
+    }
 
     if (!adminHeader || adminHeader !== expectedSecret) {
       res.status(apiStatusCodes.UNAUTHORIZED).json(
