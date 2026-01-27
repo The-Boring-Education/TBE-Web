@@ -8,13 +8,13 @@ import { useToast } from '@tbe/components/quizes'
 import { APIError, quizApi } from '@tbe/services'
 import type { CategoryPerformance,PerformanceMetrics } from '@tbe/types'
 import { formatDate } from '@tbe/utils'
-import { 
-    Activity, 
+import {
+    Activity,
     BarChart3,
-    Clock, 
+    Clock,
     Star,
-    Target, 
-    TrendingUp, 
+    Target,
+    TrendingUp,
     Trophy,
     Zap} from 'lucide-react'
 import { useCallback,useEffect, useState } from 'react'
@@ -57,10 +57,10 @@ function MetricCard({ title, value, subtitle, icon, trend, className = '' }: Met
                             {trend && (
                                 <div className={`flex items-center text-sm ${
                                     trend.isPositive ? 'text-green-600' : 'text-red-600'
-                                }`}>
+                                    }`}>
                                     <TrendingUp className={`w-4 h-4 mr-1 ${
                                         trend.isPositive ? '' : 'rotate-180'
-                                    }`} />
+                                        }`} />
                                     {trend.value}%
                                 </div>
                             )}
@@ -111,9 +111,9 @@ function PerformanceChart({ data }: { data: CategoryPerformance[] }) {
                     </div>
                     <div className={`px-2 py-1 rounded-full text-xs font-medium ${
                         category.improvementTrend === 'improving' ? 'bg-green-100 text-green-800' :
-                        category.improvementTrend === 'declining' ? 'bg-red-100 text-red-800' :
-                        'bg-yellow-100 text-yellow-800'
-                    }`}>
+                            category.improvementTrend === 'declining' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                        }`}>
                         {category.improvementTrend}
                     </div>
                 </div>
@@ -201,7 +201,7 @@ function StatsContent() {
     return (
         <div className="min-h-screen bg-background">
             <DashboardNav />
-            
+
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header */}
                 <div className="mb-8">
@@ -234,11 +234,11 @@ function StatsContent() {
                     <MetricCard
                         title="Total Attempts"
                         value={metricsLoading ? <MetricLoader /> : metrics.totalAttempts}
-                        subtitle="Quizzes completed"
+                        subtitle="Quizes completed"
                         icon={<Target className="w-6 h-6 text-blue-500" />}
                         className="animate-slide-in-left"
                     />
-                    
+
                     <MetricCard
                         title="Average Score"
                         value={metricsLoading ? <MetricLoader /> : `${metrics.averageScore}%`}
@@ -248,7 +248,7 @@ function StatsContent() {
                         className="animate-slide-in-left"
                         style={{ animationDelay: '0.1s' }}
                     />
-                    
+
                     <MetricCard
                         title="Best Score"
                         value={metricsLoading ? <MetricLoader /> : `${metrics.bestScore}%`}
@@ -257,7 +257,7 @@ function StatsContent() {
                         className="animate-slide-in-left"
                         style={{ animationDelay: '0.2s' }}
                     />
-                    
+
                     <MetricCard
                         title="Streak Days"
                         value={metricsLoading ? <MetricLoader /> : metrics.streakDays ?? 0}
