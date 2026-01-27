@@ -101,9 +101,9 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
         <QuizSection
           buttonLink={LINKS.quizApp}
           imageSrc={`${STATIC_FILE_PATH.svg}/hero-image.svg`}
-          buttonText='Start Quizzing'
-          description='Test your knowledge with our interactive quizzes. Challenge yourself with questions on various tech topics and track your progress.'
-          title='Quizzes by TBE'
+          buttonText='Start Quizing'
+          description='Test your knowledge with our interactive quizes. Challenge yourself with questions on various tech topics and track your progress.'
+          title='Quizes by TBE'
         />
         <Banner
           buttonLink={LINKS.contributeOpenSource}
