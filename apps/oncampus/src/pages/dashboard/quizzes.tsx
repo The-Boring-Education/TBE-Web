@@ -41,18 +41,18 @@ const QuizzesDashboardPage = () => {
   };
 
   return (
-    <div className=" py-8 px-4">
+    <div className="py-3 px-3">
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white mb-2">Available Quizes</h1>
-          <p className="text-sm text-gray-400">Pick a category to start</p>
+        <div className="text-center mb-3">
+          <h1 className="text-xl font-bold text-white mb-1">Available Quizes</h1>
+          <p className="text-xs text-gray-400">Pick a category to start</p>
         </div>
 
         {/* Quiz Cards Grid */}
         {categories.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-gray-400 text-sm mb-4">No quizes available right now.</p>
+          <div className="text-center py-4">
+            <p className="text-gray-400 text-xs mb-3">No quizes available right now.</p>
             <Button
               onClick={refetch}
               variant="OUTLINE"
@@ -61,7 +61,7 @@ const QuizzesDashboardPage = () => {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {categories.map((category: QuizCategoryAPI) => (
               <button
                 key={category._id}
@@ -73,34 +73,34 @@ const QuizzesDashboardPage = () => {
                   {/* Left accent bar */}
                   <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: '#ff5757' }} />
 
-                  <div className="relative p-5 flex flex-col h-full">
+                  <div className="relative p-3 flex flex-col h-full">
                     {/* Icon Section */}
-                    <div className="mb-3">
-                      <div className="text-4xl group-hover:scale-110 transition-transform duration-300 inline-block">
+                    <div className="mb-2">
+                      <div className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">
                         {category.categoryIcon}
                       </div>
                     </div>
 
                     {/* Title Section */}
-                    <div className="mb-2">
-                      <h3 className="text-lg font-bold text-white group-hover:text-[#ff5757] transition-colors duration-300">
+                    <div className="mb-1.5">
+                      <h3 className="text-sm font-bold text-white group-hover:text-[#ff5757] transition-colors duration-300">
                         {category.categoryName}
                       </h3>
                       <p className="text-xs font-medium" style={{ color: '#ff5757' }}>Quiz</p>
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-400 text-xs leading-relaxed mb-4 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
+                    <p className="text-gray-400 text-xs leading-tight mb-2.5 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
                       {category.categoryDescription}
                     </p>
 
                     {/* Button */}
                     <div className="flex justify-center">
                       <Button
-                        variant="PRIMARY"
+                        variant="OUTLINE"
                         size="SMALL"
-                        className="rounded-md mx-auto text-white bg-[#FF5757] hover:bg-[#FF5757]/90"
-                        icon={<Play className="h-4 w-4 " />}
+                        className="rounded-md mx-auto text-white bg-[#FF5757] hover:bg-[#FF5757]/90 text-xs px-3 py-1.5"
+                        icon={<Play className="h-3 w-3" />}
                         text="Start Quiz"
                       />
                     </div>

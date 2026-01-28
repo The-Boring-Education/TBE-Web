@@ -171,6 +171,7 @@ const CampusPrepDashboard = () => {
               variant="PRIMARY"
               text="Continue learning"
               size="MEDIUM"
+              onClick={() => router.push("/dashboard/interview-prep")}
             />
           </div>
         </CardContent>

@@ -216,11 +216,11 @@ export default function QuizPage() {
           <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden ring-0 hover:ring-2 hover:ring-primary/50 transition-all duration-200">
             <div
               className="h-full bg-[#FF5757] hover: transition-all"
-              style={{ width: `${Math.round(progress)}%` }}
+              style={{ width: `${Math.round(((currentQuestionIndex) / questions.length) * 100)}%` }}
             />
           </div>
           <div className="flex justify-between text-xs text-gray-500 mt-2">
-            <span>{Math.round(progress)}% complete</span>
+            <span>{Math.round(((currentQuestionIndex) / questions.length) * 100)}% complete</span>
             <span>{quiz.categoryIcon}</span>
           </div>
         </div>
