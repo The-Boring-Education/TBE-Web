@@ -14,7 +14,7 @@ import {
   Footer,
   LoadingSpinner,
 } from "@tbe/components";
-import { Home, Target, ClipboardList, FileText } from "lucide-react";
+import { Home, Target, ClipboardList, FileText, BrainCircuit } from "lucide-react";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -25,6 +25,7 @@ export const DASHBOARD_SIDEBAR_ITEMS = [
   { name: "Interview Sheets", icon: Target, href: "/dashboard/interview-prep" },
   { name: "DSA", icon: FileText, href: "/dsa-prep" },
   { name: "Quizes", icon: ClipboardList, href: "/dashboard/quizzes" },
+  { name: "Aptitude", icon: BrainCircuit, href: "/dashboard/aptitude" },
 ];
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
