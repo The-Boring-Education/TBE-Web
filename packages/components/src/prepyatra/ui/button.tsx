@@ -18,7 +18,7 @@ const buttonVariants = cva(
                 ghost: "hover:bg-accent hover:text-accent-foreground",
                 link: "text-primary underline-offset-4 hover:underline"
             },
-                size: {
+            size: {
                 default: "h-9 px-3 py-1.5",
                 sm: "h-8 rounded-md px-2.5",
                 xs: "h-7 rounded-md px-2",
@@ -35,7 +35,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
     extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-        VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants> {
     asChild?: boolean
 }
 
@@ -46,7 +46,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <Comp
                 className={cn(buttonVariants({variant, size, className}))}
                 ref={ref}
-                {...props}
+                {...(props as any)}
             />
         );
     }
