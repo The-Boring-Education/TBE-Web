@@ -53,7 +53,7 @@ const DSAPrepPage = () => {
   return (
     <div className="p-2">
       <div className="text-white mt-8">
-        <Navbar theme="dark" />
+        <Navbar theme="dark" variant="oncampus" />
         <LinkButton
           buttonProps={{
             variant: 'GHOST',
