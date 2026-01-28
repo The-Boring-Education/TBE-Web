@@ -28,6 +28,7 @@ import type { QuestionFrequencyType } from "./api";
 
 // Import TopNavbarLinkProps from the global module to avoid duplication
 import type { TopNavbarLinkProps } from "./global";
+import { QuestionDifficulty } from "./constants";
 
 export interface SectionProps {
   children: ReactNode;
@@ -885,5 +886,33 @@ export interface UserProfile {
       focusAreas?: string[];
     };
   };
+}
+
+export interface DsaQuestion {
+  name: string;
+  difficultyLevel: QuestionDifficulty;
+  id?: string | number;
+  content?: string;
+  domain?: string[];
+  companyType?: string[];
+  topics?: string[]
+}
+
+ export interface DsaQuestionListProps {
+  questions: DsaQuestion[];
+  selectedQuestionId?: string | number;
+  onQuestionClick?: (question: DsaQuestion) => void;
+  className?: string;
+}
+
+export interface DsaQuestionCardProps {
+  name: string;
+  difficultyLevel: QuestionDifficulty;
+  isSelected?: boolean;
+  onClick?: () => void;
+}
+
+export interface QuestionDetailProps {
+    question: DsaQuestion | null;
 }
 

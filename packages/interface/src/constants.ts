@@ -75,6 +75,13 @@ interface FooterProps {
   variant?: FooterVariant;
 }
 
+type QuestionDifficulty = 
+ "EASY" | "MEDIUM" | "HARD"
+
+
+ type DsaSectionTabs = "description" | "topics" | "companies";
+
+
 export type {
   CelebrationAnimationProps,
   GamificationBadgeProps,
@@ -85,4 +92,6 @@ export type {
   OutlineCardProps,
   NavbarVariantConfig,
   FooterProps,
+  QuestionDifficulty,
+  DsaSectionTabs
 };

@@ -1,107 +1,47 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useApi, useUser } from "@tbe/hooks";
 import { routes } from "@tbe/constants";
-import type { DSAQuestion } from "@tbe/types";
-import {
-  LoadingSpinner,
-  PageHeader,
-  QuestionDetails,
-  QuestionSidebar,
-} from "@tbe/components";
-
-interface BackendQuestion {
-  _id: string;
-  title: string;
-  content: string;
-  domain: string[];
-  difficulty: "EASY" | "MEDIUM" | "HARD";
-  isPremium?: boolean;
-}
-
-interface BackendSheet {
-  _id: string;
-  questions: BackendQuestion[];
-  isPremium?: boolean;
-}
+import { LoadingSpinner, DsaQuestionList, QuestionDetailPanel } from "@tbe/components";
+import { DsaQuestion } from "@tbe/interface";
 
 const DSAPrepPage = () => {
   const router = useRouter();
-  const { user, loading: userLoading, isAuth } = useUser();
+  const { loading: userLoading, isAuth } = useUser();
+  const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(null)
 
-  const [questions, setQuestions] = useState<DSAQuestion[]>([]);
-  const [selected, setSelected] = useState<DSAQuestion | null>(null);
-  const [purchaseStatuses, setPurchaseStatuses] = useState<Record<string, boolean>>({});
-  const [mobileView, setMobileView] = useState<"list" | "details">("list");
-
-  const { response, loading: sheetsLoading } = useApi("dsa-prep", {
-    url: `${routes.api.base}/interview-prep/dsa-sheet`,
+  const { response, loading: sheetsLoading } = useApi("dsa-sheet", {
+    url: `${routes.api.base}${routes.api.dsaSheet}`,
   });
 
-  // Check purchase status for premium content
-  useEffect(() => {
-    if (response?.data && user?.id) {
-      const checkPurchaseStatuses = async () => {
-        const statuses: Record<string, boolean> = {};
-        const sheetData = response.data as BackendSheet;
+  const dsaQuestions = React.useMemo(() => {
+    const data = response?.data?.questions;
 
-        if (sheetData.isPremium) {
-          try {
-            const res = await fetch(
-              `${routes.api.base}${routes.api.checkStatus}?userId=${user.id}&productId=${sheetData._id}`,
-              { method: "GET" }
-            );
-            const result = await res.json();
-            statuses[sheetData._id] = result.status && result.data?.purchased;
-          } catch {
-            statuses[sheetData._id] = false;
-          }
-        }
+    if (!Array.isArray(data)) return [];
 
-        setPurchaseStatuses(statuses);
-      };
+    return data.map((question: any) => ({
+      id: question._id,
+      name: question.title,
+      difficultyLevel: question.difficulty,
+      content: question.content,
+      topics: question.topics,
+      companyType: question.companyTypes,
+      domain: question.domain,
+    }));
+  }, [response]);
 
-      checkPurchaseStatuses();
-    }
-  }, [response?.data, user?.id]);
 
-  // Format the backend response into DSAQuestion format
-  useEffect(() => {
-    if (response?.data?.questions) {
-      const backendQuestions: BackendQuestion[] = response.data.questions;
-
-      const formatted: DSAQuestion[] = backendQuestions.map((question) => ({
-        id: question._id,
-        title: question.title,
-        description: question.content,
-        tags: question.domain ?? [],
-        difficulty:
-          question.difficulty === "EASY"
-            ? "Easy"
-            : question.difficulty === "MEDIUM"
-              ? "Medium"
-              : "Hard",
-      }));
-
-      setQuestions(formatted);
-      if (formatted.length > 0 && !selected) {
-        setSelected(formatted[0]);
-      }
-    }
-  }, [response?.data?.questions, selected]);
-
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (!userLoading && !isAuth) {
       router.push("/login");
     }
   }, [userLoading, isAuth, router]);
 
-  const loading = userLoading || sheetsLoading;
+  const handleQuestionClick = (question: DsaQuestion) => {
+    setSelectedQuestion(question)
+  };
 
-  if (loading || !selected) {
+  if (sheetsLoading || userLoading) {
     return (
       <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
         <LoadingSpinner />
@@ -110,31 +50,19 @@ const DSAPrepPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white flex flex-col">
-      {/* Reusable Sticky Header Component */}
-      <PageHeader
-        title="DSA Practice"
-        subtitle={`${questions.length} Questions`}
-        backHref="/dashboard"
-        backText="Back to Dashboard"
-      />
-
-      {/* Two-Column Layout - using flex-1 for dynamic height */}
-      <div className="flex flex-1 overflow-hidden">
-        <QuestionSidebar
-          questions={questions}
-          selected={selected}
-          onSelect={(question) => {
-            setSelected(question);
-            setMobileView("details");
-          }}
-          className={mobileView === "details" ? "hidden md:block" : ""}
+    <div className="flex h-[calc(100vh-4rem)] gap-2 w-full">
+      <div className="w-60 flex-shrink-0 overflow-y-auto scrollbar-hide">
+        <DsaQuestionList
+          questions={dsaQuestions}
+          selectedQuestionId={selectedQuestion?.id}
+          onQuestionClick={handleQuestionClick}
+          className="gap-1"
         />
+      </div>
 
-        <QuestionDetails
-          question={selected}
-          className={mobileView === "list" ? "hidden md:block" : ""}
-          onBack={() => setMobileView("list")}
+      <div className="flex-1 min-w-0 bg-[#0A0A0A] border border-gray-800 rounded-lg p-4 overflow-auto">
+        <QuestionDetailPanel
+          question={selectedQuestion}
         />
       </div>
     </div>

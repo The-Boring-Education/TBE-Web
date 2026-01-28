@@ -10,6 +10,8 @@ export type {
   NavbarProps,
   OutlineCardProps,
   NavbarVariantConfig,
+  DsaSectionTabs,
+  QuestionDifficulty
 } from "./constants";
 export * from "./database";
 export * from "./email";
