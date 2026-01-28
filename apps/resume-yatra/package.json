@@ -10,7 +10,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3006",
+    "dev": "next dev -p 3002",
     "build": "eslint . && next build",
     "postbuild": "next-sitemap",
     "start": "next start -p 3002",
