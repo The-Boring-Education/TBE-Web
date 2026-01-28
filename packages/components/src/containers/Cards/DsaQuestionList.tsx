@@ -8,7 +8,7 @@ const DsaQuestionList = ({
     className = ""
 }: DsaQuestionListProps) => {
     return (
-        <div className={`flex flex-col  w-full ${className}`}>
+        <div className={`flex flex-col w-full ${className}`}>
             {questions.map((question) => (
                 <DsaQuestionCard
                     key={question.id || question.name}

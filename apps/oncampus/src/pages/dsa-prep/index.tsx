@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useApi, useUser } from "@tbe/hooks";
 import { routes } from "@tbe/constants";
@@ -14,7 +14,7 @@ const DSAPrepPage = () => {
     url: `${routes.api.base}${routes.api.dsaSheet}`,
   });
 
-  const dsaQuestions = useMemo(() => {
+  const dsaQuestions = React.useMemo(() => {
     const data = response?.data?.questions;
 
     if (!Array.isArray(data)) return [];
@@ -50,12 +50,13 @@ const DSAPrepPage = () => {
   }
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] gap-4 w-full">
+    <div className="flex h-[calc(100vh-4rem)] gap-2 w-full">
       <div className="w-60 flex-shrink-0 overflow-y-auto scrollbar-hide">
         <DsaQuestionList
           questions={dsaQuestions}
           selectedQuestionId={selectedQuestion?.id}
           onQuestionClick={handleQuestionClick}
+          className="gap-1"
         />
       </div>
 
