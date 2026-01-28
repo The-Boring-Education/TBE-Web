@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useApi, useUser } from "@tbe/hooks";
 import { routes } from "@tbe/constants";
-import { LoadingSpinner, DsaQuestionList, QuestionDetailPanel } from "@tbe/components";
+import { LoadingSpinner, DsaQuestionList, QuestionDetailPanel, LinkButton, Navbar } from "@tbe/components";
 import { DsaQuestion } from "@tbe/interface";
+import { Button } from "@tbe/components";
 
 const DSAPrepPage = () => {
   const router = useRouter();
@@ -50,22 +51,38 @@ const DSAPrepPage = () => {
   }
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] gap-2 w-full">
-      <div className="w-60 flex-shrink-0 overflow-y-auto scrollbar-hide">
-        <DsaQuestionList
-          questions={dsaQuestions}
-          selectedQuestionId={selectedQuestion?.id}
-          onQuestionClick={handleQuestionClick}
-          className="gap-1"
+    <div className="p-2">
+      <div className="text-white mt-8">
+        <Navbar theme="dark" />
+        <LinkButton
+          buttonProps={{
+            variant: 'GHOST',
+            text: 'Back',
+          }}
+          className="mt-4"
+          href={routes.oncampus.dashboard}
+          theme="dark"
         />
+      </div>
+      <div className="flex h-[calc(100vh-4rem)] gap-2 pt-4 w-full">
+        <div className="w-60 flex-shrink-0 overflow-y-auto scrollbar-hide">
+          <DsaQuestionList
+            questions={dsaQuestions}
+            selectedQuestionId={selectedQuestion?.id}
+            onQuestionClick={handleQuestionClick}
+            className="gap-1"
+          />
+        </div>
+
+        <div className="flex-1 min-w-0 bg-[#0A0A0A] border border-gray-800 rounded-lg p-4 overflow-auto">
+          <QuestionDetailPanel
+            question={selectedQuestion}
+          />
+        </div>
       </div>
 
-      <div className="flex-1 min-w-0 bg-[#0A0A0A] border border-gray-800 rounded-lg p-4 overflow-auto">
-        <QuestionDetailPanel
-          question={selectedQuestion}
-        />
-      </div>
     </div>
+
   );
 };
 

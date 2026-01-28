@@ -243,6 +243,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           name={sheet.name ?? ''}
           isPremium={sheet.isPremium}
           isPurchased={!!isPurchased} // Ensure boolean
+          backHref={routes.interviewPrep}
         />
       </Section>
 
