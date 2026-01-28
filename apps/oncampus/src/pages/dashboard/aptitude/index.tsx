@@ -94,7 +94,7 @@ const AptitudeComingSoonPage = () => {
                             text="Quizes"
                         />
                         <Button
-                            onClick={() => router.push("/dsa-prep")}
+                            onClick={() => router.push("/dashboard/dsa-prep")}
                             variant="OUTLINE"
                             className="rounded-lg px-6 py-2 text-white font-medium bg-[#FF5757] hover:bg-[#FF5757]/90 transition-all duration-300 border-100 text-sm"
                             text="DSA"

@@ -18,6 +18,7 @@ const SheetHeroContainer = ({
   isPremium,
   isPurchased,
   redirectTo,
+  backHref,
   theme,
 }: SheetHeroContainerProps) => {
   const { user, isAuth } = useUser();
@@ -118,7 +119,7 @@ const SheetHeroContainer = ({
             variant: 'GHOST',
             text: 'Back',
           }}
-          href={routes.home}
+          href={backHref ?? routes.interviewPrep}
           theme={theme}
         />
 

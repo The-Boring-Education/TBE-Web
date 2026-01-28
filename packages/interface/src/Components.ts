@@ -380,6 +380,7 @@ export interface SheetHeroContainerProps {
   isPremium?: boolean;
   isPurchased?: boolean;
   redirectTo?: string;
+  backHref?: string;
   theme?: 'dark' | 'light';
 }
 

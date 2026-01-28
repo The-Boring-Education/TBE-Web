@@ -1,5 +1,6 @@
 import type { GenerateSectionPathProps } from "@tbe/types"
 import { envConfig } from "./envConfig"
+import { homedir } from "os"
 
 const routes = {
     home: "/",
@@ -116,6 +117,17 @@ const routes = {
     // Cohort
     cohort: {
         bringYourIdea: "/cohort/bring-your-idea"
+    },
+    //oncampus
+    oncampus:{
+        home:"/",
+        login:"/login",
+        dashboard:"/dashboard",
+        dsa:"/dashboard/dsa-prep",
+        interviewPrep:"/dashboard/interview-prep",
+        quizes:"/dashboard/interview-prep",
+        aptitude:"/dashboard/aptitude"
+
     },
     unskilled: "/unskilled",
     404: "/404",

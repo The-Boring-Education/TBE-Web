@@ -241,6 +241,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           name={sheet.name ?? ''}
           isPremium={sheet.isPremium}
           isPurchased={!!isPurchased} // Ensure boolean
+          backHref={routes.oncampus.dsa}
           theme="dark"
         />
       </Section>
