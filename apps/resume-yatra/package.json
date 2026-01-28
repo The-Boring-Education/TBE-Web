@@ -13,7 +13,7 @@
     "dev": "next dev -p 3006",
     "build": "eslint . && next build",
     "postbuild": "next-sitemap",
-    "start": "next start -p 3002",
+    "start": "next start -p 3006",
     "lint": "eslint .",
     "lint:fix": "next lint --fix",
     "export": "next export"
