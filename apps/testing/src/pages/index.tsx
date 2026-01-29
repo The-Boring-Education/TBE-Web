@@ -89,36 +89,6 @@ export default function HomePage() {
                             </p>
                         </div>
 
-                        {/* E2E Tests Card */}
-                        <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-200 opacity-60">
-                            <div className="flex items-center gap-3 mb-3">
-                                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                                    <svg
-                                        className="w-5 h-5 text-purple-600"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                        />
-                                    </svg>
-                                </div>
-                                <h2 className="text-xl font-semibold text-gray-900">
-                                    E2E Tests
-                                </h2>
-                            </div>
-                            <p className="text-gray-600 text-sm">
-                                Run E2E tests via CLI:{' '}
-                                <code className="bg-gray-100 px-1 rounded">
-                                    pnpm test:e2e
-                                </code>
-                            </p>
-                        </div>
-
                         {/* API Tests Card */}
                         <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-200 opacity-60">
                             <div className="flex items-center gap-3 mb-3">

@@ -33,8 +33,6 @@
     "test:unit": "turbo run test:unit --filter=@tbe/testing",
     "test:unit:watch": "turbo run test:unit:watch --filter=@tbe/testing",
     "test:api": "turbo run test:api --filter=@tbe/testing",
-    "test:e2e": "turbo run test:e2e --filter=@tbe/testing",
-    "test:e2e:ui": "turbo run test:e2e:ui --filter=@tbe/testing",
     "test:coverage": "turbo run test:coverage --filter=@tbe/testing",
     "test:ci": "turbo run test:ci --filter=@tbe/testing",
     "seo:audit": "lhci autorun",

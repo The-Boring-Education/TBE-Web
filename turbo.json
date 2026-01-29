@@ -176,18 +176,6 @@
         "src/test-utils/**/*.{ts,tsx}"
       ]
     },
-    "test:e2e": {
-      "cache": false,
-      "outputs": [
-        "playwright-report/**",
-        "test-results/**"
-      ],
-      "inputs": [
-        "src/e2e/**/*.{ts,tsx}",
-        "playwright.config.ts",
-        "package.json"
-      ]
-    },
     "test:coverage": {
       "cache": true,
       "outputs": [

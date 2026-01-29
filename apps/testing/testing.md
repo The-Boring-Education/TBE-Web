@@ -8,7 +8,7 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 
 - **Test Behavior, Not Implementation**: Focus on what components/functions do, not how they do it
 - **Avoid Tailwind Class Testing**: Don't test specific CSS classes; test visual behavior and functionality
-- **End-to-End Module Testing**: Ensure each module works correctly in isolation and integration
+- **Integration Testing**: Ensure each module works correctly in isolation and integration
 - **Progressive Testing**: Start with simple units, build to complex integrations
 - **Maintainable Tests**: Keep tests simple, focused, and easy to update
 
@@ -424,59 +424,6 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
   - Validation and error handling
 - **Total: 28 API route tests passing**
 
-### 6. E2E Tests (`apps/testing/src/e2e`)
-
-**Priority: High**
-
-#### 6.1 Platform App Flows
-- [x] Homepage navigation ✅ (Tested - 8 tests)
-- [x] Onboarding flow ✅ (Tested - 4 tests)
-- [x] Resume evaluation form ✅ (Tested - 1 test)
-- [x] Contact/Feedback forms ✅ (Tested - 1 test)
-- [ ] User registration/login
-- [ ] Course enrollment flow
-- [ ] Project enrollment flow
-- [ ] Interview prep sheet access
-- [ ] User dashboard
-
-#### 6.2 PrepYatra App Flows
-- [x] Add Prep Log modal ✅ (Tested - 4 tests)
-- [x] Add Recruiter modal ✅ (Tested - 2 tests)
-- [x] Onboarding modal flow ✅ (Tested - 1 test)
-- [ ] Challenge completion
-- [ ] Prep log tracking
-- [ ] Leaderboard viewing
-
-#### 6.3 Quiz App Flows
-- [ ] Quiz selection
-- [ ] Quiz taking flow
-- [ ] Results viewing
-- [ ] Leaderboard
-
-#### 6.4 Cross-App Flows
-- [ ] Authentication across apps
-- [ ] Payment flow
-- [ ] Certificate generation
-
-**Completed E2E Tests:**
-- ✅ Platform homepage (8 test cases)
-- ✅ Platform onboarding flow (4 test cases)
-- ✅ Platform forms (2 test cases)
-- ✅ Prep Yatra modals (6 test cases)
-- **Total: 20 E2E test cases (135 tests across 5 browsers)**
-
-**CI/CD Integration:**
-- ✅ GitHub Actions workflow updated with parallel Unit and E2E test jobs
-- ✅ E2E tests include server startup and health checks
-- ✅ Test results uploaded as artifacts
-- ✅ Comprehensive test summary in workflow
-
-**Testing Strategy for E2E:**
-- User journeys: Complete user workflows
-- Cross-browser: Chrome, Firefox, Safari
-- Responsive: Mobile and desktop
-- Performance: Page load times
-- Accessibility: Screen reader compatibility
 
 ## Testing Implementation Plan
 
@@ -530,15 +477,6 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 6. Test payment endpoints
 7. Test remaining endpoints
 
-### Phase 7: E2E Tests (Week 15-16)
-1. ✅ Test modal forms (Add Prep Log, Add Recruiter)
-2. ✅ Test onboarding flow (multi-step form)
-3. ✅ Test form submissions (resume evaluation, contact forms)
-4. ✅ Test homepage navigation and responsiveness
-5. [ ] Test authentication flows
-6. [ ] Test cross-app integration
-7. [ ] Test payment flows
-8. [ ] Test quiz taking flows
 
 ## Test File Structure
 
@@ -555,20 +493,15 @@ apps/testing/src/
 │   ├── hooks/               # Hook tests
 │   ├── services/            # Service tests
 │   └── utils/               # Utility tests
-├── api/                     # API route tests
-│   ├── auth/
-│   ├── user/
-│   ├── quiz/
-│   ├── interview-prep/
-│   ├── shiksha/
-│   ├── projects/
-│   ├── payment/
-│   └── ...
-└── e2e/                     # E2E tests
-    ├── platform/
-    ├── prep-yatra/
-    ├── quizes/
-    └── cross-app/
+└── api/                     # API route tests
+    ├── auth/
+    ├── user/
+    ├── quiz/
+    ├── interview-prep/
+    ├── shiksha/
+    ├── projects/
+    ├── payment/
+    └── ...
 ```
 
 ## Testing Best Practices
@@ -599,12 +532,6 @@ apps/testing/src/
 - Test authentication and authorization
 - Test validation and error handling
 
-### E2E Testing
-- Use Playwright for browser automation
-- Test critical user paths
-- Use page object model for maintainability
-- Test on multiple browsers
-- Include accessibility checks
 
 ## Coverage Goals
 
@@ -613,7 +540,6 @@ apps/testing/src/
 - **Services**: 90%+ coverage
 - **Utils**: 90%+ coverage
 - **API Routes**: 75%+ coverage (focus on critical paths)
-- **E2E**: Cover all critical user flows
 
 ## Maintenance
 
@@ -923,29 +849,7 @@ apps/testing/src/
 - [ ] `/api/v1/admin/*` - Admin endpoints
 - [ ] `/api/health/*` - Health checks
 
-### Phase 12: E2E Tests
-
-#### Platform App Flows
-- [x] Homepage navigation - Already tested
-- [ ] User registration/login
-- [ ] Course enrollment flow
-- [ ] Project enrollment flow
-- [ ] Interview prep sheet access
-- [ ] User dashboard
-
-#### PrepYatra App Flows
-- [ ] Onboarding flow
-- [ ] Challenge completion
-- [ ] Prep log tracking
-- [ ] Leaderboard viewing
-
-#### Quiz App Flows
-- [ ] Quiz selection
-- [ ] Quiz taking flow
-- [ ] Results viewing
-- [ ] Leaderboard
-
-#### Cross-App Flows
+### Phase 12: Integration Tests (Future)
 - [ ] Authentication across apps
 - [ ] Payment flow
 - [ ] Certificate generation
@@ -1018,7 +922,6 @@ apps/testing/src/
 
 #### Low Priority
 
-**E2E Tests:** All pending (Week 15-16)
 
 ### 📊 Progress Summary
 - **Components:** ~25% complete (14/55 common components)
@@ -1033,7 +936,6 @@ apps/testing/src/
 2. Add tests for more hooks (useAuth, useQuizData, usePrepLogs)
 3. Expand API route coverage (authentication, quiz endpoints)
 4. Add container component tests
-5. Begin E2E test planning
 
 ## Next Steps
 

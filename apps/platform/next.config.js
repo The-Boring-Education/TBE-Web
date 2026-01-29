@@ -148,18 +148,24 @@ const nextConfig = {
   },
 };
 
-// Sentry config
-const sentryWebpackPluginOptions = {
-  org: 'the-boring-education',
-  project: 'tbe-webapp',
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-  silent: !process.env.CI,
-  widenClientFileUpload: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
-};
+// Only apply Sentry in production to avoid OpenTelemetry conflicts in development
+if (process.env.NODE_ENV === 'production') {
+  // Sentry config
+  const sentryWebpackPluginOptions = {
+    org: 'the-boring-education',
+    project: 'tbe-webapp',
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    silent: !process.env.CI,
+    widenClientFileUpload: true,
+    disableLogger: true,
+    automaticVercelMonitors: true,
+  };
 
-module.exports = withSentryConfig(
-  withTM(nextConfig),
-  sentryWebpackPluginOptions
-);
+  module.exports = withSentryConfig(
+    withTM(nextConfig),
+    sentryWebpackPluginOptions
+  );
+} else {
+  // Skip Sentry in development to avoid OpenTelemetry errors
+  module.exports = withTM(nextConfig);
+}
