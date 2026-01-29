@@ -7,6 +7,7 @@ import {
     Sparkles
 } from "lucide-react"
 import { useRouter } from "next/router"
+import { useEffect } from "react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -34,10 +35,17 @@ export default function BuilderMain({ builder }: BuilderMainProps) {
         setShowResult
     } = builder
 
+    useEffect(() => {
+        // Ensure scroll is unlocked when leaving the builder
+        return () => {
+            document.body.style.overflow = "auto"
+        }
+    }, [])
+
     return (
-        <div className='min-h-screen bg-white'>
+        <div className='min-h-screen bg-white pt-20'>
             {/* Progress Bar */}
-            <div className='sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200 p-4 transition-all duration-300'>
+            <div className='sticky top-16 z-30 bg-white/95 backdrop-blur-sm border-b border-gray-200 p-4 transition-all duration-300'>
                 <div className='container mx-auto'>
                     <div className='flex items-center justify-between mb-2'>
                         <span className='text-sm font-medium text-gray-600'>
@@ -213,11 +221,10 @@ export default function BuilderMain({ builder }: BuilderMainProps) {
                                             />
                                             <label
                                                 htmlFor={item.id}
-                                                className={`text-sm font-medium cursor-pointer transition-all duration-200 ${
-                                                    item.checked
-                                                        ? "line-through text-gray-500"
-                                                        : "text-gray-900"
-                                                }`}>
+                                                className={`text-sm font-medium cursor-pointer transition-all duration-200 ${item.checked
+                                                    ? "line-through text-gray-500"
+                                                    : "text-gray-900"
+                                                    }`}>
                                                 {item.text}
                                             </label>
                                         </div>

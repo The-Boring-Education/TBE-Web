@@ -50,7 +50,7 @@ const PrimaryCardWithCTA = ({
           <Text className='pre-title mt-1 text-primary s' level='p'>
             {launchingOn}
           </Text>
-        )}  
+        )}
         <LinkButton
           active={active}
           buttonProps={{
@@ -62,6 +62,7 @@ const PrimaryCardWithCTA = ({
           className='mt-3 block'
           href={href}
           target={target}
+          noLoader={true}
         />
       </div>
     </GradientContainer>

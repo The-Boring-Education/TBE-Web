@@ -9,7 +9,7 @@ interface TemplatePromptProps {
 
 export default function TemplatePrompt({ builder }: TemplatePromptProps) {
     return (
-        <div className='min-h-screen bg-white flex items-center justify-center'>
+        <div className='min-h-screen bg-white flex items-center justify-center pt-20'>
             <div className='container mx-auto px-6'>
                 <div className='max-w-2xl mx-auto text-center space-y-8 animate-fade-in'>
                     <h1 className='text-4xl font-bold text-gray-900'>

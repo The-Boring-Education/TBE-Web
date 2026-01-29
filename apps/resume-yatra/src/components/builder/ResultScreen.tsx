@@ -1,4 +1,4 @@
-import { Copy, RotateCcw,Sparkles } from "lucide-react"
+import { Copy, RotateCcw, Sparkles } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { toast } from "sonner"
@@ -26,6 +26,13 @@ export default function ResultScreen({ builder }: ResultScreenProps) {
         return () => clearTimeout(timer)
     }, [setShowConfetti])
 
+    useEffect(() => {
+        // Ensure scroll is unlocked when leaving the result screen
+        return () => {
+            document.body.style.overflow = "auto"
+        }
+    }, [])
+
     const handleShareResult = () => {
         const url = window.location.href
         navigator.clipboard.writeText(url)
@@ -44,7 +51,7 @@ export default function ResultScreen({ builder }: ResultScreenProps) {
     }
 
     return (
-        <div className='min-h-screen bg-white'>
+        <div className='min-h-screen bg-white pt-20'>
             {/* Confetti Effect */}
             {showConfetti && (
                 <div className='fixed inset-0 pointer-events-none z-50'>
