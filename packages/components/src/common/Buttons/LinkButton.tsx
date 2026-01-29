@@ -10,13 +10,14 @@ const LinkButton = ({
   target,
   active = true,
   theme,
+  noLoader = false,
 }: LinkButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const isDark = theme === 'dark';
 
   const handleClick = () => {
     // Show loading spinner when navigating
-    if (active) {
+    if (active && !noLoader) {
       setIsLoading(true);
     }
   };

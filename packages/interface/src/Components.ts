@@ -69,6 +69,7 @@ export interface LinkButtonProps extends LinkProps {
   href: string;
   className?: string;
   theme?: 'dark' | 'light';
+  noLoader?: boolean;
 }
 
 export interface ButtonProps {
