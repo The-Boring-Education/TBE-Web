@@ -48,25 +48,40 @@ export default defineConfig({
         }
     ],
 
-    // Run local dev server before starting tests
+    // Run local dev server before starting tests (only in local development)
+    // In CI, servers are started manually in the workflow
     webServer: process.env.CI ? undefined : [
         {
             command: 'pnpm dev:platform',
             url: 'http://localhost:3000',
-            reuseExistingServer: !process.env.CI,
-            timeout: 120000
+            reuseExistingServer: true,
+            timeout: 120000,
+            stdout: 'pipe',
+            stderr: 'pipe'
+        },
+        {
+            command: 'pnpm dev:prep-yatra',
+            url: 'http://localhost:3001',
+            reuseExistingServer: true,
+            timeout: 120000,
+            stdout: 'pipe',
+            stderr: 'pipe'
         },
         {
             command: 'pnpm dev:quizes',
             url: 'http://localhost:3002',
-            reuseExistingServer: !process.env.CI,
-            timeout: 120000
+            reuseExistingServer: true,
+            timeout: 120000,
+            stdout: 'pipe',
+            stderr: 'pipe'
         },
         {
             command: 'pnpm dev:api',
             url: 'http://localhost:3004',
-            reuseExistingServer: !process.env.CI,
-            timeout: 120000
+            reuseExistingServer: true,
+            timeout: 120000,
+            stdout: 'pipe',
+            stderr: 'pipe'
         }
     ]
 });
