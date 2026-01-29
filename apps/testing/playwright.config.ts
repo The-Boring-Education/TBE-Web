@@ -49,9 +49,9 @@ export default defineConfig({
     ],
 
     // Run local dev server before starting tests (only in local development)
-    // In CI or when running via turbo, servers are started manually
-    // webServer is disabled when CI=true or when TURBO=true (running via turbo)
-    webServer: (process.env.CI || process.env.TURBO) ? undefined : [
+    // In CI, servers are started manually in the workflow
+    // When running locally (even via turbo), webServer will start servers automatically
+    webServer: process.env.CI ? undefined : [
         {
             command: 'cd ../.. && pnpm dev:platform',
             url: 'http://localhost:3000',
