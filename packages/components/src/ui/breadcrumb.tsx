@@ -43,27 +43,16 @@ const BreadcrumbLink = React.forwardRef<
   React.ComponentPropsWithoutRef<"a"> & {
     asChild?: boolean
   }
->(({ asChild, className, children, ...props }, ref) => {
-  if (asChild) {
-    return (
-      <Slot
-        ref={ref as React.Ref<HTMLElement>}
-        className={cn("transition-colors hover:text-foreground", className)}
-        {...props}
-      >
-        {children}
-      </Slot>
-    )
-  }
+>(({ asChild, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "a"
 
   return (
-    <a
+    // @ts-ignore - React types version mismatch between packages on Vercel
+    <Comp
       ref={ref}
       className={cn("transition-colors hover:text-foreground", className)}
       {...props}
-    >
-      {children}
-    </a>
+    />
   )
 })
 BreadcrumbLink.displayName = "BreadcrumbLink"
