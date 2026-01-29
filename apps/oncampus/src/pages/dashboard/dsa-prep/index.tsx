@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useApi, useUser } from "@tbe/hooks";
-import { routes } from "@tbe/constants";
-import { LoadingSpinner, DsaQuestionList, QuestionDetailPanel, LinkButton, Navbar } from "@tbe/components";
-import { DsaQuestion } from "@tbe/interface";
-import { Button } from "@tbe/components";
+import { DsaQuestionList, LinkButton, LoadingSpinner, Navbar, QuestionDetailPanel } from "@tbe/components"
+import { routes } from "@tbe/constants"
+import { useApi, useUser } from "@tbe/hooks"
+import type { DsaQuestion } from "@tbe/interface"
+import { useRouter } from "next/router"
+import React, { useEffect, useState } from "react"
 
 const DSAPrepPage = () => {
-  const router = useRouter();
-  const { loading: userLoading, isAuth } = useUser();
+  const router = useRouter()
+  const { loading: userLoading, isAuth } = useUser()
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(null)
 
   const { response, loading: sheetsLoading } = useApi("dsa-sheet", {
     url: `${routes.api.base}${routes.api.dsaSheet}`,
-  });
+  })
 
   const dsaQuestions = React.useMemo(() => {
-    const data = response?.data?.questions;
+    const data = response?.data?.questions
 
-    if (!Array.isArray(data)) return [];
+    if (!Array.isArray(data)) return []
 
     return data.map((question: any) => ({
       id: question._id,
@@ -28,26 +27,26 @@ const DSAPrepPage = () => {
       topics: question.topics,
       companyType: question.companyTypes,
       domain: question.domain,
-    }));
-  }, [response]);
+    }))
+  }, [response])
 
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
-      router.push("/login");
+      router.push("/login")
     }
-  }, [userLoading, isAuth, router]);
+  }, [userLoading, isAuth, router])
 
   const handleQuestionClick = (question: DsaQuestion) => {
     setSelectedQuestion(question)
-  };
+  }
 
   if (sheetsLoading || userLoading) {
     return (
       <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
         <LoadingSpinner />
       </div>
-    );
+    )
   }
 
   return (
@@ -83,7 +82,7 @@ const DSAPrepPage = () => {
 
     </div>
 
-  );
-};
+  )
+}
 
-export default DSAPrepPage;
+export default DSAPrepPage
