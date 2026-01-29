@@ -49,10 +49,11 @@ export default defineConfig({
     ],
 
     // Run local dev server before starting tests (only in local development)
-    // In CI, servers are started manually in the workflow
-    webServer: process.env.CI ? undefined : [
+    // In CI or when running via turbo, servers are started manually
+    // webServer is disabled when CI=true or when TURBO=true (running via turbo)
+    webServer: (process.env.CI || process.env.TURBO) ? undefined : [
         {
-            command: 'pnpm dev:platform',
+            command: 'cd ../.. && pnpm dev:platform',
             url: 'http://localhost:3000',
             reuseExistingServer: true,
             timeout: 120000,
@@ -60,7 +61,7 @@ export default defineConfig({
             stderr: 'pipe'
         },
         {
-            command: 'pnpm dev:prep-yatra',
+            command: 'cd ../.. && pnpm dev:prep-yatra',
             url: 'http://localhost:3001',
             reuseExistingServer: true,
             timeout: 120000,
@@ -68,7 +69,7 @@ export default defineConfig({
             stderr: 'pipe'
         },
         {
-            command: 'pnpm dev:quizes',
+            command: 'cd ../.. && pnpm dev:quizes',
             url: 'http://localhost:3002',
             reuseExistingServer: true,
             timeout: 120000,
@@ -76,7 +77,7 @@ export default defineConfig({
             stderr: 'pipe'
         },
         {
-            command: 'pnpm dev:api',
+            command: 'cd ../.. && pnpm dev:api',
             url: 'http://localhost:3004',
             reuseExistingServer: true,
             timeout: 120000,

@@ -18,6 +18,11 @@
         "test:ci": "pnpm run test:unit && pnpm run test:api && pnpm run test:e2e",
         "playwright:install": "playwright install --with-deps"
     },
+    "turbo": {
+        "test:e2e": {
+            "dependsOn": []
+        }
+    },
     "dependencies": {
         "@tbe/auth": "workspace:*",
         "@tbe/components": "workspace:*",

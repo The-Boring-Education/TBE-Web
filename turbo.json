@@ -177,13 +177,15 @@
       ]
     },
     "test:e2e": {
-      "dependsOn": [
-        "build"
-      ],
       "cache": false,
       "outputs": [
         "playwright-report/**",
         "test-results/**"
+      ],
+      "inputs": [
+        "src/e2e/**/*.{ts,tsx}",
+        "playwright.config.ts",
+        "package.json"
       ]
     },
     "test:coverage": {
