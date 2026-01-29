@@ -1,0 +1,331 @@
+name: 🚀 Auto Release
+
+on:
+    push:
+        branches:
+            - production
+
+# Prevent multiple workflows from running simultaneously
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: false
+
+permissions:
+    contents: write
+    actions: write
+
+jobs:
+    release:
+        name: Create Release
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: 📥 Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: 📦 Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9.15.9
+                  run_install: false
+
+            - name: 📦 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "pnpm"
+
+            - name: 🔍 Get pnpm store directory
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - name: 🗂️ Setup pnpm cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{ env.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+
+            - name: 📦 Install Dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: 🔍 Check if Last Commit is Version Bump
+              id: check_version_bump
+              run: |
+                  LAST_COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+                  if echo "$LAST_COMMIT_MSG" | grep -q "chore(release): bump version"; then
+                      echo "skip=true" >> $GITHUB_OUTPUT
+                      echo "Last commit is a version bump, skipping release"
+                  else
+                      echo "skip=false" >> $GITHUB_OUTPUT
+                      echo "Proceeding with release"
+                  fi
+
+            - name: 📖 Read Current Version
+              if: steps.check_version_bump.outputs.skip == 'false'
+              id: version
+              run: |
+                  CURRENT_VERSION=$(node -p "require('./package.json').version")
+                  echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+                  echo "Current version: $CURRENT_VERSION"
+
+            - name: 🔢 Increment Patch Version
+              if: steps.check_version_bump.outputs.skip == 'false'
+              id: bump_version
+              run: |
+                  CURRENT_VERSION="${{ steps.version.outputs.current_version }}"
+                  
+                  # Parse version components
+                  IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+                  
+                  # Increment patch version
+                  NEW_PATCH=$((PATCH + 1))
+                  NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+                  
+                  echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+                  echo "Previous version: $CURRENT_VERSION"
+                  echo "New version: $NEW_VERSION"
+
+            - name: 🔍 Check if Tag Exists
+              if: steps.check_version_bump.outputs.skip == 'false'
+              id: check_tag
+              run: |
+                  NEW_VERSION="${{ steps.bump_version.outputs.new_version }}"
+                  TAG_NAME="v$NEW_VERSION"
+                  
+                  if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+                      echo "exists=true" >> $GITHUB_OUTPUT
+                      echo "Tag $TAG_NAME already exists, skipping release"
+                  else
+                      echo "exists=false" >> $GITHUB_OUTPUT
+                      echo "Tag $TAG_NAME does not exist, proceeding with release"
+                  fi
+
+            - name: 📝 Update package.json
+              if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
+              run: |
+                  NEW_VERSION="${{ steps.bump_version.outputs.new_version }}"
+                  
+                  # Update version in package.json using Node.js
+                  node << EOF
+                  const fs = require('fs');
+                  const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+                  packageJson.version = '$NEW_VERSION';
+                  fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2) + '\n');
+                  EOF
+                  
+                  echo "Updated package.json to version $NEW_VERSION"
+
+            - name: 📋 Generate Changelog
+              if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
+              id: changelog
+              env:
+                  NEW_VERSION: ${{ steps.bump_version.outputs.new_version }}
+                  CURRENT_VERSION: ${{ steps.version.outputs.current_version }}
+                  GITHUB_REPOSITORY: ${{ github.repository }}
+              run: |
+                  CURRENT_VERSION="${{ steps.version.outputs.current_version }}"
+                  
+                  # Get the last tag, or use current version as fallback
+                  LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v$CURRENT_VERSION")
+                  
+                  echo "Generating changelog from $LAST_TAG to HEAD..."
+                  
+                  # Generate changelog using Node.js script with LAST_TAG passed as environment variable
+                  LAST_TAG="$LAST_TAG" node << 'EOF' > changelog.txt
+                  const { execSync } = require('child_process');
+                  
+                  const lastTag = process.env.LAST_TAG || 'HEAD~50';
+                  const newVersion = process.env.NEW_VERSION;
+                  const currentVersion = process.env.CURRENT_VERSION;
+                  const repo = process.env.GITHUB_REPOSITORY;
+                  
+                  let commits = [];
+                  try {
+                      const logOutput = execSync(`git log ${lastTag}..HEAD --pretty=format:"%H|%s|%an"`, { encoding: 'utf-8' });
+                      commits = logOutput
+                          .trim()
+                          .split('\n')
+                          .filter(line => line.trim() && !line.includes('chore(release)'))
+                          .map(line => {
+                              const [hash, ...rest] = line.split('|');
+                              const message = rest.slice(0, -1).join('|');
+                              const author = rest[rest.length - 1];
+                              return { hash, message, author };
+                          });
+                  } catch (error) {
+                      console.error('Error fetching commits:', error.message);
+                  }
+                  
+                  // Group commits by type
+                  const groups = {
+                      feat: { title: '✨ Features', items: [] },
+                      fix: { title: '🐛 Bug Fixes', items: [] },
+                      docs: { title: '📚 Documentation', items: [] },
+                      style: { title: '💅 Styling', items: [] },
+                      refactor: { title: '♻️  Refactoring', items: [] },
+                      perf: { title: '⚡ Performance', items: [] },
+                      test: { title: '🧪 Tests', items: [] },
+                      chore: { title: '🔧 Chores', items: [] },
+                      other: { title: '📝 Other Changes', items: [] }
+                  };
+                  
+                  commits.forEach(commit => {
+                      const match = commit.message.match(/^(feat|fix|docs|style|refactor|perf|test|chore)(\(.+\))?:\s*(.+)/i);
+                      if (match) {
+                          const type = match[1].toLowerCase();
+                          const description = match[3].trim();
+                          if (groups[type]) {
+                              groups[type].items.push({ description, hash: commit.hash.substring(0, 7) });
+                          }
+                      } else {
+                          groups.other.items.push({ description: commit.message.trim(), hash: commit.hash.substring(0, 7) });
+                      }
+                  });
+                  
+                  // Build markdown changelog
+                  let changelog = '## What\'s Changed\n\n';
+                  
+                  let hasContent = false;
+                  Object.values(groups).forEach(group => {
+                      if (group.items.length > 0) {
+                          hasContent = true;
+                          changelog += `### ${group.title}\n\n`;
+                          group.items.forEach(item => {
+                              changelog += `- ${item.description} (\`${item.hash}\`)\n`;
+                          });
+                          changelog += '\n';
+                      }
+                  });
+                  
+                  if (!hasContent) {
+                      changelog += 'No significant changes detected.\n\n';
+                  }
+                  
+                  // Add comparison link
+                  changelog += `**Full Changelog**: https://github.com/${repo}/compare/v${currentVersion}...v${newVersion}`;
+                  
+                  console.log(changelog);
+                  EOF
+                  
+                  # Read changelog from file and set as output
+                  CHANGELOG_CONTENT=$(cat changelog.txt)
+                  echo "changelog<<EOF" >> $GITHUB_OUTPUT
+                  echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+                  echo "EOF" >> $GITHUB_OUTPUT
+                  
+                  # Also save to file for release creation
+                  echo "$CHANGELOG_CONTENT" > release_changelog.txt
+
+            - name: 💾 Commit Version Bump
+              if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
+              run: |
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+                  
+                  NEW_VERSION="${{ steps.bump_version.outputs.new_version }}"
+                  git add package.json
+                  git commit -m "chore(release): bump version to $NEW_VERSION" || exit 0
+                  
+                  echo "Committed version bump to $NEW_VERSION"
+
+            - name: 🏷️ Create Git Tag
+              if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
+              run: |
+                  NEW_VERSION="${{ steps.bump_version.outputs.new_version }}"
+                  TAG_NAME="v$NEW_VERSION"
+                  
+                  git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
+                  echo "Created tag: $TAG_NAME"
+
+            - name: 📤 Push Changes and Tag
+              if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
+              run: |
+                  git push origin production
+                  git push origin --tags
+                  echo "Pushed version bump and tag to repository"
+
+            - name: 🚀 Create GitHub Release
+              if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
+              env:
+                  TAG_NAME: v${{ steps.bump_version.outputs.new_version }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_REPOSITORY: ${{ github.repository }}
+              run: |
+                  # Create release using Node.js to properly escape JSON
+                  node << 'EOF'
+                  const fs = require('fs');
+                  const https = require('https');
+                  
+                  const changelog = fs.readFileSync('release_changelog.txt', 'utf-8');
+                  const tagName = process.env.TAG_NAME;
+                  const token = process.env.GITHUB_TOKEN;
+                  const repo = process.env.GITHUB_REPOSITORY;
+                  
+                  const data = JSON.stringify({
+                      tag_name: tagName,
+                      name: `Release ${tagName}`,
+                      body: changelog,
+                      draft: false,
+                      prerelease: false
+                  });
+                  
+                  const options = {
+                      hostname: 'api.github.com',
+                      path: `/repos/${repo}/releases`,
+                      method: 'POST',
+                      headers: {
+                          'Authorization': `token ${token}`,
+                          'User-Agent': 'GitHub Actions',
+                          'Accept': 'application/vnd.github.v3+json',
+                          'Content-Type': 'application/json',
+                          'Content-Length': data.length
+                      }
+                  };
+                  
+                  const req = https.request(options, (res) => {
+                      let responseData = '';
+                      
+                      res.on('data', (chunk) => {
+                          responseData += chunk;
+                      });
+                      
+                      res.on('end', () => {
+                          if (res.statusCode >= 200 && res.statusCode < 300) {
+                              console.log(`✅ Created GitHub release: ${tagName}`);
+                              const release = JSON.parse(responseData);
+                              console.log(`🔗 Release URL: ${release.html_url}`);
+                          } else {
+                              console.error(`❌ Failed to create release: ${res.statusCode}`);
+                              console.error(responseData);
+                              process.exit(1);
+                          }
+                      });
+                  });
+                  
+                  req.on('error', (error) => {
+                      console.error(`❌ Error creating release: ${error.message}`);
+                      process.exit(1);
+                  });
+                  
+                  req.write(data);
+                  req.end();
+                  EOF
+
+            - name: ✅ Release Summary
+              if: always()
+              run: |
+                  if [ "${{ steps.check_version_bump.outputs.skip }}" == "true" ]; then
+                      echo "⏭️  Release skipped: Last commit is a version bump"
+                  elif [ "${{ steps.check_tag.outputs.exists }}" == "true" ]; then
+                      echo "⏭️  Release skipped: Tag already exists"
+                  else
+                      echo "✅ Release created successfully!"
+                      echo "📦 Version: ${{ steps.bump_version.outputs.new_version }}"
+                      echo "🏷️  Tag: v${{ steps.bump_version.outputs.new_version }}"
+                  fi
