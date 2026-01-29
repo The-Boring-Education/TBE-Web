@@ -13,17 +13,6 @@ export default function CampusPrepLanding() {
     router.push("/login");
   };
 
-  const handleResourceClick = (resource: ResourceItem) => {
-    if (!resource.isAvailable) {
-      toast.info("Stay tuned, coming soon...", {
-        description: `${resource.title} will be available soon. We're working hard to bring this feature to you!`,
-        duration: 3000,
-      });
-      return;
-    }
-    router.push(resource.href);
-  };
-
   return (
     <Fragment>
       {/* Pure black background */}
