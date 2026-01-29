@@ -59,7 +59,7 @@ jobs:
               run: |
                   echo "Running ESLint across all packages and apps..."
                   echo "This will fail if any unused imports, unused variables, or other lint errors are found."
-                  pnpm run lint:check
+                  pnpm run lint
 
             - name: ✅ Lint Summary
               if: always()
