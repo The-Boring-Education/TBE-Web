@@ -56,6 +56,10 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
         default: null,
       },
     },
+    resource_link: {
+      type: String,
+      default: '',
+    },
   },
   { timestamps: true, _id: true }
 );
@@ -82,6 +86,10 @@ const InterviewSheetSchema = new Schema<InterviewSheetModel>(
     liveOn: {
       type: Date,
       required: [true, 'Live on is required'],
+    },
+    resource_link: {
+      type: String,
+      default: '',
     },
     isPremium: {
       type: Boolean,

@@ -176,6 +176,7 @@ export interface InterviewSheetModel extends Document {
     dsaQuestions?: DSAQuestionModel[]
     roadmap: RoadmapsType
     features: string[]
+    resource_link?: string
 }
 
 export interface QuestionResourcesModel {
@@ -194,6 +195,7 @@ export interface InterviewSheetQuestionModel {
     priority: PriorityType
     toObject: () => UserCourseModel
     resources?: QuestionResourcesModel
+    resource_link?: string
 }
 
 export interface UserSheetModel extends Document {
@@ -652,6 +654,7 @@ export interface AddInterviewSheetRequestPayloadProps {
     isPremium?: boolean
     price?: number
     discountPercentage?: number
+    resource_link?: string
     appliedCoupon?: typeof Schema.Types.ObjectId
     questions: InterviewSheetQuestionModel[]
     roadmap: RoadmapsType
