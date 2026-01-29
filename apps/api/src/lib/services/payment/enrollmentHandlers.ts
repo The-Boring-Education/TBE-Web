@@ -1,15 +1,15 @@
-import type { PaymentModel } from '@/lib/interfaces'
+import { planTypeMap } from '@/lib/constants'
 import {
+    createSubscriptionInDB,
     enrollInACourse,
     enrollInASheet,
+    getActiveSubscriptionByUserFromDB,
     getEnrolledCourseFromDB,
     getEnrolledSheetFromDB,
-    createSubscriptionInDB,
-    getActiveSubscriptionByUserFromDB,
-    updateUserSubscriptionStatusInDB,
     updateUserPointsInDB,
+    updateUserSubscriptionStatusInDB,
 } from '@/lib/database'
-import { planTypeMap } from '@/lib/constants'
+import type { PaymentModel } from '@/lib/interfaces'
 import { getPYSubscriptionFeaturesByType } from '@/lib/utils'
 
 type EnrollmentHandler = (

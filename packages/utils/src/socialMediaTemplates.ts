@@ -112,7 +112,7 @@ ${data.appUrl}`;
     description: "Professional tone suitable for LinkedIn networking",
     template: (data: SocialMediaTemplateData) => {
       const progressPercentage = Math.round((data.currentDay / data.totalDays) * 100);
-      const goals = data.nextGoals.filter(g => g.trim()).map((g, i) => `• ${g}`).join("\n") 
+      const goals = data.nextGoals.filter(g => g.trim()).map((g) => `• ${g}`).join("\n") 
         || "• Continue learning consistently\n• Apply new concepts in practice";
 
       return `🚀 Learning Journey Update: Day ${data.currentDay + 1} of ${data.totalDays}
@@ -145,7 +145,7 @@ Learn more and start your own challenge: ${data.appUrl}`;
     description: "High-energy motivational format to inspire others",
     template: (data: SocialMediaTemplateData) => {
       const progressPercentage = Math.round((data.currentDay / data.totalDays) * 100);
-      const goals = data.nextGoals.filter(g => g.trim()).map((g, i) => `🔥 ${g}`).join("\n") 
+      const goals = data.nextGoals.filter(g => g.trim()).map((g) => `🔥 ${g}`).join("\n") 
         || "🔥 Continue learning consistently\n🔥 Apply new concepts in practice";
 
       return `💥 ANOTHER DAY, ANOTHER VICTORY! 💥

@@ -1,20 +1,23 @@
 {
   "name": "@tbe/constants",
   "version": "0.0.0",
+  "type": "module",
   "private": true,
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
     "build": "echo 'No build step needed for constants package'",
-    "lint": "echo 'No lint step needed for constants package'"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@tbe/types": "workspace:*",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@tbe/eslint-config": "workspace:*",
     "@tbe/typescript-config": "workspace:*",
     "@types/react": "^18.3.24",
+    "eslint": "^9.34.0",
     "typescript": "5.9.2"
   }
 }

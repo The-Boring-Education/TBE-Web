@@ -1,10 +1,10 @@
-import React from 'react';
 import {
   Button,
   Section,
   Text,
 } from '@tbe/components';
 import { motion } from 'framer-motion';
+import React from 'react';
 import { FaPlay } from 'react-icons/fa';
 
 interface ModernLandingHeroProps {
@@ -39,7 +39,7 @@ const ModernLandingHero = ({
   stats,
   previewContent,
 }: ModernLandingHeroProps) => (
-    <Section className={`bg-lightBG`}>
+    <Section className="bg-lightBG">
       <div className='max-w-7xl mx-auto px-8 py-8'>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 items-center'>
           

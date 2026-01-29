@@ -5,7 +5,6 @@ import pluginReactHooks from "eslint-plugin-react-hooks"
 import pluginReact from "eslint-plugin-react"
 import globals from "globals"
 import simpleImportSort from "eslint-plugin-simple-import-sort"
-import unusedImports from "eslint-plugin-unused-imports"
 import { config as baseConfig } from "./base.js"
 
 /**
@@ -31,8 +30,7 @@ export const config = [
     {
         plugins: {
             "react-hooks": pluginReactHooks,
-            "simple-import-sort": simpleImportSort,
-            "unused-imports": unusedImports
+            "simple-import-sort": simpleImportSort
         },
         settings: { react: { version: "detect" } },
         rules: {
@@ -51,19 +49,9 @@ export const config = [
             // Import sorting and management
             "simple-import-sort/exports": "warn",
             "simple-import-sort/imports": "warn",
-            "unused-imports/no-unused-imports": "warn",
-            "unused-imports/no-unused-vars": [
-                "warn",
-                {
-                    vars: "all",
-                    varsIgnorePattern: "^_",
-                    args: "after-used",
-                    argsIgnorePattern: "^_"
-                }
-            ],
-            // TypeScript-specific rules
+            // TypeScript-specific rules (using @typescript-eslint instead of unused-imports due to ESLint 9 compatibility)
             "@typescript-eslint/no-unused-vars": [
-                "warn",
+                "error",
                 {
                     vars: "all",
                     varsIgnorePattern: "^_",

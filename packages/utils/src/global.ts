@@ -191,7 +191,7 @@ const getPlaylistPageProps = async (context: any) => {
         playlist: data,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       redirect: {
         destination: routes.home,

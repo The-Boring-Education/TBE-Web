@@ -1,5 +1,5 @@
-import { ArrowLeft } from "lucide-react";
 import type { DSAQuestion, DSAQuestionDetailsProps } from "@tbe/types";
+import { ArrowLeft } from "lucide-react";
 
 export type { DSAQuestion };
 

@@ -29,7 +29,7 @@ import type {
     Video,
     WebhookEvent
 } from "@tbe/interface"
-import { QuestionDifficulty } from "@tbe/interface";
+import type { QuestionDifficulty } from "@tbe/interface";
 
 const fetchAPIData = async (url: string) => {
     const response = await fetch(`${envConfig.API_URL}/${url}`)

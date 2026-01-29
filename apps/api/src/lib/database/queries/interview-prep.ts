@@ -641,14 +641,19 @@ const getDSAQuestionsGroupedByTopic = async (
 export {
     // Interview Sheet functions
     addAInterviewSheetToDB,
+    // DSA Question functions
+    addDSAQuestionToDB,
     addQuestionToInterviewSheetInDB,
     deleteInterviewSheetFromDB,
     deleteQuestionFromSheetInDB,
     enrollInASheet,
+    getAllDSAQuestionsFromDB,
     getAllEnrolledSheetsFromDB,
     getAllInterviewSheetsFromDB,
     getAllQuestionsByUser,
     getASheetForUserFromDB,
+    getDSAQuestionsGroupedByTopic,
+    getDSASheetMetadataFromDB,
     getEnrolledSheetFromDB,
     getInterviewSheetByIDFromDB,
     getInterviewSheetBySlugFromDB,
@@ -656,13 +661,6 @@ export {
     markQuestionCompletedByUser,
     markQuestionStarredByUser,
     updateInterviewQuestionInDB,
-    updateInterviewSheetInDB,
-
-    // DSA Question functions
-    addDSAQuestionToDB,
-    getAllDSAQuestionsFromDB,
-    getDSAQuestionsGroupedByTopic,
-    getDSASheetMetadataFromDB
-}
+    updateInterviewSheetInDB}
 
 export type { DSASheetFilters }

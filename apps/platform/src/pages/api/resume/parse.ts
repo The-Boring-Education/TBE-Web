@@ -4,13 +4,12 @@
  * Follows TBE pattern: Frontend calls this, then sends data to Unskilled backend
  */
 
-import type { NextApiRequest, NextApiResponse } from 'next';
-import type { ParseResumeResponse } from '@tbe/types';
-
 import { JOB_SKILL_NORMALIZER } from '@tbe/constants';
+import type { ParseResumeResponse } from '@tbe/types';
 import formidable from 'formidable';
 import fs from 'fs';
 import mammoth from 'mammoth';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import pdfParse from 'pdf-parse';
 
 // Disable body parser to handle file upload

@@ -1,6 +1,5 @@
 import { CardContainerA, FlexContainer, Image,LandingPageHero, LinkButton, Section, SectionHeaderContainer, SEO, Text } from '@tbe/components';
-import { generateSectionPath, getSEOMeta, LINKS, MENTORSHIP_SERVICES_CARDS, routes,STATIC_FILE_PATH } from '@tbe/constants';
-import router from 'next/router';
+import { getSEOMeta, MENTORSHIP_SERVICES_CARDS, routes,STATIC_FILE_PATH } from '@tbe/constants';
 import { Fragment } from 'react';
 
 // Custom card component specifically for topmate-sessions

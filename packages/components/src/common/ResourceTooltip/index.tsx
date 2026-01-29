@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { FaYoutube, FaBook, FaCode } from 'react-icons/fa';
+import { useEffect,useRef, useState } from 'react';
+import { FaBook, FaCode,FaYoutube } from 'react-icons/fa';
 import { SiLeetcode } from 'react-icons/si';
 
 import Button from '../Buttons/Button';

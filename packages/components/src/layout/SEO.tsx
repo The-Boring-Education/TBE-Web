@@ -353,10 +353,9 @@ export default SEO
 
 // Export schema helper functions for external use
 export {
-    getOrganizationSchema,
-    getWebSiteSchema,
+    getArticleSchema,
+    getBreadcrumbSchema,
     getCourseSchema,
     getFAQSchema,
-    getArticleSchema,
-    getBreadcrumbSchema
-}
+    getOrganizationSchema,
+    getWebSiteSchema}

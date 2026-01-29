@@ -1,5 +1,6 @@
+import type { DsaQuestionListProps } from "@tbe/interface";
+
 import { DsaQuestionCard } from "./DsaQuestionCard";
-import { DsaQuestionListProps } from "@tbe/interface";
 
 const DsaQuestionList = ({
     questions,

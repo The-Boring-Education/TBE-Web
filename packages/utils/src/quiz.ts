@@ -1,7 +1,6 @@
 import { sendRequest } from "./api"
 import { trackEvent } from "./analytics"
 import type { QuizSession, QuizResult } from "@tbe/types";
-import { QuizQuestion } from "@tbe/types"
 
 /**
  * Cleanup quiz option text by removing prefixes . "
@@ -88,7 +87,7 @@ export const quizService = {
                     label: quizId,
                     value: questionCount
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {
@@ -126,7 +125,7 @@ export const quizService = {
                     value: selectedOption,
                     sessionId
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {
@@ -173,7 +172,7 @@ export const quizService = {
                     category: "quiz",
                     sessionId
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {

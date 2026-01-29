@@ -28,7 +28,7 @@ import type { QuestionFrequencyType } from "./api";
 
 // Import TopNavbarLinkProps from the global module to avoid duplication
 import type { TopNavbarLinkProps } from "./global";
-import { QuestionDifficulty } from "./constants";
+import type { QuestionDifficulty } from "./constants";
 
 export interface SectionProps {
   children: ReactNode;

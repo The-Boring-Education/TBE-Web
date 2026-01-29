@@ -1,10 +1,8 @@
 import {
   CardContainerA,
   FlexContainer,
-  Image,
   LinkButton,
   ModernLandingHero,
-  PortfolioCard,
   PortfolioTemplate,
   Section,
   SEO,
@@ -13,12 +11,9 @@ import {
 import {
   LINKS,
   PAGE_REFRESH_TIMEOUT,
-  PORTFOLIO_CARDS,
   PORTFOLIO_FEATURES,
   PORTFOLIO_TEMPLATES,
   routes,
-  STATIC_FILE_PATH,
-  TBSH_FEATURES,
 } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';

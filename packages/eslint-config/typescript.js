@@ -22,8 +22,17 @@ export const config = [
         },
         rules: {
             "turbo/no-undeclared-env-vars": "warn",
+            // Unused variables - strict enforcement (using @typescript-eslint instead of unused-imports due to ESLint 9 compatibility)
             // TypeScript-specific rules
-            "@typescript-eslint/no-unused-vars": "warn",
+            "@typescript-eslint/no-unused-vars": [
+                "error",
+                {
+                    vars: "all",
+                    varsIgnorePattern: "^_",
+                    args: "after-used",
+                    argsIgnorePattern: "^_"
+                }
+            ],
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/consistent-type-imports": "warn",
             "@typescript-eslint/no-unused-expressions": "off" // Disable problematic rule

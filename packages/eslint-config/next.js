@@ -51,9 +51,9 @@ export const config = [
             // Import sorting and management
             "simple-import-sort/exports": "warn",
             "simple-import-sort/imports": "warn",
-            "unused-imports/no-unused-imports": "warn",
+            "unused-imports/no-unused-imports": "error",
             "unused-imports/no-unused-vars": [
-                "warn",
+                "error",
                 {
                     vars: "all",
                     varsIgnorePattern: "^_",
@@ -62,7 +62,7 @@ export const config = [
                 }
             ],
             "no-unused-vars": [
-                "warn",
+                "error",
                 {
                     vars: "all",
                     varsIgnorePattern: "^_",
@@ -71,7 +71,7 @@ export const config = [
                 }
             ],
             "@typescript-eslint/no-unused-vars": [
-                "warn",
+                "error",
                 {
                     vars: "all",
                     varsIgnorePattern: "^_",

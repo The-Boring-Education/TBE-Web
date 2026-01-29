@@ -14,6 +14,7 @@ import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Toaster } from 'sonner';
+
 import DashboardLayout from '@/components/DashboardLayout';
 
 // Create a client

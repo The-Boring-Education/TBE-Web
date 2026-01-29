@@ -1,11 +1,10 @@
-import { Fragment } from "react";
-import { toast } from "sonner";
-
 import { Button } from "@tbe/components";
 import { CAMPUS_PREP_RESOURCES, type ResourceItem } from "@tbe/constants";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { Fragment } from "react";
+import { toast } from "sonner";
 
 export default function CampusPrepLanding() {
   const router = useRouter();

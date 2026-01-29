@@ -72,6 +72,8 @@ export { default as Text } from "./common/Typography/Text";
 export { default as AboutTBE } from "./containers/Cards/AboutTBE";
 export { default as CardContainerA } from "./containers/Cards/CardContainerA";
 export { default as CardContainerB } from "./containers/Cards/CardContainerB";
+export { DsaQuestionCard} from "./containers/Cards/DsaQuestionCard"
+export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
 export { default as Leaderboard } from "./containers/Cards/Leaderboard";
@@ -81,14 +83,12 @@ export { default as MentorshipCard } from "./containers/Cards/MentorshipCard";
 export { default as NotificationContainer } from "./containers/Cards/NotificationContainer";
 export { default as PaymentCard } from "./containers/Cards/PaymentCard";
 export { default as PlaylistSkillCard } from "./containers/Cards/PlaylistSkillCard";
+export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetailPanel"
 export { default as QuizSection } from "./containers/Cards/QuizSection";
 export { default as Testimonials } from "./containers/Cards/Testimonials";
 export { default as UserLevelProgressContainer } from "./containers/Cards/UserLevelProgressContainer";
 export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaughtAt";
 export { default as WebibarCard } from "./containers/Cards/WebibarCard";
-export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
-export { DsaQuestionCard} from "./containers/Cards/DsaQuestionCard"
-export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetailPanel"
 
 
 // Container Components - Card Items
@@ -225,10 +225,9 @@ export {
 } from "./prepyatra/ui/tooltip";
 
 // Export all UI components from the main ui directory
-export * from "./techyatra";
-export * from "./ui";
-
+export type { PageHeaderProps } from "./layout/PageHeader";
+export { default as PageHeader } from "./layout/PageHeader";
 export { default as QuestionDetails } from "./layout/QuestionDetails";
 export { default as QuestionSidebar } from "./layout/QuestionSidebar";
-export { default as PageHeader } from "./layout/PageHeader";
-export type { PageHeaderProps } from "./layout/PageHeader";
+export * from "./techyatra";
+export * from "./ui";

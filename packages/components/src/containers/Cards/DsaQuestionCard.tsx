@@ -1,4 +1,4 @@
-import { DsaQuestionCardProps } from "@tbe/interface";
+import type { DsaQuestionCardProps } from "@tbe/interface";
 import { getDifficultyColor } from "@tbe/utils";
 
 export const DsaQuestionCard = ({

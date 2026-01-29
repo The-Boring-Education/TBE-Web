@@ -60,7 +60,7 @@ export const challengesService = {
                     challengeName: data.name,
                     challengeCategory: data.category
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {
@@ -96,7 +96,7 @@ export const challengesService = {
                         (key) => key !== "challengeId"
                     )
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {
@@ -123,7 +123,7 @@ export const challengesService = {
                     category: "challenge",
                     challengeId
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
         } catch (error) {
             console.error("Error deleting challenge:", error)
             throw error
@@ -170,7 +170,7 @@ export const challengesService = {
                     day: data.day,
                     hoursSpent: data.hoursSpent
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {

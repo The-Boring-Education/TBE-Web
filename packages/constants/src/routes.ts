@@ -1,6 +1,5 @@
 import type { GenerateSectionPathProps } from "@tbe/types"
 import { envConfig } from "./envConfig"
-import { homedir } from "os"
 
 const routes = {
     home: "/",

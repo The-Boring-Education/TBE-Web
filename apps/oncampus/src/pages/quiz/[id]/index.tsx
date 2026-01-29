@@ -1,13 +1,13 @@
 import { useAuth } from "@tbe/auth";
-import { quizApi, gamificationApi } from "@tbe/services";
-import { cleanOptionText } from "@tbe/utils";
-import { config } from "@tbe/config/quizes";
 import { Button } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
-import type { QuizQuestionsData, QuizQuestion } from "@tbe/types";
+import { config } from "@tbe/config/quizes";
+import { gamificationApi,quizApi } from "@tbe/services";
+import type { QuizQuestion,QuizQuestionsData } from "@tbe/types";
+import { cleanOptionText } from "@tbe/utils";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type GameState = "loading" | "playing" | "submitting";
 

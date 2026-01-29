@@ -76,7 +76,7 @@ export const prepLogsService = {
                     value: data.timeSpent,
                     title: data.title
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {
@@ -109,7 +109,7 @@ export const prepLogsService = {
                     category: "prep_yatra",
                     logId: data.logId
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {
@@ -136,7 +136,7 @@ export const prepLogsService = {
                     category: "prep_yatra",
                     logId
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
         } catch (error) {
             console.error("Error deleting prep log:", error)
             throw error

@@ -222,11 +222,11 @@ const CreateChallengeModal = ({
                           <div className="flex-1">
                             <CardTitle className="text-lg text-contentLight ml-1">{template.name}</CardTitle>
                             <div className="flex items-center gap-1 mt-1 ">
-                              <Badge className={`bg-white/80 text-[#FF5757] hover:bg-[#FF5757] hover:text-white border-[#FF5757]/30 hover:border-[#FF5757] text-sm h-5 px-2 py-0.5 rounded-full  flex-shrink-0 whitespace-nowrap transition-all`}>
+                              <Badge className="bg-white/80 text-[#FF5757] hover:bg-[#FF5757] hover:text-white border-[#FF5757]/30 hover:border-[#FF5757] text-sm h-5 px-2 py-0.5 rounded-full  flex-shrink-0 whitespace-nowrap transition-all">
                                 <Calendar className="w-3 h-3 mr-1 inline" />
                                 {template.totalDays} days
                               </Badge>
-                              <Badge className={`bg-white/80 text-[#FF5757] hover:bg-[#FF5757] hover:text-white border-[#FF5757]/30 hover:border-[#FF5757] text-sm h-5 px-2 py-0.5 flex-shrink-0 whitespace-nowrap transition-all`}>
+                              <Badge className="bg-white/80 text-[#FF5757] hover:bg-[#FF5757] hover:text-white border-[#FF5757]/30 hover:border-[#FF5757] text-sm h-5 px-2 py-0.5 flex-shrink-0 whitespace-nowrap transition-all">
                                 <Star className="w-3 h-3 mr-1 flex-shrink-0" />
                                 {template.difficulty}
                               </Badge>

@@ -1,20 +1,19 @@
-import type { ReactNode } from "react";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useUser } from "@tbe/hooks";
 import {
-  SidebarProvider,
+  LoadingSpinner,
+  Navbar,
   Sidebar,
   SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
   SidebarInset,
-  Navbar,
-  Footer,
-  LoadingSpinner,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
 } from "@tbe/components";
-import { Home, Target, ClipboardList, FileText, BrainCircuit } from "lucide-react";
+import { useUser } from "@tbe/hooks";
+import { BrainCircuit,ClipboardList, FileText, Home, Target } from "lucide-react";
+import { useRouter } from "next/router";
+import type { ReactNode } from "react";
+import { useEffect } from "react";
 
 interface DashboardLayoutProps {
   children: ReactNode;

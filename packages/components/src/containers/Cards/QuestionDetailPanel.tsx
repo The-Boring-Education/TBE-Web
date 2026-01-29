@@ -1,7 +1,7 @@
-import { useState } from "react";
-import type { DsaSectionTabs } from "@tbe/interface"
 import { FlexContainer } from "@tbe/components";
-import { QuestionDetailProps } from "@tbe/interface"
+import type { DsaSectionTabs } from "@tbe/interface"
+import type { QuestionDetailProps } from "@tbe/interface"
+import { useState } from "react";
 
 const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
     const [activeTab, setActiveTab] = useState<DsaSectionTabs>("description");

@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 import { useAuth } from "@tbe/auth";
 import { Button } from "@tbe/components";
 import { useQuizData } from "@tbe/hooks";
 import type { QuizCategoryAPI } from "@tbe/types";
 import { Play } from "lucide-react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const QuizzesDashboardPage = () => {
   const router = useRouter();

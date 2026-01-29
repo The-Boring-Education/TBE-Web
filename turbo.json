@@ -30,7 +30,19 @@
         "ONBOARDING_APP_URL",
         "QUIZZES_APP_URL",
         "NEXTAUTH_URL",
-        "NEXT_PUBLIC_UNSKILLED_API_URL"
+        "NEXT_PUBLIC_UNSKILLED_API_URL",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_ONBOARDING_URL",
+        "NEXT_PUBLIC_PLATFORM_URL",
+        "NEXT_PUBLIC_AUTH_URL",
+        "NEXT_PUBLIC_GOOGLE_ANALYTICS",
+        "NEXT_PUBLIC_GTM_ID",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_ONBOARDING_APP_URL",
+        "COOKIE_DOMAIN",
+        "VITE_BASE_API_URL",
+        "NEXT_PUBLIC_PREPYATRA_BASE_URL",
+        "MONGO_URI"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
@@ -73,7 +85,19 @@
         "ONBOARDING_APP_URL",
         "QUIZZES_APP_URL",
         "NEXTAUTH_URL",
-        "NEXT_PUBLIC_UNSKILLED_API_URL"
+        "NEXT_PUBLIC_UNSKILLED_API_URL",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_ONBOARDING_URL",
+        "NEXT_PUBLIC_PLATFORM_URL",
+        "NEXT_PUBLIC_AUTH_URL",
+        "NEXT_PUBLIC_GOOGLE_ANALYTICS",
+        "NEXT_PUBLIC_GTM_ID",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_ONBOARDING_APP_URL",
+        "COOKIE_DOMAIN",
+        "VITE_BASE_API_URL",
+        "NEXT_PUBLIC_PREPYATRA_BASE_URL",
+        "MONGO_URI"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
@@ -90,7 +114,13 @@
     "lint": {
       "dependsOn": [
         "^lint"
-      ]
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "eslint.config.js",
+        ".eslintrc*"
+      ],
+      "cache": true
     },
     "check-types": {
       "dependsOn": [

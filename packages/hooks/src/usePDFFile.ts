@@ -4,8 +4,8 @@
  * Follows TBE pattern with proper error handling and loading states
  */
 
+import type { ParseResumeResponse,ResumeFileState } from '@tbe/types';
 import { useState } from 'react';
-import type { ResumeFileState, ParseResumeResponse } from '@tbe/types';
 
 const useResumeParser = () => {
   const [state, setState] = useState<ResumeFileState>({

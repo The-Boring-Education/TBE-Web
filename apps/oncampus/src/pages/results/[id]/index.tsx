@@ -1,12 +1,12 @@
 import { useAuth } from "@tbe/auth";
-import { cleanOptionText } from "@tbe/utils";
+import { MarkdownRenderer } from "@tbe/components/quizes";
 import { config } from "@tbe/config/quizes";
 import { quizApi } from "@tbe/services";
-import { MarkdownRenderer } from "@tbe/components/quizes";
-import type { QuizQuestionsData, QuizQuestion } from "@tbe/types";
+import type { QuizQuestion,QuizQuestionsData } from "@tbe/types";
+import { cleanOptionText } from "@tbe/utils";
 import { ArrowLeft, Clock, Target, Trophy } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const isMongoObjectId = (val?: string): boolean => {
   if (!val) return false;

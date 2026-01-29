@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 import { useAuth } from "@tbe/auth";
 import { Button } from "@tbe/components";
 import { BookOpen, Zap } from "lucide-react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const AptitudeComingSoonPage = () => {
     const router = useRouter();

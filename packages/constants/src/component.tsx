@@ -4,7 +4,6 @@ import {
   Map,
   BookOpen,
   TrendingUp,
-  Rocket,
   Brain,
   Trophy,
   Users,

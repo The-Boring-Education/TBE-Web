@@ -1,17 +1,22 @@
 // Conditional imports to avoid issues when Next.js is not available
-let NextApiRequest: any;
+/* eslint-disable @typescript-eslint/no-require-imports */
+let _NextApiRequestType: any;
 let getSession: any;
 
 try {
   const next = require("next");
   const nextAuth = require("next-auth/react");
-  NextApiRequest = next.NextApiRequest;
+  _NextApiRequestType = next.NextApiRequest;
   getSession = nextAuth.getSession;
-} catch (error) {
+} catch {
   // Next.js not available, define fallback types
-  NextApiRequest = class {};
+  _NextApiRequestType = class {};
   getSession = () => Promise.resolve(null);
 }
+/* eslint-enable @typescript-eslint/no-require-imports */
+
+// Export type for use in function signatures
+type NextApiRequest = typeof _NextApiRequestType;
 
 export interface AuthUser {
     id: string
@@ -24,7 +29,7 @@ export interface AuthUser {
  * Get authenticated user from Next.js API request
  */
 export const getAuthenticatedUser = async (
-    req: typeof NextApiRequest
+    req: NextApiRequest
 ): Promise<AuthUser | null> => {
     try {
         const session = await getSession({ req })
@@ -49,7 +54,7 @@ export const getAuthenticatedUser = async (
  * Validate if user is authenticated
  */
 export const isAuthenticated = async (
-    req: typeof NextApiRequest
+    req: NextApiRequest
 ): Promise<boolean> => {
     const user = await getAuthenticatedUser(req)
     return user !== null
@@ -59,8 +64,8 @@ export const isAuthenticated = async (
  * Check if user has required role (extend as needed)
  */
 export const hasRole = async (
-    req: typeof NextApiRequest,
-    requiredRole: string
+    req: NextApiRequest,
+    _requiredRole: string
 ): Promise<boolean> => {
     const user = await getAuthenticatedUser(req)
     if (!user) return false

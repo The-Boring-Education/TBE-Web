@@ -1,5 +1,6 @@
-import type { PaymentModel } from '@/lib/interfaces'
 import { getProductConfig } from '@/lib/constants/products'
+import type { PaymentModel } from '@/lib/interfaces'
+
 import { executeEnrollmentHandler } from './enrollmentHandlers'
 
 
