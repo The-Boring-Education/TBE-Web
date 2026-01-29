@@ -308,11 +308,14 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 
 **Priority: Critical** (100+ endpoints)
 
-#### 5.1 Authentication (`/api/auth`)
+#### 5.1 Health & Monitoring (`/api/health`)
+- [x] `index.ts` - Overall health check endpoint
+
+#### 5.2 Authentication (`/api/auth`)
 - `[...nextauth].ts` - NextAuth configuration
 
-#### 5.2 User Management (`/api/v1/user`)
-- `index.ts` - User CRUD operations
+#### 5.3 User Management (`/api/v1/user`)
+- [x] `index.ts` - User CRUD operations (GET, POST)
 - `dashboard.ts` - User dashboard data
 - `onboarding.ts` - User onboarding
 - `interest.ts` - User interests
@@ -321,8 +324,8 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 - `interview-prep/index.ts` / `interview-prep/sheet.ts` / `interview-prep/starred.ts` - Interview prep
 - `playlists/index.ts` - User playlists
 
-#### 5.3 Quiz System (`/api/v1/quiz`)
-- `index.ts` ✅ (Already tested)
+#### 5.4 Quiz System (`/api/v1/quiz`)
+- [x] `index.ts` - Quiz categories and creation
 - `[id].ts` - Get quiz by ID
 - `[id]/attempt.ts` - Start quiz attempt
 - `[id]/submit.ts` - Submit quiz
@@ -389,6 +392,22 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 - Database operations: Mock DB queries
 - Business logic: Verify correct data processing
 - Edge cases: Empty data, invalid IDs, missing fields
+
+**Completed API Route Tests:**
+- ✅ `/api/health` - Health check endpoint (7 tests)
+  - Service health monitoring
+  - Error handling
+  - Method validation
+- ✅ `/api/v1/user` - User management (10 tests)
+  - GET user by email/userId/username
+  - POST create user
+  - Error handling and validation
+- ✅ `/api/v1/quiz` - Quiz operations (11 tests)
+  - GET quiz categories
+  - POST create quiz
+  - POST append questions
+  - Validation and error handling
+- **Total: 28 API route tests passing**
 
 ### 6. E2E Tests (`apps/testing/src/e2e`)
 
@@ -460,12 +479,13 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 4. Test edge cases
 
 ### Phase 6: API Routes (Week 11-14)
-1. Test authentication endpoints
-2. Test user management endpoints
-3. Test quiz endpoints
-4. Test course/project endpoints
-5. Test payment endpoints
-6. Test remaining endpoints
+1. ✅ Test health check endpoints
+2. ✅ Test user management endpoints (GET, POST)
+3. ✅ Test quiz endpoints (GET categories, POST create/append)
+4. Test authentication endpoints
+5. Test course/project endpoints
+6. Test payment endpoints
+7. Test remaining endpoints
 
 ### Phase 7: E2E Tests (Week 15-16)
 1. Test critical user flows
