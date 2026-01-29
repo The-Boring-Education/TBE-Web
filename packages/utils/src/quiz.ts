@@ -1,6 +1,7 @@
-import { sendRequest } from "./api"
+import type { QuizResult,QuizSession } from "@tbe/types";
+
 import { trackEvent } from "./analytics"
-import type { QuizSession, QuizResult } from "@tbe/types";
+import { sendRequest } from "./api"
 
 /**
  * Cleanup quiz option text by removing prefixes . "

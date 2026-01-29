@@ -1,10 +1,10 @@
 import {
+  type AppIdentifier,
+  envConfig,
   getSEOMeta,
   IN_DEV_PAGES,
   routes,
   seoCommonMeta,
-  envConfig,
-  type AppIdentifier,
 } from "@tbe/constants";
 import type {
   BaseInterviewSheetResponseProps,

@@ -1,4 +1,4 @@
-import { BookOpen, Code, FileText, Clipboard, Users, Briefcase, ClipboardList } from "lucide-react";
+import { BookOpen, Briefcase, Clipboard, ClipboardList,Code, FileText, Users } from "lucide-react";
 
 export interface ResourceItem {
   title: string;

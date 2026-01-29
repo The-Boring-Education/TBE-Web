@@ -1,4 +1,4 @@
-import type { OnboardingProductConfig, BaseUser } from '@tbe/types';
+import type { BaseUser,OnboardingProductConfig } from '@tbe/types';
 
 // Helper to create field configurations
 const createField = (

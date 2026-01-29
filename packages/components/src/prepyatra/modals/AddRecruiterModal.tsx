@@ -2,7 +2,6 @@ import { useAuth } from "@tbe/auth"
 import { useToast } from "@tbe/hooks"
 import type { RecruiterContact } from "@tbe/types"
 import { useEffect, useState } from "react"
-import { Toaster } from "sonner";
 
 import Button from "../../common/Buttons/Button"
 import Text from "../../common/Typography/Text"

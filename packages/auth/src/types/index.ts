@@ -24,7 +24,7 @@ declare module "next-auth" {
         user: ExtendedUser
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+     
     interface User extends ExtendedUser {}
 }
 

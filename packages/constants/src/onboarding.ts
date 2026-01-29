@@ -1,7 +1,7 @@
 import type {
+    CompanyType,
     ExperienceLevel,
     GoalType,
-    CompanyType,
     InterviewCategory
 } from "@tbe/types";
 

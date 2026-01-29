@@ -1,19 +1,19 @@
-import { useEffect,useRef, useState } from 'react';
-import { FaBook, FaCode,FaYoutube } from 'react-icons/fa';
-import { SiLeetcode } from 'react-icons/si';
+import { useEffect, useRef, useState } from 'react'
+import { FaBook, FaYoutube } from 'react-icons/fa'
+import { SiLeetcode } from 'react-icons/si'
 
-import Button from '../Buttons/Button';
+import Button from '../Buttons/Button'
 
 export interface QuestionResources {
-    youtubeURL?: string;
-    leetcodeURL?: string;
-    blogURL?: string;
+    youtubeURL?: string
+    leetcodeURL?: string
+    blogURL?: string
 }
 
 export interface ResourceTooltipProps {
-    resources?: QuestionResources;
-    theme?: 'light' | 'dark';
-    className?: string;
+    resources?: QuestionResources
+    theme?: 'light' | 'dark'
+    className?: string
 }
 
 const ResourceTooltip = ({
@@ -21,33 +21,33 @@ const ResourceTooltip = ({
     theme = 'dark',
     className = '',
 }: ResourceTooltipProps) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-    const isDark = theme === 'dark';
+    const [isOpen, setIsOpen] = useState(false)
+    const dropdownRef = useRef<HTMLDivElement>(null)
+    const isDark = theme === 'dark'
 
     // Check if any resources exist
     const hasResources =
-        resources?.youtubeURL || resources?.leetcodeURL || resources?.blogURL;
+        resources?.youtubeURL || resources?.leetcodeURL || resources?.blogURL
 
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
+                setIsOpen(false)
             }
-        };
+        }
 
         if (isOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('mousedown', handleClickOutside)
         }
 
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isOpen]);
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [isOpen])
 
     if (!hasResources) {
-        return null;
+        return null
     }
 
     const resourceItems = [
@@ -69,12 +69,12 @@ const ResourceTooltip = ({
             label: 'Blog',
             color: 'text-blue-500',
         },
-    ].filter((item) => item.url);
+    ].filter((item) => item.url)
 
     const handleResourceClick = (url: string) => {
-        window.open(url, '_blank', 'noopener,noreferrer');
-        setIsOpen(false);
-    };
+        window.open(url, '_blank', 'noopener,noreferrer')
+        setIsOpen(false)
+    }
 
     return (
         <div ref={dropdownRef} className={`relative inline-block ${className}`}>
@@ -121,7 +121,7 @@ const ResourceTooltip = ({
                 text='View Resources'
             />
         </div>
-    );
-};
+    )
+}
 
-export default ResourceTooltip;
+export default ResourceTooltip

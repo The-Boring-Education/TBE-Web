@@ -1,3 +1,4 @@
+import type { FeedbackType } from "@tbe/constants";
 import type {
   ChangeEvent,
   ElementType,
@@ -7,28 +8,22 @@ import type {
   RefObject,
 } from "react";
 
-import type { FeedbackType } from "@tbe/constants";
 // Import these types from the api module to avoid duplication
 import type {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
 } from "./api";
-
-// Import CertificateType from the global module to avoid duplication
-import type { CertificateType } from "./global";
-
-// Import CohortRoadmapProps from the page module to avoid duplication
-import type { CohortRoadmapProps } from "./page";
-
-// Import GetSEOMetaResponseType from the global module to avoid duplication
-import type { GetSEOMetaResponseType } from "./global";
-
 // Import QuestionFrequencyType from the api module to avoid duplication
 import type { QuestionFrequencyType } from "./api";
-
+import type { QuestionDifficulty } from "./constants";
+// Import CertificateType from the global module to avoid duplication
+import type { CertificateType } from "./global";
+// Import GetSEOMetaResponseType from the global module to avoid duplication
+import type { GetSEOMetaResponseType } from "./global";
 // Import TopNavbarLinkProps from the global module to avoid duplication
 import type { TopNavbarLinkProps } from "./global";
-import type { QuestionDifficulty } from "./constants";
+// Import CohortRoadmapProps from the page module to avoid duplication
+import type { CohortRoadmapProps } from "./page";
 
 export interface SectionProps {
   children: ReactNode;

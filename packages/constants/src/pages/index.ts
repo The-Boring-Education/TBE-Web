@@ -1,5 +1,3 @@
-import { v4 } from 'uuid';
-
 import type {
   CohortRoadmapProps,
   CohortUserCategoryProps,
@@ -8,6 +6,7 @@ import type {
   TestimonialCardProps,
   TopNavbarContainerProps,
 } from '@tbe/types';
+import { v4 } from 'uuid';
 
 import { cohorts, LINKS, products, STATIC_FILE_PATH } from '../global';
 import { routes } from '../routes';
@@ -1003,17 +1002,17 @@ export {
   MY_PREV_EXPERIENCE,
   OPEN_SOURCE_INFO,
   OS_GETTING_STARTED_STEPS,
+  PORTFOLIO_FEATURES,
   PRODUCTS,
   TBIP_FEATURES,
   TBP_FEATURES,
-  TBSH_FEATURES,
   TBP_PROJECTS,
+  TBSH_FEATURES,
   TESTIMONIALS,
   TOP_NAVIGATION,
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
   USP,
   YATRA_TOOLS,
   YOUFOCUS_FEATURES,
-  PORTFOLIO_FEATURES,
 };
 

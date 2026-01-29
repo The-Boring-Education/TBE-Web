@@ -1,6 +1,5 @@
 import {
   BanknotesIcon,
-  BookOpenIcon,
   CheckCircleIcon,
   ShieldCheckIcon,
   StarIcon,

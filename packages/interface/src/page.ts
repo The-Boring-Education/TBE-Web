@@ -1,3 +1,5 @@
+import type { GetSEOMetaResponseType } from "@tbe/types"
+
 import type {
     BaseInterviewSheetResponseProps,
     BaseShikshaCourseResponseProps
@@ -10,7 +12,6 @@ import type {
     WebinarModel
 } from "./database"
 import type { UnskilledLandingGraphDataProps } from "./global"
-import type { GetSEOMetaResponseType } from "@tbe/types"
 
 export interface PageProps {
     slug: any

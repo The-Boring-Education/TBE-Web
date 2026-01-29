@@ -1,4 +1,5 @@
 import type { GenerateSectionPathProps } from "@tbe/types"
+
 import { envConfig } from "./envConfig"
 
 const routes = {

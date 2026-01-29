@@ -1,8 +1,7 @@
-import axios from 'axios';
-
 import { envConfig } from '@tbe/constants';
-import type { EmailRequest, EmailResponse } from '@tbe/interface';
 import { emailLogger } from '@tbe/constants';
+import type { EmailRequest, EmailResponse } from '@tbe/interface';
+import axios from 'axios';
 
 class EmailClient {
   private apiUrl: string;

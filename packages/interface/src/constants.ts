@@ -84,14 +84,13 @@ type QuestionDifficulty =
 
 export type {
   CelebrationAnimationProps,
+  DsaSectionTabs,
+  FooterProps,
   GamificationBadgeProps,
+  MainNavbarProps,
   NavbarDropdownContainerProps,
   NavbarDropdownLink,
   NavbarProps,
-  MainNavbarProps,
-  OutlineCardProps,
   NavbarVariantConfig,
-  FooterProps,
-  QuestionDifficulty,
-  DsaSectionTabs
-};
+  OutlineCardProps,
+  QuestionDifficulty};

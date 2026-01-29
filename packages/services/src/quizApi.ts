@@ -1,4 +1,5 @@
 import { API_ENDPOINTS, config } from "@tbe/config/quizes"
+
 import { apiClient } from "./api"
 
 export interface QuizQuestion {

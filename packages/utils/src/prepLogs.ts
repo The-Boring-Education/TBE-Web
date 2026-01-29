@@ -1,5 +1,5 @@
-import { sendRequest } from "./api"
 import { trackEvent } from "./analytics"
+import { sendRequest } from "./api"
 
 /**
  * Prep Logs Service

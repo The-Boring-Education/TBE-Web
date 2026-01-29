@@ -1,18 +1,18 @@
-import React from "react";
-import type { ComponentType } from "react";
 import {
-  Map,
+  Award,
   BookOpen,
-  TrendingUp,
   Brain,
+  Briefcase,
+  FileText,
+  Map,
+  Sparkles,
+  Target,
+  TrendingUp,
   Trophy,
   Users,
-  Sparkles,
-  FileText,
-  Briefcase,
-  Target,
-  Award,
 } from "lucide-react";
+import type { ComponentType } from "react";
+import React from "react";
 
 interface NavbarDropdownLink {
   id: string;
@@ -474,9 +474,9 @@ export const getLoginCardVariantConfig = (): Record<
 });
 
 export {
-  socialLinks,
-  productLinks,
   CONFETTI_COLORS,
-  links,
   getNavbarVariantConfig,
+  links,
+  productLinks,
+  socialLinks,
 };

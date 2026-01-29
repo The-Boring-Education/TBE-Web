@@ -1,14 +1,14 @@
-import { sendRequest } from "./api"
-import { trackEvent } from "./analytics"
 import type {
     Challenge,
     ChallengeLog,
     ChallengeProgress,
-    CreateChallengeRequest,
-    UpdateChallengeRequest,
     CreateChallengeLogRequest,
-    SocialMediaTemplate
-} from "@tbe/types"
+    CreateChallengeRequest,
+    SocialMediaTemplate,
+    UpdateChallengeRequest} from "@tbe/types"
+
+import { trackEvent } from "./analytics"
+import { sendRequest } from "./api"
 
 /**
  * Challenges Service

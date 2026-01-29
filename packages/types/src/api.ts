@@ -8,28 +8,27 @@
 import type {
     CertificateType,
     CompanyDetails,
+    CompanyType,
     CourseChapterModel,
     CourseModel,
     DifficultyType,
-    ProjectDocumentModel,
     GoalType,
     InterestEventType,
+    InterviewCategoryType as InterviewCategoryTypeImport,
     InterviewSheetModel,
     InterviewSheetQuestionModel,
     NotificationType,
     PlatformUsageType,
     PlaylistModel,
     ProjectChapter,
+    ProjectDocumentModel,
     QuestionFrequencyType,
     RoadmapsType,
     SkillsType,
     SubscriptionType,
     UserRoleType,
     WebinarEnrolledUsersProps,
-    WorkDomainType,
-    CompanyType,
-    InterviewCategoryType as InterviewCategoryTypeImport
-} from "./database"
+    WorkDomainType} from "./database"
 
 // ================================
 // CORE API TYPES

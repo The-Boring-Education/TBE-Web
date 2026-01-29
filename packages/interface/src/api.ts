@@ -1,3 +1,5 @@
+import type { InterestEventType } from "@tbe/constants"
+
 import type {
     CertificateType,
     CompanyDetails,
@@ -12,7 +14,6 @@ import type {
     UserRoleType,
     WorkDomainType
 } from "."
-import type { InterestEventType } from "@tbe/constants"
 
 export type APIMethodTypes = "GET" | "POST" | "PATCH" | "PUT"
 

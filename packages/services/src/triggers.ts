@@ -1,4 +1,5 @@
 import { envConfig } from '@tbe/constants';
+import { emailLogger } from '@tbe/constants';
 import type {
   CourseCompletionEmailData,
   CourseEnrollmentEmailData,
@@ -9,7 +10,6 @@ import type {
   InterviewPrepEnrollmentEmailData,
   ProjectEnrollmentEmailData,
 } from '@tbe/interface';
-import { emailLogger } from '@tbe/constants';
 
 import { emailClient } from './client';
 import {
