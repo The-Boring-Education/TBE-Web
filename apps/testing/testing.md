@@ -282,12 +282,12 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 - `global.ts` - Global utilities
 
 **Feature Utilities** (Priority: High)
-- `analytics.ts` - Analytics tracking
+- [x] `analytics.ts` - Analytics tracking (15 tests)
 - `auth.ts` - Authentication utilities
-- `challenges.ts` - Challenge utilities
+- [x] `challenges.ts` - Challenge utilities (18 tests)
 - [x] `discount.ts` - Discount calculations (25 tests)
 - `health.ts` - Health check utilities
-- `onboarding.ts` - Onboarding utilities
+- [x] `onboarding.ts` - Onboarding utilities (12 tests)
 - `prepLogs.ts` - Prep log utilities
 - [x] `quiz.ts` - Quiz utilities (21 tests)
 - `sitemap.ts` - Sitemap generation
@@ -299,9 +299,12 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 **Completed Utility Tests:**
 - ✅ Core functions (formatDate, formatTime, localStorage, cn, etc.) - 45 tests
 - ✅ API utilities (sendRequest) - 2 tests
+- ✅ Analytics utilities (trackEvent, trackPageView, quiz/course/user events) - 15 tests
+- ✅ Challenges utilities (challengesService, social media templates) - 18 tests
 - ✅ Discount utilities (price breakdown, coupon validation) - 25 tests
+- ✅ Onboarding utilities (username check, user fetch) - 12 tests
 - ✅ Quiz utilities (cleanOptionText, quizService) - 21 tests
-- **Total: 93 utility tests passing**
+- **Total: 138 utility tests passing**
 
 **Testing Strategy for Utilities:**
 - Pure functions: Input/output testing
