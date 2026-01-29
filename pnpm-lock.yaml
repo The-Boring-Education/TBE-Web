@@ -424,6 +424,9 @@ importers:
         specifier: ^3.3.2
         version: 3.4.19(tsx@4.19.2)
     devDependencies:
+      '@tbe/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@types/node':
         specifier: '18'
         version: 18.19.130
