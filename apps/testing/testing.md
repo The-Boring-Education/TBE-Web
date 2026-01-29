@@ -580,16 +580,16 @@ apps/testing/src/
 - [ ] `RadioButton` / `RadioInputField`
 - [ ] `SelectInput`
 - [x] `Pill` / `IconPill`
-- [ ] `TabComponent`
-- [ ] `Toast`
+- [x] `TabComponent`
+- [x] `Toast`
 - [x] `Link` / `Text` (Typography)
 
 #### Button Variants
 - [ ] `FloatingActionButton`
-- [ ] `LinkButton`
+- [x] `LinkButton`
 - [ ] `LoginRedirectButton`
 - [ ] `LoginWithGoogleButton`
-- [ ] `LogoutButton`
+- [x] `LogoutButton`
 - [ ] `ScrollToTopBottomButton`
 - [x] `StarButton`
 - [x] `ToggleButton`
