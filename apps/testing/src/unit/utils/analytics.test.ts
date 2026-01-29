@@ -16,6 +16,7 @@ import {
 describe('Analytics Utilities', () => {
     let mockGtag: any;
     let originalWindow: any;
+    let consoleLogSpy: any;
 
     beforeEach(() => {
         // Mock window object with gtag
@@ -26,11 +27,15 @@ describe('Analytics Utilities', () => {
             ...originalWindow,
             gtag: mockGtag,
         } as any;
+
+        // Suppress console.log for analytics tracking
+        consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     });
 
     afterEach(() => {
         global.window = originalWindow;
         vi.clearAllMocks();
+        consoleLogSpy.mockRestore();
     });
 
     describe('trackPageView', () => {

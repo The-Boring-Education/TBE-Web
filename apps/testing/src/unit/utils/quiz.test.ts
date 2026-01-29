@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { cleanOptionText, quizService } from '@tbe/utils/quiz';
 
 // Mock dependencies
@@ -17,8 +17,16 @@ const mockSendRequest = vi.mocked(sendRequest);
 const mockTrackEvent = vi.mocked(trackEvent);
 
 describe('Quiz Utilities', () => {
+    let consoleErrorSpy: any;
+
     beforeEach(() => {
         vi.clearAllMocks();
+        // Suppress console.error for expected error cases
+        consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleErrorSpy.mockRestore();
     });
 
     describe('cleanOptionText', () => {
