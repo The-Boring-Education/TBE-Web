@@ -277,24 +277,31 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 **Priority: High** (15+ utilities)
 
 **Core Utilities**
-- `functions.ts` - General utility functions
-- `api.ts` - API helper functions
+- [x] `functions.ts` - General utility functions (45 tests)
+- [x] `api.ts` - API helper functions (2 tests)
 - `global.ts` - Global utilities
 
 **Feature Utilities** (Priority: High)
 - `analytics.ts` - Analytics tracking
 - `auth.ts` - Authentication utilities
 - `challenges.ts` - Challenge utilities
-- `discount.ts` - Discount calculations
+- [x] `discount.ts` - Discount calculations (25 tests)
 - `health.ts` - Health check utilities
 - `onboarding.ts` - Onboarding utilities
 - `prepLogs.ts` - Prep log utilities
-- `quiz.ts` - Quiz utilities
+- [x] `quiz.ts` - Quiz utilities (21 tests)
 - `sitemap.ts` - Sitemap generation
 - `socialMedia.ts` / `socialMediaTemplates.ts` - Social media utilities
 - `mongodb.ts` - Database utilities
 - `initMiddleware.ts` - Middleware initialization
 - `mdx/index.ts` - MDX processing
+
+**Completed Utility Tests:**
+- ✅ Core functions (formatDate, formatTime, localStorage, cn, etc.) - 45 tests
+- ✅ API utilities (sendRequest) - 2 tests
+- ✅ Discount utilities (price breakdown, coupon validation) - 25 tests
+- ✅ Quiz utilities (cleanOptionText, quizService) - 21 tests
+- **Total: 93 utility tests passing**
 
 **Testing Strategy for Utilities:**
 - Pure functions: Input/output testing
@@ -473,10 +480,13 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 4. Test specialized hooks
 
 ### Phase 5: Services & Utils (Week 9-10)
-1. Test all service functions
-2. Test utility functions
-3. Test error handling
-4. Test edge cases
+1. ✅ Test core utility functions (formatDate, localStorage, etc.)
+2. ✅ Test discount utilities
+3. ✅ Test quiz utilities
+4. ✅ Test service functions (api, quizApi)
+5. Test remaining utility functions (analytics, auth, challenges, etc.)
+6. Test error handling
+7. Test edge cases
 
 ### Phase 6: API Routes (Week 11-14)
 1. ✅ Test health check endpoints
