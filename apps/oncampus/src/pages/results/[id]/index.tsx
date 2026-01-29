@@ -1,11 +1,12 @@
 import { useAuth } from "@tbe/auth";
+import { MarkdownRenderer } from "@tbe/components/quizes";
 import { config } from "@tbe/config/quizes";
 import { quizApi } from "@tbe/services";
-import { MarkdownRenderer } from "@tbe/components/quizes";
-import type { QuizQuestionsData, QuizQuestion } from "@tbe/types";
+import type { QuizQuestion,QuizQuestionsData } from "@tbe/types";
+import { cleanOptionText } from "@tbe/utils";
 import { ArrowLeft, Clock, Target, Trophy } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const isMongoObjectId = (val?: string): boolean => {
   if (!val) return false;
@@ -166,7 +167,7 @@ export default function ResultsPage() {
             className="flex items-center gap-2 text-gray-300 hover:text-white"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Quizzes
+            Back to Quizes
           </button>
         </div>
       </header>
@@ -224,7 +225,7 @@ export default function ResultsPage() {
               onClick={() => router.push("/dashboard/quizzes")}
               className="flex-1 border border-[#FF5757] text-[#FF5757] py-3 px-6 rounded-lg font-semibold hover:bg-[#FF5757]/10 transition-colors"
             >
-              Back to Quizzes
+              Back to Quizes
             </button>
           </div>
         </div>
@@ -281,7 +282,7 @@ export default function ResultsPage() {
                               {String.fromCharCode(65 + optionIndex)}.
                             </span>
                             <div className="flex-1">
-                              <MarkdownRenderer content={option} theme="dark" className="text-gray-100" />
+                              <MarkdownRenderer content={cleanOptionText(option)} theme="dark" className="text-gray-100" />
                             </div>
                           </div>
 

@@ -1,4 +1,8 @@
 import { useAuth } from "@tbe/auth"
+import { SEO } from '@tbe/components'
+import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants'
+import type { PageProps } from '@tbe/interface'
+import { getPreFetchProps } from '@tbe/utils'
 import {
     ArrowRight,
     Brain,
@@ -10,11 +14,7 @@ import {
     Trophy,
     Users} from "lucide-react"
 import { useRouter } from "next/router"
-import { useEffect, useState, Fragment } from "react"
-import { SEO } from '@tbe/components'
-import { getPreFetchProps } from '@tbe/utils'
-import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants'
-import type { PageProps } from '@tbe/interface'
+import { Fragment,useEffect, useState } from "react"
 
 function QuizesClient() {
     "use client"

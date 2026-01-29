@@ -1,5 +1,3 @@
-import type { Document, Schema, Types } from 'mongoose';
-
 import type {
   ApplicationStatusType,
   FeedbackType,
@@ -7,6 +5,7 @@ import type {
   LeaderboardEnum,
   ProductType,
 } from '@tbe/constants';
+import type { Document, Schema, Types } from 'mongoose';
 
 import type {
   CertificateType,

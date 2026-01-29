@@ -1,18 +1,16 @@
-import type { ComponentPropsWithoutRef } from "react"
-
 import type {
     CohortDataProps,
     LeaderboardType,
     MentorshipCardProps,
     PlatformUsageType,
     PortfolioTemplateProps,
+    PrimaryCardWithCTAProps,
     ProductDataProps,
     RadioButtonOptionsProps,
     UserLevel,
     UserPointsActionType,
-    UserRoleType,
-    PrimaryCardWithCTAProps
-} from "@tbe/types"
+    UserRoleType} from "@tbe/types"
+import type { ComponentPropsWithoutRef } from "react"
 
 import { envConfig } from "./envConfig"
 import { routes } from "./routes"
@@ -525,6 +523,7 @@ export {
     LINKS,
     localStorageKeys,
     MENTORSHIP_CARDS,
+    MENTORSHIP_SERVICES_CARDS,
     PAGE_REFRESH_TIMEOUT,
     POINTS_RULES,
     PORTFOLIO_CARDS,
@@ -536,6 +535,4 @@ export {
     USER_LEVELS,
     USER_ROLE_OPTIONS,
     USER_USAGE_OPTIONS,
-    YOUFOCUS_SKILL_PLAYLISTS,
-    MENTORSHIP_SERVICES_CARDS
-}
+    YOUFOCUS_SKILL_PLAYLISTS}

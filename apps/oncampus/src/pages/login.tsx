@@ -1,5 +1,5 @@
-import { Fragment } from "react"
 import { Footer, LoginCardNew, Navbar } from "@tbe/components"
+import { Fragment } from "react"
 
 const Login = () => {
     return (

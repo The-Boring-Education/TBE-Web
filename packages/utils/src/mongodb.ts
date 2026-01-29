@@ -51,7 +51,7 @@ export const getTotalCountFromModel = async (
     try {
         const count = await model.countDocuments()
         return { data: count }
-    } catch (error) {
+    } catch {
         return { error: "Error while counting documents" }
     }
 }
@@ -76,7 +76,7 @@ export const getAllDocumentsFromModel = async (
 
         const documents = await query.exec()
         return { data: documents }
-    } catch (error) {
+    } catch {
         return { error: "Error while fetching documents" }
     }
 }

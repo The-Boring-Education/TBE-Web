@@ -58,10 +58,10 @@ export interface OnboardingFieldConfig {
     pattern?: RegExp;
     minLength?: number;
     maxLength?: number;
-    custom?: (value: unknown) => boolean | string;
+    custom?: (_value: unknown) => boolean | string;
   };
   prefill?: {
-    fromUser: (user: User) => unknown;
+    fromUser: (_user: User) => unknown;
     defaultValue?: unknown;
   };
 }
@@ -73,12 +73,12 @@ export interface OnboardingProductConfig {
   description?: string;
   fields: OnboardingFieldConfig[];
   api: {
-    endpoint: string | ((userId: string) => string);
+    endpoint: string | ((_userId: string) => string);
     method: 'POST' | 'PUT' | 'PATCH';
-    transformPayload: (form: unknown, userId: string, from?: string) => unknown;
+    transformPayload: (_form: unknown, _userId: string, _from?: string) => unknown;
   };
   validation?: {
-    custom?: (form: unknown) => boolean | string;
+    custom?: (_form: unknown) => boolean | string;
   };
   ui?: {
     theme?: 'default' | 'dark' | 'minimal';
@@ -117,7 +117,7 @@ export interface UseOnboardingReturn extends OnboardingState {
   handleFinish: () => Promise<void>;
   isFieldValid: boolean;
    
-  setForm: (form: unknown) => void;
-  setUsernameAvailability: (available: boolean) => void;
-  setUsernameChecking: (checking: boolean) => void;
+  setForm: (_form: unknown) => void;
+  setUsernameAvailability: (_available: boolean) => void;
+  setUsernameChecking: (_checking: boolean) => void;
 }

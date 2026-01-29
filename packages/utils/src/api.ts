@@ -1,5 +1,5 @@
-import axios, { type AxiosRequestConfig } from "axios"
 import { envConfig } from "@tbe/constants"
+import axios, { type AxiosRequestConfig } from "axios"
 export interface APIMakeRequestProps {
     method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
     url: string

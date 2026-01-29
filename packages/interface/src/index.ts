@@ -3,13 +3,15 @@ export * from "./Components";
 // Avoid re-exporting conflicting member from constants; explicitly export required types
 export type {
   CelebrationAnimationProps,
+  DsaSectionTabs,
   FooterProps,
   GamificationBadgeProps,
   MainNavbarProps,
   NavbarDropdownLink,
   NavbarProps,
+  NavbarVariantConfig,
   OutlineCardProps,
-  VariantConfig,
+  QuestionDifficulty
 } from "./constants";
 export * from "./database";
 export * from "./email";

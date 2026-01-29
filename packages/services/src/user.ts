@@ -1,5 +1,5 @@
-import { sendRequest } from "@tbe/utils";
 import type { UserProfile } from "@tbe/interface";
+import { sendRequest } from "@tbe/utils";
 
 export const userService = {
     async getProfile(userId: string): Promise<UserProfile | null> {

@@ -1,4 +1,4 @@
-import type { EnvHealthResponse, EnvVarCheck } from "@tbe/utils"
+import type { EnvVarCheck } from "@tbe/utils"
 import { buildEnvHealthResponse } from "@tbe/utils"
 import { NextResponse } from "next/server"
 

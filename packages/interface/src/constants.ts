@@ -51,12 +51,14 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   dashboardRoute?: string;
   theme?: "light" | "dark";
 }
-interface VariantConfig {
+interface NavbarVariantConfig {
   branding: React.ReactNode;
   dashboardRoute: string;
   borderClass?: string;
   requiresAuth?: boolean; // If false, hides UserPointButton and UserAvatar
   showGamification?: boolean; // If false, hides UserPointButton (gamification)
+  showCohorts?: boolean; // If false, hides Cohorts section
+  showLearn?: boolean; // If false, hides Learn section
 }
 
 export type FooterVariant =
@@ -73,14 +75,22 @@ interface FooterProps {
   variant?: FooterVariant;
 }
 
+type QuestionDifficulty = 
+ "EASY" | "MEDIUM" | "HARD"
+
+
+ type DsaSectionTabs = "description" | "topics" | "companies";
+
+
 export type {
   CelebrationAnimationProps,
+  DsaSectionTabs,
+  FooterProps,
   GamificationBadgeProps,
+  MainNavbarProps,
   NavbarDropdownContainerProps,
   NavbarDropdownLink,
   NavbarProps,
-  MainNavbarProps,
+  NavbarVariantConfig,
   OutlineCardProps,
-  VariantConfig,
-  FooterProps,
-};
+  QuestionDifficulty};

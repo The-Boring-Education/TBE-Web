@@ -1,4 +1,4 @@
-import { config } from '@tbe/eslint-config/typescript';
+import { config } from "@tbe/eslint-config/next-js"
 
 export default [
   ...config,

@@ -1,16 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/router";
+import {
+  CardContainerB,
+  Text,
+} from "@tbe/components";
+import { routes } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
-import { PAGE_REFRESH_TIMEOUT, routes } from "@tbe/constants";
 import type { PrimaryCardWithCTAProps } from "@tbe/interface";
 import { mapInterviewSheetResponseToCard } from "@tbe/utils";
-import {
-  Card,
-  CardContent,
-  LoadingSpinner,
-  Text,
-  CardContainerB,
-} from "@tbe/components";
+import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
 
 const InterviewPrepDashboardPage = () => {
   const router = useRouter();

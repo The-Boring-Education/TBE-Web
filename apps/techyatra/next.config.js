@@ -17,10 +17,6 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
-  experimental: {
-    // Disable tracing to avoid symlink issues on Windows
-    outputFileTracing: false
-  },
   // Disable static optimization for pages that use client-side only features
   output: 'standalone',
   webpack: (config) => {

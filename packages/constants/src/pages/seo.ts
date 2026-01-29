@@ -1,8 +1,8 @@
 import type { GetSEOMetaResponseType } from "@tbe/types"
 
 import { INTERVIEW_PREP_SHEETS, products, TBP_PROJECTS } from ".."
+import { type AppIdentifier,getAppConfig } from "../apps"
 import { routes } from "../routes"
-import { getAppConfig, type AppIdentifier } from "../apps"
 
 export const seoCommonMeta = {
     type: "website",

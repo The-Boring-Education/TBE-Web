@@ -1,7 +1,17 @@
-import { sendRequest } from "./api"
+import type { QuizResult,QuizSession } from "@tbe/types";
+
 import { trackEvent } from "./analytics"
-import type { QuizSession, QuizResult } from "@tbe/types";
-import { QuizQuestion } from "@tbe/types"
+import { sendRequest } from "./api"
+
+/**
+ * Cleanup quiz option text by removing prefixes . "
+ * reusable utility for both oncampus and quizes apps
+ */
+export const cleanOptionText = (text: string): string => {
+    if (!text) return ""
+    // Regex matches uppercase letters or numbers followed by dot/paren/space and optional extra whitespace
+    return text.replace(/^[A-Z0-9][.)\s]\s*/, "").trim()
+}
 
 /**
  * Quiz Service
@@ -78,7 +88,7 @@ export const quizService = {
                     label: quizId,
                     value: questionCount
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {
@@ -116,7 +126,7 @@ export const quizService = {
                     value: selectedOption,
                     sessionId
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {
@@ -163,7 +173,7 @@ export const quizService = {
                     category: "quiz",
                     sessionId
                 })
-            } catch {}
+            } catch { /* Ignore tracking errors */ }
 
             return response.data
         } catch (error) {

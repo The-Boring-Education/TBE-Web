@@ -1,6 +1,5 @@
 import {
   BanknotesIcon,
-  BookOpenIcon,
   CheckCircleIcon,
   ShieldCheckIcon,
   StarIcon,
@@ -9,10 +8,10 @@ import {
 } from '@heroicons/react/20/solid';
 import { Button, FlexContainer, Text } from '@tbe/components';
 import { routes } from '@tbe/constants';
+import { getProductConfig } from '@tbe/constants';
 import { useCashfreePayment, useUser } from '@tbe/hooks';
 import type { PaymentCardProps } from '@tbe/interface';
 import React, { useState } from 'react';
-import { getProductConfig } from '@tbe/constants';
 
 const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
   const { user } = useUser();

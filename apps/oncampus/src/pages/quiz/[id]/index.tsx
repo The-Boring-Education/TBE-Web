@@ -1,12 +1,13 @@
 import { useAuth } from "@tbe/auth";
-import { quizApi, gamificationApi } from "@tbe/services";
-import { config } from "@tbe/config/quizes";
 import { Button } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
-import type { QuizQuestionsData, QuizQuestion } from "@tbe/types";
+import { config } from "@tbe/config/quizes";
+import { gamificationApi,quizApi } from "@tbe/services";
+import type { QuizQuestion,QuizQuestionsData } from "@tbe/types";
+import { cleanOptionText } from "@tbe/utils";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type GameState = "loading" | "playing" | "submitting";
 
@@ -132,7 +133,7 @@ export default function QuizPage() {
         // gamification: best-effort
         gamificationApi
           .updateuserGamificationPoints({ userId: mongoUserId, actionType: "COMPLETE_QUIZ" } as any)
-          .catch(() => {});
+          .catch(() => { });
       }
     } catch {
       // ignore submit errors, still show local results
@@ -184,11 +185,11 @@ export default function QuizPage() {
     <div className="min-h-screen bg-[#0A0A0A]">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-[#0A0A0A]/90 backdrop-blur border-b border-gray-800">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-3 py-3 flex items-center justify-between">
           <button
             type="button"
             onClick={() => router.push("/dashboard/quizzes")}
-            className="flex items-center gap-2 text-gray-300 hover:text-white"
+            className="flex items-center gap-1 text-gray-300 hover:text-primary transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -203,37 +204,37 @@ export default function QuizPage() {
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-4 py-4">
         {/* Quiz Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-white">{quiz.categoryName}</h1>
-          <p className="text-gray-400 mt-2">{quiz.categoryDescription}</p>
+        <div className="text-center mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-white hover:text-primary transition-all">{quiz.categoryName}</h1>
+          <p className="text-gray-400 mt-1">{quiz.categoryDescription}</p>
         </div>
 
         {/* Progress bar */}
-        <div className="mb-8">
-          <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+        <div className="mb-4">
+          <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden ring-0 hover:ring-2 hover:ring-primary/50 transition-all duration-200">
             <div
-              className="h-full bg-[#FF5757] transition-all"
-              style={{ width: `${Math.round(progress)}%` }}
+              className="h-full bg-[#FF5757] hover: transition-all"
+              style={{ width: `${Math.round(((currentQuestionIndex) / questions.length) * 100)}%` }}
             />
           </div>
           <div className="flex justify-between text-xs text-gray-500 mt-2">
-            <span>{Math.round(progress)}% complete</span>
+            <span>{Math.round(((currentQuestionIndex) / questions.length) * 100)}% complete</span>
             <span>{quiz.categoryIcon}</span>
           </div>
         </div>
 
         {/* Question */}
         <div className="border border-gray-800 rounded-xl bg-[#0F0F0F]">
-          <div className="p-6 border-b border-gray-800">
+          <div className="p-3 border-b border-gray-800">
             <div className="text-white text-lg leading-relaxed">
               <CodeRenderer content={currentQuestion.question} theme="dark" className="max-w-none" />
             </div>
           </div>
 
           {/* Options */}
-          <div className="p-6 space-y-3">
+          <div className="p-1 space-y-1">
             {currentQuestion.options.map((option, index) => {
               const isSelected = selectedAnswer === index;
               return (
@@ -242,25 +243,25 @@ export default function QuizPage() {
                   type="button"
                   onClick={() => selectAnswer(index)}
                   className={[
-                    "w-full text-left px-1 py-1 rounded-lg border transition-all",
+                    "w-full text-left px-1 py-1 rounded-lg border transition-all flex items-center",
                     isSelected
                       ? "border-[#FF5757] bg-[#FF5757]/10"
-                      : "border-gray-800 hover:border-[#FF5757]/50 hover:bg-[#FF5757]/5",
+                      : "border-gray-800 hover:border-[#FF5757] hover:bg-[#FF5757]/5",
                   ].join(" ")}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-center gap-1">
                     <div
                       className={[
-                        "mt-0.5 w-8 h-8 rounded-full border flex items-center justify-center text-sm font-semibold flex-shrink-0",
+                        " w-3 h-3 rounded-full border flex items-center justify-center text-xs leading-[1] font-semibold flex-shrink-0 ",
                         isSelected ? "border-[#FF5757] bg-[#FF5757] text-white" : "border-gray-700 text-gray-300",
                       ].join(" ")}
                     >
                       {String.fromCharCode(65 + index)}
                     </div>
-                    <div className="flex-1 text-gray-100">
-                      <CodeRenderer content={option} theme="dark" className="max-w-none" />
+                    <div className="ml-1 flex-1 text-primary text-base font-bold flex items-center">
+                      <CodeRenderer content={cleanOptionText(option)} theme="dark" className="max-w-none" />
                     </div>
-                    {isSelected && <CheckCircle2 className="w-5 h-5 text-[#FF5757]" />}
+                    {isSelected && <CheckCircle2 className="w-5 h-5 text-[#FF5757] ml-3 flex-shrink-0" />}
                   </div>
                 </button>
               );
@@ -268,11 +269,11 @@ export default function QuizPage() {
           </div>
         </div>
 
-        <div className="mt-6 text-center text-xs text-gray-500">
+        <div className="mt-2 text-center text-xs text-gray-500">
           Selecting an option will auto-advance to the next question.
         </div>
 
-        <div className="mt-6 flex justify-center">
+        <div className="mt-2 flex justify-center">
           <Button
             variant="OUTLINE"
             className="border-gray-700 text-white hover:bg-gray-800"

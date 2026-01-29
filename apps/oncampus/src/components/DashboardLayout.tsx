@@ -1,20 +1,19 @@
-import type { ReactNode } from "react";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useUser } from "@tbe/hooks";
 import {
-  SidebarProvider,
+  LoadingSpinner,
+  Navbar,
   Sidebar,
   SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
   SidebarInset,
-  Navbar,
-  Footer,
-  LoadingSpinner,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
 } from "@tbe/components";
-import { Home, Target, ClipboardList, FileText } from "lucide-react";
+import { useUser } from "@tbe/hooks";
+import { BrainCircuit,ClipboardList, FileText, Home, Target } from "lucide-react";
+import { useRouter } from "next/router";
+import type { ReactNode } from "react";
+import { useEffect } from "react";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -23,8 +22,9 @@ interface DashboardLayoutProps {
 export const DASHBOARD_SIDEBAR_ITEMS = [
   { name: "Dashboard", icon: Home, href: "/dashboard" },
   { name: "Interview Sheets", icon: Target, href: "/dashboard/interview-prep" },
-  { name: "DSA", icon: FileText, href: "/dsa-prep" },
-  { name: "Quizzes", icon: ClipboardList, href: "/dashboard/quizzes" },
+  { name: "DSA", icon: FileText, href: "/dashboard/dsa-prep" },
+  { name: "Quizes", icon: ClipboardList, href: "/dashboard/quizzes" },
+  { name: "Aptitude", icon: BrainCircuit, href: "/dashboard/aptitude" },
 ];
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
@@ -76,7 +76,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <SidebarInset className="bg-[#0A0A0A] flex flex-col min-h-screen">
           <Navbar variant="oncampus" theme="dark" />
 
-          <main className="flex-1 p-16 space-y-6">{children}</main>
+          <main className="flex-1 py-16 px-8 space-y-6">{children}</main>
 
         </SidebarInset>
       </div>

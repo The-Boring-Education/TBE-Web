@@ -102,6 +102,12 @@ const InterviewSheetSchema = new Schema<InterviewSheetModel>(
       default: null,
     },
     questions: [questionSchema],
+    dsaQuestions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: DATABASE_MODELS.DSA_QUESTION,
+      },
+    ],
     roadmap: {
       type: String,
       enum: ROADMAPS,

@@ -1,7 +1,7 @@
 import { Footer, Navbar, SEO } from "@tbe/components"
-import { getPreFetchProps } from "@tbe/utils"
 import { PAGE_REFRESH_TIMEOUT, routes } from "@tbe/constants"
 import type { PageProps } from "@tbe/interface"
+import { getPreFetchProps } from "@tbe/utils"
 import { Fragment } from "react"
 
 import FeatureCards from "@/components/landing/FeatureCards"

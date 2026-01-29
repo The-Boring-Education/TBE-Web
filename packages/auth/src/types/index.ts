@@ -24,6 +24,7 @@ declare module "next-auth" {
         user: ExtendedUser
     }
 
+     
     interface User extends ExtendedUser {}
 }
 

@@ -4,7 +4,7 @@ import { MarkdownRenderer } from "@tbe/components/quizes"
 import { ProtectedRoute } from "@tbe/components/quizes"
 import { quizApi } from "@tbe/services"
 import type {Question} from "@tbe/types"
-import { trackEvent } from "@tbe/utils"
+import { cleanOptionText,trackEvent } from "@tbe/utils"
 import { ArrowLeft, Clock, Target,Trophy } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useMemo,useRef } from "react"
@@ -28,7 +28,7 @@ function ResultsContent() {
     const answersParam = router.query.answers as string
     const timeTakenParam = router.query.timeTaken as string
 
-    const answers: (number | null)[] = useMemo(() => 
+    const answers: (number | null)[] = useMemo(() =>
         answersParam ? JSON.parse(answersParam) : [], [answersParam])
     const timeTaken = timeTakenParam ? parseInt(timeTakenParam) : 0
 
@@ -80,7 +80,7 @@ function ResultsContent() {
 
     // Submit results to TBE webapp API
     const hasSubmittedRef = useRef(false)
-    
+
     useEffect(() => {
         const submitResults = async () => {
             if (
@@ -90,9 +90,9 @@ function ResultsContent() {
                 answers.length === 0
             )
                 return
-    
+
             hasSubmittedRef.current = true
-    
+
             try {
                 const answersArray = answers.map((answer) => answer ?? -1)
 
@@ -112,7 +112,7 @@ function ResultsContent() {
                 hasSubmittedRef.current = false // allow retry if needed
             }
         }
-    
+
         submitResults()
     }, [user?.id, id, answers, timeTaken, router])
 
@@ -202,18 +202,18 @@ function ResultsContent() {
                     </div>
 
                     {/* Action Buttons */}
-                            <div className='flex flex-col sm:flex-row gap-4'>
-                                <button
-                                    onClick={() => router.push(`/quiz/${id}`)}
-                                    className='flex-1 bg-[#ef4444] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#dc2626] transition-colors'>
-                                    Try Again
-                                </button>
-                                <button
-                                    onClick={() => router.push("/dashboard")}
-                                    className='flex-1 border-2 border-[#ef4444] text-[#ef4444] py-3 px-6 rounded-lg font-semibold hover:bg-[#ef4444]/10 transition-colors'>
-                                    Back to Dashboard
-                                </button>
-                            </div>
+                    <div className='flex flex-col sm:flex-row gap-4'>
+                        <button
+                            onClick={() => router.push(`/quiz/${id}`)}
+                            className='flex-1 bg-[#ef4444] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#dc2626] transition-colors'>
+                            Try Again
+                        </button>
+                        <button
+                            onClick={() => router.push("/dashboard")}
+                            className='flex-1 border-2 border-[#ef4444] text-[#ef4444] py-3 px-6 rounded-lg font-semibold hover:bg-[#ef4444]/10 transition-colors'>
+                            Back to Dashboard
+                        </button>
+                    </div>
                 </div>
 
                 {/* Detailed Results */}
@@ -233,9 +233,9 @@ function ResultsContent() {
                                     key={question.id}
                                     className={`border-2 rounded-lg p-6 ${
                                         isCorrect
-                                            ? "border-green-200 bg-green-50"
-                                            : "border-red-200 bg-red-50"
-                                    }`}>
+                                        ? "border-green-200 bg-green-50"
+                                        : "border-red-200 bg-red-50"
+                                        }`}>
                                     <div className='flex items-start justify-between mb-4'>
                                         <h3 className='text-lg font-semibold text-gray-900'>
                                             Question {index + 1}
@@ -243,9 +243,9 @@ function ResultsContent() {
                                         <span
                                             className={`px-3 py-1 rounded-full text-sm font-semibold ${
                                                 isCorrect
-                                                    ? "bg-green-100 text-green-800"
-                                                    : "bg-red-100 text-red-800"
-                                            }`}>
+                                                ? "bg-green-100 text-green-800"
+                                                : "bg-red-100 text-red-800"
+                                                }`}>
                                             {isCorrect
                                                 ? "Correct"
                                                 : "Incorrect"}
@@ -267,13 +267,13 @@ function ResultsContent() {
                                                     className={`p-3 rounded-lg border-2 ${
                                                         optionIndex ===
                                                         question.correctAnswer
-                                                            ? "border-green-500 bg-green-100"
-                                                            : optionIndex ===
-                                                                  userAnswer &&
-                                                              !isCorrect
+                                                        ? "border-green-500 bg-green-100"
+                                                        : optionIndex ===
+                                                            userAnswer &&
+                                                            !isCorrect
                                                             ? "border-red-500 bg-red-100"
                                                             : "border-gray-200 bg-white"
-                                                    }`}>
+                                                        }`}>
                                                     <div className='flex items-start'>
                                                         <span className='font-semibold mr-2 mt-1 flex-shrink-0'>
                                                             {String.fromCharCode(
@@ -283,17 +283,17 @@ function ResultsContent() {
                                                         </span>
                                                         <div className='flex-1'>
                                                             <MarkdownRenderer
-                                                                content={option}
+                                                                content={cleanOptionText(option)}
                                                                 className='text-left'
                                                             />
                                                         </div>
                                                     </div>
                                                     {optionIndex ===
                                                         question.correctAnswer && (
-                                                        <span className='ml-2 text-green-700 font-semibold'>
-                                                            ✓ Correct Answer
-                                                        </span>
-                                                    )}
+                                                            <span className='ml-2 text-green-700 font-semibold'>
+                                                                ✓ Correct Answer
+                                                            </span>
+                                                        )}
                                                     {optionIndex ===
                                                         userAnswer &&
                                                         !isCorrect && (

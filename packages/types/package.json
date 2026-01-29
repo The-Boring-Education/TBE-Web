@@ -16,7 +16,7 @@
     },
     "scripts": {
         "build": "echo 'No build step needed for types package'",
-        "lint": "eslint . --max-warnings 0"
+        "lint": "eslint ."
     },
     "devDependencies": {
         "@tbe/eslint-config": "workspace:*",

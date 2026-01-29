@@ -28,12 +28,13 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
 
-  // experimental: {
-  optimizePackageImports: ['framer-motion'],
-  scrollRestoration: true,
-  // Disable tracing to avoid symlink issues on Windows
-  //   outputFileTracing: false
-  // },
+  experimental: {
+    optimizePackageImports: ['framer-motion'],
+    scrollRestoration: true,
+    // Use 'loose' mode to handle mixed ESM/CJS packages
+    // This allows webpack to convert require() to import() for ESM packages like date-fns
+    esmExternals: 'loose',
+  },
 
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
@@ -54,6 +55,27 @@ const nextConfig = {
   },
 
   webpack(config, { isServer, isEdgeRuntime }) {
+    const path = require('path');
+    
+    // Ensure webpack resolves from the app's node_modules first
+    // This ensures date-fns v3 from app is used instead of v2 from components package
+    const appNodeModules = path.resolve(__dirname, 'node_modules');
+    if (!Array.isArray(config.resolve.modules)) {
+      config.resolve.modules = ['node_modules'];
+    }
+    if (!config.resolve.modules.includes(appNodeModules)) {
+      config.resolve.modules.unshift(appNodeModules);
+    }
+    
+    // Configure webpack to handle ESM packages properly
+    // This ensures date-fns (ESM-only) can be used by react-datepicker (CJS)
+    config.module.rules.push({
+      test: /node_modules[\\/]react-datepicker[\\/].*\.js$/,
+      resolve: {
+        fullySpecified: false,
+      },
+    });
+    
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,

@@ -75,12 +75,12 @@
     }, [userId, productId, token, config]);
 
     const handleNext = () => {
-      try { trackEvent('onboarding_next', { category: 'onboarding', step }); } catch {}
+      try { trackEvent('onboarding_next', { category: 'onboarding', step }); } catch { /* Ignore tracking errors */ }
       setStep(s => Math.min(s + 1, totalSteps));
     };
 
     const handleBack = () => {
-      try { trackEvent('onboarding_previous', { category: 'onboarding', step }); } catch {}
+      try { trackEvent('onboarding_previous', { category: 'onboarding', step }); } catch { /* Ignore tracking errors */ }
       setStep(s => Math.max(s - 1, 1));
     };
 
@@ -89,7 +89,7 @@
 
       setSubmitting(true);
       setError('');
-      try { trackEvent('onboarding_submit', { category: 'onboarding' }); } catch {}
+      try { trackEvent('onboarding_submit', { category: 'onboarding' }); } catch { /* Ignore tracking errors */ }
 
       const { success, error: apiError } = await submitOnboarding(
         productId,
@@ -101,10 +101,10 @@
       setSubmitting(false);
 
       if (success) {
-        try { trackEvent('onboarding_complete', { category: 'onboarding' }); } catch {}
+        try { trackEvent('onboarding_complete', { category: 'onboarding' }); } catch { /* Ignore tracking errors */ }
         window.location.href = redirect;
       } else {
-        try { trackEvent('onboarding_error', { category: 'onboarding', error: apiError }); } catch {}
+        try { trackEvent('onboarding_error', { category: 'onboarding', error: apiError }); } catch { /* Ignore tracking errors */ }
         setError(apiError || 'Submission failed');
       }
     };

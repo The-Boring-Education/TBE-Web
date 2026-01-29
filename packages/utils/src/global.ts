@@ -1,10 +1,10 @@
 import {
+  type AppIdentifier,
+  envConfig,
   getSEOMeta,
   IN_DEV_PAGES,
   routes,
   seoCommonMeta,
-  envConfig,
-  type AppIdentifier,
 } from "@tbe/constants";
 import type {
   BaseInterviewSheetResponseProps,
@@ -191,7 +191,7 @@ const getPlaylistPageProps = async (context: any) => {
         playlist: data,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       redirect: {
         destination: routes.home,

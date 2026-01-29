@@ -1,3 +1,4 @@
+import type { FeedbackType } from "@tbe/constants";
 import type {
   ChangeEvent,
   ElementType,
@@ -7,27 +8,22 @@ import type {
   RefObject,
 } from "react";
 
-import type { FeedbackType } from "@tbe/constants";
 // Import these types from the api module to avoid duplication
 import type {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
 } from "./api";
-
-// Import CertificateType from the global module to avoid duplication
-import type { CertificateType } from "./global";
-
-// Import CohortRoadmapProps from the page module to avoid duplication
-import type { CohortRoadmapProps } from "./page";
-
-// Import GetSEOMetaResponseType from the global module to avoid duplication
-import type { GetSEOMetaResponseType } from "./global";
-
 // Import QuestionFrequencyType from the api module to avoid duplication
 import type { QuestionFrequencyType } from "./api";
-
+import type { QuestionDifficulty } from "./constants";
+// Import CertificateType from the global module to avoid duplication
+import type { CertificateType } from "./global";
+// Import GetSEOMetaResponseType from the global module to avoid duplication
+import type { GetSEOMetaResponseType } from "./global";
 // Import TopNavbarLinkProps from the global module to avoid duplication
 import type { TopNavbarLinkProps } from "./global";
+// Import CohortRoadmapProps from the page module to avoid duplication
+import type { CohortRoadmapProps } from "./page";
 
 export interface SectionProps {
   children: ReactNode;
@@ -72,16 +68,17 @@ export interface LinkButtonProps extends LinkProps {
   buttonProps: ButtonProps;
   href: string;
   className?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface ButtonProps {
   variant:
-    | "PRIMARY"
-    | "OUTLINE"
-    | "GHOST"
-    | "SUCCESS"
-    | "SECONDARY"
-    | "NEUTRAL";
+  | "PRIMARY"
+  | "OUTLINE"
+  | "GHOST"
+  | "SUCCESS"
+  | "SECONDARY"
+  | "NEUTRAL";
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -94,6 +91,7 @@ export interface ButtonProps {
   disabled?: boolean;
   animationType?: "DEFAULT" | "BOUNCE" | "GLOW";
   size?: "SMALL" | "MEDIUM" | "LARGE";
+  type?: "button" | "submit" | "reset";
 }
 
 export interface PageLayoutProps {
@@ -347,6 +345,7 @@ export interface ProjectHeroMetaContainerProps {
   subtitle: string;
   title: string;
   titleClassName?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface ProjectHeroContainerProps {
@@ -377,6 +376,8 @@ export interface SheetHeroContainerProps {
   isPremium?: boolean;
   isPurchased?: boolean;
   redirectTo?: string;
+  backHref?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface AccordionProps {
@@ -847,7 +848,7 @@ export interface StarButtonProps {
 }
 
 export interface LoginCardNewProps {
-    variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus";
+  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus";
   customRedirectPath?: string;
   theme?: "light" | "dark";
 }
@@ -882,5 +883,33 @@ export interface UserProfile {
       focusAreas?: string[];
     };
   };
+}
+
+export interface DsaQuestion {
+  name: string;
+  difficultyLevel: QuestionDifficulty;
+  id?: string | number;
+  content?: string;
+  domain?: string[];
+  companyType?: string[];
+  topics?: string[]
+}
+
+ export interface DsaQuestionListProps {
+  questions: DsaQuestion[];
+  selectedQuestionId?: string | number;
+  onQuestionClick?: (question: DsaQuestion) => void;
+  className?: string;
+}
+
+export interface DsaQuestionCardProps {
+  name: string;
+  difficultyLevel: QuestionDifficulty;
+  isSelected?: boolean;
+  onClick?: () => void;
+}
+
+export interface QuestionDetailProps {
+    question: DsaQuestion | null;
 }
 

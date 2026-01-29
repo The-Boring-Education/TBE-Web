@@ -2,7 +2,7 @@ import "react-datepicker/dist/react-datepicker.css"
 
 import { useToast } from "@tbe/hooks"
 import type { RecruiterContact } from "@tbe/types"
-import { Edit2,ExternalLink, Mail, Phone, Trash2 } from "lucide-react"
+import { Edit2, ExternalLink, Mail, Phone, Trash2 } from "lucide-react"
 import { useState } from "react"
 import DatePicker from "react-datepicker"
 
@@ -52,10 +52,10 @@ const RecruiterContactsTable = ({
 
     const visibleContacts = hideInactiveContacts
         ? contacts.filter(
-              (c) =>
-                  c.applicationStatus !== "Rejected" &&
-                  c.applicationStatus !== "Not Interested"
-          )
+            (c) =>
+                c.applicationStatus !== "Rejected" &&
+                c.applicationStatus !== "Not Interested"
+        )
         : contacts
 
     const getStatusColor = (status?: string) => {
@@ -229,8 +229,8 @@ const RecruiterContactsTable = ({
 
     if (contacts.length === 0) {
         return (
-            <div className='glass rounded-2xl p-8 text-center border border-greyLight'>
-                <div className='text-6xl mb-4'>📞</div>
+            <div className='glass rounded-2xl p-4 text-center border border-greyLight'>
+                <div className='text-6xl mb-2'>📞</div>
                 <h3 className='text-xl font-bold text-contentLight mb-2'>
                     No Contacts Yet
                 </h3>
@@ -244,13 +244,13 @@ const RecruiterContactsTable = ({
 
     return (
         <>
-            <div className='glass rounded-2xl p-6 border border-greyLight'>
-                <div className='flex justify-between items-center mb-6'>
+            <div className='glass rounded-2xl p-3 border border-greyLight'>
+                <div className='flex justify-between items-center mb-2'>
                     <h3 className='text-xl font-bold text-contentLight'>
                         Your Recruiter Network
                     </h3>
 
-                    <div className='flex items-center gap-8'>
+                    <div className='flex items-center gap-2'>
                         <Button
                             onClick={() =>
                                 setHideInactiveContacts((prev) => !prev)
@@ -270,32 +270,32 @@ const RecruiterContactsTable = ({
                     </div>
                 </div>
 
-                <div className='overflow-x-auto'>
+                <div className='overflow-hidden'>
                     <Table>
                         <TableHeader>
                             <TableRow className='border-greyLight hover:bg-transparent'>
-                                <TableHead className='text-primary font-semibold'>
+                                <TableHead className='text-primary font-semibold px-1 py-1'>
                                     Name
                                 </TableHead>
-                                <TableHead className='text-primary font-semibold'>
+                                <TableHead className='text-primary font-semibold px-1 py-1'>
                                     Contact
                                 </TableHead>
-                                <TableHead className='text-primary font-semibold'>
+                                <TableHead className='text-primary font-semibold px-1 py-1'>
                                     Status
                                 </TableHead>
-                                <TableHead className='text-primary font-semibold'>
+                                <TableHead className='text-primary font-semibold px-1 py-1'>
                                     Follow Up
                                 </TableHead>
-                                <TableHead className='text-primary font-semibold'>
+                                <TableHead className='text-primary font-semibold px-1 py-1'>
                                     Last Interview
                                 </TableHead>
-                                <TableHead className='text-primary font-semibold'>
+                                <TableHead className='text-primary font-semibold px-1 py-1'>
                                     Company
                                 </TableHead>
-                                <TableHead className='text-primary font-semibold'>
+                                <TableHead className='text-primary font-semibold px-1 py-1'>
                                     Comments
                                 </TableHead>
-                                <TableHead className='text-primary font-semibold'>
+                                <TableHead className='text-primary font-semibold px-1 py-1'>
                                     Actions
                                 </TableHead>
                             </TableRow>
@@ -304,8 +304,8 @@ const RecruiterContactsTable = ({
                             {visibleContacts.map((contact) => (
                                 <TableRow
                                     key={contact._id}
-                                    className='border-greyLight hover:bg-primary/5 transition-colors'>
-                                    <TableCell className='text-contentLight font-medium'>
+                                    className='border-greyLight hover:bg-primary/5 transition-colors h-9'>
+                                    <TableCell className='text-contentLight font-medium px-2 py-1 leading-tight'>
                                         {contact.recruiterName}
                                     </TableCell>
                                     <TableCell className='text-greyDark'>
@@ -324,7 +324,7 @@ const RecruiterContactsTable = ({
                                     </TableCell>
                                     <TableCell>
                                         <select
-                                            className='w-[180px] bg-white border border-greyLight text-contentLight rounded-md px-2 py-1'
+                                            className='w-[130px] bg-white border border-greyLight text-contentLight rounded-md px-1 py-0.5 text-xs'
                                             value={
                                                 contact.applicationStatus || ""
                                             }
@@ -362,8 +362,8 @@ const RecruiterContactsTable = ({
                                             selected={
                                                 contact.follow_up_date
                                                     ? new Date(
-                                                          contact.follow_up_date
-                                                      )
+                                                        contact.follow_up_date
+                                                    )
                                                     : null
                                             }
                                             onChange={(date: Date | null) =>
@@ -373,7 +373,7 @@ const RecruiterContactsTable = ({
                                                     date
                                                 )
                                             }
-                                            className='bg-white border border-greyLight rounded-md px-2 py-1 text-contentLight w-[150px]'
+                                            className='bg-white border border-greyLight rounded-md px-1 py-0.5 text-contentLight w-[110px] text-xs'
                                             dateFormat='MMM d, yyyy'
                                             placeholderText='Select date'
                                             isClearable
@@ -385,8 +385,8 @@ const RecruiterContactsTable = ({
                                             selected={
                                                 contact.last_interview_date
                                                     ? new Date(
-                                                          contact.last_interview_date
-                                                      )
+                                                        contact.last_interview_date
+                                                    )
                                                     : null
                                             }
                                             onChange={(date: Date | null) =>
@@ -396,8 +396,8 @@ const RecruiterContactsTable = ({
                                                     date
                                                 )
                                             }
-                                            className='bg-white border border-greyLight rounded-md px-2 py-1 text-contentLight w-[150px]'
-                                            dateFormat='MMM d, yyyy'
+                                            className='bg-white border border-greyLight rounded-md px-1 py-0.5 text-contentLight w-[110px]'
+                                            dateFormat='MM/dd/yy'
                                             placeholderText='Select date'
                                             isClearable
                                             portalId='recruiter-datepicker-portal'
@@ -413,7 +413,7 @@ const RecruiterContactsTable = ({
                                             {contact.comments || "-"}
                                         </div>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell >
                                         <div className='flex gap-1'>
                                             {contact.email && (
                                                 <Button
@@ -422,9 +422,9 @@ const RecruiterContactsTable = ({
                                                     onClick={() =>
                                                         openEmail(contact.email)
                                                     }
-                                                    className='h-6 w-6 p-0 hover:bg-primary/20'
+                                                    className='h-5 w-5 p-0 hover:bg-primary/20'
                                                     title='Send Email'>
-                                                    <Mail className='h-3.5 w-3.5 text-primary' />
+                                                    <Mail className='h-3 w-3 text-primary' />
                                                 </Button>
                                             )}
                                             {contact.phone && (
@@ -434,9 +434,9 @@ const RecruiterContactsTable = ({
                                                     onClick={() =>
                                                         openPhone(contact.phone)
                                                     }
-                                                    className='h-6 w-6 p-0 hover:bg-primary/20'
+                                                    className='h-5 w-5 p-0 hover:bg-primary/20'
                                                     title='Call'>
-                                                    <Phone className='h-3.5 w-3.5 text-primary' />
+                                                    <Phone className='h-3 w-3 text-primary' />
                                                 </Button>
                                             )}
                                             {contact.link && (
@@ -446,9 +446,9 @@ const RecruiterContactsTable = ({
                                                     onClick={() =>
                                                         openLink(contact.link)
                                                     }
-                                                    className='h-6 w-6 p-0 hover:bg-primary/20'
+                                                    className='h-5 w-5 p-0 hover:bg-primary/20'
                                                     title='Open Link'>
-                                                    <ExternalLink className='h-3.5 w-3.5 text-primary' />
+                                                    <ExternalLink className='h-3 w-3 text-primary' />
                                                 </Button>
                                             )}
                                             <Button
@@ -457,18 +457,18 @@ const RecruiterContactsTable = ({
                                                 onClick={() =>
                                                     handleEdit(contact)
                                                 }
-                                                className='h-6 w-6 p-0 hover:bg-primary/20'
+                                                className='h-5 w-5 p-0 hover:bg-primary/20'
                                                 title='Edit Contact'>
-                                                <Edit2 className='h-3.5 w-3.5 text-primary' />
+                                                <Edit2 className='h-3 w-3 text-primary' />
                                             </Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button
                                                         size='sm'
                                                         variant='ghost'
-                                                        className='h-6 w-6 p-0 hover:bg-red-500/20'
+                                                        className='h-5 w-5 p-0 hover:bg-red-500/20'
                                                         title='Delete Contact'>
-                                                        <Trash2 className='h-3.5 w-3.5 text-red-500' />
+                                                        <Trash2 className='h-3 w-3 text-red-500' />
                                                     </Button>
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent className='glass border-greyLight'>
@@ -512,8 +512,8 @@ const RecruiterContactsTable = ({
                 key={`edit-recruiter-${editingContact?._id || "new"}`}
                 isOpen={isModalOpen}
                 onClose={handleModalClose}
-                onContactAdded={onContactAdded ?? (() => {})}
-                onContactUpdated={onContactUpdated ?? (() => {})}
+                onContactAdded={onContactAdded ?? (() => { })}
+                onContactUpdated={onContactUpdated ?? (() => { })}
                 editContact={editingContact}
                 mongoUserId={mongoUserId ?? ""}
             />

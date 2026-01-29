@@ -1,19 +1,18 @@
-import React from "react";
-import type { ComponentType } from "react";
 import {
-  Map,
+  Award,
   BookOpen,
-  TrendingUp,
-  Rocket,
   Brain,
+  Briefcase,
+  FileText,
+  Map,
+  Sparkles,
+  Target,
+  TrendingUp,
   Trophy,
   Users,
-  Sparkles,
-  FileText,
-  Briefcase,
-  Target,
-  Award,
 } from "lucide-react";
+import type { ComponentType } from "react";
+import React from "react";
 
 interface NavbarDropdownLink {
   id: string;
@@ -86,17 +85,19 @@ const links: NavbarDropdownLink[] = [
   },
 ];
 
-interface VariantConfig {
+interface NavbarVariantConfig {
   branding: React.ReactNode;
   dashboardRoute: string;
   borderClass?: string;
   requiresAuth?: boolean;
   showGamification?: boolean;
+  showCohorts?: boolean; // If false, hides Cohorts section
+  showLearn?: boolean; // If false, hides Learn section
 }
 
 const getNavbarVariantConfig = (
   Logo: ComponentType<any>
-): Record<string, VariantConfig> => ({
+): Record<string, NavbarVariantConfig> => ({
   default: {
     branding: <Logo />,
     dashboardRoute: "/user/dashboard",
@@ -200,6 +201,8 @@ const getNavbarVariantConfig = (
     borderClass: "border-0 dark:border-0",
     requiresAuth: true, // Non-auth app
     showGamification: false,
+    showCohorts: false, // Hide Cohorts section
+    showLearn: false, // Hide Learn section
   },
 });
 
@@ -471,9 +474,9 @@ export const getLoginCardVariantConfig = (): Record<
 });
 
 export {
-  socialLinks,
-  productLinks,
   CONFETTI_COLORS,
-  links,
   getNavbarVariantConfig,
+  links,
+  productLinks,
+  socialLinks,
 };

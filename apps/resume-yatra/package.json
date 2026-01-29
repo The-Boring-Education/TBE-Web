@@ -13,7 +13,7 @@
     "dev": "next dev -p 3006",
     "build": "eslint . && next build",
     "postbuild": "next-sitemap",
-    "start": "next start -p 3002",
+    "start": "next start -p 3006",
     "lint": "eslint .",
     "lint:fix": "next lint --fix",
     "export": "next export"
@@ -63,7 +63,7 @@
     "framer-motion": "^12.4.2",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",
-    "next": "15.5.7",
+    "next": "15.5.9",
     "next-auth": "^4.24.5",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",

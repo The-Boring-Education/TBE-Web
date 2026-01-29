@@ -9,18 +9,17 @@
 // COMMON TYPES (Used across all apps)
 // ================================
 export type {
+    Achievement,
+    APIResponse,
     // Re-export all common types except conflicting ones
     BaseUser,
-    APIResponse,
-    TrackEventProps,
-    GamificationAction,
-    UserPoints,
-    Achievement,
     // Conflicting types with aliases
     APIMakeRequestProps as CommonAPIMakeRequestProps,
     LeaderboardEntry as CommonLeaderboardEntry,
-    QuizCategory as CommonQuizCategory
-} from "./common"
+    QuizCategory as CommonQuizCategory,
+    GamificationAction,
+    TrackEventProps,
+    UserPoints} from "./common"
 
 // ================================
 // DOMAIN-SPECIFIC TYPES
@@ -53,22 +52,21 @@ export * from "./resume"
 
 // Platform-specific shared types (with explicit exports to avoid conflicts)
 export type {
-    // Re-export all platform types except conflicting ones
-    GetSEOMetaResponseType,
-    SEOProps,
-    ServerSessionProp,
-    LeaderboardType,
-    LEADERBOARD_TYPES,
-    ProductDataProps,
     CohortDataProps,
     CohortRoadmapProps,
     CohortUserCategoryProps,
-    TopNavbarContainerProps,
+    // Re-export all platform types except conflicting ones
+    GetSEOMetaResponseType,
+    LEADERBOARD_TYPES,
+    LeaderboardType,
     // Email types from platform (these conflict with email module)
     EmailSendRequest as PlatformEmailSendRequest,
     EmailSendResponse as PlatformEmailSendResponse,
-    EmailTemplate as PlatformEmailTemplate
-} from "./platform"
+    EmailTemplate as PlatformEmailTemplate,
+    ProductDataProps,
+    SEOProps,
+    ServerSessionProp,
+    TopNavbarContainerProps} from "./platform"
 
 // Email and communication types
 export * from "./email"
@@ -86,9 +84,8 @@ export * from "./quiz"
 // ================================
 // Re-export common types with their original names
 export type {
-    BaseUser as User,
-    APIResponse as CommonAPIResponseType
-} from "./common"
+    APIResponse as CommonAPIResponseType,
+    BaseUser as User} from "./common"
 
 // Re-export database types with their original names for compatibility
 // Note: Do NOT alias UserModel as PlatformUser to avoid conflict with platform PlatformUser

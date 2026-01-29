@@ -1,11 +1,11 @@
-import { Fragment } from 'react';
+import { SEO } from '@tbe/components';
+import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
+import { getPreFetchProps } from '@tbe/utils';
 import { motion } from "framer-motion";
 import { Brain, Clock, Sparkles, Target } from "lucide-react";
 import Link from "next/link";
-import { SEO } from '@tbe/components';
-import { getPreFetchProps } from '@tbe/utils';
-import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
-import type { PageProps } from '@tbe/interface';
+import { Fragment } from 'react';
 
 function DsaClient() {
   "use client";

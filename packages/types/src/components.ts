@@ -535,6 +535,8 @@ export interface SheetHeroContainerProps {
     isPremium?: boolean
     isPurchased?: boolean
     redirectTo?: string
+    backHref?: string
+    theme?: "dark" | "light"
 }
 
 // ================================
@@ -966,6 +968,31 @@ export interface CardItem {
 // ================================
 // UTILITY COMPONENT TYPES
 // ================================
+
+// ================================
+// DSA QUESTION COMPONENTS
+// ================================
+
+export interface DSAQuestion {
+    id: string
+    title: string
+    difficulty: "Easy" | "Medium" | "Hard"
+    tags: string[]
+    description: string
+}
+
+export interface DSAQuestionSidebarProps {
+    questions: DSAQuestion[]
+    selected: DSAQuestion
+    onSelect: (question: DSAQuestion) => void
+    className?: string
+}
+
+export interface DSAQuestionDetailsProps {
+    question: DSAQuestion
+    className?: string
+    onBack?: () => void
+}
 
 export type GenerateSectionPathProps = {
     basePath: string

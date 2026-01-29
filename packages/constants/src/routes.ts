@@ -1,4 +1,5 @@
 import type { GenerateSectionPathProps } from "@tbe/types"
+
 import { envConfig } from "./envConfig"
 
 const routes = {
@@ -117,6 +118,17 @@ const routes = {
     cohort: {
         bringYourIdea: "/cohort/bring-your-idea"
     },
+    //oncampus
+    oncampus:{
+        home:"/",
+        login:"/login",
+        dashboard:"/dashboard",
+        dsa:"/dashboard/dsa-prep",
+        interviewPrep:"/dashboard/interview-prep",
+        quizes:"/dashboard/interview-prep",
+        aptitude:"/dashboard/aptitude"
+
+    },
     unskilled: "/unskilled",
     404: "/404",
     api: {
@@ -130,8 +142,9 @@ const routes = {
         myCourses: "/user/shiksha",
         myProjects: "/user/projects",
         mySheets: "/user/interview-prep",
-        myPlaylists: "user/plylists",
+        myPlaylists: "/user/playlists",
         interviewPrep: "/interview-prep",
+        dsaSheet: "/interview-prep/dsa-sheet",
         enrollCourse: "/user/shiksha/enroll",
         enrollProject: "/user/projects/enroll",
         enrollSheet: "/user/interview-prep/enroll",

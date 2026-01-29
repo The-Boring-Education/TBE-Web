@@ -1,0 +1,79 @@
+name: 🔍 Lint Check
+
+permissions:
+    contents: read
+
+on:
+    pull_request:
+        branches: [development, production]
+        types: [opened, synchronize, reopened, ready_for_review]
+
+# Prevent multiple workflows from running simultaneously
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    lint:
+        name: Lint Monorepo
+        runs-on: ubuntu-latest
+
+        # Skip draft PRs
+        if: github.event.pull_request.draft == false
+
+        steps:
+            - name: 📥 Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: 📦 Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9.15.9
+                  run_install: false
+
+            - name: 📦 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "pnpm"
+
+            - name: 🔍 Get pnpm store directory
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - name: 🗂️ Setup pnpm cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{ env.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+
+            - name: 📦 Install Dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: 🔍 Lint All Packages and Apps
+              run: |
+                  echo "Running ESLint across all packages and apps..."
+                  echo "This will fail if any unused imports, unused variables, or other lint errors are found."
+                  pnpm run lint
+
+            - name: ✅ Lint Summary
+              if: always()
+              run: |
+                  if [ ${{ job.status }} == 'success' ]; then
+                    echo "🎉 All linting checks passed! Code is clean."
+                  else
+                    echo "❌ Linting failed! Please fix the errors before merging."
+                    echo ""
+                    echo "Common issues:"
+                    echo "  - Unused imports (remove or use them)"
+                    echo "  - Unused variables (remove or prefix with _ if intentionally unused)"
+                    echo "  - Import sorting issues"
+                    echo ""
+                    echo "Run 'pnpm lint:fix' locally to auto-fix some issues."
+                    exit 1
+                  fi

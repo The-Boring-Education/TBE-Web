@@ -39,9 +39,9 @@ function BuilderContent() {
 export default function Builder() {
     return (
         <ProtectedRoute
-            redirectTo='/auth'
+            redirectTo='/login'
             loadingComponent={<LoadingScreen />}>
-                <Navbar variant='resume-yatra' />
+            <Navbar variant='resume-yatra' />
             <BuilderContent />
         </ProtectedRoute>
     )

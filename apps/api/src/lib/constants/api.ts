@@ -2,6 +2,9 @@ import type {
     CertificateType,
     CompanyType,
     DifficultyType,
+    DSADifficultyType,
+    DSADomainType,
+    DSATopicType,
     GoalType,
     InterviewCategoryType,
     LeaderboardType,
@@ -2720,11 +2723,46 @@ const POINTS_RULES: Record<UserPointsActionType, number> = {
 
 const LEADERBOARD_TYPES: LeaderboardType[] = ["DAILY", "WEEKLY", "MONTHLY"]
 
+const DSA_DOMAIN: DSADomainType[] = ["FRONTEND", "BACKEND", "GENERAL", "FULLSTACK"]
+
+const DSA_DIFFICULTY: DSADifficultyType[] = ["EASY", "MEDIUM", "HARD"]
+
+const DSA_TOPICS: DSATopicType[] = [
+    "ARRAY",
+    "PREFIX_SUM",
+    "HASHMAP",
+    "TWO_POINTERS",
+    "SLIDING_WINDOW",
+    "BINARY_SEARCH",
+    "SORTING",
+    "LINKED_LIST",
+    "STACK",
+    "QUEUE",
+    "TREE",
+    "BINARY_TREE",
+    "BST",
+    "GRAPH",
+    "DFS",
+    "BFS",
+    "BACKTRACKING",
+    "DYNAMIC_PROGRAMMING",
+    "GREEDY",
+    "STRING",
+    "MATH",
+    "BIT_MANIPULATION",
+    "TRIE",
+    "HEAP",
+    "UNION_FIND"
+]
+
 export {
     ALLOWED_IPS,
     CERTIFICATE_TYPE,
     COMPANY_TYPES,
     DIFFICULTY_LEVEL,
+    DSA_DIFFICULTY,
+    DSA_DOMAIN,
+    DSA_TOPICS,
     GOAL_TYPES,
     INTERVIEW_CATEGORIES,
     INTERVIEW_QUESTION_FREQUENCY,

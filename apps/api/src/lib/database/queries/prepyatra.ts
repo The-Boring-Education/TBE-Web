@@ -112,7 +112,7 @@ const addPrepLogToDB = async ({
 const getPrepLogsByUserFromDB = async (userId: string) => {
     try {
         const logs = await PrepLog.find({ user: userId }).sort({
-            createdAt: -1
+            createdAt: 1
         })
         return { data: logs }
     } catch (error: any) {
@@ -493,7 +493,7 @@ const recalculateUserPrepLogStats = async (
                 if (previousDate) {
                     const dayDiff = Math.floor(
                         (currentDate.getTime() - previousDate.getTime()) /
-                            (1000 * 60 * 60 * 24)
+                        (1000 * 60 * 60 * 24)
                     )
 
                     if (dayDiff === 1) {

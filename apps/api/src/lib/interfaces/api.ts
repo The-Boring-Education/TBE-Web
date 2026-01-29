@@ -197,6 +197,37 @@ export interface CreateSubscriptionPayload {
 
 export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY";
 
+export type DSADomainType = "FRONTEND" | "BACKEND" | "GENERAL" | "FULLSTACK";
+
+export type DSADifficultyType = "EASY" | "MEDIUM" | "HARD";
+
+export type DSATopicType =
+  | "ARRAY"
+  | "PREFIX_SUM"
+  | "HASHMAP"
+  | "TWO_POINTERS"
+  | "SLIDING_WINDOW"
+  | "BINARY_SEARCH"
+  | "SORTING"
+  | "LINKED_LIST"
+  | "STACK"
+  | "QUEUE"
+  | "TREE"
+  | "BINARY_TREE"
+  | "BST"
+  | "GRAPH"
+  | "DFS"
+  | "BFS"
+  | "BACKTRACKING"
+  | "DYNAMIC_PROGRAMMING"
+  | "GREEDY"
+  | "STRING"
+  | "MATH"
+  | "BIT_MANIPULATION"
+  | "TRIE"
+  | "HEAP"
+  | "UNION_FIND";
+
 export type ProjectPickedPageProps = Pick<
   ProjectDocumentModel,
   | "_id"

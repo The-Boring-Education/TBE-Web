@@ -6,12 +6,12 @@ import { checkUsernameAvailable } from '../utils/api';
 interface OnboardingFormProps {
   config: any;
   form: Record<string, unknown>;
-  setForm: (form: any) => void;
+  setForm: (_form: any) => void;
   step: number;
   productId: string;
   token?: string;
   user?: User;
-  onUsernameAvailabilityChange?: (available: boolean, checking: boolean) => void;
+  onUsernameAvailabilityChange?: (_available: boolean, _checking: boolean) => void;
 }
 
 const OnboardingForm: React.FC<OnboardingFormProps> = ({

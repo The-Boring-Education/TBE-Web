@@ -4,11 +4,13 @@ import type {
     AddInterviewSheetRequestPayloadProps,
     BaseInterviewSheetResponseProps,
     DatabaseQueryResponseType,
+    DSADifficultyType,
+    DSADomainType,
     SheetEnrollmentRequestProps,
     UpdateInterviewSheetRequestPayloadProps
 } from "@/lib/interfaces"
 
-import { InterviewSheet, UserSheet } from "../models"
+import { DSAQuestion, InterviewSheet, UserSheet } from "../models"
 import { toObjectId } from "./common"
 import { updateUserPointsInDB } from "./gamification"
 
@@ -53,7 +55,7 @@ const getInterviewSheetBySlugFromDB = async (
         }
 
         let isEnrolled = false
-        let mappedQuestions = sheet.questions.map((q) => q.toObject())
+        let mappedQuestions = (sheet.questions || []).map((q) => q.toObject())
 
         if (userId) {
             const userSheet = await UserSheet.findOne({
@@ -64,7 +66,7 @@ const getInterviewSheetBySlugFromDB = async (
             isEnrolled = !!userSheet
 
             if (userSheet) {
-                mappedQuestions = sheet.questions.map((question) => {
+                mappedQuestions = (sheet.questions || []).map((question) => {
                     const userQuestion = userSheet.questions.find(
                         (uq) =>
                             uq.questionId.toString() === question._id.toString()
@@ -122,7 +124,7 @@ const updateInterviewSheetInDB = async ({
 
         return { data: updatedCourse }
     } catch (error) {
-        return { error: "Failed while updating sheet" }
+        return { error: "Failed while updating sheet", details: error }
     }
 }
 
@@ -152,7 +154,7 @@ const updateInterviewQuestionInDB = async (
 
         return { data: course }
     } catch (error) {
-        return { error: "Failed to update chapter to course" }
+        return { error: "Failed to update chapter to course", details: error }
     }
 }
 
@@ -170,7 +172,7 @@ const deleteQuestionFromSheetInDB = async (
 
         return { data: course }
     } catch (error) {
-        return { error: "Failed to delete question from sheet" }
+        return { error: "Failed to delete question from sheet", details: error }
     }
 }
 
@@ -191,7 +193,7 @@ const addQuestionToInterviewSheetInDB = async (
 
         return { data: updatedSheet }
     } catch (error) {
-        return { error: "Failed to add question to interview sheet" }
+        return { error: "Failed to add question to interview sheet", details: error }
     }
 }
 
@@ -205,7 +207,7 @@ const enrollInASheet = async ({
             return { error: "Sheet not found" }
         }
 
-        const questions = sheet.questions.map((question: any) => ({
+        const questions = (sheet.questions || []).map((question: any) => ({
             questionId: question._id,
             isCompleted: false
         }))
@@ -221,7 +223,7 @@ const enrollInASheet = async ({
 
         return { data: userSheet }
     } catch (error) {
-        return { error: "Failed while enrolling in a sheet" }
+        return { error: "Failed while enrolling in a sheet", details: error }
     }
 }
 
@@ -233,7 +235,7 @@ const getEnrolledSheetFromDB = async ({
         const enrolledSheet = await UserSheet.findOne({ userId, sheetId })
         return { data: enrolledSheet }
     } catch (error) {
-        return { error: "Failed while fetching enrolled sheet" }
+        return { error: "Failed while fetching enrolled sheet", details: error }
     }
 }
 
@@ -244,18 +246,39 @@ const getAllEnrolledSheetsFromDB = async (
         const enrolledSheets = await UserSheet.find({ userId })
             .populate({
                 path: "sheet",
-                select: modelSelectParams.coursePreview
+                select: `${modelSelectParams.coursePreview} questions`
             })
+            .sort({ updatedAt: -1 }) // Sort by last updated, most recent first
             .exec()
 
         return {
-            data: enrolledSheets.map((sheet) => ({
-                ...sheet.sheet.toObject(),
-                isEnrolled: true
-            }))
+            data: enrolledSheets.map((userSheet) => {
+                const sheet = userSheet.sheet as any
+                const totalQuestions = sheet?.questions?.length || 0
+                const completedQuestions = userSheet.questions?.filter(
+                    (q: any) => q.isCompleted
+                ).length || 0
+                const progressPercentage = totalQuestions > 0
+                    ? Math.round((completedQuestions / totalQuestions) * 100)
+                    : 0
+
+                // Access updatedAt from the document (Mongoose adds it via timestamps)
+                const userSheetObj = userSheet.toObject() as any
+
+                return {
+                    ...sheet.toObject(),
+                    isEnrolled: true,
+                    lastUpdated: userSheetObj.updatedAt || userSheetObj.createdAt,
+                    progress: {
+                        completed: completedQuestions,
+                        total: totalQuestions,
+                        percentage: progressPercentage
+                    }
+                }
+            })
         }
     } catch (error) {
-        return { error: "Failed while fetching enrolled sheets" }
+        return { error: "Failed while fetching enrolled sheets", details: error }
     }
 }
 
@@ -278,7 +301,7 @@ const markQuestionCompletedByUser = async (
 
         return { data: updatedSheet }
     } catch (error) {
-        return { error: "Failed to mark question as completed" }
+        return { error: "Failed to mark question as completed", details: error }
     }
 }
 
@@ -294,11 +317,11 @@ const getAllQuestionsByUser = async (userId: string) => {
 
         const allQuestions = userSheets.flatMap((sheet) => sheet.questions)
 
-        return { data: allQuestions, error: null }
+        return { data: allQuestions }
     } catch (error) {
         return {
-            data: null,
-            error: "Error fetching questions from the database"
+            error: "Error fetching questions from the database",
+            details: error
         }
     }
 }
@@ -327,7 +350,7 @@ const getASheetFromDBById = async (
 
         return { data: sheet }
     } catch (error) {
-        return { error: `Failed while fetching a sheet ${error}` }
+        return { error: `Failed while fetching a sheet`, details: error }
     }
 }
 
@@ -344,7 +367,7 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
             return { data: { ...sheet.toObject(), isEnrolled: false } }
         }
 
-        const mappedQuestions = userSheet.sheet.questions.map((question) => {
+        const mappedQuestions = (userSheet.sheet.questions || []).map((question) => {
             const userQuestion = userSheet.questions.find(
                 (uc) => uc.questionId.toString() === question._id.toString()
             )
@@ -367,7 +390,7 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
             } as BaseInterviewSheetResponseProps
         }
     } catch (error) {
-        return { error: "Failed to fetch courses with chapter status" }
+        return { error: "Failed to fetch courses with chapter status", details: error }
     }
 }
 
@@ -392,7 +415,7 @@ const markQuestionStarredByUser = async (
 
         return { data: updatedSheet }
     } catch (error) {
-        return { error: "Failed to mark question as starred" }
+        return { error: "Failed to mark question as starred", details: error }
     }
 }
 
@@ -401,7 +424,7 @@ const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
         const userSheet = await UserSheet.findOne({ userId, sheetId })
 
         if (!userSheet) {
-            return { data: [], error: "UserSheet not found" }
+            return { error: "UserSheet not found" }
         }
 
         const starredQuestions = userSheet.questions.filter(
@@ -409,7 +432,7 @@ const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
         )
         return { data: starredQuestions }
     } catch (error) {
-        return { error: "Failed to get starred questions" }
+        return { error: "Failed to get starred questions", details: error }
     }
 }
 
@@ -442,16 +465,195 @@ const deleteInterviewSheetFromDB = async (
   }
 };
 
+interface DSASheetFilters {
+  domain?: DSADomainType | DSADomainType[];
+  difficulty?: DSADifficultyType | DSADifficultyType[];
+  companyTypes?: string | string[];
+  topics?: string | string[];
+  page?: number;
+  limit?: number;
+}
+
+const getAllDSAQuestionsFromDB = async (
+  filters: DSASheetFilters = {}
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const { domain, difficulty, companyTypes, topics, page = 1, limit = 50 } = filters;
+    
+    // Build match stage for filtering
+    const matchStage: any = {};
+
+    if (domain) {
+      const domains = Array.isArray(domain) ? domain : [domain];
+      matchStage.domain = { $in: domains };
+    }
+
+    if (difficulty) {
+      const difficulties = Array.isArray(difficulty) ? difficulty : [difficulty];
+      matchStage.difficulty = { $in: difficulties };
+    }
+
+    if (companyTypes) {
+      const types = Array.isArray(companyTypes) ? companyTypes : [companyTypes];
+      matchStage.companyTypes = { $in: types };
+    }
+
+    if (topics) {
+      const topicsList = Array.isArray(topics) ? topics : [topics];
+      matchStage.topics = { $in: topicsList };
+    }
+
+    const totalCount = await DSAQuestion.countDocuments(matchStage);
+
+    const questions = await DSAQuestion.find(matchStage)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    return {
+      data: {
+        questions,
+        pagination: {
+          total: totalCount,
+          page,
+          limit,
+          totalPages: Math.ceil(totalCount / limit),
+          hasMore: page * limit < totalCount
+        }
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching DSA questions:", error);
+    return { error: "Failed to fetch DSA questions", details: error };
+  }
+};
+
+const getDSASheetMetadataFromDB = async (): Promise<DatabaseQueryResponseType> => {
+  try {
+    const [domains, difficulties, companyTypes, topics, totalCount] = await Promise.all([
+      DSAQuestion.distinct('domain'),
+      DSAQuestion.distinct('difficulty'),
+      DSAQuestion.distinct('companyTypes'),
+      DSAQuestion.distinct('topics'),
+      DSAQuestion.countDocuments()
+    ]);
+
+    return {
+      data: {
+        totalQuestions: totalCount,
+        filters: {
+          domains: domains.sort(),
+          difficulties,
+          companyTypes: companyTypes.sort(),
+          topics: topics.sort()
+        }
+      }
+    };
+  } catch (error) {
+    return { error: "Failed to fetch metadata", details: error };
+  }
+};
+
+const addDSAQuestionToDB = async (
+  questionPayload: {
+    title: string;
+    content: string;
+    domain: DSADomainType[];
+    difficulty: DSADifficultyType;
+    companyTypes: string[];
+    topics: string[];
+  }
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const question = new DSAQuestion(questionPayload);
+    await question.save();
+    return { data: question };
+  } catch (error) {
+    return { error: "Failed to add DSA question", details: error };
+  }
+};
+
+const getDSAQuestionsGroupedByTopic = async (
+  domain: DSADomainType,
+  difficulty?: DSADifficultyType,
+  companyType?: string
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    // Build match stage for filtering
+    const matchStage: any = {
+      domain: { $in: [domain] }
+    };
+
+    if (difficulty) {
+      matchStage.difficulty = difficulty;
+    }
+
+    if (companyType) {
+      matchStage.companyTypes = { $in: [companyType] };
+    }
+
+    // Use aggregation to group questions by topic
+    const groupedQuestions = await DSAQuestion.aggregate([
+      { $match: matchStage },
+      { $unwind: "$topics" },
+      {
+        $group: {
+          _id: "$topics",
+          questions: {
+            $push: {
+              _id: "$_id",
+              title: "$title",
+              content: "$content",
+              domain: "$domain",
+              difficulty: "$difficulty",
+              companyTypes: "$companyTypes",
+              topics: "$topics"
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    // Transform to a more usable format
+    const result = {
+      domain,
+      filters: {
+        difficulty,
+        companyType
+      },
+      topics: groupedQuestions.map((group) => ({
+        topic: group._id,
+        questions: group.questions,
+        count: group.count
+      })),
+      totalQuestions: groupedQuestions.reduce((sum, g) => sum + g.count, 0)
+    };
+
+    return { data: result };
+  } catch (error) {
+    return { error: "Failed to fetch DSA questions by topic", details: error };
+  }
+};
+
 export {
+    // Interview Sheet functions
     addAInterviewSheetToDB,
+    // DSA Question functions
+    addDSAQuestionToDB,
     addQuestionToInterviewSheetInDB,
     deleteInterviewSheetFromDB,
     deleteQuestionFromSheetInDB,
     enrollInASheet,
+    getAllDSAQuestionsFromDB,
     getAllEnrolledSheetsFromDB,
     getAllInterviewSheetsFromDB,
     getAllQuestionsByUser,
     getASheetForUserFromDB,
+    getDSAQuestionsGroupedByTopic,
+    getDSASheetMetadataFromDB,
     getEnrolledSheetFromDB,
     getInterviewSheetByIDFromDB,
     getInterviewSheetBySlugFromDB,
@@ -459,5 +661,6 @@ export {
     markQuestionCompletedByUser,
     markQuestionStarredByUser,
     updateInterviewQuestionInDB,
-    updateInterviewSheetInDB
-}
+    updateInterviewSheetInDB}
+
+export type { DSASheetFilters }

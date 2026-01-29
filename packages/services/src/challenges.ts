@@ -1,13 +1,12 @@
-import { trackEvent } from "@tbe/utils"
 import type {
     Challenge,
     ChallengeLog,
     ChallengeProgress,
-    CreateChallengeRequest,
-    UpdateChallengeRequest,
     CreateChallengeLogRequest,
-    SocialMediaTemplate
-} from "@tbe/types"
+    CreateChallengeRequest,
+    SocialMediaTemplate,
+    UpdateChallengeRequest} from "@tbe/types"
+import { trackEvent } from "@tbe/utils"
 
 export const challengesService = {
     // Get all challenges for a user
