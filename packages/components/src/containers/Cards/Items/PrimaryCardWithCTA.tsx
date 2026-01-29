@@ -62,7 +62,7 @@ const PrimaryCardWithCTA = ({
           className='mt-3 block'
           href={href}
           target={target}
-          noLoader={true}
+          noLoader
         />
       </div>
     </GradientContainer>
