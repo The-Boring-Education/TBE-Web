@@ -301,6 +301,7 @@ const AddRecruiterModal = ({
                             text="Cancel"
                             onClick={onClose}
                             className='text-sm h-5 px-3'
+                            type="button"
                         />
                         <Button
                             variant="PRIMARY"
@@ -314,6 +315,7 @@ const AddRecruiterModal = ({
                                     : "Create Contact"}
                             disabled={loading}
                             className='text-sm h-5 px-3'
+                            type="submit"
                         />
                     </DialogFooter>
                 </form>
