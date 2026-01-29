@@ -42,7 +42,8 @@
         "COOKIE_DOMAIN",
         "VITE_BASE_API_URL",
         "NEXT_PUBLIC_PREPYATRA_BASE_URL",
-        "MONGO_URI"
+        "MONGO_URI",
+        "SITE_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
@@ -97,7 +98,8 @@
         "COOKIE_DOMAIN",
         "VITE_BASE_API_URL",
         "NEXT_PUBLIC_PREPYATRA_BASE_URL",
-        "MONGO_URI"
+        "MONGO_URI",
+        "SITE_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",

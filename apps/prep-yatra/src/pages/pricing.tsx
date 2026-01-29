@@ -162,7 +162,7 @@ const PricingPage: React.FC = () => {
     }
   };
 
-  const handleSignOut = async () => {
+  const _handleSignOut = async () => {
     try {
       await signOut();
       router.push("/");

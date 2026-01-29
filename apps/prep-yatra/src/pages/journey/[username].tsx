@@ -117,11 +117,11 @@ const PrepLogsShowcase = () => {
         router.push("/");
     };
 
-    const totalTimeSpent = prepLogs.reduce(
+    const _totalTimeSpent = prepLogs.reduce(
         (total, log) => total + log.timeSpent,
         0
     );
-    const totalLogs = prepLogs.length;
+    const _totalLogs = prepLogs.length;
 
     return (
         <div className="min-h-screen bg-background">

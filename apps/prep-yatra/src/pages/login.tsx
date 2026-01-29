@@ -17,7 +17,7 @@ const Auth = () => {
         }
     }, [isAuthenticated, isLoading, router])
 
-    const handleSignIn = () => {
+    const _handleSignIn = () => {
         const callbackUrl = (router.query.callbackUrl as string) || "/dashboard"
         signIn(callbackUrl)
     }
