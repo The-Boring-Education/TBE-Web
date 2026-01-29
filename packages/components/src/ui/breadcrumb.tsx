@@ -47,11 +47,10 @@ const BreadcrumbLink = React.forwardRef<
   const Comp = asChild ? Slot : "a"
 
   return (
-    // @ts-ignore - React types version mismatch between packages on Vercel
     <Comp
       ref={ref}
       className={cn("transition-colors hover:text-foreground", className)}
-      {...props}
+      {...(props as any)}
     />
   )
 })
