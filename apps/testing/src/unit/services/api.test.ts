@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock apiClient from base first
 vi.mock('@tbe/services/base', () => {
@@ -38,8 +38,16 @@ const mockGet = vi.mocked(apiClient.get);
 const mockPost = vi.mocked(apiClient.post);
 
 describe('API Services', () => {
+    let consoleErrorSpy: any;
+
     beforeEach(() => {
         vi.clearAllMocks();
+        // Suppress console.error for expected error cases
+        consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleErrorSpy.mockRestore();
     });
 
     describe('userApi', () => {
