@@ -48,7 +48,7 @@ const getButtonClasses = (
   return `${baseClasses} ${variantClasses[variant] || ''}`;
 };
 
- 
+
 const animationVariants: any = {
   DEFAULT: {
     scale: 1,
@@ -99,6 +99,7 @@ const Button = ({
   isFullWidth = false,
   animationType = 'DEFAULT',
   size = 'MEDIUM',
+  type = 'button',
 }: ButtonProps) => {
   // Size classes mapping
   const sizeClasses = {
@@ -146,12 +147,12 @@ const Button = ({
       const target = e.currentTarget;
       target.style.transform = 'scale(0.95)';
       target.style.transition = 'transform 0.05s ease-out';
-      
+
       setTimeout(() => {
         target.style.transform = '';
         target.style.transition = '';
       }, 50);
-      
+
       onClick(e);
     }
   };
@@ -164,6 +165,7 @@ const Button = ({
         className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-2`}
         disabled={!active || isLoading}
         onClick={handleClick}
+        type={type}
         {...getAnimationVariant()}
       >
         {loadingContainer}

@@ -78,12 +78,12 @@ export interface LinkButtonProps extends LinkProps {
 
 export interface ButtonProps {
   variant:
-    | "PRIMARY"
-    | "OUTLINE"
-    | "GHOST"
-    | "SUCCESS"
-    | "SECONDARY"
-    | "NEUTRAL";
+  | "PRIMARY"
+  | "OUTLINE"
+  | "GHOST"
+  | "SUCCESS"
+  | "SECONDARY"
+  | "NEUTRAL";
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -96,6 +96,7 @@ export interface ButtonProps {
   disabled?: boolean;
   animationType?: "DEFAULT" | "BOUNCE" | "GLOW";
   size?: "SMALL" | "MEDIUM" | "LARGE";
+  type?: "button" | "submit" | "reset";
 }
 
 export interface PageLayoutProps {
@@ -852,7 +853,7 @@ export interface StarButtonProps {
 }
 
 export interface LoginCardNewProps {
-    variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus";
+  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus";
   customRedirectPath?: string;
   theme?: "light" | "dark";
 }
