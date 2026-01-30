@@ -2,8 +2,8 @@ import { useAuth } from "@tbe/auth";
 import { Button } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { config } from "@tbe/config/quizes";
-import { gamificationApi,quizApi } from "@tbe/services";
-import type { QuizQuestion,QuizQuestionsData } from "@tbe/types";
+import { gamificationApi, quizApi } from "@tbe/services";
+import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
 import { cleanOptionText } from "@tbe/utils";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/router";
@@ -273,14 +273,6 @@ export default function QuizPage() {
           Selecting an option will auto-advance to the next question.
         </div>
 
-        <div className="mt-2 flex justify-center">
-          <Button
-            variant="OUTLINE"
-            className="border-gray-700 text-white hover:bg-gray-800"
-            text="Restart Quiz"
-            onClick={() => router.replace(`/quiz/${quizId}`)}
-          />
-        </div>
       </div>
     </div>
   );
