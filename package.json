@@ -54,14 +54,6 @@
     "node": ">=20.x",
     "pnpm": ">=9.12.0"
   },
-  "pnpm": {
-    "overrides": {
-      "@opentelemetry/api": "^2.0.1",
-      "@opentelemetry/core": "^2.0.1",
-      "@opentelemetry/resources": "^2.0.1",
-      "@opentelemetry/sdk-trace-base": "^2.0.1"
-    }
-  },
   "dependencies": {
     "@floating-ui/utils": "^0.2.10",
     "@radix-ui/react-accordion": "^1.2.0",
