@@ -42,24 +42,13 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
       default: 'Medium',
       required: true,
     },
-    resources: {
-      youtubeURL: {
-        type: String,
-        default: null,
+    resources: [
+      {
+        type: { type: String, required: true },
+        url: { type: String, required: true },
+        label: { type: String },
       },
-      leetcodeURL: {
-        type: String,
-        default: null,
-      },
-      blogURL: {
-        type: String,
-        default: null,
-      },
-    },
-    resource_link: {
-      type: String,
-      default: '',
-    },
+    ],
   },
   { timestamps: true, _id: true }
 );
@@ -87,10 +76,13 @@ const InterviewSheetSchema = new Schema<InterviewSheetModel>(
       type: Date,
       required: [true, 'Live on is required'],
     },
-    resource_link: {
-      type: String,
-      default: '',
-    },
+    resources: [
+      {
+        type: { type: String, required: true },
+        url: { type: String, required: true },
+        label: { type: String },
+      },
+    ],
     isPremium: {
       type: Boolean,
       default: false,

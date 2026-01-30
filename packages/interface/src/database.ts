@@ -26,7 +26,7 @@ import type {
   UserRoleType,
   WebinarEnrolledUsersProps,
   WorkDomainType,
-  } from '.';
+} from '.';
 
 export interface UserModel {
   name: string;
@@ -125,6 +125,12 @@ export interface CourseModel extends Document {
   features: string[];
 }
 
+export interface ResourceItem {
+  type: 'YOUTUBE' | 'BLOG' | 'CODE' | 'LEETCODE' | 'ARTICLE' | string;
+  url: string;
+  label?: string;
+}
+
 export interface InterviewSheetModel extends Document {
   name: string;
   meta: string;
@@ -139,12 +145,7 @@ export interface InterviewSheetModel extends Document {
   questions: InterviewSheetQuestionModel[];
   roadmap: RoadmapsType;
   features: string[];
-}
-
-export interface QuestionResourcesModel {
-  youtubeURL?: string;
-  leetcodeURL?: string;
-  blogURL?: string;
+  resources?: ResourceItem[];
 }
 
 export interface InterviewSheetQuestionModel {
@@ -156,7 +157,7 @@ export interface InterviewSheetQuestionModel {
   companyTypes?: CompanyType[];
   priority: PriorityType;
   toObject: () => UserCourseModel;
-  resources?: QuestionResourcesModel;
+  resources?: ResourceItem[];
 }
 
 export interface CouponModel extends Document {

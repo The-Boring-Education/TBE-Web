@@ -161,6 +161,12 @@ export interface UserCourseChapterModel {
     isCompleted?: boolean
 }
 
+export interface ResourceItem {
+    type: 'YOUTUBE' | 'BLOG' | 'CODE' | 'LEETCODE' | 'ARTICLE' | string
+    url: string
+    label?: string
+}
+
 export interface InterviewSheetModel extends Document {
     name: string
     meta: string
@@ -176,13 +182,7 @@ export interface InterviewSheetModel extends Document {
     dsaQuestions?: DSAQuestionModel[]
     roadmap: RoadmapsType
     features: string[]
-    resource_link?: string
-}
-
-export interface QuestionResourcesModel {
-    youtubeURL?: string
-    leetcodeURL?: string
-    blogURL?: string
+    resources?: ResourceItem[]
 }
 
 export interface InterviewSheetQuestionModel {
@@ -194,8 +194,7 @@ export interface InterviewSheetQuestionModel {
     companyTypes?: CompanyType[]
     priority: PriorityType
     toObject: () => UserCourseModel
-    resources?: QuestionResourcesModel
-    resource_link?: string
+    resources?: ResourceItem[]
 }
 
 export interface UserSheetModel extends Document {
@@ -654,7 +653,7 @@ export interface AddInterviewSheetRequestPayloadProps {
     isPremium?: boolean
     price?: number
     discountPercentage?: number
-    resource_link?: string
+    resources?: ResourceItem[]
     appliedCoupon?: typeof Schema.Types.ObjectId
     questions: InterviewSheetQuestionModel[]
     roadmap: RoadmapsType
@@ -671,6 +670,9 @@ export interface AddInterviewQuestionRequestPayloadProps {
     question: string
     answer: string
     frequency: QuestionFrequencyType
+    priority?: PriorityType
+    companyTypes?: CompanyType[]
+    resources?: ResourceItem[]
 }
 
 export interface UpdateCourseRequestPayloadProps {

@@ -181,6 +181,12 @@ export interface ProjectDocumentModel {
   updatedAt: string;
 }
 
+export interface ResourceItem {
+  type: string;
+  url: string;
+  label?: string;
+}
+
 export interface InterviewSheetModel {
   _id: string;
   title: string;
@@ -194,14 +200,9 @@ export interface InterviewSheetModel {
   price?: number;
   features?: string[];
   questions?: InterviewSheetQuestionModel[];
+  resources?: ResourceItem[];
   createdAt: string;
   updatedAt: string;
-}
-
-export interface QuestionResourcesModel {
-  youtubeURL?: string;
-  leetcodeURL?: string;
-  blogURL?: string;
 }
 
 export interface InterviewSheetQuestionModel {
@@ -212,7 +213,7 @@ export interface InterviewSheetQuestionModel {
   frequency: QuestionFrequencyType;
   isCompleted: boolean;
   isStarred?: boolean;
-  resources?: QuestionResourcesModel;
+  resources?: ResourceItem[];
 }
 
 export interface PlaylistModel {
