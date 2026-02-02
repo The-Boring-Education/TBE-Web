@@ -1,5 +1,4 @@
 import { useAuth } from "@tbe/auth";
-import { Button } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { config } from "@tbe/config/quizes";
 import { gamificationApi, quizApi } from "@tbe/services";
@@ -193,6 +192,12 @@ export default function QuizPage() {
           >
             <ArrowLeft className="w-4 h-4" />
             Back
+
+
+
+
+
+
           </button>
 
           <h1 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white hover:text-primary transition-all">
