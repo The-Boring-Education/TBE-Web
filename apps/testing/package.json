@@ -4,9 +4,9 @@
     "private": true,
     "description": "Comprehensive testing suite for TBE Platform",
     "scripts": {
-        "dev": "next dev -p 3099",
-        "build": "next build",
-        "start": "next start -p 3099",
+        "dev": "vitest watch",
+        "build": "vitest run",
+        "start": "echo 'Testing app has no start script'",
         "test": "vitest run",
         "test:unit": "vitest run --config vitest.config.ts",
         "test:unit:watch": "vitest watch --config vitest.config.ts",
