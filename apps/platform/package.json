@@ -16,8 +16,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.0.17",
-    "@opentelemetry/api": "^1.9.0",
-    "@sentry/nextjs": "^9.38.0",
+    "@sentry/nextjs": "^9.47.1",
     "@tbe/auth": "workspace:*",
     "@tbe/components": "workspace:*",
     "@tbe/config": "workspace:*",
