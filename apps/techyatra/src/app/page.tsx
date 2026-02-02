@@ -40,7 +40,7 @@ const Home = () => {
               size="LARGE"
               className="w-full sm:w-auto"
             >
-              Start Exploring 🎯
+              Get Started
             </Button>
 
             <Button
