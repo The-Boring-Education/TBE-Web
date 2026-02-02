@@ -161,11 +161,10 @@ if (process.env.NODE_ENV === 'production') {
     automaticVercelMonitors: true,
   };
 
-  module.exports = withSentryConfig(
-    withTM(nextConfig),
-    sentryWebpackPluginOptions
-  );
-} else {
-  // Skip Sentry in development to avoid OpenTelemetry errors
-  module.exports = withTM(nextConfig);
-}
+// Only use Sentry webpack plugin in production or when explicitly enabled
+// This prevents OpenTelemetry conflicts in development
+const shouldUseSentry = process.env.NODE_ENV === 'production' || process.env.ENABLE_SENTRY === 'true';
+
+module.exports = shouldUseSentry
+  ? withSentryConfig(withTM(nextConfig), sentryWebpackPluginOptions)
+  : withTM(nextConfig);
