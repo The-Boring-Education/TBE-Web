@@ -29,38 +29,8 @@
       "@test-utils/*": [
         "./src/test-utils/*"
       ],
-      "@/lib/constants": [
-        "../api/src/lib/constants"
-      ],
-      "@/lib/constants/*": [
-        "../api/src/lib/constants/*"
-      ],
-      "@/lib/database": [
-        "../api/src/lib/database"
-      ],
-      "@/lib/database/*": [
-        "../api/src/lib/database/*"
-      ],
-      "@/lib/interfaces": [
-        "../api/src/lib/interfaces"
-      ],
-      "@/lib/interfaces/*": [
-        "../api/src/lib/interfaces/*"
-      ],
-      "@/lib/services": [
-        "../api/src/lib/services"
-      ],
-      "@/lib/services/*": [
-        "../api/src/lib/services/*"
-      ],
-      "@/lib/utils": [
-        "../api/src/lib/utils"
-      ],
-      "@/lib/utils/*": [
-        "../api/src/lib/utils/*"
-      ],
-      "@/middleware": [
-        "../api/src/middleware"
+      "@/lib/*": [
+        "../api/src/lib/*"
       ],
       "@/middleware/*": [
         "../api/src/middleware/*"
@@ -77,6 +47,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "coverage"
+    "coverage",
+    "../api"
   ]
 }
