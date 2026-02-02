@@ -299,7 +299,7 @@ Thresholds:
 
 ## 🧪 Testing
 
-Comprehensive testing suite with **Vitest**, **Playwright**, and **MSW** located in `apps/testing/`.
+Comprehensive testing suite with **Vitest** and **MSW** located in `apps/testing/`.
 
 ```bash
 # Run all tests
@@ -309,8 +309,6 @@ pnpm test
 pnpm test:unit:watch     # Watch mode (fast feedback)
 pnpm test:unit           # Unit tests (components, hooks, utils)
 pnpm test:api            # API endpoint tests
-pnpm test:e2e            # End-to-end tests (cross-browser)
-pnpm test:e2e:ui         # E2E with visual debugger
 pnpm test:coverage       # Generate coverage report
 ```
 

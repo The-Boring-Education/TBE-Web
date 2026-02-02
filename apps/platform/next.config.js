@@ -148,18 +148,23 @@ const nextConfig = {
   },
 };
 
-// Sentry config
-const sentryWebpackPluginOptions = {
-  org: 'the-boring-education',
-  project: 'tbe-webapp',
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-  silent: !process.env.CI,
-  widenClientFileUpload: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
-};
+// Only apply Sentry in production to avoid OpenTelemetry conflicts in development
+if (process.env.NODE_ENV === 'production') {
+  // Sentry config
+  const sentryWebpackPluginOptions = {
+    org: 'the-boring-education',
+    project: 'tbe-webapp',
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    silent: !process.env.CI,
+    widenClientFileUpload: true,
+    disableLogger: true,
+    automaticVercelMonitors: true,
+  };
 
-module.exports = withSentryConfig(
-  withTM(nextConfig),
-  sentryWebpackPluginOptions
-);
+// Only use Sentry webpack plugin in production or when explicitly enabled
+// This prevents OpenTelemetry conflicts in development
+const shouldUseSentry = process.env.NODE_ENV === 'production' || process.env.ENABLE_SENTRY === 'true';
+
+module.exports = shouldUseSentry
+  ? withSentryConfig(withTM(nextConfig), sentryWebpackPluginOptions)
+  : withTM(nextConfig);

@@ -1,16 +1,33 @@
 // Import polyfills first to ensure they're loaded before Sentry
 import './polyfills';
 
-import * as Sentry from '@sentry/nextjs';
+// Only import Sentry in production to avoid OpenTelemetry conflicts in development
+let Sentry: any = null;
+
+if (process.env.NODE_ENV === 'production' || process.env.ENABLE_SENTRY === 'true') {
+  Sentry = require('@sentry/nextjs');
+}
 
 export async function register() {
-  if (process.env.NEXT_RUNTIME === 'nodejs') {
-    await import('../sentry.server.config');
+  // Only initialize Sentry if DSN is configured
+  if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    console.warn('Sentry DSN not configured, skipping Sentry initialization');
+    return;
   }
 
-  if (process.env.NEXT_RUNTIME === 'edge') {
-    await import('../sentry.edge.config');
+  try {
+    if (process.env.NEXT_RUNTIME === 'nodejs') {
+      await import('../sentry.server.config');
+    }
+
+    if (process.env.NEXT_RUNTIME === 'edge') {
+      await import('../sentry.edge.config');
+    }
+  } catch (error) {
+    // Gracefully handle Sentry initialization errors
+    // This prevents the app from crashing if Sentry/OpenTelemetry has issues
+    console.error('Failed to initialize Sentry:', error);
   }
 }
 
-export const onRequestError = Sentry.captureRequestError;
+export const onRequestError = Sentry?.captureRequestError || (() => {});

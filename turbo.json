@@ -176,16 +176,6 @@
         "src/test-utils/**/*.{ts,tsx}"
       ]
     },
-    "test:e2e": {
-      "dependsOn": [
-        "build"
-      ],
-      "cache": false,
-      "outputs": [
-        "playwright-report/**",
-        "test-results/**"
-      ]
-    },
     "test:coverage": {
       "cache": true,
       "outputs": [

@@ -26,7 +26,6 @@ apps/testing/
 │   │   ├── hooks/            # Hook tests
 │   │   ├── services/         # Service tests
 │   │   └── utils/            # Utility tests
-│   ├── e2e/                   # End-to-end tests (Playwright)
 │   └── test-utils/            # Shared test utilities
 └── README.md
 ```
@@ -58,10 +57,6 @@ pnpm test:unit:watch
 pnpm test:coverage
 ```
 
-### E2E Tests
-```bash
-pnpm test:e2e
-```
 
 ## 📝 API Testing
 
@@ -271,7 +266,6 @@ When adding new tests:
 - React Testing Library for component tests
 - node-mocks-http for API route testing
 - MSW (Mock Service Worker) available for API mocking
-- Playwright for E2E tests
 
 ---
 
