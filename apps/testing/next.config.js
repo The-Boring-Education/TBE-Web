@@ -2,6 +2,10 @@
 const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
+    typescript: {
+        tsconfigPath: "./tsconfig.json"
+    },
+
 
     // Transpile workspace packages
     transpilePackages: [
