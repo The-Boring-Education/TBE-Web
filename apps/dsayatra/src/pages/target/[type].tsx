@@ -45,7 +45,7 @@ export default function TargetRoadmap() {
       <div className="absolute inset-0 opacity-20" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
       }} />
-      
+
       <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
         <motion.div
@@ -82,32 +82,37 @@ export default function TargetRoadmap() {
                 <span className="text-3xl">{topic.emoji}</span>
                 <h2 className="text-2xl font-bold text-white">{topic.topic}</h2>
               </div>
-              
+
               <div className="grid gap-4">
-                {topic.questions.map((question, qIndex) => (
-                  <motion.a
-                    key={qIndex}
-                    href={question.leetcode_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (index * 0.1) + (qIndex * 0.05), duration: 0.3 }}
-                    className="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300 group"
-                  >
-                    <div className="flex-1">
-                      <h3 className="text-white font-medium group-hover:text-cyan-400 transition-colors">
-                        {question.title}
-                      </h3>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(question.difficulty)}`}>
-                        {question.difficulty}
-                      </span>
-                      <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 transition-colors" />
-                    </div>
-                  </motion.a>
-                ))}
+                {topic.questions.map((question, qIndex) => {
+                  const leetcodeResource = question.resources?.find(r => r.type === 'LEETCODE' || r.type === 'CODE');
+                  const url = leetcodeResource?.url || '#';
+
+                  return (
+                    <motion.a
+                      key={qIndex}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: (index * 0.1) + (qIndex * 0.05), duration: 0.3 }}
+                      className="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300 group"
+                    >
+                      <div className="flex-1">
+                        <h3 className="text-white font-medium group-hover:text-cyan-400 transition-colors">
+                          {question.title}
+                        </h3>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(question.difficulty)}`}>
+                          {question.difficulty}
+                        </span>
+                        <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 transition-colors" />
+                      </div>
+                    </motion.a>
+                  );
+                })}
               </div>
             </motion.div>
           ))}
