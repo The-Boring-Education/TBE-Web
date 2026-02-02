@@ -167,3 +167,10 @@ if (process.env.NODE_ENV === 'production') {
   module.exports = withTM(nextConfig);
 }
 
+// Only use Sentry webpack plugin in production or when explicitly enabled
+// This prevents OpenTelemetry conflicts in development
+const shouldUseSentry = process.env.NODE_ENV === 'production' || process.env.ENABLE_SENTRY === 'true';
+
+module.exports = shouldUseSentry
+  ? withSentryConfig(withTM(nextConfig), sentryWebpackPluginOptions)
+  : withTM(nextConfig);

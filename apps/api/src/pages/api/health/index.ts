@@ -53,7 +53,7 @@ async function checkServiceHealth(
                     "User-Agent": "TBE-Health-Check/1.0"
                 }
             } as RequestInit)
-        } catch (healthError) {
+        } catch (error) {
             response = await fetch(fallbackUrl, {
                 method: "GET",
                 timeout,
