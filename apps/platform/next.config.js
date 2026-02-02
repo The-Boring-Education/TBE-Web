@@ -56,7 +56,7 @@ const nextConfig = {
 
   webpack(config, { isServer, isEdgeRuntime }) {
     const path = require('path');
-    
+
     // Ensure webpack resolves from the app's node_modules first
     // This ensures date-fns v3 from app is used instead of v2 from components package
     const appNodeModules = path.resolve(__dirname, 'node_modules');
@@ -66,7 +66,7 @@ const nextConfig = {
     if (!config.resolve.modules.includes(appNodeModules)) {
       config.resolve.modules.unshift(appNodeModules);
     }
-    
+
     // Configure webpack to handle ESM packages properly
     // This ensures date-fns (ESM-only) can be used by react-datepicker (CJS)
     config.module.rules.push({
@@ -75,7 +75,7 @@ const nextConfig = {
         fullySpecified: false,
       },
     });
-    
+
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
@@ -148,18 +148,16 @@ const nextConfig = {
   },
 };
 
-// Only apply Sentry in production to avoid OpenTelemetry conflicts in development
-if (process.env.NODE_ENV === 'production') {
-  // Sentry config
-  const sentryWebpackPluginOptions = {
-    org: 'the-boring-education',
-    project: 'tbe-webapp',
-    authToken: process.env.SENTRY_AUTH_TOKEN,
-    silent: !process.env.CI,
-    widenClientFileUpload: true,
-    disableLogger: true,
-    automaticVercelMonitors: true,
-  };
+// Sentry config
+const sentryWebpackPluginOptions = {
+  org: 'the-boring-education',
+  project: 'tbe-webapp',
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  disableLogger: true,
+  automaticVercelMonitors: true,
+};
 
 // Only use Sentry webpack plugin in production or when explicitly enabled
 // This prevents OpenTelemetry conflicts in development
