@@ -1,17 +1,12 @@
+import type { ResourceItem } from '@tbe/types'
 import { useEffect, useRef, useState } from 'react'
-import { FaBook, FaYoutube } from 'react-icons/fa'
+import { FaBook, FaCode, FaYoutube } from 'react-icons/fa'
 import { SiLeetcode } from 'react-icons/si'
 
 import Button from '../Buttons/Button'
 
-export interface QuestionResources {
-    youtubeURL?: string
-    leetcodeURL?: string
-    blogURL?: string
-}
-
 export interface ResourceTooltipProps {
-    resources?: QuestionResources
+    resources?: ResourceItem[]
     theme?: 'light' | 'dark'
     className?: string
 }
@@ -26,8 +21,7 @@ const ResourceTooltip = ({
     const isDark = theme === 'dark'
 
     // Check if any resources exist
-    const hasResources =
-        resources?.youtubeURL || resources?.leetcodeURL || resources?.blogURL
+    const hasResources = resources && resources.length > 0
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -50,26 +44,21 @@ const ResourceTooltip = ({
         return null
     }
 
-    const resourceItems = [
-        {
-            url: resources?.youtubeURL,
-            icon: <FaYoutube className='w-3 h-3' />,
-            label: 'YouTube',
-            color: 'text-red-500',
-        },
-        {
-            url: resources?.leetcodeURL,
-            icon: <SiLeetcode className='w-3 h-3' />,
-            label: 'LeetCode',
-            color: 'text-amber-500',
-        },
-        {
-            url: resources?.blogURL,
-            icon: <FaBook className='w-3 h-3' />,
-            label: 'Blog',
-            color: 'text-blue-500',
-        },
-    ].filter((item) => item.url)
+    const getResourceIcon = (type: string) => {
+        switch (type) {
+            case 'YOUTUBE':
+                return { icon: <FaYoutube className='w-3 h-3' />, label: 'YouTube', color: 'text-red-500' }
+            case 'LEETCODE':
+                return { icon: <SiLeetcode className='w-3 h-3' />, label: 'LeetCode', color: 'text-amber-500' }
+            case 'CODE':
+                return { icon: <FaCode className='w-3 h-3' />, label: 'Code', color: 'text-emerald-500' }
+            case 'BLOG':
+            default:
+                return { icon: <FaBook className='w-3 h-3' />, label: 'Blog', color: 'text-blue-500' }
+        }
+    }
+
+    const filteredResources = resources?.filter((item) => item.url) || []
 
     const handleResourceClick = (url: string) => {
         window.open(url, '_blank', 'noopener,noreferrer')
@@ -90,26 +79,29 @@ const ResourceTooltip = ({
                         }
           `}
                 >
-                    {resourceItems.map((item, index) => (
-                        <button
-                            key={index}
-                            type='button'
-                            onClick={() => handleResourceClick(item.url!)}
-                            className={`
+                    {filteredResources.map((item, index) => {
+                        const { icon, label, color } = getResourceIcon(item.type)
+                        return (
+                            <button
+                                key={index}
+                                type='button'
+                                onClick={() => handleResourceClick(item.url)}
+                                className={`
                 w-full flex items-center gap-2 px-3 py-1.5 text-sm text-left whitespace-nowrap
                 transition-colors duration-100 cursor-pointer
                 ${index === 0 ? 'rounded-t' : ''}
-                ${index === resourceItems.length - 1 ? 'rounded-b' : ''}
+                ${index === filteredResources.length - 1 ? 'rounded-b' : ''}
                 ${isDark
-                                    ? 'text-gray-200 hover:bg-gray-700'
-                                    : 'text-gray-700 hover:bg-gray-100'
-                                }
+                                        ? 'text-gray-200 hover:bg-gray-700'
+                                        : 'text-gray-700 hover:bg-gray-100'
+                                    }
               `}
-                        >
-                            <span className={item.color}>{item.icon}</span>
-                            <span>{item.label}</span>
-                        </button>
-                    ))}
+                            >
+                                <span className={color}>{icon}</span>
+                                <span>{item.label || label}</span>
+                            </button>
+                        )
+                    })}
                 </div>
             )}
 

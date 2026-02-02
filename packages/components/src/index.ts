@@ -62,7 +62,7 @@ export { default as Pill } from "./common/Pill";
 export { default as IconPill } from "./common/Pill/IconPill";
 export { default as CircularProgressBar } from "./common/ProgressBar/CircularProgressBar";
 export { default as LinerProgressBar } from "./common/ProgressBar/LinerProgressBar";
-export type { QuestionResources, ResourceTooltipProps } from "./common/ResourceTooltip";
+export type { ResourceTooltipProps } from "./common/ResourceTooltip";
 export { default as ResourceTooltip } from "./common/ResourceTooltip";
 export { default as TabComponent } from "./common/Tab";
 export { default as Toast } from "./common/Toast";
@@ -163,30 +163,30 @@ export {
 } from "./common/GamificationDemo/GamificationProvider";
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
 export {
-    GTM_ID,
-    GTMNoScript,
-    GTMScript,
-    pushToDataLayer,
-    trackGTMEvent,
-    trackGTMPageView} from "./gtm";
+  GTM_ID,
+  GTMNoScript,
+  GTMScript,
+  pushToDataLayer,
+  trackGTMEvent,
+  trackGTMPageView} from "./gtm";
 export { default as Footer } from "./layout/Footer";
 export { default as Navbar } from "./layout/Navbar";
 export { default as Layout } from "./layout/Page";
 export { default as Section } from "./layout/Section";
 export type {
-    ArticleSchema,
-    BreadcrumbItem,
-    CourseSchema,
-    FAQItem,
-    SchemaType} from "./layout/SEO";
+  ArticleSchema,
+  BreadcrumbItem,
+  CourseSchema,
+  FAQItem,
+  SchemaType} from "./layout/SEO";
 export { default as SEO } from "./layout/SEO";
 export {
-    getArticleSchema,
-    getBreadcrumbSchema,
-    getCourseSchema,
-    getFAQSchema,
-    getOrganizationSchema,
-    getWebSiteSchema} from "./layout/SEO";
+  getArticleSchema,
+  getBreadcrumbSchema,
+  getCourseSchema,
+  getFAQSchema,
+  getOrganizationSchema,
+  getWebSiteSchema} from "./layout/SEO";
 export { PageSEO,default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./prepyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names

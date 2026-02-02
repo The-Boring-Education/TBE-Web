@@ -1,4 +1,5 @@
 import type { Document, Schema, Types } from "mongoose"
+import type { ResourceItem } from "@tbe/interface"
 
 import type {
     APIMethodTypes,
@@ -161,11 +162,8 @@ export interface UserCourseChapterModel {
     isCompleted?: boolean
 }
 
-export interface ResourceItem {
-    type: 'YOUTUBE' | 'BLOG' | 'CODE' | 'LEETCODE' | 'ARTICLE' | string
-    url: string
-    label?: string
-}
+// ResourceItem imported from @tbe/interface
+
 
 export interface InterviewSheetModel extends Document {
     name: string

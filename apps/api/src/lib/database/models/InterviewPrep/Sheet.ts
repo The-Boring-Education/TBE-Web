@@ -5,6 +5,7 @@ import {
   DATABASE_MODELS,
   INTERVIEW_QUESTION_FREQUENCY,
   PRIORITY_LEVELS,
+  RESOURCE_TYPES,
   ROADMAPS,
 } from '@/lib/constants';
 import type {
@@ -44,7 +45,7 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
     },
     resources: [
       {
-        type: { type: String, required: true },
+        type: { type: String, enum: RESOURCE_TYPES, required: true },
         url: { type: String, required: true },
         label: { type: String },
       },
@@ -78,7 +79,7 @@ const InterviewSheetSchema = new Schema<InterviewSheetModel>(
     },
     resources: [
       {
-        type: { type: String, required: true },
+        type: { type: String, enum: RESOURCE_TYPES, required: true },
         url: { type: String, required: true },
         label: { type: String },
       },

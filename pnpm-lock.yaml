@@ -109,6 +109,12 @@ importers:
       '@tbe/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@tbe/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
+      '@tbe/interface':
+        specifier: workspace:*
+        version: link:../../packages/interface
       axios:
         specifier: ^1.4.0
         version: 1.13.2
@@ -2157,6 +2163,9 @@ importers:
 
   packages/types:
     dependencies:
+      '@tbe/constants':
+        specifier: workspace:*
+        version: link:../constants
       react:
         specifier: ^18.3.1
         version: 18.3.1

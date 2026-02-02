@@ -17,6 +17,8 @@
   "dependencies": {
     "@sentry/nextjs": "^9.38.0",
     "@tbe/auth": "workspace:*",
+    "@tbe/constants": "workspace:*",
+    "@tbe/interface": "workspace:*",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

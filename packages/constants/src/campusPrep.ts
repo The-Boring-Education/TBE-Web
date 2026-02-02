@@ -1,6 +1,6 @@
-import { BookOpen, Briefcase, Clipboard, ClipboardList,Code, FileText, Users } from "lucide-react";
+import { BookOpen, Briefcase, Clipboard, ClipboardList, Code, FileText, Users } from "lucide-react";
 
-export interface ResourceItem {
+export interface CampusLandingResourceItem {
   title: string;
   desc: string;
   href: string;
@@ -8,7 +8,7 @@ export interface ResourceItem {
   isAvailable: boolean;
 }
 
-export const CAMPUS_PREP_RESOURCES: ResourceItem[] = [
+export const CAMPUS_PREP_RESOURCES: CampusLandingResourceItem[] = [
   {
     title: "Aptitude Practice",
     desc: "Daily challenges, streak tracking & top practice links for Quant, Verbal, DI, and Reasoning.",

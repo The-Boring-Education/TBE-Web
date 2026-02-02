@@ -27,6 +27,9 @@ import type {
   WebinarEnrolledUsersProps,
   WorkDomainType,
 } from '.';
+import { ResourceType } from '@tbe/constants';
+import type { ResourceItem } from '@tbe/types';
+export type { ResourceItem };
 
 export interface UserModel {
   name: string;
@@ -124,12 +127,8 @@ export interface CourseModel extends Document {
   difficultyLevel: DifficultyType;
   features: string[];
 }
+// ResourceItem imported from @tbe/types
 
-export interface ResourceItem {
-  type: 'YOUTUBE' | 'BLOG' | 'CODE' | 'LEETCODE' | 'ARTICLE' | string;
-  url: string;
-  label?: string;
-}
 
 export interface InterviewSheetModel extends Document {
   name: string;

@@ -77,7 +77,7 @@ export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 
 export const LEADERBOARD_ENUM = [
   'DAILY',
-  'WEEKLY', 
+  'WEEKLY',
   'MONTHLY',
 ] as const;
 
@@ -146,6 +146,11 @@ export const JOB_SKILL_NORMALIZER = [
   { label: ['Pandas', 'NumPy', 'Data Analysis'], value: 'data-analysis' },
   { label: ['Power BI', 'PowerBI', 'Tableau', 'Data Visualization'], value: 'data-viz' },
 ];
+
+export const RESOURCE_TYPES = ['YOUTUBE', 'BLOG', 'CODE', 'LEETCODE'] as const;
+
+export type ResourceType = (typeof RESOURCE_TYPES)[number];
+
 
 export const SKILL_BLACKLIST = [
   'communication',

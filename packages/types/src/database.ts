@@ -181,8 +181,10 @@ export interface ProjectDocumentModel {
   updatedAt: string;
 }
 
+import { ResourceType } from '@tbe/constants';
+
 export interface ResourceItem {
-  type: string;
+  type: ResourceType;
   url: string;
   label?: string;
 }
