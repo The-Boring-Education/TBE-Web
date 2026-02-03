@@ -103,7 +103,7 @@ const Button = ({
 }: ButtonProps) => {
   // Size classes mapping
   const sizeClasses = {
-    SMALL: 'px-2 py-1 text-xs',
+    SMALL: 'px-1 py-px text-xs',
     MEDIUM: 'px-3 py-2 text-sm',
     LARGE: 'px-4 py-3 text-base',
   };
@@ -162,7 +162,7 @@ const Button = ({
       className={`${animationClasses} ${isFullWidth ? 'w-full' : ''}`}
     >
       <motion.button
-        className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-2`}
+        className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-0.5`}
         disabled={!active || isLoading}
         onClick={handleClick}
         type={type}
