@@ -29,6 +29,12 @@
       ],
       "@test-utils/*": [
         "./src/test-utils/*"
+      ],
+      "@/lib/*": [
+        "../api/src/lib/*"
+      ],
+      "@/middleware/*": [
+        "../api/src/middleware/*"
       ]
     },
     "noEmit": true,
@@ -42,6 +48,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "coverage"
+    "coverage",
+    "../api"
   ]
 }

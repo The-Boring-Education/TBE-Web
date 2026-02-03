@@ -9,26 +9,24 @@ if (process.env.NODE_ENV === 'production' || process.env.ENABLE_SENTRY === 'true
 }
 
 export async function register() {
-  // Skip Sentry initialization in development to avoid OpenTelemetry errors
-  if (process.env.NODE_ENV === 'development') {
+  // Only initialize Sentry if DSN is configured
+  if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    console.warn('Sentry DSN not configured, skipping Sentry initialization');
     return;
   }
 
-  // Only initialize Sentry in production
-  if (Sentry && process.env.NEXT_RUNTIME === 'nodejs') {
-    try {
+  try {
+    if (process.env.NEXT_RUNTIME === 'nodejs') {
       await import('../sentry.server.config');
-    } catch (error) {
-      console.error('Sentry initialization failed:', error);
     }
-  }
 
-  if (Sentry && process.env.NEXT_RUNTIME === 'edge') {
-    try {
+    if (process.env.NEXT_RUNTIME === 'edge') {
       await import('../sentry.edge.config');
-    } catch (error) {
-      console.error('Sentry edge initialization failed:', error);
     }
+  } catch (error) {
+    // Gracefully handle Sentry initialization errors
+    // This prevents the app from crashing if Sentry/OpenTelemetry has issues
+    console.error('Failed to initialize Sentry:', error);
   }
 }
 
