@@ -42,17 +42,17 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                 {activeTab === "description" && (
                     <div className="space-y-3">
                         {/* Answer / Description (Markdown) */}
-                        <div className="space-y-3 pb-1 border-b border-gray-700">
+                        <div className="space-y-2 pb-3 border-b border-gray-700">
                             <div
-                                className="text-gray-300 leading-relaxed text-sm prose prose-invert prose-p:my-1 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
+                                className="text-gray-300 leading-relaxed text-sm prose prose-invert prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
                                 dangerouslySetInnerHTML={{ __html: md.render(question.answer || '') }}
                             />
                         </div>
 
                         {/* Resources */}
-                        <div className="space-y-3 pt-0">
-                            <Text level="h2" className="text-red-500 font-bold text-xl">Resources</Text>
-                            <div className="bg-[#111] border border-gray-800 rounded-lg p-3 flex gap-1 items-center justify-center">
+                        <div className="space-y-1.5 pt-1">
+                            <Text level="h2" className="text-red-500 font-bold text-sm">Resources</Text>
+                            <div className="bg-[#111] border border-gray-800 rounded-lg p-1.5 flex gap-4 items-center justify-center w-fit min-w-[120px]">
                                 {question.resources?.leetcodeURL && (
                                     <a
                                         href={question.resources.leetcodeURL}
@@ -61,7 +61,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                                         className="grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
                                         title="LeetCode Problem"
                                     >
-                                        <LeetCodeIcon />
+                                        <LeetCodeIcon className="w-5 h-5" />
                                     </a>
                                 )}
 
@@ -73,7 +73,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                                         className="grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
                                         title="YouTube Explanation"
                                     >
-                                        <YouTubeIcon />
+                                        <YouTubeIcon className="w-5 h-5" />
                                     </a>
                                 )}
                             </div>

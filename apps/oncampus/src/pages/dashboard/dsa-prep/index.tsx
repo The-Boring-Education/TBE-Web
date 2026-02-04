@@ -95,7 +95,7 @@ const DSAPrepPage = () => {
   }
 
   return (
-    <FlexContainer direction="col" className="h-screen bg-black overflow-hidden" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
+    <FlexContainer direction="col" className="h-screen bg-black overflow-hidden gap-3" fullWidth itemCenter={false} justifyCenter={false} wrap={false} >
       <Navbar theme="dark" variant="oncampus" />
 
       <FlexContainer direction="col" className="lg:flex-row flex-1 min-h-0 w-full mt-16" itemCenter={false} justifyCenter={false} wrap={false}>
@@ -103,11 +103,11 @@ const DSAPrepPage = () => {
         <div className={`flex flex-col flex-shrink-0 border-r border-gray-800 transition-all duration-300 ${selectedTopic ? 'w-full lg:w-72' : 'flex-1 lg:flex-none w-full lg:w-72'}`}>
           <div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-thin-grey">
             {!selectedTopic ? (
-              <div className="space-y-1">
-                <div className="mb-0">
+              <div className="space-y-3">
+                <div className="mb-3">
                   <LinkButton
                     href={routes.oncampus.dashboard}
-                    className="mb-0"
+                    className="mb-3"
                     buttonProps={{
                       variant: "OUTLINE",
                       size: "SMALL",
@@ -119,7 +119,7 @@ const DSAPrepPage = () => {
                   <p className="text-xs text-gray-400">Pick a category to start</p>
                 </div>
 
-                <FlexContainer direction="col" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
+                <FlexContainer direction="col" fullWidth itemCenter={false} justifyCenter={false} wrap={false} className="gap-1">
                   {topicsWithCounts.map(({ topic, count, label }) => (
                     <div
                       key={topic}

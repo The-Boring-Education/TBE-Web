@@ -73,7 +73,7 @@ const QuizzesDashboardPage = () => {
                   {/* Left accent bar */}
                   <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: '#ff5757' }} />
 
-                  <div className="relative p-2.5 flex flex-col h-full">
+                  <div className="relative p-2.5 pl-3 flex flex-col h-full">
                     {/* Icon Section */}
                     <div className="mb-1">
                       <div className="text-2xl group-hover:scale-110 transition-transform duration-300 inline-block">
@@ -98,7 +98,7 @@ const QuizzesDashboardPage = () => {
                       <Button
                         variant="OUTLINE"
                         size="SMALL"
-                        className="rounded-lg font-medium text-white bg-[#FF5757] hover:bg-[#FF5757]/90 text-sm px-1 py-1"
+                        className=" font-medium text-white bg-[#FF5757] hover:bg-[#FF5757]/90 text-sm px-1 py-1"
                         icon={<Play className="h-2.5 w-2.5 text-white" />}
                         text="Start"
                       />
