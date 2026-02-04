@@ -15,38 +15,23 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
       type: String,
       required: [true, 'Question Title is required'],
     },
-    description: {
+    answer: {
       type: String,
-      required: [true, 'Question Description is required'],
+      required: [true, 'Question Answer is required'],
     },
-    examples: {
-      type: [{
-        input: {
-          type: String,
-          required: true,
-        },
-        output: {
-          type: String,
-          required: true,
-        },
-        explanation: {
-          type: String,
-          required: true,
-        },
-      }],
-      required: [true, 'At least one example is required'],
-      validate: {
-        validator: (v: any[]) => Array.isArray(v) && v.length > 0,
-        message: 'At least one example is required',
+    resources: {
+      youtubeURL: {
+        type: String,
+        default: null,
       },
-    },
-    constraints: {
-      type: [String],
-      required: false,
-    },
-    hints: {
-      type: [String],
-      required: false,
+      leetcodeURL: {
+        type: String,
+        default: null,
+      },
+      blogURL: {
+        type: String,
+        default: null,
+      },
     },
     domain: {
       type: [String],
@@ -73,18 +58,6 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
       required: false,
       default: 0,
       index: true,
-    },
-    leetcodeLink: {
-      type: String,
-      required: false,
-      validate: {
-        validator: (v: string) => !v || /^https:\/\/leetcode\.com\/problems\/.+\/$/.test(v),
-        message: 'Invalid LeetCode URL format. Must match: https://leetcode.com/problems/{problem-slug}/',
-      },
-    },
-    youtubeSearchLink: {
-      type: String,
-      required: false,
     },
   },
   {

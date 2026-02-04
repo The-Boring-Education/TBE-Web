@@ -1,4 +1,4 @@
-import { BookOpen, Briefcase, Clipboard, ClipboardList,Code, FileText, Users } from "lucide-react";
+import { BookOpen, Briefcase, Clipboard, ClipboardList, Code, FileText, Users } from "lucide-react";
 
 export interface ResourceItem {
   title: string;
@@ -59,3 +59,31 @@ export const CAMPUS_PREP_RESOURCES: ResourceItem[] = [
     isAvailable: false
   }
 ];
+
+export const TOPIC_LABELS: Record<string, string> = {
+  ARRAY: "Array",
+  STRING: "String",
+  HASHMAP: "HashMap",
+  TWO_POINTERS: "Two Pointers",
+  SLIDING_WINDOW: "Sliding Window",
+  BINARY_SEARCH: "Binary Search",
+  SORTING: "Sorting",
+  LINKED_LIST: "Linked List",
+  STACK: "Stack",
+  QUEUE: "Queue",
+  TREE: "Tree",
+  BINARY_TREE: "Binary Tree",
+  BST: "Binary Search Tree",
+  GRAPH: "Graph",
+  DFS: "Depth First Search",
+  BFS: "Breadth First Search",
+  BACKTRACKING: "Backtracking",
+  DYNAMIC_PROGRAMMING: "Dynamic Programming",
+  GREEDY: "Greedy",
+  MATH: "Math",
+  BIT_MANIPULATION: "Bit Manipulation",
+  TRIE: "Trie",
+  HEAP: "Heap",
+  UNION_FIND: "Union Find",
+  PREFIX_SUM: "Prefix Sum",
+};

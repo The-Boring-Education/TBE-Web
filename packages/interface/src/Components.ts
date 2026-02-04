@@ -890,19 +890,15 @@ export interface DsaQuestion {
   name: string;
   difficultyLevel: QuestionDifficulty;
   id?: string | number;
-  content?: string;  
-  description?: string;  
-  examples?: {      
-    input: string;
-    output: string;
-    explanation: string;
-  }[];
-  constraints?: string[];  
+  answer?: string;
+  resources?: {
+    youtubeURL?: string;
+    leetcodeURL?: string;
+    blogURL?: string;
+  };
   domain?: string[];
   companyType?: string[];
   topics?: string[];
-  leetcodeLink?: string;
-  youtubeSearchLink?: string;
 }
 
 export interface DsaQuestionListProps {

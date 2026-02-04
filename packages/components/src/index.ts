@@ -163,30 +163,30 @@ export {
 } from "./common/GamificationDemo/GamificationProvider";
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
 export {
-    GTM_ID,
-    GTMNoScript,
-    GTMScript,
-    pushToDataLayer,
-    trackGTMEvent,
-    trackGTMPageView} from "./gtm";
+  GTM_ID,
+  GTMNoScript,
+  GTMScript,
+  pushToDataLayer,
+  trackGTMEvent,
+  trackGTMPageView} from "./gtm";
 export { default as Footer } from "./layout/Footer";
 export { default as Navbar } from "./layout/Navbar";
 export { default as Layout } from "./layout/Page";
 export { default as Section } from "./layout/Section";
 export type {
-    ArticleSchema,
-    BreadcrumbItem,
-    CourseSchema,
-    FAQItem,
-    SchemaType} from "./layout/SEO";
+  ArticleSchema,
+  BreadcrumbItem,
+  CourseSchema,
+  FAQItem,
+  SchemaType} from "./layout/SEO";
 export { default as SEO } from "./layout/SEO";
 export {
-    getArticleSchema,
-    getBreadcrumbSchema,
-    getCourseSchema,
-    getFAQSchema,
-    getOrganizationSchema,
-    getWebSiteSchema} from "./layout/SEO";
+  getArticleSchema,
+  getBreadcrumbSchema,
+  getCourseSchema,
+  getFAQSchema,
+  getOrganizationSchema,
+  getWebSiteSchema} from "./layout/SEO";
 export { PageSEO,default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./prepyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names
@@ -230,4 +230,5 @@ export { default as PageHeader } from "./layout/PageHeader";
 export { default as QuestionDetails } from "./layout/QuestionDetails";
 export { default as QuestionSidebar } from "./layout/QuestionSidebar";
 export * from "./techyatra";
+export * from "./common/Icons/ExternalIcons";
 export * from "./ui";
