@@ -55,7 +55,7 @@ const Navbar = ({
       return 'glass-dark backdrop-blur-md';
     }
     if (theme === 'dark') {
-      return 'bg-[#0A0A0A]';
+      return 'bg-black';
     }
     return 'bg-white';
   };
@@ -85,7 +85,7 @@ const Navbar = ({
   return (
     <motion.header
       animate={{ y: isVisible ? 0 : -100 }}
-      className={`fixed top-0 left-0 right-0 z-40 ${getBackgroundClass()} shadow-sm`}
+      className={`fixed top-0 left-0 right-0 z-40 ${getBackgroundClass()} shadow-md shadow-white/5 dark:shadow-[0_1px_15px_rgba(255,255,255,0.1)]`}
       initial={{ y: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
