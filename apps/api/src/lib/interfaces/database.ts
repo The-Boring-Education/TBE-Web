@@ -212,11 +212,21 @@ export interface UserSheetQuestionModel {
 export interface DSAQuestionModel extends Document {
     _id: typeof Schema.Types.ObjectId
     title: string
-    content: string
+    description: string  
+    examples: {          
+        input: string
+        output: string
+        explanation: string
+    }[]
+    constraints?: string[]  
+    hints?: string[]        
     domain: DSADomainType[]
     difficulty: DSADifficultyType
     companyTypes: CompanyType[]
     topics: DSATopicType[]
+    order?: number
+    leetcodeLink?: string
+    youtubeSearchLink?: string
     createdAt: Date
     updatedAt: Date
 }

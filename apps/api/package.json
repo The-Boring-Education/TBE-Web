@@ -41,6 +41,7 @@
     "@types/uuid": "^9.0.1",
     "eslint": "^9.34.0",
     "eslint-config-next": "^13.2.4",
+    "tsx": "^4.21.0",
     "typescript": "5.9.2"
   }
 }

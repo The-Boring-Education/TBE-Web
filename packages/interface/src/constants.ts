@@ -75,11 +75,11 @@ interface FooterProps {
   variant?: FooterVariant;
 }
 
-type QuestionDifficulty = 
- "EASY" | "MEDIUM" | "HARD"
+type QuestionDifficulty =
+  "EASY" | "MEDIUM" | "HARD"
 
 
- type DsaSectionTabs = "description" | "topics" | "companies";
+type DsaSectionTabs = "description" | "topics" | "companies" | "code";
 
 
 export type {
@@ -93,4 +93,5 @@ export type {
   NavbarProps,
   NavbarVariantConfig,
   OutlineCardProps,
-  QuestionDifficulty};
+  QuestionDifficulty
+};

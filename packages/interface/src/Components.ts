@@ -890,13 +890,22 @@ export interface DsaQuestion {
   name: string;
   difficultyLevel: QuestionDifficulty;
   id?: string | number;
-  content?: string;
+  content?: string;  
+  description?: string;  
+  examples?: {      
+    input: string;
+    output: string;
+    explanation: string;
+  }[];
+  constraints?: string[];  
   domain?: string[];
   companyType?: string[];
-  topics?: string[]
+  topics?: string[];
+  leetcodeLink?: string;
+  youtubeSearchLink?: string;
 }
 
- export interface DsaQuestionListProps {
+export interface DsaQuestionListProps {
   questions: DsaQuestion[];
   selectedQuestionId?: string | number;
   onQuestionClick?: (question: DsaQuestion) => void;
@@ -911,6 +920,6 @@ export interface DsaQuestionCardProps {
 }
 
 export interface QuestionDetailProps {
-    question: DsaQuestion | null;
+  question: DsaQuestion | null;
 }
 

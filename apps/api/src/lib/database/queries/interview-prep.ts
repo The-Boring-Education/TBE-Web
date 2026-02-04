@@ -1,4 +1,5 @@
 import { modelSelectParams } from "@/lib/constants"
+import { generateYouTubeSearchLink } from "@/lib/utils/youtube-link-generator"
 import type {
     AddInterviewQuestionRequestPayloadProps,
     AddInterviewSheetRequestPayloadProps,
@@ -437,205 +438,215 @@ const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
 }
 
 const deleteInterviewSheetFromDB = async (
-  sheetId: string
+    sheetId: string
 ): Promise<DatabaseQueryResponseType> => {
-  try {
-    const sheet = await InterviewSheet.findById(sheetId);
-    if (!sheet) {
-      return { error: "Interview sheet not found" };
-    }
-    const questionsCount = sheet.questions?.length || 0;
-    const sheetName = sheet.name;
-    await InterviewSheet.findByIdAndDelete(sheetId);
+    try {
+        const sheet = await InterviewSheet.findById(sheetId);
+        if (!sheet) {
+            return { error: "Interview sheet not found" };
+        }
+        const questionsCount = sheet.questions?.length || 0;
+        const sheetName = sheet.name;
+        await InterviewSheet.findByIdAndDelete(sheetId);
 
-    console.log(
-      `Interview sheet "${sheetName}" (${sheetId}) deleted successfully | Questions removed: ${questionsCount}`
-    );
-    return {
-      data: {
-        deletedSheetId: sheetId,
-        deletedSheetName: sheetName,
-        questionsDeleted: questionsCount,
-        timestamp: new Date().toISOString(),
-      },
-    };
-  } catch (error) {
-    console.error("Error deleting interview sheet:", error);
-    return { error: String(error) };
-  }
+        console.log(
+            `Interview sheet "${sheetName}" (${sheetId}) deleted successfully | Questions removed: ${questionsCount}`
+        );
+        return {
+            data: {
+                deletedSheetId: sheetId,
+                deletedSheetName: sheetName,
+                questionsDeleted: questionsCount,
+                timestamp: new Date().toISOString(),
+            },
+        };
+    } catch (error) {
+        console.error("Error deleting interview sheet:", error);
+        return { error: String(error) };
+    }
 };
 
 interface DSASheetFilters {
-  domain?: DSADomainType | DSADomainType[];
-  difficulty?: DSADifficultyType | DSADifficultyType[];
-  companyTypes?: string | string[];
-  topics?: string | string[];
-  page?: number;
-  limit?: number;
+    domain?: DSADomainType | DSADomainType[];
+    difficulty?: DSADifficultyType | DSADifficultyType[];
+    companyTypes?: string | string[];
+    topics?: string | string[];
+    page?: number;
+    limit?: number;
 }
 
 const getAllDSAQuestionsFromDB = async (
-  filters: DSASheetFilters = {}
+    filters: DSASheetFilters = {}
 ): Promise<DatabaseQueryResponseType> => {
-  try {
-    const { domain, difficulty, companyTypes, topics, page = 1, limit = 50 } = filters;
-    
-    // Build match stage for filtering
-    const matchStage: any = {};
+    try {
+        const { domain, difficulty, companyTypes, topics, page = 1, limit = 50 } = filters;
 
-    if (domain) {
-      const domains = Array.isArray(domain) ? domain : [domain];
-      matchStage.domain = { $in: domains };
-    }
+        // Build match stage for filtering
+        const matchStage: any = {};
 
-    if (difficulty) {
-      const difficulties = Array.isArray(difficulty) ? difficulty : [difficulty];
-      matchStage.difficulty = { $in: difficulties };
-    }
-
-    if (companyTypes) {
-      const types = Array.isArray(companyTypes) ? companyTypes : [companyTypes];
-      matchStage.companyTypes = { $in: types };
-    }
-
-    if (topics) {
-      const topicsList = Array.isArray(topics) ? topics : [topics];
-      matchStage.topics = { $in: topicsList };
-    }
-
-    const totalCount = await DSAQuestion.countDocuments(matchStage);
-
-    const questions = await DSAQuestion.find(matchStage)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
-
-    return {
-      data: {
-        questions,
-        pagination: {
-          total: totalCount,
-          page,
-          limit,
-          totalPages: Math.ceil(totalCount / limit),
-          hasMore: page * limit < totalCount
+        if (domain) {
+            const domains = Array.isArray(domain) ? domain : [domain];
+            matchStage.domain = { $in: domains };
         }
-      }
-    };
-  } catch (error) {
-    console.error("Error fetching DSA questions:", error);
-    return { error: "Failed to fetch DSA questions", details: error };
-  }
+
+        if (difficulty) {
+            const difficulties = Array.isArray(difficulty) ? difficulty : [difficulty];
+            matchStage.difficulty = { $in: difficulties };
+        }
+
+        if (companyTypes) {
+            const types = Array.isArray(companyTypes) ? companyTypes : [companyTypes];
+            matchStage.companyTypes = { $in: types };
+        }
+
+        if (topics) {
+            const topicsList = Array.isArray(topics) ? topics : [topics];
+            matchStage.topics = { $in: topicsList };
+        }
+
+        const totalCount = await DSAQuestion.countDocuments(matchStage);
+
+        const questions = await DSAQuestion.find(matchStage)
+            .sort({ order: 1, createdAt: -1 }) // Sort by order first, then by createdAt
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .lean();
+
+        return {
+            data: {
+                questions,
+                pagination: {
+                    total: totalCount,
+                    page,
+                    limit,
+                    totalPages: Math.ceil(totalCount / limit),
+                    hasMore: page * limit < totalCount
+                }
+            }
+        };
+    } catch (error) {
+        console.error("Error fetching DSA questions:", error);
+        return { error: "Failed to fetch DSA questions", details: error };
+    }
 };
 
 const getDSASheetMetadataFromDB = async (): Promise<DatabaseQueryResponseType> => {
-  try {
-    const [domains, difficulties, companyTypes, topics, totalCount] = await Promise.all([
-      DSAQuestion.distinct('domain'),
-      DSAQuestion.distinct('difficulty'),
-      DSAQuestion.distinct('companyTypes'),
-      DSAQuestion.distinct('topics'),
-      DSAQuestion.countDocuments()
-    ]);
+    try {
+        const [domains, difficulties, companyTypes, topics, totalCount] = await Promise.all([
+            DSAQuestion.distinct('domain'),
+            DSAQuestion.distinct('difficulty'),
+            DSAQuestion.distinct('companyTypes'),
+            DSAQuestion.distinct('topics'),
+            DSAQuestion.countDocuments()
+        ]);
 
-    return {
-      data: {
-        totalQuestions: totalCount,
-        filters: {
-          domains: domains.sort(),
-          difficulties,
-          companyTypes: companyTypes.sort(),
-          topics: topics.sort()
-        }
-      }
-    };
-  } catch (error) {
-    return { error: "Failed to fetch metadata", details: error };
-  }
+        return {
+            data: {
+                totalQuestions: totalCount,
+                filters: {
+                    domains: domains.sort(),
+                    difficulties,
+                    companyTypes: companyTypes.sort(),
+                    topics: topics.sort()
+                }
+            }
+        };
+    } catch (error) {
+        return { error: "Failed to fetch metadata", details: error };
+    }
 };
 
 const addDSAQuestionToDB = async (
-  questionPayload: {
-    title: string;
-    content: string;
-    domain: DSADomainType[];
-    difficulty: DSADifficultyType;
-    companyTypes: string[];
-    topics: string[];
-  }
+    questionPayload: {
+        title: string;
+        content: string;
+        domain: DSADomainType[];
+        difficulty: DSADifficultyType;
+        companyTypes: string[];
+        topics: string[];
+        order?: number;
+        leetcodeLink?: string;
+        youtubeSearchLink?: string;
+    }
 ): Promise<DatabaseQueryResponseType> => {
-  try {
-    const question = new DSAQuestion(questionPayload);
-    await question.save();
-    return { data: question };
-  } catch (error) {
-    return { error: "Failed to add DSA question", details: error };
-  }
+    try {
+        // Auto-generate YouTube search link if not provided
+        const youtubeSearchLink = questionPayload.youtubeSearchLink ||
+            generateYouTubeSearchLink(questionPayload.title);
+
+        const question = new DSAQuestion({
+            ...questionPayload,
+            youtubeSearchLink
+        });
+        await question.save();
+        return { data: question };
+    } catch (error) {
+        return { error: "Failed to add DSA question", details: error };
+    }
 };
 
 const getDSAQuestionsGroupedByTopic = async (
-  domain: DSADomainType,
-  difficulty?: DSADifficultyType,
-  companyType?: string
+    domain: DSADomainType,
+    difficulty?: DSADifficultyType,
+    companyType?: string
 ): Promise<DatabaseQueryResponseType> => {
-  try {
-    // Build match stage for filtering
-    const matchStage: any = {
-      domain: { $in: [domain] }
-    };
+    try {
+        // Build match stage for filtering
+        const matchStage: any = {
+            domain: { $in: [domain] }
+        };
 
-    if (difficulty) {
-      matchStage.difficulty = difficulty;
-    }
-
-    if (companyType) {
-      matchStage.companyTypes = { $in: [companyType] };
-    }
-
-    // Use aggregation to group questions by topic
-    const groupedQuestions = await DSAQuestion.aggregate([
-      { $match: matchStage },
-      { $unwind: "$topics" },
-      {
-        $group: {
-          _id: "$topics",
-          questions: {
-            $push: {
-              _id: "$_id",
-              title: "$title",
-              content: "$content",
-              domain: "$domain",
-              difficulty: "$difficulty",
-              companyTypes: "$companyTypes",
-              topics: "$topics"
-            }
-          },
-          count: { $sum: 1 }
+        if (difficulty) {
+            matchStage.difficulty = difficulty;
         }
-      },
-      { $sort: { _id: 1 } }
-    ]);
 
-    // Transform to a more usable format
-    const result = {
-      domain,
-      filters: {
-        difficulty,
-        companyType
-      },
-      topics: groupedQuestions.map((group) => ({
-        topic: group._id,
-        questions: group.questions,
-        count: group.count
-      })),
-      totalQuestions: groupedQuestions.reduce((sum, g) => sum + g.count, 0)
-    };
+        if (companyType) {
+            matchStage.companyTypes = { $in: [companyType] };
+        }
 
-    return { data: result };
-  } catch (error) {
-    return { error: "Failed to fetch DSA questions by topic", details: error };
-  }
+        // Use aggregation to group questions by topic
+        const groupedQuestions = await DSAQuestion.aggregate([
+            { $match: matchStage },
+            { $unwind: "$topics" },
+            {
+                $group: {
+                    _id: "$topics",
+                    questions: {
+                        $push: {
+                            _id: "$_id",
+                            title: "$title",
+                            content: "$content",
+                            domain: "$domain",
+                            difficulty: "$difficulty",
+                            companyTypes: "$companyTypes",
+                            topics: "$topics"
+                        }
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]);
+
+        // Transform to a more usable format
+        const result = {
+            domain,
+            filters: {
+                difficulty,
+                companyType
+            },
+            topics: groupedQuestions.map((group) => ({
+                topic: group._id,
+                questions: group.questions,
+                count: group.count
+            })),
+            totalQuestions: groupedQuestions.reduce((sum, g) => sum + g.count, 0)
+        };
+
+        return { data: result };
+    } catch (error) {
+        return { error: "Failed to fetch DSA questions by topic", details: error };
+    }
 };
 
 export {
@@ -661,6 +672,7 @@ export {
     markQuestionCompletedByUser,
     markQuestionStarredByUser,
     updateInterviewQuestionInDB,
-    updateInterviewSheetInDB}
+    updateInterviewSheetInDB
+}
 
 export type { DSASheetFilters }
