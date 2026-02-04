@@ -38,7 +38,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-6">
                 {activeTab === "description" && (
                     <div className="space-y-6">
                         {/* Answer / Description (Markdown) */}
