@@ -18,8 +18,8 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
     }
 
     return (
-        <FlexContainer direction="col" className="text-white space-y-6 h-full relative" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
-            <div className="space-y-4">
+        <FlexContainer direction="col" className="text-white space-y-4 h-full relative" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
+            <div className="space-y-2">
                 <Text level="h1" className="text-2xl font-bold tracking-tight">{question.name}</Text>
 
                 <div className="flex gap-3">
@@ -38,21 +38,21 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                 </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-3">
                 {activeTab === "description" && (
-                    <div className="space-y-6">
+                    <div className="space-y-3">
                         {/* Answer / Description (Markdown) */}
-                        <div className="space-y-3 pb-6 border-b border-gray-700">
+                        <div className="space-y-3 pb-1 border-b border-gray-700">
                             <div
-                                className="text-gray-300 leading-relaxed text-sm prose prose-invert prose-p:my-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
+                                className="text-gray-300 leading-relaxed text-sm prose prose-invert prose-p:my-1 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
                                 dangerouslySetInnerHTML={{ __html: md.render(question.answer || '') }}
                             />
                         </div>
 
                         {/* Resources */}
-                        <div className="space-y-3 pt-2">
-                            <Text level="h2" className="text-red-500 font-bold text-sm">Resources</Text>
-                            <div className="bg-[#111] border border-gray-800 rounded-lg p-3 flex gap-4 items-center justify-center">
+                        <div className="space-y-3 pt-0">
+                            <Text level="h2" className="text-red-500 font-bold text-xl">Resources</Text>
+                            <div className="bg-[#111] border border-gray-800 rounded-lg p-3 flex gap-1 items-center justify-center">
                                 {question.resources?.leetcodeURL && (
                                     <a
                                         href={question.resources.leetcodeURL}

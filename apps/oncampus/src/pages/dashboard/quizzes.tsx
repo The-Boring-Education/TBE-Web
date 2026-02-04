@@ -67,7 +67,7 @@ const QuizzesDashboardPage = () => {
                 key={category._id}
                 type="button"
                 onClick={() => startQuiz(category._id)}
-                className="group text-left"
+                className="group text-left ml-1"
               >
                 <div className="relative bg-black rounded-lg overflow-hidden border border-gray-800 hover:border-[#ff5757]/50 transition-all duration-300 shadow-lg" style={{ boxShadow: '0 0 20px rgba(255, 87, 87, 0.1)' }}>
                   {/* Left accent bar */}

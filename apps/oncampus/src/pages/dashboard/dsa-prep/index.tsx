@@ -1,4 +1,4 @@
-import { DsaQuestionList, LinkButton, LoadingSpinner, Navbar, QuestionDetailPanel, FlexContainer, Text } from "@tbe/components"
+import { DsaQuestionList, LinkButton, LoadingSpinner, Navbar, QuestionDetailPanel, FlexContainer, Text, Button } from "@tbe/components"
 import { routes, TOPIC_LABELS } from "@tbe/constants"
 import { useApi, useUser } from "@tbe/hooks"
 import type { DsaQuestion } from "@tbe/interface"
@@ -101,16 +101,20 @@ const DSAPrepPage = () => {
       <FlexContainer direction="col" className="lg:flex-row flex-1 min-h-0 w-full mt-16" itemCenter={false} justifyCenter={false} wrap={false}>
         {/* Left Sidebar - Topics or Questions */}
         <div className={`flex flex-col flex-shrink-0 border-r border-gray-800 transition-all duration-300 ${selectedTopic ? 'w-full lg:w-72' : 'flex-1 lg:flex-none w-full lg:w-72'}`}>
-          <div className="flex-1 overflow-y-auto px-4 py-6 scrollbar-default">
+          <div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-thin-grey">
             {!selectedTopic ? (
-              <div className="space-y-4">
-                <div className="mb-6">
-                  <Link
+              <div className="space-y-1">
+                <div className="mb-0">
+                  <LinkButton
                     href={routes.oncampus.dashboard}
-                    className="border border-gray-700 hover:border-gray-500 text-white text-xs px-3 py-1.5 rounded-md transition-all duration-200 bg-transparent hover:bg-[#111] inline-block mb-4"
-                  >
-                    ← Back to Dashboard
-                  </Link>
+                    className="mb-0"
+                    buttonProps={{
+                      variant: "OUTLINE",
+                      size: "SMALL",
+                      text: "← Back",
+                      className: "border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10 "
+                    }}
+                  />
                   <h1 className="text-xl font-bold text-white">Available Topics</h1>
                   <p className="text-xs text-gray-400">Pick a category to start</p>
                 </div>
@@ -119,7 +123,7 @@ const DSAPrepPage = () => {
                   {topicsWithCounts.map(({ topic, count, label }) => (
                     <div
                       key={topic}
-                      className="w-full border border-gray-800 rounded-lg px-3 py-2.5 mb-2 hover:border-gray-600 hover:bg-[#111] transition-all duration-200 cursor-pointer bg-transparent group"
+                      className="w-full border border-gray-800 rounded-lg px-3 py-2.5 hover:border-gray-600 hover:bg-[#111] transition-all duration-200 cursor-pointer bg-transparent group"
                       onClick={() => handleTopicClick(topic)}
                     >
                       <FlexContainer className="justify-between" fullWidth itemCenter>
@@ -135,15 +139,16 @@ const DSAPrepPage = () => {
                 </FlexContainer>
               </div>
             ) : (
-              <div className="space-y-4">
-                <button
+              <div className="space-y-3">
+                <Button
                   onClick={handleBackToTopics}
-                  className="border border-gray-700 hover:border-gray-500 text-white text-xs px-3 py-1.5 rounded-md transition-all duration-200 bg-transparent hover:bg-[#111] mb-4 flex items-center gap-1"
-                >
-                  ← Back to Topics
-                </button>
+                  variant="OUTLINE"
+                  size="SMALL"
+                  text="← Back"
+                  className="border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10"
+                />
 
-                <div className="mb-4">
+                <div className="mb-1">
                   <Text level="p" className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                     Questions
                   </Text>
@@ -160,7 +165,7 @@ const DSAPrepPage = () => {
 
         {/* Main Content Area */}
         <div className={`flex-1 flex flex-col min-w-0 bg-[#0A0A0A] ${!selectedTopic ? 'hidden lg:flex' : 'flex'}`}>
-          <div className="flex-1 overflow-y-auto scrollbar-hide px-8 py-6 scroll-smooth" id="right-scroll-area">
+          <div className="flex-1 overflow-y-auto scrollbar-thin-grey px-6 py-4 scroll-smooth" id="right-scroll-area">
             {!selectedTopic ? (
               <FlexContainer className="h-full" itemCenter justifyCenter fullWidth wrap={false}>
                 <div className="text-center space-y-2">
@@ -170,7 +175,7 @@ const DSAPrepPage = () => {
               </FlexContainer>
             ) : (
               <div className="max-w-4xl mx-auto w-full">
-                <div className="mb-8 pb-6 border-b border-gray-800/50">
+                <div className="mb-4 pb-4 border-b border-gray-800/50">
                   <Text level="h2" className="text-2xl font-bold text-white mb-1">
                     {TOPIC_LABELS[selectedTopic] || selectedTopic}
                   </Text>
@@ -179,29 +184,8 @@ const DSAPrepPage = () => {
                   </Text>
                 </div>
 
-                <div className="pb-10">
+                <div className="pb-4">
                   <QuestionDetailPanel question={selectedQuestion} />
-                </div>
-
-                {/* End of Content Indicator */}
-                <div className="mt-12 pt-8 border-t border-gray-800/50 flex flex-col items-center justify-center text-center space-y-4 pb-20">
-                  <div className="flex items-center gap-2">
-                    <div className="h-px w-8 bg-gray-800"></div>
-                    <Text level="p" className="text-xs text-gray-500 uppercase tracking-widest font-medium">End of Content</Text>
-                    <div className="h-px w-8 bg-gray-800"></div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      const rightCol = document.getElementById('right-scroll-area');
-                      rightCol?.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className="text-xs text-gray-400 hover:text-white transition-colors bg-gray-800/50 hover:bg-gray-800 px-3 py-1.5 rounded-full flex items-center gap-1.5"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                    </svg>
-                    Back to Top
-                  </button>
                 </div>
               </div>
             )}

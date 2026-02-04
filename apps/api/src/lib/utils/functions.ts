@@ -327,6 +327,16 @@ const isVercelInternalIP = (ip?: string) => {
 };  
   
 
+const generateYouTubeSearchLink = (questionTitle: string): string => {
+    if (!questionTitle || questionTitle.trim() === "") {
+        return ""
+    }
+
+    const searchQuery = `${questionTitle.trim()} leetcode solution`
+    const encodedQuery = encodeURIComponent(searchQuery)
+    return `https://www.youtube.com/results?search_query=${encodedQuery}`
+}
+
 export {
     buildOrderPayload,
     calculateUserPointsForAction,
@@ -338,10 +348,12 @@ export {
     fetchAPIData,
     fetchPlaylistData,
     generatePaymentOrderId,
+    generateYouTubeSearchLink,
     getPYSubscriptionFeaturesByType,
     isProgramActive,
     isVercelInternalIP,
     normalizeAPIPayload,
     sendAPIResponse,
     validateWebhookEvent,
-    verifyWebhookSignature  }
+    verifyWebhookSignature
+}
