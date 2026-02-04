@@ -44,7 +44,7 @@ const QuizzesDashboardPage = () => {
     <div className="py-3 px-3">
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
-        <div className="text-center mb-3">
+        <div className="mb-3">
           <h1 className="text-xl font-bold text-white mb-1">Available Quizes</h1>
           <p className="text-xs text-gray-400">Pick a category to start</p>
         </div>
@@ -75,22 +75,21 @@ const QuizzesDashboardPage = () => {
 
                   <div className="relative p-3 flex flex-col h-full">
                     {/* Icon Section */}
-                    <div className="mb-2">
+                    <div className="mb-1">
                       <div className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">
                         {category.categoryIcon}
                       </div>
                     </div>
 
                     {/* Title Section */}
-                    <div className="mb-1.5">
-                      <h3 className="text-sm font-bold text-white group-hover:text-[#ff5757] transition-colors duration-300">
+                    <div className="mb-1">
+                      <h3 className="text-xl font-bold text-white group-hover:text-[#ff5757] transition-colors duration-300">
                         {category.categoryName}
                       </h3>
-                      <p className="text-xs font-medium" style={{ color: '#ff5757' }}>Quiz</p>
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-400 text-xs leading-tight mb-2.5 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
+                    <p className="text-gray-400 text-xs leading-tight mb-2 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
                       {category.categoryDescription}
                     </p>
 
@@ -99,9 +98,9 @@ const QuizzesDashboardPage = () => {
                       <Button
                         variant="OUTLINE"
                         size="SMALL"
-                        className="rounded-md mx-auto text-white bg-[#FF5757] hover:bg-[#FF5757]/90 text-xs px-3 py-1.5"
-                        icon={<Play className="h-3 w-3" />}
-                        text="Start Quiz"
+                        className="rounded-lg font-medium text-white bg-[#FF5757] hover:bg-[#FF5757]/90 text-sm px-1 py-1"
+                        icon={<Play className="h-2.5 w-2.5 text-white" />}
+                        text="Start"
                       />
                     </div>
                   </div>

@@ -81,7 +81,7 @@ export function CodeRenderer({ content, className = "", theme = 'light' }: CodeR
       const token = tokens[idx]
       const lang = token?.info.trim() || 'javascript'
       let code = token?.content
-      
+
       // Process newline characters from API (handle both \n and \\n)
       code = code?.replace(/\\n/g, '\n').replace(/\n\s*\n/g, '\n')
 
@@ -89,15 +89,15 @@ export function CodeRenderer({ content, className = "", theme = 'light' }: CodeR
       const escapedCode = md.utils.escapeHtml(code || '')
 
       const preClass = isDark
-        ? "bg-gray-950 overflow-x-auto hover:bg-gray-900 transition border border-gray-800 px-4 py-6 rounded-lg whitespace-pre-wrap"
-        : "bg-gray-100 overflow-x-auto hover:bg-gray-200 transition border px-4 py-6 rounded-lg whitespace-pre-wrap"
+        ? "bg-gray-950 overflow-x-auto hover:bg-gray-900 transition border border-gray-800 px-3 pt-0.5 pb-2 rounded-lg whitespace-pre-wrap"
+        : "bg-gray-100 overflow-x-auto hover:bg-gray-200 transition border px-3 pt-2 pb-2 rounded-lg whitespace-pre-wrap"
       const codeClass = isDark ? "text-sm font-mono text-gray-100" : "text-sm font-mono text-gray-800"
       const buttonClass = isDark
-        ? "copy-button absolute top-2 right-2 px-2 py-1 bg-gray-900 text-gray-100 text-xs rounded border border-gray-700 hover:bg-gray-800 hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100"
-        : "copy-button absolute top-2 right-2 px-2 py-1 bg-white text-gray-800 text-xs rounded border border-gray-300 hover:bg-gray-100 hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100"
+        ? "copy-button absolute top-2 right-2 px-2 py-1 bg-gray-900 text-gray-100 text-xs rounded border border-gray-700 hover:bg-gray-800 hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100 hidden"
+        : "copy-button absolute top-2 right-2 px-2 py-1 bg-white text-gray-800 text-xs rounded border border-gray-300 hover:bg-gray-100 hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100 hidden"
 
       return (
-        `<div class="relative mb-4 group">` +
+        `<div class="relative mb-0 group">` +
         `<pre class="${preClass}">` +
         `<code class="${codeClass}">${escapedCode}</code>` +
         `</pre>` +
@@ -125,7 +125,7 @@ export function CodeRenderer({ content, className = "", theme = 'light' }: CodeR
     copyButtons.forEach((btn) => {
       const button = btn as HTMLButtonElement
       const codeBlock = button.parentElement?.querySelector('code')
-      
+
       if (codeBlock) {
         button.addEventListener('click', () => {
           const textToCopy = codeBlock.textContent || ''
@@ -153,8 +153,8 @@ export function CodeRenderer({ content, className = "", theme = 'light' }: CodeR
   }, [content, isDark])
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={[
         "prose prose-sm max-w-none",
         isDark ? "prose-invert" : "",

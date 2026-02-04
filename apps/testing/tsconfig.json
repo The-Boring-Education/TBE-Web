@@ -24,7 +24,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./src/*"
+        "./src/*",
+        "../api/src/*"
       ],
       "@test-utils/*": [
         "./src/test-utils/*"
