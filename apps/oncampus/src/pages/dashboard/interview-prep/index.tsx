@@ -110,12 +110,12 @@ const InterviewPrepDashboardPage = () => {
   const hasSheets = sheets.length > 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {hasSheets && (
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2">
           <Link
             href="/dashboard/interview-prep"
-            className={`px-4 py-2 rounded-md text-sm font-medium
+            className={`px-2 py-1 rounded-md text-sm font-medium
               ${selectedRoadmap === "all"
                 ? "bg-primary text-white"
                 : "bg-gray-800 text-gray-300 hover:bg-gray-700"
@@ -133,7 +133,7 @@ const InterviewPrepDashboardPage = () => {
                   pathname: "/dashboard/interview-prep",
                   query: { roadmap: slug },
                 }}
-                className={`px-4 py-2 rounded-md text-sm font-medium
+                className={`px-2 py-1 rounded-md text-sm font-medium
                   ${selectedRoadmap === slug
                     ? "bg-primary text-white"
                     : "bg-gray-800 text-gray-300 hover:bg-gray-700"
@@ -157,7 +157,7 @@ const InterviewPrepDashboardPage = () => {
       {hasSheets && (
         <div className="space-y-10">
           {Object.entries(visibleRoadmaps).map(([roadmap, cards]) => (
-            <section key={roadmap} className="space-y-4">
+            <section key={roadmap} className="space-y-3">
               <Text level="h3" className="text-lg font-semibold text-white">
                 {roadmap} Sheets
               </Text>
