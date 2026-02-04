@@ -2,7 +2,7 @@ import '@/styles/globals.css'
 import '@/styles/colors.css'
 
 import { Layout } from '@tbe/components'
-import { GamificationProvider, trackGTMPageView } from '@tbe/components'
+import { GamificationProvider } from '@tbe/components'
 import {
   initGA,
   installGlobalAnalyticsListeners,
@@ -44,14 +44,13 @@ const AppContent = ({
     setIsClient(true)
   }, [])
 
-  // ✅ Initialize Google Analytics and GTM
+  // ✅ Initialize Google Analytics
   useEffect(() => {
     initGA()
     installGlobalAnalyticsListeners()
 
     const handleRouteChange = (url: string) => {
       trackPageview(url)
-      trackGTMPageView(url)
     }
     router.events.on('routeChangeComplete', handleRouteChange)
     return () => router.events.off('routeChangeComplete', handleRouteChange)

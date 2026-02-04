@@ -162,13 +162,6 @@ export {
   useGamificationContext,
 } from "./common/GamificationDemo/GamificationProvider";
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
-export {
-  GTM_ID,
-  GTMNoScript,
-  GTMScript,
-  pushToDataLayer,
-  trackGTMEvent,
-  trackGTMPageView} from "./gtm";
 export { default as Footer } from "./layout/Footer";
 export { default as Navbar } from "./layout/Navbar";
 export { default as Layout } from "./layout/Page";
