@@ -65,12 +65,12 @@ export interface LogoProps {
 
 export interface ButtonProps {
     variant:
-        | "PRIMARY"
-        | "OUTLINE"
-        | "GHOST"
-        | "SUCCESS"
-        | "SECONDARY"
-        | "NEUTRAL"
+    | "PRIMARY"
+    | "OUTLINE"
+    | "GHOST"
+    | "SUCCESS"
+    | "SECONDARY"
+    | "NEUTRAL"
     className?: string
     text: string
     onClick?: MouseEventHandler<HTMLButtonElement>
@@ -979,6 +979,9 @@ export interface DSAQuestion {
     difficulty: "Easy" | "Medium" | "Hard"
     tags: string[]
     description: string
+    order?: number
+    leetcodeLink?: string
+    youtubeSearchLink?: string
 }
 
 export interface DSAQuestionSidebarProps {
