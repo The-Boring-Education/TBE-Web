@@ -104,8 +104,8 @@ const Button = ({
   // Size classes mapping
   const sizeClasses = {
     SMALL: 'px-1 py-px text-xs',
-    MEDIUM: 'px-3 py-2 text-sm',
-    LARGE: 'px-4 py-3 text-base',
+    MEDIUM: 'px-2 py-1 text-sm',
+    LARGE: 'px-3 py-2 text-base',
   };
 
   let baseClasses = `button rounded-1 ${sizeClasses[size]}`;

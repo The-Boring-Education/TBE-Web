@@ -9,7 +9,7 @@ import {
   Progress,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import { useApi,useUser } from "@tbe/hooks";
+import { useApi, useUser } from "@tbe/hooks";
 import {
   TrendingUp,
   Trophy,
@@ -57,7 +57,6 @@ const CampusPrepDashboard = () => {
   const { user, loading, isAuth } = useUser();
   const router = useRouter();
 
-  // Fetch enrolled sheets
   const { response: enrolledSheetsResponse, loading: sheetsLoading } = useApi(
     "user-interview-prep",
     user?.id
@@ -68,7 +67,6 @@ const CampusPrepDashboard = () => {
     { enabled: !!user?.id }
   );
 
-  // Fetch quiz performance (includes recent attempts and stats)
   const { response: quizPerformanceResponse, loading: quizLoading } = useApi(
     "quiz-performance",
     user?.id
@@ -79,7 +77,6 @@ const CampusPrepDashboard = () => {
     { enabled: !!user?.id }
   );
 
-  // Process enrolled sheets - All hooks must be before any early returns
   const enrolledSheets: EnrolledSheet[] = useMemo(() => {
     if (!enrolledSheetsResponse?.status || !enrolledSheetsResponse?.data) return [];
     const sheets = Array.isArray(enrolledSheetsResponse.data)
@@ -88,38 +85,23 @@ const CampusPrepDashboard = () => {
     return sheets.slice(0, 3); // Get last 3 sheets (already sorted by lastUpdated)
   }, [enrolledSheetsResponse]);
 
-  // Process quiz performance data
   const quizPerformance: QuizPerformance | null = useMemo(() => {
     if (!quizPerformanceResponse) return null;
 
-    // Handle different response formats
-    // API returns: { success: true, data: {...} }
-    // useApi returns: { status: true, data: { success: true, data: {...} } }
     const response = quizPerformanceResponse as any;
-
-    // Debug: Log the response structure
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Quiz Performance Response:', response);
-    }
-
-    // Case 1: Response has status and data (useApi wrapper)
     if (response.status && response.data) {
-      // If data has success and data properties, extract nested data
       if (response.data.success && response.data.data) {
         return response.data.data as QuizPerformance;
       }
-      // If data is directly the performance object
       if (response.data.totalAttempts !== undefined) {
         return response.data as QuizPerformance;
       }
     }
 
-    // Case 2: Response has success and data (direct API response)
     if (response.success && response.data) {
       return response.data as QuizPerformance;
     }
 
-    // Case 3: Response is directly the performance object
     if (response.totalAttempts !== undefined) {
       return response as QuizPerformance;
     }
@@ -139,7 +121,6 @@ const CampusPrepDashboard = () => {
     return quizPerformance?.averageScore || 0;
   }, [quizPerformance]);
 
-  // Redirect to login if not authenticated - Early returns AFTER all hooks
   if (!loading && !isAuth) {
     return null;
   }
@@ -155,13 +136,12 @@ const CampusPrepDashboard = () => {
   const userName = user?.name || user?.email?.split('@')[0] || "Student";
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Card */}
+    <div className="space-y-2">
       <Card className="rounded-lg border border-gray-800 transition-all duration-00 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-        <CardContent className="p-6">
+        <CardContent className="p-2">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-white mb-1">
+              <h1 className="text-2xl font-bold text-white mb-px">
                 Welcome back, {userName} 👋
               </h1>
               <p className="text-gray-400">Ready to prepare today?</p>
@@ -176,35 +156,34 @@ const CampusPrepDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Continue Learning Card - Last Sheets Studied */}
       <Card className="rounded-lg border border-gray-800 transition-all duration-00 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-        <CardHeader>
+        <CardHeader className="p-2">
           <CardTitle className="text-white">Continue where you left off</CardTitle>
           <CardDescription className="text-gray-400">
             Your recently studied interview sheets
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="p-2 space-y-1.5">
           {sheetsLoading ? (
-            <div className="flex items-center justify-center py-4">
+            <div className="flex items-center justify-center py-2">
               <LoadingSpinner height={4} width={4} />
             </div>
           ) : enrolledSheets.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">
+            <p className="text-sm text-gray-400 text-center py-2">
               No sheets studied yet. Start your first sheet!
             </p>
           ) : (
             enrolledSheets.map((sheet) => (
               <div
                 key={sheet._id}
-                className="flex items-center justify-between p-3 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg"
+                className="flex items-center justify-between p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg"
               >
                 <div className="flex-1">
-                  <h4 className="text-sm font-medium text-white mb-1">
+                  <h4 className="text-sm font-medium text-white mb-px">
                     {sheet.name}
                   </h4>
                   {sheet.progress && sheet.progress.total > 0 && (
-                    <div className="space-y-1">
+                    <div className="space-y-px">
                       <Progress
                         value={sheet.progress.percentage}
                         className="h-1.5 bg-gray-800"
@@ -218,7 +197,7 @@ const CampusPrepDashboard = () => {
                 <Button
                   variant="OUTLINE"
                   size="SMALL"
-                  className="border-gray-700 text-white hover:bg-gray-800 ml-3"
+                  className="border-gray-700 text-white hover:bg-gray-800 ml-2"
                   text="Continue"
                   onClick={() => router.push(`/dashboard/interview-prep/${sheet.slug}`)}
                 />
@@ -228,59 +207,56 @@ const CampusPrepDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Quiz Insights Section */}
       <Card className="rounded-lg border border-gray-800 transition-all duration-00 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+        <CardHeader className="p-2">
+          <CardTitle className="text-white flex items-center gap-1">
             Quiz Insights
           </CardTitle>
           <CardDescription className="text-gray-400">
             Your recent quiz performance and statistics
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Total Attempts Card */}
-            <div className="p-4 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-              <div className="flex items-center justify-between mb-2">
+        <CardContent className="p-2 space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
+              <div className="flex items-center justify-between mb-1">
                 <p className="text-sm text-gray-400">Total Attempts</p>
                 <Trophy className="w-4 h-4 text-yellow-500" />
               </div>
               <p className="text-2xl font-bold text-white">
                 {quizLoading ? "..." : totalQuizAttempts}
               </p>
-              <p className="text-xs text-gray-500 mt-1">Quizes completed</p>
+              <p className="text-xs text-gray-500 mt-px">Quizes completed</p>
             </div>
 
-            {/* Average Score Card */}
-            <div className="p-4 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-              <div className="flex items-center justify-between mb-2">
+            <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
+              <div className="flex items-center justify-between mb-1">
                 <p className="text-sm text-gray-400">Average Score</p>
                 <TrendingUp className="w-4 h-4 text-green-500" />
               </div>
               <p className="text-2xl font-bold text-white">
                 {quizLoading ? "..." : averageScore}%
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-px">
                 Based on recent attempts
               </p>
             </div>
           </div>
 
           {quizAttempts.length > 0 && (
-            <div className="space-y-2">
+            <div className="space-y-1">
               <p className="text-sm font-medium text-gray-400">Recent Scores</p>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {quizAttempts.slice(0, 3).map((attempt) => (
                   <div
                     key={attempt._id}
-                    className="p-3 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between"
+                    className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between"
                   >
                     <div className="flex-1">
                       <p className="text-sm text-white">
                         {attempt.categoryName}
                       </p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-gray-400 mt-px">
                         {new Date(attempt.completedAt).toLocaleDateString()}
                       </p>
                     </div>
@@ -299,21 +275,20 @@ const CampusPrepDashboard = () => {
           )}
         </CardContent>
       </Card>
-      {/* Practice Section */}
       <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+        <CardHeader className="p-2">
+          <CardTitle className="text-white flex items-center gap-1">
             Practice
           </CardTitle>
           <CardDescription className="text-gray-400">
             Quick practice modules to keep your streak going
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-3 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between">
+        <CardContent className="p-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between">
             <div>
               <p className="text-white font-semibold">Quizes</p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-400 mt-px">
                 Topic-wise MCQs with instant results
               </p>
             </div>
@@ -326,10 +301,10 @@ const CampusPrepDashboard = () => {
             />
           </div>
 
-          <div className="p-3 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between">
+          <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between">
             <div>
               <p className="text-white font-semibold">Interview Sheets</p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-400 mt-px">
                 Practice interview questions and mark progress
               </p>
             </div>
