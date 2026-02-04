@@ -95,7 +95,7 @@ const DSAPrepPage = () => {
   }
 
   return (
-    <FlexContainer direction="col" className="h-screen bg-black overflow-hidden p-2" fullWidth itemCenter={false} justifyCenter={false}>
+    <FlexContainer direction="col" className="h-screen bg-black overflow-hidden p-2" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
       <div className="text-white flex-shrink-0">
         <Navbar theme="dark" variant="oncampus" />
         <div className="mt-20 px-2 border-b border-gray-800 pb-2 mb-2">
@@ -117,12 +117,12 @@ const DSAPrepPage = () => {
         </div>
       </div>
 
-      <FlexContainer direction="col" className="lg:flex-row flex-1 min-h-0 gap-2 pt-4 w-full" itemCenter={false} justifyCenter={false}>
+      <FlexContainer direction="col" className="lg:flex-row flex-1 min-h-0 gap-2 pt-4 w-full" itemCenter={false} justifyCenter={false} wrap={false}>
         {/* Left Sidebar - Topics or Questions */}
         <div className={`flex-shrink-0 overflow-y-auto scrollbar-hide pb-2 ${selectedTopic ? 'h-1/3 lg:h-auto w-full lg:w-60' : 'flex-1 lg:flex-none w-full lg:w-60'}`}>
           {!selectedTopic ? (
             /* Topic List */
-            <FlexContainer direction="col" fullWidth itemCenter={false} justifyCenter={false}>
+            <FlexContainer direction="col" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
               {topicsWithCounts.map(({ topic, count, label }) => (
                 <div
                   key={topic}
@@ -162,9 +162,9 @@ const DSAPrepPage = () => {
 
         <div className={`bg-gray-800 flex-shrink-0 ${!selectedTopic ? 'hidden lg:block' : ''} h-px w-full my-2 lg:my-0 lg:w-px lg:h-auto lg:mx-2`} />
 
-        <FlexContainer direction="col" className={`flex-1 min-w-0 bg-[#0A0A0A] border border-gray-700 rounded-lg p-6 overflow-hidden shadow-sm ${!selectedTopic ? 'hidden lg:flex' : 'flex'}`} itemCenter={false} justifyCenter={false}>
+        <FlexContainer direction="col" className={`flex-1 min-w-0 bg-[#0A0A0A] border border-gray-700 rounded-lg p-6 overflow-hidden shadow-sm ${!selectedTopic ? 'hidden lg:flex' : 'flex'}`} itemCenter={false} justifyCenter={false} wrap={false}>
           {!selectedTopic ? (
-            <FlexContainer className="h-full" itemCenter justifyCenter fullWidth>
+            <FlexContainer className="h-full" itemCenter justifyCenter fullWidth wrap={false}>
               <Text level="p" className="text-gray-400 text-lg">Select a topic to start</Text>
             </FlexContainer>
           ) : (

@@ -18,7 +18,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
     }
 
     return (
-        <FlexContainer direction="col" className="text-white space-y-6 h-full relative" fullWidth itemCenter={false} justifyCenter={false}>
+        <FlexContainer direction="col" className="text-white space-y-6 h-full relative" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
             <div className="space-y-4">
                 <Text level="h1" className="text-2xl font-bold tracking-tight">{question.name}</Text>
 
