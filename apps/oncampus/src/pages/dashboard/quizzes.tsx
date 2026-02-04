@@ -41,7 +41,7 @@ const QuizzesDashboardPage = () => {
   };
 
   return (
-    <div className="py-3 px-3">
+    <div className="px-3 py-0">
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
         <div className="mb-3">
@@ -73,23 +73,23 @@ const QuizzesDashboardPage = () => {
                   {/* Left accent bar */}
                   <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: '#ff5757' }} />
 
-                  <div className="relative p-3 flex flex-col h-full">
+                  <div className="relative p-2.5 flex flex-col h-full">
                     {/* Icon Section */}
                     <div className="mb-1">
-                      <div className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">
+                      <div className="text-2xl group-hover:scale-110 transition-transform duration-300 inline-block">
                         {category.categoryIcon}
                       </div>
                     </div>
 
                     {/* Title Section */}
                     <div className="mb-1">
-                      <h3 className="text-xl font-bold text-white group-hover:text-[#ff5757] transition-colors duration-300">
+                      <h3 className="text-base font-bold text-white group-hover:text-[#ff5757] transition-colors duration-300">
                         {category.categoryName}
                       </h3>
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-400 text-xs leading-tight mb-2 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
+                    <p className="text-gray-400 text-[11px] leading-snug mb-2 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
                       {category.categoryDescription}
                     </p>
 
