@@ -12,7 +12,6 @@ const LinkButton = ({
   noLoader = false,
 }: LinkButtonProps) => {
   const isDark = theme === 'dark';
-
   // Merge theme-based className with existing buttonProps className
   const themedButtonProps = {
     ...buttonProps,
