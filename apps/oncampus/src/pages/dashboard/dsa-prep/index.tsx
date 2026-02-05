@@ -115,7 +115,7 @@ const DSAPrepPage = () => {
                       className: "border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10 "
                     }}
                   />
-                  <h1 className="text-xl font-bold text-white">Available Topics</h1>
+                  <h1 className="mt-2 text-xl font-bold text-white">Available Topics</h1>
                   <p className="text-xs text-gray-400">Pick a category to start</p>
                 </div>
 
@@ -180,11 +180,11 @@ const DSAPrepPage = () => {
                     {TOPIC_LABELS[selectedTopic] || selectedTopic}
                   </Text>
                   <Text level="p" className="text-sm text-gray-400">
-                    Showing {filteredQuestions.length} curated questions
+                    Continue your {TOPIC_LABELS[selectedTopic] || selectedTopic} preparation journey.
                   </Text>
                 </div>
 
-                <div className="pb-4">
+                <div className="pb-1">
                   <QuestionDetailPanel question={selectedQuestion} />
                 </div>
               </div>
