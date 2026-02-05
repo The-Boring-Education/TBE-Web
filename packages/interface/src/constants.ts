@@ -41,7 +41,8 @@ export type NavbarVariant =
   | "techyatra"
   | "dsayatra"
   | "resume-yatra"
-  | "oncampus";
+  | "oncampus"
+  | "learning";
 
 interface MainNavbarProps extends Partial<NavbarProps> {
   variant?: NavbarVariant;
@@ -50,6 +51,10 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   customActions?: React.ReactNode[];
   dashboardRoute?: string;
   theme?: "light" | "dark";
+  totalChapters?: number;
+  completedChapters?: number;
+  sidebarTitle?: string;
+  sidebarContent?: React.ReactNode;
 }
 interface NavbarVariantConfig {
   branding: React.ReactNode;

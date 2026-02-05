@@ -2,15 +2,13 @@ import {
   Button,
   FeedbackPopup,
   FlexContainer,
-  LinerProgressBar,
+  LearningQuestionList,
   LoadingSpinner,
   MDXRenderer,
+  Navbar,
   PaymentCard,
-  QuestionLink,
   ResourceTooltip,
-  Section,
   SEO,
-  SheetHeroContainer,
   StarButton,
   Text,
 } from '@tbe/components';
@@ -27,7 +25,7 @@ import type { SheetPageProps } from '@tbe/interface';
 import { getSheetPageProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { FaLock, FaStar } from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa';
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();
@@ -233,100 +231,42 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   // Show small loader if data is not ready
   const isDataLoading = !sheet || !questions || questions.length === 0;
 
+  const questionsSidebar = (
+    <LearningQuestionList
+      questions={questions ?? []}
+      currentQuestionId={currentQuestionId}
+      isLocked={isLocked}
+      href={router.asPath.split('?')[0]}
+      onQuestionSelect={handleQuestionClick}
+      theme='dark'
+    />
+  );
+
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <Section className='md:p-2 p-2'>
-        <SheetHeroContainer
-          id={sheet._id ?? ''}
-          isEnrolled={sheet.isEnrolled}
-          name={sheet.name ?? ''}
-          isPremium={sheet.isPremium}
-          isPurchased={!!isPurchased} // Ensure boolean
-          backHref={routes.oncampus.interviewPrep}
-          theme="dark"
-        />
-      </Section>
+      <Navbar
+        variant="learning"
+        theme="dark"
+        showFullNavigation
+        totalChapters={totalQuestions}
+        completedChapters={completedQuestions}
+        sidebarTitle="Questions"
+        sidebarContent={questionsSidebar}
+      />
 
       {isDataLoading && (
-        <div className='min-h-screen bg-[#0A0A0A] flex items-center justify-center py-8'>
+        <div className='min-h-screen bg-[#0A0A0A] flex items-center justify-center py-8 pt-12'>
           <LoadingSpinner height={8} width={8} />
           <Text level='p' className='ml-3 text-contentDark'>Loading interview questions...</Text>
         </div>
       )}
 
       {!isDataLoading && (
-        <div className='min-h-screen bg-[#0A0A0A] p-4 flex items-start'>
+        <div className='min-h-screen bg-[#0A0A0A] p-4 pt-12 flex items-start'>
           <FlexContainer className='w-full max-w-[1600px] mx-auto gap-4' itemCenter={false}>
-            {/* Left Sidebar (Questions) */}
             <FlexContainer
-              className='border md:w-3/12 w-full px-2 gap-1 rounded self-baseline max-h-[calc(100vh-2rem)] overflow-y-auto bg-[#0A0A0A] border-gray-800'
-              itemCenter={false}
-            >
-              <div className='w-full sticky top-0 bg-[#0A0A0A] py-2 z-10'>
-                <Text className='heading-5 text-contentDark' level='h5'>
-                  Questions
-                </Text>
-
-                {/* LinerProgressBar */}
-                {!isLocked && (
-                  <LinerProgressBar
-                    completedChapters={completedQuestions}
-                    totalChapters={totalQuestions}
-                  />
-                )}
-              </div>
-
-              {/* Sidebar: use button for question navigation, not <Link> */}
-              <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
-                {questions?.map(
-                  ({
-                    _id,
-                    title,
-                    question,
-                    answer,
-                    isCompleted,
-                    frequency,
-                    isStarred,
-                  }) => {
-                    const questionId = _id?.toString();
-
-                    return (
-                      <div key={questionId} className='flex items-center w-full'>
-                        <QuestionLink
-                          currentQuestionId={currentQuestionId}
-                          frequency={frequency}
-                          handleQuestionClick={() =>
-                            handleQuestionClick(
-                              `${question}\n\n${answer}`,
-                              questionId
-                            )
-                          }
-                          href={router.asPath.split('?')[0]}
-                          isCompleted={isCompleted}
-                          question={`${question}\n\n${answer}`}
-                          questionId={questionId}
-                          title={title}
-                          isLocked={isLocked}
-                          theme='dark'
-                        />
-                        {isStarred && (
-                          <FaStar
-                            className='ml-1 text-yellow-400'
-                            style={{ fontSize: '0.9em' }}
-                            title='Starred'
-                          />
-                        )}
-                      </div>
-                    );
-                  }
-                )}
-              </FlexContainer>
-            </FlexContainer>
-
-            {/* Main Content Area */}
-            <FlexContainer
-              className='border md:w-8/12 w-full p-2 rounded bg-[#0A0A0A] border-gray-800 max-h-[calc(100vh-2rem)] overflow-y-auto'
+              className='md:w-8/12 w-full bg-[#0A0A0A]'
               itemCenter={false}
               justifyCenter={false}
             >

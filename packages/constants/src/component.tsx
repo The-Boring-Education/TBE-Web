@@ -204,6 +204,15 @@ const getNavbarVariantConfig = (
     showCohorts: false, // Hide Cohorts section
     showLearn: false, // Hide Learn section
   },
+  learning: {
+    branding: <Logo />,
+    dashboardRoute: "/user/dashboard",
+    borderClass: "border",
+    requiresAuth: true,
+    showGamification: false,
+    showCohorts: false,
+    showLearn: false,
+  },
 });
 
 // Footer Variant Configuration Interface
