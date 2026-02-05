@@ -183,10 +183,10 @@ const CampusPrepDashboard = () => {
                     {sheet.name}
                   </h4>
                   {sheet.progress && sheet.progress.total > 0 && (
-                    <div className="space-y-px">
+                    <div className="space-y-1">
                       <Progress
                         value={sheet.progress.percentage}
-                        className="h-1.5 bg-gray-800"
+                        className="mt-1 h-1.5 bg-gray-800"
                       />
                       <p className="text-xs text-gray-400">
                         {sheet.progress.completed} of {sheet.progress.total} questions completed ({sheet.progress.percentage}%)

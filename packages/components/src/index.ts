@@ -72,6 +72,7 @@ export { default as Text } from "./common/Typography/Text";
 export { default as AboutTBE } from "./containers/Cards/AboutTBE";
 export { default as CardContainerA } from "./containers/Cards/CardContainerA";
 export { default as CardContainerB } from "./containers/Cards/CardContainerB";
+export { default as ExampleCard } from "./containers/Cards/ExampleCard";
 export { DsaQuestionCard} from "./containers/Cards/DsaQuestionCard"
 export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";

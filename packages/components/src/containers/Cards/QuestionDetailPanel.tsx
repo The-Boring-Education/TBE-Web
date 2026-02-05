@@ -1,4 +1,4 @@
-import { FlexContainer, Text, LeetCodeIcon, YouTubeIcon } from "@tbe/components";
+import { FlexContainer, Text, LeetCodeIcon, YouTubeIcon, ExampleCard } from "@tbe/components";
 import type { DsaSectionTabs } from "@tbe/interface";
 import type { QuestionDetailProps } from "@tbe/interface";
 import { useState } from "react";
@@ -49,6 +49,38 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                             />
                         </div>
 
+                        {/* Examples */}
+                        {question.examples && question.examples.length > 0 && (
+                            <div className="space-y-4 pt-2">
+                                {question.examples.map((example, index) => (
+                                    <ExampleCard
+                                        key={example._id || index}
+                                        index={index}
+                                        inputText={example.inputText}
+                                        outputText={example.outputText}
+                                        explanation={example.explanation}
+                                        image={example.image}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Constraints */}
+                        {question.constraints && question.constraints.length > 0 && (
+                            <div className="space-y-2 pt-1">
+                                <Text level="h2" className="text-white hover:text-red-500 transition-colors duration-200 font-bold text-sm cursor-default">Constraints</Text>
+                                <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-2.5">
+                                    <ul className="list-disc pl-4 space-y-1">
+                                        {question.constraints.map((constraint, index) => (
+                                            <li key={index} className="text-gray-300 text-xs font-mono leading-relaxed">
+                                                <div dangerouslySetInnerHTML={{ __html: md.renderInline(constraint) }} />
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Resources */}
                         <div className="space-y-1.5 pt-1">
                             <Text level="h2" className="text-red-500 font-bold text-sm">Resources</Text>
@@ -97,7 +129,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                 {activeTab === "companies" && (
                     <div>
                         <Text level="h2" className="text-red-500 font-semibold mb-3">COMPANIES</Text>
-                        <FlexContainer className="gap-2">
+                        <FlexContainer className="gap-2" justifyCenter={false} itemCenter={false} wrap={true}>
                             {question.companyType?.map((company) => (
                                 <Text level="span" key={company} className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300">
                                     {company}
