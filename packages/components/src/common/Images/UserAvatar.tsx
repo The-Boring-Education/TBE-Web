@@ -3,7 +3,7 @@ import { Image, Link } from '@tbe/components';
 import { TOP_NAVIGATION } from '@tbe/constants';
 import { signOut, useSession } from 'next-auth/react';
 import { Fragment } from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@tbe/components/ui';
 
 interface UserAvatarProps {
   dashboardRoute?: string;
