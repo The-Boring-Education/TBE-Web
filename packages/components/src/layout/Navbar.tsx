@@ -1,10 +1,10 @@
-import { Dialog } from '@headlessui/react';
+import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { getNavbarVariantConfig, LINKS, TOP_NAVIGATION } from '@tbe/constants';
 import { useScrollDirection } from '@tbe/hooks';
 import type { MainNavbarProps, NavbarVariantConfig } from '@tbe/interface';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 import {
@@ -12,6 +12,7 @@ import {
   Link,
   LoginRedirectButton,
   Logo,
+  LearningSidebarPanel,
   MobileNavbarLinksContainer,
   NavbarDropdownContainer,
   PopoverContainer,
@@ -29,10 +30,15 @@ const Navbar = ({
   customBranding,
   customActions = [],
   dashboardRoute,
-  theme
+  theme,
+  totalChapters = 0,
+  completedChapters = 0,
+  sidebarTitle = 'Progress',
+  sidebarContent,
 }: MainNavbarProps = {}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
+  const [learningSidebarOpen, setLearningSidebarOpen] = useState(false);
   const { isVisible } = useScrollDirection(100);
 
   const handleSetOpen = (popoverName: string) => {
@@ -69,6 +75,7 @@ const Navbar = ({
     ? 'border-0'
     : (variantConfig.borderClass || 'border');
   const shouldUseCustomActions = customActions && customActions.length > 0;
+  const isLearningVariant = variant === 'learning';
 
   // Check if variant requires authentication (defaults to true)
   const requiresAuth = variantConfig.requiresAuth !== false;
@@ -90,8 +97,23 @@ const Navbar = ({
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <nav className={`flex items-center justify-between p-2 lg:px-8 ${borderClass}`}>
-        <div className='flex items-center'>
+        <div className='flex items-center gap-3'>
           {finalBranding}
+          {isLearningVariant && (
+            <button
+              className={`flex items-center justify-center rounded-md p-1.5 ${theme === 'dark'
+                ? 'text-white hover:bg-gray-800'
+                : 'text-black hover:bg-gray-100'
+                }`}
+              type='button'
+              onClick={() => setLearningSidebarOpen(true)}
+            >
+              <Bars3Icon
+                aria-hidden='true'
+                className={`h-4 w-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
+              />
+            </button>
+          )}
         </div>
         {shouldUseCustomActions ? (
           <>
@@ -188,7 +210,6 @@ const Navbar = ({
         )}
       </nav>
 
-      {/* Mobile Navigation */}
       <Dialog
         as='div'
         className='lg:hidden'
@@ -289,6 +310,57 @@ const Navbar = ({
           </AnimatePresence>
         </Dialog.Panel>
       </Dialog>
+
+      {isLearningVariant && (
+        <Transition show={learningSidebarOpen} as={Fragment}>
+          <Dialog as='div' className='relative z-50' onClose={setLearningSidebarOpen}>
+            <Transition.Child
+              as={Fragment}
+              enter='transition-opacity ease-out duration-200'
+              enterFrom='opacity-0'
+              enterTo='opacity-100'
+              leave='transition-opacity ease-in duration-150'
+              leaveFrom='opacity-100'
+              leaveTo='opacity-0'
+            >
+              <div className='fixed inset-0 bg-black/40' />
+            </Transition.Child>
+
+            <div className='fixed inset-0 overflow-hidden'>
+              <div className='absolute inset-0 overflow-hidden'>
+                <div className='pointer-events-none fixed inset-y-0 left-0 flex max-w-full'>
+                  <Transition.Child
+                    as={Fragment}
+                    enter='transform transition ease-in-out duration-200'
+                    enterFrom='-translate-x-full'
+                    enterTo='translate-x-0'
+                    leave='transform transition ease-in-out duration-150'
+                    leaveFrom='translate-x-0'
+                    leaveTo='-translate-x-full'
+                  >
+                    <Dialog.Panel
+                      className={`pointer-events-auto w-80 max-w-sm ${theme === 'dark'
+                        ? 'bg-[#111111] text-white'
+                        : 'bg-white text-gray-900'
+                        }`}
+                    >
+                      <LearningSidebarPanel
+                        title={sidebarTitle}
+                        totalItems={totalChapters}
+                        completedItems={completedChapters}
+                        theme={theme}
+                        onClose={() => setLearningSidebarOpen(false)}
+                      >
+                        {sidebarContent}
+                      </LearningSidebarPanel>
+                    </Dialog.Panel>
+                  </Transition.Child>
+                </div>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+      )}
     </motion.header>
   );
 };

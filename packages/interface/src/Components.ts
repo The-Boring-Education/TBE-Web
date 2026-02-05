@@ -12,6 +12,8 @@ import type {
 import type {
   BaseInterviewSheetResponseProps,
   BaseShikshaCourseResponseProps,
+  ExtendedCourseChapterModel,
+  ExtendedInterviewSheetQuestionModel,
 } from "./api";
 // Import QuestionFrequencyType from the api module to avoid duplication
 import type { QuestionFrequencyType } from "./api";
@@ -443,6 +445,40 @@ export interface AlertProps {
 export interface LinerProgressBarProps {
   totalChapters: number;
   completedChapters: number;
+}
+
+export interface LearningSidebarPanelProps {
+  title: string;
+  totalItems: number;
+  completedItems: number;
+  children?: ReactNode;
+  theme?: 'dark' | 'light';
+  onClose?: () => void;
+}
+
+export interface LearningSidebarListProps<T = any> {
+  items: T[];
+  renderItem: (item: T, index: number) => ReactNode;
+  getKey?: (item: T, index: number) => string | number;
+  className?: string;
+}
+
+export interface LearningQuestionListProps {
+  questions: ExtendedInterviewSheetQuestionModel[];
+  currentQuestionId: string;
+  isLocked?: boolean;
+  href: string;
+  onQuestionSelect: (questionMeta: string, questionId: string) => void;
+  theme?: 'light' | 'dark';
+}
+
+export interface LearningChapterListProps {
+  chapters: ExtendedCourseChapterModel[];
+  currentChapterId: string;
+  isLocked?: boolean;
+  href: string;
+  onChapterSelect: (content: string, chapterId: string) => void;
+  includeIndex?: boolean;
 }
 
 export interface CertificateBannerProps {
