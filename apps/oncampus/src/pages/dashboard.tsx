@@ -137,8 +137,11 @@ const CampusPrepDashboard = () => {
 
   return (
     <div className="space-y-2">
-      <Card className="rounded-lg border border-gray-800 transition-all duration-00 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-        <CardContent className="p-2">
+      {/* Welcome Card with gradient overlay */}
+      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+        <CardContent className="p-2 relative z-10">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-white mb-px">
@@ -156,14 +159,16 @@ const CampusPrepDashboard = () => {
         </CardContent>
       </Card>
 
-      <Card className="rounded-lg border border-gray-800 transition-all duration-00 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-        <CardHeader className="p-2">
+      {/* Continue Learning Card with gradient overlay */}
+      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
+
+        <CardHeader className="p-2 relative z-10">
           <CardTitle className="text-white">Continue where you left off</CardTitle>
           <CardDescription className="text-gray-400">
             Your recently studied interview sheets
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-2 space-y-1.5">
+        <CardContent className="p-2 space-y-1.5 relative z-10">
           {sheetsLoading ? (
             <div className="flex items-center justify-center py-2">
               <LoadingSpinner height={4} width={4} />
@@ -176,17 +181,19 @@ const CampusPrepDashboard = () => {
             enrolledSheets.map((sheet) => (
               <div
                 key={sheet._id}
-                className="flex items-center justify-between p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg"
+                className="flex items-center justify-between p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg relative overflow-hidden group/sheet"
               >
-                <div className="flex-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/sheet:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                <div className="flex-1 relative z-10">
                   <h4 className="text-sm font-medium text-white mb-px">
                     {sheet.name}
                   </h4>
                   {sheet.progress && sheet.progress.total > 0 && (
-                    <div className="space-y-1">
+                    <div className="space-y-px">
                       <Progress
                         value={sheet.progress.percentage}
-                        className="mt-1 h-1.5 bg-gray-800"
+                        className="h-1.5 bg-gray-800"
                       />
                       <p className="text-xs text-gray-400">
                         {sheet.progress.completed} of {sheet.progress.total} questions completed ({sheet.progress.percentage}%)
@@ -197,7 +204,7 @@ const CampusPrepDashboard = () => {
                 <Button
                   variant="OUTLINE"
                   size="SMALL"
-                  className="border-gray-700 text-white hover:bg-gray-800 ml-2"
+                  className="border-gray-700 text-white hover:bg-gray-800 ml-2 relative z-10"
                   text="Continue"
                   onClick={() => router.push(`/dashboard/interview-prep/${sheet.slug}`)}
                 />
@@ -207,8 +214,10 @@ const CampusPrepDashboard = () => {
         </CardContent>
       </Card>
 
-      <Card className="rounded-lg border border-gray-800 transition-all duration-00 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-        <CardHeader className="p-2">
+      {/* Quiz Insights Card with gradient overlay */}
+      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
+
+        <CardHeader className="p-2 relative z-10">
           <CardTitle className="text-white flex items-center gap-1">
             Quiz Insights
           </CardTitle>
@@ -216,28 +225,34 @@ const CampusPrepDashboard = () => {
             Your recent quiz performance and statistics
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-2 space-y-2">
+        <CardContent className="p-2 space-y-2 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-              <div className="flex items-center justify-between mb-1">
-                <p className="text-sm text-gray-400">Total Attempts</p>
+            {/* Total Attempts Card */}
+            <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg relative overflow-hidden group/stat">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              <div className="flex items-center justify-between mb-1 relative z-10">
+                <p className="text-sm text-gray-400 group-hover/stat:text-white transition-colors">Total Attempts</p>
                 <Trophy className="w-4 h-4 text-yellow-500" />
               </div>
-              <p className="text-2xl font-bold text-white">
+              <p className="text-2xl font-bold text-white relative z-10">
                 {quizLoading ? "..." : totalQuizAttempts}
               </p>
-              <p className="text-xs text-gray-500 mt-px">Quizes completed</p>
+              <p className="text-xs text-gray-500 mt-px relative z-10">Quizes completed</p>
             </div>
 
-            <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-              <div className="flex items-center justify-between mb-1">
-                <p className="text-sm text-gray-400">Average Score</p>
+            {/* Average Score Card */}
+            <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg relative overflow-hidden group/stat">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              <div className="flex items-center justify-between mb-1 relative z-10">
+                <p className="text-sm text-gray-400 group-hover/stat:text-white transition-colors">Average Score</p>
                 <TrendingUp className="w-4 h-4 text-green-500" />
               </div>
-              <p className="text-2xl font-bold text-white">
+              <p className="text-2xl font-bold text-white relative z-10">
                 {quizLoading ? "..." : averageScore}%
               </p>
-              <p className="text-xs text-gray-500 mt-px">
+              <p className="text-xs text-gray-500 mt-px relative z-10">
                 Based on recent attempts
               </p>
             </div>
@@ -250,9 +265,11 @@ const CampusPrepDashboard = () => {
                 {quizAttempts.slice(0, 3).map((attempt) => (
                   <div
                     key={attempt._id}
-                    className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between"
+                    className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg flex items-center justify-between relative overflow-hidden group/attempt"
                   >
-                    <div className="flex-1">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/attempt:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                    <div className="flex-1 relative z-10">
                       <p className="text-sm text-white">
                         {attempt.categoryName}
                       </p>
@@ -260,7 +277,7 @@ const CampusPrepDashboard = () => {
                         {new Date(attempt.completedAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right relative z-10">
                       <p className="text-sm font-semibold text-white">
                         {attempt.score}%
                       </p>
@@ -275,8 +292,11 @@ const CampusPrepDashboard = () => {
           )}
         </CardContent>
       </Card>
-      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg">
-        <CardHeader className="p-2">
+
+      {/* Practice Card with gradient overlay */}
+      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
+
+        <CardHeader className="p-2 relative z-10">
           <CardTitle className="text-white flex items-center gap-1">
             Practice
           </CardTitle>
@@ -284,9 +304,12 @@ const CampusPrepDashboard = () => {
             Quick practice modules to keep your streak going
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-2 grid grid-cols-1 md:grid-cols-2 gap-2">
-          <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between">
-            <div>
+        <CardContent className="p-2 grid grid-cols-1 md:grid-cols-2 gap-2 relative z-10">
+          {/* Quizzes Card */}
+          <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg flex items-center justify-between relative overflow-hidden group/quiz">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/quiz:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            <div className="relative z-10">
               <p className="text-white font-semibold">Quizes</p>
               <p className="text-xs text-gray-400 mt-px">
                 Topic-wise MCQs with instant results
@@ -295,14 +318,17 @@ const CampusPrepDashboard = () => {
             <Button
               variant="OUTLINE"
               size="SMALL"
-              className="border-gray-700 text-white hover:bg-gray-800"
+              className="border-gray-700 text-white hover:bg-gray-800 relative z-10"
               text="Explore"
               onClick={() => router.push("/dashboard/quizzes")}
             />
           </div>
 
-          <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg flex items-center justify-between">
-            <div>
+          {/* Interview Sheets Card */}
+          <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg flex items-center justify-between relative overflow-hidden group/interview">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/interview:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            <div className="relative z-10">
               <p className="text-white font-semibold">Interview Sheets</p>
               <p className="text-xs text-gray-400 mt-px">
                 Practice interview questions and mark progress
@@ -311,7 +337,7 @@ const CampusPrepDashboard = () => {
             <Button
               variant="OUTLINE"
               size="SMALL"
-              className="border-gray-700 text-white hover:bg-gray-800 w-20 h-15"
+              className="border-gray-700 text-white hover:bg-gray-800 w-20 h-15 relative z-10"
               text="Open"
               onClick={() => router.push("/dashboard/interview-prep")}
             />
