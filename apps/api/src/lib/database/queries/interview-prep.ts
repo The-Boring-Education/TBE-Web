@@ -1,5 +1,6 @@
 import { modelSelectParams } from "@/lib/constants"
-import { generateYouTubeSearchLink } from "@tbe/utils"
+import { generateYouTubeSearchLink } from "@/lib/utils"
+
 import type {
     AddInterviewQuestionRequestPayloadProps,
     AddInterviewSheetRequestPayloadProps,
