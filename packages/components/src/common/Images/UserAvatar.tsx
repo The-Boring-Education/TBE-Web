@@ -3,6 +3,7 @@ import { Image, Link } from '@tbe/components';
 import { TOP_NAVIGATION } from '@tbe/constants';
 import { signOut, useSession } from 'next-auth/react';
 import { Fragment } from 'react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip';
 
 interface UserAvatarProps {
   dashboardRoute?: string;
@@ -33,30 +34,42 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
       <Popover className='relative'>
         {({ open }) => (
           <>
-            <Popover.Button
-              className={`
-                ${open ? 'ring-2 ring-primary' : ''}
-                outline-none p-0 w-[40px] h-[40px] rounded-[50%] border-[2px] border-gray-300 relative overflow-hidden flex-shrink-0 flex items-center justify-center`}
-            >
-              {session.data.user?.image ? (
-                <div 
-                  className='w-[40px] h-[40px] relative rounded-[50%] overflow-hidden'
-                  style={{ position: 'relative' }}
-                >
-                  <Image
-                    alt={`${session.data.user?.name} | The Boring Education` || ''}
-                    className='w-[40px] h-[40px] rounded-[50%]'
-                    fullWidth={false}
-                    fullHeight={false}
-                    src={session.data.user.image}
-                  />
-                </div>
-              ) : (
-                <div className='w-[40px] h-[40px] rounded-[50%] bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-semibold'>
-                  {session.data.user?.name?.[0]?.toUpperCase() || 'U'}
-                </div>
-              )}
-            </Popover.Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Popover.Button
+                    aria-label='User profile menu'
+                    className={`
+                      ${open ? 'ring-2 ring-primary' : ''}
+                      outline-none p-0 w-[40px] h-[40px] border-[2px] border-gray-300 relative overflow-hidden flex-shrink-0 flex items-center justify-center
+                      hover:opacity-80 hover:scale-110 transition focus:outline-none focus:ring-2 focus:ring-primary rounded-full`}
+                    title='Open profile menu'
+                  >
+                    {session.data.user?.image ? (
+                      <div
+                        className='w-[40px] h-[40px] relative rounded-[50%] overflow-hidden'
+                        style={{ position: 'relative' }}
+                      >
+                        <Image
+                          alt={`${session.data.user?.name} | The Boring Education` || ''}
+                          className='w-[40px] h-[40px] rounded-[50%]'
+                          fullHeight={false}
+                          fullWidth={false}
+                          src={session.data.user.image}
+                        />
+                      </div>
+                    ) : (
+                      <div className='w-[40px] h-[40px] rounded-[50%] bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-semibold'>
+                        {session.data.user?.name?.[0]?.toUpperCase() || 'U'}
+                      </div>
+                    )}
+                  </Popover.Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Profile</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Transition
               as={Fragment}
               enter='transition ease-out duration-200'
