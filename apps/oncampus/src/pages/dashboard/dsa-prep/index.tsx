@@ -7,6 +7,7 @@ import { useRouter } from "next/router"
 import React, { useEffect, useState, useMemo } from "react"
 
 
+import { transformDsaQuestion } from "../../../utils/dsaHelpers"
 
 const DSAPrepPage = () => {
   const router = useRouter()
@@ -23,16 +24,7 @@ const DSAPrepPage = () => {
 
     if (!Array.isArray(data)) return []
 
-    return data.map((question: any) => ({
-      id: question._id,
-      name: question.title,
-      difficultyLevel: question.difficulty,
-      answer: question.answer,
-      resources: question.resources,
-      topics: question.topics,
-      companyType: question.companyTypes,
-      domain: question.domain,
-    }))
+    return data.map(transformDsaQuestion)
   }, [response])
 
   const topicsWithCounts = useMemo(() => {
@@ -123,7 +115,7 @@ const DSAPrepPage = () => {
                   {topicsWithCounts.map(({ topic, count, label }) => (
                     <div
                       key={topic}
-                      className="w-full border border-gray-800 rounded-lg px-3 py-2.5 hover:border-gray-600 hover:bg-[#111] transition-all duration-200 cursor-pointer bg-transparent group"
+                      className="w-full border border-gray-800 rounded-lg px-3 py-2.5 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer bg-transparent group"
                       onClick={() => handleTopicClick(topic)}
                     >
                       <FlexContainer className="justify-between" fullWidth itemCenter>
@@ -165,7 +157,7 @@ const DSAPrepPage = () => {
 
         {/* Main Content Area */}
         <div className={`flex-1 flex flex-col min-w-0 bg-[#0A0A0A] ${!selectedTopic ? 'hidden lg:flex' : 'flex'}`}>
-          <div className="flex-1 overflow-y-auto scrollbar-thin-grey px-6 py-4 scroll-smooth" id="right-scroll-area">
+          <div className="flex-1 overflow-y-auto scrollbar-thin-grey px-2 py-4 scroll-smooth" id="right-scroll-area">
             {!selectedTopic ? (
               <FlexContainer className="h-full" itemCenter justifyCenter fullWidth wrap={false}>
                 <div className="text-center space-y-2">
@@ -174,7 +166,7 @@ const DSAPrepPage = () => {
                 </div>
               </FlexContainer>
             ) : (
-              <div className="max-w-4xl mx-auto w-full">
+              <div className="w-full max-w-none">
                 <div className="mb-4 pb-4 border-b border-gray-800/50">
                   <Text level="h2" className="text-2xl font-bold text-white mb-1">
                     {TOPIC_LABELS[selectedTopic] || selectedTopic}

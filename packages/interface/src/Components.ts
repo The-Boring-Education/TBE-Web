@@ -935,6 +935,14 @@ export interface DsaQuestion {
   domain?: string[];
   companyType?: string[];
   topics?: string[];
+  examples?: {
+    _id?: string;
+    inputText: string;
+    outputText: string;
+    explanation?: string;
+    image?: string;
+  }[];
+  constraints?: string[];
 }
 
 export interface DsaQuestionListProps {
@@ -955,3 +963,11 @@ export interface QuestionDetailProps {
   question: DsaQuestion | null;
 }
 
+
+export interface ExampleCardProps {
+  index: number;
+  inputText: string;
+  outputText: string;
+  explanation?: string;
+  image?: string;
+}
