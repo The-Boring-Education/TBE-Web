@@ -139,7 +139,7 @@ const CampusPrepDashboard = () => {
     <div className="space-y-2">
       {/* Welcome Card with gradient overlay */}
       <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 pointer-events-none" />
 
         <CardContent className="p-2 relative z-10">
           <div className="flex items-center justify-between">
@@ -158,7 +158,6 @@ const CampusPrepDashboard = () => {
           </div>
         </CardContent>
       </Card>
-
       {/* Continue Learning Card with gradient overlay */}
       <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
 
