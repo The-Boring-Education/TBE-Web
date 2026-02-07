@@ -76,6 +76,7 @@ export interface CreateChallengeRequest {
     totalDays: number
     category?: string
     predefinedType?: string
+    learningPath?: string[]
 }
 
 export interface UpdateChallengeRequest {
@@ -176,8 +177,8 @@ export interface RecruiterContact {
     link?: string
     createdAt?: string
     updatedAt?: string
-  }
-  
+}
+
 
 export interface CreateRecruiterContact {
     name: string
@@ -207,7 +208,7 @@ export interface UpdateRecruiterRequest {
 // RECRUITMENT PROCESS TYPES
 // ================================
 
-export type InterviewStatus = 
+export type InterviewStatus =
     | 'scheduled'
     | 'completed'
     | 'cancelled'
@@ -344,37 +345,37 @@ export type ExperienceLevel = "fresher" | "junior" | "mid" | "senior";
 export type OnboardingGoalType = "3Months" | "6Months" | "1Year";
 export type OnboardingCompanyType = "Startup" | "MidSize" | "MNC" | "FAANG";
 export type InterviewCategory =
-  | "MNC"
-  | "MERN"
-  | "CollegePlacement"
-  | "DSA"
-  | "SystemDesign"
-  | "GeneralTech";
+    | "MNC"
+    | "MERN"
+    | "CollegePlacement"
+    | "DSA"
+    | "SystemDesign"
+    | "GeneralTech";
 
 export interface OnboardingData {
-  linkedInUrl: string;
-  githubUrl?: string;
-  leetCodeUrl?: string;
-  workDomain: string;
-  name: string;
-  username: string;
-  experienceLevel: ExperienceLevel;
-  goal: OnboardingGoalType;
-  targetCompanies: OnboardingCompanyType[];
-  preferredCategories: InterviewCategory[];
+    linkedInUrl: string;
+    githubUrl?: string;
+    leetCodeUrl?: string;
+    workDomain: string;
+    name: string;
+    username: string;
+    experienceLevel: ExperienceLevel;
+    goal: OnboardingGoalType;
+    targetCompanies: OnboardingCompanyType[];
+    preferredCategories: InterviewCategory[];
 }
-  
-  export interface CreateRecruiterContact {
-      name: string
-      company?: string
-      email?: string
-      phone?: string
-      status?: "Screening in Process" | "Interviewing" | "Final Round Offer" | "Offer Letter" | "Rejected"
-      follow_up_date?: string
-      last_interview_date?: string
-      link?: string
-      comments?: string
-  }
+
+export interface CreateRecruiterContact {
+    name: string
+    company?: string
+    email?: string
+    phone?: string
+    status?: "Screening in Process" | "Interviewing" | "Final Round Offer" | "Offer Letter" | "Rejected"
+    follow_up_date?: string
+    last_interview_date?: string
+    link?: string
+    comments?: string
+}
 
 export interface Recruitment {
     id: string
@@ -406,97 +407,97 @@ export interface UpdateRecruitmentDTO extends Partial<CreateRecruitmentDTO> {
 }
 
 export interface Challenge {
-  _id: string;
-  user: string;
-  name: string;
-  description?: string;
-  totalDays: number;
-  currentDay: number;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-  category?: string;
-  predefinedType?: string; // ID of the predefined challenge template
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+    _id: string;
+    user: string;
+    name: string;
+    description?: string;
+    totalDays: number;
+    currentDay: number;
+    startDate: string;
+    endDate: string;
+    isActive: boolean;
+    category?: string;
+    predefinedType?: string; // ID of the predefined challenge template
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
 }
 
 export interface ChallengeLog {
-  _id: string;
-  challenge: string;
-  day: number;
-  progressText: string;
-  hoursSpent: number;
-  nextGoals: string[];
-  loggedAt: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+    _id: string;
+    challenge: string;
+    day: number;
+    progressText: string;
+    hoursSpent: number;
+    nextGoals: string[];
+    loggedAt: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
 }
 
 export interface CreateChallengeRequest {
-  name: string;
-  description?: string;
-  totalDays: number;
-  category?: string;
-  predefinedType?: string; // ID of the predefined challenge template
+    name: string;
+    description?: string;
+    totalDays: number;
+    category?: string;
+    predefinedType?: string; // ID of the predefined challenge template
 }
 
 export interface UpdateChallengeRequest {
-  challengeId: string;
-  name?: string;
-  description?: string;
-  totalDays?: number;
-  category?: string;
-  isActive?: boolean;
+    challengeId: string;
+    name?: string;
+    description?: string;
+    totalDays?: number;
+    category?: string;
+    isActive?: boolean;
 }
 
 export interface CreateChallengeLogRequest {
-  challengeId: string;
-  day: number;
-  progressText: string;
-  hoursSpent: number;
-  nextGoals: string[];
-  copyToPrepLogs?: boolean;
+    challengeId: string;
+    day: number;
+    progressText: string;
+    hoursSpent: number;
+    nextGoals: string[];
+    copyToPrepLogs?: boolean;
 }
 
 export interface ChallengeProgress {
-  challengeId: string;
-  totalDays: number;
-  completedDays: number;
-  currentDay: number;
-  progressPercentage: number;
-  totalHours: number;
-  currentStreak: number;
-  maxStreak: number;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
+    challengeId: string;
+    totalDays: number;
+    completedDays: number;
+    currentDay: number;
+    progressPercentage: number;
+    totalHours: number;
+    currentStreak: number;
+    maxStreak: number;
+    startDate: string;
+    endDate: string;
+    isActive: boolean;
 }
 
 export interface ChallengesResponse {
-  success: boolean;
-  message: string;
-  data: Challenge[];
+    success: boolean;
+    message: string;
+    data: Challenge[];
 }
 
 export interface ChallengeLogsResponse {
-  success: boolean;
-  message: string;
-  data: ChallengeLog[];
+    success: boolean;
+    message: string;
+    data: ChallengeLog[];
 }
 
 export interface SingleChallengeResponse {
-  success: boolean;
-  message: string;
-  data: Challenge;
+    success: boolean;
+    message: string;
+    data: Challenge;
 }
 
 export interface SocialMediaTemplate {
-  challengeName: string;
-  currentDay: number;
-  progressText: string;
-  nextGoals: string[];
-  appUrl: string;
+    challengeName: string;
+    currentDay: number;
+    progressText: string;
+    nextGoals: string[];
+    appUrl: string;
 }
