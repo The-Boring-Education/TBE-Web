@@ -54,14 +54,15 @@ const CreateChallengeModal = ({
     name: "",
     description: "",
     totalDays: "",
-    category: ""
+    category: "",
+    learningPath: ""
   });
 
   // Reset form when modal opens/closes
   useEffect(() => {
     if (isOpen) {
       setCustomForm({ name: "", description: "", totalDays: "", category: "" });
-      setCustomizeForm({ name: "", description: "", totalDays: "", category: "" });
+      setCustomizeForm({ name: "", description: "", totalDays: "", category: "", learningPath: "" });
       setSelectedTab("predefined");
       setSelectedTemplate(null);
       setShowCustomizeModal(false);
@@ -88,7 +89,8 @@ const CreateChallengeModal = ({
       name: template.name,
       description: template.description,
       totalDays: template.totalDays.toString(),
-      category: template.category
+      category: template.category,
+      learningPath: template.learningPath.join("\n")
     });
     setShowCustomizeModal(true);
   };
@@ -104,7 +106,8 @@ const CreateChallengeModal = ({
         totalDays: parseInt(customizeForm.totalDays),
         category: customizeForm.category,
         predefinedType: selectedTemplate.id,
-        user: userId
+        user: userId,
+        learningPath: customizeForm.learningPath.split("\n").filter(line => line.trim() !== "")
       });
 
       showCelebration(15);
@@ -440,17 +443,15 @@ const CreateChallengeModal = ({
 
                 {/* Learning Path Preview */}
                 <div className="space-y-2">
-                  <Label className="text-contentLight">Learning Path Preview</Label>
-                  <div className="bg-white/50 p-3 rounded-lg border border-greyLight">
-                    <div className="text-sm text-greyDark">
-                      {selectedTemplate.learningPath.map((item, index) => (
-                        <div key={index} className="flex items-center gap-2 mb-1">
-                          <span className="text-primary">•</span>
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <Label htmlFor="customize-learningpath" className="text-contentLight">Learning Path</Label>
+                  <Textarea
+                    id="customize-learningpath"
+                    value={customizeForm.learningPath}
+                    onChange={(e) => handleCustomizeInputChange("learningPath", e.target.value)}
+                    className="bg-white border-greyLight text-contentLight focus:border-primary resize-none font-mono text-sm"
+                    rows={8}
+                    placeholder="Enter learning path items (one per line)"
+                  />
                 </div>
               </div>
 
