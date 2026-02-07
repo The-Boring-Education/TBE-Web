@@ -4,6 +4,7 @@ import { getNavbarVariantConfig, LINKS, TOP_NAVIGATION } from '@tbe/constants';
 import { useScrollDirection } from '@tbe/hooks';
 import type { MainNavbarProps, NavbarVariantConfig } from '@tbe/interface';
 import { AnimatePresence, motion } from 'framer-motion';
+import NextLink from 'next/link';
 import { Fragment, useMemo, useState } from 'react';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
@@ -12,6 +13,7 @@ import {
   Link,
   LoginRedirectButton,
   Logo,
+  ProductLogo,
   LearningSidebarPanel,
   MobileNavbarLinksContainer,
   NavbarDropdownContainer,
@@ -68,7 +70,14 @@ const Navbar = ({
 
   const finalDashboardRoute = dashboardRoute || variantConfig.dashboardRoute;
 
-  const finalBranding = customBranding || variantConfig.branding;
+  const finalBranding = customBranding || (variantConfig.productName ? (
+    <NextLink href={finalDashboardRoute} className='no-underline hover:opacity-90 transition-opacity'>
+      <ProductLogo
+        productName={variantConfig.productName}
+        subText={variantConfig.subText}
+      />
+    </NextLink>
+  ) : variantConfig.branding);
 
   // Determine border class based on theme
   const borderClass = theme === 'dark'

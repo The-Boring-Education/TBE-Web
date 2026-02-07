@@ -49,6 +49,7 @@ export { default as GamificationToast } from "./common/GamificationToast";
 export { default as BackgroundImage } from "./common/Images/BackgroundImage";
 export { default as Image } from "./common/Images/Image";
 export { default as ImageLink } from "./common/Images/ImageLink";
+export { default as ProductLogo } from "./common/Images/ProductLogo";
 export { default as Logo } from "./common/Images/Logo";
 export { default as UserAvatar } from "./common/Images/UserAvatar";
 export { default as ChapterLink } from "./common/Learning/ChapterLink";
@@ -77,7 +78,7 @@ export { default as AboutTBE } from "./containers/Cards/AboutTBE";
 export { default as CardContainerA } from "./containers/Cards/CardContainerA";
 export { default as CardContainerB } from "./containers/Cards/CardContainerB";
 export { default as ExampleCard } from "./containers/Cards/ExampleCard";
-export { DsaQuestionCard} from "./containers/Cards/DsaQuestionCard"
+export { DsaQuestionCard } from "./containers/Cards/DsaQuestionCard"
 export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
@@ -176,7 +177,8 @@ export type {
   BreadcrumbItem,
   CourseSchema,
   FAQItem,
-  SchemaType} from "./layout/SEO";
+  SchemaType
+} from "./layout/SEO";
 export { default as SEO } from "./layout/SEO";
 export {
   getArticleSchema,
@@ -184,8 +186,9 @@ export {
   getCourseSchema,
   getFAQSchema,
   getOrganizationSchema,
-  getWebSiteSchema} from "./layout/SEO";
-export { PageSEO,default as SEOWrapper } from "./layout/SEOWrapper";
+  getWebSiteSchema
+} from "./layout/SEO";
+export { PageSEO, default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./prepyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names
 // Note: We do not re-export prepyatra `Button` to avoid clashing with existing common Button export.

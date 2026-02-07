@@ -57,7 +57,9 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   sidebarContent?: React.ReactNode;
 }
 interface NavbarVariantConfig {
-  branding: React.ReactNode;
+  branding?: React.ReactNode;
+  productName?: string;
+  subText?: string;
   dashboardRoute: string;
   borderClass?: string;
   requiresAuth?: boolean; // If false, hides UserPointButton and UserAvatar

@@ -36,6 +36,7 @@ export interface CreateChallengeRequest {
   totalDays: number;
   category?: string;
   predefinedType?: string; // ID of the predefined challenge template
+  learningPath?: string[];
 }
 
 export interface UpdateChallengeRequest {
