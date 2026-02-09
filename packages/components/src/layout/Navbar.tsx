@@ -96,7 +96,7 @@ const Navbar = ({
       initial={{ y: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
-      <nav className={`flex items-center justify-between p-2 lg:px-8 ${borderClass}`}>
+      <nav className={`flex items-center justify-between p-2 lg:px-4 ${borderClass}`}>
         <div className='flex items-center gap-3'>
           {finalBranding}
           {isLearningVariant && (

@@ -113,7 +113,7 @@ const getNavbarVariantConfig = (
   prepyatra: {
     branding: (
       <div className="flex flex-col gap-0">
-        <span className="text-2xl font-bold text-primary leading-tight">
+        <span className="text-xl font-bold text-primary leading-tight">
           PrepYatra
         </span>
         <span className="text-[10px] text-greyDark -mt-0.5">

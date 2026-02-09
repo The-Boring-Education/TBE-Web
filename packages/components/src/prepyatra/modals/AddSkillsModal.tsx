@@ -206,6 +206,7 @@ const AddSkillsModal = ({
                             icon={<Plus className='w-4 h-4' />}
                             isLoading={loading}
                             animationType='BOUNCE'
+                            type='submit'
                         />
                     </DialogFooter>
                 </form>

@@ -18,15 +18,17 @@ import { Textarea } from "../ui/textarea"
 interface AddRecruiterModalProps {
     isOpen: boolean
     onClose: () => void
+    onSuccess?: () => void
     onContactAdded: () => void
     onContactUpdated?: () => void
     editContact?: RecruiterContact | null
     mongoUserId: string
 }
 
-const AddRecruiterModal = ({
+export const AddRecruiterModal = ({
     isOpen,
     onClose,
+    onSuccess,
     onContactAdded,
     onContactUpdated,
     editContact,
@@ -134,6 +136,10 @@ const AddRecruiterModal = ({
                 description: `Recruiter ${editContact ? "updated" : "added"
                     } successfully!`
             })
+
+            if (onSuccess) {
+                onSuccess()
+            }
 
             if (editContact && onContactUpdated) {
                 onContactUpdated()
@@ -324,4 +330,4 @@ const AddRecruiterModal = ({
     )
 }
 
-export default AddRecruiterModal
+
