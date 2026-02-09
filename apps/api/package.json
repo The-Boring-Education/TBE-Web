@@ -17,6 +17,7 @@
   "dependencies": {
     "@sentry/nextjs": "^9.38.0",
     "@tbe/auth": "workspace:*",
+    "@tbe/utils": "workspace:*",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -41,6 +42,7 @@
     "@types/uuid": "^9.0.1",
     "eslint": "^9.34.0",
     "eslint-config-next": "^13.2.4",
+    "tsx": "^4.21.0",
     "typescript": "5.9.2"
   }
 }

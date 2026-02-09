@@ -189,4 +189,27 @@ button:active {
     display: none;
     /* Chrome, Safari and Opera */
   }
+
+  .scrollbar-thin-grey {
+    scrollbar-width: thin;
+    scrollbar-color: #4A4A4A #1A1A1A;
+  }
+
+  .scrollbar-thin-grey::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin-grey::-webkit-scrollbar-track {
+    background: #1A1A1A;
+  }
+
+  .scrollbar-thin-grey::-webkit-scrollbar-thumb {
+    background: #4A4A4A;
+    border-radius: 10px;
+  }
+
+  .scrollbar-thin-grey::-webkit-scrollbar-thumb:hover {
+    background: #5A5A5A;
+  }
 }

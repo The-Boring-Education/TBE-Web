@@ -15,9 +15,23 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
       type: String,
       required: [true, 'Question Title is required'],
     },
-    content: {
+    answer: {
       type: String,
-      required: [true, 'Question Content is required'],
+      required: [true, 'Question Answer is required'],
+    },
+    resources: {
+      youtubeURL: {
+        type: String,
+        default: null,
+      },
+      leetcodeURL: {
+        type: String,
+        default: null,
+      },
+      blogURL: {
+        type: String,
+        default: null,
+      },
     },
     domain: {
       type: [String],
@@ -38,6 +52,12 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
       type: [String],
       enum: DSA_TOPICS,
       required: [true, 'DSA Topics are required'],
+    },
+    order: {
+      type: Number,
+      required: false,
+      default: 0,
+      index: true,
     },
   },
   {
@@ -65,6 +85,7 @@ DSAQuestionSchema.index({ domain: 1 });
 DSAQuestionSchema.index({ difficulty: 1 });
 DSAQuestionSchema.index({ topics: 1 });
 DSAQuestionSchema.index({ companyTypes: 1 });
+DSAQuestionSchema.index({ order: 1 }); // For sorting by custom order
 
 const DSAQuestion: Model<DSAQuestionModel> =
   models?.DSAQuestion ||

@@ -162,7 +162,7 @@ const Button = ({
       className={`${animationClasses} ${isFullWidth ? 'w-full' : ''}`}
     >
       <motion.button
-        className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-2`}
+        className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-0.5`}
         disabled={!active || isLoading}
         onClick={handleClick}
         type={type}

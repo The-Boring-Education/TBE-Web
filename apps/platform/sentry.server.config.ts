@@ -13,4 +13,9 @@ Sentry.init({
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
+
+  // Disable automatic instrumentation in development to avoid OpenTelemetry conflicts
+  // This prevents the OpenTelemetry version mismatch errors during development
+  autoInstrumentServerFunctions: process.env.NODE_ENV === 'production',
+  autoInstrumentMiddleware: process.env.NODE_ENV === 'production',
 });

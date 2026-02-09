@@ -36,7 +36,6 @@
         "NEXT_PUBLIC_PLATFORM_URL",
         "NEXT_PUBLIC_AUTH_URL",
         "NEXT_PUBLIC_GOOGLE_ANALYTICS",
-        "NEXT_PUBLIC_GTM_ID",
         "NEXT_PUBLIC_SENTRY_DSN",
         "NEXT_PUBLIC_ONBOARDING_APP_URL",
         "COOKIE_DOMAIN",
@@ -92,7 +91,6 @@
         "NEXT_PUBLIC_PLATFORM_URL",
         "NEXT_PUBLIC_AUTH_URL",
         "NEXT_PUBLIC_GOOGLE_ANALYTICS",
-        "NEXT_PUBLIC_GTM_ID",
         "NEXT_PUBLIC_SENTRY_DSN",
         "NEXT_PUBLIC_ONBOARDING_APP_URL",
         "COOKIE_DOMAIN",
@@ -174,16 +172,6 @@
       "inputs": [
         "src/api/**/*.{ts,tsx}",
         "src/test-utils/**/*.{ts,tsx}"
-      ]
-    },
-    "test:e2e": {
-      "dependsOn": [
-        "build"
-      ],
-      "cache": false,
-      "outputs": [
-        "playwright-report/**",
-        "test-results/**"
       ]
     },
     "test:coverage": {

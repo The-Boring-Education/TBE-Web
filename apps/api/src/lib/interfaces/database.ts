@@ -212,11 +212,13 @@ export interface UserSheetQuestionModel {
 export interface DSAQuestionModel extends Document {
     _id: typeof Schema.Types.ObjectId
     title: string
-    content: string
+    answer: string
+    resources: QuestionResourcesModel
     domain: DSADomainType[]
     difficulty: DSADifficultyType
     companyTypes: CompanyType[]
     topics: DSATopicType[]
+    order?: number
     createdAt: Date
     updatedAt: Date
 }

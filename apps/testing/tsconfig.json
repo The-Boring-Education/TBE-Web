@@ -24,10 +24,17 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./src/*"
+        "./src/*",
+        "../api/src/*"
       ],
       "@test-utils/*": [
         "./src/test-utils/*"
+      ],
+      "@/lib/*": [
+        "../api/src/lib/*"
+      ],
+      "@/middleware/*": [
+        "../api/src/middleware/*"
       ]
     },
     "noEmit": true,
@@ -36,12 +43,12 @@
   },
   "include": [
     "src/**/*",
-    "vitest.config.ts",
-    "playwright.config.ts"
+    "vitest.config.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "coverage"
+    "coverage",
+    "../api"
   ]
 }

@@ -805,6 +805,19 @@ export function memoize<T extends (...args: unknown[]) => ReturnType<T>>(
     }) as T
 }
 
+
+export function generateYouTubeSearchLink(questionTitle: string): string {
+    if (!questionTitle || questionTitle.trim() === '') {
+        return '';
+    }
+
+    const searchQuery = `${questionTitle.trim()} leetcode solution`;
+    const encodedQuery = encodeURIComponent(searchQuery);
+    return `https://www.youtube.com/results?search_query=${encodedQuery}`;
+}
+
+
+
 export function createIntersectionObserver(
     callback: IntersectionObserverCallback,
     options: IntersectionObserverInit = {}
@@ -945,4 +958,14 @@ export {
     validateWebhookEvent,
     verifyWebhookSignature,
     type WebhookEvent,
-    withProtocol}
+    withProtocol
+}
+
+export const getDifficultyConfig = (level: string) => {
+    switch (level?.toUpperCase()) {
+        case 'EASY': return { label: 'Easy', color: 'text-emerald-400 bg-emerald-950/30 border-emerald-500/20' };
+        case 'MEDIUM': return { label: 'Med.', color: 'text-orange-400 bg-orange-950/30 border-orange-500/20' };
+        case 'HARD': return { label: 'Hard', color: 'text-red-400 bg-red-950/30 border-red-500/20' };
+        default: return { label: level, color: 'text-gray-400 bg-gray-800/50 border-gray-700' };
+    }
+};

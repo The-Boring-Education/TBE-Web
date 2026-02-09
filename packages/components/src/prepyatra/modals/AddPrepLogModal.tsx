@@ -1,5 +1,5 @@
-import {prepLogsService} from "@tbe/services";
-import {useEffect, useState} from "react";
+import { prepLogsService } from "@tbe/services";
+import { useEffect, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
 import Text from "../../common/Typography/Text";
@@ -8,10 +8,10 @@ import {
     DialogContent,
     DialogFooter,
     DialogHeader
-    } from "../ui/dialog";
-import {InputField} from "../ui/input";
-import {Textarea} from "../ui/textarea";
-import {useToast} from "../ui/use-toast";
+} from "../ui/dialog";
+import { InputField } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { useToast } from "../ui/use-toast";
 
 interface AddPrepLogModalProps {
     isOpen: boolean
@@ -33,7 +33,7 @@ const AddPrepLogModal = ({
     mongoUserId,
     editLog
 }: AddPrepLogModalProps) => {
-    const {toast} = useToast();
+    const { toast } = useToast();
     const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -50,18 +50,18 @@ const AddPrepLogModal = ({
                 timeSpent: editLog.timeSpent.toString() || ""
             });
         } else {
-            setFormData({title: "", description: "", timeSpent: ""});
+            setFormData({ title: "", description: "", timeSpent: "" });
         }
     }, [editLog, isOpen]);
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData((prev) => ({...prev, [field]: value}));
+        setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const {title, description, timeSpent} = formData;
+        const { title, description, timeSpent } = formData;
 
         if (!title || !timeSpent) {
             toast({
@@ -95,9 +95,8 @@ const AddPrepLogModal = ({
 
             toast({
                 title: "Success",
-                description: `Prep Log ${
-                    editLog ? "updated" : "added"
-                } successfully!`
+                description: `Prep Log ${editLog ? "updated" : "added"
+                    } successfully!`
             });
 
             onLogAdded();
@@ -132,7 +131,7 @@ const AddPrepLogModal = ({
                         label='Title'
                         field='title'
                         value={formData.title}
-                        className='bg-white border-greyLight text-contentLight' 
+                        className='bg-white border-greyLight text-contentLight'
                         onChange={handleInputChange}
                         placeholder='E.g. Solved Leetcode Mediums'
                         required
@@ -180,11 +179,12 @@ const AddPrepLogModal = ({
                                     ? "Updating..."
                                     : "Creating..."
                                 : editLog
-                                ? "Update Log"
-                                : "Add Log"}
+                                    ? "Update Log"
+                                    : "Add Log"}
                             disabled={loading}
                             size="SMALL"
                             className='text-sm h-5'
+                            type="submit"
                         />
                     </DialogFooter>
                 </form>
