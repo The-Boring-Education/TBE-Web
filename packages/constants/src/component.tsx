@@ -96,6 +96,7 @@ interface NavbarVariantConfig {
   showGamification?: boolean;
   showCohorts?: boolean; // If false, hides Cohorts section
   showLearn?: boolean; // If false, hides Learn section
+  showNotifications?: boolean; // If false, hides Notification section
 }
 
 const getNavbarVariantConfig = (
@@ -126,6 +127,7 @@ const getNavbarVariantConfig = (
     dashboardRoute: "/dashboard",
     borderClass: "border",
     requiresAuth: true,
+    showNotifications: false,
   },
   techyatra: {
     productName: "TechYatra",

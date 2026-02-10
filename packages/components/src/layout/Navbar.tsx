@@ -98,6 +98,9 @@ const Navbar = ({
   // Check if variant should show Learn section (defaults to true)
   const showLearn = variantConfig.showLearn !== false;
 
+  // Check if variant should show Notifications (defaults to true)
+  const showNotifications = variantConfig.showNotifications !== false;
+
   return (
     <motion.header
       animate={{ y: isVisible ? 0 : -100 }}
@@ -105,12 +108,12 @@ const Navbar = ({
       initial={{ y: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
-      <nav className={`flex items-center justify-between p-2 lg:px-8 ${borderClass}`}>
-        <div className='flex items-center gap-3'>
+      <nav className={`flex items-center justify-between p-[12px] lg:px-[32px] ${borderClass}`}>
+        <div className='flex items-center gap-[16px]'>
           {finalBranding}
           {isLearningVariant && (
             <button
-              className={`flex items-center justify-center rounded-md p-1.5 ${theme === 'dark'
+              className={`flex items-center justify-center rounded-md p-[6px] ${theme === 'dark'
                 ? 'text-white hover:bg-gray-800'
                 : 'text-black hover:bg-gray-100'
                 }`}
@@ -119,47 +122,50 @@ const Navbar = ({
             >
               <Bars3Icon
                 aria-hidden='true'
-                className={`h-4 w-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
+                className={`h-[16px] w-[16px] ${theme === 'dark' ? 'text-white' : 'text-black'}`}
               />
             </button>
           )}
         </div>
         {shouldUseCustomActions ? (
           <>
-            <div className='flex lg:hidden gap-2 items-center'>
-              {customActions.map((action: React.ReactNode, index: number) => (
-                <div key={index}>{action}</div>
-              ))}
+            <div className='flex lg:hidden gap-[8px] items-center'>
+              {requiresAuth && <UserAvatar dashboardRoute={finalDashboardRoute} />}
               <button
-                className={`-m-2.5 flex items-center justify-center rounded-md p-2.5 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
+                className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === 'dark' ? 'text-white' : 'text-black'}`}
                 type='button'
                 onClick={() => setMobileMenuOpen(true)}
               >
-                <Bars3Icon aria-hidden='true' className={`h-6 w-6 ${theme === 'dark' ? 'text-white' : 'text-black'}`} />
+                <Bars3Icon aria-hidden='true' className={`h-[24px] w-[24px] ${theme === 'dark' ? 'text-white' : 'text-black'}`} />
               </button>
             </div>
-            <div className='hidden items-center lg:flex lg:gap-3'>
+            {/* Desktop Actions - explicit hidden for mobile, flex row for desktop */}
+            <div className='hidden max-lg:hidden lg:flex lg:flex-row lg:items-center lg:gap-[16px] lg:visible'>
               {customActions.map((action: React.ReactNode, index: number) => (
                 <div key={index}>{action}</div>
               ))}
+              {requiresAuth && showNotifications && <NotificationPopover />}
+              {showGamification && <UserPointButton />}
+              {requiresAuth && <LoginRedirectButton text='Login' />}
+              {requiresAuth && <UserAvatar dashboardRoute={finalDashboardRoute} />}
             </div>
           </>
         ) : (
           <>
-            <div className='flex lg:hidden gap-2 items-center'>
-              {requiresAuth && <NotificationPopover />}
+            <div className='flex lg:hidden gap-[8px] items-center'>
+              {requiresAuth && showNotifications && <NotificationPopover />}
               {showGamification && <UserPointButton />}
               {requiresAuth && <UserAvatar dashboardRoute={finalDashboardRoute} />}
               <button
-                className={`-m-2.5 flex items-center justify-center rounded-md p-2.5 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
+                className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === 'dark' ? 'text-white' : 'text-black'}`}
                 type='button'
                 onClick={() => setMobileMenuOpen(true)}
               >
-                <Bars3Icon aria-hidden='true' className={`h-6 w-6 ${theme === 'dark' ? 'text-white' : 'text-black'}`} />
+                <Bars3Icon aria-hidden='true' className={`h-[24px] w-[24px] ${theme === 'dark' ? 'text-white' : 'text-black'}`} />
               </button>
             </div>
             {showFullNavigation && (
-              <div className='hidden items-center lg:flex lg:gap-x-4'>
+              <div className='hidden items-center lg:flex lg:gap-x-[24px]'>
                 {TOP_NAVIGATION.issues[0]?.href && (
                   <FlexContainer direction='col' itemCenter={false}>
                     <Link
@@ -209,7 +215,7 @@ const Navbar = ({
                   <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
                 </PopoverContainer>
 
-                {requiresAuth && <NotificationPopover />}
+                {requiresAuth && showNotifications && <NotificationPopover />}
                 {showGamification && <UserPointButton />}
                 {requiresAuth && <LoginRedirectButton text='Login' />}
                 {requiresAuth && <UserAvatar dashboardRoute={finalDashboardRoute} />}
@@ -252,6 +258,16 @@ const Navbar = ({
                     direction='col'
                     itemCenter={false}
                   >
+                    {shouldUseCustomActions && customActions.map((action: React.ReactNode, index: number) => (
+                      <div key={index} className="w-full">{action}</div>
+                    ))}
+                    {/* Add Gamification and Notifications to Mobile Menu */}
+                    {shouldUseCustomActions && (
+                      <FlexContainer className='gap-2' itemCenter={false} justifyCenter={false}>
+                        {requiresAuth && showNotifications && <NotificationPopover />}
+                        {showGamification && <UserPointButton />}
+                      </FlexContainer>
+                    )}
                     {requiresAuth && (
                       <FlexContainer
                         className='gap-1'
