@@ -1,12 +1,9 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { Providers } from "./providers";
-
-const inter = Inter({ subsets: ["latin"] });
 
 // Safely get base URL - always return a valid URL
 const getMetadataBase = (): URL => {
@@ -46,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <Providers>
           {children}
           <Toaster />

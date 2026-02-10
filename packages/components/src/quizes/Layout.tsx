@@ -17,7 +17,7 @@ export function Layout({ children, showNavbar = true, showFooter = true }: Layou
     return (
         <div className="min-h-screen flex flex-col">
             {showNavbar && <Navbar />}
-            <main className="flex-grow">
+            <main className={`flex-grow ${showNavbar ? 'pt-20' : ''}`}>
                 {children}
             </main>
             {showFooter && <Footer />}

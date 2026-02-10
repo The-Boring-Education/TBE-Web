@@ -57,13 +57,16 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   sidebarContent?: React.ReactNode;
 }
 interface NavbarVariantConfig {
-  branding: React.ReactNode;
+  branding?: React.ReactNode;
+  productName?: string;
+  subText?: string;
   dashboardRoute: string;
   borderClass?: string;
   requiresAuth?: boolean; // If false, hides UserPointButton and UserAvatar
   showGamification?: boolean; // If false, hides UserPointButton (gamification)
   showCohorts?: boolean; // If false, hides Cohorts section
   showLearn?: boolean; // If false, hides Learn section
+  showNotifications?: boolean; // If false, hides Notification section
 }
 
 export type FooterVariant =
