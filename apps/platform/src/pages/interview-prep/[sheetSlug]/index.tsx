@@ -309,14 +309,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                           questionId={questionId}
                           title={title}
                           isLocked={isLocked}
+                          isStarred={isStarred}
                         />
-                        {isStarred && (
-                          <FaStar
-                            className='ml-1 text-yellow-400'
-                            style={{ fontSize: '0.9em' }}
-                            title='Starred'
-                          />
-                        )}
                       </div>
                     );
                   }
@@ -399,7 +393,15 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       <StarButton
                         key='star'
                         isStarred={isStarred}
-                        onToggle={toggleStar}
+                        onToggle={async () => {
+                          await toggleStar();
+                          const updatedQuestions = questions.map((q) =>
+                            q._id.toString() === currentQuestionId
+                              ? { ...q, isStarred: !isStarred }
+                              : q
+                          );
+                          setQuestions(updatedQuestions);
+                        }}
                         isLoading={isStarLoading}
                         className='mt-2 ml-2'
                       />
