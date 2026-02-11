@@ -231,6 +231,16 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   // Show small loader if data is not ready
   const isDataLoading = !sheet || !questions || questions.length === 0;
 
+  const handleStarToggle = async () => {
+    await toggleStar();
+    const updatedQuestions = questions.map((question) =>
+      question._id.toString() === currentQuestionId
+        ? { ...question, isStarred: !isStarred }
+        : question
+    );
+    setQuestions(updatedQuestions);
+  };
+
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
@@ -392,15 +402,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       <StarButton
                         key='star'
                         isStarred={isStarred}
-                        onToggle={async () => {
-                          await toggleStar();
-                          const updatedQuestions = questions.map((q) =>
-                            q._id.toString() === currentQuestionId
-                              ? { ...q, isStarred: !isStarred }
-                              : q
-                          );
-                          setQuestions(updatedQuestions);
-                        }}
+                        onToggle={handleStarToggle}
                         isLoading={isStarLoading}
                         className='mt-2 ml-2'
                       />
