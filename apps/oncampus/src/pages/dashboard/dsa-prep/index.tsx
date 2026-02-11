@@ -80,9 +80,12 @@ const DSAPrepPage = () => {
 
   if (sheetsLoading || userLoading) {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
+      <FlexContainer direction="col" className="h-screen bg-black overflow-hidden gap-3" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
+        <Navbar theme="dark" variant="oncampus" />
+        <div className="flex-1 flex items-center justify-center">
+          <Text level="p" className="text-gray-400">Loading...</Text>
+        </div>
+      </FlexContainer>
     )
   }
 
@@ -166,7 +169,7 @@ const DSAPrepPage = () => {
                 </div>
               </FlexContainer>
             ) : (
-              <div className="w-full max-w-none">
+              <div className="w-full px-4">
                 <div className="mb-4 pb-4 border-b border-gray-800/50">
                   <Text level="h2" className="text-2xl font-bold text-white mb-1">
                     {TOPIC_LABELS[selectedTopic] || selectedTopic}
@@ -176,7 +179,7 @@ const DSAPrepPage = () => {
                   </Text>
                 </div>
 
-                <div className="pb-1">
+                <div className="pb-1 w-full">
                   <QuestionDetailPanel question={selectedQuestion} />
                 </div>
               </div>

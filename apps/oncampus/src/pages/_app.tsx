@@ -9,6 +9,7 @@ import {
 } from '@tbe/components/analytics';
 import { useUser } from '@tbe/hooks';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect, useState } from 'react';
@@ -88,6 +89,10 @@ const OnCampusApp = ({
 }: AppProps) => {
   return (
     <Fragment>
+      <Head>
+        <link rel="icon" href="/svg/favicon.ico" />
+        <title>OnCampus</title>
+      </Head>
       <SessionProvider
         session={session}
         refetchInterval={5 * 60}
