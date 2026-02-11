@@ -110,8 +110,8 @@ const DSAPrepPage = () => {
                       className: "border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10 "
                     }}
                   />
-                  <h1 className="mt-2 text-xl font-bold text-white">Available Topics</h1>
-                  <p className="text-xs text-gray-400">Pick a category to start</p>
+                  <h1 className="mt-2 text-xl font-bold text-white">Explore Topics</h1>
+                  <p className="text-xs text-gray-400">Choose a Topic to Begin</p>
                 </div>
 
                 <FlexContainer direction="col" fullWidth itemCenter={false} justifyCenter={false} wrap={false} className="gap-1">
@@ -144,9 +144,8 @@ const DSAPrepPage = () => {
                 />
 
                 <div className="mb-1">
-                  <Text level="p" className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                    Questions
-                  </Text>
+                  <h1 className="mt-2 text-xl font-bold text-white">Explore Questions</h1>
+                  <p className="mb-2 text-xs text-gray-400">Choose a Question to Begin</p>
                   <DsaQuestionList
                     questions={filteredQuestions}
                     selectedQuestionId={selectedQuestion?.id}

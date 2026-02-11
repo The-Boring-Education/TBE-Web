@@ -22,12 +22,12 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
             <div className="space-y-2">
                 <Text level="h1" className="text-2xl font-bold tracking-tight">{question.name}</Text>
 
-                <div className="flex gap-3">
-                    {["description", "topics", "companies", "code"].map((tab) => (
+                <div className="flex gap-1">
+                    {["description", "topics", "companies"].map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab as DsaSectionTabs)}
-                            className={`px-4 py-1.5 text-sm rounded-full border transition font-medium ${activeTab === tab
+                            className={`px-2 py-1.5 text-sm rounded-full border transition font-medium ${activeTab === tab
                                 ? "border-red-500 text-red-400 bg-red-950/30"
                                 : "border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200"
                                 }`}
