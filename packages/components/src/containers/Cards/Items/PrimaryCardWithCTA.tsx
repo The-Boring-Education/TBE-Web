@@ -57,7 +57,7 @@ const PrimaryCardWithCTA = ({
             variant: 'PRIMARY',
             text: active && ctaText ? ctaText : 'Coming soon',
             active,
-            className: `${!active && 'bg-secondary'} w-full`,
+            className: `w-full`,
           }}
           className='mt-3 block'
           href={href}

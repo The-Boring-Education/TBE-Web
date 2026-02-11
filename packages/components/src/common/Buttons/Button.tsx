@@ -26,7 +26,7 @@ const getButtonClasses = (
   active: boolean
 ) => {
   if (!active) {
-    return `${baseClasses} bg-greyLight text-greyDark px-2 py-1`;
+    return `${baseClasses} bg-greyLight text-greyDark px-2 py-1 opacity-50 cursor-not-allowed`;
   }
 
   const variantClasses: Record<string, string> = {
