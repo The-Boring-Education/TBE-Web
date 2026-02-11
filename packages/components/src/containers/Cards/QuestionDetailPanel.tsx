@@ -40,11 +40,11 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
 
             <div className="space-y-3">
                 {activeTab === "description" && (
-                    <div className="space-y-3">
+                    <div className="space-y-3 w-full">
                         {/* Answer / Description (Markdown) */}
-                        <div className="space-y-2 pb-3 border-b border-gray-700">
+                        <div className="space-y-2 pb-3 border-b border-gray-700 w-full">
                             <div
-                                className="text-gray-300 leading-relaxed text-sm prose prose-invert prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
+                                className="text-gray-300 leading-relaxed text-sm prose prose-invert max-w-none prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
                                 dangerouslySetInnerHTML={{ __html: md.render(question.answer || '') }}
                             />
                         </div>
