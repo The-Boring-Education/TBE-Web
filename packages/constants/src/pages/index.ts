@@ -107,7 +107,8 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       id: v4(),
       name: 'Tech Mentorship',
       description: 'Book personalized mentorship sessions',
-      href: routes.topmateSessions,
+      href: LINKS.bookTechConsultation,
+      target: '_blank',
     },
     {
       id: v4(),

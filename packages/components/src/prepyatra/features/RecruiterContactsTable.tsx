@@ -6,7 +6,7 @@ import { Edit2, ExternalLink, Mail, Phone, Trash2 } from "lucide-react"
 import { useState } from "react"
 import DatePicker from "react-datepicker"
 
-import AddRecruiterModal from "../modals/AddRecruiterModal"
+import { AddRecruiterModal } from "../modals/AddRecruiterModal"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -414,7 +414,7 @@ const RecruiterContactsTable = ({
                                         </div>
                                     </TableCell>
                                     <TableCell >
-                                        <div className='flex gap-1'>
+                                        <div className='mr-2 flex gap-1'>
                                             {contact.email && (
                                                 <Button
                                                     size='sm'
@@ -422,9 +422,9 @@ const RecruiterContactsTable = ({
                                                     onClick={() =>
                                                         openEmail(contact.email)
                                                     }
-                                                    className='h-5 w-5 p-0 hover:bg-primary/20'
+                                                    className='h-4 w-4 p-0 hover:bg-primary/20 [&_svg]:size-2'
                                                     title='Send Email'>
-                                                    <Mail className='h-3 w-3 text-primary' />
+                                                    <Mail className='text-red-500' />
                                                 </Button>
                                             )}
                                             {contact.phone && (
@@ -434,9 +434,9 @@ const RecruiterContactsTable = ({
                                                     onClick={() =>
                                                         openPhone(contact.phone)
                                                     }
-                                                    className='h-5 w-5 p-0 hover:bg-primary/20'
+                                                    className='h-4 w-4 p-0 hover:bg-primary/20 [&_svg]:size-2'
                                                     title='Call'>
-                                                    <Phone className='h-3 w-3 text-primary' />
+                                                    <Phone className='text-red-500' />
                                                 </Button>
                                             )}
                                             {contact.link && (
@@ -446,9 +446,9 @@ const RecruiterContactsTable = ({
                                                     onClick={() =>
                                                         openLink(contact.link)
                                                     }
-                                                    className='h-5 w-5 p-0 hover:bg-primary/20'
+                                                    className='h-4 w-4 p-0 hover:bg-primary/20 [&_svg]:size-2'
                                                     title='Open Link'>
-                                                    <ExternalLink className='h-3 w-3 text-primary' />
+                                                    <ExternalLink className='text-red-500' />
                                                 </Button>
                                             )}
                                             <Button
@@ -457,18 +457,17 @@ const RecruiterContactsTable = ({
                                                 onClick={() =>
                                                     handleEdit(contact)
                                                 }
-                                                className='h-5 w-5 p-0 hover:bg-primary/20'
+                                                className='h-4 w-4 p-0 hover:bg-primary/20 [&_svg]:size-2'
                                                 title='Edit Contact'>
-                                                <Edit2 className='h-3 w-3 text-primary' />
+                                                <Edit2 className='text-red-500' />
                                             </Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button
                                                         size='sm'
                                                         variant='ghost'
-                                                        className='h-5 w-5 p-0 hover:bg-red-500/20'
-                                                        title='Delete Contact'>
-                                                        <Trash2 className='h-3 w-3 text-red-500' />
+                                                        className='h-4 w-4 p-0 hover:bg-red-500/20 [&_svg]:size-2' title='Delete Contact'>
+                                                        <Trash2 className='text-red-500' />
                                                     </Button>
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent className='glass border-greyLight'>
