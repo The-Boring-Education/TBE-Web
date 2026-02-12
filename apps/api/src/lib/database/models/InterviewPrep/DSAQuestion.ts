@@ -20,10 +20,6 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
       required: [true, 'Question Answer is required'],
     },
     resources: {
-      youtubeURL: {
-        type: String,
-        default: null,
-      },
       leetcodeURL: {
         type: String,
         default: null,
