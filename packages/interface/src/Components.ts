@@ -428,6 +428,7 @@ export interface QuestionLinkProps {
   handleQuestionClick: (question: string, questionId: string) => void;
   frequency: QuestionFrequencyType;
   theme?: 'light' | 'dark';
+  isStarred?: boolean;
 }
 
 export interface MDXRendererProps {

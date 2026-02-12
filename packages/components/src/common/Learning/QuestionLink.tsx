@@ -2,7 +2,7 @@ import { useAnalytics } from '@tbe/hooks';
 import type { QuestionLinkProps } from '@tbe/interface';
 import { trackEvent as sendEvent } from '@tbe/utils';
 import Link from 'next/link';
-import { FaLock, FaRegCircle } from 'react-icons/fa';
+import { FaLock, FaRegCircle, FaStar } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 const QuestionLink = ({
@@ -16,15 +16,16 @@ const QuestionLink = ({
   isLocked = false,
   handleQuestionClick,
   theme = 'light',
+  isStarred,
 }: QuestionLinkProps) => {
   const { trackEvent } = useAnalytics();
-  
+
   // Theme-based styling
   const isDark = theme === 'dark';
   const defaultTextColor = isDark ? 'text-contentDark' : '';
   const hoverBgClass = isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-200';
   const hoverTextClass = isDark ? 'hover:text-contentDark' : 'hover:text-contentLight';
-  
+
   let additionalClasses =
     currentQuestionId === questionId
       ? isCompleted
@@ -51,13 +52,12 @@ const QuestionLink = ({
   return (
     <Link
       key={questionId}
-      className={`flex items-center gap-1 w-full p-2 mb-1 rounded text-left pre-title ${
-        isLocked
-          ? isDark
-            ? 'text-gray-500 cursor-not-allowed'
-            : 'text-gray-700 cursor-not-allowed'
-          : `${defaultTextColor} ${hoverBgClass} ${hoverTextClass} ${additionalClasses}`
-      }`}
+      className={`flex items-center gap-1 w-full p-2 mb-1 rounded text-left pre-title ${isLocked
+        ? isDark
+          ? 'text-gray-500 cursor-not-allowed'
+          : 'text-gray-700 cursor-not-allowed'
+        : `${defaultTextColor} ${hoverBgClass} ${hoverTextClass} ${additionalClasses}`
+        }`}
       href={href}
       data-analytics
       data-analytics-label={`question:${title}`}
@@ -94,13 +94,20 @@ const QuestionLink = ({
         handleQuestionClick(question, questionId);
       }}
     >
-      <div className='flex-shrink-0'>
+      <div className='flex-shrink-0 flex items-center gap-1'>
         {isLocked ? (
           <FaLock className={isDark ? 'text-gray-500' : 'text-gray-400'} size={20} />
         ) : isCompleted ? (
           <IoIosCheckmarkCircle className={iconColor} size={24} />
         ) : (
           <FaRegCircle className={iconColor} size={24} />
+        )}
+        {isStarred && (
+          <FaStar
+            className='text-yellow-400'
+            style={{ fontSize: '0.9em' }}
+            title='Starred'
+          />
         )}
       </div>
       {title}

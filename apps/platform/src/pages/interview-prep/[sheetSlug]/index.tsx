@@ -233,6 +233,16 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   // Show small loader if data is not ready
   const isDataLoading = !sheet || !questions || questions.length === 0;
 
+  const handleStarToggle = async () => {
+    await toggleStar();
+    const updatedQuestions = questions.map((question) =>
+      question._id.toString() === currentQuestionId
+        ? { ...question, isStarred: !isStarred }
+        : question
+    );
+    setQuestions(updatedQuestions);
+  };
+
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
@@ -309,14 +319,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                           questionId={questionId}
                           title={title}
                           isLocked={isLocked}
+                          isStarred={isStarred}
                         />
-                        {isStarred && (
-                          <FaStar
-                            className='ml-1 text-yellow-400'
-                            style={{ fontSize: '0.9em' }}
-                            title='Starred'
-                          />
-                        )}
                       </div>
                     );
                   }
@@ -399,7 +403,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       <StarButton
                         key='star'
                         isStarred={isStarred}
-                        onToggle={toggleStar}
+                        onToggle={handleStarToggle}
                         isLoading={isStarLoading}
                         className='mt-2 ml-2'
                       />
