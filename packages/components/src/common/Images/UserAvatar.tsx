@@ -1,6 +1,8 @@
 import { Popover, Transition } from '@headlessui/react';
+import { TOP_NAVIGATION } from '@tbe/constants';
 import { Image, Link } from '@tbe/components';
 import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 
 interface UserAvatarProps {
@@ -9,12 +11,26 @@ interface UserAvatarProps {
 
 const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
   const session = useSession();
+  const router = useRouter();
 
   if (session.status === 'loading') return null;
   if (session.status !== 'authenticated') return null;
 
-  // Use provided dashboard route or default to platform app route
-  const finalDashboardRoute = dashboardRoute || '/user/dashboard';
+  // Map user navigation links with correct dashboard route
+  const userNavLinks = TOP_NAVIGATION.user.map((link) => {
+    if (link.href.includes('/user/dashboard') || link.href.includes('/dashboard')) {
+      return {
+        ...link,
+        href: dashboardRoute || link.href,
+      };
+    }
+    return link;
+  });
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push('/login');
+  };
 
   return (
     <div className='relative'>
@@ -26,7 +42,7 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
               className={`
                 ${open ? 'ring-2 ring-primary' : ''}
                 outline-none p-0 w-[40px] h-[40px] border-[2px] border-gray-300 relative overflow-hidden flex-shrink-0 flex items-center justify-center
-                hover:opacity-80 transition focus:outline-none rounded-full`}
+                hover:opacity-80 transition focus:outline-none rounded-full cursor-pointer`}
             >
               {session.data.user?.image ? (
                 <div
@@ -35,7 +51,7 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
                 >
                   <Image
                     alt={session.data.user?.name || ''}
-                    className='w-[40px] h-[40px] rounded-[50%]'
+                    className='w-[40px] h-[40px] rounded-[50%] object-cover'
                     fullHeight={false}
                     fullWidth={false}
                     src={session.data.user.image}
@@ -57,22 +73,28 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
               leaveFrom='opacity-100 translate-y-0'
               leaveTo='opacity-0 translate-y-1'
             >
-              <Popover.Panel className="absolute z-50 mt-1 right-0">
-                <div className='bg-white rounded shadow-md ring-1 ring-gray-200 py-1 px-2 space-y-1'>
-                  <Link
-                    className='text-xs text-gray-700 hover:text-primary transition block'
-                    href={finalDashboardRoute}
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    className='text-xs text-gray-700 hover:text-primary transition text-left block'
-                    onClick={() => {
-                      signOut();
-                    }}
-                  >
-                    Logout
-                  </button>
+              <Popover.Panel
+                className="absolute z-50 mt-1 right-0"
+              >
+                <div className=' bg-white rounded shadow-md ring-1 ring-gray-200 py-1 px-2 space-y-2'>
+                  <div className=''>
+                    {userNavLinks.map(({ id, name, href, target }) => (
+                      <Link
+                        key={id}
+                        className='text-xs text-gray-700 hover:text-primary transition block'
+                        href={href}
+                        target={target}
+                      >
+                        {name}
+                      </Link>
+                    ))}
+                    <button
+                      className='text-xs text-gray-700 hover:text-primary transition block'
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
+                  </div>
                 </div>
               </Popover.Panel>
             </Transition>
