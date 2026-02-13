@@ -285,6 +285,9 @@ export interface PrimaryCardWithCTAProps {
   isPremium?: boolean;
   roadmap?: string;
   isPurchased?: boolean;
+  difficultyLevel?: string;
+  chaptersCount?: number;
+  createdAt?: string | Date;
 }
 
 export interface LandingPageHeroProps {

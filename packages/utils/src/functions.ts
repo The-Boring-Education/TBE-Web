@@ -226,7 +226,10 @@ const mapCourseResponseToCard = (
             liveOn = new Date(),
             slug,
             isEnrolled,
-            isPremium
+            isPremium,
+            difficultyLevel,
+            roadmap,
+            chapters
         }) => {
             const isActive = isProgramActive(liveOn)
 
@@ -258,7 +261,11 @@ const mapCourseResponseToCard = (
                 active: isActive,
                 ctaText,
                 launchingOn,
-                isPremium
+                isPremium,
+                difficultyLevel,
+                roadmap,
+                chaptersCount: chapters?.length ?? 0,
+                createdAt: liveOn
             }
         }
     )

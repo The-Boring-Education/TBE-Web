@@ -161,6 +161,7 @@ export { default as ProjectHeroContainer } from "./containers/Page/Project/Proje
 export { default as ResumeEvaluationSection } from "./containers/Page/UnSkilled/ResumeEvaluationSection";
 export { default as WebinarHeroContainer } from "./containers/Page/Webinar/WebinarHeroContainer";
 export { default as ExplorePlaylistContainer } from "./containers/Page/YouFocus/ExplorePlaylistContainer";
+export { default as CourseFilterSort } from "./containers/Page/Shiksha/CourseFilterSort";
 export { default as PlaylistContainer } from "./containers/Page/YouFocus/PlaylistContainer";
 // Layout Components
 export {
