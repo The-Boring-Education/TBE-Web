@@ -83,7 +83,7 @@ const DSAPrepPage = () => {
       <FlexContainer direction="col" className="h-screen bg-black overflow-hidden gap-3" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
         <Navbar theme="dark" variant="oncampus" />
         <div className="flex-1 flex items-center justify-center">
-          <Text level="p" className="text-gray-400">Loading...</Text>
+          <Text level="p" className="text-gray-800">Loading...</Text>
         </div>
       </FlexContainer>
     )
