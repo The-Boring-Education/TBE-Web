@@ -216,7 +216,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           if (next) {
             const questionId = next._id.toString();
             setCurrentQuestionId(questionId);
-            setSheetMeta(`${next.question}\n\n${next.answer}`);
+            setSheetMeta(
+              `${next.question}\n\n${next.answer}`
+            );
           }
         }
       } else {

@@ -26,7 +26,7 @@ import type {
   UserRoleType,
   WebinarEnrolledUsersProps,
   WorkDomainType,
-  } from '.';
+} from '.';
 
 export interface UserModel {
   name: string;
@@ -156,7 +156,8 @@ export interface InterviewSheetQuestionModel {
   companyTypes?: CompanyType[];
   priority: PriorityType;
   toObject: () => UserCourseModel;
-  resources?: QuestionResourcesModel;
+  resources?: { type: string; url: string; label?: string }[];
+  explanation?: string;
 }
 
 export interface CouponModel extends Document {
