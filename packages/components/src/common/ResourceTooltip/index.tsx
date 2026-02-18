@@ -2,16 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { FaBook, FaYoutube } from 'react-icons/fa'
 import { SiLeetcode } from 'react-icons/si'
 
+import { type QuestionResourcesModel } from '@tbe/interface'
 import Button from '../Buttons/Button'
 
-export interface QuestionResources {
-    youtubeURL?: string
-    leetcodeURL?: string
-    blogURL?: string
-}
-
 export interface ResourceTooltipProps {
-    resources?: QuestionResources
+    resources?: QuestionResourcesModel
     theme?: 'light' | 'dark'
     className?: string
 }

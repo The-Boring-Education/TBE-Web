@@ -156,8 +156,7 @@ export interface InterviewSheetQuestionModel {
   companyTypes?: CompanyType[];
   priority: PriorityType;
   toObject: () => UserCourseModel;
-  resources?: { type: string; url: string; label?: string }[];
-  explanation?: string;
+  resources?: QuestionResourcesModel;
 }
 
 export interface CouponModel extends Document {

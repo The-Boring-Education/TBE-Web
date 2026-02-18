@@ -179,9 +179,9 @@ export interface InterviewSheetModel extends Document {
 }
 
 export interface QuestionResourcesModel {
-    type: string
-    url: string
-    label?: string
+    youtubeURL?: string
+    leetcodeURL?: string
+    blogURL?: string
 }
 
 export interface InterviewSheetQuestionModel {
@@ -189,12 +189,11 @@ export interface InterviewSheetQuestionModel {
     title: string
     question: string
     answer: string
-    explanation?: string
     frequency: QuestionFrequencyType
     companyTypes?: CompanyType[]
     priority: PriorityType
     toObject: () => InterviewSheetQuestionModel
-    resources?: QuestionResourcesModel[]
+    resources?: QuestionResourcesModel
 }
 
 export interface UserSheetModel extends Document {
@@ -673,7 +672,7 @@ export interface AddInterviewQuestionRequestPayloadProps {
     frequency: QuestionFrequencyType
     priority?: PriorityType
     companyTypes?: CompanyType[]
-    resources?: QuestionResourcesModel[]
+    resources?: QuestionResourcesModel
 }
 
 export interface UpdateCourseRequestPayloadProps {

@@ -42,26 +42,20 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
       default: 'Medium',
       required: true,
     },
-    explanation: {
-      type: String,
-      default: null,
-    },
-    resources: [
-      {
-        type: {
-          type: String,
-          required: true,
-        },
-        url: {
-          type: String,
-          required: true,
-        },
-        label: {
-          type: String,
-          default: null,
-        },
+    resources: {
+      youtubeURL: {
+        type: String,
+        default: null,
       },
-    ],
+      leetcodeURL: {
+        type: String,
+        default: null,
+      },
+      blogURL: {
+        type: String,
+        default: null,
+      },
+    },
   },
   { timestamps: true, _id: true }
 );
