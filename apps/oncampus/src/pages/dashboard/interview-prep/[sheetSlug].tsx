@@ -281,6 +281,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         completedChapters={completedQuestions}
         sidebarTitle="Questions"
         sidebarContent={questionsSidebar}
+        dashboardRoute="/dashboard"
       />
 
       {isDataLoading && (
