@@ -4,11 +4,19 @@ import { SiLeetcode } from 'react-icons/si'
 
 import Button from '../Buttons/Button'
 
-export interface QuestionResources {
+export interface OldQuestionResources {
     youtubeURL?: string
     leetcodeURL?: string
     blogURL?: string
 }
+
+export type NewResource = {
+    type: 'YOUTUBE' | 'ARTICLE' | 'CODE' | 'LEETCODE' | 'BLOG';
+    url: string;
+    label?: string;
+};
+
+export type QuestionResources = OldQuestionResources | NewResource[];
 
 export interface ResourceTooltipProps {
     resources?: QuestionResources
@@ -26,8 +34,9 @@ const ResourceTooltip = ({
     const isDark = theme === 'dark'
 
     // Check if any resources exist
-    const hasResources =
-        resources?.youtubeURL || resources?.leetcodeURL || resources?.blogURL
+    const hasResources = Array.isArray(resources)
+        ? resources.length > 0
+        : resources?.youtubeURL || resources?.leetcodeURL || resources?.blogURL;
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -50,26 +59,66 @@ const ResourceTooltip = ({
         return null
     }
 
-    const resourceItems = [
-        {
-            url: resources?.youtubeURL,
-            icon: <FaYoutube className='w-3 h-3' />,
-            label: 'YouTube',
-            color: 'text-red-500',
-        },
-        {
-            url: resources?.leetcodeURL,
-            icon: <SiLeetcode className='w-3 h-3' />,
-            label: 'LeetCode',
-            color: 'text-amber-500',
-        },
-        {
-            url: resources?.blogURL,
-            icon: <FaBook className='w-3 h-3' />,
-            label: 'Blog',
-            color: 'text-blue-500',
-        },
-    ].filter((item) => item.url)
+    let resourceItems: { url?: string; icon: JSX.Element; label: string; color: string }[] = [];
+
+    if (Array.isArray(resources)) {
+        resourceItems = resources.map((resource) => {
+            switch (resource.type) {
+                case 'YOUTUBE':
+                    return {
+                        url: resource.url,
+                        icon: <FaYoutube className='w-3 h-3' />,
+                        label: resource.label || 'YouTube',
+                        color: 'text-red-500',
+                    };
+                case 'LEETCODE':
+                    return {
+                        url: resource.url,
+                        icon: <SiLeetcode className='w-3 h-3' />,
+                        label: resource.label || 'LeetCode',
+                        color: 'text-amber-500',
+                    };
+                case 'BLOG':
+                case 'ARTICLE':
+                    return {
+                        url: resource.url,
+                        icon: <FaBook className='w-3 h-3' />,
+                        label: resource.label || (resource.type === 'BLOG' ? 'Blog' : 'Article'),
+                        color: 'text-blue-500',
+                    };
+                case 'CODE':
+                    return {
+                        url: resource.url,
+                        icon: <FaBook className='w-3 h-3' />,
+                        label: resource.label || 'Code',
+                        color: 'text-green-500',
+                    };
+                default:
+                    return null;
+            }
+        }).filter((item): item is NonNullable<typeof item> => item !== null);
+    } else {
+        resourceItems = [
+            {
+                url: resources?.youtubeURL,
+                icon: <FaYoutube className='w-3 h-3' />,
+                label: 'YouTube',
+                color: 'text-red-500',
+            },
+            {
+                url: resources?.leetcodeURL,
+                icon: <SiLeetcode className='w-3 h-3' />,
+                label: 'LeetCode',
+                color: 'text-amber-500',
+            },
+            {
+                url: resources?.blogURL,
+                icon: <FaBook className='w-3 h-3' />,
+                label: 'Blog',
+                color: 'text-blue-500',
+            },
+        ].filter((item) => item.url)
+    }
 
     const handleResourceClick = (url: string) => {
         window.open(url, '_blank', 'noopener,noreferrer')

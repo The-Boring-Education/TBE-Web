@@ -179,7 +179,7 @@ export interface InterviewSheetModel extends Document {
 }
 
 export interface QuestionResourcesModel {
-    type: string
+    type: 'YOUTUBE' | 'ARTICLE' | 'CODE' | 'LEETCODE' | 'BLOG'
     url: string
     label?: string
 }
@@ -189,7 +189,6 @@ export interface InterviewSheetQuestionModel {
     title: string
     question: string
     answer: string
-    explanation?: string
     frequency: QuestionFrequencyType
     companyTypes?: CompanyType[]
     priority: PriorityType

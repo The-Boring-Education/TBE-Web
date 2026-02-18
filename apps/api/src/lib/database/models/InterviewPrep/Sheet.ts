@@ -42,15 +42,13 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
       default: 'Medium',
       required: true,
     },
-    explanation: {
-      type: String,
-      default: null,
-    },
+
     resources: [
       {
         type: {
           type: String,
           required: true,
+          enum: ['YOUTUBE', 'ARTICLE', 'CODE', 'LEETCODE', 'BLOG'],
         },
         url: {
           type: String,
