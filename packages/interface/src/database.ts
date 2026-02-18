@@ -147,6 +147,11 @@ export interface QuestionResourcesModel {
   blogURL?: string;
 }
 
+import {
+  RESOURCE_TYPES,
+  type ResourceType,
+} from '@tbe/constants';
+
 export interface InterviewSheetQuestionModel {
   _id: typeof Schema.Types.ObjectId;
   title: string;
@@ -157,7 +162,7 @@ export interface InterviewSheetQuestionModel {
   priority: PriorityType;
   toObject: () => UserCourseModel;
   resources?: {
-    type: 'YOUTUBE' | 'ARTICLE' | 'CODE' | 'LEETCODE' | 'BLOG';
+    type: ResourceType;
     url: string;
     label?: string;
   }[];

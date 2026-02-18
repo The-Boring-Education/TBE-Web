@@ -64,6 +64,16 @@ export const APPLICATION_STATUS = [
 
 export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
 
+export const RESOURCE_TYPES = {
+  YOUTUBE: 'YOUTUBE',
+  ARTICLE: 'ARTICLE',
+  CODE: 'CODE',
+  LEETCODE: 'LEETCODE',
+  BLOG: 'BLOG',
+} as const;
+
+export type ResourceType = (typeof RESOURCE_TYPES)[keyof typeof RESOURCE_TYPES];
+
 export const INTEREST_EVENT_TYPES = [
   'PREPYATRA_SUBSCRIPTION',
   'AI_MENTOR',

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { FaBook, FaYoutube } from 'react-icons/fa'
 import { SiLeetcode } from 'react-icons/si'
+import { RESOURCE_TYPES, type ResourceType } from '@tbe/constants'
 
 import Button from '../Buttons/Button'
 
@@ -11,7 +12,7 @@ export interface OldQuestionResources {
 }
 
 export type NewResource = {
-    type: 'YOUTUBE' | 'ARTICLE' | 'CODE' | 'LEETCODE' | 'BLOG';
+    type: ResourceType;
     url: string;
     label?: string;
 };
@@ -64,29 +65,29 @@ const ResourceTooltip = ({
     if (Array.isArray(resources)) {
         resourceItems = resources.map((resource) => {
             switch (resource.type) {
-                case 'YOUTUBE':
+                case RESOURCE_TYPES.YOUTUBE:
                     return {
                         url: resource.url,
                         icon: <FaYoutube className='w-3 h-3' />,
                         label: resource.label || 'YouTube',
                         color: 'text-red-500',
                     };
-                case 'LEETCODE':
+                case RESOURCE_TYPES.LEETCODE:
                     return {
                         url: resource.url,
                         icon: <SiLeetcode className='w-3 h-3' />,
                         label: resource.label || 'LeetCode',
                         color: 'text-amber-500',
                     };
-                case 'BLOG':
-                case 'ARTICLE':
+                case RESOURCE_TYPES.BLOG:
+                case RESOURCE_TYPES.ARTICLE:
                     return {
                         url: resource.url,
                         icon: <FaBook className='w-3 h-3' />,
-                        label: resource.label || (resource.type === 'BLOG' ? 'Blog' : 'Article'),
+                        label: resource.label || (resource.type === RESOURCE_TYPES.BLOG ? 'Blog' : 'Article'),
                         color: 'text-blue-500',
                     };
-                case 'CODE':
+                case RESOURCE_TYPES.CODE:
                     return {
                         url: resource.url,
                         icon: <FaBook className='w-3 h-3' />,
