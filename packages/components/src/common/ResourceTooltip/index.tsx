@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { FaBook, FaYoutube } from 'react-icons/fa'
 import { SiLeetcode } from 'react-icons/si'
-import { RESOURCE_TYPES, type ResourceType } from '@tbe/constants'
+import { RESOURCE_CATEGORIES, type ResourceCategory } from '@tbe/constants'
 
 import Button from '../Buttons/Button'
 
@@ -11,13 +11,17 @@ export interface OldQuestionResources {
     blogURL?: string
 }
 
-export type NewResource = {
-    type: ResourceType;
+export type QuestionResource = {
+    type: ResourceCategory;
     url: string;
     label?: string;
 };
 
-export type QuestionResources = OldQuestionResources | NewResource[];
+export type QuestionResources = OldQuestionResources | QuestionResource[];
+
+function isResourceArray(resources: QuestionResources | undefined): resources is QuestionResource[] {
+    return Array.isArray(resources);
+}
 
 export interface ResourceTooltipProps {
     resources?: QuestionResources
@@ -35,7 +39,7 @@ const ResourceTooltip = ({
     const isDark = theme === 'dark'
 
     // Check if any resources exist
-    const hasResources = Array.isArray(resources)
+    const hasResources = isResourceArray(resources)
         ? resources.length > 0
         : resources?.youtubeURL || resources?.leetcodeURL || resources?.blogURL;
 
@@ -62,32 +66,32 @@ const ResourceTooltip = ({
 
     let resourceItems: { url?: string; icon: JSX.Element; label: string; color: string }[] = [];
 
-    if (Array.isArray(resources)) {
+    if (isResourceArray(resources)) {
         resourceItems = resources.map((resource) => {
             switch (resource.type) {
-                case RESOURCE_TYPES.YOUTUBE:
+                case RESOURCE_CATEGORIES.YOUTUBE:
                     return {
                         url: resource.url,
                         icon: <FaYoutube className='w-3 h-3' />,
                         label: resource.label || 'YouTube',
                         color: 'text-red-500',
                     };
-                case RESOURCE_TYPES.LEETCODE:
+                case RESOURCE_CATEGORIES.LEETCODE:
                     return {
                         url: resource.url,
                         icon: <SiLeetcode className='w-3 h-3' />,
                         label: resource.label || 'LeetCode',
                         color: 'text-amber-500',
                     };
-                case RESOURCE_TYPES.BLOG:
-                case RESOURCE_TYPES.ARTICLE:
+                case RESOURCE_CATEGORIES.BLOG:
+                case RESOURCE_CATEGORIES.ARTICLE:
                     return {
                         url: resource.url,
                         icon: <FaBook className='w-3 h-3' />,
-                        label: resource.label || (resource.type === RESOURCE_TYPES.BLOG ? 'Blog' : 'Article'),
+                        label: resource.label || (resource.type === RESOURCE_CATEGORIES.BLOG ? 'Blog' : 'Article'),
                         color: 'text-blue-500',
                     };
-                case RESOURCE_TYPES.CODE:
+                case RESOURCE_CATEGORIES.CODE:
                     return {
                         url: resource.url,
                         icon: <FaBook className='w-3 h-3' />,

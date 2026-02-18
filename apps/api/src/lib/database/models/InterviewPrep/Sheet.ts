@@ -1,11 +1,11 @@
 import { type Model, model, models, Schema } from 'mongoose';
+import { RESOURCE_CATEGORIES } from '@tbe/constants';
 
 import {
   COMPANY_TYPES,
   DATABASE_MODELS,
   INTERVIEW_QUESTION_FREQUENCY,
   PRIORITY_LEVELS,
-  RESOURCE_TYPES,
   ROADMAPS,
 } from '@/lib/constants';
 import type {
@@ -49,7 +49,7 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
         type: {
           type: String,
           required: true,
-          enum: Object.values(RESOURCE_TYPES),
+          enum: Object.values(RESOURCE_CATEGORIES),
         },
         url: {
           type: String,

@@ -64,7 +64,7 @@ export const APPLICATION_STATUS = [
 
 export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
 
-export const RESOURCE_TYPES = {
+export const RESOURCE_CATEGORIES = {
   YOUTUBE: 'YOUTUBE',
   ARTICLE: 'ARTICLE',
   CODE: 'CODE',
@@ -72,7 +72,7 @@ export const RESOURCE_TYPES = {
   BLOG: 'BLOG',
 } as const;
 
-export type ResourceType = (typeof RESOURCE_TYPES)[keyof typeof RESOURCE_TYPES];
+export type ResourceCategory = (typeof RESOURCE_CATEGORIES)[keyof typeof RESOURCE_CATEGORIES];
 
 export const INTEREST_EVENT_TYPES = [
   'PREPYATRA_SUBSCRIPTION',
@@ -87,7 +87,7 @@ export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 
 export const LEADERBOARD_ENUM = [
   'DAILY',
-  'WEEKLY', 
+  'WEEKLY',
   'MONTHLY',
 ] as const;
 

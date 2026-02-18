@@ -1,5 +1,5 @@
 import type { Document, Schema, Types } from "mongoose"
-import { type ResourceType } from '@tbe/constants'
+import { type ResourceCategory } from '@tbe/constants'
 
 import type {
     APIMethodTypes,
@@ -180,7 +180,11 @@ export interface InterviewSheetModel extends Document {
 }
 
 export interface QuestionResourcesModel {
-    type: ResourceType
+    /**
+     * The type of the resource.
+     * Values: 'YOUTUBE' | 'ARTICLE' | 'CODE' | 'LEETCODE' | 'BLOG'
+     */
+    type: ResourceCategory
     url: string
     label?: string
 }

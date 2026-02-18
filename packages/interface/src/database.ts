@@ -148,8 +148,8 @@ export interface QuestionResourcesModel {
 }
 
 import {
-  RESOURCE_TYPES,
-  type ResourceType,
+  RESOURCE_CATEGORIES,
+  type ResourceCategory,
 } from '@tbe/constants';
 
 export interface InterviewSheetQuestionModel {
@@ -162,7 +162,7 @@ export interface InterviewSheetQuestionModel {
   priority: PriorityType;
   toObject: () => UserCourseModel;
   resources?: {
-    type: ResourceType;
+    type: ResourceCategory;
     url: string;
     label?: string;
   }[];
