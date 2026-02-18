@@ -7,6 +7,7 @@ import {
   MDXRenderer,
   Navbar,
   PaymentCard,
+  Pill,
   ResourceTooltip,
   SEO,
   StarButton,
@@ -85,7 +86,25 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     () => questions.find((question) => question._id.toString() === currentQuestionId),
     [questions, currentQuestionId]
   );
-  const questionResources = currentQuestion?.resources;
+
+  const questionResources = useMemo(() => {
+    if (!currentQuestion?.resources) return undefined;
+
+    // Handle new array format
+    if (Array.isArray(currentQuestion.resources)) {
+      const res: any = {};
+      currentQuestion.resources.forEach((r: any) => {
+        // Type might be lowercase or capitalized, handle both
+        const type = r.type?.toLowerCase();
+        if (type === 'youtube') res.youtubeURL = r.url;
+        else if (type === 'leetcode') res.leetcodeURL = r.url;
+        else if (type === 'blog' || type === 'article') res.blogURL = r.url;
+      });
+      return res;
+    }
+    // Handle legacy object format
+    return currentQuestion.resources;
+  }, [currentQuestion]);
 
   useEffect(() => {
     setIsQuestionCompleted(currentQuestion?.isCompleted);
@@ -93,7 +112,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     setIsStarred(currentQuestion?.isStarred || false);
 
     if (currentQuestion) {
-      const updatedMeta = `${currentQuestion.question}\n\n${currentQuestion.answer}`;
+      let updatedMeta = `${currentQuestion.question}\n\n${currentQuestion.answer}`;
       setSheetMeta(updatedMeta);
     }
 
@@ -121,13 +140,20 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     }
 
     setShowFeedback(allCompleted);
-  }, [currentQuestionId, questions, gamifiedAction, setIsStarred]);
+  }, [currentQuestionId, questions, gamifiedAction, setIsStarred, currentQuestion]);
 
   if (!sheet) return null;
 
   const handleQuestionClick = (questionMeta: string, questionId: string) => {
     if (!isLocked) {
-      setSheetMeta(questionMeta);
+      // Find the question to get its full content
+      const selectedQuestion = questions.find(q => q._id.toString() === questionId);
+      if (selectedQuestion) {
+        let updatedMeta = `${selectedQuestion.question}\n\n${selectedQuestion.answer}`;
+        setSheetMeta(updatedMeta);
+      } else {
+        setSheetMeta(questionMeta);
+      }
       setCurrentQuestionId(questionId);
     }
   };
@@ -214,7 +240,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           if (next) {
             const questionId = next._id.toString();
             setCurrentQuestionId(questionId);
-            setSheetMeta(`${next.question}\n\n${next.answer}`);
+            // Updating meta logic duplicated here for immediate transition
+            let updatedMeta = `${next.question}\n\n${next.answer}`;
+            setSheetMeta(updatedMeta);
           }
         }
       } else {
@@ -306,56 +334,71 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                   )}
                 </div>
               ) : (
-                <MDXRenderer
-                  theme='dark'
-                  actions={[
-                    currentQuestionId && (
-                      <Button
-                        key='complete'
-                        className='w-fit mt-2'
-                        isLoading={isLoading}
-                        disabled={!sheet.isEnrolled}
-                        text={
-                          isLoading
-                            ? 'Marking...'
-                            : !sheet.isEnrolled
-                              ? 'Enroll to Mark Complete'
-                              : isQuestionCompleted
-                                ? 'Completed'
-                                : 'Mark As Completed'
-                        }
-                        variant={
-                          isQuestionCompleted
-                            ? 'SUCCESS'
-                            : !sheet.isEnrolled
-                              ? 'SECONDARY'
-                              : isLoading
+                <div className="w-full">
+                  {/* Metadata Badges */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {currentQuestion?.frequency && (
+                      <Pill text={currentQuestion.frequency} variant="PRIMARY" containerClasses="!bg-primary/20" textStyleClasses="!text-primary-light" />
+                    )}
+                    {currentQuestion?.priority && (
+                      <Pill text={`Priority: ${currentQuestion.priority}`} variant="SECONDARY" containerClasses="!bg-secondary/20" textStyleClasses="!text-secondary-light" />
+                    )}
+                    {currentQuestion?.companyTypes?.map((ct) => (
+                      <Pill key={ct} text={ct} variant="GHOST" containerClasses="!bg-gray-800 border border-gray-700" textStyleClasses="!text-gray-300" />
+                    ))}
+                  </div>
+
+                  <MDXRenderer
+                    theme='dark'
+                    actions={[
+                      currentQuestionId && (
+                        <Button
+                          key='complete'
+                          className='w-fit mt-2'
+                          isLoading={isLoading}
+                          disabled={!sheet.isEnrolled}
+                          text={
+                            isLoading
+                              ? 'Marking...'
+                              : !sheet.isEnrolled
+                                ? 'Enroll to Mark Complete'
+                                : isQuestionCompleted
+                                  ? 'Completed'
+                                  : 'Mark As Completed'
+                          }
+                          variant={
+                            isQuestionCompleted
+                              ? 'SUCCESS'
+                              : !sheet.isEnrolled
                                 ? 'SECONDARY'
-                                : 'PRIMARY'
-                        }
-                        onClick={toggleCompletion}
-                      />
-                    ),
-                    currentQuestionId && (
-                      <StarButton
-                        key='star'
-                        isStarred={isStarred}
-                        onToggle={toggleStar}
-                        isLoading={isStarLoading}
-                        className='mt-2 ml-2'
-                      />
-                    ),
-                    currentQuestionId && questionResources && (
-                      <ResourceTooltip
-                        key='resources'
-                        resources={questionResources}
-                        theme='dark'
-                        className='mt-2 ml-2'
-                      />
-                    ),
-                  ]}
-                  mdxSource={sheetMeta}
-                />
+                                : isLoading
+                                  ? 'SECONDARY'
+                                  : 'PRIMARY'
+                          }
+                          onClick={toggleCompletion}
+                        />
+                      ),
+                      currentQuestionId && (
+                        <StarButton
+                          key='star'
+                          isStarred={isStarred}
+                          onToggle={toggleStar}
+                          isLoading={isStarLoading}
+                          className='mt-2 ml-2'
+                        />
+                      ),
+                      currentQuestionId && questionResources && (
+                        <ResourceTooltip
+                          key='resources'
+                          resources={questionResources}
+                          theme='dark'
+                          className='mt-2 ml-2'
+                        />
+                      ),
+                    ]}
+                    mdxSource={sheetMeta}
+                  />
+                </div>
               )}
             </FlexContainer>
           </FlexContainer>

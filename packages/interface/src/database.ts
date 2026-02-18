@@ -26,7 +26,7 @@ import type {
   UserRoleType,
   WebinarEnrolledUsersProps,
   WorkDomainType,
-  } from '.';
+} from '.';
 
 export interface UserModel {
   name: string;

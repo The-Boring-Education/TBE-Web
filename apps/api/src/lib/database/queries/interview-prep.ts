@@ -137,7 +137,10 @@ const updateInterviewQuestionInDB = async (
         title,
         question,
         answer,
-        frequency
+        frequency,
+        priority,
+        companyTypes,
+        resources
     }: Partial<AddInterviewQuestionRequestPayloadProps>
 ) => {
     try {
@@ -148,7 +151,10 @@ const updateInterviewQuestionInDB = async (
                     "questions.$.title": title,
                     "questions.$.question": question,
                     "questions.$.answer": answer,
-                    "questions.$.frequency": frequency
+                    "questions.$.frequency": frequency,
+                    "questions.$.priority": priority,
+                    "questions.$.companyTypes": companyTypes,
+                    "questions.$.resources": resources
                 }
             },
             { new: true }

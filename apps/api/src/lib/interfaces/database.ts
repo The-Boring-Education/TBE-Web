@@ -192,7 +192,7 @@ export interface InterviewSheetQuestionModel {
     frequency: QuestionFrequencyType
     companyTypes?: CompanyType[]
     priority: PriorityType
-    toObject: () => UserCourseModel
+    toObject: () => InterviewSheetQuestionModel
     resources?: QuestionResourcesModel
 }
 
@@ -670,6 +670,9 @@ export interface AddInterviewQuestionRequestPayloadProps {
     question: string
     answer: string
     frequency: QuestionFrequencyType
+    priority?: PriorityType
+    companyTypes?: CompanyType[]
+    resources?: QuestionResourcesModel
 }
 
 export interface UpdateCourseRequestPayloadProps {

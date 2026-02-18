@@ -37,7 +37,7 @@ const QuestionLink = ({
           : 'text-dark font-semibold bg-gray-200'
       : '';
 
-  const iconColor = isCompleted 
+  const iconColor = isCompleted
     ? (isDark ? 'text-green-400' : 'text-green-500')
     : (isDark ? 'text-gray-400' : 'text-greyDark');
 
@@ -110,7 +110,7 @@ const QuestionLink = ({
           />
         )}
       </div>
-      {title}
+      {title?.replace(/^\*\*|\*\*$/g, '')}
     </Link>
   );
 };
