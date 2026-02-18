@@ -1,3 +1,5 @@
+import { RESOURCE_TYPES } from '@tbe/constants';
+
 const DATABASE_MODELS = {
   PROJECT: 'Project',
   USER: 'User',
@@ -81,4 +83,4 @@ const modelSelectParams = {
   projectPreview: '_id name slug coverImageURL description isActive',
 };
 
-export { DATABASE_MODELS, modelSelectParams };
+export { DATABASE_MODELS, modelSelectParams, RESOURCE_TYPES };

@@ -5,6 +5,7 @@ import {
   DATABASE_MODELS,
   INTERVIEW_QUESTION_FREQUENCY,
   PRIORITY_LEVELS,
+  RESOURCE_TYPES,
   ROADMAPS,
 } from '@/lib/constants';
 import type {
@@ -48,7 +49,7 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
         type: {
           type: String,
           required: true,
-          enum: ['YOUTUBE', 'ARTICLE', 'CODE', 'LEETCODE', 'BLOG'],
+          enum: Object.values(RESOURCE_TYPES),
         },
         url: {
           type: String,
