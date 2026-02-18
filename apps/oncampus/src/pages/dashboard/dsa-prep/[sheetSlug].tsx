@@ -2,15 +2,13 @@ import {
   Button,
   FeedbackPopup,
   FlexContainer,
-  LinerProgressBar,
   LoadingSpinner,
   MDXRenderer,
+  Navbar,
   PaymentCard,
   QuestionLink,
   ResourceTooltip,
-  Section,
   SEO,
-  SheetHeroContainer,
   StarButton,
   Text,
 } from '@tbe/components';
@@ -122,7 +120,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     }
 
     setShowFeedback(allCompleted);
-  }, [currentQuestionId, questions, gamifiedAction, setIsStarred]);
+  }, [currentQuestionId, questions, gamifiedAction, setIsStarred, currentQuestion]);
 
   if (!sheet) return null;
 
@@ -231,30 +229,62 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   // Show small loader if data is not ready
   const isDataLoading = !sheet || !questions || questions.length === 0;
 
-  const handleStarToggle = async () => {
-    await toggleStar();
-    const updatedQuestions = questions.map((question) =>
-      question._id.toString() === currentQuestionId
-        ? { ...question, isStarred: !isStarred }
-        : question
-    );
-    setQuestions(updatedQuestions);
-  };
+  const questionsSidebar = (
+    <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
+      {questions?.map(
+        ({
+          _id,
+          title,
+          question,
+          answer,
+          isCompleted,
+          frequency,
+          isStarred,
+        }) => {
+          const questionId = _id?.toString();
+
+          return (
+            <div key={questionId} className='flex items-center w-full'>
+              <QuestionLink
+                currentQuestionId={currentQuestionId}
+                frequency={frequency}
+                handleQuestionClick={() =>
+                  handleQuestionClick(
+                    `${question}\n\n${answer}`,
+                    questionId
+                  )
+                }
+                href={router.asPath.split('?')[0]}
+                isCompleted={isCompleted}
+                question={`${question}\n\n${answer}`}
+                questionId={questionId}
+                title={title}
+                isLocked={isLocked}
+                theme="dark"
+                isStarred={isStarred}
+              />
+            </div>
+          );
+        }
+      )}
+    </FlexContainer>
+  );
 
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <Section className='md:p-2 p-2'>
-        <SheetHeroContainer
-          id={sheet._id ?? ''}
-          isEnrolled={sheet.isEnrolled}
-          name={sheet.name ?? ''}
-          isPremium={sheet.isPremium}
-          isPurchased={!!isPurchased} // Ensure boolean
-          backHref={routes.oncampus.dsa}
-          theme="dark"
-        />
-      </Section>
+      <Navbar
+        variant="learning"
+        theme="dark"
+        showFullNavigation={false}
+        showBackButton={true}
+        backButtonHref={routes.oncampus.dsa}
+        totalChapters={totalQuestions}
+        completedChapters={completedQuestions}
+        sidebarTitle="DSA Questions"
+        sidebarContent={questionsSidebar}
+        dashboardRoute="/dashboard"
+      />
 
       {isDataLoading && (
         <div className='min-h-screen bg-[#0A0A0A] flex items-center justify-center py-8'>
@@ -264,68 +294,8 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       )}
 
       {!isDataLoading && (
-        <div className='min-h-screen bg-[#0A0A0A] p-4 flex items-start'>
+        <div className='min-h-screen bg-[#0A0A0A] p-4 pt-16 flex items-start'>
           <FlexContainer className='w-full max-w-[1600px] mx-auto gap-4' itemCenter={false}>
-            {/* Left Sidebar (Questions) */}
-            <FlexContainer
-              className='border md:w-3/12 w-full px-2 gap-1 rounded self-baseline max-h-[calc(100vh-2rem)] overflow-y-auto bg-[#0A0A0A] border-gray-800'
-              itemCenter={false}
-            >
-              <div className='w-full sticky top-0 bg-[#0A0A0A] py-2 z-10'>
-                <Text className='heading-5 text-contentDark' level='h5'>
-                  DSA Questions
-                </Text>
-
-                {/* LinerProgressBar */}
-                {!isLocked && (
-                  <LinerProgressBar
-                    completedChapters={completedQuestions}
-                    totalChapters={totalQuestions}
-                  />
-                )}
-              </div>
-
-              {/* Sidebar: use button for question navigation, not <Link> */}
-              <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
-                {questions?.map(
-                  ({
-                    _id,
-                    title,
-                    question,
-                    answer,
-                    isCompleted,
-                    frequency,
-                    isStarred,
-                  }) => {
-                    const questionId = _id?.toString();
-
-                    return (
-                      <div key={questionId} className='flex items-center w-full'>
-                        <QuestionLink
-                          currentQuestionId={currentQuestionId}
-                          frequency={frequency}
-                          handleQuestionClick={() =>
-                            handleQuestionClick(
-                              `${question}\n\n${answer}`,
-                              questionId
-                            )
-                          }
-                          href={router.asPath.split('?')[0]}
-                          isCompleted={isCompleted}
-                          question={`${question}\n\n${answer}`}
-                          questionId={questionId}
-                          title={title}
-                          isLocked={isLocked}
-                          theme='dark'
-                          isStarred={isStarred}
-                        />
-                      </div>
-                    );
-                  }
-                )}
-              </FlexContainer>
-            </FlexContainer>
-
             {/* Main Content Area */}
             <FlexContainer
               className='border md:w-8/12 w-full p-2 rounded bg-[#0A0A0A] border-gray-800 max-h-[calc(100vh-2rem)] overflow-y-auto'
@@ -402,7 +372,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       <StarButton
                         key='star'
                         isStarred={isStarred}
-                        onToggle={handleStarToggle}
+                        onToggle={toggleStar}
                         isLoading={isStarLoading}
                         className='mt-2 ml-2'
                       />

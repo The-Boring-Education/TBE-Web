@@ -11,6 +11,7 @@ import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import {
   FlexContainer,
   Link,
+  LinkButton,
   LoginRedirectButton,
   Logo,
   ProductLogo,
@@ -37,6 +38,8 @@ const Navbar = ({
   completedChapters = 0,
   sidebarTitle = 'Progress',
   sidebarContent,
+  showBackButton = false,
+  backButtonHref = '/',
 }: MainNavbarProps = {}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
@@ -110,6 +113,17 @@ const Navbar = ({
     >
       <nav className={`flex items-center justify-between p-[12px] lg:px-[32px] ${borderClass}`}>
         <div className='flex items-center gap-[16px]'>
+          {showBackButton && (
+            <LinkButton
+              href={backButtonHref}
+              buttonProps={{
+                variant: 'OUTLINE',
+                size: 'SMALL',
+                text: '← Back',
+                className: 'border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10 py-[4px] px-[8px] h-auto whitespace-nowrap',
+              }}
+            />
+          )}
           {finalBranding}
           {isLearningVariant && (
             <button

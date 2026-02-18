@@ -164,11 +164,12 @@ const getNavbarVariantConfig = (
   learning: {
     branding: <Logo />,
     dashboardRoute: "/user/dashboard",
-    borderClass: "border",
+    borderClass: "border-0 dark:border-0",
     requiresAuth: true,
     showGamification: false,
     showCohorts: false,
     showLearn: false,
+    showNotifications: false,
   },
 });
 

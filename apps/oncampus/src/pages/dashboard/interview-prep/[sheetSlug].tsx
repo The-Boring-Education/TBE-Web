@@ -276,7 +276,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       <Navbar
         variant="learning"
         theme="dark"
-        showFullNavigation
+        showFullNavigation={false}
+        showBackButton={true}
+        backButtonHref={routes.oncampus.interviewPrep}
         totalChapters={totalQuestions}
         completedChapters={completedQuestions}
         sidebarTitle="Questions"
