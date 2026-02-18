@@ -110,7 +110,7 @@ const QuestionLink = ({
           />
         )}
       </div>
-      {title?.replace(/^\*\*|\*\*$/g, '')}
+      {title}
     </Link>
   );
 };
