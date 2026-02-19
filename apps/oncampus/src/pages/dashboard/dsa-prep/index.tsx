@@ -115,14 +115,17 @@ const DSAPrepPage = () => {
                 </div>
 
                 <FlexContainer direction="col" fullWidth itemCenter={false} justifyCenter={false} wrap={false} className="gap-1">
-                  {topicsWithCounts.map(({ topic, count, label }) => (
+                  {topicsWithCounts.map(({ topic, count, label }, index) => (
                     <div
                       key={topic}
                       className="w-full border border-gray-800 rounded-lg px-3 py-2.5 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer bg-transparent group"
                       onClick={() => handleTopicClick(topic)}
                     >
-                      <FlexContainer className="justify-between" fullWidth itemCenter>
-                        <Text level="p" className="text-gray-300 text-sm font-medium truncate group-hover:text-white">
+                      <FlexContainer className="justify-start gap-3" fullWidth itemCenter>
+                        <div className="flex items-center justify-center w-2 h-2 rounded-full bg-gray-900 border border-gray-700 text-gray-500 text-[10px] font-bold group-hover:border-primary group-hover:text-primary transition-all duration-200 shrink-0 -ml-1">
+                          {index + 1}
+                        </div>
+                        <Text level="p" className="flex-1 text-gray-300 text-sm font-medium truncate group-hover:text-white">
                           {label}
                         </Text>
                         <Text level="span" className="text-xs font-semibold text-gray-500">
