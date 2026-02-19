@@ -55,6 +55,8 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   completedChapters?: number;
   sidebarTitle?: string;
   sidebarContent?: React.ReactNode;
+  showBackButton?: boolean;
+  backButtonHref?: string;
 }
 interface NavbarVariantConfig {
   branding?: React.ReactNode;
