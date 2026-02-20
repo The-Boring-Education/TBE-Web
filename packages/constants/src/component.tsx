@@ -263,6 +263,20 @@ export const getFooterVariantConfig = (
     subtitle:
       "Your complete tech education platform. Access courses, projects, webinars, and career resources all in one place.",
   },
+  oncampus: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-white leading-tight">
+          OnCampus
+        </span>
+        <span className="text-[10px] text-gray-400 -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    subtitle:
+      "Advance your career with OnCampus. Master DSA, Aptitude, Resume, Interviews, and Projects in one unified dashboard built for students.",
+  },
 });
 
 // LoginCard Feature Interface
