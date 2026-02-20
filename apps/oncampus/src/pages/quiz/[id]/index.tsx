@@ -77,7 +77,7 @@ export default function QuizPage() {
   const loadQuiz = useCallback(async () => {
     if (!quizId) return;
     try {
-      const response = await quizApi.getQuestions(quizId);
+      const response = await quizApi.getQuestions(quizId, false);
       if (response?.success && response?.data) {
         setQuiz(response.data as QuizQuestionsData);
         setGameState("playing");
