@@ -50,8 +50,8 @@ export const quizApi = {
   },
 
   // Get quiz questions for a category
-  getQuestions: async (quizId: string) => {
-    const response = await fetch(`${config.API_BASE_URL}/quiz/${quizId}`)
+  getQuestions: async (quizId: string, shuffle: boolean = true) => {
+    const response = await fetch(`${config.API_BASE_URL}/quiz/${quizId}?shuffle=${shuffle}`)
     if (!response.ok) throw new Error('Failed to fetch quiz questions')
     return response.json()
   },

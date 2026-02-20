@@ -101,7 +101,7 @@ export default function ResultsPage() {
       if (!quizId) return;
       setLoadingQuiz(true);
       try {
-        const response = await quizApi.getQuestions(quizId);
+        const response = await quizApi.getQuestions(quizId, false);
         if (response?.success && response?.data) {
           setQuiz(response.data as QuizQuestionsData);
         } else {
