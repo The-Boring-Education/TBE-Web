@@ -2,6 +2,7 @@
 import type { DatabaseQueryResponseType } from "@/lib/interfaces"
 
 import { QuizAttempt } from "../models"
+import { toObjectId } from "./common"
 
 interface QuizAttemptData {
     userId: string
@@ -87,15 +88,20 @@ export const getUserQuizPerformanceFromDB = async (
     userId: string
 ): Promise<DatabaseQueryResponseType> => {
     try {
-        // Use string comparison for userId to avoid ObjectId conversion issues
-        const attempts = await QuizAttempt.find({}).lean()
+        const isValidObjectId = /^[a-fA-F0-9]{24}$/.test(userId)
+        const userObjectId = isValidObjectId ? toObjectId(userId) : null
 
-        // Filter attempts by userId string comparison
-        const userAttempts = attempts.filter(
-            (attempt) => attempt.userId.toString() === userId
-        )
+        // Query attempts for the specific user (matching both string and ObjectId formats)
+        // and sort by most recent
+        const query = userObjectId
+            ? { $or: [{ userId: userId }, { userId: userObjectId }] }
+            : { userId: userId }
 
-        if (userAttempts.length === 0) {
+        const userAttempts = await QuizAttempt.find(query)
+            .sort({ completedAt: -1 })
+            .lean()
+
+        if (!userAttempts || userAttempts.length === 0) {
             return {
                 data: {
                     totalAttempts: 0,

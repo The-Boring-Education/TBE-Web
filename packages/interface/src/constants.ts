@@ -83,6 +83,7 @@ export type FooterVariant =
 
 interface FooterProps {
   variant?: FooterVariant;
+  isMini?: boolean;
 }
 
 type QuestionDifficulty =

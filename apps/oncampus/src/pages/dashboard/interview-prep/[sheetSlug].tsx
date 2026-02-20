@@ -2,6 +2,7 @@ import {
   Button,
   FeedbackPopup,
   FlexContainer,
+  Footer,
   LearningQuestionList,
   LoadingSpinner,
   MDXRenderer,
@@ -411,6 +412,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type='INTERVIEW_SHEET' />
       )}
+      <Footer variant="oncampus" isMini />
     </Fragment>
   );
 };
