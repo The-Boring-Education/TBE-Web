@@ -10,7 +10,7 @@ import type { FooterProps } from "@tbe/interface";
 import { useMemo } from "react";
 import { FaGithub, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 
-const Footer = ({ variant = "default" }: FooterProps = {}) => {
+const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
   const currentYear = new Date().getFullYear();
 
   // Get variant configuration - memoized for performance
@@ -116,47 +116,59 @@ const Footer = ({ variant = "default" }: FooterProps = {}) => {
 
   return (
     <footer className="bg-dark w-full border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className={`max-w-7xl mx-auto px-4 ${isMini ? "py-6" : "py-12"}`}>
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
-          {/* Brand Section */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center justify-between mb-4">
-              {variantConfig.branding}
+        {!isMini && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+            {/* Brand Section */}
+            <div className="lg:col-span-2">
+              <div className="flex items-center justify-between mb-4">
+                {variantConfig.branding}
+              </div>
+              <Text className="text-gray-300 mb-4 max-w-md" level="p">
+                {variantConfig.subtitle}
+              </Text>
+              <FlexContainer className="gap-4" justifyCenter={false}>
+                {socialLinks.map(({ icon: Icon, href, label }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+                    aria-label={label}
+                  >
+                    <Icon color="white" size="1.5em" />
+                  </Link>
+                ))}
+              </FlexContainer>
             </div>
-            <Text className="text-gray-300 mb-4 max-w-md" level="p">
-              {variantConfig.subtitle}
-            </Text>
-            <FlexContainer className="gap-4" justifyCenter={false}>
-              {socialLinks.map(({ icon: Icon, href, label }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-                  aria-label={label}
-                >
-                  <Icon color="white" size="1.5em" />
-                </Link>
-              ))}
-            </FlexContainer>
-          </div>
 
-          {/* Products */}
-          <div>
-            <Text className="text-white font-semibold mb-4" level="h4">
-              Products
-            </Text>
-            <ul className="space-y-2">
-              {footerSections.products.map(({ name, href, description }) => (
-                <li key={name}>
-                  {href ? (
-                    <Link
-                      href={href}
-                      className="text-gray-300 hover:text-white transition-colors group"
-                    >
-                      <div>
-                        <Text className="group-hover:text-primary" level="span">
+            {/* Products */}
+            <div>
+              <Text className="text-white font-semibold mb-4" level="h4">
+                Products
+              </Text>
+              <ul className="space-y-2">
+                {footerSections.products.map(({ name, href, description }) => (
+                  <li key={name}>
+                    {href ? (
+                      <Link
+                        href={href}
+                        className="text-gray-300 hover:text-white transition-colors group"
+                      >
+                        <div>
+                          <Text className="group-hover:text-primary" level="span">
+                            {name}
+                          </Text>
+                          <br />
+                          <Text className="text-xs text-gray-400" level="span">
+                            {description}
+                          </Text>
+                        </div>
+                      </Link>
+                    ) : (
+                      <div className="text-gray-300">
+                        <Text level="span">
                           {name}
                         </Text>
                         <br />
@@ -164,108 +176,98 @@ const Footer = ({ variant = "default" }: FooterProps = {}) => {
                           {description}
                         </Text>
                       </div>
-                    </Link>
-                  ) : (
-                    <div className="text-gray-300">
-                      <Text level="span">
-                        {name}
-                      </Text>
-                      <br />
-                      <Text className="text-xs text-gray-400" level="span">
-                        {description}
-                      </Text>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Tools */}
-          <div>
-            <Text className="text-white font-semibold mb-4" level="h4">
-              Tools
-            </Text>
-            <ul className="space-y-2">
-              {footerSections.tools.map((item: any) => (
-                <li key={item.name}>
-                  {item.href ? (
-                    <Link
-                      href={item.href}
-                      target={item.external ? "_blank" : undefined}
-                      className="text-gray-300 hover:text-white transition-colors group"
-                    >
-                      <div>
-                        <Text className="group-hover:text-primary" level="span">
+            {/* Tools */}
+            <div>
+              <Text className="text-white font-semibold mb-4" level="h4">
+                Tools
+              </Text>
+              <ul className="space-y-2">
+                {footerSections.tools.map((item: any) => (
+                  <li key={item.name}>
+                    {item.href ? (
+                      <Link
+                        href={item.href}
+                        target={item.external ? "_blank" : undefined}
+                        className="text-gray-300 hover:text-white transition-colors group"
+                      >
+                        <div>
+                          <Text className="group-hover:text-primary" level="span">
+                            {item.name}
+                            {item.external && " ↗"}
+                          </Text>
+                          <br />
+                          <Text className="text-xs text-gray-400" level="span">
+                            {item.description}
+                          </Text>
+                        </div>
+                      </Link>
+                    ) : (
+                      <div className="text-gray-300">
+                        <Text level="span">
                           {item.name}
-                          {item.external && " ↗"}
                         </Text>
                         <br />
                         <Text className="text-xs text-gray-400" level="span">
                           {item.description}
                         </Text>
                       </div>
-                    </Link>
-                  ) : (
-                    <div className="text-gray-300">
-                      <Text level="span">
-                        {item.name}
-                      </Text>
-                      <br />
-                      <Text className="text-xs text-gray-400" level="span">
-                        {item.description}
-                      </Text>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Company */}
-          <div>
-            <Text className="text-white font-semibold mb-4" level="h4">
-              Company
-            </Text>
-            <ul className="space-y-2">
-              {footerSections.company.map((item: any) => (
-                <li key={item.name}>
-                  {item.href ? (
-                    <Link
-                      href={item.href}
-                      target={item.external ? "_blank" : undefined}
-                      className="text-gray-300 hover:text-white transition-colors group"
-                    >
-                      <div>
-                        <Text className="group-hover:text-primary" level="span">
+            {/* Company */}
+            <div>
+              <Text className="text-white font-semibold mb-4" level="h4">
+                Company
+              </Text>
+              <ul className="space-y-2">
+                {footerSections.company.map((item: any) => (
+                  <li key={item.name}>
+                    {item.href ? (
+                      <Link
+                        href={item.href}
+                        target={item.external ? "_blank" : undefined}
+                        className="text-gray-300 hover:text-white transition-colors group"
+                      >
+                        <div>
+                          <Text className="group-hover:text-primary" level="span">
+                            {item.name}
+                            {item.external && " ↗"}
+                          </Text>
+                          <br />
+                          <Text className="text-xs text-gray-400" level="span">
+                            {item.description}
+                          </Text>
+                        </div>
+                      </Link>
+                    ) : (
+                      <div className="text-gray-300">
+                        <Text level="span">
                           {item.name}
-                          {item.external && " ↗"}
                         </Text>
                         <br />
                         <Text className="text-xs text-gray-400" level="span">
                           {item.description}
                         </Text>
                       </div>
-                    </Link>
-                  ) : (
-                    <div className="text-gray-300">
-                      <Text level="span">
-                        {item.name}
-                      </Text>
-                      <br />
-                      <Text className="text-xs text-gray-400" level="span">
-                        {item.description}
-                      </Text>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-800 pt-8">
+        <div className={isMini ? "" : "border-t border-gray-800 pt-8"}>
           <FlexContainer
             className="flex-col md:flex-row justify-between items-center gap-4"
             justifyCenter={false}

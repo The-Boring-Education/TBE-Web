@@ -18,48 +18,6 @@ import { ArrowLeft, CheckCircle2, ChevronDown, ChevronUp, Clock, RotateCcw, Targ
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-const isMongoObjectId = (val?: string): boolean => {
-  if (!val) return false;
-  return /^[a-fA-F0-9]{24}$/.test(val);
-};
-
-const resolveUserIdToMongoId = async (user: { id?: string; email?: string; name?: string; image?: string } | null) => {
-  const candidateId = user?.id;
-  if (candidateId && isMongoObjectId(candidateId)) return candidateId;
-  if (!user?.email) return null;
-
-  const base = (config.API_BASE_URL || "").replace(/\/$/, "");
-
-  try {
-    const resp = await fetch(`${base}/user?email=${encodeURIComponent(user.email)}`);
-    const json = await resp.json();
-    const dbId = json?.data?._id;
-    if (isMongoObjectId(dbId)) return dbId;
-  } catch {
-    // ignore and try create below
-  }
-
-  try {
-    const createResp = await fetch(`${base}/user`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: user?.name || "User",
-        email: user.email,
-        googleId: user?.id || "",
-        image: user?.image || "",
-      }),
-    });
-    const createJson = await createResp.json();
-    const createdId = createJson?.data?._id;
-    if (isMongoObjectId(createdId)) return createdId;
-  } catch {
-    // ignore
-  }
-
-  return null;
-};
-
 export default function ResultsPage() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -134,30 +92,6 @@ export default function ResultsPage() {
       return () => clearTimeout(timer);
     }
   }, [loadingQuiz, percentage]);
-
-  // Submit attempt once (best-effort)
-  const hasSubmittedRef = useRef(false);
-  useEffect(() => {
-    const submitAttempt = async () => {
-      if (hasSubmittedRef.current) return;
-      if (!quizId || answers.length === 0) return;
-      const mongoUserId = await resolveUserIdToMongoId(user);
-      if (!mongoUserId) return;
-
-      hasSubmittedRef.current = true;
-      try {
-        await quizApi.submitAttempt(quizId, {
-          userId: mongoUserId,
-          answers,
-          timeTaken,
-        });
-      } catch {
-        hasSubmittedRef.current = false; // allow retry on refresh
-      }
-    };
-
-    void submitAttempt();
-  }, [quizId, answers, timeTaken, user]);
 
   if (loadingQuiz) {
     return (
@@ -409,7 +343,7 @@ export default function ResultsPage() {
         </div>
       </main>
 
-      <Footer variant="oncampus" />
+      <Footer variant="oncampus" isMini />
     </div>
   );
 }
