@@ -7,12 +7,20 @@ import { DATABASE_MODELS } from '@/lib/constants';
 interface IChallenge extends Document {
   user: Schema.Types.ObjectId;
   name: string;
+  description?: string;
   totalDays: number;
   currentDay: number;
   startDate: Date;
   endDate: Date;
   isActive: boolean;
   category?: string;
+  difficulty?: string;
+  estimatedHoursPerDay?: number;
+  tags?: string[];
+  learningPath?: string[];
+  isPredefined?: boolean;
+  predefinedType?: string;
+  gamificationPoints?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,6 +64,37 @@ const ChallengeSchema = new Schema<IChallenge>(
     category: {
       type: String,
       trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    difficulty: {
+      type: String,
+      enum: ["Beginner", "Intermediate", "Advanced"],
+    },
+    estimatedHoursPerDay: {
+      type: Number,
+      default: 0,
+    },
+    tags: {
+      type: [String],
+      default: [],
+    },
+    learningPath: {
+      type: [String],
+      default: [],
+    },
+    isPredefined: {
+      type: Boolean,
+      default: false,
+    },
+    predefinedType: {
+      type: String,
+    },
+    gamificationPoints: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

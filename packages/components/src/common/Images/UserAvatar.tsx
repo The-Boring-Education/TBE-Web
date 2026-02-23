@@ -3,7 +3,7 @@ import { TOP_NAVIGATION } from '@tbe/constants';
 import { Image, Link } from '@tbe/components';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 interface UserAvatarProps {
   dashboardRoute?: string;
@@ -12,7 +12,13 @@ interface UserAvatarProps {
 const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
   const session = useSession();
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
   if (session.status === 'loading') return null;
   if (session.status !== 'authenticated') return null;
 
