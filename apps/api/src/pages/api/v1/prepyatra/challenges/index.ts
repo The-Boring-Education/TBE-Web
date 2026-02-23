@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 
 import { apiStatusCodes } from "@/lib/constants"
-import { Challenge } from "@/lib/database"
+import { Challenge, User } from "@/lib/database"
 import { cors } from "@/lib/utils"
 import { sendAPIResponse } from "@/lib/utils"
 import { connectDB } from "@/middleware/api"
@@ -57,7 +57,6 @@ const handleGetChallenges = async (
         } else {
             // For non-ObjectId user IDs (like Google OAuth IDs), we need to handle this differently
             // First, try to find the user in the User collection to get their MongoDB _id
-            const { User } = require("@/lib/database")
             const user = await User.findOne({
                 $or: [{ email: userId }, { providerAccountId: userId }]
             })
@@ -101,7 +100,21 @@ const handleCreateChallenge = async (
     res: NextApiResponse
 ) => {
     try {
-        const { name, totalDays, category, user, userId } = req.body
+        const {
+            name,
+            totalDays,
+            category,
+            user,
+            userId,
+            description,
+            difficulty,
+            estimatedHoursPerDay,
+            tags,
+            learningPath,
+            isPredefined,
+            predefinedType,
+            gamificationPoints
+        } = req.body
 
         // Accept both 'user' and 'userId' for flexibility
         const userField = user || userId
@@ -121,7 +134,6 @@ const handleCreateChallenge = async (
         // Check if userId is a valid MongoDB ObjectId
         if (!/^[0-9a-fA-F]{24}$/.test(userField)) {
             // For non-ObjectId user IDs, find the user in the User collection
-            const { User } = require("@/lib/database")
             const userDoc = await User.findOne({
                 $or: [{ email: userField }, { providerAccountId: userField }]
             })
@@ -149,6 +161,14 @@ const handleCreateChallenge = async (
             startDate,
             endDate,
             category,
+            description,
+            difficulty,
+            estimatedHoursPerDay,
+            tags,
+            learningPath,
+            isPredefined,
+            predefinedType,
+            gamificationPoints: gamificationPoints || 0,
             currentDay: 0,
             isActive: true
         })

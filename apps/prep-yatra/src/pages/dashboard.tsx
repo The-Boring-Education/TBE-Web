@@ -11,7 +11,8 @@ import {
     LoadingSpinner,
     Navbar,
     ProfileSection,
-    usePrepYatraGamificationContext } from "@tbe/components";
+    usePrepYatraGamificationContext
+} from "@tbe/components";
 import { usePrepLogs } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import { recruitersService, userService } from "@tbe/services";
@@ -235,6 +236,7 @@ const Dashboard = () => {
                                 userId={user.id || ""}
                                 userSkills={profile?.userSkills || []}
                                 lastUpdated={profile?.userSkillsLastUpdated}
+                                onSkillsUpdated={handleSkillsUpdated}
                             />
                         </Suspense>
                     </div>
