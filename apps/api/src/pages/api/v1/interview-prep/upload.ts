@@ -32,7 +32,7 @@ export default async function handler(
         }
 
         // 2. Format Payload
-        if (!sheetData || !sheetData.name || !Array.isArray(sheetData.questions)) {
+        if (!sheetData.name || !Array.isArray(sheetData.questions)) {
             return res.status(400).json(sendAPIResponse({
                 status: false,
                 message: "Invalid session data structure. Missing core properties or questions array.",
