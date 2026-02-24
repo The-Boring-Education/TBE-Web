@@ -448,13 +448,13 @@ const deleteInterviewSheetFromDB = async (
     sheetId: string
 ): Promise<DatabaseQueryResponseType> => {
     try {
-        const sheet = await InterviewSheet.findById(sheetId);
+        const sheet = await InterviewSheet.findById(String(sheetId));
         if (!sheet) {
             return { error: "Interview sheet not found" };
         }
         const questionsCount = sheet.questions?.length || 0;
         const sheetName = sheet.name;
-        await InterviewSheet.findByIdAndDelete(sheetId);
+        await InterviewSheet.findByIdAndDelete(String(sheetId));
 
         console.log(
             `Interview sheet "${sheetName}" (${sheetId}) deleted successfully | Questions removed: ${questionsCount}`
