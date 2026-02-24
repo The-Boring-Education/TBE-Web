@@ -1,4 +1,5 @@
 import type { DsaQuestion } from "@tbe/interface";
+import { generateYouTubeSearchLink } from "@tbe/utils";
 
 export const transformDsaQuestion = (question: any): DsaQuestion => {
     const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -16,7 +17,10 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
         name: question.title,
         difficultyLevel: question.difficulty,
         answer: answer,
-        resources: question.resources,
+        resources: {
+            ...question.resources,
+            youtubeURL: question.resources?.youtubeURL || generateYouTubeSearchLink(question.title)
+        },
         topics: question.topics,
         companyType: question.companyTypes,
         domain: question.domain,

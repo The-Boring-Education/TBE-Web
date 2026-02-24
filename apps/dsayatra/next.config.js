@@ -5,7 +5,7 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@tbe/components'],
   images: {
-    domains: [],
+    domains: ["lh3.googleusercontent.com"],
   },
   experimental: {
     // Use 'loose' mode to handle mixed ESM/CJS packages
@@ -22,7 +22,7 @@ const nextConfig = {
     if (!config.resolve.modules.includes(appNodeModules)) {
       config.resolve.modules.unshift(appNodeModules);
     }
-    
+
     // Configure webpack to handle ESM packages properly
     // This ensures date-fns (ESM-only) can be used by react-datepicker (CJS)
     config.module.rules.push({

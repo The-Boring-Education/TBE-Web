@@ -80,9 +80,12 @@ const DSAPrepPage = () => {
 
   if (sheetsLoading || userLoading) {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
+      <FlexContainer direction="col" className="h-screen bg-black overflow-hidden gap-3" fullWidth itemCenter={false} justifyCenter={false} wrap={false}>
+        <Navbar theme="dark" variant="oncampus" />
+        <div className="flex-1 flex items-center justify-center">
+          <Text level="p" className="text-gray-800">Loading...</Text>
+        </div>
+      </FlexContainer>
     )
   }
 
@@ -107,19 +110,22 @@ const DSAPrepPage = () => {
                       className: "border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10 "
                     }}
                   />
-                  <h1 className="mt-2 text-xl font-bold text-white">Available Topics</h1>
-                  <p className="text-xs text-gray-400">Pick a category to start</p>
+                  <h1 className="mt-2 text-xl font-bold text-white">Explore Topics</h1>
+                  <p className="text-xs text-gray-400">Choose a Topic to Begin</p>
                 </div>
 
                 <FlexContainer direction="col" fullWidth itemCenter={false} justifyCenter={false} wrap={false} className="gap-1">
-                  {topicsWithCounts.map(({ topic, count, label }) => (
+                  {topicsWithCounts.map(({ topic, count, label }, index) => (
                     <div
                       key={topic}
                       className="w-full border border-gray-800 rounded-lg px-3 py-2.5 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer bg-transparent group"
                       onClick={() => handleTopicClick(topic)}
                     >
-                      <FlexContainer className="justify-between" fullWidth itemCenter>
-                        <Text level="p" className="text-gray-300 text-sm font-medium truncate group-hover:text-white">
+                      <FlexContainer className="justify-start gap-3" fullWidth itemCenter>
+                        <div className="flex items-center justify-center w-2 h-2 rounded-full bg-gray-900 border border-gray-700 text-gray-500 text-[10px] font-bold group-hover:border-primary group-hover:text-primary transition-all duration-200 shrink-0 -ml-1">
+                          {index + 1}
+                        </div>
+                        <Text level="p" className="flex-1 text-gray-300 text-sm font-medium truncate group-hover:text-white">
                           {label}
                         </Text>
                         <Text level="span" className="text-xs font-semibold text-gray-500">
@@ -141,9 +147,8 @@ const DSAPrepPage = () => {
                 />
 
                 <div className="mb-1">
-                  <Text level="p" className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                    Questions
-                  </Text>
+                  <h1 className="mt-2 text-xl font-bold text-white">Explore Questions</h1>
+                  <p className="mb-2 text-xs text-gray-400">Choose a Question to Begin</p>
                   <DsaQuestionList
                     questions={filteredQuestions}
                     selectedQuestionId={selectedQuestion?.id}
@@ -166,7 +171,7 @@ const DSAPrepPage = () => {
                 </div>
               </FlexContainer>
             ) : (
-              <div className="w-full max-w-none">
+              <div className="w-full px-4">
                 <div className="mb-4 pb-4 border-b border-gray-800/50">
                   <Text level="h2" className="text-2xl font-bold text-white mb-1">
                     {TOPIC_LABELS[selectedTopic] || selectedTopic}
@@ -176,7 +181,7 @@ const DSAPrepPage = () => {
                   </Text>
                 </div>
 
-                <div className="pb-1">
+                <div className="pb-1 w-full">
                   <QuestionDetailPanel question={selectedQuestion} />
                 </div>
               </div>

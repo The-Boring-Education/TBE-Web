@@ -428,6 +428,7 @@ export interface QuestionLinkProps {
   handleQuestionClick: (question: string, questionId: string) => void;
   frequency: QuestionFrequencyType;
   theme?: 'light' | 'dark';
+  isStarred?: boolean;
 }
 
 export interface MDXRendererProps {
@@ -885,7 +886,7 @@ export interface StarButtonProps {
 }
 
 export interface LoginCardNewProps {
-  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus";
+  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus" | "dsayatra";
   customRedirectPath?: string;
   theme?: "light" | "dark";
 }

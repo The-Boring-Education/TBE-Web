@@ -22,12 +22,12 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
             <div className="space-y-2">
                 <Text level="h1" className="text-2xl font-bold tracking-tight">{question.name}</Text>
 
-                <div className="flex gap-3">
-                    {["description", "topics", "companies", "code"].map((tab) => (
+                <div className="flex gap-1">
+                    {["description", "topics", "companies"].map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab as DsaSectionTabs)}
-                            className={`px-4 py-1.5 text-sm rounded-full border transition font-medium ${activeTab === tab
+                            className={`px-2 py-1.5 text-sm rounded-full border transition font-medium ${activeTab === tab
                                 ? "border-red-500 text-red-400 bg-red-950/30"
                                 : "border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200"
                                 }`}
@@ -40,11 +40,11 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
 
             <div className="space-y-3">
                 {activeTab === "description" && (
-                    <div className="space-y-3">
+                    <div className="space-y-3 w-full">
                         {/* Answer / Description (Markdown) */}
-                        <div className="space-y-2 pb-3 border-b border-gray-700">
+                        <div className="space-y-2 pb-3 border-b border-gray-700 w-full">
                             <div
-                                className="text-gray-300 leading-relaxed text-sm prose prose-invert prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
+                                className="text-gray-300 leading-relaxed text-sm prose prose-invert max-w-none prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
                                 dangerouslySetInnerHTML={{ __html: md.render(question.answer || '') }}
                             />
                         </div>

@@ -96,6 +96,7 @@ interface NavbarVariantConfig {
   showGamification?: boolean;
   showCohorts?: boolean; // If false, hides Cohorts section
   showLearn?: boolean; // If false, hides Learn section
+  showNotifications?: boolean; // If false, hides Notification section
 }
 
 const getNavbarVariantConfig = (
@@ -126,6 +127,7 @@ const getNavbarVariantConfig = (
     dashboardRoute: "/dashboard",
     borderClass: "border",
     requiresAuth: true,
+    showNotifications: false,
   },
   techyatra: {
     productName: "TechYatra",
@@ -135,19 +137,11 @@ const getNavbarVariantConfig = (
     requiresAuth: false, // Non-auth app
   },
   dsayatra: {
-    branding: (
-      <div className="flex flex-col gap-0">
-        <span className="text-2xl font-bold text-primary leading-tight">
-          DSAYatra
-        </span>
-        <span className="text-[10px] text-greyDark -mt-0.5">
-          By The Boring Education
-        </span>
-      </div>
-    ),
-    dashboardRoute: "/",
-    borderClass: "border",
-    requiresAuth: false, // Non-auth app
+    productName: "DSA Yatra",
+    subText: "By The Boring Education",
+    dashboardRoute: "/dashboard",
+    borderClass: "border-b border-greyLight",
+    requiresAuth: true,
   },
   "resume-yatra": {
     productName: "ResumeYatra",
@@ -170,11 +164,12 @@ const getNavbarVariantConfig = (
   learning: {
     branding: <Logo />,
     dashboardRoute: "/user/dashboard",
-    borderClass: "border",
+    borderClass: "border-0 dark:border-0",
     requiresAuth: true,
     showGamification: false,
     showCohorts: false,
     showLearn: false,
+    showNotifications: false,
   },
 });
 
@@ -267,6 +262,20 @@ export const getFooterVariantConfig = (
     branding: <Logo />,
     subtitle:
       "Your complete tech education platform. Access courses, projects, webinars, and career resources all in one place.",
+  },
+  oncampus: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-white leading-tight">
+          OnCampus
+        </span>
+        <span className="text-[10px] text-gray-400 -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    subtitle:
+      "Advance your career with OnCampus. Master DSA, Aptitude, Resume, Interviews, and Projects in one unified dashboard built for students.",
   },
 });
 
@@ -442,6 +451,31 @@ export const getLoginCardVariantConfig = (): Record<
     redirectPath: "/dashboard",
     termsHref: "/",
     privacyHref: "/",
+  },
+  dsayatra: {
+    title: "Welcome to DSA Yatra",
+    subtitle: "Sign in to master Data Structures & Algorithms",
+    rightSectionTitle: "Why DSA Yatra?",
+    features: [
+      {
+        icon: TrendingUp,
+        title: "Structured Path",
+        description: "Follow a curated roadmap for DSA mastery",
+      },
+      {
+        icon: Brain,
+        title: "Practice Problems",
+        description: "Solve hand-picked problems with detailed solutions",
+      },
+      {
+        icon: Target,
+        title: "Track Progress",
+        description: "Monitor your consistency and improvement",
+      },
+    ],
+    redirectPath: "/dashboard",
+    termsHref: "/terms-and-conditions",
+    privacyHref: "/privacy",
   },
 });
 

@@ -363,6 +363,7 @@ const CreateChallengeModal = ({
                     text={loading ? "Creating..." : "Create Challenge"}
                     icon={<Plus className="w-2 h-2 mr-2" />}
                     className="text-sm h-5"
+                    type="submit"
                   />
                 </DialogFooter>
               </form>

@@ -1,208 +1,118 @@
-// import axios from "axios";
-// import type { NextApiRequest, NextApiResponse } from "next";
+import { Types } from "mongoose";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-// import { addAInterviewSheetToDB } from "@/lib/database";
-// import type { AddInterviewSheetRequestPayloadProps } from "@/lib/interfaces";
+import { addAInterviewSheetToDB } from "@/lib/database";
+import type { AddInterviewSheetRequestPayloadProps, InterviewSheetQuestionModel } from "@/lib/interfaces";
+import { sendAPIResponse } from "@/lib/utils/functions";
 
-// /**
-//  * API endpoint to upload/publish completed interview sheets from The-Boring-Agents to database
-//  * Similar to quiz upload functionality but for interview prep sheets
-//  */
-// export default async function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse
-// ) {
-//   if (req.method !== "POST") {
-//     return res.status(405).json({
-//       success: false,
-//       message: "Method not allowed",
-//     });
-//   }
+/**
+ * API endpoint to upload/publish completed interview sheets from The-Boring-Agents to database
+ */
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    if (req.method !== "POST") {
+        return res.status(405).json(sendAPIResponse({
+            status: false,
+            message: "Method not allowed",
+            success: false,
+        }));
+    }
 
-//   try {
-//     const { sessionId, name, description, isPremium, price, coverImageURL } =
-//       req.body;
+    try {
+        const { sessionId, metadata: frontendMetadata, sheetData } = req.body;
 
-//     if (!sessionId) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Session ID is required",
-//       });
-//     }
+        if (!sessionId || !sheetData) {
+            return res.status(400).json(sendAPIResponse({
+                status: false,
+                message: "Missing required fields: sessionId and sheetData",
+                success: false,
+            }));
+        }
 
-//     // Get the Agents API base URL
-//     const AGENTS_API_BASE = process.env.AGENTS_API_BASE;
+        // 2. Format Payload
+        if (!sheetData.name || !Array.isArray(sheetData.questions)) {
+            return res.status(400).json(sendAPIResponse({
+                status: false,
+                message: "Invalid session data structure. Missing core properties or questions array.",
+                success: false,
+            }));
+        }
 
-//     // Fetch session data from The-Boring-Agents
-//     const sessionResponse = await axios.get(
-//       `${AGENTS_API_BASE}/interview/session/${sessionId}/progress`
-//     );
+        const {
+            questions: rawQuestions,
+            name,
+            slug,
+            description,
+            meta,
+            coverImageURL,
+            roadmap,
+            isPremium,
+            price,
+            discountPercentage,
+            appliedCoupon,
+            features
+        } = sheetData;
 
-//     if (!sessionResponse.data) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Session not found",
-//       });
-//     }
+        const metadataOverrides = frontendMetadata || {};
 
-//     const sessionData = sessionResponse.data;
+        // Map questions with fresh ObjectIds
+        const questions: InterviewSheetQuestionModel[] = rawQuestions.map((questionItem: any) => ({
+            _id: new Types.ObjectId(),
+            title: questionItem.title,
+            question: questionItem.question,
+            answer: questionItem.answer,
+            frequency: questionItem.frequency,
+            priority: questionItem.priority,
+            companyTypes: questionItem.companyTypes,
+            resources: questionItem.resources,
+        })) as InterviewSheetQuestionModel[];
 
-//     if (sessionData.status !== "completed") {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Can only upload completed sessions",
-//       });
-//     }
+        // Construct final payload with metadata overrides
+        const interviewSheetPayload: AddInterviewSheetRequestPayloadProps = {
+            name: metadataOverrides.name || name,
+            slug: metadataOverrides.slug || slug,
+            description: metadataOverrides.description || description,
+            meta: metadataOverrides.meta || meta,
+            coverImageURL: metadataOverrides.coverImageURL || coverImageURL,
+            liveOn: metadataOverrides.liveOn ? new Date(metadataOverrides.liveOn).toISOString() : new Date().toISOString(),
+            roadmap: metadataOverrides.roadmap || roadmap,
+            isPremium: metadataOverrides.isPremium !== undefined ? metadataOverrides.isPremium : isPremium,
+            price: metadataOverrides.price !== undefined ? metadataOverrides.price : price,
+            discountPercentage: metadataOverrides.discountPercentage !== undefined ? metadataOverrides.discountPercentage : discountPercentage,
+            appliedCoupon: metadataOverrides.appliedCoupon !== undefined ? metadataOverrides.appliedCoupon : appliedCoupon,
+            features: metadataOverrides.features || features,
+            questions,
+        };
 
-//     if (!sessionData.sheetData || !sessionData.sheetData.questions) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "No sheet data found in session",
-//       });
-//     }
+        // 3. Save to DB
+        const { data: savedSheet, error } = await addAInterviewSheetToDB(interviewSheetPayload);
 
-//     const sheetData = sessionData.sheetData;
+        if (error) {
+            console.error("DB Save Error:", error);
+            return res.status(500).json(sendAPIResponse({
+                status: false,
+                message: "Failed to save to database",
+                error,
+                success: false,
+            }));
+        }
 
-//     // Prepare interview sheet payload for database
-//     const interviewSheetPayload: AddInterviewSheetRequestPayloadProps = {
-//       name:
-//         name || sheetData.name || `${sessionData.topic} Interview Questions`,
-//       description:
-//         description ||
-//         sheetData.description ||
-//         `Comprehensive ${sessionData.topic} interview questions with detailed answers`,
-//       slug:
-//         sheetData.slug ||
-//         sessionData.topic
-//           .toLowerCase()
-//           .replace(/[^a-z0-9]+/g, "-")
-//           .replace(/(^-|-$)/g, ""),
-//       coverImageURL:
-//         coverImageURL ||
-//         sheetData.cover_image_url ||
-//         "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800",
-//       liveOn: new Date().toISOString(),
-//       roadmap: (sessionData.roadmap as any) || "Tech",
-//       isPremium: isPremium || false,
-//       price: isPremium ? price || 0 : 0,
-//       features: [
-//         `${sheetData.questions.length} comprehensive questions`,
-//         "Detailed explanations and answers",
-//         "Curated by AI experts",
-//         "Updated content",
-//         "Multiple difficulty levels",
-//       ],
-//     };
+        return res.status(200).json(sendAPIResponse({
+            status: true,
+            message: "Imported successfully",
+            data: savedSheet,
+            success: true,
+        }));
 
-//     // Save the sheet to database
-//     const { data: savedSheet, error: sheetError } =
-//       await addAInterviewSheetToDB(interviewSheetPayload);
-
-//     if (sheetError || !savedSheet) {
-//       console.error("Error saving interview sheet:", sheetError);
-//       return res.status(500).json({
-//         success: false,
-//         message: "Failed to save interview sheet to database",
-//         error: sheetError,
-//       });
-//     }
-
-//     // Add questions to the saved sheet
-//     const questionPromises = sheetData.questions.map(
-//       async (question: any, index: number) => {
-//         try {
-//           // Prepare question data
-//           const questionPayload = {
-//             title:
-//               question.title ||
-//               question.question?.substring(0, 100) ||
-//               `Question ${index + 1}`,
-//             question: question.question || "",
-//             answer: question.answer || "",
-//             frequency: question.frequency || "Asked Frequently",
-//             priority: question.priority || "Medium",
-//             companyTypes: question.company_types || ["Startup", "MNC"],
-//           };
-
-//           // Add question via API call to maintain consistency
-//           const questionResponse = await axios.post(
-//             `${process.env.API_URL}/interview-prep/${savedSheet._id}/question`,
-//             questionPayload,
-//             {
-//               headers: {
-//                 "Content-Type": "application/json",
-//               },
-//             }
-//           );
-
-//           return questionResponse.data;
-//         } catch (error) {
-//           console.error(`Error adding question ${index + 1}:`, error);
-//           return null;
-//         }
-//       }
-//     );
-
-//     // Wait for all questions to be added
-//     const questionResults = await Promise.allSettled(questionPromises);
-//     const successfulQuestions = questionResults.filter(
-//       (result) => result.status === "fulfilled" && result.value
-//     ).length;
-//     const failedQuestions = questionResults.length - successfulQuestions;
-
-//     // Log completion
-//     console.log(`Interview sheet uploaded: ${savedSheet._id}`);
-//     console.log(
-//       `Questions added: ${successfulQuestions}/${questionResults.length}`
-//     );
-//     if (failedQuestions > 0) {
-//       console.warn(`Failed to add ${failedQuestions} questions`);
-//     }
-
-//     // Clean up session data from The-Boring-Agents (optional)
-//     try {
-//       await axios.delete(`${AGENTS_API_BASE}/interview/session/${sessionId}`);
-//     } catch (cleanupError) {
-//       console.warn("Failed to cleanup session:", cleanupError);
-//       // Don't fail the upload for cleanup errors
-//     }
-
-//     return res.status(200).json({
-//       success: true,
-//       message: "Interview sheet uploaded successfully",
-//       data: {
-//         sheetId: savedSheet._id,
-//         name: savedSheet.name,
-//         questionsAdded: successfulQuestions,
-//         totalQuestions: questionResults.length,
-//         slug: savedSheet.slug,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("Interview sheet upload error:", error);
-
-//     // Handle specific axios errors
-//     if (axios.isAxiosError(error)) {
-//       if (error.response?.status === 404) {
-//         return res.status(404).json({
-//           success: false,
-//           message: "Session not found in The-Boring-Agents",
-//         });
-//       }
-//       if (error.response?.status === 400) {
-//         return res.status(400).json({
-//           success: false,
-//           message:
-//             error.response.data?.message ||
-//             "Invalid request to The-Boring-Agents",
-//         });
-//       }
-//     }
-
-//     return res.status(500).json({
-//       success: false,
-//       message: "Internal server error during upload",
-//       error: process.env.NODE_ENV === "development" ? error : undefined,
-//     });
-//   }
-// }
+    } catch (error: any) {
+        console.error("Upload handler error:", error.message);
+        return res.status(500).json(sendAPIResponse({
+            status: false,
+            message: "Internal server error",
+            error: error.message,
+            success: false,
+        }));
+    }
+}

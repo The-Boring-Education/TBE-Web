@@ -1,7 +1,7 @@
-  import { routes } from '@tbe/constants';
+import { routes } from '@tbe/constants';
 import { useApi } from '@tbe/hooks';
 import type { useQuestionStarredProps } from '@tbe/interface';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const useQuestionStarred = ({
   userId,
@@ -13,8 +13,14 @@ const useQuestionStarred = ({
   const [isLoading, setIsLoading] = useState(false);
   const { makeRequest } = useApi(routes.api.markSheetQuestionAsStarred);
 
+  useEffect(() => {
+    setIsStarred(initialIsStarred);
+  }, [initialIsStarred, questionId]);
+
   const toggleStar = async () => {
     if (!userId) return;
+    const oldState = isStarred;
+    setIsStarred(!isStarred); // Optimistic update
     setIsLoading(true);
     try {
       const result = await makeRequest({
@@ -27,9 +33,10 @@ const useQuestionStarred = ({
           isStarred: !isStarred,
         },
       });
-      if (result.status) setIsStarred(!isStarred);
+      if (!result.status) setIsStarred(oldState);
     } catch (e) {
       console.error(e);
+      setIsStarred(oldState);
     } finally {
       setIsLoading(false);
     }

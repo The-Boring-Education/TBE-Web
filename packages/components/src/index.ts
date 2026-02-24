@@ -67,7 +67,7 @@ export { default as Pill } from "./common/Pill";
 export { default as IconPill } from "./common/Pill/IconPill";
 export { default as CircularProgressBar } from "./common/ProgressBar/CircularProgressBar";
 export { default as LinerProgressBar } from "./common/ProgressBar/LinerProgressBar";
-export type { QuestionResources, ResourceTooltipProps } from "./common/ResourceTooltip";
+export type { ResourceTooltipProps } from "./common/ResourceTooltip";
 export { default as ResourceTooltip } from "./common/ResourceTooltip";
 export { default as TabComponent } from "./common/Tab";
 export { default as Toast } from "./common/Toast";

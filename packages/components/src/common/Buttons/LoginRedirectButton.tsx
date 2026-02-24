@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Button } from '@tbe/components';
 import type { LoginRedirectButtonProps } from '@tbe/interface';
 import { trackEvent } from '@tbe/utils';
@@ -11,6 +12,11 @@ const LoginRedirectButton = ({
   const router = useRouter();
   const pathname = usePathname();
   const { status } = useSession();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Determine the correct auth route based on current pathname
   // Prep-yatra uses /auth, platform uses /login
@@ -40,6 +46,7 @@ const LoginRedirectButton = ({
   };
 
   const authRoute = getAuthRoute();
+  if (!isClient) return null;
   if (status === 'authenticated' || pathname === '/login' || pathname === '/auth') {
     return null;
   }

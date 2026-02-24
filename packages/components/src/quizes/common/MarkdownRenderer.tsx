@@ -38,7 +38,7 @@ export function MarkdownRenderer({
                         return !isInline && language ? (
                             <pre
                                 className={[
-                                    "p-4 rounded-lg text-sm overflow-x-auto mb-4",
+                                    "p-4 rounded-lg text-sm overflow-x-auto mb-4 last:mb-0",
                                     isDark
                                         ? "bg-gray-950 text-gray-100 border border-gray-800"
                                         : "bg-gray-900 text-gray-100"
@@ -64,7 +64,7 @@ export function MarkdownRenderer({
                     p: ({ children }) => (
                         <p
                             className={[
-                                "mb-4 leading-relaxed",
+                                "mb-4 last:mb-0 leading-relaxed",
                                 isDark ? "text-gray-100" : "text-gray-900"
                             ].join(" ")}>
                             {children}
@@ -89,12 +89,12 @@ export function MarkdownRenderer({
                         </em>
                     ),
                     ul: ({ children }) => (
-                        <ul className='list-disc list-inside mb-4 space-y-1'>
+                        <ul className='list-disc list-inside mb-4 last:mb-0 space-y-1'>
                             {children}
                         </ul>
                     ),
                     ol: ({ children }) => (
-                        <ol className='list-decimal list-inside mb-4 space-y-1'>
+                        <ol className='list-decimal list-inside mb-4 last:mb-0 space-y-1'>
                             {children}
                         </ol>
                     ),
@@ -106,7 +106,7 @@ export function MarkdownRenderer({
                     blockquote: ({ children }) => (
                         <blockquote
                             className={[
-                                "border-l-4 pl-4 italic mb-4",
+                                "border-l-4 pl-4 italic mb-4 last:mb-0",
                                 isDark
                                     ? "border-gray-700 text-gray-300"
                                     : "border-gray-300 text-gray-700"
@@ -117,7 +117,7 @@ export function MarkdownRenderer({
                     h1: ({ children }) => (
                         <h1
                             className={[
-                                "text-xl font-bold mb-3",
+                                "text-xl font-bold mb-3 last:mb-0",
                                 isDark ? "text-gray-100" : "text-gray-900"
                             ].join(" ")}>
                             {children}
@@ -126,7 +126,7 @@ export function MarkdownRenderer({
                     h2: ({ children }) => (
                         <h2
                             className={[
-                                "text-lg font-bold mb-2",
+                                "text-lg font-bold mb-2 last:mb-0",
                                 isDark ? "text-gray-100" : "text-gray-900"
                             ].join(" ")}>
                             {children}
@@ -135,7 +135,7 @@ export function MarkdownRenderer({
                     h3: ({ children }) => (
                         <h3
                             className={[
-                                "text-base font-bold mb-2",
+                                "text-base font-bold mb-2 last:mb-0",
                                 isDark ? "text-gray-100" : "text-gray-900"
                             ].join(" ")}>
                             {children}

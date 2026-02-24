@@ -81,7 +81,16 @@ const InterviewPrepDashboardPage = () => {
     const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
 
     (response?.data || []).forEach((sheet: any) => {
-      const roadmap = sheet?.roadmap || "Tech";
+      let roadmap = sheet?.roadmap || "Tech";
+
+      // Auto-categorize Database related sheets
+      const title = sheet.title?.toLowerCase() || "";
+      const slug = sheet.slug?.toLowerCase() || "";
+      if (title.includes("database") || title.includes("dbms") || title.includes("sql") ||
+        slug.includes("database") || slug.includes("dbms") || slug.includes("sql")) {
+        roadmap = "Database";
+      }
+
       if (roadmap.toLowerCase() === "dsa") return;
 
       if (!groups[roadmap]) groups[roadmap] = [];
@@ -106,7 +115,15 @@ const InterviewPrepDashboardPage = () => {
     return <div>loading.....</div>;
   }
 
-  const roadmapKeys = Object.keys(groupedByRoadmap);
+  const roadmapKeys = Object.keys(groupedByRoadmap).sort((a, b) => {
+    const order = ["Tech", "Frontend", "Database"];
+    const indexA = order.indexOf(a);
+    const indexB = order.indexOf(b);
+    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
+    return a.localeCompare(b);
+  });
   const hasSheets = sheets.length > 0;
 
   return (

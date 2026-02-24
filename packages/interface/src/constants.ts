@@ -55,6 +55,8 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   completedChapters?: number;
   sidebarTitle?: string;
   sidebarContent?: React.ReactNode;
+  showBackButton?: boolean;
+  backButtonHref?: string;
 }
 interface NavbarVariantConfig {
   branding?: React.ReactNode;
@@ -66,6 +68,7 @@ interface NavbarVariantConfig {
   showGamification?: boolean; // If false, hides UserPointButton (gamification)
   showCohorts?: boolean; // If false, hides Cohorts section
   showLearn?: boolean; // If false, hides Learn section
+  showNotifications?: boolean; // If false, hides Notification section
 }
 
 export type FooterVariant =
@@ -80,6 +83,7 @@ export type FooterVariant =
 
 interface FooterProps {
   variant?: FooterVariant;
+  isMini?: boolean;
 }
 
 type QuestionDifficulty =

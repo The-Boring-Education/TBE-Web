@@ -1,7 +1,7 @@
 import { useToast } from "@tbe/hooks"
 import { trackEvent } from "@tbe/utils"
 import { AlertTriangle, Plus, X } from "lucide-react"
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 import Button from "../../common/Buttons/Button"
 import Text from "../../common/Typography/Text"
@@ -48,6 +48,11 @@ const AddSkillsModal = ({
     const [removing, setRemoving] = useState<string | null>(null)
     const { toast } = useToast()
     const inputRef = useRef<HTMLInputElement>(null)
+
+    // Sync state with props when modal opens or props change
+    useEffect(() => {
+        setSkills(userSkills)
+    }, [userSkills, isOpen])
 
     // Show warning only if no skills
     const showWarning = skills.length === 0
@@ -102,21 +107,43 @@ const AddSkillsModal = ({
     }
 
     const handleRemoveSkill = async (skill: string) => {
+        if (removing) return
         setRemoving(skill)
         try {
-            // Remove skill from backend (implement API if needed)
-            // For now, just remove locally
-            setSkills((prev) => prev.filter((s) => s !== skill))
-            toast({
-                title: "Skill removed",
-                description: `${skill} removed from your stack.`
-            })
-            try {
-                trackEvent("skill_remove", { category: "skills", skill })
-            } catch { }
-            if (onSkillsUpdated) {
-                onSkillsUpdated()
+            const res = await fetch(
+                `${NEXT_PUBLIC_API_URL}/prepyatra/userskills`,
+                {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId, skill })
+                }
+            )
+            const result = await res.json()
+            if (result.status) {
+                setSkills((prev) => prev.filter((s) => s !== skill))
+                toast({
+                    title: "Skill removed",
+                    description: `${skill} removed from your stack.`
+                })
+                try {
+                    trackEvent("skill_remove", { category: "skills", skill })
+                } catch { }
+                if (onSkillsUpdated) {
+                    onSkillsUpdated()
+                }
+            } else {
+                toast({
+                    title: "Error",
+                    description: result.message || "Failed to remove skill.",
+                    variant: "destructive"
+                })
             }
+        } catch (err) {
+            toast({
+                title: "Error",
+                description: "Failed to remove skill.",
+                variant: "destructive"
+            })
         } finally {
             setRemoving(null)
         }
@@ -206,6 +233,7 @@ const AddSkillsModal = ({
                             icon={<Plus className='w-4 h-4' />}
                             isLoading={loading}
                             animationType='BOUNCE'
+                            type='submit'
                         />
                     </DialogFooter>
                 </form>

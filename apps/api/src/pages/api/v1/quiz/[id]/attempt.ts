@@ -59,7 +59,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             }
         })
 
-        const score = Math.round((correctAnswers / quiz.questions.length) * 100)
+        const score = Math.round((correctAnswers / answers.length) * 100)
 
         // Simple points calculation - 10 points per correct answer
         const pointsEarned = correctAnswers * 10
