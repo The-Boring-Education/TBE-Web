@@ -11,14 +11,24 @@ const Login = () => {
     useEffect(() => {
         // Redirect if already authenticated
         if (!isLoading && isAuthenticated) {
-            const callbackUrl =
+            let callbackUrl =
                 (router.query.callbackUrl as string) || "/dashboard"
+
+            if (callbackUrl && !callbackUrl.startsWith("/")) {
+                callbackUrl = "/dashboard"
+            }
+
             router.replace(callbackUrl)
         }
     }, [isAuthenticated, isLoading, router])
 
     const _handleSignIn = () => {
-        const callbackUrl = (router.query.callbackUrl as string) || "/dashboard"
+        let callbackUrl = (router.query.callbackUrl as string) || "/dashboard"
+
+        if (callbackUrl && !callbackUrl.startsWith("/")) {
+            callbackUrl = "/dashboard"
+        }
+
         signIn(callbackUrl)
     }
 
