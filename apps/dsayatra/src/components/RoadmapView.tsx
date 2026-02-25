@@ -11,6 +11,7 @@ interface RoadmapViewProps {
     data: Topic[];
     backLink?: string;
     backLinkText?: string;
+    disclaimer?: React.ReactNode;
 }
 
 export const RoadmapView = ({
@@ -18,7 +19,8 @@ export const RoadmapView = ({
     description,
     data,
     backLink = "/dashboard",
-    backLinkText = "Back to Dashboard"
+    backLinkText = "Back to Dashboard",
+    disclaimer
 }: RoadmapViewProps) => {
 
     const getDifficultyColor = (difficulty: string) => {
@@ -50,6 +52,12 @@ export const RoadmapView = ({
                         {description}
                     </p>
                 </div>
+
+                {disclaimer && (
+                    <div className="mb-10">
+                        {disclaimer}
+                    </div>
+                )}
 
                 {/* Topics Grid */}
                 <div className="space-y-12">
