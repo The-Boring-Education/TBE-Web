@@ -17,12 +17,12 @@ const LandingPageHero = ({
 
                     {/* Text Content */}
                     <div className="flex-1 max-w-2xl text-center lg:text-left flex flex-col items-center lg:items-start">
-                        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-gray-900 leading-[1.1]">
+                        <h1 className="heading-1 leading-[1.1]">
                             {heading}
                             <span className="text-primary block mt-2 lg:mt-4">{focusText}</span>
                         </h1>
 
-                        <p className="mt-6 text-lg sm:text-xl text-gray-600 leading-relaxed max-w-lg">
+                        <p className="mt-6 text-lg sm:text-xl text-contentLight leading-relaxed max-w-lg">
                             {heroText}
                         </p>
 
