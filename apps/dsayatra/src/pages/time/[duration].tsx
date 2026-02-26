@@ -1,4 +1,6 @@
+import { AlertTriangle, Clock, Target } from "lucide-react";
 import { useRouter } from "next/router";
+import { Alert, AlertDescription, AlertTitle } from "@ui/alert";
 
 import { timeBasedData } from "@/data/dsaData";
 import { RoadmapView } from "@/components/RoadmapView";
@@ -26,11 +28,70 @@ export default function TimeRoadmap() {
     }
   };
 
+  const getDisclaimer = (duration: string) => {
+    if (duration === '2months') {
+      return (
+        <Alert className="bg-orange-50/50 border-orange-200 text-orange-900 mb-8 rounded-xl shadow-sm">
+          <AlertTitle className="text-lg font-bold flex items-center gap-2 mb-3">
+            <AlertTriangle className="h-5 w-5 text-orange-600" />
+            DSA understanding requires 5-6 hours/day commitment
+          </AlertTitle>
+          <AlertDescription className="space-y-2 mt-2 text-base">
+            <p className="font-medium text-orange-800">⚠️ This timeline is for DSA revision, not learning from scratch.</p>
+            <ul className="list-disc pl-5 space-y-1.5 mt-3 text-orange-700">
+              <li><strong>5-6 hours/day</strong> = minimum 5 questions/day (or 3 new + 2 revision).</li>
+              <li>DSA requires consistent time investment and revision.</li>
+            </ul>
+          </AlertDescription>
+        </Alert>
+      );
+    }
+
+    if (duration === '3-4months') {
+      return (
+        <Alert className="bg-blue-50/50 border-blue-200 text-blue-900 mb-8 rounded-xl shadow-sm">
+          <AlertTitle className="text-lg font-bold flex items-center gap-2 mb-3">
+            <Target className="h-5 w-5 text-blue-600" />
+            This timeline is for learners with basic DSA knowledge
+          </AlertTitle>
+          <AlertDescription className="space-y-2 mt-2 text-base">
+            <p className="font-medium text-blue-800">Ideal for those stuck on Arrays or Lists wanting to progress.</p>
+            <ul className="list-disc pl-5 space-y-1.5 mt-3 text-blue-700">
+              <li><strong>Recommended daily commitment:</strong> 3-4 hours/day</li>
+              <li>You have intermediate knowledge, now solidifying fundamentals.</li>
+            </ul>
+          </AlertDescription>
+        </Alert>
+      );
+    }
+
+    if (duration === '5+months') {
+      return (
+        <Alert className="bg-emerald-50/50 border-emerald-200 text-emerald-900 mb-8 rounded-xl shadow-sm">
+          <AlertTitle className="text-lg font-bold flex items-center gap-2 mb-3">
+            <Clock className="h-5 w-5 text-emerald-600" />
+            This timeline is for complete DSA learners
+          </AlertTitle>
+          <AlertDescription className="space-y-2 mt-2 text-base">
+            <p className="font-medium text-emerald-800">Perfect for 2-3 hours/day commitment over an extended period.</p>
+            <ul className="list-disc pl-5 space-y-1.5 mt-3 text-emerald-700">
+              <li>Slow and steady approach with ample time for deep learning.</li>
+              <li>You will build DSA from scratch with proper understanding.</li>
+            </ul>
+          </AlertDescription>
+        </Alert>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <RoadmapView
       title={getTitle(duration || '')}
       description={getDescription(duration || '')}
       data={data}
+      disclaimer={getDisclaimer(duration || '')}
     />
   );
 }

@@ -85,7 +85,7 @@ const LandingPage = ({ seoMeta }: PageProps) => {
       />
 
       {/* Features Section */}
-      <div id="features" className="py-20 bg-white">
+      <div id="features" className="py-10 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-center text-center mb-12 space-y-4">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
@@ -100,7 +100,7 @@ const LandingPage = ({ seoMeta }: PageProps) => {
             {FEATURES.map((feature) => (
               <Card key={feature.id} className={cn(
                 "h-full transition-all duration-300 hover:shadow-xl border-primary/20 hover:border-primary",
-                "flex flex-col items-center p-8 text-center bg-white group cursor-default relative overflow-hidden"
+                "flex flex-col items-center p-4 text-center bg-white group cursor-default relative overflow-hidden"
               )}>
                 {/* Blob Background Effect */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
