@@ -3,6 +3,7 @@ import { type Model, model, models, Schema } from 'mongoose';
 import {
   COMPANY_TYPES,
   DATABASE_MODELS,
+  DSA_TOPICS,
   GOAL_TYPES,
   INTERVIEW_CATEGORIES,
   PLATFORM_USAGE,
@@ -61,6 +62,30 @@ const PrepYatraSchema = new Schema({
       type: Number,
       default: 0,
     },
+  },
+});
+
+const DSAYatraSchema = new Schema({
+  dyOnboarded: {
+    type: Boolean,
+    default: false,
+  },
+  experienceLevel: {
+    type: String,
+  },
+  timeline: {
+    type: String,
+  },
+  target: {
+    type: String,
+  },
+  preferredLanguage: {
+    type: String,
+  },
+  targetTopics: {
+    type: [String],
+    enum: DSA_TOPICS,
+    default: [],
   },
 });
 
@@ -124,12 +149,14 @@ const UserSchema: Schema<UserModel> = new Schema(
       enum: [
         'webapp',           // From main webapp
         'prepyatra',        // From PrepYatra platform
+        'dsayatra',         // From DSAYatra platform
         'quiz',             // From quiz app
         'direct'            // Direct onboarding (existing users)
       ],
       default: 'direct'
     },
     prepYatra: PrepYatraSchema,
+    dsaYatra: DSAYatraSchema,
   },
   { timestamps: true }
 );

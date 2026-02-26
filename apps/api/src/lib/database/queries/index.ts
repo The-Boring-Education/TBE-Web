@@ -1,6 +1,7 @@
 // Export all database queries (non-conflicting ones)
 export * from './certificate'
 export * from './common'
+export * from './dsayatra'
 export * from './coupon'
 export * from './email'
 export * from './feedback'
