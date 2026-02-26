@@ -63,6 +63,14 @@ export interface UserModel {
             totalLogs?: number
         }
     }
+    dsaYatra?: {
+        dyOnboarded?: boolean
+        experienceLevel?: string
+        timeline?: string
+        target?: string
+        preferredLanguage?: string
+        targetTopics?: DSATopicType[]
+    }
 }
 
 export interface WebinarEnrolledUsersProps {

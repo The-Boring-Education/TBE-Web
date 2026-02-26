@@ -41,6 +41,7 @@ export interface User {
   purpose?: string[];
   userName?: string;
   prepYatra?: any;
+  dsaYatra?: any;
 }
 
 // Field configuration for dynamic rendering

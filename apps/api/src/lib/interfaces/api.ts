@@ -183,6 +183,17 @@ export interface PrepYatraOnboardingPayload {
   preferredCategories: InterviewCategoryType[];
 }
 
+export interface DSAYatraOnboardingPayload {
+  userId: string;
+  name: string;
+  username: string;
+  experienceLevel: string;
+  timeline: string;
+  target: string;
+  preferredLanguage: string;
+  targetTopics: DSATopicType[];
+}
+
 export interface UpdateCompanyTypePayload {
   questionIds: string[];
   companyTypes: CompanyType[];

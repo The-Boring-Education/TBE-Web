@@ -214,6 +214,118 @@ export const PRODUCT_CONFIGS: Record<string, OnboardingProductConfig> = {
             }
         }
     },
+    dsayatra: {
+        id: "dsayatra",
+        name: "DSAYatra",
+        description: "DSA preparation platform onboarding",
+        fields: [
+            createField("name", "Full Name", "text", 1, {
+                placeholder: "Enter your full name",
+                prefill: {
+                    fromUser: (user: User) => user.name || ""
+                }
+            }),
+            createField("username", "Username", "text", 2, {
+                placeholder: "Choose a username",
+                checkAvailability: true,
+                prefill: {
+                    fromUser: (user: User) => user.userName || ""
+                }
+            }),
+            createField("preferredLanguage", "Preferred Language", "select", 3, {
+                placeholder: "Select your preferred language",
+                options: ["C++", "Java", "Python", "JavaScript"],
+                prefill: {
+                    fromUser: (user: User) => user.dsaYatra?.preferredLanguage || ""
+                }
+            }),
+            createField("timeline", "Choose your timeline", "select", 4, {
+                placeholder: "Select your timeline",
+                options: ["2-3 months", "4-6 months", "8-12 months"],
+                prefill: {
+                    fromUser: (user: User) => user.dsaYatra?.timeline || ""
+                }
+            }),
+            createField("experienceLevel", "Experience Level", "select", 5, {
+                placeholder: "Select your experience level",
+                options: [
+                    "Fresher (0-1 yr)",
+                    "Junior (1-3 yr)",
+                    "Mid (3-5 yr)",
+                    "Senior (5+ yrs)"
+                ],
+                prefill: {
+                    fromUser: (user: User) => user.dsaYatra?.experienceLevel || ""
+                }
+            }),
+            createField(
+                "target",
+                "Choose your target",
+                "select",
+                6,
+                {
+                    placeholder: "Select target",
+                    options: ["Product-based", "Startups"],
+                    prefill: {
+                        fromUser: (user: User) =>
+                            user.dsaYatra?.target || ""
+                    }
+                }
+            ),
+            createField(
+                "targetTopics",
+                "Target DSA Topics",
+                "multiselect",
+                7,
+                {
+                    placeholder: "Select topics you want to focus on",
+                    options: [
+                        "ARRAY",
+                        "HASHMAP",
+                        "TWO_POINTERS",
+                        "SLIDING_WINDOW",
+                        "BINARY_SEARCH",
+                        "LINKED_LIST",
+                        "STACK",
+                        "QUEUE",
+                        "TREE",
+                        "GRAPH",
+                        "DYNAMIC_PROGRAMMING",
+                        "GREEDY",
+                        "STRING",
+                        "MATH",
+                        "BIT_MANIPULATION"
+                    ],
+                    prefill: {
+                        fromUser: (user: User) =>
+                            user.dsaYatra?.targetTopics || []
+                    }
+                }
+            )
+        ],
+        api: {
+            endpoint: () => `${config.API_BASE_URL}/dsayatra/onboarding`,
+            method: "POST",
+            transformPayload: (form: any, userId: string, from?: string) => ({
+                userId,
+                name: form.name,
+                username: form.username,
+                preferredLanguage: form.preferredLanguage,
+                timeline: form.timeline,
+                experienceLevel: form.experienceLevel,
+                target: form.target,
+                targetTopics: form.targetTopics,
+                ...(from ? { from } : {})
+            })
+        },
+        ui: {
+            theme: "default",
+            branding: {
+                title: "Welcome to DSAYatra!",
+                subtitle: "Master Data Structures and Algorithms"
+            }
+        }
+    },
 
     quizapp: {
         id: "quizapp",
