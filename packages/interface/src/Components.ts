@@ -910,6 +910,7 @@ export interface UserProfile {
   userSkills?: string[];
   userSkillsLastUpdated?: string;
   occupation?: string;
+  portfolioUrl?: string;
   purpose?: string[];
   prepYatra: {
     goal?: string;
@@ -920,6 +921,12 @@ export interface UserProfile {
       interviewCategories?: string[];
       focusAreas?: string[];
     };
+  };
+  dsaYatra?: {
+    target?: string;
+    timeline?: string;
+    experienceLevel?: string;
+    preferredLanguage?: string;
   };
 }
 

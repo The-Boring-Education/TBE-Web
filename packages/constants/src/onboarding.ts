@@ -120,3 +120,49 @@ export const INTERVIEW_CATEGORIES: {
         description: "General technical questions"
     }
 ];
+
+export const DSA_GOALS = [
+    { value: "Product-based", label: "Product-based Companies", icon: "🚀", description: "Targeting top-tier product companies" },
+    { value: "Startups", label: "Startups", icon: "🏢", description: "Focused on high-growth startup roles" }
+];
+
+export const DSA_TIMELINES = [
+    { value: "2-3 months", label: "2-3 Months", description: "Crash course / Refresher", icon: "⚡" },
+    { value: "4-6 months", label: "4-6 Months", description: "Comprehensive preparation", icon: "🎯", popular: true },
+    { value: "8-12 months", label: "8-12 Months", description: "Deep dive/Foundational", icon: "🌟" }
+];
+
+export const DSA_EXPERIENCE_LEVELS = [
+    { value: "Fresher (0-1 yr)", label: "Fresher (0-1 yr)", icon: "🌱" },
+    { value: "Junior (1-3 yr)", label: "Junior (1-3 yr)", icon: "💼" },
+    { value: "Mid (3-5 yr)", label: "Mid (3-5 yr)", icon: "🚀" },
+    { value: "Senior (5+ yrs)", label: "Senior (5+ yrs)", icon: "👔" }
+];
+
+export const DSA_TOPICS_LIST = [
+    "ARRAY",
+    "PREFIX_SUM",
+    "HASHMAP",
+    "TWO_POINTERS",
+    "SLIDING_WINDOW",
+    "BINARY_SEARCH",
+    "SORTING",
+    "LINKED_LIST",
+    "STACK",
+    "QUEUE",
+    "TREE",
+    "BINARY_TREE",
+    "BST",
+    "GRAPH",
+    "DFS",
+    "BFS",
+    "BACKTRACKING",
+    "DYNAMIC_PROGRAMMING",
+    "GREEDY",
+    "STRING",
+    "MATH",
+    "BIT_MANIPULATION",
+    "TRIE",
+    "HEAP",
+    "UNION_FIND"
+];
