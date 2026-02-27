@@ -10,6 +10,18 @@ export interface Topic {
   questions: Question[];
 }
 
+export const DIFFICULTY_WEIGHTS = {
+  Easy: 1,
+  Medium: 2,
+  Hard: 3
+} as const;
+
+export const sortQuestionsByDifficulty = (questions: Question[]): Question[] => {
+  return [...questions].sort((a, b) => {
+    return DIFFICULTY_WEIGHTS[a.difficulty] - DIFFICULTY_WEIGHTS[b.difficulty];
+  });
+};
+
 export const targetBasedData = {
   startup: [
     {
