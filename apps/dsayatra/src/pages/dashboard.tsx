@@ -26,6 +26,7 @@ import { userService } from "@tbe/services";
 import type { UserProfile } from "@tbe/interface";
 import { EditDsaOnboardingModal } from "@tbe/components";
 import { toast } from "sonner";
+import { usePrepStats, useTimeTracker } from "@tbe/hooks";
 
 const SIDEBAR_ITEMS = [
     { name: 'Dashboard', href: '/dashboard', active: true, icon: Home },
@@ -126,6 +127,12 @@ function DsaClient() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+    // Automatic time tracking for current session
+    const { seconds, formattedTime } = useTimeTracker(user?.id);
+
+    // Fetch historical stats from database
+    const { totalTimeSpent, stats } = usePrepStats(user?.id || "");
+
     useEffect(() => {
         if (user?.id) {
             userService.getProfile(user.id).then(setProfile);
@@ -134,6 +141,24 @@ function DsaClient() {
 
     const targetLabel = profile?.dsaYatra?.target || "Product-based";
     const timelineLabel = profile?.dsaYatra?.timeline || "4-6 months";
+
+    // Daily time spent calculation (Database Sum + Current Unsynced seconds)
+    const todayLog = stats?.weeklyLogs?.find(log => {
+        const logDate = new Date(log.createdAt).toDateString();
+        const todayDate = new Date().toDateString();
+        return logDate === todayDate;
+    });
+
+    const sessionMinutes = Math.floor(seconds / 60);
+    const todayTotalMinutes = (todayLog?.timeSpent || 0) + sessionMinutes;
+    const todayTotalHours = (todayTotalMinutes / 60).toFixed(1);
+
+    const dailyGoalHours = 3; // Standard goal
+    const dailyGoalProgress = Math.min(100, Math.round((todayTotalMinutes / (dailyGoalHours * 60)) * 100));
+
+    // Total invested
+    const totalMinutes = totalTimeSpent + sessionMinutes;
+    const totalHours = (totalMinutes / 60).toFixed(1);
 
     return (
         <div className="flex bg-[#0f0f0f] font-sans selection:bg-[#ff5757]/30 selection:text-white">
@@ -273,10 +298,10 @@ function DsaClient() {
 
                     <StatCard
                         title="Today's Progress"
-                        value="5"
+                        value={todayTotalHours}
                         subtext="Questions solved today"
                         icon={Code2}
-                        secondaryInfo="Time spent: 2.5 hrs"
+                        secondaryInfo={`Active: ${formattedTime}`}
                     />
                     <StatCard
                         title="Total Solved"
@@ -286,15 +311,15 @@ function DsaClient() {
                     />
                     <StatCard
                         title="Time Invested"
-                        value="42.5"
+                        value={totalHours}
                         subtext="Hours total"
-                        secondaryInfo="Avg: 2.5 hrs/day"
+                        secondaryInfo={`Last: ${todayLog?.timeSpent || 0}m`}
                     />
                     <StatCard
                         title="Daily Goal"
-                        value="2.5/3"
+                        value={`${todayTotalHours}/${dailyGoalHours}`}
                         subtext="Hours completed"
-                        progress={83}
+                        progress={dailyGoalProgress}
                     />
                 </div>
 
