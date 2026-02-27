@@ -1,6 +1,6 @@
 export * from './api';
 export * from './base';
-export * from './challenges';   
+export * from './challenges';
 export { emailClient } from './client';
 export * from './email';
 export * from "./prep-logs";
@@ -12,3 +12,4 @@ export * from "./resumeService";
 export * from './templates';
 export { emailTriggerService } from './triggers';
 export * from "./user";
+export * from "./dsaYatraService";

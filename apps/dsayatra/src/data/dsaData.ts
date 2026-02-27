@@ -2063,704 +2063,105 @@ export const domainBasedData = {
   ]
 };
 
-export const timeBasedData = {
-  "2months": [
-    {
-      topic: "Array Essentials",
-      emoji: "📝",
-      questions: [
-        {
-          title: "Two Sum",
-          leetcode_url: "https://leetcode.com/problems/two-sum/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Running Sum of 1d Array",
-          leetcode_url: "https://leetcode.com/problems/running-sum-of-1d-array/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Find Pivot Index",
-          leetcode_url: "https://leetcode.com/problems/find-pivot-index/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Best Time to Buy and Sell Stock",
-          leetcode_url: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Contains Duplicate",
-          leetcode_url: "https://leetcode.com/problems/contains-duplicate/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Maximum Subarray",
-          leetcode_url: "https://leetcode.com/problems/maximum-subarray/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Product of Array Except Self",
-          leetcode_url: "https://leetcode.com/problems/product-of-array-except-self/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "3Sum",
-          leetcode_url: "https://leetcode.com/problems/3sum/",
-          difficulty: "Medium" as const
-        }
-      ]
-    },
-    {
-      topic: "String Basics",
-      emoji: "🔤",
-      questions: [
-        {
-          title: "Valid Anagram",
-          leetcode_url: "https://leetcode.com/problems/valid-anagram/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Valid Palindrome",
-          leetcode_url: "https://leetcode.com/problems/valid-palindrome/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "First Unique Character in a String",
-          leetcode_url: "https://leetcode.com/problems/first-unique-character-in-a-string/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Longest Common Prefix",
-          leetcode_url: "https://leetcode.com/problems/longest-common-prefix/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Group Anagrams",
-          leetcode_url: "https://leetcode.com/problems/group-anagrams/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Longest Substring Without Repeating Characters",
-          leetcode_url: "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
-          difficulty: "Medium" as const
-        }
-      ]
-    },
-    {
-      topic: "Stack & Queue Fundamentals",
-      emoji: "📚",
-      questions: [
-        {
-          title: "Valid Parentheses",
-          leetcode_url: "https://leetcode.com/problems/valid-parentheses/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Implement Queue using Stacks",
-          leetcode_url: "https://leetcode.com/problems/implement-queue-using-stacks/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Min Stack",
-          leetcode_url: "https://leetcode.com/problems/min-stack/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Daily Temperatures",
-          leetcode_url: "https://leetcode.com/problems/daily-temperatures/",
-          difficulty: "Medium" as const
-        }
-      ]
-    },
-    {
-      topic: "Basic Trees",
-      emoji: "🌳",
-      questions: [
-        {
-          title: "Maximum Depth of Binary Tree",
-          leetcode_url: "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Same Tree",
-          leetcode_url: "https://leetcode.com/problems/same-tree/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Invert Binary Tree",
-          leetcode_url: "https://leetcode.com/problems/invert-binary-tree/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Binary Tree Level Order Traversal",
-          leetcode_url: "https://leetcode.com/problems/binary-tree-level-order-traversal/",
-          difficulty: "Medium" as const
-        }
-      ]
-    },
-    {
-      topic: "Basic Dynamic Programming",
-      emoji: "🧮",
-      questions: [
-        {
-          title: "Climbing Stairs",
-          leetcode_url: "https://leetcode.com/problems/climbing-stairs/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Fibonacci Number",
-          leetcode_url: "https://leetcode.com/problems/fibonacci-number/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "House Robber",
-          leetcode_url: "https://leetcode.com/problems/house-robber/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Coin Change",
-          leetcode_url: "https://leetcode.com/problems/coin-change/",
-          difficulty: "Medium" as const
-        }
-      ]
-    }
-  ],
-  "3-4months": [
-    {
-      topic: "Arrays & Two Pointers",
-      emoji: "📝",
-      questions: [
-        {
-          title: "Two Sum",
-          leetcode_url: "https://leetcode.com/problems/two-sum/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Remove Duplicates from Sorted Array",
-          leetcode_url: "https://leetcode.com/problems/remove-duplicates-from-sorted-array/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Move Zeroes",
-          leetcode_url: "https://leetcode.com/problems/move-zeroes/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "3Sum",
-          leetcode_url: "https://leetcode.com/problems/3sum/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Container With Most Water",
-          leetcode_url: "https://leetcode.com/problems/container-with-most-water/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Sort Colors",
-          leetcode_url: "https://leetcode.com/problems/sort-colors/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "4Sum",
-          leetcode_url: "https://leetcode.com/problems/4sum/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Trapping Rain Water",
-          leetcode_url: "https://leetcode.com/problems/trapping-rain-water/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "String Processing",
-      emoji: "🔤",
-      questions: [
-        {
-          title: "Valid Palindrome",
-          leetcode_url: "https://leetcode.com/problems/valid-palindrome/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Implement strStr()",
-          leetcode_url: "https://leetcode.com/problems/implement-strstr/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Longest Palindromic Substring",
-          leetcode_url: "https://leetcode.com/problems/longest-palindromic-substring/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "String to Integer (atoi)",
-          leetcode_url: "https://leetcode.com/problems/string-to-integer-atoi/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Minimum Window Substring",
-          leetcode_url: "https://leetcode.com/problems/minimum-window-substring/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Regular Expression Matching",
-          leetcode_url: "https://leetcode.com/problems/regular-expression-matching/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "Linked Lists",
-      emoji: "🔗",
-      questions: [
-        {
-          title: "Reverse Linked List",
-          leetcode_url: "https://leetcode.com/problems/reverse-linked-list/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Merge Two Sorted Lists",
-          leetcode_url: "https://leetcode.com/problems/merge-two-sorted-lists/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Linked List Cycle",
-          leetcode_url: "https://leetcode.com/problems/linked-list-cycle/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Remove Nth Node From End of List",
-          leetcode_url: "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Add Two Numbers",
-          leetcode_url: "https://leetcode.com/problems/add-two-numbers/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Merge k Sorted Lists",
-          leetcode_url: "https://leetcode.com/problems/merge-k-sorted-lists/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "Binary Trees",
-      emoji: "🌳",
-      questions: [
-        {
-          title: "Maximum Depth of Binary Tree",
-          leetcode_url: "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Same Tree",
-          leetcode_url: "https://leetcode.com/problems/same-tree/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Invert Binary Tree",
-          leetcode_url: "https://leetcode.com/problems/invert-binary-tree/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Binary Tree Level Order Traversal",
-          leetcode_url: "https://leetcode.com/problems/binary-tree-level-order-traversal/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Validate Binary Search Tree",
-          leetcode_url: "https://leetcode.com/problems/validate-binary-search-tree/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Lowest Common Ancestor of a Binary Tree",
-          leetcode_url: "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Binary Tree Maximum Path Sum",
-          leetcode_url: "https://leetcode.com/problems/binary-tree-maximum-path-sum/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "Dynamic Programming",
-      emoji: "🧮",
-      questions: [
-        {
-          title: "Climbing Stairs",
-          leetcode_url: "https://leetcode.com/problems/climbing-stairs/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Pascal's Triangle",
-          leetcode_url: "https://leetcode.com/problems/pascals-triangle/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "House Robber",
-          leetcode_url: "https://leetcode.com/problems/house-robber/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Coin Change",
-          leetcode_url: "https://leetcode.com/problems/coin-change/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Longest Increasing Subsequence",
-          leetcode_url: "https://leetcode.com/problems/longest-increasing-subsequence/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Word Break",
-          leetcode_url: "https://leetcode.com/problems/word-break/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Edit Distance",
-          leetcode_url: "https://leetcode.com/problems/edit-distance/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "Graph Fundamentals",
-      emoji: "🕸️",
-      questions: [
-        {
-          title: "Flood Fill",
-          leetcode_url: "https://leetcode.com/problems/flood-fill/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Number of Islands",
-          leetcode_url: "https://leetcode.com/problems/number-of-islands/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Clone Graph",
-          leetcode_url: "https://leetcode.com/problems/clone-graph/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Course Schedule",
-          leetcode_url: "https://leetcode.com/problems/course-schedule/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Pacific Atlantic Water Flow",
-          leetcode_url: "https://leetcode.com/problems/pacific-atlantic-water-flow/",
-          difficulty: "Medium" as const
-        }
-      ]
-    }
-  ],
-  "5+months": [
-    {
-      topic: "Advanced Arrays",
-      emoji: "🚀",
-      questions: [
-        {
-          title: "Two Sum",
-          leetcode_url: "https://leetcode.com/problems/two-sum/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "3Sum",
-          leetcode_url: "https://leetcode.com/problems/3sum/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "4Sum",
-          leetcode_url: "https://leetcode.com/problems/4sum/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Container With Most Water",
-          leetcode_url: "https://leetcode.com/problems/container-with-most-water/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Trapping Rain Water",
-          leetcode_url: "https://leetcode.com/problems/trapping-rain-water/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Median of Two Sorted Arrays",
-          leetcode_url: "https://leetcode.com/problems/median-of-two-sorted-arrays/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "First Missing Positive",
-          leetcode_url: "https://leetcode.com/problems/first-missing-positive/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Largest Rectangle in Histogram",
-          leetcode_url: "https://leetcode.com/problems/largest-rectangle-in-histogram/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "Advanced String Algorithms",
-      emoji: "🔤",
-      questions: [
-        {
-          title: "Longest Palindromic Substring",
-          leetcode_url: "https://leetcode.com/problems/longest-palindromic-substring/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "String to Integer (atoi)",
-          leetcode_url: "https://leetcode.com/problems/string-to-integer-atoi/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Minimum Window Substring",
-          leetcode_url: "https://leetcode.com/problems/minimum-window-substring/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Valid Number",
-          leetcode_url: "https://leetcode.com/problems/valid-number/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Edit Distance",
-          leetcode_url: "https://leetcode.com/problems/edit-distance/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Regular Expression Matching",
-          leetcode_url: "https://leetcode.com/problems/regular-expression-matching/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Wildcard Matching",
-          leetcode_url: "https://leetcode.com/problems/wildcard-matching/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "Advanced Trees",
-      emoji: "🌲",
-      questions: [
-        {
-          title: "Binary Tree Inorder Traversal",
-          leetcode_url: "https://leetcode.com/problems/binary-tree-inorder-traversal/",
-          difficulty: "Easy" as const
-        },
-        {
-          title: "Validate Binary Search Tree",
-          leetcode_url: "https://leetcode.com/problems/validate-binary-search-tree/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Construct Binary Tree from Preorder and Inorder Traversal",
-          leetcode_url: "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Binary Tree Maximum Path Sum",
-          leetcode_url: "https://leetcode.com/problems/binary-tree-maximum-path-sum/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Serialize and Deserialize Binary Tree",
-          leetcode_url: "https://leetcode.com/problems/serialize-and-deserialize-binary-tree/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Lowest Common Ancestor of a Binary Tree",
-          leetcode_url: "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Binary Tree Right Side View",
-          leetcode_url: "https://leetcode.com/problems/binary-tree-right-side-view/",
-          difficulty: "Medium" as const
-        }
-      ]
-    },
-    {
-      topic: "Advanced Graph Algorithms",
-      emoji: "🕸️",
-      questions: [
-        {
-          title: "Number of Islands",
-          leetcode_url: "https://leetcode.com/problems/number-of-islands/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Course Schedule",
-          leetcode_url: "https://leetcode.com/problems/course-schedule/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Course Schedule II",
-          leetcode_url: "https://leetcode.com/problems/course-schedule-ii/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Network Delay Time",
-          leetcode_url: "https://leetcode.com/problems/network-delay-time/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Cheapest Flights Within K Stops",
-          leetcode_url: "https://leetcode.com/problems/cheapest-flights-within-k-stops/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Word Ladder",
-          leetcode_url: "https://leetcode.com/problems/word-ladder/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Word Ladder II",
-          leetcode_url: "https://leetcode.com/problems/word-ladder-ii/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Alien Dictionary",
-          leetcode_url: "https://leetcode.com/problems/alien-dictionary/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "Advanced Dynamic Programming",
-      emoji: "💎",
-      questions: [
-        {
-          title: "Unique Paths",
-          leetcode_url: "https://leetcode.com/problems/unique-paths/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Unique Paths II",
-          leetcode_url: "https://leetcode.com/problems/unique-paths-ii/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Minimum Path Sum",
-          leetcode_url: "https://leetcode.com/problems/minimum-path-sum/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Word Break",
-          leetcode_url: "https://leetcode.com/problems/word-break/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Word Break II",
-          leetcode_url: "https://leetcode.com/problems/word-break-ii/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Longest Common Subsequence",
-          leetcode_url: "https://leetcode.com/problems/longest-common-subsequence/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Palindrome Partitioning II",
-          leetcode_url: "https://leetcode.com/problems/palindrome-partitioning-ii/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Burst Balloons",
-          leetcode_url: "https://leetcode.com/problems/burst-balloons/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "System Design Data Structures",
-      emoji: "⚙️",
-      questions: [
-        {
-          title: "LRU Cache",
-          leetcode_url: "https://leetcode.com/problems/lru-cache/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "LFU Cache",
-          leetcode_url: "https://leetcode.com/problems/lfu-cache/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Design Twitter",
-          leetcode_url: "https://leetcode.com/problems/design-twitter/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Design Search Autocomplete System",
-          leetcode_url: "https://leetcode.com/problems/design-search-autocomplete-system/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Insert Delete GetRandom O(1)",
-          leetcode_url: "https://leetcode.com/problems/insert-delete-getrandom-o1/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Time Based Key-Value Store",
-          leetcode_url: "https://leetcode.com/problems/time-based-key-value-store/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Design In-Memory File System",
-          leetcode_url: "https://leetcode.com/problems/design-in-memory-file-system/",
-          difficulty: "Hard" as const
-        }
-      ]
-    },
-    {
-      topic: "Advanced Algorithms",
-      emoji: "🎯",
-      questions: [
-        {
-          title: "Implement Trie (Prefix Tree)",
-          leetcode_url: "https://leetcode.com/problems/implement-trie-prefix-tree/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Word Search II",
-          leetcode_url: "https://leetcode.com/problems/word-search-ii/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Maximum XOR of Two Numbers in an Array",
-          leetcode_url: "https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/",
-          difficulty: "Medium" as const
-        },
-        {
-          title: "Sliding Window Maximum",
-          leetcode_url: "https://leetcode.com/problems/sliding-window-maximum/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Find Median from Data Stream",
-          leetcode_url: "https://leetcode.com/problems/find-median-from-data-stream/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "N-Queens",
-          leetcode_url: "https://leetcode.com/problems/n-queens/",
-          difficulty: "Hard" as const
-        },
-        {
-          title: "Sudoku Solver",
-          leetcode_url: "https://leetcode.com/problems/sudoku-solver/",
-          difficulty: "Hard" as const
-        }
-      ]
-    }
-  ]
+// DYNAMIC TIMELINE CONFIGURATION 
+export const TIMELINE_CONFIGS: Record<string, Record<string, { count: number; title: string; emoji: string }>> = {
+  "2months": {
+    "ARRAY": { count: 18, title: "Array Essentials", emoji: "📝" },
+    "STRING": { count: 14, title: "String Basics", emoji: "🔤" },
+    "HASHMAP": { count: 12, title: "Hashing Primer", emoji: "🔑" },
+    "LINKED_LIST": { count: 12, title: "Linked Lists", emoji: "🔗" },
+    "STACK": { count: 6, title: "Stack Foundations", emoji: "🥞" },
+    "QUEUE": { count: 6, title: "Queue Fundamentals", emoji: "🚶" },
+    "BINARY_SEARCH": { count: 8, title: "Search Algorithms", emoji: "🔍" },
+    "BINARY_TREE": { count: 18, title: "Basic Trees", emoji: "🌳" },
+    "HEAP": { count: 10, title: "Sets & Heaps", emoji: "⛰️" },
+    "DYNAMIC_PROGRAMMING": { count: 15, title: "Basic DP", emoji: "🧮" },
+    "GRAPH": { count: 10, title: "Basic Graphs", emoji: "🕸️" },
+    "SORTING": { count: 10, title: "Sorting Mastery", emoji: "📊" },
+  },
+  "3-4months": {
+    "ARRAY": { count: 25, title: "Arrays Deep Dive", emoji: "📝" },
+    "STRING": { count: 20, title: "String Processing", emoji: "🔤" },
+    "TWO_POINTERS": { count: 12, title: "Two Pointers", emoji: "✌️" },
+    "SLIDING_WINDOW": { count: 12, title: "Sliding Window", emoji: "🪟" },
+    "HASHMAP": { count: 15, title: "Advanced Hashing", emoji: "🔑" },
+    "LINKED_LIST": { count: 15, title: "Linked Lists Pro", emoji: "🔗" },
+    "STACK": { count: 10, title: "Advanced Stacks", emoji: "🥞" },
+    "QUEUE": { count: 8, title: "Advanced Queues", emoji: "🚶" },
+    "BINARY_SEARCH": { count: 15, title: "Binary Search Deep Dive", emoji: "🔍" },
+    "BINARY_TREE": { count: 20, title: "Trees Deep Dive", emoji: "🌳" },
+    "BST": { count: 10, title: "Binary Search Trees", emoji: "🌲" },
+    "HEAP": { count: 15, title: "Advanced Heaps", emoji: "⛰️" },
+    "DYNAMIC_PROGRAMMING": { count: 25, title: "Intermediate DP", emoji: "🧮" },
+    "GRAPH": { count: 20, title: "Intermediate Graphs", emoji: "🕸️" },
+    "GREEDY": { count: 15, title: "Greedy Algorithms", emoji: "💰" },
+    "BACKTRACKING": { count: 15, title: "Backtracking", emoji: "🔙" },
+  },
+  "5+months": {
+    "ARRAY": { count: 35, title: "Array Mastery", emoji: "📝" },
+    "STRING": { count: 25, title: "String Mastery", emoji: "🔤" },
+    "TWO_POINTERS": { count: 15, title: "Advanced Pointers", emoji: "✌️" },
+    "SLIDING_WINDOW": { count: 15, title: "Advanced Windows", emoji: "🪟" },
+    "HASHMAP": { count: 20, title: "HashMap Mastery", emoji: "🔑" },
+    "LINKED_LIST": { count: 18, title: "Linked List Mastery", emoji: "🔗" },
+    "STACK": { count: 15, title: "Stack Mastery", emoji: "🥞" },
+    "QUEUE": { count: 12, title: "Queue Mastery", emoji: "🚶" },
+    "BINARY_SEARCH": { count: 20, title: "Binary Search Mastery", emoji: "🔍" },
+    "BINARY_TREE": { count: 30, title: "Tree Mastery", emoji: "🌳" },
+    "BST": { count: 15, title: "BST Mastery", emoji: "🌲" },
+    "HEAP": { count: 20, title: "Heap Mastery", emoji: "⛰️" },
+    "TRIE": { count: 10, title: "Trie Data Structure", emoji: "🌲" },
+    "DYNAMIC_PROGRAMMING": { count: 40, title: "Advanced DP", emoji: "🧮" },
+    "GRAPH": { count: 30, title: "Advanced Graphs", emoji: "🕸️" },
+    "GREEDY": { count: 20, title: "Advanced Greedy", emoji: "💰" },
+    "BACKTRACKING": { count: 20, title: "Advanced Backtracking", emoji: "🔙" },
+    "MATH": { count: 10, title: "Math Fundamentals", emoji: "🔢" },
+    "BIT_MANIPULATION": { count: 10, title: "Bit Manipulation", emoji: "0️⃣" },
+    "UNION_FIND": { count: 10, title: "Disjoint Sets", emoji: "🔗" },
+  }
 };
+
+import { DSATopicGroup, DSAQuestionRaw } from "@tbe/services";
+
+/**
+ * Dynamically generates the UI timeline object from the raw MongoDB API payload 
+ * utilizing the TIMELINE_CONFIGS map and the sorting standardizer.
+ */
+export const generateTimelineData = (timelineId: string, apiPayloadTopics: DSATopicGroup[]) => {
+  const config = TIMELINE_CONFIGS[timelineId];
+  if (!config) return [];
+
+  const generatedRoadmap = [];
+
+  for (const [topicKey, topicConfig] of Object.entries(config)) {
+    const dbTopicGroup = apiPayloadTopics.find((t) => t.topic === topicKey);
+    let questionsToInject: Question[] = [];
+
+    if (dbTopicGroup && dbTopicGroup.questions) {
+      // Map API fields strictly to the frontend Question interface requirements
+      const formattedQuestions: Question[] = dbTopicGroup.questions.map((q) => ({
+        title: q.title,
+        leetcode_url: q.resources?.leetcodeURL || "",
+        difficulty: (["Easy", "Medium", "Hard"].includes(q.difficulty) ? q.difficulty : "Medium") as "Easy" | "Medium" | "Hard"
+      }));
+
+      // Sort questions: Easy -> Medium -> Hard
+      const sortedDbQuestions = sortQuestionsByDifficulty(formattedQuestions);
+
+      // Slice based on the config requirements for this specific timeline
+      questionsToInject = sortedDbQuestions.slice(0, topicConfig.count);
+    }
+
+    generatedRoadmap.push({
+      topic: topicConfig.title,
+      emoji: topicConfig.emoji,
+      questions: questionsToInject
+    });
+  }
+
+  return generatedRoadmap;
+};
+
+// Deprecated: Remove the static array in favor of the dynamic config generator. 
+// Kept temporarily for fallback during transition if required by other components.
+export const timeBasedData: any = {};
