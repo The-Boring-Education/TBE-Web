@@ -127,9 +127,19 @@ const Dashboard = ({ seoMeta }: PageProps) => {
     );
 }
 
-export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({ slug: routes.dsayatra.home, appId: "dsayatra" })),
-    revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
-});
+export const getStaticProps = async () => {
+    try {
+        return {
+            ...(await getPreFetchProps({ slug: routes.dsayatra.home, appId: "dsayatra" })),
+            revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
+        };
+    } catch (error) {
+        console.error("getStaticProps failed:", error);
+        return {
+            props: { seoMeta: {} },
+            revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
+        };
+    }
+};
 
 export default Dashboard;
