@@ -1,14 +1,38 @@
 import { AlertTriangle, Clock, Target } from "lucide-react";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@ui/alert";
 
-import { timeBasedData } from "@/data/dsaData";
+import { dsaYatraService } from "@tbe/services";
+import { generateTimelineData } from "@/data/dsaData";
 import { RoadmapView } from "@/components/RoadmapView";
 
 export default function TimeRoadmap() {
   const router = useRouter();
   const duration = router.query.duration as string;
-  const data = timeBasedData[duration as keyof typeof timeBasedData] || [];
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!duration) return;
+
+    const fetchTimeline = async () => {
+      setLoading(true);
+      try {
+        const response = await dsaYatraService.getDSAQuestions();
+        if (response && response.topics) {
+          const generatedData = generateTimelineData(duration, response.topics);
+          setData(generatedData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch timeline data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimeline();
+  }, [duration]);
 
   const getTitle = (duration: string) => {
     switch (duration) {
@@ -85,6 +109,14 @@ export default function TimeRoadmap() {
 
     return null;
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"></div>
+      </div>
+    );
+  }
 
   return (
     <RoadmapView
