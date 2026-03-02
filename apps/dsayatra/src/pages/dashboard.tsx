@@ -30,7 +30,7 @@ import { usePrepStats, useTimeTracker } from "@tbe/hooks";
 
 const SIDEBAR_ITEMS = [
     { name: 'Dashboard', href: '/dashboard', active: true, icon: Home },
-    { name: 'Questions', href: '/questions', icon: Target },
+    { name: 'Sheets', href: '/sheets', icon: Target },
     { name: 'Revisions', href: '/revisions', icon: FileText },
     { name: 'Topics', href: '/topics', icon: ClipboardList },
     { name: 'Progress', href: '/progress', icon: TrendingUp },

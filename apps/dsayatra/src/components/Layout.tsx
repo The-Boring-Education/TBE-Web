@@ -13,6 +13,7 @@ const Layout = ({ children }: LayoutProps) => {
 
     // If on landing page or login page, logo should point to landing page
     const isDashboard = router.pathname === '/dashboard' || router.pathname.startsWith('/dashboard/');
+    const isFullScreen = router.pathname === '/sheets';
     const dashboardRoute = (router.pathname === '/' || router.pathname === '/login') ? '/' : '/dashboard';
 
     return (
@@ -24,10 +25,10 @@ const Layout = ({ children }: LayoutProps) => {
             />
 
 
-            <main className={cn("min-h-screen pt-[72px]", isDashboard && "bg-[#0f0f0f]")}>
+            <main className={cn(isFullScreen ? "h-screen pt-[72px] overflow-hidden" : "min-h-screen pt-[72px]", (isDashboard || isFullScreen) && "bg-[#0f0f0f]")}>
                 {children}
             </main>
-            <Footer />
+            {!isFullScreen && <Footer />}
         </Fragment>
     );
 };
