@@ -28,6 +28,7 @@ import { getSheetPageProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { FaLock } from 'react-icons/fa';
+import InterviewQuestionContent from '../../../components/InterviewQuestionContent';
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();
@@ -339,21 +340,13 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                 </div>
               ) : (
                 <div className="w-full">
-                  {/* Metadata Badges */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {currentQuestion?.frequency && (
-                      <Pill text={currentQuestion.frequency} variant="PRIMARY" containerClasses="!bg-primary/20" textStyleClasses="!text-primary-light" />
-                    )}
-                    {currentQuestion?.priority && (
-                      <Pill text={`Priority: ${currentQuestion.priority}`} variant="SECONDARY" containerClasses="!bg-secondary/20" textStyleClasses="!text-secondary-light" />
-                    )}
-                    {currentQuestion?.companyTypes?.map((ct) => (
-                      <Pill key={ct} text={ct} variant="GHOST" containerClasses="!bg-gray-800 border border-gray-700" textStyleClasses="!text-gray-300" />
-                    ))}
-                  </div>
-
-                  <MDXRenderer
-                    theme='dark'
+                  <InterviewQuestionContent
+                    questionTitle={currentQuestion?.title || ''}
+                    question={currentQuestion?.question || ''}
+                    answer={currentQuestion?.answer || ''}
+                    frequency={currentQuestion?.frequency}
+                    priority={currentQuestion?.priority}
+                    companyTypes={currentQuestion?.companyTypes}
                     actions={[
                       currentQuestionId && (
                         <Button
@@ -400,7 +393,6 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                         />
                       ),
                     ]}
-                    mdxSource={sheetMeta}
                   />
                 </div>
               )}
