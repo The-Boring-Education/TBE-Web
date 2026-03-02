@@ -963,7 +963,7 @@ export {
 
 export const getDifficultyConfig = (level: string) => {
     switch (level?.toUpperCase()) {
-        case 'EASY': return { label: 'Easy', color: 'text-emerald-400 bg-emerald-950/30 border-emerald-500/20' };
+        case 'EASY': return { label: 'Easy', color: 'text-green-500 bg-green-950/30 border-green-500/30' };
         case 'MEDIUM': return { label: 'Med.', color: 'text-orange-400 bg-orange-950/30 border-orange-500/20' };
         case 'HARD': return { label: 'Hard', color: 'text-red-400 bg-red-950/30 border-red-500/20' };
         default: return { label: level, color: 'text-gray-400 bg-gray-800/50 border-gray-700' };

@@ -958,13 +958,17 @@ export interface DsaQuestionListProps {
   selectedQuestionId?: string | number;
   onQuestionClick?: (question: DsaQuestion) => void;
   className?: string;
+  completedQuestionIds?: (string | number)[];
+  onToggleComplete?: (questionId: string | number) => void;
 }
 
 export interface DsaQuestionCardProps {
   name: string;
   difficultyLevel: QuestionDifficulty;
   isSelected?: boolean;
+  isCompleted?: boolean;
   onClick?: () => void;
+  onToggleComplete?: (e: React.MouseEvent) => void;
 }
 
 export interface QuestionDetailProps {
