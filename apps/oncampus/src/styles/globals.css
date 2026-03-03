@@ -213,3 +213,5 @@ button:active {
     background: #5A5A5A;
   }
 }
+
+@import './interview-question.css';
