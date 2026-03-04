@@ -7,19 +7,22 @@ import { Toaster } from "@ui/toaster";
 import { TooltipProvider } from "@ui/tooltip";
 import { type Session } from "next-auth";
 import { useState } from "react";
+import { TimeTrackerProvider } from "./TimeTrackerProvider";
 
 export function Providers({ children, session }: { children: React.ReactNode; session: Session | null }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <AuthProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          {children}
-        </TooltipProvider>
-      </QueryClientProvider>
+      <TimeTrackerProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            {children}
+          </TooltipProvider>
+        </QueryClientProvider>
+      </TimeTrackerProvider>
     </AuthProvider>
   );
 }

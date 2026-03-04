@@ -26,7 +26,8 @@ import { userService } from "@tbe/services";
 import type { UserProfile } from "@tbe/interface";
 import { EditDsaOnboardingModal } from "@tbe/components";
 import { toast } from "sonner";
-import { usePrepStats, useTimeTracker } from "@tbe/hooks";
+import { usePrepStats } from "@tbe/hooks";
+import { useAppTimeTracker } from "@/components/TimeTrackerProvider";
 
 const SIDEBAR_ITEMS = [
     { name: 'Dashboard', href: '/dashboard', active: true, icon: Home },
@@ -127,8 +128,8 @@ function DsaClient() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    // Automatic time tracking for current session
-    const { seconds, formattedTime } = useTimeTracker(user?.id);
+    // Automatic time tracking for current session via global App TimeTracker
+    const { seconds, formattedTime } = useAppTimeTracker();
 
     // Fetch historical stats from database
     const { totalTimeSpent, stats } = usePrepStats(user?.id || "");
