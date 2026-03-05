@@ -1,6 +1,6 @@
 import { useAuth } from "@tbe/auth";
 import { SEO } from '@tbe/components';
-import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
+import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { cn, getPreFetchProps } from '@tbe/utils';
 import { Button } from "@ui/button";
@@ -21,13 +21,17 @@ import {
     Settings
 } from "lucide-react";
 import Link from "next/link";
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect, useMemo } from 'react';
 import { userService } from "@tbe/services";
 import type { UserProfile } from "@tbe/interface";
 import { EditDsaOnboardingModal } from "@tbe/components";
 import { toast } from "sonner";
+<<<<<<< HEAD
 import { usePrepStats } from "@tbe/hooks";
 import { useAppTimeTracker } from "@/components/TimeTrackerProvider";
+=======
+import { usePrepStats, useTimeTracker, useApi } from "@tbe/hooks";
+>>>>>>> 769da5298fe55a41d0618676f103412d5996e458
 
 const SIDEBAR_ITEMS = [
     { name: 'Dashboard', href: '/dashboard', active: true, icon: Home },
@@ -38,16 +42,7 @@ const SIDEBAR_ITEMS = [
     { name: 'Goals', href: '/goals', icon: Settings }
 ];
 
-const TOPICS = [
-    { name: 'Arrays', solved: 28, total: 30 },
-    { name: 'Strings', solved: 15, total: 25 },
-    { name: 'Trees', solved: 10, total: 20 },
-    { name: 'Graphs', solved: 5, total: 15 },
-    { name: 'DP', solved: 8, total: 25 },
-    { name: 'Heap/Queue', solved: 12, total: 15 },
-    { name: 'Hashing', solved: 14, total: 15 },
-    { name: 'Greedy', solved: 6, total: 12 }
-];
+// TOPICS is now computed from real API data inside DsaClient
 
 const REVISIONS = [
     { title: 'Two Sum (Arrays)', meta: '3 days after solving • Revision #2', completed: false },
@@ -132,7 +127,94 @@ function DsaClient() {
     const { seconds, formattedTime } = useAppTimeTracker();
 
     // Fetch historical stats from database
-    const { totalTimeSpent, stats } = usePrepStats(user?.id || "");
+    const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
+
+    // Fetch all DSA questions from the API (same source as sheets page)
+    const { response: dsaResponse } = useApi("dashboard-dsa-sheet", {
+        url: `${routes.api.base}${routes.api.dsaSheet}?limit=1000`,
+    });
+
+    // Read completed questions from localStorage (same source as sheets page)
+    const [completedQuestions, setCompletedQuestions] = useState<(string | number)[]>([]);
+    useEffect(() => {
+        const saved = localStorage.getItem('dsayatra_completed_questions');
+        if (saved) {
+            try { setCompletedQuestions(JSON.parse(saved)); } catch { }
+        }
+    }, []);
+
+    // Parse all DSA questions from API response
+    const allQuestions = useMemo(() => {
+        const data = dsaResponse?.data?.questions;
+        if (!Array.isArray(data)) return [];
+        return data;
+    }, [dsaResponse]);
+
+    // Compute topic-wise progress from real data
+    const topicProgress = useMemo(() => {
+        const topicMap = new Map<string, { total: number; solved: number }>();
+        allQuestions.forEach((q: any) => {
+            const primaryTopic = q.topics?.[0];
+            if (primaryTopic) {
+                if (!topicMap.has(primaryTopic)) {
+                    topicMap.set(primaryTopic, { total: 0, solved: 0 });
+                }
+                const entry = topicMap.get(primaryTopic)!;
+                entry.total += 1;
+                const qId = q._id;
+                if (qId && completedQuestions.includes(qId)) {
+                    entry.solved += 1;
+                }
+            }
+        });
+        return Array.from(topicMap.entries()).map(([topic, data]) => ({
+            name: TOPIC_LABELS[topic] || topic,
+            key: topic,
+            solved: data.solved,
+            total: data.total
+        }));
+    }, [allQuestions, completedQuestions]);
+
+    // Overall progress
+    const totalQuestions = allQuestions.length;
+    const totalSolved = completedQuestions.filter(id =>
+        allQuestions.some((q: any) => q._id === id)
+    ).length;
+    const overallPercentage = totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
+
+    // Weekly performance from real weekly logs
+    const weeklyPerformance = useMemo(() => {
+        if (!weeklyLogs || weeklyLogs.length === 0) return [];
+        // Group logs by week (Mon-Sun)
+        const now = new Date();
+        const weeks: { label: string; minutes: number; isCurrent: boolean }[] = [];
+        for (let w = 3; w >= 0; w--) {
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay() + 1 - (w * 7));
+            weekStart.setHours(0, 0, 0, 0);
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 7);
+            const weekMinutes = weeklyLogs
+                .filter((log: any) => {
+                    const logDate = new Date(log.createdAt);
+                    return logDate >= weekStart && logDate < weekEnd;
+                })
+                .reduce((sum: number, log: any) => sum + (log.timeSpent || 0), 0);
+            weeks.push({
+                label: `W${4 - w}`,
+                minutes: weekMinutes,
+                isCurrent: w === 0
+            });
+        }
+        return weeks;
+    }, [weeklyLogs]);
+
+    // This week's progress (based on time logged this week vs a weekly goal)
+    const thisWeekMinutes = weeklyPerformance.length > 0
+        ? weeklyPerformance[weeklyPerformance.length - 1]?.minutes || 0
+        : 0;
+    const weeklyGoalHours = 15; // 15 hours/week goal
+    const thisWeekPercentage = Math.min(100, Math.round((thisWeekMinutes / (weeklyGoalHours * 60)) * 100));
 
     useEffect(() => {
         if (user?.id) {
@@ -274,24 +356,27 @@ function DsaClient() {
                             <div
                                 className="w-full h-full rounded-full flex items-center justify-center"
                                 style={{
-                                    background: `conic-gradient(#ff5757 ${68 * 3.6}deg, #2a2a2a 0deg)`
+                                    background: `conic-gradient(#ff5757 ${overallPercentage * 3.6}deg, #2a2a2a 0deg)`
                                 }}
                             >
                                 <div className="w-[102px] h-[102px] rounded-full bg-[#1a1a1a] flex flex-col items-center justify-center">
-                                    <span className="text-[28px] font-bold text-[#e0e0e0]">68%</span>
-                                    <span className="text-[9px] text-[#a0a0a0]">164/240 Q's</span>
+                                    <span className="text-[28px] font-bold text-[#e0e0e0]">{overallPercentage}%</span>
+                                    <span className="text-[9px] text-[#a0a0a0]">{totalSolved}/{totalQuestions} Questions</span>
                                 </div>
                             </div>
                         </div>
                         <div className="w-full space-y-1.5">
                             <div className="flex justify-between text-[11px] text-[#a0a0a0]">
                                 <span>Expected vs Actual</span>
-                                <span className="font-bold">On Track</span>
+                                <span className="font-bold">{overallPercentage >= 50 ? 'On Track' : 'Needs Focus'}</span>
                             </div>
-                            <Progress value={68} className="h-[7px] bg-[#2a2a2a] rounded-[4px]" />
+                            <Progress value={overallPercentage} className="h-[7px] bg-[#2a2a2a] rounded-[4px]" />
                             <div className="pt-3 text-center">
-                                <span className="bg-green-500/20 text-[#51cf66] text-[9px] font-[600] px-[7px] py-[3px] rounded-[4px] uppercase">
-                                    ON TRACK
+                                <span className={cn(
+                                    "text-[9px] font-[600] px-[7px] py-[3px] rounded-[4px] uppercase",
+                                    overallPercentage >= 50 ? "bg-green-500/20 text-[#51cf66]" : "bg-orange-500/20 text-[#ffa94d]"
+                                )}>
+                                    {overallPercentage >= 50 ? 'ON TRACK' : 'KEEP GOING'}
                                 </span>
                             </div>
                         </div>
@@ -306,9 +391,9 @@ function DsaClient() {
                     />
                     <StatCard
                         title="Total Solved"
-                        value="164"
-                        subtext="Out of 240 questions"
-                        progress={68}
+                        value={String(totalSolved)}
+                        subtext={`Out of ${totalQuestions} questions`}
+                        progress={overallPercentage}
                     />
                     <StatCard
                         title="Time Invested"
@@ -331,16 +416,20 @@ function DsaClient() {
                         <h3 className="text-[16px] font-bold text-[#e0e0e0]">Topic-wise Progress</h3>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-                        {TOPICS.map((topic) => (
+                        {topicProgress.length > 0 ? topicProgress.map((topic) => (
                             <div
-                                key={topic.name}
+                                key={topic.key}
                                 className="bg-[#0f0f0f] border border-[#2a2a2a] p-4 rounded-[8px] text-center cursor-pointer hover:border-[#ff5757] transition-all group"
                             >
                                 <p className="text-[11px] font-bold text-[#e0e0e0] uppercase">{topic.name}</p>
                                 <p className="text-[10px] text-[#a0a0a0] my-1.5">{topic.solved}/{topic.total}</p>
-                                <Progress value={(topic.solved / topic.total) * 100} className="h-[7px] bg-[#1a1a1a] rounded-[4px]" />
+                                <Progress value={topic.total > 0 ? (topic.solved / topic.total) * 100 : 0} className="h-[7px] bg-[#1a1a1a] rounded-[4px]" />
                             </div>
-                        ))}
+                        )) : (
+                            <div className="col-span-full text-center py-6">
+                                <p className="text-[12px] text-[#a0a0a0]">Loading topics...</p>
+                            </div>
+                        )}
                     </div>
                 </Card>
 
@@ -367,13 +456,13 @@ function DsaClient() {
                     {/* This Week Card */}
                     <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px]">
                         <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px] mb-2.5">This Week</p>
-                        <p className="text-[20px] font-bold text-[#e0e0e0]">80% Complete</p>
-                        <Progress value={80} className="h-[7px] bg-[#2a2a2a] my-3.5 rounded-[4px]" />
+                        <p className="text-[20px] font-bold text-[#e0e0e0]">{thisWeekPercentage}% Complete</p>
+                        <Progress value={thisWeekPercentage} className="h-[7px] bg-[#2a2a2a] my-3.5 rounded-[4px]" />
                         <div className="space-y-1.5 mt-3.5">
-                            <p className="text-[11px] text-[#51cf66] flex items-center gap-1.5 font-[600]">
-                                ✓ Ahead of schedule
+                            <p className={cn("text-[11px] flex items-center gap-1.5 font-[600]", thisWeekPercentage >= 60 ? "text-[#51cf66]" : "text-[#ffa94d]")}>
+                                {thisWeekPercentage >= 60 ? '✓ Ahead of schedule' : '⚡ Keep pushing'}
                             </p>
-                            <p className="text-[11px] text-[#a0a0a0]">ETA: 12 weeks left</p>
+                            <p className="text-[11px] text-[#a0a0a0]">{Math.round(thisWeekMinutes / 60)}h / {weeklyGoalHours}h this week</p>
                         </div>
                     </Card>
                 </div>
@@ -422,22 +511,29 @@ function DsaClient() {
                 <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px]">
                     <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px] mb-3.5">Weekly Performance</p>
                     <div className="flex gap-3.5">
-                        {['W1', 'W2', 'W3', 'W4'].map((week, i) => (
-                            <div
-                                key={week}
-                                className={cn(
-                                    "flex-1 bg-[#0f0f0f] border border-[#2a2a2a] p-3 rounded-[8px] text-center",
-                                    week === 'W3' && "border-[#ff6b6b] bg-[#ff6b6b]/10"
-                                )}
-                            >
-                                <p className={cn("text-[15px] font-bold", week === 'W3' ? "text-[#ff6b6b]" : "text-[#e0e0e0]")}>{week}</p>
-                                <p className="text-[10px] text-[#a0a0a0] mt-0.5 font-medium">{i * 20 + 20}%</p>
-                            </div>
-                        ))}
+                        {(weeklyPerformance.length > 0 ? weeklyPerformance : [{ label: 'W1', minutes: 0, isCurrent: false }, { label: 'W2', minutes: 0, isCurrent: false }, { label: 'W3', minutes: 0, isCurrent: false }, { label: 'W4', minutes: 0, isCurrent: true }]).map((week) => {
+                            const weekPct = Math.min(100, Math.round((week.minutes / (weeklyGoalHours * 60)) * 100));
+                            return (
+                                <div
+                                    key={week.label}
+                                    className={cn(
+                                        "flex-1 bg-[#0f0f0f] border border-[#2a2a2a] p-3 rounded-[8px] text-center",
+                                        week.isCurrent && "border-[#ff6b6b] bg-[#ff6b6b]/10"
+                                    )}
+                                >
+                                    <p className={cn("text-[15px] font-bold", week.isCurrent ? "text-[#ff6b6b]" : "text-[#e0e0e0]")}>{week.label}</p>
+                                    <p className="text-[10px] text-[#a0a0a0] mt-0.5 font-medium">{Math.round(week.minutes / 60)}h</p>
+                                </div>
+                            );
+                        })}
                     </div>
                     <div className="mt-5 text-center">
-                        <p className="text-[11px] text-[#51cf66] font-[600]">Estimated finish: October 2025</p>
-                        <p className="text-[11px] text-[#a0a0a0] mt-0.5 font-[600]">12 weeks remaining</p>
+                        <p className={cn("text-[11px] font-[600]", overallPercentage >= 50 ? "text-[#51cf66]" : "text-[#ffa94d]")}>
+                            {totalSolved} of {totalQuestions} questions completed
+                        </p>
+                        <p className="text-[11px] text-[#a0a0a0] mt-0.5 font-[600]">
+                            {totalQuestions - totalSolved} questions remaining
+                        </p>
                     </div>
                 </Card>
             </main>
