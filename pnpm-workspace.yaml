@@ -1,12 +1,21 @@
 packages:
-    - "apps/api"
-    - "apps/onboarding"
-    - "apps/platform"
-    - "apps/prep-yatra"
-    - "apps/quizes"
-    - "apps/techyatra"
-    - "apps/dsayatra"
-    - "apps/resume-yatra"
-    - "apps/oncampus"
-    - "apps/testing"
-    - "packages/*"
+  - apps/api
+  - apps/onboarding
+  - apps/platform
+  - apps/prep-yatra
+  - apps/quizes
+  - apps/techyatra
+  - apps/dsayatra
+  - apps/resume-yatra
+  - apps/oncampus
+  - apps/testing
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@sentry/cli'
+  - canvas
+  - core-js
+  - esbuild
+  - msw
+  - sharp
+  - unrs-resolver

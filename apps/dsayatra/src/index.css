@@ -282,4 +282,22 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .scrollbar-thin-grey::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin-grey::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin-grey::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-radius: 10px;
+  }
+
+  .scrollbar-thin-grey::-webkit-scrollbar-thumb:hover {
+    background: #666666;
+  }
 }
