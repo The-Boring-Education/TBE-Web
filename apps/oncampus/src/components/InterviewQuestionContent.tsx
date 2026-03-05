@@ -82,7 +82,7 @@ const SECTION_CONFIG: Record<
 
 function parseSections(answer: string): Section[] {
     const sections: Section[] = [];
-    const regex = /^## (.+)$/gm;
+    const regex = /^#+\s+(.+)$/gm;
     let match;
     const matches: { title: string; index: number }[] = [];
 
@@ -90,8 +90,23 @@ function parseSections(answer: string): Section[] {
         matches.push({ title: match[1].trim(), index: match.index });
     }
 
+    if (matches.length === 0) {
+        return [{
+            id: 'answer',
+            title: 'Answer',
+            content: answer.trim(),
+            iconPath: ICON_PATHS.doc,
+            gradient: 'from-gray-500/10 via-gray-500/5 to-transparent',
+            borderGlow: 'rgba(156, 163, 175, 0.3)',
+            borderColor: 'rgba(156, 163, 175, 0.15)',
+            hoverGlow: 'rgba(156, 163, 175, 0.12)',
+            titleColor: '#9ca3af',
+            delay: 0,
+        }];
+    }
+
     for (let i = 0; i < matches.length; i++) {
-        const start = matches[i].index + matches[i].title.length + 3;
+        const start = matches[i].index + matches[i].title.length + answer.substring(matches[i].index).match(/^#+\s+/)?.[0].length!;
         const end = i + 1 < matches.length ? matches[i + 1].index : answer.length;
         const content = answer.slice(start, end).trim();
         const title = matches[i].title;
