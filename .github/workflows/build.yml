@@ -11,8 +11,9 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    build:
-        name: Build Monorepo
+    # Build shared packages first (dependencies for apps)
+    build-packages:
+        name: 📦 Build Shared Packages
         runs-on: ubuntu-latest
 
         # Skip draft PRs
@@ -27,7 +28,6 @@ jobs:
             - name: 📦 Setup pnpm
               uses: pnpm/action-setup@v4
               with:
-                  version: 9.15.9
                   run_install: false
 
             - name: 📦 Setup Node.js
@@ -52,29 +52,121 @@ jobs:
             - name: 📦 Install Dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: 🏗️ Build Packages
+            - name: 🏗️ Build Shared Packages
               run: |
-                  echo "Building shared packages first..."
+                  echo "Building shared packages..."
                   pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth
 
-            - name: 🏗️ Build Applications
-              run: |
-                  echo "Building all applications..."
-                  pnpm run build
+            - name: 📦 Cache Built Packages
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      packages/*/dist
+                      node_modules/.cache
+                  key: packages-build-${{ github.sha }}
 
-            - name: ✅ Build Success
-              run: |
-                  echo "✅ All builds completed successfully!"
-                  echo "📦 Built packages and applications:"
-                  echo "  - Shared packages (constants, types, utils, interface, services, components, hooks, auth)"
-                  echo "  - Platform applications (platform, prep-yatra, quizes, onboarding, api, techyatra, dsayatra, resume-yatra)"
+    # Build apps in parallel using matrix strategy
+    build-apps:
+        name: 🏗️ Build ${{ matrix.app }}
+        runs-on: ubuntu-latest
+        needs: build-packages
 
-            - name: 📊 Build Summary
-              if: always()
+        # Skip draft PRs
+        if: github.event.pull_request.draft == false
+
+        strategy:
+            # Don't cancel other matrix jobs if one fails
+            fail-fast: false
+            matrix:
+                app:
+                    - platform
+                    - prep-yatra
+                    - quizes
+                    - onboarding
+                    - api
+                    - techyatra
+                    - dsayatra
+                    - resume-yatra
+                    - oncampus
+                    - testing
+
+        steps:
+            - name: 📥 Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: 📦 Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  run_install: false
+
+            - name: 📦 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "pnpm"
+
+            - name: 🔍 Get pnpm store directory
+              shell: bash
               run: |
-                  if [ ${{ job.status }} == 'success' ]; then
-                    echo "🎉 Build completed successfully! Ready for merge."
+                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - name: 🗂️ Setup pnpm cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{ env.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+
+            - name: 📦 Restore Built Packages Cache
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      packages/*/dist
+                      node_modules/.cache
+                  key: packages-build-${{ github.sha }}
+
+            - name: 📦 Install Dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: 🏗️ Build ${{ matrix.app }}
+              run: |
+                  echo "Building @tbe/${{ matrix.app }}..."
+                  pnpm run build:${{ matrix.app }}
+
+    # Summary job to check if all builds passed
+    build-summary:
+        name: 📊 Build Summary
+        runs-on: ubuntu-latest
+        needs: [build-packages, build-apps]
+        if: always()
+
+        steps:
+            - name: 📊 Check Build Results
+              run: |
+                  echo "## 🏗️ Build Check Results" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  
+                  if [ "${{ needs.build-packages.result }}" == "success" ] && [ "${{ needs.build-apps.result }}" == "success" ]; then
+                    echo "### ✅ All Builds Passed!" >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "- ✅ Shared packages built successfully" >> $GITHUB_STEP_SUMMARY
+                    echo "- ✅ All applications built successfully" >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "🎉 Build completed successfully! Ready for merge." >> $GITHUB_STEP_SUMMARY
+                    exit 0
                   else
-                    echo "❌ Build failed! Please fix the issues before merging."
+                    echo "### ❌ Build Failed" >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    if [ "${{ needs.build-packages.result }}" != "success" ]; then
+                      echo "- ❌ Shared packages build failed" >> $GITHUB_STEP_SUMMARY
+                    fi
+                    if [ "${{ needs.build-apps.result }}" != "success" ]; then
+                      echo "- ❌ One or more application builds failed" >> $GITHUB_STEP_SUMMARY
+                    fi
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "Please fix the build errors before merging." >> $GITHUB_STEP_SUMMARY
                     exit 1
                   fi
