@@ -4,6 +4,7 @@ import { apiStatusCodes } from "@/lib/constants";
 import { updateAptitudeQuestionInDB } from "@/lib/database";
 import { cors, sendAPIResponse } from "@/lib/utils";
 import { connectDB } from "@/middleware/api";
+import { withRequestLogger } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await cors(req, res);
@@ -53,4 +54,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
 };
 
-export default handler;
+export default withRequestLogger(handler);

@@ -1,6 +1,7 @@
 import { type Model, model, models, Schema } from 'mongoose';
 
 import {
+  APTITUDE_TOPIC_SLUGS,
   DATABASE_MODELS,
   DSA_DIFFICULTY,
 } from '@/lib/constants';
@@ -25,10 +26,10 @@ const AptitudeOptionSchema = new Schema<AptitudeQuestionOptionModel>(
 
 const AptitudeQuestionSchema = new Schema<AptitudeQuestionModel>(
   {
-    topicId: {
-      type: Schema.Types.ObjectId,
-      ref: DATABASE_MODELS.APTITUDE_TOPIC,
-      required: [true, 'Topic ID is required'],
+    topic: {
+      type: String,
+      required: [true, 'Topic slug is required'],
+      enum: APTITUDE_TOPIC_SLUGS,
       index: true,
     },
     question: {
@@ -78,15 +79,8 @@ const AptitudeQuestionSchema = new Schema<AptitudeQuestionModel>(
   }
 );
 
-AptitudeQuestionSchema.index({ topicId: 1, order: 1 });
+AptitudeQuestionSchema.index({ topic: 1, order: 1 });
 AptitudeQuestionSchema.index({ difficulty: 1 });
-
-AptitudeQuestionSchema.virtual('topic', {
-  ref: DATABASE_MODELS.APTITUDE_TOPIC,
-  localField: 'topicId',
-  foreignField: '_id',
-  justOne: true,
-});
 
 const AptitudeQuestion: Model<AptitudeQuestionModel> =
   models?.AptitudeQuestion ||

@@ -1,15 +1,44 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes, COMPANY_TYPES,DSA_DIFFICULTY, DSA_DOMAIN } from "@/lib/constants";
+import {
+  apiStatusCodes,
+  APTITUDE_CATEGORIES,
+  APTITUDE_SUB_CATEGORIES,
+  COMPANY_TYPES,
+  DSA_DIFFICULTY,
+  DSA_DOMAIN,
+} from "@/lib/constants";
 import {
   addAInterviewSheetToDB,
   getAllInterviewSheetsFromDB,
+  getAptitudeMetadataFromDB,
+  getAptitudeQuestionsByTopicFromDB,
+  getAptitudeTopicsWithQuestionCountFromDB,
   getDSAQuestionsGroupedByTopic,
+  getDSASheetMetadataFromDB,
   getInterviewSheetBySlugFromDB,
 } from "@/lib/database";
-import type { AddInterviewSheetRequestPayloadProps, CompanyType, DSADifficultyType, DSADomainType } from "@/lib/interfaces";
+import type {
+  AddInterviewSheetRequestPayloadProps,
+  AptitudeCategoryType,
+  AptitudeSubCategoryType,
+  CompanyType,
+  DSADifficultyType,
+  DSADomainType,
+} from "@/lib/interfaces";
 import { cors, sendAPIResponse } from "@/lib/utils";
 import { connectDB } from "@/middleware/api";
+import { withRequestLogger } from "@/middleware/requestLogger";
+
+type RoadmapType = "DSA" | "APTITUDE";
+
+const ROADMAP_HANDLERS: Record<
+  RoadmapType,
+  (req: NextApiRequest, res: NextApiResponse) => Promise<void>
+> = {
+  DSA: handleDSAMode,
+  APTITUDE: handleAptitudeMode,
+};
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
@@ -20,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case "POST":
       return handleAddASheet(req, res);
     case "GET":
-      return handleAllGetSheet(req, res);
+      return handleGet(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -79,136 +108,205 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handleAllGetSheet = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    const { slug, roadmap, domain, difficulty, companyType } = req.query;
+// ─── Main GET Router ──────────────────────────────────────────────────────────
 
-    // Check if this is a DSA request
-    if (roadmap === "DSA") {
-      return handleDSAMode(req, res, {
-        domain: domain as string,
-        difficulty: difficulty as string,
-        companyType: companyType as string,
-      });
+const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { roadmap } = req.query;
+
+    const roadmapHandler = roadmap
+      ? ROADMAP_HANDLERS[roadmap as RoadmapType]
+      : undefined;
+
+    if (roadmap && !roadmapHandler) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Invalid roadmap: ${roadmap}. Supported: ${Object.keys(ROADMAP_HANDLERS).join(", ")}`,
+        })
+      );
     }
 
-    // Existing InterviewSheet logic
-    const { userId } = req.query;
-    if (slug) {
-      const { data: sheet, error } = await getInterviewSheetBySlugFromDB(
-        slug as string,
-        userId as string
-      );
+    if (roadmapHandler) {
+      return roadmapHandler(req, res);
+    }
 
-      if (error || !sheet) {
-        return res.status(apiStatusCodes.NOT_FOUND).json(
-          sendAPIResponse({
-            status: false,
-            message: "Sheet not found",
-            error,
-          })
-        );
+    return handleSheetsMode(req, res);
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "Unexpected error while fetching data",
+        error,
+      })
+    );
+  }
+};
+
+// ─── Sheets Mode (default, no roadmap) ───────────────────────────────────────
+
+async function handleSheetsMode(req: NextApiRequest, res: NextApiResponse) {
+  const { slug, userId } = req.query;
+
+  if (slug) {
+    const { data: sheet, error } = await getInterviewSheetBySlugFromDB(
+      slug as string,
+      userId as string
+    );
+
+    if (error || !sheet) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({ status: false, message: "Sheet not found", error })
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({ status: true, data: sheet })
+    );
+  }
+
+  const { data: allSheets, error } = await getAllInterviewSheetsFromDB();
+
+  if (error || !allSheets) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "Failed while fetching sheets",
+        error,
+      })
+    );
+  }
+
+  return res.status(apiStatusCodes.OKAY).json(
+    sendAPIResponse({ status: true, data: allSheets })
+  );
+}
+
+// ─── DSA Mode (?roadmap=DSA) ─────────────────────────────────────────────────
+// Query params:
+//   metadata=true          → available filters (domains, difficulties, companyTypes, topics)
+//   domain, difficulty, companyType → filter questions grouped by topic
+//   (default)              → all questions grouped by topic
+
+async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
+  const { metadata, domain, difficulty, companyType } = req.query;
+
+  if (metadata === "true") {
+    const { data, error } = await getDSASheetMetadataFromDB();
+    if (error) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({ status: false, message: "Failed to fetch DSA metadata", error })
+      );
+    }
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({ status: true, data })
+    );
+  }
+
+  let validDomain: DSADomainType = "GENERAL";
+  if (domain && DSA_DOMAIN.includes(domain as DSADomainType)) {
+    validDomain = domain as DSADomainType;
+  }
+
+  let validDifficulty: DSADifficultyType | undefined;
+  if (difficulty && DSA_DIFFICULTY.includes(difficulty as DSADifficultyType)) {
+    validDifficulty = difficulty as DSADifficultyType;
+  }
+
+  let validCompanyType: CompanyType | undefined;
+  if (companyType && COMPANY_TYPES.includes(companyType as CompanyType)) {
+    validCompanyType = companyType as CompanyType;
+  }
+
+  const { data, error } = await getDSAQuestionsGroupedByTopic(
+    validDomain,
+    validDifficulty,
+    validCompanyType
+  );
+
+  if (error || !data) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "Failed while fetching DSA questions",
+        error,
+      })
+    );
+  }
+
+  return res.status(apiStatusCodes.OKAY).json(
+    sendAPIResponse({ status: true, data })
+  );
+}
+
+// ─── Aptitude Mode (?roadmap=APTITUDE) ───────────────────────────────────────
+// Query params:
+//   metadata=true          → full metadata (categories, counts, grouped topics)
+//   topic=<slug>           → questions for a specific topic (+ difficulty, page, limit)
+//   category, subCategory  → filter topics list
+//   (default)              → topics with question counts
+
+async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
+  const { metadata, topic, category, subCategory, difficulty, page, limit } =
+    req.query;
+
+  if (metadata === "true") {
+    const { data, error } = await getAptitudeMetadataFromDB();
+    if (error) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({ status: false, message: "Failed to fetch aptitude metadata", error })
+      );
+    }
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({ status: true, data })
+    );
+  }
+
+  if (topic) {
+    const { data, error } = await getAptitudeQuestionsByTopicFromDB(
+      topic as string,
+      {
+        difficulty: difficulty as DSADifficultyType | undefined,
+        page: page ? parseInt(page as string) : 1,
+        limit: limit ? Math.min(parseInt(limit as string), 100) : 50,
       }
-
-      return res.status(apiStatusCodes.OKAY).json(
-        sendAPIResponse({
-          status: true,
-          data: sheet,
-        })
-      );
-    }
-
-    // No slug? Return all sheets
-    const { data: allSheets, error } = await getAllInterviewSheetsFromDB();
-
-    if (error || !allSheets) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-        sendAPIResponse({
-          status: false,
-          message: "Failed while fetching sheets",
-          error,
-        })
-      );
-    }
-
-    return res.status(apiStatusCodes.OKAY).json(
-      sendAPIResponse({
-        status: true,
-        data: allSheets,
-      })
     );
-  } catch (error) {
+
+    if (error) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({ status: false, message: "Failed to fetch aptitude questions", error })
+      );
+    }
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({ status: true, data })
+    );
+  }
+
+  const validCategory = category && APTITUDE_CATEGORIES.includes(category as AptitudeCategoryType)
+    ? (category as AptitudeCategoryType)
+    : undefined;
+  const validSubCategory = subCategory && APTITUDE_SUB_CATEGORIES.includes(subCategory as AptitudeSubCategoryType)
+    ? (subCategory as AptitudeSubCategoryType)
+    : undefined;
+
+  const { data, error } = await getAptitudeTopicsWithQuestionCountFromDB({
+    category: validCategory,
+    subCategory: validSubCategory,
+  });
+
+  if (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: "Unexpected error while fetching sheets",
+        message: "Failed to fetch aptitude topics",
         error,
       })
     );
   }
-};
 
-const handleDSAMode = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
-  filters: {
-    domain?: string;
-    difficulty?: string;
-    companyType?: string;
-  }
-) => {
-  try {
-    // Validate and set default domain
-    let domain: DSADomainType = "GENERAL";
-    if (filters.domain && DSA_DOMAIN.includes(filters.domain as DSADomainType)) {
-      domain = filters.domain as DSADomainType;
-    }
+  return res.status(apiStatusCodes.OKAY).json(
+    sendAPIResponse({ status: true, data })
+  );
+}
 
-    // Validate difficulty if provided
-    let difficulty: DSADifficultyType | undefined;
-    if (filters.difficulty && DSA_DIFFICULTY.includes(filters.difficulty as DSADifficultyType)) {
-      difficulty = filters.difficulty as DSADifficultyType;
-    }
-
-    // Validate companyType if provided
-    let companyType: CompanyType | undefined;
-    if (filters.companyType && COMPANY_TYPES.includes(filters.companyType as CompanyType)) {
-      companyType = filters.companyType as CompanyType;
-    }
-
-    // Fetch DSA questions grouped by topic
-    const { data, error } = await getDSAQuestionsGroupedByTopic(
-      domain,
-      difficulty,
-      companyType
-    );
-
-    if (error || !data) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-        sendAPIResponse({
-          status: false,
-          message: "Failed while fetching DSA questions",
-          error,
-        })
-      );
-    }
-
-    return res.status(apiStatusCodes.OKAY).json(
-      sendAPIResponse({
-        status: true,
-        data,
-        message: "DSA questions retrieved successfully",
-      })
-    );
-  } catch (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-      sendAPIResponse({
-        status: false,
-        message: "Unexpected error while fetching DSA questions",
-        error,
-      })
-    );
-  }
-};
-
-export default handler;
+export default withRequestLogger(handler);
