@@ -212,6 +212,26 @@ export type DSADomainType = "FRONTEND" | "BACKEND" | "GENERAL" | "FULLSTACK";
 
 export type DSADifficultyType = "EASY" | "MEDIUM" | "HARD";
 
+export type AptitudeCategoryType =
+  | "QUANTITATIVE"
+  | "VERBAL"
+  | "REASONING"
+  | "INTERVIEW";
+
+export type AptitudeSubCategoryType =
+  | "ARITHMETIC_APTITUDE"
+  | "DATA_INTERPRETATION"
+  | "VERBAL_ABILITY"
+  | "LOGICAL_REASONING"
+  | "GD_ROUND"
+  | "HR_INTERVIEW";
+
+export type AptitudeAnswerFormatType =
+  | "SPEED"
+  | "RULES"
+  | "PERSPECTIVE"
+  | "BEHAVIORAL";
+
 export type DSATopicType =
   | "ARRAY"
   | "PREFIX_SUM"

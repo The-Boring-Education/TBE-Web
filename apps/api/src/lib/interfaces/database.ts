@@ -3,6 +3,9 @@ import type { Document, Schema, Types } from "mongoose"
 import type {
     APIMethodTypes,
     ApplicationStatusType,
+    AptitudeAnswerFormatType,
+    AptitudeCategoryType,
+    AptitudeSubCategoryType,
     CertificateType,
     CompanyType,
     DifficultyType,
@@ -1001,4 +1004,59 @@ export interface UserInterestResponseProps {
     userAgent?: string
     createdAt: string
     updatedAt: string
+}
+
+export interface AptitudeTopicModel extends Document {
+    _id: typeof Schema.Types.ObjectId
+    name: string
+    slug: string
+    description?: string
+    category: AptitudeCategoryType
+    subCategory: AptitudeSubCategoryType
+    answerFormatType: AptitudeAnswerFormatType
+    order: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+}
+
+export interface AptitudeQuestionModel extends Document {
+    _id: typeof Schema.Types.ObjectId
+    topicId: typeof Schema.Types.ObjectId
+    question: string
+    options?: AptitudeQuestionOptionModel[]
+    answer: string
+    difficulty: DSADifficultyType
+    order: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+}
+
+export interface AptitudeQuestionOptionModel {
+    text: string
+    isCorrect: boolean
+}
+
+export interface AddAptitudeTopicPayload {
+    name: string
+    slug: string
+    description?: string
+    category: AptitudeCategoryType
+    subCategory: AptitudeSubCategoryType
+    answerFormatType: AptitudeAnswerFormatType
+    order?: number
+}
+
+export interface AddAptitudeQuestionPayload {
+    topicId: string
+    question: string
+    options?: AptitudeQuestionOptionModel[]
+    answer?: string
+    difficulty?: DSADifficultyType
+    order?: number
+}
+
+export interface AptitudeUploadPayload {
+    topics: Array<AddAptitudeTopicPayload & { questions: AddAptitudeQuestionPayload[] }>
 }
