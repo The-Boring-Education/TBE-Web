@@ -82,11 +82,18 @@ const SECTION_CONFIG: Record<
 
 function parseSections(answer: string): Section[] {
     const sections: Section[] = [];
-    const regex = /^#+\s+(.+)$/gm;
+    const regex = /^#{2,5}\s+(.+)$/gm;
     let match;
     const matches: { title: string; index: number }[] = [];
 
     while ((match = regex.exec(answer)) !== null) {
+        // Safe-check: ignore any headers if we are currently inside a markdown code block
+        const beforeMatch = answer.substring(0, match.index);
+        const codeFences = (beforeMatch.match(/```/g) || []).length;
+        if (codeFences % 2 !== 0) {
+            continue;
+        }
+
         matches.push({ title: match[1].trim(), index: match.index });
     }
 
@@ -106,7 +113,7 @@ function parseSections(answer: string): Section[] {
     }
 
     for (let i = 0; i < matches.length; i++) {
-        const start = matches[i].index + matches[i].title.length + answer.substring(matches[i].index).match(/^#+\s+/)?.[0].length!;
+        const start = matches[i].index + matches[i].title.length + answer.substring(matches[i].index).match(/^#{2,5}\s+/)?.[0].length!;
         const end = i + 1 < matches.length ? matches[i + 1].index : answer.length;
         const content = answer.slice(start, end).trim();
         const title = matches[i].title;
