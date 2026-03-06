@@ -1,4 +1,5 @@
 // Export all database queries (non-conflicting ones)
+export * from './aptitude'
 export * from './certificate'
 export * from './common'
 export * from './dsayatra'

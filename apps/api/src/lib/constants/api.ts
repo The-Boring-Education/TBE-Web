@@ -1,4 +1,7 @@
 import type {
+    AptitudeAnswerFormatType,
+    AptitudeCategoryType,
+    AptitudeSubCategoryType,
     CertificateType,
     CompanyType,
     DifficultyType,
@@ -2723,6 +2726,38 @@ const POINTS_RULES: Record<UserPointsActionType, number> = {
 
 const LEADERBOARD_TYPES: LeaderboardType[] = ["DAILY", "WEEKLY", "MONTHLY"]
 
+const APTITUDE_CATEGORIES: AptitudeCategoryType[] = [
+    "QUANTITATIVE",
+    "VERBAL",
+    "REASONING",
+    "INTERVIEW"
+]
+
+const APTITUDE_SUB_CATEGORIES: AptitudeSubCategoryType[] = [
+    "ARITHMETIC_APTITUDE",
+    "DATA_INTERPRETATION",
+    "VERBAL_ABILITY",
+    "LOGICAL_REASONING",
+    "GD_ROUND",
+    "HR_INTERVIEW"
+]
+
+const APTITUDE_ANSWER_FORMATS: AptitudeAnswerFormatType[] = [
+    "SPEED",
+    "RULES",
+    "PERSPECTIVE",
+    "BEHAVIORAL"
+]
+
+const APTITUDE_SUB_CATEGORY_FORMAT_MAP: Record<AptitudeSubCategoryType, AptitudeAnswerFormatType> = {
+    ARITHMETIC_APTITUDE: "SPEED",
+    DATA_INTERPRETATION: "SPEED",
+    VERBAL_ABILITY: "RULES",
+    LOGICAL_REASONING: "SPEED",
+    GD_ROUND: "PERSPECTIVE",
+    HR_INTERVIEW: "BEHAVIORAL"
+}
+
 const DSA_DOMAIN: DSADomainType[] = ["FRONTEND", "BACKEND", "GENERAL", "FULLSTACK"]
 
 const DSA_DIFFICULTY: DSADifficultyType[] = ["EASY", "MEDIUM", "HARD"]
@@ -2757,6 +2792,10 @@ const DSA_TOPICS: DSATopicType[] = [
 
 export {
     ALLOWED_IPS,
+    APTITUDE_ANSWER_FORMATS,
+    APTITUDE_CATEGORIES,
+    APTITUDE_SUB_CATEGORIES,
+    APTITUDE_SUB_CATEGORY_FORMAT_MAP,
     CERTIFICATE_TYPE,
     COMPANY_TYPES,
     DIFFICULTY_LEVEL,

@@ -21,26 +21,30 @@ const MDXRenderer = ({ mdxSource, actions, theme = 'light' }: MDXRendererProps) 
   // Enable bold syntax explicitly (should be default, but ensure it's on)
   // markdown-it supports both **text** and __text__ for bold by default
 
-  /**
-   * Normalize "agent markdown" into more CommonMark-friendly markdown.
-   * This is intentionally defensive because content can be generated in
-   * many inconsistent formats (extra #, unclosed fences, etc.).
-   */
   const normalizeMarkdown = (src: string): string => {
     if (!src) return '';
     let out = src;
 
+    // Convert 7+ to 3 (nice visual divider) so they render as headings, BUT NOT INSIDE CODE BLOCKS.
+    const inCodeBlockRegexSafe = (text: string, regex: RegExp, replacer: any) => {
+      let isCode = false;
+      return text.split('\n').map(line => {
+        if (line.trim().startsWith('```')) isCode = !isCode;
+        if (isCode) return line;
+        // if not code, apply regex to this line
+        return line.replace(regex, replacer);
+      }).join('\n');
+    };
+
     // 1) Fix headings that have #### at both ends (weird formatting)
     // Example: "#### text #### comment" -> "#### text" (heading) + "comment" (text)
-    out = out.replace(/^(#{1,6})\s+([^#\n]+?)\s+(#{1,6})\s+([^\n]+)$/gm, (match, h1, text, h2, comment) => {
+    out = inCodeBlockRegexSafe(out, /^(#{1,6})\s+([^#\n]+?)\s+(#{1,6})\s+([^\n]+)$/, (match: string, h1: string, text: string, h2: string, comment: string) => {
       // If both are same level, treat first as heading and second part as regular text
       if (h1 === h2) {
         return `${h1} ${text.trim()}\n\n${comment.trim()}`;
       }
       return match;
     });
-
-    // 2) Fix duplicate code fences (e.g., "```python\n\n```python" -> "```python")
     // Handle cases with blank lines between duplicate fences
     out = out.replace(/```(\w+)\s*\n\s*\n\s*```(\w+)/g, '```$1');
     out = out.replace(/```(\w+)\s*\n\s*```(\w+)/g, '```$1');
@@ -48,16 +52,12 @@ const MDXRenderer = ({ mdxSource, actions, theme = 'light' }: MDXRendererProps) 
     out = out.replace(/```(\w+)\s*\n([\s\S]*?)\n```\s*\n\s*```\1\s*\n/g, '```$1\n$2\n```\n');
 
     // 3) Headings: CommonMark supports only 1..6 #'s.
-    // Convert 7+ to 3 (nice visual divider) so they render as headings.
-    // Example: "########### Title" -> "### Title"
-    out = out.replace(/^(#{7,})\s+/gm, '### ');
+    // Convert 7+ to 3 (nice visual divider) so they render as headings, BUT NOT INSIDE CODE BLOCKS.
+    out = inCodeBlockRegexSafe(out, /^(#{7,})\s+/, '### ');
 
     // 4) Ensure headings with emojis are properly formatted (no space issues)
-    // Fix cases like "##### 💡 Title" to ensure proper parsing
-    out = out.replace(/^(#{1,6})\s+([^\n]+)/gm, (match, hashes, content) => {
-      // Remove any trailing #### that might be in the content
+    out = inCodeBlockRegexSafe(out, /^(#{1,6})\s+([^\n]+)/, (match: string, hashes: string, content: string) => {
       const cleaned = content.trim().replace(/\s+#{1,6}\s*$/, '');
-      // Ensure there's a space after hashes and content is trimmed
       return `${hashes} ${cleaned}`;
     });
 
@@ -138,7 +138,7 @@ const MDXRenderer = ({ mdxSource, actions, theme = 'light' }: MDXRendererProps) 
 
     while (i < unfencedCodeLines.length) {
       const line = unfencedCodeLines[i];
-      if (!line) {
+      if (line === undefined || line === null) {
         wrappedLines.push('');
         i++;
         continue;
@@ -187,11 +187,11 @@ const MDXRenderer = ({ mdxSource, actions, theme = 'light' }: MDXRendererProps) 
             break;
           }
 
-          if (!currentLine || currentLine.trim() === '') {
+          if (currentLine === undefined || currentLine === null || currentLine.trim() === '') {
             // Empty line - check if next line continues the code pattern
             if (j + 1 < unfencedCodeLines.length) {
               const nextLine = unfencedCodeLines[j + 1];
-              if (nextLine && (pythonPattern.test(nextLine.trim()) || nextLine.trim().startsWith('#') || /^\s{4,}/.test(nextLine || ''))) {
+              if (nextLine && (pythonPattern.test(nextLine.trim()) || nextLine.trim().startsWith('#') || /^\s{4,}/.test(nextLine))) {
                 codeLines.push(currentLine || '');
                 j++;
                 continue;
