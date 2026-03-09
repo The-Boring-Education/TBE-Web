@@ -11,9 +11,9 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
     const router = useRouter();
 
-    // If on landing page or login page, logo should point to landing page
     const isDashboard = router.pathname === '/dashboard' || router.pathname.startsWith('/dashboard/');
     const isFullScreen = router.pathname === '/sheets';
+    const isRevisions = router.pathname === '/revisions';
     const dashboardRoute = (router.pathname === '/' || router.pathname === '/login') ? '/' : '/dashboard';
 
     return (
@@ -25,7 +25,7 @@ const Layout = ({ children }: LayoutProps) => {
             />
 
 
-            <main className={cn(isFullScreen ? "h-screen pt-[72px] overflow-hidden" : "min-h-screen pt-[72px]", (isDashboard || isFullScreen) && "bg-[#0f0f0f]")}>
+            <main className={cn(isFullScreen ? "h-screen pt-[72px] overflow-hidden" : "min-h-screen pt-[72px]", (isDashboard || isFullScreen || isRevisions) && "bg-[#0A0A0A]")}>
                 {children}
             </main>
             {!isFullScreen && <Footer />}
