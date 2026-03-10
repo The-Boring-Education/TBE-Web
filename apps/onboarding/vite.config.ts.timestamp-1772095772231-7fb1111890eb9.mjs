@@ -1,6 +1,6 @@
 // vite.config.ts
-import react from "file:///C:/TBE-Web/node_modules/@vitejs/plugin-react/dist/index.js";
 import { defineConfig } from "file:///C:/TBE-Web/apps/onboarding/node_modules/vite/dist/node/index.js";
+import react from "file:///C:/TBE-Web/node_modules/@vitejs/plugin-react/dist/index.js";
 var vite_config_default = defineConfig({
   plugins: [react()]
 });

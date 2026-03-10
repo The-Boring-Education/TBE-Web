@@ -8,7 +8,7 @@ const NotFoundPage = () => {
     <>
       <SEO seoMeta={seoMeta} />
 
-  <NotFound />
+      <NotFound />
     </>
   );
 };

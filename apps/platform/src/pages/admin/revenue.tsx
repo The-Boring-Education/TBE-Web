@@ -33,7 +33,10 @@ const AdminRevenue = () => {
 
   useEffect(() => {
     const params = { period: dateRange };
-    fetchRevenue(`${routes.api.base}/admin/analytics`, { type: 'revenue', ...params });
+    fetchRevenue(`${routes.api.base}/admin/analytics`, {
+      type: 'revenue',
+      ...params,
+    });
     fetchSubscriptions(`${routes.api.base}/admin/analytics`, {
       type: 'operational',
       ...params,
@@ -89,10 +92,10 @@ const AdminRevenue = () => {
         item._id === 'COURSE'
           ? 'Courses'
           : item._id === 'PROJECT'
-          ? 'Projects'
-          : item._id === 'INTERVIEW_SHEET'
-          ? 'Interview Sheets'
-          : item._id,
+            ? 'Projects'
+            : item._id === 'INTERVIEW_SHEET'
+              ? 'Interview Sheets'
+              : item._id,
       revenue: item.totalRevenue / 100,
       transactions: item.transactionCount,
     }));
@@ -240,11 +243,11 @@ const AdminRevenue = () => {
                           <td className='px-4 py-2 text-right'>
                             ₹
                             {Math.round(
-                              product.revenue / product.transactions || 0
+                              product.revenue / product.transactions || 0,
                             ).toLocaleString()}
                           </td>
                         </tr>
-                      )
+                      ),
                     )}
                   </tbody>
                 </table>

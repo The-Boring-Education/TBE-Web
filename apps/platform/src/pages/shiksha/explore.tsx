@@ -19,7 +19,7 @@ const Home = ({ seoMeta }: PageProps) => {
 
   const courses: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
     response?.data,
-    mapCourseResponseToCard
+    mapCourseResponseToCard,
   );
 
   if (loading) {

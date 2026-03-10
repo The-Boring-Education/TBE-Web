@@ -1,7 +1,7 @@
-import type { Document } from 'mongoose';
-import { type Model, model, models, Schema } from 'mongoose';
+import type { Document } from "mongoose";
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
+import { DATABASE_MODELS } from "@/lib/constants";
 
 // Define the document interface
 interface IChallengeLog extends Document {
@@ -39,16 +39,18 @@ const ChallengeLogSchema = new Schema<IChallengeLog>(
       min: 0,
       max: 24,
     },
-    nextGoals: [{
-      type: String,
-      trim: true,
-    }],
+    nextGoals: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
     loggedAt: {
       type: Date,
       default: Date.now,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Compound index to ensure one log per day per challenge

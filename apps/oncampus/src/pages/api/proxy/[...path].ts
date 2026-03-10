@@ -1,6 +1,6 @@
-import { envConfig } from '@tbe/constants';
-import axios from 'axios';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { envConfig } from "@tbe/constants";
+import axios from "axios";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * Proxy API route to forward requests to the actual API server
@@ -11,22 +11,22 @@ import type { NextApiRequest, NextApiResponse } from 'next';
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   // Get the API URL from environment
   const apiUrl = envConfig.API_URL || process.env.NEXT_PUBLIC_API_URL;
 
   if (!apiUrl) {
     return res.status(500).json({
-      error: 'API URL not configured',
-      message: 'Please set NEXT_PUBLIC_API_URL environment variable',
+      error: "API URL not configured",
+      message: "Please set NEXT_PUBLIC_API_URL environment variable",
     });
   }
 
   try {
     // Extract the path from the catch-all route
     const { path } = req.query;
-    const apiPath = Array.isArray(path) ? path.join('/') : path || '';
+    const apiPath = Array.isArray(path) ? path.join("/") : path || "";
 
     // Construct the full URL
     const url = `${apiUrl}/${apiPath}`;
@@ -41,7 +41,7 @@ export default async function handler(
         host: undefined,
         // Forward any auth headers
         authorization: req.headers.authorization,
-        'x-admin-secret': req.headers['x-admin-secret'],
+        "x-admin-secret": req.headers["x-admin-secret"],
       },
       data: req.body,
       params: req.query,
@@ -52,11 +52,10 @@ export default async function handler(
     // Forward the response
     res.status(response.status).json(response.data);
   } catch (error: any) {
-    console.error('Proxy error:', error);
+    console.error("Proxy error:", error);
     res.status(500).json({
-      error: 'Proxy error',
+      error: "Proxy error",
       message: error.message,
     });
   }
 }
-

@@ -10,10 +10,7 @@ import {
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
-import {
-  TrendingUp,
-  Trophy,
-} from "lucide-react";
+import { TrendingUp, Trophy } from "lucide-react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
@@ -61,24 +58,25 @@ const CampusPrepDashboard = () => {
     "user-interview-prep",
     user?.id
       ? {
-        url: `${routes.api.base}${routes.api.mySheets}?userId=${user.id}`,
-      }
+          url: `${routes.api.base}${routes.api.mySheets}?userId=${user.id}`,
+        }
       : undefined,
-    { enabled: !!user?.id }
+    { enabled: !!user?.id },
   );
 
   const { response: quizPerformanceResponse, loading: quizLoading } = useApi(
     "quiz-performance",
     user?.id
       ? {
-        url: `${routes.api.base}/quiz/performance/${user.id}`,
-      }
+          url: `${routes.api.base}/quiz/performance/${user.id}`,
+        }
       : undefined,
-    { enabled: !!user?.id }
+    { enabled: !!user?.id },
   );
 
   const enrolledSheets: EnrolledSheet[] = useMemo(() => {
-    if (!enrolledSheetsResponse?.status || !enrolledSheetsResponse?.data) return [];
+    if (!enrolledSheetsResponse?.status || !enrolledSheetsResponse?.data)
+      return [];
     const sheets = Array.isArray(enrolledSheetsResponse.data)
       ? enrolledSheetsResponse.data
       : [];
@@ -133,7 +131,7 @@ const CampusPrepDashboard = () => {
     );
   }
 
-  const userName = user?.name || user?.email?.split('@')[0] || "Student";
+  const userName = user?.name || user?.email?.split("@")[0] || "Student";
 
   return (
     <div className="space-y-2">
@@ -160,9 +158,10 @@ const CampusPrepDashboard = () => {
       </Card>
       {/* Continue Learning Card with gradient overlay */}
       <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
-
         <CardHeader className="p-2 relative z-10">
-          <CardTitle className="text-white">Continue where you left off</CardTitle>
+          <CardTitle className="text-white">
+            Continue where you left off
+          </CardTitle>
           <CardDescription className="text-gray-400">
             Your recently studied interview sheets
           </CardDescription>
@@ -195,7 +194,8 @@ const CampusPrepDashboard = () => {
                         className="h-1.5 bg-gray-800"
                       />
                       <p className="text-xs text-gray-400">
-                        {sheet.progress.completed} of {sheet.progress.total} questions completed ({sheet.progress.percentage}%)
+                        {sheet.progress.completed} of {sheet.progress.total}{" "}
+                        questions completed ({sheet.progress.percentage}%)
                       </p>
                     </div>
                   )}
@@ -205,7 +205,9 @@ const CampusPrepDashboard = () => {
                   size="SMALL"
                   className="border-gray-700 text-white hover:bg-gray-800 ml-2 relative z-10"
                   text="Continue"
-                  onClick={() => router.push(`/dashboard/interview-prep/${sheet.slug}`)}
+                  onClick={() =>
+                    router.push(`/dashboard/interview-prep/${sheet.slug}`)
+                  }
                 />
               </div>
             ))
@@ -215,7 +217,6 @@ const CampusPrepDashboard = () => {
 
       {/* Quiz Insights Card with gradient overlay */}
       <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
-
         <CardHeader className="p-2 relative z-10">
           <CardTitle className="text-white flex items-center gap-1">
             Quiz Insights
@@ -231,13 +232,17 @@ const CampusPrepDashboard = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
               <div className="flex items-center justify-between mb-1 relative z-10">
-                <p className="text-sm text-gray-400 group-hover/stat:text-white transition-colors">Total Attempts</p>
+                <p className="text-sm text-gray-400 group-hover/stat:text-white transition-colors">
+                  Total Attempts
+                </p>
                 <Trophy className="w-4 h-4 text-yellow-500" />
               </div>
               <p className="text-2xl font-bold text-white relative z-10">
                 {quizLoading ? "..." : totalQuizAttempts}
               </p>
-              <p className="text-xs text-gray-500 mt-px relative z-10">Quizes completed</p>
+              <p className="text-xs text-gray-500 mt-px relative z-10">
+                Quizes completed
+              </p>
             </div>
 
             {/* Average Score Card */}
@@ -245,7 +250,9 @@ const CampusPrepDashboard = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
               <div className="flex items-center justify-between mb-1 relative z-10">
-                <p className="text-sm text-gray-400 group-hover/stat:text-white transition-colors">Average Score</p>
+                <p className="text-sm text-gray-400 group-hover/stat:text-white transition-colors">
+                  Average Score
+                </p>
                 <TrendingUp className="w-4 h-4 text-green-500" />
               </div>
               <p className="text-2xl font-bold text-white relative z-10">
@@ -294,7 +301,6 @@ const CampusPrepDashboard = () => {
 
       {/* Practice Card with gradient overlay */}
       <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
-
         <CardHeader className="p-2 relative z-10">
           <CardTitle className="text-white flex items-center gap-1">
             Practice

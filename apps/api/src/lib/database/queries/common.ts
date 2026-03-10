@@ -1,18 +1,18 @@
-import mongoose, { type Model } from 'mongoose';
+import mongoose, { type Model } from "mongoose";
 
-import type { DatabaseQueryResponseType } from '@/lib/interfaces';
+import type { DatabaseQueryResponseType } from "@/lib/interfaces";
 
-/** 
+/**
  * General utility to get total count of documents for any Mongoose model.
  */
 const getTotalCountFromModel = async (
-  model: Model<any>
+  model: Model<any>,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const count = await model.countDocuments();
     return { data: count };
   } catch (error) {
-    return { error: 'Error while counting documents' };
+    return { error: "Error while counting documents" };
   }
 };
 
@@ -25,7 +25,7 @@ const getAllDocumentsFromModel = async (
   page = 1,
   limit = 100,
   populateOptions: any = null,
-  sortOptions: Record<string, 1 | -1> = { createdAt: -1 }
+  sortOptions: Record<string, 1 | -1> = { createdAt: -1 },
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const skip = (page - 1) * limit;
@@ -43,7 +43,7 @@ const getAllDocumentsFromModel = async (
       },
     };
   } catch (error) {
-    return { error: 'Error while fetching documents' };
+    return { error: "Error while fetching documents" };
   }
 };
 

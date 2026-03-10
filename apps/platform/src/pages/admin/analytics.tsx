@@ -43,7 +43,10 @@ const AdminAnalytics = () => {
 
   useEffect(() => {
     const params = { period: dateRange };
-    fetchRevenue(`${routes.api.base}/admin/analytics`, { type: 'revenue', ...params });
+    fetchRevenue(`${routes.api.base}/admin/analytics`, {
+      type: 'revenue',
+      ...params,
+    });
     fetchEngagement(`${routes.api.base}/admin/analytics`, {
       type: 'user-engagement',
       ...params,

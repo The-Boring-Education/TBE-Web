@@ -1,6 +1,6 @@
-import { CelebrationAnimation, GamificationToast } from '@tbe/components';
-import type { ReactNode } from 'react';
-import React, { createContext, useContext, useState } from 'react';
+import { CelebrationAnimation, GamificationToast } from "@tbe/components";
+import type { ReactNode } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 interface GamificationContextType {
   triggerCelebration: (data: CelebrationData) => void;
@@ -8,12 +8,12 @@ interface GamificationContextType {
 }
 
 interface CelebrationData {
-  type: 'points' | 'levelup' | 'achievement';
-  intensity: 'low' | 'medium' | 'high';
+  type: "points" | "levelup" | "achievement";
+  intensity: "low" | "medium" | "high";
 }
 
 interface ToastData {
-  type: 'points' | 'levelup' | 'achievement';
+  type: "points" | "levelup" | "achievement";
   message: string;
   points?: number;
   level?: number;
@@ -67,16 +67,16 @@ export const GamificationProvider = ({
       {/* Global Celebration Animation */}
       <CelebrationAnimation
         isActive={showCelebration}
-        type={celebrationData?.type || 'points'}
-        intensity={celebrationData?.intensity || 'medium'}
+        type={celebrationData?.type || "points"}
+        intensity={celebrationData?.intensity || "medium"}
         onComplete={handleCelebrationComplete}
       />
 
       {/* Global Gamification Toast */}
       <GamificationToast
         isVisible={showToastState}
-        type={toastData?.type || 'points'}
-        message={toastData?.message || ''}
+        type={toastData?.type || "points"}
+        message={toastData?.message || ""}
         points={toastData?.points}
         level={toastData?.level}
         levelName={toastData?.levelName}
@@ -90,7 +90,7 @@ export const useGamificationContext = () => {
   const context = useContext(GamificationContext);
   if (!context) {
     throw new Error(
-      'useGamificationContext must be used within a GamificationProvider'
+      "useGamificationContext must be used within a GamificationProvider",
     );
   }
   return context;

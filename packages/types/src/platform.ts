@@ -1,6 +1,6 @@
 /**
  * Platform-Specific Types
- * 
+ *
  * Types specific to the TBE platform that are shared across multiple apps
  * but not necessarily part of the common domain types.
  */
@@ -11,7 +11,7 @@ interface FooterLinksContainerProps {
   links: Array<{
     label: string;
     href: string;
-    target?: '_blank';
+    target?: "_blank";
   }>;
 }
 
@@ -25,22 +25,22 @@ export interface FooterNavigationDataProps extends FooterLinksContainerProps {
 }
 
 export type ProductLabelType =
-  | 'Roadmaps'
-  | 'Projects'
-  | 'Shiksha'
-  | 'Interview Prep'
-  | 'Webinar'
-  | 'Open Source'
-  | 'Interview Prep'
-  | 'Portfolio'
-  | 'YouFocus'
-  | 'UnSkilled'
-  | 'Prep Yatra'
-  | 'Tech Yatra'
-  | 'DSA Yatra'
-  | 'Resume Yatra';
+  | "Roadmaps"
+  | "Projects"
+  | "Shiksha"
+  | "Interview Prep"
+  | "Webinar"
+  | "Open Source"
+  | "Interview Prep"
+  | "Portfolio"
+  | "YouFocus"
+  | "UnSkilled"
+  | "Prep Yatra"
+  | "Tech Yatra"
+  | "DSA Yatra"
+  | "Resume Yatra";
 
-export type CohortLabelType = 'Bring Your Idea';
+export type CohortLabelType = "Bring Your Idea";
 
 export interface ProductDataProps {
   [key: string]: {
@@ -72,7 +72,7 @@ export interface TopNavbarLinkProps {
   name: string;
   href: string;
   description?: string;
-  target?: '_blank';
+  target?: "_blank";
   isDevelopment?: boolean;
 }
 
@@ -183,12 +183,12 @@ export type FormatDateType = {
 // LEADERBOARD TYPES
 // ================================
 
-export type LeaderboardType = 'DAILY' | 'WEEKLY' | 'MONTHLY';
+export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY";
 
 export const LEADERBOARD_TYPES: LeaderboardType[] = [
-  'DAILY',
-  'WEEKLY',
-  'MONTHLY',
+  "DAILY",
+  "WEEKLY",
+  "MONTHLY",
 ];
 
 // ================================
@@ -219,7 +219,7 @@ export interface GitHubRepository {
   has_downloads: boolean;
   archived: boolean;
   disabled: boolean;
-  visibility: 'public' | 'private';
+  visibility: "public" | "private";
   pushed_at: string;
   created_at: string;
   updated_at: string;
@@ -238,10 +238,10 @@ export interface GitHubRepository {
   delete_branch_on_merge: boolean;
   allow_update_branch: boolean;
   use_squash_pr_title_as_default: boolean;
-  squash_merge_commit_message: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
-  squash_merge_commit_title: 'PR_TITLE' | 'MERGE_MESSAGE';
-  merge_commit_message: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
-  merge_commit_title: 'PR_TITLE' | 'MERGE_MESSAGE';
+  squash_merge_commit_message: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
+  squash_merge_commit_title: "PR_TITLE" | "MERGE_MESSAGE";
+  merge_commit_message: "PR_BODY" | "PR_TITLE" | "BLANK";
+  merge_commit_title: "PR_TITLE" | "MERGE_MESSAGE";
   license: {
     key: string;
     name: string;
@@ -273,7 +273,7 @@ export interface GitHubUser {
   repos_url: string;
   events_url: string;
   received_events_url: string;
-  type: 'User' | 'Organization';
+  type: "User" | "Organization";
   site_admin: boolean;
   name: string | null;
   company: string | null;
@@ -302,7 +302,7 @@ export interface EmailTemplate {
   htmlContent: string;
   textContent?: string;
   variables: string[];
-  category: 'welcome' | 'notification' | 'marketing' | 'transactional';
+  category: "welcome" | "notification" | "marketing" | "transactional";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -354,7 +354,7 @@ export interface AnalyticsPageView {
   ipAddress: string;
   country?: string;
   city?: string;
-  device: 'desktop' | 'mobile' | 'tablet';
+  device: "desktop" | "mobile" | "tablet";
   browser: string;
   os: string;
 }
@@ -435,7 +435,7 @@ interface WebinarModel {
   resources: Array<{
     title: string;
     url: string;
-    type: 'document' | 'video' | 'link';
+    type: "document" | "video" | "link";
   }>;
   tags: string[];
   createdAt: string;
@@ -443,7 +443,7 @@ interface WebinarModel {
 }
 
 export interface WebinarCardProps extends WebinarModel {
-  isCompleted: boolean
+  isCompleted: boolean;
 }
 
 export interface WebinarsLandingPageProps extends PageProps {
@@ -490,93 +490,93 @@ export interface UseUserReturnType {
 }
 
 type ActionTypes =
-  | 'USER_LOGIN'
-  | 'USER_LOGOUT'
-  | 'COURSE_ENROLL'
-  | 'COURSE_COMPLETE'
-  | 'COURSE_PROGRESS'
-  | 'COURSE_CHAPTER_START'
-  | 'COURSE_CHAPTER_COMPLETE'
-  | 'INTERVIEW_SHEET_ENROLL'
-  | 'INTERVIEW_SHEET_COMPLETE'
-  | 'INTERVIEW_SHEET_PROGRESS'
-  | 'QUESTION_START'
-  | 'QUESTION_COMPLETE'
-  | 'QUESTION_HINT_USED'
-  | 'PROJECT_ENROLL'
-  | 'PROJECT_COMPLETE'
-  | 'PROJECT_PROGRESS'
-  | 'PROJECT_CHAPTER_START'
-  | 'PROJECT_CHAPTER_COMPLETE'
-  | 'WEBINAR_ENROLL'
-  | 'WEBINAR_JOIN'
-  | 'WEBINAR_COMPLETE'
-  | 'CERTIFICATE_GENERATED'
-  | 'CERTIFICATE_DOWNLOAD'
-  | 'LEVEL_UP'
-  | 'POINTS_EARNED'
-  | 'STREAK_ACHIEVEMENT'
-  | 'PROFILE_COMPLETE'
-  | 'SOCIAL_SHARE'
-  | 'FEEDBACK_SUBMITTED'
-  | 'SEARCH_PERFORMED'
-  | 'FILTER_APPLIED'
-  | 'PAGE_VIEW_TIME'
-  | 'VIDEO_WATCH_START'
-  | 'VIDEO_WATCH_COMPLETE'
-  | 'DOWNLOAD_RESOURCE'
-  | 'EXTERNAL_LINK_CLICK';
+  | "USER_LOGIN"
+  | "USER_LOGOUT"
+  | "COURSE_ENROLL"
+  | "COURSE_COMPLETE"
+  | "COURSE_PROGRESS"
+  | "COURSE_CHAPTER_START"
+  | "COURSE_CHAPTER_COMPLETE"
+  | "INTERVIEW_SHEET_ENROLL"
+  | "INTERVIEW_SHEET_COMPLETE"
+  | "INTERVIEW_SHEET_PROGRESS"
+  | "QUESTION_START"
+  | "QUESTION_COMPLETE"
+  | "QUESTION_HINT_USED"
+  | "PROJECT_ENROLL"
+  | "PROJECT_COMPLETE"
+  | "PROJECT_PROGRESS"
+  | "PROJECT_CHAPTER_START"
+  | "PROJECT_CHAPTER_COMPLETE"
+  | "WEBINAR_ENROLL"
+  | "WEBINAR_JOIN"
+  | "WEBINAR_COMPLETE"
+  | "CERTIFICATE_GENERATED"
+  | "CERTIFICATE_DOWNLOAD"
+  | "LEVEL_UP"
+  | "POINTS_EARNED"
+  | "STREAK_ACHIEVEMENT"
+  | "PROFILE_COMPLETE"
+  | "SOCIAL_SHARE"
+  | "FEEDBACK_SUBMITTED"
+  | "SEARCH_PERFORMED"
+  | "FILTER_APPLIED"
+  | "PAGE_VIEW_TIME"
+  | "VIDEO_WATCH_START"
+  | "VIDEO_WATCH_COMPLETE"
+  | "DOWNLOAD_RESOURCE"
+  | "EXTERNAL_LINK_CLICK";
 
 type CategoryTypes =
-  | 'User'
-  | 'Course'
-  | 'InterviewSheet'
-  | 'Project'
-  | 'Webinar'
-  | 'Question'
-  | 'Gamification'
-  | 'Engagement'
-  | 'Learning'
-  | 'Achievement'
-  | 'Social';
+  | "User"
+  | "Course"
+  | "InterviewSheet"
+  | "Project"
+  | "Webinar"
+  | "Question"
+  | "Gamification"
+  | "Engagement"
+  | "Learning"
+  | "Achievement"
+  | "Social";
 
 type EventLabelTypes =
-  | 'User Logged In'
-  | 'User Logged Out'
-  | 'Course Enrolled'
-  | 'Course Completed'
-  | 'Course Progress'
-  | 'Chapter Started'
-  | 'Chapter Completed'
-  | 'Interview Sheet Enrolled'
-  | 'Interview Sheet Completed'
-  | 'Interview Sheet Progress'
-  | 'Question Started'
-  | 'Question Completed'
-  | 'Question Hint Used'
-  | 'Project Enrolled'
-  | 'Project Completed'
-  | 'Project Progress'
-  | 'Project Chapter Started'
-  | 'Project Chapter Completed'
-  | 'Webinar Enrolled'
-  | 'Webinar Joined'
-  | 'Webinar Completed'
-  | 'Certificate Generated'
-  | 'Certificate Download'
-  | 'Level Up Achievement'
-  | 'Points Earned'
-  | 'Streak Achievement'
-  | 'Profile Completed'
-  | 'Content Shared'
-  | 'Feedback Submitted'
-  | 'Search Query'
-  | 'Filter Applied'
-  | 'Time Spent'
-  | 'Video Started'
-  | 'Video Completed'
-  | 'Resource Downloaded'
-  | 'External Link Clicked';
+  | "User Logged In"
+  | "User Logged Out"
+  | "Course Enrolled"
+  | "Course Completed"
+  | "Course Progress"
+  | "Chapter Started"
+  | "Chapter Completed"
+  | "Interview Sheet Enrolled"
+  | "Interview Sheet Completed"
+  | "Interview Sheet Progress"
+  | "Question Started"
+  | "Question Completed"
+  | "Question Hint Used"
+  | "Project Enrolled"
+  | "Project Completed"
+  | "Project Progress"
+  | "Project Chapter Started"
+  | "Project Chapter Completed"
+  | "Webinar Enrolled"
+  | "Webinar Joined"
+  | "Webinar Completed"
+  | "Certificate Generated"
+  | "Certificate Download"
+  | "Level Up Achievement"
+  | "Points Earned"
+  | "Streak Achievement"
+  | "Profile Completed"
+  | "Content Shared"
+  | "Feedback Submitted"
+  | "Search Query"
+  | "Filter Applied"
+  | "Time Spent"
+  | "Video Started"
+  | "Video Completed"
+  | "Resource Downloaded"
+  | "External Link Clicked";
 
 export type TrackEventProps = {
   action: ActionTypes;
@@ -604,7 +604,7 @@ export interface useQuestionStarredProps {
 }
 
 export interface UseScrollDirectionResult {
-  scrollDirection: 'up' | 'down';
+  scrollDirection: "up" | "down";
   scrollY: number;
   isAtTop: boolean;
   isAtBottom: boolean;
@@ -627,9 +627,13 @@ export interface UseGamifiedActionResult {
 
 export const PLATFORM_CONSTANTS = {
   MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
-  SUPPORTED_IMAGE_TYPES: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-  SUPPORTED_VIDEO_TYPES: ['video/mp4', 'video/webm', 'video/ogg'],
-  SUPPORTED_DOCUMENT_TYPES: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  SUPPORTED_IMAGE_TYPES: ["image/jpeg", "image/png", "image/webp", "image/gif"],
+  SUPPORTED_VIDEO_TYPES: ["video/mp4", "video/webm", "video/ogg"],
+  SUPPORTED_DOCUMENT_TYPES: [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ],
   API_RATE_LIMITS: {
     GUEST: 100, // requests per hour
     USER: 1000, // requests per hour
@@ -673,6 +677,10 @@ export interface ErrorBoundaryState {
 
 export interface ErrorBoundaryProps {
   children: React.ReactNode;
-  fallback?: React.ComponentType<{ error: Error; errorInfo: any; resetError: () => void }>;
+  fallback?: React.ComponentType<{
+    error: Error;
+    errorInfo: any;
+    resetError: () => void;
+  }>;
   onError?: (error: Error, errorInfo: any) => void;
 }

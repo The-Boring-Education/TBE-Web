@@ -17,7 +17,6 @@ export default function CampusPrepLanding() {
     <Fragment>
       {/* Pure black background */}
       <div className="min-h-screen pt-20 bg-[#0A0A0A]">
-
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -28,7 +27,6 @@ export default function CampusPrepLanding() {
               transition={{ duration: 0.6 }}
               className="space-y-3"
             >
-
               {/* Main Heading */}
               <h1 className="text-4xl md:text-4xl lg:text-4xl font-bold leading-tight">
                 <span className="text-white">Advance Your Career with </span>
@@ -37,8 +35,9 @@ export default function CampusPrepLanding() {
 
               {/* Supporting paragraph */}
               <p className="text-white/70 text-sm leading-relaxed">
-                Master DSA, Aptitude, Resume, Interviews, and Projects in one dashboard.
-                Everything you need to ace your campus placements, all in one place.
+                Master DSA, Aptitude, Resume, Interviews, and Projects in one
+                dashboard. Everything you need to ace your campus placements,
+                all in one place.
               </p>
 
               {/* CTA Buttons */}
@@ -51,7 +50,6 @@ export default function CampusPrepLanding() {
                   size="MEDIUM"
                   animationType="BOUNCE"
                 />
-
               </div>
 
               {/* Helper text */}
@@ -89,7 +87,8 @@ export default function CampusPrepLanding() {
           </h2>
 
           <p className="text-center text-white/70 mt-4 max-w-2xl mx-auto text-sm">
-            Hand-picked resources to help you prepare for placements: practice, learn, and apply.
+            Hand-picked resources to help you prepare for placements: practice,
+            learn, and apply.
           </p>
 
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -111,9 +110,9 @@ export default function CampusPrepLanding() {
                       description: `${item.title} will be available soon. We're working hard to bring this feature to you!`,
                       duration: 3000,
                       style: {
-                        background: 'rgba(255, 87, 87, 0.6)',
-                        color: '#FFFFFF',
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        background: "rgba(255, 87, 87, 0.6)",
+                        color: "#FFFFFF",
+                        border: "1px solid rgba(255, 255, 255, 0.3)",
                       },
                     });
                   }
@@ -149,7 +148,6 @@ export default function CampusPrepLanding() {
                     </div>
                   </div>
                 </div>
-
               </motion.a>
             ))}
           </div>

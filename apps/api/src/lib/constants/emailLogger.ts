@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export interface EmailLogData {
   requestId: string;
@@ -6,7 +6,7 @@ export interface EmailLogData {
   userEmail: string;
   userId?: string;
   timestamp: string;
-  stage: 'REQUEST' | 'TEMPLATE_GENERATION' | 'API_CALL' | 'SUCCESS' | 'ERROR';
+  stage: "REQUEST" | "TEMPLATE_GENERATION" | "API_CALL" | "SUCCESS" | "ERROR";
   duration?: number;
   error?: any;
   metadata?: Record<string, any>;
@@ -36,19 +36,19 @@ class EmailLogger {
   }
 
   private updateMetrics(logData: EmailLogData) {
-    if (logData.stage === 'REQUEST') {
+    if (logData.stage === "REQUEST") {
       this.metrics.totalRequests++;
-    } else if (logData.stage === 'SUCCESS') {
+    } else if (logData.stage === "SUCCESS") {
       this.metrics.successCount++;
       if (logData.duration) {
         this.durations.push(logData.duration);
         this.metrics.averageDuration =
           this.durations.reduce((a, b) => a + b, 0) / this.durations.length;
       }
-    } else if (logData.stage === 'ERROR') {
+    } else if (logData.stage === "ERROR") {
       this.metrics.failureCount++;
       if (logData.error?.message) {
-        const errorType = logData.error.message.split(':')[0] || 'Unknown';
+        const errorType = logData.error.message.split(":")[0] || "Unknown";
         this.metrics.errorsByType[errorType] =
           (this.metrics.errorsByType[errorType] || 0) + 1;
       }
@@ -58,9 +58,9 @@ class EmailLogger {
   log(
     data: Partial<EmailLogData> & {
       requestId: string;
-      stage: EmailLogData['stage'];
+      stage: EmailLogData["stage"];
       userEmail: string;
-    }
+    },
   ) {
     const logData: EmailLogData = {
       ...data,
@@ -71,25 +71,25 @@ class EmailLogger {
 
     // Structured logging with different levels
     const logMessage = {
-      service: 'email',
+      service: "email",
       ...logData,
     };
 
     switch (logData.stage) {
-      case 'REQUEST':
-        console.log('📧 [EMAIL-REQUEST]', JSON.stringify(logMessage, null, 2));
+      case "REQUEST":
+        console.log("📧 [EMAIL-REQUEST]", JSON.stringify(logMessage, null, 2));
         break;
-      case 'TEMPLATE_GENERATION':
-        console.log('🎨 [EMAIL-TEMPLATE]', JSON.stringify(logMessage, null, 2));
+      case "TEMPLATE_GENERATION":
+        console.log("🎨 [EMAIL-TEMPLATE]", JSON.stringify(logMessage, null, 2));
         break;
-      case 'API_CALL':
-        console.log('🌐 [EMAIL-API]', JSON.stringify(logMessage, null, 2));
+      case "API_CALL":
+        console.log("🌐 [EMAIL-API]", JSON.stringify(logMessage, null, 2));
         break;
-      case 'SUCCESS':
-        console.log('✅ [EMAIL-SUCCESS]', JSON.stringify(logMessage, null, 2));
+      case "SUCCESS":
+        console.log("✅ [EMAIL-SUCCESS]", JSON.stringify(logMessage, null, 2));
         break;
-      case 'ERROR':
-        console.error('❌ [EMAIL-ERROR]', JSON.stringify(logMessage, null, 2));
+      case "ERROR":
+        console.error("❌ [EMAIL-ERROR]", JSON.stringify(logMessage, null, 2));
         break;
     }
   }
@@ -99,14 +99,14 @@ class EmailLogger {
     trigger: string,
     userEmail: string,
     userId?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ) {
     this.log({
       requestId,
       trigger,
       userEmail,
       userId,
-      stage: 'REQUEST',
+      stage: "REQUEST",
       metadata,
     });
   }
@@ -114,12 +114,12 @@ class EmailLogger {
   logTemplateGeneration(
     requestId: string,
     userEmail: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ) {
     this.log({
       requestId,
       userEmail,
-      stage: 'TEMPLATE_GENERATION',
+      stage: "TEMPLATE_GENERATION",
       metadata,
     });
   }
@@ -127,12 +127,12 @@ class EmailLogger {
   logApiCall(
     requestId: string,
     userEmail: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ) {
     this.log({
       requestId,
       userEmail,
-      stage: 'API_CALL',
+      stage: "API_CALL",
       metadata,
     });
   }
@@ -141,12 +141,12 @@ class EmailLogger {
     requestId: string,
     userEmail: string,
     duration: number,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ) {
     this.log({
       requestId,
       userEmail,
-      stage: 'SUCCESS',
+      stage: "SUCCESS",
       duration,
       metadata,
     });
@@ -157,18 +157,18 @@ class EmailLogger {
     userEmail: string,
     error: any,
     stage?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ) {
     this.log({
       requestId,
       userEmail,
-      stage: 'ERROR',
+      stage: "ERROR",
       error: {
-        message: error?.message || 'Unknown error',
+        message: error?.message || "Unknown error",
         stack: error?.stack,
         code: error?.code,
         response: error?.response?.data,
-        stage: stage || 'unknown',
+        stage: stage || "unknown",
       },
       metadata,
     });
@@ -185,9 +185,9 @@ class EmailLogger {
             (this.metrics.successCount / this.metrics.totalRequests) *
             100
           ).toFixed(2)
-        : '0';
+        : "0";
 
-    console.log('\n📊 [EMAIL-METRICS] Summary:');
+    console.log("\n📊 [EMAIL-METRICS] Summary:");
     console.log({
       totalRequests: this.metrics.totalRequests,
       successRate: `${successRate}%`,

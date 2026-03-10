@@ -1,19 +1,19 @@
-import { routes } from '@tbe/constants';
-import type { NotificationItemProps } from '@tbe/interface';
-import { useEffect, useState } from 'react';
+import { routes } from "@tbe/constants";
+import type { NotificationItemProps } from "@tbe/interface";
+import { useEffect, useState } from "react";
 
-import useApi from './useApi';
+import useApi from "./useApi";
 
 const useNotifications = () => {
   const [notifications, setNotifications] = useState<NotificationItemProps[]>(
-    []
+    [],
   );
   const [loading, setLoading] = useState(true);
-  const { makeRequest } = useApi('notifications');
+  const { makeRequest } = useApi("notifications");
 
   useEffect(() => {
     makeRequest({
-      method: 'GET',
+      method: "GET",
       url: routes.api.notification,
     })
       .then((response) => {

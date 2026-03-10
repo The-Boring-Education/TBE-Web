@@ -38,9 +38,9 @@ tbe-platform/
 
 ```json
 {
-    "name": "@tbe/package-name",
-    "version": "0.0.0",
-    "private": true
+  "name": "@tbe/package-name",
+  "version": "0.0.0",
+  "private": true
 }
 ```
 
@@ -84,10 +84,10 @@ export * from './auth';         # Authentication types
 
 ```typescript
 // API service organization
-export { authService } from "./auth"
-export { userService } from "./user"
-export { quizService } from "./quiz"
-export { analyticsService } from "./analytics"
+export { authService } from "./auth";
+export { userService } from "./user";
+export { quizService } from "./quiz";
+export { analyticsService } from "./analytics";
 ```
 
 ## 🔗 Inter-App Communication
@@ -96,35 +96,35 @@ export { analyticsService } from "./analytics"
 
 ```typescript
 // Use constants for app URLs
-import { APP_URLS } from "@tbe/constants"
+import { APP_URLS } from "@tbe/constants";
 
 // Navigate between apps
 const navigateToQuiz = (quizId: string) => {
-    window.location.href = `${APP_URLS.QUIZ}/${quizId}`
-}
+  window.location.href = `${APP_URLS.QUIZ}/${quizId}`;
+};
 
 // Environment-based URLs
 const getAppUrl = (app: string) => {
-    return process.env.NODE_ENV === "production"
-        ? `https://${app}.theboringeducation.com`
-        : `http://localhost:${getPortForApp(app)}`
-}
+  return process.env.NODE_ENV === "production"
+    ? `https://${app}.theboringeducation.com`
+    : `http://localhost:${getPortForApp(app)}`;
+};
 ```
 
 ### 2. Shared State Management
 
 ```typescript
 // Use React Query for shared state
-import { useQuery, useMutation } from "react-query"
-import { userService } from "@tbe/services"
+import { useQuery, useMutation } from "react-query";
+import { userService } from "@tbe/services";
 
 // Shared user state across apps
 export const useUser = (userId: string) => {
-    return useQuery(["user", userId], () => userService.getUser(userId), {
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        cacheTime: 10 * 60 * 1000 // 10 minutes
-    })
-}
+  return useQuery(["user", userId], () => userService.getUser(userId), {
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+  });
+};
 ```
 
 ### 3. Event Communication
@@ -132,18 +132,18 @@ export const useUser = (userId: string) => {
 ```typescript
 // Custom events for cross-app communication
 export const emitUserUpdate = (user: User) => {
-    window.dispatchEvent(
-        new CustomEvent("user:updated", {
-            detail: user
-        })
-    )
-}
+  window.dispatchEvent(
+    new CustomEvent("user:updated", {
+      detail: user,
+    }),
+  );
+};
 
 export const listenForUserUpdates = (callback: (user: User) => void) => {
-    const handler = (event: CustomEvent) => callback(event.detail)
-    window.addEventListener("user:updated", handler)
-    return () => window.removeEventListener("user:updated", handler)
-}
+  const handler = (event: CustomEvent) => callback(event.detail);
+  window.addEventListener("user:updated", handler);
+  return () => window.removeEventListener("user:updated", handler);
+};
 ```
 
 ## 🔧 Configuration Management
@@ -173,21 +173,21 @@ export const listenForUserUpdates = (callback: (user: User) => void) => {
 ```typescript
 // packages/config/src/index.ts
 export const config = {
-    api: {
-        baseUrl: process.env.VITE_BASE_API_URL || "http://localhost:3004",
-        timeout: 30000,
-        retries: 3
-    },
-    auth: {
-        sessionTimeout: 24 * 60 * 60 * 1000, // 24 hours
-        refreshThreshold: 5 * 60 * 1000 // 5 minutes
-    },
-    ui: {
-        defaultPageSize: 20,
-        maxFileSize: 10 * 1024 * 1024, // 10MB
-        supportedImageTypes: ["jpg", "jpeg", "png", "webp"]
-    }
-}
+  api: {
+    baseUrl: process.env.VITE_BASE_API_URL || "http://localhost:3004",
+    timeout: 30000,
+    retries: 3,
+  },
+  auth: {
+    sessionTimeout: 24 * 60 * 60 * 1000, // 24 hours
+    refreshThreshold: 5 * 60 * 1000, // 5 minutes
+  },
+  ui: {
+    defaultPageSize: 20,
+    maxFileSize: 10 * 1024 * 1024, // 10MB
+    supportedImageTypes: ["jpg", "jpeg", "png", "webp"],
+  },
+};
 ```
 
 ## 🚀 Build & Development Architecture
@@ -197,19 +197,19 @@ export const config = {
 ```json
 // turbo.json
 {
-    "tasks": {
-        "build": {
-            "dependsOn": ["^build"],
-            "outputs": [".next/**", "dist/**"]
-        },
-        "dev": {
-            "cache": false,
-            "persistent": true
-        },
-        "lint": {
-            "dependsOn": ["^lint"]
-        }
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
     }
+  }
 }
 ```
 
@@ -245,40 +245,40 @@ pnpm --filter @tbe/components build
 ```typescript
 // Centralized auth through NextAuth.js
 // Each app uses the same auth configuration
-import { authOptions } from "@tbe/auth"
+import { authOptions } from "@tbe/auth";
 
 // Session sharing across subdomains
 export const authOptions = {
-    // ... configuration
-    cookies: {
-        sessionToken: {
-            name: "next-auth.session-token",
-            options: {
-                domain: ".theboringeducation.com",
-                httpOnly: true,
-                secure: true
-            }
-        }
-    }
-}
+  // ... configuration
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        domain: ".theboringeducation.com",
+        httpOnly: true,
+        secure: true,
+      },
+    },
+  },
+};
 ```
 
 ### 2. API Security
 
 ```typescript
 // Centralized API security patterns
-import { withAuth, rateLimiter } from "@tbe/middleware"
+import { withAuth, rateLimiter } from "@tbe/middleware";
 
 // Protected API routes
 export default withAuth(
-    async (req, res) => {
-        // Rate limiting
-        await rateLimiter(req, res)
+  async (req, res) => {
+    // Rate limiting
+    await rateLimiter(req, res);
 
-        // Business logic
-    },
-    { requireAuth: true }
-)
+    // Business logic
+  },
+  { requireAuth: true },
+);
 ```
 
 ## 📊 Data Architecture
@@ -304,24 +304,24 @@ collections: {
 ```typescript
 // Multi-level caching
 export const cacheStrategy = {
-    // 1. Browser cache (React Query)
-    client: {
-        staleTime: 5 * 60 * 1000,
-        cacheTime: 10 * 60 * 1000
-    },
+  // 1. Browser cache (React Query)
+  client: {
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 10 * 60 * 1000,
+  },
 
-    // 2. API response cache
-    api: {
-        redis: process.env.REDIS_URL,
-        ttl: 15 * 60 // 15 minutes
-    },
+  // 2. API response cache
+  api: {
+    redis: process.env.REDIS_URL,
+    ttl: 15 * 60, // 15 minutes
+  },
 
-    // 3. CDN cache for static assets
-    cdn: {
-        maxAge: 31536000, // 1 year
-        staleWhileRevalidate: 86400 // 1 day
-    }
-}
+  // 3. CDN cache for static assets
+  cdn: {
+    maxAge: 31536000, // 1 year
+    staleWhileRevalidate: 86400, // 1 day
+  },
+};
 ```
 
 ## 🔄 Deployment Architecture
@@ -347,21 +347,21 @@ api.theboringeducation.com
 ```typescript
 // GitHub Actions workflow
 export const deploymentFlow = {
-    // 1. Code push to branch
-    trigger: ["push", "pull_request"],
+  // 1. Code push to branch
+  trigger: ["push", "pull_request"],
 
-    // 2. Build all affected apps
-    build: "turbo run build --filter=[HEAD^1]",
+  // 2. Build all affected apps
+  build: "turbo run build --filter=[HEAD^1]",
 
-    // 3. Run tests and linting
-    test: "turbo run test lint --filter=[HEAD^1]",
+  // 3. Run tests and linting
+  test: "turbo run test lint --filter=[HEAD^1]",
 
-    // 4. Deploy to appropriate environment
-    deploy: {
-        development: "auto-deploy on merge",
-        production: "manual approval required"
-    }
-}
+  // 4. Deploy to appropriate environment
+  deploy: {
+    development: "auto-deploy on merge",
+    production: "manual approval required",
+  },
+};
 ```
 
 ## 🎯 Architecture Principles

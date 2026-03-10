@@ -43,7 +43,9 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchOverview(`${routes.api.base}/admin/dashboard`, { type: 'overview' });
-    fetchAnalytics(`${routes.api.base}/admin/analytics`, { type: 'user-engagement' });
+    fetchAnalytics(`${routes.api.base}/admin/analytics`, {
+      type: 'user-engagement',
+    });
     fetchRevenue(`${routes.api.base}/admin/analytics`, { type: 'revenue' });
     fetchUserGrowth(`${routes.api.base}/admin/users`, { action: 'growth' });
   }, [fetchOverview, fetchAnalytics, fetchRevenue, fetchUserGrowth]);

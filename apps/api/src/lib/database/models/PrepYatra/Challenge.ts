@@ -1,7 +1,7 @@
-import type { Document } from 'mongoose';
-import { type Model, model, models, Schema } from 'mongoose';
+import type { Document } from "mongoose";
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
+import { DATABASE_MODELS } from "@/lib/constants";
 
 // Define the document interface
 interface IChallenge extends Document {
@@ -97,12 +97,12 @@ const ChallengeSchema = new Schema<IChallenge>(
       default: 0,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Pre-save hook with proper typing
-ChallengeSchema.pre('save', function(this: IChallenge, next) {
-  if (this.isModified('totalDays') || this.isNew) {
+ChallengeSchema.pre("save", function (this: IChallenge, next) {
+  if (this.isModified("totalDays") || this.isNew) {
     this.endDate = new Date(this.startDate);
     this.endDate.setDate(this.startDate.getDate() + this.totalDays);
   }

@@ -1,4 +1,4 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
 import {
   COMPANY_TYPES,
@@ -6,18 +6,18 @@ import {
   DSA_DIFFICULTY,
   DSA_DOMAIN,
   DSA_TOPICS,
-} from '@/lib/constants';
-import type { DSAQuestionModel } from '@/lib/interfaces';
+} from "@/lib/constants";
+import type { DSAQuestionModel } from "@/lib/interfaces";
 
 const DSAQuestionSchema = new Schema<DSAQuestionModel>(
   {
     title: {
       type: String,
-      required: [true, 'Question Title is required'],
+      required: [true, "Question Title is required"],
     },
     answer: {
       type: String,
-      required: [true, 'Question Answer is required'],
+      required: [true, "Question Answer is required"],
     },
     resources: {
       youtubeURL: {
@@ -36,22 +36,22 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
     domain: {
       type: [String],
       enum: DSA_DOMAIN,
-      required: [true, 'Domain is required'],
+      required: [true, "Domain is required"],
     },
     difficulty: {
       type: String,
       enum: DSA_DIFFICULTY,
-      required: [true, 'Difficulty is required'],
+      required: [true, "Difficulty is required"],
     },
     companyTypes: {
       type: [String],
       enum: COMPANY_TYPES,
-      required: [true, 'Company Types are required'],
+      required: [true, "Company Types are required"],
     },
     topics: {
       type: [String],
       enum: DSA_TOPICS,
-      required: [true, 'DSA Topics are required'],
+      required: [true, "DSA Topics are required"],
     },
     order: {
       type: Number,
@@ -77,7 +77,7 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
         return ret;
       },
     },
-  }
+  },
 );
 
 // Create indexes for efficient querying
@@ -89,9 +89,6 @@ DSAQuestionSchema.index({ order: 1 }); // For sorting by custom order
 
 const DSAQuestion: Model<DSAQuestionModel> =
   models?.DSAQuestion ||
-  model<DSAQuestionModel>(
-    DATABASE_MODELS.DSA_QUESTION,
-    DSAQuestionSchema
-  );
+  model<DSAQuestionModel>(DATABASE_MODELS.DSA_QUESTION, DSAQuestionSchema);
 
 export default DSAQuestion;

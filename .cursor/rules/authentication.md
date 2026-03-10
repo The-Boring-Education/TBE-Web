@@ -10,94 +10,94 @@ This document defines authentication and authorization patterns using NextAuth.j
 
 ```typescript
 // packages/auth/src/config.ts
-import { NextAuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
-import { MongoClient } from "mongodb"
+import { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import { MongoClient } from "mongodb";
 
-const client = new MongoClient(process.env.MONGODB_URI!)
-const clientPromise = client.connect()
+const client = new MongoClient(process.env.MONGODB_URI!);
+const clientPromise = client.connect();
 
 export const authOptions: NextAuthOptions = {
-    adapter: MongoDBAdapter(clientPromise),
-    providers: [
-        GoogleProvider({
-            clientId: process.env.GOOGLE_AUTH_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET!
-        })
-    ],
-    session: {
-        strategy: "jwt",
-        maxAge: 24 * 60 * 60 // 24 hours
+  adapter: MongoDBAdapter(clientPromise),
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_AUTH_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET!,
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 hours
+  },
+  jwt: {
+    maxAge: 24 * 60 * 60, // 24 hours
+  },
+  callbacks: {
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role || "user";
+        token.permissions = user.permissions || [];
+      }
+      return token;
     },
-    jwt: {
-        maxAge: 24 * 60 * 60 // 24 hours
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
+        session.user.permissions = token.permissions as string[];
+      }
+      return session;
     },
-    callbacks: {
-        async jwt({ token, user, account }) {
-            if (user) {
-                token.id = user.id
-                token.role = user.role || "user"
-                token.permissions = user.permissions || []
-            }
-            return token
-        },
-        async session({ session, token }) {
-            if (token) {
-                session.user.id = token.id as string
-                session.user.role = token.role as string
-                session.user.permissions = token.permissions as string[]
-            }
-            return session
-        },
-        async signIn({ user, account, profile }) {
-            // Custom sign-in logic
-            if (account?.provider === "google") {
-                // Verify email domain if needed
-                const allowedDomains =
-                    process.env.ALLOWED_EMAIL_DOMAINS?.split(",") || []
-                if (allowedDomains.length > 0) {
-                    const emailDomain = user.email?.split("@")[1]
-                    if (!allowedDomains.includes(emailDomain!)) {
-                        return false
-                    }
-                }
-            }
-            return true
+    async signIn({ user, account, profile }) {
+      // Custom sign-in logic
+      if (account?.provider === "google") {
+        // Verify email domain if needed
+        const allowedDomains =
+          process.env.ALLOWED_EMAIL_DOMAINS?.split(",") || [];
+        if (allowedDomains.length > 0) {
+          const emailDomain = user.email?.split("@")[1];
+          if (!allowedDomains.includes(emailDomain!)) {
+            return false;
+          }
         }
+      }
+      return true;
     },
-    pages: {
-        signIn: "/auth/signin",
-        signOut: "/auth/signout",
-        error: "/auth/error"
+  },
+  pages: {
+    signIn: "/auth/signin",
+    signOut: "/auth/signout",
+    error: "/auth/error",
+  },
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".theboringeducation.com"
+            : "localhost",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      },
     },
-    cookies: {
-        sessionToken: {
-            name: "next-auth.session-token",
-            options: {
-                domain:
-                    process.env.NODE_ENV === "production"
-                        ? ".theboringeducation.com"
-                        : "localhost",
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax"
-            }
-        }
-    }
-}
+  },
+};
 ```
 
 ### App-Level Auth Setup
 
 ```typescript
 // app/api/auth/[...nextauth]/route.ts
-import NextAuth from "next-auth"
-import { authOptions } from "@tbe/auth"
+import NextAuth from "next-auth";
+import { authOptions } from "@tbe/auth";
 
-const handler = NextAuth(authOptions)
+const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };
 ```
 
 ## 🛡️ Protected Routes
@@ -245,92 +245,92 @@ export default async function AdminPage() {
 
 ```typescript
 // hooks/useAuth.ts
-import { useSession, signIn, signOut } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import type { User } from "@tbe/types"
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import type { User } from "@tbe/types";
 
 interface UseAuthReturn {
-    user: User | null
-    isLoading: boolean
-    isAuthenticated: boolean
-    login: (provider?: string) => void
-    logout: () => void
-    hasPermission: (permission: string) => boolean
-    isAdmin: () => boolean
+  user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: (provider?: string) => void;
+  logout: () => void;
+  hasPermission: (permission: string) => boolean;
+  isAdmin: () => boolean;
 }
 
 export const useAuth = (): UseAuthReturn => {
-    const { data: session, status } = useSession()
-    const router = useRouter()
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-    const login = (provider = "google") => {
-        signIn(provider, { callbackUrl: "/dashboard" })
-    }
+  const login = (provider = "google") => {
+    signIn(provider, { callbackUrl: "/dashboard" });
+  };
 
-    const logout = () => {
-        signOut({ callbackUrl: "/" })
-    }
+  const logout = () => {
+    signOut({ callbackUrl: "/" });
+  };
 
-    const hasPermission = (permission: string) => {
-        return session?.user?.permissions?.includes(permission) ?? false
-    }
+  const hasPermission = (permission: string) => {
+    return session?.user?.permissions?.includes(permission) ?? false;
+  };
 
-    const isAdmin = () => {
-        return session?.user?.role === "admin"
-    }
+  const isAdmin = () => {
+    return session?.user?.role === "admin";
+  };
 
-    return {
-        user: session?.user || null,
-        isLoading: status === "loading",
-        isAuthenticated: !!session,
-        login,
-        logout,
-        hasPermission,
-        isAdmin
-    }
-}
+  return {
+    user: session?.user || null,
+    isLoading: status === "loading",
+    isAuthenticated: !!session,
+    login,
+    logout,
+    hasPermission,
+    isAdmin,
+  };
+};
 ```
 
 ### Permission Hook
 
 ```typescript
 // hooks/usePermissions.ts
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
 
 export const usePermissions = () => {
-    const { data: session } = useSession()
+  const { data: session } = useSession();
 
-    const hasPermission = (permission: string) => {
-        return session?.user?.permissions?.includes(permission) ?? false
-    }
+  const hasPermission = (permission: string) => {
+    return session?.user?.permissions?.includes(permission) ?? false;
+  };
 
-    const hasAnyPermission = (permissions: string[]) => {
-        return permissions.some((permission) => hasPermission(permission))
-    }
+  const hasAnyPermission = (permissions: string[]) => {
+    return permissions.some((permission) => hasPermission(permission));
+  };
 
-    const hasAllPermissions = (permissions: string[]) => {
-        return permissions.every((permission) => hasPermission(permission))
-    }
+  const hasAllPermissions = (permissions: string[]) => {
+    return permissions.every((permission) => hasPermission(permission));
+  };
 
-    const isAdmin = () => {
-        return session?.user?.role === "admin"
-    }
+  const isAdmin = () => {
+    return session?.user?.role === "admin";
+  };
 
-    const canAccess = (resource: string, action: string) => {
-        const permission = `${resource}:${action}`
-        return hasPermission(permission) || isAdmin()
-    }
+  const canAccess = (resource: string, action: string) => {
+    const permission = `${resource}:${action}`;
+    return hasPermission(permission) || isAdmin();
+  };
 
-    return {
-        hasPermission,
-        hasAnyPermission,
-        hasAllPermissions,
-        isAdmin,
-        canAccess,
-        permissions: session?.user?.permissions || [],
-        role: session?.user?.role || "user"
-    }
-}
+  return {
+    hasPermission,
+    hasAnyPermission,
+    hasAllPermissions,
+    isAdmin,
+    canAccess,
+    permissions: session?.user?.permissions || [],
+    role: session?.user?.role || "user",
+  };
+};
 ```
 
 ## 🌐 API Route Protection
@@ -339,115 +339,115 @@ export const usePermissions = () => {
 
 ```typescript
 // middleware/withAuth.ts
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@tbe/auth"
-import { sendAPIResponse } from "@/utils"
-import type { NextApiRequest, NextApiResponse } from "next"
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@tbe/auth";
+import { sendAPIResponse } from "@/utils";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 interface AuthOptions {
-    requireAuth?: boolean
-    requireAdmin?: boolean
-    requiredPermissions?: string[]
+  requireAuth?: boolean;
+  requireAdmin?: boolean;
+  requiredPermissions?: string[];
 }
 
 export const withAuth = (
-    handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>,
-    options: AuthOptions = {}
+  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>,
+  options: AuthOptions = {},
 ) => {
-    return async (req: NextApiRequest, res: NextApiResponse) => {
-        const {
-            requireAuth = true,
-            requireAdmin = false,
-            requiredPermissions = []
-        } = options
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const {
+      requireAuth = true,
+      requireAdmin = false,
+      requiredPermissions = [],
+    } = options;
 
-        if (!requireAuth) {
-            return handler(req, res)
-        }
-
-        const session = await getServerSession(req, res, authOptions)
-
-        if (!session) {
-            return res.status(401).json(
-                sendAPIResponse({
-                    status: false,
-                    message: "Unauthorized - Please login"
-                })
-            )
-        }
-
-        if (requireAdmin && session.user.role !== "admin") {
-            return res.status(403).json(
-                sendAPIResponse({
-                    status: false,
-                    message: "Forbidden - Admin access required"
-                })
-            )
-        }
-
-        if (requiredPermissions.length > 0) {
-            const hasPermissions = requiredPermissions.every((permission) =>
-                session.user.permissions?.includes(permission)
-            )
-
-            if (!hasPermissions) {
-                return res.status(403).json(
-                    sendAPIResponse({
-                        status: false,
-                        message: "Forbidden - Insufficient permissions"
-                    })
-                )
-            }
-        }
-
-        // Add user to request for handler access
-        req.user = session.user
-        return handler(req, res)
+    if (!requireAuth) {
+      return handler(req, res);
     }
-}
+
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session) {
+      return res.status(401).json(
+        sendAPIResponse({
+          status: false,
+          message: "Unauthorized - Please login",
+        }),
+      );
+    }
+
+    if (requireAdmin && session.user.role !== "admin") {
+      return res.status(403).json(
+        sendAPIResponse({
+          status: false,
+          message: "Forbidden - Admin access required",
+        }),
+      );
+    }
+
+    if (requiredPermissions.length > 0) {
+      const hasPermissions = requiredPermissions.every((permission) =>
+        session.user.permissions?.includes(permission),
+      );
+
+      if (!hasPermissions) {
+        return res.status(403).json(
+          sendAPIResponse({
+            status: false,
+            message: "Forbidden - Insufficient permissions",
+          }),
+        );
+      }
+    }
+
+    // Add user to request for handler access
+    req.user = session.user;
+    return handler(req, res);
+  };
+};
 
 // Usage in API routes
 export default withAuth(
-    async (req: NextApiRequest, res: NextApiResponse) => {
-        // Handler logic with authenticated user
-        const userId = req.user.id
-        // ... rest of handler
-    },
-    { requireAuth: true, requiredPermissions: ["quiz:read"] }
-)
+  async (req: NextApiRequest, res: NextApiResponse) => {
+    // Handler logic with authenticated user
+    const userId = req.user.id;
+    // ... rest of handler
+  },
+  { requireAuth: true, requiredPermissions: ["quiz:read"] },
+);
 ```
 
 ### Direct Auth Check
 
 ```typescript
 // pages/api/protected-route.ts
-import type { NextApiRequest, NextApiResponse } from "next"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@tbe/auth"
-import { sendAPIResponse } from "@/utils"
+import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@tbe/auth";
+import { sendAPIResponse } from "@/utils";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) {
-    const session = await getServerSession(req, res, authOptions)
+  const session = await getServerSession(req, res, authOptions);
 
-    if (!session) {
-        return res.status(401).json(
-            sendAPIResponse({
-                status: false,
-                message: "Unauthorized"
-            })
-        )
-    }
+  if (!session) {
+    return res.status(401).json(
+      sendAPIResponse({
+        status: false,
+        message: "Unauthorized",
+      }),
+    );
+  }
 
-    // Authenticated logic here
-    return res.status(200).json(
-        sendAPIResponse({
-            status: true,
-            data: { message: "Protected data", userId: session.user.id }
-        })
-    )
+  // Authenticated logic here
+  return res.status(200).json(
+    sendAPIResponse({
+      status: true,
+      data: { message: "Protected data", userId: session.user.id },
+    }),
+  );
 }
 ```
 
@@ -597,25 +597,25 @@ signIn("google", { callbackUrl: "/dashboard" }) ✅
 
 ```typescript
 // hooks/useSessionRefresh.ts
-import { useSession } from "next-auth/react"
-import { useEffect } from "react"
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export const useSessionRefresh = () => {
-    const { data: session, update } = useSession()
+  const { data: session, update } = useSession();
 
-    useEffect(() => {
-        const interval = setInterval(
-            async () => {
-                if (session) {
-                    await update() // Refresh session
-                }
-            },
-            5 * 60 * 1000
-        ) // Every 5 minutes
+  useEffect(() => {
+    const interval = setInterval(
+      async () => {
+        if (session) {
+          await update(); // Refresh session
+        }
+      },
+      5 * 60 * 1000,
+    ); // Every 5 minutes
 
-        return () => clearInterval(interval)
-    }, [session, update])
-}
+    return () => clearInterval(interval);
+  }, [session, update]);
+};
 ```
 
 ### Cross-App Session Sharing

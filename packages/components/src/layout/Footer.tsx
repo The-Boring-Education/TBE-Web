@@ -157,7 +157,10 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
                         className="text-gray-300 hover:text-white transition-colors group"
                       >
                         <div>
-                          <Text className="group-hover:text-primary" level="span">
+                          <Text
+                            className="group-hover:text-primary"
+                            level="span"
+                          >
                             {name}
                           </Text>
                           <br />
@@ -168,9 +171,7 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
                       </Link>
                     ) : (
                       <div className="text-gray-300">
-                        <Text level="span">
-                          {name}
-                        </Text>
+                        <Text level="span">{name}</Text>
                         <br />
                         <Text className="text-xs text-gray-400" level="span">
                           {description}
@@ -197,7 +198,10 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
                         className="text-gray-300 hover:text-white transition-colors group"
                       >
                         <div>
-                          <Text className="group-hover:text-primary" level="span">
+                          <Text
+                            className="group-hover:text-primary"
+                            level="span"
+                          >
                             {item.name}
                             {item.external && " ↗"}
                           </Text>
@@ -209,9 +213,7 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
                       </Link>
                     ) : (
                       <div className="text-gray-300">
-                        <Text level="span">
-                          {item.name}
-                        </Text>
+                        <Text level="span">{item.name}</Text>
                         <br />
                         <Text className="text-xs text-gray-400" level="span">
                           {item.description}
@@ -238,7 +240,10 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
                         className="text-gray-300 hover:text-white transition-colors group"
                       >
                         <div>
-                          <Text className="group-hover:text-primary" level="span">
+                          <Text
+                            className="group-hover:text-primary"
+                            level="span"
+                          >
                             {item.name}
                             {item.external && " ↗"}
                           </Text>
@@ -250,9 +255,7 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
                       </Link>
                     ) : (
                       <div className="text-gray-300">
-                        <Text level="span">
-                          {item.name}
-                        </Text>
+                        <Text level="span">{item.name}</Text>
                         <br />
                         <Text className="text-xs text-gray-400" level="span">
                           {item.description}

@@ -1,31 +1,31 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from '@/lib/constants';
+import { apiStatusCodes } from "@/lib/constants";
 import {
   enrollInASheet,
   getEnrolledSheetFromDB,
   getInterviewSheetByIDFromDB,
   getUserByIdFromDB,
-} from '@/lib/database';
-import type { SheetEnrollmentRequestProps } from '@/lib/interfaces';
-import { sendInterviewPrepEnrollmentEmail } from '@/lib/services';
-import { cors, sendAPIResponse } from '@/lib/utils';
+} from "@/lib/database";
+import type { SheetEnrollmentRequestProps } from "@/lib/interfaces";
+import { sendInterviewPrepEnrollmentEmail } from "@/lib/services";
+import { cors, sendAPIResponse } from "@/lib/utils";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await cors(req, res);
-    if (req.method === 'OPTIONS') {
+    if (req.method === "OPTIONS") {
       return res.status(200).end();
     }
     switch (req.method) {
-      case 'POST':
+      case "POST":
         return handleSheetEnrollment(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
             status: false,
             message: `Method ${req.method} Not Allowed`,
-          })
+          }),
         );
     }
   } catch (error) {
@@ -34,14 +34,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         status: false,
         message: `Something went wrong`,
         error,
-      })
+      }),
     );
   }
 };
 
 const handleSheetEnrollment = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   const { userId, sheetId } = req.body as SheetEnrollmentRequestProps;
 
@@ -53,16 +53,16 @@ const handleSheetEnrollment = async (
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: 'Failed while enrolling in sheet',
-        })
+          message: "Failed while enrolling in sheet",
+        }),
       );
 
     if (alreadyExists)
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'Already enrolled in sheet',
-        })
+          message: "Already enrolled in sheet",
+        }),
       );
 
     const { data, error } = await enrollInASheet({ userId, sheetId });
@@ -71,8 +71,8 @@ const handleSheetEnrollment = async (
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: 'Failed while enrolling in sheet',
-        })
+          message: "Failed while enrolling in sheet",
+        }),
       );
 
     // Send interview prep enrollment email (non-blocking)
@@ -91,29 +91,29 @@ const handleSheetEnrollment = async (
           sheetDescription: sheetResult.data.description,
         }).catch((error) => {
           console.error(
-            'Failed to send interview prep enrollment email:',
-            error
+            "Failed to send interview prep enrollment email:",
+            error,
           );
         });
       }
     } catch (error) {
-      console.error('Error fetching user/sheet data for email:', error);
+      console.error("Error fetching user/sheet data for email:", error);
     }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
         data,
-        message: 'Successfully enrolled in sheet',
-      })
+        message: "Successfully enrolled in sheet",
+      }),
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Failed while enrolling in sheet',
+        message: "Failed while enrolling in sheet",
         error,
-      })
+      }),
     );
   }
 };

@@ -1,66 +1,67 @@
-import '@/styles/globals.css'
-import '@/styles/colors.css'
+import '@tbe/components/styles/common.css';
+import '@/styles/globals.css';
+import '@/styles/colors.css';
 
-import { Layout } from '@tbe/components'
-import { GamificationProvider } from '@tbe/components'
+import { Layout } from '@tbe/components';
+import { GamificationProvider } from '@tbe/components';
 import {
   initGA,
   installGlobalAnalyticsListeners,
   trackPageview,
-} from '@tbe/components/analytics'
+} from '@tbe/components/analytics';
 // import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
-import { envConfig, routes } from '@tbe/constants'
-import { useUser } from '@tbe/hooks'
-import { getRedirectUrl } from '@tbe/utils'
-import type { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
-import { SessionProvider } from 'next-auth/react'
-import { Fragment, useEffect, useState } from 'react'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { envConfig, routes } from '@tbe/constants';
+import { useUser } from '@tbe/hooks';
+import { getRedirectUrl } from '@tbe/utils';
+import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
+import { SessionProvider } from 'next-auth/react';
+import { Fragment, useEffect, useState } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 // Create a client
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 const AppContent = ({
   Component,
   pageProps,
 }: {
-  Component: AppProps['Component']
-  pageProps: any
+  Component: AppProps['Component'];
+  pageProps: any;
 }) => {
-  const router = useRouter()
-  const [isClient, setIsClient] = useState(false)
-  const userData = useUser()
+  const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+  const userData = useUser();
   const { user, isOnboarded, isAuth, loading, updateSession } =
     (userData as any) || {
       user: null,
       isOnboarded: false,
       isAuth: false,
       loading: true,
-    }
+    };
 
   // Ensure we're on the client side before accessing window
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    setIsClient(true);
+  }, []);
 
   // ✅ Initialize Google Analytics
   useEffect(() => {
-    initGA()
-    installGlobalAnalyticsListeners()
+    initGA();
+    installGlobalAnalyticsListeners();
 
     const handleRouteChange = (url: string) => {
-      trackPageview(url)
-    }
-    router.events.on('routeChangeComplete', handleRouteChange)
-    return () => router.events.off('routeChangeComplete', handleRouteChange)
-  }, [router.events])
+      trackPageview(url);
+    };
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => router.events.off('routeChangeComplete', handleRouteChange);
+  }, [router.events]);
 
-  const [isSyncingSession, setIsSyncingSession] = useState(false)
+  const [isSyncingSession, setIsSyncingSession] = useState(false);
 
   useEffect(() => {
     // Only run on client side
-    if (!isClient || loading || !isAuth || isSyncingSession) return
+    if (!isClient || loading || !isAuth || isSyncingSession) return;
 
     const ensureOnboardingAndSession = async () => {
       // If session says not onboarded, verify with API once to avoid stale session loop
@@ -68,24 +69,24 @@ const AppContent = ({
         try {
           if (user?.id) {
             const resp = await fetch(
-              `${envConfig.API_URL}/user?userId=${user.id}`
-            )
-            const json = await resp.json()
-            const dbIsOnboarded = json?.data?.isOnboarded === true
+              `${envConfig.API_URL}/user?userId=${user.id}`,
+            );
+            const json = await resp.json();
+            const dbIsOnboarded = json?.data?.isOnboarded === true;
             if (dbIsOnboarded) {
               // Refresh session so callbacks pull latest isOnboarded
-              setIsSyncingSession(true)
+              setIsSyncingSession(true);
               try {
                 if (typeof updateSession === 'function') {
-                  await updateSession()
+                  await updateSession();
                 } else {
                   // Fallback: hard reload to force session refetch
-                  window.location.reload()
+                  window.location.reload();
                 }
               } finally {
-                setIsSyncingSession(false)
+                setIsSyncingSession(false);
               }
-              return // Skip redirect since user is actually onboarded
+              return; // Skip redirect since user is actually onboarded
             }
           }
         } catch {
@@ -93,30 +94,30 @@ const AppContent = ({
         }
 
         // Redirect to external onboarding app (only if URL configured)
-        const onboardingBaseUrl = envConfig.ONBOARDING_URL
+        const onboardingBaseUrl = envConfig.ONBOARDING_URL;
         if (onboardingBaseUrl) {
           const params = new URLSearchParams({
             userId: user?.id || '',
             email: user?.email || '',
             from: 'webapp',
             redirect: window.location.href,
-          })
+          });
           if (user && (user as any).token) {
-            params.append('token', (user as any).token)
+            params.append('token', (user as any).token);
           }
-          window.location.href = `${onboardingBaseUrl}/?${params.toString()}`
-          return
+          window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
+          return;
         }
       }
 
       // Redirect to dashboard if onboarded and authenticated
       if (isOnboarded && router.pathname === routes.onboarding) {
-        const redirectTo = getRedirectUrl()
-        router.push(redirectTo)
+        const redirectTo = getRedirectUrl();
+        router.push(redirectTo);
       }
-    }
+    };
 
-    void ensureOnboardingAndSession()
+    void ensureOnboardingAndSession();
   }, [
     isClient,
     isAuth,
@@ -127,7 +128,7 @@ const AppContent = ({
     user,
     updateSession,
     isSyncingSession,
-  ])
+  ]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -137,8 +138,8 @@ const AppContent = ({
         </Layout>
       </GamificationProvider>
     </QueryClientProvider>
-  )
-}
+  );
+};
 const TheBoringEducation = ({
   Component,
   pageProps: { session, ...pageProps },
@@ -153,7 +154,7 @@ const TheBoringEducation = ({
         <AppContent Component={Component} pageProps={pageProps} />
       </SessionProvider>
     </Fragment>
-  )
-}
+  );
+};
 
-export default TheBoringEducation
+export default TheBoringEducation;

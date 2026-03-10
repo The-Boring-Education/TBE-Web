@@ -1,7 +1,7 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
-import type { JobModel } from '@/lib/interfaces';
+import { DATABASE_MODELS } from "@/lib/constants";
+import type { JobModel } from "@/lib/interfaces";
 
 const JobSchema: Schema<JobModel> = new Schema(
   {
@@ -36,7 +36,7 @@ const JobSchema: Schema<JobModel> = new Schema(
     platform: { type: String, required: true },
     postedAt: { type: Date, default: Date.now },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Job: Model<JobModel> =

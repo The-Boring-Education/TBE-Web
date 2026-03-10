@@ -1,5 +1,5 @@
-import { isProductionEnv } from '@tbe/constants';
-import { useCallback, useEffect, useState } from 'react';
+import { isProductionEnv } from "@tbe/constants";
+import { useCallback, useEffect, useState } from "react";
 
 declare global {
   interface Window {
@@ -8,14 +8,14 @@ declare global {
   }
 }
 
-const CASHFREE_SCRIPT_URL = 'https://sdk.cashfree.com/js/v3/cashfree.js';
+const CASHFREE_SCRIPT_URL = "https://sdk.cashfree.com/js/v3/cashfree.js";
 
 const useCashfreePayment = () => {
   const [isCashfreeLoaded, setIsCashfreeLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadCashfreeSDK = useCallback(() => {
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.src = CASHFREE_SCRIPT_URL;
     script.async = true;
 
@@ -24,13 +24,13 @@ const useCashfreePayment = () => {
         setIsCashfreeLoaded(true);
       } else {
         setError(
-          'Payment gateway initialization failed. Please refresh the page.'
+          "Payment gateway initialization failed. Please refresh the page.",
         );
       }
     };
 
     script.onerror = () => {
-      setError('Failed to load payment gateway. Please try again.');
+      setError("Failed to load payment gateway. Please try again.");
       setIsCashfreeLoaded(false);
     };
 
@@ -39,7 +39,7 @@ const useCashfreePayment = () => {
 
   const cleanupCashfreeSDK = () => {
     const script = document.querySelector(
-      `script[src="${CASHFREE_SCRIPT_URL}"]`
+      `script[src="${CASHFREE_SCRIPT_URL}"]`,
     );
     if (script) {
       document.body.removeChild(script);
@@ -60,18 +60,18 @@ const useCashfreePayment = () => {
     paymentSessionId: string,
     onSuccess?: (data: any) => void,
     onFailure?: (data: any) => void,
-    onClose?: () => void
+    onClose?: () => void,
   ) => {
     const PaymentSDK = window.Cashfree || window.CFPaymentSDK;
     if (!PaymentSDK) {
       throw new Error(
-        'Payment gateway is not available. Please refresh the page and try again.'
+        "Payment gateway is not available. Please refresh the page and try again.",
       );
     }
 
-    let mode = 'sandbox';
+    let mode = "sandbox";
     if (isProductionEnv) {
-      mode = 'production';
+      mode = "production";
     }
 
     const cashfree = new PaymentSDK({
@@ -81,7 +81,7 @@ const useCashfreePayment = () => {
     await cashfree.checkout({
       paymentSessionId,
       returnUrl: window.location.href,
-      redirectTarget: '_self',
+      redirectTarget: "_self",
       onSuccess,
       onFailure,
       onClose,

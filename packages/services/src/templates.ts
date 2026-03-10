@@ -1,11 +1,11 @@
-import { envConfig, routes } from "@tbe/constants"
+import { envConfig, routes } from "@tbe/constants";
 import type {
-    CourseCompletionEmailData,
-    CourseEnrollmentEmailData,
-    EmailTriggerData,
-    InterviewPrepEnrollmentEmailData,
-    ProjectEnrollmentEmailData
-} from "@tbe/interface"
+  CourseCompletionEmailData,
+  CourseEnrollmentEmailData,
+  EmailTriggerData,
+  InterviewPrepEnrollmentEmailData,
+  ProjectEnrollmentEmailData,
+} from "@tbe/interface";
 
 const getBaseTemplate = (content: string) => `
 <!DOCTYPE html>
@@ -138,10 +138,10 @@ const getBaseTemplate = (content: string) => `
     </div>
 </body>
 </html>
-`
+`;
 
 export const welcomeEmailTemplate = (data: EmailTriggerData): string => {
-    const content = `
+  const content = `
     <div class="greeting">Hey ${data.userName}! 👋</div>
     
     <div class="main-text">
@@ -170,15 +170,15 @@ export const welcomeEmailTemplate = (data: EmailTriggerData): string => {
             🚀 Start Learning Now
         </a>
     </div>
-  `
+  `;
 
-    return getBaseTemplate(content)
-}
+  return getBaseTemplate(content);
+};
 
 export const courseEnrollmentTemplate = (
-    data: CourseEnrollmentEmailData
+  data: CourseEnrollmentEmailData,
 ): string => {
-    const content = `
+  const content = `
     <div class="greeting">Hey ${data.userName}! 📚</div>
     
     <div class="main-text">
@@ -191,9 +191,9 @@ export const courseEnrollmentTemplate = (
         <br><br>
         
         ${
-            data.courseDescription
-                ? `<em>"${data.courseDescription}"</em><br><br>`
-                : ""
+          data.courseDescription
+            ? `<em>"${data.courseDescription}"</em><br><br>`
+            : ""
         }
         
         Here's what I recommend to make the most of this course:
@@ -209,25 +209,25 @@ export const courseEnrollmentTemplate = (
     
     <div style="text-align: center;">
         <a href=${
-            envConfig.PLATFORM_URL + routes.user.dashboard
+          envConfig.PLATFORM_URL + routes.user.dashboard
         } class="cta-button">
             📖 Continue Learning
         </a>
     </div>
-  `
+  `;
 
-    return getBaseTemplate(content)
-}
+  return getBaseTemplate(content);
+};
 
 export const projectEnrollmentTemplate = (
-    data: ProjectEnrollmentEmailData
+  data: ProjectEnrollmentEmailData,
 ): string => {
-    const content = `
+  const content = `
     <div class="greeting">Hey ${data.userName}! 🛠️</div>
     
     <div class="main-text">
         Awesome! You've enrolled in the <strong>${
-            data.projectName
+          data.projectName
         }</strong> project! 🚀
         
         <br><br>
@@ -237,9 +237,9 @@ export const projectEnrollmentTemplate = (
         <br><br>
         
         ${
-            data.projectDescription
-                ? `<em>"${data.projectDescription}"</em><br><br>`
-                : ""
+          data.projectDescription
+            ? `<em>"${data.projectDescription}"</em><br><br>`
+            : ""
         }
         
         Here's how to ace this project:
@@ -259,15 +259,15 @@ export const projectEnrollmentTemplate = (
             🔨 Start Building
         </a>
     </div>
-  `
+  `;
 
-    return getBaseTemplate(content)
-}
+  return getBaseTemplate(content);
+};
 
 export const interviewPrepEnrollmentTemplate = (
-    data: InterviewPrepEnrollmentEmailData
+  data: InterviewPrepEnrollmentEmailData,
 ): string =>
-    getBaseTemplate(`
+  getBaseTemplate(`
     <div class="greeting">Hello ${data.userName}! 👋</div>
     
     <div class="main-text">
@@ -306,12 +306,12 @@ export const interviewPrepEnrollmentTemplate = (
       <div class="signature-name">Sachin from The Boring Education</div>
       <div class="signature-title">Your Interview Success Partners</div>
     </div>
-  `)
+  `);
 
 export const courseCompletionTemplate = (
-    data: CourseCompletionEmailData
+  data: CourseCompletionEmailData,
 ): string =>
-    getBaseTemplate(`
+  getBaseTemplate(`
     <div class="greeting">Congratulations ${data.userName}! 🎉</div>
     
     <div class="main-text">
@@ -335,13 +335,13 @@ export const courseCompletionTemplate = (
         Review Your Course 📚
       </a>
       ${
-          data.certificateUrl
-              ? `
+        data.certificateUrl
+          ? `
         <a href="${data.certificateUrl}" class="cta-button" style="margin-left: 10px; background: linear-gradient(135deg, #059669 0%, #047857 100%);">
           Download Certificate 🏆
         </a>
       `
-              : ""
+          : ""
       }
     </div>
     
@@ -361,4 +361,4 @@ export const courseCompletionTemplate = (
       <div class="signature-name">Sachin from The Boring Education</div>
       <div class="signature-title">Proud of Your Achievement!</div>
     </div>
-  `)
+  `);

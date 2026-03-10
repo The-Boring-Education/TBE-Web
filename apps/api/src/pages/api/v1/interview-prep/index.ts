@@ -55,7 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
-        })
+        }),
       );
   }
 };
@@ -65,7 +65,7 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
     const sheetPayload = req.body as AddInterviewSheetRequestPayloadProps;
 
     const { error: sheetAlreadyExist } = await getInterviewSheetBySlugFromDB(
-      sheetPayload.slug
+      sheetPayload.slug,
     );
 
     if (!sheetAlreadyExist) {
@@ -73,7 +73,7 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: "Sheet already exists",
-        })
+        }),
       );
     }
 
@@ -86,7 +86,7 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
           status: false,
           message: "Sheet not added",
           error,
-        })
+        }),
       );
     }
 
@@ -95,7 +95,7 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
         status: true,
         data,
         message: "Sheet added successfully",
-      })
+      }),
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
@@ -103,7 +103,7 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
         status: false,
         message: "Failed while adding sheet",
         error,
-      })
+      }),
     );
   }
 };
@@ -123,7 +123,7 @@ const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Invalid roadmap: ${roadmap}. Supported: ${Object.keys(ROADMAP_HANDLERS).join(", ")}`,
-        })
+        }),
       );
     }
 
@@ -138,7 +138,7 @@ const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
         status: false,
         message: "Unexpected error while fetching data",
         error,
-      })
+      }),
     );
   }
 };
@@ -151,18 +151,20 @@ async function handleSheetsMode(req: NextApiRequest, res: NextApiResponse) {
   if (slug) {
     const { data: sheet, error } = await getInterviewSheetBySlugFromDB(
       slug as string,
-      userId as string
+      userId as string,
     );
 
     if (error || !sheet) {
-      return res.status(apiStatusCodes.NOT_FOUND).json(
-        sendAPIResponse({ status: false, message: "Sheet not found", error })
-      );
+      return res
+        .status(apiStatusCodes.NOT_FOUND)
+        .json(
+          sendAPIResponse({ status: false, message: "Sheet not found", error }),
+        );
     }
 
-    return res.status(apiStatusCodes.OKAY).json(
-      sendAPIResponse({ status: true, data: sheet })
-    );
+    return res
+      .status(apiStatusCodes.OKAY)
+      .json(sendAPIResponse({ status: true, data: sheet }));
   }
 
   const { data: allSheets, error } = await getAllInterviewSheetsFromDB();
@@ -173,13 +175,13 @@ async function handleSheetsMode(req: NextApiRequest, res: NextApiResponse) {
         status: false,
         message: "Failed while fetching sheets",
         error,
-      })
+      }),
     );
   }
 
-  return res.status(apiStatusCodes.OKAY).json(
-    sendAPIResponse({ status: true, data: allSheets })
-  );
+  return res
+    .status(apiStatusCodes.OKAY)
+    .json(sendAPIResponse({ status: true, data: allSheets }));
 }
 
 // ─── DSA Mode (?roadmap=DSA) ─────────────────────────────────────────────────
@@ -194,13 +196,19 @@ async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
   if (metadata === "true") {
     const { data, error } = await getDSASheetMetadataFromDB();
     if (error) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-        sendAPIResponse({ status: false, message: "Failed to fetch DSA metadata", error })
-      );
+      return res
+        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(
+          sendAPIResponse({
+            status: false,
+            message: "Failed to fetch DSA metadata",
+            error,
+          }),
+        );
     }
-    return res.status(apiStatusCodes.OKAY).json(
-      sendAPIResponse({ status: true, data })
-    );
+    return res
+      .status(apiStatusCodes.OKAY)
+      .json(sendAPIResponse({ status: true, data }));
   }
 
   let validDomain: DSADomainType = "GENERAL";
@@ -221,7 +229,7 @@ async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
   const { data, error } = await getDSAQuestionsGroupedByTopic(
     validDomain,
     validDifficulty,
-    validCompanyType
+    validCompanyType,
   );
 
   if (error || !data) {
@@ -230,13 +238,13 @@ async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
         status: false,
         message: "Failed while fetching DSA questions",
         error,
-      })
+      }),
     );
   }
 
-  return res.status(apiStatusCodes.OKAY).json(
-    sendAPIResponse({ status: true, data })
-  );
+  return res
+    .status(apiStatusCodes.OKAY)
+    .json(sendAPIResponse({ status: true, data }));
 }
 
 // ─── Aptitude Mode (?roadmap=APTITUDE) ───────────────────────────────────────
@@ -253,13 +261,19 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
   if (metadata === "true") {
     const { data, error } = await getAptitudeMetadataFromDB();
     if (error) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-        sendAPIResponse({ status: false, message: "Failed to fetch aptitude metadata", error })
-      );
+      return res
+        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(
+          sendAPIResponse({
+            status: false,
+            message: "Failed to fetch aptitude metadata",
+            error,
+          }),
+        );
     }
-    return res.status(apiStatusCodes.OKAY).json(
-      sendAPIResponse({ status: true, data })
-    );
+    return res
+      .status(apiStatusCodes.OKAY)
+      .json(sendAPIResponse({ status: true, data }));
   }
 
   if (topic) {
@@ -269,25 +283,34 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
         difficulty: difficulty as DSADifficultyType | undefined,
         page: page ? parseInt(page as string) : 1,
         limit: limit ? Math.min(parseInt(limit as string), 100) : 50,
-      }
+      },
     );
 
     if (error) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-        sendAPIResponse({ status: false, message: "Failed to fetch aptitude questions", error })
-      );
+      return res
+        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(
+          sendAPIResponse({
+            status: false,
+            message: "Failed to fetch aptitude questions",
+            error,
+          }),
+        );
     }
-    return res.status(apiStatusCodes.OKAY).json(
-      sendAPIResponse({ status: true, data })
-    );
+    return res
+      .status(apiStatusCodes.OKAY)
+      .json(sendAPIResponse({ status: true, data }));
   }
 
-  const validCategory = category && APTITUDE_CATEGORIES.includes(category as AptitudeCategoryType)
-    ? (category as AptitudeCategoryType)
-    : undefined;
-  const validSubCategory = subCategory && APTITUDE_SUB_CATEGORIES.includes(subCategory as AptitudeSubCategoryType)
-    ? (subCategory as AptitudeSubCategoryType)
-    : undefined;
+  const validCategory =
+    category && APTITUDE_CATEGORIES.includes(category as AptitudeCategoryType)
+      ? (category as AptitudeCategoryType)
+      : undefined;
+  const validSubCategory =
+    subCategory &&
+    APTITUDE_SUB_CATEGORIES.includes(subCategory as AptitudeSubCategoryType)
+      ? (subCategory as AptitudeSubCategoryType)
+      : undefined;
 
   const { data, error } = await getAptitudeTopicsWithQuestionCountFromDB({
     category: validCategory,
@@ -300,13 +323,13 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
         status: false,
         message: "Failed to fetch aptitude topics",
         error,
-      })
+      }),
     );
   }
 
-  return res.status(apiStatusCodes.OKAY).json(
-    sendAPIResponse({ status: true, data })
-  );
+  return res
+    .status(apiStatusCodes.OKAY)
+    .json(sendAPIResponse({ status: true, data }));
 }
 
 export default withRequestLogger(handler);

@@ -1,13 +1,13 @@
-import { routes } from '@tbe/constants';
-import { useApi, useUser } from '@tbe/hooks';
-import type { useFeedbackProps } from '@tbe/interface';
-import { useState } from 'react';
+import { routes } from "@tbe/constants";
+import { useApi, useUser } from "@tbe/hooks";
+import type { useFeedbackProps } from "@tbe/interface";
+import { useState } from "react";
 
 const useFeedback = ({ type, refId }: useFeedbackProps) => {
   const { user } = useUser();
 
   const [rating, setRating] = useState(0);
-  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackText, setFeedbackText] = useState("");
   const [feedbackId, setFeedbackId] = useState<string | null>(null);
 
   const [feedbackModal, setFeedbackModal] = useState({
@@ -18,18 +18,18 @@ const useFeedback = ({ type, refId }: useFeedbackProps) => {
 
   const [toast, setToast] = useState({
     show: false,
-    message: '',
+    message: "",
   });
 
-  const submitRatingApi = useApi('submit-feedback');
-  const updateFeedbackApi = useApi('update-feedback');
+  const submitRatingApi = useApi("submit-feedback");
+  const updateFeedbackApi = useApi("update-feedback");
 
   const handleStarClick = async (value: number) => {
     setRating(value);
 
     const response = await submitRatingApi.makeRequest({
       url: routes.api.submitUserFeedback,
-      method: 'POST',
+      method: "POST",
       body: { rating: value, type, ref: refId, userId: user?.id },
     });
 
@@ -46,20 +46,20 @@ const useFeedback = ({ type, refId }: useFeedbackProps) => {
 
     const response = await updateFeedbackApi.makeRequest({
       url: routes.api.submitUserFeedback,
-      method: 'PUT',
+      method: "PUT",
       body: { feedbackId, feedback: feedbackText, userId: user?.id },
     });
 
     if (response) {
       setToast({
         show: true,
-        message: 'Thanks for your feedback!',
+        message: "Thanks for your feedback!",
       });
       setFeedbackModal({ rating: false, feedback: false, success: true });
     } else {
       setToast({
         show: true,
-        message: 'Failed to submit detailed feedback.',
+        message: "Failed to submit detailed feedback.",
       });
     }
   };

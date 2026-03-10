@@ -17,7 +17,7 @@ const connectDB = async () => {
 // Admin authentication middleware
 const adminMiddleware = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<boolean> => {
   try {
     const adminHeader = req.headers["x-admin-secret"];
@@ -32,7 +32,7 @@ const adminMiddleware = async (
           status: apiStatusCodes.INTERNAL_SERVER_ERROR,
           error: true,
           message: "Server configuration error",
-        })
+        }),
       );
       return false;
     }
@@ -44,7 +44,7 @@ const adminMiddleware = async (
           status: apiStatusCodes.UNAUTHORIZED,
           error: true,
           message: "Unauthorized. Admin access required.",
-        })
+        }),
       );
       return false;
     }
@@ -58,7 +58,7 @@ const adminMiddleware = async (
         error: true,
         message: "Admin authentication error",
         data: error,
-      })
+      }),
     );
     return false;
   }

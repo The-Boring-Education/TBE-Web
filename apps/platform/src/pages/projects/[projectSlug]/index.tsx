@@ -5,7 +5,7 @@ import {
   FeedbackPopup,
   FlexContainer,
   LinerProgressBar,
-  MDXRenderer,  
+  MDXRenderer,
   ProjectHeroContainer,
   Section,
   SEO,
@@ -30,12 +30,14 @@ const ProjectPage = ({
   const firstSection = sections?.[0];
   const firstChapter = firstSection?.chapters?.[0];
   const firstChapterId = firstChapter?.chapterId?.toString() || '';
-  const [currentChapterIdState, setCurrentChapterIdState] = useState(currentChapterId || firstChapterId);
+  const [currentChapterIdState, setCurrentChapterIdState] = useState(
+    currentChapterId || firstChapterId,
+  );
   const [isChapterCompleted, setIsChapterCompleted] = useState(
     sections
       .flatMap((section) => section.chapters)
       .find((chapter) => chapter.chapterId.toString() === currentChapterIdState)
-      ?.isCompleted
+      ?.isCompleted,
   );
   const [isLoading, setIsLoading] = useState(false);
   const [showChapterFeedback, setShowChapterFeedback] = useState(false);
@@ -44,13 +46,13 @@ const ProjectPage = ({
   // Calculate total and completed chapters for the progress bar
   const totalChapters = sections.reduce(
     (total, section) => total + section.chapters.length,
-    0
+    0,
   );
   const completedChapters = sections.reduce(
     (completed, section) =>
       completed +
       section.chapters.filter((chapter) => chapter.isCompleted).length,
-    0
+    0,
   );
 
   const { makeRequest } = useApi(`projects/${slug}`);
@@ -61,8 +63,10 @@ const ProjectPage = ({
   useEffect(() => {
     const currentChapter = sections
       .flatMap((section) => section.chapters)
-      .find((chapter) => chapter.chapterId.toString() === currentChapterIdState);
-    
+      .find(
+        (chapter) => chapter.chapterId.toString() === currentChapterIdState,
+      );
+
     setIsChapterCompleted(currentChapter?.isCompleted);
 
     if (currentChapter) {
@@ -71,8 +75,9 @@ const ProjectPage = ({
 
     // Show feedback popup if all chapters are completed
     const allCompleted =
-      sections.length > 0 && sections.every((section) =>
-        section.chapters.every((chapter) => chapter.isCompleted)
+      sections.length > 0 &&
+      sections.every((section) =>
+        section.chapters.every((chapter) => chapter.isCompleted),
       );
 
     if (allCompleted && !showChapterFeedback) {
@@ -95,16 +100,23 @@ const ProjectPage = ({
     }
 
     setShowChapterFeedback(allCompleted);
-  }, [currentChapterIdState, sections, project._id, project.name, totalChapters, showChapterFeedback, gamifiedAction]);
+  }, [
+    currentChapterIdState,
+    sections,
+    project._id,
+    project.name,
+    totalChapters,
+    showChapterFeedback,
+    gamifiedAction,
+  ]);
 
   // Initialize state when component mounts
   useEffect(() => {
-    
     if (sections.length > 0 && currentChapterId) {
       const currentChapter = sections
         .flatMap((section) => section.chapters)
         .find((chapter) => chapter.chapterId.toString() === currentChapterId);
-      
+
       if (currentChapter) {
         setIsChapterCompleted(currentChapter.isCompleted);
         setProjectMeta(currentChapter.content);
@@ -115,25 +127,25 @@ const ProjectPage = ({
 
   const handleChapterClick = ({ sectionId, chapterId }: any) => {
     console.log('Chapter clicked:', { sectionId, chapterId });
-    
+
     const selectedChapter = getSelectedProjectChapterMeta(
       project,
       sectionId,
-      chapterId
+      chapterId,
     );
-    
+
     console.log('Selected chapter content:', !!selectedChapter);
-    
+
     setProjectMeta(selectedChapter);
     setCurrentChapterIdState(chapterId);
-    
+
     // Update the completion status for the clicked chapter
     const clickedChapter = sections
       .flatMap((section) => section.chapters)
       .find((chapter) => chapter.chapterId.toString() === chapterId);
-      
+
     console.log('Clicked chapter found:', clickedChapter);
-    
+
     setIsChapterCompleted(clickedChapter?.isCompleted || false);
   };
 
@@ -153,7 +165,9 @@ const ProjectPage = ({
           userId: user?.id,
           projectId: project._id,
           sectionId: sections.find((section) =>
-            section.chapters.some((chap) => chap.chapterId === currentChapterIdState)
+            section.chapters.some(
+              (chap) => chap.chapterId === currentChapterIdState,
+            ),
           )?.sectionId,
           chapterId: currentChapterIdState,
           isCompleted: newCompletionStatus,
@@ -197,7 +211,7 @@ const ProjectPage = ({
           chapters: section.chapters.map((chapter) =>
             chapter.chapterId === currentChapterIdState
               ? { ...chapter, isCompleted: newCompletionStatus }
-              : chapter
+              : chapter,
           ),
         }));
 
@@ -207,21 +221,29 @@ const ProjectPage = ({
         // Move to next chapter if completed
         if (newCompletionStatus) {
           // Use the updated sections to find the next chapter
-          const allChapters = updatedSections.flatMap((section) => section.chapters);
+          const allChapters = updatedSections.flatMap(
+            (section) => section.chapters,
+          );
 
           console.log('Finding next chapter:', {
             currentChapterIdState,
-            allChapters: allChapters.map(c => ({ id: c.chapterId, name: c.chapterName, completed: c.isCompleted }))
+            allChapters: allChapters.map((c) => ({
+              id: c.chapterId,
+              name: c.chapterName,
+              completed: c.isCompleted,
+            })),
           });
 
           const currentIndex = allChapters.findIndex(
-            (chapter) => chapter.chapterId.toString() === currentChapterIdState
+            (chapter) => chapter.chapterId.toString() === currentChapterIdState,
           );
 
           console.log('Current chapter index:', currentIndex);
 
           const next =
-            allChapters.slice(currentIndex + 1).find((chapter) => !chapter.isCompleted) ||
+            allChapters
+              .slice(currentIndex + 1)
+              .find((chapter) => !chapter.isCompleted) ||
             allChapters.find((chapter) => !chapter.isCompleted); // Loop to beginning if none left
 
           console.log('Next chapter found:', next);
@@ -229,43 +251,53 @@ const ProjectPage = ({
           if (next) {
             const chapterId = next.chapterId.toString();
             console.log('Setting next chapter ID:', chapterId);
-            
+
             setCurrentChapterIdState(chapterId);
-            
+
             // Find the section that contains the next chapter
             const nextSection = updatedSections.find((section) =>
-              section.chapters.some((chap) => chap.chapterId.toString() === chapterId)
+              section.chapters.some(
+                (chap) => chap.chapterId.toString() === chapterId,
+              ),
             );
-            
+
             console.log('Next section found:', nextSection?.sectionName);
-            
+
             if (nextSection) {
               // Find the next chapter content directly from the updated sections
               const nextChapter = nextSection.chapters.find(
-                (chap) => chap.chapterId.toString() === chapterId
+                (chap) => chap.chapterId.toString() === chapterId,
               );
-              
-              console.log('Next chapter content found:', !!nextChapter?.content);
-              
+
+              console.log(
+                'Next chapter content found:',
+                !!nextChapter?.content,
+              );
+
               if (nextChapter) {
                 setProjectMeta(nextChapter.content);
-                
+
                 // Auto-scroll to content section for better UX
                 setTimeout(() => {
-                  contentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+                  contentSectionRef.current?.scrollIntoView({
+                    behavior: 'smooth',
+                  });
                 }, 100);
               }
             }
           } else {
             console.log('No next chapter found');
           }
-          
+
           // Show feedback popup for chapter completion
           setShowChapterFeedback(true);
         }
       } else {
         // Handle API error - don't update local state
-        console.error('Failed to update chapter completion:', response?.message);
+        console.error(
+          'Failed to update chapter completion:',
+          response?.message,
+        );
       }
     } catch (error) {
       console.error('Error toggling chapter completion:', error);
@@ -315,7 +347,7 @@ const ProjectPage = ({
                       return (
                         <AccordionLinkItem
                           key={chapterId}
-                          href="#"
+                          href='#'
                           isActive={isActive}
                           isCompleted={isCompleted}
                           label={chapterName}
@@ -349,15 +381,15 @@ const ProjectPage = ({
                         isLoading
                           ? 'Marking...'
                           : isChapterCompleted
-                          ? 'Completed'
-                          : 'Mark As Completed'
+                            ? 'Completed'
+                            : 'Mark As Completed'
                       }
                       variant={
                         isChapterCompleted
                           ? 'SUCCESS'
                           : isLoading
-                          ? 'SECONDARY'
-                          : 'PRIMARY'
+                            ? 'SECONDARY'
+                            : 'PRIMARY'
                       }
                       onClick={toggleCompletion}
                     />
@@ -370,9 +402,9 @@ const ProjectPage = ({
         </div>
       </Section>
       {showChapterFeedback && (
-        <FeedbackPopup 
-          refId={currentChapterIdState} 
-          type='GENERAL' 
+        <FeedbackPopup
+          refId={currentChapterIdState}
+          type='GENERAL'
           onSubmit={handleFeedbackComplete}
         />
       )}

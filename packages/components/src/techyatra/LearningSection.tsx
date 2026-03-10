@@ -1,92 +1,91 @@
+import { BookOpen, ExternalLink, FileText } from "lucide-react";
+import React from "react";
 
-import { BookOpen, ExternalLink, FileText } from 'lucide-react';
-import React from 'react';
-
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const LearningSection = () => {
   const courses = [
     {
-      id: 'logic-building',
-      title: 'Logic Building For Everyone',
-      description: 'Master programming fundamentals and logical thinking',
-      level: 'Beginner',
-      duration: '4-6 weeks',
-      gradient: 'from-blue-500 to-cyan-500',
-      url: 'https://www.theboringeducation.com/shiksha/logic-building-for-everyone?courseId=669f374b2ef89c28d87b4473',
-      topics: ['Problem Solving', 'Logic Development', 'Programming Basics']
+      id: "logic-building",
+      title: "Logic Building For Everyone",
+      description: "Master programming fundamentals and logical thinking",
+      level: "Beginner",
+      duration: "4-6 weeks",
+      gradient: "from-blue-500 to-cyan-500",
+      url: "https://www.theboringeducation.com/shiksha/logic-building-for-everyone?courseId=669f374b2ef89c28d87b4473",
+      topics: ["Problem Solving", "Logic Development", "Programming Basics"],
     },
     {
-      id: 'js-basics',
-      title: 'Basics of Programming with JS',
-      description: 'Learn JavaScript fundamentals from scratch',
-      level: 'Beginner',
-      duration: '6-8 weeks',
-      gradient: 'from-yellow-500 to-orange-500',
-      url: 'https://www.theboringeducation.com/shiksha/basics-of-programming-with-js?courseId=66b99909946f754d9d7a4c50',
-      topics: ['JavaScript Syntax', 'Functions', 'Objects', 'DOM Manipulation']
+      id: "js-basics",
+      title: "Basics of Programming with JS",
+      description: "Learn JavaScript fundamentals from scratch",
+      level: "Beginner",
+      duration: "6-8 weeks",
+      gradient: "from-yellow-500 to-orange-500",
+      url: "https://www.theboringeducation.com/shiksha/basics-of-programming-with-js?courseId=66b99909946f754d9d7a4c50",
+      topics: ["JavaScript Syntax", "Functions", "Objects", "DOM Manipulation"],
     },
     {
-      id: 'frontend-dev',
-      title: 'Zero to One Frontend Dev',
-      description: 'Complete frontend development from basics to advanced',
-      level: 'Intermediate',
-      duration: '10-12 weeks',
-      gradient: 'from-purple-500 to-pink-500',
-      url: 'https://www.theboringeducation.com/shiksha/zero-to-one-frontend-development?courseId=677642add16888110ba779ad',
-      topics: ['HTML/CSS', 'React.js', 'State Management', 'Projects']
+      id: "frontend-dev",
+      title: "Zero to One Frontend Dev",
+      description: "Complete frontend development from basics to advanced",
+      level: "Intermediate",
+      duration: "10-12 weeks",
+      gradient: "from-purple-500 to-pink-500",
+      url: "https://www.theboringeducation.com/shiksha/zero-to-one-frontend-development?courseId=677642add16888110ba779ad",
+      topics: ["HTML/CSS", "React.js", "State Management", "Projects"],
     },
     {
-      id: 'backend-dev',
-      title: 'Zero to One Backend Dev',
-      description: 'Master backend development and server-side programming',
-      level: 'Intermediate',
-      duration: '10-12 weeks',
-      gradient: 'from-green-500 to-emerald-500',
-      url: 'https://www.theboringeducation.com/shiksha/zero-to-one-backend-development?courseId=6799dfcadd77f0ff4c605790',
-      topics: ['Node.js', 'Databases', 'APIs', 'Authentication']
-    }
+      id: "backend-dev",
+      title: "Zero to One Backend Dev",
+      description: "Master backend development and server-side programming",
+      level: "Intermediate",
+      duration: "10-12 weeks",
+      gradient: "from-green-500 to-emerald-500",
+      url: "https://www.theboringeducation.com/shiksha/zero-to-one-backend-development?courseId=6799dfcadd77f0ff4c605790",
+      topics: ["Node.js", "Databases", "APIs", "Authentication"],
+    },
   ];
 
   const interviewSheets = [
     {
-      id: 'javascript',
-      title: 'JavaScript Interview Questions',
-      description: 'Comprehensive JavaScript interview preparation',
-      questionCount: '100+',
-      gradient: 'from-yellow-400 to-yellow-600',
-      url: 'https://www.theboringeducation.com/interview-prep/javascript-interview-questions?sheetId=673333d146a1961fc8b84345',
-      topics: ['ES6+', 'Closures', 'Promises', 'Event Loop']
+      id: "javascript",
+      title: "JavaScript Interview Questions",
+      description: "Comprehensive JavaScript interview preparation",
+      questionCount: "100+",
+      gradient: "from-yellow-400 to-yellow-600",
+      url: "https://www.theboringeducation.com/interview-prep/javascript-interview-questions?sheetId=673333d146a1961fc8b84345",
+      topics: ["ES6+", "Closures", "Promises", "Event Loop"],
     },
     {
-      id: 'react',
-      title: 'React.js Interview Questions',
-      description: 'Master React interviews with detailed Q&A',
-      questionCount: '80+',
-      gradient: 'from-blue-400 to-blue-600',
-      url: 'https://www.theboringeducation.com/interview-prep/react-interview-questions?sheetId=6733f45fb99d209c811f3f4e',
-      topics: ['Hooks', 'State Management', 'Performance', 'Testing']
+      id: "react",
+      title: "React.js Interview Questions",
+      description: "Master React interviews with detailed Q&A",
+      questionCount: "80+",
+      gradient: "from-blue-400 to-blue-600",
+      url: "https://www.theboringeducation.com/interview-prep/react-interview-questions?sheetId=6733f45fb99d209c811f3f4e",
+      topics: ["Hooks", "State Management", "Performance", "Testing"],
     },
     {
-      id: 'nodejs',
-      title: 'Node.js Interview Questions',
-      description: 'Backend development interview preparation',
-      questionCount: '90+',
-      gradient: 'from-green-400 to-green-600',
-      url: 'https://www.theboringeducation.com/interview-prep/node-interview-questions?sheetId=67345538bdf619907a005031',
-      topics: ['Express.js', 'Middleware', 'Authentication', 'Performance']
+      id: "nodejs",
+      title: "Node.js Interview Questions",
+      description: "Backend development interview preparation",
+      questionCount: "90+",
+      gradient: "from-green-400 to-green-600",
+      url: "https://www.theboringeducation.com/interview-prep/node-interview-questions?sheetId=67345538bdf619907a005031",
+      topics: ["Express.js", "Middleware", "Authentication", "Performance"],
     },
     {
-      id: 'database',
-      title: 'Database Interview Questions',
-      description: 'SQL and NoSQL database concepts',
-      questionCount: '70+',
-      gradient: 'from-purple-400 to-purple-600',
-      url: 'https://www.theboringeducation.com/interview-prep/db-interview-questions?sheetId=673427888dabf8ca6e3c7c4b',
-      topics: ['SQL Queries', 'Normalization', 'Indexing', 'MongoDB']
-    }
+      id: "database",
+      title: "Database Interview Questions",
+      description: "SQL and NoSQL database concepts",
+      questionCount: "70+",
+      gradient: "from-purple-400 to-purple-600",
+      url: "https://www.theboringeducation.com/interview-prep/db-interview-questions?sheetId=673427888dabf8ca6e3c7c4b",
+      topics: ["SQL Queries", "Normalization", "Indexing", "MongoDB"],
+    },
   ];
 
   return (
@@ -97,7 +96,8 @@ const LearningSection = () => {
             Learn Tech for Free
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Master programming and ace interviews with our comprehensive free courses and prep sheets
+            Master programming and ace interviews with our comprehensive free
+            courses and prep sheets
           </p>
         </div>
 
@@ -112,11 +112,16 @@ const LearningSection = () => {
               Structured learning paths with hands-on projects
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {courses.map((course) => (
-              <Card key={course.id} className="group relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${course.gradient}`} />
+              <Card
+                key={course.id}
+                className="group relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <div
+                  className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${course.gradient}`}
+                />
                 <CardHeader>
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant="outline" className="text-xs">
@@ -132,20 +137,26 @@ const LearningSection = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">{course.description}</p>
-                  
+
                   <div className="mb-4">
-                    <h5 className="font-semibold text-gray-800 mb-2 text-sm">What you'll learn:</h5>
+                    <h5 className="font-semibold text-gray-800 mb-2 text-sm">
+                      What you'll learn:
+                    </h5>
                     <div className="flex flex-wrap gap-2">
                       {course.topics.map((topic) => (
-                        <Badge key={topic} variant="outline" className="text-xs bg-gray-50">
+                        <Badge
+                          key={topic}
+                          variant="outline"
+                          className="text-xs bg-gray-50"
+                        >
                           {topic}
                         </Badge>
                       ))}
                     </div>
                   </div>
-                  
+
                   <Button
-                    onClick={() => window.open(course.url, '_blank')}
+                    onClick={() => window.open(course.url, "_blank")}
                     className={`w-full bg-gradient-to-r ${course.gradient} text-white hover:shadow-lg transition-all duration-300 group-hover:scale-105`}
                   >
                     Start Learning
@@ -168,11 +179,16 @@ const LearningSection = () => {
               Curated questions with detailed answers to ace your interviews
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {interviewSheets.map((sheet) => (
-              <Card key={sheet.id} className="group relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${sheet.gradient}`} />
+              <Card
+                key={sheet.id}
+                className="group relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <div
+                  className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${sheet.gradient}`}
+                />
                 <CardHeader>
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant="outline" className="text-xs">
@@ -188,20 +204,26 @@ const LearningSection = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">{sheet.description}</p>
-                  
+
                   <div className="mb-4">
-                    <h5 className="font-semibold text-gray-800 mb-2 text-sm">Key Topics:</h5>
+                    <h5 className="font-semibold text-gray-800 mb-2 text-sm">
+                      Key Topics:
+                    </h5>
                     <div className="flex flex-wrap gap-2">
                       {sheet.topics.map((topic) => (
-                        <Badge key={topic} variant="outline" className="text-xs bg-gray-50">
+                        <Badge
+                          key={topic}
+                          variant="outline"
+                          className="text-xs bg-gray-50"
+                        >
                           {topic}
                         </Badge>
                       ))}
                     </div>
                   </div>
-                  
+
                   <Button
-                    onClick={() => window.open(sheet.url, '_blank')}
+                    onClick={() => window.open(sheet.url, "_blank")}
                     className={`w-full bg-gradient-to-r ${sheet.gradient} text-white hover:shadow-lg transition-all duration-300 group-hover:scale-105`}
                   >
                     Access Questions

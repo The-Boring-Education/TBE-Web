@@ -5,7 +5,17 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@tbe/components'],
   images: {
-    domains: ["lh3.googleusercontent.com"],
+    domains: [
+      'lh3.googleusercontent.com',
+      'lh3.google.com',
+      'ik.imagekit.io',
+      'images.unsplash.com',
+      'i.ytimg.com',
+      'via.placeholder.com',
+      'avatars.githubusercontent.com',
+    ],
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60,
   },
   experimental: {
     // Use 'loose' mode to handle mixed ESM/CJS packages

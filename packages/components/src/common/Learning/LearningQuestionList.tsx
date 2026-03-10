@@ -1,8 +1,8 @@
-import type { LearningQuestionListProps } from '@tbe/interface';
-import { FaStar } from 'react-icons/fa';
+import type { LearningQuestionListProps } from "@tbe/interface";
+import { FaStar } from "react-icons/fa";
 
-import LearningSidebarList from './LearningSidebarList';
-import QuestionLink from './QuestionLink';
+import LearningSidebarList from "./LearningSidebarList";
+import QuestionLink from "./QuestionLink";
 
 const LearningQuestionList = ({
   questions,
@@ -10,23 +10,26 @@ const LearningQuestionList = ({
   isLocked = false,
   href,
   onQuestionSelect,
-  theme = 'light',
+  theme = "light",
 }: LearningQuestionListProps) => {
   return (
     <LearningSidebarList
       items={questions ?? []}
-      getKey={(item) => item?._id?.toString() ?? ''}
+      getKey={(item) => item?._id?.toString() ?? ""}
       renderItem={(item) => {
         const questionId = item?._id?.toString();
         if (!questionId) return null;
 
         return (
-          <div className='flex items-center w-full'>
+          <div className="flex items-center w-full">
             <QuestionLink
               currentQuestionId={currentQuestionId}
               frequency={item.frequency}
               handleQuestionClick={() =>
-                onQuestionSelect(`${item.question}\n\n${item.answer}`, questionId)
+                onQuestionSelect(
+                  `${item.question}\n\n${item.answer}`,
+                  questionId,
+                )
               }
               href={href}
               isCompleted={item.isCompleted}
@@ -38,9 +41,9 @@ const LearningQuestionList = ({
             />
             {item.isStarred && (
               <FaStar
-                className='ml-1 text-yellow-400'
-                style={{ fontSize: '0.9em' }}
-                title='Starred'
+                className="ml-1 text-yellow-400"
+                style={{ fontSize: "0.9em" }}
+                title="Starred"
               />
             )}
           </div>

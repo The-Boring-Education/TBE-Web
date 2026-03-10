@@ -46,11 +46,11 @@ export interface CourseCompletionEmailData extends EmailTriggerData {
 }
 
 export type EmailTriggerType =
-  | 'WELCOME'
-  | 'COURSE_ENROLLMENT'
-  | 'PROJECT_ENROLLMENT'
-  | 'INTERVIEW_PREP_ENROLLMENT'
-  | 'COURSE_COMPLETION';
+  | "WELCOME"
+  | "COURSE_ENROLLMENT"
+  | "PROJECT_ENROLLMENT"
+  | "INTERVIEW_PREP_ENROLLMENT"
+  | "COURSE_COMPLETION";
 
 export interface EmailTriggerRequest {
   trigger: EmailTriggerType;

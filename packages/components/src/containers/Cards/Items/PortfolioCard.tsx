@@ -1,5 +1,5 @@
-import { FlexContainer, Image, Text } from '@tbe/components';
-import type { PortfolioCardProps } from '@tbe/interface';
+import { FlexContainer, Image, Text } from "@tbe/components";
+import type { PortfolioCardProps } from "@tbe/interface";
 
 const PortfolioCard = ({
   index,
@@ -8,27 +8,27 @@ const PortfolioCard = ({
   description,
 }: PortfolioCardProps) => (
   <FlexContainer
-    className='w-full md:w-[48%] lg:w-[31%] border border-gray-300 p-3 gap-1 rounded-1'
-    direction='col'
+    className="w-full md:w-[48%] lg:w-[31%] border border-gray-300 p-3 gap-1 rounded-1"
+    direction="col"
     itemCenter={false}
   >
-    <Text className='text-5xl font-extrabold' level='h1'>
+    <Text className="text-5xl font-extrabold" level="h1">
       {index}.
     </Text>
 
-    <div className='w-[40%]'>
+    <div className="w-[40%]">
       <Image
         alt={title}
-        className='rounded-1 aspect-square my-1'
+        className="rounded-1 aspect-square my-1"
         src={imageUrl}
       />
     </div>
 
-    <FlexContainer direction='col' itemCenter={false}>
-      <Text className='heading-4' level='h3'>
+    <FlexContainer direction="col" itemCenter={false}>
+      <Text className="heading-4" level="h3">
         {title}
       </Text>
-      <Text className='paragraph' level='p'>
+      <Text className="paragraph" level="p">
         {description}
       </Text>
     </FlexContainer>

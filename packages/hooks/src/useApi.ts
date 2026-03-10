@@ -1,12 +1,12 @@
-import type { APIMakeRequestProps, APIResponseType } from '@tbe/types';
-import { sendRequest } from '@tbe/utils';
-import { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
+import type { APIMakeRequestProps, APIResponseType } from "@tbe/types";
+import { sendRequest } from "@tbe/utils";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 
 const useApi = (
   queryKey: string,
   initialParams?: APIMakeRequestProps,
-  options = { enabled: !!initialParams }
+  options = { enabled: !!initialParams },
 ) => {
   const queryClient = useQueryClient();
   const [data, setData] = useState<APIResponseType | null>(null);
@@ -32,10 +32,10 @@ const useApi = (
   const makeRequest = (overrideParams?: APIMakeRequestProps) => {
     const params = overrideParams || initialParams;
     if (!params) {
-      throw new Error('Params are required to make a request.');
+      throw new Error("Params are required to make a request.");
     }
     return queryClient.fetchQuery([queryKey, params], () =>
-      fetchFunction(params)
+      fetchFunction(params),
     );
   };
 

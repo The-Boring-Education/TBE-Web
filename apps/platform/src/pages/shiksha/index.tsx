@@ -1,13 +1,20 @@
-import {CardContainerA, LinkButton, ModernLandingHero, SEO } from '@tbe/components';
-import {routes, TBSH_FEATURES } from '@tbe/constants';
+import {
+  CardContainerA,
+  LinkButton,
+  ModernLandingHero,
+  SEO,
+} from '@tbe/components';
+import { routes, TBSH_FEATURES } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
 import { Fragment } from 'react';
-import { FaCertificate,FaClock, FaPlay, FaUsers } from 'react-icons/fa';
+import { FaCertificate, FaClock, FaPlay, FaUsers } from 'react-icons/fa';
 
 const Home = ({ seoMeta }: PageProps) => {
   const handlePreviewClick = () => {
-    document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' });
+    document
+      .getElementById('features-section')
+      ?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const stats = [
@@ -35,7 +42,8 @@ const Home = ({ seoMeta }: PageProps) => {
 
   const previewContent = {
     title: 'Preview Our Courses',
-    description: 'Get a quick overview of our bite-sized tech courses and start learning today',
+    description:
+      'Get a quick overview of our bite-sized tech courses and start learning today',
     buttonText: 'Explore Features',
     onPreviewClick: handlePreviewClick,
   };
@@ -56,7 +64,8 @@ const Home = ({ seoMeta }: PageProps) => {
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Explore Courses',
-              className: 'bg-red hover:bg-gray-100 hover:text-black px-6 py-2 text-base font-semibold w-full sm:w-auto',
+              className:
+                'bg-red hover:bg-gray-100 hover:text-black px-6 py-2 text-base font-semibold w-full sm:w-auto',
             }}
             className='w-full sm:w-fit'
             href={routes.shikshaExplore}

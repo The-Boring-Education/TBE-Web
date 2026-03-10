@@ -4,7 +4,10 @@ import './polyfills';
 // Only import Sentry in production to avoid OpenTelemetry conflicts in development
 let Sentry: any = null;
 
-if (process.env.NODE_ENV === 'production' || process.env.ENABLE_SENTRY === 'true') {
+if (
+  process.env.NODE_ENV === 'production' ||
+  process.env.ENABLE_SENTRY === 'true'
+) {
   Sentry = require('@sentry/nextjs');
 }
 

@@ -1,14 +1,14 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
-import type { UserCourseModel } from '@/lib/interfaces';
+import { DATABASE_MODELS } from "@/lib/constants";
+import type { UserCourseModel } from "@/lib/interfaces";
 
 const UserChapterSchema = new Schema(
   {
     chapterId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.COURSE_CHAPTER,
-      required: [true, 'Chapter id is required'],
+      required: [true, "Chapter id is required"],
     },
     isCompleted: {
       type: Boolean,
@@ -26,7 +26,7 @@ const UserChapterSchema = new Schema(
   {
     timestamps: true,
     _id: false,
-  }
+  },
 );
 
 const UserCourseSchema = new Schema<UserCourseModel>(
@@ -34,13 +34,13 @@ const UserCourseSchema = new Schema<UserCourseModel>(
     userId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
-      required: [true, 'User id is required'],
+      required: [true, "User id is required"],
       index: true,
     },
     courseId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.COURSE,
-      required: [true, 'Course id is required'],
+      required: [true, "Course id is required"],
       index: true,
     },
     chapters: [UserChapterSchema],
@@ -70,13 +70,13 @@ const UserCourseSchema = new Schema<UserCourseModel>(
         return ret;
       },
     },
-  }
+  },
 );
 
-UserCourseSchema.virtual('course', {
+UserCourseSchema.virtual("course", {
   ref: DATABASE_MODELS.COURSE,
-  localField: 'courseId',
-  foreignField: '_id',
+  localField: "courseId",
+  foreignField: "_id",
   justOne: true,
 });
 

@@ -1,7 +1,4 @@
-import {
-  CardContainerB,
-  Text,
-} from "@tbe/components";
+import { CardContainerB, Text } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
 import type { PrimaryCardWithCTAProps } from "@tbe/interface";
@@ -23,7 +20,9 @@ const InterviewPrepDashboardPage = () => {
     url: `${routes.api.base}${routes.api.interviewPrep}`,
   });
 
-  const [purchaseStatuses, setPurchaseStatuses] = useState<Record<string, boolean>>({});
+  const [purchaseStatuses, setPurchaseStatuses] = useState<
+    Record<string, boolean>
+  >({});
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -40,7 +39,7 @@ const InterviewPrepDashboardPage = () => {
           if (sheet.isPremium) {
             try {
               const res = await fetch(
-                `${routes.api.base}${routes.api.checkStatus}?userId=${user.id}&productId=${sheet._id}`
+                `${routes.api.base}${routes.api.checkStatus}?userId=${user.id}&productId=${sheet._id}`,
               );
               const result = await res.json();
               statuses[sheet._id] = result.status && result.data?.purchased;
@@ -86,8 +85,14 @@ const InterviewPrepDashboardPage = () => {
       // Auto-categorize Database related sheets
       const title = sheet.title?.toLowerCase() || "";
       const slug = sheet.slug?.toLowerCase() || "";
-      if (title.includes("database") || title.includes("dbms") || title.includes("sql") ||
-        slug.includes("database") || slug.includes("dbms") || slug.includes("sql")) {
+      if (
+        title.includes("database") ||
+        title.includes("dbms") ||
+        title.includes("sql") ||
+        slug.includes("database") ||
+        slug.includes("dbms") ||
+        slug.includes("sql")
+      ) {
         roadmap = "Database";
       }
 
@@ -105,7 +110,7 @@ const InterviewPrepDashboardPage = () => {
     if (selectedRoadmap === "all") return groupedByRoadmap;
 
     const entry = Object.entries(groupedByRoadmap).find(
-      ([roadmap]) => roadmap.toLowerCase() === selectedRoadmap
+      ([roadmap]) => roadmap.toLowerCase() === selectedRoadmap,
     );
 
     return entry ? { [entry[0]]: entry[1] } : {};
@@ -133,9 +138,10 @@ const InterviewPrepDashboardPage = () => {
           <Link
             href="/dashboard/interview-prep"
             className={`px-2 py-1 rounded-md text-sm font-medium
-              ${selectedRoadmap === "all"
-                ? "bg-primary text-white"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+              ${
+                selectedRoadmap === "all"
+                  ? "bg-primary text-white"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
               }`}
           >
             All Roadmaps
@@ -151,9 +157,10 @@ const InterviewPrepDashboardPage = () => {
                   query: { roadmap: slug },
                 }}
                 className={`px-2 py-1 rounded-md text-sm font-medium
-                  ${selectedRoadmap === slug
-                    ? "bg-primary text-white"
-                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                  ${
+                    selectedRoadmap === slug
+                      ? "bg-primary text-white"
+                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
                   }`}
               >
                 {roadmap}

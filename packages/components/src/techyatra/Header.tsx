@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React from "react";
 
 const Header = () => {
   return (
@@ -10,7 +9,9 @@ const Header = () => {
             <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               TechYatra
             </h1>
-            <p className="text-xs text-gray-500 font-medium">By The Boring Education</p>
+            <p className="text-xs text-gray-500 font-medium">
+              By The Boring Education
+            </p>
           </div>
         </div>
       </div>
