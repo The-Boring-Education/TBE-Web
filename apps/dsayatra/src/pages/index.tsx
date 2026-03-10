@@ -1,142 +1,96 @@
-import { LinkButton } from '@tbe/components';
-import { FAQSection } from '@tbe/components';
-import { SEO } from '@tbe/components';
-import { LINKS, PAGE_REFRESH_TIMEOUT } from '@tbe/constants';
+import {
+    CardContainerA,
+    FAQSection,
+    LandingPageHero,
+    LinkButton,
+    SEO,
+} from '@tbe/components';
+import { DSA_YATRA_FEATURES, generateSectionPath, LINKS, PAGE_REFRESH_TIMEOUT, routes, STATIC_FILE_PATH } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
-import { getPreFetchProps, cn } from '@tbe/utils';
+import { getPreFetchProps } from '@tbe/utils';
 import { Fragment } from 'react';
-import { useRouter } from 'next/router';
-import LandingPageHero from '../components/LandingPageHero';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@ui/card";
-import { Rocket, Code, Brain } from "lucide-react";
-
-// Feature Cards Data
-const FEATURES = [
-  {
-    id: "1",
-    Icon: Rocket,
-    title: "Structured Learning Path",
-    content: "Don't get lost in random problems. Follow a curated path designed for your target role.",
-  },
-  {
-    id: "2",
-    Icon: Code,
-    title: "Company Focused",
-    content: "Prepare specifically for Startups, MNCs, or MAANG with tailored question sets.",
-  },
-  {
-    id: "3",
-    Icon: Brain,
-    title: "Concept Mastery",
-    content: "Master the underlying patterns, not just memorize solutions.",
-  }
-];
 
 const FAQS = [
-  {
-    question: "Is this free?",
-    answer: "DSA Yatra offers both free resources and premium tailored paths."
-  },
-  {
-    question: "Do I need prior experience?",
-    answer: "We have paths for absolute beginners as well as experienced developers."
-  }
+    {
+        question: 'Is DSA Yatra free?',
+        answer:
+            'Yes. You get free access to structured content and practice. We also offer premium paths with tailored roadmaps, company-focused question sets, and deeper tracking—so you can start free and upgrade when you want more focus.',
+    },
+    {
+        question: 'How is this different from solving random LeetCode problems?',
+        answer:
+            'DSA Yatra gives you a structured path instead of a random list. You follow a curated sequence by target (e.g. Startups, MNCs, MAANG), build concept mastery with patterns and revisions, and avoid wasting time on problems that don’t match your goal.',
+    },
+    {
+        question: 'Do I need prior DSA or coding experience?',
+        answer:
+            'No. We have paths for absolute beginners as well as for developers who already know basics and want to level up for interviews. Pick your current level and we’ll suggest the right starting point.',
+    },
+    {
+        question: 'What kind of roles or companies are the paths for?',
+        answer:
+            'Paths are tailored for Startups, MNCs, and MAANG-style interviews. You choose your target and get question sets and a timeline designed for that type of role, so your practice is aligned with real interviews.',
+    },
+    {
+        question: 'How much time do I need to commit?',
+        answer:
+            'It depends on your path and deadline. Each path has a suggested timeline; you can follow it as-is or adjust to your pace. The structure helps you stay consistent instead of burning out on random problems.',
+    },
 ];
 
-const LandingPage = ({ seoMeta }: PageProps) => {
-  const router = useRouter();
-
-  return (
+const LandingPage = ({ seoMeta }: PageProps) => (
     <Fragment>
-      <SEO seoMeta={seoMeta} />
+        <SEO seoMeta={seoMeta} />
 
-      {/* Hero Section */}
-      <LandingPageHero
-        backgroundImageUrl="/landing.svg"
-        imageClassName="w-full max-w-2xl h-64 md:h-96"
-        heroText="Master DSA with a Structured Plan"
-        sectionHeaderProps={{
-          heading: "Your Journey to",
-          focusText: "Dream Job",
-          subtext: "Stop grinding random LeetCode questions. Follow a structured path tailored to your goals and timeline."
-        }}
-        primaryButton={
-          <LinkButton
-            buttonProps={{
-              variant: 'PRIMARY',
-              text: 'Start Your Journey',
-              className: 'w-full',
+        <LandingPageHero
+            backgroundImageUrl={`${STATIC_FILE_PATH.svg}/dsa-yatra.svg`}
+            heroText='Stop grinding random LeetCode questions. Follow a structured path tailored to your goals and timeline.'
+            primaryButton={
+                <LinkButton
+                    buttonProps={{
+                        variant: 'PRIMARY',
+                        text: 'Get Started',
+                        className: 'w-full',
+                    }}
+                    className='w-full sm:w-fit'
+                    href={routes.dsayatra.dashboard}
+                />
+            }
+            secondaryButton={
+                <LinkButton
+                    buttonProps={{
+                        variant: 'OUTLINE',
+                        text: 'Book Free Session',
+                        className: 'w-full',
+                    }}
+                    className='w-full sm:w-fit'
+                    href={LINKS.bookTechConsultation}
+                    target='_blank'
+                />
+            }
+            sectionHeaderProps={{
+                heading: 'Stop Grinding Random',
+                focusText: 'LeetCode Questions',
             }}
-            className='w-full sm:w-fit'
-            href="/dashboard"
-          />
-        }
-        secondaryButton={
-          <LinkButton
-            buttonProps={{
-              variant: 'OUTLINE',
-              text: 'Explore Paths',
-              className: 'w-full',
-            }}
-            className='w-full sm:w-fit'
-            href="#features"
-          />
-        }
-      />
+        />
 
-      {/* Features Section */}
-      <div id="features" className="py-10 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center justify-center text-center mb-12 space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
-              Why Choose <span className="text-primary">DSA Yatra?</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl">
-              We make data structures and algorithms less boring and more effective.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {FEATURES.map((feature) => (
-              <Card key={feature.id} className={cn(
-                "h-full transition-all duration-300 hover:shadow-xl border-primary/20 hover:border-primary",
-                "flex flex-col items-center p-4 text-center bg-white group cursor-default relative overflow-hidden"
-              )}>
-                {/* Blob Background Effect */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                <div className="mb-6 w-20 h-20 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors duration-300">
-                  <feature.Icon
-                    className="w-10 h-10 text-primary transition-transform duration-300 group-hover:scale-110"
-                    strokeWidth={1.5}
-                  />
-                </div>
-
-                <CardTitle className="text-xl font-bold text-gray-900 mb-3">{feature.title}</CardTitle>
-
-                <CardDescription className="text-gray-500 leading-relaxed">
-                  {feature.content}
-                </CardDescription>
-              </Card>
-            ))}
-          </div>
+        <div id="features">
+            <CardContainerA
+                borderColour={4}
+                cards={DSA_YATRA_FEATURES}
+                focusText="DSA Yatra?"
+                heading="Why Choose"
+                subtext="We make data structures and algorithms less boring and more effective."
+            />
         </div>
-      </div>
 
-
-      {/* Simple FAQ */}
-      {/* <FAQSection
-        faqs={FAQS}
-        heading="Common Questions"
-      /> */}
-
+        <FAQSection faqs={FAQS} heading="Common Questions" />
     </Fragment>
-  );
-};
+);
 
 export const getStaticProps = async () => ({
-  ...(await getPreFetchProps({ slug: "/", appId: "dsayatra" })),
-  revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
+    ...(await getPreFetchProps({ slug: '/', appId: 'dsayatra' })),
+    revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
 });
 
 export default LandingPage;

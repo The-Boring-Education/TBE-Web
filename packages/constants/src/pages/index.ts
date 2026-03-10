@@ -617,6 +617,32 @@ const MY_PREV_EXPERIENCE = [
   },
 ];
 
+const DSA_YATRA_FEATURES: PrimaryCardProps[] = [
+  {
+    id: v4(),
+    title: 'Structured Learning Path',
+    content:
+      "Don't get lost in random problems. Follow a curated path designed for your target role.",
+    image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
+    imageAltText: 'Structured learning',
+  },
+  {
+    id: v4(),
+    title: 'Company Focused',
+    content:
+      'Prepare specifically for Startups, MNCs, or MAANG with tailored question sets.',
+    image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
+    imageAltText: 'Company focused prep',
+  },
+  {
+    id: v4(),
+    title: 'Concept Mastery',
+    content: 'Master the underlying patterns, not just memorize solutions.',
+    image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
+    imageAltText: 'Concept mastery',
+  },
+];
+
 const YOUFOCUS_FEATURES: PrimaryCardProps[] = [
   {
     id: v4(),
@@ -1005,6 +1031,7 @@ export {
   OS_GETTING_STARTED_STEPS,
   PORTFOLIO_FEATURES,
   PRODUCTS,
+  DSA_YATRA_FEATURES,
   TBIP_FEATURES,
   TBP_FEATURES,
   TBP_PROJECTS,
