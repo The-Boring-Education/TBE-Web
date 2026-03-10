@@ -1,286 +1,222 @@
+import {
+  APTITUDE_SUB_CATEGORY_FORMAT_MAP,
+  APTITUDE_TOPIC_SLUGS,
+  APTITUDE_TOPICS,
+} from "@/lib/constants";
 import type {
-    AddAptitudeQuestionPayload,
-    AddAptitudeTopicPayload,
-    AptitudeCategoryType,
-    AptitudeSubCategoryType,
-    AptitudeUploadPayload,
-    DatabaseQueryResponseType,
-    DSADifficultyType,
-} from "@/lib/interfaces"
+  AddAptitudeQuestionPayload,
+  AptitudeCategoryType,
+  AptitudeSubCategoryType,
+  AptitudeUploadPayload,
+  DatabaseQueryResponseType,
+  DSADifficultyType,
+} from "@/lib/interfaces";
 
-import { AptitudeQuestion, AptitudeTopic } from "../models"
-
-// ─── Topic Queries ───────────────────────────────────────────────────────────
-
-const addAptitudeTopicToDB = async (
-    payload: AddAptitudeTopicPayload
-): Promise<DatabaseQueryResponseType> => {
-    try {
-        const topic = new AptitudeTopic(payload)
-        await topic.save()
-        return { data: topic }
-    } catch (error) {
-        return { error: "Failed to create aptitude topic", details: error }
-    }
-}
-
-const getAllAptitudeTopicsFromDB = async (filters: {
-    category?: AptitudeCategoryType
-    subCategory?: AptitudeSubCategoryType
-    isActive?: boolean
-} = {}): Promise<DatabaseQueryResponseType> => {
-    try {
-        const matchStage: any = {}
-
-        if (filters.category) matchStage.category = filters.category
-        if (filters.subCategory) matchStage.subCategory = filters.subCategory
-        if (filters.isActive !== undefined) matchStage.isActive = filters.isActive
-
-        const topics = await AptitudeTopic.find(matchStage)
-            .sort({ category: 1, subCategory: 1, order: 1 })
-            .lean()
-
-        return { data: topics }
-    } catch (error) {
-        return { error: "Failed to fetch aptitude topics", details: error }
-    }
-}
-
-const getAptitudeTopicBySlugFromDB = async (
-    slug: string
-): Promise<DatabaseQueryResponseType> => {
-    try {
-        const topic = await AptitudeTopic.findOne({ slug }).lean()
-        if (!topic) return { error: "Topic not found" }
-        return { data: topic }
-    } catch (error) {
-        return { error: "Failed to fetch topic", details: error }
-    }
-}
-
-const getAptitudeTopicByIdFromDB = async (
-    topicId: string
-): Promise<DatabaseQueryResponseType> => {
-    try {
-        const topic = await AptitudeTopic.findById(topicId).lean()
-        if (!topic) return { error: "Topic not found" }
-        return { data: topic }
-    } catch (error) {
-        return { error: "Failed to fetch topic", details: error }
-    }
-}
-
-const updateAptitudeTopicInDB = async (
-    topicId: string,
-    updates: Partial<AddAptitudeTopicPayload & { isActive: boolean }>
-): Promise<DatabaseQueryResponseType> => {
-    try {
-        const topic = await AptitudeTopic.findByIdAndUpdate(
-            topicId,
-            updates,
-            { new: true }
-        )
-        if (!topic) return { error: "Topic not found" }
-        return { data: topic }
-    } catch (error) {
-        return { error: "Failed to update topic", details: error }
-    }
-}
+import { AptitudeQuestion } from "../models";
 
 // ─── Question Queries ────────────────────────────────────────────────────────
 
 const addAptitudeQuestionToDB = async (
-    payload: AddAptitudeQuestionPayload
+  payload: AddAptitudeQuestionPayload,
 ): Promise<DatabaseQueryResponseType> => {
-    try {
-        const question = new AptitudeQuestion(payload)
-        await question.save()
-        return { data: question }
-    } catch (error) {
-        return { error: "Failed to create aptitude question", details: error }
+  try {
+    if (!APTITUDE_TOPIC_SLUGS.includes(payload.topic)) {
+      return { error: `Invalid topic slug: ${payload.topic}` };
     }
-}
+    const question = new AptitudeQuestion(payload);
+    await question.save();
+    return { data: question };
+  } catch (error) {
+    return { error: "Failed to create aptitude question", details: error };
+  }
+};
 
 const getAptitudeQuestionsByTopicFromDB = async (
-    topicId: string,
-    filters: {
-        difficulty?: DSADifficultyType
-        page?: number
-        limit?: number
-    } = {}
+  topic: string,
+  filters: {
+    difficulty?: DSADifficultyType;
+    page?: number;
+    limit?: number;
+  } = {},
 ): Promise<DatabaseQueryResponseType> => {
-    try {
-        const { difficulty, page = 1, limit = 50 } = filters
-        const matchStage: any = { topicId, isActive: true }
+  try {
+    const { difficulty, page = 1, limit = 50 } = filters;
+    const matchStage: Record<string, unknown> = { topic, isActive: true };
 
-        if (difficulty) matchStage.difficulty = difficulty
+    if (difficulty) matchStage.difficulty = difficulty;
 
-        const totalCount = await AptitudeQuestion.countDocuments(matchStage)
-        const questions = await AptitudeQuestion.find(matchStage)
-            .sort({ order: 1, createdAt: -1 })
-            .skip((page - 1) * limit)
-            .limit(limit)
-            .lean()
+    const totalCount = await AptitudeQuestion.countDocuments(matchStage);
+    const questions = await AptitudeQuestion.find(matchStage)
+      .sort({ order: 1, createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
 
-        return {
-            data: {
-                questions,
-                pagination: {
-                    total: totalCount,
-                    page,
-                    limit,
-                    totalPages: Math.ceil(totalCount / limit),
-                    hasMore: page * limit < totalCount,
-                },
-            },
-        }
-    } catch (error) {
-        return { error: "Failed to fetch questions", details: error }
-    }
-}
+    return {
+      data: {
+        questions,
+        pagination: {
+          total: totalCount,
+          page,
+          limit,
+          totalPages: Math.ceil(totalCount / limit),
+          hasMore: page * limit < totalCount,
+        },
+      },
+    };
+  } catch (error) {
+    return { error: "Failed to fetch questions", details: error };
+  }
+};
 
 const updateAptitudeQuestionInDB = async (
-    questionId: string,
-    updates: Partial<AddAptitudeQuestionPayload & { isActive: boolean }>
+  questionId: string,
+  updates: Partial<AddAptitudeQuestionPayload & { isActive: boolean }>,
 ): Promise<DatabaseQueryResponseType> => {
-    try {
-        const question = await AptitudeQuestion.findByIdAndUpdate(
-            questionId,
-            updates,
-            { new: true }
-        )
-        if (!question) return { error: "Question not found" }
-        return { data: question }
-    } catch (error) {
-        return { error: "Failed to update question", details: error }
+  try {
+    if (updates.topic && !APTITUDE_TOPIC_SLUGS.includes(updates.topic)) {
+      return { error: `Invalid topic slug: ${updates.topic}` };
     }
-}
+    const question = await AptitudeQuestion.findByIdAndUpdate(
+      questionId,
+      updates,
+      { new: true },
+    );
+    if (!question) return { error: "Question not found" };
+    return { data: question };
+  } catch (error) {
+    return { error: "Failed to update question", details: error };
+  }
+};
 
-// ─── Metadata & Aggregations ─────────────────────────────────────────────────
+// ─── Topics (derived from constants + question counts) ───────────────────────
 
-const getAptitudeMetadataFromDB = async (): Promise<DatabaseQueryResponseType> => {
-    try {
-        const [categories, subCategories, totalTopics, totalQuestions] = await Promise.all([
-            AptitudeTopic.distinct("category"),
-            AptitudeTopic.distinct("subCategory"),
-            AptitudeTopic.countDocuments({ isActive: true }),
-            AptitudeQuestion.countDocuments({ isActive: true }),
-        ])
-
-        const topicsGrouped = await AptitudeTopic.aggregate([
-            { $match: { isActive: true } },
-            {
-                $group: {
-                    _id: { category: "$category", subCategory: "$subCategory" },
-                    topics: { $push: { _id: "$_id", name: "$name", slug: "$slug" } },
-                    count: { $sum: 1 },
-                },
-            },
-            { $sort: { "_id.category": 1, "_id.subCategory": 1 } },
-        ])
-
-        return {
-            data: {
-                categories: categories.sort(),
-                subCategories: subCategories.sort(),
-                totalTopics,
-                totalQuestions,
-                grouped: topicsGrouped.map((g) => ({
-                    category: g._id.category,
-                    subCategory: g._id.subCategory,
-                    topics: g.topics,
-                    topicCount: g.count,
-                })),
-            },
-        }
-    } catch (error) {
-        return { error: "Failed to fetch aptitude metadata", details: error }
+const getAptitudeTopicsWithQuestionCountFromDB = async (
+  filters: {
+    category?: AptitudeCategoryType;
+    subCategory?: AptitudeSubCategoryType;
+  } = {},
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    let topics = APTITUDE_TOPICS;
+    if (filters.category) {
+      topics = topics.filter((t) => t.category === filters.category);
     }
-}
-
-const getAptitudeTopicsWithQuestionCountFromDB = async (filters: {
-    category?: AptitudeCategoryType
-    subCategory?: AptitudeSubCategoryType
-} = {}): Promise<DatabaseQueryResponseType> => {
-    try {
-        const matchStage: any = { isActive: true }
-        if (filters.category) matchStage.category = filters.category
-        if (filters.subCategory) matchStage.subCategory = filters.subCategory
-
-        const topics = await AptitudeTopic.aggregate([
-            { $match: matchStage },
-            {
-                $lookup: {
-                    from: "aptitudequestions",
-                    localField: "_id",
-                    foreignField: "topicId",
-                    pipeline: [
-                        { $match: { isActive: true } },
-                        { $count: "count" },
-                    ],
-                    as: "questionStats",
-                },
-            },
-            {
-                $addFields: {
-                    questionCount: {
-                        $ifNull: [{ $arrayElemAt: ["$questionStats.count", 0] }, 0],
-                    },
-                },
-            },
-            { $project: { questionStats: 0 } },
-            { $sort: { category: 1, subCategory: 1, order: 1 } },
-        ])
-
-        return { data: topics }
-    } catch (error) {
-        return { error: "Failed to fetch topics with counts", details: error }
+    if (filters.subCategory) {
+      topics = topics.filter((t) => t.subCategory === filters.subCategory);
     }
-}
+
+    const slugs = topics.map((t) => t.slug);
+
+    const counts = await AptitudeQuestion.aggregate([
+      { $match: { topic: { $in: slugs }, isActive: true } },
+      { $group: { _id: "$topic", questionCount: { $sum: 1 } } },
+    ]);
+
+    const countMap = new Map(counts.map((c) => [c._id, c.questionCount]));
+
+    const data = topics.map((t) => ({
+      ...t,
+      answerFormatType: APTITUDE_SUB_CATEGORY_FORMAT_MAP[t.subCategory],
+      questionCount: countMap.get(t.slug) || 0,
+    }));
+
+    return { data };
+  } catch (error) {
+    return { error: "Failed to fetch topics with counts", details: error };
+  }
+};
+
+// ─── Metadata ────────────────────────────────────────────────────────────────
+
+const getAptitudeMetadataFromDB =
+  async (): Promise<DatabaseQueryResponseType> => {
+    try {
+      const categories = [
+        ...new Set(APTITUDE_TOPICS.map((t) => t.category)),
+      ].sort();
+      const subCategories = [
+        ...new Set(APTITUDE_TOPICS.map((t) => t.subCategory)),
+      ].sort();
+
+      const totalQuestions = await AptitudeQuestion.countDocuments({
+        isActive: true,
+      });
+
+      const grouped = categories
+        .map((category) => {
+          const categoryTopics = APTITUDE_TOPICS.filter(
+            (t) => t.category === category,
+          );
+          const subCats = [
+            ...new Set(categoryTopics.map((t) => t.subCategory)),
+          ];
+
+          return subCats.map((subCategory) => ({
+            category,
+            subCategory,
+            answerFormatType:
+              APTITUDE_SUB_CATEGORY_FORMAT_MAP[
+                subCategory as AptitudeSubCategoryType
+              ],
+            topics: categoryTopics
+              .filter((t) => t.subCategory === subCategory)
+              .map((t) => ({ name: t.name, slug: t.slug })),
+            topicCount: categoryTopics.filter(
+              (t) => t.subCategory === subCategory,
+            ).length,
+          }));
+        })
+        .flat();
+
+      return {
+        data: {
+          categories,
+          subCategories,
+          totalTopics: APTITUDE_TOPICS.length,
+          totalQuestions,
+          grouped,
+        },
+      };
+    } catch (error) {
+      return { error: "Failed to fetch aptitude metadata", details: error };
+    }
+  };
 
 // ─── Bulk Upload (from Agents) ───────────────────────────────────────────────
 
 const bulkUploadAptitudeDataToDB = async (
-    payload: AptitudeUploadPayload
+  payload: AptitudeUploadPayload,
 ): Promise<DatabaseQueryResponseType> => {
-    try {
-        const results: { topics: number; questions: number } = { topics: 0, questions: 0 }
+  try {
+    const { topic, questions } = payload;
 
-        for (const topicData of payload.topics) {
-            const { questions: questionsPayload, ...topicPayload } = topicData
-
-            let topic = await AptitudeTopic.findOne({ slug: topicPayload.slug })
-            if (!topic) {
-                topic = await AptitudeTopic.create(topicPayload)
-                results.topics++
-            }
-
-            if (questionsPayload?.length) {
-                const questionsToInsert = questionsPayload.map((q) => ({
-                    ...q,
-                    topicId: topic!._id,
-                }))
-                await AptitudeQuestion.insertMany(questionsToInsert)
-                results.questions += questionsToInsert.length
-            }
-        }
-
-        return { data: results }
-    } catch (error) {
-        return { error: "Failed to bulk upload aptitude data", details: error }
+    if (!APTITUDE_TOPIC_SLUGS.includes(topic)) {
+      return { error: `Invalid topic slug: ${topic}` };
     }
-}
+
+    if (!questions?.length) {
+      return { error: "No questions provided" };
+    }
+
+    const questionsToInsert = questions.map((q) => ({
+      ...q,
+      topic,
+    }));
+
+    const inserted = await AptitudeQuestion.insertMany(questionsToInsert);
+
+    return { data: { topic, questionsInserted: inserted.length } };
+  } catch (error) {
+    return { error: "Failed to bulk upload aptitude data", details: error };
+  }
+};
 
 export {
-    addAptitudeQuestionToDB,
-    addAptitudeTopicToDB,
-    bulkUploadAptitudeDataToDB,
-    getAllAptitudeTopicsFromDB,
-    getAptitudeMetadataFromDB,
-    getAptitudeQuestionsByTopicFromDB,
-    getAptitudeTopicByIdFromDB,
-    getAptitudeTopicBySlugFromDB,
-    getAptitudeTopicsWithQuestionCountFromDB,
-    updateAptitudeQuestionInDB,
-    updateAptitudeTopicInDB,
-}
+  addAptitudeQuestionToDB,
+  bulkUploadAptitudeDataToDB,
+  getAptitudeMetadataFromDB,
+  getAptitudeQuestionsByTopicFromDB,
+  getAptitudeTopicsWithQuestionCountFromDB,
+  updateAptitudeQuestionInDB,
+};

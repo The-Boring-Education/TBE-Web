@@ -12,7 +12,7 @@ const Home = ({ seoMeta }: PageProps) => {
 
   const projects = useAPIResponseMapper(
     response?.data,
-    mapProjectResponseToCard
+    mapProjectResponseToCard,
   );
 
   if (loading) {

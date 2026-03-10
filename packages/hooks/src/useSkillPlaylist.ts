@@ -1,10 +1,10 @@
-import { routes } from '@tbe/constants';
-import { useApi } from '@tbe/hooks';
-import type { PlaylistSkillCardProps } from '@tbe/interface';
-import { useEffect, useState } from 'react';
+import { routes } from "@tbe/constants";
+import { useApi } from "@tbe/hooks";
+import type { PlaylistSkillCardProps } from "@tbe/interface";
+import { useEffect, useState } from "react";
 
 const useSkillPlaylist = (q: string) => {
-  const { makeRequest, loading } = useApi('fetchPlaylists');
+  const { makeRequest, loading } = useApi("fetchPlaylists");
   const [playlists, setPlaylists] = useState<PlaylistSkillCardProps[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -14,18 +14,18 @@ const useSkillPlaylist = (q: string) => {
     const fetchPlaylists = async () => {
       try {
         const response = await makeRequest({
-          method: 'GET',
+          method: "GET",
           url: `${routes.api.youfocusExplore}?q=${encodeURIComponent(q)}`,
         });
 
         if (!response.data || response.data.length === 0) {
-          setErrorMessage('No playlists found for this skill.');
+          setErrorMessage("No playlists found for this skill.");
           setPlaylists([]);
         } else {
           setPlaylists(response.data);
         }
       } catch (error) {
-        setErrorMessage('Failed to fetch playlists. Please try again.');
+        setErrorMessage("Failed to fetch playlists. Please try again.");
         setPlaylists([]);
       }
     };

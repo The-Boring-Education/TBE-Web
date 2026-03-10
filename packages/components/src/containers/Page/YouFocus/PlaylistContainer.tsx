@@ -3,14 +3,14 @@ import {
   FlexContainer,
   PlaylistCard,
   PlaylistVideoCard,
-} from '@tbe/components';
-import { useUser } from '@tbe/hooks';
-import type { PlaylistCantainerCardProps } from '@tbe/interface';
-import { signIn } from 'next-auth/react';
-import React, { useState } from 'react';
+} from "@tbe/components";
+import { useUser } from "@tbe/hooks";
+import type { PlaylistCantainerCardProps } from "@tbe/interface";
+import { signIn } from "next-auth/react";
+import React, { useState } from "react";
 
-import PlaylistRecommend from '../../Cards/Items/PlaylistRecommend';
-import PlaylistVideoTimeCard from '../../Cards/Items/PlaylistVideoTimeCard';
+import PlaylistRecommend from "../../Cards/Items/PlaylistRecommend";
+import PlaylistVideoTimeCard from "../../Cards/Items/PlaylistVideoTimeCard";
 
 const PlaylistContainer = ({
   id,
@@ -34,21 +34,21 @@ const PlaylistContainer = ({
   const handleStartLearning = () => {
     if (loading) return;
     if (!isAuth) {
-      signIn('google');
+      signIn("google");
       return;
     }
     setIsStartedLearningFromPlaylist(true);
   };
 
   return (
-    <div className='py-2'>
+    <div className="py-2">
       <FlexContainer
-        className='border w-full md:border-grey gap-4 rounded-md md:p-2 p-1 items-start'
+        className="border w-full md:border-grey gap-4 rounded-md md:p-2 p-1 items-start"
         itemCenter={false}
       >
-        <FlexContainer className='flex-1 max-w-full gap-2 md:sticky md:top-2 z-10'>
+        <FlexContainer className="flex-1 max-w-full gap-2 md:sticky md:top-2 z-10">
           {isStartedLearningFromPlaylist && userId && (
-            <div className='w-full flex justify-center'>
+            <div className="w-full flex justify-center">
               <PlaylistVideoTimeCard
                 playlistId={id}
                 userId={userId}
@@ -67,14 +67,14 @@ const PlaylistContainer = ({
 
           {!isStartedLearningFromPlaylist && (
             <Button
-              className='w-full mx-auto'
-              text='Start Learning'
-              variant='PRIMARY'
+              className="w-full mx-auto"
+              text="Start Learning"
+              variant="PRIMARY"
               onClick={handleStartLearning}
             />
           )}
         </FlexContainer>
-        <FlexContainer className='flex-1 max-w-full gap-2' direction='col'>
+        <FlexContainer className="flex-1 max-w-full gap-2" direction="col">
           {videos?.map(({ videoId, title, thumbnail }) => {
             const commonProps = {
               key: videoId,
@@ -103,7 +103,7 @@ const PlaylistContainer = ({
       </FlexContainer>
 
       {userId && (
-        <div className='w-full flex justify-center'>
+        <div className="w-full flex justify-center">
           <PlaylistRecommend
             playlistId={id}
             recommend={isRecommended}

@@ -1,7 +1,7 @@
-import {cva, type VariantProps} from "class-variance-authority";
-import {clsx} from "clsx";
+import { cva, type VariantProps } from "class-variance-authority";
+import { clsx } from "clsx";
 import * as React from "react";
-import {twMerge} from "tailwind-merge";
+import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: (string | undefined | null | boolean)[]) {
   return twMerge(clsx(inputs));
@@ -18,31 +18,32 @@ const badgeVariants = cva(
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground"
-      }
+        outline: "text-foreground",
+      },
     },
     defaultVariants: {
-      variant: "default"
-    }
-  }
+      variant: "default",
+    },
+  },
 );
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
 const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
-  ({className, variant, ...props}, ref) => {
+  ({ className, variant, ...props }, ref) => {
     return (
-      <div 
+      <div
         ref={ref}
-        className={cn(badgeVariants({variant}), className)} 
-        {...props} 
+        className={cn(badgeVariants({ variant }), className)}
+        {...props}
       />
     );
-  }
+  },
 );
 
 Badge.displayName = "Badge";
 
-export {Badge, badgeVariants};
+export { Badge, badgeVariants };

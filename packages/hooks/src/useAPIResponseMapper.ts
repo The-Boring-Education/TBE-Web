@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const useAPIResponseMapper = (
   data: any,
   mappingFunction: any,
-  addtionalParams?: any
+  addtionalParams?: any,
 ) => {
   const [mappedData, setMappedData] = useState([]);
 

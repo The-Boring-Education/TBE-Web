@@ -47,7 +47,7 @@ const envChecks: EnvVarCheck[] = [
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<EnvHealthResponse>
+  res: NextApiResponse<EnvHealthResponse>,
 ) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', ['GET']);

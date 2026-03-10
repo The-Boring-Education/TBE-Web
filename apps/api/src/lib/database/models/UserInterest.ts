@@ -1,26 +1,26 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, INTEREST_EVENT_TYPES } from '@/lib/constants';
-import type { UserInterestModel } from '@/lib/interfaces';
+import { DATABASE_MODELS, INTEREST_EVENT_TYPES } from "@/lib/constants";
+import type { UserInterestModel } from "@/lib/interfaces";
 
 const UserInterestSchema = new Schema<UserInterestModel>(
   {
     userId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
-      required: [true, 'User ID is required'],
+      required: [true, "User ID is required"],
       index: true,
     },
     eventType: {
       type: String,
       enum: INTEREST_EVENT_TYPES,
-      required: [true, 'Event type is required'],
+      required: [true, "Event type is required"],
       index: true,
     },
     eventDescription: {
       type: String,
       trim: true,
-      maxlength: [500, 'Event description cannot exceed 500 characters'],
+      maxlength: [500, "Event description cannot exceed 500 characters"],
     },
     metadata: {
       type: Schema.Types.Mixed,
@@ -33,8 +33,8 @@ const UserInterestSchema = new Schema<UserInterestModel>(
     },
     source: {
       type: String,
-      enum: ['WEBAPP', 'PREPYATRA', 'ADMIN', 'API'],
-      required: [true, 'Source is required'],
+      enum: ["WEBAPP", "PREPYATRA", "ADMIN", "API"],
+      required: [true, "Source is required"],
       index: true,
     },
     ipAddress: {
@@ -63,7 +63,7 @@ const UserInterestSchema = new Schema<UserInterestModel>(
         return ret;
       },
     },
-  }
+  },
 );
 
 // Compound indexes for efficient queries
@@ -77,15 +77,12 @@ UserInterestSchema.index(
   { userId: 1, eventType: 1 },
   {
     unique: true,
-    partialFilterExpression: { isActive: true }
-  }
+    partialFilterExpression: { isActive: true },
+  },
 );
 
 const UserInterest: Model<UserInterestModel> =
   models?.UserInterest ||
-  model<UserInterestModel>(
-    DATABASE_MODELS.USER_INTEREST,
-    UserInterestSchema
-  );
+  model<UserInterestModel>(DATABASE_MODELS.USER_INTEREST, UserInterestSchema);
 
 export default UserInterest;

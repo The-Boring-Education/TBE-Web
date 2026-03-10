@@ -33,7 +33,7 @@ const Home = ({ seoMeta }: PageProps) => {
             try {
               const response = await fetch(
                 `${routes.api.base}${routes.api.checkStatus}?userId=${user.id}&productId=${sheet._id}`,
-                { method: 'GET' }
+                { method: 'GET' },
               );
               const result = await response.json();
               statuses[sheet._id] = result.status && result.data?.purchased;
@@ -76,23 +76,23 @@ const Home = ({ seoMeta }: PageProps) => {
   // Group by roadmap/domain for structured sections
   const groupedByRoadmap = useMemo(() => {
     const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
-    
+
     (response?.data || []).forEach((sheet: any) => {
       // Filter out DSA sheets - they have their own section
       const roadmap = sheet?.roadmap || '';
       if (roadmap.toLowerCase() === 'dsa') return;
-      
+
       const normalizedRoadmap = roadmap || 'Tech';
       if (!groups[normalizedRoadmap]) {
         groups[normalizedRoadmap] = [];
       }
-      
+
       const card = (sheets || []).find((c) => c.id === sheet._id);
       if (card) {
         groups[normalizedRoadmap].push(card);
       }
     });
-    
+
     return groups;
   }, [response?.data, sheets]);
 
@@ -126,8 +126,12 @@ const Home = ({ seoMeta }: PageProps) => {
       <Section className='bg-lightBG py-5'>
         <div className='max-w-6xl mx-auto px-4 text-center'>
           <div className='text-3xl font-bold mb-4'>
-            <Text className='text-gray-900 inline' level='span'>Explore </Text>
-            <Text className='text-primary inline' level='span'>Interview Prep Sheets</Text>
+            <Text className='text-gray-900 inline' level='span'>
+              Explore{' '}
+            </Text>
+            <Text className='text-primary inline' level='span'>
+              Interview Prep Sheets
+            </Text>
           </div>
           <Text className='text-lg text-gray-600' level='p'>
             Choose from our carefully curated collection of interview questions,
@@ -140,15 +144,15 @@ const Home = ({ seoMeta }: PageProps) => {
       <Section className='py-8'>
         {Object.entries(groupedByRoadmap).length > 0 ? (
           <div className='space-y-12'>
-          <div className='max-w-7xl mx-auto px-4 flex justify-center mb-8'>
-            <Image
-              src='/svg/undraw_interview_yz52.svg'
-              alt='Interview Preparation'
-              width={400}
-              height={400}
-              priority
-            />
-          </div>
+            <div className='max-w-7xl mx-auto px-4 flex justify-center mb-8'>
+              <Image
+                src='/svg/undraw_interview_yz52.svg'
+                alt='Interview Preparation'
+                width={400}
+                height={400}
+                priority
+              />
+            </div>
 
             {Object.entries(groupedByRoadmap).map(([roadmap, cards]) => (
               <div key={roadmap} className='max-w-7xl mx-auto px-4'>
@@ -159,28 +163,28 @@ const Home = ({ seoMeta }: PageProps) => {
                       roadmap === 'Frontend'
                         ? 'bg-blue-100 text-blue-800'
                         : roadmap === 'Backend'
-                        ? 'bg-green-100 text-green-800'
-                        : roadmap === 'Fullstack'
-                        ? 'bg-purple-100 text-purple-800'
-                        : roadmap === 'DSA'
-                        ? 'bg-orange-100 text-orange-800'
-                        : roadmap === 'Tech'
-                        ? 'bg-indigo-100 text-indigo-800'
-                        : 'bg-gray-100 text-gray-800'
+                          ? 'bg-green-100 text-green-800'
+                          : roadmap === 'Fullstack'
+                            ? 'bg-purple-100 text-purple-800'
+                            : roadmap === 'DSA'
+                              ? 'bg-orange-100 text-orange-800'
+                              : roadmap === 'Tech'
+                                ? 'bg-indigo-100 text-indigo-800'
+                                : 'bg-gray-100 text-gray-800'
                     }`}
                   >
                     <span className='text-2xl'>
                       {roadmap === 'Frontend'
                         ? '🎨'
                         : roadmap === 'Backend'
-                        ? '⚙️'
-                        : roadmap === 'Fullstack'
-                        ? '🚀'
-                        : roadmap === 'DSA'
-                        ? '📊'
-                        : roadmap === 'Tech'
-                        ? '💻'
-                        : '💻'}
+                          ? '⚙️'
+                          : roadmap === 'Fullstack'
+                            ? '🚀'
+                            : roadmap === 'DSA'
+                              ? '📊'
+                              : roadmap === 'Tech'
+                                ? '💻'
+                                : '💻'}
                     </span>
                     <Text level='h3' className='text-lg font-semibold'>
                       {roadmap} Domain

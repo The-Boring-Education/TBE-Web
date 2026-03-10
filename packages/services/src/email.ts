@@ -1,7 +1,7 @@
-import { emailLogger } from '@tbe/constants';
-import type { ExternalEmailRequest } from '@tbe/interface';
+import { emailLogger } from "@tbe/constants";
+import type { ExternalEmailRequest } from "@tbe/interface";
 
-import { emailTriggerService } from './triggers';
+import { emailTriggerService } from "./triggers";
 
 /**
  * Send a welcome email to a new user
@@ -12,7 +12,7 @@ export const sendWelcomeEmail = async (data: {
   id: string;
 }) => {
   const request: ExternalEmailRequest = {
-    emailType: 'WELCOME',
+    emailType: "WELCOME",
     userData: {
       email: data.email,
       name: data.name,
@@ -34,7 +34,7 @@ export const sendCourseEnrollmentEmail = async (data: {
   courseDescription?: string;
 }) => {
   const request: ExternalEmailRequest = {
-    emailType: 'COURSE_ENROLLMENT',
+    emailType: "COURSE_ENROLLMENT",
     userData: {
       email: data.email,
       name: data.name,
@@ -60,7 +60,7 @@ export const sendProjectEnrollmentEmail = async (data: {
   projectDescription?: string;
 }) => {
   const request: ExternalEmailRequest = {
-    emailType: 'PROJECT_ENROLLMENT',
+    emailType: "PROJECT_ENROLLMENT",
     userData: {
       email: data.email,
       name: data.name,
@@ -86,7 +86,7 @@ export const sendInterviewPrepEnrollmentEmail = async (data: {
   sheetDescription?: string;
 }) => {
   const request: ExternalEmailRequest = {
-    emailType: 'INTERVIEW_PREP_ENROLLMENT',
+    emailType: "INTERVIEW_PREP_ENROLLMENT",
     userData: {
       email: data.email,
       name: data.name,
@@ -114,7 +114,7 @@ export const sendCourseCompletionEmail = async (data: {
   certificateUrl?: string;
 }) => {
   const request: ExternalEmailRequest = {
-    emailType: 'COURSE_COMPLETION',
+    emailType: "COURSE_COMPLETION",
     userData: {
       email: data.email,
       name: data.name,

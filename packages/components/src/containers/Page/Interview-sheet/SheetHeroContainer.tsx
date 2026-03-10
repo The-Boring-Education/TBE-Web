@@ -5,11 +5,11 @@ import {
   LoginRedirectButton,
   PageHeroMetaContainer,
   Text,
-} from '@tbe/components';
-import { useGamifiedAction } from '@tbe/components';
-import { routes } from '@tbe/constants';
-import { useAnalytics, useApi, useUser } from '@tbe/hooks';
-import type { SheetHeroContainerProps } from '@tbe/interface';
+} from "@tbe/components";
+import { useGamifiedAction } from "@tbe/components";
+import { routes } from "@tbe/constants";
+import { useAnalytics, useApi, useUser } from "@tbe/hooks";
+import type { SheetHeroContainerProps } from "@tbe/interface";
 
 const SheetHeroContainer = ({
   id,
@@ -25,11 +25,11 @@ const SheetHeroContainer = ({
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
 
-  const { makeRequest, loading } = useApi('interview-prep/enrollSheet');
+  const { makeRequest, loading } = useApi("interview-prep/enrollSheet");
 
   const enrollSheet = () => {
     makeRequest({
-      method: 'POST',
+      method: "POST",
       url: routes.api.enrollSheet,
       body: {
         userId: user?.id,
@@ -38,9 +38,9 @@ const SheetHeroContainer = ({
     })
       .then(async () => {
         trackEvent({
-          action: 'INTERVIEW_SHEET_ENROLL',
-          category: 'InterviewSheet',
-          label: 'Interview Sheet Enrolled',
+          action: "INTERVIEW_SHEET_ENROLL",
+          category: "InterviewSheet",
+          label: "Interview Sheet Enrolled",
           value: {
             userId: user?.id,
             sheetId: id,
@@ -48,13 +48,13 @@ const SheetHeroContainer = ({
         });
 
         await gamifiedAction.triggerGamifiedAction({
-          gamificationAction: 'ENROLL_SHEET',
+          gamificationAction: "ENROLL_SHEET",
           analytics: {
-            action: 'INTERVIEW_SHEET_ENROLL',
-            category: 'InterviewSheet',
-            label: 'Interview Sheet Enrolled',
+            action: "INTERVIEW_SHEET_ENROLL",
+            category: "InterviewSheet",
+            label: "Interview Sheet Enrolled",
           },
-          customMessage: 'Interview sheet enrolled! Time to practice!',
+          customMessage: "Interview sheet enrolled! Time to practice!",
           metadata: {
             sheetId: id,
             sheetName: name,
@@ -77,15 +77,15 @@ const SheetHeroContainer = ({
   if (!isAuth) {
     headerActionButton = (
       <FlexContainer>
-        <LoginRedirectButton text='Login to Get Started' />
+        <LoginRedirectButton text="Login to Get Started" />
       </FlexContainer>
     );
   } else if (isAuth && !isEnrolled && !isPremium) {
     headerActionButton = (
       <FlexContainer>
         <Button
-          text='Enroll in Sheet'
-          variant='PRIMARY'
+          text="Enroll in Sheet"
+          variant="PRIMARY"
           onClick={enrollSheet}
         />
       </FlexContainer>
@@ -94,8 +94,8 @@ const SheetHeroContainer = ({
     headerActionButton = (
       <FlexContainer>
         <Button
-          text='Enroll in Sheet'
-          variant='PRIMARY'
+          text="Enroll in Sheet"
+          variant="PRIMARY"
           onClick={enrollSheet}
         />
       </FlexContainer>
@@ -104,20 +104,22 @@ const SheetHeroContainer = ({
 
   if (loading) {
     headerActionButton = (
-      <Button isLoading text='Enrolling...' variant='PRIMARY' />
+      <Button isLoading text="Enrolling..." variant="PRIMARY" />
     );
   }
 
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
 
   return (
     <FlexContainer>
-      <FlexContainer className={`border md:w-4/5 gap-4 w-full p-2 justify-between rounded ${isDark ? 'border-gray-700 bg-[#0A0A0A]' : 'border-gray-200 bg-white'}`}>
+      <FlexContainer
+        className={`border md:w-4/5 gap-4 w-full p-2 justify-between rounded ${isDark ? "border-gray-700 bg-[#0A0A0A]" : "border-gray-200 bg-white"}`}
+      >
         {/* Back Button */}
         <LinkButton
           buttonProps={{
-            variant: 'GHOST',
-            text: 'Back',
+            variant: "GHOST",
+            text: "Back",
           }}
           href={backHref ?? routes.interviewPrep}
           theme={theme}
@@ -125,24 +127,34 @@ const SheetHeroContainer = ({
 
         {/* Heading and Subheading */}
         <FlexContainer
-          className='items-start gap-1'
-          direction='col'
+          className="items-start gap-1"
+          direction="col"
           itemCenter={false}
         >
-          <Text className={`heading-4 ${isDark ? 'text-white' : 'text-gray-900'}`} level='h4'>
-            Hello {user?.name ?? 'there'}!
+          <Text
+            className={`heading-4 ${isDark ? "text-white" : "text-gray-900"}`}
+            level="h4"
+          >
+            Hello {user?.name ?? "there"}!
           </Text>
-          <Text className={`paragraph ${isDark ? 'text-gray-400' : 'text-greyDark'}`} level='p'>
+          <Text
+            className={`paragraph ${isDark ? "text-gray-400" : "text-greyDark"}`}
+            level="p"
+          >
             Ready to prepare for interviews?
           </Text>
         </FlexContainer>
 
         <FlexContainer
-          className='justify-start items-start gap-3'
+          className="justify-start items-start gap-3"
           itemCenter={false}
           justifyCenter={false}
         >
-          <PageHeroMetaContainer subtitle="YOU'RE PRACTICING" title={name} theme={theme} />
+          <PageHeroMetaContainer
+            subtitle="YOU'RE PRACTICING"
+            title={name}
+            theme={theme}
+          />
         </FlexContainer>
 
         {headerActionButton}

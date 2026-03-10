@@ -1,5 +1,5 @@
-import { Image, Link } from '@tbe/components';
-import type { ImageLinkProps } from '@tbe/interface';
+import { Image, Link } from "@tbe/components";
+import type { ImageLinkProps } from "@tbe/interface";
 
 const ImageLink = ({ linkProps, imageProps }: ImageLinkProps) => (
   <Link {...linkProps}>

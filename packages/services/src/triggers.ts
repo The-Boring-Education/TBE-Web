@@ -1,5 +1,5 @@
-import { envConfig } from '@tbe/constants';
-import { emailLogger } from '@tbe/constants';
+import { envConfig } from "@tbe/constants";
+import { emailLogger } from "@tbe/constants";
 import type {
   CourseCompletionEmailData,
   CourseEnrollmentEmailData,
@@ -9,24 +9,24 @@ import type {
   ExternalEmailResponse,
   InterviewPrepEnrollmentEmailData,
   ProjectEnrollmentEmailData,
-} from '@tbe/interface';
+} from "@tbe/interface";
 
-import { emailClient } from './client';
+import { emailClient } from "./client";
 import {
   courseCompletionTemplate,
   courseEnrollmentTemplate,
   interviewPrepEnrollmentTemplate,
   projectEnrollmentTemplate,
   welcomeEmailTemplate,
-} from './templates';
+} from "./templates";
 
 class EmailTriggerService {
   private getDefaultFromEmail(): string {
-    return envConfig.FROM_EMAIL || 'theboringeducation@gmail.com';
+    return envConfig.FROM_EMAIL || "theboringeducation@gmail.com";
   }
 
   private getDefaultFromName(): string {
-    return 'TBE';
+    return "TBE";
   }
 
   private async sendEmailWithTemplate(
@@ -38,7 +38,7 @@ class EmailTriggerService {
       | InterviewPrepEnrollmentEmailData
       | CourseCompletionEmailData,
     templateFunction: (data: any) => string,
-    subject: string
+    subject: string,
   ) {
     const requestId = emailLogger.generateRequestId();
 
@@ -60,7 +60,7 @@ class EmailTriggerService {
         success: result.success,
         message: result.success
           ? `${emailType} email sent successfully`
-          : 'Failed to send email',
+          : "Failed to send email",
         requestId: result.requestId,
         error: result.error,
       };
@@ -69,13 +69,13 @@ class EmailTriggerService {
         requestId,
         data.userEmail,
         error,
-        'TEMPLATE_GENERATION'
+        "TEMPLATE_GENERATION",
       );
       return {
         success: false,
-        message: 'Failed to send email',
+        message: "Failed to send email",
         requestId,
-        error: error.message || 'Unknown error',
+        error: error.message || "Unknown error",
       };
     }
   }
@@ -87,58 +87,58 @@ class EmailTriggerService {
       | CourseEnrollmentEmailData
       | ProjectEnrollmentEmailData
       | InterviewPrepEnrollmentEmailData
-      | CourseCompletionEmailData
+      | CourseCompletionEmailData,
   ) {
     switch (trigger) {
-      case 'WELCOME':
+      case "WELCOME":
         return this.sendEmailWithTemplate(
           trigger,
           data as EmailTriggerData,
           welcomeEmailTemplate,
-          'Welcome to The Boring Education! 🎉'
+          "Welcome to The Boring Education! 🎉",
         );
 
-      case 'COURSE_ENROLLMENT':
+      case "COURSE_ENROLLMENT":
         return this.sendEmailWithTemplate(
           trigger,
           data as CourseEnrollmentEmailData,
           courseEnrollmentTemplate,
-          `Welcome to ${(data as CourseEnrollmentEmailData).courseName}! 🚀`
+          `Welcome to ${(data as CourseEnrollmentEmailData).courseName}! 🚀`,
         );
 
-      case 'PROJECT_ENROLLMENT':
+      case "PROJECT_ENROLLMENT":
         return this.sendEmailWithTemplate(
           trigger,
           data as ProjectEnrollmentEmailData,
           projectEnrollmentTemplate,
-          `Welcome to ${(data as ProjectEnrollmentEmailData).projectName}! 🛠️`
+          `Welcome to ${(data as ProjectEnrollmentEmailData).projectName}! 🛠️`,
         );
 
-      case 'INTERVIEW_PREP_ENROLLMENT':
+      case "INTERVIEW_PREP_ENROLLMENT":
         return this.sendEmailWithTemplate(
           trigger,
           data as InterviewPrepEnrollmentEmailData,
           interviewPrepEnrollmentTemplate,
           `Welcome to ${
             (data as InterviewPrepEnrollmentEmailData).sheetName
-          }! 🎯`
+          }! 🎯`,
         );
 
-      case 'COURSE_COMPLETION':
+      case "COURSE_COMPLETION":
         return this.sendEmailWithTemplate(
           trigger,
           data as CourseCompletionEmailData,
           courseCompletionTemplate,
           `Congratulations! You've completed ${
             (data as CourseCompletionEmailData).courseName
-          }! 🏆`
+          }! 🏆`,
         );
 
       default:
         return {
           success: false,
           message: `Unsupported email trigger: ${trigger}`,
-          error: 'Invalid email trigger type',
+          error: "Invalid email trigger type",
           requestId: undefined,
         };
     }
@@ -146,7 +146,7 @@ class EmailTriggerService {
 
   // New method for external API usage
   async sendExternalEmail(
-    request: ExternalEmailRequest
+    request: ExternalEmailRequest,
   ): Promise<ExternalEmailResponse> {
     const { emailType, userData, additionalData } = request;
 
@@ -155,8 +155,8 @@ class EmailTriggerService {
       if (!userData.email || !userData.name || !userData.id) {
         return {
           success: false,
-          message: 'Missing required user data: email, name, or id',
-          error: 'INVALID_USER_DATA',
+          message: "Missing required user data: email, name, or id",
+          error: "INVALID_USER_DATA",
         };
       }
 
@@ -172,16 +172,16 @@ class EmailTriggerService {
       let emailData: any = baseData;
 
       switch (emailType) {
-        case 'WELCOME':
+        case "WELCOME":
           emailData = baseData;
           break;
 
-        case 'COURSE_ENROLLMENT':
+        case "COURSE_ENROLLMENT":
           if (!additionalData?.courseName) {
             return {
               success: false,
-              message: 'Missing required course data: courseName',
-              error: 'INVALID_COURSE_DATA',
+              message: "Missing required course data: courseName",
+              error: "INVALID_COURSE_DATA",
             };
           }
           emailData = {
@@ -191,12 +191,12 @@ class EmailTriggerService {
           };
           break;
 
-        case 'PROJECT_ENROLLMENT':
+        case "PROJECT_ENROLLMENT":
           if (!additionalData?.projectName) {
             return {
               success: false,
-              message: 'Missing required project data: projectName',
-              error: 'INVALID_PROJECT_DATA',
+              message: "Missing required project data: projectName",
+              error: "INVALID_PROJECT_DATA",
             };
           }
           emailData = {
@@ -206,12 +206,12 @@ class EmailTriggerService {
           };
           break;
 
-        case 'INTERVIEW_PREP_ENROLLMENT':
+        case "INTERVIEW_PREP_ENROLLMENT":
           if (!additionalData?.sheetName) {
             return {
               success: false,
-              message: 'Missing required sheet data: sheetName',
-              error: 'INVALID_SHEET_DATA',
+              message: "Missing required sheet data: sheetName",
+              error: "INVALID_SHEET_DATA",
             };
           }
           emailData = {
@@ -221,13 +221,13 @@ class EmailTriggerService {
           };
           break;
 
-        case 'COURSE_COMPLETION':
+        case "COURSE_COMPLETION":
           if (!additionalData?.courseName || !additionalData?.completionDate) {
             return {
               success: false,
               message:
-                'Missing required completion data: courseName, completionDate',
-              error: 'INVALID_COMPLETION_DATA',
+                "Missing required completion data: courseName, completionDate",
+              error: "INVALID_COMPLETION_DATA",
             };
           }
           emailData = {
@@ -242,7 +242,7 @@ class EmailTriggerService {
           return {
             success: false,
             message: `Unsupported email type: ${emailType}`,
-            error: 'INVALID_EMAIL_TYPE',
+            error: "INVALID_EMAIL_TYPE",
           };
       }
 
@@ -251,15 +251,15 @@ class EmailTriggerService {
 
       return {
         success: result.success,
-        message: result.message || 'Email processed',
+        message: result.message || "Email processed",
         requestId: result.requestId || undefined,
         error: result.error,
       };
     } catch (error: any) {
       return {
         success: false,
-        message: 'Failed to process email request',
-        error: error.message || 'Unknown error',
+        message: "Failed to process email request",
+        error: error.message || "Unknown error",
       };
     }
   }

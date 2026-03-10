@@ -27,7 +27,10 @@ import {
   UNSKILLED_LANDING_GRAPH_TAB_PARAMS,
 } from '@tbe/constants';
 import { useResumeEvaluation, useUnskilledGraphData } from '@tbe/hooks';
-import type { OutlineCardProps, UnskilledLandingPageProps } from '@tbe/interface';
+import type {
+  OutlineCardProps,
+  UnskilledLandingPageProps,
+} from '@tbe/interface';
 import { formatDate, getUnskilledLandingPageProps } from '@tbe/utils';
 import { motion } from 'framer-motion';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -68,7 +71,11 @@ const UnskilledLandingPage = ({
   isDev,
 }: UnskilledLandingPageProps) => {
   // Fetch graph data on client-side after page loads
-  const { data: jobData, loading: graphLoading, error: graphError } = useUnskilledGraphData();
+  const {
+    data: jobData,
+    loading: graphLoading,
+    error: graphError,
+  } = useUnskilledGraphData();
 
   const {
     file,
@@ -323,7 +330,7 @@ const UnskilledLandingPage = ({
                 onClick={handleResumeEvaluation}
                 disabled={isEvaluating}
               />
-              
+
               {error && (
                 <Text className='text-red-600 text-sm text-center' level='p'>
                   {error}
@@ -419,7 +426,7 @@ const UnskilledLandingPage = ({
 
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.match}
-                    items={evaluationData.matchingSkills.map(skill => ({
+                    items={evaluationData.matchingSkills.map((skill) => ({
                       skill: skill.skill,
                       percentage: skill.percentage,
                       frequency: skill.jobCount,
@@ -429,7 +436,7 @@ const UnskilledLandingPage = ({
                   />
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.missing}
-                    items={evaluationData.missingSkills.map(skill => ({
+                    items={evaluationData.missingSkills.map((skill) => ({
                       skill: skill.skill,
                       percentage: skill.percentage,
                       frequency: skill.jobCount,
@@ -439,11 +446,13 @@ const UnskilledLandingPage = ({
                   />
                   <ResumeEvaluationSection
                     colorScheme={colorSchemes.company}
-                    items={evaluationData.companyTypeDistribution.map(company => ({
-                      name: company.type,
-                      percentage: company.percentage,
-                      count: company.jobCount,
-                    }))}
+                    items={evaluationData.companyTypeDistribution.map(
+                      (company) => ({
+                        name: company.type,
+                        percentage: company.percentage,
+                        count: company.jobCount,
+                      }),
+                    )}
                     subtitle='You should focus on applying at these companies'
                     title='🏢 Companies Hiring'
                   />

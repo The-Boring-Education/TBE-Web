@@ -1,18 +1,18 @@
-import { FlexContainer, Text } from '@tbe/components';
-import type { SectionHeaderProps } from '@tbe/interface';
+import { FlexContainer, Text } from "@tbe/components";
+import type { SectionHeaderProps } from "@tbe/interface";
 
 const SectionHeaderContainer = ({
   heading,
   focusText,
   headingLevel = 4,
-  className = '',
+  className = "",
   flexContainerProps,
   subtext,
 }: SectionHeaderProps) => (
   <FlexContainer
     className={`gap-1 ${className}`}
     {...flexContainerProps}
-    direction='col'
+    direction="col"
   >
     <Text
       className={`heading-${headingLevel}`}
@@ -22,14 +22,14 @@ const SectionHeaderContainer = ({
       {heading}
       <Text
         className={`heading-${headingLevel} text-primary`}
-        level='span'
+        level="span"
         textCenter
       >
         &nbsp;{focusText}
       </Text>
     </Text>
     {subtext && (
-      <Text className='pre-text text-greyDark' level='span' textCenter>
+      <Text className="pre-text text-greyDark" level="span" textCenter>
         {subtext}
       </Text>
     )}

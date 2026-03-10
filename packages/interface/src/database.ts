@@ -4,8 +4,8 @@ import type {
   InterestEventType,
   LeaderboardEnum,
   ProductType,
-} from '@tbe/constants';
-import type { Document, Schema, Types } from 'mongoose';
+} from "@tbe/constants";
+import type { Document, Schema, Types } from "mongoose";
 
 import type {
   CertificateType,
@@ -26,7 +26,7 @@ import type {
   UserRoleType,
   WebinarEnrolledUsersProps,
   WorkDomainType,
-} from '.';
+} from ".";
 
 export interface UserModel {
   name: string;
@@ -363,7 +363,7 @@ export interface WebhookEvent {
   order_id: string;
   payment_id?: string;
   isPaid: boolean;
-  payment_status: 'SUCCESS' | 'FAILED';
+  payment_status: "SUCCESS" | "FAILED";
 }
 
 export interface PrepYatraUserModel extends Document {
@@ -420,11 +420,11 @@ export interface ChallengeModel extends Document {
   description?: string;
   totalDays: number;
   currentDay: number;
-  status: 'active' | 'completed' | 'paused' | 'cancelled';
+  status: "active" | "completed" | "paused" | "cancelled";
   startDate: Date;
   endDate: Date;
   isPredefined: boolean;
-  predefinedType?: '21DaysPython' | '21DaysJava' | '50DaysInternship';
+  predefinedType?: "21DaysPython" | "21DaysJava" | "50DaysInternship";
   gamificationPoints: number;
 }
 
@@ -481,7 +481,7 @@ export interface UserInterestModel {
   eventDescription?: string;
   metadata?: Record<string, any>;
   isActive: boolean;
-  source: 'WEBAPP' | 'PREPYATRA' | 'ADMIN' | 'API';
+  source: "WEBAPP" | "PREPYATRA" | "ADMIN" | "API";
   ipAddress?: string;
   userAgent?: string;
 }

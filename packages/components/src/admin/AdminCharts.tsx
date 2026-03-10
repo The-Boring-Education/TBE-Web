@@ -13,9 +13,9 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from "recharts";
 
-import Text from '../common/Typography/Text';
+import Text from "../common/Typography/Text";
 
 interface ChartWrapperProps {
   title: string;
@@ -26,10 +26,10 @@ interface ChartWrapperProps {
 const ChartWrapper = ({
   title,
   children,
-  className = '',
+  className = "",
 }: ChartWrapperProps) => (
   <div className={`bg-white rounded-lg shadow p-6 ${className}`}>
-    <Text className='text-lg font-semibold text-gray-900 mb-4' level='h3'>
+    <Text className="text-lg font-semibold text-gray-900 mb-4" level="h3">
       {title}
     </Text>
     {children}
@@ -49,17 +49,17 @@ const AdminLineChart = ({
   title,
   dataKey,
   xAxisKey,
-  color = '#3B82F6',
+  color = "#3B82F6",
 }: LineChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width='100%' height={300}>
+    <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>
-        <CartesianGrid strokeDasharray='3 3' />
+        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xAxisKey} />
         <YAxis />
         <Tooltip />
         <Line
-          type='monotone'
+          type="monotone"
           dataKey={dataKey}
           stroke={color}
           strokeWidth={2}
@@ -83,17 +83,17 @@ const AdminAreaChart = ({
   title,
   dataKey,
   xAxisKey,
-  color = '#10B981',
+  color = "#10B981",
 }: AreaChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width='100%' height={300}>
+    <ResponsiveContainer width="100%" height={300}>
       <AreaChart data={data}>
-        <CartesianGrid strokeDasharray='3 3' />
+        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xAxisKey} />
         <YAxis />
         <Tooltip />
         <Area
-          type='monotone'
+          type="monotone"
           dataKey={dataKey}
           stroke={color}
           fill={color}
@@ -117,12 +117,12 @@ const AdminBarChart = ({
   title,
   dataKey,
   xAxisKey,
-  color = '#8B5CF6',
+  color = "#8B5CF6",
 }: BarChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width='100%' height={300}>
+    <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data}>
-        <CartesianGrid strokeDasharray='3 3' />
+        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xAxisKey} />
         <YAxis />
         <Tooltip />
@@ -145,21 +145,21 @@ const AdminPieChart = ({
   title,
   dataKey,
   nameKey: _nameKey,
-  colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'],
+  colors = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"],
 }: PieChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width='100%' height={300}>
+    <ResponsiveContainer width="100%" height={300}>
       <PieChart>
         <Pie
           data={data}
-          cx='50%'
-          cy='50%'
+          cx="50%"
+          cy="50%"
           labelLine={false}
-          label={({ name, percent }:any) =>
+          label={({ name, percent }: any) =>
             `${name} ${(percent * 100).toFixed(0)}%`
           }
           outerRadius={80}
-          fill='#8884d8'
+          fill="#8884d8"
           dataKey={dataKey}
         >
           {data.map((entry, index) => (
@@ -190,9 +190,9 @@ const AdminMultiBarChart = ({
   xAxisKey,
 }: MultiBarChartProps) => (
   <ChartWrapper title={title}>
-    <ResponsiveContainer width='100%' height={300}>
+    <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data}>
-        <CartesianGrid strokeDasharray='3 3' />
+        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xAxisKey} />
         <YAxis />
         <Tooltip />

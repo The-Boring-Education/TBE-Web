@@ -8,9 +8,9 @@ import {
   ShieldCheckIcon,
   StarIcon,
   UserGroupIcon,
-} from '@heroicons/react/20/solid';
+} from "@heroicons/react/20/solid";
 
-import type { ProductType  } from './database';
+import type { ProductType } from "./database";
 
 export interface ProductConfigProps {
   name: string;
@@ -30,199 +30,203 @@ export interface ProductConfigProps {
 
 export const PRODUCT_CONFIGS: Record<ProductType, ProductConfigProps> = {
   INTERVIEW_SHEET: {
-    name: 'Interview Sheet',
+    name: "Interview Sheet",
     icon: ShieldCheckIcon,
     reasonsToBuy: [
       {
         icon: ShieldCheckIcon,
-        title: 'Real Interview Questions',
-        description: 'Questions asked in actual FAANG and top-tier companies',
+        title: "Real Interview Questions",
+        description: "Questions asked in actual FAANG and top-tier companies",
       },
       {
         icon: StarIcon,
-        title: 'Expert Solutions',
-        description: 'Detailed explanations and optimal approaches for each question',
+        title: "Expert Solutions",
+        description:
+          "Detailed explanations and optimal approaches for each question",
       },
       {
         icon: LightBulbIcon,
-        title: 'Interview Insights',
-        description: 'Pro tips and common mistakes to avoid during interviews',
+        title: "Interview Insights",
+        description: "Pro tips and common mistakes to avoid during interviews",
       },
       {
         icon: ClockIcon,
-        title: 'Save 100+ Hours',
-        description: 'Curated content saves months of research and preparation',
+        title: "Save 100+ Hours",
+        description: "Curated content saves months of research and preparation",
       },
     ],
     defaultFeatures: [
-      'Complete question bank',
-      'Detailed solutions',
-      'Interview tips',
-      'Lifetime access',
+      "Complete question bank",
+      "Detailed solutions",
+      "Interview tips",
+      "Lifetime access",
     ],
     lockedMessage: {
-      title: '🚀 This is a Premium Interview Sheet',
+      title: "🚀 This is a Premium Interview Sheet",
       description:
-        'To access all the interview questions and detailed solutions, please complete the payment. Once payment is confirmed, all questions will be unlocked instantly.',
-      buttonText: 'Pay Now to Unlock',
+        "To access all the interview questions and detailed solutions, please complete the payment. Once payment is confirmed, all questions will be unlocked instantly.",
+      buttonText: "Pay Now to Unlock",
     },
   },
   SHIKSHA: {
-    name: 'Course',
+    name: "Course",
     icon: BookOpenIcon,
     reasonsToBuy: [
       {
         icon: BookOpenIcon,
-        title: 'Comprehensive Learning',
-        description: 'Complete hands-on course with practical projects',
+        title: "Comprehensive Learning",
+        description: "Complete hands-on course with practical projects",
       },
       {
         icon: StarIcon,
-        title: 'Industry Relevant',
-        description: 'Latest technologies and best practices used in industry',
+        title: "Industry Relevant",
+        description: "Latest technologies and best practices used in industry",
       },
       {
         icon: CheckCircleIcon,
-        title: 'Completion Certificate',
-        description: 'Get verified certificate upon successful completion',
+        title: "Completion Certificate",
+        description: "Get verified certificate upon successful completion",
       },
       {
         icon: ClockIcon,
-        title: 'Lifetime Access',
-        description: 'Learn at your own pace with permanent access to content',
+        title: "Lifetime Access",
+        description: "Learn at your own pace with permanent access to content",
       },
     ],
     defaultFeatures: [
-      'Video lectures',
-      'Hands-on projects',
-      'Completion certificate',
-      'Lifetime access',
+      "Video lectures",
+      "Hands-on projects",
+      "Completion certificate",
+      "Lifetime access",
     ],
     lockedMessage: {
-      title: '🚀 This is a Premium Course',
+      title: "🚀 This is a Premium Course",
       description:
-        'To access all course content, videos, and projects, please complete the payment. Once payment is confirmed, all chapters will be unlocked instantly.',
-      buttonText: 'Pay Now to Unlock',
+        "To access all course content, videos, and projects, please complete the payment. Once payment is confirmed, all chapters will be unlocked instantly.",
+      buttonText: "Pay Now to Unlock",
     },
   },
   PROJECTS: {
-    name: 'Project',
+    name: "Project",
     icon: CodeBracketIcon,
     reasonsToBuy: [
       {
         icon: CodeBracketIcon,
-        title: 'Real-World Projects',
-        description: 'Build industry-standard projects with complete source code',
+        title: "Real-World Projects",
+        description:
+          "Build industry-standard projects with complete source code",
       },
       {
         icon: StarIcon,
-        title: 'Portfolio Ready',
-        description: 'Projects you can showcase in your portfolio and resume',
+        title: "Portfolio Ready",
+        description: "Projects you can showcase in your portfolio and resume",
       },
       {
         icon: CheckCircleIcon,
-        title: 'Step-by-Step Guide',
-        description: 'Detailed documentation and implementation guide',
+        title: "Step-by-Step Guide",
+        description: "Detailed documentation and implementation guide",
       },
       {
         icon: UserGroupIcon,
-        title: 'Community Support',
-        description: 'Get help from community and expert mentors',
+        title: "Community Support",
+        description: "Get help from community and expert mentors",
       },
     ],
     defaultFeatures: [
-      'Complete source code',
-      'Documentation',
-      'Deployment guide',
-      'Lifetime access',
+      "Complete source code",
+      "Documentation",
+      "Deployment guide",
+      "Lifetime access",
     ],
     lockedMessage: {
-      title: '🚀 This is a Premium Project',
+      title: "🚀 This is a Premium Project",
       description:
-        'To access the complete project source code, documentation, and deployment guide, please complete the payment. Once payment is confirmed, all resources will be unlocked instantly.',
-      buttonText: 'Pay Now to Unlock',
+        "To access the complete project source code, documentation, and deployment guide, please complete the payment. Once payment is confirmed, all resources will be unlocked instantly.",
+      buttonText: "Pay Now to Unlock",
     },
   },
   PREPYATRA: {
-    name: 'PrepYatra Subscription',
+    name: "PrepYatra Subscription",
     icon: StarIcon,
     reasonsToBuy: [
       {
         icon: StarIcon,
-        title: 'Access to All Products',
-        description: 'Unlock all courses, sheets, and projects with one subscription',
+        title: "Access to All Products",
+        description:
+          "Unlock all courses, sheets, and projects with one subscription",
       },
       {
         icon: ShieldCheckIcon,
-        title: 'Priority Support',
-        description: 'Get priority support from our expert team',
+        title: "Priority Support",
+        description: "Get priority support from our expert team",
       },
       {
         icon: CheckCircleIcon,
-        title: 'Exclusive Content',
-        description: 'Access to exclusive content and early features',
+        title: "Exclusive Content",
+        description: "Access to exclusive content and early features",
       },
       {
         icon: ClockIcon,
-        title: 'Flexible Plans',
-        description: 'Choose from monthly, yearly, or lifetime plans',
+        title: "Flexible Plans",
+        description: "Choose from monthly, yearly, or lifetime plans",
       },
     ],
     defaultFeatures: [
-      'All courses access',
-      'All interview sheets',
-      'All projects',
-      'Priority support',
+      "All courses access",
+      "All interview sheets",
+      "All projects",
+      "Priority support",
     ],
     lockedMessage: {
-      title: '🚀 Unlock Everything with PrepYatra',
+      title: "🚀 Unlock Everything with PrepYatra",
       description:
-        'Get access to all premium courses, interview sheets, and projects with a single subscription. Choose a plan that works for you.',
-      buttonText: 'Subscribe Now',
+        "Get access to all premium courses, interview sheets, and projects with a single subscription. Choose a plan that works for you.",
+      buttonText: "Subscribe Now",
     },
   },
   GENERAL: {
-    name: 'Product',
+    name: "Product",
     icon: BanknotesIcon,
     reasonsToBuy: [
       {
         icon: StarIcon,
-        title: 'Premium Quality',
-        description: 'High-quality content curated by industry experts',
+        title: "Premium Quality",
+        description: "High-quality content curated by industry experts",
       },
       {
         icon: CheckCircleIcon,
-        title: 'Instant Access',
-        description: 'Get immediate access after payment confirmation',
+        title: "Instant Access",
+        description: "Get immediate access after payment confirmation",
       },
       {
         icon: ClockIcon,
-        title: 'Lifetime Access',
-        description: 'Access content forever with no recurring fees',
+        title: "Lifetime Access",
+        description: "Access content forever with no recurring fees",
       },
       {
         icon: ShieldCheckIcon,
-        title: 'Secure Payment',
-        description: 'Safe and secure payment processing',
+        title: "Secure Payment",
+        description: "Safe and secure payment processing",
       },
     ],
     defaultFeatures: [
-      'Premium content',
-      'Lifetime access',
-      'Expert support',
-      'Regular updates',
+      "Premium content",
+      "Lifetime access",
+      "Expert support",
+      "Regular updates",
     ],
     lockedMessage: {
-      title: '🚀 This is a Premium Product',
+      title: "🚀 This is a Premium Product",
       description:
-        'To access all premium content, please complete the payment. Once payment is confirmed, all features will be unlocked instantly.',
-      buttonText: 'Pay Now to Unlock',
+        "To access all premium content, please complete the payment. Once payment is confirmed, all features will be unlocked instantly.",
+      buttonText: "Pay Now to Unlock",
     },
   },
 };
 
-export const getProductConfig = (productType: ProductType | string): ProductConfigProps => {
+export const getProductConfig = (
+  productType: ProductType | string,
+): ProductConfigProps => {
   const config = PRODUCT_CONFIGS[productType as ProductType];
-  return config || PRODUCT_CONFIGS.GENERAL as ProductConfigProps;
+  return config || (PRODUCT_CONFIGS.GENERAL as ProductConfigProps);
 };
-

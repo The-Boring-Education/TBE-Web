@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
 const rateLimitMap = new Map<
   string,
@@ -13,9 +13,9 @@ const rateLimiter =
   (handler: (req: NextApiRequest, res: NextApiResponse) => void) =>
   (req: NextApiRequest, res: NextApiResponse) => {
     const ip =
-      req.headers['x-forwarded-for']?.toString() ||
+      req.headers["x-forwarded-for"]?.toString() ||
       req.socket.remoteAddress ||
-      'unknown';
+      "unknown";
 
     const currentTime = Date.now();
 
@@ -28,7 +28,7 @@ const rateLimiter =
       if (ipData.count >= REQUEST_LIMIT) {
         res
           .status(429)
-          .json({ message: 'Too many requests, please try again later.' });
+          .json({ message: "Too many requests, please try again later." });
         return;
       }
 

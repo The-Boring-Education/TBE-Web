@@ -1,4 +1,4 @@
-import { sendRequest } from "./api"
+import { sendRequest } from "./api";
 
 /**
  * Onboarding-specific utility functions
@@ -7,36 +7,36 @@ import { sendRequest } from "./api"
 
 // Check if username is available
 export async function checkUsernameAvailable(
-    username: string,
-    token?: string
+  username: string,
+  token?: string,
 ): Promise<boolean> {
-    try {
-        const response = await sendRequest({
-            url: `/user/username-check?username=${username}`,
-            method: "GET",
-            headers: token ? { Authorization: `Bearer ${token}` } : {}
-        })
+  try {
+    const response = await sendRequest({
+      url: `/user/username-check?username=${username}`,
+      method: "GET",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
 
-        return Boolean(response.success && response.data?.available === true)
-    } catch {
-        return false
-    }
+    return Boolean(response.success && response.data?.available === true);
+  } catch {
+    return false;
+  }
 }
 
 // Get user by ID for onboarding
 export async function getOnboardingUser(
-    userId: string,
-    token?: string
+  userId: string,
+  token?: string,
 ): Promise<any> {
-    try {
-        const response = await sendRequest({
-            url: `/user?userId=${userId}`,
-            method: "GET",
-            headers: token ? { Authorization: `Bearer ${token}` } : {}
-        })
+  try {
+    const response = await sendRequest({
+      url: `/user?userId=${userId}`,
+      method: "GET",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
 
-        return response.success ? response.data : null
-    } catch {
-        return null
-    }
+    return response.success ? response.data : null;
+  } catch {
+    return null;
+  }
 }

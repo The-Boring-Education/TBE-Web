@@ -1,5 +1,5 @@
-import type { CertificateBannerProps } from '@tbe/interface';
-import { createElement } from 'react';
+import type { CertificateBannerProps } from "@tbe/interface";
+import { createElement } from "react";
 
 const CertificateBanner = ({
   backgroundColor,
@@ -11,15 +11,15 @@ const CertificateBanner = ({
 }: CertificateBannerProps) => (
   <div
     className={`${backgroundColor} text-white rounded-lg py-2 px-4 mt-2 shadow-lg flex items-center justify-between ${
-      isLocked ? 'cursor-not-allowed' : 'cursor-pointer'
+      isLocked ? "cursor-not-allowed" : "cursor-pointer"
     }`}
     onClick={!isLocked ? onClick : undefined}
   >
     <div>
-      <h2 className='text-lg font-bold'>{heading}</h2>
-      <p className='text-sm'>{subtext}</p>
+      <h2 className="text-lg font-bold">{heading}</h2>
+      <p className="text-sm">{subtext}</p>
     </div>
-    <div className='text-2xl'>{icon && createElement(icon)} </div>
+    <div className="text-2xl">{icon && createElement(icon)} </div>
   </div>
 );
 

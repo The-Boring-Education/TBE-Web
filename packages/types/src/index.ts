@@ -9,92 +9,95 @@
 // COMMON TYPES (Used across all apps)
 // ================================
 export type {
-    Achievement,
-    APIResponse,
-    // Re-export all common types except conflicting ones
-    BaseUser,
-    // Conflicting types with aliases
-    APIMakeRequestProps as CommonAPIMakeRequestProps,
-    LeaderboardEntry as CommonLeaderboardEntry,
-    QuizCategory as CommonQuizCategory,
-    GamificationAction,
-    TrackEventProps,
-    UserPoints} from "./common"
+  Achievement,
+  APIResponse,
+  // Re-export all common types except conflicting ones
+  BaseUser,
+  // Conflicting types with aliases
+  APIMakeRequestProps as CommonAPIMakeRequestProps,
+  LeaderboardEntry as CommonLeaderboardEntry,
+  QuizCategory as CommonQuizCategory,
+  GamificationAction,
+  TrackEventProps,
+  UserPoints,
+} from "./common";
 
 // ================================
 // DOMAIN-SPECIFIC TYPES
 // ================================
 
 // Database models and schemas
-export * from "./database"
+export * from "./database";
 
 // Additional database types that are commonly used
 
 // API types and request/response interfaces
-export * from "./api"
+export * from "./api";
 
 // Component interfaces and UI types
-export * from "./components"
+export * from "./components";
 
 // Additional component types that are commonly used
 export type {
-    MentorshipCardProps,
-    PortfolioTemplateProps,
-    PrimaryCardProps,
-    PrimaryCardWithCTAProps,
-    RadioButtonOptionsProps,
-    TestimonialCardProps,
-    UserLevel
-} from "./components"
+  MentorshipCardProps,
+  PortfolioTemplateProps,
+  PrimaryCardProps,
+  PrimaryCardWithCTAProps,
+  RadioButtonOptionsProps,
+  TestimonialCardProps,
+  UserLevel,
+} from "./components";
 
 // Resume evaluation types
-export * from "./resume"
+export * from "./resume";
 
 // Platform-specific shared types (with explicit exports to avoid conflicts)
 export type {
-    CohortDataProps,
-    CohortRoadmapProps,
-    CohortUserCategoryProps,
-    // Re-export all platform types except conflicting ones
-    GetSEOMetaResponseType,
-    LEADERBOARD_TYPES,
-    LeaderboardType,
-    // Email types from platform (these conflict with email module)
-    EmailSendRequest as PlatformEmailSendRequest,
-    EmailSendResponse as PlatformEmailSendResponse,
-    EmailTemplate as PlatformEmailTemplate,
-    ProductDataProps,
-    SEOProps,
-    ServerSessionProp,
-    TopNavbarContainerProps} from "./platform"
+  CohortDataProps,
+  CohortRoadmapProps,
+  CohortUserCategoryProps,
+  // Re-export all platform types except conflicting ones
+  GetSEOMetaResponseType,
+  LEADERBOARD_TYPES,
+  LeaderboardType,
+  // Email types from platform (these conflict with email module)
+  EmailSendRequest as PlatformEmailSendRequest,
+  EmailSendResponse as PlatformEmailSendResponse,
+  EmailTemplate as PlatformEmailTemplate,
+  ProductDataProps,
+  SEOProps,
+  ServerSessionProp,
+  TopNavbarContainerProps,
+} from "./platform";
 
 // Email and communication types
-export * from "./email"
+export * from "./email";
 
 // Onboarding (used across all apps)
-export * from "./onboarding"
+export * from "./onboarding";
 
 // Prep-Yatra domain
-export * from "./prepyatra"
+export * from "./prepyatra";
 
 // Quiz domain
-export * from "./quiz"
+export * from "./quiz";
 // ================================
 // LEGACY EXPORTS (for backward compatibility)
 // ================================
 // Re-export common types with their original names
 export type {
-    APIResponse as CommonAPIResponseType,
-    BaseUser as User} from "./common"
+  APIResponse as CommonAPIResponseType,
+  BaseUser as User,
+} from "./common";
 
 // Re-export database types with their original names for compatibility
 // Note: Do NOT alias UserModel as PlatformUser to avoid conflict with platform PlatformUser
 
 // Re-export API types with their original names for compatibility
 export type {
-    APIMakeRequestProps as APIMakeRquestProps,
-    APIResponseProps as APIResponseType
-} from "./api"
+  APIMakeRequestProps as APIMakeRquestProps,
+  APIResponseProps as APIResponseType,
+} from "./api";
 
 // ================================
 // TYPE UTILITIES
@@ -102,20 +105,20 @@ export type {
 
 // Utility types for better development experience
 export type Prettify<T> = {
-    [K in keyof T]: T[K]
-} & {}
+  [K in keyof T]: T[K];
+} & {};
 
-export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>
+export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
 export type DeepPartial<T> = {
-    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
-}
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
 
-export type NonEmptyArray<T> = [T, ...T[]]
+export type NonEmptyArray<T> = [T, ...T[]];
 
-export type ValueOf<T> = T[keyof T]
+export type ValueOf<T> = T[keyof T];
 
 // ================================
 // GLOBAL TYPE AUGMENTATIONS

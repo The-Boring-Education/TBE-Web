@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
-        })
+        }),
       );
   }
 };
@@ -41,7 +41,7 @@ const handleUpdateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
   sheetId: string,
-  questionId: string
+  questionId: string,
 ) => {
   const updatedData =
     req.body as Partial<AddInterviewQuestionRequestPayloadProps>;
@@ -50,7 +50,7 @@ const handleUpdateQuestion = async (
     const { data, error } = await updateInterviewQuestionInDB(
       sheetId,
       questionId,
-      updatedData
+      updatedData,
     );
 
     if (error) {
@@ -58,7 +58,7 @@ const handleUpdateQuestion = async (
         sendAPIResponse({
           status: false,
           message: "Failed while updating chapter to section",
-        })
+        }),
       );
     }
 
@@ -70,7 +70,7 @@ const handleUpdateQuestion = async (
       sendAPIResponse({
         status: false,
         message: "Failed while updating chapter to section",
-      })
+      }),
     );
   }
 };
@@ -79,12 +79,12 @@ const handleDeleteQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
   sheetId: string,
-  questionId: string
+  questionId: string,
 ) => {
   try {
     const { data, error } = await deleteQuestionFromSheetInDB(
       sheetId,
-      questionId
+      questionId,
     );
 
     if (error) {
@@ -92,7 +92,7 @@ const handleDeleteQuestion = async (
         sendAPIResponse({
           status: false,
           message: "Failed while deleting question from sheet",
-        })
+        }),
       );
     }
 
@@ -104,7 +104,7 @@ const handleDeleteQuestion = async (
       sendAPIResponse({
         status: false,
         message: "Failed while deleting question from sheet",
-      })
+      }),
     );
   }
 };

@@ -1,118 +1,118 @@
-import type { GetSEOMetaResponseType } from "@tbe/types"
+import type { GetSEOMetaResponseType } from "@tbe/types";
 
 import type {
-    BaseInterviewSheetResponseProps,
-    BaseShikshaCourseResponseProps
-} from "."
+  BaseInterviewSheetResponseProps,
+  BaseShikshaCourseResponseProps,
+} from ".";
 import type {
-    CertificateModel,
-    PlaylistModel,
-    ProjectDocumentModel,
-    UserPlaylistModel,
-    WebinarModel
-} from "./database"
-import type { UnskilledLandingGraphDataProps } from "./global"
+  CertificateModel,
+  PlaylistModel,
+  ProjectDocumentModel,
+  UserPlaylistModel,
+  WebinarModel,
+} from "./database";
+import type { UnskilledLandingGraphDataProps } from "./global";
 
 export interface PageProps {
-    slug: any
-    isDev?: boolean
-    seoMeta: GetSEOMetaResponseType
-    resolvedUrl?: string
+  slug: any;
+  isDev?: boolean;
+  seoMeta: GetSEOMetaResponseType;
+  resolvedUrl?: string;
 }
 
 export type ProjectPickedPageProps = Pick<
-    ProjectDocumentModel,
-    | "_id"
-    | "name"
-    | "meta"
-    | "roadmap"
-    | "difficultyLevel"
-    | "sections"
-    | "requiredSkills"
+  ProjectDocumentModel,
+  | "_id"
+  | "name"
+  | "meta"
+  | "roadmap"
+  | "difficultyLevel"
+  | "sections"
+  | "requiredSkills"
 > & {
-    isEnrolled?: boolean
-    _id: string
-}
+  isEnrolled?: boolean;
+  _id: string;
+};
 
 export interface ProjectPageProps extends PageProps {
-    project: ProjectPickedPageProps
-    meta: string
-    currentChapterId: string
+  project: ProjectPickedPageProps;
+  meta: string;
+  currentChapterId: string;
 }
 
 export interface PlaylistPageProps extends PageProps {
-    playlist: PlaylistPickedPageProps
-    PlaylistId: string
+  playlist: PlaylistPickedPageProps;
+  PlaylistId: string;
 }
 
 export interface CoursePageProps extends PageProps {
-    course: BaseShikshaCourseResponseProps
-    meta: string
-    currentChapterId: string
+  course: BaseShikshaCourseResponseProps;
+  meta: string;
+  currentChapterId: string;
 }
 
 export interface SheetPageProps extends PageProps {
-    sheet: BaseInterviewSheetResponseProps
-    meta: string
-    currentQuestionId: string
+  sheet: BaseInterviewSheetResponseProps;
+  meta: string;
+  currentQuestionId: string;
 }
 
 export interface WebinarCardProps extends WebinarModel {
-    isCompleted: boolean
+  isCompleted: boolean;
 }
 
 export interface WebinarsLandingPageProps extends PageProps {
-    webinars: WebinarCardProps[]
+  webinars: WebinarCardProps[];
 }
 
 export interface CertificatePageProps extends PageProps {
-    certificate: CertificateModel
+  certificate: CertificateModel;
 }
 
 export interface UnskilledLandingPageProps extends PageProps {
-    jobData: {
-        jobDomains: UnskilledLandingGraphDataProps[]
-        trendingSkills: UnskilledLandingGraphDataProps[]
-        companyTypes: UnskilledLandingGraphDataProps[]
-        topLocations: UnskilledLandingGraphDataProps[]
-        updatedAt: string
-    }
+  jobData: {
+    jobDomains: UnskilledLandingGraphDataProps[];
+    trendingSkills: UnskilledLandingGraphDataProps[];
+    companyTypes: UnskilledLandingGraphDataProps[];
+    topLocations: UnskilledLandingGraphDataProps[];
+    updatedAt: string;
+  };
 }
 
 export interface CardItem {
-    id: string
-    title: string
-    description?: string
-    thumbnail?: string
+  id: string;
+  title: string;
+  description?: string;
+  thumbnail?: string;
 }
 
 export type PlaylistPickedPageProps = Pick<
-    UserPlaylistModel & { _id: string },
-    "_id" | "playlistId" | "isRecommended" | "learningTime"
+  UserPlaylistModel & { _id: string },
+  "_id" | "playlistId" | "isRecommended" | "learningTime"
 > &
-    Pick<
-        PlaylistModel,
-        | "playlistName"
-        | "description"
-        | "thumbnail"
-        | "tags"
-        | "videos"
-        | "referrerBy"
-    >
+  Pick<
+    PlaylistModel,
+    | "playlistName"
+    | "description"
+    | "thumbnail"
+    | "tags"
+    | "videos"
+    | "referrerBy"
+  >;
 
 export interface CohortRoadmapProps {
-    week: string
-    title: string
-    description: string
+  week: string;
+  title: string;
+  description: string;
 }
 
 export interface CohortUserCategoryProps {
-    key: string
-    label: string
-    data: CohortRoadmapProps[]
-    duration: string
-    price: number
-    discount: number
-    slashedPrice: number
-    features: string[]
+  key: string;
+  label: string;
+  data: CohortRoadmapProps[];
+  duration: string;
+  price: number;
+  discount: number;
+  slashedPrice: number;
+  features: string[];
 }

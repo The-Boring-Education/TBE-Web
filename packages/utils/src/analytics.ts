@@ -1,4 +1,4 @@
-export const GA_TRACKING_ID = 'G-SR3M17B588';
+export const GA_TRACKING_ID = "G-SR3M17B588";
 declare global {
   interface Window {
     gtag?: (...args: any[]) => void;
@@ -6,14 +6,13 @@ declare global {
 }
 export {};
 
-
 /* -----------------------------
     LOAD GA
 ------------------------------ */
 export const initGA = () => {
   console.log("Initializing Google Analytics...");
 
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   // gtag script
   const s1 = document.createElement("script");
@@ -39,7 +38,7 @@ export const initGA = () => {
 export const trackPageView = (url: string) => {
   console.log("📄 Page view:", url);
 
-  if (typeof window !== 'undefined' && (window as any).gtag) {
+  if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("config", GA_TRACKING_ID, {
       page_path: url,
     });
@@ -52,13 +51,10 @@ export const trackPageview = trackPageView;
 /* -----------------------------
     GENERAL EVENT
 ------------------------------ */
-export const trackEvent = (
-  name: string,
-  params: Record<string, any> = {}
-) => {
+export const trackEvent = (name: string, params: Record<string, any> = {}) => {
   console.log("🎯 Tracking event:", name, params);
 
-  if (typeof window !== 'undefined' && (window as any).gtag) {
+  if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("event", name, params);
   }
 };
@@ -90,7 +86,7 @@ export const trackQuizStart = (quizId: string) =>
 export const trackQuizAnswer = (
   quizId: string,
   questionId: string,
-  correct: boolean
+  correct: boolean,
 ) =>
   trackEvent("quiz_question_answered", {
     quiz_id: quizId,

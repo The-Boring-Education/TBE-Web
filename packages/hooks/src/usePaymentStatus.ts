@@ -1,6 +1,6 @@
-import { routes } from '@tbe/constants';
-import type { usePaymentStatusProps } from '@tbe/interface';
-import { useEffect, useState } from 'react';
+import { routes } from "@tbe/constants";
+import type { usePaymentStatusProps } from "@tbe/interface";
+import { useEffect, useState } from "react";
 
 const usePaymentStatus = ({
   userId,
@@ -15,19 +15,19 @@ const usePaymentStatus = ({
       try {
         // Build query string with optional productType
         const queryParams = new URLSearchParams({
-          userId: userId || '',
+          userId: userId || "",
           productId: productId,
         });
-        
+
         if (productType) {
-          queryParams.append('productType', productType);
+          queryParams.append("productType", productType);
         }
 
         const response = await fetch(
           `${routes.api.base}${routes.api.checkStatus}?${queryParams.toString()}`,
           {
-            method: 'GET',
-          }
+            method: "GET",
+          },
         );
 
         const result = await response.json();

@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import logo from '../assets/logo.svg';
-import type { OnboardingProductConfig } from '../types/onboarding';
+import logo from "../assets/logo.svg";
+import type { OnboardingProductConfig } from "../types/onboarding";
 
 interface OnboardingLayoutProps {
   children: React.ReactNode;
@@ -20,7 +20,7 @@ const ProgressBar = ({ step, total }: { step: number; total: number }) => {
   // Calculate progress based on completed steps (step - 1) out of total steps
   const completedSteps = step - 1;
   const percent = Math.round((completedSteps / total) * 100);
-  
+
   return (
     <div className="w-full mb-6">
       <div className="flex justify-between items-center mb-2">
@@ -46,7 +46,7 @@ const BrandingHeader = ({
 }: {
   config?: OnboardingProductConfig | null;
 }) => {
-  const title = config?.ui?.branding?.title || 'Welcome Onboard!';
+  const title = config?.ui?.branding?.title || "Welcome Onboard!";
   const subtitle =
     config?.ui?.branding?.subtitle ||
     "Let's get you set up in just a few quick steps.";
@@ -97,7 +97,7 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
           <BrandingHeader config={config} />
           <ProgressBar step={step} total={totalSteps} />
           <form
-            onSubmit={e => {
+            onSubmit={(e) => {
               e.preventDefault();
               if (step === totalSteps) {
                 onFinish();
@@ -195,12 +195,12 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
                             r="10"
                             stroke="currentColor"
                             strokeWidth="4"
-                           />
+                          />
                           <path
                             className="opacity-75"
                             fill="currentColor"
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                           />
+                          />
                         </svg>
                         <span>Submitting...</span>
                       </>

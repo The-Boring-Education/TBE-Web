@@ -1,146 +1,170 @@
-import { useAuth } from "@tbe/auth"
-import { Button } from "@tbe/components"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
-import { Layout } from "@tbe/components/quizes"
-import {leaderboardApi } from "@tbe/services"
+import { useAuth } from "@tbe/auth";
+import { Button } from "@tbe/components";
 import {
-  Award,
-  Clock,
-  Crown,
-  Medal,
-  Target,
-  Trophy,
-  User} from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useEffect,useState } from "react"
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@tbe/components/quizes";
+import { Layout } from "@tbe/components/quizes";
+import { leaderboardApi } from "@tbe/services";
+import { Award, Clock, Crown, Medal, Target, Trophy, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface LeaderboardEntry {
-  _id: string
-  username: string
-  image: string
-  bestScore: number
-  totalAttempts: number
-  averageScore: number
-  totalTimeSpent: number
-  rank: number
+  _id: string;
+  username: string;
+  image: string;
+  bestScore: number;
+  totalAttempts: number;
+  averageScore: number;
+  totalTimeSpent: number;
+  rank: number;
 }
 
 function LeaderboardContent() {
-  const { user } = useAuth()
-  const router = useRouter()
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { user } = useAuth();
+  const router = useRouter();
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadLeaderboard()
-  }, [])
+    loadLeaderboard();
+  }, []);
 
   const loadLeaderboard = async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
-      console.log('🔄 Fetching leaderboard data from API...')
-      const response = await leaderboardApi.getLeaderboard(100)
-      console.log('📊 Raw leaderboard response:', JSON.stringify(response, null, 2))
+      console.log("🔄 Fetching leaderboard data from API...");
+      const response = await leaderboardApi.getLeaderboard(100);
+      console.log(
+        "📊 Raw leaderboard response:",
+        JSON.stringify(response, null, 2),
+      );
 
       // Check if response has data
       if (!response) {
-        throw new Error('No response from API')
+        throw new Error("No response from API");
       }
 
       // Check if response.data exists and is an array
       if (response.success && response.data && Array.isArray(response.data)) {
-        console.log(`✅ Received ${response.data.length} leaderboard entries`)
-        
+        console.log(`✅ Received ${response.data.length} leaderboard entries`);
+
         // Transform quiz leaderboard data to LeaderboardEntry
-        const transformedData: LeaderboardEntry[] = response.data.map((item: any, index) => {
-          // API returns quiz stats directly
-          const username = item.username || 'Unknown User'
-          const image = item.image || ''
-          
-          console.log(`📍 User #${index + 1}:`, {
-            id: item._id,
-            username,
-            bestScore: item.bestScore,
-            totalAttempts: item.totalAttempts,
-            averageScore: item.averageScore
-          })
-          
-          return {
-            _id: item._id || `user-${index}`,
-            username,
-            image,
-            bestScore: typeof item.bestScore === 'number' ? Math.round(item.bestScore) : 0,
-            totalAttempts: typeof item.totalAttempts === 'number' ? item.totalAttempts : 0,
-            averageScore: typeof item.averageScore === 'number' ? Math.round(item.averageScore) : 0,
-            totalTimeSpent: typeof item.totalTimeSpent === 'number' ? item.totalTimeSpent : 0,
-            rank: index + 1
-          }
-        })
-        
-        console.log('✅ Transformed leaderboard data:', transformedData.length, 'entries')
-        setLeaderboard(transformedData)
+        const transformedData: LeaderboardEntry[] = response.data.map(
+          (item: any, index) => {
+            // API returns quiz stats directly
+            const username = item.username || "Unknown User";
+            const image = item.image || "";
+
+            console.log(`📍 User #${index + 1}:`, {
+              id: item._id,
+              username,
+              bestScore: item.bestScore,
+              totalAttempts: item.totalAttempts,
+              averageScore: item.averageScore,
+            });
+
+            return {
+              _id: item._id || `user-${index}`,
+              username,
+              image,
+              bestScore:
+                typeof item.bestScore === "number"
+                  ? Math.round(item.bestScore)
+                  : 0,
+              totalAttempts:
+                typeof item.totalAttempts === "number" ? item.totalAttempts : 0,
+              averageScore:
+                typeof item.averageScore === "number"
+                  ? Math.round(item.averageScore)
+                  : 0,
+              totalTimeSpent:
+                typeof item.totalTimeSpent === "number"
+                  ? item.totalTimeSpent
+                  : 0,
+              rank: index + 1,
+            };
+          },
+        );
+
+        console.log(
+          "✅ Transformed leaderboard data:",
+          transformedData.length,
+          "entries",
+        );
+        setLeaderboard(transformedData);
       } else if (response.success === false) {
-        console.error('❌ API returned error:', response.message)
-        setError(response.message || 'Failed to load leaderboard')
+        console.error("❌ API returned error:", response.message);
+        setError(response.message || "Failed to load leaderboard");
       } else if (!response.data || !Array.isArray(response.data)) {
-        console.error('❌ Invalid data format:', typeof response.data, response.data)
-        setError('Invalid leaderboard data format received from server')
+        console.error(
+          "❌ Invalid data format:",
+          typeof response.data,
+          response.data,
+        );
+        setError("Invalid leaderboard data format received from server");
       } else {
-        console.error('❌ Unexpected response structure:', response)
-        setError('Unexpected response from server')
+        console.error("❌ Unexpected response structure:", response);
+        setError("Unexpected response from server");
       }
     } catch (err) {
-      console.error('❌ Error loading leaderboard:', err)
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load leaderboard data'
-      console.error('Error details:', errorMessage)
-      setError(errorMessage)
+      console.error("❌ Error loading leaderboard:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to load leaderboard data";
+      console.error("Error details:", errorMessage);
+      setError(errorMessage);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <Crown className="h-6 w-6 text-yellow-500" />
+        return <Crown className="h-6 w-6 text-yellow-500" />;
       case 2:
-        return <Medal className="h-6 w-6 text-gray-400" />
+        return <Medal className="h-6 w-6 text-gray-400" />;
       case 3:
-        return <Award className="h-6 w-6 text-amber-600" />
+        return <Award className="h-6 w-6 text-amber-600" />;
       default:
-        return <span className="text-lg font-bold text-gray-600">#{rank}</span>
+        return <span className="text-lg font-bold text-gray-600">#{rank}</span>;
     }
-  }
+  };
 
   const getRankStyle = (rank: number, isCurrentUser: boolean) => {
     if (isCurrentUser) {
-      return "bg-blue-50 border-blue-200 border-2"
+      return "bg-blue-50 border-blue-200 border-2";
     }
     switch (rank) {
       case 1:
-        return "bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200"
+        return "bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200";
       case 2:
-        return "bg-gradient-to-r from-gray-50 to-slate-50 border-gray-200"
+        return "bg-gradient-to-r from-gray-50 to-slate-50 border-gray-200";
       case 3:
-        return "bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200"
+        return "bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200";
       default:
-        return "bg-white border-gray-100"
+        return "bg-white border-gray-100";
     }
-  }
+  };
 
   const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     if (hours > 0) {
-      return `${hours}h ${minutes}m`
+      return `${hours}h ${minutes}m`;
     }
-    return `${minutes}m`
-  }
+    return `${minutes}m`;
+  };
 
-  const currentUserRank = leaderboard.findIndex(entry => entry._id === user?.id) + 1
+  const currentUserRank =
+    leaderboard.findIndex((entry) => entry._id === user?.id) + 1;
 
   if (loading) {
     return (
@@ -152,7 +176,7 @@ function LeaderboardContent() {
           </div>
         </div>
       </Layout>
-    )
+    );
   }
 
   if (error) {
@@ -161,11 +185,18 @@ function LeaderboardContent() {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-600 mb-4">{error}</p>
-            <Button onClick={loadLeaderboard} variant="PRIMARY" className="rounded-md" size="LARGE">Try Again</Button>
+            <Button
+              onClick={loadLeaderboard}
+              variant="PRIMARY"
+              className="rounded-md"
+              size="LARGE"
+            >
+              Try Again
+            </Button>
           </div>
         </div>
       </Layout>
-    )
+    );
   }
 
   return (
@@ -174,8 +205,12 @@ function LeaderboardContent() {
         <div className="container mx-auto px-4 py-12">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">🏆 Leaderboard</h1>
-            <p className="text-xl text-gray-600">See who&apos;s leading the pack in our quiz community</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              🏆 Leaderboard
+            </h1>
+            <p className="text-xl text-gray-600">
+              See who&apos;s leading the pack in our quiz community
+            </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
@@ -183,18 +218,23 @@ function LeaderboardContent() {
             {currentUserRank > 0 && currentUserRank > 3 && (
               <Card className="mb-6 bg-blue-50 border-blue-200">
                 <CardHeader>
-                  <CardTitle className="text-lg text-blue-900">Your Position</CardTitle>
+                  <CardTitle className="text-lg text-blue-900">
+                    Your Position
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-lg font-bold text-blue-600">#{currentUserRank}</span>
+                        <span className="text-lg font-bold text-blue-600">
+                          #{currentUserRank}
+                        </span>
                       </div>
                       <div>
                         <p className="font-semibold text-blue-900">You</p>
                         <p className="text-sm text-blue-700">
-                          {leaderboard[currentUserRank - 1]?.totalAttempts || 0} attempts
+                          {leaderboard[currentUserRank - 1]?.totalAttempts || 0}{" "}
+                          attempts
                         </p>
                       </div>
                     </div>
@@ -224,16 +264,23 @@ function LeaderboardContent() {
                 {leaderboard.length === 0 ? (
                   <div className="text-center py-12">
                     <Trophy className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500 mb-4">No leaderboard data available yet</p>
-                    <Button onClick={() => router.push('/dashboard')} className="rounded-md" variant="PRIMARY" size="LARGE">
+                    <p className="text-gray-500 mb-4">
+                      No leaderboard data available yet
+                    </p>
+                    <Button
+                      onClick={() => router.push("/dashboard")}
+                      className="rounded-md"
+                      variant="PRIMARY"
+                      size="LARGE"
+                    >
                       Take Your First Quiz
                     </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {leaderboard.slice(0, 20).map((entry, index) => {
-                      const isCurrentUser = entry._id === user?.id
-                      const rank = entry.rank
+                      const isCurrentUser = entry._id === user?.id;
+                      const rank = entry.rank;
 
                       return (
                         <div
@@ -244,29 +291,43 @@ function LeaderboardContent() {
                             <div className="flex items-center space-x-4">
                               <div className="w-12 h-12 rounded-full flex items-center justify-center">
                                 {rank <= 3 ? (
-                                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${rank === 1 ? 'bg-yellow-100' :
-                                      rank === 2 ? 'bg-gray-100' : 'bg-amber-100'
-                                    }`}>
+                                  <div
+                                    className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                                      rank === 1
+                                        ? "bg-yellow-100"
+                                        : rank === 2
+                                          ? "bg-gray-100"
+                                          : "bg-amber-100"
+                                    }`}
+                                  >
                                     {getRankIcon(rank)}
                                   </div>
                                 ) : (
                                   <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                                    <span className="text-lg font-bold text-gray-600">#{rank}</span>
+                                    <span className="text-lg font-bold text-gray-600">
+                                      #{rank}
+                                    </span>
                                   </div>
                                 )}
                               </div>
 
                               <div>
                                 <div className="flex items-center space-x-2">
-                                  <p className={`font-semibold ${isCurrentUser ? 'text-blue-900' : 'text-gray-900'}`}>
-                                    {isCurrentUser ? 'You' : entry.username}
+                                  <p
+                                    className={`font-semibold ${isCurrentUser ? "text-blue-900" : "text-gray-900"}`}
+                                  >
+                                    {isCurrentUser ? "You" : entry.username}
                                   </p>
-                                  {isCurrentUser && <User className="h-4 w-4 text-blue-600" />}
+                                  {isCurrentUser && (
+                                    <User className="h-4 w-4 text-blue-600" />
+                                  )}
                                 </div>
                                 <div className="flex items-center space-x-4 text-sm text-gray-600">
                                   <div className="flex items-center space-x-1">
                                     <Target className="h-3 w-3" />
-                                    <span>{entry.totalAttempts || 0} attempts</span>
+                                    <span>
+                                      {entry.totalAttempts || 0} attempts
+                                    </span>
                                   </div>
                                   <div className="flex items-center space-x-1">
                                     <Trophy className="h-3 w-3" />
@@ -274,24 +335,35 @@ function LeaderboardContent() {
                                   </div>
                                   <div className="flex items-center space-x-1">
                                     <Clock className="h-3 w-3" />
-                                    <span>{formatTime(entry.totalTimeSpent || 0)}</span>
+                                    <span>
+                                      {formatTime(entry.totalTimeSpent || 0)}
+                                    </span>
                                   </div>
                                 </div>
                               </div>
                             </div>
 
                             <div className="text-right">
-                              <div className={`text-2xl font-bold ${(entry.bestScore || 0) >= 90 ? 'text-green-600' :
-                                  (entry.bestScore || 0) >= 75 ? 'text-blue-600' :
-                                    (entry.bestScore || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
-                                }`}>
+                              <div
+                                className={`text-2xl font-bold ${
+                                  (entry.bestScore || 0) >= 90
+                                    ? "text-green-600"
+                                    : (entry.bestScore || 0) >= 75
+                                      ? "text-blue-600"
+                                      : (entry.bestScore || 0) >= 60
+                                        ? "text-yellow-600"
+                                        : "text-red-600"
+                                }`}
+                              >
                                 {entry.bestScore || 0}%
                               </div>
-                              <p className="text-sm text-gray-600">Best Score</p>
+                              <p className="text-sm text-gray-600">
+                                Best Score
+                              </p>
                             </div>
                           </div>
                         </div>
-                      )
+                      );
                     })}
                   </div>
                 )}
@@ -301,7 +373,7 @@ function LeaderboardContent() {
             {/* Action Buttons */}
             <div className="flex justify-center space-x-4 mt-12">
               <Button
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push("/dashboard")}
                 variant="PRIMARY"
                 className="rounded-md"
                 size="LARGE"
@@ -310,7 +382,7 @@ function LeaderboardContent() {
               </Button>
               <Button
                 variant="OUTLINE"
-                onClick={() => router.push('/performance')}
+                onClick={() => router.push("/performance")}
                 size="LARGE"
               >
                 View Your Performance
@@ -320,9 +392,9 @@ function LeaderboardContent() {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
 export default function Leaderboard() {
-  return <LeaderboardContent />
+  return <LeaderboardContent />;
 }

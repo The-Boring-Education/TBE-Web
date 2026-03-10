@@ -1,17 +1,17 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
+import { DATABASE_MODELS } from "@/lib/constants";
 import type {
   UserProjectChapterModel,
   UserProjectModel,
   UserProjectSectionModel,
-    } from '@/lib/interfaces';
+} from "@/lib/interfaces";
 
 const UserProjectChapterSchema = new Schema<UserProjectChapterModel>(
   {
     chapterId: {
       type: String,
-      required: [true, 'Chapter ID is required'],
+      required: [true, "Chapter ID is required"],
     },
     isCompleted: {
       type: Boolean,
@@ -21,21 +21,21 @@ const UserProjectChapterSchema = new Schema<UserProjectChapterModel>(
   {
     timestamps: true,
     _id: false,
-  }
+  },
 );
 
 const UserProjectSectionSchema = new Schema<UserProjectSectionModel>(
   {
     sectionId: {
       type: String,
-      required: [true, 'Section ID is required'],
+      required: [true, "Section ID is required"],
     },
     chapters: [UserProjectChapterSchema],
   },
   {
     timestamps: true,
     _id: false,
-  }
+  },
 );
 
 const UserProjectSchema = new Schema<UserProjectModel>(
@@ -43,13 +43,13 @@ const UserProjectSchema = new Schema<UserProjectModel>(
     userId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
-      required: [true, 'User ID is required'],
+      required: [true, "User ID is required"],
       index: true,
     },
     projectId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.PROJECT,
-      required: [true, 'Project ID is required'],
+      required: [true, "Project ID is required"],
       index: true,
     },
     sections: [UserProjectSectionSchema],
@@ -71,13 +71,13 @@ const UserProjectSchema = new Schema<UserProjectModel>(
         return ret;
       },
     },
-  }
+  },
 );
 
-UserProjectSchema.virtual('project', {
+UserProjectSchema.virtual("project", {
   ref: DATABASE_MODELS.PROJECT,
-  localField: 'projectId',
-  foreignField: '_id',
+  localField: "projectId",
+  foreignField: "_id",
   justOne: true,
 });
 

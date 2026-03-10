@@ -1,4 +1,4 @@
-export { default as DomainSection } from "./DomainSection"; 
+export { default as DomainSection } from "./DomainSection";
 export { default as DSASection } from "./DSASection";
 export { default as Header } from "./Header";
 export { default as LanguageSection } from "./LanguageSection";

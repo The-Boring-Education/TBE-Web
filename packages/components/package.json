@@ -26,7 +26,8 @@
     "./analytics": {
       "import": "./src/analytics.ts",
       "require": "./src/analytics.ts"
-    }
+    },
+    "./styles/common.css": "./src/styles/common.css"
   },
   "scripts": {
     "build": "echo 'No build step needed for components package'",

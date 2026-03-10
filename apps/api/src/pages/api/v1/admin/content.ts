@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from '@/lib/constants';
+import { apiStatusCodes } from "@/lib/constants";
 import {
   Course,
   Feedback,
@@ -10,15 +10,15 @@ import {
   UserProject,
   UserSheet,
   Webinar,
-} from '@/lib/database';
-import { sendAPIResponse } from '@/lib/utils';
-import { cors } from '@/lib/utils';
-import { connectDB } from '@/middleware/api';
+} from "@/lib/database";
+import { sendAPIResponse } from "@/lib/utils";
+import { cors } from "@/lib/utils";
+import { connectDB } from "@/middleware/api";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
   }
@@ -32,18 +32,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     contentId,
     startDate,
     endDate,
-    page = '1',
-    limit = '20',
-    sortBy = 'createdAt',
-    order = 'desc',
+    page = "1",
+    limit = "20",
+    sortBy = "createdAt",
+    order = "desc",
   } = query;
 
-  if (method !== 'GET') {
+  if (method !== "GET") {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
       sendAPIResponse({
         status: false,
         message: `Method ${method} not allowed`,
-      })
+      }),
     );
   }
 
@@ -57,7 +57,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     parseInt(page as string),
     parseInt(limit as string),
     sortBy as string,
-    order as string
+    order as string,
   );
 };
 
@@ -71,37 +71,37 @@ const handleContentManagementRequest = async (
   page: number,
   limit: number,
   sortBy: string,
-  order: string
+  order: string,
 ) => {
   try {
     const dateRange = getDateRange(startDate, endDate);
-    const sortOrder = order === 'desc' ? -1 : 1;
+    const sortOrder = order === "desc" ? -1 : 1;
 
     switch (action) {
-      case 'performance':
+      case "performance":
         return await getContentPerformance(res, contentType, dateRange);
-      case 'details':
+      case "details":
         return await getContentDetails(res, contentType, contentId, dateRange);
-      case 'engagement':
+      case "engagement":
         return await getContentEngagement(res, contentType, dateRange);
-      case 'difficulty-analysis':
+      case "difficulty-analysis":
         return await getDifficultyAnalysis(res, dateRange);
-      case 'completion-funnel':
+      case "completion-funnel":
         return await getCompletionFunnel(
           res,
           contentType,
           contentId,
-          dateRange
+          dateRange,
         );
-      case 'feedback-analysis':
+      case "feedback-analysis":
         return await getFeedbackAnalysis(res, contentType, dateRange);
-      case 'trending':
+      case "trending":
         return await getTrendingContent(res, dateRange);
-      case 'optimization-insights':
+      case "optimization-insights":
         return await getOptimizationInsights(res, dateRange);
-      case 'content-gaps':
+      case "content-gaps":
         return await getContentGaps(res, dateRange);
-      case 'list':
+      case "list":
         return await getContentList(
           res,
           contentType,
@@ -109,14 +109,14 @@ const handleContentManagementRequest = async (
           limit,
           sortBy,
           sortOrder,
-          dateRange
+          dateRange,
         );
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
             status: false,
-            message: 'Invalid action specified',
-          })
+            message: "Invalid action specified",
+          }),
         );
     }
   } catch (error) {
@@ -124,8 +124,8 @@ const handleContentManagementRequest = async (
       sendAPIResponse({
         status: false,
         error,
-        message: 'Error processing content management request',
-      })
+        message: "Error processing content management request",
+      }),
     );
   }
 };
@@ -141,14 +141,14 @@ const getDateRange = (startDate: string, endDate: string) => {
 const getContentPerformance = async (
   res: NextApiResponse,
   contentType: string,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   const { start, end } = dateRange;
 
   let performanceData;
 
   switch (contentType) {
-    case 'courses':
+    case "courses":
       performanceData = await UserCourse.aggregate([
         {
           $match: {
@@ -157,45 +157,45 @@ const getContentPerformance = async (
         },
         {
           $group: {
-            _id: '$courseId',
+            _id: "$courseId",
             enrollments: { $sum: 1 },
             completions: {
-              $sum: { $cond: [{ $eq: ['$isCompleted', true] }, 1, 0] },
+              $sum: { $cond: [{ $eq: ["$isCompleted", true] }, 1, 0] },
             },
             avgChaptersCompleted: {
               $avg: {
                 $size: {
                   $filter: {
-                    input: '$chapters',
-                    cond: { $eq: ['$$this.isCompleted', true] },
+                    input: "$chapters",
+                    cond: { $eq: ["$$this.isCompleted", true] },
                   },
                 },
               },
             },
             certificatesIssued: {
-              $sum: { $cond: [{ $ne: ['$certificateId', null] }, 1, 0] },
+              $sum: { $cond: [{ $ne: ["$certificateId", null] }, 1, 0] },
             },
           },
         },
         {
           $lookup: {
-            from: 'courses',
-            localField: '_id',
-            foreignField: '_id',
-            as: 'courseInfo',
+            from: "courses",
+            localField: "_id",
+            foreignField: "_id",
+            as: "courseInfo",
           },
         },
         {
-          $unwind: '$courseInfo',
+          $unwind: "$courseInfo",
         },
         {
           $addFields: {
             completionRate: {
-              $multiply: [{ $divide: ['$completions', '$enrollments'] }, 100],
+              $multiply: [{ $divide: ["$completions", "$enrollments"] }, 100],
             },
             certificateRate: {
               $multiply: [
-                { $divide: ['$certificatesIssued', '$enrollments'] },
+                { $divide: ["$certificatesIssued", "$enrollments"] },
                 100,
               ],
             },
@@ -203,19 +203,19 @@ const getContentPerformance = async (
         },
         {
           $project: {
-            courseName: '$courseInfo.name',
-            courseSlug: '$courseInfo.slug',
-            difficulty: '$courseInfo.difficultyLevel',
-            roadmap: '$courseInfo.roadmap',
-            isPremium: '$courseInfo.isPremium',
-            price: '$courseInfo.price',
+            courseName: "$courseInfo.name",
+            courseSlug: "$courseInfo.slug",
+            difficulty: "$courseInfo.difficultyLevel",
+            roadmap: "$courseInfo.roadmap",
+            isPremium: "$courseInfo.isPremium",
+            price: "$courseInfo.price",
             enrollments: 1,
             completions: 1,
             completionRate: 1,
             certificatesIssued: 1,
             certificateRate: 1,
             avgChaptersCompleted: 1,
-            totalChapters: { $size: '$courseInfo.chapters' },
+            totalChapters: { $size: "$courseInfo.chapters" },
           },
         },
         {
@@ -224,7 +224,7 @@ const getContentPerformance = async (
       ]);
       break;
 
-    case 'projects':
+    case "projects":
       performanceData = await UserProject.aggregate([
         {
           $match: {
@@ -233,19 +233,19 @@ const getContentPerformance = async (
         },
         {
           $group: {
-            _id: '$projectId',
+            _id: "$projectId",
             enrollments: { $sum: 1 },
             avgSectionsCompleted: {
               $avg: {
                 $size: {
                   $filter: {
-                    input: '$sections',
+                    input: "$sections",
                     cond: {
                       $allElementsTrue: {
                         $map: {
-                          input: '$$this.chapters',
-                          as: 'chapter',
-                          in: '$$chapter.isCompleted',
+                          input: "$$this.chapters",
+                          as: "chapter",
+                          in: "$$chapter.isCompleted",
                         },
                       },
                     },
@@ -257,26 +257,26 @@ const getContentPerformance = async (
         },
         {
           $lookup: {
-            from: 'projects',
-            localField: '_id',
-            foreignField: '_id',
-            as: 'projectInfo',
+            from: "projects",
+            localField: "_id",
+            foreignField: "_id",
+            as: "projectInfo",
           },
         },
         {
-          $unwind: '$projectInfo',
+          $unwind: "$projectInfo",
         },
         {
           $project: {
-            projectName: '$projectInfo.name',
-            projectSlug: '$projectInfo.slug',
-            difficulty: '$projectInfo.difficultyLevel',
-            roadmap: '$projectInfo.roadmap',
-            isPremium: '$projectInfo.isPremium',
-            price: '$projectInfo.price',
+            projectName: "$projectInfo.name",
+            projectSlug: "$projectInfo.slug",
+            difficulty: "$projectInfo.difficultyLevel",
+            roadmap: "$projectInfo.roadmap",
+            isPremium: "$projectInfo.isPremium",
+            price: "$projectInfo.price",
             enrollments: 1,
             avgSectionsCompleted: 1,
-            totalSections: { $size: '$projectInfo.sections' },
+            totalSections: { $size: "$projectInfo.sections" },
           },
         },
         {
@@ -285,7 +285,7 @@ const getContentPerformance = async (
       ]);
       break;
 
-    case 'sheets':
+    case "sheets":
       performanceData = await UserSheet.aggregate([
         {
           $match: {
@@ -294,14 +294,14 @@ const getContentPerformance = async (
         },
         {
           $group: {
-            _id: '$sheetId',
+            _id: "$sheetId",
             enrollments: { $sum: 1 },
             avgQuestionsCompleted: {
               $avg: {
                 $size: {
                   $filter: {
-                    input: '$questions',
-                    cond: { $eq: ['$$this.isCompleted', true] },
+                    input: "$questions",
+                    cond: { $eq: ["$$this.isCompleted", true] },
                   },
                 },
               },
@@ -310,25 +310,25 @@ const getContentPerformance = async (
         },
         {
           $lookup: {
-            from: 'interviewsheets',
-            localField: '_id',
-            foreignField: '_id',
-            as: 'sheetInfo',
+            from: "interviewsheets",
+            localField: "_id",
+            foreignField: "_id",
+            as: "sheetInfo",
           },
         },
         {
-          $unwind: '$sheetInfo',
+          $unwind: "$sheetInfo",
         },
         {
           $project: {
-            sheetName: '$sheetInfo.name',
-            sheetSlug: '$sheetInfo.slug',
-            roadmap: '$sheetInfo.roadmap',
-            isPremium: '$sheetInfo.isPremium',
-            price: '$sheetInfo.price',
+            sheetName: "$sheetInfo.name",
+            sheetSlug: "$sheetInfo.slug",
+            roadmap: "$sheetInfo.roadmap",
+            isPremium: "$sheetInfo.isPremium",
+            price: "$sheetInfo.price",
             enrollments: 1,
             avgQuestionsCompleted: 1,
-            totalQuestions: { $size: '$sheetInfo.questions' },
+            totalQuestions: { $size: "$sheetInfo.questions" },
           },
         },
         {
@@ -342,8 +342,8 @@ const getContentPerformance = async (
         sendAPIResponse({
           status: apiStatusCodes.BAD_REQUEST,
           error: true,
-          message: 'Invalid content type specified',
-        })
+          message: "Invalid content type specified",
+        }),
       );
   }
 
@@ -351,7 +351,7 @@ const getContentPerformance = async (
     sendAPIResponse({
       status: true,
       data: performanceData,
-    })
+    }),
   );
 };
 
@@ -359,15 +359,15 @@ const getContentDetails = async (
   res: NextApiResponse,
   contentType: string,
   contentId: string,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   if (!contentId) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: apiStatusCodes.BAD_REQUEST,
         error: true,
-        message: 'Content ID is required',
-      })
+        message: "Content ID is required",
+      }),
     );
   }
 
@@ -378,7 +378,7 @@ const getContentDetails = async (
   let feedbackData;
 
   switch (contentType) {
-    case 'courses':
+    case "courses":
       contentDetails = await Course.findById(contentId);
       engagementMetrics = await UserCourse.aggregate([
         {
@@ -392,10 +392,10 @@ const getContentDetails = async (
             _id: null,
             totalEnrollments: { $sum: 1 },
             completions: {
-              $sum: { $cond: [{ $eq: ['$isCompleted', true] }, 1, 0] },
+              $sum: { $cond: [{ $eq: ["$isCompleted", true] }, 1, 0] },
             },
             certificatesIssued: {
-              $sum: { $cond: [{ $ne: ['$certificateId', null] }, 1, 0] },
+              $sum: { $cond: [{ $ne: ["$certificateId", null] }, 1, 0] },
             },
           },
         },
@@ -411,15 +411,15 @@ const getContentDetails = async (
             },
           },
           {
-            $unwind: '$chapters',
+            $unwind: "$chapters",
           },
           {
             $group: {
-              _id: '$chapters.chapterId',
+              _id: "$chapters.chapterId",
               totalViews: { $sum: 1 },
               completions: {
                 $sum: {
-                  $cond: [{ $eq: ['$chapters.isCompleted', true] }, 1, 0],
+                  $cond: [{ $eq: ["$chapters.isCompleted", true] }, 1, 0],
                 },
               },
             },
@@ -427,7 +427,7 @@ const getContentDetails = async (
           {
             $addFields: {
               completionRate: {
-                $multiply: [{ $divide: ['$completions', '$totalViews'] }, 100],
+                $multiply: [{ $divide: ["$completions", "$totalViews"] }, 100],
               },
             },
           },
@@ -437,7 +437,7 @@ const getContentDetails = async (
         ]);
 
         feedbackData = await Feedback.find({
-          type: 'SHIKSHA_COURSE',
+          type: "SHIKSHA_COURSE",
           ref: contentId,
           createdAt: { $gte: start, $lte: end },
         });
@@ -446,7 +446,7 @@ const getContentDetails = async (
           sendAPIResponse({
             status: apiStatusCodes.OKAY,
             error: false,
-            message: 'Content details fetched successfully',
+            message: "Content details fetched successfully",
             data: {
               contentDetails,
               engagementMetrics: engagementMetrics[0] || {},
@@ -458,11 +458,11 @@ const getContentDetails = async (
                     feedbackData.length
                   : 0,
             },
-          })
+          }),
         );
       }
 
-    case 'projects':
+    case "projects":
       contentDetails = await Project.findById(contentId);
       engagementMetrics = await UserProject.aggregate([
         {
@@ -483,15 +483,15 @@ const getContentDetails = async (
         sendAPIResponse({
           status: apiStatusCodes.OKAY,
           error: false,
-          message: 'Content details fetched successfully',
+          message: "Content details fetched successfully",
           data: {
             contentDetails,
             engagementMetrics: engagementMetrics[0] || {},
           },
-        })
+        }),
       );
 
-    case 'sheets':
+    case "sheets":
       contentDetails = await InterviewSheet.findById(contentId);
       engagementMetrics = await UserSheet.aggregate([
         {
@@ -509,7 +509,7 @@ const getContentDetails = async (
       ]);
 
       feedbackData = await Feedback.find({
-        type: 'INTERVIEW_SHEET',
+        type: "INTERVIEW_SHEET",
         ref: contentId,
         createdAt: { $gte: start, $lte: end },
       });
@@ -518,7 +518,7 @@ const getContentDetails = async (
         sendAPIResponse({
           status: apiStatusCodes.OKAY,
           error: false,
-          message: 'Content details fetched successfully',
+          message: "Content details fetched successfully",
           data: {
             contentDetails,
             engagementMetrics: engagementMetrics[0] || {},
@@ -529,7 +529,7 @@ const getContentDetails = async (
                   feedbackData.length
                 : 0,
           },
-        })
+        }),
       );
 
     default:
@@ -537,8 +537,8 @@ const getContentDetails = async (
         sendAPIResponse({
           status: apiStatusCodes.BAD_REQUEST,
           error: true,
-          message: 'Invalid content type specified',
-        })
+          message: "Invalid content type specified",
+        }),
       );
   }
 };
@@ -546,7 +546,7 @@ const getContentDetails = async (
 const getContentEngagement = async (
   res: NextApiResponse,
   contentType: string,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   const { start, end } = dateRange;
 
@@ -560,14 +560,14 @@ const getContentEngagement = async (
     {
       $group: {
         _id: {
-          hour: { $hour: '$updatedAt' },
-          dayOfWeek: { $dayOfWeek: '$updatedAt' },
+          hour: { $hour: "$updatedAt" },
+          dayOfWeek: { $dayOfWeek: "$updatedAt" },
         },
         activityCount: { $sum: 1 },
       },
     },
     {
-      $sort: { '_id.hour': 1, '_id.dayOfWeek': 1 },
+      $sort: { "_id.hour": 1, "_id.dayOfWeek": 1 },
     },
   ]);
 
@@ -580,25 +580,25 @@ const getContentEngagement = async (
     },
     {
       $lookup: {
-        from: 'users',
-        localField: 'userId',
-        foreignField: '_id',
-        as: 'user',
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "user",
       },
     },
     {
-      $unwind: '$user',
+      $unwind: "$user",
     },
     {
       $group: {
-        _id: '$user.occupation',
+        _id: "$user.occupation",
         totalEngagement: { $sum: 1 },
-        uniqueUsers: { $addToSet: '$userId' },
+        uniqueUsers: { $addToSet: "$userId" },
       },
     },
     {
       $addFields: {
-        uniqueUserCount: { $size: '$uniqueUsers' },
+        uniqueUserCount: { $size: "$uniqueUsers" },
       },
     },
   ]);
@@ -607,18 +607,18 @@ const getContentEngagement = async (
     sendAPIResponse({
       status: apiStatusCodes.OKAY,
       error: false,
-      message: 'Content engagement fetched successfully',
+      message: "Content engagement fetched successfully",
       data: {
         engagementByTime,
         engagementByDemographics,
       },
-    })
+    }),
   );
 };
 
 const getDifficultyAnalysis = async (
   res: NextApiResponse,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   const { start, end } = dateRange;
 
@@ -631,28 +631,28 @@ const getDifficultyAnalysis = async (
     },
     {
       $lookup: {
-        from: 'courses',
-        localField: 'courseId',
-        foreignField: '_id',
-        as: 'course',
+        from: "courses",
+        localField: "courseId",
+        foreignField: "_id",
+        as: "course",
       },
     },
     {
-      $unwind: '$course',
+      $unwind: "$course",
     },
     {
       $group: {
-        _id: '$course.difficultyLevel',
+        _id: "$course.difficultyLevel",
         totalEnrollments: { $sum: 1 },
         completions: {
-          $sum: { $cond: [{ $eq: ['$isCompleted', true] }, 1, 0] },
+          $sum: { $cond: [{ $eq: ["$isCompleted", true] }, 1, 0] },
         },
         avgChaptersCompleted: {
           $avg: {
             $size: {
               $filter: {
-                input: '$chapters',
-                cond: { $eq: ['$$this.isCompleted', true] },
+                input: "$chapters",
+                cond: { $eq: ["$$this.isCompleted", true] },
               },
             },
           },
@@ -662,7 +662,7 @@ const getDifficultyAnalysis = async (
     {
       $addFields: {
         completionRate: {
-          $multiply: [{ $divide: ['$completions', '$totalEnrollments'] }, 100],
+          $multiply: [{ $divide: ["$completions", "$totalEnrollments"] }, 100],
         },
       },
     },
@@ -677,28 +677,28 @@ const getDifficultyAnalysis = async (
     },
     {
       $lookup: {
-        from: 'courses',
-        localField: 'courseId',
-        foreignField: '_id',
-        as: 'course',
+        from: "courses",
+        localField: "courseId",
+        foreignField: "_id",
+        as: "course",
       },
     },
     {
-      $unwind: '$course',
+      $unwind: "$course",
     },
     {
       $group: {
-        _id: '$course.roadmap',
+        _id: "$course.roadmap",
         totalEnrollments: { $sum: 1 },
         completions: {
-          $sum: { $cond: [{ $eq: ['$isCompleted', true] }, 1, 0] },
+          $sum: { $cond: [{ $eq: ["$isCompleted", true] }, 1, 0] },
         },
       },
     },
     {
       $addFields: {
         completionRate: {
-          $multiply: [{ $divide: ['$completions', '$totalEnrollments'] }, 100],
+          $multiply: [{ $divide: ["$completions", "$totalEnrollments"] }, 100],
         },
       },
     },
@@ -708,12 +708,12 @@ const getDifficultyAnalysis = async (
     sendAPIResponse({
       status: apiStatusCodes.OKAY,
       error: false,
-      message: 'Difficulty analysis fetched successfully',
+      message: "Difficulty analysis fetched successfully",
       data: {
         coursesDifficultyAnalysis,
         roadmapAnalysis,
       },
-    })
+    }),
   );
 };
 
@@ -721,21 +721,21 @@ const getCompletionFunnel = async (
   res: NextApiResponse,
   contentType: string,
   contentId: string,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   if (!contentId) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: apiStatusCodes.BAD_REQUEST,
         error: true,
-        message: 'Content ID is required for funnel analysis',
-      })
+        message: "Content ID is required for funnel analysis",
+      }),
     );
   }
 
   const { start, end } = dateRange;
 
-  if (contentType === 'courses') {
+  if (contentType === "courses") {
     const funnelData = await UserCourse.aggregate([
       {
         $match: {
@@ -744,21 +744,21 @@ const getCompletionFunnel = async (
         },
       },
       {
-        $unwind: '$chapters',
+        $unwind: "$chapters",
       },
       {
         $group: {
-          _id: '$chapters.chapterId',
+          _id: "$chapters.chapterId",
           started: { $sum: 1 },
           completed: {
-            $sum: { $cond: [{ $eq: ['$chapters.isCompleted', true] }, 1, 0] },
+            $sum: { $cond: [{ $eq: ["$chapters.isCompleted", true] }, 1, 0] },
           },
         },
       },
       {
         $addFields: {
           completionRate: {
-            $multiply: [{ $divide: ['$completed', '$started'] }, 100],
+            $multiply: [{ $divide: ["$completed", "$started"] }, 100],
           },
         },
       },
@@ -771,11 +771,11 @@ const getCompletionFunnel = async (
       sendAPIResponse({
         status: apiStatusCodes.OKAY,
         error: false,
-        message: 'Funnel analysis fetched successfully',
+        message: "Funnel analysis fetched successfully",
         data: {
           funnelData,
         },
-      })
+      }),
     );
   }
 
@@ -783,28 +783,28 @@ const getCompletionFunnel = async (
     sendAPIResponse({
       status: apiStatusCodes.BAD_REQUEST,
       error: true,
-      message: 'Funnel analysis not implemented for this content type',
-    })
+      message: "Funnel analysis not implemented for this content type",
+    }),
   );
 };
 
 const getFeedbackAnalysis = async (
   res: NextApiResponse,
   contentType: string,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   const { start, end } = dateRange;
 
   let feedbackType;
   switch (contentType) {
-    case 'courses':
-      feedbackType = 'SHIKSHA_COURSE';
+    case "courses":
+      feedbackType = "SHIKSHA_COURSE";
       break;
-    case 'sheets':
-      feedbackType = 'INTERVIEW_SHEET';
+    case "sheets":
+      feedbackType = "INTERVIEW_SHEET";
       break;
     default:
-      feedbackType = 'GENERAL';
+      feedbackType = "GENERAL";
   }
 
   const feedbackAnalysis = await Feedback.aggregate([
@@ -816,9 +816,9 @@ const getFeedbackAnalysis = async (
     },
     {
       $group: {
-        _id: '$rating',
+        _id: "$rating",
         count: { $sum: 1 },
-        feedbacks: { $push: '$feedback' },
+        feedbacks: { $push: "$feedback" },
       },
     },
     {
@@ -836,7 +836,7 @@ const getFeedbackAnalysis = async (
     {
       $group: {
         _id: null,
-        averageRating: { $avg: '$rating' },
+        averageRating: { $avg: "$rating" },
         totalFeedback: { $sum: 1 },
       },
     },
@@ -850,13 +850,13 @@ const getFeedbackAnalysis = async (
         averageRating: averageRating[0]?.averageRating || 0,
         totalFeedback: averageRating[0]?.totalFeedback || 0,
       },
-    })
+    }),
   );
 };
 
 const getTrendingContent = async (
   res: NextApiResponse,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   const { start, end } = dateRange;
 
@@ -868,14 +868,14 @@ const getTrendingContent = async (
     },
     {
       $group: {
-        _id: '$courseId',
+        _id: "$courseId",
         enrollments: { $sum: 1 },
         recentActivity: {
           $sum: {
             $cond: [
               {
                 $gte: [
-                  '$updatedAt',
+                  "$updatedAt",
                   new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
                 ],
               },
@@ -888,21 +888,21 @@ const getTrendingContent = async (
     },
     {
       $lookup: {
-        from: 'courses',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'course',
+        from: "courses",
+        localField: "_id",
+        foreignField: "_id",
+        as: "course",
       },
     },
     {
-      $unwind: '$course',
+      $unwind: "$course",
     },
     {
       $addFields: {
         trendingScore: {
           $add: [
-            { $multiply: ['$enrollments', 1] },
-            { $multiply: ['$recentActivity', 3] },
+            { $multiply: ["$enrollments", 1] },
+            { $multiply: ["$recentActivity", 3] },
           ],
         },
       },
@@ -923,14 +923,14 @@ const getTrendingContent = async (
     },
     {
       $group: {
-        _id: '$sheetId',
+        _id: "$sheetId",
         enrollments: { $sum: 1 },
         recentActivity: {
           $sum: {
             $cond: [
               {
                 $gte: [
-                  '$updatedAt',
+                  "$updatedAt",
                   new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
                 ],
               },
@@ -943,21 +943,21 @@ const getTrendingContent = async (
     },
     {
       $lookup: {
-        from: 'interviewsheets',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'sheet',
+        from: "interviewsheets",
+        localField: "_id",
+        foreignField: "_id",
+        as: "sheet",
       },
     },
     {
-      $unwind: '$sheet',
+      $unwind: "$sheet",
     },
     {
       $addFields: {
         trendingScore: {
           $add: [
-            { $multiply: ['$enrollments', 1] },
-            { $multiply: ['$recentActivity', 3] },
+            { $multiply: ["$enrollments", 1] },
+            { $multiply: ["$recentActivity", 3] },
           ],
         },
       },
@@ -977,13 +977,13 @@ const getTrendingContent = async (
         trendingCourses,
         trendingSheets,
       },
-    })
+    }),
   );
 };
 
 const getOptimizationInsights = async (
   res: NextApiResponse,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   const { start, end } = dateRange;
 
@@ -996,17 +996,17 @@ const getOptimizationInsights = async (
     },
     {
       $group: {
-        _id: '$courseId',
+        _id: "$courseId",
         enrollments: { $sum: 1 },
         completions: {
-          $sum: { $cond: [{ $eq: ['$isCompleted', true] }, 1, 0] },
+          $sum: { $cond: [{ $eq: ["$isCompleted", true] }, 1, 0] },
         },
       },
     },
     {
       $addFields: {
         completionRate: {
-          $divide: ['$completions', '$enrollments'],
+          $divide: ["$completions", "$enrollments"],
         },
       },
     },
@@ -1018,21 +1018,21 @@ const getOptimizationInsights = async (
     },
     {
       $lookup: {
-        from: 'courses',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'course',
+        from: "courses",
+        localField: "_id",
+        foreignField: "_id",
+        as: "course",
       },
     },
     {
-      $unwind: '$course',
+      $unwind: "$course",
     },
     {
       $project: {
-        courseName: '$course.name',
+        courseName: "$course.name",
         enrollments: 1,
         completions: 1,
-        completionRate: { $multiply: ['$completionRate', 100] },
+        completionRate: { $multiply: ["$completionRate", 100] },
       },
     },
   ]);
@@ -1045,14 +1045,14 @@ const getOptimizationInsights = async (
       },
     },
     {
-      $unwind: '$chapters',
+      $unwind: "$chapters",
     },
     {
       $group: {
-        _id: '$chapters.chapterId',
+        _id: "$chapters.chapterId",
         started: { $sum: 1 },
         completed: {
-          $sum: { $cond: [{ $eq: ['$chapters.isCompleted', true] }, 1, 0] },
+          $sum: { $cond: [{ $eq: ["$chapters.isCompleted", true] }, 1, 0] },
         },
       },
     },
@@ -1060,7 +1060,7 @@ const getOptimizationInsights = async (
       $addFields: {
         dropOffRate: {
           $multiply: [
-            { $subtract: [1, { $divide: ['$completed', '$started'] }] },
+            { $subtract: [1, { $divide: ["$completed", "$started"] }] },
             100,
           ],
         },
@@ -1084,13 +1084,13 @@ const getOptimizationInsights = async (
         lowPerformingCourses,
         highDropOffChapters,
       },
-    })
+    }),
   );
 };
 
 const getContentGaps = async (
   res: NextApiResponse,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   const { start, end } = dateRange;
 
@@ -1103,26 +1103,26 @@ const getContentGaps = async (
     },
     {
       $lookup: {
-        from: 'courses',
-        localField: 'courseId',
-        foreignField: '_id',
-        as: 'course',
+        from: "courses",
+        localField: "courseId",
+        foreignField: "_id",
+        as: "course",
       },
     },
     {
-      $unwind: '$course',
+      $unwind: "$course",
     },
     {
       $group: {
-        _id: '$course.roadmap',
+        _id: "$course.roadmap",
         totalEnrollments: { $sum: 1 },
-        uniqueCourses: { $addToSet: '$courseId' },
+        uniqueCourses: { $addToSet: "$courseId" },
       },
     },
     {
       $addFields: {
-        courseCount: { $size: '$uniqueCourses' },
-        demandPerCourse: { $divide: ['$totalEnrollments', '$courseCount'] },
+        courseCount: { $size: "$uniqueCourses" },
+        demandPerCourse: { $divide: ["$totalEnrollments", "$courseCount"] },
       },
     },
     {
@@ -1140,13 +1140,13 @@ const getContentGaps = async (
   const difficultyGaps = await Course.aggregate([
     {
       $group: {
-        _id: '$difficultyLevel',
+        _id: "$difficultyLevel",
         courseCount: { $sum: 1 },
       },
     },
     {
       $lookup: {
-        from: 'usercourses',
+        from: "usercourses",
         pipeline: [
           {
             $match: {
@@ -1155,30 +1155,30 @@ const getContentGaps = async (
           },
           {
             $lookup: {
-              from: 'courses',
-              localField: 'courseId',
-              foreignField: '_id',
-              as: 'course',
+              from: "courses",
+              localField: "courseId",
+              foreignField: "_id",
+              as: "course",
             },
           },
           {
-            $unwind: '$course',
+            $unwind: "$course",
           },
           {
             $group: {
-              _id: '$course.difficultyLevel',
+              _id: "$course.difficultyLevel",
               totalEnrollments: { $sum: 1 },
             },
           },
         ],
-        as: 'enrollmentData',
+        as: "enrollmentData",
       },
     },
     {
       $addFields: {
         totalEnrollments: {
           $ifNull: [
-            { $arrayElemAt: ['$enrollmentData.totalEnrollments', 0] },
+            { $arrayElemAt: ["$enrollmentData.totalEnrollments", 0] },
             0,
           ],
         },
@@ -1186,11 +1186,11 @@ const getContentGaps = async (
           $divide: [
             {
               $ifNull: [
-                { $arrayElemAt: ['$enrollmentData.totalEnrollments', 0] },
+                { $arrayElemAt: ["$enrollmentData.totalEnrollments", 0] },
                 0,
               ],
             },
-            '$courseCount',
+            "$courseCount",
           ],
         },
       },
@@ -1204,7 +1204,7 @@ const getContentGaps = async (
         roadmapGaps,
         difficultyGaps,
       },
-    })
+    }),
   );
 };
 
@@ -1215,7 +1215,7 @@ const getContentList = async (
   limit: number,
   sortBy: string,
   sortOrder: number,
-  dateRange: { start: Date; end: Date }
+  dateRange: { start: Date; end: Date },
 ) => {
   const { start, end } = dateRange;
   const skip = (page - 1) * limit;
@@ -1232,7 +1232,7 @@ const getContentList = async (
   let totalContent: number;
 
   switch (contentType) {
-    case 'courses':
+    case "courses":
       content = await Course.find(matchCriteria)
         .sort(sortCriteria)
         .skip(skip)
@@ -1240,7 +1240,7 @@ const getContentList = async (
         .lean();
       totalContent = await Course.countDocuments(matchCriteria);
       break;
-    case 'projects':
+    case "projects":
       content = await Project.find(matchCriteria)
         .sort(sortCriteria)
         .skip(skip)
@@ -1248,7 +1248,7 @@ const getContentList = async (
         .lean();
       totalContent = await Project.countDocuments(matchCriteria);
       break;
-    case 'sheets':
+    case "sheets":
       content = await InterviewSheet.find(matchCriteria)
         .sort(sortCriteria)
         .skip(skip)
@@ -1256,7 +1256,7 @@ const getContentList = async (
         .lean();
       totalContent = await InterviewSheet.countDocuments(matchCriteria);
       break;
-    case 'webinars':
+    case "webinars":
       content = await Webinar.find(matchCriteria)
         .sort(sortCriteria)
         .skip(skip)
@@ -1268,8 +1268,8 @@ const getContentList = async (
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'Invalid content type specified',
-        })
+          message: "Invalid content type specified",
+        }),
       );
   }
 
@@ -1288,7 +1288,7 @@ const getContentList = async (
           hasPrev: page > 1,
         },
       },
-    })
+    }),
   );
 };
 

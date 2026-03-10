@@ -11,39 +11,39 @@ This document defines the styling conventions, UI patterns, and design system gu
 ```typescript
 // Tailwind CSS custom colors (tailwind.config.js)
 module.exports = {
-    theme: {
-        extend: {
-            colors: {
-                primary: {
-                    50: "#eff6ff",
-                    500: "#3b82f6",
-                    600: "#2563eb",
-                    700: "#1d4ed8"
-                },
-                secondary: {
-                    50: "#f8fafc",
-                    500: "#64748b",
-                    600: "#475569"
-                },
-                success: {
-                    50: "#f0fdf4",
-                    500: "#22c55e",
-                    600: "#16a34a"
-                },
-                warning: {
-                    50: "#fffbeb",
-                    500: "#f59e0b",
-                    600: "#d97706"
-                },
-                error: {
-                    50: "#fef2f2",
-                    500: "#ef4444",
-                    600: "#dc2626"
-                }
-            }
-        }
-    }
-}
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: "#eff6ff",
+          500: "#3b82f6",
+          600: "#2563eb",
+          700: "#1d4ed8",
+        },
+        secondary: {
+          50: "#f8fafc",
+          500: "#64748b",
+          600: "#475569",
+        },
+        success: {
+          50: "#f0fdf4",
+          500: "#22c55e",
+          600: "#16a34a",
+        },
+        warning: {
+          50: "#fffbeb",
+          500: "#f59e0b",
+          600: "#d97706",
+        },
+        error: {
+          50: "#fef2f2",
+          500: "#ef4444",
+          600: "#dc2626",
+        },
+      },
+    },
+  },
+};
 ```
 
 ### Typography Scale
@@ -51,23 +51,23 @@ module.exports = {
 ```typescript
 // Typography utilities
 const typography = {
-    // Headings
-    h1: "text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl",
-    h2: "text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl",
-    h3: "text-2xl font-bold tracking-tight text-gray-900",
-    h4: "text-xl font-semibold text-gray-900",
-    h5: "text-lg font-semibold text-gray-900",
-    h6: "text-base font-semibold text-gray-900",
+  // Headings
+  h1: "text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl",
+  h2: "text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl",
+  h3: "text-2xl font-bold tracking-tight text-gray-900",
+  h4: "text-xl font-semibold text-gray-900",
+  h5: "text-lg font-semibold text-gray-900",
+  h6: "text-base font-semibold text-gray-900",
 
-    // Body text
-    body: "text-base text-gray-700",
-    bodyLarge: "text-lg text-gray-700",
-    bodySmall: "text-sm text-gray-600",
+  // Body text
+  body: "text-base text-gray-700",
+  bodyLarge: "text-lg text-gray-700",
+  bodySmall: "text-sm text-gray-600",
 
-    // Special text
-    caption: "text-xs text-gray-500",
-    overline: "text-xs font-medium uppercase tracking-wide text-gray-500"
-}
+  // Special text
+  caption: "text-xs text-gray-500",
+  overline: "text-xs font-medium uppercase tracking-wide text-gray-500",
+};
 ```
 
 ## 🧩 Component Styling Patterns
@@ -568,16 +568,16 @@ export const LoadingCard: React.FC = () => {
 ```typescript
 // Purge unused styles in production
 module.exports = {
-    content: [
-        "./src/**/*.{js,ts,jsx,tsx}",
-        "./pages/**/*.{js,ts,jsx,tsx}",
-        "./components/**/*.{js,ts,jsx,tsx}"
-    ],
-    theme: {
-        extend: {}
-    },
-    plugins: []
-}
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
 
 // Use CSS-in-JS sparingly
 // Prefer Tailwind classes over styled-components for better performance

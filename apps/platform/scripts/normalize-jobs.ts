@@ -51,7 +51,7 @@ class JobNormalizer {
         const skills = normalizeAPIPayload(job.skills, JOB_SKILL_NORMALIZER);
         const location = normalizeAPIPayload(
           job.location,
-          JOB_LOCATION_NORMALIZER
+          JOB_LOCATION_NORMALIZER,
         );
         const role = normalizeAPIPayload(job.role, JOB_DOMAIN_NORMALIZER);
 
@@ -59,16 +59,16 @@ class JobNormalizer {
           job._id,
           {
             skills: this.deduplicateArray(
-              Array.from(job.skills || []).concat(Array.from(skills || []))
+              Array.from(job.skills || []).concat(Array.from(skills || [])),
             ),
             location: this.deduplicateArray(
-              Array.from(job.location || []).concat(Array.from(location || []))
+              Array.from(job.location || []).concat(Array.from(location || [])),
             ),
             role: this.deduplicateArray(
-              Array.from(job.role || []).concat(Array.from(role || []))
+              Array.from(job.role || []).concat(Array.from(role || [])),
             ),
           },
-          { new: true }
+          { new: true },
         );
       });
 
@@ -100,7 +100,7 @@ class JobNormalizer {
 
         for (const mapping of JOB_DOMAIN_MAPPER) {
           const matched = mapping.skills.some((skill) =>
-            jobSkills.includes(skill.toLowerCase())
+            jobSkills.includes(skill.toLowerCase()),
           );
 
           if (matched) {
@@ -230,7 +230,7 @@ class JobNormalizer {
               },
             },
           },
-        ])
+        ]),
       );
 
       const results = await Promise.all(updates);
@@ -240,7 +240,7 @@ class JobNormalizer {
       console.log(
         `✅ Batch ${this.page + 1}: Processed ${
           jobs.length
-        } jobs, Modified: ${modified}`
+        } jobs, Modified: ${modified}`,
       );
 
       this.page++;
@@ -262,7 +262,7 @@ class JobNormalizer {
 
       const updates = jobs.map(async (job) => {
         const cleanedSkills = (job.skills || []).filter(
-          (skill) => skill && /^[A-Z]/.test(skill.trim())
+          (skill) => skill && /^[A-Z]/.test(skill.trim()),
         );
 
         if (cleanedSkills.length === 0) {

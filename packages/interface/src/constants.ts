@@ -86,12 +86,9 @@ interface FooterProps {
   isMini?: boolean;
 }
 
-type QuestionDifficulty =
-  "EASY" | "MEDIUM" | "HARD"
-
+type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";
 
 type DsaSectionTabs = "description" | "topics" | "companies" | "code";
-
 
 export type {
   CelebrationAnimationProps,
@@ -104,5 +101,5 @@ export type {
   NavbarProps,
   NavbarVariantConfig,
   OutlineCardProps,
-  QuestionDifficulty
+  QuestionDifficulty,
 };

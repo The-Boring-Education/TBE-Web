@@ -98,13 +98,6 @@
     @apply text-label font-semibold text-greyDark;
   }
 
-  /* Image */
-  .image {
-    object-fit: contain;
-    width: 100%;
-    position: relative !important;
-  }
-
   /* Link */
   .link {
     @apply text-button-text text-contentLight;
@@ -176,6 +169,7 @@ button:active {
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

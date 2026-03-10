@@ -1,19 +1,19 @@
-import { FlexContainer, Image, Text } from '@tbe/components';
-import type { IconPillProps } from '@tbe/interface';
+import { FlexContainer, Image, Text } from "@tbe/components";
+import type { IconPillProps } from "@tbe/interface";
 
 const IconPill = ({
   iconPath,
   iconAltText,
   label,
   className,
-  backgroundColor = 'bg-dark',
+  backgroundColor = "bg-dark",
   labelColor,
 }: IconPillProps) => (
   <FlexContainer
     className={`gap-2 rounded-1 ${backgroundColor} p-2 ${className}`}
   >
-    <Image alt={iconAltText} className='w-4' fullWidth={false} src={iconPath} />
-    <Text className={`strong-text ${labelColor}`} level='p'>
+    <Image alt={iconAltText} className="w-4" fullWidth={false} src={iconPath} />
+    <Text className={`strong-text ${labelColor}`} level="p">
       {label}
     </Text>
   </FlexContainer>

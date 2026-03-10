@@ -1,24 +1,28 @@
-import { FlexContainer, Link } from '@tbe/components';
-import type { NavbarDropdownContainerProps } from '@tbe/interface';
+import { FlexContainer, Link } from "@tbe/components";
+import type { NavbarDropdownContainerProps } from "@tbe/interface";
 
 const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => (
-  <div className='p-2'>
+  <div className="p-2">
     {links.map(({ name, href, description, target, isDevelopment }) => {
       // Skip rendering Link if href is empty or undefined
-      if (!href || (typeof href === 'string' && href.trim() === '')) {
+      if (!href || (typeof href === "string" && href.trim() === "")) {
         return (
           <FlexContainer
             key={name}
-            className='relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-50 max-w-sm'
-            direction='col'
+            className="relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-50 max-w-sm"
+            direction="col"
             itemCenter={false}
           >
-            <FlexContainer direction='col' itemCenter={false}>
-              <div className='text-base font-semibold text-black dark:text-gray-900'>
-                {name}{' '}
-                {isDevelopment && <span className='text-secondary'>(In Dev)</span>}
+            <FlexContainer direction="col" itemCenter={false}>
+              <div className="text-base font-semibold text-black dark:text-gray-900">
+                {name}{" "}
+                {isDevelopment && (
+                  <span className="text-secondary">(In Dev)</span>
+                )}
               </div>
-              <p className='text-gray-600 dark:text-gray-700 break-words'>{description}</p>
+              <p className="text-gray-600 dark:text-gray-700 break-words">
+                {description}
+              </p>
             </FlexContainer>
           </FlexContainer>
         );
@@ -27,21 +31,25 @@ const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => (
       return (
         <FlexContainer
           key={name}
-          className='relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-50 max-w-sm'
-          direction='col'
+          className="relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-50 max-w-sm"
+          direction="col"
           itemCenter={false}
         >
-          <FlexContainer direction='col' itemCenter={false}>
+          <FlexContainer direction="col" itemCenter={false}>
             <Link
-              className='text-base font-semibold text-black dark:text-gray-900 hover:text-primary dark:hover:text-primary'
+              className="text-base font-semibold text-black dark:text-gray-900 hover:text-primary dark:hover:text-primary"
               href={href}
               target={target}
             >
-              {name}{' '}
-              {isDevelopment && <span className='text-secondary'>(In Dev)</span>}
-              <span className='absolute inset-0' />
+              {name}{" "}
+              {isDevelopment && (
+                <span className="text-secondary">(In Dev)</span>
+              )}
+              <span className="absolute inset-0" />
             </Link>
-            <p className='text-gray-600 dark:text-gray-700 break-words'>{description}</p>
+            <p className="text-gray-600 dark:text-gray-700 break-words">
+              {description}
+            </p>
           </FlexContainer>
         </FlexContainer>
       );

@@ -1,7 +1,7 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, LeaderboardEnum } from '@/lib/constants';
-import { type LeaderboardModel } from '@/lib/interfaces';
+import { DATABASE_MODELS, LeaderboardEnum } from "@/lib/constants";
+import { type LeaderboardModel } from "@/lib/interfaces";
 
 const LeaderboardEntrySchema = new Schema(
   {
@@ -15,7 +15,7 @@ const LeaderboardEntrySchema = new Schema(
       required: true,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const LeaderboardSchema = new Schema(
@@ -34,7 +34,7 @@ const LeaderboardSchema = new Schema(
       default: [],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Leaderboard: Model<LeaderboardModel> =

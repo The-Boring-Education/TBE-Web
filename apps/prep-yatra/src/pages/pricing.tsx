@@ -129,7 +129,7 @@ const PricingPage: React.FC = () => {
             userEmail: user.email,
             userName: user.name,
           }),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -152,7 +152,7 @@ const PricingPage: React.FC = () => {
           },
           () => {
             console.log("Payment dialog closed");
-          }
+          },
         );
       }
     } catch (error) {

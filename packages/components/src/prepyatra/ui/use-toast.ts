@@ -1,3 +1,3 @@
-import {toast,useToast} from "@tbe/hooks";
+import { toast, useToast } from "@tbe/hooks";
 
-export {toast,useToast};
+export { toast, useToast };

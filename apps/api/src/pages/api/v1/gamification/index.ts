@@ -1,14 +1,14 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from '@/lib/constants';
+import { apiStatusCodes } from "@/lib/constants";
 import {
   addGamificationDocInDB,
   getUserPointsFromDB,
   updateUserPointsInDB,
-} from '@/lib/database';
-import type { UserPointsActionType } from '@/lib/interfaces';
-import { cors } from '@/lib/utils';
-import { connectDB } from '@/middleware/api';
+} from "@/lib/database";
+import type { UserPointsActionType } from "@/lib/interfaces";
+import { cors } from "@/lib/utils";
+import { connectDB } from "@/middleware/api";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
@@ -17,9 +17,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { userId } = query as { userId: string };
 
   switch (req.method) {
-    case 'GET':
+    case "GET":
       return handleGetUserGamificationRecords(req, res, userId);
-    case 'POST':
+    case "POST":
       return handleUpdateGamificationRecord(req, res, userId);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json({
@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 const handleUpdateGamificationRecord = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  userId: string
+  userId: string,
 ) => {
   const { body } = req;
   const { actionType } = body as { actionType: UserPointsActionType };
@@ -40,14 +40,14 @@ const handleUpdateGamificationRecord = async (
   if (!actionType) {
     return res.status(apiStatusCodes.BAD_REQUEST).json({
       success: false,
-      message: 'Missing required fields',
+      message: "Missing required fields",
     });
   }
 
   const result = await updateUserPointsInDB(userId, actionType);
   return res.status(apiStatusCodes.OKAY).json({
     success: true,
-    message: 'Gamification record updated successfully',
+    message: "Gamification record updated successfully",
     data: result,
   });
 };
@@ -55,7 +55,7 @@ const handleUpdateGamificationRecord = async (
 const handleGetUserGamificationRecords = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  userId: string
+  userId: string,
 ) => {
   const { data, error } = await getUserPointsFromDB(userId);
 
@@ -65,14 +65,14 @@ const handleGetUserGamificationRecords = async (
 
     return res.status(apiStatusCodes.OKAY).json({
       success: true,
-      message: 'Gamification record created successfully',
+      message: "Gamification record created successfully",
       data,
     });
   }
 
   return res.status(apiStatusCodes.OKAY).json({
     success: true,
-    message: 'Gamification records fetched successfully',
+    message: "Gamification records fetched successfully",
     data,
   });
 };

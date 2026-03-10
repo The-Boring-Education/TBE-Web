@@ -1,10 +1,8 @@
-import type { usePaymentStatusProps } from '@tbe/interface';
-import type { UsePaymentAccessProps } from '@tbe/interface';
+import type { usePaymentStatusProps } from "@tbe/interface";
+import type { UsePaymentAccessProps } from "@tbe/interface";
 
-import usePaymentStatus from './usePaymentStatus';
-import useUser  from './useUser';
-
-
+import usePaymentStatus from "./usePaymentStatus";
+import useUser from "./useUser";
 
 const usePaymentAccess = ({
   productId,
@@ -27,8 +25,7 @@ const usePaymentAccess = ({
   // 1. It's premium AND
   // 2. User is not enrolled AND
   // 3. Payment is not purchased
-  const isLocked =
-    isPremium === true && !isEnrolled && isPurchased === false;
+  const isLocked = isPremium === true && !isEnrolled && isPurchased === false;
 
   // Determine if user has access
   const hasAccess = !isLocked;
@@ -42,4 +39,3 @@ const usePaymentAccess = ({
 };
 
 export default usePaymentAccess;
-

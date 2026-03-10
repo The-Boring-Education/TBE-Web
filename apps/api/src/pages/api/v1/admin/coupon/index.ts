@@ -1,12 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from '@/lib/constants';
-import {
-  createCouponFromDB,
-  getAllCouponsFromDB,
-} from '@/lib/database';
-import { cors, sendAPIResponse } from '@/lib/utils';
-import { adminMiddleware, connectDB } from '@/middleware/api';
+import { apiStatusCodes } from "@/lib/constants";
+import { createCouponFromDB, getAllCouponsFromDB } from "@/lib/database";
+import { cors, sendAPIResponse } from "@/lib/utils";
+import { adminMiddleware, connectDB } from "@/middleware/api";
 
 interface CreateCouponRequest {
   code: string;
@@ -22,7 +19,7 @@ interface CreateCouponRequest {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
   }
@@ -36,10 +33,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
 
   switch (method) {
-    case 'GET':
+    case "GET":
       return handleGetAllCoupons(res);
-    
-    case 'POST':
+
+    case "POST":
       return handleCreateCoupon(req, res);
 
     default:
@@ -47,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: apiStatusCodes.BAD_REQUEST,
           message: `Method ${method} not allowed`,
-        })
+        }),
       );
   }
 };
@@ -62,24 +59,24 @@ const handleGetAllCoupons = async (res: NextApiResponse) => {
         sendAPIResponse({
           status: apiStatusCodes.BAD_REQUEST,
           message: error,
-        })
+        }),
       );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: apiStatusCodes.OKAY,
-        message: 'Coupons fetched successfully',
+        message: "Coupons fetched successfully",
         data: coupons,
-      })
+      }),
     );
   } catch (error) {
-    console.error('Error fetching coupons:', error);
+    console.error("Error fetching coupons:", error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: apiStatusCodes.BAD_REQUEST,
-        message: 'Internal server error while fetching coupons',
-      })
+        message: "Internal server error while fetching coupons",
+      }),
     );
   }
 };
@@ -87,7 +84,7 @@ const handleGetAllCoupons = async (res: NextApiResponse) => {
 // POST - Create new coupon (admin only)
 const handleCreateCoupon = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   try {
     const {
@@ -106,8 +103,9 @@ const handleCreateCoupon = async (
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: apiStatusCodes.BAD_REQUEST,
-          message: 'Code, description, discountPercentage, and expiryDate are required',
-        })
+          message:
+            "Code, description, discountPercentage, and expiryDate are required",
+        }),
       );
     }
 
@@ -115,8 +113,8 @@ const handleCreateCoupon = async (
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: apiStatusCodes.BAD_REQUEST,
-          message: 'Discount percentage must be between 1 and 100',
-        })
+          message: "Discount percentage must be between 1 and 100",
+        }),
       );
     }
 
@@ -126,14 +124,15 @@ const handleCreateCoupon = async (
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: apiStatusCodes.BAD_REQUEST,
-          message: 'Expiry date must be in the future',
-        })
+          message: "Expiry date must be in the future",
+        }),
       );
     }
 
     // For now, set createdBy to a placeholder admin user ID
     // In a real scenario, you'd extract this from the authenticated user
-    const createdBy = req.headers['x-admin-user-id'] as string || '000000000000000000000000';
+    const createdBy =
+      (req.headers["x-admin-user-id"] as string) || "000000000000000000000000";
 
     const couponData = {
       code: code.trim().toUpperCase(),
@@ -152,26 +151,26 @@ const handleCreateCoupon = async (
     if (error) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
-            status: apiStatusCodes.BAD_REQUEST,
+          status: apiStatusCodes.BAD_REQUEST,
           message: error,
-        })
+        }),
       );
     }
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json(
       sendAPIResponse({
         status: apiStatusCodes.RESOURCE_CREATED,
-        message: 'Coupon created successfully',
+        message: "Coupon created successfully",
         data: newCoupon,
-      })
+      }),
     );
   } catch (error) {
-    console.error('Error creating coupon:', error);
+    console.error("Error creating coupon:", error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: apiStatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Internal server error while creating coupon',
-      })
+        message: "Internal server error while creating coupon",
+      }),
     );
   }
 };

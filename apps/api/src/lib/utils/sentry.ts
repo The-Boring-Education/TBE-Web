@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from "@sentry/nextjs";
 
 /**
  * Capture an exception with additional context
@@ -9,14 +9,14 @@ export const captureException = (
     tags?: Record<string, string>;
     extra?: Record<string, any>;
     user?: Record<string, any>;
-    level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
-  }
+    level?: "fatal" | "error" | "warning" | "info" | "debug";
+  },
 ) =>
   Sentry.captureException(error, {
     tags: context?.tags,
     extra: context?.extra,
     user: context?.user,
-    level: context?.level || 'error',
+    level: context?.level || "error",
   });
 
 /**
@@ -27,13 +27,13 @@ export const captureMessage = (
   context?: {
     tags?: Record<string, string>;
     extra?: Record<string, any>;
-    level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
-  }
+    level?: "fatal" | "error" | "warning" | "info" | "debug";
+  },
 ) =>
   Sentry.captureMessage(message, {
     tags: context?.tags,
     extra: context?.extra,
-    level: context?.level || 'info',
+    level: context?.level || "info",
   });
 
 /**
@@ -70,14 +70,14 @@ export const captureAPIError = (
   endpoint: string,
   method: string,
   statusCode?: number,
-  requestData?: any
+  requestData?: any,
 ) =>
   Sentry.captureException(error, {
     tags: {
-      section: 'api',
+      section: "api",
       endpoint,
       method,
-      status_code: statusCode?.toString() || 'unknown',
+      status_code: statusCode?.toString() || "unknown",
     },
     extra: {
       endpoint,
@@ -85,7 +85,7 @@ export const captureAPIError = (
       statusCode,
       requestData,
     },
-    level: 'error',
+    level: "error",
   });
 
 /**
@@ -95,20 +95,20 @@ export const captureDatabaseError = (
   error: Error,
   operation: string,
   collection?: string,
-  query?: any
+  query?: any,
 ) =>
   Sentry.captureException(error, {
     tags: {
-      section: 'database',
+      section: "database",
       operation,
-      collection: collection || 'unknown',
+      collection: collection || "unknown",
     },
     extra: {
       operation,
       collection,
       query,
     },
-    level: 'error',
+    level: "error",
   });
 
 /**
@@ -117,18 +117,18 @@ export const captureDatabaseError = (
 export const captureAuthError = (
   error: Error,
   authMethod: string,
-  userId?: string
+  userId?: string,
 ) =>
   Sentry.captureException(error, {
     tags: {
-      section: 'authentication',
+      section: "authentication",
       auth_method: authMethod,
     },
     extra: {
       authMethod,
       userId,
     },
-    level: 'warning',
+    level: "warning",
   });
 
 /**
@@ -138,11 +138,11 @@ export const capturePaymentError = (
   error: Error,
   paymentMethod: string,
   amount?: number,
-  userId?: string
+  userId?: string,
 ) =>
   Sentry.captureException(error, {
     tags: {
-      section: 'payment',
+      section: "payment",
       payment_method: paymentMethod,
     },
     extra: {
@@ -150,16 +150,16 @@ export const capturePaymentError = (
       amount,
       userId,
     },
-    level: 'error',
+    level: "error",
   });
 
 /**
  * Track performance issues
  */
-export const trackPerformance = (name: string, value: number, unit = 'ms') => {
+export const trackPerformance = (name: string, value: number, unit = "ms") => {
   Sentry.addBreadcrumb({
     message: `Performance: ${name}`,
-    level: 'info',
+    level: "info",
     data: {
       value,
       unit,
@@ -173,12 +173,12 @@ export const trackPerformance = (name: string, value: number, unit = 'ms') => {
 export const addBreadcrumb = (
   message: string,
   category: string,
-  data?: Record<string, any>
+  data?: Record<string, any>,
 ) => {
   Sentry.addBreadcrumb({
     message,
     category,
-    level: 'info',
+    level: "info",
     data,
   });
 };
@@ -192,7 +192,7 @@ export const startSpan = (name: string, op: string, callback: () => any) =>
       name,
       op,
     },
-    callback
+    callback,
   );
 
 export default {

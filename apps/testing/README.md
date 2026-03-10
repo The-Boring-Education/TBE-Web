@@ -5,6 +5,7 @@ This directory contains a robust testing suite for the TBE Platform, covering bo
 ## 📋 Overview
 
 The testing suite is designed with the following principles:
+
 - **Simple & Focused**: Test simple endpoints thoroughly, skip complex ones
 - **Robust Component Tests**: Ensure components are bulletproof and can't be easily broken
 - **Maintainable**: Easy to understand and extend
@@ -33,46 +34,53 @@ apps/testing/
 ## 🚀 Running Tests
 
 ### All Tests
+
 ```bash
 pnpm test
 ```
 
 ### Unit Tests Only
+
 ```bash
 pnpm test:unit
 ```
 
 ### API Tests Only
+
 ```bash
 pnpm test:api
 ```
 
 ### Watch Mode
+
 ```bash
 pnpm test:unit:watch
 ```
 
 ### Coverage
+
 ```bash
 pnpm test:coverage
 ```
-
 
 ## 📝 API Testing
 
 ### Tested Endpoints
 
 #### Quiz API (`/api/v1/quiz`)
+
 - ✅ `GET /api/v1/quiz` - Get quiz categories
 - ✅ `POST /api/v1/quiz` - Create new quiz
 - ✅ Quiz validation and error handling
 
 #### Interview Prep API (`/api/v1/interview-prep`)
+
 - ✅ `GET /api/v1/interview-prep` - Get all sheets or by slug
 - ✅ `POST /api/v1/interview-prep` - Create new interview sheet
 - ✅ User-specific data handling
 
 #### Shiksha API (`/api/v1/shiksha`)
+
 - ✅ `GET /api/v1/shiksha` - Get all courses or by slug
 - ✅ `POST /api/v1/shiksha` - Create new course
 - ✅ Enrollment status handling
@@ -90,19 +98,23 @@ Located in `src/api/utils/api-test-helpers.ts`:
 ### Example API Test
 
 ```typescript
-import { describe, it, expect, vi } from 'vitest';
-import { createMockRequest, createMockResponse, executeHandler } from '../utils/api-test-helpers';
-import handler from '../../../../api/src/pages/api/v1/quiz/index';
+import { describe, it, expect, vi } from "vitest";
+import {
+  createMockRequest,
+  createMockResponse,
+  executeHandler,
+} from "../utils/api-test-helpers";
+import handler from "../../../../api/src/pages/api/v1/quiz/index";
 
-describe('Quiz API', () => {
-    it('should return quiz categories', async () => {
-        const req = createMockRequest('GET');
-        const res = createMockResponse();
-        const result = await executeHandler(handler, req, res);
-        
-        expect(result.statusCode).toBe(200);
-        expect(result.data.success).toBe(true);
-    });
+describe("Quiz API", () => {
+  it("should return quiz categories", async () => {
+    const req = createMockRequest("GET");
+    const res = createMockResponse();
+    const result = await executeHandler(handler, req, res);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.data.success).toBe(true);
+  });
 });
 ```
 
@@ -111,6 +123,7 @@ describe('Quiz API', () => {
 ### Tested Components
 
 #### Button Component
+
 - ✅ All variants (PRIMARY, SECONDARY, OUTLINE, GHOST, SUCCESS, NEUTRAL)
 - ✅ All sizes (SMALL, MEDIUM, LARGE)
 - ✅ Active/disabled states
@@ -122,6 +135,7 @@ describe('Quiz API', () => {
 - ✅ Accessibility
 
 #### LoadingSpinner Component
+
 - ✅ Size customization (height, width)
 - ✅ Border color customization
 - ✅ Margin classes
@@ -129,6 +143,7 @@ describe('Quiz API', () => {
 - ✅ Animation classes
 
 #### Modal Component
+
 - ✅ Open/close states
 - ✅ Title rendering
 - ✅ Children content
@@ -138,6 +153,7 @@ describe('Quiz API', () => {
 - ✅ Accessibility
 
 #### Card Components
+
 - ✅ Base Card component
 - ✅ CardHeader
 - ✅ CardTitle
@@ -174,6 +190,7 @@ describe('Button Component', () => {
 ## 🎯 Testing Philosophy
 
 ### API Tests
+
 - **Simple Endpoints**: Test thoroughly with all edge cases
 - **Complex Endpoints**: Skip if too complex (as per requirements)
 - **Error Handling**: Always test error scenarios
@@ -181,6 +198,7 @@ describe('Button Component', () => {
 - **Database Mocking**: Mock all database operations
 
 ### Component Tests
+
 - **Robustness**: Make tests so robust that components can't be easily broken
 - **Edge Cases**: Test all edge cases and error states
 - **Accessibility**: Ensure components are accessible
@@ -197,14 +215,18 @@ describe('Button Component', () => {
 ## 🔧 Configuration
 
 ### Vitest Config
+
 Located in `vitest.config.ts`:
+
 - Environment: `jsdom` for React components
 - Setup files: `src/test-utils/setup.ts`
 - Coverage provider: `v8`
 - Test timeout: 10 seconds
 
 ### Test Setup
+
 Located in `src/test-utils/setup.ts`:
+
 - React Testing Library cleanup
 - Next.js router mocking
 - NextAuth mocking
@@ -213,6 +235,7 @@ Located in `src/test-utils/setup.ts`:
 ## 🚫 What NOT to Test
 
 As per requirements:
+
 - ❌ Complex API endpoints (skip them)
 - ❌ Third-party library internals
 - ❌ Implementation details (test behavior, not implementation)
@@ -231,21 +254,25 @@ As per requirements:
 ## 🐛 Debugging Tests
 
 ### Run Single Test File
+
 ```bash
 pnpm test src/api/quiz/quiz.test.ts
 ```
 
 ### Run Tests in Watch Mode
+
 ```bash
 pnpm test:unit:watch
 ```
 
 ### Debug with VS Code
+
 Add breakpoints and use the VS Code debugger with the "Debug Jest Tests" configuration.
 
 ## 📈 Continuous Integration
 
 Tests run automatically in CI/CD pipeline:
+
 - All unit tests
 - All API tests
 - Coverage reports
@@ -254,6 +281,7 @@ Tests run automatically in CI/CD pipeline:
 ## 🤝 Contributing
 
 When adding new tests:
+
 1. Follow existing patterns
 2. Use provided utilities
 3. Mock external dependencies

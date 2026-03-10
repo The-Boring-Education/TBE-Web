@@ -5,5 +5,4 @@
  * for the TBE Platform monorepo.
  */
 
-export * from "./routes-registry"
-
+export * from "./routes-registry";

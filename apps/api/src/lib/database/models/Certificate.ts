@@ -1,7 +1,7 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { CERTIFICATE_TYPE, DATABASE_MODELS } from '@/lib/constants';
-import type { CertificateModel } from '@/lib/interfaces'; 
+import { CERTIFICATE_TYPE, DATABASE_MODELS } from "@/lib/constants";
+import type { CertificateModel } from "@/lib/interfaces";
 
 const CertificateSchema = new Schema<CertificateModel>(
   {
@@ -48,7 +48,7 @@ const CertificateSchema = new Schema<CertificateModel>(
         return ret;
       },
     },
-  }
+  },
 );
 
 const Certificate: Model<CertificateModel> =

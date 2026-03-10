@@ -70,18 +70,18 @@ export interface LinkButtonProps extends LinkProps {
   buttonProps: ButtonProps;
   href: string;
   className?: string;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
   noLoader?: boolean;
 }
 
 export interface ButtonProps {
   variant:
-  | "PRIMARY"
-  | "OUTLINE"
-  | "GHOST"
-  | "SUCCESS"
-  | "SECONDARY"
-  | "NEUTRAL";
+    | "PRIMARY"
+    | "OUTLINE"
+    | "GHOST"
+    | "SUCCESS"
+    | "SECONDARY"
+    | "NEUTRAL";
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -348,7 +348,7 @@ export interface ProjectHeroMetaContainerProps {
   subtitle: string;
   title: string;
   titleClassName?: string;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
 }
 
 export interface ProjectHeroContainerProps {
@@ -380,7 +380,7 @@ export interface SheetHeroContainerProps {
   isPurchased?: boolean;
   redirectTo?: string;
   backHref?: string;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
 }
 
 export interface AccordionProps {
@@ -427,14 +427,14 @@ export interface QuestionLinkProps {
   currentQuestionId: string;
   handleQuestionClick: (question: string, questionId: string) => void;
   frequency: QuestionFrequencyType;
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
   isStarred?: boolean;
 }
 
 export interface MDXRendererProps {
   mdxSource: string;
   actions?: ReactNode[];
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
 }
 
 export interface AlertProps {
@@ -453,7 +453,7 @@ export interface LearningSidebarPanelProps {
   totalItems: number;
   completedItems: number;
   children?: ReactNode;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
   onClose?: () => void;
 }
 
@@ -470,7 +470,7 @@ export interface LearningQuestionListProps {
   isLocked?: boolean;
   href: string;
   onQuestionSelect: (questionMeta: string, questionId: string) => void;
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
 }
 
 export interface LearningChapterListProps {
@@ -848,7 +848,10 @@ export interface ResumeEvaluationData {
 }
 
 export interface PaymentCardProps {
-  course: BaseShikshaCourseResponseProps | BaseInterviewSheetResponseProps | BaseProductProps;
+  course:
+    | BaseShikshaCourseResponseProps
+    | BaseInterviewSheetResponseProps
+    | BaseProductProps;
   onClose: () => void;
   productType: string;
 }
@@ -886,7 +889,14 @@ export interface StarButtonProps {
 }
 
 export interface LoginCardNewProps {
-  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus" | "dsayatra";
+  variant?:
+    | "default"
+    | "platform"
+    | "prepyatra"
+    | "quizes"
+    | "resume-yatra"
+    | "oncampus"
+    | "dsayatra";
   customRedirectPath?: string;
   theme?: "light" | "dark";
 }
@@ -974,7 +984,6 @@ export interface DsaQuestionCardProps {
 export interface QuestionDetailProps {
   question: DsaQuestion | null;
 }
-
 
 export interface ExampleCardProps {
   index: number;

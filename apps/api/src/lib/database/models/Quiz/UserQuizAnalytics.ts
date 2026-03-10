@@ -1,6 +1,6 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
+import { DATABASE_MODELS } from "@/lib/constants";
 
 export interface ProgressTimelineEntry {
   date: Date;
@@ -54,7 +54,7 @@ const ProgressTimelineSchema = new Schema<ProgressTimelineEntry>(
       min: 0,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const DifficultyPerformanceSubSchema = new Schema(
@@ -71,7 +71,7 @@ const DifficultyPerformanceSubSchema = new Schema(
       max: 1,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const DifficultyPerformanceSchema = new Schema<DifficultyPerformance>(
@@ -80,7 +80,7 @@ const DifficultyPerformanceSchema = new Schema<DifficultyPerformance>(
     medium: DifficultyPerformanceSubSchema,
     hard: DifficultyPerformanceSubSchema,
   },
-  { _id: false }
+  { _id: false },
 );
 
 const UserQuizAnalyticsSchema = new Schema<UserQuizAnalyticsModel>(
@@ -88,11 +88,11 @@ const UserQuizAnalyticsSchema = new Schema<UserQuizAnalyticsModel>(
     userId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
-      required: [true, 'User ID is required'],
+      required: [true, "User ID is required"],
     },
     categoryName: {
       type: String,
-      required: [true, 'Category name is required'],
+      required: [true, "Category name is required"],
     },
     totalAttempts: {
       type: Number,
@@ -138,7 +138,7 @@ const UserQuizAnalyticsSchema = new Schema<UserQuizAnalyticsModel>(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Unique index per user-category combination
@@ -149,7 +149,10 @@ UserQuizAnalyticsSchema.index({ categoryName: 1, bestScore: -1 });
 UserQuizAnalyticsSchema.index({ categoryName: 1, averageScore: -1 });
 
 const UserQuizAnalytics: Model<UserQuizAnalyticsModel> =
-  models?.UserQuizAnalytics || 
-  model<UserQuizAnalyticsModel>(DATABASE_MODELS.USER_QUIZ_ANALYTICS, UserQuizAnalyticsSchema);
+  models?.UserQuizAnalytics ||
+  model<UserQuizAnalyticsModel>(
+    DATABASE_MODELS.USER_QUIZ_ANALYTICS,
+    UserQuizAnalyticsSchema,
+  );
 
 export default UserQuizAnalytics;

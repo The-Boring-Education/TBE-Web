@@ -33,28 +33,28 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
     {
       url: `${routes.api.userDashboard}?userId=${user?.id}`,
     },
-    { enabled: !!user?.id }
+    { enabled: !!user?.id },
   );
 
   const courses: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
     response?.data.enrolledCourses,
-    mapCourseResponseToCard
+    mapCourseResponseToCard,
   );
 
   const projects: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
     response?.data.enrolledProjects,
     mapProjectResponseToCard,
-    { isEnrolled: true }
+    { isEnrolled: true },
   );
 
   const interviewSheets: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
     response?.data.enrolledSheets,
-    mapInterviewSheetResponseToCard
+    mapInterviewSheetResponseToCard,
   );
 
   const userPlaylist: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
     response?.data.enrolledPlaylists,
-    mapUserPlaylistResponseToCard
+    mapUserPlaylistResponseToCard,
   );
 
   if (loadingUser) return;

@@ -163,13 +163,19 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       <CardContent className="p-1 mt-0.1">
         <div className="space-y-1">
           <FlexContainer className="justify-between text-xs items-center">
-            <Text level="h1" className="text-muted-foreground text-sm flex items-center gap-2">
+            <Text
+              level="h1"
+              className="text-muted-foreground text-sm flex items-center gap-2"
+            >
               <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
                 <span className="text-sm">💼</span>
               </div>
               Experience
             </Text>
-            <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1">
+            <Badge
+              variant="default"
+              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1"
+            >
               {profile?.prepYatra?.experienceLevel || "Not set"}
             </Badge>
           </FlexContainer>
@@ -177,13 +183,19 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           <div className="border-t border-[#FF5757]/10" />
 
           <FlexContainer className="justify-between text-xs items-center">
-            <Text level="h1" className="text-muted-foreground text-sm flex items-center gap-2">
+            <Text
+              level="h1"
+              className="text-muted-foreground text-sm flex items-center gap-2"
+            >
               <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
                 <span className="text-sm">🎯</span>
               </div>
               Goal
             </Text>
-            <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1">
+            <Badge
+              variant="default"
+              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1"
+            >
               {profile?.prepYatra?.goal || "Not set"}
             </Badge>
           </FlexContainer>
@@ -191,45 +203,65 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           <div className="border-t border-[#FF5757]/10" />
 
           <FlexContainer className="justify-between text-xs items-center">
-            <Text level="h1" className="text-muted-foreground text-sm flex items-center gap-2">
+            <Text
+              level="h1"
+              className="text-muted-foreground text-sm flex items-center gap-2"
+            >
               <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
                 <span className="text-sm">👔</span>
               </div>
               Occupation
             </Text>
-            <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1">
-              {profile?.occupation ? profile.occupation.replace("_", " ") : "Not set"}
+            <Badge
+              variant="default"
+              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1"
+            >
+              {profile?.occupation
+                ? profile.occupation.replace("_", " ")
+                : "Not set"}
             </Badge>
           </FlexContainer>
 
           <div className="border-t border-[#FF5757]/10" />
 
           <FlexContainer className="justify-between text-xs items-center">
-            <Text level="h1" className="text-muted-foreground text-sm flex items-center gap-2">
+            <Text
+              level="h1"
+              className="text-muted-foreground text-sm flex items-center gap-2"
+            >
               <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
                 <span className="text-sm">🎓</span>
               </div>
               Purpose
             </Text>
-            <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1 max-w-[65%] text-right">
+            <Badge
+              variant="default"
+              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1 max-w-[65%] text-right"
+            >
               {profile?.purpose?.length
-                ? profile.purpose.map((p) => String(p).replace("_", " ")).join(", ")
+                ? profile.purpose
+                    .map((p) => String(p).replace("_", " "))
+                    .join(", ")
                 : "Not set"}
             </Badge>
-
-
           </FlexContainer>
 
           <div className="border-t border-[#FF5757]/10" />
 
           <FlexContainer className="justify-between text-xs items-center">
-            <Text level="h1" className="text-muted-foreground text-sm flex items-center gap-2">
+            <Text
+              level="h1"
+              className="text-muted-foreground text-sm flex items-center gap-2"
+            >
               <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
                 <span className="text-sm">📅</span>
               </div>
               Joined
             </Text>
-            <Badge variant="default" className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200  text-xs px-3 py-1">
+            <Badge
+              variant="default"
+              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200  text-xs px-3 py-1"
+            >
               {profile?.createdAt
                 ? new Date(profile.createdAt).toLocaleDateString()
                 : "Unknown"}
@@ -261,7 +293,6 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             />
           )}
         </div>
-
       </CardContent>
     </Card>
   );

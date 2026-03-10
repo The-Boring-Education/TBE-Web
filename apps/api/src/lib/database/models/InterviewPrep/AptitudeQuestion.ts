@@ -1,39 +1,40 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
 import {
+  APTITUDE_TOPIC_SLUGS,
   DATABASE_MODELS,
   DSA_DIFFICULTY,
-} from '@/lib/constants';
+} from "@/lib/constants";
 import type {
   AptitudeQuestionModel,
   AptitudeQuestionOptionModel,
-} from '@/lib/interfaces';
+} from "@/lib/interfaces";
 
 const AptitudeOptionSchema = new Schema<AptitudeQuestionOptionModel>(
   {
     text: {
       type: String,
-      required: [true, 'Option text is required'],
+      required: [true, "Option text is required"],
     },
     isCorrect: {
       type: Boolean,
       default: false,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const AptitudeQuestionSchema = new Schema<AptitudeQuestionModel>(
   {
-    topicId: {
-      type: Schema.Types.ObjectId,
-      ref: DATABASE_MODELS.APTITUDE_TOPIC,
-      required: [true, 'Topic ID is required'],
+    topic: {
+      type: String,
+      required: [true, "Topic slug is required"],
+      enum: APTITUDE_TOPIC_SLUGS,
       index: true,
     },
     question: {
       type: String,
-      required: [true, 'Question text is required'],
+      required: [true, "Question text is required"],
     },
     options: {
       type: [AptitudeOptionSchema],
@@ -41,12 +42,12 @@ const AptitudeQuestionSchema = new Schema<AptitudeQuestionModel>(
     },
     answer: {
       type: String,
-      default: '',
+      default: "",
     },
     difficulty: {
       type: String,
       enum: DSA_DIFFICULTY,
-      default: 'MEDIUM',
+      default: "MEDIUM",
     },
     order: {
       type: Number,
@@ -75,24 +76,17 @@ const AptitudeQuestionSchema = new Schema<AptitudeQuestionModel>(
         return ret;
       },
     },
-  }
+  },
 );
 
-AptitudeQuestionSchema.index({ topicId: 1, order: 1 });
+AptitudeQuestionSchema.index({ topic: 1, order: 1 });
 AptitudeQuestionSchema.index({ difficulty: 1 });
-
-AptitudeQuestionSchema.virtual('topic', {
-  ref: DATABASE_MODELS.APTITUDE_TOPIC,
-  localField: 'topicId',
-  foreignField: '_id',
-  justOne: true,
-});
 
 const AptitudeQuestion: Model<AptitudeQuestionModel> =
   models?.AptitudeQuestion ||
   model<AptitudeQuestionModel>(
     DATABASE_MODELS.APTITUDE_QUESTION,
-    AptitudeQuestionSchema
+    AptitudeQuestionSchema,
   );
 
 export default AptitudeQuestion;

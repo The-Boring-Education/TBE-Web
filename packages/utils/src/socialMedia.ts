@@ -1,6 +1,6 @@
 // /**
 //  * Social Media Templates & Utilities
-//  * 
+//  *
 //  * Extracted from prep-yatra and made reusable
 //  * Handles social media sharing functionality
 //  */
@@ -29,7 +29,7 @@
 //     challengeProgress: (data: PrepYatraShareData): SocialMediaShareData => {
 //         const { challengeName, currentDay, progressText, nextGoals = [], totalTime, streak } = data
 //         const appUrl = process.env.NEXT_PUBLIC_PREPYATRA_BASE_URL || 'https://prepyatra.theboringeducation.com'
-        
+
 //         const goals = nextGoals
 //             .map((goal, index) => `${index + 1}. ${goal}`)
 //             .join('\n')
@@ -105,9 +105,9 @@
 //         const maxLength = 280
 //         const hashtagString = data.hashtags ? ` ${data.hashtags.map(tag => `#${tag}`).join(' ')}` : ''
 //         const urlLength = 23 // Twitter's t.co URL length
-        
+
 //         const availableLength = maxLength - urlLength - hashtagString.length - 3 // 3 for spaces
-//         const truncatedText = data.text.length > availableLength 
+//         const truncatedText = data.text.length > availableLength
 //             ? `${data.text.substring(0, availableLength - 3)}...`
 //             : data.text
 
@@ -178,7 +178,7 @@
 //  */
 // export const copyToClipboard = async (data: SocialMediaShareData): Promise<boolean> => {
 //     const text = formatForPlatform.general(data)
-    
+
 //     try {
 //         await navigator.clipboard.writeText(text)
 //         return true

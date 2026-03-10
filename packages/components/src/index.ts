@@ -14,6 +14,8 @@ export { default as AdminTable } from "./admin/AdminTable";
 // Common Components
 export { default as Accordion } from "./common/Accordion";
 export { default as AccordionLinkItem } from "./common/Accordion/AccordionLinkItem";
+export type { AccordionListItem } from "./common/Accordion/AccordionList";
+export { default as AccordionList } from "./common/Accordion/AccordionList";
 export { default as Alert } from "./common/Alert";
 export { default as AnalyticsWrapper } from "./common/Analytics/AnalyticsWrapper";
 export { default as Banner } from "./common/Banner";
@@ -49,8 +51,8 @@ export { default as GamificationToast } from "./common/GamificationToast";
 export { default as BackgroundImage } from "./common/Images/BackgroundImage";
 export { default as Image } from "./common/Images/Image";
 export { default as ImageLink } from "./common/Images/ImageLink";
-export { default as ProductLogo } from "./common/Images/ProductLogo";
 export { default as Logo } from "./common/Images/Logo";
+export { default as ProductLogo } from "./common/Images/ProductLogo";
 export { default as UserAvatar } from "./common/Images/UserAvatar";
 export { default as ChapterLink } from "./common/Learning/ChapterLink";
 export { default as LearningChapterList } from "./common/Learning/LearningChapterList";
@@ -77,9 +79,9 @@ export { default as Text } from "./common/Typography/Text";
 export { default as AboutTBE } from "./containers/Cards/AboutTBE";
 export { default as CardContainerA } from "./containers/Cards/CardContainerA";
 export { default as CardContainerB } from "./containers/Cards/CardContainerB";
-export { default as ExampleCard } from "./containers/Cards/ExampleCard";
-export { DsaQuestionCard } from "./containers/Cards/DsaQuestionCard"
+export { DsaQuestionCard } from "./containers/Cards/DsaQuestionCard";
 export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
+export { default as ExampleCard } from "./containers/Cards/ExampleCard";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
 export { default as Leaderboard } from "./containers/Cards/Leaderboard";
@@ -89,13 +91,12 @@ export { default as MentorshipCard } from "./containers/Cards/MentorshipCard";
 export { default as NotificationContainer } from "./containers/Cards/NotificationContainer";
 export { default as PaymentCard } from "./containers/Cards/PaymentCard";
 export { default as PlaylistSkillCard } from "./containers/Cards/PlaylistSkillCard";
-export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetailPanel"
+export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetailPanel";
 export { default as QuizSection } from "./containers/Cards/QuizSection";
 export { default as Testimonials } from "./containers/Cards/Testimonials";
 export { default as UserLevelProgressContainer } from "./containers/Cards/UserLevelProgressContainer";
 export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaughtAt";
 export { default as WebibarCard } from "./containers/Cards/WebibarCard";
-
 
 // Container Components - Card Items
 export { default as ContactCard } from "./containers/Cards/Items/ContactCard";
@@ -121,9 +122,9 @@ export { default as RadioButtonContainer } from "./containers/Forms/RadioButtonC
 export { default as UploadFileInput } from "./containers/Forms/UploadFileInput";
 
 // Container Components - Page
+export { default as FAQSection } from "./common/FAQSection";
 export { default as NotFound } from "./containers/Cards/NotFound";
 export { default as CohortJourneyContainer } from "./containers/Page/Cohort/CohortJourneyContainer";
-export { default as FAQSection } from "./containers/Page/Cohort/FAQSection";
 export { default as InterviewPrepSection } from "./containers/Page/Cohort/InterviewPrepSection";
 export { default as PrevCohortProjects } from "./containers/Page/Cohort/PrevCohortProjects";
 export { default as SessionDetailsSection } from "./containers/Page/Cohort/SessionDetailsSection";
@@ -170,6 +171,8 @@ export {
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
 export { default as Footer } from "./layout/Footer";
 export { default as Navbar } from "./layout/Navbar";
+export { default as LearningNavbar } from "./layout/LearningNavbar";
+export { default as LearningEnvironmentLayout } from "./layout/LearningEnvironmentLayout";
 export { default as Layout } from "./layout/Page";
 export { default as Section } from "./layout/Section";
 export type {
@@ -177,7 +180,7 @@ export type {
   BreadcrumbItem,
   CourseSchema,
   FAQItem,
-  SchemaType
+  SchemaType,
 } from "./layout/SEO";
 export { default as SEO } from "./layout/SEO";
 export {
@@ -186,7 +189,7 @@ export {
   getCourseSchema,
   getFAQSchema,
   getOrganizationSchema,
-  getWebSiteSchema
+  getWebSiteSchema,
 } from "./layout/SEO";
 export { PageSEO, default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./prepyatra";
@@ -226,10 +229,10 @@ export {
 } from "./prepyatra/ui/tooltip";
 
 // Export all UI components from the main ui directory
+export * from "./common/Icons/ExternalIcons";
 export type { PageHeaderProps } from "./layout/PageHeader";
 export { default as PageHeader } from "./layout/PageHeader";
 export { default as QuestionDetails } from "./layout/QuestionDetails";
 export { default as QuestionSidebar } from "./layout/QuestionSidebar";
 export * from "./techyatra";
-export * from "./common/Icons/ExternalIcons";
 export * from "./ui";

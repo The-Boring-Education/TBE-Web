@@ -1,46 +1,46 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from '@/lib/constants';
-import type { CourseChapterModel, CourseModel } from '@/lib/interfaces';
+import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from "@/lib/constants";
+import type { CourseChapterModel, CourseModel } from "@/lib/interfaces";
 
 const chapterSchema = new Schema<CourseChapterModel>(
   {
     name: {
       type: String,
-      required: [true, 'Chapter Name is required'],
+      required: [true, "Chapter Name is required"],
     },
     content: {
       type: String,
-      required: [true, 'Chapter content is required'],
+      required: [true, "Chapter content is required"],
     },
     isOptional: {
       type: Boolean,
     },
   },
-  { timestamps: true, _id: true }
+  { timestamps: true, _id: true },
 );
 
 const CourseSchema = new Schema<CourseModel>(
   {
     name: {
       type: String,
-      required: [true, 'Course name is required'],
+      required: [true, "Course name is required"],
     },
     meta: { type: String },
     slug: {
       type: String,
-      required: [true, 'Slug is required'],
+      required: [true, "Slug is required"],
     },
     coverImageURL: {
       type: String,
-      required: [true, 'Course thumbnail is required'],
+      required: [true, "Course thumbnail is required"],
     },
     description: {
       type: String,
     },
     liveOn: {
       type: Date,
-      required: [true, 'Live on is required'],
+      required: [true, "Live on is required"],
     },
     isPremium: {
       type: Boolean,
@@ -79,7 +79,7 @@ const CourseSchema = new Schema<CourseModel>(
         return ret;
       },
     },
-  }
+  },
 );
 
 const Course: Model<CourseModel> =

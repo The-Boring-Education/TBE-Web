@@ -1,4 +1,3 @@
- 
 // Base types for all onboarding products
 export interface BaseOnboardingFields {
   [key: string]: unknown;
@@ -48,7 +47,7 @@ export interface User {
 export interface OnboardingFieldConfig {
   name: string;
   label: string;
-  type: 'text' | 'select' | 'multiselect' | 'tel' | 'email' | 'url';
+  type: "text" | "select" | "multiselect" | "tel" | "email" | "url";
   required: boolean;
   options?: string[];
   step: number;
@@ -75,14 +74,18 @@ export interface OnboardingProductConfig {
   fields: OnboardingFieldConfig[];
   api: {
     endpoint: string | ((_userId: string) => string);
-    method: 'POST' | 'PUT' | 'PATCH';
-    transformPayload: (_form: unknown, _userId: string, _from?: string) => unknown;
+    method: "POST" | "PUT" | "PATCH";
+    transformPayload: (
+      _form: unknown,
+      _userId: string,
+      _from?: string,
+    ) => unknown;
   };
   validation?: {
     custom?: (_form: unknown) => boolean | string;
   };
   ui?: {
-    theme?: 'default' | 'dark' | 'minimal';
+    theme?: "default" | "dark" | "minimal";
     branding?: {
       logo?: string;
       title?: string;
@@ -117,7 +120,7 @@ export interface UseOnboardingReturn extends OnboardingState {
   handleBack: () => void;
   handleFinish: () => Promise<void>;
   isFieldValid: boolean;
-   
+
   setForm: (_form: unknown) => void;
   setUsernameAvailability: (_available: boolean) => void;
   setUsernameChecking: (_checking: boolean) => void;

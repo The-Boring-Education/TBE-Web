@@ -69,7 +69,7 @@ const getProjectPageProps = async (context: any) => {
       const user = await isUserAuthenticated(req);
 
       const { status, data } = await fetchAPIData(
-        routes.api.projectBySlugWithUser(projectSlug, user?.id)
+        routes.api.projectBySlugWithUser(projectSlug, user?.id),
       );
 
       // If the project data is not found, return the message
@@ -97,7 +97,7 @@ const getProjectPageProps = async (context: any) => {
         const selectedChapterMeta = getSelectedProjectChapterMeta(
           project,
           sectionId,
-          chapterId
+          chapterId,
         );
 
         if (selectedChapterMeta) {
@@ -106,10 +106,10 @@ const getProjectPageProps = async (context: any) => {
       } else {
         // No specific chapter requested - find the first incomplete chapter or first chapter
         const allChapters = project.sections.flatMap(
-          (section) => section.chapters
+          (section) => section.chapters,
         );
         const firstIncompleteChapter = allChapters.find(
-          (chapter) => !chapter.isCompleted
+          (chapter) => !chapter.isCompleted,
         );
 
         if (firstIncompleteChapter) {
@@ -173,7 +173,7 @@ const getPlaylistPageProps = async (context: any) => {
 
   try {
     const { status, data } = await fetchAPIData(
-      routes.api.youfocusUserPlaylistById(playlistId, user?.id)
+      routes.api.youfocusUserPlaylistById(playlistId, user?.id),
     );
 
     if (!status || !data) {
@@ -217,7 +217,7 @@ const getCoursePageProps = async (context: any) => {
       const user = await isUserAuthenticated(req);
 
       const { status, data } = await fetchAPIData(
-        routes.api.courseBySlugWithUser(courseSlug, user?.id)
+        routes.api.courseBySlugWithUser(courseSlug, user?.id),
       );
 
       // If the course data is not found, return the message
@@ -304,7 +304,7 @@ const getSheetPageProps = async (context: any) => {
       const user = await isUserAuthenticated(req);
 
       const { status, data } = await fetchAPIData(
-        routes.api.sheetByIdWithUser(sheetSlug as string, user?.id)
+        routes.api.sheetByIdWithUser(sheetSlug as string, user?.id),
       );
 
       if (!status) {
@@ -326,7 +326,7 @@ const getSheetPageProps = async (context: any) => {
         currentQuestionId = firstQuestion._id.toString();
         const selectedQuestionMeta = getSelectedSheetQuestionMeta(
           sheet,
-          currentQuestionId
+          currentQuestionId,
         );
         if (selectedQuestionMeta) meta = selectedQuestionMeta;
       }
@@ -436,7 +436,7 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
     if (process.env.NODE_ENV === "development") {
       console.warn(
         "Could not fetch Unskilled data (API may not be running):",
-        error instanceof Error ? error.message : error
+        error instanceof Error ? error.message : error,
       );
     }
 
@@ -451,7 +451,7 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
 };
 const getCertificatePageProps = async ({ query: { certificateId } }: any) => {
   const { status, data: certificate } = await fetchAPIData(
-    routes.api.certificateById(certificateId)
+    routes.api.certificateById(certificateId),
   );
 
   if (!status) {
@@ -485,7 +485,7 @@ const getWebinarPageProps = async (context: any) => {
   const { webinarSlug: slug } = query;
 
   const { status, data: webinar } = await fetchAPIData(
-    routes.api.webinarBySlug(slug)
+    routes.api.webinarBySlug(slug),
   );
 
   if (!status) {
@@ -555,7 +555,7 @@ const getSkillPlaylistPageProps = async (context: any) => {
   const skillQuery = typeof q === "string" ? q : "";
 
   const { status, data: playlists } = await fetchAPIData(
-    routes.api.playlistByQuery(skillQuery)
+    routes.api.playlistByQuery(skillQuery),
   );
 
   if (!status) {
@@ -568,7 +568,7 @@ const getSkillPlaylistPageProps = async (context: any) => {
 
   const seoMeta = {
     title: `${getYoufocusSkillName(
-      skillQuery
+      skillQuery,
     )} Playlists | YouFocus| The Boring Education`,
     siteName: "YouFocus The Boring Education",
     description: `Explore ${skillQuery} playlists and start learning`,

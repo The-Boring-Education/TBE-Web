@@ -1,98 +1,101 @@
-import { describe, it, expect, vi } from 'vitest';
-import { renderHook } from '@testing-library/react';
-import useAPIResponseMapper from '@tbe/hooks/useAPIResponseMapper';
+import { describe, it, expect, vi } from "vitest";
+import { renderHook } from "@testing-library/react";
+import useAPIResponseMapper from "@tbe/hooks/useAPIResponseMapper";
 
-describe('useAPIResponseMapper Hook', () => {
-    describe('Mapping Function', () => {
-        it('should map data using provided mapping function', () => {
-            const mockData = [{ id: 1, name: 'Item 1' }];
-            const mappingFunction = vi.fn((data) =>
-                data.map((item: any) => ({ ...item, mapped: true }))
-            );
+describe("useAPIResponseMapper Hook", () => {
+  describe("Mapping Function", () => {
+    it("should map data using provided mapping function", () => {
+      const mockData = [{ id: 1, name: "Item 1" }];
+      const mappingFunction = vi.fn((data) =>
+        data.map((item: any) => ({ ...item, mapped: true })),
+      );
 
-            const { result } = renderHook(() =>
-                useAPIResponseMapper(mockData, mappingFunction)
-            );
+      const { result } = renderHook(() =>
+        useAPIResponseMapper(mockData, mappingFunction),
+      );
 
-            expect(mappingFunction).toHaveBeenCalledWith(mockData, undefined);
-            expect(result.current).toEqual([{ id: 1, name: 'Item 1', mapped: true }]);
-        });
-
-        it('should pass additional params to mapping function', () => {
-            const mockData = [{ id: 1 }];
-            const additionalParams = { filter: 'active' };
-            const mappingFunction = vi.fn((data, params) => {
-                return data.map((item: any) => ({ ...item, ...params }));
-            });
-
-            const { result } = renderHook(() =>
-                useAPIResponseMapper(mockData, mappingFunction, additionalParams)
-            );
-
-            expect(mappingFunction).toHaveBeenCalledWith(mockData, additionalParams);
-            expect(result.current).toEqual([{ id: 1, filter: 'active' }]);
-        });
+      expect(mappingFunction).toHaveBeenCalledWith(mockData, undefined);
+      expect(result.current).toEqual([{ id: 1, name: "Item 1", mapped: true }]);
     });
 
-    describe('Data Updates', () => {
-        it('should update mapped data when input data changes', () => {
-            const mappingFunction = (data: any) => data.map((item: any) => ({ ...item, mapped: true }));
+    it("should pass additional params to mapping function", () => {
+      const mockData = [{ id: 1 }];
+      const additionalParams = { filter: "active" };
+      const mappingFunction = vi.fn((data, params) => {
+        return data.map((item: any) => ({ ...item, ...params }));
+      });
 
-            const { result, rerender } = renderHook(
-                ({ data }) => useAPIResponseMapper(data, mappingFunction),
-                { initialProps: { data: [{ id: 1 }] } }
-            );
+      const { result } = renderHook(() =>
+        useAPIResponseMapper(mockData, mappingFunction, additionalParams),
+      );
 
-            expect(result.current).toEqual([{ id: 1, mapped: true }]);
+      expect(mappingFunction).toHaveBeenCalledWith(mockData, additionalParams);
+      expect(result.current).toEqual([{ id: 1, filter: "active" }]);
+    });
+  });
 
-            rerender({ data: [{ id: 2 }, { id: 3 }] });
+  describe("Data Updates", () => {
+    it("should update mapped data when input data changes", () => {
+      const mappingFunction = (data: any) =>
+        data.map((item: any) => ({ ...item, mapped: true }));
 
-            expect(result.current).toEqual([
-                { id: 2, mapped: true },
-                { id: 3, mapped: true },
-            ]);
-        });
+      const { result, rerender } = renderHook(
+        ({ data }) => useAPIResponseMapper(data, mappingFunction),
+        { initialProps: { data: [{ id: 1 }] } },
+      );
 
-        it('should not map when data is null or undefined', () => {
-            const mappingFunction = vi.fn((data) => data);
+      expect(result.current).toEqual([{ id: 1, mapped: true }]);
 
-            const { result } = renderHook(() =>
-                useAPIResponseMapper(null, mappingFunction)
-            );
+      rerender({ data: [{ id: 2 }, { id: 3 }] });
 
-            expect(mappingFunction).not.toHaveBeenCalled();
-            expect(result.current).toEqual([]);
-        });
+      expect(result.current).toEqual([
+        { id: 2, mapped: true },
+        { id: 3, mapped: true },
+      ]);
     });
 
-    describe('Mapping Function Changes', () => {
-        it('should remap when mapping function changes', () => {
-            const data = [{ id: 1, value: 10 }];
-            const mappingFunction1 = (data: any) => data.map((item: any) => ({ ...item, type: 'A' }));
-            const mappingFunction2 = (data: any) => data.map((item: any) => ({ ...item, type: 'B' }));
+    it("should not map when data is null or undefined", () => {
+      const mappingFunction = vi.fn((data) => data);
 
-            const { result, rerender } = renderHook(
-                ({ mapper }) => useAPIResponseMapper(data, mapper),
-                { initialProps: { mapper: mappingFunction1 } }
-            );
+      const { result } = renderHook(() =>
+        useAPIResponseMapper(null, mappingFunction),
+      );
 
-            expect(result.current).toEqual([{ id: 1, value: 10, type: 'A' }]);
-
-            rerender({ mapper: mappingFunction2 });
-
-            expect(result.current).toEqual([{ id: 1, value: 10, type: 'B' }]);
-        });
+      expect(mappingFunction).not.toHaveBeenCalled();
+      expect(result.current).toEqual([]);
     });
+  });
 
-    describe('Initial State', () => {
-        it('should return empty array initially', () => {
-            const mappingFunction = vi.fn((data) => data);
+  describe("Mapping Function Changes", () => {
+    it("should remap when mapping function changes", () => {
+      const data = [{ id: 1, value: 10 }];
+      const mappingFunction1 = (data: any) =>
+        data.map((item: any) => ({ ...item, type: "A" }));
+      const mappingFunction2 = (data: any) =>
+        data.map((item: any) => ({ ...item, type: "B" }));
 
-            const { result } = renderHook(() =>
-                useAPIResponseMapper(null, mappingFunction)
-            );
+      const { result, rerender } = renderHook(
+        ({ mapper }) => useAPIResponseMapper(data, mapper),
+        { initialProps: { mapper: mappingFunction1 } },
+      );
 
-            expect(result.current).toEqual([]);
-        });
+      expect(result.current).toEqual([{ id: 1, value: 10, type: "A" }]);
+
+      rerender({ mapper: mappingFunction2 });
+
+      expect(result.current).toEqual([{ id: 1, value: 10, type: "B" }]);
     });
+  });
+
+  describe("Initial State", () => {
+    it("should return empty array initially", () => {
+      const mappingFunction = vi.fn((data) => data);
+
+      const { result } = renderHook(() =>
+        useAPIResponseMapper(null, mappingFunction),
+      );
+
+      expect(result.current).toEqual([]);
+    });
+  });
 });

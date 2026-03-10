@@ -30,7 +30,12 @@ const QuizzesDashboardPage = () => {
       <div className="min-h-[40vh] flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-400 mb-4">{error}</p>
-          <Button onClick={refetch} variant="OUTLINE" className="border-gray-700 text-white hover:bg-gray-800" text="Try Again" />
+          <Button
+            onClick={refetch}
+            variant="OUTLINE"
+            className="border-gray-700 text-white hover:bg-gray-800"
+            text="Try Again"
+          />
         </div>
       </div>
     );
@@ -45,14 +50,18 @@ const QuizzesDashboardPage = () => {
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
         <div className="mb-3">
-          <h1 className="text-xl font-bold text-white mb-1">Available Quizes</h1>
+          <h1 className="text-xl font-bold text-white mb-1">
+            Available Quizes
+          </h1>
           <p className="text-xs text-gray-400">Pick a category to start</p>
         </div>
 
         {/* Quiz Cards Grid */}
         {categories.length === 0 ? (
           <div className="text-center py-4">
-            <p className="text-gray-400 text-xs mb-3">No quizes available right now.</p>
+            <p className="text-gray-400 text-xs mb-3">
+              No quizes available right now.
+            </p>
             <Button
               onClick={refetch}
               variant="OUTLINE"
@@ -69,9 +78,15 @@ const QuizzesDashboardPage = () => {
                 onClick={() => startQuiz(category._id)}
                 className="group text-left ml-1"
               >
-                <div className="relative bg-black rounded-lg overflow-hidden border border-gray-800 hover:border-[#ff5757]/50 transition-all duration-300 shadow-lg" style={{ boxShadow: '0 0 20px rgba(255, 87, 87, 0.1)' }}>
+                <div
+                  className="relative bg-black rounded-lg overflow-hidden border border-gray-800 hover:border-[#ff5757]/50 transition-all duration-300 shadow-lg"
+                  style={{ boxShadow: "0 0 20px rgba(255, 87, 87, 0.1)" }}
+                >
                   {/* Left accent bar */}
-                  <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: '#ff5757' }} />
+                  <div
+                    className="absolute left-0 top-0 bottom-0 w-1"
+                    style={{ backgroundColor: "#ff5757" }}
+                  />
 
                   <div className="relative p-2.5 pl-3 flex flex-col h-full">
                     {/* Icon Section */}

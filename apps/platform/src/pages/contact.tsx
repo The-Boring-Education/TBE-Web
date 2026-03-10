@@ -1,4 +1,4 @@
-  import { ContactCard, SEO } from '@tbe/components';
+import { ContactCard, SEO } from '@tbe/components';
 import { getSEOMeta, routes } from '@tbe/constants';
 import { getPreFetchProps } from '@tbe/utils';
 import { Fragment } from 'react';

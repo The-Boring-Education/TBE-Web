@@ -29,19 +29,19 @@ const extractSkillsFromText = (text: string): string[] => {
 
   JOB_SKILL_NORMALIZER.forEach(({ label, value }) => {
     const labelArray = Array.isArray(label) ? label : [label];
-    
+
     for (const skillVariant of labelArray) {
       const skillLower = skillVariant.toLowerCase();
-      
+
       // Create word boundary pattern for accurate matching
       // Matches: "React", "React.js", "React JS", but not "Reactionary"
       const wordBoundaryPattern = new RegExp(
         `\\b${skillLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b|` +
-        `\\b${skillLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\.js\\b|` +
-        `\\b${skillLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} js\\b`,
-        'i'
+          `\\b${skillLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\.js\\b|` +
+          `\\b${skillLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} js\\b`,
+        'i',
       );
-      
+
       if (wordBoundaryPattern.test(lowerText)) {
         matchedSkills.add(value);
         break; // Found this skill, move to next
@@ -80,7 +80,8 @@ const parseResumeFile = async (file: formidable.File): Promise<string> => {
   if (mimeType === 'application/pdf') {
     return await parsePDF(filePath);
   } else if (
-    mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    mimeType ===
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
     mimeType === 'application/msword'
   ) {
     return await parseDOCX(filePath);
@@ -94,7 +95,7 @@ const parseResumeFile = async (file: formidable.File): Promise<string> => {
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ParseResumeResponse>
+  res: NextApiResponse<ParseResumeResponse>,
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({

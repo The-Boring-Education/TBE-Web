@@ -127,13 +127,13 @@ apps/resume-yatra/
 ### 2. Resume Builder
 
 - **7 Comprehensive Sections:**
-    1. Professional Header
-    2. Professional Summary
-    3. Work Experience
-    4. Projects & Portfolio
-    5. Technical Skills
-    6. Achievements & Awards
-    7. Open Source Contributions
+  1. Professional Header
+  2. Professional Summary
+  3. Work Experience
+  4. Projects & Portfolio
+  5. Technical Skills
+  6. Achievements & Awards
+  7. Open Source Contributions
 
 - **Interactive Checklists** for each section
 - **Real-time Scoring** with progress tracking
@@ -152,8 +152,8 @@ apps/resume-yatra/
 ### 4. Data Persistence (Ready for Database)
 
 - API routes ready at:
-    - `POST /api/resume/save-progress`
-    - `GET /api/resume/get-progress`
+  - `POST /api/resume/save-progress`
+  - `GET /api/resume/get-progress`
 - React Query for caching and optimization
 - Auto-save with debouncing
 

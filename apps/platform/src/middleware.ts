@@ -54,7 +54,7 @@ const middleware = async (req: NextRequest) => {
           status: false,
           message: 'Unauthorized - Admin header required for DELETE',
         }),
-        { status: 401 }
+        { status: 401 },
       );
       return res;
     }
@@ -76,7 +76,7 @@ const middleware = async (req: NextRequest) => {
               status: false,
               message: 'Unauthorized',
             }),
-            { status: 401 }
+            { status: 401 },
           );
           return res;
         }
@@ -88,7 +88,7 @@ const middleware = async (req: NextRequest) => {
 
     if (!isAuthenticated) {
       const isProtectedUIRoute = protectedUIRoutes.find((route) =>
-        route.path.test(currentUrl)
+        route.path.test(currentUrl),
       );
 
       if (isProtectedUIRoute) {
@@ -123,7 +123,7 @@ const middleware = async (req: NextRequest) => {
         status: false,
         message: 'Internal server error',
       }),
-      { status: 500 }
+      { status: 500 },
     );
     const origin = req.headers.get('origin');
     const isAPI = req.nextUrl.pathname.startsWith('/api/');

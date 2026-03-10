@@ -1,8 +1,8 @@
-import { Disclosure } from '@headlessui/react';
-import { Link } from '@tbe/components';
-import type { AccordionLinkItemProps } from '@tbe/interface';
-import { FaRegCircle } from 'react-icons/fa';
-import { IoIosCheckmarkCircle } from 'react-icons/io';
+import { Disclosure } from "@headlessui/react";
+import { Link } from "@tbe/components";
+import type { AccordionLinkItemProps } from "@tbe/interface";
+import { FaRegCircle } from "react-icons/fa";
+import { IoIosCheckmarkCircle } from "react-icons/io";
 
 const AccordionLinkItem = ({
   label,
@@ -12,21 +12,21 @@ const AccordionLinkItem = ({
   isActive,
   onClick,
 }: AccordionLinkItemProps) => {
-  const iconColor = isCompleted ? 'text-green-500' : 'text-greyDark';
+  const iconColor = isCompleted ? "text-green-500" : "text-greyDark";
 
   const additionalClasses = isActive
     ? isCompleted
-      ? 'text-dark font-semibold bg-green-200'
-      : 'text-dark font-semibold bg-gray-200'
-    : '';
+      ? "text-dark font-semibold bg-green-200"
+      : "text-dark font-semibold bg-gray-200"
+    : "";
 
   return (
-    <Link className='w-full' href={href}>
+    <Link className="w-full" href={href}>
       <Disclosure.Panel
         className={`${className} flex items-center gap-1 p-2 rounded text-left pre-title text-greyDark hover:bg-gray-200 hover:text-primary ${additionalClasses}`}
         onClick={onClick}
       >
-        <div className='flex-shrink-0'>
+        <div className="flex-shrink-0">
           {isCompleted ? (
             <IoIosCheckmarkCircle className={iconColor} size={24} />
           ) : (

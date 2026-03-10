@@ -9,70 +9,70 @@ This document defines the backend development patterns, conventions, and best pr
 ### Standard API Route Structure
 
 ```typescript
-import type { NextApiRequest, NextApiResponse } from "next"
-import { apiStatusCodes } from "@/config/constants"
-import { sendAPIResponse } from "@/utils"
-import { connectDB, cors } from "@/middleware"
+import type { NextApiRequest, NextApiResponse } from "next";
+import { apiStatusCodes } from "@/config/constants";
+import { sendAPIResponse } from "@/utils";
+import { connectDB, cors } from "@/middleware";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    // Apply CORS headers (REQUIRED)
-    await cors(req, res)
+  // Apply CORS headers (REQUIRED)
+  await cors(req, res);
 
-    // Handle OPTIONS preflight
-    if (req.method === "OPTIONS") {
-        res.status(200).end()
-        return
-    }
+  // Handle OPTIONS preflight
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
 
-    // Connect to database
-    await connectDB()
-    const { method, query, body } = req
+  // Connect to database
+  await connectDB();
+  const { method, query, body } = req;
 
-    switch (method) {
-        case "GET":
-            return handleGet(req, res)
-        case "POST":
-            return handlePost(req, res)
-        case "PATCH":
-            return handlePatch(req, res)
-        case "DELETE":
-            return handleDelete(req, res)
-        default:
-            return res.status(apiStatusCodes.BAD_REQUEST).json(
-                sendAPIResponse({
-                    status: false,
-                    message: `Method ${method} Not Allowed`
-                })
-            )
-    }
-}
+  switch (method) {
+    case "GET":
+      return handleGet(req, res);
+    case "POST":
+      return handlePost(req, res);
+    case "PATCH":
+      return handlePatch(req, res);
+    case "DELETE":
+      return handleDelete(req, res);
+    default:
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${method} Not Allowed`,
+        }),
+      );
+  }
+};
 
-export default handler
+export default handler;
 ```
 
 ### Response Structure Pattern
 
 ```typescript
 // Always use sendAPIResponse utility
-import { sendAPIResponse } from "@/utils"
+import { sendAPIResponse } from "@/utils";
 
 // Success response
 return res.status(200).json(
-    sendAPIResponse({
-        status: true,
-        data: result,
-        message: "Operation successful"
-    })
-)
+  sendAPIResponse({
+    status: true,
+    data: result,
+    message: "Operation successful",
+  }),
+);
 
 // Error response
 return res.status(400).json(
-    sendAPIResponse({
-        status: false,
-        message: "Validation error",
-        error: errorDetails
-    })
-)
+  sendAPIResponse({
+    status: false,
+    message: "Validation error",
+    error: errorDetails,
+  }),
+);
 ```
 
 ## 🗄️ Database Patterns
@@ -82,59 +82,59 @@ return res.status(400).json(
 ```typescript
 // Use existing query functions from @/database
 import {
-    getUserByIdFromDB,
-    createUserInDB,
-    updateUserInDB,
-    deleteUserFromDB
-} from "@/database"
+  getUserByIdFromDB,
+  createUserInDB,
+  updateUserInDB,
+  deleteUserFromDB,
+} from "@/database";
 
 // Create new query functions in appropriate files
 // database/queries/user.ts
 export const getUserByEmailFromDB = async (email: string) => {
-    try {
-        const user = await User.findOne({ email }).lean()
-        return user
-    } catch (error) {
-        throw new Error(`Error fetching user: ${error.message}`)
-    }
-}
+  try {
+    const user = await User.findOne({ email }).lean();
+    return user;
+  } catch (error) {
+    throw new Error(`Error fetching user: ${error.message}`);
+  }
+};
 ```
 
 ### Mongoose Model Patterns
 
 ```typescript
-import mongoose, { Schema, Document } from "mongoose"
+import mongoose, { Schema, Document } from "mongoose";
 
 interface IUser extends Document {
-    email: string
-    name: string
-    createdAt: Date
-    updatedAt: Date
+  email: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const UserSchema = new Schema<IUser>(
-    {
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            lowercase: true,
-            trim: true
-        },
-        name: {
-            type: String,
-            required: true,
-            trim: true
-        }
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
-    {
-        timestamps: true,
-        collection: "users"
-    }
-)
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  {
+    timestamps: true,
+    collection: "users",
+  },
+);
 
 export const User =
-    mongoose.models.User || mongoose.model<IUser>("User", UserSchema)
+  mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
 ```
 
 ## 🔐 Authentication & Authorization
@@ -142,53 +142,53 @@ export const User =
 ### Protected Route Pattern
 
 ```typescript
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/config/auth"
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/config/auth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    await cors(req, res)
-    await connectDB()
+  await cors(req, res);
+  await connectDB();
 
-    // Check authentication
-    const session = await getServerSession(req, res, authOptions)
+  // Check authentication
+  const session = await getServerSession(req, res, authOptions);
 
-    if (!session) {
-        return res.status(401).json(
-            sendAPIResponse({
-                status: false,
-                message: "Unauthorized - Please login"
-            })
-        )
-    }
+  if (!session) {
+    return res.status(401).json(
+      sendAPIResponse({
+        status: false,
+        message: "Unauthorized - Please login",
+      }),
+    );
+  }
 
-    // Continue with authenticated logic
-    const userId = session.user.id
-    // ... rest of handler
-}
+  // Continue with authenticated logic
+  const userId = session.user.id;
+  // ... rest of handler
+};
 ```
 
 ### Admin Authorization
 
 ```typescript
-import { withAuth } from "@/middleware"
+import { withAuth } from "@/middleware";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    await cors(req, res)
-    await connectDB()
+  await cors(req, res);
+  await connectDB();
 
-    // Use admin middleware
-    const authResult = await withAuth(req, res, { requireAdmin: true })
-    if (!authResult.success) {
-        return res.status(401).json(
-            sendAPIResponse({
-                status: false,
-                message: authResult.message
-            })
-        )
-    }
+  // Use admin middleware
+  const authResult = await withAuth(req, res, { requireAdmin: true });
+  if (!authResult.success) {
+    return res.status(401).json(
+      sendAPIResponse({
+        status: false,
+        message: authResult.message,
+      }),
+    );
+  }
 
-    // Admin-only logic here
-}
+  // Admin-only logic here
+};
 ```
 
 ## 🛡️ Error Handling
@@ -196,62 +196,62 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 ### Consistent Error Patterns
 
 ```typescript
-import { captureAPIError } from "@/utils/sentry"
+import { captureAPIError } from "@/utils/sentry";
 
 const handleDatabaseOperation = async (
-    req: NextApiRequest,
-    res: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) => {
-    try {
-        const result = await performDatabaseOperation()
+  try {
+    const result = await performDatabaseOperation();
 
-        return res.status(200).json(
-            sendAPIResponse({
-                status: true,
-                data: result
-            })
-        )
-    } catch (error) {
-        // Log error to Sentry
-        captureAPIError(error, req)
+    return res.status(200).json(
+      sendAPIResponse({
+        status: true,
+        data: result,
+      }),
+    );
+  } catch (error) {
+    // Log error to Sentry
+    captureAPIError(error, req);
 
-        // Return user-friendly error
-        return res.status(500).json(
-            sendAPIResponse({
-                status: false,
-                message: "Internal server error"
-            })
-        )
-    }
-}
+    // Return user-friendly error
+    return res.status(500).json(
+      sendAPIResponse({
+        status: false,
+        message: "Internal server error",
+      }),
+    );
+  }
+};
 ```
 
 ### Validation Patterns
 
 ```typescript
 const validateRequestBody = (body: any, requiredFields: string[]) => {
-    const missingFields = requiredFields.filter((field) => !body[field])
+  const missingFields = requiredFields.filter((field) => !body[field]);
 
-    if (missingFields.length > 0) {
-        throw new Error(`Missing required fields: ${missingFields.join(", ")}`)
-    }
-}
+  if (missingFields.length > 0) {
+    throw new Error(`Missing required fields: ${missingFields.join(", ")}`);
+  }
+};
 
 // Usage in handler
 const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
-    try {
-        validateRequestBody(req.body, ["email", "name"])
+  try {
+    validateRequestBody(req.body, ["email", "name"]);
 
-        // Continue with logic
-    } catch (error) {
-        return res.status(400).json(
-            sendAPIResponse({
-                status: false,
-                message: error.message
-            })
-        )
-    }
-}
+    // Continue with logic
+  } catch (error) {
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: error.message,
+      }),
+    );
+  }
+};
 ```
 
 ## 🔌 External Service Integration
@@ -260,31 +260,31 @@ const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
 
 ```typescript
 // services/email.ts
-import { EmailAPIResponse } from "@/interfaces"
+import { EmailAPIResponse } from "@/interfaces";
 
 export const sendWelcomeEmail = async (
-    email: string,
-    name: string
+  email: string,
+  name: string,
 ): Promise<EmailAPIResponse> => {
-    try {
-        const response = await fetch(process.env.EMAIL_SERVICE_URL!, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${process.env.EMAIL_API_KEY}`
-            },
-            body: JSON.stringify({
-                to: email,
-                template: "welcome",
-                data: { name }
-            })
-        })
+  try {
+    const response = await fetch(process.env.EMAIL_SERVICE_URL!, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.EMAIL_API_KEY}`,
+      },
+      body: JSON.stringify({
+        to: email,
+        template: "welcome",
+        data: { name },
+      }),
+    });
 
-        return await response.json()
-    } catch (error) {
-        throw new Error(`Email service error: ${error.message}`)
-    }
-}
+    return await response.json();
+  } catch (error) {
+    throw new Error(`Email service error: ${error.message}`);
+  }
+};
 ```
 
 ## 📝 Interface Definitions
@@ -294,23 +294,23 @@ export const sendWelcomeEmail = async (
 ```typescript
 // Define in @/interfaces/api.ts
 export interface CreateUserRequestPayloadProps {
-    email: string
-    name: string
-    username?: string
+  email: string;
+  name: string;
+  username?: string;
 }
 
 export interface UserResponseProps {
-    id: string
-    email: string
-    name: string
-    createdAt: string
+  id: string;
+  email: string;
+  name: string;
+  createdAt: string;
 }
 
 export interface APIResponse<T = any> {
-    status: boolean
-    message?: string
-    data?: T
-    error?: any
+  status: boolean;
+  message?: string;
+  data?: T;
+  error?: any;
 }
 ```
 
@@ -323,13 +323,13 @@ export interface APIResponse<T = any> {
 ```typescript
 // BAD: No CORS handling
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    // Direct logic without CORS ❌
-}
+  // Direct logic without CORS ❌
+};
 
 // GOOD: Always apply CORS
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    await cors(req, res) // ✅
-}
+  await cors(req, res); // ✅
+};
 ```
 
 2. **Don't use direct MongoDB queries**

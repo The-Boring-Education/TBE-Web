@@ -1,17 +1,17 @@
-import { FlexContainer, Image, Section, Text } from '@tbe/components';
-import { MY_PREV_EXPERIENCE } from '@tbe/constants';
+import { FlexContainer, Image, Section, Text } from "@tbe/components";
+import { MY_PREV_EXPERIENCE } from "@tbe/constants";
 
 const WeAlreadyTaughtAt = () => (
   <Section>
-    <FlexContainer className='gap-4' direction='col'>
-      <Text className='heading-4' level='h4'>
-        We already <span className=' text-primary'>taught</span> at
+    <FlexContainer className="gap-4" direction="col">
+      <Text className="heading-4" level="h4">
+        We already <span className=" text-primary">taught</span> at
       </Text>
       <FlexContainer>
-        {MY_PREV_EXPERIENCE.map((item:any) => (
+        {MY_PREV_EXPERIENCE.map((item: any) => (
           <FlexContainer
             key={item.id}
-            className='w-88 justify-between [&:not(:first-child)]:ml-2'
+            className="w-88 justify-between [&:not(:first-child)]:ml-2"
             justifyCenter={false}
           >
             <Image alt={item.imageAltText} fullWidth src={item.image} />

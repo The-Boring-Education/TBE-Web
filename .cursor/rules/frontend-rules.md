@@ -7,6 +7,7 @@ This document defines the frontend development patterns, conventions, and best p
 ## ⚛️ React & Next.js Patterns
 
 ### 1. Component Structure
+
 ```typescript
 // Standard functional component pattern
 import React from 'react';
@@ -48,6 +49,7 @@ export default PageComponent;
 ```
 
 ### 2. Page Structure (App Router)
+
 ```typescript
 // app/dashboard/page.tsx
 import { Metadata } from 'next';
@@ -73,6 +75,7 @@ export default function DashboardPage({ searchParams }: DashboardPageProps) {
 ```
 
 ### 3. Client Components
+
 ```typescript
 'use client';
 
@@ -85,8 +88,8 @@ interface QuizDashboardProps {
   initialQuizzes?: Quiz[];
 }
 
-export const QuizDashboard: React.FC<QuizDashboardProps> = ({ 
-  initialQuizzes = [] 
+export const QuizDashboard: React.FC<QuizDashboardProps> = ({
+  initialQuizzes = []
 }) => {
   const { user, isAuthenticated } = useAuth();
   const { execute: fetchQuizzes, loading } = useApi<Quiz[]>();
@@ -117,52 +120,54 @@ export const QuizDashboard: React.FC<QuizDashboardProps> = ({
 ## 🎣 State Management Patterns
 
 ### 1. React Query for Server State
+
 ```typescript
 // hooks/useQuizzes.ts
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { quizService } from '@tbe/services';
-import type { Quiz, CreateQuizPayload } from '@tbe/types';
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { quizService } from "@tbe/services";
+import type { Quiz, CreateQuizPayload } from "@tbe/types";
 
 export const useQuizzes = (userId?: string) => {
   return useQuery(
-    ['quizzes', userId],
+    ["quizzes", userId],
     () => quizService.getUserQuizzes(userId!),
     {
       enabled: !!userId,
       staleTime: 5 * 60 * 1000, // 5 minutes
       cacheTime: 10 * 60 * 1000, // 10 minutes
-    }
+    },
   );
 };
 
 export const useCreateQuiz = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation(
     (quizData: CreateQuizPayload) => quizService.createQuiz(quizData),
     {
       onSuccess: (newQuiz) => {
         // Update the quizzes cache
-        queryClient.setQueryData(['quizzes'], (oldQuizzes: Quiz[] = []) => [
+        queryClient.setQueryData(["quizzes"], (oldQuizzes: Quiz[] = []) => [
           ...oldQuizzes,
-          newQuiz
+          newQuiz,
         ]);
-        
+
         // Show success toast
-        toast.success('Quiz created successfully!');
+        toast.success("Quiz created successfully!");
       },
       onError: (error) => {
-        toast.error(error.message || 'Failed to create quiz');
-      }
-    }
+        toast.error(error.message || "Failed to create quiz");
+      },
+    },
   );
 };
 ```
 
 ### 2. Local State with useState/useReducer
+
 ```typescript
 // For complex local state
-import { useReducer } from 'react';
+import { useReducer } from "react";
 
 interface QuizState {
   currentQuestion: number;
@@ -171,24 +176,24 @@ interface QuizState {
   isSubmitted: boolean;
 }
 
-type QuizAction = 
-  | { type: 'NEXT_QUESTION' }
-  | { type: 'ANSWER_QUESTION'; questionId: string; answer: string }
-  | { type: 'TICK_TIMER' }
-  | { type: 'SUBMIT_QUIZ' };
+type QuizAction =
+  | { type: "NEXT_QUESTION" }
+  | { type: "ANSWER_QUESTION"; questionId: string; answer: string }
+  | { type: "TICK_TIMER" }
+  | { type: "SUBMIT_QUIZ" };
 
 const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
   switch (action.type) {
-    case 'NEXT_QUESTION':
+    case "NEXT_QUESTION":
       return { ...state, currentQuestion: state.currentQuestion + 1 };
-    case 'ANSWER_QUESTION':
+    case "ANSWER_QUESTION":
       return {
         ...state,
-        answers: { ...state.answers, [action.questionId]: action.answer }
+        answers: { ...state.answers, [action.questionId]: action.answer },
       };
-    case 'TICK_TIMER':
+    case "TICK_TIMER":
       return { ...state, timeRemaining: Math.max(0, state.timeRemaining - 1) };
-    case 'SUBMIT_QUIZ':
+    case "SUBMIT_QUIZ":
       return { ...state, isSubmitted: true };
     default:
       return state;
@@ -200,7 +205,7 @@ export const useQuizState = (initialTime: number) => {
     currentQuestion: 0,
     answers: {},
     timeRemaining: initialTime,
-    isSubmitted: false
+    isSubmitted: false,
   });
 
   return { state, dispatch };
@@ -208,6 +213,7 @@ export const useQuizState = (initialTime: number) => {
 ```
 
 ### 3. Context for App-Wide State
+
 ```typescript
 // contexts/ThemeContext.tsx
 'use client';
@@ -224,8 +230,8 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ 
-  children 
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
+  children
 }) => {
   const [theme, setTheme] = useState<Theme>('system');
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
@@ -237,9 +243,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
-    
+
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches 
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark' : 'light';
       setResolvedTheme(systemTheme);
     } else {
@@ -266,6 +272,7 @@ export const useTheme = () => {
 ## 🎨 Styling & UI Patterns
 
 ### 1. Tailwind CSS Conventions
+
 ```typescript
 // Component with responsive design
 export const ResponsiveCard: React.FC<CardProps> = ({ children, className }) => {
@@ -298,6 +305,7 @@ const commonClasses = {
 ```
 
 ### 2. Component Variants with CVA
+
 ```typescript
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@tbe/utils';
@@ -328,7 +336,7 @@ const buttonVariants = cva(
   }
 );
 
-interface ButtonProps 
+interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
@@ -354,6 +362,7 @@ export const Button: React.FC<ButtonProps> = ({
 ## 🔐 Authentication Patterns
 
 ### 1. Protected Routes
+
 ```typescript
 // components/auth/ProtectedRoute.tsx
 'use client';
@@ -414,36 +423,37 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 ```
 
 ### 2. Auth Hooks
+
 ```typescript
 // hooks/useRequireAuth.ts
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export const useRequireAuth = (redirectTo = '/auth/signin') => {
+export const useRequireAuth = (redirectTo = "/auth/signin") => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (status === 'loading') return;
+    if (status === "loading") return;
     if (!session) {
       router.push(redirectTo);
     }
   }, [session, status, redirectTo, router]);
 
-  return { session, loading: status === 'loading' };
+  return { session, loading: status === "loading" };
 };
 
 // hooks/usePermissions.ts
 export const usePermissions = () => {
   const { data: session } = useSession();
-  
+
   const hasPermission = (permission: string) => {
     return session?.user?.permissions?.includes(permission) ?? false;
   };
 
   const isAdmin = () => {
-    return session?.user?.role === 'admin';
+    return session?.user?.role === "admin";
   };
 
   const canAccess = (resource: string, action: string) => {
@@ -457,6 +467,7 @@ export const usePermissions = () => {
 ## 📱 Responsive Design Patterns
 
 ### 1. Mobile-First Approach
+
 ```typescript
 // Responsive component example
 export const ResponsiveNavigation: React.FC = () => {
@@ -508,6 +519,7 @@ export const ResponsiveNavigation: React.FC = () => {
 ```
 
 ### 2. Responsive Grid Layouts
+
 ```typescript
 // Responsive grid component
 interface ResponsiveGridProps {
@@ -544,6 +556,7 @@ export const ResponsiveGrid: React.FC<ResponsiveGridProps> = ({
 ## 🔄 Data Fetching Patterns
 
 ### 1. Server Components (App Router)
+
 ```typescript
 // app/courses/page.tsx
 import { Suspense } from 'react';
@@ -555,11 +568,11 @@ async function getCourses(searchParams: any) {
   const response = await fetch(`${process.env.API_URL}/api/v1/courses`, {
     next: { revalidate: 300 } // Revalidate every 5 minutes
   });
-  
+
   if (!response.ok) {
     throw new Error('Failed to fetch courses');
   }
-  
+
   return response.json();
 }
 
@@ -573,12 +586,12 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Courses</h1>
-      
+
       <div className="flex flex-col lg:flex-row gap-8">
         <aside className="lg:w-64">
           <CourseFilters />
         </aside>
-        
+
         <main className="flex-1">
           <Suspense fallback={<LoadingSpinner />}>
             <CourseGrid courses={courses} />
@@ -591,6 +604,7 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
 ```
 
 ### 2. Client-Side Data Fetching
+
 ```typescript
 // components/UserDashboard.tsx
 'use client';
@@ -644,6 +658,7 @@ export const UserDashboard: React.FC<{ userId: string }> = ({ userId }) => {
 ### ❌ What NOT to Do
 
 1. **Don't use inline styles**
+
 ```typescript
 // BAD
 <div style={{ marginTop: '20px', color: 'red' }}>Content</div>
@@ -653,17 +668,21 @@ export const UserDashboard: React.FC<{ userId: string }> = ({ userId }) => {
 ```
 
 2. **Don't fetch data in useEffect for server-renderable content**
+
 ```typescript
 // BAD - Client-side fetching for static data
 useEffect(() => {
-  fetch('/api/courses').then(res => res.json()).then(setCourses);
+  fetch("/api/courses")
+    .then((res) => res.json())
+    .then(setCourses);
 }, []);
 
 // GOOD - Server component or React Query
-const { data: courses } = useQuery('courses', () => courseService.getCourses());
+const { data: courses } = useQuery("courses", () => courseService.getCourses());
 ```
 
 3. **Don't create unnecessary client components**
+
 ```typescript
 // BAD - Making everything client-side
 'use client';
@@ -674,6 +693,7 @@ export const StaticContent = () => <div>Static content</div>;
 ```
 
 4. **Don't ignore loading and error states**
+
 ```typescript
 // BAD - No loading/error handling
 const { data } = useQuery('users', fetchUsers);
@@ -689,6 +709,7 @@ return <div>{data?.map(user => <UserCard key={user.id} user={user} />)}</div>;
 ## 🎯 Performance Optimization
 
 ### 1. Code Splitting
+
 ```typescript
 // Dynamic imports for heavy components
 import dynamic from 'next/dynamic';
@@ -705,6 +726,7 @@ const AdminPanel = dynamic(() => import('@/components/admin/AdminPanel'), {
 ```
 
 ### 2. Image Optimization
+
 ```typescript
 import Image from 'next/image';
 
@@ -730,6 +752,7 @@ export const OptimizedImage: React.FC<{
 ```
 
 ### 3. Memoization
+
 ```typescript
 import { memo, useMemo, useCallback } from 'react';
 

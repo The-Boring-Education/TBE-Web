@@ -1,8 +1,8 @@
-import { useAnalytics } from '@tbe/hooks';
-import { toPng } from 'html-to-image';
-import { useRef } from 'react';
+import { useAnalytics } from "@tbe/hooks";
+import { toPng } from "html-to-image";
+import { useRef } from "react";
 
-import useUser from './useUser';
+import useUser from "./useUser";
 
 const useCertificate = () => {
   const { user } = useUser();
@@ -15,9 +15,9 @@ const useCertificate = () => {
     if (certificateRef.current) {
       try {
         trackEvent({
-          action: 'CERTIFICATE_DOWNLOAD',
-          category: 'User',
-          label: 'Certificate Download',
+          action: "CERTIFICATE_DOWNLOAD",
+          category: "User",
+          label: "Certificate Download",
           value: {
             user: user.name,
             certificate: label,
@@ -25,13 +25,13 @@ const useCertificate = () => {
         });
 
         const dataUrl = await toPng(certificateRef.current, { quality: 1 });
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = dataUrl;
         link.download = `${user.name}-${label}-certificate.png`;
         link.click();
       } catch (error) {
         // Certificate generation failed - could be improved with user notification
-        throw new Error('Failed to generate certificate. Please try again.');
+        throw new Error("Failed to generate certificate. Please try again.");
       }
     }
   };

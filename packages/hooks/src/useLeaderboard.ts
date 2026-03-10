@@ -1,11 +1,11 @@
-import { routes } from '@tbe/constants';
-import { useApi } from '@tbe/hooks';
-import type { LeaderboardType } from '@tbe/interface';
-import { useEffect, useState } from 'react';
+import { routes } from "@tbe/constants";
+import { useApi } from "@tbe/hooks";
+import type { LeaderboardType } from "@tbe/interface";
+import { useEffect, useState } from "react";
 
 const useLeaderboard = (tab: LeaderboardType) => {
   const { response, makeRequest, loading } = useApi(`leaderboard-${tab}`, {
-    method: 'GET',
+    method: "GET",
     url: `${routes.api.leaderboard}?type=${tab}`,
   });
 
@@ -13,7 +13,7 @@ const useLeaderboard = (tab: LeaderboardType) => {
 
   useEffect(() => {
     makeRequest({
-      method: 'GET',
+      method: "GET",
       url: `${routes.api.leaderboard}?type=${tab}`,
     });
   }, [tab]);

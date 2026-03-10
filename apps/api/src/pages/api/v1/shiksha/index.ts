@@ -1,26 +1,26 @@
-import type mongoose from 'mongoose';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type mongoose from "mongoose";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from '@/lib/constants';
+import { apiStatusCodes } from "@/lib/constants";
 import {
   addACourseToDB,
   getAllCourseFromDB,
   getAllEnrolledCoursesFromDB,
   getCourseBySlugFromDB,
   getCourseBySlugWithUserFromDB,
-} from '@/lib/database';
+} from "@/lib/database";
 import type {
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,
-} from '@/lib/interfaces';
-import { cors, sendAPIResponse } from '@/lib/utils';
-import { connectDB } from '@/middleware/api';
+} from "@/lib/interfaces";
+import { cors, sendAPIResponse } from "@/lib/utils";
+import { connectDB } from "@/middleware/api";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Apply CORS headers
   await cors(req, res);
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
   }
@@ -30,16 +30,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { userId, slug } = query as { userId: string; slug: string };
 
   switch (method) {
-    case 'POST':
+    case "POST":
       return handleAddACourse(req, res);
-    case 'GET':
+    case "GET":
       return handleAllGetCourse(req, res, userId, slug);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
-        })
+        }),
       );
   }
 };
@@ -49,15 +49,15 @@ const handleAddACourse = async (req: NextApiRequest, res: NextApiResponse) => {
     const coursePayload = req.body as AddCourseRequestPayloadProps;
 
     const { error: courseAlreadyExist } = await getCourseBySlugFromDB(
-      coursePayload.slug
+      coursePayload.slug,
     );
 
     if (!courseAlreadyExist) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: 'Course already exists',
-        })
+          message: "Course already exists",
+        }),
       );
     }
 
@@ -67,25 +67,25 @@ const handleAddACourse = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: 'Course not added',
+          message: "Course not added",
           error,
-        })
+        }),
       );
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
         data,
-        message: 'Course added successfully',
-      })
+        message: "Course added successfully",
+      }),
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Failed while adding course',
+        message: "Failed while adding course",
         error,
-      })
+      }),
     );
   }
 };
@@ -94,20 +94,23 @@ const handleAllGetCourse = async (
   req: NextApiRequest,
   res: NextApiResponse,
   userId: string,
-  slug?: string
+  slug?: string,
 ) => {
   try {
     // If slug is provided, fetch specific course by slug with user data
     if (slug) {
-      const { data: course, error } = await getCourseBySlugWithUserFromDB(slug, userId);
+      const { data: course, error } = await getCourseBySlugWithUserFromDB(
+        slug,
+        userId,
+      );
 
       if (error || !course) {
         return res.status(apiStatusCodes.NOT_FOUND).json(
           sendAPIResponse({
             status: false,
-            message: 'Course not found',
+            message: "Course not found",
             error,
-          })
+          }),
         );
       }
 
@@ -115,7 +118,7 @@ const handleAllGetCourse = async (
         sendAPIResponse({
           status: true,
           data: course,
-        })
+        }),
       );
     }
 
@@ -130,9 +133,9 @@ const handleAllGetCourse = async (
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: 'Failed while fetching courses',
+          message: "Failed while fetching courses",
           error: allCoursesError,
-        })
+        }),
       );
     }
 
@@ -142,7 +145,7 @@ const handleAllGetCourse = async (
         const courseDoc = course as mongoose.Document &
           BaseShikshaCourseResponseProps;
         return [courseDoc._id.toString(), { ...courseDoc.toObject() }];
-      })
+      }),
     );
 
     // If the user is logged in, fetch enrolled courses and mark them in the map
@@ -154,9 +157,9 @@ const handleAllGetCourse = async (
         return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
           sendAPIResponse({
             status: false,
-            message: 'Failed while fetching enrolled courses',
+            message: "Failed while fetching enrolled courses",
             error: enrolledCoursesError,
-          })
+          }),
         );
       }
 
@@ -171,7 +174,7 @@ const handleAllGetCourse = async (
               _id: courseId,
             });
           }
-        }
+        },
       );
     }
 
@@ -182,15 +185,15 @@ const handleAllGetCourse = async (
       sendAPIResponse({
         status: true,
         data: allCoursesResponse,
-      })
+      }),
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Unexpected error while fetching courses',
+        message: "Unexpected error while fetching courses",
         error,
-      })
+      }),
     );
   }
 };

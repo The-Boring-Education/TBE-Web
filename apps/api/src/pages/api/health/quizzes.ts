@@ -1,9 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { envConfig } from '@/lib/constants';
+import { envConfig } from "@/lib/constants";
 
 interface HealthCheckResponse {
-  status: 'healthy' | 'unhealthy' | 'unknown';
+  status: "healthy" | "unhealthy" | "unknown";
   service: string;
   timestamp: string;
   responseTime?: number;
@@ -13,17 +13,17 @@ interface HealthCheckResponse {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<HealthCheckResponse>
+  res: NextApiResponse<HealthCheckResponse>,
 ) {
   // Only allow GET requests
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', ['GET']);
+  if (req.method !== "GET") {
+    res.setHeader("Allow", ["GET"]);
     return res.status(405).json({
-      status: 'unhealthy',
-      service: 'quizzes',
+      status: "unhealthy",
+      service: "quizzes",
       timestamp: new Date().toISOString(),
-      url: envConfig.QUIZ_APP_URL || 'not-configured',
-      error: 'Method not allowed',
+      url: envConfig.QUIZ_APP_URL || "not-configured",
+      error: "Method not allowed",
     });
   }
 
@@ -32,11 +32,11 @@ export default async function handler(
 
   if (!quizUrl) {
     return res.status(500).json({
-      status: 'unhealthy',
-      service: 'quizzes',
+      status: "unhealthy",
+      service: "quizzes",
       timestamp: new Date().toISOString(),
-      url: 'not-configured',
-      error: 'QUIZ_APP_URL environment variable not configured',
+      url: "not-configured",
+      error: "QUIZ_APP_URL environment variable not configured",
     });
   }
 
@@ -49,19 +49,19 @@ export default async function handler(
     try {
       // First try the dedicated health endpoint
       response = await fetch(healthUrl, {
-        method: 'GET',
+        method: "GET",
         timeout: 10000, // 10 second timeout
         headers: {
-          'User-Agent': 'TBE-Health-Check/1.0',
+          "User-Agent": "TBE-Health-Check/1.0",
         },
       } as RequestInit);
     } catch (healthError) {
       // If health endpoint fails, try the root URL
       response = await fetch(fallbackUrl, {
-        method: 'GET',
+        method: "GET",
         timeout: 10000,
         headers: {
-          'User-Agent': 'TBE-Health-Check/1.0',
+          "User-Agent": "TBE-Health-Check/1.0",
         },
       } as RequestInit);
     }
@@ -70,16 +70,16 @@ export default async function handler(
 
     if (response.ok) {
       res.status(200).json({
-        status: 'healthy',
-        service: 'quizzes',
+        status: "healthy",
+        service: "quizzes",
         timestamp: new Date().toISOString(),
         responseTime,
         url: quizUrl,
       });
     } else {
       res.status(503).json({
-        status: 'unhealthy',
-        service: 'quizzes',
+        status: "unhealthy",
+        service: "quizzes",
         timestamp: new Date().toISOString(),
         responseTime,
         url: quizUrl,
@@ -89,11 +89,11 @@ export default async function handler(
   } catch (error) {
     const responseTime = Date.now() - startTime;
     const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error';
+      error instanceof Error ? error.message : "Unknown error";
 
     res.status(503).json({
-      status: 'unhealthy',
-      service: 'quizzes',
+      status: "unhealthy",
+      service: "quizzes",
       timestamp: new Date().toISOString(),
       responseTime,
       url: quizUrl,
