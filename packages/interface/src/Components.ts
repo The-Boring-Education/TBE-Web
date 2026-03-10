@@ -122,6 +122,7 @@ export interface GradientContainerProps {
   className?: string;
   backgroundColor?: string;
   childrenClassName?: string;
+  isOncampusCard?: boolean;
 }
 
 export interface PrimaryCardProps {
@@ -131,6 +132,7 @@ export interface PrimaryCardProps {
   title: string;
   content: string;
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
+  className?: string;
 }
 
 export interface PortfolioCardProps {

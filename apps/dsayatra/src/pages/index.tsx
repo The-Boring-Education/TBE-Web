@@ -19,7 +19,7 @@ import { Fragment } from "react";
 import { DSA_YATRA_FAQS } from "@/data/dsaData";
 
 const LandingPage = ({ seoMeta }: PageProps) => (
-  <Fragment>
+  <div className="dark bg-dark min-h-screen pb-10">
     <SEO seoMeta={seoMeta} />
 
     <LandingPageHero
@@ -53,7 +53,7 @@ const LandingPage = ({ seoMeta }: PageProps) => (
     </div>
 
     <FAQSection faqs={DSA_YATRA_FAQS} heading="Common Questions" />
-  </Fragment>
+  </div>
 );
 
 export const getStaticProps = async () => ({

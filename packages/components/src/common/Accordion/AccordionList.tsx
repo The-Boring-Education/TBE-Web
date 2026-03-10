@@ -20,9 +20,9 @@ interface AccordionListProps {
 const AccordionList = ({
   items,
   type = "single",
-  itemClassName = "border border-gray-200 rounded-xl overflow-hidden shadow-sm bg-white",
+  itemClassName = "border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm bg-white dark:bg-[#19191B]",
   triggerClassName = "w-full flex justify-between items-center px-5 py-2 text-left focus:outline-none",
-  contentClassName = "px-5 pb-2 text-gray-700 text-sm",
+  contentClassName = "px-5 pb-2 text-gray-700 dark:text-gray-300 text-sm",
   className = "space-y-2 text-left",
 }: AccordionListProps) => {
   const [openIndices, setOpenIndices] = useState<Set<number>>(new Set());
@@ -51,7 +51,7 @@ const AccordionList = ({
             onClick={() => toggle(index)}
             type="button"
           >
-            <span className="font-medium text-lg text-gray-800">
+            <span className="font-medium text-lg text-gray-800 dark:text-gray-200">
               {item.trigger}
             </span>
             <motion.span
@@ -60,7 +60,7 @@ const AccordionList = ({
               }}
               transition={{ duration: 0.3 }}
             >
-              <ChevronDownIcon className="w-5 h-5 text-gray-500" />
+              <ChevronDownIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
             </motion.span>
           </button>
           {isOpen(index) && (

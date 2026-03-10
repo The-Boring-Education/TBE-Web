@@ -98,40 +98,40 @@
 
   /* 2. Fonts */
   .heading-1 {
-    @apply text-4xl md:text-5xl lg:text-6xl font-black text-contentLight;
+    @apply text-4xl md:text-5xl lg:text-6xl font-black text-contentLight dark:text-white;
   }
 
   .heading-2 {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-contentLight;
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-contentLight dark:text-white;
   }
 
   .heading-3 {
-    @apply text-2xl md:text-3xl lg:text-4xl font-bold text-contentLight;
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold text-contentLight dark:text-white;
   }
 
   .heading-4,
   .md-1 {
-    @apply text-xl md:text-2xl lg:text-3xl font-semibold text-contentLight;
+    @apply text-xl md:text-2xl lg:text-3xl font-semibold text-contentLight dark:text-white;
   }
 
   .heading-5 {
-    @apply text-lg md:text-xl lg:text-2xl font-semibold text-contentLight;
+    @apply text-lg md:text-xl lg:text-2xl font-semibold text-contentLight dark:text-white;
   }
 
   .subtitle {
-    @apply text-subtitle font-normal text-contentLight;
+    @apply text-subtitle font-normal text-contentLight dark:text-grey;
   }
 
   .paragraph {
-    @apply text-paragraph font-normal text-contentLight;
+    @apply text-paragraph font-normal text-contentLight dark:text-grey;
   }
 
   .strong-text {
-    @apply text-strong-text font-semibold text-contentLight;
+    @apply text-strong-text font-semibold text-contentLight dark:text-white;
   }
 
   .pre-title {
-    @apply text-pre-title font-normal text-contentLight;
+    @apply text-pre-title font-normal text-contentLight dark:text-grey;
   }
 
   .button-text {
@@ -157,6 +157,37 @@
   .checkbox,
   .radio {
     @apply flex items-center gap-2 px-3 py-2 border label rounded-full transition-all duration-150 cursor-pointer shadow-md;
+  }
+
+  /* OnCampus Like Card Style */
+  .oncampus-card {
+    background-color: #0c0c10 !important;
+    border-radius: 1rem !important;
+    border-width: 1px !important;
+    border-color: rgba(255, 87, 87, 0.4) !important;
+    box-shadow: 0 0 40px rgba(255, 87, 87, 0.16) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .oncampus-card:hover {
+    transform: translateY(-6px) scale(1.02) !important;
+    box-shadow: 0 20px 40px rgba(255, 87, 87, 0.28), 0 0 0 8px rgba(255, 87, 87, 0.12) !important;
+  }
+
+  .oncampus-card h5 {
+    @apply text-slate-100 font-semibold text-sm transition-colors duration-200 !important;
+  }
+
+  .oncampus-card p {
+    @apply text-slate-400 text-[13px] mt-2 leading-relaxed transition-colors duration-200 !important;
+  }
+
+  .oncampus-card:hover h5 {
+    @apply text-white !important;
+  }
+
+  .oncampus-card:hover p {
+    @apply text-slate-300 !important;
   }
 }
 

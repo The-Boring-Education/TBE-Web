@@ -625,6 +625,7 @@ const DSA_YATRA_FEATURES: PrimaryCardProps[] = [
       "Don't get lost in random problems. Follow a curated path designed for your target role.",
     image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
     imageAltText: "Structured learning",
+    className: "oncampus-card",
   },
   {
     id: v4(),
@@ -633,6 +634,7 @@ const DSA_YATRA_FEATURES: PrimaryCardProps[] = [
       "Prepare specifically for Startups, MNCs, or MAANG with tailored question sets.",
     image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
     imageAltText: "Company focused prep",
+    className: "oncampus-card",
   },
   {
     id: v4(),
@@ -640,6 +642,7 @@ const DSA_YATRA_FEATURES: PrimaryCardProps[] = [
     content: "Master the underlying patterns, not just memorize solutions.",
     image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
     imageAltText: "Concept mastery",
+    className: "oncampus-card",
   },
 ];
 
