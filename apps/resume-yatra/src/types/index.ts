@@ -1,2 +1,2 @@
-export * from "./builder"
-export * from "./resume"
+export * from "./builder";
+export * from "./resume";

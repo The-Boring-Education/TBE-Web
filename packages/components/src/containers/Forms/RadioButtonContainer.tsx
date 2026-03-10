@@ -1,5 +1,5 @@
-import { FlexContainer, RadioButton } from '@tbe/components';
-import type { RadioGroupProps } from '@tbe/interface';
+import { FlexContainer, RadioButton } from "@tbe/components";
+import type { RadioGroupProps } from "@tbe/interface";
 
 const RadioButtonContainer = ({
   options,
@@ -7,11 +7,11 @@ const RadioButtonContainer = ({
   onChange,
 }: RadioGroupProps) => {
   const handleClick = (value: string) => {
-    onChange(selectedValue === value ? '' : value);
+    onChange(selectedValue === value ? "" : value);
   };
 
   return (
-    <FlexContainer className='gap-2'>
+    <FlexContainer className="gap-2">
       {options.map((option, index) => (
         <RadioButton
           key={index}

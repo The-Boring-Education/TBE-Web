@@ -1,4 +1,4 @@
-import {cn} from "@tbe/utils";
+import { cn } from "@tbe/utils";
 
 function Skeleton({
   className,
@@ -12,4 +12,4 @@ function Skeleton({
   );
 }
 
-export {Skeleton};
+export { Skeleton };

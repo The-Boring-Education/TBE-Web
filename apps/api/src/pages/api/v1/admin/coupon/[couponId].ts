@@ -1,13 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from '@/lib/constants';
+import { apiStatusCodes } from "@/lib/constants";
 import {
   deleteCouponFromDB,
   getCouponByIdFromDB,
   updateCouponFromDB,
-} from '@/lib/database';
-import { cors, sendAPIResponse } from '@/lib/utils';
-import { adminMiddleware, connectDB } from '@/middleware/api';
+} from "@/lib/database";
+import { cors, sendAPIResponse } from "@/lib/utils";
+import { adminMiddleware, connectDB } from "@/middleware/api";
 
 interface UpdateCouponRequest {
   code?: string;
@@ -23,7 +23,7 @@ interface UpdateCouponRequest {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
   }
@@ -37,23 +37,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req;
   const { couponId } = query;
 
-  if (!couponId || typeof couponId !== 'string') {
+  if (!couponId || typeof couponId !== "string") {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: false,
-        message: 'Coupon ID is required',
-      })
+        message: "Coupon ID is required",
+      }),
     );
   }
 
   switch (method) {
-    case 'GET':
+    case "GET":
       return handleGetCoupon(couponId, res);
-    
-    case 'PUT':
+
+    case "PUT":
       return handleUpdateCoupon(req, res, couponId);
-    
-    case 'DELETE':
+
+    case "DELETE":
       return handleDeleteCoupon(couponId, res);
 
     default:
@@ -61,16 +61,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Method ${method} not allowed`,
-        })
+        }),
       );
   }
 };
 
 // GET - Get specific coupon (admin only)
-const handleGetCoupon = async (
-  couponId: string,
-  res: NextApiResponse
-) => {
+const handleGetCoupon = async (couponId: string, res: NextApiResponse) => {
   try {
     const { data: coupon, error } = await getCouponByIdFromDB(couponId);
 
@@ -79,24 +76,24 @@ const handleGetCoupon = async (
         sendAPIResponse({
           status: false,
           message: error,
-        })
+        }),
       );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        message: 'Coupon fetched successfully',
+        message: "Coupon fetched successfully",
         data: coupon,
-      })
+      }),
     );
   } catch (error) {
-    console.error('Error fetching coupon:', error);
+    console.error("Error fetching coupon:", error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Internal server error while fetching coupon',
-      })
+        message: "Internal server error while fetching coupon",
+      }),
     );
   }
 };
@@ -105,19 +102,22 @@ const handleGetCoupon = async (
 const handleUpdateCoupon = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  couponId: string
+  couponId: string,
 ) => {
   try {
     const updateData: UpdateCouponRequest = req.body;
 
     // Validate discount percentage if provided
     if (updateData.discountPercentage != null) {
-      if (updateData.discountPercentage < 1 || updateData.discountPercentage > 100) {
+      if (
+        updateData.discountPercentage < 1 ||
+        updateData.discountPercentage > 100
+      ) {
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
             status: false,
-            message: 'Discount percentage must be between 1 and 100',
-          })
+            message: "Discount percentage must be between 1 and 100",
+          }),
         );
       }
     }
@@ -133,7 +133,7 @@ const handleUpdateCoupon = async (
 
     const { data: updatedCoupon, error } = await updateCouponFromDB(
       couponId,
-      processedUpdateData
+      processedUpdateData,
     );
 
     if (error) {
@@ -141,33 +141,30 @@ const handleUpdateCoupon = async (
         sendAPIResponse({
           status: false,
           message: error,
-        })
+        }),
       );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        message: 'Coupon updated successfully',
+        message: "Coupon updated successfully",
         data: updatedCoupon,
-      })
+      }),
     );
   } catch (error) {
-    console.error('Error updating coupon:', error);
+    console.error("Error updating coupon:", error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Internal server error while updating coupon',
-      })
+        message: "Internal server error while updating coupon",
+      }),
     );
   }
 };
 
 // DELETE - Delete coupon (admin only)
-const handleDeleteCoupon = async (
-  couponId: string,
-  res: NextApiResponse
-) => {
+const handleDeleteCoupon = async (couponId: string, res: NextApiResponse) => {
   try {
     const { data: deletedCoupon, error } = await deleteCouponFromDB(couponId);
 
@@ -176,24 +173,24 @@ const handleDeleteCoupon = async (
         sendAPIResponse({
           status: false,
           message: error,
-        })
+        }),
       );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        message: 'Coupon deleted successfully',
+        message: "Coupon deleted successfully",
         data: deletedCoupon,
-      })
+      }),
     );
   } catch (error) {
-    console.error('Error deleting coupon:', error);
+    console.error("Error deleting coupon:", error);
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: 'Internal server error while deleting coupon',
-      })
+        message: "Internal server error while deleting coupon",
+      }),
     );
   }
 };

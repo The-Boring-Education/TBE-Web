@@ -1,17 +1,18 @@
-import type { ImageContainerProps } from '@tbe/interface';
-import Image from 'next/image';
+import type { ImageContainerProps } from "@tbe/interface";
+import Image from "next/image";
 
 const ImageContainer = ({
   src,
-  alt = '',
+  alt = "",
   className,
-  loading = 'lazy',
+  loading = "lazy",
   fullWidth = true,
   fullHeight = true,
 }: ImageContainerProps) => (
   <div
-    className={`${className} ${fullWidth && 'w-full'} ${fullHeight && 'h-full'
-      } relative`}
+    className={`${className} ${fullWidth && "w-full"} ${
+      fullHeight && "h-full"
+    } relative`}
   >
     <Image
       alt={alt}
@@ -19,7 +20,7 @@ const ImageContainer = ({
       fill
       loading={loading}
       src={src}
-      style={{ objectFit: 'cover' }}
+      style={{ objectFit: "cover" }}
     />
   </div>
 );

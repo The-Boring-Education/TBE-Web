@@ -15,7 +15,7 @@ import type {
  * Calls Unskilled backend directly (like graph API)
  */
 export const evaluateResume = async (
-  payload: ResumeEvaluationRequest
+  payload: ResumeEvaluationRequest,
 ): Promise<ResumeEvaluationResponse> => {
   try {
     const apiUrl = `${envConfig.UNSKILLED_API_URL}/resume/evaluate`;
@@ -37,7 +37,7 @@ export const evaluateResume = async (
       const textResponse = await response.text();
       console.error("Non-JSON response:", textResponse);
       throw new Error(
-        `Server returned ${response.status}: ${textResponse.substring(0, 200)}`
+        `Server returned ${response.status}: ${textResponse.substring(0, 200)}`,
       );
     }
 
@@ -64,7 +64,7 @@ export const checkResumeServiceHealth = async (): Promise<{
 }> => {
   try {
     const response = await fetch(
-      `${envConfig.UNSKILLED_API_URL}/evaluate/health`
+      `${envConfig.UNSKILLED_API_URL}/evaluate/health`,
     );
 
     if (!response.ok) {

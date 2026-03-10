@@ -1,8 +1,8 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
+import { DATABASE_MODELS } from "@/lib/constants";
 
-export interface QuizAttemptAnswer {  
+export interface QuizAttemptAnswer {
   questionIndex: number;
   selectedAnswer: number | null;
   isCorrect: boolean;
@@ -44,7 +44,7 @@ const QuizAttemptAnswerSchema = new Schema<QuizAttemptAnswer>(
       required: true,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const QuizAttemptSchema = new Schema<QuizAttemptModel>(
@@ -52,37 +52,37 @@ const QuizAttemptSchema = new Schema<QuizAttemptModel>(
     userId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
-      required: [true, 'User ID is required'],
+      required: [true, "User ID is required"],
     },
     quizId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.QUIZ,
-      required: [true, 'Quiz ID is required'],
+      required: [true, "Quiz ID is required"],
     },
     categoryName: {
       type: String,
-      required: [true, 'Category name is required'],
+      required: [true, "Category name is required"],
     },
     answers: [QuizAttemptAnswerSchema],
     score: {
       type: Number,
-      required: [true, 'Score is required'],
+      required: [true, "Score is required"],
     },
     totalQuestions: {
       type: Number,
-      required: [true, 'Total questions is required'],
+      required: [true, "Total questions is required"],
     },
     correctAnswers: {
       type: Number,
-      required: [true, 'Correct answers count is required'],
+      required: [true, "Correct answers count is required"],
     },
     timeTaken: {
       type: Number,
-      required: [true, 'Time taken is required'],
+      required: [true, "Time taken is required"],
     },
     pointsEarned: {
       type: Number,
-      required: [true, 'Points earned is required'],
+      required: [true, "Points earned is required"],
       default: 0,
     },
     completedAt: {
@@ -90,7 +90,7 @@ const QuizAttemptSchema = new Schema<QuizAttemptModel>(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Index for faster queries

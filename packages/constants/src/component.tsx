@@ -100,7 +100,7 @@ interface NavbarVariantConfig {
 }
 
 const getNavbarVariantConfig = (
-  Logo: ComponentType<any>
+  Logo: ComponentType<any>,
 ): Record<string, NavbarVariantConfig> => ({
   default: {
     branding: <Logo />,
@@ -181,7 +181,7 @@ export interface FooterVariantConfig {
 
 // Get Footer Variant Configuration
 export const getFooterVariantConfig = (
-  Logo: ComponentType<any>
+  Logo: ComponentType<any>,
 ): Record<string, FooterVariantConfig> => ({
   default: {
     branding: <Logo />,

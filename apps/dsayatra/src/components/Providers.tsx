@@ -8,7 +8,13 @@ import { type Session } from "next-auth";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-export function Providers({ children, session }: { children: React.ReactNode; session: Session | null }) {
+export function Providers({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session: Session | null;
+}) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
@@ -23,4 +29,3 @@ export function Providers({ children, session }: { children: React.ReactNode; se
     </AuthProvider>
   );
 }
-

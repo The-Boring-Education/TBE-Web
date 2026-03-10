@@ -1,17 +1,17 @@
-import { type Model, model, models, Schema } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
+import { type Model, model, models, Schema } from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   DATABASE_MODELS,
   DIFFICULTY_LEVEL,
   PROJECT_SKILLS,
-  ROADMAPS, 
-} from '@/lib/constants';
+  ROADMAPS,
+} from "@/lib/constants";
 import type {
   ProjectChapter,
   ProjectDocumentModel,
   ProjectSection,
-} from '@/lib/interfaces';
+} from "@/lib/interfaces";
 
 const chapterSchema: Schema<ProjectChapter> = new Schema(
   {
@@ -20,7 +20,7 @@ const chapterSchema: Schema<ProjectChapter> = new Schema(
     content: { type: String, required: true },
     isOptional: { type: Boolean, default: false },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const sectionSchema: Schema<ProjectSection> = new Schema(
@@ -29,7 +29,7 @@ const sectionSchema: Schema<ProjectSection> = new Schema(
     sectionName: { type: String, required: true },
     chapters: [chapterSchema],
   },
-  { _id: false }
+  { _id: false },
 );
 
 const projectSchema: Schema<ProjectDocumentModel> =
@@ -50,7 +50,7 @@ const projectSchema: Schema<ProjectDocumentModel> =
       },
       isActive: { type: Boolean, default: false },
     },
-    { timestamps: true }
+    { timestamps: true },
   );
 
 const Project: Model<ProjectDocumentModel> =

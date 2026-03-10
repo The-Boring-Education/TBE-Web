@@ -1,4 +1,4 @@
-import { Head, Html, Main, NextScript } from 'next/document'
+import { Head, Html, Main, NextScript } from 'next/document';
 
 const TheBoringEducation = () => {
   return (
@@ -9,6 +9,6 @@ const TheBoringEducation = () => {
         <NextScript />
       </body>
     </Html>
-  )
-}
-export default TheBoringEducation
+  );
+};
+export default TheBoringEducation;

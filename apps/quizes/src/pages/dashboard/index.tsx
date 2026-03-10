@@ -1,38 +1,44 @@
-import { useAuth } from "@tbe/auth"
-import { Button } from "@tbe/components"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@tbe/components/quizes"
-import { Layout } from "@tbe/components/quizes"
-import { ProtectedRoute } from "@tbe/components/quizes"
-import { useQuizData } from "@tbe/hooks"
-import { gamificationApi } from "@tbe/services"
-import { BookOpen,Play } from "lucide-react"
-import { useRouter } from "next/router"
-import React, { useEffect } from "react"
+import { useAuth } from "@tbe/auth";
+import { Button } from "@tbe/components";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@tbe/components/quizes";
+import { Layout } from "@tbe/components/quizes";
+import { ProtectedRoute } from "@tbe/components/quizes";
+import { useQuizData } from "@tbe/hooks";
+import { gamificationApi } from "@tbe/services";
+import { BookOpen, Play } from "lucide-react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 function DashboardContent() {
-  const { user } = useAuth()
-  const router = useRouter()
-  const { categories, loading, error, refetch } = useQuizData()
+  const { user } = useAuth();
+  const router = useRouter();
+  const { categories, loading, error, refetch } = useQuizData();
 
   // Debug API URLs on dashboard load
 
   const startQuiz = (categoryId: string) => {
-    router.push(`/quiz/${categoryId}`)
-  }
+    router.push(`/quiz/${categoryId}`);
+  };
 
   useEffect(() => {
-    const effectiveUserId = (user as any)?._id || user?.id
-    if (!effectiveUserId) return
+    const effectiveUserId = (user as any)?._id || user?.id;
+    if (!effectiveUserId) return;
 
     gamificationApi
       .getuserGamificationPoints(effectiveUserId)
       .then((res: any) => {
-        console.log(res)
+        console.log(res);
       })
       .catch((err: any) => {
-        console.error('Failed to load gamification points:', err)
-      })
-  }, [user?.id])
+        console.error("Failed to load gamification points:", err);
+      });
+  }, [user?.id]);
 
   if (loading) {
     return (
@@ -44,7 +50,7 @@ function DashboardContent() {
           </div>
         </div>
       </Layout>
-    )
+    );
   }
 
   if (error) {
@@ -53,11 +59,13 @@ function DashboardContent() {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-600 mb-4">{error}</p>
-            <Button onClick={refetch} variant="OUTLINE">Try Again</Button>
+            <Button onClick={refetch} variant="OUTLINE">
+              Try Again
+            </Button>
           </div>
         </div>
       </Layout>
-    )
+    );
   }
 
   return (
@@ -67,7 +75,7 @@ function DashboardContent() {
           {/* Welcome Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Welcome back, {user?.name?.split(' ')[0]}! 👋
+              Welcome back, {user?.name?.split(" ")[0]}! 👋
             </h1>
             <p className="text-xl text-gray-600">
               Ready to test your knowledge? Choose a quiz below to get started.
@@ -90,7 +98,9 @@ function DashboardContent() {
                 {categories.length === 0 ? (
                   <div className="text-center py-16">
                     <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500 text-lg mb-6">No quizes available</p>
+                    <p className="text-gray-500 text-lg mb-6">
+                      No quizes available
+                    </p>
                     <Button onClick={refetch} variant="OUTLINE" size="LARGE">
                       Refresh
                     </Button>
@@ -117,7 +127,6 @@ function DashboardContent() {
                             <Button
                               className="w-full rounded-md text-white"
                               variant="PRIMARY"
-
                               icon={<Play className="h-5 w-5 mr-2" />}
                               text="Start Quiz"
                             />
@@ -133,7 +142,7 @@ function DashboardContent() {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
 export default function Dashboard() {
@@ -141,5 +150,5 @@ export default function Dashboard() {
     <ProtectedRoute>
       <DashboardContent />
     </ProtectedRoute>
-  )
+  );
 }

@@ -3,9 +3,9 @@ import {
   InputFieldContainer,
   SelectInput,
   Text,
-} from '@tbe/components';
-import { COUNTRY_CODES } from '@tbe/constants';
-import type { StepPhoneNumberProps } from '@tbe/interface';
+} from "@tbe/components";
+import { COUNTRY_CODES } from "@tbe/constants";
+import type { StepPhoneNumberProps } from "@tbe/interface";
 
 const StepPhoneNumber = ({
   countryCode,
@@ -16,26 +16,26 @@ const StepPhoneNumber = ({
   const codeList = COUNTRY_CODES.map((c) => c.code);
 
   return (
-    <FlexContainer className='gap-2' direction='col'>
-      <Text className='paragraph' level='p'>
+    <FlexContainer className="gap-2" direction="col">
+      <Text className="paragraph" level="p">
         Your Contact No
       </Text>
 
-      <FlexContainer className='gap-2 w-full items-center flex-nowrap'>
+      <FlexContainer className="gap-2 w-full items-center flex-nowrap">
         <SelectInput
-          aria-label='Country Code'
-          className=''
+          aria-label="Country Code"
+          className=""
           list={codeList}
           selectedItem={countryCode}
           onChange={onChangeCode}
         />
 
         <InputFieldContainer
-          className='w-full'
+          className="w-full"
           isOptional
-          label='Phone Number'
-          labelClass='sr-only'
-          type='tel'
+          label="Phone Number"
+          labelClass="sr-only"
+          type="tel"
           value={phoneNumber}
           onChange={onChangeNumber}
         />

@@ -1,14 +1,14 @@
-import { FlexContainer } from '@tbe/components';
-import type { CardSectionContainerProps } from '@tbe/interface';
+import { FlexContainer } from "@tbe/components";
+import type { CardSectionContainerProps } from "@tbe/interface";
 
 const CardSectionContainer = ({
   children,
   isWidthFull = true,
-  className = '',
+  className = "",
   gap,
 }: CardSectionContainerProps) => (
   <FlexContainer
-    className={`${isWidthFull && 'w-full'} ${gap ?? 'gap-4'} ${className}`}
+    className={`${isWidthFull && "w-full"} ${gap ?? "gap-4"} ${className}`}
     itemCenter={false}
   >
     {children}

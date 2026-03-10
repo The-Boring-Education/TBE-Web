@@ -16,7 +16,9 @@ const isMongoObjectId = (val?: string): boolean => {
   return /^[a-fA-F0-9]{24}$/.test(val);
 };
 
-const resolveUserIdToMongoId = async (user: { id?: string; email?: string; name?: string; image?: string } | null) => {
+const resolveUserIdToMongoId = async (
+  user: { id?: string; email?: string; name?: string; image?: string } | null,
+) => {
   const candidateId = user?.id;
   if (candidateId && isMongoObjectId(candidateId)) return candidateId;
   if (!user?.email) return null;
@@ -24,7 +26,9 @@ const resolveUserIdToMongoId = async (user: { id?: string; email?: string; name?
   const base = (config.API_BASE_URL || "").replace(/\/$/, "");
 
   try {
-    const resp = await fetch(`${base}/user?email=${encodeURIComponent(user.email)}`);
+    const resp = await fetch(
+      `${base}/user?email=${encodeURIComponent(user.email)}`,
+    );
     const json = await resp.json();
     const dbId = json?.data?._id;
     if (isMongoObjectId(dbId)) return dbId;
@@ -60,9 +64,13 @@ export default function QuizPage() {
 
   const [quiz, setQuiz] = useState<QuizQuestionsData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    Record<number, number>
+  >({});
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
-  const [questionTimes, setQuestionTimes] = useState<Record<number, number>>({});
+  const [questionTimes, setQuestionTimes] = useState<Record<number, number>>(
+    {},
+  );
   const [gameState, setGameState] = useState<GameState>("loading");
   const [quizStartTime] = useState(Date.now());
   const hasSubmittedRef = useRef(false);
@@ -104,8 +112,12 @@ export default function QuizPage() {
   }, [currentQuestionIndex, gameState]);
 
   const questions = useMemo(() => quiz?.questions || [], [quiz?.questions]);
-  const currentQuestion: QuizQuestion | undefined = questions[currentQuestionIndex];
-  const progress = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
+  const currentQuestion: QuizQuestion | undefined =
+    questions[currentQuestionIndex];
+  const progress =
+    questions.length > 0
+      ? ((currentQuestionIndex + 1) / questions.length) * 100
+      : 0;
 
   const submitQuiz = useCallback(async () => {
     if (!quizId || !quiz || hasSubmittedRef.current) return;
@@ -132,24 +144,46 @@ export default function QuizPage() {
 
         // gamification: best-effort
         gamificationApi
-          .updateuserGamificationPoints({ userId: mongoUserId, actionType: "COMPLETE_QUIZ" } as any)
-          .catch(() => { });
+          .updateuserGamificationPoints({
+            userId: mongoUserId,
+            actionType: "COMPLETE_QUIZ",
+          } as any)
+          .catch(() => {});
       }
     } catch {
       // ignore submit errors, still show local results
     } finally {
-      const answersParam = encodeURIComponent(JSON.stringify(answersPayload.map((a) => a.selectedAnswer)));
-      router.replace(`/results/${quizId}?answers=${answersParam}&timeTaken=${totalTimeSpent}`);
+      const answersParam = encodeURIComponent(
+        JSON.stringify(answersPayload.map((a) => a.selectedAnswer)),
+      );
+      router.replace(
+        `/results/${quizId}?answers=${answersParam}&timeTaken=${totalTimeSpent}`,
+      );
     }
-  }, [quizId, quiz, user, quizStartTime, questions, selectedAnswers, questionTimes, router]);
+  }, [
+    quizId,
+    quiz,
+    user,
+    quizStartTime,
+    questions,
+    selectedAnswers,
+    questionTimes,
+    router,
+  ]);
 
   const selectAnswer = (answerIndex: number) => {
     if (!quiz || !currentQuestion) return;
     if (gameState !== "playing") return;
 
     const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
-    setQuestionTimes((prev) => ({ ...prev, [currentQuestionIndex]: timeSpent }));
-    setSelectedAnswers((prev) => ({ ...prev, [currentQuestionIndex]: answerIndex }));
+    setQuestionTimes((prev) => ({
+      ...prev,
+      [currentQuestionIndex]: timeSpent,
+    }));
+    setSelectedAnswers((prev) => ({
+      ...prev,
+      [currentQuestionIndex]: answerIndex,
+    }));
 
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
@@ -177,8 +211,12 @@ export default function QuizPage() {
               <div className="absolute inset-0 border-4 border-transparent border-t-primary rounded-full animate-spin" />
             </div>
           </div>
-          <div className="text-white font-semibold text-lg">Submitting quiz...</div>
-          <div className="text-gray-400 text-sm mt-2">Please wait while we process your results</div>
+          <div className="text-white font-semibold text-lg">
+            Submitting quiz...
+          </div>
+          <div className="text-gray-400 text-sm mt-2">
+            Please wait while we process your results
+          </div>
         </div>
       </div>
     );
@@ -207,8 +245,18 @@ export default function QuizPage() {
 
         <div className="flex items-center gap-3">
           <div className="relative w-14 h-14">
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" fill="none" stroke="#1F2937" strokeWidth="3" />
+            <svg
+              className="w-full h-full transform -rotate-90"
+              viewBox="0 0 100 100"
+            >
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="#1F2937"
+                strokeWidth="3"
+              />
               <circle
                 cx="50"
                 cy="50"
@@ -217,14 +265,14 @@ export default function QuizPage() {
                 stroke="#FF5757"
                 strokeWidth="3"
                 strokeDasharray={`${2 * Math.PI * 45}`}
-                strokeDashoffset={`${2 * Math.PI * 45 * (1 - (currentQuestionIndex) / questions.length)}`}
+                strokeDashoffset={`${2 * Math.PI * 45 * (1 - currentQuestionIndex / questions.length)}`}
                 strokeLinecap="round"
                 style={{ transition: "stroke-dashoffset 0.3s ease" }}
               />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-xs font-semibold text-gray-300">
-                {Math.round(((currentQuestionIndex) / questions.length) * 100)}%
+                {Math.round((currentQuestionIndex / questions.length) * 100)}%
               </span>
             </div>
           </div>
@@ -238,12 +286,15 @@ export default function QuizPage() {
       </div>
 
       <div className="max-w-5xl mx-auto px-2 py-2">
-
         {/* Question */}
         <div className="border border-gray-800 rounded-xl bg-[#0F0F0F]">
           <div className="p-3 border-b border-gray-800">
             <div className="text-white text-lg leading-relaxed">
-              <CodeRenderer content={currentQuestion.question} theme="dark" className="max-w-none" />
+              <CodeRenderer
+                content={currentQuestion.question}
+                theme="dark"
+                className="max-w-none"
+              />
             </div>
           </div>
 
@@ -267,15 +318,23 @@ export default function QuizPage() {
                     <div
                       className={[
                         " w-3 h-3 rounded-full border flex items-center justify-center text-xs leading-[1] font-semibold flex-shrink-0 ",
-                        isSelected ? "border-[#FF5757] bg-[#FF5757] text-white" : "border-gray-700 text-gray-300",
+                        isSelected
+                          ? "border-[#FF5757] bg-[#FF5757] text-white"
+                          : "border-gray-700 text-gray-300",
                       ].join(" ")}
                     >
                       {String.fromCharCode(65 + index)}
                     </div>
                     <div className="ml-1 flex-1 text-primary text-base font-bold flex items-center">
-                      <CodeRenderer content={cleanOptionText(option)} theme="dark" className="max-w-none" />
+                      <CodeRenderer
+                        content={cleanOptionText(option)}
+                        theme="dark"
+                        className="max-w-none"
+                      />
                     </div>
-                    {isSelected && <CheckCircle2 className="w-5 h-5 text-[#FF5757] ml-3 flex-shrink-0" />}
+                    {isSelected && (
+                      <CheckCircle2 className="w-5 h-5 text-[#FF5757] ml-3 flex-shrink-0" />
+                    )}
                   </div>
                 </button>
               );
@@ -290,4 +349,3 @@ export default function QuizPage() {
     </div>
   );
 }
-

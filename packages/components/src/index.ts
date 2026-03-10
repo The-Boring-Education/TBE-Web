@@ -79,7 +79,7 @@ export { default as Text } from "./common/Typography/Text";
 export { default as AboutTBE } from "./containers/Cards/AboutTBE";
 export { default as CardContainerA } from "./containers/Cards/CardContainerA";
 export { default as CardContainerB } from "./containers/Cards/CardContainerB";
-export { DsaQuestionCard } from "./containers/Cards/DsaQuestionCard"
+export { DsaQuestionCard } from "./containers/Cards/DsaQuestionCard";
 export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
 export { default as ExampleCard } from "./containers/Cards/ExampleCard";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
@@ -91,13 +91,12 @@ export { default as MentorshipCard } from "./containers/Cards/MentorshipCard";
 export { default as NotificationContainer } from "./containers/Cards/NotificationContainer";
 export { default as PaymentCard } from "./containers/Cards/PaymentCard";
 export { default as PlaylistSkillCard } from "./containers/Cards/PlaylistSkillCard";
-export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetailPanel"
+export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetailPanel";
 export { default as QuizSection } from "./containers/Cards/QuizSection";
 export { default as Testimonials } from "./containers/Cards/Testimonials";
 export { default as UserLevelProgressContainer } from "./containers/Cards/UserLevelProgressContainer";
 export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaughtAt";
 export { default as WebibarCard } from "./containers/Cards/WebibarCard";
-
 
 // Container Components - Card Items
 export { default as ContactCard } from "./containers/Cards/Items/ContactCard";
@@ -179,7 +178,7 @@ export type {
   BreadcrumbItem,
   CourseSchema,
   FAQItem,
-  SchemaType
+  SchemaType,
 } from "./layout/SEO";
 export { default as SEO } from "./layout/SEO";
 export {
@@ -188,7 +187,7 @@ export {
   getCourseSchema,
   getFAQSchema,
   getOrganizationSchema,
-  getWebSiteSchema
+  getWebSiteSchema,
 } from "./layout/SEO";
 export { PageSEO, default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./prepyatra";

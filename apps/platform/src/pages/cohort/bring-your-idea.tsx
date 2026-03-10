@@ -141,7 +141,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
     useState<CohortUserCategoryProps>(BYI_USER_CATEGORIES[0]);
   const [teamSize, setTeamSize] = useState(1);
   const [perTeamMemberPrice, setPerTeamMemberPrice] = useState(
-    selectedUserCategory.price / teamSize
+    selectedUserCategory.price / teamSize,
   );
 
   const handleTeamSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,7 +154,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
 
   const handleSelectUserCategory = (key: string) => {
     const selectedCategory = BYI_USER_CATEGORIES.find(
-      (category) => category.key === key
+      (category) => category.key === key,
     );
 
     if (selectedCategory) {
@@ -455,7 +455,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
 
       <FAQSection
         faqs={BYI_FAQS}
-        heading="Frequently Asked Questions"
+        heading='Frequently Asked Questions'
         subtext="Here's everything you might want to ask before joining the Bring Your Idea Cohort"
       />
     </Fragment>

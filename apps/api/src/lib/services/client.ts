@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from "axios";
 
-import { envConfig } from '@/lib/constants';
-import { emailLogger } from '@/lib/constants';
-import type { EmailRequest, EmailResponse } from '@/lib/interfaces';
+import { envConfig } from "@/lib/constants";
+import { emailLogger } from "@/lib/constants";
+import type { EmailRequest, EmailResponse } from "@/lib/interfaces";
 
 class EmailClient {
   private apiUrl: string;
@@ -15,7 +15,7 @@ class EmailClient {
 
   async sendEmail(
     emailData: EmailRequest,
-    requestId?: string
+    requestId?: string,
   ): Promise<EmailResponse> {
     const currentRequestId = requestId || emailLogger.generateRequestId();
     const startTime = Date.now();
@@ -23,23 +23,23 @@ class EmailClient {
     try {
       // Validate configuration
       if (!this.apiKey) {
-        const error = new Error('Email API key not configured');
+        const error = new Error("Email API key not configured");
         emailLogger.logError(
           currentRequestId,
           emailData.to_email,
           error,
-          'CONFIGURATION'
+          "CONFIGURATION",
         );
         throw error;
       }
 
       if (!this.apiUrl) {
-        const error = new Error('Email service URL not configured');
+        const error = new Error("Email service URL not configured");
         emailLogger.logError(
           currentRequestId,
           emailData.to_email,
           error,
-          'CONFIGURATION'
+          "CONFIGURATION",
         );
         throw error;
       }
@@ -56,11 +56,11 @@ class EmailClient {
         emailData,
         {
           headers: {
-            'Content-Type': 'application/json',
-            'X-Breevo-API-Key': this.apiKey,
+            "Content-Type": "application/json",
+            "X-Breevo-API-Key": this.apiKey,
           },
           timeout: 10000, // 10 second timeout
-        }
+        },
       );
 
       const duration = Date.now() - startTime;
@@ -74,7 +74,7 @@ class EmailClient {
 
       return {
         success: true,
-        message: 'Email sent successfully',
+        message: "Email sent successfully",
         requestId: currentRequestId,
       };
     } catch (error: any) {
@@ -85,7 +85,7 @@ class EmailClient {
         currentRequestId,
         emailData.to_email,
         error,
-        'API_CALL',
+        "API_CALL",
         {
           duration,
           httpStatus: error.response?.status,
@@ -93,9 +93,9 @@ class EmailClient {
           responseData: error.response?.data,
           subject: emailData.subject,
           apiUrl: this.apiUrl,
-          isTimeout: error.code === 'ECONNABORTED',
+          isTimeout: error.code === "ECONNABORTED",
           isNetworkError: !error.response,
-        }
+        },
       );
 
       return {
@@ -103,7 +103,7 @@ class EmailClient {
         error:
           error.response?.data?.message ||
           error.message ||
-          'Failed to send email',
+          "Failed to send email",
         requestId: currentRequestId,
       };
     }
@@ -111,13 +111,13 @@ class EmailClient {
 
   async sendBulkEmails(emails: EmailRequest[]): Promise<EmailResponse[]> {
     const results = await Promise.allSettled(
-      emails.map((email) => this.sendEmail(email))
+      emails.map((email) => this.sendEmail(email)),
     );
 
     return results.map((result) =>
-      result.status === 'fulfilled'
+      result.status === "fulfilled"
         ? result.value
-        : { success: false, error: 'Failed to send email' }
+        : { success: false, error: "Failed to send email" },
     );
   }
 }

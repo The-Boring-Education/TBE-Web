@@ -11,7 +11,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   // Get the API URL from environment
   const apiUrl = envConfig.API_URL || process.env.NEXT_PUBLIC_API_URL;

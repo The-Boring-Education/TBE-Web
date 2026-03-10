@@ -165,30 +165,30 @@ import { SectionEditor } from '@/components/forms'
 
 ```typescript
 interface Resume {
-    id: string
-    userId: string
-    template: string
-    personalInfo: PersonalInfo
-    summary: string
-    experience: Experience[]
-    education: Education[]
-    skills: Skill[]
-    projects: Project[]
-    certifications: Certification[]
-    customSections: CustomSection[]
-    settings: ResumeSettings
+  id: string;
+  userId: string;
+  template: string;
+  personalInfo: PersonalInfo;
+  summary: string;
+  experience: Experience[];
+  education: Education[];
+  skills: Skill[];
+  projects: Project[];
+  certifications: Certification[];
+  customSections: CustomSection[];
+  settings: ResumeSettings;
 }
 
 interface Experience {
-    id: string
-    company: string
-    position: string
-    location: string
-    startDate: string
-    endDate?: string
-    current: boolean
-    description: string[]
-    technologies: string[]
+  id: string;
+  company: string;
+  position: string;
+  location: string;
+  startDate: string;
+  endDate?: string;
+  current: boolean;
+  description: string[];
+  technologies: string[];
 }
 ```
 

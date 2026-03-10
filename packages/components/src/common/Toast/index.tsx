@@ -1,12 +1,12 @@
-import { XMarkIcon } from '@heroicons/react/20/solid';
-import type { ToastProps } from '@tbe/interface';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { XMarkIcon } from "@heroicons/react/20/solid";
+import type { ToastProps } from "@tbe/interface";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 
 const Toast = ({
   message,
-  type = 'success',
-  position = 'bottom-right',
+  type = "success",
+  position = "bottom-right",
   duration = 3000,
   onClose,
 }: ToastProps) => {
@@ -19,17 +19,17 @@ const Toast = ({
   }, [onClose, duration]);
 
   const positionClasses = {
-    'bottom-right': 'bottom-8 right-4',
-    'bottom-left': 'bottom-8 left-4',
-    'top-right': 'top-4 right-4',
-    'top-left': 'top-4 left-4',
+    "bottom-right": "bottom-8 right-4",
+    "bottom-left": "bottom-8 left-4",
+    "top-right": "top-4 right-4",
+    "top-left": "top-4 left-4",
   };
 
   const typeClasses = {
-    success: 'bg-green-600 text-white',
-    error: 'bg-red-600 text-white',
-    info: 'bg-blue-600 text-white',
-    warning: 'bg-yellow-500 text-black',
+    success: "bg-green-600 text-white",
+    error: "bg-red-600 text-white",
+    info: "bg-blue-600 text-white",
+    warning: "bg-yellow-500 text-black",
   };
 
   return (
@@ -43,7 +43,7 @@ const Toast = ({
       >
         <span>{message}</span>
         <button onClick={onClose}>
-          <XMarkIcon className='w-4 h-4 text-white hover:text-gray-200' />
+          <XMarkIcon className="w-4 h-4 text-white hover:text-gray-200" />
         </button>
       </motion.div>
     </AnimatePresence>

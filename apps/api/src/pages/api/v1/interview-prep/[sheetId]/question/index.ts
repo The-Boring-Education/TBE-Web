@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
-        })
+        }),
       );
   }
 };
@@ -27,14 +27,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 const handleAddQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  sheetId: string
+  sheetId: string,
 ) => {
   const questionData = req.body as AddInterviewQuestionRequestPayloadProps;
 
   // Validate required fields
   const requiredFields = ["title", "question", "answer"];
   const missingFields = requiredFields.filter(
-    (field) => !questionData[field as keyof AddInterviewQuestionRequestPayloadProps]
+    (field) =>
+      !questionData[field as keyof AddInterviewQuestionRequestPayloadProps],
   );
 
   if (missingFields.length > 0) {
@@ -42,14 +43,14 @@ const handleAddQuestion = async (
       sendAPIResponse({
         status: false,
         message: `Missing required fields: ${missingFields.join(", ")}`,
-      })
+      }),
     );
   }
 
   try {
     const { data, error } = await addQuestionToInterviewSheetInDB(
       sheetId,
-      questionData
+      questionData,
     );
 
     if (error) {
@@ -57,7 +58,7 @@ const handleAddQuestion = async (
         sendAPIResponse({
           status: false,
           message: "Failed while adding question to interview sheet",
-        })
+        }),
       );
     }
 
@@ -66,14 +67,14 @@ const handleAddQuestion = async (
         status: true,
         data,
         message: "Question added to interview sheet successfully",
-      })
+      }),
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
         message: "Failed while adding question to interview sheet",
-      })
+      }),
     );
   }
 };

@@ -1,3 +1,4 @@
+import "@tbe/components/styles/common.css";
 import "@/index.css";
 
 import type { AppProps } from "next/app";

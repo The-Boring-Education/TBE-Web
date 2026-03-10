@@ -3,19 +3,19 @@ import {
   MentorshipCard,
   Section,
   SectionHeaderContainer,
-} from '@tbe/components';
-import { MENTORSHIP_CARDS } from '@tbe/constants';
+} from "@tbe/components";
+import { MENTORSHIP_CARDS } from "@tbe/constants";
 
 const MentorshipPlans = () => (
-  <Section className='md:p-5 px-2 py-4'>
-    <FlexContainer className='gap-4' direction='col'>
+  <Section className="md:p-5 px-2 py-4">
+    <FlexContainer className="gap-4" direction="col">
       <SectionHeaderContainer
-        focusText='Mentorship'
-        heading='Get Personalised'
+        focusText="Mentorship"
+        heading="Get Personalised"
         headingLevel={3}
       />
-      <FlexContainer className='gap-2 h-full'>
-        {MENTORSHIP_CARDS.map((plan:any) => (
+      <FlexContainer className="gap-2 h-full">
+        {MENTORSHIP_CARDS.map((plan: any) => (
           <MentorshipCard
             key={plan.heading}
             description={plan.description}

@@ -21,7 +21,7 @@ export { default as useMediaQuery } from "./useMediaQuery";
 export { default as useNotifications } from "./useNotifications";
 export { default as useOnboarding } from "./useOnboarding";
 export { default as useOptimizedNavigation } from "./useOptimizedNavigation";
-export { default as usePaymentAccess } from "./usePaymentAccess"
+export { default as usePaymentAccess } from "./usePaymentAccess";
 export { default as usePaymentStatus } from "./usePaymentStatus";
 export { default as usePDFFile } from "./usePDFFile";
 export { default as useResumeParser } from "./usePDFFile";

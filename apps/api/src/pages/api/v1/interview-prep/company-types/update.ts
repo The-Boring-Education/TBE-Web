@@ -22,14 +22,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
-        })
+        }),
       );
   }
 };
 
 const handleUpdateCompanyTypes = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   try {
     const { questionIds, companyTypes }: UpdateCompanyTypePayload = req.body;
@@ -43,7 +43,7 @@ const handleUpdateCompanyTypes = async (
         sendAPIResponse({
           status: false,
           message: "Question IDs array is required",
-        })
+        }),
       );
     }
 
@@ -56,7 +56,7 @@ const handleUpdateCompanyTypes = async (
         sendAPIResponse({
           status: false,
           message: "Company types array is required",
-        })
+        }),
       );
     }
 
@@ -71,7 +71,7 @@ const handleUpdateCompanyTypes = async (
       {
         arrayFilters: [{ "elem._id": { $in: questionIds } }],
         multi: true,
-      }
+      },
     );
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -82,7 +82,7 @@ const handleUpdateCompanyTypes = async (
           matchedCount: updateResult.matchedCount,
         },
         message: "Company types updated successfully",
-      })
+      }),
     );
   } catch (error: any) {
     console.error("Error updating company types:", error);
@@ -91,7 +91,7 @@ const handleUpdateCompanyTypes = async (
         status: false,
         message: "Failed while updating company types",
         error: error.message,
-      })
+      }),
     );
   }
 };

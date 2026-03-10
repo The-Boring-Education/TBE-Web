@@ -1,18 +1,18 @@
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React from "react";
+import { useSearchParams } from "react-router-dom";
 
-import OnboardingForm from '../components/OnboardingForm';
-import OnboardingLayout from '../components/OnboardingLayout';
-import { isValidProduct } from '../config/products';
-import { useOnboarding } from '../hooks/useOnboarding';
+import OnboardingForm from "../components/OnboardingForm";
+import OnboardingLayout from "../components/OnboardingLayout";
+import { isValidProduct } from "../config/products";
+import { useOnboarding } from "../hooks/useOnboarding";
 
 const Onboarding: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const userId = searchParams.get('userId') || '';
-  const productId = searchParams.get('productId') || 'webapp';
-  const from = searchParams.get('from') || '';
-  const redirect = searchParams.get('redirect') || '/';
-  const token = searchParams.get('token') || '';
+  const userId = searchParams.get("userId") || "";
+  const productId = searchParams.get("productId") || "webapp";
+  const from = searchParams.get("from") || "";
+  const redirect = searchParams.get("redirect") || "/";
+  const token = searchParams.get("token") || "";
 
   const {
     user,

@@ -13,37 +13,37 @@ import {
   SEO,
   StarButton,
   Text,
-} from '@tbe/components';
-import { useGamifiedAction } from '@tbe/components';
-import { routes } from '@tbe/constants';
+} from "@tbe/components";
+import { useGamifiedAction } from "@tbe/components";
+import { routes } from "@tbe/constants";
 import {
   useAnalytics,
   useApi,
   usePaymentAccess,
   useQuestionStarred,
   useUser,
-} from '@tbe/hooks';
-import type { SheetPageProps } from '@tbe/interface';
-import { getSheetPageProps } from '@tbe/utils';
-import { useRouter } from 'next/router';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { FaLock } from 'react-icons/fa';
+} from "@tbe/hooks";
+import type { SheetPageProps } from "@tbe/interface";
+import { getSheetPageProps } from "@tbe/utils";
+import { useRouter } from "next/router";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { FaLock } from "react-icons/fa";
 
-import InterviewQuestionContent from '../../../components/InterviewQuestionContent';
+import InterviewQuestionContent from "../../../components/InterviewQuestionContent";
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();
-  const [sheetMeta, setSheetMeta] = useState<string>(meta || '');
+  const [sheetMeta, setSheetMeta] = useState<string>(meta || "");
   const [questions, setQuestions] = useState(sheet.questions || []);
-  const firstQuestionId = questions?.[0]?._id?.toString() || '';
+  const firstQuestionId = questions?.[0]?._id?.toString() || "";
   const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
   const [isQuestionCompleted, setIsQuestionCompleted] = useState(
     questions.find((question) => question._id.toString() === currentQuestionId)
-      ?.isCompleted
+      ?.isCompleted,
   );
   const [isQuestionStarred, setIsQuestionStarred] = useState(
     questions.find((question) => question._id.toString() === currentQuestionId)
-      ?.isStarred
+      ?.isStarred,
   );
   const [showFeedback, setShowFeedback] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -54,7 +54,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   // Calculate total and completed questions for the progress bar
   const totalQuestions = questions.length;
   const completedQuestions = questions.filter(
-    (question) => question.isCompleted
+    (question) => question.isCompleted,
   ).length;
 
   const { makeRequest } = useApi(`interview-prep/${slug}`);
@@ -65,7 +65,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   // Universal payment access hook - handles all payment status and locked logic
   const { isLocked, isPurchased } = usePaymentAccess({
     productId: sheet?._id,
-    productType: 'INTERVIEW_SHEET',
+    productType: "INTERVIEW_SHEET",
     isPremium: sheet?.isPremium,
     isEnrolled: sheet?.isEnrolled,
   });
@@ -76,9 +76,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     toggleStar,
     setIsStarred,
   } = useQuestionStarred({
-    userId: user?.id || '',
-    sheetId: sheet._id?.toString() || '',
-    questionId: currentQuestionId || '',
+    userId: user?.id || "",
+    sheetId: sheet._id?.toString() || "",
+    questionId: currentQuestionId || "",
     initialIsStarred:
       questions.find((q) => q._id.toString() === currentQuestionId)
         ?.isStarred || false,
@@ -86,8 +86,11 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
 
   // Get current question and its resources
   const currentQuestion = useMemo(
-    () => questions.find((question) => question._id.toString() === currentQuestionId),
-    [questions, currentQuestionId]
+    () =>
+      questions.find(
+        (question) => question._id.toString() === currentQuestionId,
+      ),
+    [questions, currentQuestionId],
   );
 
   const questionResources = useMemo(() => {
@@ -99,9 +102,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       currentQuestion.resources.forEach((r: any) => {
         // Type might be lowercase or capitalized, handle both
         const type = r.type?.toLowerCase();
-        if (type === 'youtube') res.youtubeURL = r.url;
-        else if (type === 'leetcode') res.leetcodeURL = r.url;
-        else if (type === 'blog' || type === 'article') res.blogURL = r.url;
+        if (type === "youtube") res.youtubeURL = r.url;
+        else if (type === "leetcode") res.leetcodeURL = r.url;
+        else if (type === "blog" || type === "article") res.blogURL = r.url;
       });
       return res;
     }
@@ -126,13 +129,13 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     if (allCompleted && !showFeedback) {
       // Trigger sheet completion celebration
       gamifiedAction.triggerGamifiedAction({
-        gamificationAction: 'COMPLETE_INTERVIEW_SHEET',
+        gamificationAction: "COMPLETE_INTERVIEW_SHEET",
         analytics: {
-          action: 'INTERVIEW_SHEET_COMPLETE',
-          category: 'Achievement',
-          label: 'Interview Sheet Completed',
+          action: "INTERVIEW_SHEET_COMPLETE",
+          category: "Achievement",
+          label: "Interview Sheet Completed",
         },
-        celebrationType: 'achievement',
+        celebrationType: "achievement",
         customMessage: "Interview sheet completed! You're ready!",
         metadata: {
           sheetId: sheet._id,
@@ -143,14 +146,22 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     }
 
     setShowFeedback(allCompleted);
-  }, [currentQuestionId, questions, gamifiedAction, setIsStarred, currentQuestion]);
+  }, [
+    currentQuestionId,
+    questions,
+    gamifiedAction,
+    setIsStarred,
+    currentQuestion,
+  ]);
 
   if (!sheet) return null;
 
   const handleQuestionClick = (questionMeta: string, questionId: string) => {
     if (!isLocked) {
       // Find the question to get its full content
-      const selectedQuestion = questions.find(q => q._id.toString() === questionId);
+      const selectedQuestion = questions.find(
+        (q) => q._id.toString() === questionId,
+      );
       if (selectedQuestion) {
         const updatedMeta = `${selectedQuestion.question}\n\n${selectedQuestion.answer}`;
         setSheetMeta(updatedMeta);
@@ -164,7 +175,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const handleShowPayment = () => {
     setShowPayment(true);
     setTimeout(() => {
-      paymentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      paymentSectionRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 100);
   };
 
@@ -179,7 +190,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       const newCompletionStatus = !isQuestionCompleted;
 
       const response = await makeRequest({
-        method: 'PATCH',
+        method: "PATCH",
         url: routes.api.markSheetQuestionAsCompleted,
         body: {
           userId: user?.id,
@@ -194,13 +205,13 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         // Fire gamified action on completion
         if (newCompletionStatus) {
           await gamifiedAction.triggerGamifiedAction({
-            gamificationAction: 'COMPLETE_QUESTION',
+            gamificationAction: "COMPLETE_QUESTION",
             analytics: {
-              action: 'QUESTION_COMPLETE',
-              category: 'Learning',
-              label: 'Question Completed',
+              action: "QUESTION_COMPLETE",
+              category: "Learning",
+              label: "Question Completed",
             },
-            customMessage: 'Question solved! Great work!',
+            customMessage: "Question solved! Great work!",
             metadata: {
               sheetId: sheet._id,
               questionId: currentQuestionId,
@@ -209,9 +220,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           });
         } else {
           trackEvent({
-            action: 'INTERVIEW_SHEET_PROGRESS',
-            category: 'InterviewSheet',
-            label: 'Interview Sheet Progress',
+            action: "INTERVIEW_SHEET_PROGRESS",
+            category: "InterviewSheet",
+            label: "Interview Sheet Progress",
             value: {
               userId: user?.id,
               sheetId: sheet._id,
@@ -224,7 +235,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         const updatedQuestions = questions.map((question) =>
           question._id.toString() === currentQuestionId
             ? { ...question, isCompleted: newCompletionStatus }
-            : question
+            : question,
         );
 
         setQuestions(updatedQuestions);
@@ -233,7 +244,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         // Move to next question if completed
         if (newCompletionStatus) {
           const currentIndex = questions.findIndex(
-            (q) => q._id.toString() === currentQuestionId
+            (q) => q._id.toString() === currentQuestionId,
           );
 
           const next =
@@ -250,10 +261,13 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         }
       } else {
         // Handle API error - don't update local state
-        console.error('Failed to update question completion:', response?.message);
+        console.error(
+          "Failed to update question completion:",
+          response?.message,
+        );
       }
     } catch (error) {
-      console.error('Error toggling question completion:', error);
+      console.error("Error toggling question completion:", error);
     } finally {
       setIsLoading(false);
     }
@@ -267,9 +281,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       questions={questions ?? []}
       currentQuestionId={currentQuestionId}
       isLocked={isLocked}
-      href={router.asPath.split('?')[0]}
+      href={router.asPath.split("?")[0]}
       onQuestionSelect={handleQuestionClick}
-      theme='dark'
+      theme="dark"
     />
   );
 
@@ -290,41 +304,46 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       />
 
       {isDataLoading && (
-        <div className='min-h-screen bg-[#0A0A0A] flex items-center justify-center py-8 pt-12'>
+        <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center py-8 pt-12">
           <LoadingSpinner height={8} width={8} />
-          <Text level='p' className='ml-3 text-contentDark'>Loading interview questions...</Text>
+          <Text level="p" className="ml-3 text-contentDark">
+            Loading interview questions...
+          </Text>
         </div>
       )}
 
       {!isDataLoading && (
-        <div className='min-h-screen bg-[#0A0A0A] p-4 pt-12 flex items-start'>
-          <FlexContainer className='w-full max-w-[1600px] mx-auto gap-4' itemCenter={false}>
+        <div className="min-h-screen bg-[#0A0A0A] p-4 pt-12 flex items-start">
+          <FlexContainer
+            className="w-full max-w-[1600px] mx-auto gap-4"
+            itemCenter={false}
+          >
             <FlexContainer
-              className='md:w-8/12 w-full bg-[#0A0A0A]'
+              className="md:w-8/12 w-full bg-[#0A0A0A]"
               itemCenter={false}
               justifyCenter={false}
             >
               {isLocked ? (
-                <div className='w-full'>
-                  <Text level='h2' className='heading-4 mb-4 text-contentDark'>
+                <div className="w-full">
+                  <Text level="h2" className="heading-4 mb-4 text-contentDark">
                     Interview Sheet Overview
                   </Text>
-                  <MDXRenderer theme='dark' mdxSource={sheet.meta || ''} />
-                  <div className='mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm'>
-                    <Text level='h4' className='mb-2 flex items-center gap-2'>
-                      <FaLock className='text-yellow-600' />
+                  <MDXRenderer theme="dark" mdxSource={sheet.meta || ""} />
+                  <div className="mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm">
+                    <Text level="h4" className="mb-2 flex items-center gap-2">
+                      <FaLock className="text-yellow-600" />
                       🚀 This is a Premium Interview Sheet
                     </Text>
-                    <Text level='p' className='mb-4'>
+                    <Text level="p" className="mb-4">
                       To access all the interview questions and detailed
                       solutions, please complete the payment. Once payment is
                       confirmed, all questions will be unlocked instantly.
                     </Text>
                     {!showPayment && (
                       <Button
-                        text='Pay Now to Unlock'
-                        variant='PRIMARY'
-                        className='w-fit'
+                        text="Pay Now to Unlock"
+                        variant="PRIMARY"
+                        className="w-fit"
                         onClick={handleShowPayment}
                       />
                     )}
@@ -334,7 +353,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       <PaymentCard
                         course={sheet}
                         onClose={() => setShowPayment(false)}
-                        productType='INTERVIEW_SHEET'
+                        productType="INTERVIEW_SHEET"
                       />
                     </div>
                   )}
@@ -342,55 +361,55 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
               ) : (
                 <div className="w-full">
                   <InterviewQuestionContent
-                    questionTitle={currentQuestion?.title || ''}
-                    question={currentQuestion?.question || ''}
-                    answer={currentQuestion?.answer || ''}
+                    questionTitle={currentQuestion?.title || ""}
+                    question={currentQuestion?.question || ""}
+                    answer={currentQuestion?.answer || ""}
                     frequency={currentQuestion?.frequency}
                     priority={currentQuestion?.priority}
                     companyTypes={currentQuestion?.companyTypes}
                     actions={[
                       currentQuestionId && (
                         <Button
-                          key='complete'
-                          className='w-fit mt-2'
+                          key="complete"
+                          className="w-fit mt-2"
                           isLoading={isLoading}
                           disabled={!sheet.isEnrolled}
                           text={
                             isLoading
-                              ? 'Marking...'
+                              ? "Marking..."
                               : !sheet.isEnrolled
-                                ? 'Enroll to Mark Complete'
+                                ? "Enroll to Mark Complete"
                                 : isQuestionCompleted
-                                  ? 'Completed'
-                                  : 'Mark As Completed'
+                                  ? "Completed"
+                                  : "Mark As Completed"
                           }
                           variant={
                             isQuestionCompleted
-                              ? 'SUCCESS'
+                              ? "SUCCESS"
                               : !sheet.isEnrolled
-                                ? 'SECONDARY'
+                                ? "SECONDARY"
                                 : isLoading
-                                  ? 'SECONDARY'
-                                  : 'PRIMARY'
+                                  ? "SECONDARY"
+                                  : "PRIMARY"
                           }
                           onClick={toggleCompletion}
                         />
                       ),
                       currentQuestionId && (
                         <StarButton
-                          key='star'
+                          key="star"
                           isStarred={isStarred}
                           onToggle={toggleStar}
                           isLoading={isStarLoading}
-                          className='mt-2 ml-2'
+                          className="mt-2 ml-2"
                         />
                       ),
                       currentQuestionId && questionResources && (
                         <ResourceTooltip
-                          key='resources'
+                          key="resources"
                           resources={questionResources}
-                          theme='dark'
-                          className='mt-2 ml-2'
+                          theme="dark"
+                          className="mt-2 ml-2"
                         />
                       ),
                     ]}
@@ -403,7 +422,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       )}
 
       {showFeedback && (
-        <FeedbackPopup refId={sheet._id} type='INTERVIEW_SHEET' />
+        <FeedbackPopup refId={sheet._id} type="INTERVIEW_SHEET" />
       )}
       <Footer variant="oncampus" isMini />
     </Fragment>
@@ -413,4 +432,3 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
 export const getServerSideProps = getSheetPageProps;
 
 export default SheetPage;
-

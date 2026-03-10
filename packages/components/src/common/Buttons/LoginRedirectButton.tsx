@@ -1,13 +1,13 @@
-import { Button } from '@tbe/components';
-import type { LoginRedirectButtonProps } from '@tbe/interface';
-import { trackEvent } from '@tbe/utils';
-import { usePathname, useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { Button } from "@tbe/components";
+import type { LoginRedirectButtonProps } from "@tbe/interface";
+import { trackEvent } from "@tbe/utils";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 const LoginRedirectButton = ({
-  text = 'Login to Start',
-  className = '',
+  text = "Login to Start",
+  className = "",
 }: LoginRedirectButtonProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -22,32 +22,43 @@ const LoginRedirectButton = ({
   // Prep-yatra uses /auth, platform uses /login
   const getAuthRoute = () => {
     // Check if we're in prep-yatra app (has /auth route)
-    if (pathname === '/auth' || pathname.startsWith('/dashboard') || pathname.startsWith('/pricing') || pathname.startsWith('/journey')) {
-      return '/auth';
+    if (
+      pathname === "/auth" ||
+      pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/pricing") ||
+      pathname.startsWith("/journey")
+    ) {
+      return "/auth";
     }
     // Default to /login for platform app
-    return '/login';
+    return "/login";
   };
 
   const handleLoginRedirect = () => {
-    if (status === 'unauthenticated') {
+    if (status === "unauthenticated") {
       try {
-        trackEvent('login_redirect_click', {
-          category: 'auth',
-          label: 'Login Redirect',
+        trackEvent("login_redirect_click", {
+          category: "auth",
+          label: "Login Redirect",
         });
       } catch {
         /* ignore analytics errors */
       }
       const authRoute = getAuthRoute();
-      const redirectParam = authRoute === '/auth' ? 'callbackUrl' : 'redirect';
-      router.push(`${authRoute}?${redirectParam}=${encodeURIComponent(pathname)}`);
+      const redirectParam = authRoute === "/auth" ? "callbackUrl" : "redirect";
+      router.push(
+        `${authRoute}?${redirectParam}=${encodeURIComponent(pathname)}`,
+      );
     }
   };
 
   const authRoute = getAuthRoute();
   if (!isClient) return null;
-  if (status === 'authenticated' || pathname === '/login' || pathname === '/auth') {
+  if (
+    status === "authenticated" ||
+    pathname === "/login" ||
+    pathname === "/auth"
+  ) {
     return null;
   }
 
@@ -55,7 +66,7 @@ const LoginRedirectButton = ({
     <Button
       className={className}
       text={text}
-      variant='PRIMARY'
+      variant="PRIMARY"
       onClick={handleLoginRedirect}
     />
   );

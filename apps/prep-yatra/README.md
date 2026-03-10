@@ -125,37 +125,37 @@ pnpm export               # Export static site
 ```typescript
 // Challenge types
 interface Challenge {
-    id: string
-    title: string
-    difficulty: "Easy" | "Medium" | "Hard"
-    category: string
-    description: string
-    testCases: TestCase[]
-    solution?: string
+  id: string;
+  title: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  category: string;
+  description: string;
+  testCases: TestCase[];
+  solution?: string;
 }
 
 // Usage
-import { ChallengeCard, ChallengeList } from "@/components/challenges"
+import { ChallengeCard, ChallengeList } from "@/components/challenges";
 ```
 
 ### Progress Tracking
 
 ```typescript
 // Progress analytics
-import { ProgressChart, StatsCard } from "@/components/dashboard"
+import { ProgressChart, StatsCard } from "@/components/dashboard";
 
 // Track user progress
-const { progress, stats } = useProgress()
+const { progress, stats } = useProgress();
 ```
 
 ### Mentorship Features
 
 ```typescript
 // Mentorship components
-import { MentorCard, BookingForm } from "@/components/mentorship"
+import { MentorCard, BookingForm } from "@/components/mentorship";
 
 // Connect with mentors
-const { mentors, bookSession } = useMentorship()
+const { mentors, bookSession } = useMentorship();
 ```
 
 ## 🎨 UI Components
@@ -164,13 +164,13 @@ Built with shadcn/ui and Radix UI:
 
 ```typescript
 // Import UI components
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Dialog } from "@/components/ui/dialog"
-import { Form } from "@/components/ui/form"
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Dialog } from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
 
 // Feature components from shared packages
-import { ChallengeCard, PrepYatraHero, PrepLogsList } from "@tbe/components"
+import { ChallengeCard, PrepYatraHero, PrepLogsList } from "@tbe/components";
 ```
 
 ## 🔐 Authentication & Authorization
@@ -195,34 +195,34 @@ import { ProtectedRoute } from '@tbe/components'
 
 ```typescript
 // API hooks
-import { useChallenges, useProgress } from "@/hooks/api"
+import { useChallenges, useProgress } from "@/hooks/api";
 
 // Fetch challenges
 const { data: challenges, isLoading } = useChallenges({
-    difficulty: "Medium",
-    category: "Arrays"
-})
+  difficulty: "Medium",
+  category: "Arrays",
+});
 
 // Submit solution
-const { mutate: submitSolution } = useSubmitSolution()
+const { mutate: submitSolution } = useSubmitSolution();
 ```
 
 ### Form Handling
 
 ```typescript
 // Form with validation
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const schema = z.object({
-    solution: z.string().min(1, "Solution is required"),
-    language: z.enum(["javascript", "python", "java"])
-})
+  solution: z.string().min(1, "Solution is required"),
+  language: z.enum(["javascript", "python", "java"]),
+});
 
 const form = useForm({
-    resolver: zodResolver(schema)
-})
+  resolver: zodResolver(schema),
+});
 ```
 
 ## 🎯 Key Pages & Routes
@@ -351,21 +351,21 @@ Unexpected token '<', "<!DOCTYPE "... is not valid JSON
 **Causes & Solutions:**
 
 1. **Missing `NEXTAUTH_SECRET`** ❌
-    - Error: `NEXTAUTH_SECRET environment variable is required`
-    - Solution: Add `NEXTAUTH_SECRET` in Vercel environment variables
-    - Generate: `openssl rand -base64 32`
+   - Error: `NEXTAUTH_SECRET environment variable is required`
+   - Solution: Add `NEXTAUTH_SECRET` in Vercel environment variables
+   - Generate: `openssl rand -base64 32`
 
 2. **Missing `NEXT_PUBLIC_AUTH_URL`** ❌
-    - Error: Session endpoint returns HTML instead of JSON
-    - Solution: Set `NEXT_PUBLIC_AUTH_URL=https://your-production-url.vercel.app`
+   - Error: Session endpoint returns HTML instead of JSON
+   - Solution: Set `NEXT_PUBLIC_AUTH_URL=https://your-production-url.vercel.app`
 
 3. **Missing `API_URL`** ❌
-    - Error: User creation/fetch fails in callbacks
-    - Solution: Add both `API_URL` and `NEXT_PUBLIC_API_URL`
+   - Error: User creation/fetch fails in callbacks
+   - Solution: Add both `API_URL` and `NEXT_PUBLIC_API_URL`
 
 4. **Missing Google OAuth credentials** ❌
-    - Error: Provider authentication fails
-    - Solution: Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+   - Error: Provider authentication fails
+   - Solution: Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
 
 **Quick Fix Steps:**
 

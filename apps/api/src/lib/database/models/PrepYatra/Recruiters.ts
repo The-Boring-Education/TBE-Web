@@ -1,7 +1,7 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { APPLICATION_STATUS, DATABASE_MODELS } from '@/lib/constants';
-import type { RecruiterModel } from '@/lib/interfaces';
+import { APPLICATION_STATUS, DATABASE_MODELS } from "@/lib/constants";
+import type { RecruiterModel } from "@/lib/interfaces";
 
 const RecruiterSchema = new Schema<RecruiterModel>(
   {
@@ -46,7 +46,7 @@ const RecruiterSchema = new Schema<RecruiterModel>(
       type: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Recruiter: Model<RecruiterModel> =

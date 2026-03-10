@@ -35,11 +35,11 @@ You need to prove you own the website. Choose one of these methods:
 **For TBE Platform**, you can add it to `apps/platform/src/pages/_document.tsx`:
 
 ```tsx
-import { Head, Html, Main, NextScript } from 'next/document'
+import { Head, Html, Main, NextScript } from "next/document";
 
 const TheBoringEducation = () => {
   return (
-    <Html lang='en'>
+    <Html lang="en">
       <Head>
         {/* Google Search Console Verification */}
         <meta
@@ -52,9 +52,9 @@ const TheBoringEducation = () => {
         <NextScript />
       </body>
     </Html>
-  )
-}
-export default TheBoringEducation
+  );
+};
+export default TheBoringEducation;
 ```
 
 4. Deploy your changes
@@ -183,31 +183,31 @@ Don't forget Bing! It's the second-largest search engine:
 Ensure each page uses the SEO component:
 
 ```tsx
-import { SEO } from '@tbe/components';
+import { SEO } from "@tbe/components";
 
 const MyPage = () => {
-    return (
-        <>
-            <SEO
-                seoMeta={{
-                    title: "Page Title - The Boring Education",
-                    description: "Page description (150-160 characters)",
-                    keywords: "keyword1, keyword2, keyword3",
-                    image: "https://theboringeducation.com/og-image.jpg",
-                    // ... other meta fields
-                }}
-                schema={{
-                    type: "Course", // or "Article", "FAQPage", etc.
-                    course: {
-                        name: "Course Name",
-                        description: "Course description",
-                        // ... other schema fields
-                    }
-                }}
-            />
-            {/* Your page content */}
-        </>
-    );
+  return (
+    <>
+      <SEO
+        seoMeta={{
+          title: "Page Title - The Boring Education",
+          description: "Page description (150-160 characters)",
+          keywords: "keyword1, keyword2, keyword3",
+          image: "https://theboringeducation.com/og-image.jpg",
+          // ... other meta fields
+        }}
+        schema={{
+          type: "Course", // or "Article", "FAQPage", etc.
+          course: {
+            name: "Course Name",
+            description: "Course description",
+            // ... other schema fields
+          },
+        }}
+      />
+      {/* Your page content */}
+    </>
+  );
 };
 ```
 
@@ -259,6 +259,7 @@ const MyPage = () => {
 **Problem**: `https://yoursite.com/sitemap.xml` returns 404
 
 **Solutions**:
+
 1. Check `next-sitemap.config.js` exists in your app
 2. Run `pnpm build` to generate sitemap
 3. Verify `public/sitemap.xml` exists after build
@@ -270,6 +271,7 @@ const MyPage = () => {
 **Problem**: Google not indexing your pages
 
 **Solutions**:
+
 1. **Check robots.txt**: Ensure it's not blocking search engines
    ```txt
    User-agent: *
@@ -287,6 +289,7 @@ const MyPage = () => {
 **Problem**: Pages are indexed but ranking low
 
 **Solutions**:
+
 1. **Improve content quality**: Make content more comprehensive and valuable
 2. **Optimize meta tags**: Ensure titles and descriptions are compelling
 3. **Build backlinks**: Get other sites to link to your content
@@ -300,6 +303,7 @@ const MyPage = () => {
 **Problem**: Google reports crawl errors
 
 **Solutions**:
+
 1. **404 Errors**: Fix broken links or set up redirects
 2. **Server Errors (5xx)**: Check server logs and fix backend issues
 3. **Redirect Errors**: Ensure redirects are set up correctly
@@ -311,6 +315,7 @@ const MyPage = () => {
 **Problem**: Can't verify site ownership in Search Console
 
 **Solutions**:
+
 1. **HTML Tag**: Ensure meta tag is in `<head>` section, not `<body>`
 2. **HTML File**: Verify file is accessible at exact URL shown
 3. **DNS**: Wait 24-48 hours for DNS propagation
@@ -385,6 +390,7 @@ const MyPage = () => {
 ---
 
 **Need Help?** Check the troubleshooting section or review the codebase:
+
 - SEO Component: `packages/components/src/layout/SEO.tsx`
 - Sitemap Config: `apps/[app-name]/next-sitemap.config.js`
 - Robots.txt: `apps/[app-name]/public/robots.txt`

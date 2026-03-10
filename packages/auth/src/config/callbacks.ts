@@ -1,5 +1,5 @@
-import { createOrFindUser, getUserByEmail } from "../services"
-import type { ExtendedUser } from "../types"
+import { createOrFindUser, getUserByEmail } from "../services";
+import type { ExtendedUser } from "../types";
 
 /**
  * Default signIn callback
@@ -10,34 +10,34 @@ import type { ExtendedUser } from "../types"
  * @returns Whether sign in should proceed
  */
 export const defaultSignInCallback = async (
-    user: ExtendedUser,
-    account?: any
+  user: ExtendedUser,
+  account?: any,
 ): Promise<boolean> => {
-    if (!user) return false
+  if (!user) return false;
 
-    const { name, email } = user
+  const { name, email } = user;
 
-    if (!email || !name) return false
+  if (!email || !name) return false;
 
-    try {
-        // Create or find user in MongoDB
-        const userData = await createOrFindUser({
-            name,
-            email,
-            image: user.image,
-            provider: account?.provider || "google",
-            providerAccountId: account?.providerAccountId || user.id
-        })
+  try {
+    // Create or find user in MongoDB
+    const userData = await createOrFindUser({
+      name,
+      email,
+      image: user.image,
+      provider: account?.provider || "google",
+      providerAccountId: account?.providerAccountId || user.id,
+    });
 
-        // Attach MongoDB _id to the user object
-        user.id = userData._id.toString()
+    // Attach MongoDB _id to the user object
+    user.id = userData._id.toString();
 
-        return true
-    } catch (error) {
-        console.error("Error in defaultSignInCallback:", error)
-        return false
-    }
-}
+    return true;
+  } catch (error) {
+    console.error("Error in defaultSignInCallback:", error);
+    return false;
+  }
+};
 
 /**
  * Default session callback
@@ -48,34 +48,33 @@ export const defaultSignInCallback = async (
  * @returns Enriched session object
  */
 export const defaultSessionCallback = async (
-    session: any,
-    token: any
+  session: any,
+  token: any,
 ): Promise<any> => {
-    try {
-        // Always attach the token sub (user ID) as fallback
-        session.user.id = token.sub
+  try {
+    // Always attach the token sub (user ID) as fallback
+    session.user.id = token.sub;
 
-        // Fetch fresh user data from the database
-        const userData = await getUserByEmail(session.user.email)
+    // Fetch fresh user data from the database
+    const userData = await getUserByEmail(session.user.email);
 
-        if (userData) {
-            session.user.id = userData._id
-            session.user.isOnboarded = userData.isOnboarded || false
-            session.user.userName = userData.userName
-            session.user.occupation = userData.occupation
-            session.user.purpose = userData.purpose
-            session.user.contactNo = userData.contactNo
-        }
-
-
-        return session
-    } catch (error) {
-        console.error("Error in defaultSessionCallback:", error)
-        // Return session with basic info on error
-        session.user.id = token.sub
-        return session
+    if (userData) {
+      session.user.id = userData._id;
+      session.user.isOnboarded = userData.isOnboarded || false;
+      session.user.userName = userData.userName;
+      session.user.occupation = userData.occupation;
+      session.user.purpose = userData.purpose;
+      session.user.contactNo = userData.contactNo;
     }
-}
+
+    return session;
+  } catch (error) {
+    console.error("Error in defaultSessionCallback:", error);
+    // Return session with basic info on error
+    session.user.id = token.sub;
+    return session;
+  }
+};
 
 /**
  * Default JWT callback
@@ -87,25 +86,25 @@ export const defaultSessionCallback = async (
  * @returns Updated JWT token
  */
 export const defaultJwtCallback = async (params: {
-    token: any
-    user?: any
-    account?: any
+  token: any;
+  user?: any;
+  account?: any;
 }): Promise<any> => {
-    const { token, user, account } = params
+  const { token, user, account } = params;
 
-    // On initial sign in, attach user data to token
-    if (user) {
-        token.sub = user.id
-        token.email = user.email
-        token.name = user.name
-        token.picture = user.image
-    }
+  // On initial sign in, attach user data to token
+  if (user) {
+    token.sub = user.id;
+    token.email = user.email;
+    token.name = user.name;
+    token.picture = user.image;
+  }
 
-    // Attach provider info on initial sign in
-    if (account) {
-        token.provider = account.provider
-        token.providerAccountId = account.providerAccountId
-    }
+  // Attach provider info on initial sign in
+  if (account) {
+    token.provider = account.provider;
+    token.providerAccountId = account.providerAccountId;
+  }
 
-    return token
-}
+  return token;
+};

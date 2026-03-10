@@ -15,7 +15,6 @@ import { getPreFetchProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 
-
 const Home = ({ seoMeta }: PageProps) => {
   const { user } = useUser();
   const userId = user?.id;

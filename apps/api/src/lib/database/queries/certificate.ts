@@ -1,12 +1,12 @@
 import type {
   AddCertificateRequestPayloadProps,
   DatabaseQueryResponseType,
-} from '@/lib/interfaces';
+} from "@/lib/interfaces";
 
-import Certificate from '../models/Certificate';
+import Certificate from "../models/Certificate";
 
 const addACertificateToDB = async (
-  certificatePayload: AddCertificateRequestPayloadProps
+  certificatePayload: AddCertificateRequestPayloadProps,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const certificate = new Certificate(certificatePayload);
@@ -20,7 +20,7 @@ const addACertificateToDB = async (
 const checkCertificateExistForAProgram = async (
   type: string,
   userId: string,
-  programId: string
+  programId: string,
 ) => {
   try {
     const certificate = await Certificate.findOne({ type, userId, programId });
@@ -28,10 +28,10 @@ const checkCertificateExistForAProgram = async (
     if (certificate) {
       return { data: certificate };
     } else {
-      return { error: 'Certificate does not exist' };
+      return { error: "Certificate does not exist" };
     }
   } catch (error) {
-    return { error: 'Failed while checking certificate existence' };
+    return { error: "Failed while checking certificate existence" };
   }
 };
 
@@ -43,10 +43,10 @@ const getCertificateById = async (certificateId: string) => {
     if (certificate) {
       return { data: certificate };
     } else {
-      return { error: 'Certificate not found' };
+      return { error: "Certificate not found" };
     }
   } catch (error) {
-    return { error: 'Failed while fetching certificate' };
+    return { error: "Failed while fetching certificate" };
   }
 };
 
@@ -58,10 +58,10 @@ const getUserCertificates = async (userId: string) => {
     if (certificates.length > 0) {
       return { data: certificates };
     } else {
-      return { error: 'No certificates found' };
+      return { error: "No certificates found" };
     }
   } catch (error) {
-    return { error: 'Failed while fetching certificates' };
+    return { error: "Failed while fetching certificates" };
   }
 };
 

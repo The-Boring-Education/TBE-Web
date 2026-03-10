@@ -164,15 +164,15 @@ import { QuizCard, QuestionCard } from '@/components/quiz'
 ```typescript
 // Analytics components
 import {
-    PerformanceChart,
-    CategoryBreakdown,
-    TrendAnalysis,
-    AccuracyMetrics
-} from "@/components/analytics"
+  PerformanceChart,
+  CategoryBreakdown,
+  TrendAnalysis,
+  AccuracyMetrics,
+} from "@/components/analytics";
 
 // Analytics hooks
 const { performanceData, categoryStats, timeSpentData } =
-    useQuizAnalytics(userId)
+  useQuizAnalytics(userId);
 ```
 
 ### Leaderboard System
@@ -180,21 +180,21 @@ const { performanceData, categoryStats, timeSpentData } =
 ```typescript
 // Leaderboard types
 interface LeaderboardEntry {
-    userId: string
-    username: string
-    totalScore: number
-    averageScore: number
-    quizzesCompleted: number
-    rank: number
-    badges: Badge[]
+  userId: string;
+  username: string;
+  totalScore: number;
+  averageScore: number;
+  quizzesCompleted: number;
+  rank: number;
+  badges: Badge[];
 }
 
 // Components
 import {
-    GlobalLeaderboard,
-    CategoryLeaderboard,
-    UserRankCard
-} from "@/components/leaderboard"
+  GlobalLeaderboard,
+  CategoryLeaderboard,
+  UserRankCard,
+} from "@/components/leaderboard";
 ```
 
 ## 🎨 UI Components
@@ -204,20 +204,20 @@ import {
 ```typescript
 // Import shared components
 import {
-    QuizGamificationCard,
-    CodeRenderer,
-    MarkdownRenderer,
-    PointsDisplay,
-    DashboardNav
-} from "@tbe/components"
+  QuizGamificationCard,
+  CodeRenderer,
+  MarkdownRenderer,
+  PointsDisplay,
+  DashboardNav,
+} from "@tbe/components";
 
 // App-specific components
 import {
-    QuizTimer,
-    ProgressBar,
-    AnswerOptions,
-    ResultsModal
-} from "@/components/quiz"
+  QuizTimer,
+  ProgressBar,
+  AnswerOptions,
+  ResultsModal,
+} from "@/components/quiz";
 ```
 
 ### Dashboard Components
@@ -225,26 +225,26 @@ import {
 ```typescript
 // Dashboard layout
 import {
-    StatsOverview,
-    RecentAttempts,
-    CategoryProgress,
-    AchievementBadges
-} from "@/components/dashboard"
+  StatsOverview,
+  RecentAttempts,
+  CategoryProgress,
+  AchievementBadges,
+} from "@/components/dashboard";
 ```
 
 ## 🔐 Authentication & User Management
 
 ```typescript
 // Authentication (inherited from platform)
-import { useAuth } from "@tbe/hooks"
+import { useAuth } from "@tbe/hooks";
 
-const { user, isAuthenticated } = useAuth()
+const { user, isAuthenticated } = useAuth();
 
 // User progress tracking
-import { useUserProgress } from "@/hooks/useUserProgress"
+import { useUserProgress } from "@/hooks/useUserProgress";
 
 const { totalAttempts, averageScore, categoryProgress, achievements } =
-    useUserProgress(user?.id)
+  useUserProgress(user?.id);
 ```
 
 ## 📊 Data Management & API Integration
@@ -253,33 +253,33 @@ const { totalAttempts, averageScore, categoryProgress, achievements } =
 
 ```typescript
 // Fetch quizzes
-import { useQuizzes, useQuizById } from "@/hooks/api"
+import { useQuizzes, useQuizById } from "@/hooks/api";
 
 const { data: quizzes, isLoading } = useQuizzes({
-    category: "javascript",
-    difficulty: "intermediate"
-})
+  category: "javascript",
+  difficulty: "intermediate",
+});
 
 // Submit quiz attempt
-import { useSubmitQuizAttempt } from "@/hooks/api"
+import { useSubmitQuizAttempt } from "@/hooks/api";
 
-const { mutate: submitAttempt } = useSubmitQuizAttempt()
+const { mutate: submitAttempt } = useSubmitQuizAttempt();
 ```
 
 ### Analytics API
 
 ```typescript
 // Performance analytics
-import { usePerformanceAnalytics } from "@/hooks/analytics"
+import { usePerformanceAnalytics } from "@/hooks/analytics";
 
 const {
-    data: analytics,
-    timeRange,
-    setTimeRange
+  data: analytics,
+  timeRange,
+  setTimeRange,
 } = usePerformanceAnalytics({
-    userId: user.id,
-    timeRange: "30d"
-})
+  userId: user.id,
+  timeRange: "30d",
+});
 ```
 
 ## 🎮 Gamification Features
@@ -289,17 +289,17 @@ const {
 ```typescript
 // Points calculation
 const calculatePoints = (
-    correctAnswers: number,
-    totalQuestions: number,
-    timeSpent: number,
-    difficulty: string
+  correctAnswers: number,
+  totalQuestions: number,
+  timeSpent: number,
+  difficulty: string,
 ) => {
-    const basePoints = (correctAnswers / totalQuestions) * 100
-    const difficultyMultiplier = getDifficultyMultiplier(difficulty)
-    const timeBonus = calculateTimeBonus(timeSpent)
+  const basePoints = (correctAnswers / totalQuestions) * 100;
+  const difficultyMultiplier = getDifficultyMultiplier(difficulty);
+  const timeBonus = calculateTimeBonus(timeSpent);
 
-    return Math.round(basePoints * difficultyMultiplier + timeBonus)
-}
+  return Math.round(basePoints * difficultyMultiplier + timeBonus);
+};
 ```
 
 ### Achievement System
@@ -307,20 +307,20 @@ const calculatePoints = (
 ```typescript
 // Achievement types
 interface Achievement {
-    id: string
-    name: string
-    description: string
-    icon: string
-    condition: AchievementCondition
-    points: number
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  condition: AchievementCondition;
+  points: number;
 }
 
 // Check achievements
-import { useAchievements } from "@/hooks/useAchievements"
+import { useAchievements } from "@/hooks/useAchievements";
 
 const { unlockedAchievements, checkForNewAchievements } = useAchievements(
-    user.id
-)
+  user.id,
+);
 ```
 
 ## 📈 Analytics & Reporting
@@ -337,14 +337,14 @@ const { unlockedAchievements, checkForNewAchievements } = useAchievements(
 
 ```typescript
 // Charts and visualizations
-import { LineChart, BarChart, PieChart, RadarChart } from "recharts"
+import { LineChart, BarChart, PieChart, RadarChart } from "recharts";
 
 // Custom chart components
 import {
-    PerformanceTrendChart,
-    CategoryComparisonChart,
-    AccuracyOverTimeChart
-} from "@/components/charts"
+  PerformanceTrendChart,
+  CategoryComparisonChart,
+  AccuracyOverTimeChart,
+} from "@/components/charts";
 ```
 
 ## 🏆 Leaderboard Features
@@ -360,13 +360,13 @@ import {
 
 ```typescript
 // Leaderboard hooks
-import { useLeaderboard } from "@/hooks/useLeaderboard"
+import { useLeaderboard } from "@/hooks/useLeaderboard";
 
 const { globalRankings, categoryRankings, userRank, nearbyUsers } =
-    useLeaderboard({
-        category: "javascript",
-        timeframe: "monthly"
-    })
+  useLeaderboard({
+    category: "javascript",
+    timeframe: "monthly",
+  });
 ```
 
 ## 🚀 Deployment

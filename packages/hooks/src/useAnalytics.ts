@@ -1,7 +1,10 @@
-import type { TrackEventProps } from '@tbe/types';
-import { installGlobalAnalyticsListeners,trackEvent as sendEvent } from '@tbe/utils';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import type { TrackEventProps } from "@tbe/types";
+import {
+  installGlobalAnalyticsListeners,
+  trackEvent as sendEvent,
+} from "@tbe/utils";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const useAnalytics = () => {
   const router = useRouter();
@@ -10,16 +13,16 @@ const useAnalytics = () => {
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       if (window.gtag && process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) {
-        window.gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
+        window.gtag("config", process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
           page_path: url,
         });
       }
     };
 
-    router.events.on('routeChangeComplete', handleRouteChange);
+    router.events.on("routeChangeComplete", handleRouteChange);
     installGlobalAnalyticsListeners();
     return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
+      router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events]);
 

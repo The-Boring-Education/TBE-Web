@@ -1,21 +1,22 @@
-import type { LinkButtonProps } from '@tbe/interface';
+import type { LinkButtonProps } from "@tbe/interface";
 
-import { Button, Link } from '../..';
+import { Button, Link } from "../..";
 
 const LinkButton = ({
   href,
-  className = '',
+  className = "",
   buttonProps,
   target,
   active = true,
   theme,
   noLoader = false,
 }: LinkButtonProps) => {
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
   // Merge theme-based className with existing buttonProps className
   const themedButtonProps = {
     ...buttonProps,
-    className: `${buttonProps.className || ''} ${isDark ? 'bg-gray-800 text-white border-gray-600 hover:bg-gray-700' : ''}`.trim(),
+    className:
+      `${buttonProps.className || ""} ${isDark ? "bg-gray-800 text-white border-gray-600 hover:bg-gray-700" : ""}`.trim(),
   };
 
   return (

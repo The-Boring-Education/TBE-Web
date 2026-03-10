@@ -199,25 +199,25 @@ GET    /api/v1/analytics/performance # Get performance metrics
 
 ```typescript
 interface User {
-    _id: ObjectId
-    email: string
-    name: string
-    image?: string
-    role: "student" | "instructor" | "admin"
-    profile: {
-        skills: string[]
-        interests: string[]
-        experience: string
-        goals: string[]
-    }
-    progress: {
-        coursesCompleted: number
-        quizzesAttempted: number
-        totalPoints: number
-        achievements: string[]
-    }
-    createdAt: Date
-    updatedAt: Date
+  _id: ObjectId;
+  email: string;
+  name: string;
+  image?: string;
+  role: "student" | "instructor" | "admin";
+  profile: {
+    skills: string[];
+    interests: string[];
+    experience: string;
+    goals: string[];
+  };
+  progress: {
+    coursesCompleted: number;
+    quizzesAttempted: number;
+    totalPoints: number;
+    achievements: string[];
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }
 ```
 
@@ -225,25 +225,25 @@ interface User {
 
 ```typescript
 interface Quiz {
-    _id: ObjectId
-    title: string
-    description: string
-    category: string
-    difficulty: "Beginner" | "Intermediate" | "Advanced"
-    questions: Question[]
-    timeLimit: number
-    isActive: boolean
-    createdBy: ObjectId
-    createdAt: Date
+  _id: ObjectId;
+  title: string;
+  description: string;
+  category: string;
+  difficulty: "Beginner" | "Intermediate" | "Advanced";
+  questions: Question[];
+  timeLimit: number;
+  isActive: boolean;
+  createdBy: ObjectId;
+  createdAt: Date;
 }
 
 interface Question {
-    id: string
-    question: string
-    options: string[]
-    correctAnswer: number
-    explanation: string
-    points: number
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+  points: number;
 }
 ```
 
@@ -251,17 +251,17 @@ interface Question {
 
 ```typescript
 interface Course {
-    _id: ObjectId
-    title: string
-    description: string
-    instructor: ObjectId
-    modules: Module[]
-    prerequisites: string[]
-    difficulty: string
-    duration: number
-    isPublished: boolean
-    enrollmentCount: number
-    rating: number
+  _id: ObjectId;
+  title: string;
+  description: string;
+  instructor: ObjectId;
+  modules: Module[];
+  prerequisites: string[];
+  difficulty: string;
+  duration: number;
+  isPublished: boolean;
+  enrollmentCount: number;
+  rating: number;
 }
 ```
 
@@ -271,29 +271,29 @@ interface Course {
 
 ```typescript
 // pages/api/auth/[...nextauth].ts
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 
 export default NextAuth({
-    providers: [
-        GoogleProvider({
-            clientId: process.env.GOOGLE_AUTH_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET!
-        })
-    ],
-    adapter: MongoDBAdapter(mongoClient),
-    callbacks: {
-        session: async ({ session, token }) => {
-            // Customize session object
-            return session
-        },
-        jwt: async ({ token, user }) => {
-            // Customize JWT token
-            return token
-        }
-    }
-})
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_AUTH_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET!,
+    }),
+  ],
+  adapter: MongoDBAdapter(mongoClient),
+  callbacks: {
+    session: async ({ session, token }) => {
+      // Customize session object
+      return session;
+    },
+    jwt: async ({ token, user }) => {
+      // Customize JWT token
+      return token;
+    },
+  },
+});
 ```
 
 ### Authorization Middleware
@@ -301,22 +301,22 @@ export default NextAuth({
 ```typescript
 // middleware/withAuth.ts
 export const withAuth = (handler: NextApiHandler) => {
-    return async (req: NextApiRequest, res: NextApiResponse) => {
-        const session = await getSession({ req })
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const session = await getSession({ req });
 
-        if (!session) {
-            return res.status(401).json({ error: "Unauthorized" })
-        }
-
-        req.user = session.user
-        return handler(req, res)
+    if (!session) {
+      return res.status(401).json({ error: "Unauthorized" });
     }
-}
+
+    req.user = session.user;
+    return handler(req, res);
+  };
+};
 
 // Usage
 export default withAuth(async (req, res) => {
-    // Protected endpoint logic
-})
+  // Protected endpoint logic
+});
 ```
 
 ## 🔌 External Service Integrations
@@ -325,48 +325,48 @@ export default withAuth(async (req, res) => {
 
 ```typescript
 // lib/services/openai.ts
-import { OpenAI } from "openai"
+import { OpenAI } from "openai";
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-})
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export const generateQuizQuestions = async (topic: string, count: number) => {
-    const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-            {
-                role: "system",
-                content: "Generate quiz questions for the given topic..."
-            },
-            {
-                role: "user",
-                content: `Generate ${count} questions about ${topic}`
-            }
-        ]
-    })
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: "Generate quiz questions for the given topic...",
+      },
+      {
+        role: "user",
+        content: `Generate ${count} questions about ${topic}`,
+      },
+    ],
+  });
 
-    return parseQuizQuestions(response.choices[0].message.content)
-}
+  return parseQuizQuestions(response.choices[0].message.content);
+};
 ```
 
 ### Payment Integration
 
 ```typescript
 // lib/services/payment.ts
-import { Cashfree } from "cashfree-pg"
+import { Cashfree } from "cashfree-pg";
 
-Cashfree.XClientId = process.env.CASHFREE_CLIENT_ID
-Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY
+Cashfree.XClientId = process.env.CASHFREE_CLIENT_ID;
+Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
 Cashfree.XEnvironment =
-    process.env.NODE_ENV === "production"
-        ? Cashfree.Environment.PRODUCTION
-        : Cashfree.Environment.SANDBOX
+  process.env.NODE_ENV === "production"
+    ? Cashfree.Environment.PRODUCTION
+    : Cashfree.Environment.SANDBOX;
 
 export const createPaymentOrder = async (orderData: OrderData) => {
-    const response = await Cashfree.PGCreateOrder("2023-08-01", orderData)
-    return response.data
-}
+  const response = await Cashfree.PGCreateOrder("2023-08-01", orderData);
+  return response.data;
+};
 ```
 
 ## 🚀 Deployment
@@ -425,22 +425,22 @@ OPENAI_API_KEY=sk-...
 
 ```typescript
 // lib/sentry.ts
-import * as Sentry from "@sentry/nextjs"
+import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
-    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    environment: process.env.NODE_ENV
-})
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+});
 
 // Error handling in API routes
 export const handleApiError = (error: Error, req: NextApiRequest) => {
-    Sentry.captureException(error, {
-        tags: {
-            endpoint: req.url,
-            method: req.method
-        }
-    })
-}
+  Sentry.captureException(error, {
+    tags: {
+      endpoint: req.url,
+      method: req.method,
+    },
+  });
+};
 ```
 
 ### Health Check Endpoint
@@ -448,25 +448,25 @@ export const handleApiError = (error: Error, req: NextApiRequest) => {
 ```typescript
 // pages/api/health/index.ts
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) {
-    try {
-        // Check database connection
-        await mongoose.connection.db.admin().ping()
+  try {
+    // Check database connection
+    await mongoose.connection.db.admin().ping();
 
-        res.status(200).json({
-            status: "healthy",
-            timestamp: new Date().toISOString(),
-            uptime: process.uptime(),
-            version: process.env.npm_package_version
-        })
-    } catch (error) {
-        res.status(503).json({
-            status: "unhealthy",
-            error: error.message
-        })
-    }
+    res.status(200).json({
+      status: "healthy",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      version: process.env.npm_package_version,
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: "unhealthy",
+      error: error.message,
+    });
+  }
 }
 ```
 
@@ -476,24 +476,24 @@ export default async function handler(
 
 ```typescript
 // Example test structure
-import { createMocks } from "node-mocks-http"
-import handler from "../pages/api/v1/user/profile"
+import { createMocks } from "node-mocks-http";
+import handler from "../pages/api/v1/user/profile";
 
 describe("/api/v1/user/profile", () => {
-    it("returns user profile for authenticated user", async () => {
-        const { req, res } = createMocks({
-            method: "GET",
-            headers: {
-                authorization: "Bearer valid-token"
-            }
-        })
+  it("returns user profile for authenticated user", async () => {
+    const { req, res } = createMocks({
+      method: "GET",
+      headers: {
+        authorization: "Bearer valid-token",
+      },
+    });
 
-        await handler(req, res)
+    await handler(req, res);
 
-        expect(res._getStatusCode()).toBe(200)
-        expect(JSON.parse(res._getData())).toHaveProperty("user")
-    })
-})
+    expect(res._getStatusCode()).toBe(200);
+    expect(JSON.parse(res._getData())).toHaveProperty("user");
+  });
+});
 ```
 
 ## 🐛 Troubleshooting

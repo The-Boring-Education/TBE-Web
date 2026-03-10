@@ -1,7 +1,7 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, USER_POINTS_ACTION } from '@/lib/constants';
-import type { GamificationModel, UserPointsAction } from '@/lib/interfaces';
+import { DATABASE_MODELS, USER_POINTS_ACTION } from "@/lib/constants";
+import type { GamificationModel, UserPointsAction } from "@/lib/interfaces";
 
 const ActionSchema = new Schema<UserPointsAction>(
   {
@@ -12,7 +12,7 @@ const ActionSchema = new Schema<UserPointsAction>(
     },
     pointsEarned: { type: Number, required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const GamificationSchema = new Schema<GamificationModel>(
@@ -25,7 +25,7 @@ const GamificationSchema = new Schema<GamificationModel>(
     points: { type: Number, default: 0 },
     actions: [ActionSchema],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Gamification: Model<GamificationModel> =

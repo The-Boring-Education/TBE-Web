@@ -150,16 +150,16 @@ All applications use these shared packages:
 
 ```typescript
 // Import UI components
-import { Button, Card, Modal } from "@tbe/components"
+import { Button, Card, Modal } from "@tbe/components";
 
 // Import hooks
-import { useAuth, useApi } from "@tbe/hooks"
+import { useAuth, useApi } from "@tbe/hooks";
 
 // Import utilities
-import { connectToDatabase, sendRequest } from "@tbe/utils"
+import { connectToDatabase, sendRequest } from "@tbe/utils";
 
 // Import types
-import { User, APIResponse } from "@tbe/types"
+import { User, APIResponse } from "@tbe/types";
 ```
 
 ## 🚀 Deployment
@@ -248,6 +248,7 @@ pnpm dev
 ```
 
 Features:
+
 - View Lighthouse scores for all apps
 - Validate meta tags for any URL
 - Monitor route priorities and indexing status
@@ -288,11 +289,13 @@ import { SEO } from "@tbe/components"
 ### CI/CD Integration
 
 Lighthouse audits run automatically:
+
 - On every push to `production` branch
 - Weekly on Monday at 6 AM UTC
 - Manual trigger via GitHub Actions
 
 Thresholds:
+
 - SEO: 85% minimum (fails build if below)
 - Accessibility: 80% warning
 - Best Practices: 75% warning

@@ -1,14 +1,14 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, NOTIFICATION_TYPE } from '@/lib/constants';
-import type { NotificationModel } from '@/lib/interfaces';
+import { DATABASE_MODELS, NOTIFICATION_TYPE } from "@/lib/constants";
+import type { NotificationModel } from "@/lib/interfaces";
 
 const NotificationSchema: Schema<NotificationModel> = new Schema(
   {
     type: {
       type: String,
       enum: NOTIFICATION_TYPE,
-      required: [true, 'Type is required'],
+      required: [true, "Type is required"],
     },
     text: {
       type: String,
@@ -28,7 +28,7 @@ const NotificationSchema: Schema<NotificationModel> = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Notification: Model<NotificationModel> =

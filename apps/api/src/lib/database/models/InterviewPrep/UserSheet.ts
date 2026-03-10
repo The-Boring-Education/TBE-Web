@@ -1,13 +1,13 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
-import type { UserSheetModel, UserSheetQuestionModel } from '@/lib/interfaces';
+import { DATABASE_MODELS } from "@/lib/constants";
+import type { UserSheetModel, UserSheetQuestionModel } from "@/lib/interfaces";
 
 const UserQuestionSchema = new Schema<UserSheetQuestionModel>(
   {
     questionId: {
       type: Schema.Types.ObjectId,
-      required: [true, 'Question ID is required'],
+      required: [true, "Question ID is required"],
     },
     isStarred: {
       type: Boolean,
@@ -21,7 +21,7 @@ const UserQuestionSchema = new Schema<UserSheetQuestionModel>(
   {
     timestamps: true,
     _id: true, // We need an _id field for each question
-  }
+  },
 );
 
 const UserSheetSchema = new Schema<UserSheetModel>(
@@ -29,13 +29,13 @@ const UserSheetSchema = new Schema<UserSheetModel>(
     userId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
-      required: [true, 'User ID is required'],
+      required: [true, "User ID is required"],
       index: true,
     },
     sheetId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.INTERVIEW_SHEET,
-      required: [true, 'Sheet ID is required'],
+      required: [true, "Sheet ID is required"],
       index: true,
     },
     questions: [UserQuestionSchema],
@@ -57,13 +57,13 @@ const UserSheetSchema = new Schema<UserSheetModel>(
         return ret;
       },
     },
-  }
+  },
 );
 
-UserSheetSchema.virtual('sheet', {
+UserSheetSchema.virtual("sheet", {
   ref: DATABASE_MODELS.INTERVIEW_SHEET,
-  localField: 'sheetId',
-  foreignField: '_id',
+  localField: "sheetId",
+  foreignField: "_id",
   justOne: true,
 });
 

@@ -1,7 +1,7 @@
-import type { LearningChapterListProps } from '@tbe/interface';
+import type { LearningChapterListProps } from "@tbe/interface";
 
-import ChapterLink from './ChapterLink';
-import LearningSidebarList from './LearningSidebarList';
+import ChapterLink from "./ChapterLink";
+import LearningSidebarList from "./LearningSidebarList";
 
 const LearningChapterList = ({
   chapters,
@@ -14,17 +14,15 @@ const LearningChapterList = ({
   return (
     <LearningSidebarList
       items={chapters ?? []}
-      getKey={(item) => item?._id?.toString() ?? ''}
+      getKey={(item) => item?._id?.toString() ?? ""}
       renderItem={(item, index) => {
         const chapterId = item?._id?.toString();
         if (!chapterId) return null;
 
-        const title = includeIndex
-          ? `${index + 1} - ${item.name}`
-          : item.name;
+        const title = includeIndex ? `${index + 1} - ${item.name}` : item.name;
 
         return (
-          <div className='flex items-center w-full'>
+          <div className="flex items-center w-full">
             <ChapterLink
               chapterId={chapterId}
               content={item.content}

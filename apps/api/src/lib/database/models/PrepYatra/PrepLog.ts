@@ -1,7 +1,7 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
-import type { PrepLogModel } from '@/lib/interfaces';
+import { DATABASE_MODELS } from "@/lib/constants";
+import type { PrepLogModel } from "@/lib/interfaces";
 
 const PrepLogSchema = new Schema<PrepLogModel>(
   {
@@ -25,7 +25,7 @@ const PrepLogSchema = new Schema<PrepLogModel>(
       type: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const PrepLog: Model<PrepLogModel> =

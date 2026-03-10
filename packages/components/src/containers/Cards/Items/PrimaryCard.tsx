@@ -1,5 +1,5 @@
-import { GradientContainer, Image, Text } from '@tbe/components';
-import type { PrimaryCardProps } from '@tbe/interface';
+import { GradientContainer, Image, Text } from "@tbe/components";
+import type { PrimaryCardProps } from "@tbe/interface";
 
 const PrimaryCard = ({
   image,
@@ -14,16 +14,16 @@ const PrimaryCard = ({
     <GradientContainer className={`max-w-sm ${border}`}>
       <Image
         alt={imageAltText}
-        className='h-40 w-48'
+        className="h-40 w-48"
         fullHeight={false}
         fullWidth={false}
         src={`${image}`}
       />
-      <Text className='heading-5 mt-4' level='h5'>
+      <Text className="heading-5 mt-4" level="h5">
         {title}
       </Text>
 
-      <Text className='paragraph mt-1 text-greyDark' level='p'>
+      <Text className="paragraph mt-1 text-greyDark" level="p">
         {content}
       </Text>
     </GradientContainer>

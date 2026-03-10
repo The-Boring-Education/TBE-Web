@@ -1,26 +1,29 @@
-"use client"
+"use client";
 
-import { initGA, installGlobalAnalyticsListeners, trackPageview } from "@tbe/utils"
-import { usePathname, useSearchParams } from "next/navigation"
-import { useEffect } from "react"
+import {
+  initGA,
+  installGlobalAnalyticsListeners,
+  trackPageview,
+} from "@tbe/utils";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const AnalyticsWrapper = ({ children }: { children: React.ReactNode }) => {
-    const pathname = usePathname()
-    const searchParams = useSearchParams()
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-    useEffect(() => {
-        initGA()
-        installGlobalAnalyticsListeners()
-    }, [])
+  useEffect(() => {
+    initGA();
+    installGlobalAnalyticsListeners();
+  }, []);
 
-    useEffect(() => {
-        if (!pathname) return
-        const url = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ""}`
-        trackPageview(url)
-    }, [pathname, searchParams])
+  useEffect(() => {
+    if (!pathname) return;
+    const url = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ""}`;
+    trackPageview(url);
+  }, [pathname, searchParams]);
 
-    return <>{children}</>
+  return <>{children}</>;
 };
 
-
-export default AnalyticsWrapper
+export default AnalyticsWrapper;

@@ -1,8 +1,8 @@
-import { Button } from '@ui/button';
-import Link from 'next/link';
+import { Button } from "@ui/button";
+import Link from "next/link";
 
 // Disable static generation to avoid prerendering issues
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default function NotFound() {
   return (
@@ -15,7 +15,10 @@ export default function NotFound() {
         The page you&apos;re looking for doesn&apos;t exist or has been moved.
       </p>
       <Link href="/">
-        <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button
+          variant="default"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
           Go Back Home
         </Button>
       </Link>

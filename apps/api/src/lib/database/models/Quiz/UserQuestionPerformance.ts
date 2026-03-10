@@ -1,13 +1,13 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
+import { DATABASE_MODELS } from "@/lib/constants";
 
 export interface UserQuestionPerformanceModel {
   _id?: string;
   userId: Schema.Types.ObjectId;
   questionId: Schema.Types.ObjectId;
   categoryName: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   attempts: number;
   correctAttempts: number;
   averageTime: number; // seconds
@@ -25,20 +25,20 @@ const UserQuestionPerformanceSchema = new Schema<UserQuestionPerformanceModel>(
     userId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
-      required: [true, 'User ID is required'],
+      required: [true, "User ID is required"],
     },
     questionId: {
       type: Schema.Types.ObjectId,
-      required: [true, 'Question ID is required'],
+      required: [true, "Question ID is required"],
     },
     categoryName: {
       type: String,
-      required: [true, 'Category name is required'],
+      required: [true, "Category name is required"],
     },
     difficulty: {
       type: String,
-      enum: ['easy', 'medium', 'hard'],
-      required: [true, 'Difficulty is required'],
+      enum: ["easy", "medium", "hard"],
+      required: [true, "Difficulty is required"],
     },
     attempts: {
       type: Number,
@@ -80,11 +80,14 @@ const UserQuestionPerformanceSchema = new Schema<UserQuestionPerformanceModel>(
       min: 1,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Unique index to prevent duplicate records
-UserQuestionPerformanceSchema.index({ userId: 1, questionId: 1 }, { unique: true });
+UserQuestionPerformanceSchema.index(
+  { userId: 1, questionId: 1 },
+  { unique: true },
+);
 
 // Indexes for performance queries
 UserQuestionPerformanceSchema.index({ userId: 1, nextReviewDate: 1 });
@@ -92,7 +95,10 @@ UserQuestionPerformanceSchema.index({ userId: 1, categoryName: 1 });
 UserQuestionPerformanceSchema.index({ userId: 1, strengthLevel: 1 });
 
 const UserQuestionPerformance: Model<UserQuestionPerformanceModel> =
-  models?.UserQuestionPerformance || 
-  model<UserQuestionPerformanceModel>(DATABASE_MODELS.USER_QUESTION_PERFORMANCE, UserQuestionPerformanceSchema);
+  models?.UserQuestionPerformance ||
+  model<UserQuestionPerformanceModel>(
+    DATABASE_MODELS.USER_QUESTION_PERFORMANCE,
+    UserQuestionPerformanceSchema,
+  );
 
 export default UserQuestionPerformance;

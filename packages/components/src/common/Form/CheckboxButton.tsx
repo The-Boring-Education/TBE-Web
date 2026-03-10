@@ -1,5 +1,5 @@
-import type { CheckboxButtonProps } from '@tbe/interface';
-import React from 'react';
+import type { CheckboxButtonProps } from "@tbe/interface";
+import React from "react";
 
 const CheckboxButton = ({
   label,
@@ -9,15 +9,15 @@ const CheckboxButton = ({
 }: CheckboxButtonProps) => (
   <label
     className={`checkbox 
-        ${isSelected ? 'bg-primary text-white' : 'bg-accent hover:bg-greyLight'}
+        ${isSelected ? "bg-primary text-white" : "bg-accent hover:bg-greyLight"}
       `}
     htmlFor={`checkbox-${value}`}
   >
     <input
       checked={isSelected}
-      className='hidden'
+      className="hidden"
       id={`checkbox-${value}`}
-      type='checkbox'
+      type="checkbox"
       value={value}
       onChange={onClick}
     />

@@ -11,7 +11,7 @@ export type {
   NavbarProps,
   NavbarVariantConfig,
   OutlineCardProps,
-  QuestionDifficulty
+  QuestionDifficulty,
 } from "./constants";
 export * from "./database";
 export * from "./email";

@@ -37,11 +37,11 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
   const [isQuestionCompleted, setIsQuestionCompleted] = useState(
     questions.find((question) => question._id.toString() === currentQuestionId)
-      ?.isCompleted
+      ?.isCompleted,
   );
   const [isQuestionStarred, setIsQuestionStarred] = useState(
     questions.find((question) => question._id.toString() === currentQuestionId)
-      ?.isStarred
+      ?.isStarred,
   );
   const [showFeedback, setShowFeedback] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -52,13 +52,16 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   // Calculate total and completed questions for the progress bar
   const totalQuestions = questions.length;
   const completedQuestions = questions.filter(
-    (question) => question.isCompleted
+    (question) => question.isCompleted,
   ).length;
 
   // Get current question and its resources
   const currentQuestion = useMemo(
-    () => questions.find((question) => question._id.toString() === currentQuestionId),
-    [questions, currentQuestionId]
+    () =>
+      questions.find(
+        (question) => question._id.toString() === currentQuestionId,
+      ),
+    [questions, currentQuestionId],
   );
   const questionResources = currentQuestion?.resources;
 
@@ -197,7 +200,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         const updatedQuestions = questions.map((question) =>
           question._id.toString() === currentQuestionId
             ? { ...question, isCompleted: newCompletionStatus }
-            : question
+            : question,
         );
 
         setQuestions(updatedQuestions);
@@ -206,7 +209,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         // Move to next question if completed
         if (newCompletionStatus) {
           const currentIndex = questions.findIndex(
-            (q) => q._id.toString() === currentQuestionId
+            (q) => q._id.toString() === currentQuestionId,
           );
 
           const next =
@@ -216,14 +219,15 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           if (next) {
             const questionId = next._id.toString();
             setCurrentQuestionId(questionId);
-            setSheetMeta(
-              `${next.question}\n\n${next.answer}`
-            );
+            setSheetMeta(`${next.question}\n\n${next.answer}`);
           }
         }
       } else {
         // Handle API error - don't update local state
-        console.error('Failed to update question completion:', response?.message);
+        console.error(
+          'Failed to update question completion:',
+          response?.message,
+        );
       }
     } catch (error) {
       console.error('Error toggling question completion:', error);
@@ -240,7 +244,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     const updatedQuestions = questions.map((question) =>
       question._id.toString() === currentQuestionId
         ? { ...question, isStarred: !isStarred }
-        : question
+        : question,
     );
     setQuestions(updatedQuestions);
   };
@@ -263,7 +267,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         <Section className='md:p-2 p-2'>
           <div className='flex items-center justify-center py-8'>
             <LoadingSpinner height={8} width={8} />
-            <Text level='p' className='ml-3 text-gray-600'>Loading interview questions...</Text>
+            <Text level='p' className='ml-3 text-gray-600'>
+              Loading interview questions...
+            </Text>
           </div>
         </Section>
       )}
@@ -305,14 +311,17 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                     const questionId = _id?.toString();
 
                     return (
-                      <div key={questionId} className='flex items-center w-full'>
+                      <div
+                        key={questionId}
+                        className='flex items-center w-full'
+                      >
                         <QuestionLink
                           currentQuestionId={currentQuestionId}
                           frequency={frequency}
                           handleQuestionClick={() =>
                             handleQuestionClick(
                               `${question}\n\n${answer}`,
-                              questionId
+                              questionId,
                             )
                           }
                           href={router.asPath.split('?')[0]}
@@ -325,7 +334,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                         />
                       </div>
                     );
-                  }
+                  },
                 )}
               </FlexContainer>
             </FlexContainer>
