@@ -22,21 +22,23 @@ const Layout = ({ children }: LayoutProps) => {
       ? "/"
       : "/dashboard";
 
+  if (isFullScreen) {
+    return <Fragment>{children}</Fragment>;
+  }
+
   return (
     <Fragment>
       <Navbar variant="dsayatra" theme="dark" dashboardRoute={dashboardRoute} />
 
       <main
         className={cn(
-          isFullScreen
-            ? "h-screen pt-[72px] overflow-hidden"
-            : "min-h-screen pt-[72px]",
-          (isDashboard || isFullScreen || isRevisions) && "bg-[#0A0A0A]",
+          "min-h-screen pt-[72px]",
+          (isDashboard || isRevisions) && "bg-[#0A0A0A]",
         )}
       >
         {children}
       </main>
-      {!isFullScreen && <Footer />}
+      <Footer />
     </Fragment>
   );
 };
