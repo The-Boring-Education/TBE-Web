@@ -28,6 +28,7 @@ import { getSheetPageProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { FaLock } from 'react-icons/fa';
+
 import InterviewQuestionContent from '../../../components/InterviewQuestionContent';
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
@@ -114,7 +115,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     setIsStarred(currentQuestion?.isStarred || false);
 
     if (currentQuestion) {
-      let updatedMeta = `${currentQuestion.question}\n\n${currentQuestion.answer}`;
+      const updatedMeta = `${currentQuestion.question}\n\n${currentQuestion.answer}`;
       setSheetMeta(updatedMeta);
     }
 
@@ -151,7 +152,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       // Find the question to get its full content
       const selectedQuestion = questions.find(q => q._id.toString() === questionId);
       if (selectedQuestion) {
-        let updatedMeta = `${selectedQuestion.question}\n\n${selectedQuestion.answer}`;
+        const updatedMeta = `${selectedQuestion.question}\n\n${selectedQuestion.answer}`;
         setSheetMeta(updatedMeta);
       } else {
         setSheetMeta(questionMeta);
@@ -243,7 +244,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
             const questionId = next._id.toString();
             setCurrentQuestionId(questionId);
             // Updating meta logic duplicated here for immediate transition
-            let updatedMeta = `${next.question}\n\n${next.answer}`;
+            const updatedMeta = `${next.question}\n\n${next.answer}`;
             setSheetMeta(updatedMeta);
           }
         }
@@ -279,7 +280,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         variant="learning"
         theme="dark"
         showFullNavigation={false}
-        showBackButton={true}
+        showBackButton
         backButtonHref={routes.oncampus.interviewPrep}
         totalChapters={totalQuestions}
         completedChapters={completedQuestions}

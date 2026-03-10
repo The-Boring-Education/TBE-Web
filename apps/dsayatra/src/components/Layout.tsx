@@ -1,8 +1,9 @@
 import { Footer } from '@tbe/components';
 import { cn } from '@tbe/utils';
-import Navbar from './NoSSRNavbar';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
+
+import Navbar from './NoSSRNavbar';
 
 interface LayoutProps {
     children: React.ReactNode;

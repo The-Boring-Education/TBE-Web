@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import type { AptitudeUploadPayload } from "@/lib/interfaces";
 import { bulkUploadAptitudeDataToDB } from "@/lib/database";
+import type { AptitudeUploadPayload } from "@/lib/interfaces";
 import { cors, sendAPIResponse } from "@/lib/utils";
 import { connectDB } from "@/middleware/api";
 

@@ -6,6 +6,7 @@ import {
   SparklesIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
+import type { FAQItem } from '@tbe/components';
 import {
   Banner,
   Button,
@@ -41,7 +42,6 @@ import type {
 import { getPreFetchProps } from '@tbe/utils';
 import { motion } from 'framer-motion';
 import { Fragment, useState } from 'react';
-import type { FAQItem } from '@tbe/components';
 
 const BYI_FAQS: FAQItem[] = [
   {

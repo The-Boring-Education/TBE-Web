@@ -1,8 +1,8 @@
 import { Popover, Transition } from '@headlessui/react';
-import { TOP_NAVIGATION } from '@tbe/constants';
 import { Image, Link } from '@tbe/components';
-import { signOut, useSession } from 'next-auth/react';
+import { TOP_NAVIGATION } from '@tbe/constants';
 import { useRouter } from 'next/router';
+import { signOut, useSession } from 'next-auth/react';
 import { Fragment, useEffect, useState } from 'react';
 
 interface UserAvatarProps {

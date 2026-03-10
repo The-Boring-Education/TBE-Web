@@ -1,8 +1,8 @@
 'use client'
 
-import { QueryClient, QueryClientProvider } from "react-query"
 import type { ReactNode } from "react";
 import { useState } from "react"
+import { QueryClient, QueryClientProvider } from "react-query"
 
 interface QueryProviderProps {
     children: ReactNode

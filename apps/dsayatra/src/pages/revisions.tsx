@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useMemo, Fragment } from 'react';
-import Head from 'next/head';
-import { Check, Lock, ChevronRight, Info, ArrowLeft, Target } from 'lucide-react';
-import { SEO, FlexContainer, Text, LoadingSpinner, Button, LeetCodeIcon, YouTubeIcon } from "@tbe/components";
-import type { PageProps, DsaQuestion } from "@tbe/interface";
-import { getPreFetchProps, cn } from "@tbe/utils";
+import { Button, FlexContainer, LeetCodeIcon, LoadingSpinner, SEO, Text, YouTubeIcon } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
-import { transformDsaQuestion } from "../utils/dsaHelpers";
+import type { DsaQuestion,PageProps } from "@tbe/interface";
+import { cn,getPreFetchProps } from "@tbe/utils";
+import { ArrowLeft, Check, ChevronRight, Info, Lock, Target } from 'lucide-react';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
+import React, { Fragment,useEffect, useMemo, useState } from 'react';
+
+import { transformDsaQuestion } from "../utils/dsaHelpers";
 
 export default function RevisionsUI({ seoMeta }: PageProps) {
     const router = useRouter();
@@ -57,13 +58,13 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
         if (!dsaQuestions.length || !globalCompleted.length) return;
 
         let modified = false;
-        let newAssignments = { ...weeklyAssignments };
+        const newAssignments = { ...weeklyAssignments };
 
         const validGlobalCompleted = globalCompleted.filter(id =>
             dsaQuestions.some(q => String(q.id || q.name) === String(id))
         );
 
-        let usedQuestions = new Set<string>();
+        const usedQuestions = new Set<string>();
 
         for (let i = 0; i < numUnlockedWeeks; i++) {
             const weekQs = newAssignments[i] || [];
@@ -106,7 +107,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
     const handleSelectWeek = (weekIndex: number) => {
         if (weekIndex >= numUnlockedWeeks) return; // Locked
 
-        let assignments = { ...weeklyAssignments };
+        const assignments = { ...weeklyAssignments };
         if (!assignments[weekIndex] || assignments[weekIndex].length < 7) {
             const validGlobalCompleted = globalCompleted.filter(id =>
                 dsaQuestions.some(q => String(q.id || q.name) === String(id))

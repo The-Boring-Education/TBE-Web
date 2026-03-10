@@ -1,4 +1,4 @@
-import { APTITUDE_SUB_CATEGORY_FORMAT_MAP, APTITUDE_TOPICS, APTITUDE_TOPIC_SLUGS } from "@/lib/constants"
+import { APTITUDE_SUB_CATEGORY_FORMAT_MAP, APTITUDE_TOPIC_SLUGS,APTITUDE_TOPICS } from "@/lib/constants"
 import type {
     AddAptitudeQuestionPayload,
     AptitudeCategoryType,

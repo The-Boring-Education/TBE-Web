@@ -1,5 +1,7 @@
 import mongoose from "mongoose"
-import { DatabaseQueryResponseType } from "@/lib/interfaces"
+
+import type { DatabaseQueryResponseType } from "@/lib/interfaces"
+
 import { User } from "../models"
 
 const getDYUserByIdFromDB = async (

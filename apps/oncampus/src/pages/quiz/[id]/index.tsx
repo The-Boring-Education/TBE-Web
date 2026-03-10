@@ -173,8 +173,8 @@ export default function QuizPage() {
           {/* Animated Spinner */}
           <div className="flex justify-center mb-6">
             <div className="relative w-10 h-10">
-              <div className="absolute inset-0 border-4 border-gray-800 rounded-full"></div>
-              <div className="absolute inset-0 border-4 border-transparent border-t-primary rounded-full animate-spin"></div>
+              <div className="absolute inset-0 border-4 border-gray-800 rounded-full" />
+              <div className="absolute inset-0 border-4 border-transparent border-t-primary rounded-full animate-spin" />
             </div>
           </div>
           <div className="text-white font-semibold text-lg">Submitting quiz...</div>

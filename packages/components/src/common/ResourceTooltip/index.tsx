@@ -1,8 +1,8 @@
+import { type QuestionResourcesModel } from '@tbe/interface'
 import { useEffect, useRef, useState } from 'react'
 import { FaBook, FaYoutube } from 'react-icons/fa'
 import { SiLeetcode } from 'react-icons/si'
 
-import { type QuestionResourcesModel } from '@tbe/interface'
 import Button from '../Buttons/Button'
 
 export interface ResourceTooltipProps {

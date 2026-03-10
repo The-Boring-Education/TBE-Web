@@ -10,15 +10,15 @@ import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 import {
   FlexContainer,
+  LearningSidebarPanel,
   Link,
   LinkButton,
   LoginRedirectButton,
   Logo,
-  ProductLogo,
-  LearningSidebarPanel,
   MobileNavbarLinksContainer,
   NavbarDropdownContainer,
   PopoverContainer,
+  ProductLogo,
   Text,
   UserAvatar,
   UserPointButton,

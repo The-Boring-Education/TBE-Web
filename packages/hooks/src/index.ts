@@ -34,7 +34,7 @@ export { default as useResumeEvaluation } from "./useResumeEvaluation";
 export { default as useScrollDirection } from "./useScrollDirection";
 export { default as useScrollPosition } from "./useScrollPosition";
 export { default as useSkillPlaylist } from "./useSkillPlaylist";
+export { useTimeTracker } from "./useTimeTracker";
 export { default as useUnskilledGraphData } from "./useUnskilledGraphData";
 export { default as useUser } from "./useUser";
 export { default as useUsername } from "./useUsername";
-export { useTimeTracker } from "./useTimeTracker";

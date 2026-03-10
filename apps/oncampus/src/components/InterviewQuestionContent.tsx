@@ -1,5 +1,5 @@
 import { MDXRenderer, Pill } from '@tbe/components';
-import { useMemo, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 interface Section {
     id: string;

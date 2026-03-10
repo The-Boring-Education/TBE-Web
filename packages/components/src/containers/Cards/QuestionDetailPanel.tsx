@@ -1,8 +1,8 @@
-import { FlexContainer, Text, LeetCodeIcon, YouTubeIcon, ExampleCard } from "@tbe/components";
+import { ExampleCard,FlexContainer, LeetCodeIcon, Text, YouTubeIcon } from "@tbe/components";
 import type { DsaSectionTabs } from "@tbe/interface";
 import type { QuestionDetailProps } from "@tbe/interface";
-import { useState } from "react";
 import markdownit from 'markdown-it';
+import { useState } from "react";
 
 const md = markdownit();
 
@@ -129,7 +129,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                 {activeTab === "companies" && (
                     <div>
                         <Text level="h2" className="text-red-500 font-semibold mb-3">COMPANIES</Text>
-                        <FlexContainer className="gap-2" justifyCenter={false} itemCenter={false} wrap={true}>
+                        <FlexContainer className="gap-2" justifyCenter={false} itemCenter={false} wrap>
                             {question.companyType?.map((company) => (
                                 <Text level="span" key={company} className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300">
                                     {company}

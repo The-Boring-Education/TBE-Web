@@ -277,7 +277,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         variant="learning"
         theme="dark"
         showFullNavigation={false}
-        showBackButton={true}
+        showBackButton
         backButtonHref={routes.oncampus.dsa}
         totalChapters={totalQuestions}
         completedChapters={completedQuestions}

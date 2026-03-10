@@ -13,7 +13,7 @@ import { config } from "@tbe/config/quizes";
 import { quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
 import { cleanOptionText } from "@tbe/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence,motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, ChevronDown, ChevronUp, Clock, RotateCcw, Target, Trophy, XCircle } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";

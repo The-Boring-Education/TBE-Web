@@ -3,6 +3,7 @@ import {
     DSA_GOALS,
     DSA_TIMELINES
 } from "@tbe/constants"
+import { cn, sendRequest } from "@tbe/utils"
 import { ExternalLink, Github, Linkedin } from "lucide-react"
 import { useEffect, useState } from "react"
 
@@ -15,7 +16,6 @@ import {
     DialogTitle
 } from "../ui/dialog"
 import { useToast } from "../ui/use-toast"
-import { cn, sendRequest } from "@tbe/utils"
 
 interface EditDsaOnboardingModalProps {
     isOpen: boolean

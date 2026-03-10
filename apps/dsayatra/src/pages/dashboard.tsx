@@ -1,32 +1,31 @@
 import { useAuth } from "@tbe/auth";
 import { SEO } from '@tbe/components';
+import { EditDsaOnboardingModal } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from '@tbe/constants';
+import { useApi,usePrepStats, useTimeTracker } from "@tbe/hooks";
 import type { PageProps } from '@tbe/interface';
+import type { UserProfile } from "@tbe/interface";
+import { userService } from "@tbe/services";
 import { cn, getPreFetchProps } from '@tbe/utils';
 import { Button } from "@ui/button";
 import { Card, CardContent } from "@ui/card";
 import { Progress } from "@ui/progress";
 import {
     CheckCircle2,
+    ClipboardList,
     Code2,
+    FileText,
     Github,
+    Home,
     Linkedin,
     Monitor,
-    TrendingUp,
     PieChart,
-    Home,
+    Settings,
     Target,
-    FileText,
-    ClipboardList,
-    Settings
-} from "lucide-react";
+    TrendingUp} from "lucide-react";
 import Link from "next/link";
-import { Fragment, useState, useEffect, useMemo } from 'react';
-import { userService } from "@tbe/services";
-import type { UserProfile } from "@tbe/interface";
-import { EditDsaOnboardingModal } from "@tbe/components";
+import { Fragment, useEffect, useMemo,useState } from 'react';
 import { toast } from "sonner";
-import { usePrepStats, useTimeTracker, useApi } from "@tbe/hooks";
 
 const SIDEBAR_ITEMS = [
     { name: 'Dashboard', href: '/dashboard', active: true, icon: Home },

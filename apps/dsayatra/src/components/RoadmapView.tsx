@@ -1,8 +1,9 @@
-import { ArrowLeft, ExternalLink } from "lucide-react";
-import Link from "next/link";
 import { cn } from "@tbe/utils";
 import { Badge } from "@ui/badge";
 import { Card, CardContent } from "@ui/card";
+import { ArrowLeft, ExternalLink } from "lucide-react";
+import Link from "next/link";
+
 import type { Topic } from "@/data/dsaData";
 
 interface RoadmapViewProps {
