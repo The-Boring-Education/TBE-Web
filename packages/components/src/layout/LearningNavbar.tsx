@@ -49,7 +49,7 @@ const LearningNavbar = ({ backHref, onMenuToggle, headerCenterContent, headerRig
                 {/* Right Section */}
                 <div className="flex items-center gap-[16px] min-w-0">
                     {headerRightContent}
-                    {TOP_NAVIGATION.issues[0]?.href && (
+                    {TOP_NAVIGATION?.issues?.[0]?.href && (
                         <FlexContainer direction="col" itemCenter={false}>
                             <Link
                                 className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary whitespace-nowrap`}

@@ -1,181 +1,294 @@
-import { useAuth } from "@tbe/auth";
-import { Button } from "@tbe/components";
-import { BookOpen, Zap } from "lucide-react";
+import {
+  Button,
+  DsaQuestionList,
+  FlexContainer,
+  LearningEnvironmentLayout,
+  LoadingSpinner,
+  QuestionDetailPanel,
+  Text,
+} from "@tbe/components";
+import { routes } from "@tbe/constants";
+import { useApi, useUser } from "@tbe/hooks";
+import type { DsaQuestion } from "@tbe/interface";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
-const AptitudeComingSoonPage = () => {
+import { transformAptitudeQuestion } from "../../../utils/aptitudeHelpers";
+
+const AptitudePrepPage = () => {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { loading: userLoading, isAuth } = useUser();
+  const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
+    null,
+  );
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [selectedTopicLabel, setSelectedTopicLabel] = useState<string>("");
+
+  // Fetch Topics
+  const { response: topicsResponse, loading: topicsLoading } = useApi(
+    "aptitude-topics",
+    {
+      url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE`,
+    },
+  );
+
+  // Fetch Questions (Manual Trigger)
+  const {
+    response: questionsResponse,
+    loading: questionsLoading,
+    makeRequest: fetchQuestions,
+  } = useApi("aptitude-questions", undefined, { enabled: false });
+
+  const topicsWithCounts = useMemo(() => {
+    const data = topicsResponse?.data;
+    if (!Array.isArray(data)) return [];
+
+    return data
+      .map((t: any) => ({
+        topic: t.slug,
+        count: t.questionCount,
+        label: t.name,
+      }))
+      .sort((a: any, b: any) => a.label.localeCompare(b.label));
+  }, [topicsResponse]);
+
+  const filteredQuestions = useMemo(() => {
+    const data = questionsResponse?.data?.questions;
+    if (!Array.isArray(data)) return [];
+    return data.map(transformAptitudeQuestion);
+  }, [questionsResponse]);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (selectedTopic) {
+      fetchQuestions({
+        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}&limit=100`,
+      });
+      setSelectedQuestion(null);
+    }
+  }, [selectedTopic, fetchQuestions]);
+
+  useEffect(() => {
+    if (!userLoading && !isAuth) {
       router.push("/login");
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [userLoading, isAuth, router]);
 
-  const navigateToQuizzes = () => {
-    router.push("/quizzes");
+  const handleQuestionClick = (question: DsaQuestion) => {
+    setSelectedQuestion(question);
   };
 
-  if (isLoading) {
+  const handleTopicClick = (topic: string, label: string) => {
+    setSelectedTopic(topic);
+    setSelectedTopicLabel(label);
+  };
+
+  const handleBackToTopics = () => {
+    setSelectedTopic(null);
+    setSelectedQuestion(null);
+    setSelectedTopicLabel("");
+  };
+
+  const overallLoading = userLoading || topicsLoading;
+
+  if (overallLoading) {
     return (
-      <div className="min-h-[40vh] flex items-center justify-center">
-        <div className="text-gray-300">Loading...</div>
-      </div>
+      <LearningEnvironmentLayout backHref={routes.oncampus.dashboard} isLoading>
+        <div className="flex-1 flex items-center justify-center">
+          <LoadingSpinner height={8} width={8} />
+          <Text level="p" className="text-gray-400 ml-3">
+            Loading...
+          </Text>
+        </div>
+      </LearningEnvironmentLayout>
+    );
+  }
+
+  if (topicsResponse?.error) {
+    return (
+      <LearningEnvironmentLayout backHref={routes.oncampus.dashboard}>
+        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+          <Text level="h2" className="text-xl font-bold text-red-500 mb-2">
+            Failed to load topics
+          </Text>
+          <Text level="p" className="text-gray-400 mb-6">
+            There was an error fetching the aptitude topics. Please try again.
+          </Text>
+          <Button
+            onClick={() => router.reload()}
+            variant="PRIMARY"
+            text="Retry"
+          />
+        </div>
+      </LearningEnvironmentLayout>
     );
   }
 
   return (
-    <div className="px-3 pt-0.5">
-      <div className="max-w-2xl mx-auto w-full">
-        {/* Main Content */}
-        <div className="text-center">
-          {/* Heading */}
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Aptitude Coming <span style={{ color: "#ff5757" }}>Soon</span>
-          </h1>
-          {/* Subheading */}
-          <p className="text-gray-400 text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed">
-            We're preparing comprehensive aptitude assessments to help you
-            master problem-solving and logical reasoning. Get ready for the
-            challenge.
-          </p>
+    <LearningEnvironmentLayout
+      backHref={routes.oncampus.dashboard}
+      layoutMode="workspace"
+    >
+      <FlexContainer
+        direction="col"
+        className="lg:flex-row flex-1 min-h-0 w-full h-full"
+        itemCenter={false}
+        justifyCenter={false}
+        wrap={false}
+      >
+        {/* Left Sidebar - Topics or Questions */}
+        <div
+          className={`flex flex-col flex-shrink-0 border-r border-gray-800 transition-all duration-300 ${selectedTopic ? "w-full lg:w-72" : "flex-1 lg:flex-none w-full lg:w-72"}`}
+        >
+          <div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-thin-grey">
+            {!selectedTopic ? (
+              <div className="space-y-3">
+                <div className="mb-3">
+                  <h1 className="mt-2 text-xl font-bold text-white">
+                    Aptitude Prep
+                  </h1>
+                  <p className="text-xs text-gray-400">
+                    Choose a Topic to Begin
+                  </p>
+                </div>
 
-          {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-            {/* Card 1 */}
-            <div className="relative group">
-              <div
-                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur"
-                style={{ backgroundColor: "#ff5757" }}
-              />
-              <div className="relative bg-black rounded-lg border border-gray-800 group-hover:border-[#ff5757]/50 transition-all duration-300 p-4 text-left">
-                <div className="flex items-start gap-3">
-                  <div className="mt-1" style={{ color: "#ff5757" }}>
-                    <BookOpen className="w-5 h-5" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">
-                      Structured Content
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      Curated problems designed to build your aptitude skills
-                    </p>
-                  </div>
+                <FlexContainer
+                  direction="col"
+                  fullWidth
+                  itemCenter={false}
+                  justifyCenter={false}
+                  wrap={false}
+                  className="gap-1"
+                >
+                  {topicsWithCounts.map(({ topic, count, label }, index) => (
+                    <div
+                      key={topic}
+                      className="w-full border border-gray-800 rounded-lg px-3 py-2.5 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer bg-transparent group"
+                      onClick={() => handleTopicClick(topic, label)}
+                    >
+                      <FlexContainer
+                        className="justify-start gap-3"
+                        fullWidth
+                        itemCenter
+                      >
+                        <div className="flex items-center justify-center w-2 h-2 rounded-full bg-gray-900 border border-gray-700 text-gray-500 text-[10px] font-bold group-hover:border-primary group-hover:text-primary transition-all duration-200 shrink-0 -ml-1">
+                          {index + 1}
+                        </div>
+                        <Text
+                          level="p"
+                          className="flex-1 text-gray-300 text-sm font-medium truncate group-hover:text-white"
+                        >
+                          {label}
+                        </Text>
+                        <Text
+                          level="span"
+                          className="text-xs font-semibold text-gray-500"
+                        >
+                          {count}
+                        </Text>
+                      </FlexContainer>
+                    </div>
+                  ))}
+                </FlexContainer>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <Button
+                  onClick={handleBackToTopics}
+                  variant="OUTLINE"
+                  size="SMALL"
+                  text="← All Topics"
+                  className="border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10"
+                />
+
+                <div className="mb-1">
+                  <h1 className="mt-2 text-xl font-bold text-white">
+                    Explore Questions
+                  </h1>
+                  <p className="mb-2 text-xs text-gray-400">
+                    Choose a Question to Begin
+                  </p>
+                  {questionsLoading ? (
+                    <div className="flex items-center justify-center py-10">
+                      <LoadingSpinner height={6} width={6} />
+                    </div>
+                  ) : questionsResponse?.error ? (
+                    <div className="flex flex-col items-center justify-center py-10 text-center px-4">
+                      <Text level="p" className="text-red-400 text-sm mb-4">
+                        Failed to load questions
+                      </Text>
+                      <Button
+                        onClick={() =>
+                          fetchQuestions({
+                            url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}&limit=100`,
+                          })
+                        }
+                        variant="OUTLINE"
+                        size="SMALL"
+                        text="Retry"
+                      />
+                    </div>
+                  ) : (
+                    <DsaQuestionList
+                      questions={filteredQuestions}
+                      selectedQuestionId={selectedQuestion?.id}
+                      onQuestionClick={handleQuestionClick}
+                    />
+                  )}
                 </div>
               </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="relative group">
-              <div
-                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur"
-                style={{ backgroundColor: "#ff5757" }}
-              />
-              <div className="relative bg-black rounded-lg border border-gray-800 group-hover:border-[#ff5757]/50 transition-all duration-300 p-4 text-left">
-                <div className="flex items-start gap-3">
-                  <div className="mt-1" style={{ color: "#ff5757" }}>
-                    <Zap className="w-5 h-5" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">
-                      Instant Feedback
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      Real-time evaluation with detailed explanations
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* CTA Text */}
-          <div className="mb-8 p-4 bg-black rounded-lg border border-gray-800 relative overflow-hidden">
-            <div
-              className="absolute left-0 top-0 bottom-0 w-1"
-              style={{ backgroundColor: "#ff5757" }}
-            />
-            <p className="text-gray-300 text-sm md:text-base">
-              <span className="font-semibold text-white">In the meantime,</span>{" "}
-              sharpen your problem-solving skills with our DSA sheet. We'll be
-              back with the fundamentals to ace aptitude!
-            </p>
-          </div>
-
-          {/* Navigation Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 justify-center">
-            <Button
-              onClick={() => router.push("/dashboard/quizzes")}
-              variant="OUTLINE"
-              className="rounded-lg px-6 py-2 text-white font-medium bg-[#FF5757] hover:bg-[#FF5757]/90 transition-all duration-300 border-100 text-sm"
-              text="Quizes"
-            />
-            <Button
-              onClick={() => router.push("/dashboard/dsa-prep")}
-              variant="OUTLINE"
-              className="rounded-lg px-6 py-2 text-white font-medium bg-[#FF5757] hover:bg-[#FF5757]/90 transition-all duration-300 border-100 text-sm"
-              text="DSA"
-            />
-            <Button
-              onClick={() => router.push("/dashboard/interview-prep")}
-              variant="OUTLINE"
-              className="rounded-lg px-6 py-2 text-white font-medium bg-[#FF5757] hover:bg-[#FF5757]/90 transition-all duration-300 border-100 text-sm"
-              text="Sheets"
-            />
+            )}
           </div>
         </div>
 
-        {/* Decorative Elements */}
-        <div className="mt-10 relative">
-          {/* Left accent */}
+        {/* Main Content Area */}
+        <div
+          className={`flex-1 flex flex-col min-w-0 bg-[#0A0A0A] ${!selectedTopic ? "hidden lg:flex" : "flex"}`}
+        >
           <div
-            className="absolute -left-10 top-1/2 w-20 h-20 rounded-full blur-3xl opacity-10"
-            style={{ backgroundColor: "#ff5757" }}
-          />
+            className="flex-1 overflow-y-auto scrollbar-thin-grey px-2 py-4 scroll-smooth"
+            id="right-scroll-area"
+          >
+            {!selectedTopic ? (
+              <FlexContainer
+                className="h-full"
+                itemCenter
+                justifyCenter
+                fullWidth
+                wrap={false}
+              >
+                <div className="text-center space-y-2">
+                  <Text level="p" className="text-gray-400 text-lg">
+                    Select an aptitude topic from the left to start practicing
+                  </Text>
+                  <Text level="p" className="text-gray-500 text-sm italic">
+                    Unlock your true logical thinking potential
+                  </Text>
+                </div>
+              </FlexContainer>
+            ) : (
+              <div className="w-full px-4">
+                <div className="mb-4 pb-4 border-b border-gray-800/50">
+                  <Text
+                    level="h2"
+                    className="text-2xl font-bold text-white mb-1"
+                  >
+                    {selectedTopicLabel}
+                  </Text>
+                  <Text level="p" className="text-sm text-gray-400">
+                    Continue your {selectedTopicLabel} aptitude preparation.
+                  </Text>
+                </div>
 
-          {/* Right accent */}
-          <div
-            className="absolute -right-10 bottom-0 w-32 h-32 rounded-full blur-3xl opacity-10"
-            style={{ backgroundColor: "#ff5757" }}
-          />
-
-          {/* Timeline/Progress indicator */}
-          <div className="relative z-10 text-center">
-            <p className="text-gray-500 text-xs uppercase tracking-widest mb-6">
-              What to expect
-            </p>
-            <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
-              <span
-                className="flex items-center justify-center w-6 h-6 rounded-full border border-gray-700"
-                style={{ borderColor: "#ff5757", color: "#ff5757" }}
-              >
-                1
-              </span>
-              <div className="w-8 h-px bg-gray-700" />
-              <span
-                className="flex items-center justify-center w-6 h-6 rounded-full border border-gray-700"
-                style={{ borderColor: "#ff5757", color: "#ff5757" }}
-              >
-                2
-              </span>
-              <div className="w-8 h-px bg-gray-700" />
-              <span
-                className="flex items-center justify-center w-6 h-6 rounded-full border border-gray-700"
-                style={{ borderColor: "#ff5757", color: "#ff5757" }}
-              >
-                3
-              </span>
-            </div>
-            <div className="mt-4 text-xs text-[#ff5757]">
-              <p>Build fundamentals → Test your limits → Reach mastery</p>
-            </div>
+                <div className="pb-1 w-full">
+                  <QuestionDetailPanel question={selectedQuestion} />
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      </div>
-    </div>
+      </FlexContainer>
+    </LearningEnvironmentLayout>
   );
 };
 
-export default AptitudeComingSoonPage;
+export default AptitudePrepPage;

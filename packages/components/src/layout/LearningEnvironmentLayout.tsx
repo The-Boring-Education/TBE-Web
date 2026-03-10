@@ -11,6 +11,8 @@ export interface LearningEnvironmentLayoutProps {
     layoutMode?: 'centered' | 'workspace';
     headerCenterContent?: ReactNode;
     headerRightContent?: ReactNode;
+    totalItems?: number;
+    completedItems?: number;
 }
 
 const LearningEnvironmentLayout = ({
@@ -20,7 +22,9 @@ const LearningEnvironmentLayout = ({
     isLoading = false,
     layoutMode = 'centered',
     headerCenterContent,
-    headerRightContent
+    headerRightContent,
+    totalItems = 0,
+    completedItems = 0
 }: LearningEnvironmentLayoutProps) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -46,7 +50,7 @@ const LearningEnvironmentLayout = ({
                         <FlexContainer
                             className="w-full max-w-[1000px] shrink-0 mx-auto px-4 py-6 gap-4"
                             itemCenter={false}
-                            justifyCenter={false} 
+                            justifyCenter={false}
                         >
                             <div className="w-full h-full">
                                 {children}
@@ -92,8 +96,8 @@ const LearningEnvironmentLayout = ({
                                         <Dialog.Panel className="pointer-events-auto w-[380px] max-w-md bg-[#111111] text-white">
                                             <LearningSidebarPanel
                                                 title="Questions"
-                                                totalItems={0}
-                                                completedItems={0}
+                                                totalItems={totalItems}
+                                                completedItems={completedItems}
                                                 theme="dark"
                                                 onClose={() => setSidebarOpen(false)}
                                             >
