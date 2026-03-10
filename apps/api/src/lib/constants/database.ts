@@ -33,7 +33,6 @@ const DATABASE_MODELS = {
   USER_INTEREST: 'UserInterest',
   COUPON: 'Coupon',
   DSA_QUESTION: 'DSAQuestion',
-  APTITUDE_TOPIC: 'AptitudeTopic',
   APTITUDE_QUESTION: 'AptitudeQuestion',
 };
 

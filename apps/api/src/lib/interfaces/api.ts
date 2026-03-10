@@ -232,6 +232,13 @@ export type AptitudeAnswerFormatType =
   | "PERSPECTIVE"
   | "BEHAVIORAL";
 
+export interface AptitudeTopicDefinition {
+  name: string;
+  slug: string;
+  category: AptitudeCategoryType;
+  subCategory: AptitudeSubCategoryType;
+}
+
 export type DSATopicType =
   | "ARRAY"
   | "PREFIX_SUM"
