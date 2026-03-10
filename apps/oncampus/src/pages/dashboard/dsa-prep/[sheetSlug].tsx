@@ -2,9 +2,9 @@ import {
   Button,
   FeedbackPopup,
   FlexContainer,
+  LearningEnvironmentLayout,
   LoadingSpinner,
   MDXRenderer,
-  Navbar,
   PaymentCard,
   QuestionLink,
   ResourceTooltip,
@@ -282,76 +282,70 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <Navbar
-        variant="learning"
-        theme="dark"
-        showFullNavigation={false}
-        showBackButton
-        backButtonHref={routes.oncampus.dsa}
-        totalChapters={totalQuestions}
-        completedChapters={completedQuestions}
-        sidebarTitle="DSA Questions"
-        sidebarContent={questionsSidebar}
-        dashboardRoute="/dashboard"
-      />
+      <LearningEnvironmentLayout
+        backHref={routes.oncampus.dsa}
+        isLoading={isDataLoading}
+        layoutMode="workspace"
+      >
+        <FlexContainer
+          className="lg:flex-row flex-1 min-h-0 w-full h-full"
+          direction="col"
+          itemCenter={false}
+          justifyCenter={false}
+          wrap={false}
+        >
+          {/* Sidebar with questions list */}
+          <div className="hidden lg:block lg:w-4/12 border-r border-gray-800 bg-[#0A0A0A] overflow-y-auto h-full p-2">
+            {questionsSidebar}
+          </div>
 
-      {isDataLoading && (
-        <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center py-8">
-          <LoadingSpinner height={8} width={8} />
-          <Text level="p" className="ml-3 text-contentDark">
-            Loading DSA questions...
-          </Text>
-        </div>
-      )}
-
-      {!isDataLoading && (
-        <div className="min-h-screen bg-[#0A0A0A] p-4 pt-16 flex items-start">
+          {/* Main Content Area */}
           <FlexContainer
-            className="w-full max-w-[1600px] mx-auto gap-4"
+            className="md:w-8/12 w-full p-4 md:p-6 bg-[#0A0A0A] overflow-y-auto h-full"
             itemCenter={false}
+            justifyCenter={false}
           >
-            {/* Main Content Area */}
-            <FlexContainer
-              className="border md:w-8/12 w-full p-2 rounded bg-[#0A0A0A] border-gray-800 max-h-[calc(100vh-2rem)] overflow-y-auto"
-              itemCenter={false}
-              justifyCenter={false}
-            >
-              {isLocked ? (
-                <div className="w-full">
-                  <Text level="h2" className="heading-4 mb-4 text-contentDark">
-                    DSA Sheet Overview
+            {isLocked ? (
+              <div className="w-full">
+                <Text level="h2" className="heading-4 mb-4 text-contentDark">
+                  DSA Sheet Overview
+                </Text>
+                <MDXRenderer theme="dark" mdxSource={sheet.meta || ""} />
+                <div className="mt-6 w-full rounded bg-orange-100 p-4 border border-orange-300 shadow-sm">
+                  <Text level="h4" className="mb-2 flex items-center gap-2">
+                    <FaLock className="text-orange-600" />
+                    🚀 This is a Premium DSA Sheet
                   </Text>
-                  <MDXRenderer theme="dark" mdxSource={sheet.meta || ""} />
-                  <div className="mt-6 w-full rounded bg-orange-100 p-4 border border-orange-300 shadow-sm">
-                    <Text level="h4" className="mb-2 flex items-center gap-2">
-                      <FaLock className="text-orange-600" />
-                      🚀 This is a Premium DSA Sheet
-                    </Text>
-                    <Text level="p" className="mb-4">
-                      To access all the DSA interview questions and detailed
-                      solutions, please complete the payment. Once payment is
-                      confirmed, all questions will be unlocked instantly.
-                    </Text>
-                    {!showPayment && (
-                      <Button
-                        text="Pay Now to Unlock"
-                        variant="PRIMARY"
-                        className="w-fit"
-                        onClick={handleShowPayment}
-                      />
-                    )}
-                  </div>
-                  {showPayment && (
-                    <div ref={paymentSectionRef}>
-                      <PaymentCard
-                        course={sheet}
-                        onClose={() => setShowPayment(false)}
-                        productType="INTERVIEW_SHEET"
-                      />
-                    </div>
+                  <Text level="p" className="mb-4">
+                    To access all the DSA interview questions and detailed
+                    solutions, please complete the payment. Once payment is
+                    confirmed, all questions will be unlocked instantly.
+                  </Text>
+                  {!showPayment && (
+                    <Button
+                      text="Pay Now to Unlock"
+                      variant="PRIMARY"
+                      className="w-fit"
+                      onClick={handleShowPayment}
+                    />
                   )}
                 </div>
-              ) : (
+                {showPayment && (
+                  <div ref={paymentSectionRef}>
+                    <PaymentCard
+                      course={sheet}
+                      onClose={() => setShowPayment(false)}
+                      productType="INTERVIEW_SHEET"
+                    />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <FlexContainer
+                className="border w-full p-6 rounded-xl bg-[#0A0A0A] border-gray-800"
+                itemCenter={false}
+                justifyCenter={false}
+              >
                 <MDXRenderer
                   theme="dark"
                   actions={[
@@ -402,11 +396,11 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                   ]}
                   mdxSource={sheetMeta}
                 />
-              )}
-            </FlexContainer>
+              </FlexContainer>
+            )}
           </FlexContainer>
-        </div>
-      )}
+        </FlexContainer>
+      </LearningEnvironmentLayout>
 
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type="INTERVIEW_SHEET" />
