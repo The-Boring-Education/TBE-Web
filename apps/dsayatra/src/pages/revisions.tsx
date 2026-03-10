@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, Fragment } from 'react';
 import Head from 'next/head';
 import { Check, Lock, ChevronRight, Info, ArrowLeft, Target } from 'lucide-react';
-import { SEO, FlexContainer, Text, LoadingSpinner, Button } from "@tbe/components";
+import { SEO, FlexContainer, Text, LoadingSpinner, Button, LeetCodeIcon, YouTubeIcon } from "@tbe/components";
 import type { PageProps, DsaQuestion } from "@tbe/interface";
 import { getPreFetchProps, cn } from "@tbe/utils";
 import { routes } from "@tbe/constants";
@@ -438,7 +438,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                                             <h3 className={`text-sm font-bold mb-1 truncate transition-all duration-300 ${isChecked ? 'line-through text-gray-500' : 'text-gray-200'}`}>
                                                 {q.name}
                                             </h3>
-                                            <div className="flex flex-wrap gap-2">
+                                            <div className="flex flex-wrap items-center gap-2">
                                                 {q.topics?.slice(0, 3).map((topic, i) => (
                                                     <div
                                                         key={i}
@@ -447,6 +447,32 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                                                         {topic}
                                                     </div>
                                                 ))}
+                                                <div className="flex items-center gap-2 flex-grow justify-end pr-2">
+                                                    {q.resources?.leetcodeURL && (
+                                                        <a
+                                                            href={q.resources.leetcodeURL}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="grayscale hover:grayscale-0 transition-all duration-300 opacity-50 hover:opacity-100"
+                                                            title="Solve on LeetCode"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        >
+                                                            <LeetCodeIcon className="w-4 h-4" />
+                                                        </a>
+                                                    )}
+                                                    {q.resources?.youtubeURL && (
+                                                        <a
+                                                            href={q.resources.youtubeURL}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="grayscale hover:grayscale-0 transition-all duration-300 opacity-50 hover:opacity-100"
+                                                            title="Watch explanation on YouTube"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        >
+                                                            <YouTubeIcon className="w-4 h-4" />
+                                                        </a>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
