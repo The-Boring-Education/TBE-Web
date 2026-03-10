@@ -2,9 +2,9 @@ import {
   Button,
   DsaQuestionList,
   FlexContainer,
+  LearningEnvironmentLayout,
   LinkButton,
   LoadingSpinner,
-  Navbar,
   QuestionDetailPanel,
   Text,
 } from "@tbe/components";
@@ -90,38 +90,25 @@ const DSAPrepPage = () => {
 
   if (sheetsLoading || userLoading) {
     return (
-      <FlexContainer
-        direction="col"
-        className="h-screen bg-black overflow-hidden gap-3"
-        fullWidth
-        itemCenter={false}
-        justifyCenter={false}
-        wrap={false}
-      >
-        <Navbar theme="dark" variant="oncampus" />
+      <LearningEnvironmentLayout backHref={routes.oncampus.dashboard} isLoading>
         <div className="flex-1 flex items-center justify-center">
-          <Text level="p" className="text-gray-800">
+          <LoadingSpinner height={8} width={8} />
+          <Text level="p" className="text-gray-400 ml-3">
             Loading...
           </Text>
         </div>
-      </FlexContainer>
+      </LearningEnvironmentLayout>
     );
   }
 
   return (
-    <FlexContainer
-      direction="col"
-      className="h-screen bg-black overflow-hidden gap-3"
-      fullWidth
-      itemCenter={false}
-      justifyCenter={false}
-      wrap={false}
+    <LearningEnvironmentLayout
+      backHref={routes.oncampus.dashboard}
+      layoutMode="workspace"
     >
-      <Navbar theme="dark" variant="oncampus" />
-
       <FlexContainer
         direction="col"
-        className="lg:flex-row flex-1 min-h-0 w-full mt-16"
+        className="lg:flex-row flex-1 min-h-0 w-full h-full"
         itemCenter={false}
         justifyCenter={false}
         wrap={false}
@@ -134,17 +121,6 @@ const DSAPrepPage = () => {
             {!selectedTopic ? (
               <div className="space-y-3">
                 <div className="mb-3">
-                  <LinkButton
-                    href={routes.oncampus.dashboard}
-                    className="mb-3"
-                    buttonProps={{
-                      variant: "OUTLINE",
-                      size: "SMALL",
-                      text: "← Back",
-                      className:
-                        "border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10 ",
-                    }}
-                  />
                   <h1 className="mt-2 text-xl font-bold text-white">
                     Explore Topics
                   </h1>
@@ -198,7 +174,7 @@ const DSAPrepPage = () => {
                   onClick={handleBackToTopics}
                   variant="OUTLINE"
                   size="SMALL"
-                  text="← Back"
+                  text="← All Topics"
                   className="border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10"
                 />
 
@@ -268,7 +244,7 @@ const DSAPrepPage = () => {
           </div>
         </div>
       </FlexContainer>
-    </FlexContainer>
+    </LearningEnvironmentLayout>
   );
 };
 

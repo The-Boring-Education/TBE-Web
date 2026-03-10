@@ -171,6 +171,8 @@ export {
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
 export { default as Footer } from "./layout/Footer";
 export { default as Navbar } from "./layout/Navbar";
+export { default as LearningNavbar } from "./layout/LearningNavbar";
+export { default as LearningEnvironmentLayout } from "./layout/LearningEnvironmentLayout";
 export { default as Layout } from "./layout/Page";
 export { default as Section } from "./layout/Section";
 export type {
