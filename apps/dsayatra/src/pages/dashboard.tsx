@@ -76,7 +76,7 @@ function Sidebar() {
 
 function StatCard({ title, value, subtext, icon: Icon, progress, status, secondaryInfo }: any) {
     return (
-        <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#3a3a3a] transition-all duration-200 hover:-translate-y-0.5 group rounded-[10px] p-[16px] h-full">
+        <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:-translate-y-1 group rounded-[10px] p-[16px] h-full">
             <div className="flex flex-row items-center justify-between pb-1.5">
                 <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px]">
                     {title}
@@ -262,7 +262,7 @@ function DsaClient() {
                 </header>
 
                 {/* Profile Card Section */}
-                <Card className="w-full bg-gradient-to-b from-[#1a1a1a] to-[#252525] border-[#2a2a2a] rounded-[10px] p-3.5">
+                <Card className="w-full bg-gradient-to-b from-[#1a1a1a] to-[#252525] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:-translate-y-1 rounded-[10px] p-3.5">
                     <div className="flex flex-col items-center">
                         <div className="w-[64px] h-[64px] rounded-full overflow-hidden mb-3 shadow-lg border-2 border-[#ff6b6b]/20 flex items-center justify-center">
                             {user?.image ? (
@@ -307,9 +307,9 @@ function DsaClient() {
                                 { label: 'Goal Timeline', value: timelineLabel },
                                 { label: 'Experience', value: profile?.dsaYatra?.experienceLevel || user?.occupation || 'Tech Student' },
                                 { label: 'Joined', value: profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : '6/2/2025' },
-                                { label: 'Focus', value: 'DSA Yatra' }
+                                { label: 'Focus', value: targetLabel }
                             ].map((stat, i) => (
-                                <div key={i} className="bg-[#0f0f0f] p-2.5 rounded-lg border border-[#2a2a2a]">
+                                <div key={i} className="bg-[#0f0f0f] p-2.5 rounded-lg border border-[#2a2a2a] hover:border-[#ff5757]/30 hover:shadow-[0_0_10px_rgba(255,87,87,0.1)] transition-all duration-300 hover:-translate-y-0.5">
                                     <p className="text-[10px] text-[#a0a0a0] uppercase mb-0.5 font-bold">{stat.label}</p>
                                     <p className="text-[12px] font-bold text-[#ff5757]">{stat.value}</p>
                                 </div>
@@ -342,7 +342,7 @@ function DsaClient() {
                 {/* Dashboard Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Overall Progress Card */}
-                    <Card className="md:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-3.5 lg:row-span-2 flex flex-col items-center justify-center rounded-[10px]">
+                    <Card className="md:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:-translate-y-1 p-3.5 lg:row-span-2 flex flex-col items-center justify-center rounded-[10px]">
                         <div className="flex items-center justify-between w-full mb-5">
                             <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px]">Overall Progress</p>
                             <TrendingUp className="w-3.5 h-3.5 text-[#ff5757]" />
@@ -405,7 +405,7 @@ function DsaClient() {
                 </div>
 
                 {/* Topic-wise Progress Section */}
-                <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px]">
+                <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:-translate-y-1 p-3.5 rounded-[10px]">
                     <div className="flex items-center gap-2 mb-3.5">
                         <PieChart className="w-4.5 h-4.5 text-[#ff5757]" />
                         <h3 className="text-[16px] font-bold text-[#e0e0e0]">Topic-wise Progress</h3>
@@ -431,7 +431,7 @@ function DsaClient() {
                 {/* Today's View Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     {/* Today's Schedule Card */}
-                    <Card className="lg:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px]">
+                    <Card className="lg:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:-translate-y-1 p-3.5 rounded-[10px]">
                         <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px] mb-3.5">Today's Schedule</p>
                         <div className="grid grid-cols-4 gap-3.5 text-center">
                             {[
@@ -449,7 +449,7 @@ function DsaClient() {
                     </Card>
 
                     {/* This Week Card */}
-                    <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px]">
+                    <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:-translate-y-1 p-3.5 rounded-[10px]">
                         <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px] mb-2.5">This Week</p>
                         <p className="text-[20px] font-bold text-[#e0e0e0]">{thisWeekPercentage}% Complete</p>
                         <Progress value={thisWeekPercentage} className="h-[7px] bg-[#2a2a2a] my-3.5 rounded-[4px]" />
@@ -463,7 +463,7 @@ function DsaClient() {
                 </div>
 
                 {/* Daily Revisions Queue Section */}
-                <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px]">
+                <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:-translate-y-1 p-3.5 rounded-[10px]">
                     <div className="mb-3.5">
                         <h3 className="text-[16px] font-bold text-[#e0e0e0]">Today's Revisions Queue</h3>
                         <p className="text-[10px] text-[#a0a0a0] mt-0.5">3 new + 2 old questions</p>
@@ -473,8 +473,8 @@ function DsaClient() {
                             <div
                                 key={i}
                                 className={cn(
-                                    "flex justify-between items-center p-[10px] bg-[#0f0f0f] border-l-[3px] rounded-r-[4px] transition-all",
-                                    item.completed ? "border-green-500 opacity-[0.7]" : "border-[#ff5757]"
+                                    "flex justify-between items-center p-[10px] bg-[#0f0f0f] border-l-[3px] rounded-r-[4px] transition-all duration-300 hover:translate-x-1 hover:shadow-[0_0_10px_rgba(255,87,87,0.1)] hover:bg-[#151515]",
+                                    item.completed ? "border-green-500 opacity-[0.7] hover:shadow-[0_0_10px_rgba(34,197,94,0.1)]" : "border-[#ff5757]"
                                 )}
                             >
                                 <div>
@@ -503,7 +503,7 @@ function DsaClient() {
                 </Card>
 
                 {/* Weekly Performance Card */}
-                <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px]">
+                <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:-translate-y-1 p-3.5 rounded-[10px]">
                     <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px] mb-3.5">Weekly Performance</p>
                     <div className="flex gap-3.5">
                         {(weeklyPerformance.length > 0 ? weeklyPerformance : [{ label: 'W1', minutes: 0, isCurrent: false }, { label: 'W2', minutes: 0, isCurrent: false }, { label: 'W3', minutes: 0, isCurrent: false }, { label: 'W4', minutes: 0, isCurrent: true }]).map((week) => {
@@ -512,8 +512,8 @@ function DsaClient() {
                                 <div
                                     key={week.label}
                                     className={cn(
-                                        "flex-1 bg-[#0f0f0f] border border-[#2a2a2a] p-3 rounded-[8px] text-center",
-                                        week.isCurrent && "border-[#ff6b6b] bg-[#ff6b6b]/10"
+                                        "flex-1 bg-[#0f0f0f] border border-[#2a2a2a] p-3 rounded-[8px] text-center transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff5757]/30 hover:shadow-[0_0_10px_rgba(255,87,87,0.1)]",
+                                        week.isCurrent && "border-[#ff6b6b] bg-[#ff6b6b]/10 hover:border-[#ff6b6b]/50 hover:shadow-[0_0_15px_rgba(255,107,107,0.2)]"
                                     )}
                                 >
                                     <p className={cn("text-[15px] font-bold", week.isCurrent ? "text-[#ff6b6b]" : "text-[#e0e0e0]")}>{week.label}</p>
