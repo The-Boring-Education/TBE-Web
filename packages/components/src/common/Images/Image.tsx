@@ -10,13 +10,12 @@ const ImageContainer = ({
   fullHeight = true,
 }: ImageContainerProps) => (
   <div
-    className={`${className} ${fullWidth && 'w-full'} ${
-      fullHeight && 'h-full'
-    } relative`}
+    className={`${className} ${fullWidth && 'w-full'} ${fullHeight && 'h-full'
+      } relative`}
   >
     <Image
       alt={alt}
-      className={`${className} image`}
+      className="image"
       fill
       loading={loading}
       src={src}

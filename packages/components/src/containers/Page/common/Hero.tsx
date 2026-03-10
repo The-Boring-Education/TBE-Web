@@ -49,7 +49,7 @@ const LandingPageHero = ({
             alt='landing-page-hero-image'
             className='w-64'
             fullWidth={false}
-            loading='eager'
+            loading='lazy'
             src={backgroundImageUrl}
           />
         </FlexContainer>

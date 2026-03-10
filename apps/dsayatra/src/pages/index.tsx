@@ -31,18 +31,6 @@ const LandingPage = ({ seoMeta }: PageProps) => (
                     href={routes.dsayatra.dashboard}
                 />
             }
-            secondaryButton={
-                <LinkButton
-                    buttonProps={{
-                        variant: 'OUTLINE',
-                        text: 'Book Free Session',
-                        className: 'w-full',
-                    }}
-                    className='w-full sm:w-fit'
-                    href={LINKS.bookTechConsultation}
-                    target='_blank'
-                />
-            }
             sectionHeaderProps={{
                 heading: 'Stop Grinding Random',
                 focusText: 'LeetCode Questions',
