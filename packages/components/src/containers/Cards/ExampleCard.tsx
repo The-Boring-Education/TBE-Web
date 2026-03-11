@@ -15,8 +15,8 @@ const ExampleCard = ({
         Example {index + 1}:
       </Text>
       <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg overflow-hidden">
-        <div className="flex flex-col md:flex-row border-b border-gray-800 last:border-0">
-          <div className="flex-1 min-w-0 p-2 border-b md:border-b-0 md:border-r border-gray-800">
+        <div className="flex flex-col border-b border-gray-800 last:border-0">
+          <div className="flex-1 min-w-0 p-2 border-b border-gray-800 bg-[#161616]">
             <Text
               level="span"
               className="text-[10px] text-white hover:text-red-500 transition-colors duration-200 cursor-default font-mono block mb-1 uppercase tracking-wider"
@@ -27,7 +27,7 @@ const ExampleCard = ({
               {inputText}
             </div>
           </div>
-          <div className="flex-1 min-w-0 p-2">
+          <div className="flex-1 min-w-0 p-2 bg-[#161616]">
             <Text
               level="span"
               className="text-[10px] text-white hover:text-red-500 transition-colors duration-200 cursor-default font-mono block mb-1 uppercase tracking-wider"

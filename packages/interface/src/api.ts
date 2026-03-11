@@ -540,6 +540,20 @@ export interface UserInterestResponseProps {
   source: "WEBAPP" | "PREPYATRA" | "ADMIN" | "API";
   ipAddress?: string;
   userAgent?: string;
-  createdAt: string;
   updatedAt: string;
 }
+
+export interface AptitudeOption {
+  text: string;
+  isCorrect: boolean;
+}
+
+export interface AptitudeQuestion {
+  _id: string;
+  question: string;
+  difficulty?: string;
+  topic?: string;
+  options: AptitudeOption[];
+  answer?: string;
+}
+

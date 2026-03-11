@@ -60,8 +60,11 @@ const AppContent = ({
   const isStudyRoute = router.pathname.includes("[sheetSlug]");
   // Exclude the main DSA prep page for fullscreen experience
   const isDSAMainRoute = router.pathname === "/dashboard/dsa-prep";
+  // Exclude the Aptitude page for fullscreen workspace experience
+  const isAptitudeRoute = router.pathname === "/dashboard/aptitude";
+
   const shouldUseDashboardLayout =
-    (isDashboardRoute || isDSAPrepRoute) && !isStudyRoute && !isDSAMainRoute;
+    (isDashboardRoute || isDSAPrepRoute) && !isStudyRoute && !isDSAMainRoute && !isAptitudeRoute;
 
   const pageContent = <Component {...pageProps} />;
 
