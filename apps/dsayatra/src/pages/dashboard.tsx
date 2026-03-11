@@ -240,40 +240,17 @@ function DsaClient() {
   const overallPercentage =
     totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
 
-  // Weekly performance strictly mapped from join date (first recorded log)
+  // Weekly performance strictly mapped from March 2026
   const weeklyPerformance = useMemo(() => {
-    let joinDate = new Date();
-
-    // Find the absolute first day the user logged anything to mark the start of their journey
-    if (weeklyLogs && weeklyLogs.length > 0) {
-      joinDate = new Date(
-        Math.min(
-          ...weeklyLogs.map((l: any) => new Date(l.createdAt).getTime()),
-        ),
-      );
-    } else if (profile?.createdAt) {
-      // Fallback to profile creation if recent
-      const pDate = new Date(profile.createdAt);
-      joinDate = pDate;
-    }
-
-    // Treat the start of their journey as the 1st of that month
-    const journeyStart = new Date(
-      joinDate.getFullYear(),
-      joinDate.getMonth(),
-      1,
-    );
-    journeyStart.setHours(0, 0, 0, 0);
-
-    // Find the nearest preceding Monday to that 1st of the month
-    const startDay = journeyStart.getDay();
-    const diff = journeyStart.getDate() - startDay + (startDay === 0 ? -6 : 1);
-    const anchorMonday = new Date(journeyStart.setDate(diff));
+    // Treat the start of their journey as March 2, 2026 (First Monday of March)
+    const anchorMonday = new Date(2026, 2, 2);
+    anchorMonday.setHours(0, 0, 0, 0);
 
     const now = new Date();
     const msInWeek = 1000 * 60 * 60 * 24 * 7;
-    const currentWeekIndex = Math.floor(
-      (now.getTime() - anchorMonday.getTime()) / msInWeek,
+    const currentWeekIndex = Math.max(
+      0,
+      Math.floor((now.getTime() - anchorMonday.getTime()) / msInWeek),
     );
 
     // Map logs to their respective week indices relative to anchor Monday
@@ -306,7 +283,7 @@ function DsaClient() {
     }
 
     return weeks;
-  }, [weeklyLogs, profile?.createdAt]);
+  }, [weeklyLogs]);
 
   // This week's progress (based on time logged this week vs a weekly goal)
   const thisWeekMinutes =
