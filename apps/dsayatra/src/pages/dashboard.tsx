@@ -240,16 +240,30 @@ function DsaClient() {
   const overallPercentage =
     totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
 
-  // Weekly performance strictly mapped from join date
+  // Weekly performance strictly mapped from join date (first recorded log)
   const weeklyPerformance = useMemo(() => {
-    if (!profile?.createdAt) return [];
+    let joinDate = new Date();
 
-    const joinDate = new Date(profile.createdAt);
+    // Find the absolute first day the user logged anything to mark the start of their journey
+    if (weeklyLogs && weeklyLogs.length > 0) {
+      joinDate = new Date(
+        Math.min(
+          ...weeklyLogs.map((l: any) => new Date(l.createdAt).getTime()),
+        ),
+      );
+    } else if (profile?.createdAt) {
+      // Fallback to profile creation if recent
+      const pDate = new Date(profile.createdAt);
+      const daysOld = (Date.now() - pDate.getTime()) / (1000 * 60 * 60 * 24);
+      if (daysOld < 30) joinDate = pDate;
+    }
+
     joinDate.setHours(0, 0, 0, 0);
 
     const now = new Date();
-    const daysSinceJoin = Math.floor(
-      (now.getTime() - joinDate.getTime()) / (1000 * 60 * 60 * 24),
+    const daysSinceJoin = Math.max(
+      0,
+      Math.floor((now.getTime() - joinDate.getTime()) / (1000 * 60 * 60 * 24)),
     );
     const currentWeekIndex = Math.floor(daysSinceJoin / 7);
 
@@ -268,11 +282,12 @@ function DsaClient() {
       });
     }
 
-    // Generate the 4 most recent structured weeks leading up to the current one
+    // Always generate exactly 4 contiguous blocks for the UI
     const weeks: { label: string; minutes: number; isCurrent: boolean }[] = [];
     const startIdx = Math.max(0, currentWeekIndex - 3);
+    const endIdx = Math.max(3, currentWeekIndex);
 
-    for (let i = startIdx; i <= currentWeekIndex; i++) {
+    for (let i = startIdx; i <= endIdx; i++) {
       weeks.push({
         label: `Week ${i + 1}`,
         minutes: weekMap[i] || 0,
@@ -280,7 +295,7 @@ function DsaClient() {
       });
     }
 
-    return weeks;
+    return weeks.slice(-4); // Ensure only the latest 4 blocks are ever presented
   }, [weeklyLogs, profile?.createdAt]);
 
   // This week's progress (based on time logged this week vs a weekly goal)
