@@ -240,27 +240,39 @@ function DsaClient() {
   const overallPercentage =
     totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
 
-  // Weekly performance strictly mapped from March 2026
+  // Weekly performance strictly mapped from join date (the day they first loaded DSA Yatra)
+  const [joinDateStr, setJoinDateStr] = useState<string | null>(null);
+
+  useEffect(() => {
+    let storedJoinDate = localStorage.getItem("dsayatra_join_date");
+    if (!storedJoinDate) {
+      storedJoinDate = new Date().toISOString();
+      localStorage.setItem("dsayatra_join_date", storedJoinDate);
+    }
+    setJoinDateStr(storedJoinDate);
+  }, []);
+
   const weeklyPerformance = useMemo(() => {
-    // Treat the start of their journey as March 2, 2026 (First Monday of March)
-    const anchorMonday = new Date(2026, 2, 2);
-    anchorMonday.setHours(0, 0, 0, 0);
+    if (!joinDateStr) return [];
+
+    let joinDate = new Date(joinDateStr);
+    joinDate.setHours(0, 0, 0, 0);
 
     const now = new Date();
     const msInWeek = 1000 * 60 * 60 * 24 * 7;
     const currentWeekIndex = Math.max(
       0,
-      Math.floor((now.getTime() - anchorMonday.getTime()) / msInWeek),
+      Math.floor((now.getTime() - joinDate.getTime()) / msInWeek),
     );
 
-    // Map logs to their respective week indices relative to anchor Monday
+    // Map logs to their respective week indices relative to exact join date
     const weekMap: Record<number, number> = {};
     if (weeklyLogs) {
       weeklyLogs.forEach((log: any) => {
         const logDate = new Date(log.createdAt);
-        if (logDate >= anchorMonday) {
+        if (logDate >= joinDate) {
           const wIndex = Math.floor(
-            (logDate.getTime() - anchorMonday.getTime()) / msInWeek,
+            (logDate.getTime() - joinDate.getTime()) / msInWeek,
           );
           weekMap[wIndex] = (weekMap[wIndex] || 0) + (log.timeSpent || 0);
         }
@@ -269,8 +281,6 @@ function DsaClient() {
 
     // Always generate exactly 4 contiguous blocks for the UI
     const weeks: { label: string; minutes: number; isCurrent: boolean }[] = [];
-    // If we're early in the journey (e.g. current week is 0, 1, or 2), show weeks 1-4.
-    // Otherwise, show the prior 3 weeks up to the current week.
     const startIdx = Math.max(0, currentWeekIndex - 3);
     const endIdx = startIdx + 3;
 
@@ -283,7 +293,7 @@ function DsaClient() {
     }
 
     return weeks;
-  }, [weeklyLogs]);
+  }, [weeklyLogs, joinDateStr]);
 
   // This week's progress (based on time logged this week vs a weekly goal)
   const thisWeekMinutes =
