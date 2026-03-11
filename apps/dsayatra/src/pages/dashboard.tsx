@@ -254,29 +254,37 @@ function DsaClient() {
     } else if (profile?.createdAt) {
       // Fallback to profile creation if recent
       const pDate = new Date(profile.createdAt);
-      const daysOld = (Date.now() - pDate.getTime()) / (1000 * 60 * 60 * 24);
-      if (daysOld < 30) joinDate = pDate;
+      joinDate = pDate;
     }
 
-    joinDate.setHours(0, 0, 0, 0);
+    // Treat the start of their journey as the 1st of that month
+    const journeyStart = new Date(
+      joinDate.getFullYear(),
+      joinDate.getMonth(),
+      1,
+    );
+    journeyStart.setHours(0, 0, 0, 0);
+
+    // Find the nearest preceding Monday to that 1st of the month
+    const startDay = journeyStart.getDay();
+    const diff = journeyStart.getDate() - startDay + (startDay === 0 ? -6 : 1);
+    const anchorMonday = new Date(journeyStart.setDate(diff));
 
     const now = new Date();
-    const daysSinceJoin = Math.max(
-      0,
-      Math.floor((now.getTime() - joinDate.getTime()) / (1000 * 60 * 60 * 24)),
+    const msInWeek = 1000 * 60 * 60 * 24 * 7;
+    const currentWeekIndex = Math.floor(
+      (now.getTime() - anchorMonday.getTime()) / msInWeek,
     );
-    const currentWeekIndex = Math.floor(daysSinceJoin / 7);
 
-    // Map logs to their respective week indices relative to join date
+    // Map logs to their respective week indices relative to anchor Monday
     const weekMap: Record<number, number> = {};
     if (weeklyLogs) {
       weeklyLogs.forEach((log: any) => {
         const logDate = new Date(log.createdAt);
-        if (logDate >= joinDate) {
-          const daysOffset = Math.floor(
-            (logDate.getTime() - joinDate.getTime()) / (1000 * 60 * 60 * 24),
+        if (logDate >= anchorMonday) {
+          const wIndex = Math.floor(
+            (logDate.getTime() - anchorMonday.getTime()) / msInWeek,
           );
-          const wIndex = Math.floor(daysOffset / 7);
           weekMap[wIndex] = (weekMap[wIndex] || 0) + (log.timeSpent || 0);
         }
       });
@@ -284,8 +292,10 @@ function DsaClient() {
 
     // Always generate exactly 4 contiguous blocks for the UI
     const weeks: { label: string; minutes: number; isCurrent: boolean }[] = [];
+    // If we're early in the journey (e.g. current week is 0, 1, or 2), show weeks 1-4.
+    // Otherwise, show the prior 3 weeks up to the current week.
     const startIdx = Math.max(0, currentWeekIndex - 3);
-    const endIdx = Math.max(3, currentWeekIndex);
+    const endIdx = startIdx + 3;
 
     for (let i = startIdx; i <= endIdx; i++) {
       weeks.push({
@@ -295,7 +305,7 @@ function DsaClient() {
       });
     }
 
-    return weeks.slice(-4); // Ensure only the latest 4 blocks are ever presented
+    return weeks;
   }, [weeklyLogs, profile?.createdAt]);
 
   // This week's progress (based on time logged this week vs a weekly goal)
