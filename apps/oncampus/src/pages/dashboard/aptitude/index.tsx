@@ -65,7 +65,8 @@ const AptitudePrepPage = () => {
         });
       }
     }
-  }, [selectedTopic, topicsWithCounts, fetchQuestions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTopic, topicsWithCounts]);
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
