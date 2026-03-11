@@ -53,10 +53,10 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
             <div className="flex-1 flex flex-col min-w-0 w-full overflow-y-auto scrollbar-thin-grey px-6 py-8">
                 <div className="max-w-3xl mx-auto w-full">
                     {/* Progress header */}
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="px-3 py-1 bg-gray-900 border border-gray-800 rounded-full">
-                            <Text level="span" className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                Question {currentIndex + 1} / {questions.length}
+                    <div className="flex items-center gap-3 mb-5">
+                        <div className="px-2.5 py-1 bg-gray-900/50 border border-gray-800/60 rounded-md backdrop-blur-sm">
+                            <Text level="span" className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">
+                                Question {currentIndex + 1} of {questions.length}
                             </Text>
                         </div>
                     </div>
@@ -97,11 +97,11 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
             </div>
 
             {/* Quiz Sidebar for Question Navigation (Moved to Right) */}
-            <div className="w-full lg:w-[280px] flex-shrink-0 bg-[#0A0A0A] border-l border-gray-800 p-6 max-h-[300px] lg:max-h-full overflow-y-auto scrollbar-thin-grey flex flex-col shadow-[-10px_0_20px_rgba(0,0,0,0.5)] z-10">
-                <Text level="h3" className="text-gray-400 font-bold mb-6 text-xs uppercase tracking-[0.2em]">
-                    Question Grid
+            <div className="w-full lg:w-[240px] flex-shrink-0 bg-[#0A0A0A] border-l border-gray-800 p-5 max-h-[300px] lg:max-h-full overflow-y-auto scrollbar-thin-grey flex flex-col z-10">
+                <Text level="h3" className="text-gray-500 font-bold mb-5 text-[10px] uppercase tracking-[0.15em]">
+                    Questions
                 </Text>
-                <div className="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-6 sm:grid-cols-10 lg:grid-cols-4 gap-2">
                     {questions.map((_, idx) => {
                         const isActive = idx === currentIndex;
 
@@ -110,9 +110,9 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
                                 key={idx}
                                 onClick={() => setCurrentIndex(idx)}
                                 aria-current={isActive ? "page" : undefined}
-                                className={`w-11 h-11 flex items-center justify-center rounded-lg text-sm font-semibold transition-all duration-300 border focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A] focus-visible:ring-red-500/50 ${isActive
-                                    ? "bg-red-500 border-red-400 text-black shadow-[0_0_15px_rgba(239,68,68,0.4)] scale-105"
-                                    : "bg-[#111] border-gray-800 text-gray-400 hover:bg-[#1a1a1a] hover:border-gray-600 hover:text-white"
+                                className={`w-9 h-9 flex items-center justify-center rounded-md text-[13px] font-semibold transition-all duration-300 border focus:outline-none ${isActive
+                                    ? "bg-red-500 border-red-400 text-black shadow-[0_0_12px_rgba(239,68,68,0.3)]"
+                                    : "bg-[#0F0F0F] border-gray-800/60 text-gray-500 hover:border-gray-600 hover:text-gray-300"
                                     }`}
                                 title={`Jump to Question ${idx + 1}`}
                             >

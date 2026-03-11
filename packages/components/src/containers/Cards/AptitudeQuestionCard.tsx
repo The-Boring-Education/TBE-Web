@@ -28,14 +28,14 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
         selectedOptionIndex !== null && question.options[selectedOptionIndex]?.isCorrect;
 
     return (
-        <div className="bg-[#111] border border-gray-800 rounded-xl p-5 md:p-6 w-full shadow-lg">
-            <div className="flex items-start gap-4 mb-6">
-                <div className="flex items-center justify-center min-w-[32px] w-[32px] h-[32px] rounded-full bg-red-950/40 border border-red-500/50 text-red-500 font-bold text-sm shrink-0">
+        <div className="bg-[#0D0D0D] border border-gray-800/80 rounded-xl p-4 md:p-4.5 w-full shadow-2xl relative overflow-hidden">
+            <div className="flex items-start gap-4 mb-4">
+                <div className="flex items-center justify-center min-w-[26px] w-[26px] h-[26px] rounded-full bg-red-950/20 border border-red-500/30 text-red-500 font-black text-xs shrink-0 mt-0.5">
                     {index + 1}
                 </div>
-                <div className="flex-1 mt-1">
+                <div className="flex-1">
                     <div
-                        className="text-white text-[15px] sm:text-base leading-relaxed font-medium prose prose-invert prose-pre:bg-[#1a1a1a] prose-pre:border prose-pre:border-gray-800"
+                        className="text-white text-[15.5px] leading-relaxed font-semibold prose prose-invert prose-p:my-0 prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
                         dangerouslySetInnerHTML={{
                             __html: md.render(question.question || ""),
                         }}
@@ -43,21 +43,21 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
                 </div>
             </div>
 
-            <div className="space-y-3 mb-6">
+            <div className="space-y-1.5 mb-4">
                 {question.options?.map((opt, idx) => {
                     const isSelected = selectedOptionIndex === idx;
                     const label = String.fromCharCode(65 + idx); // A, B, C, D
 
                     let optionStyle =
-                        "border-gray-800 hover:border-gray-600 bg-[#141414] hover:bg-[#1a1a1a] cursor-pointer shadow-sm";
+                        "border-gray-800/60 bg-[#121212] hover:border-gray-700 hover:bg-white/[0.03] cursor-pointer";
 
                     if (isAnswered) {
                         if (opt.isCorrect) {
-                            optionStyle = "border-green-500/50 bg-green-950/20 text-green-300 shadow-[0_0_15px_rgba(34,197,94,0.1)]";
+                            optionStyle = "border-green-500/40 bg-green-500/5 text-green-400 shadow-[0_0_12px_rgba(34,197,94,0.1)] backdrop-blur-sm";
                         } else if (isSelected && !opt.isCorrect) {
-                            optionStyle = "border-red-500/50 bg-red-950/20 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.1)]";
+                            optionStyle = "border-red-500/40 bg-red-500/5 text-red-400 shadow-[0_0_12px_rgba(239,68,68,0.1)] backdrop-blur-sm";
                         } else {
-                            optionStyle = "border-gray-800/60 bg-[#111] opacity-50 cursor-not-allowed";
+                            optionStyle = "border-gray-800/40 bg-[#0A0A0A] opacity-30 cursor-not-allowed";
                         }
                     }
 
@@ -74,16 +74,16 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
                                     handleOptionSelect(idx);
                                 }
                             }}
-                            className={`flex items-start sm:items-center gap-4 p-4 min-h-[64px] rounded-xl border transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] focus-visible:ring-red-500/50 ${optionStyle}`}
+                            className={`flex items-start sm:items-center gap-4 py-2 px-4 rounded-xl border transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-red-500/30 ${optionStyle}`}
                         >
                             <div
-                                className={`flex items-center justify-center min-w-[30px] w-[30px] h-[30px] rounded border text-sm font-bold shrink-0 transition-colors duration-300 ${isAnswered
+                                className={`flex items-center justify-center min-w-[24px] w-[24px] h-[24px] rounded border text-[11px] font-black shrink-0 transition-all duration-300 ${isAnswered
                                     ? opt.isCorrect
-                                        ? "border-green-500 bg-green-500 text-black shadow-lg shadow-green-500/20"
+                                        ? "border-green-500 bg-green-500 text-black shadow-lg shadow-green-500/30"
                                         : isSelected
-                                            ? "border-red-500 bg-red-500 text-black shadow-lg shadow-red-500/20"
-                                            : "border-gray-700 bg-gray-900 text-gray-600"
-                                    : "border-gray-600 bg-[#111] text-gray-400 hover:text-white"
+                                            ? "border-red-500 bg-red-500 text-black shadow-lg shadow-red-500/30"
+                                            : "border-gray-800 bg-gray-900 text-gray-700"
+                                    : "border-gray-700 bg-[#111] text-gray-500 group-hover:text-white"
                                     }`}
                             >
                                 {label}
@@ -129,12 +129,12 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
             </FlexContainer>
 
             {showExplanation && (
-                <div className="mt-4 p-4 bg-gray-900/50 border border-gray-800 rounded-lg">
-                    <Text level="h4" className="text-sm font-bold text-gray-300 mb-2">
+                <div className="mt-4 p-4 bg-gray-900/30 border border-gray-800/80 rounded-xl backdrop-blur-sm">
+                    <Text level="h4" className="text-[12px] font-black text-gray-400 mb-3 uppercase tracking-wider">
                         Explanation
                     </Text>
                     <div
-                        className="text-gray-400 text-sm leading-relaxed prose prose-invert max-w-none prose-p:my-1 prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
+                        className="text-gray-300 text-[14px] leading-relaxed prose prose-invert max-w-none prose-p:my-1 prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
                         dangerouslySetInnerHTML={{
                             __html: md.render(question.answer || "No explanation provided."),
                         }}

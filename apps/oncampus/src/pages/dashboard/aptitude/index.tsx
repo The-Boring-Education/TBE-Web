@@ -159,12 +159,12 @@ const AptitudePrepPage = () => {
           <div className="w-full lg:w-72 flex-shrink-0 border-r border-gray-800 flex flex-col bg-[#0A0A0A]">
             <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
               <div className="space-y-3">
-                <div className="mb-2 px-1">
-                  <Text level="h2" className="text-base font-bold text-white mb-0.5">
+                <div className="mb-2.5 px-1 pt-1">
+                  <Text level="h2" className="text-[14px] font-black text-white mb-0.5 tracking-tight">
                     Explore Topics
                   </Text>
-                  <Text level="p" className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">
-                    Choose a Topic to Begin
+                  <Text level="p" className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">
+                    Choose a Topic to practice
                   </Text>
                 </div>
 
@@ -182,31 +182,45 @@ const AptitudePrepPage = () => {
                       <button
                         key={topic}
                         onClick={() => handleTopicClick(topic, label)}
-                        className={`w-full group relative px-3 py-2.5 rounded-lg border transition-all duration-200 cursor-pointer text-left bg-transparent focus:outline-none focus:ring-2 focus:ring-red-500/50 ${isActive
-                          ? "bg-red-500/10 border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.05)]"
-                          : "border-gray-800 hover:border-gray-700 hover:bg-gray-800/10"
+                        className={`w-full group relative px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer text-left bg-transparent focus:outline-none ${isActive
+                          ? "bg-red-500/5 border-red-500/20 shadow-[0_1px_6px_rgba(239,68,68,0.02)]"
+                          : "border-gray-800/30 hover:border-gray-700/40 hover:bg-white/[0.01]"
                           }`}
                         aria-pressed={isActive}
                       >
                         <FlexContainer
-                          className="justify-start gap-3"
+                          className="justify-between gap-3"
                           fullWidth
                           itemCenter
                         >
-                          <div className={`flex items-center justify-center w-2 h-2 rounded-full border text-[10px] font-bold transition-all duration-200 shrink-0 -ml-1 ${isActive
-                            ? "bg-red-900/80 border-red-500 text-red-500"
-                            : "bg-gray-900 border-gray-700 text-gray-500 group-hover:border-red-500/50 group-hover:text-red-400"
-                            }`}>
-                            {index + 1}
-                          </div>
+                          <FlexContainer className="gap-3 flex-1" itemCenter justifyCenter={false}>
+                            <div className={`flex items-center justify-center w-5 h-5 rounded-full border text-[9px] font-black transition-all duration-300 shrink-0 ${isActive
+                              ? "bg-red-500/20 border-red-500/40 text-red-500 shadow-[0_0_6px_rgba(239,68,68,0.15)]"
+                              : "bg-gray-950/40 border-gray-800 text-gray-600 group-hover:border-gray-700 group-hover:text-gray-500"
+                              }`}>
+                              {index + 1}
+                            </div>
+
+                            <Text
+                              level="p"
+                              className={`flex-1 text-[13px] font-semibold transition-colors duration-300 truncate ${isActive ? "text-white" : "text-gray-400 group-hover:text-gray-300"
+                                }`}
+                            >
+                              {label}
+                            </Text>
+                          </FlexContainer>
 
                           <Text
-                            level="p"
-                            className={`flex-1 text-sm font-medium transition-colors duration-200 ${isActive ? "text-white" : "text-gray-300 group-hover:text-white"
+                            level="span"
+                            className={`text-[11px] font-black transition-colors duration-300 ${isActive ? "text-red-500/70" : "text-gray-700 group-hover:text-gray-600"
                               }`}
                           >
-                            {label}
+                            {count || 0}
                           </Text>
+
+                          {isActive && (
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[1.5px] h-3 bg-red-500 rounded-r-full shadow-[0_0_6px_rgba(239,68,68,0.4)]" />
+                          )}
                         </FlexContainer>
                       </button>
                     );
