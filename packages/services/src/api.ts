@@ -8,7 +8,6 @@ import type {
   UserPoints,
   UserProfile,
 } from "@tbe/types";
-import { QuizAttempt, QuizCategoryAPI, QuizQuestionsData } from "@tbe/types";
 
 import { apiClient, APIError } from "./base";
 

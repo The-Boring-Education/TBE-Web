@@ -27,7 +27,7 @@ import type { SheetPageProps } from '@tbe/interface';
 import { getSheetPageProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { FaLock, FaStar } from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa';
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();

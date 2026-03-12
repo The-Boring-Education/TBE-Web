@@ -5,25 +5,15 @@ import type { PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  AlignLeft,
   ArrowLeft,
-  Binary,
-  Calculator,
   Check,
   Code,
-  Columns,
-  Cpu,
   Database,
-  GitBranch,
   Hash,
   Layers,
   Link2,
   Lock,
-  Network,
   Search,
-  Split,
-  Target,
-  Terminal,
 } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";

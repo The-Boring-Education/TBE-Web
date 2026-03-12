@@ -11,14 +11,7 @@ import { routes } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
-import {
-  ArrowLeft,
-  Check,
-  ChevronRight,
-  Info,
-  Lock,
-  Target,
-} from "lucide-react";
+import { Check, ChevronRight, Info, Lock, Target } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { Fragment, useEffect, useMemo, useState } from "react";

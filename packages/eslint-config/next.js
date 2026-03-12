@@ -6,6 +6,7 @@ import pluginReact from "eslint-plugin-react"
 import globals from "globals"
 import pluginNext from "@next/eslint-plugin-next"
 import simpleImportSort from "eslint-plugin-simple-import-sort"
+import unusedImports from "eslint-plugin-unused-imports"
 import { config as baseConfig } from "./base.js"
 
 /**
@@ -35,13 +36,16 @@ export const config = [
         },
         rules: {
             ...pluginNext.configs.recommended.rules,
-            ...pluginNext.configs["core-web-vitals"].rules
+            ...pluginNext.configs["core-web-vitals"].rules,
+            // Shared config is used by non-Next packages too.
+            "@next/next/no-html-link-for-pages": "off"
         }
     },
     {
         plugins: {
             "react-hooks": pluginReactHooks,
-            "simple-import-sort": simpleImportSort
+            "simple-import-sort": simpleImportSort,
+            "unused-imports": unusedImports
         },
         settings: { react: { version: "detect" } },
         rules: {
@@ -51,8 +55,9 @@ export const config = [
             // Import sorting
             "simple-import-sort/exports": "warn",
             "simple-import-sort/imports": "warn",
-            // Unused variables detection
-            "@typescript-eslint/no-unused-vars": [
+            // Autofix/remove unused imports and keep variable checks.
+            "unused-imports/no-unused-imports": "warn",
+            "unused-imports/no-unused-vars": [
                 "warn",
                 {
                     vars: "all",
@@ -61,6 +66,7 @@ export const config = [
                     argsIgnorePattern: "^_"
                 }
             ],
+            "@typescript-eslint/no-unused-vars": "off",
             // React-specific rules
             "react/display-name": "off",
             "react/jsx-curly-brace-presence": [

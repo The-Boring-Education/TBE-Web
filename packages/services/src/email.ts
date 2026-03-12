@@ -1,4 +1,3 @@
-import { emailLogger } from "@tbe/constants";
 import type { ExternalEmailRequest } from "@tbe/interface";
 
 import { emailTriggerService } from "./triggers";

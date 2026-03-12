@@ -9,20 +9,12 @@ import {
   SEO,
   Text,
 } from "@tbe/components";
-import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
+import { routes, TOPIC_LABELS } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
 import type { DsaQuestion, PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
 import { cn, getPreFetchProps } from "@tbe/utils";
-import {
-  ClipboardList,
-  FileText,
-  Home,
-  Settings,
-  Target,
-  TrendingUp,
-} from "lucide-react";
-import Link from "next/link";
+import { Target } from "lucide-react";
 import { useRouter } from "next/router";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 

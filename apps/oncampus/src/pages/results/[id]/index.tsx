@@ -1,15 +1,12 @@
 import { useAuth } from "@tbe/auth";
 import {
   Button,
-  Card,
-  CardContent,
   CelebrationAnimation,
   Footer,
   Navbar,
   Progress,
 } from "@tbe/components";
 import { MarkdownRenderer } from "@tbe/components/quizes";
-import { config } from "@tbe/config/quizes";
 import { quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
 import { cleanOptionText } from "@tbe/utils";
@@ -22,11 +19,10 @@ import {
   Clock,
   RotateCcw,
   Target,
-  Trophy,
   XCircle,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ResultsPage() {
   const router = useRouter();

@@ -7,7 +7,6 @@ import {
 } from "@tbe/components";
 import {
   DSA_YATRA_FEATURES,
-  LINKS,
   PAGE_REFRESH_TIMEOUT,
   routes,
   STATIC_FILE_PATH,

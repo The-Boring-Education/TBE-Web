@@ -3,8 +3,6 @@ import type { Document, Schema, Types } from "mongoose";
 import type {
   APIMethodTypes,
   ApplicationStatusType,
-  AptitudeCategoryType,
-  AptitudeSubCategoryType,
   CertificateType,
   CompanyType,
   DifficultyType,

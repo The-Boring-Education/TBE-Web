@@ -3,7 +3,6 @@ import {
   FlexContainer,
   PrimaryCardWithCTA,
   Section,
-  SectionHeaderContainer,
 } from "@tbe/components";
 import type { CardContainerBProps } from "@tbe/interface";
 

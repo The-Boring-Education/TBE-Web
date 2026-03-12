@@ -1,4 +1,4 @@
-import { Button, FlexContainer, Text } from "@tbe/components";
+import { FlexContainer, Text } from "@tbe/components";
 import type { AptitudeQuestion } from "@tbe/interface";
 import markdownit from "markdown-it";
 import React, { useEffect, useState } from "react";
