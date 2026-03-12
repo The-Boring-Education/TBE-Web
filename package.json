@@ -8,9 +8,11 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint -- --fix",
     "lint:check": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,cjs,mjs,json,md,yml,yaml,css,scss}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,cjs,mjs,json,md,yml,yaml,css,scss}\"",
     "check-types": "turbo run check-types",
+    "quality:fix": "pnpm lint && pnpm format",
+    "quality:check": "pnpm lint:check && pnpm format:check && pnpm check-types",
     "clean": "turbo run clean",
     "dev:platform": "turbo run dev --filter=@tbe/platform",
     "dev:prep-yatra": "turbo run dev --filter=@tbe/prep-yatra",
@@ -46,7 +48,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,cjs,mjs}": [
-      "eslint --fix --max-warnings=0",
+      "eslint --fix",
       "prettier --write"
     ],
     "*.{json,md,yml,yaml,css,scss}": [

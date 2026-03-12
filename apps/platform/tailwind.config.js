@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const { fontFamily } = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
@@ -9,7 +8,6 @@ module.exports = {
     './src/layouts/**/*.{js,ts,jsx,tsx}',
     './src/utils/**/*.{js,ts,jsx,tsx}',
     '../../packages/components/src/**/*.{js,ts,jsx,tsx}',
-    
   ],
   theme: {
     extend: {

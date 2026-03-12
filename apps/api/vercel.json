@@ -1,15 +1,13 @@
 {
-    "buildCommand": "cd ../.. && pnpm run build:api",
-    "outputDirectory": ".next",
-    "framework": "nextjs",
-    "installCommand": "cd ../.. && corepack enable && corepack prepare pnpm@9.15.9 --activate && pnpm install --no-frozen-lockfile",
-    "devCommand": "cd ../.. && pnpm run dev:api",
-    "regions": [
-        "iad1"
-    ],
-    "functions": {
-        "src/pages/api/**/*.ts": {
-            "maxDuration": 60
-        }
+  "buildCommand": "cd ../.. && pnpm run build:api",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && corepack enable && corepack prepare pnpm@9.15.9 --activate && pnpm install --no-frozen-lockfile",
+  "devCommand": "cd ../.. && pnpm run dev:api",
+  "regions": ["iad1"],
+  "functions": {
+    "src/pages/api/**/*.ts": {
+      "maxDuration": 60
     }
+  }
 }

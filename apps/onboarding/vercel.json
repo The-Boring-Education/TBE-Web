@@ -1,10 +1,8 @@
 {
-    "buildCommand": "cd ../.. && pnpm run build:onboarding",
-    "outputDirectory": "dist",
-    "framework": "vite",
-    "installCommand": "cd ../.. && corepack enable && corepack prepare pnpm@9.15.9 --activate && pnpm install --no-frozen-lockfile",
-    "devCommand": "cd ../.. && pnpm run dev:onboarding",
-    "regions": [
-        "iad1"
-    ]
+  "buildCommand": "cd ../.. && pnpm run build:onboarding",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "installCommand": "cd ../.. && corepack enable && corepack prepare pnpm@9.15.9 --activate && pnpm install --no-frozen-lockfile",
+  "devCommand": "cd ../.. && pnpm run dev:onboarding",
+  "regions": ["iad1"]
 }

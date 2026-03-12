@@ -3,31 +3,37 @@
 @tailwind utilities;
 
 :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-rgb: 250, 250, 250;
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 250, 250, 250;
 }
 
 body {
-    color: rgb(var(--foreground-rgb));
-    background: rgb(var(--background-rgb));
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-        'Helvetica Neue', Arial, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
 }
 
 /* Score colors */
 .score-excellent {
-    @apply text-green-600 bg-green-50;
+  @apply text-green-600 bg-green-50;
 }
 
 .score-good {
-    @apply text-blue-600 bg-blue-50;
+  @apply text-blue-600 bg-blue-50;
 }
 
 .score-average {
-    @apply text-yellow-600 bg-yellow-50;
+  @apply text-yellow-600 bg-yellow-50;
 }
 
 .score-poor {
-    @apply text-red-600 bg-red-50;
+  @apply text-red-600 bg-red-50;
 }
-

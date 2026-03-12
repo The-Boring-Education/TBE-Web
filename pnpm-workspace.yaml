@@ -12,7 +12,7 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
-  - '@sentry/cli'
+  - "@sentry/cli"
   - canvas
   - core-js
   - esbuild

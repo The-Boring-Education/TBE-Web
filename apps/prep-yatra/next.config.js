@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -28,12 +28,12 @@ const nextConfig = {
     // Fix for multiple React instances issue
     // Ensure single React instance is used across all packages
     // This prevents "Cannot read properties of null (reading 'useState')" errors
-    
+
     // Ensure webpack resolves from the app's node_modules first
     // This ensures all packages use the same React instance
-    const appNodeModules = path.resolve(__dirname, 'node_modules');
+    const appNodeModules = path.resolve(__dirname, "node_modules");
     if (!Array.isArray(config.resolve.modules)) {
-      config.resolve.modules = ['node_modules'];
+      config.resolve.modules = ["node_modules"];
     }
     if (!config.resolve.modules.includes(appNodeModules)) {
       config.resolve.modules.unshift(appNodeModules);

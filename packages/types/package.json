@@ -1,34 +1,34 @@
 {
-    "name": "@tbe/types",
-    "version": "0.0.0",
-    "type": "module",
-    "private": true,
-    "license": "MIT",
-    "main": "./src/index.ts",
-    "types": "./src/index.ts",
-    "exports": {
-        ".": "./src/index.ts",
-        "./api": "./src/api.ts",
-        "./user": "./src/user.ts",
-        "./quiz": "./src/quiz.ts",
-        "./prepyatra": "./src/prepyatra.ts",
-        "./platform": "./src/platform.ts"
-    },
-    "scripts": {
-        "build": "echo 'No build step needed for types package'",
-        "lint": "eslint ."
-    },
-    "devDependencies": {
-        "@tbe/eslint-config": "workspace:*",
-        "@tbe/typescript-config": "workspace:*",
-        "@types/node": "^18.19.0",
-        "@types/react": "^18.3.24",
-        "@types/react-dom": "^18.3.7",
-        "eslint": "^9.34.0",
-        "typescript": "^5.9.2"
-    },
-    "dependencies": {
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1"
-    }
+  "name": "@tbe/types",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./api": "./src/api.ts",
+    "./user": "./src/user.ts",
+    "./quiz": "./src/quiz.ts",
+    "./prepyatra": "./src/prepyatra.ts",
+    "./platform": "./src/platform.ts"
+  },
+  "scripts": {
+    "build": "echo 'No build step needed for types package'",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@tbe/eslint-config": "workspace:*",
+    "@tbe/typescript-config": "workspace:*",
+    "@types/node": "^18.19.0",
+    "@types/react": "^18.3.24",
+    "@types/react-dom": "^18.3.7",
+    "eslint": "^9.34.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
 }

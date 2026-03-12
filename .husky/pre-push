@@ -1,6 +1,13 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-pnpm lint:check
-pnpm format:check
-pnpm check-types
+pnpm quality:fix
+
+if ! git diff --quiet || ! git diff --cached --quiet; then
+    echo ""
+    echo "Pre-push auto-fixed files."
+    echo "Please git add/commit the changes, then push again."
+    exit 1
+fi
+
+pnpm quality:check
