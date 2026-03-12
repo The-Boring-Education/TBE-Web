@@ -1,6 +1,7 @@
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import { LinkButton, Link, FlexContainer } from '..';
 import { TOP_NAVIGATION } from '@tbe/constants';
+
+import { FlexContainer,Link, LinkButton } from '..';
 
 export interface LearningNavbarProps {
     backHref: string;

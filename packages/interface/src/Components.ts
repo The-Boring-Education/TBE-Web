@@ -937,6 +937,7 @@ export interface UserProfile {
     timeline?: string;
     experienceLevel?: string;
     preferredLanguage?: string;
+    companies?: string[];
   };
 }
 

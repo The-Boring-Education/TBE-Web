@@ -1,6 +1,8 @@
-import { ReactNode, Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { LoadingSpinner, Text, FlexContainer, LearningSidebarPanel } from '..';
+import type { ReactNode} from 'react';
+import { Fragment, useState } from 'react';
+
+import { FlexContainer, LearningSidebarPanel,LoadingSpinner, Text } from '..';
 import LearningNavbar from './LearningNavbar';
 
 export interface LearningEnvironmentLayoutProps {
