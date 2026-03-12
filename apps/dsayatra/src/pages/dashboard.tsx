@@ -19,13 +19,11 @@ import {
   Linkedin,
   Monitor,
   PieChart,
-  Settings,
   Target,
   TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 
 const SIDEBAR_ITEMS = [
   { name: "Dashboard", href: "/dashboard", active: true, icon: Home },
@@ -33,7 +31,6 @@ const SIDEBAR_ITEMS = [
   { name: "Revisions", href: "/revisions", icon: FileText },
   { name: "Topics", href: "/topics", icon: ClipboardList },
   { name: "Progress", href: "#overall-progress", icon: TrendingUp },
-  { name: "Goals", href: "/goals", icon: Settings },
 ];
 
 // TOPICS is now computed from real API data inside DsaClient
@@ -530,18 +527,6 @@ function DsaClient() {
                 className="flex-1 bg-[#2a2a2a] text-[#a0a0a0] hover:bg-[#333] font-[600] text-[12px] rounded-[6px] py-[8px] h-auto"
               >
                 Edit Profile
-              </Button>
-              <Button
-                onClick={() => {
-                  if (profile?.userName) {
-                    const url = `${window.location.origin}/journey/${profile.userName}`;
-                    navigator.clipboard.writeText(url);
-                    toast.success("Journey link copied!");
-                  }
-                }}
-                className="flex-1 bg-[#ff6b6b] text-white hover:bg-[#ff5252] font-[600] text-[12px] rounded-[6px] py-[8px] h-auto px-6"
-              >
-                Share Journey
               </Button>
             </div>
           </div>

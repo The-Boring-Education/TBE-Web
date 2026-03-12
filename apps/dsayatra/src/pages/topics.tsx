@@ -3,6 +3,7 @@ import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useApi } from "@tbe/hooks";
 import type { PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
+import { Button } from "@ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -349,15 +350,15 @@ function TopicsClient() {
 
       {/* Back Button */}
       <div className="absolute top-6 left-6 z-[110]">
-        <button
+        <Button
           onClick={() => router.push("/dashboard")}
-          className="flex items-center gap-2 px-4 py-2 bg-[#111] border border-[#2a2a2a] rounded-lg text-gray-400 hover:text-white hover:border-[#ff5757] transition-all duration-300 group"
+          variant="ghost"
+          size="xs"
+          className="border border-accent rounded-lg text-gray-400 transition-all duration-300"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-xs font-bold uppercase tracking-widest">
-            Back to Dashboard
-          </span>
-        </button>
+          Back to Dashboard
+        </Button>
       </div>
 
       {/* Header Section */}
