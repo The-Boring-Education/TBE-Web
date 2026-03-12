@@ -71,6 +71,27 @@ const SheetsPageClient = () => {
             setIsProfileLoading(false);
         }
     }, [user?.id, userLoading]);
+      map[topic] = isCompleted;
+    });
+    return map;
+  }, [topicsWithCounts, dsaQuestions, completedQuestions]);
+
+  const filteredQuestions = useMemo(() => {
+    if (!selectedTopic) return [];
+    return dsaQuestions.filter((q) => q.topics?.[0] === selectedTopic);
+  }, [dsaQuestions, selectedTopic]);
+
+  useEffect(() => {
+    if (router.isReady && router.query.topic) {
+      setSelectedTopic(router.query.topic as string);
+    }
+  }, [router.isReady, router.query.topic]);
+
+  useEffect(() => {
+    if (!userLoading && !isAuth) {
+      router.push("/login");
+    }
+  }, [userLoading, isAuth, router]);
 
     const { response, loading: sheetsLoading } = useApi("dashboard-dsa-sheet", {
         url: `${routes.api.base}${routes.api.dsaSheet}?limit=1000`,
@@ -83,6 +104,18 @@ const SheetsPageClient = () => {
 
         return data.map(transformDsaQuestion)
     }, [response])
+  if (sheetsLoading || userLoading || isProfileLoading) {
+    return (
+      <div className="flex bg-[#0f0f0f] font-sans h-[calc(100vh-72px)]">
+        <main className="flex-1 flex items-center justify-center">
+          <LoadingSpinner height={8} width={8} />
+          <Text level="p" className="text-gray-400 ml-3">
+            Loading Sheet...
+          </Text>
+        </main>
+      </div>
+    );
+  }
 
     const topicsWithCounts = useMemo(() => {
         const topicMap = new Map<string, number>()

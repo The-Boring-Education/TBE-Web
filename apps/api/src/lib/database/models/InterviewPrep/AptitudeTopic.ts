@@ -8,6 +8,7 @@ import {
 import type {
   AptitudeQuestionModel,
   AptitudeQuestionOptionModel,
+  AptitudeTopicModel,
 } from "@/lib/interfaces";
 
 const AptitudeOptionSchema = new Schema<AptitudeQuestionOptionModel>(
@@ -26,12 +27,6 @@ const AptitudeOptionSchema = new Schema<AptitudeQuestionOptionModel>(
 
 const AptitudeQuestionSchema = new Schema<AptitudeQuestionModel>(
   {
-    topic: {
-      type: String,
-      required: [true, "Topic slug is required"],
-      enum: APTITUDE_TOPIC_SLUGS,
-      index: true,
-    },
     question: {
       type: String,
       required: [true, "Question text is required"],
@@ -52,11 +47,40 @@ const AptitudeQuestionSchema = new Schema<AptitudeQuestionModel>(
     order: {
       type: Number,
       default: 0,
-      index: true,
     },
     isActive: {
       type: Boolean,
       default: true,
+    },
+  },
+  { timestamps: true, _id: true },
+);
+
+const AptitudeTopicSchema = new Schema<AptitudeTopicModel>(
+  {
+    topic: {
+      type: String,
+      required: [true, "Topic slug is required"],
+      enum: APTITUDE_TOPIC_SLUGS,
+      unique: true,
+      index: true,
+    },
+    studyGuide: {
+      type: String,
+      default: "",
+    },
+    questions: {
+      type: [AptitudeQuestionSchema],
+      default: [],
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    order: {
+      type: Number,
+      default: 0,
+      index: true,
     },
   },
   {
@@ -79,14 +103,11 @@ const AptitudeQuestionSchema = new Schema<AptitudeQuestionModel>(
   },
 );
 
-AptitudeQuestionSchema.index({ topic: 1, order: 1 });
-AptitudeQuestionSchema.index({ difficulty: 1 });
-
-const AptitudeQuestion: Model<AptitudeQuestionModel> =
-  models?.AptitudeQuestion ||
-  model<AptitudeQuestionModel>(
-    DATABASE_MODELS.APTITUDE_QUESTION,
-    AptitudeQuestionSchema,
+const AptitudeTopic: Model<AptitudeTopicModel> =
+  models?.AptitudeTopic ||
+  model<AptitudeTopicModel>(
+    DATABASE_MODELS.APTITUDE_TOPIC || "AptitudeTopic",
+    AptitudeTopicSchema,
   );
 
-export default AptitudeQuestion;
+export default AptitudeTopic;

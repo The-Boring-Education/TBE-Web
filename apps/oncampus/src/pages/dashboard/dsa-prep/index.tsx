@@ -3,7 +3,6 @@ import {
   DsaQuestionList,
   FlexContainer,
   LearningEnvironmentLayout,
-  LinkButton,
   LoadingSpinner,
   QuestionDetailPanel,
   Text,
@@ -11,7 +10,6 @@ import {
 import { routes, TOPIC_LABELS } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 

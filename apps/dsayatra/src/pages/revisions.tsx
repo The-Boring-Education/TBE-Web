@@ -11,14 +11,7 @@ import { routes } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
-import {
-  ArrowLeft,
-  Check,
-  ChevronRight,
-  Info,
-  Lock,
-  Target,
-} from "lucide-react";
+import { Check, ChevronRight, Info, Lock, Target } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
@@ -222,6 +215,13 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
           wrap={false}
         >
           <div className="max-w-[1400px] w-full mx-auto">
+            <Button
+              onClick={() => router.push("/dashboard")}
+              variant="OUTLINE"
+              size="SMALL"
+              text="← Back to Dashboard"
+              className="mb-6 border-[#2a2a2a] text-white hover:border-[#ff5757] hover:bg-[#ff5757]/10 bg-transparent flex items-center justify-center transition-all duration-300 w-max"
+            />
             <header className="mb-10 text-center sm:text-left">
               <h1 className="text-3xl font-bold text-white mb-2">
                 Weekly Revisions

@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
@@ -16,39 +12,18 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": [
-      "vitest/globals",
-      "@testing-library/jest-dom",
-      "node"
-    ],
+    "types": ["vitest/globals", "@testing-library/jest-dom", "node"],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*",
-        "../api/src/*"
-      ],
-      "@test-utils/*": [
-        "./src/test-utils/*"
-      ],
-      "@/lib/*": [
-        "../api/src/lib/*"
-      ],
-      "@/middleware/*": [
-        "../api/src/middleware/*"
-      ]
+      "@/*": ["./src/*", "../api/src/*"],
+      "@test-utils/*": ["./src/test-utils/*"],
+      "@/lib/*": ["../api/src/lib/*"],
+      "@/middleware/*": ["../api/src/middleware/*"]
     },
     "noEmit": true,
     "incremental": true,
     "isolatedModules": true
   },
-  "include": [
-    "src/**/*",
-    "vitest.config.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "coverage",
-    "../api"
-  ]
+  "include": ["src/**/*", "vitest.config.ts"],
+  "exclude": ["node_modules", "dist", "coverage", "../api"]
 }

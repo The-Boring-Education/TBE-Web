@@ -1,3 +1,5 @@
+import fs from "fs";
+
 import {
   APTITUDE_SUB_CATEGORY_FORMAT_MAP,
   APTITUDE_TOPIC_SLUGS,
@@ -12,22 +14,31 @@ import type {
   DSADifficultyType,
 } from "@/lib/interfaces";
 
-import { AptitudeQuestion } from "../models";
+import { AptitudeTopic } from "../models";
 
 // ─── Question Queries ────────────────────────────────────────────────────────
 
+/**
+ * @deprecated Use bulkUploadAptitudeQuestionsToTopic instead for consolidated model
+ */
 const addAptitudeQuestionToDB = async (
+  topic: string,
   payload: AddAptitudeQuestionPayload,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    if (!APTITUDE_TOPIC_SLUGS.includes(payload.topic)) {
-      return { error: `Invalid topic slug: ${payload.topic}` };
+    if (!APTITUDE_TOPIC_SLUGS.includes(topic)) {
+      return { error: `Invalid topic slug: ${topic}` };
     }
-    const question = new AptitudeQuestion(payload);
-    await question.save();
-    return { data: question };
+
+    const updatedTopic = await AptitudeTopic.findOneAndUpdate(
+      { topic },
+      { $push: { questions: payload } },
+      { new: true, upsert: true },
+    );
+
+    return { data: updatedTopic };
   } catch (error) {
-    return { error: "Failed to create aptitude question", details: error };
+    return { error: "Failed to add aptitude question", details: error };
   }
 };
 
@@ -41,20 +52,36 @@ const getAptitudeQuestionsByTopicFromDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const { difficulty, page = 1, limit = 50 } = filters;
-    const matchStage: Record<string, unknown> = { topic, isActive: true };
 
-    if (difficulty) matchStage.difficulty = difficulty;
+    const topicDoc = await AptitudeTopic.findOne({
+      topic,
+      isActive: true,
+    }).lean();
 
-    const totalCount = await AptitudeQuestion.countDocuments(matchStage);
-    const questions = await AptitudeQuestion.find(matchStage)
-      .sort({ order: 1, createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    if (!topicDoc) {
+      return {
+        data: {
+          questions: [],
+          pagination: { total: 0, page, limit, totalPages: 0, hasMore: false },
+        },
+      };
+    }
+
+    let questions = topicDoc.questions || [];
+
+    if (difficulty) {
+      questions = questions.filter((q) => q.difficulty === difficulty);
+    }
+
+    const totalCount = questions.length;
+    const paginatedQuestions = questions.slice(
+      (page - 1) * limit,
+      page * limit,
+    );
 
     return {
       data: {
-        questions,
+        questions: paginatedQuestions,
         pagination: {
           total: totalCount,
           page,
@@ -70,20 +97,28 @@ const getAptitudeQuestionsByTopicFromDB = async (
 };
 
 const updateAptitudeQuestionInDB = async (
+  topic: string,
   questionId: string,
   updates: Partial<AddAptitudeQuestionPayload & { isActive: boolean }>,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    if (updates.topic && !APTITUDE_TOPIC_SLUGS.includes(updates.topic)) {
-      return { error: `Invalid topic slug: ${updates.topic}` };
-    }
-    const question = await AptitudeQuestion.findByIdAndUpdate(
-      questionId,
-      updates,
-      { new: true },
+    const topicDoc = await AptitudeTopic.findOne({ topic });
+    if (!topicDoc) return { error: "Topic not found" };
+
+    const questionIndex = topicDoc.questions.findIndex(
+      (q: any) => q._id.toString() === questionId,
     );
-    if (!question) return { error: "Question not found" };
-    return { data: question };
+
+    if (questionIndex === -1) return { error: "Question not found" };
+
+    // Apply updates
+    topicDoc.questions[questionIndex] = {
+      ...topicDoc.questions[questionIndex],
+      ...updates,
+    } as any;
+
+    await topicDoc.save();
+    return { data: topicDoc.questions[questionIndex] };
   } catch (error) {
     return { error: "Failed to update question", details: error };
   }
@@ -108,12 +143,14 @@ const getAptitudeTopicsWithQuestionCountFromDB = async (
 
     const slugs = topics.map((t) => t.slug);
 
-    const counts = await AptitudeQuestion.aggregate([
-      { $match: { topic: { $in: slugs }, isActive: true } },
-      { $group: { _id: "$topic", questionCount: { $sum: 1 } } },
-    ]);
+    const topicDocs = await AptitudeTopic.find({
+      topic: { $in: slugs },
+      isActive: true,
+    }).lean();
 
-    const countMap = new Map(counts.map((c) => [c._id, c.questionCount]));
+    const countMap = new Map(
+      topicDocs.map((doc) => [doc.topic, doc.questions?.length || 0]),
+    );
 
     const data = topics.map((t) => ({
       ...t,
@@ -139,9 +176,13 @@ const getAptitudeMetadataFromDB =
         ...new Set(APTITUDE_TOPICS.map((t) => t.subCategory)),
       ].sort();
 
-      const totalQuestions = await AptitudeQuestion.countDocuments({
-        isActive: true,
-      });
+      const results = await AptitudeTopic.aggregate([
+        { $match: { isActive: true } },
+        { $project: { questionCount: { $size: "$questions" } } },
+        { $group: { _id: null, total: { $sum: "$questionCount" } } },
+      ]);
+
+      const totalQuestions = results[0]?.total || 0;
 
       const grouped = categories
         .map((category) => {
@@ -185,6 +226,9 @@ const getAptitudeMetadataFromDB =
 
 // ─── Bulk Upload (from Agents) ───────────────────────────────────────────────
 
+/**
+ * Consolidated bulk upload: Updates exactly one AptitudeTopic document
+ */
 const bulkUploadAptitudeDataToDB = async (
   payload: AptitudeUploadPayload,
 ): Promise<DatabaseQueryResponseType> => {
@@ -199,24 +243,132 @@ const bulkUploadAptitudeDataToDB = async (
       return { error: "No questions provided" };
     }
 
-    const questionsToInsert = questions.map((q) => ({
-      ...q,
-      topic,
-    }));
+    const updated = await AptitudeTopic.findOneAndUpdate(
+      { topic },
+      { $set: { questions } },
+      { new: true, upsert: true },
+    );
 
-    const inserted = await AptitudeQuestion.insertMany(questionsToInsert);
-
-    return { data: { topic, questionsInserted: inserted.length } };
+    return { data: { topic, questionsInserted: updated.questions.length } };
   } catch (error) {
     return { error: "Failed to bulk upload aptitude data", details: error };
   }
 };
+
+// ─── Study Guide Queries ─────────────────────────────────────────────────────
+
+const getAptitudeStudyGuideByTopicFromDB = async (
+  topic: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const topicDoc = await AptitudeTopic.findOne({ topic }).lean();
+    if (!topicDoc || !topicDoc.studyGuide) {
+      return { data: null };
+    }
+    return { data: { content: topicDoc.studyGuide, topic: topicDoc.topic } };
+  } catch (error) {
+    return { error: "Failed to fetch study guide", details: error };
+  }
+};
+
+const upsertAptitudeStudyGuideToDB = async (
+  topic: string,
+  content: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    if (!APTITUDE_TOPIC_SLUGS.includes(topic)) {
+      return { error: `Invalid topic slug: ${topic}` };
+    }
+
+    const updated = await AptitudeTopic.findOneAndUpdate(
+      { topic },
+      { $set: { studyGuide: content } },
+      { new: true, upsert: true },
+    );
+
+    return { data: updated };
+  } catch (error) {
+    return { error: "Failed to upsert study guide", details: error };
+  }
+};
+
+// ─── Migration Helper ────────────────────────────────────────────────────────
+
+const migrateExistingAptitudeData =
+  async (): Promise<DatabaseQueryResponseType> => {
+    const logFile = "migration.log"; // Define logFile here
+    const log = (msg: string) => {
+      console.log(`[Migration] ${msg}`);
+      try {
+        fs.appendFileSync(logFile, msg + "\n");
+      } catch (e) {
+        console.error(`Failed to write to log file: ${e}`);
+      }
+    };
+
+    try {
+      fs.writeFileSync(logFile, "Starting migration...\n");
+      const db = AptitudeTopic.db;
+      const guides = await db
+        .collection("aptitudestudyguides")
+        .find({})
+        .toArray();
+      const allQuestions = await db
+        .collection("aptitudequestions")
+        .find({})
+        .toArray();
+
+      log(`Found ${guides.length} guides and ${allQuestions.length} questions`);
+
+      const results = [];
+
+      for (const slug of APTITUDE_TOPIC_SLUGS) {
+        const topicGuide = guides.find((g: any) => g.topic === slug);
+        const topicQuestions = allQuestions
+          .filter((q: any) => q.topic === slug)
+          .map((q: any) => {
+            const { topic: _unused, _id, ...rest } = q;
+            return rest;
+          });
+
+        if (topicGuide || topicQuestions.length > 0) {
+          log(
+            `Migrating topic: ${slug} (${topicQuestions.length} questions, guide: ${!!topicGuide})`,
+          );
+          const updated = await AptitudeTopic.findOneAndUpdate(
+            { topic: slug },
+            {
+              $set: {
+                studyGuide: topicGuide?.content || "",
+                questions: topicQuestions,
+              },
+            },
+            { new: true, upsert: true },
+          );
+          results.push({
+            topic: slug,
+            questions: updated.questions.length,
+            hasGuide: !!updated.studyGuide,
+          });
+        }
+      }
+
+      log(`Migration complete. Migrated ${results.length} topics.`);
+      return { data: { migratedTopics: results.length, details: results } };
+    } catch (error) {
+      log(`Migration failed: ${error}`);
+      return { error: "Migration failed", details: error };
+    }
+  };
 
 export {
   addAptitudeQuestionToDB,
   bulkUploadAptitudeDataToDB,
   getAptitudeMetadataFromDB,
   getAptitudeQuestionsByTopicFromDB,
+  getAptitudeStudyGuideByTopicFromDB,
   getAptitudeTopicsWithQuestionCountFromDB,
+  migrateExistingAptitudeData,
   updateAptitudeQuestionInDB,
+  upsertAptitudeStudyGuideToDB,
 };

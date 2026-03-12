@@ -1,11 +1,11 @@
 import { useAuth } from "@tbe/auth";
-import { Button, LearningEnvironmentLayout } from "@tbe/components";
+import { LearningEnvironmentLayout } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { config } from "@tbe/config/quizes";
 import { gamificationApi, quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
 import { cleanOptionText } from "@tbe/utils";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 

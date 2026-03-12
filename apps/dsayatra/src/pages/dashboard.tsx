@@ -1,15 +1,14 @@
 import { useAuth } from "@tbe/auth";
-import { SEO } from "@tbe/components";
-import { EditDsaOnboardingModal } from "@tbe/components";
+import { EditDsaOnboardingModal, SEO } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useApi, usePrepStats, useTimeTracker } from "@tbe/hooks";
-import type { PageProps } from "@tbe/interface";
-import type { UserProfile } from "@tbe/interface";
+import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import { Button } from "@ui/button";
-import { Card, CardContent } from "@ui/card";
+import { Card } from "@ui/card";
 import { Progress } from "@ui/progress";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     CheckCircle2,
     ClipboardList,
@@ -25,17 +24,14 @@ import {
     TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 
 const SIDEBAR_ITEMS = [
-    { name: "Dashboard", href: "/dashboard", active: true, icon: Home },
-    { name: "Sheets", href: "/sheets", icon: Target },
-    { name: "Revisions", href: "/revisions", icon: FileText },
-    { name: "Topics", href: "/topics", icon: ClipboardList },
-    { name: "Progress", href: "#overall-progress", icon: TrendingUp },
-    { name: "Goals", href: "/goals", icon: Settings },
+  { name: "Dashboard", href: "/dashboard", active: true, icon: Home },
+  { name: "Sheets", href: "/sheets", icon: Target },
+  { name: "Revisions", href: "/revisions", icon: FileText },
+  { name: "Topics", href: "/topics", icon: ClipboardList },
+  { name: "Progress", href: "#overall-progress", icon: TrendingUp },
 ];
 
 // TOPICS is now computed from real API data inside DsaClient
@@ -133,56 +129,96 @@ function StatCard({
 }
 
 function DsaClient() {
-    "use client";
-    const { user } = useAuth();
-    const [profile, setProfile] = useState<UserProfile | null>(null);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [activeScheduleItem, setActiveScheduleItem] = useState<number | null>(
-        null,
-    );
+  "use client";
+  const { user } = useAuth();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [activeScheduleItem, setActiveScheduleItem] = useState<number | null>(
+    null,
+  );
 
-    // Automatic time tracking for current session
-    const { seconds, formattedTime } = useTimeTracker(user?.id);
+  // Automatic time tracking for current session
+  const { seconds, formattedTime } = useTimeTracker(user?.id);
 
-    // Fetch historical stats from database
-    const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
+  // Fetch historical stats from database
+  const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
 
-    // Fetch all DSA questions from the API (same source as sheets page)
-    const { response: dsaResponse } = useApi("dashboard-dsa-sheet", {
-        url: `${routes.api.base}${routes.api.dsaSheet}?limit=1000`,
-    });
+  // Fetch all DSA questions from the API (same source as sheets page)
+  const { response: dsaResponse } = useApi("dashboard-dsa-sheet", {
+    url: `${routes.api.base}${routes.api.dsaSheet}?limit=1000`,
+  });
 
-    // Read completed questions from localStorage (same source as sheets page)
-    const [completedQuestions, setCompletedQuestions] = useState<
-        (string | number)[]
-    >([]);
-    const [solvedToday, setSolvedToday] = useState(0);
+  // Read completed questions from localStorage (same source as sheets page)
+  const [completedQuestions, setCompletedQuestions] = useState<
+    (string | number)[]
+  >([]);
+  const [solvedToday, setSolvedToday] = useState(0);
 
-    // New revision state handling
-    const [weeklyAssignments, setWeeklyAssignments] = useState<
-        Record<number, string[]>
-    >({});
-    const [weekProgress, setWeekProgress] = useState<Record<number, string[]>>(
-        {},
-    );
+  // New revision state handling
+  const [weeklyAssignments, setWeeklyAssignments] = useState<
+    Record<number, string[]>
+  >({});
+  const [weekProgress, setWeekProgress] = useState<Record<number, string[]>>(
+    {},
+  );
 
-    useEffect(() => {
-        const saved = localStorage.getItem("dsayatra_completed_questions");
-        if (saved) {
-            try {
-                setCompletedQuestions(JSON.parse(saved));
-            } catch { }
+  useEffect(() => {
+    const saved = localStorage.getItem("dsayatra_completed_questions");
+    if (saved) {
+      try {
+        setCompletedQuestions(JSON.parse(saved));
+      } catch (e) {
+        console.debug("Failed to parse completed questions", e);
+      }
+    }
+
+    const todayStr = new Date().toDateString();
+    const statsStr = localStorage.getItem("dsayatra_today_stats");
+    if (statsStr) {
+      try {
+        const data = JSON.parse(statsStr);
+        if (data.date === todayStr) {
+          setSolvedToday(data.solvedCount || 0);
         }
+      } catch (e) {
+        console.debug("Failed to parse today stats", e);
+      }
+    }
 
-        const todayStr = new Date().toDateString();
-        const statsStr = localStorage.getItem("dsayatra_today_stats");
-        if (statsStr) {
-            try {
-                const data = JSON.parse(statsStr);
-                if (data.date === todayStr) {
-                    setSolvedToday(data.solvedCount || 0);
-                }
-            } catch { }
+    const savedAssignments = localStorage.getItem("dsayatra_weekly_revisions");
+    if (savedAssignments) {
+      try {
+        setWeeklyAssignments(JSON.parse(savedAssignments));
+      } catch (e) {
+        console.debug("Failed to parse weekly revisions", e);
+      }
+    }
+
+    const savedProgress = localStorage.getItem("dsayatra_revision_completed");
+    if (savedProgress) {
+      try {
+        setWeekProgress(JSON.parse(savedProgress));
+      } catch (e) {
+        console.debug("Failed to parse revision completed", e);
+      }
+    }
+  }, []);
+
+  // Parse all DSA questions from API response
+  const allQuestions = useMemo(() => {
+    const data = dsaResponse?.data?.questions;
+    if (!Array.isArray(data)) return [];
+    return data;
+  }, [dsaResponse]);
+
+  // Compute topic-wise progress from real data
+  const topicProgress = useMemo(() => {
+    const topicMap = new Map<string, { total: number; solved: number }>();
+    allQuestions.forEach((q: any) => {
+      const primaryTopic = q.topics?.[0];
+      if (primaryTopic) {
+        if (!topicMap.has(primaryTopic)) {
+          topicMap.set(primaryTopic, { total: 0, solved: 0 });
         }
 
         const savedAssignments = localStorage.getItem("dsayatra_weekly_revisions");
@@ -191,6 +227,48 @@ function DsaClient() {
                 setWeeklyAssignments(JSON.parse(savedAssignments));
             } catch { }
         }
+      }
+    });
+    return Array.from(topicMap.entries()).map(([topic, data]) => ({
+      name: TOPIC_LABELS[topic] || topic,
+      key: topic,
+      solved: data.solved,
+      total: data.total,
+    }));
+  }, [allQuestions, completedQuestions]);
+
+  // Overall progress
+  const totalQuestions = allQuestions.length;
+  const totalSolved = completedQuestions.filter((id) =>
+    allQuestions.some((q: any) => q._id === id),
+  ).length;
+  const overallPercentage =
+    totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
+
+  // Weekly performance strictly mapped from join date (the day they first loaded DSA Yatra)
+  const [joinDateStr, setJoinDateStr] = useState<string | null>(null);
+
+  useEffect(() => {
+    let storedJoinDate = localStorage.getItem("dsayatra_join_date");
+    if (!storedJoinDate) {
+      storedJoinDate = new Date().toISOString();
+      localStorage.setItem("dsayatra_join_date", storedJoinDate);
+    }
+    setJoinDateStr(storedJoinDate);
+  }, []);
+
+  const weeklyPerformance = useMemo(() => {
+    if (!joinDateStr) return [];
+
+    const joinDate = new Date(joinDateStr);
+    joinDate.setHours(0, 0, 0, 0);
+
+    const now = new Date();
+    const msInWeek = 1000 * 60 * 60 * 24 * 7;
+    const currentWeekIndex = Math.max(
+      0,
+      Math.floor((now.getTime() - joinDate.getTime()) / msInWeek),
+    );
 
         const savedProgress = localStorage.getItem("dsayatra_revision_completed");
         if (savedProgress) {

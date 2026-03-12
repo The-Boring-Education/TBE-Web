@@ -56,7 +56,7 @@ const nextConfig = {
 
   webpack(config, { isServer, isEdgeRuntime }) {
     const path = require('path');
-    
+
     // Ensure webpack resolves from the app's node_modules first
     // This ensures date-fns v3 from app is used instead of v2 from components package
     const appNodeModules = path.resolve(__dirname, 'node_modules');
@@ -66,7 +66,7 @@ const nextConfig = {
     if (!config.resolve.modules.includes(appNodeModules)) {
       config.resolve.modules.unshift(appNodeModules);
     }
-    
+
     // Configure webpack to handle ESM packages properly
     // This ensures date-fns (ESM-only) can be used by react-datepicker (CJS)
     config.module.rules.push({
@@ -75,7 +75,7 @@ const nextConfig = {
         fullySpecified: false,
       },
     });
-    
+
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
@@ -161,7 +161,10 @@ if (process.env.NODE_ENV === 'production') {
     automaticVercelMonitors: true,
   };
 
-  module.exports = withSentryConfig(withTM(nextConfig), sentryWebpackPluginOptions);
+  module.exports = withSentryConfig(
+    withTM(nextConfig),
+    sentryWebpackPluginOptions,
+  );
 } else {
   // Skip Sentry in development to avoid OpenTelemetry errors
   module.exports = withTM(nextConfig);

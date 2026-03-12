@@ -998,15 +998,18 @@ export interface UserInterestResponseProps {
   updatedAt: string;
 }
 
-export interface AptitudeQuestionModel extends Document {
+export interface AptitudeQuestionOptionModel {
+  text: string;
+  isCorrect: boolean;
+}
+
+export interface AptitudeTopicModel extends Document {
   _id: typeof Schema.Types.ObjectId;
   topic: string;
-  question: string;
-  options?: AptitudeQuestionOptionModel[];
-  answer: string;
-  difficulty: DSADifficultyType;
-  order: number;
+  studyGuide?: string;
+  questions: AptitudeQuestionModel[];
   isActive: boolean;
+  order: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -1016,16 +1019,32 @@ export interface AptitudeQuestionOptionModel {
   isCorrect: boolean;
 }
 
-export interface AddAptitudeQuestionPayload {
-  topic: string;
+export interface AptitudeQuestionModel {
+  _id: typeof Schema.Types.ObjectId;
   question: string;
-  options?: AptitudeQuestionOptionModel[];
-  answer?: string;
+  options: AptitudeQuestionOptionModel[];
+  answer: string;
+  difficulty: DSADifficultyType;
+  order: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AddAptitudeQuestionPayload {
+  question: string;
+  options: AptitudeQuestionOptionModel[];
+  answer: string;
   difficulty?: DSADifficultyType;
   order?: number;
 }
 
 export interface AptitudeUploadPayload {
   topic: string;
-  questions: Omit<AddAptitudeQuestionPayload, "topic">[];
+  questions: AddAptitudeQuestionPayload[];
+}
+
+export interface AptitudeStudyGuideUploadPayload {
+  topic: string;
+  content: string;
 }
