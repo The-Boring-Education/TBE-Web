@@ -114,7 +114,6 @@ export const TIMELINE_CONFIGS: Record<
 };
 
 import type { DSATopicGroup } from "@tbe/services";
-import { DSAQuestionRaw } from "@tbe/services";
 
 /**
  * Dynamically generates the UI timeline object from the raw MongoDB API payload

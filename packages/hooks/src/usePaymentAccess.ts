@@ -1,4 +1,3 @@
-import type { usePaymentStatusProps } from "@tbe/interface";
 import type { UsePaymentAccessProps } from "@tbe/interface";
 
 import usePaymentStatus from "./usePaymentStatus";

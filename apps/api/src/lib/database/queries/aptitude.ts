@@ -53,10 +53,18 @@ const getAptitudeQuestionsByTopicFromDB = async (
   try {
     const { difficulty, page = 1, limit = 50 } = filters;
 
-    const topicDoc = await AptitudeTopic.findOne({ topic, isActive: true }).lean();
+    const topicDoc = await AptitudeTopic.findOne({
+      topic,
+      isActive: true,
+    }).lean();
 
     if (!topicDoc) {
-      return { data: { questions: [], pagination: { total: 0, page, limit, totalPages: 0, hasMore: false } } };
+      return {
+        data: {
+          questions: [],
+          pagination: { total: 0, page, limit, totalPages: 0, hasMore: false },
+        },
+      };
     }
 
     let questions = topicDoc.questions || [];
@@ -66,7 +74,10 @@ const getAptitudeQuestionsByTopicFromDB = async (
     }
 
     const totalCount = questions.length;
-    const paginatedQuestions = questions.slice((page - 1) * limit, page * limit);
+    const paginatedQuestions = questions.slice(
+      (page - 1) * limit,
+      page * limit,
+    );
 
     return {
       data: {
@@ -137,7 +148,9 @@ const getAptitudeTopicsWithQuestionCountFromDB = async (
       isActive: true,
     }).lean();
 
-    const countMap = new Map(topicDocs.map((doc) => [doc.topic, doc.questions?.length || 0]));
+    const countMap = new Map(
+      topicDocs.map((doc) => [doc.topic, doc.questions?.length || 0]),
+    );
 
     const data = topics.map((t) => ({
       ...t,
@@ -166,7 +179,7 @@ const getAptitudeMetadataFromDB =
       const results = await AptitudeTopic.aggregate([
         { $match: { isActive: true } },
         { $project: { questionCount: { $size: "$questions" } } },
-        { $group: { _id: null, total: { $sum: "$questionCount" } } }
+        { $group: { _id: null, total: { $sum: "$questionCount" } } },
       ]);
 
       const totalQuestions = results[0]?.total || 0;
@@ -185,7 +198,7 @@ const getAptitudeMetadataFromDB =
             subCategory,
             answerFormatType:
               APTITUDE_SUB_CATEGORY_FORMAT_MAP[
-              subCategory as AptitudeSubCategoryType
+                subCategory as AptitudeSubCategoryType
               ],
             topics: categoryTopics
               .filter((t) => t.subCategory === subCategory)
@@ -281,59 +294,72 @@ const upsertAptitudeStudyGuideToDB = async (
 
 // ─── Migration Helper ────────────────────────────────────────────────────────
 
-const migrateExistingAptitudeData = async (): Promise<DatabaseQueryResponseType> => {
-  const logFile = "migration.log"; // Define logFile here
-  const log = (msg: string) => {
-    console.log(`[Migration] ${msg}`);
+const migrateExistingAptitudeData =
+  async (): Promise<DatabaseQueryResponseType> => {
+    const logFile = "migration.log"; // Define logFile here
+    const log = (msg: string) => {
+      console.log(`[Migration] ${msg}`);
+      try {
+        fs.appendFileSync(logFile, msg + "\n");
+      } catch (e) {
+        console.error(`Failed to write to log file: ${e}`);
+      }
+    };
+
     try {
-      fs.appendFileSync(logFile, msg + "\n");
-    } catch (e) {
-      console.error(`Failed to write to log file: ${e}`);
+      fs.writeFileSync(logFile, "Starting migration...\n");
+      const db = AptitudeTopic.db;
+      const guides = await db
+        .collection("aptitudestudyguides")
+        .find({})
+        .toArray();
+      const allQuestions = await db
+        .collection("aptitudequestions")
+        .find({})
+        .toArray();
+
+      log(`Found ${guides.length} guides and ${allQuestions.length} questions`);
+
+      const results = [];
+
+      for (const slug of APTITUDE_TOPIC_SLUGS) {
+        const topicGuide = guides.find((g: any) => g.topic === slug);
+        const topicQuestions = allQuestions
+          .filter((q: any) => q.topic === slug)
+          .map((q: any) => {
+            const { topic: _unused, _id, ...rest } = q;
+            return rest;
+          });
+
+        if (topicGuide || topicQuestions.length > 0) {
+          log(
+            `Migrating topic: ${slug} (${topicQuestions.length} questions, guide: ${!!topicGuide})`,
+          );
+          const updated = await AptitudeTopic.findOneAndUpdate(
+            { topic: slug },
+            {
+              $set: {
+                studyGuide: topicGuide?.content || "",
+                questions: topicQuestions,
+              },
+            },
+            { new: true, upsert: true },
+          );
+          results.push({
+            topic: slug,
+            questions: updated.questions.length,
+            hasGuide: !!updated.studyGuide,
+          });
+        }
+      }
+
+      log(`Migration complete. Migrated ${results.length} topics.`);
+      return { data: { migratedTopics: results.length, details: results } };
+    } catch (error) {
+      log(`Migration failed: ${error}`);
+      return { error: "Migration failed", details: error };
     }
   };
-
-  try {
-    fs.writeFileSync(logFile, "Starting migration...\n");
-    const db = AptitudeTopic.db;
-    const guides = await db.collection("aptitudestudyguides").find({}).toArray();
-    const allQuestions = await db.collection("aptitudequestions").find({}).toArray();
-
-    log(`Found ${guides.length} guides and ${allQuestions.length} questions`);
-
-    const results = [];
-
-    for (const slug of APTITUDE_TOPIC_SLUGS) {
-      const topicGuide = guides.find((g: any) => g.topic === slug);
-      const topicQuestions = allQuestions
-        .filter((q: any) => q.topic === slug)
-        .map((q: any) => {
-          const { topic: _unused, _id, ...rest } = q;
-          return rest;
-        });
-
-      if (topicGuide || topicQuestions.length > 0) {
-        log(`Migrating topic: ${slug} (${topicQuestions.length} questions, guide: ${!!topicGuide})`);
-        const updated = await AptitudeTopic.findOneAndUpdate(
-          { topic: slug },
-          {
-            $set: {
-              studyGuide: topicGuide?.content || "",
-              questions: topicQuestions,
-            }
-          },
-          { new: true, upsert: true }
-        );
-        results.push({ topic: slug, questions: updated.questions.length, hasGuide: !!updated.studyGuide });
-      }
-    }
-
-    log(`Migration complete. Migrated ${results.length} topics.`);
-    return { data: { migratedTopics: results.length, details: results } };
-  } catch (error) {
-    log(`Migration failed: ${error}`);
-    return { error: "Migration failed", details: error };
-  }
-};
 
 export {
   addAptitudeQuestionToDB,

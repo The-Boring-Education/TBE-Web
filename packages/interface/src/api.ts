@@ -556,4 +556,3 @@ export interface AptitudeQuestion {
   options: AptitudeOption[];
   answer?: string;
 }
-

@@ -25,8 +25,6 @@ import type {
   SubscriptionStatus,
   SubscriptionType,
   UserPointsActionType,
-  AptitudeCategoryType,
-  AptitudeSubCategoryType,
   UserRoleType,
   WorkDomainType,
 } from "./api";
@@ -1050,4 +1048,3 @@ export interface AptitudeStudyGuideUploadPayload {
   topic: string;
   content: string;
 }
-

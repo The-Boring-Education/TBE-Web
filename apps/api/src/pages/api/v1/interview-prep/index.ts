@@ -196,15 +196,13 @@ async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
   if (metadata === "true") {
     const { data, error } = await getDSASheetMetadataFromDB();
     if (error) {
-      return res
-        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(
-          sendAPIResponse({
-            status: false,
-            message: "Failed to fetch DSA metadata",
-            error,
-          }),
-        );
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: "Failed to fetch DSA metadata",
+          error,
+        }),
+      );
     }
     return res
       .status(apiStatusCodes.OKAY)
@@ -261,15 +259,13 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
   if (metadata === "true") {
     const { data, error } = await getAptitudeMetadataFromDB();
     if (error) {
-      return res
-        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(
-          sendAPIResponse({
-            status: false,
-            message: "Failed to fetch aptitude metadata",
-            error,
-          }),
-        );
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: "Failed to fetch aptitude metadata",
+          error,
+        }),
+      );
     }
     return res
       .status(apiStatusCodes.OKAY)
@@ -287,15 +283,13 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
     );
 
     if (error) {
-      return res
-        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(
-          sendAPIResponse({
-            status: false,
-            message: "Failed to fetch aptitude questions",
-            error,
-          }),
-        );
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: "Failed to fetch aptitude questions",
+          error,
+        }),
+      );
     }
     return res
       .status(apiStatusCodes.OKAY)

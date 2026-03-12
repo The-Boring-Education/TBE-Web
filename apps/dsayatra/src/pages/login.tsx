@@ -1,5 +1,5 @@
 import { useAuth } from "@tbe/auth";
-import { Footer, LoginCardNew, Navbar } from "@tbe/components";
+import { LoginCardNew } from "@tbe/components";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 

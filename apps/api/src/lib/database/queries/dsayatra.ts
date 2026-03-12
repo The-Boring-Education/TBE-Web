@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
 
 import { User } from "../models";

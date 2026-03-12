@@ -11,14 +11,7 @@ import { routes } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
-import {
-  ArrowLeft,
-  Check,
-  ChevronRight,
-  Info,
-  Lock,
-  Target,
-} from "lucide-react";
+import { Check, ChevronRight, Info, Lock, Target } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
@@ -58,21 +51,21 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
     if (savedGlobal) {
       try {
         setGlobalCompleted(JSON.parse(savedGlobal));
-      } catch { }
+      } catch {}
     }
 
     const savedAssignments = localStorage.getItem("dsayatra_weekly_revisions");
     if (savedAssignments) {
       try {
         setWeeklyAssignments(JSON.parse(savedAssignments));
-      } catch { }
+      } catch {}
     }
 
     const savedProgress = localStorage.getItem("dsayatra_revision_completed");
     if (savedProgress) {
       try {
         setWeekProgress(JSON.parse(savedProgress));
-      } catch { }
+      } catch {}
     }
   }, []);
 
@@ -223,7 +216,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
         >
           <div className="max-w-[1400px] w-full mx-auto">
             <Button
-              onClick={() => router.push('/dashboard')}
+              onClick={() => router.push("/dashboard")}
               variant="OUTLINE"
               size="SMALL"
               text="← Back to Dashboard"
@@ -267,7 +260,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                         ? "cursor-pointer border-[#2a2a2a] bg-[#111] hover:border-[#ff5757] hover:bg-[#1a1a1a] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)] hover:-translate-y-1"
                         : "cursor-not-allowed border-[#1a1a1a] bg-[#0A0A0A] opacity-60",
                       isCompleted &&
-                      "border-green-500/30 bg-green-500/5 hover:border-green-500/50 hover:bg-green-500/10 hover:shadow-[0_0_15px_rgba(74,222,128,0.2)]",
+                        "border-green-500/30 bg-green-500/5 hover:border-green-500/50 hover:bg-green-500/10 hover:shadow-[0_0_15px_rgba(74,222,128,0.2)]",
                     )}
                   >
                     <div className="flex flex-col gap-1">
@@ -582,19 +575,21 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                   <div
                     key={qIdStr}
                     className={`hover-sweep flex gap-3 p-3 rounded-xl border transition-all duration-300 cursor-pointer hover:-translate-y-0.5
-                                            ${isChecked
-                        ? "bg-green-500/5 border-green-500/30 hover:shadow-[0_0_15px_rgba(74,222,128,0.2)]"
-                        : "bg-[#111] border-[#2a2a2a] hover:border-[#ff5757] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)]"
-                      }`}
+                                            ${
+                                              isChecked
+                                                ? "bg-green-500/5 border-green-500/30 hover:shadow-[0_0_15px_rgba(74,222,128,0.2)]"
+                                                : "bg-[#111] border-[#2a2a2a] hover:border-[#ff5757] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)]"
+                                            }`}
                     onClick={() => toggleRevisionQuestion(qIdStr)}
                   >
                     <div className="flex-shrink-0 pt-0">
                       <div
                         className={`w-4 h-4 rounded border flex items-center justify-center transition-all duration-300
-                                                ${isChecked
-                            ? "bg-green-500 border-green-500"
-                            : "border-[#444]"
-                          }`}
+                                                ${
+                                                  isChecked
+                                                    ? "bg-green-500 border-green-500"
+                                                    : "border-[#444]"
+                                                }`}
                       >
                         {isChecked && (
                           <Check size={10} className="text-black font-bold" />
