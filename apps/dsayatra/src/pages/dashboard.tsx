@@ -1,12 +1,8 @@
 import { useAuth } from "@tbe/auth";
-import { SEO } from "@tbe/components";
-import { EditDsaOnboardingModal } from "@tbe/components";
-import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
-import { useApi, usePrepStats, useTimeTracker } from "@tbe/hooks";
-import type { PageProps } from "@tbe/interface";
-import type { UserProfile } from "@tbe/interface";
-import { userService } from "@tbe/services";
-import { cn, getPreFetchProps } from "@tbe/utils";
+import { SEO } from '@tbe/components';
+import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from '@tbe/constants';
+import type { PageProps } from '@tbe/interface';
+import { cn, getPreFetchProps } from '@tbe/utils';
 import { Button } from "@ui/button";
 import { Card, CardContent } from "@ui/card";
 import { Progress } from "@ui/progress";
@@ -28,6 +24,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { usePrepStats, useTimeTracker, useApi } from "@tbe/hooks";
 
 const SIDEBAR_ITEMS = [
     { name: "Dashboard", href: "/dashboard", active: true, icon: Home },
