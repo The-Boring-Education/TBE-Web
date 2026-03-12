@@ -82,8 +82,12 @@ export { default as AptitudeQuizPanel } from "./containers/Cards/AptitudeQuizPan
 export { default as AptitudeStudyGuide } from "./containers/Cards/AptitudeStudyGuide";
 export { default as CardContainerA } from "./containers/Cards/CardContainerA";
 export { default as CardContainerB } from "./containers/Cards/CardContainerB";
+export type { DsaPrepWorkspaceProps } from "./containers/Cards/DsaPrepWorkspace";
+export { default as DsaPrepWorkspace } from "./containers/Cards/DsaPrepWorkspace";
 export { DsaQuestionCard } from "./containers/Cards/DsaQuestionCard";
 export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
+export type { DsaTopicSidebarProps } from "./containers/Cards/DsaTopicSidebar";
+export { default as DsaTopicSidebar } from "./containers/Cards/DsaTopicSidebar";
 export { default as ExampleCard } from "./containers/Cards/ExampleCard";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";

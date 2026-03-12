@@ -1,6 +1,6 @@
 import { SEO } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
-import { useApi } from "@tbe/hooks";
+import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
 import type { PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import { Button } from "@ui/button";
@@ -165,28 +165,10 @@ interface TopicNode {
 
 function TopicsClient() {
   const router = useRouter();
-  const { response: dsaResponse } = useApi("dashboard-dsa-sheet", {
-    url: `${routes.api.base}${routes.api.dsaSheet}?limit=1000`,
+  const { rawQuestions: allQuestions } = useDsaQuestions({
+    queryKey: "dashboard-dsa-sheet",
   });
-
-  const [completedQuestions, setCompletedQuestions] = useState<
-    (string | number)[]
-  >([]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("dsayatra_completed_questions");
-    if (saved) {
-      try {
-        setCompletedQuestions(JSON.parse(saved));
-      } catch {}
-    }
-  }, []);
-
-  const allQuestions = useMemo(() => {
-    return Array.isArray(dsaResponse?.data?.questions)
-      ? dsaResponse.data.questions
-      : [];
-  }, [dsaResponse]);
+  const { completedIds: completedQuestions } = useDsaCompletedQuestions();
 
   const nodes = useMemo(() => {
     const topicMap = new Map<string, { total: number; solved: number }>();
@@ -369,7 +351,7 @@ function TopicsClient() {
         transition={{ duration: 0.8, staggerChildren: 0.2 }}
       >
         <motion.h1
-          className="text-[42px] md:text-[52px] font-[900] leading-[0.9] tracking-tight text-white m-0 p-0"
+          className="text-5xl md:text-5xl font-black leading-[0.9] tracking-tight text-white m-0 p-0"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -379,7 +361,7 @@ function TopicsClient() {
           <span className="text-[#ff5757]">STRUCTURES</span>
         </motion.h1>
         <motion.p
-          className="mt-2 text-[#888] text-[12px] md:text-[14px] max-w-sm"
+          className="mt-2 text-[#888] text-xs md:text-sm max-w-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
@@ -397,26 +379,26 @@ function TopicsClient() {
         transition={{ duration: 0.6, delay: 0.8 }}
       >
         <div className="flex flex-col items-center">
-          <span className="text-3xl md:text-5xl font-[900] text-[#ff5757]">
+          <span className="text-3xl md:text-5xl font-black text-[#ff5757]">
             {stats.topicsTotal}
           </span>
-          <span className="text-[10px] font-bold text-[#666] tracking-[0.2em] uppercase mt-2">
+          <span className="text-[10px] font-bold text-[#666] tracking-widest uppercase mt-2">
             Topics
           </span>
         </div>
         <div className="flex flex-col items-center">
-          <span className="text-3xl md:text-5xl font-[900] text-[#ff5757]">
+          <span className="text-3xl md:text-5xl font-black text-[#ff5757]">
             {stats.mastered}
           </span>
-          <span className="text-[10px] font-bold text-[#666] tracking-[0.2em] uppercase mt-2">
+          <span className="text-[10px] font-bold text-[#666] tracking-widest uppercase mt-2">
             Mastered
           </span>
         </div>
         <div className="flex flex-col items-center">
-          <span className="text-3xl md:text-5xl font-[900] text-[#ff5757]">
+          <span className="text-3xl md:text-5xl font-black text-[#ff5757]">
             {stats.potential}
           </span>
-          <span className="text-[10px] font-bold text-[#666] tracking-[0.2em] uppercase mt-2">
+          <span className="text-[10px] font-bold text-[#666] tracking-widest uppercase mt-2">
             Potential
           </span>
         </div>
@@ -547,7 +529,7 @@ function TopicsClient() {
                       handleNodeClick(node);
                     }}
                   >
-                    <span className="font-bold text-white text-[13px] mb-2">
+                    <span className="font-bold text-white text-xs mb-2">
                       {node.name}
                     </span>
                     <span className="text-[10px] text-[#A0A0A0] font-sans text-center leading-[1.4]">
@@ -555,7 +537,7 @@ function TopicsClient() {
                     </span>
                     {!node.isLocked && (
                       <div
-                        className="mt-3 text-[8px] font-[900] px-2 py-0.5 rounded-[4px] text-black tracking-widest"
+                        className="mt-3 text-[8px] font-black px-2 py-0.5 rounded text-black tracking-widest"
                         style={{ backgroundColor: diffColor }}
                       >
                         {diffLabel}
@@ -578,7 +560,7 @@ function TopicsClient() {
                   {/* Node Circle matches exact image spec */}
                   <div
                     className={cn(
-                      "w-[84px] h-[84px] rounded-full flex flex-col items-center justify-center relative border-[3px] z-10 transition-colors duration-300",
+                      "w-20 h-20 rounded-full flex flex-col items-center justify-center relative border-[3px] z-10 transition-colors duration-300",
                       isDone
                         ? "bg-[#141414] border-[#51cf66] shadow-[0_0_15px_rgba(81,207,102,0.2)]"
                         : isActive
@@ -594,7 +576,7 @@ function TopicsClient() {
                         <div className="absolute inset-[-15px] rounded-full border border-[#ff5757]/30 animate-pulse pointer-events-none" />
                         <div className="absolute inset-[-30px] rounded-full border border-[#ff5757]/10 animate-ping opacity-20 pointer-events-none" />
                         <motion.div
-                          className="absolute -top-[28px] text-[20px] drop-shadow-[0_0_10px_rgba(255,87,87,0.8)]"
+                          className="absolute -top-[28px] text-xl drop-shadow-[0_0_10px_rgba(255,87,87,0.8)]"
                           animate={{ y: [0, -6, 0] }}
                           transition={{ duration: 1.5, repeat: Infinity }}
                         >
@@ -622,7 +604,7 @@ function TopicsClient() {
                     {/* 0X Number text inside circle */}
                     <span
                       className={cn(
-                        "text-[12px] font-[900] tracking-wide",
+                        "text-xs font-black tracking-wide",
                         isActive
                           ? "text-white"
                           : isAvailable
@@ -644,7 +626,7 @@ function TopicsClient() {
                       </div>
                     )}
                     {node.isLocked && (
-                      <div className="absolute bottom-1 right-1 w-[20px] h-[20px] bg-[#1a1a1a] rounded-full border-[2px] border-[#0a0a0a] flex items-center justify-center translate-x-1/4 translate-y-1/4">
+                      <div className="absolute bottom-1 right-1 w-5 h-5 bg-[#1a1a1a] rounded-full border-[2px] border-[#0a0a0a] flex items-center justify-center translate-x-1/4 translate-y-1/4">
                         <Lock
                           className="w-2.5 h-2.5 text-[#555]"
                           strokeWidth={3}
@@ -661,7 +643,7 @@ function TopicsClient() {
                 >
                   <span
                     className={cn(
-                      "text-[12px] font-bold text-center",
+                      "text-xs font-bold text-center",
                       isActive || isAvailable ? "text-white" : "text-[#555]",
                     )}
                   >
