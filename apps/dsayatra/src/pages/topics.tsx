@@ -23,6 +23,7 @@ import {
   Split,
   Terminal,
   Cpu,
+  ArrowLeft,
 } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -77,24 +78,17 @@ const LOCKED_TOPICS = [
   },
 ];
 
-const TOPIC_ICONS = [
-  Database,
-  Layers,
-  Hash,
-  Search,
-  Link2,
-  Network,
-  Code,
-  Target,
-  GitBranch,
-  AlignLeft,
-  Calculator,
-  Binary,
-  Columns,
-  Split,
-  Terminal,
-  Cpu,
-];
+const TOPIC_ICON_MAP: Record<string, any> = {
+  ARRAY: Database,
+  SLIDING_WINDOW: Layers,
+  RECURSION: Hash,
+  BINARY_SEARCH: Search,
+  LINKED_LIST: Link2,
+  STACK: Database,
+  STRING: Code,
+};
+
+const DEFAULT_ICON = Code;
 
 // Background Noise
 const NoiseOverlay = () => (
@@ -220,34 +214,42 @@ function TopicsClient() {
       }
     });
 
-    const activeNodes: TopicNode[] = Array.from(topicMap.entries())
-      .map(([topicKey, data], idx) => {
-        const name = TOPIC_LABELS[topicKey] || topicKey;
-        return {
-          id: topicKey,
-          name,
-          total: data.total,
-          solved: data.solved,
-          isLocked: false,
-          explanation:
-            EXPLANATIONS[name] || "Fundamental algorithmic knowledge.",
-          difficulty: 1 + (idx % 5),
-        };
-      })
-      .sort((a, b) => b.total - a.total); // Sort roughly by volume
+    // Create a list of all possible topics from TOPIC_LABELS to ensure they all show up
+    const allTopicKeys = Object.keys(TOPIC_LABELS);
 
-    // Add locked ones at the end
-    const lockedNodes: TopicNode[] = LOCKED_TOPICS.map((l, idx) => ({
-      id: l.name.toLowerCase().replace(" ", "_"),
-      name: l.name,
-      total: 0,
-      solved: 0,
-      isLocked: true,
-      explanation: l.explanation,
-      difficulty: 1 + ((activeNodes.length + idx) % 5),
-    }));
+    // Sort keys to have a consistent roadmap (e.g., Array, String, etc.)
+    const preferredOrder = ["ARRAY", "SLIDING_WINDOW", "RECURSION", "BINARY_SEARCH", "LINKED_LIST", "STACK", "STRING"];
+    const sortedKeys = [...allTopicKeys].sort((a, b) => {
+      const idxA = preferredOrder.indexOf(a);
+      const idxB = preferredOrder.indexOf(b);
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if (idxA !== -1) return -1;
+      if (idxB !== -1) return 1;
+      return a.localeCompare(b);
+    });
 
-    return [...activeNodes, ...lockedNodes];
+    const combinedNodes: TopicNode[] = sortedKeys.map((topicKey, idx) => {
+      const data = topicMap.get(topicKey) || { total: 0, solved: 0 };
+      let name = TOPIC_LABELS[topicKey] || topicKey;
+
+      // Specifically match image case for RECURSION
+      if (topicKey === "RECURSION") name = "RECURSION";
+
+      // If a topic has 0 questions, it's "locked" or "coming soon"
+      const isActuallyLocked = data.total === 0;
+
+      return {
+        id: topicKey,
+        name,
+        total: data.total,
+        solved: data.solved,
+        isLocked: isActuallyLocked,
+        explanation: EXPLANATIONS[name] || `Master the fundamentals of ${name}.`,
+        difficulty: 1 + (idx % 5),
+      };
+    }).filter(node => node.total > 0 || node.name === "RECURSION" || node.isLocked); // Keep non-empty ones or specific ones
+
+    return combinedNodes;
   }, [allQuestions, completedQuestions]);
 
   const stats = useMemo(() => {
@@ -341,6 +343,17 @@ function TopicsClient() {
       <div className="absolute -top-[1px] left-0 right-0 h-[3px] bg-[#0a0a0a] z-[100]" />
       <NoiseOverlay />
       <FloatingParticles />
+
+      {/* Back Button */}
+      <div className="absolute top-6 left-6 z-[110]">
+        <button
+          onClick={() => router.push('/dashboard')}
+          className="flex items-center gap-2 px-4 py-2 bg-[#111] border border-[#2a2a2a] rounded-lg text-gray-400 hover:text-white hover:border-[#ff5757] transition-all duration-300 group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          <span className="text-xs font-bold uppercase tracking-widest">Back to Dashboard</span>
+        </button>
+      </div>
 
       {/* Header Section */}
       <motion.div
@@ -518,7 +531,13 @@ function TopicsClient() {
                   onClick={() => handleNodeClick(node)}
                 >
                   {/* Tooltip */}
-                  <div className="absolute bottom-[110%] left-1/2 -translate-x-1/2 mb-5 w-52 bg-[#111] border border-[#333] p-3.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex flex-col items-center z-50">
+                  <div
+                    className="absolute bottom-[110%] left-1/2 -translate-x-1/2 mb-5 w-52 bg-[#111] border border-[#333] p-3.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-auto cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex flex-col items-center z-50"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNodeClick(node);
+                    }}
+                  >
                     <span className="font-bold text-white text-[13px] mb-2">
                       {node.name}
                     </span>
@@ -586,7 +605,7 @@ function TopicsClient() {
                       )}
                     >
                       {React.createElement(
-                        TOPIC_ICONS[index % TOPIC_ICONS.length],
+                        TOPIC_ICON_MAP[node.id] || DEFAULT_ICON,
                         { className: "w-5 h-5 stroke-[2px]" },
                       )}
                     </span>
@@ -627,7 +646,10 @@ function TopicsClient() {
                 </div>
 
                 {/* Bottom External Title Text (moved outside scaling container so it doesn't clip) */}
-                <div className="absolute top-[96px] left-1/2 -translate-x-1/2 flex flex-col items-center w-36 pointer-events-none">
+                <div
+                  className="absolute top-[96px] left-1/2 -translate-x-1/2 flex flex-col items-center w-36 pointer-events-auto cursor-pointer z-20"
+                  onClick={() => handleNodeClick(node)}
+                >
                   <span
                     className={cn(
                       "text-[12px] font-bold text-center",

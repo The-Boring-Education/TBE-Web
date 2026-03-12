@@ -416,7 +416,10 @@ function DsaClient() {
                         <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-[16px] py-[8px] h-auto font-[600] text-[12px] rounded-[6px] transition-all hover:scale-105">
                             Continue Learning
                         </Button>
-                        <Button className="bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-[16px] py-[8px] font-[600] text-[12px] rounded-[6px]">
+                        <Button
+                            onClick={() => setIsEditModalOpen(true)}
+                            className="bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-[16px] py-[8px] font-[600] text-[12px] rounded-[6px]"
+                        >
                             Edit Goal
                         </Button>
                     </div>
