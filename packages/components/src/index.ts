@@ -141,6 +141,11 @@ export { default as GradientContainer } from "./containers/Page/common/GradientC
 export { default as GridContainer } from "./containers/Page/common/GridContainer";
 export { default as HeaderLabel } from "./containers/Page/common/HeaderLabel";
 export { default as LandingPageHero } from "./containers/Page/common/Hero";
+export type {
+  InteractiveRoadmapProps,
+  RoadmapStatItem,
+} from "./containers/Page/common/InteractiveRoadmap";
+export { default as InteractiveRoadmap } from "./containers/Page/common/InteractiveRoadmap";
 export { default as MobileNavbarLinksContainer } from "./containers/Page/common/MobileNavbarLinksContainer";
 export { default as ModernLandingHero } from "./containers/Page/common/ModernLandingHero";
 export { default as NavbarDropdownContainer } from "./containers/Page/common/NavbarDropdownContainer";
