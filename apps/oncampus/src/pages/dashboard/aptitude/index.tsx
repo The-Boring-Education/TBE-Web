@@ -22,8 +22,6 @@ const AptitudePrepPage = () => {
   const [isTopicEmpty, setIsTopicEmpty] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<"STUDY" | "QUIZ">("STUDY");
 
-
-
   // Fetch Topics
   const { response: topicsResponse, loading: topicsLoading } = useApi(
     "aptitude-topics",
@@ -180,10 +178,16 @@ const AptitudePrepPage = () => {
             <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
               <div className="space-y-3">
                 <div className="mb-2.5 px-1 pt-1">
-                  <Text level="h2" className="text-[14px] font-black text-white mb-0.5 tracking-tight">
+                  <Text
+                    level="h2"
+                    className="text-[14px] font-black text-white mb-0.5 tracking-tight"
+                  >
                     Explore Topics
                   </Text>
-                  <Text level="p" className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">
+                  <Text
+                    level="p"
+                    className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]"
+                  >
                     Choose a Topic to practice
                   </Text>
                 </div>
@@ -202,10 +206,11 @@ const AptitudePrepPage = () => {
                       <button
                         key={topic}
                         onClick={() => handleTopicClick(topic, label)}
-                        className={`w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none ${isActive
-                          ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)]"
-                          : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800"
-                          }`}
+                        className={`w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none ${
+                          isActive
+                            ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)]"
+                            : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800"
+                        }`}
                         aria-pressed={isActive}
                       >
                         <FlexContainer
@@ -220,8 +225,11 @@ const AptitudePrepPage = () => {
                           )}
                           <Text
                             level="p"
-                            className={`text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1 ${isActive ? "text-white" : "text-gray-400 group-hover:text-gray-300"
-                              }`}
+                            className={`text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1 ${
+                              isActive
+                                ? "text-white"
+                                : "text-gray-400 group-hover:text-gray-300"
+                            }`}
                           >
                             {label}
                           </Text>
@@ -255,11 +263,19 @@ const AptitudePrepPage = () => {
                   </div>
 
                   <div>
-                    <Text level="h2" className="text-white text-3xl font-extrabold tracking-tight mb-2">
+                    <Text
+                      level="h2"
+                      className="text-white text-3xl font-extrabold tracking-tight mb-2"
+                    >
                       Aptitude Vault
                     </Text>
-                    <Text level="p" className="text-gray-400 text-[15px] leading-relaxed">
-                      Sharpen your logical, quantitative, and verbal reasoning skills. Pick a category on the left to begin an interactive session.
+                    <Text
+                      level="p"
+                      className="text-gray-400 text-[15px] leading-relaxed"
+                    >
+                      Sharpen your logical, quantitative, and verbal reasoning
+                      skills. Pick a category on the left to begin an
+                      interactive session.
                     </Text>
                   </div>
                 </div>
@@ -267,7 +283,12 @@ const AptitudePrepPage = () => {
             </div>
           ) : (
             <div className="flex-1 flex flex-col h-full w-full overflow-hidden bg-[#0A0A0A]">
-              {(isTopicEmpty || (questions.length === 0 && !questionsLoading && !questionsResponse?.error)) && !studyGuideLoading && !studyGuideResponse?.data?.content ? (
+              {(isTopicEmpty ||
+                (questions.length === 0 &&
+                  !questionsLoading &&
+                  !questionsResponse?.error)) &&
+              !studyGuideLoading &&
+              !studyGuideResponse?.data?.content ? (
                 <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-[#050505] relative overflow-hidden">
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
                     <div className="w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[100px]" />
@@ -277,11 +298,21 @@ const AptitudePrepPage = () => {
                     <FolderOpen className="w-8 h-8 text-gray-500 opacity-80" />
                   </div>
 
-                  <Text level="h3" className="text-2xl font-bold text-white mb-3">
+                  <Text
+                    level="h3"
+                    className="text-2xl font-bold text-white mb-3"
+                  >
                     No Questions Available
                   </Text>
-                  <Text level="p" className="text-gray-400 max-w-sm mx-auto mb-8 leading-relaxed">
-                    We're actively adding more content to <strong className="text-gray-300">{selectedTopicLabel || selectedTopic}</strong>. Check back soon for new aptitude challenges.
+                  <Text
+                    level="p"
+                    className="text-gray-400 max-w-sm mx-auto mb-8 leading-relaxed"
+                  >
+                    We're actively adding more content to{" "}
+                    <strong className="text-gray-300">
+                      {selectedTopicLabel || selectedTopic}
+                    </strong>
+                    . Check back soon for new aptitude challenges.
                   </Text>
 
                   <Button
@@ -292,10 +323,12 @@ const AptitudePrepPage = () => {
                     className="border-gray-700 hover:border-red-500/50 hover:bg-red-500/10 transition-colors duration-300"
                   />
                 </div>
-              ) : (questionsLoading || studyGuideLoading) ? (
+              ) : questionsLoading || studyGuideLoading ? (
                 <div className="flex-1 flex flex-col items-center justify-center space-y-4">
                   <LoadingSpinner height={8} width={8} />
-                  <Text level="p" className="text-gray-400 font-medium">Loading challenge...</Text>
+                  <Text level="p" className="text-gray-400 font-medium">
+                    Loading challenge...
+                  </Text>
                 </div>
               ) : questionsResponse?.error ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center px-4 h-full">

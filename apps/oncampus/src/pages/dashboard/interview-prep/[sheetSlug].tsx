@@ -312,9 +312,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                   🚀 This is a Premium Interview Sheet
                 </Text>
                 <Text level="p" className="mb-4">
-                  To access all the interview questions and detailed
-                  solutions, please complete the payment. Once payment is
-                  confirmed, all questions will be unlocked instantly.
+                  To access all the interview questions and detailed solutions,
+                  please complete the payment. Once payment is confirmed, all
+                  questions will be unlocked instantly.
                 </Text>
                 {!showPayment && (
                   <Button

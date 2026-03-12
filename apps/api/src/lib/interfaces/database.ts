@@ -3,6 +3,8 @@ import type { Document, Schema, Types } from "mongoose";
 import type {
   APIMethodTypes,
   ApplicationStatusType,
+  AptitudeCategoryType,
+  AptitudeSubCategoryType,
   CertificateType,
   CompanyType,
   DifficultyType,
@@ -25,8 +27,6 @@ import type {
   SubscriptionStatus,
   SubscriptionType,
   UserPointsActionType,
-  AptitudeCategoryType,
-  AptitudeSubCategoryType,
   UserRoleType,
   WorkDomainType,
 } from "./api";
@@ -1050,4 +1050,3 @@ export interface AptitudeStudyGuideUploadPayload {
   topic: string;
   content: string;
 }
-

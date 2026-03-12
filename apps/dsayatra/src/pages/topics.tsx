@@ -5,25 +5,25 @@ import type { PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Check,
-  Lock,
-  Database,
-  Layers,
-  Hash,
-  Search,
-  Link2,
-  Network,
-  Code,
-  Target,
-  GitBranch,
   AlignLeft,
-  Calculator,
-  Binary,
-  Columns,
-  Split,
-  Terminal,
-  Cpu,
   ArrowLeft,
+  Binary,
+  Calculator,
+  Check,
+  Code,
+  Columns,
+  Cpu,
+  Database,
+  GitBranch,
+  Hash,
+  Layers,
+  Link2,
+  Lock,
+  Network,
+  Search,
+  Split,
+  Target,
+  Terminal,
 } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -187,7 +187,7 @@ function TopicsClient() {
     if (saved) {
       try {
         setCompletedQuestions(JSON.parse(saved));
-      } catch { }
+      } catch {}
     }
   }, []);
 
@@ -218,7 +218,15 @@ function TopicsClient() {
     const allTopicKeys = Object.keys(TOPIC_LABELS);
 
     // Sort keys to have a consistent roadmap (e.g., Array, String, etc.)
-    const preferredOrder = ["ARRAY", "SLIDING_WINDOW", "RECURSION", "BINARY_SEARCH", "LINKED_LIST", "STACK", "STRING"];
+    const preferredOrder = [
+      "ARRAY",
+      "SLIDING_WINDOW",
+      "RECURSION",
+      "BINARY_SEARCH",
+      "LINKED_LIST",
+      "STACK",
+      "STRING",
+    ];
     const sortedKeys = [...allTopicKeys].sort((a, b) => {
       const idxA = preferredOrder.indexOf(a);
       const idxB = preferredOrder.indexOf(b);
@@ -228,26 +236,31 @@ function TopicsClient() {
       return a.localeCompare(b);
     });
 
-    const combinedNodes: TopicNode[] = sortedKeys.map((topicKey, idx) => {
-      const data = topicMap.get(topicKey) || { total: 0, solved: 0 };
-      let name = TOPIC_LABELS[topicKey] || topicKey;
+    const combinedNodes: TopicNode[] = sortedKeys
+      .map((topicKey, idx) => {
+        const data = topicMap.get(topicKey) || { total: 0, solved: 0 };
+        let name = TOPIC_LABELS[topicKey] || topicKey;
 
-      // Specifically match image case for RECURSION
-      if (topicKey === "RECURSION") name = "RECURSION";
+        // Specifically match image case for RECURSION
+        if (topicKey === "RECURSION") name = "RECURSION";
 
-      // If a topic has 0 questions, it's "locked" or "coming soon"
-      const isActuallyLocked = data.total === 0;
+        // If a topic has 0 questions, it's "locked" or "coming soon"
+        const isActuallyLocked = data.total === 0;
 
-      return {
-        id: topicKey,
-        name,
-        total: data.total,
-        solved: data.solved,
-        isLocked: isActuallyLocked,
-        explanation: EXPLANATIONS[name] || `Master the fundamentals of ${name}.`,
-        difficulty: 1 + (idx % 5),
-      };
-    }).filter(node => node.total > 0 || node.name === "RECURSION" || node.isLocked); // Keep non-empty ones or specific ones
+        return {
+          id: topicKey,
+          name,
+          total: data.total,
+          solved: data.solved,
+          isLocked: isActuallyLocked,
+          explanation:
+            EXPLANATIONS[name] || `Master the fundamentals of ${name}.`,
+          difficulty: 1 + (idx % 5),
+        };
+      })
+      .filter(
+        (node) => node.total > 0 || node.name === "RECURSION" || node.isLocked,
+      ); // Keep non-empty ones or specific ones
 
     return combinedNodes;
   }, [allQuestions, completedQuestions]);
@@ -347,11 +360,13 @@ function TopicsClient() {
       {/* Back Button */}
       <div className="absolute top-6 left-6 z-[110]">
         <button
-          onClick={() => router.push('/dashboard')}
+          onClick={() => router.push("/dashboard")}
           className="flex items-center gap-2 px-4 py-2 bg-[#111] border border-[#2a2a2a] rounded-lg text-gray-400 hover:text-white hover:border-[#ff5757] transition-all duration-300 group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-xs font-bold uppercase tracking-widest">Back to Dashboard</span>
+          <span className="text-xs font-bold uppercase tracking-widest">
+            Back to Dashboard
+          </span>
         </button>
       </div>
 
@@ -448,7 +463,10 @@ function TopicsClient() {
 
       {/* HORIZONTAL ROADMAP CANVAS */}
       <div className="relative w-[100vw] overflow-x-auto z-10 custom-scrollbar pt-6 pb-0 -mt-[56px] flex-1">
-        <div className="relative mx-auto mt-16" style={{ width: TOTAL_WIDTH, height: 420 }}>
+        <div
+          className="relative mx-auto mt-16"
+          style={{ width: TOTAL_WIDTH, height: 420 }}
+        >
           {/* SVG Curvy joints */}
           <div className="absolute inset-x-0 inset-y-0 pointer-events-none mt-4">
             <svg width={TOTAL_WIDTH} height={420} className="w-full h-full">

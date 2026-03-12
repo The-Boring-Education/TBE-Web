@@ -64,7 +64,10 @@ const AppContent = ({
   const isAptitudeRoute = router.pathname === "/dashboard/aptitude";
 
   const shouldUseDashboardLayout =
-    (isDashboardRoute || isDSAPrepRoute) && !isStudyRoute && !isDSAMainRoute && !isAptitudeRoute;
+    (isDashboardRoute || isDSAPrepRoute) &&
+    !isStudyRoute &&
+    !isDSAMainRoute &&
+    !isAptitudeRoute;
 
   const pageContent = <Component {...pageProps} />;
 
