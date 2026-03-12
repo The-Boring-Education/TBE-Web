@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
 import { Button, FlexContainer, Text } from "@tbe/components";
 import type { AptitudeQuestion } from "@tbe/interface";
+import React, { useEffect,useState } from "react";
+
 import AptitudeQuestionCard from "./AptitudeQuestionCard";
 
 export interface AptitudeQuizPanelProps {
