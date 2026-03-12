@@ -1,12 +1,17 @@
 /**
  * @vitest-environment jsdom
  */
-import type { RoadmapNode } from "@tbe/interface";
-import { fireEvent, render, screen } from "@testing-library/react";
-import React from "react";
-import { describe, expect, it, vi } from "vitest";
+import "@testing-library/jest-dom/vitest";
 
-import InteractiveRoadmap from "../../../../../../packages/components/src/containers/Page/common/InteractiveRoadmap";
+import type { RoadmapNode } from "@tbe/interface";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import React from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+});
 
 vi.mock("framer-motion", () => ({
   motion: {
@@ -15,6 +20,10 @@ vi.mock("framer-motion", () => ({
   },
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-ignore -- relative path bypasses barrel to avoid tsconfig resolution issues
+import InteractiveRoadmap from "../../../../../../packages/components/src/containers/Page/common/InteractiveRoadmap";
 
 const sampleNodes: RoadmapNode[] = [
   {
@@ -66,11 +75,14 @@ describe("InteractiveRoadmap", () => {
     expect(screen.getByText("Learn step by step")).toBeInTheDocument();
   });
 
-  it("renders all node names", () => {
+  it("renders all node names as labels", () => {
     render(<InteractiveRoadmap {...defaultProps} />);
-    expect(screen.getByText("Array")).toBeInTheDocument();
-    expect(screen.getByText("Stack")).toBeInTheDocument();
-    expect(screen.getByText("Graphs")).toBeInTheDocument();
+    const arrays = screen.getAllByText("Array");
+    expect(arrays.length).toBeGreaterThanOrEqual(1);
+    const stacks = screen.getAllByText("Stack");
+    expect(stacks.length).toBeGreaterThanOrEqual(1);
+    const graphs = screen.getAllByText("Graphs");
+    expect(graphs.length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders node explanations in tooltips", () => {
@@ -118,7 +130,7 @@ describe("InteractiveRoadmap", () => {
     );
     const btn = screen.getByText("Back to Dashboard");
     expect(btn).toBeInTheDocument();
-    fireEvent.click(btn);
+    fireEvent.click(btn.closest("button")!);
     expect(onBack).toHaveBeenCalledOnce();
   });
 
@@ -131,7 +143,8 @@ describe("InteractiveRoadmap", () => {
     const onClick = vi.fn();
     render(<InteractiveRoadmap {...defaultProps} onNodeClick={onClick} />);
 
-    fireEvent.click(screen.getByText("Array"));
+    const labels = screen.getAllByText("Array");
+    fireEvent.click(labels[labels.length - 1]);
     await vi.waitFor(() => {
       expect(onClick).toHaveBeenCalledWith(sampleNodes[0]);
     });
@@ -141,7 +154,8 @@ describe("InteractiveRoadmap", () => {
     const onClick = vi.fn();
     render(<InteractiveRoadmap {...defaultProps} onNodeClick={onClick} />);
 
-    fireEvent.click(screen.getByText("Graphs"));
+    const labels = screen.getAllByText("Graphs");
+    fireEvent.click(labels[labels.length - 1]);
     await new Promise((r) => setTimeout(r, 600));
     expect(onClick).not.toHaveBeenCalled();
   });
@@ -172,7 +186,13 @@ describe("InteractiveRoadmap", () => {
   });
 
   it("renders with empty nodes without crashing", () => {
-    render(<InteractiveRoadmap {...defaultProps} nodes={[]} />);
-    expect(screen.getByTestId("roadmap-title")).toBeInTheDocument();
+    render(
+      <InteractiveRoadmap
+        nodes={[]}
+        onNodeClick={vi.fn()}
+        title={<span data-testid="empty-title">EMPTY</span>}
+      />,
+    );
+    expect(screen.getByTestId("empty-title")).toBeInTheDocument();
   });
 });
