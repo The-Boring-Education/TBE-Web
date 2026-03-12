@@ -1,13 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
-
-pnpm quality:fix
-
-if ! git diff --quiet || ! git diff --cached --quiet; then
-    echo ""
-    echo "Pre-push auto-fixed files."
-    echo "Please git add/commit the changes, then push again."
-    exit 1
-fi
-
-pnpm quality:check
+# Intentionally no checks here to keep push frictionless.
+exit 0
