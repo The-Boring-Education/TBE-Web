@@ -4,7 +4,8 @@ import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { cn, getPreFetchProps } from '@tbe/utils';
 import { Button } from "@ui/button";
-import { Card, CardContent } from "@ui/card";
+import { userService } from "@tbe/services";
+import { Card } from "@ui/card";
 import { Progress } from "@ui/progress";
 import {
     CheckCircle2,
@@ -168,7 +169,9 @@ function DsaClient() {
         if (saved) {
             try {
                 setCompletedQuestions(JSON.parse(saved));
-            } catch { }
+            } catch (e) {
+                console.debug("Failed to parse completed questions", e);
+            }
         }
 
         const todayStr = new Date().toDateString();
@@ -179,21 +182,27 @@ function DsaClient() {
                 if (data.date === todayStr) {
                     setSolvedToday(data.solvedCount || 0);
                 }
-            } catch { }
+            } catch (e) {
+                console.debug("Failed to parse today stats", e);
+            }
         }
 
         const savedAssignments = localStorage.getItem("dsayatra_weekly_revisions");
         if (savedAssignments) {
             try {
                 setWeeklyAssignments(JSON.parse(savedAssignments));
-            } catch { }
+            } catch (e) {
+                console.debug("Failed to parse weekly revisions", e);
+            }
         }
 
         const savedProgress = localStorage.getItem("dsayatra_revision_completed");
         if (savedProgress) {
             try {
                 setWeekProgress(JSON.parse(savedProgress));
-            } catch { }
+            } catch (e) {
+                console.debug("Failed to parse revision completed", e);
+            }
         }
     }, []);
 
@@ -492,9 +501,9 @@ function DsaClient() {
                                 {
                                     label: "Target",
                                     value:
-                                        (profile as any)?.dsaYatra?.companies &&
-                                            (profile as any).dsaYatra.companies.length > 0
-                                            ? (profile as any).dsaYatra.companies[0]
+                                        profile?.dsaYatra?.companies &&
+                                            profile.dsaYatra.companies.length > 0
+                                            ? profile.dsaYatra.companies[0]
                                             : "Top Tech",
                                 },
                             ].map((stat, i) => (
