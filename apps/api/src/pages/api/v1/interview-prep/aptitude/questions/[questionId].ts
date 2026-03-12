@@ -35,7 +35,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       .json(sendAPIResponse({ status: false, message: "Unauthorized" }));
   }
 
-  const { question, options, answer, difficulty, order, isActive } = req.body;
+  const { topic, question, options, answer, difficulty, order, isActive } = req.body;
+
+  if (!topic) {
+    return res
+      .status(apiStatusCodes.BAD_REQUEST)
+      .json(sendAPIResponse({ status: false, message: "topic is required" }));
+  }
+
   const updates: any = {};
   if (question !== undefined) updates.question = question;
   if (options !== undefined) updates.options = options;
@@ -44,7 +51,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (order !== undefined) updates.order = order;
   if (isActive !== undefined) updates.isActive = isActive;
 
-  const { data, error } = await updateAptitudeQuestionInDB(questionId, updates);
+  const { data, error } = await updateAptitudeQuestionInDB(topic as string, questionId, updates);
   if (error) {
     return res
       .status(apiStatusCodes.INTERNAL_SERVER_ERROR)

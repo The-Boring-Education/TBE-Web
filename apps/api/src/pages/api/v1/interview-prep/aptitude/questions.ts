@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
       sendAPIResponse({
         status: false,
-        message: `Method ${req.method} Not Allowed. Use GET /interview-prep?roadmap=APTITUDE&topic=<slug> to fetch questions.`,
+        message: `Method ${req.method} Not Allowed. Use GET /api/v1/interview-prep/aptitude/questions?topic=<slug> to fetch questions.`,
       }),
     );
   }
@@ -36,8 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  const { data, error } = await addAptitudeQuestionToDB({
-    topic,
+  const { data, error } = await addAptitudeQuestionToDB(topic, {
     question,
     options,
     answer,

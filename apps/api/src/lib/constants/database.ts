@@ -33,7 +33,7 @@ const DATABASE_MODELS = {
   USER_INTEREST: "UserInterest",
   COUPON: "Coupon",
   DSA_QUESTION: "DSAQuestion",
-  APTITUDE_QUESTION: "AptitudeQuestion",
+  APTITUDE_TOPIC: "AptitudeTopic",
 };
 
 export const FEEDBACK_TYPES = [

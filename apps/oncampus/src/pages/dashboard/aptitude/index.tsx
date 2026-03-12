@@ -1,5 +1,6 @@
 import {
   AptitudeQuizPanel,
+  AptitudeStudyGuide,
   Button,
   FlexContainer,
   LearningEnvironmentLayout,
@@ -9,6 +10,7 @@ import {
 import { routes } from "@tbe/constants";
 import { useApi, useUser } from "@tbe/hooks";
 import type { AptitudeQuestion } from "@tbe/interface";
+import { AlertTriangle, Folder, FolderOpen, Lightbulb } from "lucide-react";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 
@@ -18,6 +20,9 @@ const AptitudePrepPage = () => {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedTopicLabel, setSelectedTopicLabel] = useState<string>("");
   const [isTopicEmpty, setIsTopicEmpty] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<"STUDY" | "QUIZ">("STUDY");
+
+
 
   // Fetch Topics
   const { response: topicsResponse, loading: topicsLoading } = useApi(
@@ -33,6 +38,13 @@ const AptitudePrepPage = () => {
     loading: questionsLoading,
     makeRequest: fetchQuestions,
   } = useApi("aptitude-questions", undefined, { enabled: false });
+
+  // Fetch Study Guide (Manual Trigger)
+  const {
+    response: studyGuideResponse,
+    loading: studyGuideLoading,
+    makeRequest: fetchStudyGuide,
+  } = useApi("aptitude-study-guide", undefined, { enabled: false });
 
   const topicsWithCounts = useMemo(() => {
     const data = topicsResponse?.data;
@@ -56,6 +68,12 @@ const AptitudePrepPage = () => {
   useEffect(() => {
     if (selectedTopic && topicsWithCounts.length > 0) {
       const topicData = topicsWithCounts.find((t) => t.topic === selectedTopic);
+
+      // Always fetch study guide if a topic is selected
+      fetchStudyGuide({
+        url: `${routes.api.base}${routes.api.interviewPrep}/aptitude/study-guide?topic=${selectedTopic}`,
+      });
+
       if (topicData && topicData.count === 0) {
         setIsTopicEmpty(true);
       } else {
@@ -77,11 +95,13 @@ const AptitudePrepPage = () => {
   const handleTopicClick = (topic: string, label: string) => {
     setSelectedTopic(topic);
     setSelectedTopicLabel(label);
+    setViewMode("STUDY");
   };
 
   const handleBackToTopics = () => {
     setSelectedTopic(null);
     setSelectedTopicLabel("");
+    setViewMode("STUDY");
   };
 
   const overallLoading = userLoading || topicsLoading;
@@ -182,45 +202,29 @@ const AptitudePrepPage = () => {
                       <button
                         key={topic}
                         onClick={() => handleTopicClick(topic, label)}
-                        className={`w-full group relative px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer text-left bg-transparent focus:outline-none ${isActive
-                          ? "bg-red-500/5 border-red-500/20 shadow-[0_1px_6px_rgba(239,68,68,0.02)]"
-                          : "border-gray-800/30 hover:border-gray-700/40 hover:bg-white/[0.01]"
+                        className={`w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none ${isActive
+                          ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)]"
+                          : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800"
                           }`}
                         aria-pressed={isActive}
                       >
                         <FlexContainer
-                          className="justify-between gap-3"
-                          fullWidth
+                          className="items-center w-full gap-3"
                           itemCenter
+                          justifyCenter={false}
                         >
-                          <FlexContainer className="gap-3 flex-1" itemCenter justifyCenter={false}>
-                            <div className={`flex items-center justify-center w-5 h-5 rounded-full border text-[9px] font-black transition-all duration-300 shrink-0 ${isActive
-                              ? "bg-red-500/20 border-red-500/40 text-red-500 shadow-[0_0_6px_rgba(239,68,68,0.15)]"
-                              : "bg-gray-950/40 border-gray-800 text-gray-600 group-hover:border-gray-700 group-hover:text-gray-500"
-                              }`}>
-                              {index + 1}
-                            </div>
-
-                            <Text
-                              level="p"
-                              className={`flex-1 text-[13px] font-semibold transition-colors duration-300 truncate ${isActive ? "text-white" : "text-gray-400 group-hover:text-gray-300"
-                                }`}
-                            >
-                              {label}
-                            </Text>
-                          </FlexContainer>
-
+                          {isActive ? (
+                            <FolderOpen className="w-[15px] h-[15px] shrink-0 text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                          ) : (
+                            <Folder className="w-[15px] h-[15px] shrink-0 text-gray-600 group-hover:text-gray-400 transition-colors" />
+                          )}
                           <Text
-                            level="span"
-                            className={`text-[11px] font-black transition-colors duration-300 ${isActive ? "text-red-500/70" : "text-gray-700 group-hover:text-gray-600"
+                            level="p"
+                            className={`text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1 ${isActive ? "text-white" : "text-gray-400 group-hover:text-gray-300"
                               }`}
                           >
-                            {count || 0}
+                            {label}
                           </Text>
-
-                          {isActive && (
-                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[1.5px] h-3 bg-red-500 rounded-r-full shadow-[0_0_6px_rgba(239,68,68,0.4)]" />
-                          )}
                         </FlexContainer>
                       </button>
                     );
@@ -246,7 +250,7 @@ const AptitudePrepPage = () => {
                   <div className="relative mx-auto w-24 h-24 mb-6">
                     <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
                     <div className="relative w-full h-full bg-[#111] border border-gray-800 rounded-2xl flex items-center justify-center shadow-2xl">
-                      <span role="img" aria-label="Aptitude Vault" className="text-4xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">💡</span>
+                      <Lightbulb className="w-10 h-10 text-white opacity-80 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
                     </div>
                   </div>
 
@@ -263,14 +267,14 @@ const AptitudePrepPage = () => {
             </div>
           ) : (
             <div className="flex-1 flex flex-col h-full w-full overflow-hidden bg-[#0A0A0A]">
-              {isTopicEmpty || (questions.length === 0 && !questionsLoading && !questionsResponse?.error) ? (
+              {(isTopicEmpty || (questions.length === 0 && !questionsLoading && !questionsResponse?.error)) && !studyGuideLoading && !studyGuideResponse?.data?.content ? (
                 <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-[#050505] relative overflow-hidden">
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
                     <div className="w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[100px]" />
                   </div>
 
                   <div className="relative z-10 w-20 h-20 bg-gray-900/50 border border-gray-800 rounded-2xl flex items-center justify-center mb-6 shadow-2xl">
-                    <span className="text-3xl opacity-80 filter grayscale">📂</span>
+                    <FolderOpen className="w-8 h-8 text-gray-500 opacity-80" />
                   </div>
 
                   <Text level="h3" className="text-2xl font-bold text-white mb-3">
@@ -288,7 +292,7 @@ const AptitudePrepPage = () => {
                     className="border-gray-700 hover:border-red-500/50 hover:bg-red-500/10 transition-colors duration-300"
                   />
                 </div>
-              ) : questionsLoading ? (
+              ) : (questionsLoading || studyGuideLoading) ? (
                 <div className="flex-1 flex flex-col items-center justify-center space-y-4">
                   <LoadingSpinner height={8} width={8} />
                   <Text level="p" className="text-gray-400 font-medium">Loading challenge...</Text>
@@ -296,7 +300,7 @@ const AptitudePrepPage = () => {
               ) : questionsResponse?.error ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center px-4 h-full">
                   <div className="w-16 h-16 bg-red-950/30 border border-red-500/20 rounded-full flex items-center justify-center mb-4">
-                    <span className="text-2xl">⚠️</span>
+                    <AlertTriangle className="w-7 h-7 text-red-500" />
                   </div>
                   <Text level="p" className="text-red-400 text-sm mb-6">
                     Network error while fetching questions.
@@ -314,7 +318,15 @@ const AptitudePrepPage = () => {
                 </div>
               ) : (
                 <div className="flex-1 h-full w-full overflow-hidden">
-                  <AptitudeQuizPanel questions={questions} />
+                  {viewMode === "STUDY" ? (
+                    <AptitudeStudyGuide
+                      topicName={selectedTopicLabel}
+                      markdownContent={studyGuideResponse?.data?.content || ""}
+                      onStartQuiz={() => setViewMode("QUIZ")}
+                    />
+                  ) : (
+                    <AptitudeQuizPanel questions={questions} />
+                  )}
                 </div>
               )}
             </div>

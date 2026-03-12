@@ -95,6 +95,7 @@ export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetai
 export { default as QuizSection } from "./containers/Cards/QuizSection";
 export { default as AptitudeQuestionCard } from "./containers/Cards/AptitudeQuestionCard";
 export { default as AptitudeQuizPanel } from "./containers/Cards/AptitudeQuizPanel";
+export { default as AptitudeStudyGuide } from "./containers/Cards/AptitudeStudyGuide";
 export { default as Testimonials } from "./containers/Cards/Testimonials";
 export { default as UserLevelProgressContainer } from "./containers/Cards/UserLevelProgressContainer";
 export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaughtAt";
