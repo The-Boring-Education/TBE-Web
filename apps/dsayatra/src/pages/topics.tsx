@@ -4,7 +4,26 @@ import { useApi } from "@tbe/hooks";
 import type { PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Lock } from "lucide-react";
+import {
+  Check,
+  Lock,
+  Database,
+  Layers,
+  Hash,
+  Search,
+  Link2,
+  Network,
+  Code,
+  Target,
+  GitBranch,
+  AlignLeft,
+  Calculator,
+  Binary,
+  Columns,
+  Split,
+  Terminal,
+  Cpu,
+} from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
@@ -58,22 +77,23 @@ const LOCKED_TOPICS = [
   },
 ];
 
-const EMOJIS = [
-  "🚀",
-  "💡",
-  "🔥",
-  "🤯",
-  "🧩",
-  "🎯",
-  "⚡",
-  "🔮",
-  "🛠️",
-  "🧠",
-  "⚔️",
-  "💎",
-  "💻",
-  "✨",
-  "🔑",
+const TOPIC_ICONS = [
+  Database,
+  Layers,
+  Hash,
+  Search,
+  Link2,
+  Network,
+  Code,
+  Target,
+  GitBranch,
+  AlignLeft,
+  Calculator,
+  Binary,
+  Columns,
+  Split,
+  Terminal,
+  Cpu,
 ];
 
 // Background Noise
@@ -316,27 +336,21 @@ function TopicsClient() {
   }, [nodePositions, nodes]);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white relative font-sans overflow-x-hidden pt-20 pb-10">
+    <div className="min-h-[calc(100vh-72px)] bg-[#0a0a0a] text-white relative font-sans overflow-x-hidden pt-4 pb-0 flex flex-col items-center">
+      {/* Cover navbar bottom border */}
+      <div className="absolute -top-[1px] left-0 right-0 h-[3px] bg-[#0a0a0a] z-[100]" />
       <NoiseOverlay />
       <FloatingParticles />
 
       {/* Header Section */}
       <motion.div
-        className="relative z-10 flex flex-col items-center justify-center text-center px-6"
+        className="relative z-10 flex flex-col items-center justify-center text-center px-6 mt-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, staggerChildren: 0.2 }}
       >
-        <motion.p
-          className="text-[#ff5757] text-[11px] font-bold tracking-[0.3em] uppercase mb-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          Curriculum Roadmap
-        </motion.p>
         <motion.h1
-          className="text-[60px] md:text-[80px] font-[900] leading-[0.9] tracking-tight text-white m-0 p-0"
+          className="text-[42px] md:text-[52px] font-[900] leading-[0.9] tracking-tight text-white m-0 p-0"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -346,7 +360,7 @@ function TopicsClient() {
           <span className="text-[#ff5757]">STRUCTURES</span>
         </motion.h1>
         <motion.p
-          className="mt-6 text-[#888] text-[14px] md:text-[16px] max-w-md"
+          className="mt-2 text-[#888] text-[12px] md:text-[14px] max-w-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
@@ -354,17 +368,11 @@ function TopicsClient() {
           Master the fundamentals of computer science through a structured and
           interactive milestone journey.
         </motion.p>
-        <motion.div
-          className="w-12 h-[3px] bg-[#ff5757] mt-8"
-          initial={{ width: 0 }}
-          animate={{ width: 48 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        />
       </motion.div>
 
       {/* Stats Row */}
       <motion.div
-        className="relative z-10 flex items-center justify-center gap-12 md:gap-24 mt-16 px-6"
+        className="relative z-10 w-full flex items-center justify-center gap-10 md:gap-20 mt-6 px-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.8 }}
@@ -397,7 +405,7 @@ function TopicsClient() {
 
       {/* Progress Bar */}
       <motion.div
-        className="relative z-10 max-w-2xl mx-auto mt-16 px-6"
+        className="relative z-10 w-full max-w-xl mx-auto mt-6 px-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 1 }}
@@ -418,19 +426,19 @@ function TopicsClient() {
 
       {/* Scroll Hint */}
       <motion.div
-        className="relative z-10 mt-14 text-center font-mono text-[10px] text-[#555] tracking-widest uppercase"
-        animate={{ y: [0, 8, 0] }}
+        className="relative z-10 mt-4 text-center font-mono text-[10px] text-[#555] tracking-widest uppercase mb-0"
+        animate={{ y: [0, 6, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
         ► scroll horizontally ►
       </motion.div>
 
       {/* HORIZONTAL ROADMAP CANVAS */}
-      <div className="relative w-full mt-10 overflow-x-auto overflow-y-hidden z-10 custom-scrollbar pb-20">
-        <div className="relative" style={{ width: TOTAL_WIDTH, height: 460 }}>
+      <div className="relative w-[100vw] overflow-x-auto z-10 custom-scrollbar pt-6 pb-0 -mt-[56px] flex-1">
+        <div className="relative mx-auto mt-16" style={{ width: TOTAL_WIDTH, height: 420 }}>
           {/* SVG Curvy joints */}
-          <div className="absolute inset-0 pointer-events-none">
-            <svg width={TOTAL_WIDTH} height={460} className="w-full h-full">
+          <div className="absolute inset-x-0 inset-y-0 pointer-events-none mt-4">
+            <svg width={TOTAL_WIDTH} height={420} className="w-full h-full">
               {/* Thick outer path base */}
               <path
                 d={dFull}
@@ -497,7 +505,7 @@ function TopicsClient() {
                 )}
                 style={{
                   left: pos.cx,
-                  top: pos.cy,
+                  top: pos.cy + 16, // Align perfectly with margin-top 4 of SVG container
                   transform: "translate(-50%, -50%)",
                   zIndex: isDone ? 10 : isActive ? 30 : 20,
                 }}
@@ -567,16 +575,20 @@ function TopicsClient() {
                       </Fragment>
                     )}
 
-                    {/* Node Internal Icon Emoji */}
+                    {/* Node Internal Icon */}
                     <span
                       className={cn(
-                        "text-[26px] mb-0.5 mt-1",
-                        isDone && "grayscale opacity-30",
-                        node.isLocked &&
-                        "grayscale opacity-10 drop-shadow-none",
+                        "flex items-center justify-center mb-0.5 mt-1 transition-colors duration-300",
+                        isDone ? "text-[#51cf66] opacity-70" : "",
+                        node.isLocked ? "text-[#444] opacity-30" : "",
+                        isActive ? "text-white" : "",
+                        isAvailable ? "text-[#ff5757]" : "",
                       )}
                     >
-                      {EMOJIS[index % EMOJIS.length]}
+                      {React.createElement(
+                        TOPIC_ICONS[index % TOPIC_ICONS.length],
+                        { className: "w-5 h-5 stroke-[2px]" },
+                      )}
                     </span>
 
                     {/* 0X Number text inside circle */}
@@ -614,8 +626,8 @@ function TopicsClient() {
                   </div>
                 </div>
 
-                {/* Bottom External Title Text */}
-                <div className="absolute top-full mt-4 left-1/2 -translate-x-1/2 flex flex-col items-center w-36 pointer-events-none">
+                {/* Bottom External Title Text (moved outside scaling container so it doesn't clip) */}
+                <div className="absolute top-[96px] left-1/2 -translate-x-1/2 flex flex-col items-center w-36 pointer-events-none">
                   <span
                     className={cn(
                       "text-[12px] font-bold text-center",
@@ -667,10 +679,10 @@ function TopicsClient() {
         }
         
         .custom-scrollbar::-webkit-scrollbar {
-            height: 8px;
+            height: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #0f0f0f;
+            background: #0a0a0a;
             border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
