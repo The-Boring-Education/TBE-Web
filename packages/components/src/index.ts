@@ -95,6 +95,7 @@ export { default as PaymentCard } from "./containers/Cards/PaymentCard";
 export { default as PlaylistSkillCard } from "./containers/Cards/PlaylistSkillCard";
 export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetailPanel";
 export { default as QuizSection } from "./containers/Cards/QuizSection";
+export { default as AptitudeStudyGuide } from "./containers/Cards/AptitudeStudyGuide";
 export { default as Testimonials } from "./containers/Cards/Testimonials";
 export { default as UserLevelProgressContainer } from "./containers/Cards/UserLevelProgressContainer";
 export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaughtAt";

@@ -14,7 +14,7 @@ export { default as Webinar } from "./Webinar";
 export { DevRelLead, DevRelTask } from "./DevRel";
 
 // Interview Prep models
-export { default as AptitudeQuestion } from "./InterviewPrep/AptitudeQuestion";
+export { default as AptitudeTopic } from "./InterviewPrep/AptitudeTopic";
 export { default as DSAQuestion } from "./InterviewPrep/DSAQuestion";
 export { default as InterviewSheet } from "./InterviewPrep/Sheet";
 export { default as UserSheet } from "./InterviewPrep/UserSheet";
