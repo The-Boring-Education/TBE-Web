@@ -77,6 +77,8 @@ export { default as Link } from "./common/Typography/Link";
 export { default as Text } from "./common/Typography/Text";
 // Container Components - Cards
 export { default as AboutTBE } from "./containers/Cards/AboutTBE";
+export { default as AptitudeQuestionCard } from "./containers/Cards/AptitudeQuestionCard";
+export { default as AptitudeQuizPanel } from "./containers/Cards/AptitudeQuizPanel";
 export { default as CardContainerA } from "./containers/Cards/CardContainerA";
 export { default as CardContainerB } from "./containers/Cards/CardContainerB";
 export { DsaQuestionCard } from "./containers/Cards/DsaQuestionCard";
@@ -173,9 +175,9 @@ export {
 } from "./common/GamificationDemo/GamificationProvider";
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
 export { default as Footer } from "./layout/Footer";
-export { default as Navbar } from "./layout/Navbar";
-export { default as LearningNavbar } from "./layout/LearningNavbar";
 export { default as LearningEnvironmentLayout } from "./layout/LearningEnvironmentLayout";
+export { default as LearningNavbar } from "./layout/LearningNavbar";
+export { default as Navbar } from "./layout/Navbar";
 export { default as Layout } from "./layout/Page";
 export { default as Section } from "./layout/Section";
 export type {

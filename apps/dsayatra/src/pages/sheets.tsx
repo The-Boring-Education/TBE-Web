@@ -130,6 +130,12 @@ const SheetsPageClient = () => {
     }, [dsaQuestions, selectedTopic])
 
     useEffect(() => {
+        if (router.isReady && router.query.topic) {
+            setSelectedTopic(router.query.topic as string);
+        }
+    }, [router.isReady, router.query.topic]);
+
+    useEffect(() => {
         if (!userLoading && !isAuth) {
             router.push("/login")
         }

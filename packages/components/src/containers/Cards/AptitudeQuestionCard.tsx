@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import markdownit from "markdown-it";
-import { Button, Text, FlexContainer } from "@tbe/components";
+import { Button, FlexContainer,Text } from "@tbe/components";
 import type { AptitudeQuestion } from "@tbe/interface";
+import markdownit from "markdown-it";
+import React, { useState } from "react";
 
 const md = markdownit({ html: true, breaks: true });
 
