@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
 @layer base {
   html {
@@ -159,7 +158,6 @@ button:active {
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {
@@ -185,7 +183,7 @@ button:active {
 
   .scrollbar-thin-grey {
     scrollbar-width: thin;
-    scrollbar-color: #4A4A4A #1A1A1A;
+    scrollbar-color: #4a4a4a #1a1a1a;
   }
 
   .scrollbar-thin-grey::-webkit-scrollbar {
@@ -194,17 +192,17 @@ button:active {
   }
 
   .scrollbar-thin-grey::-webkit-scrollbar-track {
-    background: #1A1A1A;
+    background: #1a1a1a;
   }
 
   .scrollbar-thin-grey::-webkit-scrollbar-thumb {
-    background: #4A4A4A;
+    background: #4a4a4a;
     border-radius: 10px;
   }
 
   .scrollbar-thin-grey::-webkit-scrollbar-thumb:hover {
-    background: #5A5A5A;
+    background: #5a5a5a;
   }
 }
 
-@import './interview-question.css';
+@import "./interview-question.css";

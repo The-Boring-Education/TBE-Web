@@ -7,8 +7,12 @@
     "build:all": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint -- --fix",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint:check": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,cjs,mjs,json,md,yml,yaml,css,scss}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,cjs,mjs,json,md,yml,yaml,css,scss}\"",
     "check-types": "turbo run check-types",
+    "quality:fix": "pnpm lint && pnpm format",
+    "quality:check": "pnpm lint:check && pnpm format:check && pnpm check-types",
     "clean": "turbo run clean",
     "dev:platform": "turbo run dev --filter=@tbe/platform",
     "dev:prep-yatra": "turbo run dev --filter=@tbe/prep-yatra",
@@ -39,13 +43,27 @@
     "test:ci": "turbo run test:ci --filter=@tbe/testing",
     "seo:audit": "lhci autorun",
     "seo:audit:prod": "LHCI_ENV=production lhci autorun",
-    "seo:audit:app": "LHCI_ENV=production lhci autorun"
+    "seo:audit:app": "LHCI_ENV=production lhci autorun",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,cjs,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css,scss}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
+    "@tbe/eslint-config": "workspace:*",
     "@lhci/cli": "^0.13.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^9.0.1",
     "baseline-browser-mapping": "^2.9.11",
+    "eslint": "^9.39.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.3.0",
     "prettier": "^3.6.2",
     "turbo": "^2.5.6"
   },

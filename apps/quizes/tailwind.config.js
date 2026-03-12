@@ -1,13 +1,13 @@
-const { fontFamily } = require('tailwindcss/defaultTheme');
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    '../../packages/components/src/**/*.{js,ts,jsx,tsx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "../../packages/components/src/**/*.{js,ts,jsx,tsx}",
   ],
   prefix: "",
   theme: {
@@ -20,7 +20,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        primary: ['Inter', ...fontFamily.sans],
+        primary: ["Inter", ...fontFamily.sans],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -28,14 +28,14 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        dark: '#040505',
-        success: '#31ad6b',
-        contentLight: '#19191B',
-        contentDark: '#FDFDFD',
-        grey: '#B0B0B0',
-        greyLight: '#e3e3e3',
-        greyDark: '#848484',
-        lightBG: '#F8F8F8',
+        dark: "#040505",
+        success: "#31ad6b",
+        contentLight: "#19191B",
+        contentDark: "#FDFDFD",
+        grey: "#B0B0B0",
+        greyLight: "#e3e3e3",
+        greyDark: "#848484",
+        lightBG: "#F8F8F8",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -143,4 +143,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
