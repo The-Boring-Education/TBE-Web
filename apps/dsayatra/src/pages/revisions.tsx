@@ -7,21 +7,17 @@ import {
   Text,
   YouTubeIcon,
 } from "@tbe/components";
-import { routes } from "@tbe/constants";
-import { useApi, useUser } from "@tbe/hooks";
+import { useDsaCompletedQuestions, useDsaQuestions, useUser } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import { Check, ChevronRight, Info, Lock, Target } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { Fragment, useEffect, useMemo, useState } from "react";
-
-import { transformDsaQuestion } from "../utils/dsaHelpers";
+import { Fragment, useEffect, useState } from "react";
 
 export default function RevisionsUI({ seoMeta }: PageProps) {
   const router = useRouter();
   const { loading: userLoading, isAuth } = useUser();
-  const [globalCompleted, setGlobalCompleted] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null);
   const [weeklyAssignments, setWeeklyAssignments] = useState<
     Record<number, string[]>
@@ -30,15 +26,9 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
     {},
   );
 
-  const { response, loading: sheetsLoading } = useApi("dsa-sheet", {
-    url: `${routes.api.base}${routes.api.dsaSheet}?limit=1000`,
-  });
-
-  const dsaQuestions = useMemo(() => {
-    const data = response?.data?.questions;
-    if (!Array.isArray(data)) return [];
-    return data.map(transformDsaQuestion);
-  }, [response]);
+  const { questions: dsaQuestions, loading: sheetsLoading } = useDsaQuestions();
+  const { completedIds } = useDsaCompletedQuestions();
+  const globalCompleted = completedIds.map(String);
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -47,25 +37,22 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
   }, [userLoading, isAuth, router]);
 
   useEffect(() => {
-    const savedGlobal = localStorage.getItem("dsayatra_completed_questions");
-    if (savedGlobal) {
-      try {
-        setGlobalCompleted(JSON.parse(savedGlobal));
-      } catch {}
-    }
-
     const savedAssignments = localStorage.getItem("dsayatra_weekly_revisions");
     if (savedAssignments) {
       try {
         setWeeklyAssignments(JSON.parse(savedAssignments));
-      } catch {}
+      } catch {
+        /* corrupted data */
+      }
     }
 
     const savedProgress = localStorage.getItem("dsayatra_revision_completed");
     if (savedProgress) {
       try {
         setWeekProgress(JSON.parse(savedProgress));
-      } catch {}
+      } catch {
+        /* corrupted data */
+      }
     }
   }, []);
 

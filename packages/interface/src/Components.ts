@@ -993,3 +993,13 @@ export interface ExampleCardProps {
   explanation?: string;
   image?: string;
 }
+
+export interface RoadmapNode {
+  id: string;
+  name: string;
+  total: number;
+  solved: number;
+  isLocked: boolean;
+  explanation: string;
+  difficulty: number;
+}

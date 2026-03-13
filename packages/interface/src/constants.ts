@@ -58,17 +58,36 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   showBackButton?: boolean;
   backButtonHref?: string;
 }
+/**
+ * Controls visibility of a single navbar section.
+ * - `true`     → show all links in the section
+ * - `false`    → hide the section entirely
+ * - `string[]` → show only links whose IDs are in the array
+ */
+type NavbarSectionVisibility = boolean | string[];
+
+/**
+ * Per-section navigation visibility config.
+ * Sections not specified default to `true` (visible with all links).
+ */
+interface NavbarNavigationConfig {
+  issues?: NavbarSectionVisibility;
+  cohorts?: NavbarSectionVisibility;
+  learn?: NavbarSectionVisibility;
+  tools?: NavbarSectionVisibility;
+  links?: NavbarSectionVisibility;
+}
+
 interface NavbarVariantConfig {
   branding?: React.ReactNode;
   productName?: string;
   subText?: string;
   dashboardRoute: string;
   borderClass?: string;
-  requiresAuth?: boolean; // If false, hides UserPointButton and UserAvatar
-  showGamification?: boolean; // If false, hides UserPointButton (gamification)
-  showCohorts?: boolean; // If false, hides Cohorts section
-  showLearn?: boolean; // If false, hides Learn section
-  showNotifications?: boolean; // If false, hides Notification section
+  requiresAuth?: boolean;
+  showGamification?: boolean;
+  showNotifications?: boolean;
+  navigation?: NavbarNavigationConfig;
 }
 
 export type FooterVariant =
@@ -98,7 +117,9 @@ export type {
   MainNavbarProps,
   NavbarDropdownContainerProps,
   NavbarDropdownLink,
+  NavbarNavigationConfig,
   NavbarProps,
+  NavbarSectionVisibility,
   NavbarVariantConfig,
   OutlineCardProps,
   QuestionDifficulty,

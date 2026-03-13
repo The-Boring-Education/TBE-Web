@@ -2,7 +2,13 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { getNavbarVariantConfig, LINKS, TOP_NAVIGATION } from "@tbe/constants";
 import { useScrollDirection } from "@tbe/hooks";
-import type { MainNavbarProps, NavbarVariantConfig } from "@tbe/interface";
+import type {
+  MainNavbarProps,
+  NavbarNavigationConfig,
+  NavbarSectionVisibility,
+  NavbarVariantConfig,
+} from "@tbe/interface";
+import type { TopNavbarLinkProps } from "@tbe/types";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
 import { Fragment, useMemo, useState } from "react";
@@ -24,6 +30,19 @@ import {
   UserPointButton,
 } from "..";
 import NotificationPopover from "../common/Notification/index";
+
+function resolveSection(
+  visibility: NavbarSectionVisibility | undefined,
+  allLinks: TopNavbarLinkProps[],
+): { visible: boolean; links: TopNavbarLinkProps[] } {
+  if (visibility === false) return { visible: false, links: [] };
+  if (visibility === undefined || visibility === true)
+    return { visible: true, links: allLinks };
+  const filtered = allLinks.filter((link) =>
+    (visibility as string[]).includes(link.id),
+  );
+  return { visible: filtered.length > 0, links: filtered };
+}
 
 const Navbar = ({
   onSignOut,
@@ -54,13 +73,34 @@ const Navbar = ({
     setMobileMenuOpen(false);
   };
 
-  // Get variant configuration - memoized for performance
   const VARIANT_CONFIG = useMemo(() => getNavbarVariantConfig(Logo), []);
   const variantConfig = useMemo(() => {
     return VARIANT_CONFIG[variant] || VARIANT_CONFIG.default;
   }, [variant, VARIANT_CONFIG]) as NavbarVariantConfig;
 
-  // Determine background class based on variant and theme
+  const nav: NavbarNavigationConfig = variantConfig.navigation ?? {};
+
+  const issuesNav = useMemo(
+    () => resolveSection(nav.issues, TOP_NAVIGATION.issues),
+    [nav.issues],
+  );
+  const cohortsNav = useMemo(
+    () => resolveSection(nav.cohorts, TOP_NAVIGATION.cohorts),
+    [nav.cohorts],
+  );
+  const learnNav = useMemo(
+    () => resolveSection(nav.learn, TOP_NAVIGATION.products),
+    [nav.learn],
+  );
+  const toolsNav = useMemo(
+    () => resolveSection(nav.tools, TOP_NAVIGATION.tools),
+    [nav.tools],
+  );
+  const linksNav = useMemo(
+    () => resolveSection(nav.links, TOP_NAVIGATION.links),
+    [nav.links],
+  );
+
   const getBackgroundClass = () => {
     if (variant === "transparent") {
       return "glass-dark backdrop-blur-md";
@@ -89,26 +129,16 @@ const Navbar = ({
       variantConfig.branding
     ));
 
-  // Determine border class based on theme
   const borderClass =
     theme === "dark" ? "border-0" : variantConfig.borderClass || "border";
   const shouldUseCustomActions = customActions && customActions.length > 0;
   const isLearningVariant = variant === "learning";
 
-  // Check if variant requires authentication (defaults to true)
   const requiresAuth = variantConfig.requiresAuth !== false;
 
-  // Check if variant should show gamification (defaults to true if requiresAuth is true)
   const showGamification =
     requiresAuth && variantConfig.showGamification !== false;
 
-  // Check if variant should show Cohorts section (defaults to true)
-  const showCohorts = variantConfig.showCohorts !== false;
-
-  // Check if variant should show Learn section (defaults to true)
-  const showLearn = variantConfig.showLearn !== false;
-
-  // Check if variant should show Notifications (defaults to true)
   const showNotifications = variantConfig.showNotifications !== false;
 
   return (
@@ -203,54 +233,58 @@ const Navbar = ({
             </div>
             {showFullNavigation && (
               <div className="hidden items-center lg:flex lg:gap-x-[24px]">
-                {TOP_NAVIGATION.issues[0]?.href && (
+                {issuesNav.visible && issuesNav.links[0]?.href && (
                   <FlexContainer direction="col" itemCenter={false}>
                     <Link
                       className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
-                      href={TOP_NAVIGATION.issues[0].href}
-                      target={TOP_NAVIGATION.issues[0]?.target}
+                      href={issuesNav.links[0].href}
+                      target={issuesNav.links[0]?.target}
                     >
-                      {TOP_NAVIGATION.issues[0]?.name}
+                      {issuesNav.links[0]?.name}
                     </Link>
                   </FlexContainer>
                 )}
-                {showCohorts && (
+                {cohortsNav.visible && (
                   <PopoverContainer
                     isOpen={openPopover === "cohorts"}
                     label="Cohorts"
                     onToggle={() => handleSetOpen("cohorts")}
                     theme={theme}
                   >
-                    <NavbarDropdownContainer links={TOP_NAVIGATION.cohorts} />
+                    <NavbarDropdownContainer links={cohortsNav.links} />
                   </PopoverContainer>
                 )}
-                {showLearn && (
+                {learnNav.visible && (
                   <PopoverContainer
                     isOpen={openPopover === "products"}
                     label="Learn"
                     onToggle={() => handleSetOpen("products")}
                     theme={theme}
                   >
-                    <NavbarDropdownContainer links={TOP_NAVIGATION.products} />
+                    <NavbarDropdownContainer links={learnNav.links} />
                   </PopoverContainer>
                 )}
-                <PopoverContainer
-                  isOpen={openPopover === "tools"}
-                  label="Tools"
-                  onToggle={() => handleSetOpen("tools")}
-                  theme={theme}
-                >
-                  <NavbarDropdownContainer links={TOP_NAVIGATION.tools} />
-                </PopoverContainer>
-                <PopoverContainer
-                  isOpen={openPopover === "links"}
-                  label="Links"
-                  panelClasses="-left-6"
-                  onToggle={() => handleSetOpen("links")}
-                  theme={theme}
-                >
-                  <NavbarDropdownContainer links={TOP_NAVIGATION.links} />
-                </PopoverContainer>
+                {toolsNav.visible && (
+                  <PopoverContainer
+                    isOpen={openPopover === "tools"}
+                    label="Tools"
+                    onToggle={() => handleSetOpen("tools")}
+                    theme={theme}
+                  >
+                    <NavbarDropdownContainer links={toolsNav.links} />
+                  </PopoverContainer>
+                )}
+                {linksNav.visible && (
+                  <PopoverContainer
+                    isOpen={openPopover === "links"}
+                    label="Links"
+                    panelClasses="-left-6"
+                    onToggle={() => handleSetOpen("links")}
+                    theme={theme}
+                  >
+                    <NavbarDropdownContainer links={linksNav.links} />
+                  </PopoverContainer>
+                )}
 
                 {requiresAuth && showNotifications && <NotificationPopover />}
                 {showGamification && <UserPointButton />}
@@ -331,30 +365,34 @@ const Navbar = ({
                       </FlexContainer>
                     )}
 
-                    {showCohorts && (
+                    {cohortsNav.visible && (
                       <MobileNavbarLinksContainer
-                        links={TOP_NAVIGATION.cohorts}
+                        links={cohortsNav.links}
                         title="Cohorts"
                         onLinkClick={handleCloseMobileMenu}
                       />
                     )}
-                    {showLearn && (
+                    {learnNav.visible && (
                       <MobileNavbarLinksContainer
-                        links={TOP_NAVIGATION.products}
+                        links={learnNav.links}
                         title="Learn"
                         onLinkClick={handleCloseMobileMenu}
                       />
                     )}
-                    <MobileNavbarLinksContainer
-                      links={TOP_NAVIGATION.tools}
-                      title="Tools"
-                      onLinkClick={handleCloseMobileMenu}
-                    />
-                    <MobileNavbarLinksContainer
-                      links={TOP_NAVIGATION.links}
-                      title="Links"
-                      onLinkClick={handleCloseMobileMenu}
-                    />
+                    {toolsNav.visible && (
+                      <MobileNavbarLinksContainer
+                        links={toolsNav.links}
+                        title="Tools"
+                        onLinkClick={handleCloseMobileMenu}
+                      />
+                    )}
+                    {linksNav.visible && (
+                      <MobileNavbarLinksContainer
+                        links={linksNav.links}
+                        title="Links"
+                        onLinkClick={handleCloseMobileMenu}
+                      />
+                    )}
                     <FlexContainer
                       className="gap-1"
                       direction="col"

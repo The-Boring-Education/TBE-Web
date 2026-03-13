@@ -1,5 +1,6 @@
 import type { DsaQuestion } from "@tbe/interface";
-import { generateYouTubeSearchLink } from "@tbe/utils";
+
+import { generateYouTubeSearchLink } from "./functions";
 
 export const transformDsaQuestion = (question: any): DsaQuestion => {
   const escapeRegExp = (str: string) =>
@@ -34,11 +35,11 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     companyType: question.companyTypes,
     domain: question.domain,
     examples: examples,
-    constraints: constraints,
+    constraints: constraints as string[],
   };
 };
 
-const extractExamples = (markdown: string) => {
+export const extractExamples = (markdown: string) => {
   const exampleRegex =
     /Example \d+:[\s\S]*?(?=(Example \d+:|Constraints:|#|$))/g;
   const matches = markdown.match(exampleRegex);
@@ -61,23 +62,25 @@ const extractExamples = (markdown: string) => {
       text.replace(/^[\s*`:_]+|[\s*`:_]+$/g, "").trim();
 
     return {
-      inputText: inputTextMatch ? cleanText(inputTextMatch[1]) : "",
-      outputText: outputTextMatch ? cleanText(outputTextMatch[1]) : "",
+      inputText: inputTextMatch ? cleanText(inputTextMatch?.[1] || "") : "",
+      outputText: outputTextMatch ? cleanText(outputTextMatch?.[1] || "") : "",
       explanation: explanationMatch
-        ? cleanText(explanationMatch[1])
-        : undefined,
+        ? cleanText(explanationMatch?.[1] || "")
+        : "",
     };
   });
 };
 
-const extractConstraints = (markdown: string) => {
+export const extractConstraints = (markdown: string) => {
   const constraintsRegex =
     /(?:Constraints|Constraints\s*):?\s*([\s\S]*?)(?=$)/i;
   const match = markdown.match(constraintsRegex);
 
   if (!match) return [];
 
-  return match[1]
+  const rawText = match[1] || "";
+
+  return rawText
     .split("\n")
     .map((line) => line.trim())
     .filter(

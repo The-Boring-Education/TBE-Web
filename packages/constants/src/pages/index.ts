@@ -14,7 +14,7 @@ import { routes } from "../routes";
 const TOP_NAVIGATION: TopNavbarContainerProps = {
   cohorts: [
     {
-      id: v4(),
+      id: "cohort-bring-your-idea",
       name: cohorts.bringYourIdea!.label,
       description: cohorts.bringYourIdea!.description,
       href: cohorts.bringYourIdea!.slug,
@@ -22,42 +22,41 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
   ],
   tools: [
     {
-      id: v4(),
+      id: "tool-unskilled",
       name: products.unskilled!.label,
       description: products.unskilled!.description,
       href: products.unskilled!.slug,
     },
-
     {
-      id: v4(),
+      id: "tool-techyatra",
       name: products.techYatra!.label,
       description: products.techYatra!.description,
       href: products.techYatra!.slug,
       target: "_blank",
     },
     {
-      id: v4(),
+      id: "tool-dsayatra",
       name: products.dsaYatra!.label,
       description: products.dsaYatra!.description,
       href: products.dsaYatra!.slug,
       target: "_blank",
     },
     {
-      id: v4(),
+      id: "tool-resumeyatra",
       name: products.resumeYatra!.label,
       description: products.resumeYatra!.description,
       href: products.resumeYatra!.slug,
       target: "_blank",
     },
     {
-      id: v4(),
+      id: "tool-prepyatra",
       name: products.prepYatra!.label,
       description: products.prepYatra!.description,
       href: products.prepYatra!.slug,
       target: "_blank",
     },
     {
-      id: v4(),
+      id: "tool-oncampus",
       name: "OnCampus",
       description: "Campus-focused learning platform for students",
       href: "https://oncampus.theboringeducation.com/",
@@ -66,37 +65,37 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
   ],
   products: [
     {
-      id: v4(),
+      id: "learn-shiksha",
       name: products.shiksha!.label,
       description: products.shiksha!.description,
       href: products.shiksha!.slug,
     },
     {
-      id: v4(),
+      id: "learn-interview-prep",
       name: products.interviewPrep!.label,
       description: products.interviewPrep!.description,
       href: products.interviewPrep!.slug,
     },
     {
-      id: v4(),
+      id: "learn-youfocus",
       name: products.youfocus!.label,
       description: products.youfocus!.description,
       href: products.youfocus!.slug,
     },
     {
-      id: v4(),
+      id: "learn-webinar",
       name: products.webinar!.label,
       description: products.webinar!.description,
       href: products.webinar!.slug,
     },
     {
-      id: v4(),
+      id: "learn-portfolio",
       name: products.portfolio!.label,
       description: products.portfolio!.description,
       href: products.portfolio!.slug,
     },
     {
-      id: v4(),
+      id: "learn-projects",
       name: products.projects!.label,
       description: products.projects!.description,
       href: products.projects!.slug,
@@ -104,28 +103,28 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
   ],
   links: [
     {
-      id: v4(),
+      id: "link-tech-mentorship",
       name: "Tech Mentorship",
       description: "Book personalized mentorship sessions",
       href: LINKS.bookTechConsultation,
       target: "_blank",
     },
     {
-      id: v4(),
+      id: "link-instagram",
       name: "Follow us on Instagram",
       description: "Follow us on Instagram",
       href: LINKS.followUsOnInstagram,
       target: "_blank",
     },
     {
-      id: v4(),
+      id: "link-community",
       name: "Join Our Community",
       description: "Join our WhatsApp Community",
       href: LINKS.whatsappCommunity,
       target: "_blank",
     },
     {
-      id: v4(),
+      id: "link-host-tbe",
       name: "Host TBE at Your College",
       description: "Bring Tech Education to Your Campus",
       href: LINKS.hostTBEAtYourCollege,
@@ -134,14 +133,14 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
   ],
   user: [
     {
-      id: v4(),
+      id: "user-dashboard",
       name: "Dashboard",
       href: routes.user.dashboard,
     },
   ],
   issues: [
     {
-      id: v4(),
+      id: "issue-bug-report",
       name: "Found a Bug?",
       description: "Create an Issue for our community.",
       href: LINKS.createIssue,
