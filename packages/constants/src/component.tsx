@@ -1,4 +1,5 @@
 // @ts-nocheck
+import type { NavbarVariantConfig } from "@tbe/interface";
 import {
   Award,
   BookOpen,
@@ -86,19 +87,6 @@ const links: NavbarDropdownLink[] = [
   },
 ];
 
-interface NavbarVariantConfig {
-  branding?: React.ReactNode;
-  productName?: string;
-  subText?: string;
-  dashboardRoute: string;
-  borderClass?: string;
-  requiresAuth?: boolean;
-  showGamification?: boolean;
-  showCohorts?: boolean; // If false, hides Cohorts section
-  showLearn?: boolean; // If false, hides Learn section
-  showNotifications?: boolean; // If false, hides Notification section
-}
-
 const getNavbarVariantConfig = (
   Logo: ComponentType<any>,
 ): Record<string, NavbarVariantConfig> => ({
@@ -107,12 +95,26 @@ const getNavbarVariantConfig = (
     dashboardRoute: "/user/dashboard",
     borderClass: "border",
     requiresAuth: true,
+    navigation: {
+      issues: true,
+      cohorts: true,
+      learn: true,
+      tools: true,
+      links: true,
+    },
   },
   transparent: {
     branding: <Logo />,
     dashboardRoute: "/user/dashboard",
     borderClass: "border",
     requiresAuth: true,
+    navigation: {
+      issues: true,
+      cohorts: true,
+      learn: true,
+      tools: true,
+      links: true,
+    },
   },
   prepyatra: {
     productName: "PrepYatra",
@@ -120,6 +122,18 @@ const getNavbarVariantConfig = (
     dashboardRoute: "/dashboard",
     borderClass: "border-b border-greyLight",
     requiresAuth: true,
+    navigation: {
+      issues: true,
+      cohorts: false,
+      learn: false,
+      tools: [
+        "tool-techyatra",
+        "tool-dsayatra",
+        "tool-resumeyatra",
+        "tool-oncampus",
+      ],
+      links: ["link-tech-mentorship", "link-community"],
+    },
   },
   quizes: {
     productName: "The Boring Quizes",
@@ -128,13 +142,38 @@ const getNavbarVariantConfig = (
     borderClass: "border",
     requiresAuth: true,
     showNotifications: false,
+    navigation: {
+      issues: true,
+      cohorts: false,
+      learn: false,
+      tools: [
+        "tool-techyatra",
+        "tool-dsayatra",
+        "tool-resumeyatra",
+        "tool-prepyatra",
+        "tool-oncampus",
+      ],
+      links: ["link-tech-mentorship", "link-community"],
+    },
   },
   techyatra: {
     productName: "TechYatra",
     subText: "By The Boring Education",
     dashboardRoute: "/",
     borderClass: "border-b border-greyLight",
-    requiresAuth: false, // Non-auth app
+    requiresAuth: false,
+    navigation: {
+      issues: true,
+      cohorts: false,
+      learn: false,
+      tools: [
+        "tool-dsayatra",
+        "tool-resumeyatra",
+        "tool-prepyatra",
+        "tool-oncampus",
+      ],
+      links: ["link-tech-mentorship", "link-community"],
+    },
   },
   dsayatra: {
     productName: "DSA Yatra",
@@ -142,6 +181,13 @@ const getNavbarVariantConfig = (
     dashboardRoute: "/dashboard",
     borderClass: "border-b border-greyLight",
     requiresAuth: true,
+    navigation: {
+      issues: true,
+      cohorts: false,
+      learn: false,
+      tools: ["tool-techyatra", "tool-resumeyatra", "tool-prepyatra"],
+      links: ["link-tech-mentorship", "link-community"],
+    },
   },
   "resume-yatra": {
     productName: "ResumeYatra",
@@ -150,16 +196,38 @@ const getNavbarVariantConfig = (
     borderClass: "border",
     requiresAuth: true,
     showGamification: false,
+    navigation: {
+      issues: true,
+      cohorts: false,
+      learn: false,
+      tools: [
+        "tool-techyatra",
+        "tool-dsayatra",
+        "tool-prepyatra",
+        "tool-oncampus",
+      ],
+      links: ["link-tech-mentorship", "link-community"],
+    },
   },
   oncampus: {
     productName: "OnCampus",
     subText: "By The Boring Education",
     dashboardRoute: "/dashboard",
     borderClass: "border-0 dark:border-0",
-    requiresAuth: true, // Non-auth app
+    requiresAuth: true,
     showGamification: false,
-    showCohorts: false, // Hide Cohorts section
-    showLearn: false, // Hide Learn section
+    navigation: {
+      issues: true,
+      cohorts: false,
+      learn: false,
+      tools: [
+        "tool-techyatra",
+        "tool-dsayatra",
+        "tool-resumeyatra",
+        "tool-prepyatra",
+      ],
+      links: ["link-community"],
+    },
   },
   learning: {
     branding: <Logo />,
@@ -167,9 +235,14 @@ const getNavbarVariantConfig = (
     borderClass: "border-0 dark:border-0",
     requiresAuth: true,
     showGamification: false,
-    showCohorts: false,
-    showLearn: false,
     showNotifications: false,
+    navigation: {
+      issues: false,
+      cohorts: false,
+      learn: false,
+      tools: false,
+      links: false,
+    },
   },
 });
 

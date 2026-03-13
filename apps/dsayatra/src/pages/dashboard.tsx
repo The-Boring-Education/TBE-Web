@@ -1,7 +1,12 @@
 import { useAuth } from "@tbe/auth";
 import { EditDsaOnboardingModal, SEO } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
-import { useApi, usePrepStats, useTimeTracker } from "@tbe/hooks";
+import {
+  useDsaCompletedQuestions,
+  useDsaQuestions,
+  usePrepStats,
+  useTimeTracker,
+} from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
 import { cn, getPreFetchProps } from "@tbe/utils";
@@ -39,7 +44,7 @@ const SIDEBAR_ITEMS = [
 
 function Sidebar() {
   return (
-    <aside className="sticky top-[72px] h-[calc(100vh-72px)] w-[210px] bg-[#0f0f0f] border-r border-[#2a2a2a] z-40 hidden lg:block shrink-0">
+    <aside className="sticky top-[72px] h-[calc(100vh-72px)] w-52 bg-[#0f0f0f] border-r border-[#2a2a2a] z-40 hidden lg:block shrink-0">
       <div className="py-2 px-2">
         <nav className="space-y-0.5">
           {SIDEBAR_ITEMS.map((item) => (
@@ -47,7 +52,7 @@ function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-2 px-2.5 py-1.5 text-[12px] font-semibold transition-all duration-200 rounded-lg group",
+                "flex items-center gap-2 px-2.5 py-1.5 text-xs font-semibold transition-all duration-200 rounded-lg group",
                 item.active
                   ? "bg-[#ff5757] text-white shadow-md shadow-[#ff5757]/10"
                   : "text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-[#e0e0e0]",
@@ -80,22 +85,22 @@ function StatCard({
   secondaryInfo,
 }: any) {
   return (
-    <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:scale-[1.02] group rounded-[10px] p-[16px] h-full relative overflow-hidden">
+    <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:scale-[1.02] group rounded-xl p-4 h-full relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-[#ff5757]/0 to-[#ff5757]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       <div className="flex flex-row items-center justify-between pb-1.5 relative z-10">
-        <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px]">
+        <p className="text-xs font-semibold text-[#a0a0a0] uppercase tracking-wide">
           {title}
         </p>
         {Icon && <Icon className="w-3.5 h-3.5 text-[#ff5757]" />}
       </div>
       <div className="mt-1">
-        <div className="text-[28px] font-[700] text-[#e0e0e0] leading-tight">
+        <div className="text-3xl font-bold text-[#e0e0e0] leading-tight">
           {value}
         </div>
         {(subtext || secondaryInfo) && (
           <div className="mt-1">
             {subtext && (
-              <p className="text-[11px] font-[500] text-[#a0a0a0]">{subtext}</p>
+              <p className="text-xs font-medium text-[#a0a0a0]">{subtext}</p>
             )}
             {secondaryInfo && (
               <p className="text-[10px] text-[#606060]">{secondaryInfo}</p>
@@ -105,7 +110,7 @@ function StatCard({
         {status && (
           <div
             className={cn(
-              "mt-2 text-[9px] font-[600] px-[7px] py-[3px] rounded-[4px] inline-block uppercase",
+              "mt-2 text-[9px] font-semibold px-2 py-0.5 rounded inline-block uppercase",
               status === "ON TRACK"
                 ? "bg-green-500/20 text-[#51cf66]"
                 : "bg-red-500/20 text-[#ff6b6b]",
@@ -116,10 +121,7 @@ function StatCard({
         )}
         {progress !== undefined && (
           <div className="mt-3">
-            <Progress
-              value={progress}
-              className="h-[6px] bg-[#2a2a2a] rounded-[4px]"
-            />
+            <Progress value={progress} className="h-1.5 bg-[#2a2a2a] rounded" />
           </div>
         )}
       </div>
@@ -136,24 +138,15 @@ function DsaClient() {
     null,
   );
 
-  // Automatic time tracking for current session
   const { seconds, formattedTime } = useTimeTracker(user?.id);
-
-  // Fetch historical stats from database
   const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
 
-  // Fetch all DSA questions from the API (same source as sheets page)
-  const { response: dsaResponse } = useApi("dashboard-dsa-sheet", {
-    url: `${routes.api.base}${routes.api.dsaSheet}?limit=1000`,
+  const { rawQuestions: allQuestions } = useDsaQuestions({
+    queryKey: "dashboard-dsa-sheet",
   });
+  const { completedIds: completedQuestions, solvedToday } =
+    useDsaCompletedQuestions();
 
-  // Read completed questions from localStorage (same source as sheets page)
-  const [completedQuestions, setCompletedQuestions] = useState<
-    (string | number)[]
-  >([]);
-  const [solvedToday, setSolvedToday] = useState(0);
-
-  // New revision state handling
   const [weeklyAssignments, setWeeklyAssignments] = useState<
     Record<number, string[]>
   >({});
@@ -162,34 +155,12 @@ function DsaClient() {
   );
 
   useEffect(() => {
-    const saved = localStorage.getItem("dsayatra_completed_questions");
-    if (saved) {
-      try {
-        setCompletedQuestions(JSON.parse(saved));
-      } catch (e) {
-        console.debug("Failed to parse completed questions", e);
-      }
-    }
-
-    const todayStr = new Date().toDateString();
-    const statsStr = localStorage.getItem("dsayatra_today_stats");
-    if (statsStr) {
-      try {
-        const data = JSON.parse(statsStr);
-        if (data.date === todayStr) {
-          setSolvedToday(data.solvedCount || 0);
-        }
-      } catch (e) {
-        console.debug("Failed to parse today stats", e);
-      }
-    }
-
     const savedAssignments = localStorage.getItem("dsayatra_weekly_revisions");
     if (savedAssignments) {
       try {
         setWeeklyAssignments(JSON.parse(savedAssignments));
-      } catch (e) {
-        console.debug("Failed to parse weekly revisions", e);
+      } catch {
+        /* corrupted data */
       }
     }
 
@@ -197,18 +168,11 @@ function DsaClient() {
     if (savedProgress) {
       try {
         setWeekProgress(JSON.parse(savedProgress));
-      } catch (e) {
-        console.debug("Failed to parse revision completed", e);
+      } catch {
+        /* corrupted data */
       }
     }
   }, []);
-
-  // Parse all DSA questions from API response
-  const allQuestions = useMemo(() => {
-    const data = dsaResponse?.data?.questions;
-    if (!Array.isArray(data)) return [];
-    return data;
-  }, [dsaResponse]);
 
   // Compute topic-wise progress from real data
   const topicProgress = useMemo(() => {
@@ -402,20 +366,20 @@ function DsaClient() {
         {/* Header Section */}
         <header className="flex justify-between items-center">
           <div>
-            <h2 className="text-[26px] font-bold text-[#e0e0e0]">
+            <h2 className="text-2xl font-bold text-[#e0e0e0]">
               Welcome back, {user?.name?.split(" ")[0] || "Yatree"}! 👋
             </h2>
-            <p className="text-[#a0a0a0] text-[13px] mt-0.5">
+            <p className="text-[#a0a0a0] text-xs mt-0.5">
               Ready to master DSA today?
             </p>
           </div>
           <div className="flex gap-3">
-            <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-[16px] py-[8px] h-auto font-[600] text-[12px] rounded-[6px] transition-all hover:scale-105">
+            <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-4 py-2 h-auto font-semibold text-xs rounded-md transition-all hover:scale-105">
               Continue Learning
             </Button>
             <Button
               onClick={() => setIsEditModalOpen(true)}
-              className="bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-[16px] py-[8px] font-[600] text-[12px] rounded-[6px]"
+              className="bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-4 py-2 font-semibold text-xs rounded-md"
             >
               Edit Goal
             </Button>
@@ -423,9 +387,9 @@ function DsaClient() {
         </header>
 
         {/* Profile Card Section */}
-        <Card className="w-full bg-gradient-to-b from-[#1a1a1a] to-[#252525] border-[#2a2a2a] rounded-[10px] p-3.5">
+        <Card className="w-full bg-gradient-to-b from-[#1a1a1a] to-[#252525] border-[#2a2a2a] rounded-xl p-3.5">
           <div className="flex flex-col items-center">
-            <div className="w-[64px] h-[64px] rounded-full overflow-hidden mb-3 shadow-lg border-2 border-[#ff6b6b]/20 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full overflow-hidden mb-3 shadow-lg border-2 border-[#ff6b6b]/20 flex items-center justify-center">
               {user?.image ? (
                 <img
                   src={user.image}
@@ -433,7 +397,7 @@ function DsaClient() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-[#ff6b6b] to-[#ff9b9b] flex items-center justify-center text-white text-[20px] font-bold">
+                <div className="w-full h-full bg-gradient-to-br from-[#ff6b6b] to-[#ff9b9b] flex items-center justify-center text-white text-xl font-bold">
                   {user?.name
                     ?.split(" ")
                     .map((n) => n[0])
@@ -441,10 +405,10 @@ function DsaClient() {
                 </div>
               )}
             </div>
-            <h3 className="text-[16px] font-bold text-[#e0e0e0] leading-tight">
+            <h3 className="text-base font-bold text-[#e0e0e0] leading-tight">
               {user?.name || "Shivani Jha"}
             </h3>
-            <p className="text-[#a0a0a0] text-[11px] mt-0.5">
+            <p className="text-[#a0a0a0] text-xs mt-0.5">
               @{user?.userName || "shivanijhavats"}
             </p>
 
@@ -474,7 +438,7 @@ function DsaClient() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(
-                    "rounded-md border border-[#2a2a2a] text-[#ff5757] hover:border-[#ff5757] hover:bg-[#ff5757]/10 flex items-center gap-2 px-4 py-2 text-[11px] font-[600] transition-all uppercase",
+                    "rounded-md border border-[#2a2a2a] text-[#ff5757] hover:border-[#ff5757] hover:bg-[#ff5757]/10 flex items-center gap-2 px-4 py-2 text-xs font-semibold transition-all uppercase",
                     !social.url && "opacity-50 cursor-not-allowed",
                   )}
                   onClick={(e) => !social.url && e.preventDefault()}
@@ -514,7 +478,7 @@ function DsaClient() {
                   <p className="text-[10px] text-[#a0a0a0] uppercase mb-0.5 font-bold">
                     {stat.label}
                   </p>
-                  <p className="text-[12px] font-bold text-[#ff5757]">
+                  <p className="text-xs font-bold text-[#ff5757]">
                     {stat.value}
                   </p>
                 </div>
@@ -524,7 +488,7 @@ function DsaClient() {
             <div className="flex gap-3 w-full max-w-sm">
               <Button
                 onClick={() => setIsEditModalOpen(true)}
-                className="flex-1 bg-[#2a2a2a] text-[#a0a0a0] hover:bg-[#333] font-[600] text-[12px] rounded-[6px] py-[8px] h-auto"
+                className="flex-1 bg-[#2a2a2a] text-[#a0a0a0] hover:bg-[#333] font-semibold text-xs rounded-md py-2 h-auto"
               >
                 Edit Profile
               </Button>
@@ -537,23 +501,23 @@ function DsaClient() {
           {/* Overall Progress Card */}
           <Card
             id="overall-progress"
-            className="md:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-3.5 lg:row-span-2 flex flex-col items-center justify-center rounded-[10px] hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300"
+            className="md:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-3.5 lg:row-span-2 flex flex-col items-center justify-center rounded-xl hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300"
           >
             <div className="flex items-center justify-between w-full mb-5">
-              <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px]">
+              <p className="text-xs font-semibold text-[#a0a0a0] uppercase tracking-wide">
                 Overall Progress
               </p>
               <TrendingUp className="w-3.5 h-3.5 text-[#ff5757]" />
             </div>
-            <div className="relative w-[120px] h-[120px] mb-5">
+            <div className="relative w-28 h-28 mb-5">
               <div
                 className="w-full h-full rounded-full flex items-center justify-center"
                 style={{
                   background: `conic-gradient(#ff5757 ${overallPercentage * 3.6}deg, #2a2a2a 0deg)`,
                 }}
               >
-                <div className="w-[102px] h-[102px] rounded-full bg-[#1a1a1a] flex flex-col items-center justify-center">
-                  <span className="text-[28px] font-bold text-[#e0e0e0]">
+                <div className="w-24 h-24 rounded-full bg-[#1a1a1a] flex flex-col items-center justify-center">
+                  <span className="text-3xl font-bold text-[#e0e0e0]">
                     {overallPercentage}%
                   </span>
                   <span className="text-[9px] text-[#a0a0a0]">
@@ -563,7 +527,7 @@ function DsaClient() {
               </div>
             </div>
             <div className="w-full space-y-1.5">
-              <div className="flex justify-between text-[11px] text-[#a0a0a0]">
+              <div className="flex justify-between text-xs text-[#a0a0a0]">
                 <span>Expected vs Actual</span>
                 <span className="font-bold">
                   {overallPercentage >= 50 ? "On Track" : "Needs Focus"}
@@ -571,12 +535,12 @@ function DsaClient() {
               </div>
               <Progress
                 value={overallPercentage}
-                className="h-[7px] bg-[#2a2a2a] rounded-[4px]"
+                className="h-1.5 bg-[#2a2a2a] rounded"
               />
               <div className="pt-3 text-center">
                 <span
                   className={cn(
-                    "text-[9px] font-[600] px-[7px] py-[3px] rounded-[4px] uppercase",
+                    "text-[9px] font-semibold px-2 py-0.5 rounded uppercase",
                     overallPercentage >= 50
                       ? "bg-green-500/20 text-[#51cf66]"
                       : "bg-orange-500/20 text-[#ffa94d]",
@@ -616,10 +580,10 @@ function DsaClient() {
         </div>
 
         {/* Topic-wise Progress Section */}
-        <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px] hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
+        <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-xl hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
           <div className="flex items-center gap-2 mb-3.5">
             <PieChart className="w-4.5 h-4.5 text-[#ff5757]" />
-            <h3 className="text-[16px] font-bold text-[#e0e0e0]">
+            <h3 className="text-base font-bold text-[#e0e0e0]">
               Topic-wise Progress
             </h3>
           </div>
@@ -628,9 +592,9 @@ function DsaClient() {
               topicProgress.map((topic) => (
                 <div
                   key={topic.key}
-                  className="bg-[#0f0f0f] border border-[#2a2a2a] p-4 rounded-[8px] text-center cursor-pointer hover:border-[#ff5757] transition-all group"
+                  className="bg-[#0f0f0f] border border-[#2a2a2a] p-4 rounded-lg text-center cursor-pointer hover:border-[#ff5757] transition-all group"
                 >
-                  <p className="text-[11px] font-bold text-[#e0e0e0] uppercase">
+                  <p className="text-xs font-bold text-[#e0e0e0] uppercase">
                     {topic.name}
                   </p>
                   <p className="text-[10px] text-[#a0a0a0] my-1.5">
@@ -640,13 +604,13 @@ function DsaClient() {
                     value={
                       topic.total > 0 ? (topic.solved / topic.total) * 100 : 0
                     }
-                    className="h-[7px] bg-[#1a1a1a] rounded-[4px]"
+                    className="h-1.5 bg-[#1a1a1a] rounded"
                   />
                 </div>
               ))
             ) : (
               <div className="col-span-full text-center py-6">
-                <p className="text-[12px] text-[#a0a0a0]">Loading topics...</p>
+                <p className="text-xs text-[#a0a0a0]">Loading topics...</p>
               </div>
             )}
           </div>
@@ -655,8 +619,8 @@ function DsaClient() {
         {/* Today's View Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Today's Schedule Card */}
-          <Card className="lg:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px] hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
-            <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px] mb-3.5">
+          <Card className="lg:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-xl hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
+            <p className="text-xs font-semibold text-[#a0a0a0] uppercase tracking-wide mb-3.5">
               Today's Schedule
             </p>
             <div className="flex justify-around items-center px-2 py-4 gap-4 flex-wrap">
@@ -673,7 +637,7 @@ function DsaClient() {
                     whileTap={{ scale: 0.9 }}
                     className="relative w-[70px] h-[70px] rounded-full border-2 border-[#ff5757]/20 bg-[#0f0f0f] flex items-center justify-center group-hover:border-[#ff5757]/60 group-hover:shadow-[0_0_20px_rgba(255,87,87,0.3)] transition-all duration-300"
                   >
-                    <p className="text-[32px] font-bold text-[#e0e0e0] leading-none mb-0.5">
+                    <p className="text-3xl font-bold text-[#e0e0e0] leading-none mb-0.5">
                       {item.value}
                     </p>
                     <AnimatePresence>
@@ -682,14 +646,14 @@ function DsaClient() {
                           initial={{ opacity: 0, scale: 0.5, y: -10 }}
                           animate={{ opacity: 1, scale: 1, y: -40 }}
                           exit={{ opacity: 0, scale: 0.5, y: -10 }}
-                          className="absolute -top-6 whitespace-nowrap bg-gradient-to-r from-[#ff5757] to-[#ff3030] text-white px-3 py-1.5 rounded-lg text-[11px] shadow-xl pointer-events-none z-10 font-[700] border border-white/20"
+                          className="absolute -top-6 whitespace-nowrap bg-gradient-to-r from-[#ff5757] to-[#ff3030] text-white px-3 py-1.5 rounded-lg text-xs shadow-xl pointer-events-none z-10 font-bold border border-white/20"
                         >
                           {item.value} {item.details}
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </motion.div>
-                  <p className="text-[10px] font-[600] text-[#a0a0a0] uppercase mt-3 group-hover:text-[#e0e0e0] transition-colors">
+                  <p className="text-[10px] font-semibold text-[#a0a0a0] uppercase mt-3 group-hover:text-[#e0e0e0] transition-colors">
                     {item.label}
                   </p>
                 </div>
@@ -698,21 +662,21 @@ function DsaClient() {
           </Card>
 
           {/* This Week Card */}
-          <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px] hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
-            <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px] mb-2.5">
+          <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-xl hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
+            <p className="text-xs font-semibold text-[#a0a0a0] uppercase tracking-wide mb-2.5">
               This Week
             </p>
-            <p className="text-[20px] font-bold text-[#e0e0e0]">
+            <p className="text-xl font-bold text-[#e0e0e0]">
               {thisWeekPercentage}% Complete
             </p>
             <Progress
               value={thisWeekPercentage}
-              className="h-[7px] bg-[#2a2a2a] my-3.5 rounded-[4px]"
+              className="h-1.5 bg-[#2a2a2a] my-3.5 rounded"
             />
             <div className="space-y-1.5 mt-3.5">
               <p
                 className={cn(
-                  "text-[11px] flex items-center gap-1.5 font-[600]",
+                  "text-xs flex items-center gap-1.5 font-semibold",
                   thisWeekPercentage >= 60
                     ? "text-[#51cf66]"
                     : "text-[#ffa94d]",
@@ -722,7 +686,7 @@ function DsaClient() {
                   ? "✓ Ahead of schedule"
                   : "⚡ Keep pushing"}
               </p>
-              <p className="text-[11px] text-[#a0a0a0]">
+              <p className="text-xs text-[#a0a0a0]">
                 {Math.round(thisWeekMinutes / 60)}h / {weeklyGoalHours}h this
                 week
               </p>
@@ -731,9 +695,9 @@ function DsaClient() {
         </div>
 
         {/* Daily Revisions Queue Section */}
-        <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px] hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
+        <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-xl hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
           <div className="mb-3.5">
-            <h3 className="text-[16px] font-bold text-[#e0e0e0]">
+            <h3 className="text-base font-bold text-[#e0e0e0]">
               Today's Revisions Queue
             </h3>
             <p className="text-[10px] text-[#a0a0a0] mt-0.5">
@@ -741,15 +705,15 @@ function DsaClient() {
               {dueRevisionsCount === 1 ? "question" : "questions"}
             </p>
           </div>
-          <div className="space-y-[10px]">
+          <div className="space-y-2.5">
             {displayRevisions.length === 0 ? (
               completedQuestions.length < 10 ? (
                 <div className="flex flex-col items-center justify-center py-6 text-center space-y-2 border border-dashed border-[#2a2a2a] rounded-lg bg-[#0f0f0f]/50">
-                  <div className="text-[36px] mb-2 animate-bounce">🔒</div>
-                  <p className="text-[14px] font-bold text-[#e0e0e0]">
+                  <div className="text-4xl mb-2 animate-bounce">🔒</div>
+                  <p className="text-sm font-bold text-[#e0e0e0]">
                     Revisions Locked!
                   </p>
-                  <p className="text-[11px] text-[#a0a0a0] max-w-[220px]">
+                  <p className="text-xs text-[#a0a0a0] max-w-56">
                     Solve at least{" "}
                     <span className="text-[#ff5757] font-bold">
                       10 questions
@@ -763,13 +727,13 @@ function DsaClient() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-6 text-center space-y-2 border border-dashed border-[#2a2a2a] rounded-lg bg-[#0f0f0f]/50">
-                  <div className="text-[40px] text-green-500 mb-1">
+                  <div className="text-4xl text-green-500 mb-1">
                     <CheckCircle2 size={40} className="fill-green-500/20" />
                   </div>
-                  <p className="text-[14px] font-bold text-[#e0e0e0]">
+                  <p className="text-sm font-bold text-[#e0e0e0]">
                     You are all caught up!
                   </p>
-                  <p className="text-[11px] text-[#a0a0a0] max-w-[220px]">
+                  <p className="text-xs text-[#a0a0a0] max-w-56">
                     <span className="text-[#ff5757] font-semibold text-[10px] italic mt-1 flex items-center justify-center gap-1">
                       You're doing great, not everyone gets caught up till here!
                       ✨
@@ -781,10 +745,10 @@ function DsaClient() {
               displayRevisions.map((item, i) => (
                 <div
                   key={i}
-                  className="flex justify-between items-center p-[10px] bg-[#0f0f0f] border-l-[3px] rounded-r-[4px] transition-all hover:bg-[#151515] border-[#ff5757]"
+                  className="flex justify-between items-center p-2.5 bg-[#0f0f0f] border-l-[3px] rounded-r transition-all hover:bg-[#151515] border-[#ff5757]"
                 >
                   <div>
-                    <p className="text-[12px] font-bold text-[#e0e0e0]">
+                    <p className="text-xs font-bold text-[#e0e0e0]">
                       {item.title}
                     </p>
                     <p className="text-[10px] text-[#a0a0a0] mt-0.5">
@@ -793,7 +757,7 @@ function DsaClient() {
                   </div>
                   <Link
                     href="/revisions"
-                    className="h-auto flex items-center justify-center text-[10px] font-[600] px-[10px] py-[5px] rounded-[4px] transition-all bg-[#ff5757] text-white hover:bg-[#ff5252]"
+                    className="h-auto flex items-center justify-center text-[10px] font-semibold px-2.5 py-1 rounded transition-all bg-[#ff5757] text-white hover:bg-[#ff5252]"
                   >
                     Attempt
                   </Link>
@@ -802,12 +766,12 @@ function DsaClient() {
             )}
           </div>
           <div className="mt-6 flex items-center justify-between">
-            <p className="text-[11px] text-[#a0a0a0]">
+            <p className="text-xs text-[#a0a0a0]">
               {completedRevisionsCount} overall completed
             </p>
             <Link
               href="/revisions"
-              className="bg-[#ff6b6b] text-white inline-flex hover:bg-[#ff5252] text-[12px] font-[600] px-[18px] py-[8px] rounded-[6px] transition-all"
+              className="bg-[#ff6b6b] text-white inline-flex hover:bg-[#ff5252] text-xs font-semibold px-4 py-2 rounded-md transition-all"
             >
               Go to Revisions
             </Link>
@@ -815,8 +779,8 @@ function DsaClient() {
         </Card>
 
         {/* Weekly Performance Card */}
-        <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-[10px] hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
-          <p className="text-[11px] font-[600] text-[#a0a0a0] uppercase tracking-[0.5px] mb-3.5">
+        <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-xl hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
+          <p className="text-xs font-semibold text-[#a0a0a0] uppercase tracking-wide mb-3.5">
             Weekly Performance
           </p>
           <div className="flex gap-3.5">
@@ -837,13 +801,13 @@ function DsaClient() {
                 <div
                   key={week.label}
                   className={cn(
-                    "flex-1 bg-[#0f0f0f] border border-[#2a2a2a] p-3 rounded-[8px] text-center",
+                    "flex-1 bg-[#0f0f0f] border border-[#2a2a2a] p-3 rounded-lg text-center",
                     week.isCurrent && "border-[#ff6b6b] bg-[#ff6b6b]/10",
                   )}
                 >
                   <p
                     className={cn(
-                      "text-[15px] font-bold",
+                      "text-sm font-bold",
                       week.isCurrent ? "text-[#ff6b6b]" : "text-[#e0e0e0]",
                     )}
                   >
@@ -859,13 +823,13 @@ function DsaClient() {
           <div className="mt-5 text-center">
             <p
               className={cn(
-                "text-[11px] font-[600]",
+                "text-xs font-semibold",
                 overallPercentage >= 50 ? "text-[#51cf66]" : "text-[#ffa94d]",
               )}
             >
               {totalSolved} of {totalQuestions} questions completed
             </p>
-            <p className="text-[11px] text-[#a0a0a0] mt-0.5 font-[600]">
+            <p className="text-xs text-[#a0a0a0] mt-0.5 font-semibold">
               {totalQuestions - totalSolved} questions remaining
             </p>
           </div>
