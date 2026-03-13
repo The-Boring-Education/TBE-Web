@@ -55,9 +55,7 @@ const PREFERRED_ORDER = [
 
 function TopicsClient() {
   const router = useRouter();
-  const { rawQuestions: allQuestions } = useDsaQuestions({
-    queryKey: "dashboard-dsa-sheet",
-  });
+  const { questions: allQuestions } = useDsaQuestions();
   const { completedIds: completedQuestions } = useDsaCompletedQuestions();
 
   const nodes: RoadmapNode[] = useMemo(() => {
@@ -70,8 +68,8 @@ function TopicsClient() {
         }
         const entry = topicMap.get(primaryTopic)!;
         entry.total += 1;
-        const qId = q._id;
-        if (qId && completedQuestions.includes(qId)) {
+        const qId = q._id || q.id;
+        if (qId && completedQuestions.includes(String(qId))) {
           entry.solved += 1;
         }
       }

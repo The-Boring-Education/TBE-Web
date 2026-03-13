@@ -14,6 +14,7 @@ import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Progress } from "@ui/progress";
 import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "@ui/sonner";
 import {
     CheckCircle2,
     ClipboardList,
@@ -28,6 +29,7 @@ import {
     Target,
     TrendingUp,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
@@ -184,12 +186,11 @@ function DsaClient() {
         if (!topicMap.has(primaryTopic)) {
           topicMap.set(primaryTopic, { total: 0, solved: 0 });
         }
-
-        const savedAssignments = localStorage.getItem("dsayatra_weekly_revisions");
-        if (savedAssignments) {
-            try {
-                setWeeklyAssignments(JSON.parse(savedAssignments));
-            } catch { }
+        const entry = topicMap.get(primaryTopic)!;
+        entry.total += 1;
+        const qId = q._id || q.id;
+        if (qId && completedQuestions.includes(String(qId))) {
+          entry.solved += 1;
         }
       }
     });
@@ -204,7 +205,7 @@ function DsaClient() {
   // Overall progress
   const totalQuestions = allQuestions.length;
   const totalSolved = completedQuestions.filter((id) =>
-    allQuestions.some((q: any) => q._id === id),
+    allQuestions.some((q: any) => String(q._id || q.id) === String(id)),
   ).length;
   const overallPercentage =
     totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
@@ -234,125 +235,74 @@ function DsaClient() {
       Math.floor((now.getTime() - joinDate.getTime()) / msInWeek),
     );
 
-        const savedProgress = localStorage.getItem("dsayatra_revision_completed");
-        if (savedProgress) {
-            try {
-                setWeekProgress(JSON.parse(savedProgress));
-            } catch { }
+    // Map logs to their respective week indices relative to exact join date
+    const weekMap: Record<number, number> = {};
+    if (weeklyLogs) {
+      weeklyLogs.forEach((log: any) => {
+        const logDate = new Date(log.createdAt);
+        if (logDate >= joinDate) {
+          const wIndex = Math.floor(
+            (logDate.getTime() - joinDate.getTime()) / msInWeek,
+          );
+          weekMap[wIndex] = (weekMap[wIndex] || 0) + (log.timeSpent || 0);
         }
-    }, []);
+      });
+    }
 
-    // Parse all DSA questions from API response
-    const allQuestions = useMemo(() => {
-        const data = dsaResponse?.data?.questions;
-        if (!Array.isArray(data)) return [];
-        return data;
-    }, [dsaResponse]);
+    // Always generate exactly 4 contiguous blocks for the UI
+    const weeks: { label: string; minutes: number; isCurrent: boolean }[] = [];
+    const startIdx = Math.max(0, currentWeekIndex - 3);
+    const endIdx = startIdx + 3;
 
-    // Compute topic-wise progress from real data
-    const topicProgress = useMemo(() => {
-        const topicMap = new Map<string, { total: number; solved: number }>();
-        allQuestions.forEach((q: any) => {
-            const primaryTopic = q.topics?.[0];
-            if (primaryTopic) {
-                if (!topicMap.has(primaryTopic)) {
-                    topicMap.set(primaryTopic, { total: 0, solved: 0 });
-                }
-                const entry = topicMap.get(primaryTopic)!;
-                entry.total += 1;
-                const qId = q._id;
-                if (qId && completedQuestions.includes(qId)) {
-                    entry.solved += 1;
-                }
-            }
-        });
-        return Array.from(topicMap.entries()).map(([topic, data]) => ({
-            name: TOPIC_LABELS[topic] || topic,
-            key: topic,
-            solved: data.solved,
-            total: data.total,
-        }));
-    }, [allQuestions, completedQuestions]);
+    for (let i = startIdx; i <= endIdx; i++) {
+      weeks.push({
+        label: `Week ${i + 1}`,
+        minutes: weekMap[i] || 0,
+        isCurrent: i === currentWeekIndex,
+      });
+    }
 
-    // Overall progress
-    const totalQuestions = allQuestions.length;
-    const totalSolved = completedQuestions.filter((id) =>
-        allQuestions.some((q: any) => q._id === id),
-    ).length;
-    const overallPercentage =
-        totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
+    return weeks;
+  }, [weeklyLogs, joinDateStr]);
 
-    // Weekly performance strictly mapped from join date (the day they first loaded DSA Yatra)
-    const [joinDateStr, setJoinDateStr] = useState<string | null>(null);
+  // This week's progress (based on time logged this week vs a weekly goal)
+  const thisWeekMinutes =
+    weeklyPerformance.length > 0
+      ? weeklyPerformance[weeklyPerformance.length - 1]?.minutes || 0
+      : 0;
+  const weeklyGoalHours = 15; // 15 hours/week goal
+  const thisWeekPercentage = Math.min(
+    100,
+    Math.round((thisWeekMinutes / (weeklyGoalHours * 60)) * 100),
+  );
 
-    useEffect(() => {
-        let storedJoinDate = localStorage.getItem("dsayatra_join_date");
-        if (!storedJoinDate) {
-            storedJoinDate = new Date().toISOString();
-            localStorage.setItem("dsayatra_join_date", storedJoinDate);
+  useEffect(() => {
+    if (user?.id) {
+      userService.getProfile(user.id).then(setProfile);
+    }
+  }, [user?.id]);
+
+  // Resolve dynamic revisions
+  const allRevisions = useMemo(() => {
+    const revs: { title: string; weekInfo: string; completed: boolean }[] = [];
+    Object.keys(weeklyAssignments).forEach((weekIdx) => {
+      const idx = parseInt(weekIdx);
+      const qIds = weeklyAssignments[idx] || [];
+      const completedQs = weekProgress[idx] || [];
+
+      qIds.forEach((qId) => {
+        const q = allQuestions.find((q: any) => String(q._id || q.id) === String(qId));
+        if (q) {
+          revs.push({
+            title: q.name,
+            weekInfo: `Week ${idx + 1} Assignment`,
+            completed: completedQs.includes(qId),
+          });
         }
-        setJoinDateStr(storedJoinDate);
-    }, []);
-
-    const weeklyPerformance = useMemo(() => {
-        if (!joinDateStr) return [];
-
-        let joinDate = new Date(joinDateStr);
-        joinDate.setHours(0, 0, 0, 0);
-
-        const now = new Date();
-        const msInWeek = 1000 * 60 * 60 * 24 * 7;
-        const currentWeekIndex = Math.max(
-            0,
-            Math.floor((now.getTime() - joinDate.getTime()) / msInWeek),
-        );
-
-        // Map logs to their respective week indices relative to exact join date
-        const weekMap: Record<number, number> = {};
-        if (weeklyLogs) {
-            weeklyLogs.forEach((log: any) => {
-                const logDate = new Date(log.createdAt);
-                if (logDate >= joinDate) {
-                    const wIndex = Math.floor(
-                        (logDate.getTime() - joinDate.getTime()) / msInWeek,
-                    );
-                    weekMap[wIndex] = (weekMap[wIndex] || 0) + (log.timeSpent || 0);
-                }
-            });
-        }
-
-        // Always generate exactly 4 contiguous blocks for the UI
-        const weeks: { label: string; minutes: number; isCurrent: boolean }[] = [];
-        const startIdx = Math.max(0, currentWeekIndex - 3);
-        const endIdx = startIdx + 3;
-
-        for (let i = startIdx; i <= endIdx; i++) {
-            weeks.push({
-                label: `Week ${i + 1}`,
-                minutes: weekMap[i] || 0,
-                isCurrent: i === currentWeekIndex,
-            });
-        }
-
-        return weeks;
-    }, [weeklyLogs, joinDateStr]);
-
-    // This week's progress (based on time logged this week vs a weekly goal)
-    const thisWeekMinutes =
-        weeklyPerformance.length > 0
-            ? weeklyPerformance[weeklyPerformance.length - 1]?.minutes || 0
-            : 0;
-    const weeklyGoalHours = 15; // 15 hours/week goal
-    const thisWeekPercentage = Math.min(
-        100,
-        Math.round((thisWeekMinutes / (weeklyGoalHours * 60)) * 100),
-    );
-
-    useEffect(() => {
-        if (user?.id) {
-            userService.getProfile(user.id).then(setProfile);
-        }
-    }, [user?.id]);
+      });
+    });
+    return revs;
+  }, [weeklyAssignments, weekProgress, allQuestions]);
 
   const incompleteRevisions = allRevisions.filter((r) => !r.completed);
   const completedRevisionsCount = allRevisions.filter(
@@ -379,6 +329,23 @@ function DsaClient() {
       details: "Revisions done",
     },
   ];
+
+  const targetLabel = profile?.dsaYatra?.target || "Product-based";
+  const timelineLabel = profile?.dsaYatra?.timeline || "4-6 months";
+  const expLabel = profile?.dsaYatra?.experienceLevel || "Fresher (0-1 yr)";
+
+  const dailyGoalHours = 4;
+  const dailyGoalProgress = Math.min(
+    100,
+    Math.round((solvedToday / expectedDailyQuestions) * 100),
+  );
+  const todayTotalHours = (solvedToday / expectedDailyQuestions) * 4;
+
+  const todayLog = weeklyLogs?.find(
+    (log: any) => new Date(log.createdAt).toDateString() === new Date().toDateString(),
+  );
+
+  const sessionMinutes = Math.floor(seconds / 60);
 
   // Total invested
   const totalMinutes = totalTimeSpent + sessionMinutes;
@@ -417,9 +384,11 @@ function DsaClient() {
           <div className="flex flex-col items-center">
             <div className="w-16 h-16 rounded-full overflow-hidden mb-3 shadow-lg border-2 border-[#ff6b6b]/20 flex items-center justify-center">
               {user?.image ? (
-                <img
+                <Image
                   src={user.image}
                   alt={user.name || "Profile"}
+                  width={64}
+                  height={64}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -486,7 +455,7 @@ function DsaClient() {
                 },
                 {
                   label: "Focus",
-                  value: profile?.dsaYatra?.target || "Software Eng",
+                  value: targetLabel,
                 },
                 {
                   label: "Target",
@@ -517,6 +486,18 @@ function DsaClient() {
                 className="flex-1 bg-[#2a2a2a] text-[#a0a0a0] hover:bg-[#333] font-semibold text-xs rounded-md py-2 h-auto"
               >
                 Edit Profile
+              </Button>
+              <Button
+                onClick={() => {
+                  if (profile?.userName) {
+                    const url = `${window.location.origin}/journey/${profile.userName}`;
+                    navigator.clipboard.writeText(url);
+                    toast.success("Journey link copied!");
+                  }
+                }}
+                className="flex-1 bg-[#ff6b6b] text-white hover:bg-[#ff5252] font-semibold text-xs rounded-md py-2 h-auto px-6"
+              >
+                Share Journey
               </Button>
             </div>
           </div>
