@@ -13,6 +13,7 @@ import type {
   DatabaseQueryResponseType,
   DSADifficultyType,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { AptitudeTopic } from "../models";
 
@@ -251,6 +252,12 @@ const bulkUploadAptitudeDataToDB = async (
 
     return { data: { topic, questionsInserted: updated.questions.length } };
   } catch (error) {
+    logger.error("DB: bulkUploadAptitudeDataToDB failed", {
+      topic: payload.topic,
+      questionCount: payload.questions?.length,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed to bulk upload aptitude data", details: error };
   }
 };

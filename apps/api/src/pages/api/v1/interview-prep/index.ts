@@ -26,9 +26,8 @@ import type {
   DSADifficultyType,
   DSADomainType,
 } from "@/lib/interfaces";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
-import { withRequestLogger } from "@/middleware/requestLogger";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 type RoadmapType = "DSA" | "APTITUDE";
 
@@ -41,8 +40,6 @@ const ROADMAP_HANDLERS: Record<
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -326,4 +323,4 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
     .json(sendAPIResponse({ status: true, data }));
 }
 
-export default withRequestLogger(handler);
+export default withApiHandler(handler);
