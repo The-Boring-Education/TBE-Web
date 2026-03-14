@@ -3,6 +3,8 @@ import {
   DsaPrepWorkspace,
   EditDsaOnboardingModal,
   FlexContainer,
+  Footer,
+  LearningNavbar,
   LinkButton,
   LoadingSpinner,
   SEO,
@@ -107,10 +109,11 @@ const SheetsPageClient = () => {
 
   if (!isMatch) {
     return (
-      <div className="flex bg-gray-950 font-sans h-[calc(100vh-72px)]">
-        <main className="flex-1 px-4 pt-10 text-center flex flex-col items-center justify-center space-y-4">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 max-w-lg">
-            <Target className="w-16 h-16 text-red-500 mx-auto mb-4" />
+      <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col font-sans">
+        <LearningNavbar backHref={routes.dsayatra.dashboard} />
+        <main className="flex-1 pt-[72px] flex flex-col items-center justify-center px-4">
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 max-w-lg text-center">
+            <Target className="w-16 h-16 text-[#ff5757] mx-auto mb-4" />
             <Text level="h3" className="text-xl font-bold text-white mb-2">
               Sheet Currently Unavailable
             </Text>
@@ -120,34 +123,34 @@ const SheetsPageClient = () => {
               <strong>4-6 months</strong> with <strong>Fresher (0-1 yr)</strong>{" "}
               experience. <br />
               <br />
-              Update your goals to access the DSA PREP sheet, or explore topics
+              Update your goals to access the SA PREP sheet, or explore topics
               directly.
             </Text>
             <Button
               variant="PRIMARY"
               onClick={() => setIsEditModalOpen(true)}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold"
+              className="bg-[#ff5757] hover:bg-[#ff4444] text-white font-bold px-8 py-3 rounded-xl transition-all hover:scale-105"
             >
-              Update Goals to Unlock
+              Adjust My Goals
             </Button>
           </div>
-
-          <EditDsaOnboardingModal
-            isOpen={isEditModalOpen}
-            onClose={() => setIsEditModalOpen(false)}
-            onUpdate={() => {
-              if (user?.id) {
-                setIsProfileLoading(true);
-                userService.getProfile(user.id).then((p) => {
-                  setProfile(p);
-                  setIsProfileLoading(false);
-                });
-              }
-            }}
-            currentData={profile as any}
-            userId={user?.id || ""}
-          />
         </main>
+        <Footer isMini />
+        <EditDsaOnboardingModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onUpdate={() => {
+            if (user?.id) {
+              setIsProfileLoading(true);
+              userService.getProfile(user.id).then((p) => {
+                setProfile(p);
+                setIsProfileLoading(false);
+              });
+            }
+          }}
+          currentData={profile as any}
+          userId={user?.id || ""}
+        />
       </div>
     );
   }
@@ -190,13 +193,12 @@ const SheetsPageClient = () => {
 };
 
 export default function SheetsPage({ seoMeta }: PageProps) {
-  return (
-    <Fragment>
-      <SEO seoMeta={seoMeta} appId="dsayatra" />
-      <SheetsPageClient />
-    </Fragment>
-  );
+    return (
+        <Fragment>
+            <SEO seoMeta={seoMeta} appId="dsayatra" />
+            <SheetsPageClient />
+        </Fragment>
+    )
 }
 
-export const getServerSideProps = async () =>
-  getPreFetchProps({ slug: "/sheets", appId: "dsayatra" });
+export const getServerSideProps = async () => getPreFetchProps({ slug: "/sheets", appId: "dsayatra" });

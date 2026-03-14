@@ -14,19 +14,22 @@ import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Progress } from "@ui/progress";
 import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "@ui/sonner";
 import {
-  CheckCircle2,
-  ClipboardList,
-  Code2,
-  FileText,
-  Github,
-  Home,
-  Linkedin,
-  Monitor,
-  PieChart,
-  Target,
-  TrendingUp,
+    CheckCircle2,
+    ClipboardList,
+    Code2,
+    FileText,
+    Github,
+    Home,
+    Linkedin,
+    Monitor,
+    PieChart,
+    Settings,
+    Target,
+    TrendingUp,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
@@ -76,13 +79,13 @@ function Sidebar() {
 }
 
 function StatCard({
-  title,
-  value,
-  subtext,
-  icon: Icon,
-  progress,
-  status,
-  secondaryInfo,
+    title,
+    value,
+    subtext,
+    icon: Icon,
+    progress,
+    status,
+    secondaryInfo,
 }: any) {
   return (
     <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:scale-[1.02] group rounded-xl p-4 h-full relative overflow-hidden">
@@ -185,8 +188,8 @@ function DsaClient() {
         }
         const entry = topicMap.get(primaryTopic)!;
         entry.total += 1;
-        const qId = q._id;
-        if (qId && completedQuestions.includes(qId)) {
+        const qId = q._id || q.id;
+        if (qId && completedQuestions.includes(String(qId))) {
           entry.solved += 1;
         }
       }
@@ -202,7 +205,7 @@ function DsaClient() {
   // Overall progress
   const totalQuestions = allQuestions.length;
   const totalSolved = completedQuestions.filter((id) =>
-    allQuestions.some((q: any) => q._id === id),
+    allQuestions.some((q: any) => String(q._id || q.id) === String(id)),
   ).length;
   const overallPercentage =
     totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
@@ -279,54 +282,27 @@ function DsaClient() {
     }
   }, [user?.id]);
 
-  const targetLabel = profile?.dsaYatra?.target || "Product-based";
-  const timelineLabel = profile?.dsaYatra?.timeline || "4-6 months";
-
-  // Daily time spent calculation (Database Sum + Current Unsynced seconds)
-  const todayLog = stats?.weeklyLogs?.find((log) => {
-    const logDate = new Date(log.createdAt).toDateString();
-    const todayDate = new Date().toDateString();
-    return logDate === todayDate;
-  });
-
-  const sessionMinutes = Math.floor(seconds / 60);
-  const todayTotalMinutes = (todayLog?.timeSpent || 0) + sessionMinutes;
-  const todayTotalHours = (todayTotalMinutes / 60).toFixed(1);
-
-  const dailyGoalHours = 3; // Standard goal
-  const dailyGoalProgress = Math.min(
-    100,
-    Math.round((todayTotalMinutes / (dailyGoalHours * 60)) * 100),
-  );
-
-  // Revisions Data Generation
+  // Resolve dynamic revisions
   const allRevisions = useMemo(() => {
-    const questions: {
-      id: string;
-      title: string;
-      completed: boolean;
-      weekInfo: string;
-    }[] = [];
-    Object.keys(weeklyAssignments).forEach((weekKey) => {
-      const weekIndex = parseInt(weekKey);
-      const assignments = weeklyAssignments[weekIndex] || [];
-      const completedIds = weekProgress[weekIndex] || [];
-      assignments.forEach((id) => {
-        const q = allQuestions.find(
-          (q: any) => String(q._id || q.id || q.name) === String(id),
-        );
+    const revs: { title: string; weekInfo: string; completed: boolean }[] = [];
+    Object.keys(weeklyAssignments).forEach((weekIdx) => {
+      const idx = parseInt(weekIdx);
+      const qIds = weeklyAssignments[idx] || [];
+      const completedQs = weekProgress[idx] || [];
+
+      qIds.forEach((qId) => {
+        const q = allQuestions.find((q: any) => String(q._id || q.id) === String(qId));
         if (q) {
-          questions.push({
-            id: String(id),
-            title: q.name || q.title || "DSA Question",
-            completed: completedIds.includes(String(id)),
-            weekInfo: `Week ${weekIndex + 1} Revision`,
+          revs.push({
+            title: q.name,
+            weekInfo: `Week ${idx + 1} Assignment`,
+            completed: completedQs.includes(qId),
           });
         }
       });
     });
-    return questions;
-  }, [allQuestions, weeklyAssignments, weekProgress]);
+    return revs;
+  }, [weeklyAssignments, weekProgress, allQuestions]);
 
   const incompleteRevisions = allRevisions.filter((r) => !r.completed);
   const completedRevisionsCount = allRevisions.filter(
@@ -353,6 +329,23 @@ function DsaClient() {
       details: "Revisions done",
     },
   ];
+
+  const targetLabel = profile?.dsaYatra?.target || "Product-based";
+  const timelineLabel = profile?.dsaYatra?.timeline || "4-6 months";
+  const expLabel = profile?.dsaYatra?.experienceLevel || "Fresher (0-1 yr)";
+
+  const dailyGoalHours = 4;
+  const dailyGoalProgress = Math.min(
+    100,
+    Math.round((solvedToday / expectedDailyQuestions) * 100),
+  );
+  const todayTotalHours = (solvedToday / expectedDailyQuestions) * 4;
+
+  const todayLog = weeklyLogs?.find(
+    (log: any) => new Date(log.createdAt).toDateString() === new Date().toDateString(),
+  );
+
+  const sessionMinutes = Math.floor(seconds / 60);
 
   // Total invested
   const totalMinutes = totalTimeSpent + sessionMinutes;
@@ -391,9 +384,11 @@ function DsaClient() {
           <div className="flex flex-col items-center">
             <div className="w-16 h-16 rounded-full overflow-hidden mb-3 shadow-lg border-2 border-[#ff6b6b]/20 flex items-center justify-center">
               {user?.image ? (
-                <img
+                <Image
                   src={user.image}
                   alt={user.name || "Profile"}
+                  width={64}
+                  height={64}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -460,7 +455,7 @@ function DsaClient() {
                 },
                 {
                   label: "Focus",
-                  value: profile?.dsaYatra?.target || "Software Eng",
+                  value: targetLabel,
                 },
                 {
                   label: "Target",
@@ -491,6 +486,18 @@ function DsaClient() {
                 className="flex-1 bg-[#2a2a2a] text-[#a0a0a0] hover:bg-[#333] font-semibold text-xs rounded-md py-2 h-auto"
               >
                 Edit Profile
+              </Button>
+              <Button
+                onClick={() => {
+                  if (profile?.userName) {
+                    const url = `${window.location.origin}/journey/${profile.userName}`;
+                    navigator.clipboard.writeText(url);
+                    toast.success("Journey link copied!");
+                  }
+                }}
+                className="flex-1 bg-[#ff6b6b] text-white hover:bg-[#ff5252] font-semibold text-xs rounded-md py-2 h-auto px-6"
+              >
+                Share Journey
               </Button>
             </div>
           </div>
@@ -852,20 +859,20 @@ function DsaClient() {
 }
 
 const Dashboard = ({ seoMeta }: PageProps) => {
-  return (
-    <Fragment>
-      <SEO seoMeta={seoMeta} />
-      <DsaClient />
-    </Fragment>
-  );
+    return (
+        <Fragment>
+            <SEO seoMeta={seoMeta} />
+            <DsaClient />
+        </Fragment>
+    );
 };
 
 export const getStaticProps = async () => ({
-  ...(await getPreFetchProps({
-    slug: routes.dsayatra.home,
-    appId: "dsayatra",
-  })),
-  revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
+    ...(await getPreFetchProps({
+        slug: routes.dsayatra.home,
+        appId: "dsayatra",
+    })),
+    revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
 });
 
 export default Dashboard;

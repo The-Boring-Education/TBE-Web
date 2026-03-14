@@ -10,37 +10,37 @@ import { useRouter } from "next/router";
 import { Fragment, useMemo } from "react";
 
 const EXPLANATIONS: Record<string, string> = {
-  Array: "Fundamental linear data structure for storing collections of items.",
-  String:
-    "Sequence of characters, foundational for text manipulation algorithms.",
-  HashMap:
-    "Key-value pairs using hash functions for O(1) average time complexity.",
-  "Two Pointers": "Technique to optimize searches by using two moving indices.",
-  "Sliding Window": "Subset of two pointers for tracking contiguous subarrays.",
-  "Binary Search": "Efficient O(log n) algorithm for searching sorted arrays.",
-  Sorting: "Algorithms to arrange data in a specific order.",
-  "Linked List": "Linear structure where elements point to the next node.",
-  Stack: "LIFO data structure for push/pop operations.",
-  Queue: "FIFO data structure for processing items strictly in order.",
-  Tree: "Hierarchical data structure with a root, branches, and leaves.",
-  "Binary Tree": "Tree structure where each node has at most two children.",
-  "Binary Search Tree": "A binary tree organized for O(log n) searching.",
-  "Prefix Sum": "Precomputed array for fast range sum queries.",
-  "Bit Manipulation":
-    "Operators that act on the binary representations of values.",
-  Math: "Mathematical algorithms and number theory logic.",
-  Greedy: "Making the locally optimal choice at each step.",
-  Backtracking: "Algorithmic technique for solving problems recursively.",
+    Array: "Fundamental linear data structure for storing collections of items.",
+    String:
+        "Sequence of characters, foundational for text manipulation algorithms.",
+    HashMap:
+        "Key-value pairs using hash functions for O(1) average time complexity.",
+    "Two Pointers": "Technique to optimize searches by using two moving indices.",
+    "Sliding Window": "Subset of two pointers for tracking contiguous subarrays.",
+    "Binary Search": "Efficient O(log n) algorithm for searching sorted arrays.",
+    Sorting: "Algorithms to arrange data in a specific order.",
+    "Linked List": "Linear structure where elements point to the next node.",
+    Stack: "LIFO data structure for push/pop operations.",
+    Queue: "FIFO data structure for processing items strictly in order.",
+    Tree: "Hierarchical data structure with a root, branches, and leaves.",
+    "Binary Tree": "Tree structure where each node has at most two children.",
+    "Binary Search Tree": "A binary tree organized for O(log n) searching.",
+    "Prefix Sum": "Precomputed array for fast range sum queries.",
+    "Bit Manipulation":
+        "Operators that act on the binary representations of values.",
+    Math: "Mathematical algorithms and number theory logic.",
+    Greedy: "Making the locally optimal choice at each step.",
+    Backtracking: "Algorithmic technique for solving problems recursively.",
 };
 
 const TOPIC_ICON_MAP: Record<string, any> = {
-  ARRAY: Database,
-  SLIDING_WINDOW: Layers,
-  RECURSION: Hash,
-  BINARY_SEARCH: Search,
-  LINKED_LIST: Link2,
-  STACK: Database,
-  STRING: Code,
+    ARRAY: Database,
+    SLIDING_WINDOW: Layers,
+    RECURSION: Hash,
+    BINARY_SEARCH: Search,
+    LINKED_LIST: Link2,
+    STACK: Database,
+    STRING: Code,
 };
 
 const PREFERRED_ORDER = [
@@ -55,9 +55,7 @@ const PREFERRED_ORDER = [
 
 function TopicsClient() {
   const router = useRouter();
-  const { rawQuestions: allQuestions } = useDsaQuestions({
-    queryKey: "dashboard-dsa-sheet",
-  });
+  const { questions: allQuestions } = useDsaQuestions();
   const { completedIds: completedQuestions } = useDsaCompletedQuestions();
 
   const nodes: RoadmapNode[] = useMemo(() => {
@@ -70,8 +68,8 @@ function TopicsClient() {
         }
         const entry = topicMap.get(primaryTopic)!;
         entry.total += 1;
-        const qId = q._id;
-        if (qId && completedQuestions.includes(qId)) {
+        const qId = q._id || q.id;
+        if (qId && completedQuestions.includes(String(qId))) {
           entry.solved += 1;
         }
       }
