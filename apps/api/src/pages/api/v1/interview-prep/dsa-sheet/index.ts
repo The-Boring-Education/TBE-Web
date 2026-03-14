@@ -6,13 +6,10 @@ import {
   getAllDSAQuestionsFromDB,
   getDSASheetMetadataFromDB,
 } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
-
   switch (req.method) {
     case "GET":
       return handleGetQuestion(req, res);
@@ -95,4 +92,4 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json(sendAPIResponse({ status: true, data }));
 };
 
-export default handler;
+export default withApiHandler(handler);

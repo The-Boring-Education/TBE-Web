@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { envConfig } from "@/lib/constants";
@@ -13,6 +14,7 @@ interface OverallHealthResponse {
   status: "healthy" | "degraded" | "unhealthy";
   timestamp: string;
   services: {
+    database: ServiceHealthStatus;
     quizzes: ServiceHealthStatus;
     onboarding: ServiceHealthStatus;
   };
@@ -104,13 +106,38 @@ export default async function handler(
   }
 
   try {
-    // Check all services in parallel
-    const [quizzesHealth, onboardingHealth] = await Promise.all([
-      checkServiceHealth("quizzes", envConfig.QUIZ_APP_URL),
-      checkServiceHealth("onboarding", envConfig.ONBOARDING_URL),
-    ]);
+    const checkDatabaseHealth = async (): Promise<ServiceHealthStatus> => {
+      const start = Date.now();
+      try {
+        if (mongoose.connection.readyState !== 1) {
+          await mongoose.connect(envConfig.MONGODB_URI);
+        }
+        await mongoose.connection.db?.admin().ping();
+        return {
+          status: "healthy",
+          responseTime: Date.now() - start,
+          url: "mongodb",
+        };
+      } catch (error) {
+        return {
+          status: "unhealthy",
+          responseTime: Date.now() - start,
+          url: "mongodb",
+          error: error instanceof Error ? error.message : "Connection failed",
+        };
+      }
+    };
+
+    const [databaseHealth, quizzesHealth, onboardingHealth] = await Promise.all(
+      [
+        checkDatabaseHealth(),
+        checkServiceHealth("quizzes", envConfig.QUIZ_APP_URL),
+        checkServiceHealth("onboarding", envConfig.ONBOARDING_URL),
+      ],
+    );
 
     const services = {
+      database: databaseHealth,
       quizzes: quizzesHealth,
       onboarding: onboardingHealth,
     };
@@ -158,23 +185,11 @@ export default async function handler(
       status: "unhealthy",
       timestamp: new Date().toISOString(),
       services: {
-        quizzes: {
-          status: "unknown",
-          url: "error",
-          error: errorMessage,
-        },
-        onboarding: {
-          status: "unknown",
-          url: "error",
-          error: errorMessage,
-        },
+        database: { status: "unknown", url: "mongodb", error: errorMessage },
+        quizzes: { status: "unknown", url: "error", error: errorMessage },
+        onboarding: { status: "unknown", url: "error", error: errorMessage },
       },
-      summary: {
-        total: 3,
-        healthy: 0,
-        unhealthy: 0,
-        unknown: 3,
-      },
+      summary: { total: 3, healthy: 0, unhealthy: 0, unknown: 3 },
     });
   }
 }

@@ -27,6 +27,7 @@ import type {
   DSADomainType,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 type RoadmapType = "DSA" | "APTITUDE";
@@ -77,7 +78,9 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, error } = await addAInterviewSheetToDB(sheetPayload);
 
     if (error) {
-      console.log("Error:", error);
+      logger.error("Error adding interview sheet", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,

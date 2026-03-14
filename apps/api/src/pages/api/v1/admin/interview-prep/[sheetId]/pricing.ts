@@ -2,25 +2,18 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { updateInterviewSheetInDB } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware, connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 interface UpdateSheetPricingRequest {
   price: number;
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
   const adminCheck = await adminMiddleware(req, res);
   if (!adminCheck) return; // adminMiddleware handles the response
-
-  await connectDB();
 
   const { method, query } = req;
   const { sheetId } = query;
@@ -103,7 +96,9 @@ const handleUpdateSheetPricing = async (
       }),
     );
   } catch (error) {
-    console.error("Error updating sheet pricing:", error);
+    logger.error("Error updating sheet pricing", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -113,4 +108,4 @@ const handleUpdateSheetPricing = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

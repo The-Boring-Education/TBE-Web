@@ -1,5 +1,6 @@
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
 import { emailClient } from "@/lib/services";
+import { logger } from "@/lib/utils/logger";
 
 interface EmailRequest {
   from_email: string;
@@ -34,7 +35,11 @@ const sendEmailFromDB = async (
       return { error: result.error || "Failed to send email" };
     }
   } catch (error) {
-    return { error: "Email service error" };
+    logger.error("DB: sendEmailFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Email service error", details: error };
   }
 };
 

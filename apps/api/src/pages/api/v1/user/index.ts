@@ -9,14 +9,12 @@ import {
 } from "@/lib/database";
 import type { CreateUserRequestPayloadProps } from "@/lib/interfaces";
 import { sendWelcomeEmail } from "@/lib/services";
-import { cors, sendAPIResponse } from "@/lib/utils";
+import { sendAPIResponse } from "@/lib/utils";
 import { captureAPIError, captureAuthError } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
-
   const { method, query } = req;
   const { email, userId, username } = query;
 
@@ -189,7 +187,9 @@ const handleCreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
           name,
           id: data._id.toString(),
         }).catch((error) => {
-          console.error("Failed to send welcome email:", error);
+          logger.error("Failed to send welcome email", {
+            error: error instanceof Error ? error.message : String(error),
+          });
           // Don't fail the user creation if email fails
         });
       }
@@ -219,4 +219,4 @@ const handleCreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

@@ -11,12 +11,10 @@ import type {
   MarkQuestionCompletedRequestProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
-
     const { method } = req;
 
     switch (method) {
@@ -123,4 +121,4 @@ const handleGetAllQuestions = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

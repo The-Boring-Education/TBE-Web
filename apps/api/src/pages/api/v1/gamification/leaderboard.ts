@@ -1,18 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getLeaderboardFromDB } from "@/lib/database";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -20,8 +12,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { limit } = req.query;
 
   try {
-    await connectDB();
-
     const { data, error } = await getLeaderboardFromDB(
       limit ? parseInt(limit as string) : 10,
     );
@@ -32,9 +22,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json({ success: true, data });
   } catch (error) {
-    console.error("Leaderboard API error:", error);
+    logger.error("Leaderboard API error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(500).json({ error: "Internal server error" });
   }
 }
 
-export default handler;
+export default withApiHandler(handler);

@@ -4,6 +4,7 @@ import type {
   UserPointsActionType,
 } from "@/lib/interfaces";
 import { calculateUserPointsForAction } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 
 import { Gamification } from "../models";
 
@@ -15,7 +16,11 @@ const addGamificationDocInDB = async (
     await gamification.save();
     return { data: gamification };
   } catch (error) {
-    return { error };
+    logger.error("DB: addGamificationDocInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to add gamification document", details: error };
   }
 };
 
@@ -31,7 +36,11 @@ const getUserPointsFromDB = async (
 
     return { data: gamification };
   } catch (error) {
-    return { error: "Error fetching user points" };
+    logger.error("DB: getUserPointsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error fetching user points", details: error };
   }
 };
 
@@ -62,7 +71,11 @@ const updateUserPointsInDB = async (
 
     return { data: updatedGamification };
   } catch (error) {
-    return { error: "Error updating user points" };
+    logger.error("DB: updateUserPointsInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error updating user points", details: error };
   }
 };
 
@@ -93,7 +106,11 @@ const deductUserPointsFromDB = async (
 
     return { data: updatedGamification };
   } catch (error) {
-    return { error: "Error reducing points" };
+    logger.error("DB: deductUserPointsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error reducing points", details: error };
   }
 };
 
@@ -116,7 +133,14 @@ const handleGamificationPoints = async (
       data,
     };
   } catch (error) {
-    return { error: "Unexpected error in handleGamificationPoints" };
+    logger.error("DB: handleGamificationPoints failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Unexpected error in handleGamificationPoints",
+      details: error,
+    };
   }
 };
 
@@ -149,17 +173,34 @@ const getLeaderboardFromDB = async (
 
     return { data: leaderboard };
   } catch (error) {
-    return { error: "Error fetching leaderboard" };
+    logger.error("DB: getLeaderboardFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error fetching leaderboard", details: error };
   }
 };
 
 const getActionsWithinDateRange = async (
   start: Date,
   end: Date,
-): Promise<DatabaseQueryResponseType> =>
-  await Gamification.find({
-    createdAt: { $gte: start, $lte: end },
-  }).lean();
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const data = await Gamification.find({
+      createdAt: { $gte: start, $lte: end },
+    }).lean();
+    return { data };
+  } catch (error) {
+    logger.error("DB: getActionsWithinDateRange failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch actions within date range",
+      details: error,
+    };
+  }
+};
 
 export {
   addGamificationDocInDB,

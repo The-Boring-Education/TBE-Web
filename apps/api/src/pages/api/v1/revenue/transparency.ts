@@ -3,8 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { Payment, PrepYatraSubscription } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 interface PopulatedPayment {
   _id: any;
@@ -34,15 +34,6 @@ interface PopulatedSubscription {
  * GET /api/v1/revenue/transparency - Get recent transactions and total revenue
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -161,7 +152,9 @@ const handleGetRevenueData = async (
       }),
     );
   } catch (error: any) {
-    console.error("Error getting revenue data:", error);
+    logger.error("Error getting revenue data", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -172,4 +165,4 @@ const handleGetRevenueData = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

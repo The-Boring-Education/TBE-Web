@@ -4,7 +4,8 @@ import { getServerSession } from "next-auth";
 import { apiStatusCodes } from "@/lib/constants";
 import { DevRelLead, DevRelTask, User } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -18,8 +19,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await connectDB();
-
     // Check authentication
     const session = await getServerSession(req, res, authOptions);
     if (!session || !session.user) {
@@ -55,7 +54,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
   } catch (error) {
-    console.error("Error fetching dashboard data:", error);
+    logger.error("Error fetching dashboard data", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -201,7 +202,9 @@ const handleAdvocateDashboard = async (
       }),
     );
   } catch (error) {
-    console.error("Error fetching advocate dashboard:", error);
+    logger.error("Error fetching advocate dashboard", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -324,7 +327,9 @@ const handleLeadDashboard = async (
       }),
     );
   } catch (error) {
-    console.error("Error fetching lead dashboard:", error);
+    logger.error("Error fetching lead dashboard", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -335,4 +340,4 @@ const handleLeadDashboard = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

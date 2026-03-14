@@ -9,19 +9,10 @@ import {
   updateRecruiterInDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  // Handle OPTIONS request for CORS preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  await connectDB();
-
   switch (req.method) {
     case "GET":
       return handleGetRecruiters(req, res);
@@ -120,7 +111,12 @@ const handleAddRecruiter = async (
     try {
       await handleGamificationPoints(true, userId, "RECRUITER_ADDED");
     } catch (gamificationError) {
-      console.error("Gamification trigger failed:", gamificationError);
+      logger.error("Gamification trigger failed", {
+        error:
+          gamificationError instanceof Error
+            ? gamificationError.message
+            : String(gamificationError),
+      });
     }
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -234,4 +230,4 @@ const handleDeleteRecruiter = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

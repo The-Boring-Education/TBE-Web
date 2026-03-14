@@ -8,13 +8,11 @@ import {
   handleGamificationPoints,
   updatePrepLogInDB,
 } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
-
   switch (req.method) {
     case "POST":
       return handleAddLog(req, res);
@@ -68,7 +66,12 @@ const handleAddLog = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       await handleGamificationPoints(true, userId, "PREPLOG_CREATED");
     } catch (gamificationError) {
-      console.error("Gamification trigger failed:", gamificationError);
+      logger.error("Gamification trigger failed", {
+        error:
+          gamificationError instanceof Error
+            ? gamificationError.message
+            : String(gamificationError),
+      });
     }
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json(
@@ -236,8 +239,9 @@ const handleAddMentorFeedback = async (
         });
       } catch (e) {
         // Do not fail the API if email fails; just proceed
-
-        console.error("Feedback email send failed:", e);
+        logger.error("Feedback email send failed", {
+          error: e instanceof Error ? e.message : String(e),
+        });
       }
     }
 
@@ -301,4 +305,4 @@ const handleDeleteLog = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

@@ -1,19 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getActiveSessionsFromDB } from "@/lib/database";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await cors(req, res);
-
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    await connectDB();
-
     const { data: sessions, error } = await getActiveSessionsFromDB();
 
     if (error) {
@@ -25,9 +21,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       data: sessions,
     });
   } catch (error) {
-    console.error("Error fetching active sessions:", error);
+    logger.error("Error fetching active sessions", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     res.status(500).json({ error: "Internal server error" });
   }
 }
 
-export default handler;
+export default withApiHandler(handler);

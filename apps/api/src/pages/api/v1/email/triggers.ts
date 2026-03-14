@@ -4,12 +4,11 @@ import { apiStatusCodes } from "@/lib/constants";
 import type { EmailTriggerRequest } from "@/lib/interfaces";
 import { emailTriggerService } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
-
     switch (req.method) {
       case "POST":
         return handleEmailTrigger(req, res);
@@ -77,7 +76,9 @@ const handleEmailTrigger = async (
       );
     }
   } catch (error) {
-    console.error("Email trigger error:", error);
+    logger.error("Email trigger error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -88,4 +89,4 @@ const handleEmailTrigger = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

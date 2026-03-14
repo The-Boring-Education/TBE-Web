@@ -2,19 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { Challenge, User } from "@/lib/database";
-import { cors } from "@/lib/utils";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  // Handle OPTIONS request for CORS preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -84,7 +76,9 @@ const handleGetChallenges = async (
       }),
     );
   } catch (error) {
-    console.error("Get Challenges Error:", error);
+    logger.error("Get Challenges Error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -182,7 +176,9 @@ const handleCreateChallenge = async (
       }),
     );
   } catch (error) {
-    console.error("Create Challenge Error:", error);
+    logger.error("Create Challenge Error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -193,4 +189,4 @@ const handleCreateChallenge = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

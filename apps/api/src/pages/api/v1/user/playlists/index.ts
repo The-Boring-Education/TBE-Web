@@ -6,20 +6,9 @@ import {
   getUserPlaylistsFromDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
-
   const { method, query } = req;
   const { userId, playlistId } = query as {
     userId: string;
@@ -109,4 +98,4 @@ const handleDeleteUserPlaylist = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

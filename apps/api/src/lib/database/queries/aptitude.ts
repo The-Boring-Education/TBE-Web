@@ -305,11 +305,13 @@ const migrateExistingAptitudeData =
   async (): Promise<DatabaseQueryResponseType> => {
     const logFile = "migration.log"; // Define logFile here
     const log = (msg: string) => {
-      console.log(`[Migration] ${msg}`);
+      logger.info(msg);
       try {
         fs.appendFileSync(logFile, msg + "\n");
       } catch (e) {
-        console.error(`Failed to write to log file: ${e}`);
+        logger.error("Failed to write to log file", {
+          error: e instanceof Error ? e.message : String(e),
+        });
       }
     };
 

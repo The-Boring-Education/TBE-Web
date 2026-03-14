@@ -5,21 +5,20 @@ import {
   getQuizByIdFromDB,
   updateAQuizInDB,
 } from "@/lib/database";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await cors(req, res);
-
   const { id } = req.query;
 
   if (!id || typeof id !== "string") {
-    return res.status(400).json({ error: "Quiz ID is required" });
+    return res
+      .status(400)
+      .json(sendAPIResponse({ status: false, message: "Quiz ID is required" }));
   }
 
   try {
-    await connectDB();
-
     switch (req.method) {
       case "GET":
         return handleGetQuiz(id, req, res);
@@ -30,11 +29,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         return handleAppendQuestions(id, req, res);
 
       default:
-        return res.status(405).json({ error: "Method not allowed" });
+        return res
+          .status(405)
+          .json(
+            sendAPIResponse({ status: false, message: "Method not allowed" }),
+          );
     }
   } catch (error) {
-    console.error("Quiz API error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    logger.error("Quiz API error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return res
+      .status(500)
+      .json(
+        sendAPIResponse({ status: false, message: "Internal server error" }),
+      );
   }
 }
 
@@ -53,7 +62,9 @@ async function handleGetQuiz(
   const { data, error } = await getQuizByIdFromDB(id, includeInactiveQuizzes);
 
   if (error) {
-    return res.status(404).json({ error });
+    return res
+      .status(404)
+      .json(sendAPIResponse({ status: false, message: error || "Not found" }));
   }
 
   // Get all questions
@@ -86,7 +97,9 @@ async function handleGetQuiz(
     questions: simplifiedQuestions,
   };
 
-  return res.status(200).json({ success: true, data: simplifiedData });
+  return res
+    .status(200)
+    .json(sendAPIResponse({ status: true, data: simplifiedData }));
 }
 
 async function handleUpdateQuiz(
@@ -104,10 +117,14 @@ async function handleUpdateQuiz(
   const { data, error } = await updateAQuizInDB({ id, updatedData });
 
   if (error) {
-    return res.status(400).json({ error });
+    return res
+      .status(400)
+      .json(
+        sendAPIResponse({ status: false, message: error || "Bad request" }),
+      );
   }
 
-  return res.status(200).json({ success: true, data });
+  return res.status(200).json(sendAPIResponse({ status: true, data }));
 }
 
 async function handleAppendQuestions(
@@ -119,14 +136,23 @@ async function handleAppendQuestions(
   if (!Array.isArray(questions) || questions.length === 0) {
     return res
       .status(400)
-      .json({ error: "questions must be a non-empty array" });
+      .json(
+        sendAPIResponse({
+          status: false,
+          message: "questions must be a non-empty array",
+        }),
+      );
   }
 
   const { data, error } = await appendQuestionsToQuizInDB(id, questions);
   if (error) {
-    return res.status(400).json({ error });
+    return res
+      .status(400)
+      .json(
+        sendAPIResponse({ status: false, message: error || "Bad request" }),
+      );
   }
-  return res.status(200).json({ success: true, data });
+  return res.status(200).json(sendAPIResponse({ status: true, data }));
 }
 
-export default handler;
+export default withApiHandler(handler);

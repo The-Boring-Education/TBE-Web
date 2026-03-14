@@ -7,10 +7,10 @@ import {
 } from "@/lib/database";
 import type { AddInterviewQuestionRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware, connectDB } from "@/middleware/api";
+import { adminMiddleware } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { method, query } = req;
   const { sheetId, questionId } = query as {
     questionId: string;
@@ -109,4 +109,4 @@ const handleDeleteQuestion = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

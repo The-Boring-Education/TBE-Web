@@ -2,19 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { ChallengeLog } from "@/lib/database";
-import { cors } from "@/lib/utils";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  // Handle OPTIONS request for CORS preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -69,7 +61,9 @@ const handleUpdateLog = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    console.error("Update Challenge Log Error:", error);
+    logger.error("Update Challenge Log Error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -111,7 +105,9 @@ const handleDeleteLog = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    console.error("Delete Challenge Log Error:", error);
+    logger.error("Delete Challenge Log Error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -122,4 +118,4 @@ const handleDeleteLog = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

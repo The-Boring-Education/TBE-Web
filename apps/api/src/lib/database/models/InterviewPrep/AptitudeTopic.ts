@@ -110,8 +110,4 @@ const AptitudeTopic: Model<AptitudeTopicModel> =
     AptitudeTopicSchema,
   );
 
-AptitudeTopic.syncIndexes().catch((err) =>
-  console.error("[AptitudeTopic] syncIndexes failed:", err),
-);
-
 export default AptitudeTopic;

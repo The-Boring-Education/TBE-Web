@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
 
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import type { QuizSessionModel, QuizSessionQuestion } from "../models";
 import {
@@ -75,7 +76,9 @@ const createQuizSessionInDB = async ({
 
     return { data: session };
   } catch (error) {
-    console.error("Error creating quiz session:", error);
+    logger.error("Error creating quiz session", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return { error: "Failed to create quiz session" };
   }
 };
@@ -213,7 +216,9 @@ const submitAnswerInDB = async ({
       },
     };
   } catch (error) {
-    console.error("Error submitting answer:", error);
+    logger.error("Error submitting answer", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return { error: "Failed to submit answer" };
   }
 };
@@ -279,7 +284,9 @@ const completeQuizSessionInDB = async (
 
     return { data: session };
   } catch (error) {
-    console.error("Error completing session:", error);
+    logger.error("Error completing session", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return { error: "Failed to complete session" };
   }
 };
@@ -303,7 +310,7 @@ const updateUserQuestionPerformance = async ({
   difficulty: "easy" | "medium" | "hard";
   isCorrect: boolean;
   timeSpent: number;
-}): Promise<void> => {
+}): Promise<DatabaseQueryResponseType> => {
   try {
     let performance = await UserQuestionPerformance.findOne({
       userId,
@@ -327,29 +334,32 @@ const updateUserQuestionPerformance = async ({
       });
     }
 
-    // Update basic stats
     performance.attempts++;
     if (isCorrect) {
       performance.correctAttempts++;
     }
 
-    // Update average time
     performance.averageTime =
       (performance.averageTime * (performance.attempts - 1) + timeSpent) /
       performance.attempts;
 
-    // Update strength level (0-1 scale)
     performance.strengthLevel =
       performance.correctAttempts / performance.attempts;
 
-    // Update spaced repetition parameters (SuperMemo-2 algorithm)
     updateSpacedRepetition(performance, isCorrect, timeSpent);
 
     performance.lastAttemptedAt = new Date();
 
     await performance.save();
+    return { data: performance };
   } catch (error) {
-    console.error("Error updating question performance:", error);
+    logger.error("DB: updateUserQuestionPerformance failed", {
+      userId,
+      questionId,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update question performance", details: error };
   }
 };
 
@@ -405,7 +415,7 @@ const updateUserAnalyticsInDB = async ({
   score: number;
   difficulty: string;
   timeSpent: number;
-}): Promise<void> => {
+}): Promise<DatabaseQueryResponseType> => {
   try {
     let analytics = await UserQuizAnalytics.findOne({
       userId,
@@ -432,7 +442,6 @@ const updateUserAnalyticsInDB = async ({
       });
     }
 
-    // Update basic stats
     analytics.totalAttempts++;
     analytics.bestScore = Math.max(analytics.bestScore, score);
     analytics.averageScore =
@@ -440,7 +449,6 @@ const updateUserAnalyticsInDB = async ({
       analytics.totalAttempts;
     analytics.totalTimeSpent += timeSpent;
 
-    // Update difficulty performance
     if (
       difficulty !== "mixed" &&
       ["easy", "medium", "hard"].includes(difficulty)
@@ -455,7 +463,6 @@ const updateUserAnalyticsInDB = async ({
         analytics.difficultyPerformance[diffKey].attempts;
     }
 
-    // Add to progress timeline (keep last 30 entries)
     analytics.progressTimeline.push({
       date: new Date(),
       score,
@@ -470,8 +477,15 @@ const updateUserAnalyticsInDB = async ({
     analytics.lastAttemptAt = new Date();
 
     await analytics.save();
+    return { data: analytics };
   } catch (error) {
-    console.error("Error updating analytics:", error);
+    logger.error("DB: updateUserAnalyticsInDB failed", {
+      userId,
+      categoryName,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update user analytics", details: error };
   }
 };
 
@@ -671,7 +685,9 @@ const getQuizAdminAnalyticsFromDB =
 
       return { data: analytics };
     } catch (error) {
-      console.error("Error fetching admin analytics:", error);
+      logger.error("Error fetching admin analytics", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       return { error: "Failed to fetch admin analytics" };
     }
   };
@@ -714,7 +730,9 @@ const getActiveSessionsFromDB =
 
       return { data: formattedSessions };
     } catch (error) {
-      console.error("Error fetching active sessions:", error);
+      logger.error("Error fetching active sessions", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       return { error: "Failed to fetch active sessions" };
     }
   };

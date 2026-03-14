@@ -5,6 +5,7 @@ import type {
   UserRoleType,
   WorkDomainType,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { User } from "../models";
 
@@ -18,7 +19,11 @@ const getUserByIdFromDB = async (
 
     return { data: user };
   } catch (error) {
-    return { error: "Error while fetching user" };
+    logger.error("DB: getUserByIdFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error while fetching user", details: error };
   }
 };
 
@@ -32,7 +37,11 @@ const getUserByEmailFromDB = async (
 
     return { data: user };
   } catch (error) {
-    return { error: "Failed while fetching user" };
+    logger.error("DB: getUserByEmailFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching user", details: error };
   }
 };
 
@@ -43,7 +52,11 @@ const createUserInDB = async (
     const user = await User.create(userPayload);
     return { data: user };
   } catch (error) {
-    return { error: "Failed while creating user" };
+    logger.error("DB: createUserInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while creating user", details: error };
   }
 };
 
@@ -63,7 +76,14 @@ const getUserByUserNameFromDB = async (
 
     return { data: true };
   } catch (error) {
-    return { error: "An error occurred while checking the userName" };
+    logger.error("DB: getUserByUserNameFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "An error occurred while checking the userName",
+      details: error,
+    };
   }
 };
 
@@ -100,7 +120,11 @@ const onboardUserToDB = async (
 
     return { data: user };
   } catch (error) {
-    return { error };
+    logger.error("DB: onboardUserToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to onboard user", details: error };
   }
 };
 
@@ -135,7 +159,11 @@ const onboardPrepYatraUserTODB = async (
 
     return { data: user };
   } catch (error) {
-    return { error };
+    logger.error("DB: onboardPrepYatraUserTODB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to onboard PrepYatra user", details: error };
   }
 };
 
@@ -155,7 +183,11 @@ const updateUserSkillsInDB = async (
     if (!user) return { error: "User does not exist" };
     return { data: user };
   } catch (error) {
-    return { error: "Failed to update user skills" };
+    logger.error("DB: updateUserSkillsInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update user skills", details: error };
   }
 };
 
@@ -166,7 +198,11 @@ const getUserDataByUserNameFromDB = async (
     const user = await User.findOne({ userName });
     return { data: user };
   } catch (error) {
-    return { error: "Failed to fetch user from DB" };
+    logger.error("DB: getUserDataByUserNameFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch user from DB", details: error };
   }
 };
 

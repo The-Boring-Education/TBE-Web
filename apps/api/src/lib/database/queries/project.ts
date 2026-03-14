@@ -12,6 +12,7 @@ import type {
   UpdateProjectRequestPayloadProps,
   UpdateUserChapterInProjectRequestProps,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { Project, UserProject } from "../models";
 import { updateUserPointsInDB } from "./gamification";
@@ -39,12 +40,20 @@ const addAProjectToDB = async ({
     try {
       await project.save();
     } catch (error) {
-      return { error };
+      logger.error("DB: addAProjectToDB failed", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      return { error: "Failed to add project to database", details: error };
     }
 
     return { data: project };
   } catch (error) {
-    return { error };
+    logger.error("DB: addAProjectToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to add project to database", details: error };
   }
 };
 
@@ -53,7 +62,11 @@ const getProjectsFromDB = async (): Promise<DatabaseQueryResponseType> => {
     const projects = await Project.find();
     return { data: projects };
   } catch (error) {
-    return { error };
+    logger.error("DB: getProjectsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch projects from database", details: error };
   }
 };
 
@@ -69,7 +82,14 @@ const getProjectBySlugFromDB = async (
 
     return { data: project };
   } catch (error) {
-    return { error };
+    logger.error("DB: getProjectBySlugFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch project by slug from database",
+      details: error,
+    };
   }
 };
 
@@ -115,7 +135,14 @@ const getProjectBySlugWithUserFromDB = async (
       },
     };
   } catch (error) {
-    return { error };
+    logger.error("DB: getProjectBySlugWithUserFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch project by slug with user from database",
+      details: error,
+    };
   }
 };
 
@@ -147,7 +174,14 @@ const getProjectByIDFromDB = async (
 
     return { data: project };
   } catch (error) {
-    return { error: `Failed while fetching a project: ${error}` };
+    logger.error("DB: getProjectByIDFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch project by ID from database",
+      details: error,
+    };
   }
 };
 
@@ -168,7 +202,11 @@ const updateProjectInDB = async ({
 
     return { data: updatedProject };
   } catch (error) {
-    return { error };
+    logger.error("DB: updateProjectInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update project in database", details: error };
   }
 };
 
@@ -184,7 +222,11 @@ const deleteProjectFromDB = async (
     }
     return { data: deletedProject };
   } catch (error) {
-    return { error };
+    logger.error("DB: deleteProjectFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to delete project from database", details: error };
   }
 };
 
@@ -205,7 +247,11 @@ const addSectionToProjectInDB = async (
 
     return { data: project };
   } catch (error) {
-    return { error: "Section not added" };
+    logger.error("DB: addSectionToProjectInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Section not added", details: error };
   }
 };
 
@@ -221,7 +267,11 @@ const getSectionsFromProjectInDB = async (
 
     return { data: project.sections };
   } catch (error) {
-    return { error: "Section not fetched" };
+    logger.error("DB: getSectionsFromProjectInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Section not fetched", details: error };
   }
 };
 
@@ -255,7 +305,11 @@ const updateSectionInProjectInDB = async ({
 
     return { data: project.sections[updatedSectionIndex] };
   } catch (error) {
-    return { error: "Error updating section" };
+    logger.error("DB: updateSectionInProjectInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error updating section", details: error };
   }
 };
 
@@ -284,7 +338,11 @@ const deleteSectionFromProjectInDB = async ({
 
     return {};
   } catch (error) {
-    return { error: "Error deleting section" };
+    logger.error("DB: deleteSectionFromProjectInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error deleting section", details: error };
   }
 };
 
@@ -314,7 +372,11 @@ const addChapterToSectionInDB = async (
 
     return { data: project };
   } catch (error) {
-    return { error: "Chapter not added" };
+    logger.error("DB: addChapterToSectionInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Chapter not added", details: error };
   }
 };
 
@@ -373,7 +435,11 @@ const getChapterFromSectionInDB = async (
 
     return { data: chapter };
   } catch (error) {
-    return { error: "Error fetching chapter" };
+    logger.error("DB: getChapterFromSectionInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error fetching chapter", details: error };
   }
 };
 
@@ -417,7 +483,11 @@ const updateChapterInSectionInDB = async ({
 
     return { data: project };
   } catch (error) {
-    return { error: "Chapter not updated" };
+    logger.error("DB: updateChapterInSectionInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Chapter not updated", details: error };
   }
 };
 
@@ -467,7 +537,11 @@ const deleteChapterFromSectionInDB = async ({
 
     return { data: "Chapter deleted successfully" };
   } catch (error) {
-    return { error: "Error deleting chapter" };
+    logger.error("DB: deleteChapterFromSectionInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error deleting chapter", details: error };
   }
 };
 
@@ -524,7 +598,14 @@ const updateUserProjectChapterInDB = async ({
 
     return { data: userProject };
   } catch (error) {
-    return { error: "Failed to update chapter in user project" };
+    logger.error("DB: updateUserProjectChapterInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to update chapter in user project",
+      details: error,
+    };
   }
 };
 
@@ -558,7 +639,11 @@ const enrollInAProject = async ({
 
     return { data: userProject };
   } catch (error) {
-    return { error: `Failed while enrolling in a project ${error}` };
+    logger.error("DB: enrollInAProject failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to enroll in project", details: error };
   }
 };
 
@@ -583,7 +668,11 @@ const getAllEnrolledProjectsFromDB = async (
       data: projectData,
     };
   } catch (error) {
-    return { error: "Failed while fetching enrolled projects" };
+    logger.error("DB: getAllEnrolledProjectsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching enrolled projects", details: error };
   }
 };
 
@@ -595,7 +684,11 @@ const getEnrolledProjectFromDB = async ({
     const enrolledProject = await UserProject.findOne({ userId, projectId });
     return { data: enrolledProject };
   } catch (error) {
-    return { error: "Failed while fetching enrolled project" };
+    logger.error("DB: getEnrolledProjectFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching enrolled project", details: error };
   }
 };
 
@@ -653,7 +746,14 @@ const getAProjectForUserFromDB = async (userId: string, projectId: string) => {
       },
     };
   } catch (error) {
-    return { error: "Failed to fetch project with task status" };
+    logger.error("DB: getAProjectForUserFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch project with task status",
+      details: error,
+    };
   }
 };
 

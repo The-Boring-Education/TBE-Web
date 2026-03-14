@@ -7,14 +7,13 @@ import type {
   InterviewSheetQuestionModel,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils/functions";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
  * API endpoint to upload/publish completed interview sheets from The-Boring-Agents to database
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(405).json(
       sendAPIResponse({
@@ -116,7 +115,9 @@ export default async function handler(
     );
 
     if (error) {
-      console.error("DB Save Error:", error);
+      logger.error("DB Save Error", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       return res.status(500).json(
         sendAPIResponse({
           status: false,
@@ -136,7 +137,9 @@ export default async function handler(
       }),
     );
   } catch (error: any) {
-    console.error("Upload handler error:", error.message);
+    logger.error("Upload handler error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(500).json(
       sendAPIResponse({
         status: false,
@@ -146,4 +149,6 @@ export default async function handler(
       }),
     );
   }
-}
+};
+
+export default withApiHandler(handler);

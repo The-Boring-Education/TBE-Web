@@ -7,12 +7,10 @@ import {
 } from "@/lib/database";
 import type { MarkQuestionStarredRequestProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
-
     switch (req.method) {
       case "POST":
         return handleStarQuestion(req, res);
@@ -140,4 +138,4 @@ const handleGetStarredQuestions = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

@@ -3,7 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { DevRelLead } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
@@ -16,8 +17,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await connectDB();
-
     const { email } = req.query;
 
     if (!email || typeof email !== "string") {
@@ -62,7 +61,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    console.error("Error checking application status:", error);
+    logger.error("Error checking application status", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -73,4 +74,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

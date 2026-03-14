@@ -150,11 +150,4 @@ const withApiHandler = (
   };
 };
 
-/**
- * @deprecated Use withApiHandler instead for full logging + error boundary.
- */
-const withRequestLogger = (handler: NextApiHandler): NextApiHandler => {
-  return withApiHandler(handler, { cors: false, db: false });
-};
-
-export { withApiHandler, withRequestLogger };
+export { withApiHandler };

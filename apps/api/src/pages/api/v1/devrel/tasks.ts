@@ -4,7 +4,8 @@ import { getServerSession } from "next-auth";
 import { apiStatusCodes } from "@/lib/constants";
 import { DevRelLead, DevRelTask, User } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 interface CreateTaskRequest {
@@ -30,8 +31,6 @@ interface CreateTaskRequest {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
-
     // Check authentication
     const session = await getServerSession(req, res, authOptions);
     if (!session || !session.user) {
@@ -69,7 +68,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
   } catch (error) {
-    console.error("Error in DevRel tasks API:", error);
+    logger.error("Error in DevRel tasks API", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -139,7 +140,9 @@ const handleGetTasks = async (
       }),
     );
   } catch (error) {
-    console.error("Error fetching tasks:", error);
+    logger.error("Error fetching tasks", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -196,7 +199,9 @@ const handleCreateTask = async (
       }),
     );
   } catch (error) {
-    console.error("Error creating task:", error);
+    logger.error("Error creating task", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -293,7 +298,9 @@ const handleUpdateTaskProgress = async (
       }),
     );
   } catch (error) {
-    console.error("Error updating task progress:", error);
+    logger.error("Error updating task progress", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -304,4 +311,4 @@ const handleUpdateTaskProgress = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

@@ -8,15 +8,11 @@ import {
   saveLeaderboardToDB,
 } from "@/lib/database";
 import type { LeaderboardType } from "@/lib/interfaces";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
   try {
-    await connectDB();
-
     switch (req.method) {
       case "POST":
         return await handleGenerateLeaderboard(req, res);
@@ -115,4 +111,4 @@ const handleGetLeaderboard = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

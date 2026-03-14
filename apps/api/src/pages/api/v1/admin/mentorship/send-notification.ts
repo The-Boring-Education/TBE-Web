@@ -3,19 +3,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { emailClient } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
-
   if (req.method !== "POST") {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
       sendAPIResponse({
@@ -134,4 +124,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

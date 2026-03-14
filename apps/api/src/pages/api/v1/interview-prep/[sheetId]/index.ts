@@ -8,10 +8,12 @@ import {
 } from "@/lib/database";
 import type { AddInterviewSheetRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware, connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { method, query } = req;
   const { sheetId, userId } = query as { sheetId: string; userId: string };
 
@@ -112,7 +114,7 @@ const handleUpdateSheet = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);
 
 const handleDeleteSheet = async (
   req: NextApiRequest,
@@ -124,7 +126,7 @@ const handleDeleteSheet = async (
 
     if (error) {
       if (error === "Interview sheet not found") {
-        console.warn(`Sheet ${sheetId} not found for deletion`);
+        logger.warn("Sheet not found for deletion", { sheetId });
         return res.status(apiStatusCodes.NOT_FOUND).json(
           sendAPIResponse({
             status: false,
@@ -133,7 +135,10 @@ const handleDeleteSheet = async (
         );
       }
 
-      console.error(`Error deleting sheet ${sheetId}:`, error);
+      logger.error("Error deleting sheet", {
+        sheetId,
+        error: error instanceof Error ? error.message : String(error),
+      });
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
@@ -151,7 +156,10 @@ const handleDeleteSheet = async (
       }),
     );
   } catch (error) {
-    console.error(`Exception deleting sheet ${sheetId}:`, error);
+    logger.error("Exception deleting sheet", {
+      sheetId,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,

@@ -2,6 +2,7 @@ import type {
   AddCertificateRequestPayloadProps,
   DatabaseQueryResponseType,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import Certificate from "../models/Certificate";
 
@@ -13,7 +14,11 @@ const addACertificateToDB = async (
     await certificate.save();
     return { data: certificate };
   } catch (error) {
-    return { error };
+    logger.error("DB: addACertificateToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to add certificate", details: error };
   }
 };
 
@@ -31,7 +36,14 @@ const checkCertificateExistForAProgram = async (
       return { error: "Certificate does not exist" };
     }
   } catch (error) {
-    return { error: "Failed while checking certificate existence" };
+    logger.error("DB: checkCertificateExistForAProgram failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed while checking certificate existence",
+      details: error,
+    };
   }
 };
 
@@ -46,7 +58,11 @@ const getCertificateById = async (certificateId: string) => {
       return { error: "Certificate not found" };
     }
   } catch (error) {
-    return { error: "Failed while fetching certificate" };
+    logger.error("DB: getCertificateById failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching certificate", details: error };
   }
 };
 
@@ -61,7 +77,11 @@ const getUserCertificates = async (userId: string) => {
       return { error: "No certificates found" };
     }
   } catch (error) {
-    return { error: "Failed while fetching certificates" };
+    logger.error("DB: getUserCertificates failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching certificates", details: error };
   }
 };
 

@@ -10,6 +10,7 @@ import type {
   UpdateInterviewSheetRequestPayloadProps,
 } from "@/lib/interfaces";
 import { generateYouTubeSearchLink } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 
 import { DSAQuestion, InterviewSheet, UserSheet } from "../models";
 import { toObjectId } from "./common";
@@ -23,7 +24,11 @@ const addAInterviewSheetToDB = async (
     await sheet.save();
     return { data: sheet };
   } catch (error) {
-    return { error };
+    logger.error("DB: addAInterviewSheetToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to add interview sheet", details: error };
   }
 };
 
@@ -40,7 +45,11 @@ const getAllInterviewSheetsFromDB =
 
       return { data: sheet };
     } catch (error) {
-      return { error };
+      logger.error("DB: getAllInterviewSheetsFromDB failed", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      return { error: "Failed to fetch interview sheets", details: error };
     }
   };
 
@@ -89,7 +98,11 @@ const getInterviewSheetBySlugFromDB = async (
       },
     };
   } catch (error) {
-    return { error };
+    logger.error("DB: getInterviewSheetBySlugFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch interview sheet by slug", details: error };
   }
 };
 
@@ -105,7 +118,11 @@ const getInterviewSheetByIDFromDB = async (
 
     return { data: sheet };
   } catch (error) {
-    return { error };
+    logger.error("DB: getInterviewSheetByIDFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch interview sheet by ID", details: error };
   }
 };
 
@@ -124,6 +141,10 @@ const updateInterviewSheetInDB = async ({
 
     return { data: updatedCourse };
   } catch (error) {
+    logger.error("DB: updateInterviewSheetInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed while updating sheet", details: error };
   }
 };
@@ -160,7 +181,11 @@ const updateInterviewQuestionInDB = async (
 
     return { data: course };
   } catch (error) {
-    return { error: "Failed to update chapter to course", details: error };
+    logger.error("DB: updateInterviewQuestionInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update interview question", details: error };
   }
 };
 
@@ -178,6 +203,10 @@ const deleteQuestionFromSheetInDB = async (
 
     return { data: course };
   } catch (error) {
+    logger.error("DB: deleteQuestionFromSheetInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed to delete question from sheet", details: error };
   }
 };
@@ -199,6 +228,10 @@ const addQuestionToInterviewSheetInDB = async (
 
     return { data: updatedSheet };
   } catch (error) {
+    logger.error("DB: addQuestionToInterviewSheetInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return {
       error: "Failed to add question to interview sheet",
       details: error,
@@ -232,6 +265,10 @@ const enrollInASheet = async ({
 
     return { data: userSheet };
   } catch (error) {
+    logger.error("DB: enrollInASheet failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed while enrolling in a sheet", details: error };
   }
 };
@@ -244,6 +281,10 @@ const getEnrolledSheetFromDB = async ({
     const enrolledSheet = await UserSheet.findOne({ userId, sheetId });
     return { data: enrolledSheet };
   } catch (error) {
+    logger.error("DB: getEnrolledSheetFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed while fetching enrolled sheet", details: error };
   }
 };
@@ -287,6 +328,10 @@ const getAllEnrolledSheetsFromDB = async (
       }),
     };
   } catch (error) {
+    logger.error("DB: getAllEnrolledSheetsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed while fetching enrolled sheets", details: error };
   }
 };
@@ -310,6 +355,10 @@ const markQuestionCompletedByUser = async (
 
     return { data: updatedSheet };
   } catch (error) {
+    logger.error("DB: markQuestionCompletedByUser failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed to mark question as completed", details: error };
   }
 };
@@ -328,6 +377,10 @@ const getAllQuestionsByUser = async (userId: string) => {
 
     return { data: allQuestions };
   } catch (error) {
+    logger.error("DB: getAllQuestionsByUser failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return {
       error: "Error fetching questions from the database",
       details: error,
@@ -359,7 +412,11 @@ const getASheetFromDBById = async (
 
     return { data: sheet };
   } catch (error) {
-    return { error: `Failed while fetching a sheet`, details: error };
+    logger.error("DB: getASheetFromDBById failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching a sheet", details: error };
   }
 };
 
@@ -401,8 +458,12 @@ const getASheetForUserFromDB = async (userId: string, sheetId: string) => {
       } as BaseInterviewSheetResponseProps,
     };
   } catch (error) {
+    logger.error("DB: getASheetForUserFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return {
-      error: "Failed to fetch courses with chapter status",
+      error: "Failed to fetch sheet for user",
       details: error,
     };
   }
@@ -429,6 +490,10 @@ const markQuestionStarredByUser = async (
 
     return { data: updatedSheet };
   } catch (error) {
+    logger.error("DB: markQuestionStarredByUser failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed to mark question as starred", details: error };
   }
 };
@@ -446,6 +511,10 @@ const getStarredQuestionsFromDB = async (userId: string, sheetId: string) => {
     );
     return { data: starredQuestions };
   } catch (error) {
+    logger.error("DB: getStarredQuestionsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed to get starred questions", details: error };
   }
 };
@@ -462,9 +531,11 @@ const deleteInterviewSheetFromDB = async (
     const sheetName = sheet.name;
     await InterviewSheet.findByIdAndDelete(String(sheetId));
 
-    console.log(
-      `Interview sheet "${sheetName}" (${sheetId}) deleted successfully | Questions removed: ${questionsCount}`,
-    );
+    logger.info("Interview sheet deleted successfully", {
+      sheetName,
+      sheetId,
+      questionsDeleted: questionsCount,
+    });
     return {
       data: {
         deletedSheetId: sheetId,
@@ -474,8 +545,11 @@ const deleteInterviewSheetFromDB = async (
       },
     };
   } catch (error) {
-    console.error("Error deleting interview sheet:", error);
-    return { error: String(error) };
+    logger.error("DB: deleteInterviewSheetFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to delete interview sheet", details: error };
   }
 };
 
@@ -547,7 +621,10 @@ const getAllDSAQuestionsFromDB = async (
       },
     };
   } catch (error) {
-    console.error("Error fetching DSA questions:", error);
+    logger.error("DB: getAllDSAQuestionsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed to fetch DSA questions", details: error };
   }
 };
@@ -576,6 +653,10 @@ const getDSASheetMetadataFromDB =
         },
       };
     } catch (error) {
+      logger.error("DB: getDSASheetMetadataFromDB failed", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
       return { error: "Failed to fetch metadata", details: error };
     }
   };
@@ -604,6 +685,10 @@ const addDSAQuestionToDB = async (questionPayload: {
     await question.save();
     return { data: question };
   } catch (error) {
+    logger.error("DB: addDSAQuestionToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed to add DSA question", details: error };
   }
 };
@@ -668,6 +753,10 @@ const getDSAQuestionsGroupedByTopic = async (
 
     return { data: result };
   } catch (error) {
+    logger.error("DB: getDSAQuestionsGroupedByTopic failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed to fetch DSA questions by topic", details: error };
   }
 };

@@ -3,18 +3,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { getDYUserByIdFromDB, updateDYUserByIdInDB } from "@/lib/database";
 import type { DSAYatraOnboardingPayload } from "@/lib/interfaces";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  // Handle OPTIONS request for CORS preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -102,4 +94,4 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

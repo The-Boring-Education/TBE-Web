@@ -2,6 +2,7 @@ import type {
   CreateUserInterestRequestProps,
   DatabaseQueryResponseType,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { UserInterest } from "../models";
 
@@ -61,7 +62,11 @@ const createUserInterestInDB = async (
 
     return { data: interest };
   } catch (error) {
-    return { error: "Failed to create user interest" };
+    logger.error("DB: createUserInterestInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to create user interest", details: error };
   }
 };
 
@@ -116,7 +121,11 @@ const getUserInterestsFromDB = async (filters: {
       },
     };
   } catch (error) {
-    return { error: "Failed to get user interests" };
+    logger.error("DB: getUserInterestsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to get user interests", details: error };
   }
 };
 
@@ -140,7 +149,11 @@ const updateUserInterestInDB = async (
 
     return { data: interest };
   } catch (error) {
-    return { error: "Failed to update user interest" };
+    logger.error("DB: updateUserInterestInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update user interest", details: error };
   }
 };
 

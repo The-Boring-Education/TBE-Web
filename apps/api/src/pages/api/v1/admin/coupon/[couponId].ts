@@ -6,8 +6,10 @@ import {
   getCouponByIdFromDB,
   updateCouponFromDB,
 } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware, connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 interface UpdateCouponRequest {
   code?: string;
@@ -21,18 +23,9 @@ interface UpdateCouponRequest {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
   // Apply admin middleware - only admins can access coupon management
   const adminCheck = await adminMiddleware(req, res);
   if (!adminCheck) return; // adminMiddleware handles the response
-
-  await connectDB();
 
   const { method, query } = req;
   const { couponId } = query;
@@ -88,7 +81,9 @@ const handleGetCoupon = async (couponId: string, res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    console.error("Error fetching coupon:", error);
+    logger.error("Error fetching coupon", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -153,7 +148,9 @@ const handleUpdateCoupon = async (
       }),
     );
   } catch (error) {
-    console.error("Error updating coupon:", error);
+    logger.error("Error updating coupon", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -185,7 +182,9 @@ const handleDeleteCoupon = async (couponId: string, res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    console.error("Error deleting coupon:", error);
+    logger.error("Error deleting coupon", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -195,4 +194,4 @@ const handleDeleteCoupon = async (couponId: string, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

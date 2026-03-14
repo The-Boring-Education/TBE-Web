@@ -1,29 +1,27 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import { getAllEnrolledSheetsFromDB } from "@/lib/database";
+import {
+  getAllQuestionsByUser,
+  handleGamificationPoints,
+  markQuestionCompletedByUser,
+} from "@/lib/database";
+import type {
+  GetAllQuestionsRequestProps,
+  MarkQuestionCompletedRequestProps,
+} from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
   try {
-    await connectDB();
-
-    const { method, query } = req;
-    const { userId } = query;
+    const { method } = req;
 
     switch (method) {
+      case "PATCH":
+        return handleMarkQuestionCompleted(req, res);
       case "GET":
-        return handleGetAllUserSheets(req, res, userId as string);
+        return handleGetAllQuestions(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
@@ -43,38 +41,84 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handleGetAllUserSheets = async (
+const handleMarkQuestionCompleted = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  userId: string,
 ) => {
-  try {
-    const { data: allUserSheets, error: fetchEnrolledSheetsError } =
-      await getAllEnrolledSheetsFromDB(userId);
+  const { userId, sheetId, questionId, isCompleted } =
+    req.body as MarkQuestionCompletedRequestProps;
 
-    if (fetchEnrolledSheetsError)
+  try {
+    const { data, error } = await markQuestionCompletedByUser(
+      userId,
+      sheetId,
+      questionId,
+      isCompleted,
+    );
+
+    if (error) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: "Failed while fetching enrolled sheets",
+          message: "Failed to update question status",
         }),
       );
+    }
+
+    await handleGamificationPoints(isCompleted, userId, "COMPLETE_QUESTION");
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        data: allUserSheets,
+        data,
+        message: "Question status updated successfully",
       }),
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: "Failed while fetching enrolled sheets",
+        message: "Failed to update question status",
         error,
       }),
     );
   }
 };
 
-export default handler;
+const handleGetAllQuestions = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+) => {
+  const { userId } = req.query as unknown as GetAllQuestionsRequestProps;
+
+  try {
+    const { data, error } = await getAllQuestionsByUser(userId);
+
+    if (error || !data) {
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: "Failed to retrieve questions",
+        }),
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data,
+        message: "Questions retrieved successfully",
+      }),
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "Failed to retrieve questions",
+        error,
+      }),
+    );
+  }
+};
+
+export default withApiHandler(handler);

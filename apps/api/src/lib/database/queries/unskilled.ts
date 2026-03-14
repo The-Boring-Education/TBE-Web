@@ -4,6 +4,7 @@ import type {
   UnSkilledEvaluationRequestBody,
 } from "@/lib/interfaces";
 import { constrainNumberToRange } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 
 import { Job, JobAggregate } from "../models";
 
@@ -16,7 +17,11 @@ const addJobToDB = async (
     const savedJob = await newJob.save();
     return { data: savedJob };
   } catch (error) {
-    return { error };
+    logger.error("DB: addJobToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to add job to database", details: error };
   }
 };
 
@@ -48,7 +53,11 @@ const getAllJobsFromDB = async (
       },
     };
   } catch (error) {
-    return { error };
+    logger.error("DB: getAllJobsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch jobs from database", details: error };
   }
 };
 
@@ -67,7 +76,11 @@ const getJobByJobIdFromDB = async (
     }
     return { data: job };
   } catch (error) {
-    return { error };
+    logger.error("DB: getJobByJobIdFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch job by ID from database", details: error };
   }
 };
 
@@ -176,7 +189,14 @@ const fetchJobsAggregationFromDB =
         },
       };
     } catch (error) {
-      return { error };
+      logger.error("DB: fetchJobsAggregationFromDB failed", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      return {
+        error: "Failed to fetch job aggregation from database",
+        details: error,
+      };
     }
   };
 
@@ -202,7 +222,11 @@ const saveDailyJobsAggregationToDB =
 
       return { data: newAggregation };
     } catch (error) {
-      return { error: "Failed to save job aggregation to DB" };
+      logger.error("DB: saveDailyJobsAggregationToDB failed", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      return { error: "Failed to save job aggregation to DB", details: error };
     }
   };
 
@@ -219,7 +243,14 @@ const getLatestJobAggregationFromDB =
 
       return { data: latestAggregation };
     } catch (error) {
-      return { error: "Failed to fetch latest job aggregation data" };
+      logger.error("DB: getLatestJobAggregationFromDB failed", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      return {
+        error: "Failed to fetch latest job aggregation data",
+        details: error,
+      };
     }
   };
 
@@ -375,7 +406,14 @@ const getResumeEvaluationResultsFromDB = async ({
 
     return { data: response };
   } catch (error) {
-    return { error: "Failed to fetch latest job aggregation data" };
+    logger.error("DB: getResumeEvaluationResultsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch resume evaluation results from database",
+      details: error,
+    };
   }
 };
 

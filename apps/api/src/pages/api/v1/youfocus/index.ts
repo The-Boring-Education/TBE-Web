@@ -10,23 +10,13 @@ import {
   updateTagsInPlaylist,
 } from "@/lib/database";
 import {
-  cors,
   extractPlaylistId,
   fetchPlaylistData,
   sendAPIResponse,
 } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
   const { query } = req;
   const { userId } = query as { userId: string };
 
@@ -36,10 +26,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case "GET":
       return handleGetPlaylists(req, res);
     default:
-      return res.status(apiStatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: `Method ${req.method} not allowed`,
-      });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${req.method} not allowed`,
+        }),
+      );
   }
 };
 
@@ -53,10 +45,12 @@ const handleAddPlaylist = async (
   const playlistId = extractPlaylistId(playlistUrl);
 
   if (!playlistId) {
-    return res.status(apiStatusCodes.BAD_REQUEST).json({
-      success: false,
-      message: "Invalid playlist URL",
-    });
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: "Invalid playlist URL",
+      }),
+    );
   }
 
   const { data: existingPlaylist } = await checkPlaylistExistsByID(playlistId);
@@ -95,10 +89,12 @@ const handleAddPlaylist = async (
     const playlistData = await fetchPlaylistData(playlistId);
 
     if (!playlistData) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: "Failed to fetch playlist data from YouTube",
-      });
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: "Failed to fetch playlist data from YouTube",
+        }),
+      );
     }
 
     // Add playlist to the database
@@ -124,11 +120,13 @@ const handleAddPlaylist = async (
       );
 
       if (userPlaylistError) {
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-          status: false,
-          message: "Failed to link user and playlist",
-          error: userPlaylistError,
-        });
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+          sendAPIResponse({
+            status: false,
+            message: "Failed to link user and playlist",
+            error: userPlaylistError,
+          }),
+        );
       }
     }
 
@@ -140,11 +138,13 @@ const handleAddPlaylist = async (
       }),
     );
   } catch (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: `We can't fetch this playlist. Try another one.`,
-      error,
-    });
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: `We can't fetch this playlist. Try another one.`,
+        error,
+      }),
+    );
   }
 };
 
@@ -155,11 +155,13 @@ const handleGetPlaylists = async (
   const { data, error } = await getPlaylistsFromDB();
 
   if (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "Error fetching playlists",
-      error,
-    });
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "Error fetching playlists",
+        error,
+      }),
+    );
   }
 
   return res.status(apiStatusCodes.OKAY).json(
@@ -171,4 +173,4 @@ const handleGetPlaylists = async (
   );
 };
 
-export default handler;
+export default withApiHandler(handler);

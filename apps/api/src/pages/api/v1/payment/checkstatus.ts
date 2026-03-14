@@ -3,21 +3,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { checkPaymentStatusFromDB } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
   try {
-    await connectDB();
-
     switch (req.method) {
       case "GET":
         return checkPaymentStatus(req, res);
@@ -73,4 +62,4 @@ const checkPaymentStatus = async (
   );
 };
 
-export default handler;
+export default withApiHandler(handler);

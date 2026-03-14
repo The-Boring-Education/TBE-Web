@@ -10,19 +10,9 @@ import {
   UserSheet,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
-
   const { method, query } = req;
   const {
     action,
@@ -992,4 +982,4 @@ const getUserDemographics = async (
   );
 };
 
-export default handler;
+export default withApiHandler(handler);

@@ -2,8 +2,9 @@ import { Types } from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { Quiz, QuizSession } from "@/lib/database";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 interface StartSessionBody {
   userId: string;
@@ -13,10 +14,13 @@ interface StartSessionBody {
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await cors(req, res);
-
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json(
+      sendAPIResponse({
+        status: false,
+        message: "Method not allowed",
+      }),
+    );
   }
 
   const {
@@ -28,35 +32,52 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   // Validation
   if (!userId || !quizId) {
-    return res.status(400).json({
-      error: "Missing required fields: userId, quizId",
-    });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "Missing required fields: userId, quizId",
+      }),
+    );
   }
 
   if (difficulty && !["easy", "medium", "hard", "mixed"].includes(difficulty)) {
-    return res.status(400).json({
-      error: "Invalid difficulty. Must be easy, medium, hard, or mixed",
-    });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "Invalid difficulty. Must be easy, medium, hard, or mixed",
+      }),
+    );
   }
 
   if (questionCount < 1 || questionCount > 50) {
-    return res.status(400).json({
-      error: "Question count must be between 1 and 50",
-    });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "Question count must be between 1 and 50",
+      }),
+    );
   }
 
   try {
-    await connectDB();
-
     // Get the quiz
     const quiz = await Quiz.findById(quizId).lean();
     if (!quiz || !quiz.isActive) {
-      return res.status(404).json({ error: "Quiz not found or inactive" });
+      return res.status(404).json(
+        sendAPIResponse({
+          status: false,
+          message: "Quiz not found or inactive",
+        }),
+      );
     }
 
     // Check if quiz has questions
     if (!quiz.questions || quiz.questions.length === 0) {
-      return res.status(400).json({ error: "Quiz has no questions" });
+      return res.status(400).json(
+        sendAPIResponse({
+          status: false,
+          message: "Quiz has no questions",
+        }),
+      );
     }
 
     // Question selection
@@ -75,9 +96,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     if (selectedQuestions.length === 0) {
-      return res.status(400).json({
-        error: "No questions available for the selected difficulty",
-      });
+      return res.status(400).json(
+        sendAPIResponse({
+          status: false,
+          message: "No questions available for the selected difficulty",
+        }),
+      );
     }
 
     // Create session data
@@ -125,14 +149,24 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     };
 
-    res.status(201).json({
-      success: true,
-      data: response,
-    });
+    return res.status(201).json(
+      sendAPIResponse({
+        status: true,
+        data: response,
+      }),
+    );
   } catch (error) {
-    console.error("Error starting quiz session:", error);
-    res.status(500).json({ error: "Internal server error" });
+    logger.error("Error starting quiz session", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return res.status(500).json(
+      sendAPIResponse({
+        status: false,
+        message: "Internal server error",
+        error,
+      }),
+    );
   }
 }
 
-export default handler;
+export default withApiHandler(handler);

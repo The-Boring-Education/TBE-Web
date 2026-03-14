@@ -1,4 +1,5 @@
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { User } from "../models";
 
@@ -9,7 +10,11 @@ const getDYUserByIdFromDB = async (
     const user = await User.findById(userId);
     return { data: user };
   } catch (error) {
-    return { error: "Failed to fetch user from DB" };
+    logger.error("DB: getDYUserByIdFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch user from DB", details: error };
   }
 };
 
@@ -22,7 +27,11 @@ const updateDYUserByIdInDB = async (
     const updatedUser = await User.findByIdAndUpdate(userId, update, options);
     return { data: updatedUser };
   } catch (error) {
-    return { error: "Failed to update user in DB" };
+    logger.error("DB: updateDYUserByIdInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update user in DB", details: error };
   }
 };
 

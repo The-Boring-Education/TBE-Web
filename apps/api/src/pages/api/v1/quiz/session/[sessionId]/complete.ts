@@ -2,32 +2,38 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import type { QuizSessionQuestion } from "@/lib/database";
 import { completeQuizSessionInDB } from "@/lib/database";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await cors(req, res);
-
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res
+      .status(405)
+      .json(sendAPIResponse({ status: false, message: "Method not allowed" }));
   }
 
   const { sessionId } = req.query;
 
   // Validation
   if (!sessionId || typeof sessionId !== "string") {
-    return res.status(400).json({ error: "Session ID is required" });
+    return res
+      .status(400)
+      .json(
+        sendAPIResponse({ status: false, message: "Session ID is required" }),
+      );
   }
 
   try {
-    await connectDB();
-
     const { data: session, error } = await completeQuizSessionInDB(sessionId);
 
     if (error || !session) {
-      return res
-        .status(400)
-        .json({ error: error || "Failed to complete session" });
+      return res.status(400).json(
+        sendAPIResponse({
+          status: false,
+          message: error || "Failed to complete session",
+        }),
+      );
     }
 
     // Calculate detailed results
@@ -79,13 +85,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       ),
     };
 
-    res.status(200).json({
-      success: true,
-      data: response,
-    });
+    return res
+      .status(200)
+      .json(sendAPIResponse({ status: true, data: response }));
   } catch (error) {
-    console.error("Error completing quiz session:", error);
-    res.status(500).json({ error: "Internal server error" });
+    logger.error("Error completing quiz session", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return res
+      .status(500)
+      .json(
+        sendAPIResponse({ status: false, message: "Internal server error" }),
+      );
   }
 }
 
@@ -131,4 +142,4 @@ function calculateDifficultyPerformance(
   };
 }
 
-export default handler;
+export default withApiHandler(handler);

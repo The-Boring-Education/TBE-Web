@@ -1,6 +1,7 @@
 import mongoose, { type Model } from "mongoose";
 
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 /**
  * General utility to get total count of documents for any Mongoose model.
@@ -12,7 +13,11 @@ const getTotalCountFromModel = async (
     const count = await model.countDocuments();
     return { data: count };
   } catch (error) {
-    return { error: "Error while counting documents" };
+    logger.error("DB: getTotalCountFromModel failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error while counting documents", details: error };
   }
 };
 
@@ -43,7 +48,11 @@ const getAllDocumentsFromModel = async (
       },
     };
   } catch (error) {
-    return { error: "Error while fetching documents" };
+    logger.error("DB: getAllDocumentsFromModel failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error while fetching documents", details: error };
   }
 };
 

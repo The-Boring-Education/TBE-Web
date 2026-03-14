@@ -4,12 +4,11 @@ import { apiStatusCodes } from "@/lib/constants";
 import { sendEmailFromDB } from "@/lib/database";
 import type { EmailRequest } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
-
     switch (req.method) {
       case "POST":
         return handleSendEmail(req, res);
@@ -73,7 +72,9 @@ const handleSendEmail = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    console.error("Email sending error:", error);
+    logger.error("Email sending error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -84,4 +85,4 @@ const handleSendEmail = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

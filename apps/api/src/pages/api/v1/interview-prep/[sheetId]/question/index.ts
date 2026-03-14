@@ -4,10 +4,9 @@ import { apiStatusCodes } from "@/lib/constants";
 import { addQuestionToInterviewSheetInDB } from "@/lib/database";
 import type { AddInterviewQuestionRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { method, query } = req;
   const { sheetId } = query as { sheetId: string };
 
@@ -79,4 +78,4 @@ const handleAddQuestion = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

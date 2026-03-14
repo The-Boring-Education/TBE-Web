@@ -4,14 +4,15 @@ import { apiStatusCodes } from "@/lib/constants";
 import { InterviewSheet } from "@/lib/database";
 import type { UpdateCompanyTypePayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
  * API Handler to update company types for multiple interview questions
  * POST /api/v1/interview-prep/company-types/update
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -85,7 +86,9 @@ const handleUpdateCompanyTypes = async (
       }),
     );
   } catch (error: any) {
-    console.error("Error updating company types:", error);
+    logger.error("Error updating company types", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -96,4 +99,4 @@ const handleUpdateCompanyTypes = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

@@ -5,7 +5,8 @@ import { User } from "@/lib/database";
 import { PrepYatraSubscription } from "@/lib/database";
 import { type CreateSubscriptionPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
  * API Handler for PrepYatra subscriptions
@@ -13,7 +14,6 @@ import { connectDB } from "@/middleware/api";
  * GET /api/v1/prepyatra/subscription?userId={userId} - Get user subscription status
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -97,7 +97,9 @@ const handleCreateSubscription = async (
       }),
     );
   } catch (error: any) {
-    console.error("Error creating subscription:", error);
+    logger.error("Error creating subscription", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -148,7 +150,9 @@ const handleGetSubscription = async (
       }),
     );
   } catch (error: any) {
-    console.error("Error getting subscription:", error);
+    logger.error("Error getting subscription", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -159,4 +163,4 @@ const handleGetSubscription = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

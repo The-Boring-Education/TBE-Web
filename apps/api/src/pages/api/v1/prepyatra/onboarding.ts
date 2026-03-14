@@ -3,18 +3,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { getPYUserByIdFromDB, updatePYUserByIdInDB } from "@/lib/database";
 import type { PrepYatraOnboardingPayload } from "@/lib/interfaces";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  // Handle OPTIONS request for CORS preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -55,7 +48,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    console.log(req.body);
+    logger.info("Onboarding request body", { body: req.body });
 
     const userResult = await getPYUserByIdFromDB(userId);
     if (userResult.error || !userResult.data) {
@@ -127,4 +120,4 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

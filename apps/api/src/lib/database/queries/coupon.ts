@@ -1,4 +1,5 @@
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import Coupon from "../models/Coupon";
 
@@ -12,7 +13,11 @@ const findCouponByCodeFromDB = async (
     }
     return { data: coupon };
   } catch (error) {
-    return { error: "Failed to find coupon" };
+    logger.error("DB: findCouponByCodeFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to find coupon", details: error };
   }
 };
 
@@ -54,7 +59,11 @@ const validateCouponForProductFromDB = async (
 
     return { data: coupon };
   } catch (error) {
-    return { error: "Failed to validate coupon" };
+    logger.error("DB: validateCouponForProductFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to validate coupon", details: error };
   }
 };
 
@@ -68,7 +77,11 @@ const getCouponByIdFromDB = async (
     }
     return { data: coupon };
   } catch (error) {
-    return { error: "Failed to get coupon" };
+    logger.error("DB: getCouponByIdFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to get coupon", details: error };
   }
 };
 
@@ -81,7 +94,11 @@ const getAllCouponsFromDB = async (): Promise<DatabaseQueryResponseType> => {
       .sort({ createdAt: -1 });
     return { data: coupons };
   } catch (error) {
-    return { error: "Failed to fetch coupons" };
+    logger.error("DB: getAllCouponsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch coupons", details: error };
   }
 };
 
@@ -120,21 +137,33 @@ const createCouponFromDB = async (couponData: {
     await savedCoupon.populate("createdBy", "name email");
 
     return { data: savedCoupon };
-  } catch (error: any) {
+  } catch (error) {
+    logger.error("DB: createCouponFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     // Handle Mongoose validation errors
-    if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map(
+    if (
+      error instanceof Error &&
+      "name" in error &&
+      error.name === "ValidationError"
+    ) {
+      const messages = Object.values((error as any).errors).map(
         (err: any) => err.message,
       );
-      return { error: messages.join(", ") };
+      return { error: messages.join(", "), details: error };
     }
 
     // Handle duplicate key error
-    if (error.code === 11000) {
-      return { error: "Coupon with this code already exists" };
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      (error as any).code === 11000
+    ) {
+      return { error: "Coupon with this code already exists", details: error };
     }
 
-    return { error: "Failed to create coupon" };
+    return { error: "Failed to create coupon", details: error };
   }
 };
 
@@ -190,21 +219,35 @@ const updateCouponFromDB = async (
     }
 
     return { data: updatedCoupon };
-  } catch (error: any) {
+  } catch (error) {
+    logger.error("DB: updateCouponFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     // Handle Mongoose validation errors
-    if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map(
-        (err: any) => err.message,
-      );
-      return { error: messages.join(", ") };
+    if (
+      error &&
+      typeof error === "object" &&
+      "name" in error &&
+      (error as { name: string }).name === "ValidationError"
+    ) {
+      const messages = Object.values(
+        (error as { errors: Record<string, { message: string }> }).errors,
+      ).map((err) => err.message);
+      return { error: messages.join(", "), details: error };
     }
 
     // Handle duplicate key error
-    if (error.code === 11000) {
-      return { error: "Coupon with this code already exists" };
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      (error as { code: number }).code === 11000
+    ) {
+      return { error: "Coupon with this code already exists", details: error };
     }
 
-    return { error: "Failed to update coupon" };
+    return { error: "Failed to update coupon", details: error };
   }
 };
 
@@ -220,7 +263,11 @@ const deleteCouponFromDB = async (
 
     return { data: deletedCoupon };
   } catch (error) {
-    return { error: "Failed to delete coupon" };
+    logger.error("DB: deleteCouponFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to delete coupon", details: error };
   }
 };
 
@@ -253,7 +300,11 @@ const applyCouponToSheetsFromDB = async (
 
     return { data: updatedCoupon };
   } catch (error) {
-    return { error: "Failed to apply coupon to sheets" };
+    logger.error("DB: applyCouponToSheetsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to apply coupon to sheets", details: error };
   }
 };
 
@@ -280,7 +331,11 @@ const removeCouponFromSheetFromDB = async (
 
     return { data: updatedCoupon };
   } catch (error) {
-    return { error: "Failed to remove coupon from sheet" };
+    logger.error("DB: removeCouponFromSheetFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to remove coupon from sheet", details: error };
   }
 };
 
@@ -300,7 +355,11 @@ const incrementCouponUsageFromDB = async (
 
     return { data: updatedCoupon };
   } catch (error) {
-    return { error: "Failed to increment coupon usage" };
+    logger.error("DB: incrementCouponUsageFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to increment coupon usage", details: error };
   }
 };
 

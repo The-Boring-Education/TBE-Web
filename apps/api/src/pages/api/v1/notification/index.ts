@@ -11,19 +11,10 @@ import type {
   AddNotificationRequestPayloadProps,
   UpdateNotificationRequestPayloadProps,
 } from "@/lib/interfaces";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -191,4 +182,4 @@ const handleDeleteANotification = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

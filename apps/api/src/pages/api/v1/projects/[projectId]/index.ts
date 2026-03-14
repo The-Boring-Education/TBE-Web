@@ -9,11 +9,9 @@ import {
 } from "@/lib/database";
 import type { UpdateProjectRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
-
   const { query } = req;
   const { projectId, userId } = query as { projectId: string; userId: string };
 
@@ -143,4 +141,4 @@ const handleDeleteProject = async (
   );
 };
 
-export default handler;
+export default withApiHandler(handler);
