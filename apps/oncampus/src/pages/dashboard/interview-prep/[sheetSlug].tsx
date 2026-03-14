@@ -344,33 +344,6 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                 companyTypes={currentQuestion?.companyTypes}
                 actions={[
                   currentQuestionId && (
-                    <Button
-                      key="complete"
-                      className="w-fit mt-2"
-                      isLoading={isLoading}
-                      disabled={!sheet.isEnrolled}
-                      text={
-                        isLoading
-                          ? "Marking..."
-                          : !sheet.isEnrolled
-                            ? "Enroll to Mark Complete"
-                            : isQuestionCompleted
-                              ? "Completed"
-                              : "Mark As Completed"
-                      }
-                      variant={
-                        isQuestionCompleted
-                          ? "SUCCESS"
-                          : !sheet.isEnrolled
-                            ? "SECONDARY"
-                            : isLoading
-                              ? "SECONDARY"
-                              : "PRIMARY"
-                      }
-                      onClick={toggleCompletion}
-                    />
-                  ),
-                  currentQuestionId && (
                     <StarButton
                       key="star"
                       isStarred={isStarred}
