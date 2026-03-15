@@ -1,3 +1,5 @@
+/// <reference path="../../types/markdown-it-texmath.d.ts" />
+
 import katex from "katex";
 import type MarkdownIt from "markdown-it";
 import texmath from "markdown-it-texmath";
