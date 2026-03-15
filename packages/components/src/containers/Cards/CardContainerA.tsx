@@ -4,8 +4,8 @@ import {
   PrimaryCard,
   Section,
   SectionHeaderContainer,
-} from '@tbe/components';
-import type { CardContainerAProps } from '@tbe/interface';
+} from "@tbe/components";
+import type { CardContainerAProps } from "@tbe/interface";
 
 const CardContainerA = ({
   heading,
@@ -15,9 +15,9 @@ const CardContainerA = ({
   subtext,
 }: CardContainerAProps) => (
   <Section>
-    <FlexContainer className='gap-4' direction='col'>
+    <FlexContainer className="gap-4" direction="col">
       <SectionHeaderContainer
-        focusText={focusText || ''}
+        focusText={focusText || ""}
         heading={heading}
         subtext={subtext}
       />

@@ -1,10 +1,10 @@
-import type { LearningSidebarListProps } from '@tbe/interface';
+import type { LearningSidebarListProps } from "@tbe/interface";
 
 const LearningSidebarList = <T,>({
   items,
   renderItem,
   getKey,
-  className = '',
+  className = "",
 }: LearningSidebarListProps<T>) => {
   return (
     <div className={`flex flex-col gap-px ${className}`}>

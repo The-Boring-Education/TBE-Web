@@ -1,15 +1,16 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
 import {
   COMPANY_TYPES,
   DATABASE_MODELS,
+  DSA_TOPICS,
   GOAL_TYPES,
   INTERVIEW_CATEGORIES,
   PLATFORM_USAGE,
   USER_ROLE,
-  WORK_DOMAIN,  
-} from '@/lib/constants';
-import type { UserModel } from '@/lib/interfaces';
+  WORK_DOMAIN,
+} from "@/lib/constants";
+import type { UserModel } from "@/lib/interfaces";
 
 const PrepYatraSchema = new Schema({
   pyOnboarded: {
@@ -27,7 +28,7 @@ const PrepYatraSchema = new Schema({
   goal: {
     type: String,
     enum: GOAL_TYPES,
-    required: [true, 'Goal is required'],
+    required: [true, "Goal is required"],
   },
   targetCompanies: {
     type: [String],
@@ -64,18 +65,42 @@ const PrepYatraSchema = new Schema({
   },
 });
 
+const DSAYatraSchema = new Schema({
+  dyOnboarded: {
+    type: Boolean,
+    default: false,
+  },
+  experienceLevel: {
+    type: String,
+  },
+  timeline: {
+    type: String,
+  },
+  target: {
+    type: String,
+  },
+  preferredLanguage: {
+    type: String,
+  },
+  targetTopics: {
+    type: [String],
+    enum: DSA_TOPICS,
+    default: [],
+  },
+});
+
 const UserSchema: Schema<UserModel> = new Schema(
   {
     name: {
       type: String,
-      required: [true, 'name is required'],
+      required: [true, "name is required"],
     },
     userName: {
       type: String,
     },
     email: {
       type: String,
-      required: [true, 'email is required'],
+      required: [true, "email is required"],
       unique: true,
     },
     image: {
@@ -122,16 +147,18 @@ const UserSchema: Schema<UserModel> = new Schema(
     from: {
       type: String,
       enum: [
-        'webapp',           // From main webapp
-        'prepyatra',        // From PrepYatra platform
-        'quiz',             // From quiz app
-        'direct'            // Direct onboarding (existing users)
+        "webapp", // From main webapp
+        "prepyatra", // From PrepYatra platform
+        "dsayatra", // From DSAYatra platform
+        "quiz", // From quiz app
+        "direct", // Direct onboarding (existing users)
       ],
-      default: 'direct'
+      default: "direct",
     },
     prepYatra: PrepYatraSchema,
+    dsaYatra: DSAYatraSchema,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const User: Model<UserModel> =

@@ -1,4 +1,4 @@
-import {useToast} from "@tbe/hooks";
+import { useToast } from "@tbe/hooks";
 
 import {
   Toast,
@@ -6,16 +6,24 @@ import {
   ToastDescription,
   ToastProvider,
   ToastTitle,
-  ToastViewport
+  ToastViewport,
 } from "../ui/toast";
 
 export function Toaster() {
-  const {toasts} = useToast();
+  const { toasts } = useToast();
 
   return (
     <ToastProvider>
-      {toasts.map(function ({id, title, description, action, variant, ...restProps}) {
-        const mappedVariant = variant === "destructive" ? "destructive" : "default"
+      {toasts.map(function ({
+        id,
+        title,
+        description,
+        action,
+        variant,
+        ...restProps
+      }) {
+        const mappedVariant =
+          variant === "destructive" ? "destructive" : "default";
         return (
           <Toast key={id} variant={mappedVariant} {...restProps}>
             <div className="grid gap-1">

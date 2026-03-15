@@ -1,7 +1,7 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS } from '@/lib/constants';
-import type { PlaylistModel, Video } from '@/lib/interfaces';
+import { DATABASE_MODELS } from "@/lib/constants";
+import type { PlaylistModel, Video } from "@/lib/interfaces";
 
 const VideoSchema = new Schema<Video>(
   {
@@ -9,18 +9,18 @@ const VideoSchema = new Schema<Video>(
     videoId: { type: String, required: true },
     thumbnail: { type: String, required: true },
   },
-  { _id: false } // Disable the creation of _id for embedded documents
+  { _id: false }, // Disable the creation of _id for embedded documents
 );
 
 const PlaylistSchema = new Schema<PlaylistModel>(
   {
     playlistId: {
       type: String,
-      required: [true, 'Playlist ID is required'],
+      required: [true, "Playlist ID is required"],
     },
     playlistName: {
       type: String,
-      required: [true, 'Playlist Name is required'],
+      required: [true, "Playlist Name is required"],
     },
     description: {
       type: String,
@@ -31,14 +31,14 @@ const PlaylistSchema = new Schema<PlaylistModel>(
     },
     thumbnail: {
       type: String,
-      required: [true, 'Thumbnail URL is required'],
+      required: [true, "Thumbnail URL is required"],
     },
     tags: {
       type: [String],
     },
     videos: [VideoSchema],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Create or retrieve the model

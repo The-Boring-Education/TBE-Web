@@ -1,8 +1,8 @@
-import { Disclosure } from '@headlessui/react';
-import { ChevronUpIcon } from '@heroicons/react/20/solid';
-import { FlexContainer, Text } from '@tbe/components';
-import type { AccordionProps } from '@tbe/interface';
-import { useState } from 'react';
+import { Disclosure } from "@headlessui/react";
+import { ChevronUpIcon } from "@heroicons/react/20/solid";
+import { FlexContainer, Text } from "@tbe/components";
+import type { AccordionProps } from "@tbe/interface";
+import { useState } from "react";
 
 const Accordion = ({ title, children, open = false }: AccordionProps) => {
   const [isSelected, setIsSelected] = useState(open);
@@ -13,20 +13,20 @@ const Accordion = ({ title, children, open = false }: AccordionProps) => {
         <>
           <Disclosure.Button
             className={`flex w-full justify-between items-center rounded border px-2 py-1 strong-text hover:bg-gray-200 ${
-              isSelected ? 'bg-blue-100' : ''
+              isSelected ? "bg-blue-100" : ""
             }`}
             onClick={() => setIsSelected(!isSelected)}
           >
-            <Text className='paragraph text-greyDark text-left' level='span'>
+            <Text className="paragraph text-greyDark text-left" level="span">
               {title}
             </Text>
             <ChevronUpIcon
               className={`transition text-greyDark ${
-                !open ? 'rotate-180 transform' : ''
+                !open ? "rotate-180 transform" : ""
               } h-5 w-5`}
             />
           </Disclosure.Button>
-          <FlexContainer className='my-1 w-full' justifyCenter={false}>
+          <FlexContainer className="my-1 w-full" justifyCenter={false}>
             {children}
           </FlexContainer>
         </>

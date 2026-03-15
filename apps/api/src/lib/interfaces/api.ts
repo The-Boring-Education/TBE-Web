@@ -183,6 +183,17 @@ export interface PrepYatraOnboardingPayload {
   preferredCategories: InterviewCategoryType[];
 }
 
+export interface DSAYatraOnboardingPayload {
+  userId: string;
+  name: string;
+  username: string;
+  experienceLevel: string;
+  timeline: string;
+  target: string;
+  preferredLanguage: string;
+  targetTopics: DSATopicType[];
+}
+
 export interface UpdateCompanyTypePayload {
   questionIds: string[];
   companyTypes: CompanyType[];
@@ -200,6 +211,33 @@ export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY";
 export type DSADomainType = "FRONTEND" | "BACKEND" | "GENERAL" | "FULLSTACK";
 
 export type DSADifficultyType = "EASY" | "MEDIUM" | "HARD";
+
+export type AptitudeCategoryType =
+  | "QUANTITATIVE"
+  | "VERBAL"
+  | "REASONING"
+  | "INTERVIEW";
+
+export type AptitudeSubCategoryType =
+  | "ARITHMETIC_APTITUDE"
+  | "DATA_INTERPRETATION"
+  | "VERBAL_ABILITY"
+  | "LOGICAL_REASONING"
+  | "GD_ROUND"
+  | "HR_INTERVIEW";
+
+export type AptitudeAnswerFormatType =
+  | "SPEED"
+  | "RULES"
+  | "PERSPECTIVE"
+  | "BEHAVIORAL";
+
+export interface AptitudeTopicDefinition {
+  name: string;
+  slug: string;
+  category: AptitudeCategoryType;
+  subCategory: AptitudeSubCategoryType;
+}
 
 export type DSATopicType =
   | "ARRAY"

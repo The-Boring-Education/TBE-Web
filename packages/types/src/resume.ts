@@ -12,7 +12,7 @@
  * Only skills are extracted from resume, domains and experience are UI selections
  */
 export interface ParsedResumeData {
-  skills: string[]
+  skills: string[];
 }
 
 /**
@@ -20,9 +20,9 @@ export interface ParsedResumeData {
  * Combines extracted skills + user UI selections
  */
 export interface ResumeEvaluationRequest {
-  resumeSkills: string[]
-  domains: string[]
-  experienceLevel: string
+  resumeSkills: string[];
+  domains: string[];
+  experienceLevel: string;
 }
 
 /**
@@ -34,7 +34,7 @@ export type ExperienceLevelType =
   | "Mid-Level (2-4 yrs)"
   | "Senior (4-7 yrs)"
   | "Staff Engineer (7-10 yrs)"
-  | "Principal Engineer (10+ yrs)"
+  | "Principal Engineer (10+ yrs)";
 
 // ============================================================================
 // BACKEND RESPONSE TYPES - From Unskilled API
@@ -44,18 +44,18 @@ export type ExperienceLevelType =
  * Skill data with job market statistics
  */
 export interface SkillData {
-  skill: string
-  percentage: number
-  jobCount: number
+  skill: string;
+  percentage: number;
+  jobCount: number;
 }
 
 /**
  * Company type distribution data
  */
 export interface CompanyTypeData {
-  type: string
-  percentage: number
-  jobCount: number
+  type: string;
+  percentage: number;
+  jobCount: number;
 }
 
 /**
@@ -63,23 +63,23 @@ export interface CompanyTypeData {
  * Contains all information needed for frontend UI display
  */
 export interface ResumeEvaluationData {
-  resumeScore: number
-  skillsMatched: number
-  skillsMissing: number
-  remoteJobs: number
-  jobsAnalyzed: number
-  matchingSkills: SkillData[]
-  missingSkills: SkillData[]
-  companyTypeDistribution: CompanyTypeData[]
+  resumeScore: number;
+  skillsMatched: number;
+  skillsMissing: number;
+  remoteJobs: number;
+  jobsAnalyzed: number;
+  matchingSkills: SkillData[];
+  missingSkills: SkillData[];
+  companyTypeDistribution: CompanyTypeData[];
 }
 
 /**
  * Complete API response structure from Unskilled backend
  */
 export interface ResumeEvaluationResponse {
-  status: boolean
-  message: string
-  data: ResumeEvaluationData
+  status: boolean;
+  message: string;
+  data: ResumeEvaluationData;
 }
 
 // ============================================================================
@@ -90,18 +90,18 @@ export interface ResumeEvaluationResponse {
  * Response from Next.js parse API route
  */
 export interface ParseResumeResponse {
-  status: boolean
-  message: string
-  data?: ParsedResumeData
-  error?: string
+  status: boolean;
+  message: string;
+  data?: ParsedResumeData;
+  error?: string;
 }
 
 /**
  * File upload state for hook
  */
 export interface ResumeFileState {
-  file: File | null
-  extractedSkills: string[]
-  isLoading: boolean
-  error: string | null
+  file: File | null;
+  extractedSkills: string[];
+  isLoading: boolean;
+  error: string | null;
 }

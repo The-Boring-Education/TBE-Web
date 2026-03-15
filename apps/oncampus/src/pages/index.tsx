@@ -10,5 +10,5 @@ export default function Home() {
       <CampusPrepLanding />
       <Footer variant="oncampus" />
     </Fragment>
-  )
-} 
+  );
+}

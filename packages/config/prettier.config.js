@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   semi: true,
   singleQuote: true,
   tabWidth: 2,
@@ -17,3 +17,5 @@ module.exports = {
   requirePragma: false,
   useTabs: false,
 };
+
+export default config;

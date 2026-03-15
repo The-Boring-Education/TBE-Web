@@ -83,6 +83,7 @@ The app uses the `@tbe/auth` package for authentication, which provides:
 ### Auth Setup
 
 The authentication is configured in:
+
 - `src/pages/api/auth/[...nextauth].ts` - NextAuth handler
 - `src/pages/_app.tsx` - SessionProvider wrapper
 - `src/pages/login.tsx` - Login page with `LoginCardNew` component

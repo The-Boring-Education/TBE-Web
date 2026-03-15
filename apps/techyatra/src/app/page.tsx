@@ -1,12 +1,12 @@
-"use client"
-import { Button, Footer, Navbar } from "@tbe/components"
-import { LearningSection, TabSection } from "@tbe/components/techyatra"
-import React from "react"
+"use client";
+import { Button, Footer, Navbar } from "@tbe/components";
+import { LearningSection, TabSection } from "@tbe/components/techyatra";
+import React from "react";
 
 const Home = () => {
   const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
-  }
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen">
@@ -98,7 +98,7 @@ const Home = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

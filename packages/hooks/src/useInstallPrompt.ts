@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 export function useInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null);
@@ -23,9 +23,9 @@ export function useInstallPrompt() {
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      setIsInstallable(true)
+      setIsInstallable(true);
       // Cache the event globally
-      ;(window as any).deferredBeforeInstallPrompt = e;
+      (window as any).deferredBeforeInstallPrompt = e;
     };
 
     const onAppInstalled = () => {
@@ -44,5 +44,5 @@ export function useInstallPrompt() {
     };
   }, []);
 
-  return {isInstallable, deferredPrompt};
+  return { isInstallable, deferredPrompt };
 }

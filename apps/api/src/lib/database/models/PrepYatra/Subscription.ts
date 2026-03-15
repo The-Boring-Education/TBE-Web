@@ -1,32 +1,32 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
 import {
   DATABASE_MODELS,
   SUBSCRIPTION_FEATURES,
   SUBSCRIPTION_TYPES,
-} from '@/lib/constants';
-import type { PrepYatraSubscriptionModel } from '@/lib/interfaces';
+} from "@/lib/constants";
+import type { PrepYatraSubscriptionModel } from "@/lib/interfaces";
 
 const PrepYatraSubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
   {
     userId: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
-      required: [true, 'User ID is required'],
+      required: [true, "User ID is required"],
       index: true,
     },
     type: {
       type: String,
       enum: SUBSCRIPTION_TYPES,
-      required: [true, 'Subscription type is required'],
+      required: [true, "Subscription type is required"],
     },
     amount: {
       type: Number,
-      required: [true, 'Amount is required'],
+      required: [true, "Amount is required"],
     },
     duration: {
       type: Number,
-      required: [true, 'Duration in months is required'],
+      required: [true, "Duration in months is required"],
     },
     startDate: {
       type: Date,
@@ -35,7 +35,7 @@ const PrepYatraSubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
     },
     expiryDate: {
       type: Date,
-      required: [true, 'Expiry date is required'],
+      required: [true, "Expiry date is required"],
     },
     isActive: {
       type: Boolean,
@@ -64,7 +64,7 @@ const PrepYatraSubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
         return ret;
       },
     },
-  }
+  },
 );
 
 // Index for efficient queries
@@ -75,7 +75,7 @@ const PrepYatraSubscription: Model<PrepYatraSubscriptionModel> =
   models?.PrepYatraSubscription ||
   model<PrepYatraSubscriptionModel>(
     DATABASE_MODELS.PREP_YATRA_SUBSCRIPTION,
-    PrepYatraSubscriptionSchema
+    PrepYatraSubscriptionSchema,
   );
 
 export default PrepYatraSubscription;

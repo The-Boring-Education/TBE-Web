@@ -1,122 +1,112 @@
-import type { NextApiRequest, NextApiResponse } from "next"
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from "@/lib/constants"
+import { apiStatusCodes } from "@/lib/constants";
 import {
-    addAWebinarToDB,
-    getAllWebinarsFromDB,
-    getWebinarBySlugFromDB
-} from "@/lib/database"
-import type { AddWebinarRequestPayloadProps } from "@/lib/interfaces"
-import { sendAPIResponse } from "@/lib/utils"
-import { cors } from "@/lib/utils"
-import { connectDB } from "@/middleware/api"
+  addAWebinarToDB,
+  getAllWebinarsFromDB,
+  getWebinarBySlugFromDB,
+} from "@/lib/database";
+import type { AddWebinarRequestPayloadProps } from "@/lib/interfaces";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    // Apply CORS headers
-    await cors(req, res)
+  const { method } = req;
 
-    if (req.method === "OPTIONS") {
-        res.status(200).end()
-        return
-    }
-
-    await connectDB()
-    const { method } = req
-
-    switch (method) {
-        case "POST":
-            return handleAddAWebinar(req, res)
-        case "GET":
-            return handleGetAllWebinars(req, res)
-        default:
-            return res.status(apiStatusCodes.BAD_REQUEST).json(
-                sendAPIResponse({
-                    status: false,
-                    message: `Method ${method} Not Allowed`
-                })
-            )
-    }
-}
+  switch (method) {
+    case "POST":
+      return handleAddAWebinar(req, res);
+    case "GET":
+      return handleGetAllWebinars(req, res);
+    default:
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${method} Not Allowed`,
+        }),
+      );
+  }
+};
 
 const handleAddAWebinar = async (req: NextApiRequest, res: NextApiResponse) => {
-    try {
-        const webinarPayload = req.body as AddWebinarRequestPayloadProps
+  try {
+    const webinarPayload = req.body as AddWebinarRequestPayloadProps;
 
-        const { error: webinarAlreadyExist } = await getWebinarBySlugFromDB(
-            webinarPayload.slug
-        )
+    const { error: webinarAlreadyExist } = await getWebinarBySlugFromDB(
+      webinarPayload.slug,
+    );
 
-        if (!webinarAlreadyExist) {
-            return res.status(apiStatusCodes.BAD_REQUEST).json(
-                sendAPIResponse({
-                    status: false,
-                    message: "Webinar already exists"
-                })
-            )
-        }
-
-        const { data, error } = await addAWebinarToDB(webinarPayload)
-
-        if (error)
-            return res.status(apiStatusCodes.NOT_FOUND).json(
-                sendAPIResponse({
-                    status: false,
-                    message: "Course not added",
-                    error
-                })
-            )
-
-        return res.status(apiStatusCodes.OKAY).json(
-            sendAPIResponse({
-                status: true,
-                message: "Webinar added successfully",
-                data
-            })
-        )
-    } catch (error) {
-        return res.status(apiStatusCodes.NOT_FOUND).json(
-            sendAPIResponse({
-                status: false,
-                message: "Failed while adding webinar",
-                error
-            })
-        )
+    if (!webinarAlreadyExist) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Webinar already exists",
+        }),
+      );
     }
-}
+
+    const { data, error } = await addAWebinarToDB(webinarPayload);
+
+    if (error)
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: "Course not added",
+          error,
+        }),
+      );
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        message: "Webinar added successfully",
+        data,
+      }),
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.NOT_FOUND).json(
+      sendAPIResponse({
+        status: false,
+        message: "Failed while adding webinar",
+        error,
+      }),
+    );
+  }
+};
 
 const handleGetAllWebinars = async (
-    req: NextApiRequest,
-    res: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) => {
-    try {
-        const { data: allWebinars, error: allWebinarsError } =
-            await getAllWebinarsFromDB()
+  try {
+    const { data: allWebinars, error: allWebinarsError } =
+      await getAllWebinarsFromDB();
 
-        if (allWebinarsError || !allWebinars) {
-            return res.status(apiStatusCodes.NOT_FOUND).json(
-                sendAPIResponse({
-                    status: false,
-                    message: "Failed while fetching webinars",
-                    error: allWebinarsError
-                })
-            )
-        }
-
-        return res.status(apiStatusCodes.OKAY).json(
-            sendAPIResponse({
-                status: true,
-                data: allWebinars
-            })
-        )
-    } catch (error) {
-        return res.status(apiStatusCodes.NOT_FOUND).json(
-            sendAPIResponse({
-                status: false,
-                message: "Failed while fetching webinars",
-                error
-            })
-        )
+    if (allWebinarsError || !allWebinars) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: "Failed while fetching webinars",
+          error: allWebinarsError,
+        }),
+      );
     }
-}
 
-export default handler
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data: allWebinars,
+      }),
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.NOT_FOUND).json(
+      sendAPIResponse({
+        status: false,
+        message: "Failed while fetching webinars",
+        error,
+      }),
+    );
+  }
+};
+
+export default withApiHandler(handler);

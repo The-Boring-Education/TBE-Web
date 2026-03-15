@@ -1,5 +1,5 @@
-import { CheckboxButton, FlexContainer } from '@tbe/components';
-import type { CheckboxGroupProps } from '@tbe/interface';
+import { CheckboxButton, FlexContainer } from "@tbe/components";
+import type { CheckboxGroupProps } from "@tbe/interface";
 
 const CheckboxButtonContainer = ({
   options,
@@ -15,7 +15,7 @@ const CheckboxButtonContainer = ({
   };
 
   return (
-    <FlexContainer className='gap-2'>
+    <FlexContainer className="gap-2">
       {options.map((option, index) => (
         <CheckboxButton
           key={index}

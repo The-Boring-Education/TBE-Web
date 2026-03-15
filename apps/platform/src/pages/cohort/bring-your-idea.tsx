@@ -6,6 +6,7 @@ import {
   SparklesIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
+import type { FAQItem } from '@tbe/components';
 import {
   Banner,
   Button,
@@ -41,6 +42,34 @@ import type {
 import { getPreFetchProps } from '@tbe/utils';
 import { motion } from 'framer-motion';
 import { Fragment, useState } from 'react';
+
+const BYI_FAQS: FAQItem[] = [
+  {
+    question: 'What is Bring Your Idea Cohort?',
+    answer:
+      "It's a 2-phase mentorship-driven program where you launch a product in the first phase and prepare for interviews in the second.",
+  },
+  {
+    question: 'Do I need to have a tech background to join?',
+    answer:
+      "Not necessarily. We've different tracks for beginners, confused learners, and those looking for mentorship.",
+  },
+  {
+    question: 'Can I join with a friend or a team?',
+    answer:
+      'Yes, you can join with up to 4 friends and build together. The pricing adjusts automatically per team size.',
+  },
+  {
+    question: "What if I don't complete the project?",
+    answer:
+      'You still learn a lot! However, the 50% cashback is only applicable on project completion.',
+  },
+  {
+    question: 'Are 1:1 sessions included?',
+    answer:
+      'Yes! You get weekly 1:1 mentorship along with product roundtables.',
+  },
+];
 
 const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
   const whyUs = [
@@ -112,7 +141,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
     useState<CohortUserCategoryProps>(BYI_USER_CATEGORIES[0]);
   const [teamSize, setTeamSize] = useState(1);
   const [perTeamMemberPrice, setPerTeamMemberPrice] = useState(
-    selectedUserCategory.price / teamSize
+    selectedUserCategory.price / teamSize,
   );
 
   const handleTeamSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +154,7 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
 
   const handleSelectUserCategory = (key: string) => {
     const selectedCategory = BYI_USER_CATEGORIES.find(
-      (category) => category.key === key
+      (category) => category.key === key,
     );
 
     if (selectedCategory) {
@@ -424,7 +453,11 @@ const BrinYourIdeaLandingPage = ({ seoMeta }: PageProps) => {
         </FlexContainer>
       </Section>
 
-      <FAQSection />
+      <FAQSection
+        faqs={BYI_FAQS}
+        heading='Frequently Asked Questions'
+        subtext="Here's everything you might want to ask before joining the Bring Your Idea Cohort"
+      />
     </Fragment>
   );
 };

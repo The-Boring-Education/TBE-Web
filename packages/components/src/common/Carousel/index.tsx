@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
-import type { CarouselProps } from '@tbe/interface';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import type { CarouselProps } from "@tbe/interface";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
 const Carousel = ({ items, renderItem }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,26 +33,26 @@ const Carousel = ({ items, renderItem }: CarouselProps) => {
   const paginate = (newDirection: number) => {
     setDirection(newDirection);
     setCurrentIndex(
-      (prevIndex) => (prevIndex + newDirection + items.length) % items.length
+      (prevIndex) => (prevIndex + newDirection + items.length) % items.length,
     );
   };
 
   return (
-    <div className='relative w-full max-w-4xl mx-auto md:px-4 px-2'>
-      <div className='relative md:h-[300px] h-[520px] overflow-hidden'>
+    <div className="relative w-full max-w-4xl mx-auto md:px-4 px-2">
+      <div className="relative md:h-[300px] h-[520px] overflow-hidden">
         <AnimatePresence custom={direction} initial={false}>
           <motion.div
             key={currentIndex}
-            animate='center'
-            className='absolute w-full'
+            animate="center"
+            className="absolute w-full"
             custom={direction}
-            drag='x'
+            drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
-            exit='exit'
-            initial='enter'
+            exit="exit"
+            initial="enter"
             transition={{
-              x: { type: 'spring', stiffness: 300, damping: 30 },
+              x: { type: "spring", stiffness: 300, damping: 30 },
               opacity: { duration: 0.2 },
             }}
             variants={slideVariants}
@@ -71,22 +71,22 @@ const Carousel = ({ items, renderItem }: CarouselProps) => {
         </AnimatePresence>
       </div>
 
-      <div className='flex justify-center gap-4 mt-6'>
+      <div className="flex justify-center gap-4 mt-6">
         <motion.button
-          className='p-2 rounded-full bg-primary/10 hover:bg-primary/20'
+          className="p-2 rounded-full bg-primary/10 hover:bg-primary/20"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => paginate(-1)}
         >
-          <ChevronLeftIcon className='w-6 h-6 text-primary' />
+          <ChevronLeftIcon className="w-6 h-6 text-primary" />
         </motion.button>
         <motion.button
-          className='p-2 rounded-full bg-primary/10 hover:bg-primary/20'
+          className="p-2 rounded-full bg-primary/10 hover:bg-primary/20"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => paginate(1)}
         >
-          <ChevronRightIcon className='w-6 h-6 text-primary' />
+          <ChevronRightIcon className="w-6 h-6 text-primary" />
         </motion.button>
       </div>
     </div>

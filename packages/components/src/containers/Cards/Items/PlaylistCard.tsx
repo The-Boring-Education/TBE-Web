@@ -1,6 +1,6 @@
-import { FlexContainer, Image, Text } from '@tbe/components';
-import type { PlaylistCardProps } from '@tbe/interface';
-import React from 'react';
+import { FlexContainer, Image, Text } from "@tbe/components";
+import type { PlaylistCardProps } from "@tbe/interface";
+import React from "react";
 
 const PlaylistCard = ({
   title,
@@ -9,12 +9,12 @@ const PlaylistCard = ({
   isStartedLearningFromPlaylist,
   videoId,
 }: PlaylistCardProps) => (
-  <FlexContainer className='gap-4 w-full items-baseline' direction='col'>
-    <div className='w-full border-1 border-black rounded-md overflow-hidden'>
+  <FlexContainer className="gap-4 w-full items-baseline" direction="col">
+    <div className="w-full border-1 border-black rounded-md overflow-hidden">
       {!isStartedLearningFromPlaylist ? (
         <Image
           alt={title}
-          className='aspect-image rounded-sm'
+          className="aspect-image rounded-sm"
           fullHeight={false}
           fullWidth={false}
           src={thumbnail}
@@ -22,19 +22,19 @@ const PlaylistCard = ({
       ) : (
         <iframe
           allowFullScreen
-          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-          className='w-full aspect-video rounded-sm'
-          frame-Border='0'
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          className="w-full aspect-video rounded-sm"
+          frame-Border="0"
           src={`https://www.youtube.com/embed/${videoId}`}
-          title='YouTube Video'
+          title="YouTube Video"
         />
       )}
     </div>
-    <FlexContainer className='w-full gap-1 items-baseline' direction='col'>
-      <Text className='heading-4 font-bold' level='h4'>
+    <FlexContainer className="w-full gap-1 items-baseline" direction="col">
+      <Text className="heading-4 font-bold" level="h4">
         {title}
       </Text>
-      <Text className=' w-full line-clamp-2 text-grey' level='p'>
+      <Text className=" w-full line-clamp-2 text-grey" level="p">
         {description}
       </Text>
     </FlexContainer>

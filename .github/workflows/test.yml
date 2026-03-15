@@ -1,154 +1,152 @@
 name: 🧪 Test Suite
 
 on:
-    push:
-        branches: [development, production]
-    pull_request:
-        branches: [development, production]
-        types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [development, production]
+  pull_request:
+    branches: [development, production]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 # Prevent multiple workflows from running simultaneously
 concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
-    contents: read
+  contents: read
 
 jobs:
-    # Shared setup steps
-    setup:
-        name: Setup Environment
-        runs-on: ubuntu-latest
-        outputs:
-            cache-hit: ${{ steps.cache.outputs.cache-hit }}
-        steps:
-            - name: 📥 Checkout Repository
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
+  # Shared setup steps
+  setup:
+    name: Setup Environment
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-            - name: 📦 Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9.15.9
-                  run_install: false
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
 
-            - name: 📦 Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  cache: "pnpm"
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
 
-            - name: 🔍 Get pnpm store directory
-              shell: bash
-              run: |
-                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - name: 🔍 Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-            - name: 🗂️ Setup pnpm cache
-              id: cache
-              uses: actions/cache@v4
-              with:
-                  path: ${{ env.STORE_PATH }}
-                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-                  restore-keys: |
-                      ${{ runner.os }}-pnpm-store-
+      - name: 🗂️ Setup pnpm cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
-            - name: 📦 Install Dependencies
-              run: pnpm install --frozen-lockfile
+      - name: 📦 Install Dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: 🏗️ Build Packages
-              run: |
-                  echo "Building shared packages first..."
-                  pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth
+      - name: 🏗️ Build Packages
+        run: |
+          echo "Building shared packages first..."
+          pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth
 
-    # Unit Tests Job
-    unit-tests:
-        name: 🧪 Unit Tests
-        runs-on: ubuntu-latest
-        needs: setup
+  # Unit Tests Job
+  unit-tests:
+    name: 🧪 Unit Tests
+    runs-on: ubuntu-latest
+    needs: setup
 
-        # Skip draft PRs
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.draft == false)
+    # Skip draft PRs
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.draft == false)
 
-        steps:
-            - name: 📥 Checkout Repository
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-            - name: 📦 Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9.15.9
-                  run_install: false
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
 
-            - name: 📦 Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  cache: "pnpm"
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
 
-            - name: 🔍 Get pnpm store directory
-              shell: bash
-              run: |
-                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - name: 🔍 Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-            - name: 🗂️ Restore pnpm cache
-              uses: actions/cache@v4
-              with:
-                  path: ${{ env.STORE_PATH }}
-                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-                  restore-keys: |
-                      ${{ runner.os }}-pnpm-store-
+      - name: 🗂️ Restore pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
-            - name: 📦 Install Dependencies
-              run: pnpm install --frozen-lockfile
+      - name: 📦 Install Dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: 🏗️ Build Packages
-              run: |
-                  echo "Building shared packages..."
-                  pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth
+      - name: 🏗️ Build Packages
+        run: |
+          echo "Building shared packages..."
+          pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth
 
-            - name: 🧪 Run Unit Tests
-              run: |
-                  echo "Running unit tests..."
-                  pnpm --filter @tbe/testing test:unit
+      - name: 🧪 Run Unit Tests
+        run: |
+          echo "Running unit tests..."
+          pnpm --filter @tbe/testing test:unit
 
-            - name: 📊 Unit Test Summary
-              if: always()
-              run: |
-                  if [ ${{ job.status }} == 'success' ]; then
-                    echo "✅ Unit tests passed!"
-                  else
-                    echo "❌ Unit tests failed!"
-                    exit 1
-                  fi
-
-    # Test Summary Job
-    test-summary:
-        name: 📊 Test Summary
-        runs-on: ubuntu-latest
-        needs: [unit-tests]
+      - name: 📊 Unit Test Summary
         if: always()
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "✅ Unit tests passed!"
+          else
+            echo "❌ Unit tests failed!"
+            exit 1
+          fi
 
-        steps:
-            - name: 📊 Test Results Summary
-              run: |
-                  echo "## 🧪 Test Suite Results" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "### Unit Tests" >> $GITHUB_STEP_SUMMARY
-                  if [ "${{ needs.unit-tests.result }}" == "success" ]; then
-                    echo "✅ **PASSED**" >> $GITHUB_STEP_SUMMARY
-                  else
-                    echo "❌ **FAILED**" >> $GITHUB_STEP_SUMMARY
-                  fi
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  
-                  if [ "${{ needs.unit-tests.result }}" == "success" ]; then
-                    echo "🎉 All tests passed! Ready for merge." >> $GITHUB_STEP_SUMMARY
-                    exit 0
-                  else
-                    echo "❌ Some tests failed. Please fix the issues before merging." >> $GITHUB_STEP_SUMMARY
-                    exit 1
-                  fi
+  # Test Summary Job
+  test-summary:
+    name: 📊 Test Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests]
+    if: always()
+
+    steps:
+      - name: 📊 Test Results Summary
+        run: |
+          echo "## 🧪 Test Suite Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Unit Tests" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.unit-tests.result }}" == "success" ]; then
+            echo "✅ **PASSED**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **FAILED**" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.unit-tests.result }}" == "success" ]; then
+            echo "🎉 All tests passed! Ready for merge." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          else
+            echo "❌ Some tests failed. Please fix the issues before merging." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi

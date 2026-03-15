@@ -1,199 +1,195 @@
-import type { NextApiRequest, NextApiResponse } from "next"
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from "@/lib/constants"
+import { apiStatusCodes } from "@/lib/constants";
 import {
-    getUserByUserNameFromDB,
-    onboardPrepYatraUserTODB,
-    onboardUserToDB
-} from "@/lib/database"
+  getUserByUserNameFromDB,
+  onboardPrepYatraUserTODB,
+  onboardUserToDB,
+} from "@/lib/database";
 import type {
-    AddOnboardingPayloadProps,
-    AddPrepYatraOnboardingPayloadProps
-} from "@/lib/interfaces"
-import { cors, sendAPIResponse } from "@/lib/utils"
-import { connectDB } from "@/middleware/api"
+  AddOnboardingPayloadProps,
+  AddPrepYatraOnboardingPayloadProps,
+} from "@/lib/interfaces";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    await cors(req, res)
-    await connectDB()
+  const { method } = req;
+  const { userId, userName } = req.query as {
+    userId: string;
+    userName: string;
+  };
 
-    const { method } = req
-    const { userId, userName } = req.query as {
-        userId: string
-        userName: string
-    }
-
-    switch (method) {
-        case "GET":
-            return getUserByUsername(req, res, userName)
-        case "POST":
-            return handleUserOnboarding(req, res, userId)
-        case "PUT":
-            return handlePrepYatraOnboarding(req, res, userId)
-        default:
-            return res.status(apiStatusCodes.BAD_REQUEST).json(
-                sendAPIResponse({
-                    status: false,
-                    message: `Method ${method} Not Allowed`
-                })
-            )
-    }
-}
+  switch (method) {
+    case "GET":
+      return getUserByUsername(req, res, userName);
+    case "POST":
+      return handleUserOnboarding(req, res, userId);
+    case "PUT":
+      return handlePrepYatraOnboarding(req, res, userId);
+    default:
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${method} Not Allowed`,
+        }),
+      );
+  }
+};
 
 const getUserByUsername = async (
-    req: NextApiRequest,
-    res: NextApiResponse,
-    userName: string
+  req: NextApiRequest,
+  res: NextApiResponse,
+  userName: string,
 ) => {
-    if (!userName) {
-        return res.status(apiStatusCodes.BAD_REQUEST).json(
-            sendAPIResponse({
-                status: false,
-                message: "Username is required"
-            })
-        )
+  if (!userName) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: "Username is required",
+      }),
+    );
+  }
+
+  try {
+    const { data, error } = await getUserByUserNameFromDB(userName);
+
+    if (error) {
+      // Username already exists
+      return res.status(apiStatusCodes.OKAY).json(
+        sendAPIResponse({
+          status: false,
+          message: "Username already taken. Please choose another.",
+        }),
+      );
     }
 
-    try {
-        const { data, error } = await getUserByUserNameFromDB(userName)
-
-        if (error) {
-            // Username already exists
-            return res.status(apiStatusCodes.OKAY).json(
-                sendAPIResponse({
-                    status: false,
-                    message: "Username already taken. Please choose another."
-                })
-            )
-        }
-
-        return res.status(apiStatusCodes.OKAY).json(
-            sendAPIResponse({
-                status: true,
-                data,
-                message: "Username is available."
-            })
-        )
-    } catch (error) {
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-            sendAPIResponse({
-                status: false,
-                message: "Error while checking userName",
-                error
-            })
-        )
-    }
-}
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data,
+        message: "Username is available.",
+      }),
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "Error while checking userName",
+        error,
+      }),
+    );
+  }
+};
 
 const handleUserOnboarding = async (
-    req: NextApiRequest,
-    res: NextApiResponse,
-    userId: string
+  req: NextApiRequest,
+  res: NextApiResponse,
+  userId: string,
 ) => {
-    try {
-        const { userName, occupation, purpose, contactNo, from } =
-            req.body as AddOnboardingPayloadProps
+  try {
+    const { userName, occupation, purpose, contactNo, from } =
+      req.body as AddOnboardingPayloadProps;
 
-        if (!userId || !userName || !occupation || !purpose || !contactNo) {
-            return res.status(apiStatusCodes.BAD_REQUEST).json(
-                sendAPIResponse({
-                    status: false,
-                    error: "Missing required fields",
-                    message: "Please provide all required fields"
-                })
-            )
-        }
-
-        const { data, error: updateUserError } = await onboardUserToDB(
-            userId,
-            userName,
-            occupation,
-            purpose,
-            contactNo,
-            from
-        )
-
-        if (updateUserError) {
-            return res.status(apiStatusCodes.BAD_REQUEST).json(
-                sendAPIResponse({
-                    status: false,
-                    error: updateUserError,
-                    message: "Error while onboarding user"
-                })
-            )
-        }
-
-        return res.status(apiStatusCodes.OKAY).json(
-            sendAPIResponse({
-                status: true,
-                data,
-                message: "User onboarded successfully"
-            })
-        )
-    } catch (error) {
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-            sendAPIResponse({
-                status: false,
-                error,
-                message: "Error while onboarding user"
-            })
-        )
+    if (!userId || !userName || !occupation || !purpose || !contactNo) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          error: "Missing required fields",
+          message: "Please provide all required fields",
+        }),
+      );
     }
-}
+
+    const { data, error: updateUserError } = await onboardUserToDB(
+      userId,
+      userName,
+      occupation,
+      purpose,
+      contactNo,
+      from,
+    );
+
+    if (updateUserError) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          error: updateUserError,
+          message: "Error while onboarding user",
+        }),
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data,
+        message: "User onboarded successfully",
+      }),
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        error,
+        message: "Error while onboarding user",
+      }),
+    );
+  }
+};
 
 const handlePrepYatraOnboarding = async (
-    req: NextApiRequest,
-    res: NextApiResponse,
-    userId: string
+  req: NextApiRequest,
+  res: NextApiResponse,
+  userId: string,
 ) => {
-    try {
-        const { workDomain, linkedInUrl, from } =
-            req.body as AddPrepYatraOnboardingPayloadProps
+  try {
+    const { workDomain, linkedInUrl, from } =
+      req.body as AddPrepYatraOnboardingPayloadProps;
 
-        if (!userId || !workDomain) {
-            return res.status(apiStatusCodes.BAD_REQUEST).json(
-                sendAPIResponse({
-                    status: false,
-                    error: "Missing required fields",
-                    message: "Please provide all required fields"
-                })
-            )
-        }
-
-        const { data, error: onboardUserError } =
-            await onboardPrepYatraUserTODB(
-                userId,
-                workDomain,
-                linkedInUrl,
-                from
-            )
-
-        if (onboardUserError) {
-            return res.status(apiStatusCodes.BAD_REQUEST).json(
-                sendAPIResponse({
-                    status: false,
-                    error: onboardUserError,
-                    message: "Error while onboarding user"
-                })
-            )
-        }
-
-        return res.status(apiStatusCodes.OKAY).json(
-            sendAPIResponse({
-                status: true,
-                data,
-                message: "User onboarded successfully"
-            })
-        )
-    } catch (error) {
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-            sendAPIResponse({
-                status: false,
-                error,
-                message: "Error while onboarding user"
-            })
-        )
+    if (!userId || !workDomain) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          error: "Missing required fields",
+          message: "Please provide all required fields",
+        }),
+      );
     }
-}
 
-export default handler
+    const { data, error: onboardUserError } = await onboardPrepYatraUserTODB(
+      userId,
+      workDomain,
+      linkedInUrl,
+      from,
+    );
+
+    if (onboardUserError) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          error: onboardUserError,
+          message: "Error while onboarding user",
+        }),
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data,
+        message: "User onboarded successfully",
+      }),
+    );
+  } catch (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        error,
+        message: "Error while onboarding user",
+      }),
+    );
+  }
+};
+
+export default withApiHandler(handler);

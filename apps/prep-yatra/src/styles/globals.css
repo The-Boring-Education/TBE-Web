@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
 @layer base {
   :root {
@@ -35,11 +35,11 @@
 
     --radius: 0.5rem;
   }
-  
+
   html {
-  @apply scroll-smooth;
-  background: #FFD5D5;
-}
+    @apply scroll-smooth;
+    background: #ffd5d5;
+  }
 }
 
 @layer base {
@@ -48,7 +48,7 @@
   }
   body {
     @apply text-contentLight scroll-smooth font-primary;
-    background: #FFF0F0;
+    background: #fff0f0;
     min-height: 100vh;
   }
 }
@@ -172,7 +172,6 @@
 
   /* Custom animations for the showcase page */
   @keyframes float {
-
     0%,
     100% {
       transform: translateY(0px);
@@ -184,7 +183,6 @@
   }
 
   @keyframes pulse-glow {
-
     0%,
     100% {
       box-shadow: 0 0 20px rgba(255, 207, 37, 0.3);

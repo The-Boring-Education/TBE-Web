@@ -1,18 +1,23 @@
-import mongoose, { type Model } from 'mongoose';
+import mongoose, { type Model } from "mongoose";
 
-import type { DatabaseQueryResponseType } from '@/lib/interfaces';
+import type { DatabaseQueryResponseType } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
-/** 
+/**
  * General utility to get total count of documents for any Mongoose model.
  */
 const getTotalCountFromModel = async (
-  model: Model<any>
+  model: Model<any>,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const count = await model.countDocuments();
     return { data: count };
   } catch (error) {
-    return { error: 'Error while counting documents' };
+    logger.error("DB: getTotalCountFromModel failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error while counting documents", details: error };
   }
 };
 
@@ -25,7 +30,7 @@ const getAllDocumentsFromModel = async (
   page = 1,
   limit = 100,
   populateOptions: any = null,
-  sortOptions: Record<string, 1 | -1> = { createdAt: -1 }
+  sortOptions: Record<string, 1 | -1> = { createdAt: -1 },
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const skip = (page - 1) * limit;
@@ -43,7 +48,11 @@ const getAllDocumentsFromModel = async (
       },
     };
   } catch (error) {
-    return { error: 'Error while fetching documents' };
+    logger.error("DB: getAllDocumentsFromModel failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Error while fetching documents", details: error };
   }
 };
 

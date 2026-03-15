@@ -1,12 +1,27 @@
-import { CardContainerA, FlexContainer, Image,LandingPageHero, LinkButton, Section, SectionHeaderContainer, SEO, Text } from '@tbe/components';
-import { getSEOMeta, MENTORSHIP_SERVICES_CARDS, routes,STATIC_FILE_PATH } from '@tbe/constants';
+import {
+  CardContainerA,
+  FlexContainer,
+  Image,
+  LandingPageHero,
+  LinkButton,
+  Section,
+  SectionHeaderContainer,
+  SEO,
+  Text,
+} from '@tbe/components';
+import {
+  getSEOMeta,
+  MENTORSHIP_SERVICES_CARDS,
+  routes,
+  STATIC_FILE_PATH,
+} from '@tbe/constants';
 import { Fragment } from 'react';
 
 // Custom card component specifically for topmate-sessions
 const TopmateServiceCard = ({ card }: { card: any }) => (
-  <div className="w-full bg-white rounded-2 shadow-sm border-2 border-accent hover:shadow-lg transition-all duration-300 p-6 h-full flex flex-col">
+  <div className='w-full bg-white rounded-2 shadow-sm border-2 border-accent hover:shadow-lg transition-all duration-300 p-6 h-full flex flex-col'>
     {card.image && (
-      <div className="flex justify-center mb-4">
+      <div className='flex justify-center mb-4'>
         <Image
           alt={card.imageAltText}
           className='w-20 h-20 object-contain'
@@ -46,7 +61,7 @@ const TopmateServiceCard = ({ card }: { card: any }) => (
 
 const TopmateSessionsPage = () => {
   const seoMeta = getSEOMeta(routes.home);
-  
+
   // Debug: Log the data being used
 
   return (
@@ -82,18 +97,18 @@ const TopmateSessionsPage = () => {
           heading: 'Get Personalized',
           focusText: ' Mentorship',
         }}
-      />  
-      
+      />
+
       {/* Custom Services Section */}
       <Section className='md:px-8 md:py-16 px-2 py-8'>
-        <div className="max-w-6xl mx-auto">
+        <div className='max-w-6xl mx-auto'>
           <FlexContainer className='gap-12' direction='col'>
             <SectionHeaderContainer
               focusText='Our Services'
               heading='Choose Your Mentorship Session'
               subtext='Select from our range of personalized mentorship services designed to accelerate your career growth'
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 px-4">
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 px-4'>
               {MENTORSHIP_SERVICES_CARDS.map((card) => (
                 <TopmateServiceCard key={card.id} card={card} />
               ))}
@@ -123,19 +138,40 @@ const TopmateSessionsPage = () => {
           />
           <FlexContainer className='gap-6 md:flex-row flex-col'>
             <div className='flex-1 text-center'>
-              <div className='w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4'>1</div>
-              <Text level='h4' className='font-bold mb-2'>Book Your Session</Text>
-              <Text level='p' className='text-grey'>Choose your preferred service and time slot from our available mentors</Text>
+              <div className='w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4'>
+                1
+              </div>
+              <Text level='h4' className='font-bold mb-2'>
+                Book Your Session
+              </Text>
+              <Text level='p' className='text-grey'>
+                Choose your preferred service and time slot from our available
+                mentors
+              </Text>
             </div>
             <div className='flex-1 text-center'>
-              <div className='w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4'>2</div>
-              <Text level='h4' className='font-bold mb-2'>Connect & Learn</Text>
-              <Text level='p' className='text-grey'>Join your video session and get personalized guidance from industry experts</Text>
+              <div className='w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4'>
+                2
+              </div>
+              <Text level='h4' className='font-bold mb-2'>
+                Connect & Learn
+              </Text>
+              <Text level='p' className='text-grey'>
+                Join your video session and get personalized guidance from
+                industry experts
+              </Text>
             </div>
             <div className='flex-1 text-center'>
-              <div className='w-16 h-16 bg-success text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4'>3</div>
-              <Text level='h4' className='font-bold mb-2'>Apply & Grow</Text>
-              <Text level='p' className='text-grey'>Implement the advice and watch your career take off with newfound confidence</Text>
+              <div className='w-16 h-16 bg-success text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4'>
+                3
+              </div>
+              <Text level='h4' className='font-bold mb-2'>
+                Apply & Grow
+              </Text>
+              <Text level='p' className='text-grey'>
+                Implement the advice and watch your career take off with
+                newfound confidence
+              </Text>
             </div>
           </FlexContainer>
         </FlexContainer>
@@ -144,8 +180,13 @@ const TopmateSessionsPage = () => {
       {/* CTA Section */}
       <Section className='md:px-8 md:py-16 px-2 py-8 bg-primary text-white'>
         <FlexContainer className='gap-6 text-center' direction='col'>
-          <Text level='h2' className='font-bold text-2xl md:text-3xl'>Ready to Transform Your Tech Career?</Text>
-          <Text level='p' className='text-white/90 max-w-2xl mx-auto'>Join hundreds of students who have already taken the first step towards their dream tech job. Book your session today!</Text>
+          <Text level='h2' className='font-bold text-2xl md:text-3xl'>
+            Ready to Transform Your Tech Career?
+          </Text>
+          <Text level='p' className='text-white/90 max-w-2xl mx-auto'>
+            Join hundreds of students who have already taken the first step
+            towards their dream tech job. Book your session today!
+          </Text>
           <FlexContainer className='gap-4 md:flex-row flex-col'>
             <LinkButton
               buttonProps={{
@@ -161,7 +202,8 @@ const TopmateSessionsPage = () => {
               buttonProps={{
                 variant: 'OUTLINE',
                 text: 'Learn More',
-                className: 'w-full md:w-fit text-white border-white hover:bg-white/10',
+                className:
+                  'w-full md:w-fit text-white border-white hover:bg-white/10',
               }}
               className='w-full md:w-fit'
               href='#services'

@@ -1,64 +1,64 @@
 {
-    "name": "Prep Yatra - Turn Hustle Into Hires",
-    "short_name": "Prep Yatra",
-    "description": "The ultimate community platform for job hunters to store recruiter contacts, share prep logs, and crowdsource resources together.",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#0f172a",
-    "theme_color": "#3b82f6",
-    "orientation": "portrait-primary",
-    "scope": "/",
-    "lang": "en",
-    "categories": [
-        "education",
-        "job-hunting",
-        "recruiting",
-        "networking",
-        "community"
-    ],
-    "icons": [
+  "name": "Prep Yatra - Turn Hustle Into Hires",
+  "short_name": "Prep Yatra",
+  "description": "The ultimate community platform for job hunters to store recruiter contacts, share prep logs, and crowdsource resources together.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": [
+    "education",
+    "job-hunting",
+    "recruiting",
+    "networking",
+    "community"
+  ],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your recruitment dashboard",
+      "url": "/dashboard",
+      "icons": [
         {
-            "src": "/favicon.ico",
-            "sizes": "16x16 32x32",
-            "type": "image/x-icon"
-        },
-        {
-            "src": "/favicon.ico",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "/favicon.ico",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any"
+          "src": "/favicon.ico",
+          "sizes": "96x96"
         }
-    ],
-    "shortcuts": [
+      ]
+    },
+    {
+      "name": "Add Recruiter",
+      "short_name": "Add Recruiter",
+      "description": "Add a new recruiter contact",
+      "url": "/dashboard?action=add-recruiter",
+      "icons": [
         {
-            "name": "Dashboard",
-            "short_name": "Dashboard",
-            "description": "View your recruitment dashboard",
-            "url": "/dashboard",
-            "icons": [
-                {
-                    "src": "/favicon.ico",
-                    "sizes": "96x96"
-                }
-            ]
-        },
-        {
-            "name": "Add Recruiter",
-            "short_name": "Add Recruiter",
-            "description": "Add a new recruiter contact",
-            "url": "/dashboard?action=add-recruiter",
-            "icons": [
-                {
-                    "src": "/favicon.ico",
-                    "sizes": "96x96"
-                }
-            ]
+          "src": "/favicon.ico",
+          "sizes": "96x96"
         }
-    ]
+      ]
+    }
+  ]
 }

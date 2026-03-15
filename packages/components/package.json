@@ -26,7 +26,8 @@
     "./analytics": {
       "import": "./src/analytics.ts",
       "require": "./src/analytics.ts"
-    }
+    },
+    "./styles/common.css": "./src/styles/common.css"
   },
   "scripts": {
     "build": "echo 'No build step needed for components package'",
@@ -69,8 +70,10 @@
     "cmdk": "^1.0.0",
     "framer-motion": "^12.4.2",
     "input-otp": "^1.2.4",
+    "katex": "^0.16.38",
     "lucide-react": "^0.462.0",
     "markdown-it": "^14.1.0",
+    "markdown-it-texmath": "^1.0.0",
     "next": "14.2.35",
     "next-auth": "^4.24.11",
     "next-themes": "^0.3.0",
@@ -81,6 +84,8 @@
     "react-icons": "^4.8.0",
     "react-resizable-panels": "^2.0.9",
     "recharts": "^3.2.1",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "sonner": "^1.5.0",
     "sooner": "^1.1.4",
     "tailwind-merge": "^2.5.2",
@@ -89,6 +94,7 @@
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
+    "@types/katex": "^0.16.8",
     "@types/markdown-it": "^14.1.2",
     "@types/react": "^18.3.24",
     "@types/react-datepicker": "^6.2.0",

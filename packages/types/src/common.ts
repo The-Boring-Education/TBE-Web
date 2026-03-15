@@ -1,6 +1,6 @@
 /**
  * Common Types - Shared across ALL TBE apps
- * 
+ *
  * This file contains types that are used by multiple apps
  * including API responses, base user types, and shared utilities
  */
@@ -10,45 +10,45 @@
 // ================================
 
 export interface BaseUser {
-    _id: string
-    id?: string
-    name?: string
-    email?: string
-    image?: string
-    provider?: string
-    providerAccountId?: string
-    createdAt?: string
-    updatedAt?: string
-    contactNo?: string
-    isOnboarded?: boolean
-    occupation?: string
-    purpose?: string[]
-    userName?: string
-    prepYatra?: any
+  _id: string;
+  id?: string;
+  name?: string;
+  email?: string;
+  image?: string;
+  provider?: string;
+  providerAccountId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  contactNo?: string;
+  isOnboarded?: boolean;
+  occupation?: string;
+  purpose?: string[];
+  userName?: string;
+  prepYatra?: any;
 }
 
 export interface User {
-    id: string
-    email: string
-    name: string
-    picture?: string
-    provider: string
-    providerAccountId: string
+  id: string;
+  email: string;
+  name: string;
+  picture?: string;
+  provider: string;
+  providerAccountId: string;
 }
 
 export interface GoogleUser {
-    sub: string
-    email: string
-    name: string
-    picture?: string
+  sub: string;
+  email: string;
+  name: string;
+  picture?: string;
 }
 
 export interface AuthContextType {
-    user: User | null
-    loading: boolean
-    signIn: (googleUser: GoogleUser) => Promise<void>
-    signOut: () => Promise<void>
-    checkAuth: () => Promise<void>
+  user: User | null;
+  loading: boolean;
+  signIn: (googleUser: GoogleUser) => Promise<void>;
+  signOut: () => Promise<void>;
+  checkAuth: () => Promise<void>;
 }
 
 // ================================
@@ -56,40 +56,40 @@ export interface AuthContextType {
 // ================================
 
 export interface APIResponse<T = any> {
-    success: boolean
-    status?: boolean
-    data?: T
-    message?: string
-    error?: string
-    statusCode?: number
+  success: boolean;
+  status?: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
+  statusCode?: number;
 }
 
 export interface APIResponseType<T = any> {
-    success: boolean
-    data?: T
-    error?: string
-    message?: string
-    statusCode?: number
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+  statusCode?: number;
 }
 
 export interface APIMakeRequestProps {
-    url: string
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
-    data?: any
-    headers?: Record<string, string>
-    timeout?: number
+  url: string;
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  data?: any;
+  headers?: Record<string, string>;
+  timeout?: number;
 }
 
 export interface PaginatedResponse<T> {
-    data: T[]
-    pagination: {
-        page: number
-        limit: number
-        total: number
-        totalPages: number
-        hasNext: boolean
-        hasPrev: boolean
-    }
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
 }
 
 // ================================
@@ -97,20 +97,20 @@ export interface PaginatedResponse<T> {
 // ================================
 
 export interface TrackEventProps {
-    action: string
-    category?: string
-    label?: string
-    // Accept numeric values for GA-style events and
-    // structured payloads for custom analytics pipelines
-    value?: number | Record<string, any>
-    [key: string]: any
+  action: string;
+  category?: string;
+  label?: string;
+  // Accept numeric values for GA-style events and
+  // structured payloads for custom analytics pipelines
+  value?: number | Record<string, any>;
+  [key: string]: any;
 }
 
 export interface AnalyticsEvent {
-    event: string
-    properties?: Record<string, any>
-    userId?: string
-    timestamp?: string
+  event: string;
+  properties?: Record<string, any>;
+  userId?: string;
+  timestamp?: string;
 }
 
 // ================================
@@ -118,29 +118,29 @@ export interface AnalyticsEvent {
 // ================================
 
 export interface GamificationAction {
-    action: string
-    points: number
-    category: string
-    description?: string
+  action: string;
+  points: number;
+  category: string;
+  description?: string;
 }
 
 export interface UserPoints {
-    userId: string
-    totalPoints: number
-    level: number
-    achievements: string[]
-    streak: number
+  userId: string;
+  totalPoints: number;
+  level: number;
+  achievements: string[];
+  streak: number;
 }
 
 export interface Achievement {
-    id: string
-    name: string
-    description: string
-    icon: string
-    points: number
-    condition: string
-    unlocked: boolean
-    unlockedAt?: string
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  points: number;
+  condition: string;
+  unlocked: boolean;
+  unlockedAt?: string;
 }
 
 // ================================
@@ -148,65 +148,65 @@ export interface Achievement {
 // ================================
 
 export interface QuizAttempt {
-    id: string
-    userId: string
-    quizId: string
-    score: number
-    totalQuestions: number
-    correctAnswers: number
-    timeTaken: number
-    completedAt: string
-    answers: QuizAnswer[]
+  id: string;
+  userId: string;
+  quizId: string;
+  score: number;
+  totalQuestions: number;
+  correctAnswers: number;
+  timeTaken: number;
+  completedAt: string;
+  answers: QuizAnswer[];
 }
 
 export interface QuizAnswer {
-    questionId: string
-    selectedOption: number
-    isCorrect: boolean
-    timeTaken: number
+  questionId: string;
+  selectedOption: number;
+  isCorrect: boolean;
+  timeTaken: number;
 }
 
 export interface QuizCategory {
-    id: string
-    name: string
-    description: string
-    icon: string
-    color: string
-    questionsCount: number
-    difficulty: 'easy' | 'medium' | 'hard'
-    estimatedTime: number
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  questionsCount: number;
+  difficulty: "easy" | "medium" | "hard";
+  estimatedTime: number;
 }
 
 export interface QuizCategoryAPI {
-    _id: string
-    name: string
-    description: string
-    icon: string
-    color: string
-    questions: any[]
-    createdAt: string
-    updatedAt: string
-    __v: number
+  _id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  questions: any[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface LeaderboardEntry {
-    userId: string
-    userName: string
-    userImage?: string
-    totalScore: number
-    totalQuizzes: number
-    averageScore: number
-    rank: number
+  userId: string;
+  userName: string;
+  userImage?: string;
+  totalScore: number;
+  totalQuizzes: number;
+  averageScore: number;
+  rank: number;
 }
 
 export interface QuizStats {
-    totalQuizzesTaken: number
-    averageScore: number
-    totalTimePlayed: number
-    favoriteCategory: string
-    streak: number
-    rank: number
-    improvementTrend: 'up' | 'down' | 'stable'
+  totalQuizzesTaken: number;
+  averageScore: number;
+  totalTimePlayed: number;
+  favoriteCategory: string;
+  streak: number;
+  rank: number;
+  improvementTrend: "up" | "down" | "stable";
 }
 
 // ================================
@@ -214,16 +214,16 @@ export interface QuizStats {
 // ================================
 
 export interface APIError {
-    message: string
-    statusCode: number
-    code?: string
-    details?: any
+  message: string;
+  statusCode: number;
+  code?: string;
+  details?: any;
 }
 
 export interface ValidationError {
-    field: string
-    message: string
-    code: string
+  field: string;
+  message: string;
+  code: string;
 }
 
 // ================================
@@ -231,53 +231,60 @@ export interface ValidationError {
 // ================================
 
 export interface SelectOption {
-    value: string | number
-    label: string
-    disabled?: boolean
+  value: string | number;
+  label: string;
+  disabled?: boolean;
 }
 
 export interface FormField {
-    name: string
-    label: string
-    type: 'text' | 'email' | 'password' | 'select' | 'textarea' | 'checkbox' | 'radio'
-    required?: boolean
-    placeholder?: string
-    options?: SelectOption[]
-    validation?: {
-        pattern?: RegExp
-        minLength?: number
-        maxLength?: number
-        custom?: (value: any) => boolean | string
-    }
+  name: string;
+  label: string;
+  type:
+    | "text"
+    | "email"
+    | "password"
+    | "select"
+    | "textarea"
+    | "checkbox"
+    | "radio";
+  required?: boolean;
+  placeholder?: string;
+  options?: SelectOption[];
+  validation?: {
+    pattern?: RegExp;
+    minLength?: number;
+    maxLength?: number;
+    custom?: (value: any) => boolean | string;
+  };
 }
 
 // ================================
 // UTILITY TYPES
 // ================================
 
-export type LoadingState = 'idle' | 'loading' | 'succeeded' | 'failed'
+export type LoadingState = "idle" | "loading" | "succeeded" | "failed";
 
-export type Theme = 'light' | 'dark' | 'system'
+export type Theme = "light" | "dark" | "system";
 
-export type UserRole = 'user' | 'admin' | 'moderator'
+export type UserRole = "user" | "admin" | "moderator";
 
-export type ExperienceLevel = 'fresher' | 'junior' | 'mid' | 'senior'
+export type ExperienceLevel = "fresher" | "junior" | "mid" | "senior";
 
-export type SubscriptionTier = 'free' | 'pro' | 'enterprise'
+export type SubscriptionTier = "free" | "pro" | "enterprise";
 
 // ================================
 // DATE & TIME TYPES
 // ================================
 
 export interface DateRange {
-    startDate: string
-    endDate: string
+  startDate: string;
+  endDate: string;
 }
 
 export interface TimeSlot {
-    startTime: string
-    endTime: string
-    timezone?: string
+  startTime: string;
+  endTime: string;
+  timezone?: string;
 }
 
 // ================================
@@ -285,22 +292,22 @@ export interface TimeSlot {
 // ================================
 
 export interface Notification {
-    id: string
-    title: string
-    message: string
-    type: 'info' | 'success' | 'warning' | 'error'
-    read: boolean
-    createdAt: string
-    actionUrl?: string
+  id: string;
+  title: string;
+  message: string;
+  type: "info" | "success" | "warning" | "error";
+  read: boolean;
+  createdAt: string;
+  actionUrl?: string;
 }
 
 export interface NotificationPreferences {
-    email: boolean
-    push: boolean
-    sms: boolean
-    categories: {
-        updates: boolean
-        marketing: boolean
-        security: boolean
-    }
+  email: boolean;
+  push: boolean;
+  sms: boolean;
+  categories: {
+    updates: boolean;
+    marketing: boolean;
+    security: boolean;
+  };
 }

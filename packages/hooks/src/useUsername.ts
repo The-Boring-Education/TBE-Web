@@ -1,7 +1,7 @@
-import { routes } from '@tbe/constants';
-import { useApi } from '@tbe/hooks';
-import type { APIMakeRquestProps } from '@tbe/interface';
-import { useEffect, useRef, useState } from 'react';
+import { routes } from "@tbe/constants";
+import { useApi } from "@tbe/hooks";
+import type { APIMakeRquestProps } from "@tbe/interface";
+import { useEffect, useRef, useState } from "react";
 
 const useUsername = (userName: string) => {
   const [message, setMessage] = useState<string>();
@@ -10,13 +10,13 @@ const useUsername = (userName: string) => {
   const [isChecking, setIsChecking] = useState<boolean>(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { response, error, makeRequest } = useApi('check-userName', undefined, {
+  const { response, error, makeRequest } = useApi("check-userName", undefined, {
     enabled: false,
   });
 
   useEffect(() => {
     if (!userName) {
-      setMessage('');
+      setMessage("");
       return;
     }
 
@@ -25,12 +25,12 @@ const useUsername = (userName: string) => {
     }
 
     setIsChecking(true);
-    setMessage('Checking availability...');
+    setMessage("Checking availability...");
 
     typingTimeoutRef.current = setTimeout(() => {
       const params: APIMakeRquestProps = {
         url: `${routes.api.onboard}?userName=${userName}`,
-        method: 'GET',
+        method: "GET",
       };
       makeRequest(params);
     }, 1500);

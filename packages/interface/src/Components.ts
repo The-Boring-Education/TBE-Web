@@ -70,18 +70,18 @@ export interface LinkButtonProps extends LinkProps {
   buttonProps: ButtonProps;
   href: string;
   className?: string;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
   noLoader?: boolean;
 }
 
 export interface ButtonProps {
   variant:
-  | "PRIMARY"
-  | "OUTLINE"
-  | "GHOST"
-  | "SUCCESS"
-  | "SECONDARY"
-  | "NEUTRAL";
+    | "PRIMARY"
+    | "OUTLINE"
+    | "GHOST"
+    | "SUCCESS"
+    | "SECONDARY"
+    | "NEUTRAL";
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -348,7 +348,7 @@ export interface ProjectHeroMetaContainerProps {
   subtitle: string;
   title: string;
   titleClassName?: string;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
 }
 
 export interface ProjectHeroContainerProps {
@@ -380,7 +380,7 @@ export interface SheetHeroContainerProps {
   isPurchased?: boolean;
   redirectTo?: string;
   backHref?: string;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
 }
 
 export interface AccordionProps {
@@ -427,14 +427,14 @@ export interface QuestionLinkProps {
   currentQuestionId: string;
   handleQuestionClick: (question: string, questionId: string) => void;
   frequency: QuestionFrequencyType;
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
   isStarred?: boolean;
 }
 
 export interface MDXRendererProps {
   mdxSource: string;
   actions?: ReactNode[];
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
 }
 
 export interface AlertProps {
@@ -453,7 +453,7 @@ export interface LearningSidebarPanelProps {
   totalItems: number;
   completedItems: number;
   children?: ReactNode;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
   onClose?: () => void;
 }
 
@@ -470,7 +470,7 @@ export interface LearningQuestionListProps {
   isLocked?: boolean;
   href: string;
   onQuestionSelect: (questionMeta: string, questionId: string) => void;
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
 }
 
 export interface LearningChapterListProps {
@@ -848,7 +848,10 @@ export interface ResumeEvaluationData {
 }
 
 export interface PaymentCardProps {
-  course: BaseShikshaCourseResponseProps | BaseInterviewSheetResponseProps | BaseProductProps;
+  course:
+    | BaseShikshaCourseResponseProps
+    | BaseInterviewSheetResponseProps
+    | BaseProductProps;
   onClose: () => void;
   productType: string;
 }
@@ -886,7 +889,14 @@ export interface StarButtonProps {
 }
 
 export interface LoginCardNewProps {
-  variant?: "default" | "platform" | "prepyatra" | "quizes" | "resume-yatra" | "oncampus" | "dsayatra";
+  variant?:
+    | "default"
+    | "platform"
+    | "prepyatra"
+    | "quizes"
+    | "resume-yatra"
+    | "oncampus"
+    | "dsayatra";
   customRedirectPath?: string;
   theme?: "light" | "dark";
 }
@@ -910,6 +920,7 @@ export interface UserProfile {
   userSkills?: string[];
   userSkillsLastUpdated?: string;
   occupation?: string;
+  portfolioUrl?: string;
   purpose?: string[];
   prepYatra: {
     goal?: string;
@@ -920,6 +931,13 @@ export interface UserProfile {
       interviewCategories?: string[];
       focusAreas?: string[];
     };
+  };
+  dsaYatra?: {
+    target?: string;
+    timeline?: string;
+    experienceLevel?: string;
+    preferredLanguage?: string;
+    companies?: string[];
   };
 }
 
@@ -951,19 +969,22 @@ export interface DsaQuestionListProps {
   selectedQuestionId?: string | number;
   onQuestionClick?: (question: DsaQuestion) => void;
   className?: string;
+  completedQuestionIds?: (string | number)[];
+  onToggleComplete?: (questionId: string | number) => void;
 }
 
 export interface DsaQuestionCardProps {
   name: string;
   difficultyLevel: QuestionDifficulty;
   isSelected?: boolean;
+  isCompleted?: boolean;
   onClick?: () => void;
+  onToggleComplete?: (e: React.MouseEvent) => void;
 }
 
 export interface QuestionDetailProps {
   question: DsaQuestion | null;
 }
-
 
 export interface ExampleCardProps {
   index: number;
@@ -971,4 +992,14 @@ export interface ExampleCardProps {
   outputText: string;
   explanation?: string;
   image?: string;
+}
+
+export interface RoadmapNode {
+  id: string;
+  name: string;
+  total: number;
+  solved: number;
+  isLocked: boolean;
+  explanation: string;
+  difficulty: number;
 }

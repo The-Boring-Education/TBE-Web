@@ -8,10 +8,12 @@ export type {
   GamificationBadgeProps,
   MainNavbarProps,
   NavbarDropdownLink,
+  NavbarNavigationConfig,
   NavbarProps,
+  NavbarSectionVisibility,
   NavbarVariantConfig,
   OutlineCardProps,
-  QuestionDifficulty
+  QuestionDifficulty,
 } from "./constants";
 export * from "./database";
 export * from "./email";

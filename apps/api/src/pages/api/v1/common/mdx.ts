@@ -1,23 +1,15 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from '@/lib/constants';
-import { sendAPIResponse } from '@/lib/utils';
-import { cors } from '@/lib/utils';
-import { getMDXContent } from '@/lib/utils';
+import { apiStatusCodes } from "@/lib/constants";
+import { sendAPIResponse } from "@/lib/utils";
+import { getMDXContent } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
   switch (req.method) {
-    case 'GET':
+    case "GET":
       return generateMDXContent(req, res);
-    case 'POST':
+    case "POST":
       return generateBulkMDXContent(req, res);
 
     default:
@@ -25,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
-        })
+        }),
       );
   }
 };
@@ -35,7 +27,7 @@ const generateMDXContent = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const generateBulkMDXContent = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   const { bulkMDPayload } = req.body;
 
@@ -43,8 +35,8 @@ const generateBulkMDXContent = async (
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: false,
-        message: 'bulkMDPayload is required',
-      })
+        message: "bulkMDPayload is required",
+      }),
     );
   }
 
@@ -59,4 +51,4 @@ const generateBulkMDXContent = async (
   return res.status(apiStatusCodes.OKAY).json(mappedData);
 };
 
-export default handler;
+export default withApiHandler(handler, { db: false });

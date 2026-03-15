@@ -8,7 +8,7 @@ import {
   Star,
   Target,
   TrendingUp,
-  Trophy
+  Trophy,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -17,7 +17,13 @@ import ChallengeLogModal from "../modals/ChallengeLogModal";
 import ChallengeLogsModal from "../modals/ChallengeLogsModal";
 import CreateChallengeModal from "../modals/CreateChallengeModal";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 
 interface ChallengeSectionProps {
@@ -25,11 +31,16 @@ interface ChallengeSectionProps {
   className?: string;
 }
 
-const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => {
+const ChallengeSection = ({
+  userId,
+  className = "",
+}: ChallengeSectionProps) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   const [isLogsModalOpen, setIsLogsModalOpen] = useState(false);
-  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
+  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
+    null,
+  );
 
   const {
     challenges,
@@ -40,7 +51,7 @@ const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => 
     completionRate,
     loading,
     error,
-    refetch
+    refetch,
   } = useChallenges(userId);
 
   const handleChallengeCreated = () => {
@@ -68,7 +79,9 @@ const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => 
   };
 
   // Check if any challenges are completed
-  const hasCompletedChallenges = challenges.some(challenge => challenge.currentDay >= challenge.totalDays);
+  const hasCompletedChallenges = challenges.some(
+    (challenge) => challenge.currentDay >= challenge.totalDays,
+  );
 
   if (loading) {
     return (
@@ -89,7 +102,12 @@ const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => 
         <Card className="border-red-500/20 bg-red-500/10">
           <CardContent className="pt-6">
             <p className="text-red-400">Failed to load challenges: {error}</p>
-            <Button onClick={refetch} variant="outline" size="sm" className="mt-2">
+            <Button
+              onClick={refetch}
+              variant="outline"
+              size="sm"
+              className="mt-2"
+            >
               Try Again
             </Button>
           </CardContent>
@@ -112,11 +130,11 @@ const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => 
             </div>
 
             <CardTitle className="text-2xl font-bold text-black mb-3">
-
               Ready to Transform Your Skills?
             </CardTitle>
             <CardDescription className="text-gray-600 text-base max-w-lg mx-auto">
-              Create structured learning challenges to stay consistent, track progress, and share your journey with the world.
+              Create structured learning challenges to stay consistent, track
+              progress, and share your journey with the world.
             </CardDescription>
           </CardHeader>
 
@@ -128,7 +146,9 @@ const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => 
                   <Calendar className="w-6 h-6 text-[#FF5757]" />
                 </div>
                 <div className="text-black font-medium">Daily Consistency</div>
-                <div className="text-gray-600 text-xs">Build lasting habits</div>
+                <div className="text-gray-600 text-xs">
+                  Build lasting habits
+                </div>
               </div>
 
               <div className="flex flex-col items-center space-y-2">
@@ -181,29 +201,29 @@ const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => 
             My Challenges
           </h2>
           <p className="text-gray-600 mt-1">
-            {activeChallenges.length} active • {completedChallenges.length} completed
+            {activeChallenges.length} active • {completedChallenges.length}{" "}
+            completed
           </p>
         </div>
         <Button
           onClick={() => setIsCreateModalOpen(true)}
           className="text-sm h-8 bg-[#FF5757] hover:bg-[#e64f4f] text-white"
-
         >
           New Challenge
           <Plus className="w-1 h-1" />
-
         </Button>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="glass border-greyLight hover:border-[#FF5757] transition-all hover:shadow-md">
-
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Trophy className="w-5 h-5 text-[#FF5757]" />
               <div>
-                <div className="text-xl font-bold text-contentLight">{challenges.length}</div>
+                <div className="text-xl font-bold text-contentLight">
+                  {challenges.length}
+                </div>
                 <div className="text-xs text-greyDark">Total Challenges</div>
               </div>
             </div>
@@ -215,7 +235,9 @@ const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => 
             <div className="flex items-center gap-2">
               <Flame className="w-5 h-5 text-[#FF5757]" />
               <div>
-                <div className="text-xl font-bold text-contentLight">{activeChallenges.length}</div>
+                <div className="text-xl font-bold text-contentLight">
+                  {activeChallenges.length}
+                </div>
                 <div className="text-xs text-greyDark">Active Now</div>
               </div>
             </div>
@@ -227,7 +249,9 @@ const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => 
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#FF5757]" />
               <div>
-                <div className="text-xl font-bold text-contentLight">{totalDaysCommitted}</div>
+                <div className="text-xl font-bold text-contentLight">
+                  {totalDaysCommitted}
+                </div>
                 <div className="text-xs text-greyDark">Days Committed</div>
               </div>
             </div>
@@ -239,7 +263,9 @@ const ChallengeSection = ({ userId, className = "" }: ChallengeSectionProps) => 
             <div className="flex items-center gap-2">
               <Star className="w-5 h-5 text-[#FF5757]" />
               <div>
-                <div className="text-xl font-bold text-contentLight">{completionRate}%</div>
+                <div className="text-xl font-bold text-contentLight">
+                  {completionRate}%
+                </div>
                 <div className="text-xs text-greyDark">Success Rate</div>
               </div>
             </div>

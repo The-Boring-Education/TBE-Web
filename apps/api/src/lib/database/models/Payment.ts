@@ -1,23 +1,23 @@
-import { type Model, model, models, Schema } from 'mongoose';
+import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, PRODUCT_TYPE } from '@/lib/constants';
-import type { PaymentModel } from '@/lib/interfaces';
+import { DATABASE_MODELS, PRODUCT_TYPE } from "@/lib/constants";
+import type { PaymentModel } from "@/lib/interfaces";
 
 const PaymentSchema: Schema<PaymentModel> = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
-      required: [true, 'User ref is required'],
+      required: [true, "User ref is required"],
     },
     productId: {
       type: String,
-      required: [true, 'Product ID is required'],
+      required: [true, "Product ID is required"],
     },
     productType: {
       type: String,
       enum: PRODUCT_TYPE,
-      required: [true, 'Product type is required'],
+      required: [true, "Product type is required"],
     },
     amount: {
       type: Number,
@@ -51,7 +51,7 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Payment: Model<PaymentModel> =

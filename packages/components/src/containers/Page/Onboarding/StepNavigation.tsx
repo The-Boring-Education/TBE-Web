@@ -1,5 +1,5 @@
-import { Button, FlexContainer } from '@tbe/components';
-import type { StepNavigationProps } from '@tbe/interface';
+import { Button, FlexContainer } from "@tbe/components";
+import type { StepNavigationProps } from "@tbe/interface";
 
 const StepNavigation = ({
   isValid,
@@ -10,27 +10,27 @@ const StepNavigation = ({
   onSubmit,
   isLoading = false,
 }: StepNavigationProps) => (
-  <FlexContainer className='gap-2'>
+  <FlexContainer className="gap-2">
     {currentStep > 0 && (
       <Button
-        className=''
-        text='Back'
-        variant='OUTLINE'
+        className=""
+        text="Back"
+        variant="OUTLINE"
         onClick={onBack}
         disabled={isLoading}
       />
     )}
     <Button
       active={isValid && !isLoading}
-      className='m-auto'
+      className="m-auto"
       text={
         isLastStep
           ? isLoading
-            ? 'Completing...'
-            : 'Complete Onboarding'
-          : 'Next'
+            ? "Completing..."
+            : "Complete Onboarding"
+          : "Next"
       }
-      variant='PRIMARY'
+      variant="PRIMARY"
       onClick={isLastStep ? onSubmit : onNext}
       disabled={isLoading}
     />

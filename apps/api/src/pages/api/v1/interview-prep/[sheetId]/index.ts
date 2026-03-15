@@ -8,10 +8,11 @@ import {
 } from "@/lib/database";
 import type { AddInterviewSheetRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware, connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { method, query } = req;
   const { sheetId, userId } = query as { sheetId: string; userId: string };
 
@@ -31,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
-        })
+        }),
       );
   }
 };
@@ -40,7 +41,7 @@ const handleGetSheetById = async (
   req: NextApiRequest,
   res: NextApiResponse,
   userId: string,
-  sheetId: string
+  sheetId: string,
 ) => {
   try {
     const { data, error } = await getASheetForUserFromDB(userId, sheetId);
@@ -50,7 +51,7 @@ const handleGetSheetById = async (
         sendAPIResponse({
           status: false,
           message: "Failed while fetching questions from the interview sheet",
-        })
+        }),
       );
     }
 
@@ -59,14 +60,14 @@ const handleGetSheetById = async (
         status: true,
         data,
         message: "Questions retrieved successfully",
-      })
+      }),
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
         message: "Failed while fetching questions from the interview sheet",
-      })
+      }),
     );
   }
 };
@@ -74,7 +75,7 @@ const handleGetSheetById = async (
 const handleUpdateSheet = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  sheetId: string
+  sheetId: string,
 ) => {
   const updatedData = req.body as Partial<AddInterviewSheetRequestPayloadProps>;
 
@@ -90,7 +91,7 @@ const handleUpdateSheet = async (
           status: false,
           message: "Failed while updating sheet",
           error,
-        })
+        }),
       );
     }
 
@@ -99,7 +100,7 @@ const handleUpdateSheet = async (
         status: true,
         data,
         message: "Sheet updated successfully",
-      })
+      }),
     );
   } catch (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
@@ -107,39 +108,42 @@ const handleUpdateSheet = async (
         status: false,
         message: "Failed while updating sheet",
         error,
-      })
+      }),
     );
   }
 };
 
-export default handler;
+export default withApiHandler(handler);
 
 const handleDeleteSheet = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  sheetId: string
+  sheetId: string,
 ) => {
   try {
     const { data, error } = await deleteInterviewSheetFromDB(sheetId);
 
     if (error) {
       if (error === "Interview sheet not found") {
-        console.warn(`Sheet ${sheetId} not found for deletion`);
+        logger.warn("Sheet not found for deletion", { sheetId });
         return res.status(apiStatusCodes.NOT_FOUND).json(
           sendAPIResponse({
             status: false,
             message: "Interview sheet not found",
-          })
+          }),
         );
       }
 
-      console.error(`Error deleting sheet ${sheetId}:`, error);
+      logger.error("Error deleting sheet", {
+        sheetId,
+        error: error instanceof Error ? error.message : String(error),
+      });
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
           message: "Failed to delete interview sheet",
           error,
-        })
+        }),
       );
     }
 
@@ -148,16 +152,19 @@ const handleDeleteSheet = async (
         success: true,
         message: "Interview sheet deleted successfully",
         data,
-      })
+      }),
     );
   } catch (error) {
-    console.error(`Exception deleting sheet ${sheetId}:`, error);
+    logger.error("Exception deleting sheet", {
+      sheetId,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
         message: "Failed to delete interview sheet",
         error: String(error),
-      })
+      }),
     );
   }
 };

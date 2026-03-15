@@ -19,12 +19,21 @@ const getMetadataBase = (): URL => {
 export const metadata: Metadata = {
   metadataBase: getMetadataBase(),
   title: "TechYatra - Your Tech Learning Roadmap",
-  description: "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
-  keywords: ["tech learning", "programming", "web development", "dsa", "interview prep", "career guidance"],
+  description:
+    "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
+  keywords: [
+    "tech learning",
+    "programming",
+    "web development",
+    "dsa",
+    "interview prep",
+    "career guidance",
+  ],
   authors: [{ name: "The Boring Education" }],
   openGraph: {
     title: "TechYatra - Your Tech Learning Roadmap",
-    description: "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
+    description:
+      "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
     siteName: "TechYatra",
     locale: "hi_IN",
     type: "website",
@@ -32,7 +41,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "TechYatra - Your Tech Learning Roadmap",
-    description: "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
+    description:
+      "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
   },
 };
 
@@ -52,4 +62,3 @@ export default function RootLayout({
     </html>
   );
 }
-

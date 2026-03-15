@@ -169,25 +169,25 @@ Use these rules as a checklist to ensure:
 
 ```typescript
 // Component imports
-import { Button, Card } from "@tbe/components"
-import { useAuth, useApi } from "@tbe/hooks"
-import type { User, APIResponse } from "@tbe/types"
+import { Button, Card } from "@tbe/components";
+import { useAuth, useApi } from "@tbe/hooks";
+import type { User, APIResponse } from "@tbe/types";
 
 // API response structure
 return res.status(200).json(
-    sendAPIResponse({
-        status: true,
-        data: result
-    })
-)
+  sendAPIResponse({
+    status: true,
+    data: result,
+  }),
+);
 
 // Error handling
 try {
-    const result = await operation()
-    return success(result)
+  const result = await operation();
+  return success(result);
 } catch (error) {
-    captureError(error)
-    return errorResponse(error.message)
+  captureError(error);
+  return errorResponse(error.message);
 }
 ```
 

@@ -1,6 +1,6 @@
 /**
  * Email & Communication Types
- * 
+ *
  * Types for email services, templates, and communication workflows
  * used across TBE platform apps.
  */
@@ -61,11 +61,11 @@ export interface CourseCompletionEmailData extends EmailTriggerData {
 }
 
 export type EmailTriggerType =
-  | 'WELCOME'
-  | 'COURSE_ENROLLMENT'
-  | 'PROJECT_ENROLLMENT'
-  | 'INTERVIEW_PREP_ENROLLMENT'
-  | 'COURSE_COMPLETION';
+  | "WELCOME"
+  | "COURSE_ENROLLMENT"
+  | "PROJECT_ENROLLMENT"
+  | "INTERVIEW_PREP_ENROLLMENT"
+  | "COURSE_COMPLETION";
 
 export interface EmailTriggerRequest {
   trigger: EmailTriggerType;
@@ -109,7 +109,7 @@ export interface EmailTemplate {
   htmlContent: string;
   textContent?: string;
   variables: string[];
-  category: 'welcome' | 'notification' | 'marketing' | 'transactional';
+  category: "welcome" | "notification" | "marketing" | "transactional";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

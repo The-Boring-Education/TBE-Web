@@ -1,22 +1,23 @@
-import '@/styles/globals.css';
-import '@/styles/colors.css';
+import "@tbe/components/styles/common.css";
+import "@/styles/globals.css";
+import "@/styles/colors.css";
 
-import { GamificationProvider } from '@tbe/components';
+import { GamificationProvider } from "@tbe/components";
 import {
   initGA,
   installGlobalAnalyticsListeners,
   trackPageview,
-} from '@tbe/components/analytics';
-import { useUser } from '@tbe/hooks';
-import type { AppProps } from 'next/app';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { SessionProvider } from 'next-auth/react';
-import { Fragment, useEffect, useState } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { Toaster } from 'sonner';
+} from "@tbe/components/analytics";
+import { useUser } from "@tbe/hooks";
+import type { AppProps } from "next/app";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { SessionProvider } from "next-auth/react";
+import { Fragment, useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Toaster } from "sonner";
 
-import DashboardLayout from '@/components/DashboardLayout';
+import DashboardLayout from "@/components/DashboardLayout";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -25,18 +26,17 @@ const AppContent = ({
   Component,
   pageProps,
 }: {
-  Component: AppProps['Component'];
+  Component: AppProps["Component"];
   pageProps: any;
 }) => {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const userData = useUser();
-  const { user, isAuth, loading } =
-    (userData as any) || {
-      user: null,
-      isAuth: false,
-      loading: true,
-    };
+  const { user, isAuth, loading } = (userData as any) || {
+    user: null,
+    isAuth: false,
+    loading: true,
+  };
 
   // Ensure we're on the client side before accessing window
   useEffect(() => {
@@ -49,31 +49,34 @@ const AppContent = ({
     installGlobalAnalyticsListeners();
 
     const handleRouteChange = (url: string) => trackPageview(url);
-    router.events.on('routeChangeComplete', handleRouteChange);
-    return () => router.events.off('routeChangeComplete', handleRouteChange);
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => router.events.off("routeChangeComplete", handleRouteChange);
   }, [router.events]);
 
-  const isDashboardRoute = router.pathname.startsWith('/dashboard');
-  const isDSAPrepRoute = router.pathname.startsWith('/dashboard/dsa-prep');
+  const isDashboardRoute = router.pathname.startsWith("/dashboard");
+  const isDSAPrepRoute = router.pathname.startsWith("/dashboard/dsa-prep");
   // Exclude slug pages from DashboardLayout (they should be full-screen study view)
   // router.pathname for dynamic routes is the pattern like '/dashboard/interview-prep/[sheetSlug]' or '/dsa-prep/[sheetSlug]'
-  const isStudyRoute = router.pathname.includes('[sheetSlug]');
+  const isStudyRoute = router.pathname.includes("[sheetSlug]");
   // Exclude the main DSA prep page for fullscreen experience
-  const isDSAMainRoute = router.pathname === '/dashboard/dsa-prep';
-  const shouldUseDashboardLayout = (isDashboardRoute || isDSAPrepRoute) && !isStudyRoute && !isDSAMainRoute;
+  const isDSAMainRoute = router.pathname === "/dashboard/dsa-prep";
+  // Exclude the Aptitude page for fullscreen workspace experience
+  const isAptitudeRoute = router.pathname === "/dashboard/aptitude";
 
-  const pageContent = (
-    <Component {...pageProps} />
-  );
+  const shouldUseDashboardLayout =
+    (isDashboardRoute || isDSAPrepRoute) &&
+    !isStudyRoute &&
+    !isDSAMainRoute &&
+    !isAptitudeRoute;
+
+  const pageContent = <Component {...pageProps} />;
 
   return (
     <QueryClientProvider client={queryClient}>
       <GamificationProvider>
         <div className="bg-[#0A0A0A] min-h-screen">
           {shouldUseDashboardLayout ? (
-            <DashboardLayout>
-              {pageContent}
-            </DashboardLayout>
+            <DashboardLayout>{pageContent}</DashboardLayout>
           ) : (
             pageContent
           )}

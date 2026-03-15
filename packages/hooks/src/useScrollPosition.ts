@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const useScrollPosition = () => {
   const [scrollPercentage, setScrollPercentage] = useState(0);
@@ -12,8 +12,8 @@ const useScrollPosition = () => {
       setScrollPercentage(percentScrolled);
     };
 
-    window.addEventListener('scroll', updateScroll);
-    return () => window.removeEventListener('scroll', updateScroll);
+    window.addEventListener("scroll", updateScroll);
+    return () => window.removeEventListener("scroll", updateScroll);
   }, []);
 
   return scrollPercentage;

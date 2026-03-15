@@ -1,11 +1,11 @@
-import { ArrowLeftIcon, PauseIcon, PlayIcon } from '@heroicons/react/20/solid';
-import { FlexContainer, Text } from '@tbe/components';
-import { routes } from '@tbe/constants';
-import { useApi } from '@tbe/hooks';
-import type { PlaylistVideoTimeCard as PlaylistVideoTimeCardProps } from '@tbe/interface';
-import { convertSecondsToMinutes } from '@tbe/utils';
-import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react';
+import { ArrowLeftIcon, PauseIcon, PlayIcon } from "@heroicons/react/20/solid";
+import { FlexContainer, Text } from "@tbe/components";
+import { routes } from "@tbe/constants";
+import { useApi } from "@tbe/hooks";
+import type { PlaylistVideoTimeCard as PlaylistVideoTimeCardProps } from "@tbe/interface";
+import { convertSecondsToMinutes } from "@tbe/utils";
+import { useRouter } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 
 const PlaylistVideoTimeCard = ({
   usertime = 0,
@@ -16,16 +16,16 @@ const PlaylistVideoTimeCard = ({
   const [isRunning, setIsRunning] = useState(false);
   const router = useRouter();
 
-  const { makeRequest } = useApi('update-user-learning-time');
+  const { makeRequest } = useApi("update-user-learning-time");
 
   const updateLearningTime = useCallback(() => {
     const minutes = Math.floor(time / 60);
 
     makeRequest({
       url: `${routes.api.youfocusUserPlaylistById(playlistId, userId)}`,
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ learningTime: minutes }),
     }).catch((error) => error);
@@ -62,10 +62,10 @@ const PlaylistVideoTimeCard = ({
       updateLearningTime();
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [updateLearningTime]);
 
@@ -75,38 +75,38 @@ const PlaylistVideoTimeCard = ({
 
   return (
     <FlexContainer
-      className='gap-2 w-full justify-between p-2 bg-dark text-white rounded-lg shadow-md'
-      direction='row'
+      className="gap-2 w-full justify-between p-2 bg-dark text-white rounded-lg shadow-md"
+      direction="row"
     >
       <button
-        aria-label='Go back'
-        className='w-10 h-10 flex items-center justify-center bg-white text-white rounded-full hover:bg-gray-200'
+        aria-label="Go back"
+        className="w-10 h-10 flex items-center justify-center bg-white text-white rounded-full hover:bg-gray-200"
         onClick={handleBackButton}
       >
         <ArrowLeftIcon
-          aria-hidden='true'
-          className='w-5 h-5 p-[4px] text-gray-700'
+          aria-hidden="true"
+          className="w-5 h-5 p-[4px] text-gray-700"
         />
       </button>
 
-      <Text className='strong-text text-contentDark' level='span'>
+      <Text className="strong-text text-contentDark" level="span">
         {convertSecondsToMinutes(time)}
       </Text>
 
       <button
-        aria-label={isRunning ? 'Pause' : 'Play'}
-        className='w-12 h-12 flex items-center justify-center bg-white text-white rounded-full hover:bg-gray-200'
+        aria-label={isRunning ? "Pause" : "Play"}
+        className="w-12 h-12 flex items-center justify-center bg-white text-white rounded-full hover:bg-gray-200"
         onClick={toggleTimer}
       >
         {isRunning ? (
           <PauseIcon
-            aria-hidden='true'
-            className='w-5 h-5 p-[4px] text-gray-700'
+            aria-hidden="true"
+            className="w-5 h-5 p-[4px] text-gray-700"
           />
         ) : (
           <PlayIcon
-            aria-hidden='true'
-            className='w-5 h-5 p-[4px] text-gray-700'
+            aria-hidden="true"
+            className="w-5 h-5 p-[4px] text-gray-700"
           />
         )}
       </button>

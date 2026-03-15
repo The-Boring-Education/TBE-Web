@@ -11,7 +11,13 @@ import {
   SidebarProvider,
 } from "@tbe/components";
 import { useUser } from "@tbe/hooks";
-import { BrainCircuit, ClipboardList, FileText, Home, Target } from "lucide-react";
+import {
+  BrainCircuit,
+  ClipboardList,
+  FileText,
+  Home,
+  Target,
+} from "lucide-react";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
@@ -53,7 +59,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
-
       <Sidebar className="border-r border-gray-800">
         <SidebarContent className="pt-10">
           <SidebarMenu>

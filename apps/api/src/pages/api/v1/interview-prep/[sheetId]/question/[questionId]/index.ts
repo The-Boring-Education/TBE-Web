@@ -7,10 +7,10 @@ import {
 } from "@/lib/database";
 import type { AddInterviewQuestionRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware, connectDB } from "@/middleware/api";
+import { adminMiddleware } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { method, query } = req;
   const { sheetId, questionId } = query as {
     questionId: string;
@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
-        })
+        }),
       );
   }
 };
@@ -41,7 +41,7 @@ const handleUpdateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
   sheetId: string,
-  questionId: string
+  questionId: string,
 ) => {
   const updatedData =
     req.body as Partial<AddInterviewQuestionRequestPayloadProps>;
@@ -50,7 +50,7 @@ const handleUpdateQuestion = async (
     const { data, error } = await updateInterviewQuestionInDB(
       sheetId,
       questionId,
-      updatedData
+      updatedData,
     );
 
     if (error) {
@@ -58,7 +58,7 @@ const handleUpdateQuestion = async (
         sendAPIResponse({
           status: false,
           message: "Failed while updating chapter to section",
-        })
+        }),
       );
     }
 
@@ -70,7 +70,7 @@ const handleUpdateQuestion = async (
       sendAPIResponse({
         status: false,
         message: "Failed while updating chapter to section",
-      })
+      }),
     );
   }
 };
@@ -79,12 +79,12 @@ const handleDeleteQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
   sheetId: string,
-  questionId: string
+  questionId: string,
 ) => {
   try {
     const { data, error } = await deleteQuestionFromSheetInDB(
       sheetId,
-      questionId
+      questionId,
     );
 
     if (error) {
@@ -92,7 +92,7 @@ const handleDeleteQuestion = async (
         sendAPIResponse({
           status: false,
           message: "Failed while deleting question from sheet",
-        })
+        }),
       );
     }
 
@@ -104,9 +104,9 @@ const handleDeleteQuestion = async (
       sendAPIResponse({
         status: false,
         message: "Failed while deleting question from sheet",
-      })
+      }),
     );
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

@@ -1,6 +1,6 @@
-import { Text } from '@tbe/components';
-import type { ProgressRingProps } from '@tbe/interface';
-import React from 'react';
+import { Text } from "@tbe/components";
+import type { ProgressRingProps } from "@tbe/interface";
+import React from "react";
 
 const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
   const radius = 42;
@@ -14,33 +14,33 @@ const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
     circumference - (clampedProgress / 100) * circumference;
 
   return (
-    <div className='relative w-20 h-20 flex items-center justify-center'>
-      <svg className='absolute w-full h-full' viewBox='0 0 100 100'>
+    <div className="relative w-20 h-20 flex items-center justify-center">
+      <svg className="absolute w-full h-full" viewBox="0 0 100 100">
         {/* Background Circle */}
         <circle
-          cx='50'
-          cy='50'
-          fill='transparent'
+          cx="50"
+          cy="50"
+          fill="transparent"
           r={radius}
-          stroke='#E0E0E0'
-          strokeWidth='8'
+          stroke="#E0E0E0"
+          strokeWidth="8"
         />
         {/* Progress Circle */}
         <circle
-          className='transition-all duration-300 ease-in-out'
-          cx='50'
-          cy='50'
-          fill='transparent'
+          className="transition-all duration-300 ease-in-out"
+          cx="50"
+          cy="50"
+          fill="transparent"
           r={radius}
-          stroke='#FF4A4A'
+          stroke="#FF4A4A"
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
-          strokeLinecap='round'
-          strokeWidth='8'
+          strokeLinecap="round"
+          strokeWidth="8"
         />
       </svg>
       {/* Display Progress Percentage */}
-      <Text className='p-3 text-base md:text-lg font-bold' level='span'>
+      <Text className="p-3 text-base md:text-lg font-bold" level="span">
         {point}
       </Text>
     </div>

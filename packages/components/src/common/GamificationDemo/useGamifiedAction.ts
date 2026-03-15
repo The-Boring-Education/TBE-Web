@@ -1,15 +1,18 @@
-import { routes } from '@tbe/constants';
-import { useAnalytics, useApi, useGamification, useUser } from '@tbe/hooks';
-import type { TrackEventProps, UserPointsActionType } from '@tbe/interface';
-import { calculateUserPointsForAction, getUserGamificationLevel } from '@tbe/utils';
-import { useCallback, useState } from 'react';
+import { routes } from "@tbe/constants";
+import { useAnalytics, useApi, useGamification, useUser } from "@tbe/hooks";
+import type { TrackEventProps, UserPointsActionType } from "@tbe/interface";
+import {
+  calculateUserPointsForAction,
+  getUserGamificationLevel,
+} from "@tbe/utils";
+import { useCallback, useState } from "react";
 
-import { useGamificationContext } from './GamificationProvider';
+import { useGamificationContext } from "./GamificationProvider";
 
 export interface GamificationEvent {
   gamificationAction?: UserPointsActionType;
-  analytics: Omit<TrackEventProps, 'value'>;
-  celebrationType?: 'points' | 'levelup' | 'achievement';
+  analytics: Omit<TrackEventProps, "value">;
+  celebrationType?: "points" | "levelup" | "achievement";
   customMessage?: string;
   metadata?: any;
 }
@@ -19,15 +22,15 @@ export interface GamificationState {
   showCelebration: boolean;
   showToast: boolean;
   toastData: {
-    type: 'points' | 'levelup' | 'achievement';
+    type: "points" | "levelup" | "achievement";
     message: string;
     points?: number;
     level?: number;
     levelName?: string;
   } | null;
   celebrationData: {
-    type: 'points' | 'levelup' | 'achievement';
-    intensity: 'low' | 'medium' | 'high';
+    type: "points" | "levelup" | "achievement";
+    intensity: "low" | "medium" | "high";
   } | null;
 }
 
@@ -35,7 +38,7 @@ const useGamifiedAction = () => {
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const { points: currentPoints } = useGamification();
-  const { makeRequest } = useApi('gamification');
+  const { makeRequest } = useApi("gamification");
   const { triggerCelebration, showToast } = useGamificationContext();
 
   const [state, setState] = useState<GamificationState>({
@@ -65,7 +68,7 @@ const useGamifiedAction = () => {
         // Handle gamification if applicable
         if (event.gamificationAction) {
           const pointsEarned = calculateUserPointsForAction(
-            event.gamificationAction
+            event.gamificationAction,
           );
           const previousLevel = getUserGamificationLevel(currentPoints);
           const newTotalPoints = currentPoints + pointsEarned;
@@ -73,7 +76,7 @@ const useGamifiedAction = () => {
 
           // Update points in database
           await makeRequest({
-            method: 'POST',
+            method: "POST",
             url: routes.api.gamification,
             body: {
               actionType: event.gamificationAction,
@@ -81,21 +84,21 @@ const useGamifiedAction = () => {
           });
 
           // Determine celebration type
-          let celebrationType: 'points' | 'levelup' | 'achievement' = 'points';
-          let celebrationIntensity: 'low' | 'medium' | 'high' = 'medium';
-          let toastMessage = event.customMessage || 'Great job!';
+          let celebrationType: "points" | "levelup" | "achievement" = "points";
+          let celebrationIntensity: "low" | "medium" | "high";
+          let toastMessage = event.customMessage || "Great job!";
 
           // Check for level up
           if (newLevel.currentLevel > previousLevel.currentLevel) {
-            celebrationType = 'levelup';
-            celebrationIntensity = 'high';
+            celebrationType = "levelup";
+            celebrationIntensity = "high";
             toastMessage = `Level Up! Welcome to ${newLevel.currentLevelName}!`;
 
             // Track level up event
             trackEvent({
-              action: 'LEVEL_UP',
-              category: 'Gamification',
-              label: 'Level Up Achievement',
+              action: "LEVEL_UP",
+              category: "Gamification",
+              label: "Level Up Achievement",
               value: {
                 userId: user.id,
                 previousLevel: previousLevel.currentLevel,
@@ -105,11 +108,11 @@ const useGamifiedAction = () => {
               },
             });
           } else if (pointsEarned >= 50) {
-            celebrationIntensity = 'high';
+            celebrationIntensity = "high";
           } else if (pointsEarned >= 20) {
-            celebrationIntensity = 'medium';
+            celebrationIntensity = "medium";
           } else {
-            celebrationIntensity = 'low';
+            celebrationIntensity = "low";
           }
 
           // Override with custom celebration type if provided
@@ -131,14 +134,14 @@ const useGamifiedAction = () => {
           });
 
           console.log(
-            '🎮 [useGamifiedAction] Provider functions called successfully'
+            "🎮 [useGamifiedAction] Provider functions called successfully",
           );
 
           // Track points earned event
           trackEvent({
-            action: 'POINTS_EARNED',
-            category: 'Gamification',
-            label: 'Points Earned',
+            action: "POINTS_EARNED",
+            category: "Gamification",
+            label: "Points Earned",
             value: {
               userId: user.id,
               pointsEarned,
@@ -148,7 +151,7 @@ const useGamifiedAction = () => {
           });
         }
       } catch (error) {
-        console.error('Gamified action failed:', error);
+        console.error("Gamified action failed:", error);
       } finally {
         setState((prev) => ({ ...prev, isLoading: false }));
       }
@@ -160,7 +163,7 @@ const useGamifiedAction = () => {
       makeRequest,
       triggerCelebration,
       showToast,
-    ]
+    ],
   );
 
   const dismissCelebration = useCallback(() => {

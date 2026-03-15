@@ -1,40 +1,40 @@
 /** @type {import('tailwindcss').Config} */
-const { fontFamily } = require('tailwindcss/defaultTheme');
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
 module.exports = {
   darkMode: ["class"],
   content: [
-    './src/pages/**/*.{ts,tsx}',
-    './src/components/**/*.{ts,tsx}',
-    './src/app/**/*.{ts,tsx}',
-    '../../packages/components/src/**/*.{ts,tsx}',
+    "./src/pages/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+    "./src/app/**/*.{ts,tsx}",
+    "../../packages/components/src/**/*.{ts,tsx}",
   ],
   theme: {
     container: {
       center: true,
       padding: "1rem",
       screens: {
-        sm: '480px',
-        md: '768px',
-        lg: '976px',
-        xl: '1280px',
-        "2xl": "1280px"
-      }
+        sm: "480px",
+        md: "768px",
+        lg: "976px",
+        xl: "1280px",
+        "2xl": "1280px",
+      },
     },
     extend: {
       fontFamily: {
-        primary: ['Inter', ...fontFamily.sans],
+        primary: ["Inter", ...fontFamily.sans],
       },
       padding: {
-        1: '10px',
-        2: '16px',
-        4: '32px',
-        6: '48px',
-        8: '64px',
-        10: '80px',
-        12: '96px',
-        14: '112px',
-        16: '128px',
+        1: "10px",
+        2: "16px",
+        4: "32px",
+        6: "48px",
+        8: "64px",
+        10: "80px",
+        12: "96px",
+        14: "112px",
+        16: "128px",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -42,10 +42,10 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        dark: '#040505',
-        grey: '#B0B0B0',
-        greyLight: '#e3e3e3',
-        greyDark: '#848484',
+        dark: "#040505",
+        grey: "#B0B0B0",
+        greyLight: "#e3e3e3",
+        greyDark: "#848484",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -97,5 +97,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
-
+};

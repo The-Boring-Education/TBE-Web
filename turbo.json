@@ -3,9 +3,7 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "GOOGLE_AUTH_CLIENT_ID",
         "MONGODB_URI",
@@ -51,16 +49,10 @@
         ".env.production",
         ".env"
       ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "build:cloud-run": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "GOOGLE_AUTH_CLIENT_ID",
         "MONGODB_URI",
@@ -106,26 +98,15 @@
         ".env.production",
         ".env"
       ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
-      "dependsOn": [
-        "^lint"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "eslint.config.js",
-        ".eslintrc*"
-      ],
+      "dependsOn": ["^lint"],
+      "inputs": ["$TURBO_DEFAULT$", "eslint.config.js", ".eslintrc*"],
       "cache": true
     },
     "check-types": {
-      "dependsOn": [
-        "^check-types"
-      ]
+      "dependsOn": ["^check-types"]
     },
     "dev": {
       "cache": false,
@@ -139,14 +120,9 @@
       ]
     },
     "test": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": true,
-      "outputs": [
-        "coverage/**",
-        "test-results/**"
-      ],
+      "outputs": ["coverage/**", "test-results/**"],
       "inputs": [
         "src/**/*.{ts,tsx}",
         "src/**/*.test.{ts,tsx}",
@@ -156,35 +132,20 @@
     },
     "test:unit": {
       "cache": true,
-      "outputs": [
-        "coverage/**"
-      ],
-      "inputs": [
-        "src/unit/**/*.{ts,tsx}",
-        "src/test-utils/**/*.{ts,tsx}"
-      ]
+      "outputs": ["coverage/**"],
+      "inputs": ["src/unit/**/*.{ts,tsx}", "src/test-utils/**/*.{ts,tsx}"]
     },
     "test:api": {
       "cache": true,
-      "outputs": [
-        "coverage/**"
-      ],
-      "inputs": [
-        "src/api/**/*.{ts,tsx}",
-        "src/test-utils/**/*.{ts,tsx}"
-      ]
+      "outputs": ["coverage/**"],
+      "inputs": ["src/api/**/*.{ts,tsx}", "src/test-utils/**/*.{ts,tsx}"]
     },
     "test:coverage": {
       "cache": true,
-      "outputs": [
-        "coverage/**"
-      ]
+      "outputs": ["coverage/**"]
     },
     "test:ci": {
-      "dependsOn": [
-        "test:unit",
-        "test:api"
-      ],
+      "dependsOn": ["test:unit", "test:api"],
       "cache": false
     }
   }

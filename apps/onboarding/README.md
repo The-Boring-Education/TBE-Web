@@ -122,12 +122,12 @@ pnpm type-check           # TypeScript type checking
 
 ```typescript
 interface BasicInfo {
-    email: string
-    password: string
-    confirmPassword: string
-    firstName: string
-    lastName: string
-    agreeToTerms: boolean
+  email: string;
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
+  agreeToTerms: boolean;
 }
 ```
 
@@ -135,11 +135,11 @@ interface BasicInfo {
 
 ```typescript
 interface ProfileInfo {
-    role: "student" | "professional" | "career-changer"
-    experience: "beginner" | "intermediate" | "advanced"
-    interests: string[]
-    goals: string[]
-    preferredLearningStyle: string
+  role: "student" | "professional" | "career-changer";
+  experience: "beginner" | "intermediate" | "advanced";
+  interests: string[];
+  goals: string[];
+  preferredLearningStyle: string;
 }
 ```
 
@@ -147,10 +147,10 @@ interface ProfileInfo {
 
 ```typescript
 interface SkillsInfo {
-    programmingLanguages: string[]
-    frameworks: string[]
-    currentSkillLevel: number
-    areasToImprove: string[]
+  programmingLanguages: string[];
+  frameworks: string[];
+  currentSkillLevel: number;
+  areasToImprove: string[];
 }
 ```
 
@@ -167,13 +167,13 @@ interface SkillsInfo {
 ```typescript
 // Registration forms
 import {
-    BasicInfoForm,
-    ProfileSetupForm,
-    SkillsAssessmentForm
-} from "@/components/forms"
+  BasicInfoForm,
+  ProfileSetupForm,
+  SkillsAssessmentForm,
+} from "@/components/forms";
 
 // UI elements
-import { Button, Input, Select, Checkbox, ProgressBar } from "@/components/ui"
+import { Button, Input, Select, Checkbox, ProgressBar } from "@/components/ui";
 ```
 
 ### Layout Components
@@ -181,10 +181,10 @@ import { Button, Input, Select, Checkbox, ProgressBar } from "@/components/ui"
 ```typescript
 // Layout components
 import {
-    OnboardingLayout,
-    StepIndicator,
-    NavigationButtons
-} from "@/components/layout"
+  OnboardingLayout,
+  StepIndicator,
+  NavigationButtons,
+} from "@/components/layout";
 ```
 
 ## 🔄 State Management
@@ -193,28 +193,28 @@ import {
 
 ```typescript
 // Form management with React Hook Form equivalent
-import { useState, useReducer } from "react"
+import { useState, useReducer } from "react";
 
 interface OnboardingState {
-    currentStep: number
-    basicInfo: BasicInfo
-    profileInfo: ProfileInfo
-    skillsInfo: SkillsInfo
-    isLoading: boolean
-    errors: Record<string, string>
+  currentStep: number;
+  basicInfo: BasicInfo;
+  profileInfo: ProfileInfo;
+  skillsInfo: SkillsInfo;
+  isLoading: boolean;
+  errors: Record<string, string>;
 }
 
 // Custom hooks for state management
 const useOnboardingFlow = () => {
-    const [state, dispatch] = useReducer(onboardingReducer, initialState)
+  const [state, dispatch] = useReducer(onboardingReducer, initialState);
 
-    const nextStep = () => dispatch({ type: "NEXT_STEP" })
-    const prevStep = () => dispatch({ type: "PREV_STEP" })
-    const updateBasicInfo = (info: BasicInfo) =>
-        dispatch({ type: "UPDATE_BASIC_INFO", payload: info })
+  const nextStep = () => dispatch({ type: "NEXT_STEP" });
+  const prevStep = () => dispatch({ type: "PREV_STEP" });
+  const updateBasicInfo = (info: BasicInfo) =>
+    dispatch({ type: "UPDATE_BASIC_INFO", payload: info });
 
-    return { state, nextStep, prevStep, updateBasicInfo }
-}
+  return { state, nextStep, prevStep, updateBasicInfo };
+};
 ```
 
 ### Progress Tracking
@@ -222,14 +222,14 @@ const useOnboardingFlow = () => {
 ```typescript
 // Progress tracking
 const useProgress = () => {
-    const [progress, setProgress] = useState(0)
+  const [progress, setProgress] = useState(0);
 
-    const updateProgress = (step: number, totalSteps: number) => {
-        setProgress((step / totalSteps) * 100)
-    }
+  const updateProgress = (step: number, totalSteps: number) => {
+    setProgress((step / totalSteps) * 100);
+  };
 
-    return { progress, updateProgress }
-}
+  return { progress, updateProgress };
+};
 ```
 
 ## 🔐 Form Validation
@@ -239,33 +239,33 @@ const useProgress = () => {
 ```typescript
 // Validation utilities
 const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-}
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
 
 const validatePassword = (password: string): string[] => {
-    const errors = []
-    if (password.length < 8)
-        errors.push("Password must be at least 8 characters")
-    if (!/[A-Z]/.test(password))
-        errors.push("Password must contain uppercase letter")
-    if (!/[0-9]/.test(password)) errors.push("Password must contain a number")
-    return errors
-}
+  const errors = [];
+  if (password.length < 8)
+    errors.push("Password must be at least 8 characters");
+  if (!/[A-Z]/.test(password))
+    errors.push("Password must contain uppercase letter");
+  if (!/[0-9]/.test(password)) errors.push("Password must contain a number");
+  return errors;
+};
 
 // Form validation hook
 const useFormValidation = (formData: any, validationRules: any) => {
-    const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
 
-    const validate = () => {
-        const newErrors = {}
-        // Validation logic
-        setErrors(newErrors)
-        return Object.keys(newErrors).length === 0
-    }
+  const validate = () => {
+    const newErrors = {};
+    // Validation logic
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    return { errors, validate }
-}
+  return { errors, validate };
+};
 ```
 
 ## 🌐 API Integration
@@ -275,50 +275,50 @@ const useFormValidation = (formData: any, validationRules: any) => {
 ```typescript
 // API service
 class OnboardingAPI {
-    static async registerUser(userData: UserRegistrationData) {
-        const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/auth/register`,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(userData)
-            }
-        )
+  static async registerUser(userData: UserRegistrationData) {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/auth/register`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      },
+    );
 
-        if (!response.ok) {
-            throw new Error("Registration failed")
-        }
-
-        return response.json()
+    if (!response.ok) {
+      throw new Error("Registration failed");
     }
 
-    static async updateProfile(profileData: ProfileData) {
-        // Profile update logic
-    }
+    return response.json();
+  }
+
+  static async updateProfile(profileData: ProfileData) {
+    // Profile update logic
+  }
 }
 
 // API hooks
 const useRegistration = () => {
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    const register = async (userData: UserRegistrationData) => {
-        setIsLoading(true)
-        setError(null)
+  const register = async (userData: UserRegistrationData) => {
+    setIsLoading(true);
+    setError(null);
 
-        try {
-            const result = await OnboardingAPI.registerUser(userData)
-            return result
-        } catch (err) {
-            setError(err.message)
-            throw err
-        } finally {
-            setIsLoading(false)
-        }
+    try {
+      const result = await OnboardingAPI.registerUser(userData);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    return { register, isLoading, error }
-}
+  return { register, isLoading, error };
+};
 ```
 
 ## 🎨 Styling & Design
@@ -328,24 +328,24 @@ const useRegistration = () => {
 ```javascript
 // tailwind.config.js
 module.exports = {
-    content: ["./src/**/*.{js,ts,jsx,tsx}"],
-    theme: {
-        extend: {
-            colors: {
-                primary: {
-                    50: "#eff6ff",
-                    500: "#3b82f6",
-                    600: "#2563eb",
-                    700: "#1d4ed8"
-                }
-            },
-            animation: {
-                "fade-in": "fadeIn 0.5s ease-in-out",
-                "slide-up": "slideUp 0.3s ease-out"
-            }
-        }
-    }
-}
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: "#eff6ff",
+          500: "#3b82f6",
+          600: "#2563eb",
+          700: "#1d4ed8",
+        },
+      },
+      animation: {
+        "fade-in": "fadeIn 0.5s ease-in-out",
+        "slide-up": "slideUp 0.3s ease-out",
+      },
+    },
+  },
+};
 ```
 
 ### Component Styling
@@ -376,26 +376,26 @@ const Button = ({ variant = 'primary', children, ...props }) => {
 
 ```typescript
 // vite.config.ts
-import { defineConfig } from "vite"
-import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-    plugins: [react()],
-    build: {
-        outDir: "dist",
-        sourcemap: true,
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    vendor: ["react", "react-dom", "react-router-dom"]
-                }
-            }
-        }
+  plugins: [react()],
+  build: {
+    outDir: "dist",
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+        },
+      },
     },
-    server: {
-        port: 3003
-    }
-})
+  },
+  server: {
+    port: 3003,
+  },
+});
 ```
 
 ### Deployment Options

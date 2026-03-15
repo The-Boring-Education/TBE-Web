@@ -122,7 +122,7 @@ const WebinarPage = ({
     } catch (error) {
       console.error('Detailed error while generating certificate: ', error);
       setRegistrationErrorMessage(
-        'Failed to generate certificate. Please try again.'
+        'Failed to generate certificate. Please try again.',
       );
     }
   };

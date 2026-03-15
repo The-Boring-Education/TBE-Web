@@ -1,4 +1,4 @@
-import {Award, Sparkles} from "lucide-react";
+import { Award, Sparkles } from "lucide-react";
 import React from "react";
 
 import Button from "../../common/Buttons/Button";
@@ -10,12 +10,22 @@ interface UserSkillsShowcaseProps {
 }
 
 const formatDate = (dateString?: string) => {
-  if (!dateString) {return null;}
+  if (!dateString) {
+    return null;
+  }
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {year: "numeric", month: "short", day: "numeric"});
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 };
 
-const UserSkillsShowcase: React.FC<UserSkillsShowcaseProps> = ({userSkills, lastUpdated, title}) => {
+const UserSkillsShowcase: React.FC<UserSkillsShowcaseProps> = ({
+  userSkills,
+  lastUpdated,
+  title,
+}) => {
   return (
     <div className="w-full bg-white border border-greyLight rounded-2xl p-4 mb-4 mt-2 shadow">
       <h3 className="text-base font-semibold text-primary mb-4 flex items-center gap-2 justify-center">
@@ -49,4 +59,4 @@ const UserSkillsShowcase: React.FC<UserSkillsShowcaseProps> = ({userSkills, last
   );
 };
 
-export default UserSkillsShowcase; 
+export default UserSkillsShowcase;

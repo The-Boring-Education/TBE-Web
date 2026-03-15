@@ -21,7 +21,6 @@ import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import { FaCertificate, FaClock, FaUsers } from 'react-icons/fa';
 
-
 const stats = [
   {
     icon: <FaCertificate />,
@@ -47,10 +46,13 @@ const stats = [
 
 const previewContent = {
   title: 'Preview Our Portfolio',
-  description: 'See how our portfolio templates can help you showcase your projects',
+  description:
+    'See how our portfolio templates can help you showcase your projects',
   buttonText: 'Explore Portfolio',
   onPreviewClick: () => {
-    document.getElementById('portfolio-section')?.scrollIntoView({ behavior: 'smooth' });
+    document
+      .getElementById('portfolio-section')
+      ?.scrollIntoView({ behavior: 'smooth' });
   },
 };
 const Portfolio = ({ seoMeta }: PageProps) => {
@@ -59,7 +61,7 @@ const Portfolio = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-            <ModernLandingHero
+      <ModernLandingHero
         heading='Get a Portfolio'
         focusText='In Minutes'
         heroText='Create Your Portfolio Websites in Minutes and Show your skills and projects to the world.'
@@ -72,11 +74,12 @@ const Portfolio = ({ seoMeta }: PageProps) => {
             buttonProps={{
               variant: 'PRIMARY',
               text: 'Explore Portfolio',
-              className: 'bg-red hover:bg-gray-100 hover:text-black px-4 py-2 text-base font-semibold w-full sm:w-auto',
+              className:
+                'bg-red hover:bg-gray-100 hover:text-black px-4 py-2 text-base font-semibold w-full sm:w-auto',
             }}
             className='w-full sm:w-fit'
             href={`${router.asPath}#${routes.internals.landing.portfolio}`}
-            />
+          />
         }
       />
       <div id='features-section'>

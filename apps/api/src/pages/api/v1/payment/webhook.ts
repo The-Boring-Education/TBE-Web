@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getRawBody from "raw-body";
 
+import { apiStatusCodes, envConfig, isDevelopmentEnv } from "@/lib/constants";
 import {
-  apiStatusCodes,
-  envConfig,
-  isDevelopmentEnv,
-} from "@/lib/constants";
-import { getPaymentByOrderIdFromDB, updatePaymentStatusToDB } from "@/lib/database";
+  getPaymentByOrderIdFromDB,
+  updatePaymentStatusToDB,
+} from "@/lib/database";
 import { processPostPaymentEnrollment } from "@/lib/services/payment";
-import { cors, sendAPIResponse, verifyWebhookSignature } from "@/lib/utils"; // note: verifyWebhookSignature moved below
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse, verifyWebhookSignature } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY;
 
@@ -26,7 +26,9 @@ type WebhookEvent = {
   raw?: any;
 };
 
-const validateAndExtract = (payload: any): { isValid: boolean; error?: string; data?: WebhookEvent } => {
+const validateAndExtract = (
+  payload: any,
+): { isValid: boolean; error?: string; data?: WebhookEvent } => {
   if (!payload || typeof payload !== "object") {
     return { isValid: false, error: "Invalid payload format" };
   }
@@ -37,15 +39,27 @@ const validateAndExtract = (payload: any): { isValid: boolean; error?: string; d
   const order = data.order;
   const payment = data.payment;
   if (!order || !payment) {
-    return { isValid: false, error: "Missing order or payment in payload.data" };
+    return {
+      isValid: false,
+      error: "Missing order or payment in payload.data",
+    };
   }
 
   const order_id = order.order_id || order.orderId || null;
-  const payment_status = (payment.payment_status || payment.status || null) as string | null;
-  const payment_id = payment.cf_payment_id || payment.gateway_payment_id || payment.payment_id || null;
+  const payment_status = (payment.payment_status || payment.status || null) as
+    | string
+    | null;
+  const payment_id =
+    payment.cf_payment_id ||
+    payment.gateway_payment_id ||
+    payment.payment_id ||
+    null;
 
   if (!order_id || !payment_status) {
-    return { isValid: false, error: "Missing order_id or payment_status in webhook payload" };
+    return {
+      isValid: false,
+      error: "Missing order_id or payment_status in webhook payload",
+    };
   }
 
   return {
@@ -64,15 +78,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const rawBodyBuffer = await getRawBody(req);
     const payloadString = rawBodyBuffer.toString("utf8");
 
-    await cors(req, res);
-    await connectDB();
-
     if (!WEBHOOK_SECRET) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
           message: "Webhook secret configuration missing",
-        })
+        }),
       );
     }
 
@@ -81,23 +92,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Method ${req.method} Not Allowed`,
-        })
+        }),
       );
     }
 
     const rawSignature = req.headers["x-webhook-signature"];
     const rawTimestamp = req.headers["x-webhook-timestamp"];
-    const webhookSignature = Array.isArray(rawSignature) ? rawSignature[0] : rawSignature;
-    const webhookTimestamp = Array.isArray(rawTimestamp) ? rawTimestamp[0] : rawTimestamp;
+    const webhookSignature = Array.isArray(rawSignature)
+      ? rawSignature[0]
+      : rawSignature;
+    const webhookTimestamp = Array.isArray(rawTimestamp)
+      ? rawTimestamp[0]
+      : rawTimestamp;
 
     if (process.env.NODE_ENV !== "development") {
-      const { isValid, error } = verifyWebhookSignature(payloadString, webhookSignature as string | undefined, WEBHOOK_SECRET as string, webhookTimestamp as string | undefined);
+      const { isValid, error } = verifyWebhookSignature(
+        payloadString,
+        webhookSignature as string | undefined,
+        WEBHOOK_SECRET as string,
+        webhookTimestamp as string | undefined,
+      );
       if (!isValid) {
         return res.status(apiStatusCodes.UNAUTHORIZED).json(
           sendAPIResponse({
             status: false,
             message: error || "Invalid webhook signature",
-          })
+          }),
         );
       }
     }
@@ -110,23 +130,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: "Invalid JSON payload",
-        })
+        }),
       );
     }
 
-        const { isValid: ok, error: validationError, data: webhookEvent } = validateAndExtract(parsed);
+    const {
+      isValid: ok,
+      error: validationError,
+      data: webhookEvent,
+    } = validateAndExtract(parsed);
     if (!ok || !webhookEvent) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
           message: validationError || "Invalid webhook event",
-        })
+        }),
       );
     }
 
-    const { data: _payment, error: findError } = await getPaymentByOrderIdFromDB(webhookEvent.order_id);
+    const { data: _payment, error: findError } =
+      await getPaymentByOrderIdFromDB(webhookEvent.order_id);
     if (findError) {
-      return res.status(apiStatusCodes.NOT_FOUND).json(sendAPIResponse({ status: false, message: findError }));
+      return res
+        .status(apiStatusCodes.NOT_FOUND)
+        .json(sendAPIResponse({ status: false, message: findError }));
     }
 
     const { error: updateError } = await updatePaymentStatusToDB({
@@ -136,30 +163,40 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (updateError) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(sendAPIResponse({ status: false, message: updateError }));
+      return res
+        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(sendAPIResponse({ status: false, message: updateError }));
     }
 
     if (webhookEvent.payment_status === "SUCCESS") {
       const enrollmentResult = await processPostPaymentEnrollment(_payment);
       if (!enrollmentResult.success) {
-        console.error(`Post-payment enrollment failed for ${_payment.productType}:`, enrollmentResult.error);
+        logger.error("Post-payment enrollment failed", {
+          productType: _payment.productType,
+          error: enrollmentResult.error ?? "Unknown enrollment error",
+        });
         // do not fail webhook
       } else {
-        console.log(`Successfully processed enrollment for ${_payment.productType} - Order: ${webhookEvent.order_id}`);
+        logger.info("Successfully processed enrollment", {
+          productType: _payment.productType,
+          orderId: webhookEvent.order_id,
+        });
       }
     }
 
     return res.status(apiStatusCodes.OKAY).json({ status: "OK" });
   } catch (error) {
-    console.error("Webhook handler error:", error);
+    logger.error("Webhook handler error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
         message: "Webhook processing failed",
         error: isDevelopmentEnv && (error as any).message,
-      })
+      }),
     );
   }
 };
 
-export default handler;
+export default withApiHandler(handler);
