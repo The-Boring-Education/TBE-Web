@@ -67,16 +67,6 @@ const handleAggregateJobData = async (
       );
     }
 
-    if (error) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-        sendAPIResponse({
-          status: false,
-          message: "Failed to save job aggregated data to DB",
-          error,
-        }),
-      );
-    }
-
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
