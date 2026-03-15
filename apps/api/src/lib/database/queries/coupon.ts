@@ -3,6 +3,32 @@ import { logger } from "@/lib/utils/logger";
 
 import Coupon from "../models/Coupon";
 
+type CouponValidationError = {
+  name: string;
+  errors: Record<string, { message: string }>;
+};
+
+const isCouponValidationError = (
+  error: unknown,
+): error is CouponValidationError => {
+  if (!error || typeof error !== "object") {
+    return false;
+  }
+
+  if (
+    !("name" in error) ||
+    (error as { name: unknown }).name !== "ValidationError"
+  ) {
+    return false;
+  }
+
+  return (
+    "errors" in error &&
+    typeof (error as { errors?: unknown }).errors === "object" &&
+    (error as { errors?: unknown }).errors !== null
+  );
+};
+
 const findCouponByCodeFromDB = async (
   code: string,
 ): Promise<DatabaseQueryResponseType> => {
@@ -143,14 +169,8 @@ const createCouponFromDB = async (couponData: {
       stack: error instanceof Error ? error.stack : undefined,
     });
     // Handle Mongoose validation errors
-    if (
-      error instanceof Error &&
-      "name" in error &&
-      error.name === "ValidationError"
-    ) {
-      const messages = Object.values((error as any).errors).map(
-        (err: any) => err.message,
-      );
+    if (isCouponValidationError(error)) {
+      const messages = Object.values(error.errors).map((err) => err.message);
       return { error: messages.join(", "), details: error };
     }
 
@@ -225,15 +245,8 @@ const updateCouponFromDB = async (
       stack: error instanceof Error ? error.stack : undefined,
     });
     // Handle Mongoose validation errors
-    if (
-      error &&
-      typeof error === "object" &&
-      "name" in error &&
-      (error as { name: string }).name === "ValidationError"
-    ) {
-      const messages = Object.values(
-        (error as { errors: Record<string, { message: string }> }).errors,
-      ).map((err) => err.message);
+    if (isCouponValidationError(error)) {
+      const messages = Object.values(error.errors).map((err) => err.message);
       return { error: messages.join(", "), details: error };
     }
 

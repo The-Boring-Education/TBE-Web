@@ -29,14 +29,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   if (!userId || !answers || !Array.isArray(answers) || !timeTaken) {
-    return res
-      .status(400)
-      .json(
-        sendAPIResponse({
-          status: false,
-          message: "Missing required fields: userId, answers, timeTaken",
-        }),
-      );
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "Missing required fields: userId, answers, timeTaken",
+      }),
+    );
   }
 
   try {
@@ -85,14 +83,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       await saveQuizAttemptToDB(attemptData);
 
     if (saveError) {
-      return res
-        .status(500)
-        .json(
-          sendAPIResponse({
-            status: false,
-            message: "Failed to save quiz attempt",
-          }),
-        );
+      return res.status(500).json(
+        sendAPIResponse({
+          status: false,
+          message: "Failed to save quiz attempt",
+        }),
+      );
     }
 
     return res.status(200).json(

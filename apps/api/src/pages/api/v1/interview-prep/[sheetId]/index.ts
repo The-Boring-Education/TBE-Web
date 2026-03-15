@@ -9,7 +9,6 @@ import {
 import type { AddInterviewSheetRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { logger } from "@/lib/utils/logger";
 import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 

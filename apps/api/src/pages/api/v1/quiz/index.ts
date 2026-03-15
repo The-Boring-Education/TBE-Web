@@ -219,16 +219,17 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   const { data, error, details } = await addAQuizToDB(quizData);
 
   if (error) {
-    return res
-      .status(400)
-      .json(
-        sendAPIResponse({
-          status: false,
-          message: "Error occurred",
-          error,
-          details,
-        }),
-      );
+    logger.error("Failed to create quiz", {
+      error,
+      details,
+    });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "Error occurred",
+        error,
+      }),
+    );
   }
 
   return res.status(201).json(sendAPIResponse({ status: true, data }));
