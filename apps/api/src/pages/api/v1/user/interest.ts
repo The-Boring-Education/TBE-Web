@@ -11,8 +11,8 @@ import type {
   GetUserInterestsRequestProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
  * API Handler for User Interests
@@ -21,15 +21,6 @@ import { connectDB } from "@/middleware/api";
  * PATCH /user/interest - Update interest status (activate/deactivate)
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -108,7 +99,9 @@ const handleCreateInterest = async (
       }),
     );
   } catch (error: any) {
-    console.error("Error creating user interest:", error);
+    logger.error("Error creating user interest", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -173,7 +166,9 @@ const handleGetInterests = async (
       }),
     );
   } catch (error: any) {
-    console.error("Error getting user interests:", error);
+    logger.error("Error getting user interests", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -229,7 +224,9 @@ const handleUpdateInterest = async (
       }),
     );
   } catch (error: any) {
-    console.error("Error updating user interest:", error);
+    logger.error("Error updating user interest", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -240,4 +237,4 @@ const handleUpdateInterest = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

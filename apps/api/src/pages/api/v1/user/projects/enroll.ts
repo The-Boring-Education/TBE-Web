@@ -10,12 +10,11 @@ import {
 import type { ProjectEnrollmentRequestProps } from "@/lib/interfaces";
 import { sendProjectEnrollmentEmail } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
-
     switch (req.method) {
       case "POST":
         return handleProjectEnrollment(req, res);
@@ -89,11 +88,15 @@ const handleProjectEnrollment = async (
           projectName: projectResult.data.name,
           projectDescription: projectResult.data.description,
         }).catch((error) => {
-          console.error("Failed to send project enrollment email:", error);
+          logger.error("Failed to send project enrollment email", {
+            error: error instanceof Error ? error.message : String(error),
+          });
         });
       }
     } catch (error) {
-      console.error("Error fetching user/project data for email:", error);
+      logger.error("Error fetching user/project data for email", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       // Don't fail the enrollment if email data fetch fails
     }
 
@@ -115,4 +118,4 @@ const handleProjectEnrollment = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

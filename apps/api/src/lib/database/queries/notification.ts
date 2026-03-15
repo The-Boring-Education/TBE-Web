@@ -2,6 +2,7 @@ import type {
   AddNotificationRequestPayloadProps,
   UpdateNotificationRequestPayloadProps,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { Notification } from "../models";
 
@@ -13,7 +14,11 @@ const addANotificationToDB = async (
     await notification.save();
     return { data: notification };
   } catch (error) {
-    return { error };
+    logger.error("DB: addANotificationToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to add notification", details: error };
   }
 };
 
@@ -23,7 +28,11 @@ const getAllNotificationsFromDB = async () => {
 
     return { data: notifications };
   } catch (error) {
-    return { error };
+    logger.error("DB: getAllNotificationsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch notifications", details: error };
   }
 };
 
@@ -41,7 +50,11 @@ const updateANotificationInDB = async (
 
     return { data: updatedNotificationData };
   } catch (error) {
-    return { error };
+    logger.error("DB: updateANotificationInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update notification", details: error };
   }
 };
 
@@ -57,7 +70,11 @@ const deleteANotificationsFromDB = async (notificationId: string) => {
 
     return { data: notification };
   } catch (error) {
-    return { error };
+    logger.error("DB: deleteANotificationsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to delete notification", details: error };
   }
 };
 

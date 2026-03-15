@@ -1,4 +1,5 @@
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { QuizAttempt } from "../models";
 import { toObjectId } from "./common";
@@ -69,15 +70,13 @@ export const addUserQuizAttemptToDB = async (
     const savedAttempt = await attempt.save();
     return { data: savedAttempt };
   } catch (error) {
-    console.error("Error saving quiz attempt:", error);
-    console.error(
-      "Attempt data that failed:",
-      JSON.stringify(attemptData, null, 2),
-    );
-    if (error instanceof Error) {
-      console.error("Error details:", error.message);
-      console.error("Error stack:", error.stack);
-    }
+    logger.error("Error saving quiz attempt", {
+      error: error instanceof Error ? error.message : String(error),
+      attemptData: JSON.stringify(attemptData, null, 2),
+      ...(error instanceof Error && {
+        stack: error.stack,
+      }),
+    });
     return { error: "Failed to save quiz attempt" };
   }
 };
@@ -179,7 +178,9 @@ export const getUserQuizPerformanceFromDB = async (
 
     return { data: performanceStats };
   } catch (error) {
-    console.error("Error getting user performance:", error);
+    logger.error("Error getting user performance", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     // Return empty results instead of error for better UX
     return {
       data: {
@@ -233,7 +234,9 @@ export const getLeaderboardFromDB = async (
 
     return { data: attempts };
   } catch (error) {
-    console.error("Error getting leaderboard:", error);
+    logger.error("Error getting leaderboard", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return { error: "Failed to get leaderboard" };
   }
 };
@@ -314,7 +317,9 @@ export const getQuizAdminAnalyticsFromDB =
 
       return { data: analytics };
     } catch (error) {
-      console.error("Error getting admin analytics:", error);
+      logger.error("Error getting admin analytics", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       return { error: "Failed to get admin analytics" };
     }
   };

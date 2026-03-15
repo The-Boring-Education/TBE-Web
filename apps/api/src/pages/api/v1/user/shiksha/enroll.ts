@@ -9,18 +9,12 @@ import {
 } from "@/lib/database";
 import type { CourseEnrollmentRequestProps } from "@/lib/interfaces";
 import { sendCourseEnrollmentEmail } from "@/lib/services";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    // CORS preflight support
-    await cors(req, res);
-    if (req.method === "OPTIONS") {
-      return res.status(200).end();
-    }
-    await connectDB();
-
     switch (req.method) {
       case "POST":
         return handleCourseEnrollment(req, res);
@@ -103,11 +97,15 @@ const handleCourseEnrollment = async (
           courseName: courseResult.data.name,
           courseDescription: courseResult.data.description,
         }).catch((error) => {
-          console.error("Failed to send course enrollment email:", error);
+          logger.error("Failed to send course enrollment email", {
+            error: error instanceof Error ? error.message : String(error),
+          });
         });
       }
     } catch (error) {
-      console.error("Error fetching user/course data for email:", error);
+      logger.error("Error fetching user/course data for email", {
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -128,4 +126,4 @@ const handleCourseEnrollment = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

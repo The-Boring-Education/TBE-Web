@@ -2,13 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { getChallengeStatsFromDB } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
-
   switch (req.method) {
     case "GET":
       return handleGetChallengeStats(req, res);
@@ -55,4 +52,4 @@ const handleGetChallengeStats = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

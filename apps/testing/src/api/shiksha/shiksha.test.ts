@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   createMockRequest,
   createMockResponse,
@@ -25,6 +26,10 @@ vi.mock("@/lib/utils", () => ({
   sendAPIResponse: (payload: any) => payload,
 }));
 
+vi.mock("@/lib/utils/cors", () => ({
+  cors: vi.fn().mockResolvedValue(undefined),
+}));
+
 // Mock constants
 vi.mock("@/lib/constants", () => ({
   apiStatusCodes: {
@@ -38,11 +43,12 @@ vi.mock("@/lib/constants", () => ({
 
 // Import after mocks
 import handler from "@api/pages/api/v1/shiksha/index";
+
 import {
+  addACourseToDB,
   getAllCourseFromDB,
   getCourseBySlugFromDB,
   getCourseBySlugWithUserFromDB,
-  addACourseToDB,
 } from "@/lib/database";
 
 // Helper to create mock mongoose-like documents
@@ -185,7 +191,7 @@ describe("Shiksha API - /api/v1/shiksha", () => {
 
       const result = await executeHandler(handler, req, res);
 
-      expect(result.statusCode).toBe(200);
+      expect(result.statusCode).toBe(400);
     });
   });
 

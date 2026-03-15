@@ -13,10 +13,9 @@ import {
   fetchPlaylistData,
   sendAPIResponse,
 } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { query } = req;
   const { userId } = query as { userId: string };
 
@@ -24,10 +23,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case "POST":
       return handleAddBulkPlaylist(req, res, userId);
     default:
-      return res.status(apiStatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: `Method ${req.method} not allowed`,
-      });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${req.method} not allowed`,
+        }),
+      );
   }
 };
 
@@ -39,10 +40,12 @@ const handleAddBulkPlaylist = async (
   const { playlists } = req.body; // Array of playlist URLs with optional tags
 
   if (!Array.isArray(playlists) || playlists.length === 0) {
-    return res.status(apiStatusCodes.BAD_REQUEST).json({
-      success: false,
-      message: "No playlists provided",
-    });
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: "No playlists provided",
+      }),
+    );
   }
 
   const addedPlaylists = [];
@@ -133,4 +136,4 @@ const handleAddBulkPlaylist = async (
   );
 };
 
-export default handler;
+export default withApiHandler(handler);

@@ -3,6 +3,7 @@ import type {
   DatabaseQueryResponseType,
   UpdateFeedbackRequestProps,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { Feedback } from "../models";
 
@@ -24,7 +25,11 @@ const addFeedbackToDB = async ({
     await newFeedback.save();
     return { data: newFeedback };
   } catch (error) {
-    return { error: "Failed to create feedback" };
+    logger.error("DB: addFeedbackToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to create feedback", details: error };
   }
 };
 
@@ -47,7 +52,11 @@ const updateFeedbackTextInDB = async ({
     await existingFeedback.save();
     return { data: existingFeedback };
   } catch (error) {
-    return { error: "Failed to update feedback text" };
+    logger.error("DB: updateFeedbackTextInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update feedback text", details: error };
   }
 };
 

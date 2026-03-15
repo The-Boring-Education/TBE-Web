@@ -13,21 +13,20 @@ import { cn, getPreFetchProps } from "@tbe/utils";
 import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Progress } from "@ui/progress";
-import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "@ui/sonner";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-    CheckCircle2,
-    ClipboardList,
-    Code2,
-    FileText,
-    Github,
-    Home,
-    Linkedin,
-    Monitor,
-    PieChart,
-    Settings,
-    Target,
-    TrendingUp,
+  CheckCircle2,
+  ClipboardList,
+  Code2,
+  FileText,
+  Github,
+  Home,
+  Linkedin,
+  Monitor,
+  PieChart,
+  Target,
+  TrendingUp,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -79,13 +78,13 @@ function Sidebar() {
 }
 
 function StatCard({
-    title,
-    value,
-    subtext,
-    icon: Icon,
-    progress,
-    status,
-    secondaryInfo,
+  title,
+  value,
+  subtext,
+  icon: Icon,
+  progress,
+  status,
+  secondaryInfo,
 }: any) {
   return (
     <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:scale-[1.02] group rounded-xl p-4 h-full relative overflow-hidden">
@@ -291,7 +290,9 @@ function DsaClient() {
       const completedQs = weekProgress[idx] || [];
 
       qIds.forEach((qId) => {
-        const q = allQuestions.find((q: any) => String(q._id || q.id) === String(qId));
+        const q = allQuestions.find(
+          (q: any) => String(q._id || q.id) === String(qId),
+        );
         if (q) {
           revs.push({
             title: q.name,
@@ -342,7 +343,8 @@ function DsaClient() {
   const todayTotalHours = (solvedToday / expectedDailyQuestions) * 4;
 
   const todayLog = weeklyLogs?.find(
-    (log: any) => new Date(log.createdAt).toDateString() === new Date().toDateString(),
+    (log: any) =>
+      new Date(log.createdAt).toDateString() === new Date().toDateString(),
   );
 
   const sessionMinutes = Math.floor(seconds / 60);
@@ -859,20 +861,20 @@ function DsaClient() {
 }
 
 const Dashboard = ({ seoMeta }: PageProps) => {
-    return (
-        <Fragment>
-            <SEO seoMeta={seoMeta} />
-            <DsaClient />
-        </Fragment>
-    );
+  return (
+    <Fragment>
+      <SEO seoMeta={seoMeta} />
+      <DsaClient />
+    </Fragment>
+  );
 };
 
 export const getStaticProps = async () => ({
-    ...(await getPreFetchProps({
-        slug: routes.dsayatra.home,
-        appId: "dsayatra",
-    })),
-    revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
+  ...(await getPreFetchProps({
+    slug: routes.dsayatra.home,
+    appId: "dsayatra",
+  })),
+  revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,
 });
 
 export default Dashboard;

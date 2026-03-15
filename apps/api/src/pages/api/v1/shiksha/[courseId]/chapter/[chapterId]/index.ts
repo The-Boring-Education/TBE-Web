@@ -8,10 +8,9 @@ import {
 } from "@/lib/database";
 import type { UpdateChapterInCourseRequestProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { method, query } = req;
   const { courseId, chapterId } = query as {
     chapterId: string;
@@ -129,4 +128,4 @@ const handleDeleteChapter = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

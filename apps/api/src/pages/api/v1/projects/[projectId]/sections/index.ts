@@ -14,11 +14,9 @@ import type {
   UpateSectionRequestPayloadProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
-
   const { method, query } = req;
   const projectId = query.projectId as string;
 
@@ -203,4 +201,4 @@ const handleDeleteSection = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

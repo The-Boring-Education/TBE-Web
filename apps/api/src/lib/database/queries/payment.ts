@@ -3,6 +3,7 @@ import type {
   DatabaseQueryResponseType,
   UpdatePaymentStatusPayloadProps,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { Payment, PrepYatraSubscription } from "../models";
 
@@ -32,7 +33,11 @@ const addPaymentToDB = async ({
     await payment.save();
     return { data: payment };
   } catch (error) {
-    return { error: "Failed to save payment to DB" };
+    logger.error("DB: addPaymentToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to save payment to DB", details: error };
   }
 };
 
@@ -46,7 +51,11 @@ const getPaymentByOrderIdFromDB = async (
     }
     return { data: payment };
   } catch (error) {
-    return { error: "Failed to find payment" };
+    logger.error("DB: getPaymentByOrderIdFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to find payment", details: error };
   }
 };
 
@@ -68,8 +77,15 @@ const updatePaymentStatusToDB = async ({
 
     await payment.save();
     return { data: payment };
-  } catch (error: any) {
-    return { error: `Failed to update payment status: ${error.message}` };
+  } catch (error) {
+    logger.error("DB: updatePaymentStatusToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to update payment status",
+      details: error,
+    };
   }
 };
 
@@ -124,7 +140,14 @@ const checkPaymentStatusFromDB = async (
       };
     }
   } catch (error) {
-    return { error: "Error checking payment status" };
+    logger.error("DB: checkPaymentStatusFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to check payment status",
+      details: error,
+    };
   }
 };
 

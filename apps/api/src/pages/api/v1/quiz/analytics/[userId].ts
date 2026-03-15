@@ -1,14 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getUserAnalyticsFromDB } from "@/lib/database";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await cors(req, res);
-
   if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res
+      .status(405)
+      .json(sendAPIResponse({ status: false, message: "Method not allowed" }));
   }
 
   const { userId } = req.query;
@@ -16,19 +17,23 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   // Validation
   if (!userId || typeof userId !== "string") {
-    return res.status(400).json({ error: "User ID is required" });
+    return res
+      .status(400)
+      .json(sendAPIResponse({ status: false, message: "User ID is required" }));
   }
 
   try {
-    await connectDB();
-
     const { data: analytics, error } = await getUserAnalyticsFromDB(
       userId,
       categoryName as string,
     );
 
     if (error) {
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json(
+          sendAPIResponse({ status: false, message: "Error occurred", error }),
+        );
     }
 
     // Format the response for frontend consumption
@@ -71,14 +76,22 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         lastAttemptAt: analytic.lastAttemptAt,
       })) || [];
 
-    res.status(200).json({
-      success: true,
-      data: formattedAnalytics,
-    });
+    res.status(200).json(
+      sendAPIResponse({
+        status: true,
+        data: formattedAnalytics,
+      }),
+    );
   } catch (error) {
-    console.error("Error fetching user analytics:", error);
-    res.status(500).json({ error: "Internal server error" });
+    logger.error("Error fetching user analytics", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    res
+      .status(500)
+      .json(
+        sendAPIResponse({ status: false, message: "Internal server error" }),
+      );
   }
 }
 
-export default handler;
+export default withApiHandler(handler);

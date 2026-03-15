@@ -6,15 +6,12 @@ import {
   getQuizCategoriesFromDB,
   getQuizCategoriesWithCountsFromDB,
 } from "@/lib/database";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await cors(req, res);
-
   try {
-    await connectDB();
-
     switch (req.method) {
       case "GET":
         return handleGetCategories(req, res);
@@ -23,11 +20,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         return handleCreateQuiz(req, res);
 
       default:
-        return res.status(405).json({ error: "Method not allowed" });
+        return res
+          .status(405)
+          .json(
+            sendAPIResponse({ status: false, message: "Method not allowed" }),
+          );
     }
   } catch (error) {
-    console.error("Quiz API error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    logger.error("Quiz API error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return res
+      .status(500)
+      .json(
+        sendAPIResponse({ status: false, message: "Internal server error" }),
+      );
   }
 }
 
@@ -44,10 +51,14 @@ async function handleGetCategories(req: NextApiRequest, res: NextApiResponse) {
     : await getQuizCategoriesFromDB(includeInactiveQuizzes);
 
   if (error) {
-    return res.status(400).json({ error });
+    return res
+      .status(400)
+      .json(
+        sendAPIResponse({ status: false, message: "Error occurred", error }),
+      );
   }
 
-  return res.status(200).json({ success: true, data });
+  return res.status(200).json(sendAPIResponse({ status: true, data }));
 }
 
 async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
@@ -63,31 +74,43 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   // If quizId is provided, append to existing quiz
   if (quizId) {
     if (!questions || !Array.isArray(questions) || questions.length === 0) {
-      return res.status(400).json({
-        error: "Missing required fields for append: questions",
-      });
+      return res.status(400).json(
+        sendAPIResponse({
+          status: false,
+          message: "Missing required fields for append: questions",
+        }),
+      );
     }
 
     // Append questions to existing quiz
     const { data, error } = await appendQuestionsToQuizInDB(quizId, questions);
 
     if (error) {
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json(
+          sendAPIResponse({ status: false, message: "Error occurred", error }),
+        );
     }
 
-    return res.status(200).json({
-      success: true,
-      data,
-      message: `Successfully appended ${questions.length} questions to quiz`,
-    });
+    return res.status(200).json(
+      sendAPIResponse({
+        status: true,
+        data,
+        message: `Successfully appended ${questions.length} questions to quiz`,
+      }),
+    );
   }
 
   // Basic validation for new quiz creation
   if (!categoryName || !categoryDescription || !categoryIcon || !questions) {
-    return res.status(400).json({
-      error:
-        "Missing required fields: categoryName, categoryDescription, categoryIcon, questions",
-    });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message:
+          "Missing required fields: categoryName, categoryDescription, categoryIcon, questions",
+      }),
+    );
   }
 
   // Ensure non-empty description
@@ -95,15 +118,21 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
     typeof categoryDescription !== "string" ||
     categoryDescription.trim().length === 0
   ) {
-    return res
-      .status(400)
-      .json({ error: "categoryDescription must be a non-empty string" });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "categoryDescription must be a non-empty string",
+      }),
+    );
   }
 
   if (!Array.isArray(questions) || questions.length === 0) {
-    return res
-      .status(400)
-      .json({ error: "Questions must be a non-empty array" });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "Questions must be a non-empty array",
+      }),
+    );
   }
 
   // Normalize and validate each question
@@ -171,7 +200,12 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   });
 
   if (errors.length) {
-    return res.status(400).json({ error: errors.join("; ") });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: errors.join("; "),
+      }),
+    );
   }
 
   const quizData = {
@@ -185,10 +219,20 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   const { data, error, details } = await addAQuizToDB(quizData);
 
   if (error) {
-    return res.status(400).json({ error, details });
+    logger.error("Failed to create quiz", {
+      error,
+      details,
+    });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "Error occurred",
+        error,
+      }),
+    );
   }
 
-  return res.status(201).json({ success: true, data });
+  return res.status(201).json(sendAPIResponse({ status: true, data }));
 }
 
-export default handler;
+export default withApiHandler(handler);

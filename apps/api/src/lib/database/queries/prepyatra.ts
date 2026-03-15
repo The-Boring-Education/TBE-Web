@@ -5,6 +5,7 @@ import type {
   AddRecruiterToDBPayloadProps,
   DatabaseQueryResponseType,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import {
   Challenge,
@@ -143,10 +144,12 @@ const deletePrepLogInDB = async (prepLogId: string) => {
     try {
       await recalculateUserPrepLogStats(deletedLog.user.toString());
     } catch (recalcError) {
-      console.error(
-        "Failed to recalculate user stats after deletion:",
-        recalcError,
-      );
+      logger.error("Failed to recalculate user stats after deletion", {
+        error:
+          recalcError instanceof Error
+            ? recalcError.message
+            : String(recalcError),
+      });
       // Don't fail the deletion if recalculation fails
     }
 
@@ -323,10 +326,12 @@ const updateUserPrepLogStreak = async (
             `PREPLOG_STREAK_${milestone}` as any,
           );
         } catch (gamificationError) {
-          console.error(
-            "Gamification streak reward failed:",
-            gamificationError,
-          );
+          logger.error("Gamification streak reward failed", {
+            error:
+              gamificationError instanceof Error
+                ? gamificationError.message
+                : String(gamificationError),
+          });
         }
       }
     }

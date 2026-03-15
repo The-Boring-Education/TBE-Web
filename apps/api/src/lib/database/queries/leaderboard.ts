@@ -6,6 +6,7 @@ import type {
   LeaderboardModel,
   LeaderboardType,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { Gamification, Leaderboard } from "../models";
 
@@ -15,8 +16,15 @@ const addLeaderboardTopperToDB = async (
   try {
     const data = await Leaderboard.create(payload);
     return { data };
-  } catch (error: any) {
-    return { error: error.message || "Error saving leaderboard winner" };
+  } catch (error) {
+    logger.error("DB: addLeaderboardTopperToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to save leaderboard winner",
+      details: error,
+    };
   }
 };
 
@@ -27,8 +35,15 @@ const getLeaderboardEntriesFromDB = async (
     const query = type ? { type } : {};
     const data = await Leaderboard.find(query).sort({ date: -1 });
     return { data };
-  } catch (error: any) {
-    return { error: error.message || "Error fetching leaderboard entries" };
+  } catch (error) {
+    logger.error("DB: getLeaderboardEntriesFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch leaderboard entries",
+      details: error,
+    };
   }
 };
 
@@ -43,8 +58,12 @@ const saveLeaderboardToDB = async (
       { upsert: true, new: true },
     );
     return { data: result };
-  } catch (error: any) {
-    return { error: error.message || "Failed to save leaderboard" };
+  } catch (error) {
+    logger.error("DB: saveLeaderboardToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to save leaderboard", details: error };
   }
 };
 
@@ -56,9 +75,14 @@ const getLeaderboardWithUsersFromDB = async (
       .sort({ date: -1 })
       .populate("entries.userId", "name image");
     return { data };
-  } catch (error: any) {
+  } catch (error) {
+    logger.error("DB: getLeaderboardWithUsersFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return {
-      error: error.message || "Error fetching leaderboard with users",
+      error: "Failed to fetch leaderboard with users",
+      details: error,
     };
   }
 };
@@ -78,47 +102,55 @@ const getStartDateByType = (type: LeaderboardType) => {
   return now;
 };
 
-const generateLeaderboard = async (type: LeaderboardType) => {
-  const startDate = getStartDateByType(type);
-  const endDate = new Date();
+const generateLeaderboard = async (
+  type: LeaderboardType,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const startDate = getStartDateByType(type);
+    const endDate = new Date();
 
-  const gamificationData = await Gamification.find();
+    const gamificationData = await Gamification.find();
 
-  const userScores: Record<string, number> = {};
+    const userScores: Record<string, number> = {};
 
-  gamificationData.forEach((user) => {
-    const actions = user.actions.filter(
-      (a) =>
-        a.createdAt !== undefined &&
-        a.createdAt >= startDate &&
-        a.createdAt <= endDate,
+    gamificationData.forEach((user) => {
+      const actions = user.actions.filter(
+        (a) =>
+          a.createdAt !== undefined &&
+          a.createdAt >= startDate &&
+          a.createdAt <= endDate,
+      );
+
+      const total = actions.reduce((sum, a) => sum + (a.pointsEarned || 0), 0);
+      if (total > 0) {
+        userScores[user.userId.toString()] =
+          (userScores[user.userId.toString()] || 0) + total;
+      }
+    });
+
+    const sorted = Object.entries(userScores)
+      .sort((a, b) => b[1] - a[1])
+      .map(([userId, points]) => ({ userId, points }));
+
+    const publicDir = path.join(process.cwd(), "public", "leaderboards");
+    if (!fs.existsSync(publicDir)) {
+      fs.mkdirSync(publicDir, { recursive: true });
+    }
+
+    fs.writeFileSync(
+      path.join(publicDir, `${type.toLowerCase()}.json`),
+      JSON.stringify(sorted, null, 2),
     );
 
-    const total = actions.reduce((sum, a) => sum + (a.pointsEarned || 0), 0);
-    if (total > 0) {
-      userScores[user.userId.toString()] =
-        (userScores[user.userId.toString()] || 0) + total;
-    }
-  });
-
-  const sorted = Object.entries(userScores)
-    .sort((a, b) => b[1] - a[1])
-    .map(([userId, points]) => ({ userId, points }));
-
-  const publicDir = path.join(process.cwd(), "public", "leaderboards");
-  if (!fs.existsSync(publicDir)) {
-    fs.mkdirSync(publicDir, { recursive: true });
+    return { data: sorted };
+  } catch (error) {
+    logger.error("DB: generateLeaderboard failed", {
+      type,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to generate leaderboard", details: error };
   }
-
-  fs.writeFileSync(
-    path.join(publicDir, `${type.toLowerCase()}.json`),
-    JSON.stringify(sorted, null, 2),
-  );
-
-  if (sorted.length > 0) {
-    const top = sorted[0];
-  }
-  return sorted;
 };
 
 export {

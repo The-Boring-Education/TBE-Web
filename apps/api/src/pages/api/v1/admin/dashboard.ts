@@ -12,8 +12,8 @@ import {
   UserProject,
   UserSheet,
 } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 // Helper function to convert date to IST and format it
 const formatDateToIST = (date: Date) => {
@@ -46,15 +46,6 @@ const formatDateToIST = (date: Date) => {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
-
   const { method, query } = req;
   const { type = "overview", page = "1", limit = "20" } = query;
 
@@ -357,4 +348,4 @@ const handleAdminDashboard = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

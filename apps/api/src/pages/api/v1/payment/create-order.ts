@@ -4,18 +4,14 @@ import { apiStatusCodes, envConfig, isDevelopmentEnv } from "@/lib/constants";
 import { addPaymentToDB } from "@/lib/database";
 import {
   buildOrderPayload,
-  cors,
   createCashfreeOrder,
   generatePaymentOrderId,
   sendAPIResponse,
 } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await cors(req, res);
-    await connectDB();
-
     switch (req.method) {
       case "POST":
         return await handleCreateOrder(req, res);
@@ -134,4 +130,4 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

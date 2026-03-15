@@ -4,8 +4,9 @@ import { apiStatusCodes } from "@/lib/constants";
 // Import all product models
 import { Course, InterviewSheet, Project, Webinar } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { adminMiddleware, connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 interface ProductInfo {
   _id: string;
@@ -24,18 +25,9 @@ interface ProductsResponse {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
   // Apply admin middleware - only admins can access product management
   const adminCheck = await adminMiddleware(req, res);
   if (!adminCheck) return;
-
-  await connectDB();
 
   const { method } = req;
 
@@ -117,7 +109,9 @@ const handleGetProducts = async (res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    console.error("Error fetching products:", error);
+    logger.error("Error fetching products", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -127,4 +121,4 @@ const handleGetProducts = async (res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

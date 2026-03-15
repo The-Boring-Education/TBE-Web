@@ -2,8 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { createCouponFromDB, getAllCouponsFromDB } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware, connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 interface CreateCouponRequest {
   code: string;
@@ -17,18 +19,9 @@ interface CreateCouponRequest {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
   // Apply admin middleware - only admins can access coupon management
   const adminCheck = await adminMiddleware(req, res);
   if (!adminCheck) return; // adminMiddleware handles the response
-
-  await connectDB();
 
   const { method } = req;
 
@@ -71,7 +64,9 @@ const handleGetAllCoupons = async (res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    console.error("Error fetching coupons:", error);
+    logger.error("Error fetching coupons", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: apiStatusCodes.BAD_REQUEST,
@@ -165,7 +160,9 @@ const handleCreateCoupon = async (
       }),
     );
   } catch (error) {
-    console.error("Error creating coupon:", error);
+    logger.error("Error creating coupon", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: apiStatusCodes.INTERNAL_SERVER_ERROR,
@@ -175,4 +172,4 @@ const handleCreateCoupon = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

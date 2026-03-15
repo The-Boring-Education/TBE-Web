@@ -1,4 +1,5 @@
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { Quiz, QuizAttempt } from "../models";
 import type { QuizModel } from "../models/Quiz/Quiz";
@@ -13,6 +14,10 @@ const addAQuizToDB = async (
     await quiz.save();
     return { data: quiz };
   } catch (error) {
+    logger.error("DB: addAQuizToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed while adding quiz", details: error };
   }
 };
@@ -35,7 +40,11 @@ const updateAQuizInDB = async ({
 
     return { data: updatedQuiz };
   } catch (error) {
-    return { error: "Failed while updating quiz" };
+    logger.error("DB: updateAQuizInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while updating quiz", details: error };
   }
 };
 
@@ -52,7 +61,11 @@ const getQuizCategoriesFromDB = async (
 
     return { data: categories };
   } catch (error) {
-    return { error: "Failed while fetching quiz categories" };
+    logger.error("DB: getQuizCategoriesFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching quiz categories", details: error };
   }
 };
 
@@ -71,7 +84,11 @@ const getQuizByIdFromDB = async (
 
     return { data: quiz };
   } catch (error) {
-    return { error: "Failed while fetching quiz" };
+    logger.error("DB: getQuizByIdFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching quiz", details: error };
   }
 };
 
@@ -97,7 +114,14 @@ const getQuizCategoriesWithCountsFromDB = async (
 
     return { data: categories };
   } catch (error) {
-    return { error: "Failed while fetching quiz categories with counts" };
+    logger.error("DB: getQuizCategoriesWithCountsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed while fetching quiz categories with counts",
+      details: error,
+    };
   }
 };
 
@@ -121,7 +145,14 @@ const appendQuestionsToQuizInDB = async (
 
     return { data: updated };
   } catch (error) {
-    return { error: "Failed while appending questions to quiz" };
+    logger.error("DB: appendQuestionsToQuizInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed while appending questions to quiz",
+      details: error,
+    };
   }
 };
 
@@ -134,7 +165,11 @@ const saveQuizAttemptToDB = async (
     const savedAttempt = await attempt.save();
     return { data: savedAttempt };
   } catch (error) {
-    return { error: "Failed while saving quiz attempt" };
+    logger.error("DB: saveQuizAttemptToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while saving quiz attempt", details: error };
   }
 };
 
@@ -159,7 +194,11 @@ const getUserQuizHistoryFromDB = async ({
 
     return { data: attempts };
   } catch (error) {
-    return { error: "Failed while fetching quiz history" };
+    logger.error("DB: getUserQuizHistoryFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching quiz history", details: error };
   }
 };
 
@@ -219,7 +258,11 @@ const getUserQuizStatsFromDB = async (
 
     return { data: stats[0] || defaultStats };
   } catch (error) {
-    return { error: "Failed while fetching quiz statistics" };
+    logger.error("DB: getUserQuizStatsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching quiz statistics", details: error };
   }
 };
 

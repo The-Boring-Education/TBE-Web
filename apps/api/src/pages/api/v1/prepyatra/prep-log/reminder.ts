@@ -2,13 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { addANotificationToDB, getUserPrepLogStats } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
-
   switch (req.method) {
     case "POST":
       return handleSendPrepLogReminder(req, res);
@@ -139,4 +136,4 @@ const generateReminderMessage = (stats: any, reminderType: string) => {
   };
 };
 
-export default handler;
+export default withApiHandler(handler);

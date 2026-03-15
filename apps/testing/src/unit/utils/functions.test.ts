@@ -1,18 +1,18 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
-  formatDate,
-  formatTime,
-  getDiscountPercentage,
-  setLocalStorageItem,
-  getLocalStorageItem,
-  removeLocalStorageItem,
-  cn,
   calculatePriceBreakdown,
-  getDiscountDisplayInfo,
-  validateCouponForSheet,
+  cn,
+  formatDate,
   formatPrice,
+  formatTime,
+  getDiscountDisplayInfo,
+  getDiscountPercentage,
+  getLocalStorageItem,
   getSavingsPercentage,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+  validateCouponForSheet,
 } from "@tbe/utils";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("Utility Functions", () => {
   describe("formatDate", () => {
@@ -244,21 +244,29 @@ describe("Utility Functions", () => {
       // Reset localStorage mock before each test
       localStorageMock = {};
 
-      // Mock localStorage methods
-      global.Storage.prototype.setItem = vi.fn((key: string, value: string) => {
-        localStorageMock[key] = value;
-      });
+      const localStorageImpl = {
+        getItem: vi.fn((key: string) => localStorageMock[key] ?? null),
+        setItem: vi.fn((key: string, value: string) => {
+          localStorageMock[key] = value;
+        }),
+        removeItem: vi.fn((key: string) => {
+          delete localStorageMock[key];
+        }),
+        clear: vi.fn(() => {
+          localStorageMock = {};
+        }),
+        get length() {
+          return Object.keys(localStorageMock).length;
+        },
+        key: vi.fn(
+          (index: number) => Object.keys(localStorageMock)[index] ?? null,
+        ),
+      } as Storage;
 
-      global.Storage.prototype.getItem = vi.fn((key: string) => {
-        return localStorageMock[key] || null;
-      });
-
-      global.Storage.prototype.removeItem = vi.fn((key: string) => {
-        delete localStorageMock[key];
-      });
-
-      global.Storage.prototype.clear = vi.fn(() => {
-        localStorageMock = {};
+      Object.defineProperty(globalThis, "localStorage", {
+        value: localStorageImpl,
+        writable: true,
+        configurable: true,
       });
     });
 
@@ -320,7 +328,7 @@ describe("Utility Functions", () => {
           .mockImplementation(() => {});
 
         // Mock localStorage.setItem to throw error
-        global.Storage.prototype.setItem = vi.fn(() => {
+        localStorage.setItem = vi.fn(() => {
           throw new Error("Storage quota exceeded");
         });
 
@@ -413,7 +421,7 @@ describe("Utility Functions", () => {
           .mockImplementation(() => {});
 
         // Mock localStorage.getItem to throw error
-        global.Storage.prototype.getItem = vi.fn(() => {
+        localStorage.getItem = vi.fn(() => {
           throw new Error("Storage error");
         });
 
@@ -459,7 +467,7 @@ describe("Utility Functions", () => {
           .mockImplementation(() => {});
 
         // Mock localStorage.removeItem to throw error
-        global.Storage.prototype.removeItem = vi.fn(() => {
+        localStorage.removeItem = vi.fn(() => {
           throw new Error("Storage error");
         });
 

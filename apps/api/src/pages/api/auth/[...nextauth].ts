@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { routes } from "@/lib/constants";
 import { createUserInDB, getUserByEmailFromDB } from "@/lib/database";
+import { logger } from "@/lib/utils/logger";
 import { connectDB } from "@/middleware/api";
 
 /**
@@ -87,7 +88,9 @@ const authOptions: NextAuthOptions = {
 
         return true; // Allow the sign in
       } catch (error) {
-        console.error("Error signing in:", error);
+        logger.error("Error signing in", {
+          error: error instanceof Error ? error.message : String(error),
+        });
         return false;
       }
     },
@@ -122,7 +125,9 @@ const authOptions: NextAuthOptions = {
           session.user.isOnboarded = existingUser.isOnboarded;
         }
       } catch (error) {
-        console.error("Error fetching user in session:", error);
+        logger.error("Error fetching user in session", {
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
 
       return session;
@@ -131,11 +136,16 @@ const authOptions: NextAuthOptions = {
 
   events: {
     async signIn({ user, account }) {
-      console.log(`User signed in: ${user.email} via ${account?.provider}`);
+      logger.info("User signed in", {
+        email: user.email,
+        provider: account?.provider,
+      });
     },
 
     async signOut({ session }) {
-      console.log(`User signed out: ${session?.user?.email || "unknown"}`);
+      logger.info("User signed out", {
+        email: session?.user?.email || "unknown",
+      });
     },
   },
 

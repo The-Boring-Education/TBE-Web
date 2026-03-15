@@ -4,16 +4,16 @@ import { apiStatusCodes } from "@/lib/constants";
 import { getResumeEvaluationResultsFromDB } from "@/lib/database";
 import type { UnSkilledEvaluationRequestBody } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
-
   if (req.method !== "POST") {
-    return res.status(apiStatusCodes.BAD_REQUEST).json({
-      success: false,
-      message: `Method ${req.method} not allowed`,
-    });
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: `Method ${req.method} not allowed`,
+      }),
+    );
   }
 
   try {
@@ -21,10 +21,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       req.body as UnSkilledEvaluationRequestBody;
 
     if (!skills || !domains || !experience) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: "Missing required fields in request body",
-      });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Missing required fields in request body",
+        }),
+      );
     }
 
     const { data, error } = await getResumeEvaluationResultsFromDB({
@@ -61,4 +63,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

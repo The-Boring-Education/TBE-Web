@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createMocks } from "node-mocks-http";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createMocks } from "node-mocks-http";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import handler from "../../../../api/src/pages/api/v1/quiz/index";
 
 // Mock dependencies
@@ -23,6 +24,7 @@ vi.mock("../../../../api/src/lib/database", () => ({
 
 vi.mock("../../../../api/src/lib/utils", () => ({
   cors: (...args: any[]) => mockCors(...args),
+  sendAPIResponse: (payload: any) => payload,
 }));
 
 vi.mock("../../../../api/src/middleware/api", () => ({
@@ -56,7 +58,7 @@ describe("Quiz API Route", () => {
       expect(mockGetQuizCategoriesFromDB).toHaveBeenCalledWith(false);
       expect(res._getStatusCode()).toBe(200);
       const data = JSON.parse(res._getData());
-      expect(data.success).toBe(true);
+      expect(data.status).toBe(true);
       expect(data.data).toEqual(mockCategories);
     });
 
@@ -166,7 +168,7 @@ describe("Quiz API Route", () => {
       expect(mockAddAQuizToDB).toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(201);
       const data = JSON.parse(res._getData());
-      expect(data.success).toBe(true);
+      expect(data.status).toBe(true);
     });
 
     it("should append questions to existing quiz when quizId provided", async () => {
@@ -208,7 +210,7 @@ describe("Quiz API Route", () => {
       );
       expect(res._getStatusCode()).toBe(200);
       const data = JSON.parse(res._getData());
-      expect(data.success).toBe(true);
+      expect(data.status).toBe(true);
       expect(data.message).toContain("appended");
     });
 
@@ -225,7 +227,7 @@ describe("Quiz API Route", () => {
 
       expect(res._getStatusCode()).toBe(400);
       const data = JSON.parse(res._getData());
-      expect(data.error).toContain("Missing required fields");
+      expect(data.message).toContain("Missing required fields");
     });
 
     it("should validate question structure", async () => {
@@ -248,7 +250,7 @@ describe("Quiz API Route", () => {
 
       expect(res._getStatusCode()).toBe(400);
       const data = JSON.parse(res._getData());
-      expect(data.error).toBeDefined();
+      expect(data.message).toBeDefined();
     });
 
     it("should validate correctAnswer is within options bounds", async () => {
@@ -275,7 +277,7 @@ describe("Quiz API Route", () => {
 
       expect(res._getStatusCode()).toBe(400);
       const data = JSON.parse(res._getData());
-      expect(data.error).toContain("out of bounds");
+      expect(data.message).toContain("out of bounds");
     });
 
     it("should handle database errors during quiz creation", async () => {

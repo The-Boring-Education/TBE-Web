@@ -13,19 +13,10 @@ import type {
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,
 } from "@/lib/interfaces";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
   const { method, query } = req;
   const { userId, slug } = query as { userId: string; slug: string };
 
@@ -198,4 +189,4 @@ const handleAllGetCourse = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

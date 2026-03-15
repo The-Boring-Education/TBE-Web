@@ -6,21 +6,21 @@ import {
   getPlaylistByTagFromDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
-
   switch (req.method) {
     case "GET":
       return handleGetPlaylistsBySkill(req, res);
     case "DELETE":
       return handleDeletePlaylistBySkill(req, res);
     default:
-      return res.status(apiStatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: `Method ${req.method} not allowed`,
-      });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${req.method} not allowed`,
+        }),
+      );
   }
 };
 
@@ -31,21 +31,25 @@ const handleGetPlaylistsBySkill = async (
   const { q } = req.query;
 
   if (!q || typeof q !== "string") {
-    return res.status(apiStatusCodes.BAD_REQUEST).json({
-      success: false,
-      message: "Query parameter 'q' is required",
-    });
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: "Query parameter 'q' is required",
+      }),
+    );
   }
 
   try {
     const { data, error } = await getPlaylistByTagFromDB(q);
 
     if (error) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: "Error fetching YouFocus playlists",
-        error,
-      });
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: "Error fetching YouFocus playlists",
+          error,
+        }),
+      );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -56,11 +60,13 @@ const handleGetPlaylistsBySkill = async (
       }),
     );
   } catch (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "An unexpected error occurred while fetching playlists",
-      error,
-    });
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "An unexpected error occurred while fetching playlists",
+        error,
+      }),
+    );
   }
 };
 
@@ -71,21 +77,25 @@ const handleDeletePlaylistBySkill = async (
   const { q } = req.query;
 
   if (!q || typeof q !== "string") {
-    return res.status(apiStatusCodes.BAD_REQUEST).json({
-      success: false,
-      message: "Query parameter 'q' is required",
-    });
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: "Query parameter 'q' is required",
+      }),
+    );
   }
 
   try {
     const { data, error } = await deletePlaylistByTagFromDB(q);
 
     if (error) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: "Error deleting YouFocus playlists",
-        error,
-      });
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: "Error deleting YouFocus playlists",
+          error,
+        }),
+      );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -96,12 +106,14 @@ const handleDeletePlaylistBySkill = async (
       }),
     );
   } catch (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "An unexpected error occurred while deleting playlists",
-      error,
-    });
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "An unexpected error occurred while deleting playlists",
+        error,
+      }),
+    );
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

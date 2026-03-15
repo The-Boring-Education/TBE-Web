@@ -7,8 +7,9 @@ import {
   updatePaymentStatusToDB,
 } from "@/lib/database";
 import { processPostPaymentEnrollment } from "@/lib/services/payment";
-import { cors, sendAPIResponse, verifyWebhookSignature } from "@/lib/utils"; // note: verifyWebhookSignature moved below
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse, verifyWebhookSignature } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY;
 
@@ -76,9 +77,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const rawBodyBuffer = await getRawBody(req);
     const payloadString = rawBodyBuffer.toString("utf8");
-
-    await cors(req, res);
-    await connectDB();
 
     if (!WEBHOOK_SECRET) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
@@ -173,21 +171,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (webhookEvent.payment_status === "SUCCESS") {
       const enrollmentResult = await processPostPaymentEnrollment(_payment);
       if (!enrollmentResult.success) {
-        console.error(
-          `Post-payment enrollment failed for ${_payment.productType}:`,
-          enrollmentResult.error,
-        );
+        logger.error("Post-payment enrollment failed", {
+          productType: _payment.productType,
+          error: enrollmentResult.error ?? "Unknown enrollment error",
+        });
         // do not fail webhook
       } else {
-        console.log(
-          `Successfully processed enrollment for ${_payment.productType} - Order: ${webhookEvent.order_id}`,
-        );
+        logger.info("Successfully processed enrollment", {
+          productType: _payment.productType,
+          orderId: webhookEvent.order_id,
+        });
       }
     }
 
     return res.status(apiStatusCodes.OKAY).json({ status: "OK" });
   } catch (error) {
-    console.error("Webhook handler error:", error);
+    logger.error("Webhook handler error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -198,4 +199,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

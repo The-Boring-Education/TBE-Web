@@ -9,20 +9,9 @@ import {
 } from "@/lib/database";
 import type { AddProjectRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
-
   switch (req.method) {
     case "POST":
       return handleAddProject(req, res);
@@ -139,4 +128,4 @@ const handleGetProjects = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 };
 
-export default handler;
+export default withApiHandler(handler);

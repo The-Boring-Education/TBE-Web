@@ -13,6 +13,7 @@ import type {
   DatabaseQueryResponseType,
   DSADifficultyType,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { AptitudeTopic } from "../models";
 
@@ -251,6 +252,12 @@ const bulkUploadAptitudeDataToDB = async (
 
     return { data: { topic, questionsInserted: updated.questions.length } };
   } catch (error) {
+    logger.error("DB: bulkUploadAptitudeDataToDB failed", {
+      topic: payload.topic,
+      questionCount: payload.questions?.length,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return { error: "Failed to bulk upload aptitude data", details: error };
   }
 };
@@ -298,11 +305,13 @@ const migrateExistingAptitudeData =
   async (): Promise<DatabaseQueryResponseType> => {
     const logFile = "migration.log"; // Define logFile here
     const log = (msg: string) => {
-      console.log(`[Migration] ${msg}`);
+      logger.info(msg);
       try {
         fs.appendFileSync(logFile, msg + "\n");
       } catch (e) {
-        console.error(`Failed to write to log file: ${e}`);
+        logger.error("Failed to write to log file", {
+          error: e instanceof Error ? e.message : String(e),
+        });
       }
     };
 

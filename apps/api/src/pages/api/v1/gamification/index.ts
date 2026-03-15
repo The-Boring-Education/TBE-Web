@@ -7,12 +7,9 @@ import {
   updateUserPointsInDB,
 } from "@/lib/database";
 import type { UserPointsActionType } from "@/lib/interfaces";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
   const { query } = req;
   const { userId } = query as { userId: string };
 
@@ -77,4 +74,4 @@ const handleGetUserGamificationRecords = async (
   });
 };
 
-export default handler;
+export default withApiHandler(handler);

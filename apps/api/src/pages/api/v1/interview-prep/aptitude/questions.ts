@@ -2,13 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { addAptitudeQuestionToDB } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
-
   if (req.method !== "POST") {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
       sendAPIResponse({
@@ -59,4 +56,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     .json(sendAPIResponse({ status: true, data, message: "Question created" }));
 };
 
-export default handler;
+export default withApiHandler(handler);

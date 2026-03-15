@@ -17,21 +17,21 @@ import {
   normalizeAPIPayload,
   sendAPIResponse,
 } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
-
   switch (req.method) {
     case "POST":
       return handleAddJob(req, res);
     case "GET":
       return handleGetJobs(req, res);
     default:
-      return res.status(apiStatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: `Method ${req.method} not allowed`,
-      });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${req.method} not allowed`,
+        }),
+      );
   }
 };
 
@@ -62,18 +62,22 @@ const handleAddJob = async (req: NextApiRequest, res: NextApiResponse) => {
       !platform ||
       !skills?.length
     ) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: "Missing required job details",
-      });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Missing required job details",
+        }),
+      );
     }
 
     const { data: existingJob } = await getJobByJobIdFromDB(job_id);
     if (existingJob) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: "Job already exists",
-      });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Job already exists",
+        }),
+      );
     }
 
     // Normalize the skills array
@@ -120,11 +124,13 @@ const handleAddJob = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "An unexpected error occurred while adding the job",
-      error,
-    });
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "An unexpected error occurred while adding the job",
+        error,
+      }),
+    );
   }
 };
 
@@ -144,11 +150,13 @@ const handleGetJobs = async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, error } = await getAllJobsFromDB(query, pageNumber, pageSize);
 
     if (error) {
-      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: "Error fetching jobs",
-        error,
-      });
+      return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+        sendAPIResponse({
+          status: false,
+          message: "Error fetching jobs",
+          error,
+        }),
+      );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -159,12 +167,14 @@ const handleGetJobs = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   } catch (error) {
-    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "An unexpected error occurred while fetching jobs",
-      error,
-    });
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "An unexpected error occurred while fetching jobs",
+        error,
+      }),
+    );
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

@@ -26,9 +26,9 @@ import type {
   DSADifficultyType,
   DSADomainType,
 } from "@/lib/interfaces";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
-import { withRequestLogger } from "@/middleware/requestLogger";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 type RoadmapType = "DSA" | "APTITUDE";
 
@@ -41,8 +41,6 @@ const ROADMAP_HANDLERS: Record<
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -80,7 +78,9 @@ const handleAddASheet = async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, error } = await addAInterviewSheetToDB(sheetPayload);
 
     if (error) {
-      console.log("Error:", error);
+      logger.error("Error adding interview sheet", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
@@ -326,4 +326,4 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
     .json(sendAPIResponse({ status: true, data }));
 }
 
-export default withRequestLogger(handler);
+export default withApiHandler(handler);

@@ -3,19 +3,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { getAllUsersWithLogsFromDB } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
-
   if (req.method !== "GET") {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
       sendAPIResponse({
@@ -33,7 +24,7 @@ const handleGetUsersWithLogs = async (
   res: NextApiResponse,
 ) => {
   try {
-    console.log("getAllUsersWithLogsFromDB");
+    logger.info("getAllUsersWithLogsFromDB");
     const { data, error } = await getAllUsersWithLogsFromDB();
 
     if (error) {
@@ -64,4 +55,4 @@ const handleGetUsersWithLogs = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

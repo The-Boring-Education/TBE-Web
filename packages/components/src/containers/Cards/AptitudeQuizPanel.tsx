@@ -1,11 +1,18 @@
+import "katex/dist/katex.min.css";
+
 import { FlexContainer, Text } from "@tbe/components";
 import type { AptitudeQuestion } from "@tbe/interface";
 import markdownit from "markdown-it";
 import React, { useEffect, useState } from "react";
 
+import {
+  normalizeLatexDelimiters,
+  registerMathPlugin,
+} from "../../common/MDXRenderer/mathPlugin";
 import AptitudeQuestionCard from "./AptitudeQuestionCard";
 
 const md = markdownit({ html: true, breaks: true });
+registerMathPlugin(md);
 
 export interface AptitudeQuizPanelProps {
   questions: AptitudeQuestion[];
@@ -88,8 +95,10 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
                 className="text-gray-300 text-[13px] leading-relaxed prose prose-invert max-w-none prose-p:my-2 prose-pre:bg-[#050505] prose-pre:border prose-pre:border-gray-800"
                 dangerouslySetInnerHTML={{
                   __html: md.render(
-                    currentQuestion.answer ||
-                      "No explanation available for this question.",
+                    normalizeLatexDelimiters(
+                      currentQuestion.answer ||
+                        "No explanation available for this question.",
+                    ),
                   ),
                 }}
               />

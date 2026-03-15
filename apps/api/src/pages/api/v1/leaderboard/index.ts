@@ -8,15 +8,29 @@ import {
   saveLeaderboardToDB,
 } from "@/lib/database";
 import type { LeaderboardType } from "@/lib/interfaces";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
+
+const isLeaderboardEntries = (
+  value: unknown,
+): value is { userId: string; points: number }[] => {
+  if (!Array.isArray(value)) {
+    return false;
+  }
+
+  return value.every(
+    (entry) =>
+      typeof entry === "object" &&
+      entry !== null &&
+      "userId" in entry &&
+      "points" in entry &&
+      typeof (entry as { userId: unknown }).userId === "string" &&
+      typeof (entry as { points: unknown }).points === "number",
+  );
+};
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-
   try {
-    await connectDB();
-
     switch (req.method) {
       case "POST":
         return await handleGenerateLeaderboard(req, res);
@@ -47,8 +61,26 @@ const handleGenerateLeaderboard = async (
 ) => {
   try {
     for (const type of LEADERBOARD_TYPES) {
-      const topUsers = await generateLeaderboard(type);
-      await saveLeaderboardToDB(type, topUsers);
+      const { data: topUsers, error: generateError } =
+        await generateLeaderboard(type);
+      if (generateError || !isLeaderboardEntries(topUsers)) {
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+          sendAPIResponse({
+            status: false,
+            message: generateError || "Generated leaderboard data is invalid",
+          }),
+        );
+      }
+
+      const { error: saveError } = await saveLeaderboardToDB(type, topUsers);
+      if (saveError) {
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+          sendAPIResponse({
+            status: false,
+            message: saveError,
+          }),
+        );
+      }
     }
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -115,4 +147,4 @@ const handleGetLeaderboard = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

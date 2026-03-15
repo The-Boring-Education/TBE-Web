@@ -9,14 +9,12 @@ import {
 } from "@/lib/database";
 import type { SheetEnrollmentRequestProps } from "@/lib/interfaces";
 import { sendInterviewPrepEnrollmentEmail } from "@/lib/services";
-import { cors, sendAPIResponse } from "@/lib/utils";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await cors(req, res);
-    if (req.method === "OPTIONS") {
-      return res.status(200).end();
-    }
     switch (req.method) {
       case "POST":
         return handleSheetEnrollment(req, res);
@@ -90,14 +88,15 @@ const handleSheetEnrollment = async (
           sheetName: sheetResult.data.name,
           sheetDescription: sheetResult.data.description,
         }).catch((error) => {
-          console.error(
-            "Failed to send interview prep enrollment email:",
-            error,
-          );
+          logger.error("Failed to send interview prep enrollment email", {
+            error: error instanceof Error ? error.message : String(error),
+          });
         });
       }
     } catch (error) {
-      console.error("Error fetching user/sheet data for email:", error);
+      logger.error("Error fetching user/sheet data for email", {
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -118,4 +117,4 @@ const handleSheetEnrollment = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

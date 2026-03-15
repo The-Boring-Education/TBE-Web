@@ -9,6 +9,7 @@ import type {
   UpdateCourseRequestPayloadProps,
   UpdateUserChapterInCourseRequestProps,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { Course, UserCourse } from "../models";
 import { updateUserPointsInDB } from "./gamification";
@@ -21,7 +22,11 @@ const addACourseToDB = async (
     await course.save();
     return { data: course };
   } catch (error) {
-    return { error: "Failed while adding course" };
+    logger.error("DB: addACourseToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while adding course", details: error };
   }
 };
 
@@ -40,7 +45,11 @@ const updateACourseInDB = async ({
 
     return { data: updatedCourse };
   } catch (error) {
-    return { error: "Failed while updating course" };
+    logger.error("DB: updateACourseInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while updating course", details: error };
   }
 };
 
@@ -55,7 +64,11 @@ const deleteACourseFromDBById = async (
     }
     return { data: "Course deleted" };
   } catch (error) {
-    return { error: "Failed while deleting course" };
+    logger.error("DB: deleteACourseFromDBById failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while deleting course", details: error };
   }
 };
 
@@ -71,7 +84,14 @@ const getAllCourseFromDB = async (): Promise<DatabaseQueryResponseType> => {
 
     return { data: course };
   } catch (error) {
-    return { error: `Failed while fetching a course ${error}` };
+    logger.error("DB: getAllCourseFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed while fetching courses from database",
+      details: error,
+    };
   }
 };
 
@@ -99,7 +119,14 @@ const getACourseFromDBById = async (
 
     return { data: course };
   } catch (error) {
-    return { error: `Failed while fetching a course ${error}` };
+    logger.error("DB: getACourseFromDBById failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed while fetching course by ID from database",
+      details: error,
+    };
   }
 };
 
@@ -120,7 +147,11 @@ const addChapterToCourseInDB = async (
 
     return { data: updatedCourse };
   } catch (error) {
-    return { error: "Failed to add chapter to course" };
+    logger.error("DB: addChapterToCourseInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to add chapter to course", details: error };
   }
 };
 
@@ -144,7 +175,11 @@ const updateCourseChapterInDB = async (
 
     return { data: course };
   } catch (error) {
-    return { error: "Failed to update chapter to course" };
+    logger.error("DB: updateCourseChapterInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update chapter to course", details: error };
   }
 };
 
@@ -160,7 +195,11 @@ const deleteCourseChapterByIdFromDB = async (
     );
     return { data: course };
   } catch (error) {
-    return { error: "Failed to delete chapter from course" };
+    logger.error("DB: deleteCourseChapterByIdFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to delete chapter from course", details: error };
   }
 };
 
@@ -190,7 +229,11 @@ const enrollInACourse = async ({
 
     return { data: userCourse };
   } catch (error) {
-    return { error: "Failed while enrolling in a course" };
+    logger.error("DB: enrollInACourse failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while enrolling in a course", details: error };
   }
 };
 
@@ -202,7 +245,11 @@ const getEnrolledCourseFromDB = async ({
     const enrolledCourse = await UserCourse.findOne({ userId, courseId });
     return { data: enrolledCourse };
   } catch (error) {
-    return { error: "Failed while fetching enrolled course" };
+    logger.error("DB: getEnrolledCourseFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching enrolled course", details: error };
   }
 };
 
@@ -224,7 +271,11 @@ const getAllEnrolledCoursesFromDB = async (
       })) as unknown as BaseShikshaCourseResponseProps,
     };
   } catch (error) {
-    return { error: "Failed while fetching enrolled course" };
+    logger.error("DB: getAllEnrolledCoursesFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while fetching enrolled courses", details: error };
   }
 };
 
@@ -240,7 +291,14 @@ const getCourseBySlugFromDB = async (
 
     return { data: course };
   } catch (error) {
-    return { error };
+    logger.error("DB: getCourseBySlugFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch course by slug from database",
+      details: error,
+    };
   }
 };
 
@@ -288,7 +346,14 @@ const getCourseBySlugWithUserFromDB = async (
       },
     };
   } catch (error) {
-    return { error };
+    logger.error("DB: getCourseBySlugWithUserFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch course by slug with user from database",
+      details: error,
+    };
   }
 };
 
@@ -336,7 +401,11 @@ const updateUserCourseChapterInDB = async ({
 
     return { data: userCourse };
   } catch (error) {
-    return { error: "Failed to update chapter in user course" };
+    logger.error("DB: updateUserCourseChapterInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update chapter in user course", details: error };
   }
 };
 
@@ -382,7 +451,14 @@ const getACourseForUserFromDB = async (userId: string, courseId: string) => {
       } as BaseShikshaCourseResponseProps,
     };
   } catch (error) {
-    return { error: "Failed to fetch courses with chapter status" };
+    logger.error("DB: getACourseForUserFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch courses with chapter status",
+      details: error,
+    };
   }
 };
 
@@ -404,7 +480,14 @@ const updateCertificateToUserShikshaCourseDoc = async (
 
     return { data: userCourse };
   } catch (error) {
-    return { error: "Failed to update certificate status in user course" };
+    logger.error("DB: updateCertificateToUserShikshaCourseDoc failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to update certificate status in user course",
+      details: error,
+    };
   }
 };
 

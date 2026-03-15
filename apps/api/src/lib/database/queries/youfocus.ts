@@ -2,6 +2,7 @@ import type {
   DatabaseQueryResponseType,
   PlaylistModel,
 } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { Playlist, UserPlaylist } from "../models";
 
@@ -14,7 +15,11 @@ const addPlaylistToDB = async (
     await playlist.save();
     return { data: playlist };
   } catch (error) {
-    return { error: "Failed while adding playlist" };
+    logger.error("DB: addPlaylistToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while adding playlist", details: error };
   }
 };
 
@@ -31,7 +36,11 @@ const updateTagsInPlaylist = async (
 
     return { data: updatedPlaylist };
   } catch (error) {
-    return { error };
+    logger.error("DB: updateTagsInPlaylist failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update tags in playlist", details: error };
   }
 };
 
@@ -57,7 +66,11 @@ const addUserPlaylistToDB = async (
     await userPlaylist.save();
     return { data: userPlaylist };
   } catch (error) {
-    return { error };
+    logger.error("DB: addUserPlaylistToDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to add user playlist to database", details: error };
   }
 };
 
@@ -78,7 +91,14 @@ const updateReferredByInPlaylist = async (
 
     return { data: updatedPlaylist };
   } catch (error) {
-    return { error: `An error occurred: ${error}` };
+    logger.error("DB: updateReferredByInPlaylist failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to update referrer count in playlist",
+      details: error,
+    };
   }
 };
 
@@ -94,7 +114,11 @@ const checkPlaylistExistsByID = async (
 
     return { data: platlist };
   } catch (error) {
-    return { error };
+    logger.error("DB: checkPlaylistExistsByID failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to check if playlist exists", details: error };
   }
 };
 
@@ -103,7 +127,11 @@ const getPlaylistsFromDB = async (): Promise<DatabaseQueryResponseType> => {
     const playlists = await Playlist.find();
     return { data: playlists };
   } catch (error) {
-    return { error };
+    logger.error("DB: getPlaylistsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch playlists from database", details: error };
   }
 };
 
@@ -170,7 +198,14 @@ const getPlaylistByIdFromDB = async (
 
     return { data: result };
   } catch (error) {
-    return { error };
+    logger.error("DB: getPlaylistByIdFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch playlist by ID from database",
+      details: error,
+    };
   }
 };
 
@@ -196,7 +231,14 @@ const getUserPlaylistsFromDB = async (
 
     return { data: playlists };
   } catch (error) {
-    return { error: "An error occurred while fetching playlists" };
+    logger.error("DB: getUserPlaylistsFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "An error occurred while fetching playlists",
+      details: error,
+    };
   }
 };
 
@@ -215,7 +257,14 @@ const deleteUserPlaylistFromDB = async (
     }
     return { data: userPlaylist };
   } catch (error) {
-    return { error: "An error occurred while deleting userPlaylist" };
+    logger.error("DB: deleteUserPlaylistFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "An error occurred while deleting userPlaylist",
+      details: error,
+    };
   }
 };
 
@@ -258,7 +307,11 @@ const updateUserPlaylistData = async (
     }
     return { data: { updatedUserPlaylist, updatedPlaylist } };
   } catch (error) {
-    return { error: `An error occurred: ${error}` };
+    logger.error("DB: updateUserPlaylistData failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update user playlist data", details: error };
   }
 };
 
@@ -274,7 +327,14 @@ const getPlaylistByTagFromDB = async (
 
     return { data: playlists };
   } catch (error) {
-    return { error };
+    logger.error("DB: getPlaylistByTagFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch playlists by tag from database",
+      details: error,
+    };
   }
 };
 
@@ -290,7 +350,11 @@ const deletePlaylistFromDB = async (
 
     return { data: playlist };
   } catch (error) {
-    return { error };
+    logger.error("DB: deletePlaylistFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to delete playlist from database", details: error };
   }
 };
 
@@ -307,7 +371,14 @@ const deletePlaylistByTagFromDB = async (
       data: playlists,
     };
   } catch (error) {
-    return { error };
+    logger.error("DB: deletePlaylistByTagFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to delete playlists by tag from database",
+      details: error,
+    };
   }
 };
 

@@ -3,7 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { validateCouponForProductFromDB } from "@/lib/database";
 import type { APIResponseType } from "@/lib/interfaces";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 interface ValidateCouponRequest {
   code: string;
@@ -41,8 +42,6 @@ const validateCoupon = async (
   }
 
   try {
-    await connectDB();
-
     const { code, productId, productType, userId }: ValidateCouponRequest =
       req.body;
 
@@ -88,7 +87,9 @@ const validateCoupon = async (
       },
     });
   } catch (error) {
-    console.error("Error validating coupon:", error);
+    logger.error("Error validating coupon", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
       status: false,
       message: "Internal server error",
@@ -97,4 +98,4 @@ const validateCoupon = async (
   }
 };
 
-export default validateCoupon;
+export default withApiHandler(validateCoupon);

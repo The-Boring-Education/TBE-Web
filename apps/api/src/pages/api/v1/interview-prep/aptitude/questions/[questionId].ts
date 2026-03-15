@@ -2,14 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { updateAptitudeQuestionInDB } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
-import { withRequestLogger } from "@/middleware/requestLogger";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
-
   const { questionId } = req.query;
   if (!questionId || typeof questionId !== "string") {
     return res
@@ -68,4 +64,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     .json(sendAPIResponse({ status: true, data, message: "Question updated" }));
 };
 
-export default withRequestLogger(handler);
+export default withApiHandler(handler);

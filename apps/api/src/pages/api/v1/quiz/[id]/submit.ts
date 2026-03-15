@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { addUserQuizAttemptToDB, getQuizByIdFromDB } from "@/lib/database";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 interface QuizAnswer {
   questionIndex: number;
@@ -18,24 +19,31 @@ interface SubmitQuizRequest {
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await cors(req, res);
-
   const { id } = req.query;
 
   if (!id || typeof id !== "string") {
-    return res.status(400).json({ error: "Quiz ID is required" });
+    return res
+      .status(400)
+      .json(sendAPIResponse({ status: false, message: "Quiz ID is required" }));
   }
 
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res
+      .status(405)
+      .json(sendAPIResponse({ status: false, message: "Method not allowed" }));
   }
 
   try {
-    await connectDB();
     return handleSubmitQuiz(id, req, res);
   } catch (error) {
-    console.error("Quiz submit API error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    logger.error("Quiz submit API error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return res
+      .status(500)
+      .json(
+        sendAPIResponse({ status: false, message: "Internal server error" }),
+      );
   }
 }
 
@@ -48,17 +56,27 @@ async function handleSubmitQuiz(
 
   // Validation
   if (!userId) {
-    return res.status(400).json({ error: "userId is required" });
+    return res
+      .status(400)
+      .json(sendAPIResponse({ status: false, message: "userId is required" }));
   }
 
   if (!Array.isArray(answers) || answers.length === 0) {
-    return res.status(400).json({ error: "answers array is required" });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "answers array is required",
+      }),
+    );
   }
 
   if (typeof totalTimeSpent !== "number" || totalTimeSpent < 0) {
-    return res.status(400).json({
-      error: "totalTimeSpent is required and must be a positive number",
-    });
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "totalTimeSpent is required and must be a positive number",
+      }),
+    );
   }
 
   // Get quiz to validate answers
@@ -68,7 +86,9 @@ async function handleSubmitQuiz(
   );
 
   if (quizError || !quiz) {
-    return res.status(404).json({ error: "Quiz not found" });
+    return res
+      .status(404)
+      .json(sendAPIResponse({ status: false, message: "Quiz not found" }));
   }
 
   // Calculate score and correct answers
@@ -115,28 +135,37 @@ async function handleSubmitQuiz(
     await addUserQuizAttemptToDB(attemptData);
 
   if (attemptError) {
-    console.error("Failed to save quiz attempt:", attemptError);
-    console.error(
-      "Attempt data that failed:",
-      JSON.stringify(attemptData, null, 2),
+    logger.error("Failed to save quiz attempt", {
+      attemptError:
+        attemptError instanceof Error
+          ? attemptError.message
+          : String(attemptError),
+      attemptData: JSON.stringify(attemptData, null, 2),
+    });
+    return res.status(500).json(
+      sendAPIResponse({
+        status: false,
+        message: "Failed to save quiz attempt",
+      }),
     );
-    return res.status(500).json({ error: "Failed to save quiz attempt" });
   }
 
   // Return results
-  return res.status(200).json({
-    success: true,
-    data: {
-      attemptId: attempt._id,
-      score,
-      correctAnswers,
-      totalQuestions,
-      percentage: score,
-      totalTimeSpent,
-      results: detailedResults,
-      categoryName: quiz.categoryName,
-    },
-  });
+  return res.status(200).json(
+    sendAPIResponse({
+      status: true,
+      data: {
+        attemptId: attempt._id,
+        score,
+        correctAnswers,
+        totalQuestions,
+        percentage: score,
+        totalTimeSpent,
+        results: detailedResults,
+        categoryName: quiz.categoryName,
+      },
+    }),
+  );
 }
 
-export default handler;
+export default withApiHandler(handler);

@@ -6,30 +6,21 @@ import {
   saveDailyJobsAggregationToDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { cors } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply CORS headers
-  await cors(req, res);
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  await connectDB();
-
   switch (req.method) {
     case "GET":
       return handleGetDailyJobAggregation(req, res);
     case "POST":
       return handleAggregateJobData(req, res);
     default:
-      return res.status(apiStatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: `Method ${req.method} not allowed`,
-      });
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Method ${req.method} not allowed`,
+        }),
+      );
   }
 };
 
@@ -104,4 +95,4 @@ const handleAggregateJobData = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

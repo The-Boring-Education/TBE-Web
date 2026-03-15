@@ -7,12 +7,11 @@ import type {
 } from "@/lib/interfaces";
 import { emailTriggerService } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { logger } from "@/lib/utils/logger";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await connectDB();
-
     switch (req.method) {
       case "POST":
         return handleExternalEmail(req, res);
@@ -97,7 +96,9 @@ const handleExternalEmail = async (
       );
     }
   } catch (error) {
-    console.error("External email sending error:", error);
+    logger.error("External email sending error", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
@@ -108,4 +109,4 @@ const handleExternalEmail = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

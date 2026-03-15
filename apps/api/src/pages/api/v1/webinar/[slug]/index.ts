@@ -9,10 +9,9 @@ import {
 } from "@/lib/database";
 import type { UpdateEnrolledUsersRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDB();
   const { method } = req;
   const { slug, email } = req.query as { slug: string; email: string };
 
@@ -214,4 +213,4 @@ const handleDeleteWebinar = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

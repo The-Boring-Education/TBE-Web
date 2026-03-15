@@ -2,12 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { updateUserSkillsInDB, User } from "@/lib/database";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
   const { method } = req;
 
   switch (method) {
@@ -164,4 +162,4 @@ const handleRemoveUserSkill = async (
   }
 };
 
-export default handler;
+export default withApiHandler(handler);

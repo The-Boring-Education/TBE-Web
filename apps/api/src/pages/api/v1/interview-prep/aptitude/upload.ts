@@ -3,13 +3,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { bulkUploadAptitudeDataToDB } from "@/lib/database";
 import type { AptitudeUploadPayload } from "@/lib/interfaces";
-import { cors, sendAPIResponse } from "@/lib/utils";
-import { connectDB } from "@/middleware/api";
+import { sendAPIResponse } from "@/lib/utils";
+import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res);
-  await connectDB();
-
   if (req.method !== "POST") {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
       sendAPIResponse({
@@ -46,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  const { data, error } = await bulkUploadAptitudeDataToDB({
+  const { data, error, details } = await bulkUploadAptitudeDataToDB({
     topic,
     questions,
   });
@@ -70,4 +67,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 };
 
-export default handler;
+export default withApiHandler(handler);
