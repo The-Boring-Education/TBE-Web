@@ -3,6 +3,10 @@ import type MarkdownIt from "markdown-it";
 import texmath from "markdown-it-texmath";
 
 export function registerMathPlugin(md: MarkdownIt) {
+  if (!md || typeof (md as any).use !== "function") {
+    return;
+  }
+
   md.use(texmath, {
     engine: katex,
     delimiters: "dollars",
