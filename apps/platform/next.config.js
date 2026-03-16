@@ -1,20 +1,21 @@
 const { withSentryConfig } = require('@sentry/nextjs');
-const withTM = require('next-transpile-modules')([
-  '@tbe/auth',
-  '@tbe/components', // <-- your workspace package
-  '@tbe/hooks',
-  '@tbe/constants',
-  '@tbe/utils',
-  '@tbe/interface',
-  '@tbe/services',
-  '@tbe/types',
-  '@tbe/typescript-config',
-  '@tbe/eslint-config',
-  '@tbe/config',
-]);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: [
+    '@tbe/auth',
+    '@tbe/components',
+    '@tbe/hooks',
+    '@tbe/constants',
+    '@tbe/utils',
+    '@tbe/interface',
+    '@tbe/services',
+    '@tbe/types',
+    '@tbe/typescript-config',
+    '@tbe/eslint-config',
+    '@tbe/config',
+  ],
+
   eslint: {
     dirs: ['src'],
     ignoreDuringBuilds: true,
@@ -161,11 +162,7 @@ if (process.env.NODE_ENV === 'production') {
     automaticVercelMonitors: true,
   };
 
-  module.exports = withSentryConfig(
-    withTM(nextConfig),
-    sentryWebpackPluginOptions,
-  );
+  module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
 } else {
-  // Skip Sentry in development to avoid OpenTelemetry errors
-  module.exports = withTM(nextConfig);
+  module.exports = nextConfig;
 }

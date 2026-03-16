@@ -38,9 +38,6 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "highlight.js": "^11.11.1",
-    "js-cookie": "^3.0.5",
-    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.462.0",
     "markdown-it": "^14.1.0",
     "next": "14.2.35",
@@ -59,7 +56,6 @@
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
-    "@types/js-cookie": "^3.0.6",
     "@types/node": "^18.19.124",
     "@types/react": "^18.3.24",
     "@types/react-dom": "^18.3.7",
