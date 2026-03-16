@@ -1480,6 +1480,9 @@ importers:
       "@tbe/interface":
         specifier: workspace:*
         version: link:../../packages/interface
+      "@tbe/query":
+        specifier: workspace:*
+        version: link:../../packages/api
       "@tbe/services":
         specifier: workspace:*
         version: link:../../packages/services

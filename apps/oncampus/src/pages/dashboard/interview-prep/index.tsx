@@ -1,8 +1,9 @@
 import { CardContainerB, Text } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import { useApi, useUser } from "@tbe/hooks";
+import { useUser } from "@tbe/hooks";
 import type { PrimaryCardWithCTAProps } from "@tbe/interface";
-import { mapInterviewSheetResponseToCard } from "@tbe/utils";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import { mapInterviewSheetResponseToCard, sendRequest } from "@tbe/utils";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
@@ -16,8 +17,13 @@ const InterviewPrepDashboardPage = () => {
       ? router.query.roadmap.toLowerCase()
       : "all";
 
-  const { response, loading: sheetsLoading } = useApi("interview-prep", {
-    url: `${routes.api.base}${routes.api.interviewPrep}`,
+  const { data: response, isLoading: sheetsLoading } = useQuery<any>({
+    queryKey: queryKeys.interviewPrep.lists(),
+    queryFn: () =>
+      sendRequest({
+        url: `${routes.api.base}${routes.api.interviewPrep}`,
+      }),
+    ...CACHE_TIMES.STATIC,
   });
 
   const [purchaseStatuses, setPurchaseStatuses] = useState<

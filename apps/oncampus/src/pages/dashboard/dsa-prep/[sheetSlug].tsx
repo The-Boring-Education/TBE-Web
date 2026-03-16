@@ -15,13 +15,13 @@ import { useGamifiedAction } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import {
   useAnalytics,
-  useApi,
   usePaymentAccess,
   useQuestionStarred,
   useUser,
 } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
-import { getSheetPageProps } from "@tbe/utils";
+import { useMutation } from "@tbe/query";
+import { getSheetPageProps, sendRequest } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FaLock } from "react-icons/fa";
@@ -52,7 +52,10 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     (question) => question.isCompleted,
   ).length;
 
-  const { makeRequest } = useApi(`interview-prep/${slug}`);
+  const { mutateAsync: makeRequest } = useMutation({
+    mutationFn: (params: Parameters<typeof sendRequest>[0]) =>
+      sendRequest(params),
+  });
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();

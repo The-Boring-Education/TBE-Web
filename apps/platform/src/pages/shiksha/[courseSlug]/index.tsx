@@ -16,12 +16,13 @@ import {
 } from '@tbe/components';
 import { useGamificationContext, useGamifiedAction } from '@tbe/components';
 import { routes, SCREEN_BREAKPOINTS } from '@tbe/constants';
-import { useAnalytics, useApi, useMediaQuery, useUser } from '@tbe/hooks';
+import { useAnalytics, useMediaQuery, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,
 } from '@tbe/interface';
-import { formatDate, getCoursePageProps } from '@tbe/utils';
+import { useMutation } from '@tbe/query';
+import { formatDate, getCoursePageProps, sendRequest } from '@tbe/utils';
 import router from 'next/router';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { FaLock, FaTrophy } from 'react-icons/fa';
@@ -166,7 +167,10 @@ const CoursePage = ({
     }
   }, [user?.id, chapters, certificateId]);
 
-  const { makeRequest } = useApi(`shiksha/${slug}`);
+  const { mutateAsync: makeRequest } = useMutation({
+    mutationFn: (params: Parameters<typeof sendRequest>[0]) =>
+      sendRequest(params),
+  });
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
   const { triggerCelebration, showToast } = useGamificationContext();
