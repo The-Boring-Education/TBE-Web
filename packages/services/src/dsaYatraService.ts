@@ -9,7 +9,7 @@ export interface DSAQuestionFetchParams {
 export interface DSAQuestionRaw {
   _id: string;
   title: string;
-  content: string;
+  answer: string;
   domain: string[];
   difficulty: string;
   companyTypes: string[];

@@ -29,20 +29,29 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const { title, content, domain, difficulty, companyTypes, topics } = req.body;
+  const { title, answer, content, domain, difficulty, companyTypes, topics } =
+    req.body;
 
-  if (!title || !content || !domain || !difficulty || !companyTypes || !topics)
+  const questionAnswer = answer || content;
+  if (
+    !title ||
+    !questionAnswer ||
+    !domain ||
+    !difficulty ||
+    !companyTypes ||
+    !topics
+  )
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: false,
         message:
-          "Required: title, content, domain, difficulty, companyTypes, topics",
+          "Required: title, answer, domain, difficulty, companyTypes, topics",
       }),
     );
 
   const { data, error } = await addDSAQuestionToDB({
     title,
-    content,
+    answer: questionAnswer,
     domain: Array.isArray(domain) ? domain : [domain],
     difficulty,
     companyTypes: Array.isArray(companyTypes) ? companyTypes : [companyTypes],
@@ -71,8 +80,12 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   if (metadata === "true") {
     const { data, error } = await getDSASheetMetadataFromDB();
     if (error)
-      return res.status(500).json(sendAPIResponse({ status: false, error }));
-    return res.status(200).json(sendAPIResponse({ status: true, data }));
+      return res
+        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(sendAPIResponse({ status: false, error }));
+    return res
+      .status(apiStatusCodes.OKAY)
+      .json(sendAPIResponse({ status: true, data }));
   }
 
   const toArray = (val: any) =>
@@ -88,8 +101,12 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   if (error)
-    return res.status(500).json(sendAPIResponse({ status: false, error }));
-  return res.status(200).json(sendAPIResponse({ status: true, data }));
+    return res
+      .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+      .json(sendAPIResponse({ status: false, error }));
+  return res
+    .status(apiStatusCodes.OKAY)
+    .json(sendAPIResponse({ status: true, data }));
 };
 
 export default withApiHandler(handler);

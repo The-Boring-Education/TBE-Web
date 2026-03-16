@@ -663,7 +663,7 @@ const getDSASheetMetadataFromDB =
 
 const addDSAQuestionToDB = async (questionPayload: {
   title: string;
-  content: string;
+  answer: string;
   domain: DSADomainType[];
   difficulty: DSADifficultyType;
   companyTypes: string[];
@@ -723,7 +723,7 @@ const getDSAQuestionsGroupedByTopic = async (
             $push: {
               _id: "$_id",
               title: "$title",
-              content: "$content",
+              answer: "$answer",
               domain: "$domain",
               difficulty: "$difficulty",
               companyTypes: "$companyTypes",
