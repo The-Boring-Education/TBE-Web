@@ -2,6 +2,24 @@ import type { DsaQuestion } from "@tbe/interface";
 
 import { generateYouTubeSearchLink } from "./functions";
 
+const DIFFICULTY_SORT_WEIGHT: Record<string, number> = {
+  EASY: 1,
+  MEDIUM: 2,
+  HARD: 3,
+};
+
+export const sortDsaQuestionsByDifficulty = (
+  questions: DsaQuestion[],
+): DsaQuestion[] => {
+  return [...questions].sort((a, b) => {
+    const aWeight =
+      DIFFICULTY_SORT_WEIGHT[a.difficultyLevel?.toUpperCase()] ?? 4;
+    const bWeight =
+      DIFFICULTY_SORT_WEIGHT[b.difficultyLevel?.toUpperCase()] ?? 4;
+    return aWeight - bWeight;
+  });
+};
+
 export const transformDsaQuestion = (question: any): DsaQuestion => {
   const escapeRegExp = (str: string) =>
     str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

@@ -1,6 +1,6 @@
 import { routes } from "@tbe/constants";
 import type { DsaQuestion } from "@tbe/interface";
-import { transformDsaQuestion } from "@tbe/utils";
+import { sortDsaQuestionsByDifficulty, transformDsaQuestion } from "@tbe/utils";
 import { useMemo } from "react";
 
 import useApi from "./useApi";
@@ -32,7 +32,7 @@ const useDsaQuestions = (
   }, [response]);
 
   const questions = useMemo(() => {
-    return rawQuestions.map(transformDsaQuestion);
+    return sortDsaQuestionsByDifficulty(rawQuestions.map(transformDsaQuestion));
   }, [rawQuestions]);
 
   return { questions, rawQuestions, loading };

@@ -13,6 +13,13 @@ vi.mock("@tbe/utils", () => ({
     examples: [],
     constraints: [],
   })),
+  sortDsaQuestionsByDifficulty: vi.fn((questions: any[]) => {
+    const weight: Record<string, number> = { EASY: 1, MEDIUM: 2, HARD: 3 };
+    return [...questions].sort(
+      (a, b) =>
+        (weight[a.difficultyLevel] ?? 4) - (weight[b.difficultyLevel] ?? 4),
+    );
+  }),
 }));
 
 const mockFetchQuery = vi.fn();
