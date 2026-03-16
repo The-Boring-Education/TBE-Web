@@ -85,7 +85,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         );
         if (error)
           return res
-            .status(500)
+            .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
             .json(sendAPIResponse({ status: false, error }));
         result = syncResult;
         break;
@@ -105,7 +105,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         );
         if (error)
           return res
-            .status(500)
+            .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
             .json(sendAPIResponse({ status: false, error }));
         result = syncResult;
         break;
@@ -145,12 +145,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }),
           );
         }
-        const { data: syncResult, error } = await syncQuizzesToDB(
-          data.quizzes,
-        );
+        const { data: syncResult, error } = await syncQuizzesToDB(data.quizzes);
         if (error)
           return res
-            .status(500)
+            .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
             .json(sendAPIResponse({ status: false, error }));
         result = syncResult;
         break;
@@ -218,11 +216,11 @@ function handleDryRun(res: NextApiResponse, type: string, data: any) {
       break;
     default:
       return res
-        .status(400)
+        .status(apiStatusCodes.BAD_REQUEST)
         .json(sendAPIResponse({ status: false, message: "Invalid type" }));
   }
 
-  return res.status(200).json(
+  return res.status(apiStatusCodes.OKAY).json(
     sendAPIResponse({
       status: true,
       data: summary,

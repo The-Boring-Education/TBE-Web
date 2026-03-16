@@ -3,6 +3,39 @@ import { logger } from "@/lib/utils/logger";
 
 import { AptitudeTopic, DSAQuestion, InterviewSheet, Quiz } from "../models";
 
+// ─── Shared Helpers ─────────────────────────────────────────────────────────
+
+function toErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function applyDefinedFields(
+  target: Record<string, any>,
+  source: Record<string, any>,
+  fields: string[],
+): void {
+  for (const field of fields) {
+    if (source[field] !== undefined) {
+      target[field] = source[field];
+    }
+  }
+}
+
+function buildSyncResult(
+  added: number,
+  updated: number,
+  errors: string[],
+  total: number,
+) {
+  return {
+    added,
+    updated,
+    failed: errors.length,
+    total,
+    errors: errors.slice(0, 10),
+  };
+}
+
 // ─── Export Queries ──────────────────────────────────────────────────────────
 
 const exportDSAQuestionsFromDB = async (filters: {
@@ -21,7 +54,7 @@ const exportDSAQuestionsFromDB = async (filters: {
     return { data: { questions, count: questions.length } };
   } catch (error) {
     logger.error("DB: exportDSAQuestionsFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
+      error: toErrorMessage(error),
     });
     return { error: "Failed to export DSA questions", details: error };
   }
@@ -40,7 +73,7 @@ const exportInterviewSheetsFromDB = async (filters: {
     return { data: { sheets, count: sheets.length } };
   } catch (error) {
     logger.error("DB: exportInterviewSheetsFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
+      error: toErrorMessage(error),
     });
     return { error: "Failed to export interview sheets", details: error };
   }
@@ -57,7 +90,7 @@ const exportAptitudeTopicsFromDB = async (filters: {
     return { data: { topics, count: topics.length } };
   } catch (error) {
     logger.error("DB: exportAptitudeTopicsFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
+      error: toErrorMessage(error),
     });
     return { error: "Failed to export aptitude topics", details: error };
   }
@@ -75,7 +108,7 @@ const exportQuizzesFromDB = async (filters: {
     return { data: { quizzes, count: quizzes.length } };
   } catch (error) {
     logger.error("DB: exportQuizzesFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
+      error: toErrorMessage(error),
     });
     return { error: "Failed to export quizzes", details: error };
   }
@@ -87,6 +120,16 @@ const exportQuizzesFromDB = async (filters: {
  * Sync DSA questions: upsert by title. Preserves _id of existing questions.
  * New questions get fresh _ids. Existing questions get their fields updated.
  */
+const DSA_QUESTION_SYNC_FIELDS = [
+  "answer",
+  "domain",
+  "difficulty",
+  "companyTypes",
+  "topics",
+  "order",
+  "resources",
+] as const;
+
 const syncDSAQuestionsToDB = async (
   questions: any[],
 ): Promise<DatabaseQueryResponseType> => {
@@ -100,40 +143,24 @@ const syncDSAQuestionsToDB = async (
         const existing = await DSAQuestion.findOne({ title: q.title });
 
         if (existing) {
-          if (q.answer !== undefined) existing.answer = q.answer;
-          if (q.domain !== undefined) existing.domain = q.domain;
-          if (q.difficulty !== undefined) existing.difficulty = q.difficulty;
-          if (q.companyTypes !== undefined)
-            existing.companyTypes = q.companyTypes;
-          if (q.topics !== undefined) existing.topics = q.topics;
-          if (q.order !== undefined) existing.order = q.order;
-          if (q.resources !== undefined) existing.resources = q.resources;
+          applyDefinedFields(existing, q, [...DSA_QUESTION_SYNC_FIELDS]);
           await existing.save();
           updated++;
         } else {
-          const newQ = new DSAQuestion(q);
-          await newQ.save();
+          await new DSAQuestion(q).save();
           added++;
         }
       } catch (qError) {
-        const msg = `Question "${q.title}": ${qError instanceof Error ? qError.message : String(qError)}`;
+        const msg = `Question "${q.title}": ${toErrorMessage(qError)}`;
         errors.push(msg);
         logger.warn("syncDSAQuestionsToDB: question error", { error: msg });
       }
     }
 
-    return {
-      data: {
-        added,
-        updated,
-        failed: errors.length,
-        total: questions.length,
-        errors: errors.slice(0, 10),
-      },
-    };
+    return { data: buildSyncResult(added, updated, errors, questions.length) };
   } catch (error) {
     logger.error("DB: syncDSAQuestionsToDB failed", {
-      error: error instanceof Error ? error.message : String(error),
+      error: toErrorMessage(error),
     });
     return { error: "Failed to sync DSA questions", details: error };
   }
@@ -143,6 +170,26 @@ const syncDSAQuestionsToDB = async (
  * Sync interview sheets: upsert by slug. Preserves _id and embedded question _ids.
  * For existing sheets: updates metadata, merges questions (match by title).
  */
+const SHEET_METADATA_SYNC_FIELDS = [
+  "name",
+  "description",
+  "meta",
+  "coverImageURL",
+  "roadmap",
+  "isPremium",
+  "price",
+  "features",
+] as const;
+
+const SHEET_QUESTION_SYNC_FIELDS = [
+  "question",
+  "answer",
+  "frequency",
+  "priority",
+  "companyTypes",
+  "resources",
+] as const;
+
 const syncInterviewSheetsToDB = async (
   sheets: any[],
 ): Promise<DatabaseQueryResponseType> => {
@@ -156,17 +203,7 @@ const syncInterviewSheetsToDB = async (
         const existing = await InterviewSheet.findOne({ slug: sheet.slug });
 
         if (existing) {
-          if (sheet.name !== undefined) existing.name = sheet.name;
-          if (sheet.description !== undefined)
-            existing.description = sheet.description;
-          if (sheet.meta !== undefined) existing.meta = sheet.meta;
-          if (sheet.coverImageURL !== undefined)
-            existing.coverImageURL = sheet.coverImageURL;
-          if (sheet.roadmap !== undefined) existing.roadmap = sheet.roadmap;
-          if (sheet.isPremium !== undefined)
-            existing.isPremium = sheet.isPremium;
-          if (sheet.price !== undefined) existing.price = sheet.price;
-          if (sheet.features !== undefined) existing.features = sheet.features;
+          applyDefinedFields(existing, sheet, [...SHEET_METADATA_SYNC_FIELDS]);
 
           if (sheet.questions?.length) {
             const existingQMap = new Map(
@@ -176,18 +213,9 @@ const syncInterviewSheetsToDB = async (
             for (const incomingQ of sheet.questions) {
               const existingQ = existingQMap.get(incomingQ.title);
               if (existingQ) {
-                if (incomingQ.question !== undefined)
-                  existingQ.question = incomingQ.question;
-                if (incomingQ.answer !== undefined)
-                  existingQ.answer = incomingQ.answer;
-                if (incomingQ.frequency !== undefined)
-                  existingQ.frequency = incomingQ.frequency;
-                if (incomingQ.priority !== undefined)
-                  existingQ.priority = incomingQ.priority;
-                if (incomingQ.companyTypes !== undefined)
-                  existingQ.companyTypes = incomingQ.companyTypes;
-                if (incomingQ.resources !== undefined)
-                  existingQ.resources = incomingQ.resources;
+                applyDefinedFields(existingQ, incomingQ, [
+                  ...SHEET_QUESTION_SYNC_FIELDS,
+                ]);
               } else {
                 existing.questions.push(incomingQ);
               }
@@ -208,29 +236,20 @@ const syncInterviewSheetsToDB = async (
           await existing.save();
           updated++;
         } else {
-          const newSheet = new InterviewSheet(sheet);
-          await newSheet.save();
+          await new InterviewSheet(sheet).save();
           added++;
         }
       } catch (sError) {
-        const msg = `Sheet "${sheet.slug}": ${sError instanceof Error ? sError.message : String(sError)}`;
+        const msg = `Sheet "${sheet.slug}": ${toErrorMessage(sError)}`;
         errors.push(msg);
         logger.warn("syncInterviewSheetsToDB: sheet error", { error: msg });
       }
     }
 
-    return {
-      data: {
-        added,
-        updated,
-        failed: errors.length,
-        total: sheets.length,
-        errors: errors.slice(0, 10),
-      },
-    };
+    return { data: buildSyncResult(added, updated, errors, sheets.length) };
   } catch (error) {
     logger.error("DB: syncInterviewSheetsToDB failed", {
-      error: error instanceof Error ? error.message : String(error),
+      error: toErrorMessage(error),
     });
     return { error: "Failed to sync interview sheets", details: error };
   }
@@ -240,6 +259,12 @@ const syncInterviewSheetsToDB = async (
  * Sync quizzes: upsert by categoryName.
  * For existing quizzes: updates metadata, merges questions (match by question text).
  */
+const QUIZ_METADATA_SYNC_FIELDS = [
+  "categoryDescription",
+  "categoryIcon",
+  "isActive",
+] as const;
+
 const syncQuizzesToDB = async (
   quizzes: any[],
 ): Promise<DatabaseQueryResponseType> => {
@@ -255,11 +280,7 @@ const syncQuizzesToDB = async (
         });
 
         if (existing) {
-          if (quiz.categoryDescription !== undefined)
-            existing.categoryDescription = quiz.categoryDescription;
-          if (quiz.categoryIcon !== undefined)
-            existing.categoryIcon = quiz.categoryIcon;
-          if (quiz.isActive !== undefined) existing.isActive = quiz.isActive;
+          applyDefinedFields(existing, quiz, [...QUIZ_METADATA_SYNC_FIELDS]);
 
           if (quiz.questions?.length) {
             const existingQTexts = new Set(
@@ -276,29 +297,20 @@ const syncQuizzesToDB = async (
           await existing.save();
           updated++;
         } else {
-          const newQuiz = new Quiz(quiz);
-          await newQuiz.save();
+          await new Quiz(quiz).save();
           added++;
         }
       } catch (qError) {
-        const msg = `Quiz "${quiz.categoryName}": ${qError instanceof Error ? qError.message : String(qError)}`;
+        const msg = `Quiz "${quiz.categoryName}": ${toErrorMessage(qError)}`;
         errors.push(msg);
         logger.warn("syncQuizzesToDB: quiz error", { error: msg });
       }
     }
 
-    return {
-      data: {
-        added,
-        updated,
-        failed: errors.length,
-        total: quizzes.length,
-        errors: errors.slice(0, 10),
-      },
-    };
+    return { data: buildSyncResult(added, updated, errors, quizzes.length) };
   } catch (error) {
     logger.error("DB: syncQuizzesToDB failed", {
-      error: error instanceof Error ? error.message : String(error),
+      error: toErrorMessage(error),
     });
     return { error: "Failed to sync quizzes", details: error };
   }

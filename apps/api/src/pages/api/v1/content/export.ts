@@ -53,6 +53,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       : undefined;
 
   const contentType = type as string;
+  const validTypes = new Set([
+    "dsa-questions",
+    "interview-sheets",
+    "aptitude",
+    "quizzes",
+    "all",
+  ]);
+
+  if (!contentType || !validTypes.has(contentType)) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message:
+          "Required: type (dsa-questions | interview-sheets | aptitude | quizzes | all)",
+      }),
+    );
+  }
+
   const result: any = {};
 
   try {
@@ -63,7 +81,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         difficulty: toArray(difficulty),
       });
       if (error)
-        return res.status(500).json(sendAPIResponse({ status: false, error }));
+        return res
+          .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+          .json(sendAPIResponse({ status: false, error }));
       result.dsaQuestions = data;
     }
 
@@ -73,7 +93,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         roadmap: roadmap as string,
       });
       if (error)
-        return res.status(500).json(sendAPIResponse({ status: false, error }));
+        return res
+          .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+          .json(sendAPIResponse({ status: false, error }));
       result.interviewSheets = data;
     }
 
@@ -82,7 +104,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         topics: toArray(topics),
       });
       if (error)
-        return res.status(500).json(sendAPIResponse({ status: false, error }));
+        return res
+          .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+          .json(sendAPIResponse({ status: false, error }));
       result.aptitude = data;
     }
 
@@ -91,18 +115,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         categoryNames: toArray(categoryNames),
       });
       if (error)
-        return res.status(500).json(sendAPIResponse({ status: false, error }));
+        return res
+          .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+          .json(sendAPIResponse({ status: false, error }));
       result.quizzes = data;
-    }
-
-    if (!contentType) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json(
-        sendAPIResponse({
-          status: false,
-          message:
-            "Required: type (dsa-questions | interview-sheets | aptitude | quizzes | all)",
-        }),
-      );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
