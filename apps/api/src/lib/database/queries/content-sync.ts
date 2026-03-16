@@ -206,8 +206,9 @@ const syncInterviewSheetsToDB = async (
           applyDefinedFields(existing, sheet, [...SHEET_METADATA_SYNC_FIELDS]);
 
           if (sheet.questions?.length) {
+            if (!existing.questions) existing.questions = [];
             const existingQMap = new Map(
-              (existing.questions || []).map((q: any) => [q.title, q]),
+              existing.questions.map((q: any) => [q.title, q]),
             );
 
             for (const incomingQ of sheet.questions) {
@@ -223,8 +224,9 @@ const syncInterviewSheetsToDB = async (
           }
 
           if (sheet.dsaQuestions?.length) {
+            if (!existing.dsaQuestions) existing.dsaQuestions = [];
             const existingDsaIds = new Set(
-              (existing.dsaQuestions || []).map((id: any) => id.toString()),
+              existing.dsaQuestions.map((id: any) => id.toString()),
             );
             for (const dsaId of sheet.dsaQuestions) {
               if (!existingDsaIds.has(dsaId.toString())) {
@@ -283,8 +285,9 @@ const syncQuizzesToDB = async (
           applyDefinedFields(existing, quiz, [...QUIZ_METADATA_SYNC_FIELDS]);
 
           if (quiz.questions?.length) {
+            if (!existing.questions) existing.questions = [];
             const existingQTexts = new Set(
-              (existing.questions || []).map((q: any) => q.question),
+              existing.questions.map((q: any) => q.question),
             );
 
             for (const incomingQ of quiz.questions) {
