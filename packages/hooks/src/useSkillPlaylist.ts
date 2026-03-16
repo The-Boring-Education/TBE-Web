@@ -1,39 +1,32 @@
 import { routes } from "@tbe/constants";
-import { useApi } from "@tbe/hooks";
 import type { PlaylistSkillCardProps } from "@tbe/interface";
-import { useEffect, useState } from "react";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import { sendRequest } from "@tbe/utils";
 
 const useSkillPlaylist = (q: string) => {
-  const { makeRequest, loading } = useApi("fetchPlaylists");
-  const [playlists, setPlaylists] = useState<PlaylistSkillCardProps[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useQuery<any>({
+    queryKey: queryKeys.youfocus.playlists(q),
+    queryFn: () =>
+      sendRequest({
+        method: "GET",
+        url: `${routes.api.youfocusExplore}?q=${encodeURIComponent(q)}`,
+      }),
+    ...CACHE_TIMES.STANDARD,
+    enabled: !!q,
+  });
 
-  useEffect(() => {
-    if (!q) return; // Skip fetching if q is empty
+  const playlists: PlaylistSkillCardProps[] = response?.data ?? [];
+  const errorMessage =
+    error?.message ??
+    (response && (!response.data || response.data.length === 0)
+      ? "No playlists found for this skill."
+      : null);
 
-    const fetchPlaylists = async () => {
-      try {
-        const response = await makeRequest({
-          method: "GET",
-          url: `${routes.api.youfocusExplore}?q=${encodeURIComponent(q)}`,
-        });
-
-        if (!response.data || response.data.length === 0) {
-          setErrorMessage("No playlists found for this skill.");
-          setPlaylists([]);
-        } else {
-          setPlaylists(response.data);
-        }
-      } catch (error) {
-        setErrorMessage("Failed to fetch playlists. Please try again.");
-        setPlaylists([]);
-      }
-    };
-
-    fetchPlaylists();
-  }, [q]);
-
-  return { playlists, loading, errorMessage };
+  return { playlists, loading: isLoading, errorMessage };
 };
 
 export default useSkillPlaylist;

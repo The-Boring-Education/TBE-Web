@@ -1,5 +1,5 @@
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import { prepLogsService } from "@tbe/services";
-import { useEffect, useState } from "react";
 
 export interface PrepLog {
   _id: string;
@@ -19,55 +19,26 @@ export interface PrepLogsResponse {
 }
 
 export function usePrepLogs(userId: string) {
-  const [logs, setLogs] = useState<PrepLog[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const {
+    data: logs = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery<PrepLog[]>({
+    queryKey: queryKeys.prepYatra.logs(userId),
+    queryFn: () => prepLogsService.getByUserId(userId),
+    ...CACHE_TIMES.STANDARD,
+    enabled: !!userId,
+  });
 
-  const fetchPrepLogs = async () => {
-    if (!userId) {
-      setError("User ID is required");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      const data = await prepLogsService.getByUserId(userId);
-      setLogs(data);
-    } catch (err) {
-      console.error("Error fetching prep logs:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to fetch prep logs",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPrepLogs();
-  }, [userId, refreshTrigger]);
-
-  // Debounced refetch function to prevent excessive API calls
-  const refetch = () => {
-    setRefreshTrigger((prev) => prev + 1);
-  };
-
-  // Calculate statistics
   const totalTimeSpent = logs.reduce(
     (acc, log) => acc + (log.timeSpent || 0),
     0,
   );
   const totalLogs = logs.length;
 
-  // Calculate streak (consecutive days with logs)
   const calculateStreak = () => {
-    if (logs.length === 0) {
-      return 0;
-    }
+    if (logs.length === 0) return 0;
 
     const sortedLogs = [...logs].sort(
       (a, b) =>
@@ -100,11 +71,9 @@ export function usePrepLogs(userId: string) {
 
   const streak = calculateStreak();
 
-  // Get recent activity (last 7 days)
   const getRecentActivity = () => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
     return logs.filter((log) => new Date(log.createdAt) >= sevenDaysAgo);
   };
 
@@ -112,9 +81,8 @@ export function usePrepLogs(userId: string) {
 
   return {
     logs,
-    setLogs,
-    loading,
-    error,
+    loading: isLoading,
+    error: error?.message ?? null,
     totalTimeSpent,
     totalLogs,
     streak,

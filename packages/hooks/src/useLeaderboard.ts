@@ -1,30 +1,22 @@
 import { routes } from "@tbe/constants";
-import { useApi } from "@tbe/hooks";
 import type { LeaderboardType } from "@tbe/interface";
-import { useEffect, useState } from "react";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import { sendRequest } from "@tbe/utils";
 
 const useLeaderboard = (tab: LeaderboardType) => {
-  const { response, makeRequest, loading } = useApi(`leaderboard-${tab}`, {
-    method: "GET",
-    url: `${routes.api.leaderboard}?type=${tab}`,
+  const { data: response, isLoading } = useQuery<any>({
+    queryKey: queryKeys.gamification.leaderboard(),
+    queryFn: () =>
+      sendRequest({
+        method: "GET",
+        url: `${routes.api.leaderboard}?type=${tab}`,
+      }),
+    ...CACHE_TIMES.DYNAMIC,
   });
 
-  const [data, setData] = useState<any[]>([]);
+  const data = response?.data?.entries ?? [];
 
-  useEffect(() => {
-    makeRequest({
-      method: "GET",
-      url: `${routes.api.leaderboard}?type=${tab}`,
-    });
-  }, [tab]);
-
-  useEffect(() => {
-    if (response?.data?.entries) {
-      setData(response.data.entries);
-    }
-  }, [response]);
-
-  return { data, loading };
+  return { data, loading: isLoading };
 };
 
 export default useLeaderboard;

@@ -1,41 +1,29 @@
 import { routes } from "@tbe/constants";
-import { useApi } from "@tbe/hooks";
 import { useUser } from "@tbe/hooks";
-import { getUserGamificationLevel } from "@tbe/utils";
-import { useEffect, useState } from "react";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import { getUserGamificationLevel, sendRequest } from "@tbe/utils";
 
 const useGamification = () => {
-  const { makeRequest } = useApi("useGamification");
   const { user } = useUser();
-  const [points, setPoints] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const userId = user?.id;
 
-  useEffect(() => {
-    const userId = user?.id;
-    if (!userId) {
-      setLoading(false);
-      return;
-    }
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useQuery<any>({
+    queryKey: queryKeys.gamification.points(userId ?? ""),
+    queryFn: () =>
+      sendRequest({
+        method: "GET",
+        url: `${routes.api.gamification}?userId=${userId}`,
+        headers: { "Content-Type": "application/json" },
+      }),
+    ...CACHE_TIMES.STANDARD,
+    enabled: !!userId,
+  });
 
-    const fetchData = async () => {
-      try {
-        const response = await makeRequest({
-          method: "GET",
-          url: `${routes.api.gamification}?userId=${userId}`,
-          headers: { "Content-Type": "application/json" },
-        });
-
-        setPoints(response?.data?.points);
-      } catch (error) {
-        setError(error as Error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [user?.id]);
+  const points = response?.data?.points ?? 0;
 
   const {
     currentLevel,
@@ -46,8 +34,8 @@ const useGamification = () => {
   } = getUserGamificationLevel(points);
 
   return {
-    loading,
-    error,
+    loading: isLoading,
+    error: error ?? null,
     points,
     currentLevel,
     currentLevelName,

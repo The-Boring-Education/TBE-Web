@@ -8,11 +8,11 @@ import { Toaster as Sonner } from "@tbe/components";
 import { Toaster } from "@tbe/components";
 import { TooltipProvider } from "@tbe/components";
 import { initGA, trackPageview } from "@tbe/components/analytics";
+import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
 
 // Cache clearing component
 const CacheManager = () => {
@@ -161,8 +161,6 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
-  const [queryClient] = useState(() => new QueryClient());
-
   return (
     <>
       <Head>
@@ -185,13 +183,13 @@ export default function App({
       </Head>
 
       <AuthProvider session={session}>
-        <QueryClientProvider client={queryClient}>
+        <TBEQueryProvider>
           <TooltipProvider>
             <Toaster />
             <Sonner />
             <AppContent Component={Component} pageProps={pageProps} />
           </TooltipProvider>
-        </QueryClientProvider>
+        </TBEQueryProvider>
       </AuthProvider>
     </>
   );

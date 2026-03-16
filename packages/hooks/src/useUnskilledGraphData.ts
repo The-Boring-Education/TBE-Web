@@ -1,84 +1,24 @@
-import { envConfig } from "@tbe/constants";
-import type { UnskilledGraphData } from "@tbe/interface";
-import { useEffect, useRef, useState } from "react";
+import { CACHE_TIMES, useQuery } from "@tbe/query";
 
-interface UseUnskilledGraphDataReturn {
-  data: UnskilledGraphData | null;
-  loading: boolean;
-  error: string | null;
-}
+const UNSKILLED_API_URL = process.env.NEXT_PUBLIC_UNSKILLED_API_URL;
 
-const useUnskilledGraphData = (): UseUnskilledGraphDataReturn => {
-  const [data, setData] = useState<UnskilledGraphData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const hasFetchedRef = useRef(false);
+const useUnskilledGraphData = () => {
+  const { data, isLoading, error } = useQuery<any>({
+    queryKey: ["unskilled", "graph"],
+    queryFn: async () => {
+      const response = await fetch(`${UNSKILLED_API_URL}/graph`);
+      if (!response.ok) throw new Error("Failed to fetch graph data");
+      return response.json();
+    },
+    ...CACHE_TIMES.STATIC,
+    enabled: !!UNSKILLED_API_URL,
+  });
 
-  useEffect(() => {
-    // Prevent duplicate fetches (React Strict Mode causes double mount in dev)
-    if (hasFetchedRef.current) {
-      return;
-    }
-
-    const fetchGraphData = async () => {
-      // Skip if API URL is not configured
-      if (!envConfig.UNSKILLED_API_URL) {
-        setLoading(false);
-        setError("API URL not configured");
-        return;
-      }
-
-      console.log("[Graph Data] API URL:", envConfig.UNSKILLED_API_URL);
-
-      const controller = new AbortController();
-      const startTime = performance.now();
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          signal: controller.signal,
-        });
-
-        const fetchTime = (performance.now() - startTime).toFixed(2);
-        console.log(`[Graph Data] API responded in ${fetchTime}ms`);
-
-        if (!response.ok) {
-          throw new Error(`API responded with status ${response.status}`);
-        }
-
-        const apiResponse = await response.json();
-        console.log("[Graph Data] Data parsed successfully");
-        setData(apiResponse.data || null);
-      } catch (err) {
-        if (err instanceof Error && err.name === "AbortError") {
-          console.log("[Graph Data] Fetch aborted");
-          return;
-        }
-        const errorMessage =
-          err instanceof Error ? err.message : "Failed to fetch graph data";
-        setError(errorMessage);
-        console.error("[Graph Data] Error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    hasFetchedRef.current = true;
-    fetchGraphData();
-
-    // Cleanup function - this is what React Strict Mode tests
-    return () => {
-      // Don't reset hasFetchedRef on cleanup to prevent refetch
-      console.log("[Graph Data] Component cleanup (Strict Mode unmount)");
-    };
-  }, []);
-
-  return { data, loading, error };
+  return {
+    data: data ?? null,
+    loading: isLoading,
+    error: error?.message ?? null,
+  };
 };
 
 export default useUnskilledGraphData;

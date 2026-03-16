@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@tbe/auth";
 import { MarkdownRenderer } from "@tbe/components/quizes";
 import { ProtectedRoute } from "@tbe/components/quizes";
+import { useQuery } from "@tbe/query";
 import { quizApi } from "@tbe/services";
 import type { Question } from "@tbe/types";
 import { cleanOptionText, trackEvent } from "@tbe/utils";
