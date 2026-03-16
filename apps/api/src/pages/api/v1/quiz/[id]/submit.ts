@@ -62,14 +62,12 @@ async function handleSubmitQuiz(
   }
 
   if (!Array.isArray(answers) || answers.length === 0) {
-    return res
-      .status(400)
-      .json(
-        sendAPIResponse({
-          status: false,
-          message: "answers array is required",
-        }),
-      );
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "answers array is required",
+      }),
+    );
   }
 
   if (typeof totalTimeSpent !== "number" || totalTimeSpent < 0) {
@@ -144,14 +142,12 @@ async function handleSubmitQuiz(
           : String(attemptError),
       attemptData: JSON.stringify(attemptData, null, 2),
     });
-    return res
-      .status(500)
-      .json(
-        sendAPIResponse({
-          status: false,
-          message: "Failed to save quiz attempt",
-        }),
-      );
+    return res.status(500).json(
+      sendAPIResponse({
+        status: false,
+        message: "Failed to save quiz attempt",
+      }),
+    );
   }
 
   // Return results

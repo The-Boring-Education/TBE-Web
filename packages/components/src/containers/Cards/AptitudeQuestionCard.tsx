@@ -1,9 +1,17 @@
+import "katex/dist/katex.min.css";
+
 import { Button, FlexContainer } from "@tbe/components";
 import type { AptitudeQuestion } from "@tbe/interface";
 import markdownit from "markdown-it";
 import React, { useState } from "react";
 
+import {
+  normalizeLatexDelimiters,
+  registerMathPlugin,
+} from "../../common/MDXRenderer/mathPlugin";
+
 const md = markdownit({ html: true, breaks: true });
+registerMathPlugin(md);
 
 export interface AptitudeQuestionCardProps {
   question: AptitudeQuestion;
@@ -43,7 +51,9 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
           <div
             className="text-white text-[15px] leading-relaxed font-semibold prose prose-invert prose-p:my-0 prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
             dangerouslySetInnerHTML={{
-              __html: md.render(question.question || ""),
+              __html: md.render(
+                normalizeLatexDelimiters(question.question || ""),
+              ),
             }}
           />
         </div>
@@ -101,7 +111,9 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
               <div
                 className="flex-1 text-[14px] leading-snug prose prose-invert prose-p:my-0 prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0"
                 dangerouslySetInnerHTML={{
-                  __html: md.renderInline(opt.text || ""),
+                  __html: md.renderInline(
+                    normalizeLatexDelimiters(opt.text || ""),
+                  ),
                 }}
               />
             </div>

@@ -1,6 +1,10 @@
+import "katex/dist/katex.min.css";
+
 import type { MDXRendererProps } from "@tbe/interface";
 import MarkdownIt from "markdown-it";
 import { Fragment, useEffect, useRef } from "react";
+
+import { normalizeLatexDelimiters, registerMathPlugin } from "./mathPlugin";
 
 const MDXRenderer = ({
   mdxSource,
@@ -21,15 +25,13 @@ const MDXRenderer = ({
     breaks: true,
     linkify: true,
     typographer: true,
-    // Ensure bold and italic are enabled (default, but explicit is better)
   });
 
-  // Enable bold syntax explicitly (should be default, but ensure it's on)
-  // markdown-it supports both **text** and __text__ for bold by default
+  registerMathPlugin(md);
 
   const normalizeMarkdown = (src: string): string => {
     if (!src) return "";
-    let out = src;
+    let out = normalizeLatexDelimiters(src);
 
     // Convert 7+ to 3 (nice visual divider) so they render as headings, BUT NOT INSIDE CODE BLOCKS.
     const inCodeBlockRegexSafe = (

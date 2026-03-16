@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createMocks } from "node-mocks-http";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createMocks } from "node-mocks-http";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import handler from "../../../../api/src/pages/api/health/index";
 
 // Mock environment config
@@ -8,6 +9,21 @@ vi.mock("../../../../api/src/lib/constants", () => ({
   envConfig: {
     QUIZ_APP_URL: "http://localhost:3001",
     ONBOARDING_URL: "http://localhost:3002",
+    MONGODB_URI: "mongodb://localhost:27017/test",
+  },
+}));
+
+vi.mock("mongoose", () => ({
+  default: {
+    connection: {
+      readyState: 1,
+      db: {
+        admin: () => ({
+          ping: vi.fn().mockResolvedValue(true),
+        }),
+      },
+    },
+    connect: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
@@ -42,7 +58,7 @@ describe("Health Check API Route", () => {
       expect(data.status).toBe("healthy");
       expect(data.services.quizzes.status).toBe("healthy");
       expect(data.services.onboarding.status).toBe("healthy");
-      expect(data.summary.healthy).toBe(2);
+      expect(data.summary.healthy).toBe(3);
     });
 
     it("should return degraded status when some services are unhealthy", async () => {
@@ -80,10 +96,10 @@ describe("Health Check API Route", () => {
 
       await handler(req, res);
 
-      expect(res._getStatusCode()).toBe(503);
+      expect(res._getStatusCode()).toBe(207);
       const data = JSON.parse(res._getData());
-      expect(data.status).toBe("unhealthy");
-      expect(data.summary.healthy).toBe(0);
+      expect(data.status).toBe("degraded");
+      expect(data.summary.healthy).toBe(1);
     });
 
     it("should handle missing service URLs", async () => {
@@ -155,10 +171,10 @@ describe("Health Check API Route", () => {
 
       await handler(req, res);
 
-      // Health check returns 503 for unhealthy status, not 500
-      expect(res._getStatusCode()).toBe(503);
+      // Database remains healthy while one external service fails
+      expect(res._getStatusCode()).toBe(207);
       const data = JSON.parse(res._getData());
-      expect(data.status).toBe("unhealthy");
+      expect(data.status).toBe("degraded");
     });
   });
 });

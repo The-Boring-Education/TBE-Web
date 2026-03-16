@@ -173,10 +173,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (!enrollmentResult.success) {
         logger.error("Post-payment enrollment failed", {
           productType: _payment.productType,
-          error:
-            enrollmentResult.error instanceof Error
-              ? enrollmentResult.error.message
-              : String(enrollmentResult.error),
+          error: enrollmentResult.error ?? "Unknown enrollment error",
         });
         // do not fail webhook
       } else {

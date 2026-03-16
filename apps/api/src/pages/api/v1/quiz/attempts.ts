@@ -29,15 +29,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
 
     if (error) {
-      return res
-        .status(400)
-        .json(
-          sendAPIResponse({
-            status: false,
-            message: "Error fetching quiz history",
-            error,
-          }),
-        );
+      return res.status(400).json(
+        sendAPIResponse({
+          status: false,
+          message: "Error fetching quiz history",
+          error,
+        }),
+      );
     }
 
     return res
