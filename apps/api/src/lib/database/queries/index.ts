@@ -2,6 +2,7 @@
 export * from "./aptitude";
 export * from "./certificate";
 export * from "./common";
+export * from "./content-sync";
 export * from "./coupon";
 export * from "./dsayatra";
 export * from "./email";

@@ -228,7 +228,8 @@ const getAptitudeMetadataFromDB =
 // ─── Bulk Upload (from Agents) ───────────────────────────────────────────────
 
 /**
- * Consolidated bulk upload: Updates exactly one AptitudeTopic document
+ * Merge-based bulk upload: adds new questions, updates existing (matched by question text), never deletes.
+ * Preserves _id of existing questions so any references remain valid.
  */
 const bulkUploadAptitudeDataToDB = async (
   payload: AptitudeUploadPayload,
@@ -244,13 +245,54 @@ const bulkUploadAptitudeDataToDB = async (
       return { error: "No questions provided" };
     }
 
-    const updated = await AptitudeTopic.findOneAndUpdate(
-      { topic },
-      { $set: { questions } },
-      { new: true, upsert: true },
+    let topicDoc = await AptitudeTopic.findOne({ topic });
+
+    if (!topicDoc) {
+      topicDoc = new AptitudeTopic({ topic, questions });
+      await topicDoc.save();
+      return {
+        data: {
+          topic,
+          questionsAdded: questions.length,
+          questionsUpdated: 0,
+          totalQuestions: topicDoc.questions.length,
+        },
+      };
+    }
+
+    const existingMap = new Map(
+      topicDoc.questions.map((q: any) => [q.question, q]),
     );
 
-    return { data: { topic, questionsInserted: updated.questions.length } };
+    let added = 0;
+    let updated = 0;
+
+    for (const incoming of questions) {
+      const existing = existingMap.get(incoming.question);
+
+      if (existing) {
+        if (incoming.answer !== undefined) existing.answer = incoming.answer;
+        if (incoming.options !== undefined) existing.options = incoming.options;
+        if (incoming.difficulty !== undefined)
+          existing.difficulty = incoming.difficulty;
+        if (incoming.order !== undefined) existing.order = incoming.order;
+        updated++;
+      } else {
+        topicDoc.questions.push(incoming as any);
+        added++;
+      }
+    }
+
+    await topicDoc.save();
+
+    return {
+      data: {
+        topic,
+        questionsAdded: added,
+        questionsUpdated: updated,
+        totalQuestions: topicDoc.questions.length,
+      },
+    };
   } catch (error) {
     logger.error("DB: bulkUploadAptitudeDataToDB failed", {
       topic: payload.topic,

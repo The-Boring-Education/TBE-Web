@@ -29,20 +29,21 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const { title, content, domain, difficulty, companyTypes, topics } = req.body;
+  const { title, answer, content, domain, difficulty, companyTypes, topics } = req.body;
 
-  if (!title || !content || !domain || !difficulty || !companyTypes || !topics)
+  const questionAnswer = answer || content;
+  if (!title || !questionAnswer || !domain || !difficulty || !companyTypes || !topics)
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: false,
         message:
-          "Required: title, content, domain, difficulty, companyTypes, topics",
+          "Required: title, answer, domain, difficulty, companyTypes, topics",
       }),
     );
 
   const { data, error } = await addDSAQuestionToDB({
     title,
-    content,
+    answer: questionAnswer,
     domain: Array.isArray(domain) ? domain : [domain],
     difficulty,
     companyTypes: Array.isArray(companyTypes) ? companyTypes : [companyTypes],
