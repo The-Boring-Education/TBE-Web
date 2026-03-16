@@ -602,10 +602,52 @@ const getAllDSAQuestionsFromDB = async (
 
     const totalCount = await DSAQuestion.countDocuments(matchStage);
 
+    const DSA_TOPIC_SORT_ORDER = [
+      "ARRAY",
+      "STRING",
+      "HASHMAP",
+      "TWO_POINTERS",
+      "SLIDING_WINDOW",
+      "PREFIX_SUM",
+      "SORTING",
+      "BINARY_SEARCH",
+      "MATH",
+      "BIT_MANIPULATION",
+      "RECURSION",
+      "LINKED_LIST",
+      "STACK",
+      "QUEUE",
+      "BINARY_TREE",
+      "TREE",
+      "BST",
+      "HEAP",
+      "TRIE",
+      "GRAPH",
+      "DFS",
+      "BFS",
+      "BACKTRACKING",
+      "DYNAMIC_PROGRAMMING",
+      "GREEDY",
+      "UNION_FIND",
+    ];
+
     const questions = await DSAQuestion.aggregate([
       { $match: matchStage },
       {
         $addFields: {
+          _topicOrder: {
+            $let: {
+              vars: {
+                idx: {
+                  $indexOfArray: [
+                    DSA_TOPIC_SORT_ORDER,
+                    { $arrayElemAt: ["$topics", 0] },
+                  ],
+                },
+              },
+              in: { $cond: [{ $eq: ["$$idx", -1] }, 999, "$$idx"] },
+            },
+          },
           _difficultyOrder: {
             $switch: {
               branches: [
@@ -618,10 +660,12 @@ const getAllDSAQuestionsFromDB = async (
           },
         },
       },
-      { $sort: { order: 1, _difficultyOrder: 1, createdAt: -1 } },
+      {
+        $sort: { _topicOrder: 1, _difficultyOrder: 1, order: 1, createdAt: -1 },
+      },
       { $skip: (page - 1) * limit },
       { $limit: limit },
-      { $project: { _difficultyOrder: 0 } },
+      { $project: { _topicOrder: 0, _difficultyOrder: 0 } },
     ]);
 
     return {
