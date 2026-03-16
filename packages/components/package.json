@@ -56,7 +56,7 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@tanstack/react-query": "^5.90.6",
+    "@tbe/query": "workspace:*",
     "@tbe/auth": "workspace:*",
     "@tbe/config": "workspace:*",
     "@tbe/constants": "workspace:*",

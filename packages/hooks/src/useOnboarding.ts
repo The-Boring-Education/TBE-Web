@@ -1,4 +1,5 @@
-import { getOnboardingConfig, isValidOnboardingProduct } from "@tbe/config"; // FIXME: REFACTOR
+import { getOnboardingConfig, isValidOnboardingProduct } from "@tbe/config";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import type {
   BaseUser,
   UseOnboardingProps,
@@ -7,12 +8,6 @@ import type {
 import { sendRequest, trackEvent } from "@tbe/utils";
 import { useEffect, useState } from "react";
 
-/**
- * useOnboarding Hook
- *
- * Extracted from onboarding app and made reusable
- * Handles complete onboarding flow for any TBE product
- */
 export default function useOnboarding({
   userId,
   productId,
@@ -20,10 +15,8 @@ export default function useOnboarding({
   token,
   from,
 }: UseOnboardingProps): UseOnboardingReturn {
-  const [user, setUser] = useState<BaseUser | null>(null);
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<Record<string, unknown>>({});
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(true);
@@ -31,7 +24,6 @@ export default function useOnboarding({
 
   const config = getOnboardingConfig(productId);
 
-  // Get unique step numbers that have at least one field
   const stepNumbersWithFields = config
     ? Array.from(new Set(config.fields.map((f) => f.step))).sort(
         (a, b) => a - b,
@@ -39,62 +31,48 @@ export default function useOnboarding({
     : [];
   const totalSteps = stepNumbersWithFields.length;
 
-  // Map visible step index (1-based) to actual step number
   const getActualStepNumber = (visibleStep: number) =>
     stepNumbersWithFields[visibleStep - 1];
 
-  // Reset form when product changes
+  const { data: user, isLoading: loading } = useQuery<BaseUser | null>({
+    queryKey: queryKeys.user.detail(userId ?? ""),
+    queryFn: async () => {
+      const response = await sendRequest({
+        url: `/user?userId=${userId}`,
+        method: "GET",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+
+      if (response.success && response.data) {
+        return response.data as BaseUser;
+      }
+      return null;
+    },
+    ...CACHE_TIMES.STANDARD,
+    enabled: !!userId && isValidOnboardingProduct(productId),
+  });
+
+  // Prefill form when user data arrives
+  useEffect(() => {
+    if (user && config) {
+      const prefillData: Record<string, unknown> = {};
+      config.fields.forEach((field) => {
+        if (field.prefill?.fromUser) {
+          prefillData[field.name] = field.prefill.fromUser(user);
+        } else {
+          prefillData[field.name] =
+            field.prefill?.defaultValue ||
+            (field.type === "multiselect" ? [] : "");
+        }
+      });
+      setForm(prefillData);
+    }
+  }, [user, config]);
+
   useEffect(() => {
     setForm({});
     setStep(1);
   }, [productId]);
-
-  // Fetch user data and prefill form
-  useEffect(() => {
-    async function fetchUser() {
-      if (!userId || !isValidOnboardingProduct(productId)) {
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-
-      try {
-        const response = await sendRequest({
-          url: `/user?userId=${userId}`,
-          method: "GET",
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        });
-
-        if (response.success && response.data) {
-          const userData = response.data as BaseUser;
-          setUser(userData);
-
-          if (config) {
-            // Prefill form using product configuration
-            const prefillData: Record<string, unknown> = {};
-            config.fields.forEach((field) => {
-              if (field.prefill?.fromUser) {
-                prefillData[field.name] = field.prefill.fromUser(userData);
-              } else {
-                prefillData[field.name] =
-                  field.prefill?.defaultValue ||
-                  (field.type === "multiselect" ? [] : "");
-              }
-            });
-            setForm(prefillData);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to fetch user:", err);
-        setError("Failed to load user data");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchUser();
-  }, [userId, productId, token, config]);
 
   const handleNext = () => {
     try {
@@ -104,7 +82,6 @@ export default function useOnboarding({
         value: step,
       });
     } catch {}
-
     setStep((s) => Math.min(s + 1, totalSteps));
   };
 
@@ -116,7 +93,6 @@ export default function useOnboarding({
         value: step,
       });
     } catch {}
-
     setStep((s) => Math.max(s - 1, 1));
   };
 
@@ -158,7 +134,6 @@ export default function useOnboarding({
           });
         } catch {}
 
-        // Redirect to specified URL
         if (redirect) {
           window.location.href = redirect;
         }
@@ -186,7 +161,6 @@ export default function useOnboarding({
     const actualStep = getActualStepNumber(step);
     const currentFields = config.fields.filter((f) => f.step === actualStep);
 
-    // All required fields for this step must be valid
     return currentFields.every((currentField) => {
       if (!currentField.required) return true;
 
@@ -207,7 +181,7 @@ export default function useOnboarding({
   };
 
   return {
-    user,
+    user: user ?? null,
     step,
     form,
     setForm,

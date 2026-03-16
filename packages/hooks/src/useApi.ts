@@ -1,8 +1,12 @@
+import { useQueryClient } from "@tbe/query";
 import type { APIMakeRequestProps, APIResponseType } from "@tbe/types";
 import { sendRequest } from "@tbe/utils";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
 
+/**
+ * @deprecated Migrate to `createQuery` / `useQuery` from `@tbe/query` instead.
+ * This hook exists for backward compatibility during the migration period.
+ */
 const useApi = (
   queryKey: string,
   initialParams?: APIMakeRequestProps,
@@ -28,18 +32,17 @@ const useApi = (
     }
   };
 
-  // Custom function to refetch with optional new params
   const makeRequest = (overrideParams?: APIMakeRequestProps) => {
     const params = overrideParams || initialParams;
     if (!params) {
       throw new Error("Params are required to make a request.");
     }
-    return queryClient.fetchQuery([queryKey, params], () =>
-      fetchFunction(params),
-    );
+    return queryClient.fetchQuery({
+      queryKey: [queryKey, params],
+      queryFn: () => fetchFunction(params),
+    });
   };
 
-  // Effect to trigger the API call on initial render if enabled
   useEffect(() => {
     if (options.enabled && initialParams) {
       makeRequest(initialParams);

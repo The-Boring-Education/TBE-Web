@@ -9,7 +9,9 @@ import {
   Progress,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import { useApi, useUser } from "@tbe/hooks";
+import { useUser } from "@tbe/hooks";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import { sendRequest } from "@tbe/utils";
 import { TrendingUp, Trophy } from "lucide-react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
@@ -54,25 +56,27 @@ const CampusPrepDashboard = () => {
   const { user, loading, isAuth } = useUser();
   const router = useRouter();
 
-  const { response: enrolledSheetsResponse, loading: sheetsLoading } = useApi(
-    "user-interview-prep",
-    user?.id
-      ? {
-          url: `${routes.api.base}${routes.api.mySheets}?userId=${user.id}`,
-        }
-      : undefined,
-    { enabled: !!user?.id },
-  );
+  const { data: enrolledSheetsResponse, isLoading: sheetsLoading } =
+    useQuery<any>({
+      queryKey: queryKeys.interviewPrep.lists(),
+      queryFn: () =>
+        sendRequest({
+          url: `${routes.api.base}${routes.api.mySheets}?userId=${user?.id}`,
+        }),
+      ...CACHE_TIMES.STANDARD,
+      enabled: !!user?.id,
+    });
 
-  const { response: quizPerformanceResponse, loading: quizLoading } = useApi(
-    "quiz-performance",
-    user?.id
-      ? {
-          url: `${routes.api.base}/quiz/performance/${user.id}`,
-        }
-      : undefined,
-    { enabled: !!user?.id },
-  );
+  const { data: quizPerformanceResponse, isLoading: quizLoading } =
+    useQuery<any>({
+      queryKey: queryKeys.quiz.performance(user?.id ?? ""),
+      queryFn: () =>
+        sendRequest({
+          url: `${routes.api.base}/quiz/performance/${user?.id}`,
+        }),
+      ...CACHE_TIMES.STANDARD,
+      enabled: !!user?.id,
+    });
 
   const enrolledSheets: EnrolledSheet[] = useMemo(() => {
     if (!enrolledSheetsResponse?.status || !enrolledSheetsResponse?.data)

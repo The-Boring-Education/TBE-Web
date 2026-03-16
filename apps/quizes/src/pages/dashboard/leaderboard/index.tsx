@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@tbe/auth";
 import { DashboardNav, ProtectedRoute } from "@tbe/components/quizes";
 import {
@@ -11,6 +10,7 @@ import { Button } from "@tbe/components/quizes";
 import { Badge } from "@tbe/components/quizes";
 import { Avatar, AvatarFallback, AvatarImage } from "@tbe/components/quizes";
 import { useToast } from "@tbe/components/quizes";
+import { useQuery } from "@tbe/query";
 import { APIError, leaderboardApi, userProfileApi } from "@tbe/services";
 import type { LeaderboardData, UserProfile } from "@tbe/types";
 import { formatDate } from "@tbe/utils";

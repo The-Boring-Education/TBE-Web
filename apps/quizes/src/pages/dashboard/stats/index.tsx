@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@tbe/auth";
 import { ProtectedRoute } from "@tbe/components/quizes";
 import { DashboardNav } from "@tbe/components/quizes";
@@ -11,6 +10,7 @@ import {
 } from "@tbe/components/quizes";
 import { Button } from "@tbe/components/quizes";
 import { useToast } from "@tbe/components/quizes";
+import { useQuery } from "@tbe/query";
 import { APIError, quizApi } from "@tbe/services";
 import type { CategoryPerformance, PerformanceMetrics } from "@tbe/types";
 import { formatDate } from "@tbe/utils";

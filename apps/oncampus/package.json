@@ -13,7 +13,6 @@
     "react": "^18",
     "react-dom": "^18",
     "next": "13.5.6",
-    "react-query": "^3.39.3",
     "@tbe/components": "workspace:*",
     "@tbe/hooks": "workspace:*",
     "@tbe/utils": "workspace:*",
@@ -21,6 +20,7 @@
     "@tbe/services": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/interface": "workspace:*",
+    "@tbe/query": "workspace:*",
     "@tbe/auth": "workspace:*",
     "@tbe/config": "workspace:*",
     "sonner": "^1.5.0"

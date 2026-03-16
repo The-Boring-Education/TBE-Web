@@ -1,6 +1,6 @@
 import { routes } from "@tbe/constants";
 import type { usePaymentStatusProps } from "@tbe/interface";
-import { useEffect, useState } from "react";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 
 const usePaymentStatus = ({
   userId,
@@ -8,51 +8,35 @@ const usePaymentStatus = ({
   productType,
   isPremium,
 }: usePaymentStatusProps) => {
-  const [isPurchased, setIsPurchased] = useState<boolean | null>(null);
+  const { data, isLoading } = useQuery<{ purchased: boolean }>({
+    queryKey: queryKeys.payment.status(userId ?? "", productId),
+    queryFn: async () => {
+      const queryParams = new URLSearchParams({
+        userId: userId || "",
+        productId: productId,
+      });
 
-  useEffect(() => {
-    const checkPaymentStatus = async () => {
-      try {
-        // Build query string with optional productType
-        const queryParams = new URLSearchParams({
-          userId: userId || "",
-          productId: productId,
-        });
-
-        if (productType) {
-          queryParams.append("productType", productType);
-        }
-
-        const response = await fetch(
-          `${routes.api.base}${routes.api.checkStatus}?${queryParams.toString()}`,
-          {
-            method: "GET",
-          },
-        );
-
-        const result = await response.json();
-
-        if (result.status && result.data?.purchased) {
-          setIsPurchased(true);
-        } else {
-          setIsPurchased(false);
-        }
-      } catch (error) {
-        setIsPurchased(false);
+      if (productType) {
+        queryParams.append("productType", productType);
       }
-    };
 
-    if (isPremium) {
-      if (!userId || !productId) {
-        setIsPurchased(false);
-      } else {
-        checkPaymentStatus();
+      const response = await fetch(
+        `${routes.api.base}${routes.api.checkStatus}?${queryParams.toString()}`,
+        { method: "GET" },
+      );
+
+      const result = await response.json();
+
+      if (result.status && result.data?.purchased) {
+        return { purchased: true };
       }
-    } else {
-      setIsPurchased(true);
-    }
-  }, [userId, productId, productType, isPremium]);
+      return { purchased: false };
+    },
+    ...CACHE_TIMES.REALTIME,
+    enabled: !!isPremium && !!userId && !!productId,
+  });
 
+  const isPurchased = isPremium ? (data?.purchased ?? null) : true;
   const isLocked = isPremium && isPurchased === false;
 
   return { isPurchased, isLocked };

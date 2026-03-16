@@ -1,9 +1,9 @@
 import { routes } from "@tbe/constants";
 import type { DsaQuestion } from "@tbe/interface";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import { sendRequest } from "@tbe/utils";
 import { transformDsaQuestion } from "@tbe/utils";
 import { useMemo } from "react";
-
-import useApi from "./useApi";
 
 interface UseDsaQuestionsOptions {
   queryKey?: string;
@@ -19,10 +19,15 @@ interface UseDsaQuestionsReturn {
 const useDsaQuestions = (
   options: UseDsaQuestionsOptions = {},
 ): UseDsaQuestionsReturn => {
-  const { queryKey = "dsa-sheet", limit = 1000 } = options;
+  const { limit = 1000 } = options;
 
-  const { response, loading } = useApi(queryKey, {
-    url: `${routes.api.base}${routes.api.dsaSheet}?limit=${limit}`,
+  const { data: response, isLoading } = useQuery<any>({
+    queryKey: queryKeys.dsa.questions({ limit }),
+    queryFn: () =>
+      sendRequest({
+        url: `${routes.api.base}${routes.api.dsaSheet}?limit=${limit}`,
+      }),
+    ...CACHE_TIMES.STABLE,
   });
 
   const rawQuestions = useMemo(() => {
@@ -35,7 +40,7 @@ const useDsaQuestions = (
     return rawQuestions.map(transformDsaQuestion);
   }, [rawQuestions]);
 
-  return { questions, rawQuestions, loading };
+  return { questions, rawQuestions, loading: isLoading };
 };
 
 export default useDsaQuestions;

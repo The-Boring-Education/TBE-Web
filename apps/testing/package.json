@@ -20,6 +20,7 @@
     "@tbe/config": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/hooks": "workspace:*",
+    "@tbe/query": "workspace:*",
     "@tbe/interface": "workspace:*",
     "@tbe/services": "workspace:*",
     "@tbe/types": "workspace:*",

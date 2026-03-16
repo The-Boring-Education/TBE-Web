@@ -1,4 +1,5 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHookWithQuery } from "@test-utils/query-wrapper";
+import { waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@tbe/utils", () => ({
@@ -15,14 +16,10 @@ vi.mock("@tbe/utils", () => ({
   })),
 }));
 
-const mockFetchQuery = vi.fn();
-vi.mock("react-query", () => ({
-  useQueryClient: () => ({
-    fetchQuery: mockFetchQuery,
-  }),
-}));
+import useDsaQuestions from "@tbe/hooks/useDsaQuestions";
+import { sendRequest } from "@tbe/utils";
 
-import { useDsaQuestions } from "@tbe/hooks";
+const mockSendRequest = vi.mocked(sendRequest);
 
 describe("useDsaQuestions", () => {
   const mockApiResponse = {
@@ -48,39 +45,62 @@ describe("useDsaQuestions", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockFetchQuery.mockResolvedValue(mockApiResponse);
+    mockSendRequest.mockResolvedValue(mockApiResponse);
   });
 
   it("should return empty arrays initially", () => {
-    mockFetchQuery.mockImplementation(() => new Promise(() => {}));
+    mockSendRequest.mockReturnValue(new Promise(() => {}));
 
-    const { result } = renderHook(() => useDsaQuestions());
+    const { result } = renderHookWithQuery(() => useDsaQuestions());
 
     expect(result.current.questions).toEqual([]);
     expect(result.current.rawQuestions).toEqual([]);
   });
 
   it("should transform questions after API response", async () => {
-    const { result } = renderHook(() => useDsaQuestions());
+    const { result } = renderHookWithQuery(() => useDsaQuestions());
 
     await waitFor(() => {
-      expect(result.current.questions.length).toBeGreaterThanOrEqual(0);
+      expect(result.current.questions.length).toBe(2);
     });
+
+    expect(result.current.questions[0]!.id).toBe("q1");
+    expect(result.current.questions[0]!.name).toBe("Two Sum");
   });
 
-  it("should accept custom queryKey", () => {
-    const { result } = renderHook(() =>
-      useDsaQuestions({ queryKey: "custom-key" }),
+  it("should accept custom limit", async () => {
+    const { result } = renderHookWithQuery(() =>
+      useDsaQuestions({ limit: 500 }),
     );
 
-    expect(result.current.questions).toBeDefined();
-    expect(result.current.rawQuestions).toBeDefined();
-    expect(result.current.loading).toBeDefined();
+    await waitFor(() => {
+      expect(result.current.questions).toBeDefined();
+    });
+
+    expect(mockSendRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: expect.stringContaining("limit=500"),
+      }),
+    );
   });
 
-  it("should accept custom limit", () => {
-    const { result } = renderHook(() => useDsaQuestions({ limit: 500 }));
+  it("should return loading state", () => {
+    mockSendRequest.mockReturnValue(new Promise(() => {}));
 
-    expect(result.current.questions).toBeDefined();
+    const { result } = renderHookWithQuery(() => useDsaQuestions());
+
+    expect(result.current.loading).toBe(true);
+  });
+
+  it("should return rawQuestions separate from transformed", async () => {
+    const { result } = renderHookWithQuery(() => useDsaQuestions());
+
+    await waitFor(() => {
+      expect(result.current.rawQuestions.length).toBe(2);
+    });
+
+    expect(result.current.rawQuestions[0]).toEqual(
+      mockApiResponse.data.questions[0],
+    );
   });
 });

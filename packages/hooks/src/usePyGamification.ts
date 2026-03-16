@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 
 export interface GamificationAction {
   actionType: string;
@@ -17,6 +17,7 @@ export interface GamificationLevel {
   minPoints: number;
   maxPoints: number;
 }
+
 const LEVELS: GamificationLevel[] = [
   { level: 1, name: "Noob", minPoints: 0, maxPoints: 499 },
   { level: 2, name: "Coder", minPoints: 500, maxPoints: 999 },
@@ -30,99 +31,67 @@ const LEVELS: GamificationLevel[] = [
   { level: 10, name: "Legend", minPoints: 10000, maxPoints: Infinity },
 ];
 
+interface GamificationApiResponse {
+  success: boolean;
+  message?: string;
+  data: { points: number; actions: unknown[] };
+}
+
 export function usePyGamification(userId?: string) {
-  const [data, setData] = useState<{
-    points: number;
-    actions: unknown[];
-  } | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error, refetch } = useQuery<GamificationApiResponse>(
+    {
+      queryKey: queryKeys.gamification.points(userId ?? ""),
+      queryFn: async () => {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/gamification?userId=${userId}`,
+        );
+        const result = await res.json();
+        if (!result.success) {
+          throw new Error(
+            result.message || "Failed to fetch gamification data",
+          );
+        }
+        return result;
+      },
+      ...CACHE_TIMES.STANDARD,
+      enabled: !!userId,
+    },
+  );
 
-  // Fetch gamification data from backend
-  const fetchGamificationData = useCallback(async () => {
-    if (!userId) {
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/gamification?userId=${userId}`,
-      );
-      const result = await res.json();
-      if (!result.success) {
-        throw new Error(result.message || "Failed to fetch gamification data");
-      }
-      setData(result.data);
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to fetch gamification data",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    fetchGamificationData();
-    // Listen for global refetch event
-    const handleRefetch = () => fetchGamificationData();
-    window.addEventListener("gamification-refetch", handleRefetch);
-    return () =>
-      window.removeEventListener("gamification-refetch", handleRefetch);
-  }, [fetchGamificationData]);
-
-  // Calculate current level based on points
   const getCurrentLevel = (): GamificationLevel => {
-    if (!data?.points) {
-      return LEVELS[0]!;
-    }
-
-    const matchedLevel: GamificationLevel | undefined = LEVELS.find(
-      (level) =>
-        data.points >= level.minPoints && data.points <= level.maxPoints,
+    const points = data?.data?.points;
+    if (!points) return LEVELS[0]!;
+    return (
+      LEVELS.find(
+        (level) => points >= level.minPoints && points <= level.maxPoints,
+      ) ?? LEVELS[0]!
     );
-    if (matchedLevel) {
-      return matchedLevel;
-    }
-    return LEVELS[0]!;
   };
 
-  // Calculate progress to next level
   const getProgressToNextLevel = () => {
-    if (!data?.points) {
-      return 0;
-    }
-
+    const points = data?.data?.points;
+    if (!points) return 0;
     const currentLevel = getCurrentLevel();
-    const pointsInCurrentLevel = data.points - currentLevel.minPoints;
+    const pointsInCurrentLevel = points - currentLevel.minPoints;
     const pointsNeededForLevel =
       currentLevel.maxPoints - currentLevel.minPoints;
-
     return Math.min((pointsInCurrentLevel / pointsNeededForLevel) * 100, 100);
   };
 
-  // Get next level info
   const getNextLevel = (): GamificationLevel | null => {
     const currentLevel = getCurrentLevel();
     const nextLevelIndex = LEVELS.findIndex(
       (level) => level.level === currentLevel.level + 1,
     );
-    if (nextLevelIndex < 0 || nextLevelIndex >= LEVELS.length) {
-      return null;
-    }
+    if (nextLevelIndex < 0 || nextLevelIndex >= LEVELS.length) return null;
     return LEVELS[nextLevelIndex]!;
   };
 
-  // Get points needed for next level
   const getPointsNeededForNextLevel = (): number => {
     const nextLevel = getNextLevel();
-    if (!nextLevel || !data?.points) {
-      return 0;
-    }
-    return nextLevel.minPoints - data.points;
+    const points = data?.data?.points;
+    if (!nextLevel || !points) return 0;
+    return nextLevel.minPoints - points;
   };
 
   const currentLevel = getCurrentLevel();
@@ -131,11 +100,11 @@ export function usePyGamification(userId?: string) {
   const pointsNeededForNextLevel = getPointsNeededForNextLevel();
 
   return {
-    points: data?.points || 0,
-    actions: data?.actions || [],
-    loading,
-    error,
-    refetch: fetchGamificationData,
+    points: data?.data?.points || 0,
+    actions: data?.data?.actions || [],
+    loading: isLoading,
+    error: error?.message ?? null,
+    refetch,
     currentLevel: currentLevel.level,
     currentLevelName: currentLevel.name,
     nextLevel: nextLevel?.level || null,

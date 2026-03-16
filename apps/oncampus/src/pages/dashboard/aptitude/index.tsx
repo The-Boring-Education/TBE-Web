@@ -8,8 +8,10 @@ import {
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import { useApi, useUser } from "@tbe/hooks";
+import { useUser } from "@tbe/hooks";
 import type { AptitudeQuestion } from "@tbe/interface";
+import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import { sendRequest } from "@tbe/utils";
 import { AlertTriangle, Folder, FolderOpen, Lightbulb } from "lucide-react";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
@@ -19,30 +21,17 @@ const AptitudePrepPage = () => {
   const { loading: userLoading, isAuth } = useUser();
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedTopicLabel, setSelectedTopicLabel] = useState<string>("");
-  const [isTopicEmpty, setIsTopicEmpty] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<"STUDY" | "QUIZ">("STUDY");
 
-  // Fetch Topics
-  const { response: topicsResponse, loading: topicsLoading } = useApi(
-    "aptitude-topics",
-    {
-      url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE`,
-    },
-  );
-
-  // Fetch Questions (Manual Trigger)
-  const {
-    response: questionsResponse,
-    loading: questionsLoading,
-    makeRequest: fetchQuestions,
-  } = useApi("aptitude-questions", undefined, { enabled: false });
-
-  // Fetch Study Guide (Manual Trigger)
-  const {
-    response: studyGuideResponse,
-    loading: studyGuideLoading,
-    makeRequest: fetchStudyGuide,
-  } = useApi("aptitude-study-guide", undefined, { enabled: false });
+  // Fetch Topics (auto-fetch)
+  const { data: topicsResponse, isLoading: topicsLoading } = useQuery<any>({
+    queryKey: queryKeys.aptitude.topics(),
+    queryFn: () =>
+      sendRequest({
+        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE`,
+      }),
+    ...CACHE_TIMES.STATIC,
+  });
 
   const topicsWithCounts = useMemo(() => {
     const data = topicsResponse?.data;
@@ -57,32 +46,50 @@ const AptitudePrepPage = () => {
       .sort((a: any, b: any) => a.label.localeCompare(b.label));
   }, [topicsResponse]);
 
+  const topicData = useMemo(
+    () =>
+      selectedTopic
+        ? topicsWithCounts.find((t) => t.topic === selectedTopic)
+        : undefined,
+    [selectedTopic, topicsWithCounts],
+  );
+  // When topicData is undefined (e.g. loading), assume questions exist and fetch
+  const topicHasQuestions = !topicData || (topicData.count ?? 0) > 0;
+
+  // Fetch Questions (enabled when topic selected and has questions)
+  const {
+    data: questionsResponse,
+    isLoading: questionsLoading,
+    refetch: refetchQuestions,
+  } = useQuery<any>({
+    queryKey: queryKeys.aptitude.questions(selectedTopic ?? ""),
+    queryFn: () =>
+      sendRequest({
+        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}&limit=100`,
+      }),
+    ...CACHE_TIMES.STABLE,
+    enabled: !!selectedTopic && topicHasQuestions,
+  });
+
+  // Fetch Study Guide (enabled when topic selected)
+  const { data: studyGuideResponse, isLoading: studyGuideLoading } =
+    useQuery<any>({
+      queryKey: queryKeys.aptitude.studyGuide(selectedTopic ?? ""),
+      queryFn: () =>
+        sendRequest({
+          url: `${routes.api.base}${routes.api.interviewPrep}/aptitude/study-guide?topic=${selectedTopic}`,
+        }),
+      ...CACHE_TIMES.STABLE,
+      enabled: !!selectedTopic,
+    });
+
   const questions = useMemo(() => {
     const data = questionsResponse?.data?.questions;
     if (!Array.isArray(data)) return [];
     return data as AptitudeQuestion[];
   }, [questionsResponse]);
 
-  useEffect(() => {
-    if (selectedTopic && topicsWithCounts.length > 0) {
-      const topicData = topicsWithCounts.find((t) => t.topic === selectedTopic);
-
-      // Always fetch study guide if a topic is selected
-      fetchStudyGuide({
-        url: `${routes.api.base}${routes.api.interviewPrep}/aptitude/study-guide?topic=${selectedTopic}`,
-      });
-
-      if (topicData && topicData.count === 0) {
-        setIsTopicEmpty(true);
-      } else {
-        setIsTopicEmpty(false);
-        fetchQuestions({
-          url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}&limit=100`,
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTopic, topicsWithCounts]);
+  const isTopicEmpty = !!topicData && topicData.count === 0;
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -200,7 +207,7 @@ const AptitudePrepPage = () => {
                   wrap={false}
                   className="gap-1"
                 >
-                  {topicsWithCounts.map(({ topic, count, label }, index) => {
+                  {topicsWithCounts.map(({ topic, count, label }) => {
                     const isActive = selectedTopic === topic;
                     return (
                       <button
@@ -339,11 +346,7 @@ const AptitudePrepPage = () => {
                     Network error while fetching questions.
                   </Text>
                   <Button
-                    onClick={() =>
-                      fetchQuestions({
-                        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}&limit=100`,
-                      })
-                    }
+                    onClick={() => refetchQuestions()}
                     variant="PRIMARY"
                     size="MEDIUM"
                     text="Try Again"
