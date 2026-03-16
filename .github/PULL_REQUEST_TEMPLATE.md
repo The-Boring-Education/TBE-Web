@@ -23,12 +23,6 @@
 
 ## Screenshots / Recordings
 
-<!-- If this touches UI at all, paste screenshots or a short screen recording here. Before & after comparisons are gold. -->
-
-| Before | After |
-| ------ | ----- |
-|        |       |
-
 ---
 
 ## Testing
