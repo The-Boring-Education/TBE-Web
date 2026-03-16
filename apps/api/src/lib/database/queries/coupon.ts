@@ -232,7 +232,8 @@ const updateCouponFromDB = async (
       (error as { name: string }).name === "ValidationError"
     ) {
       const messages = Object.values(
-        (error as { errors: Record<string, { message: string }> }).errors,
+        (error as unknown as { errors: Record<string, { message: string }> })
+          .errors,
       ).map((err) => err.message);
       return { error: messages.join(", "), details: error };
     }
