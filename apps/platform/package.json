@@ -14,7 +14,6 @@
     "release": "npm run pre-release && npm run format && npm run typecheck && npm run build"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.0.17",
     "@sentry/nextjs": "^9.47.1",
     "@tbe/auth": "workspace:*",
@@ -28,10 +27,8 @@
     "@tbe/types": "workspace:*",
     "@tbe/typescript-config": "workspace:*",
     "@tbe/utils": "workspace:*",
-    "@types/cors": "^2.8.19",
     "axios": "^1.4.0",
     "clsx": "^2.1.1",
-    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "formidable": "^3.5.4",
     "framer-motion": "^12.4.2",
@@ -41,14 +38,12 @@
     "mongoose": "^7.4.1",
     "next": "14.2.35",
     "next-auth": "4.24.11",
-    "next-transpile-modules": "^10.0.1",
     "openai": "^4.85.2",
     "pdf-parse": "1.1.1",
     "raw-body": "^3.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^4.8.0",
-    "react-pdftotext": "^1.3.4",
     "react-query": "^3.39.3",
     "recharts": "^2.15.1",
     "uuid": "^9.0.0"
@@ -66,7 +61,6 @@
     "@types/pdf-parse": "^1.1.5",
     "@types/raw-body": "^2.1.4",
     "@types/react": "^18.3.24",
-    "@types/recharts": "^1.8.29",
     "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
@@ -76,12 +70,9 @@
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "node-fetch": "^2.7.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
     "tailwindcss": "^3.2.7",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.2",
-    "webpack-bundle-analyzer": "^4.10.2"
+    "typescript": "^5.9.2"
   }
 }

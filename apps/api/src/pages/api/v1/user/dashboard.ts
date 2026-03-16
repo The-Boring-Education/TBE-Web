@@ -74,24 +74,6 @@ const handleGetUserDashboard = async (
         .json(sendAPIResponse({ status: true, data: userDashboard }));
     }
 
-    if (userId) {
-      const { data, error } = await getUserByIdFromDB(userId);
-
-      if (error) {
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-          sendAPIResponse({
-            status: false,
-            error,
-            message: "Error while fetching user",
-          }),
-        );
-      }
-
-      return res
-        .status(apiStatusCodes.OKAY)
-        .json(sendAPIResponse({ status: true, data }));
-    }
-
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: false,

@@ -193,12 +193,13 @@ const SheetsPageClient = () => {
 };
 
 export default function SheetsPage({ seoMeta }: PageProps) {
-    return (
-        <Fragment>
-            <SEO seoMeta={seoMeta} appId="dsayatra" />
-            <SheetsPageClient />
-        </Fragment>
-    )
+  return (
+    <Fragment>
+      <SEO seoMeta={seoMeta} appId="dsayatra" />
+      <SheetsPageClient />
+    </Fragment>
+  );
 }
 
-export const getServerSideProps = async () => getPreFetchProps({ slug: "/sheets", appId: "dsayatra" });
+export const getServerSideProps = async () =>
+  getPreFetchProps({ slug: "/sheets", appId: "dsayatra" });

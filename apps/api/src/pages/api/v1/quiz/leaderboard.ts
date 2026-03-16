@@ -34,15 +34,13 @@ async function handleGetLeaderboard(req: NextApiRequest, res: NextApiResponse) {
   const { data: leaderboard, error } = await getLeaderboardFromDB(limitNum);
 
   if (error) {
-    return res
-      .status(500)
-      .json(
-        sendAPIResponse({
-          status: false,
-          message: "Error fetching leaderboard",
-          error,
-        }),
-      );
+    return res.status(500).json(
+      sendAPIResponse({
+        status: false,
+        message: "Error fetching leaderboard",
+        error,
+      }),
+    );
   }
 
   return res

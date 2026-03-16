@@ -85,7 +85,7 @@ const useGamifiedAction = () => {
 
           // Determine celebration type
           let celebrationType: "points" | "levelup" | "achievement" = "points";
-          let celebrationIntensity: "low" | "medium" | "high" = "medium";
+          let celebrationIntensity: "low" | "medium" | "high";
           let toastMessage = event.customMessage || "Great job!";
 
           // Check for level up

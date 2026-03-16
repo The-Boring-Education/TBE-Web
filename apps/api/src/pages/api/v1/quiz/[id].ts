@@ -134,14 +134,12 @@ async function handleAppendQuestions(
 ) {
   const { questions } = req.body || {};
   if (!Array.isArray(questions) || questions.length === 0) {
-    return res
-      .status(400)
-      .json(
-        sendAPIResponse({
-          status: false,
-          message: "questions must be a non-empty array",
-        }),
-      );
+    return res.status(400).json(
+      sendAPIResponse({
+        status: false,
+        message: "questions must be a non-empty array",
+      }),
+    );
   }
 
   const { data, error } = await appendQuestionsToQuizInDB(id, questions);

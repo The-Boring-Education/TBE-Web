@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   createMockRequest,
   createMockResponse,
@@ -21,15 +22,16 @@ vi.mock("@/middleware/api", () => ({
 // Mock CORS
 vi.mock("@/lib/utils", () => ({
   cors: vi.fn().mockResolvedValue(undefined),
+  sendAPIResponse: (payload: any) => payload,
 }));
 
 // Import after mocks
 import handler from "@api/pages/api/v1/quiz/index";
+
 import {
+  addAQuizToDB,
   getQuizCategoriesFromDB,
   getQuizCategoriesWithCountsFromDB,
-  addAQuizToDB,
-  appendQuestionsToQuizInDB,
 } from "@/lib/database";
 
 describe("Quiz API - /api/v1/quiz", () => {
@@ -59,7 +61,7 @@ describe("Quiz API - /api/v1/quiz", () => {
       const result = await executeHandler(handler, req, res);
 
       expect(result.statusCode).toBe(200);
-      expect(result.data.success).toBe(true);
+      expect(result.data.status).toBe(true);
       expect(result.data.data).toEqual(mockCategories);
     });
 
@@ -127,7 +129,7 @@ describe("Quiz API - /api/v1/quiz", () => {
       const result = await executeHandler(handler, req, res);
 
       expect(result.statusCode).toBe(201);
-      expect(result.data.success).toBe(true);
+      expect(result.data.status).toBe(true);
     });
 
     it("should reject missing required fields", async () => {

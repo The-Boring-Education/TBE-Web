@@ -5,7 +5,6 @@ import { InterviewSheet } from "@/lib/database";
 import type { UpdateCompanyTypePayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
