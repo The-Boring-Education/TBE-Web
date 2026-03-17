@@ -30,7 +30,6 @@ const nextConfig = {
     // This prevents "Cannot read properties of null (reading 'useState')" errors
 
     // Ensure webpack resolves from the app's node_modules first
-    // This ensures all packages use the same React instance
     const appNodeModules = path.resolve(__dirname, "node_modules");
     if (!Array.isArray(config.resolve.modules)) {
       config.resolve.modules = ["node_modules"];
