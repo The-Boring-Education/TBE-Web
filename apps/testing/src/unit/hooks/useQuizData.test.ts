@@ -34,9 +34,7 @@ describe("useQuizData", () => {
 
   it("starts in loading state", () => {
     mockGetCategories.mockImplementation(() => new Promise(() => {}));
-
     const { result } = renderHookWithQuery(() => useQuizData());
-
     expect(result.current.loading).toBe(true);
   });
 
@@ -69,9 +67,10 @@ describe("useQuizData", () => {
     });
 
     expect(result.current.categories).toEqual(mockCategories);
+    expect(result.current.error).toBe(null);
   });
 
-  it("sets error on failed fetch", async () => {
+  it("sets error on failed fetch (rejected promise)", async () => {
     mockGetCategories.mockRejectedValue(new Error("Network error"));
 
     const { result } = renderHookWithQuery(() => useQuizData());
@@ -83,7 +82,7 @@ describe("useQuizData", () => {
     expect(result.current.error).toBe("Network error");
   });
 
-  it("sets error when API returns unsuccessful", async () => {
+  it("returns empty categories and error message when API returns unsuccessful (non-throwing)", async () => {
     mockGetCategories.mockResolvedValue({
       success: false,
       status: false,
@@ -96,6 +95,7 @@ describe("useQuizData", () => {
       expect(result.current.loading).toBe(false);
     });
 
+    expect(result.current.categories).toEqual([]);
     expect(result.current.error).toBe("Unauthorized");
   });
 
