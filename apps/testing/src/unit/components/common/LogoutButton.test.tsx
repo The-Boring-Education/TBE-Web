@@ -1,17 +1,14 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
 import { LogoutButton } from "@tbe/components";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock next-auth/react
 const mockSignOut = vi.fn();
-const mockUseSession = vi.fn();
+const mockUseAuth = vi.fn();
 
-vi.mock("next-auth/react", () => ({
-  signOut: () => mockSignOut(),
-  useSession: () => mockUseSession(),
+vi.mock("@tbe/auth", () => ({
+  useAuth: () => mockUseAuth(),
 }));
 
-// Mock framer-motion
 vi.mock("framer-motion", () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
@@ -28,9 +25,13 @@ describe("LogoutButton Component", () => {
 
   describe("Rendering", () => {
     it("should render logout button when authenticated", () => {
-      mockUseSession.mockReturnValue({
-        status: "authenticated",
-        data: { user: { name: "Test User" } },
+      mockUseAuth.mockReturnValue({
+        isAuthenticated: true,
+        signOut: mockSignOut,
+        user: { name: "Test User" },
+        isLoading: false,
+        signIn: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       render(<LogoutButton />);
@@ -38,33 +39,43 @@ describe("LogoutButton Component", () => {
     });
 
     it("should not render when unauthenticated", () => {
-      mockUseSession.mockReturnValue({
-        status: "unauthenticated",
-        data: null,
+      mockUseAuth.mockReturnValue({
+        isAuthenticated: false,
+        signOut: mockSignOut,
+        user: null,
+        isLoading: false,
+        signIn: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
-      const { container } = render(<LogoutButton />);
-      expect(container.firstChild).toBeNull();
+      render(<LogoutButton />);
+      expect(screen.queryByText("Log out")).not.toBeInTheDocument();
     });
 
     it("should not render when loading", () => {
-      mockUseSession.mockReturnValue({
-        status: "loading",
-        data: null,
+      mockUseAuth.mockReturnValue({
+        isAuthenticated: false,
+        signOut: mockSignOut,
+        user: null,
+        isLoading: true,
+        signIn: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { container } = render(<LogoutButton />);
-      // Component returns empty fragment when unauthenticated, but might render during loading
-      // This depends on implementation - checking it doesn't crash
       expect(container).toBeInTheDocument();
     });
   });
 
   describe("Interaction", () => {
     it("should call signOut when button is clicked", () => {
-      mockUseSession.mockReturnValue({
-        status: "authenticated",
-        data: { user: { name: "Test User" } },
+      mockUseAuth.mockReturnValue({
+        isAuthenticated: true,
+        signOut: mockSignOut,
+        user: { name: "Test User" },
+        isLoading: false,
+        signIn: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       render(<LogoutButton />);
@@ -76,9 +87,13 @@ describe("LogoutButton Component", () => {
 
   describe("Button Props", () => {
     it("should render with GHOST variant", () => {
-      mockUseSession.mockReturnValue({
-        status: "authenticated",
-        data: { user: { name: "Test User" } },
+      mockUseAuth.mockReturnValue({
+        isAuthenticated: true,
+        signOut: mockSignOut,
+        user: { name: "Test User" },
+        isLoading: false,
+        signIn: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { container } = render(<LogoutButton />);
@@ -87,9 +102,13 @@ describe("LogoutButton Component", () => {
     });
 
     it("should have full width class", () => {
-      mockUseSession.mockReturnValue({
-        status: "authenticated",
-        data: { user: { name: "Test User" } },
+      mockUseAuth.mockReturnValue({
+        isAuthenticated: true,
+        signOut: mockSignOut,
+        user: { name: "Test User" },
+        isLoading: false,
+        signIn: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { container } = render(<LogoutButton />);

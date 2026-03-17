@@ -1,13 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
 import useUser from "@tbe/hooks/useUser";
+import { renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock next-auth/react
-const mockUseSession = vi.fn();
-const mockUpdate = vi.fn();
+const mockRefreshSession = vi.fn();
 
-vi.mock("next-auth/react", () => ({
-  useSession: () => mockUseSession(),
+vi.mock("@tbe/auth", () => ({
+  useAuth: () => mockRefreshSession(),
 }));
 
 describe("useUser Hook", () => {
@@ -17,10 +15,13 @@ describe("useUser Hook", () => {
 
   describe("Loading State", () => {
     it("should return loading true when session status is loading", () => {
-      mockUseSession.mockReturnValue({
-        data: null,
-        status: "loading",
-        update: mockUpdate,
+      mockRefreshSession.mockReturnValue({
+        user: null,
+        isAuthenticated: false,
+        isLoading: true,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { result } = renderHook(() => useUser());
@@ -29,10 +30,13 @@ describe("useUser Hook", () => {
     });
 
     it("should return loading false when session status is not loading", () => {
-      mockUseSession.mockReturnValue({
-        data: null,
-        status: "unauthenticated",
-        update: mockUpdate,
+      mockRefreshSession.mockReturnValue({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { result } = renderHook(() => useUser());
@@ -50,12 +54,13 @@ describe("useUser Hook", () => {
         isOnboarded: true,
       };
 
-      mockUseSession.mockReturnValue({
-        data: {
-          user: mockUser,
-        },
-        status: "authenticated",
-        update: mockUpdate,
+      mockRefreshSession.mockReturnValue({
+        user: mockUser,
+        isAuthenticated: true,
+        isLoading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { result } = renderHook(() => useUser());
@@ -65,10 +70,13 @@ describe("useUser Hook", () => {
     });
 
     it("should return isAuth false when no user session", () => {
-      mockUseSession.mockReturnValue({
-        data: null,
-        status: "unauthenticated",
-        update: mockUpdate,
+      mockRefreshSession.mockReturnValue({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { result } = renderHook(() => useUser());
@@ -87,12 +95,13 @@ describe("useUser Hook", () => {
         isOnboarded: true,
       };
 
-      mockUseSession.mockReturnValue({
-        data: {
-          user: mockUser,
-        },
-        status: "authenticated",
-        update: mockUpdate,
+      mockRefreshSession.mockReturnValue({
+        user: mockUser,
+        isAuthenticated: true,
+        isLoading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { result } = renderHook(() => useUser());
@@ -108,12 +117,13 @@ describe("useUser Hook", () => {
         isOnboarded: false,
       };
 
-      mockUseSession.mockReturnValue({
-        data: {
-          user: mockUser,
-        },
-        status: "authenticated",
-        update: mockUpdate,
+      mockRefreshSession.mockReturnValue({
+        user: mockUser,
+        isAuthenticated: true,
+        isLoading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { result } = renderHook(() => useUser());
@@ -123,16 +133,20 @@ describe("useUser Hook", () => {
   });
 
   describe("Session Updates", () => {
-    it("should provide updateSession function", () => {
-      mockUseSession.mockReturnValue({
-        data: null,
-        status: "unauthenticated",
-        update: mockUpdate,
+    it("should provide updateSession function that is refreshSession", () => {
+      const refreshSession = vi.fn();
+      mockRefreshSession.mockReturnValue({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession,
       });
 
       const { result } = renderHook(() => useUser());
 
-      expect(result.current.updateSession).toBe(mockUpdate);
+      expect(result.current.updateSession).toBe(refreshSession);
     });
 
     it("should update when session changes", () => {
@@ -143,23 +157,26 @@ describe("useUser Hook", () => {
         isOnboarded: true,
       };
 
-      mockUseSession.mockReturnValue({
-        data: null,
-        status: "unauthenticated",
-        update: mockUpdate,
+      mockRefreshSession.mockReturnValue({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { result, rerender } = renderHook(() => useUser());
 
       expect(result.current.isAuth).toBe(false);
 
-      // Update session
-      mockUseSession.mockReturnValue({
-        data: {
-          user: mockUser,
-        },
-        status: "authenticated",
-        update: mockUpdate,
+      mockRefreshSession.mockReturnValue({
+        user: mockUser,
+        isAuthenticated: true,
+        isLoading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       rerender();
@@ -171,10 +188,13 @@ describe("useUser Hook", () => {
 
   describe("Return Values", () => {
     it("should return correct structure", () => {
-      mockUseSession.mockReturnValue({
-        data: null,
-        status: "unauthenticated",
-        update: mockUpdate,
+      mockRefreshSession.mockReturnValue({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        refreshSession: vi.fn(),
       });
 
       const { result } = renderHook(() => useUser());
