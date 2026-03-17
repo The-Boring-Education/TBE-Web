@@ -1,10 +1,10 @@
-import { signOut, useSession } from "next-auth/react";
+import { useAuth } from "@tbe/auth";
 
 import Button from "./Button";
 
 const LogoutButton = () => {
-  const session = useSession();
-  if (session.status === "unauthenticated") return <></>;
+  const { isAuthenticated, signOut } = useAuth();
+  if (!isAuthenticated) return <></>;
   return (
     <Button
       className="w-full"

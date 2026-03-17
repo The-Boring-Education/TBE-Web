@@ -40,7 +40,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     signInWithGoogle: async () => {
       await nextAuth.signIn();
     },
-    signOut: nextAuth.signOut,
+    signOut: async () => {
+      nextAuth.signOut();
+    },
     updateUser: () => {
       // NextAuth handles user updates automatically
       console.warn(

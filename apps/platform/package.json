@@ -38,7 +38,6 @@
     "markdown-it": "^14.1.0",
     "mongoose": "^7.4.1",
     "next": "14.2.35",
-    "next-auth": "4.24.11",
     "openai": "^4.85.2",
     "pdf-parse": "1.1.1",
     "raw-body": "^3.0.0",

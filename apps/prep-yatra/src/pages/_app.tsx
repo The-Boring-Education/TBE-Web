@@ -157,10 +157,7 @@ const AppContent = ({
   );
 };
 
-export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
@@ -182,7 +179,7 @@ export default function App({
         <link rel="manifest" href="/manifest.json" />
       </Head>
 
-      <AuthProvider session={session}>
+      <AuthProvider>
         <TBEQueryProvider>
           <TooltipProvider>
             <Toaster />

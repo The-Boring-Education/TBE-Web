@@ -1,43 +1,37 @@
-// Configuration
-export {
-  defaultJwtCallback,
-  defaultSessionCallback,
-  defaultSignInCallback,
-} from "./config/callbacks";
-export { createAuthOptions } from "./config/nextauth";
-export {
-  getAuthSecret,
-  getAuthUrl,
-  getCookieConfig,
-  sessionConfig,
-} from "./config/session";
-
-// Providers
-export { createGoogleProvider } from "./providers/google";
-
-// Services
-export { createOrFindUser, getUserByEmail, getUserById } from "./services";
+// Components
+export { AuthCallback } from "./components/AuthCallback";
+export { AuthProvider } from "./components/AuthProvider";
+export { ProtectedRoute } from "./components/ProtectedRoute";
 
 // Hooks
 export { useAuth } from "./hooks/useAuth";
 
-// Components
-export { AuthProvider } from "./components/AuthProvider";
-export { ProtectedRoute } from "./components/ProtectedRoute";
+// Token utilities
+export {
+  clearTokens,
+  decodeToken,
+  getAccessToken,
+  getRefreshToken,
+  getRefreshTokenFromCookies,
+  getTokenFromCookies,
+  isTokenExpired,
+  setTokens,
+} from "./token";
+
+// Config
+export { AUTH_CONFIG, getAuthApiUrl } from "./config";
 
 // Middleware
-export { withAdminAuth, withAuth } from "./middleware/withAuth";
-
-// Plug-and-Play Handler
+export type {
+  AuthenticatedRequest,
+  AuthenticatedUser,
+} from "./middleware/withAuth";
 export {
-  createNextAuthHandler,
-  getAuthOptions,
-} from "./handlers/nextAuthHandler";
+  decodeJwtPayload,
+  getAuthFromRequest,
+  withAdminAuth,
+  withAuth,
+} from "./middleware/withAuth";
 
 // Types
-export type {
-  AppAuthConfig,
-  AuthConfig,
-  CreateUserData,
-  ExtendedUser,
-} from "./types";
+export type { AuthContextType, AuthUser, TokenResponse } from "./types";
