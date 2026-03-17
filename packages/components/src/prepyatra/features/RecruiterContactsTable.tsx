@@ -1,4 +1,4 @@
-import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.min.css";
 
 import { useToast } from "@tbe/hooks";
 import type { RecruiterContact } from "@tbe/types";
