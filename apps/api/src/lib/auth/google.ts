@@ -14,13 +14,10 @@ const getCredentials = () => {
 };
 
 const getCallbackUrl = (): string => {
-  const baseUrl =
-    process.env.AUTH_URL ||
-    process.env.NEXTAUTH_URL ||
-    process.env.NEXT_PUBLIC_APP_URL;
+  const baseUrl = process.env.AUTH_URL;
   if (!baseUrl) {
     throw new Error(
-      "AUTH_URL or NEXTAUTH_URL must be configured for OAuth callback",
+      "AUTH_URL must be set to the API app base URL (e.g. https://api.example.com) for OAuth callback",
     );
   }
   return `${baseUrl.replace(/\/$/, "")}/api/v1/auth/callback/google`;
