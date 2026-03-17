@@ -16,7 +16,7 @@ export interface AuthContextType {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  signIn: (provider?: string, callbackUrl?: string) => void;
+  signIn: (providerOrCallbackUrl?: string, callbackUrl?: string) => void;
   signOut: (callbackUrl?: string) => void;
   refreshSession: () => Promise<void>;
 }

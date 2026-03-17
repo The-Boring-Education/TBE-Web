@@ -130,11 +130,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [user, refreshAccessToken]);
 
   const signIn = useCallback(
-    (provider: string = "google", callbackUrl?: string) => {
+    (providerOrCallbackUrl: string = "google", callbackUrl?: string) => {
+      // Backwards-compatible signature:
+      // - signIn() -> google
+      // - signIn("google") -> google
+      // - signIn("/some/path") -> google + callbackUrl="/some/path"
+      // - signIn("google", "/some/path") -> explicit
+      const looksLikeCallbackUrl =
+        providerOrCallbackUrl.startsWith("/") ||
+        providerOrCallbackUrl.startsWith("http");
+
+      const provider = looksLikeCallbackUrl
+        ? "google"
+        : providerOrCallbackUrl || "google";
+
+      const returnTo =
+        (looksLikeCallbackUrl ? providerOrCallbackUrl : callbackUrl) ||
+        window.location.pathname;
+
       const apiUrl = getAuthApiUrl();
-      const returnTo = callbackUrl || window.location.pathname;
       const redirectUri = `${window.location.origin}/auth/callback?returnTo=${encodeURIComponent(returnTo)}`;
-      window.location.href = `${apiUrl}/auth/login?provider=${provider}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+      window.location.href = `${apiUrl}/auth/login?provider=${encodeURIComponent(provider)}&redirect_uri=${encodeURIComponent(redirectUri)}`;
     },
     [],
   );
