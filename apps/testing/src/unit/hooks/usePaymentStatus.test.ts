@@ -1,4 +1,5 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHookWithQuery } from "@test-utils/query-wrapper";
+import { waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@tbe/constants", () => ({
@@ -21,7 +22,7 @@ describe("usePaymentStatus", () => {
   });
 
   it("non-premium products always return isPurchased=true, isLocked=false", async () => {
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       usePaymentStatus({
         userId: "user-1",
         productId: "prod-1",
@@ -37,8 +38,8 @@ describe("usePaymentStatus", () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
-  it("returns isPurchased=false when userId is missing", async () => {
-    const { result } = renderHook(() =>
+  it("returns isPurchased=null when userId is missing (query disabled)", async () => {
+    const { result } = renderHookWithQuery(() =>
       usePaymentStatus({
         userId: "",
         productId: "prod-1",
@@ -47,14 +48,14 @@ describe("usePaymentStatus", () => {
     );
 
     await waitFor(() => {
-      expect(result.current.isPurchased).toBe(false);
+      expect(result.current.isPurchased).toBe(null);
     });
 
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
-  it("returns isPurchased=false when productId is missing", async () => {
-    const { result } = renderHook(() =>
+  it("returns isPurchased=null when productId is missing (query disabled)", async () => {
+    const { result } = renderHookWithQuery(() =>
       usePaymentStatus({
         userId: "user-1",
         productId: "",
@@ -63,7 +64,7 @@ describe("usePaymentStatus", () => {
     );
 
     await waitFor(() => {
-      expect(result.current.isPurchased).toBe(false);
+      expect(result.current.isPurchased).toBe(null);
     });
 
     expect(mockFetch).not.toHaveBeenCalled();
@@ -78,7 +79,7 @@ describe("usePaymentStatus", () => {
         }),
     });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       usePaymentStatus({
         userId: "user-1",
         productId: "prod-1",
@@ -102,7 +103,7 @@ describe("usePaymentStatus", () => {
         }),
     });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       usePaymentStatus({
         userId: "user-1",
         productId: "prod-1",
@@ -115,10 +116,10 @@ describe("usePaymentStatus", () => {
     });
   });
 
-  it("returns isPurchased=false on network error", async () => {
+  it("returns isPurchased=null on network error (query errors, no data)", async () => {
     mockFetch.mockRejectedValue(new Error("Network error"));
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       usePaymentStatus({
         userId: "user-1",
         productId: "prod-1",
@@ -127,7 +128,7 @@ describe("usePaymentStatus", () => {
     );
 
     await waitFor(() => {
-      expect(result.current.isPurchased).toBe(false);
+      expect(result.current.isPurchased).toBe(null);
     });
   });
 
@@ -140,7 +141,7 @@ describe("usePaymentStatus", () => {
         }),
     });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       usePaymentStatus({
         userId: "user-1",
         productId: "prod-1",
@@ -163,7 +164,7 @@ describe("usePaymentStatus", () => {
         }),
     });
 
-    renderHook(() =>
+    renderHookWithQuery(() =>
       usePaymentStatus({
         userId: "user-1",
         productId: "prod-1",
