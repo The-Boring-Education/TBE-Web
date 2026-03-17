@@ -9,7 +9,7 @@ const nextConfig = {
   },
 
   // 👇 ADD THIS: transpile TypeScript packages from your monorepo
-  transpilePackages: ["@tbe/components", "@tbe/utils"],
+  transpilePackages: ["@tbe/auth", "@tbe/components", "@tbe/utils"],
 
   // Disable ESLint during Next.js build (we run it separately in package.json)
   eslint: {

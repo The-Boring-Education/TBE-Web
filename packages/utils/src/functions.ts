@@ -168,45 +168,31 @@ const getSelectedSheetQuestionMeta = (
 };
 
 const isUserAuthenticated = async (req: any): Promise<User | null> => {
-  const cookie = req.headers.cookie;
-  const authBaseUrl = envConfig.AUTH_URL?.replace(/\/$/, "") ?? "";
+  const cookie = req.headers?.cookie || req.headers?.get?.("cookie") || "";
 
-  if (!authBaseUrl) {
-    console.error("Error fetching session: NEXT_PUBLIC_AUTH_URL is missing");
-    return null;
-  }
-
-  const sessionUrl = authBaseUrl.includes("/api/auth")
-    ? `${authBaseUrl}/session`
-    : `${authBaseUrl}/api/auth/session`;
+  const tokenMatch = cookie.match(/(?:^|; )tbe_access_token=([^;]+)/);
+  if (!tokenMatch?.[1]) return null;
 
   try {
-    const response = await fetch(sessionUrl, {
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookie || "",
-      },
-    });
+    const parts = tokenMatch[1].split(".");
+    if (parts.length !== 3 || !parts[1]) return null;
 
-    if (!response.ok) {
-      console.error(
-        `Error fetching session: received status ${response.status}`,
-      );
-      return null;
-    }
+    const payload = JSON.parse(
+      typeof atob !== "undefined"
+        ? atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
+        : Buffer.from(parts[1], "base64").toString(),
+    );
 
-    const contentType = response.headers.get("content-type") || "";
-    if (!contentType.includes("application/json")) {
-      console.error(
-        `Error fetching session: expected JSON, received ${contentType}`,
-      );
-      return null;
-    }
+    if (payload.exp && payload.exp * 1000 < Date.now()) return null;
 
-    const session = await response.json();
-    return session && session.user ? session.user : null;
-  } catch (error) {
-    console.error("Error fetching session:", error);
+    return {
+      id: payload.sub,
+      email: payload.email,
+      name: payload.name,
+      image: payload.image,
+      isOnboarded: payload.isOnboarded,
+    } as User;
+  } catch {
     return null;
   }
 };

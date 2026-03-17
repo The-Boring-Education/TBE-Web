@@ -114,15 +114,29 @@ const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
+      if (!session.user) {
+        return session;
+      }
+
+      const sessionUser = session.user as {
+        id?: string;
+        email?: string | null;
+        isOnboarded?: boolean;
+      };
+
       // Attach the MongoDB user ID to the session object
-      session.user.id = token.sub || "";
+      sessionUser.id = token.sub || "";
 
       try {
+        if (!sessionUser.email) {
+          return session;
+        }
+
         const { data: existingUser } = await getUserByEmailFromDB(
-          session.user.email,
+          sessionUser.email,
         );
         if (existingUser) {
-          session.user.isOnboarded = existingUser.isOnboarded;
+          sessionUser.isOnboarded = existingUser.isOnboarded;
         }
       } catch (error) {
         logger.error("Error fetching user in session", {

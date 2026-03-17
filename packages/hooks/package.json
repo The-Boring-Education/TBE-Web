@@ -16,6 +16,7 @@
     "@tbe/constants": "workspace:*",
     "@tbe/interface": "workspace:*",
     "@tbe/types": "workspace:*",
+    "@tbe/auth": "workspace:*",
     "@tbe/utils": "workspace:*",
     "@tbe/services": "workspace:*",
     "@tbe/config": "workspace:*",
@@ -35,7 +36,6 @@
   "peerDependencies": {
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "next": "13.5.6",
-    "next-auth": "4.24.11"
+    "next": "13.5.6"
   }
 }

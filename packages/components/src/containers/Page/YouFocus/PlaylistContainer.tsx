@@ -1,3 +1,4 @@
+import { useAuth } from "@tbe/auth";
 import {
   Button,
   FlexContainer,
@@ -6,7 +7,6 @@ import {
 } from "@tbe/components";
 import { useUser } from "@tbe/hooks";
 import type { PlaylistCantainerCardProps } from "@tbe/interface";
-import { signIn } from "next-auth/react";
 import React, { useState } from "react";
 
 import PlaylistRecommend from "../../Cards/Items/PlaylistRecommend";
@@ -29,6 +29,7 @@ const PlaylistContainer = ({
   });
 
   const { user, isAuth, loading } = useUser();
+  const { signIn } = useAuth();
   const userId = user?.id;
 
   const handleStartLearning = () => {
