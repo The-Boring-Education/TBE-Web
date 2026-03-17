@@ -12,10 +12,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   return (
@@ -47,7 +44,7 @@ export default function App({
         <meta name="apple-mobile-web-app-title" content="Resume Yatra" />
       </Head>
 
-      <AuthProvider session={session}>
+      <AuthProvider>
         <TBEQueryProvider>
           <TooltipProvider>
             <Toaster />

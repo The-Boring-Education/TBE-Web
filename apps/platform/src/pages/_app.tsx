@@ -2,6 +2,7 @@ import '@tbe/components/styles/common.css';
 import '@/styles/globals.css';
 import '@/styles/colors.css';
 
+import { AuthProvider } from '@tbe/auth';
 import { Layout } from '@tbe/components';
 import { GamificationProvider } from '@tbe/components';
 import {
@@ -16,7 +17,6 @@ import { TBEQueryProvider } from '@tbe/query';
 import { getRedirectUrl } from '@tbe/utils';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { SessionProvider } from 'next-auth/react';
 import { Fragment, useEffect, useState } from 'react';
 
 const AppContent = ({
@@ -137,19 +137,12 @@ const AppContent = ({
     </TBEQueryProvider>
   );
 };
-const TheBoringEducation = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppProps) => {
+const TheBoringEducation = ({ Component, pageProps }: AppProps) => {
   return (
     <Fragment>
-      <SessionProvider
-        session={session}
-        refetchInterval={5 * 60}
-        refetchOnWindowFocus
-      >
+      <AuthProvider>
         <AppContent Component={Component} pageProps={pageProps} />
-      </SessionProvider>
+      </AuthProvider>
     </Fragment>
   );
 };

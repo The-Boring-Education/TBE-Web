@@ -8,7 +8,7 @@ import type { ResumeStep } from "@/types/resume";
 import { useResumeProgress } from "./use-resume-progress";
 
 export const useResumeBuilder = (): UseResumeBuilderReturn => {
-  const { session } = useAuth();
+  const { isAuthenticated } = useAuth();
   const {
     progress: savedProgress,
     saveProgress,
@@ -34,7 +34,7 @@ export const useResumeBuilder = (): UseResumeBuilderReturn => {
 
   // Auto-save progress when user is authenticated and data changes
   useEffect(() => {
-    if (session && stepData !== RESUME_STEPS) {
+    if (isAuthenticated && stepData !== RESUME_STEPS) {
       const timeoutId = setTimeout(() => {
         saveProgress({
           stepData,
@@ -46,7 +46,14 @@ export const useResumeBuilder = (): UseResumeBuilderReturn => {
 
       return () => clearTimeout(timeoutId);
     }
-  }, [stepData, currentStep, hasResume, showTemplate, session, saveProgress]);
+  }, [
+    stepData,
+    currentStep,
+    hasResume,
+    showTemplate,
+    isAuthenticated,
+    saveProgress,
+  ]);
 
   const updateChecklistItem = useCallback(
     (stepIndex: number, itemId: string, checked: boolean) => {

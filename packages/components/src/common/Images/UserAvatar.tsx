@@ -1,8 +1,7 @@
 import { Popover, Transition } from "@headlessui/react";
+import { useAuth } from "@tbe/auth";
 import { Image, Link } from "@tbe/components";
 import { TOP_NAVIGATION } from "@tbe/constants";
-import { useRouter } from "next/router";
-import { signOut, useSession } from "next-auth/react";
 import { Fragment, useEffect, useState } from "react";
 
 interface UserAvatarProps {
@@ -10,8 +9,7 @@ interface UserAvatarProps {
 }
 
 const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
-  const session = useSession();
-  const router = useRouter();
+  const { user, isAuthenticated, isLoading, signOut } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -19,8 +17,8 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
   }, []);
 
   if (!isClient) return null;
-  if (session.status === "loading") return null;
-  if (session.status !== "authenticated") return null;
+  if (isLoading) return null;
+  if (!isAuthenticated || !user) return null;
 
   // Map user navigation links with correct dashboard route
   const userNavLinks = TOP_NAVIGATION.user.map((link) => {
@@ -36,9 +34,8 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
     return link;
   });
 
-  const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push("/login");
+  const handleLogout = () => {
+    signOut("/login");
   };
 
   return (
@@ -53,22 +50,22 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
                 outline-none p-0 w-[40px] h-[40px] border-[2px] border-gray-300 relative overflow-hidden flex-shrink-0 flex items-center justify-center
                 hover:opacity-80 transition focus:outline-none rounded-full cursor-pointer`}
             >
-              {session.data.user?.image ? (
+              {user?.image ? (
                 <div
                   className="w-[40px] h-[40px] relative rounded-[50%] overflow-hidden"
                   style={{ position: "relative" }}
                 >
                   <Image
-                    alt={session.data.user?.name || ""}
+                    alt={user?.name || ""}
                     className="w-[40px] h-[40px] rounded-[50%] object-cover"
                     fullHeight={false}
                     fullWidth={false}
-                    src={session.data.user.image}
+                    src={user.image}
                   />
                 </div>
               ) : (
                 <div className="w-[40px] h-[40px] rounded-[50%] bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-semibold">
-                  {session.data.user?.name?.[0]?.toUpperCase() || "U"}
+                  {user?.name?.[0]?.toUpperCase() || "U"}
                 </div>
               )}
             </Popover.Button>

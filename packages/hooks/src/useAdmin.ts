@@ -1,30 +1,16 @@
+import { useAuth } from "@tbe/auth";
 import { routes } from "@tbe/constants";
-import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 const ADMIN_EMAIL = "theboringeducation@gmail.com";
 
 export const useAdmin = () => {
-  const sessionResult = useSession();
-  const { data: session, status } = sessionResult || {
-    data: null,
-    status: "loading",
-  };
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (status === "loading") return;
-
-    const adminStatus = session?.user?.email === ADMIN_EMAIL;
-    setIsAdmin(adminStatus);
-    setIsLoading(false);
-  }, [session, status]);
+  const { user, isLoading } = useAuth();
 
   return {
-    isAdmin,
+    isAdmin: user?.email === ADMIN_EMAIL,
     isLoading,
-    user: session?.user,
+    user,
   };
 };
 
