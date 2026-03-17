@@ -76,12 +76,12 @@ export interface LinkButtonProps extends LinkProps {
 
 export interface ButtonProps {
   variant:
-    | "PRIMARY"
-    | "OUTLINE"
-    | "GHOST"
-    | "SUCCESS"
-    | "SECONDARY"
-    | "NEUTRAL";
+  | "PRIMARY"
+  | "OUTLINE"
+  | "GHOST"
+  | "SUCCESS"
+  | "SECONDARY"
+  | "NEUTRAL";
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -849,9 +849,9 @@ export interface ResumeEvaluationData {
 
 export interface PaymentCardProps {
   course:
-    | BaseShikshaCourseResponseProps
-    | BaseInterviewSheetResponseProps
-    | BaseProductProps;
+  | BaseShikshaCourseResponseProps
+  | BaseInterviewSheetResponseProps
+  | BaseProductProps;
   onClose: () => void;
   productType: string;
 }
@@ -890,13 +890,13 @@ export interface StarButtonProps {
 
 export interface LoginCardNewProps {
   variant?:
-    | "default"
-    | "platform"
-    | "prepyatra"
-    | "quizes"
-    | "resume-yatra"
-    | "oncampus"
-    | "dsayatra";
+  | "default"
+  | "platform"
+  | "prepyatra"
+  | "quizes"
+  | "resume-yatra"
+  | "oncampus"
+  | "dsayatra";
   customRedirectPath?: string;
   theme?: "light" | "dark";
 }
@@ -962,6 +962,60 @@ export interface DsaQuestion {
     image?: string;
   }[];
   constraints?: string[];
+  sections?: {
+    first_principles?: {
+      paragraphs: string[];
+      key_observation: string;
+    };
+    constraints?: {
+      constraint: string;
+      plain_meaning: string;
+      implication: string;
+    }[];
+    examples?: {
+      label: string;
+      input: string;
+      output: string;
+      explanation: string;
+      step_by_step: string[] | null;
+    }[];
+    ways_to_solve?: {
+      approach_number: number;
+      name: string;
+      description: string;
+      time_complexity: string;
+      time_reason: string;
+      space_complexity: string;
+      space_reason: string;
+      verdict: "too_slow" | "acceptable" | "optimal";
+      verdict_label: string;
+    }[];
+    how_to_approach?: {
+      steps: {
+        step_number: number;
+        heading: string;
+        body: string;
+      }[];
+    };
+    pseudo_code?: {
+      code: string;
+      annotations: {
+        line_reference: string;
+        note: string;
+      }[];
+    };
+    working_code?: {
+      default_language: string;
+      languages: Record<string, { code: string }>;
+    };
+    common_mistakes?: {
+      mistake_number: number;
+      title: string;
+      wrong_code: string;
+      explanation: string;
+      fix: string;
+    }[];
+  };
 }
 
 export interface DsaQuestionListProps {

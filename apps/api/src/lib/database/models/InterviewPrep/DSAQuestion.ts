@@ -53,6 +53,11 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
       enum: DSA_TOPICS,
       required: [true, "DSA Topics are required"],
     },
+    sections: {
+      type: Schema.Types.Mixed,
+      required: false,
+      default: null,
+    },
     order: {
       type: Number,
       required: false,
