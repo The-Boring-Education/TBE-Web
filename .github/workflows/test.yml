@@ -116,11 +116,10 @@ jobs:
       - name: 📊 Unit Test Summary
         if: always()
         run: |
-          if [ ${{ job.status }} == 'success' ]; then
+          if [ "${{ job.status }}" == "success" ]; then
             echo "✅ Unit tests passed!"
           else
             echo "❌ Unit tests failed!"
-            exit 1
           fi
 
   # Test Summary Job
@@ -135,17 +134,23 @@ jobs:
         run: |
           echo "## 🧪 Test Suite Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+
+          UNIT_RESULT="${{ needs.unit-tests.result }}"
+
           echo "### Unit Tests" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ needs.unit-tests.result }}" == "success" ]; then
+          if [ "$UNIT_RESULT" == "success" ]; then
             echo "✅ **PASSED**" >> $GITHUB_STEP_SUMMARY
+          elif [ "$UNIT_RESULT" == "skipped" ]; then
+            echo "⏭️ **SKIPPED** (Draft PR)" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ **FAILED**" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ needs.unit-tests.result }}" == "success" ]; then
+          if [ "$UNIT_RESULT" == "success" ]; then
             echo "🎉 All tests passed! Ready for merge." >> $GITHUB_STEP_SUMMARY
-            exit 0
+          elif [ "$UNIT_RESULT" == "skipped" ]; then
+            echo "ℹ️ Tests were skipped. This is normal for draft Pull Requests." >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ Some tests failed. Please fix the issues before merging." >> $GITHUB_STEP_SUMMARY
             exit 1

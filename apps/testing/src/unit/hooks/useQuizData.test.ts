@@ -1,4 +1,5 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHookWithQuery } from "@test-utils/query-wrapper";
+import { waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockGetCategories = vi.fn();
@@ -9,11 +10,21 @@ vi.mock("@tbe/services", () => ({
   },
 }));
 
-import useQuizData from "@tbe/hooks/useQuizData";
+import { useQuizData } from "@tbe/hooks";
 
 const mockCategories = [
-  { id: "1", name: "JavaScript", slug: "javascript" },
-  { id: "2", name: "React", slug: "react" },
+  {
+    _id: "1",
+    categoryName: "JavaScript",
+    categoryDescription: "JS Quiz",
+    categoryIcon: "js-icon",
+  },
+  {
+    _id: "2",
+    categoryName: "React",
+    categoryDescription: "React Quiz",
+    categoryIcon: "react-icon",
+  },
 ];
 
 describe("useQuizData", () => {
@@ -24,7 +35,7 @@ describe("useQuizData", () => {
   it("starts in loading state", () => {
     mockGetCategories.mockImplementation(() => new Promise(() => {}));
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     expect(result.current.loading).toBe(true);
   });
@@ -35,7 +46,7 @@ describe("useQuizData", () => {
       data: mockCategories,
     });
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -51,7 +62,7 @@ describe("useQuizData", () => {
       data: mockCategories,
     });
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -63,7 +74,7 @@ describe("useQuizData", () => {
   it("sets error on failed fetch", async () => {
     mockGetCategories.mockRejectedValue(new Error("Network error"));
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -79,7 +90,7 @@ describe("useQuizData", () => {
       message: "Unauthorized",
     });
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -94,7 +105,7 @@ describe("useQuizData", () => {
       data: mockCategories,
     });
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -102,7 +113,15 @@ describe("useQuizData", () => {
 
     mockGetCategories.mockResolvedValue({
       success: true,
-      data: [...mockCategories, { id: "3", name: "Node", slug: "node" }],
+      data: [
+        ...mockCategories,
+        {
+          _id: "3",
+          categoryName: "Node",
+          categoryDescription: "Node Quiz",
+          categoryIcon: "node-icon",
+        },
+      ],
     });
 
     await result.current.refetch();

@@ -63,7 +63,7 @@ jobs:
       - name: ✅ Lint Summary
         if: always()
         run: |
-          if [ ${{ job.status }} == 'success' ]; then
+          if [ "${{ job.status }}" == "success" ]; then
             echo "🎉 All linting checks passed! Code is clean."
           else
             echo "❌ Linting failed! Please fix the errors before merging."
@@ -74,5 +74,4 @@ jobs:
             echo "  - Import sorting issues"
             echo ""
             echo "Run 'pnpm lint:fix' locally to auto-fix some issues."
-            exit 1
           fi

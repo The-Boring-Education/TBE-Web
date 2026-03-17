@@ -19,12 +19,17 @@ export default function useQuizData(): UseQuizDataReturn {
     ...CACHE_TIMES.STATIC,
   });
 
-  const categories = (data?.success ?? data?.status) ? (data?.data ?? []) : [];
+  const isSuccessful = data?.success ?? data?.status;
+  const categories = isSuccessful ? (data?.data ?? []) : [];
+  const apiError =
+    !isSuccessful && data
+      ? data.message || data.error || "Failed to fetch categories"
+      : null;
 
   return {
     categories,
     loading: isLoading,
-    error: error?.message ?? null,
+    error: apiError ?? error?.message ?? null,
     refetch,
   };
 }

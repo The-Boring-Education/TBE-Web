@@ -120,7 +120,11 @@ export interface UseOnboardingReturn extends OnboardingState {
   handleBack: () => void;
   handleFinish: () => Promise<void>;
   isFieldValid: boolean;
-  setForm: (form: Record<string, unknown>) => void;
+  setForm: (
+    form:
+      | Record<string, unknown>
+      | ((prev: Record<string, unknown>) => Record<string, unknown>),
+  ) => void;
   setUsernameAvailability: (available: boolean) => void;
   setUsernameChecking: (checking: boolean) => void;
 }
