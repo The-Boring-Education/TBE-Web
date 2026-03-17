@@ -2,6 +2,7 @@ import "@tbe/components/styles/common.css";
 import "@/styles/globals.css";
 import "@/styles/colors.css";
 
+import { AuthProvider } from "@tbe/auth";
 import { GamificationProvider } from "@tbe/components";
 import {
   initGA,
@@ -13,7 +14,6 @@ import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { SessionProvider } from "next-auth/react";
 import { Fragment, useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
@@ -83,24 +83,17 @@ const AppContent = ({
   );
 };
 
-const OnCampusApp = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppProps) => {
+const OnCampusApp = ({ Component, pageProps }: AppProps) => {
   return (
     <Fragment>
       <Head>
         <link rel="icon" href="/svg/favicon.ico" />
         <title>OnCampus</title>
       </Head>
-      <SessionProvider
-        session={session}
-        refetchInterval={5 * 60}
-        refetchOnWindowFocus
-      >
+      <AuthProvider>
         <AppContent Component={Component} pageProps={pageProps} />
         <Toaster position="top-center" richColors />
-      </SessionProvider>
+      </AuthProvider>
     </Fragment>
   );
 };

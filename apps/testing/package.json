@@ -12,7 +12,11 @@
     "test:unit:watch": "vitest watch --config vitest.config.ts",
     "test:api": "vitest run --config vitest.config.ts src/api",
     "test:coverage": "vitest run --coverage",
-    "test:ci": "pnpm run test:unit && pnpm run test:api"
+    "test:ci": "pnpm run test:unit && pnpm run test:api",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@tbe/auth": "workspace:*",
@@ -20,8 +24,8 @@
     "@tbe/config": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/hooks": "workspace:*",
-    "@tbe/query": "workspace:*",
     "@tbe/interface": "workspace:*",
+    "@tbe/query": "workspace:*",
     "@tbe/services": "workspace:*",
     "@tbe/types": "workspace:*",
     "@tbe/utils": "workspace:*",
@@ -35,9 +39,7 @@
     "tailwind-merge": "^2.5.2"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.18",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1",
+    "@playwright/test": "^1.58.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
@@ -46,10 +48,13 @@
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "^2.1.8",
+    "autoprefixer": "^10.4.18",
     "jsdom": "^25.0.1",
     "msw": "^2.6.8",
     "node-mocks-http": "^1.16.1",
+    "postcss": "^8.4.35",
     "supertest": "^7.0.0",
+    "tailwindcss": "^3.4.1",
     "typescript": "5.9.2",
     "vitest": "^2.1.8"
   }

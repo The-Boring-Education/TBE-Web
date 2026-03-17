@@ -1,6 +1,6 @@
+import { useAuth } from "@tbe/auth";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 import LoginWithGoogleButton from "../../common/Buttons/LoginWithGoogleButton";
@@ -11,14 +11,14 @@ import Section from "../../layout/Section";
 import FlexContainer from "../Page/common/FlexContainer";
 
 const Login = () => {
-  const { status } = useSession();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const redirectPath = router.query.redirect
     ? String(router.query.redirect)
     : "/";
 
   useEffect(() => {
-    if (status === "authenticated") {
+    if (isAuthenticated) {
       router.replace(redirectPath);
     }
   }, [status, router, redirectPath]);

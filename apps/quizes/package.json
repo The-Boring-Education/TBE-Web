@@ -42,7 +42,6 @@
     "lucide-react": "^0.462.0",
     "markdown-it": "^14.1.0",
     "next": "14.2.35",
-    "next-auth": "^4.24.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",

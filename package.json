@@ -41,6 +41,8 @@
     "test:api": "turbo run test:api --filter=@tbe/testing",
     "test:coverage": "turbo run test:coverage --filter=@tbe/testing",
     "test:ci": "turbo run test:ci --filter=@tbe/testing",
+    "test:e2e": "turbo run test:e2e --filter=@tbe/testing",
+    "test:e2e:ui": "turbo run test:e2e:ui --filter=@tbe/testing",
     "seo:audit": "lhci autorun",
     "seo:audit:prod": "LHCI_ENV=production lhci autorun",
     "seo:audit:app": "LHCI_ENV=production lhci autorun",

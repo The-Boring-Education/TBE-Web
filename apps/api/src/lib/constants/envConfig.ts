@@ -22,6 +22,9 @@ const OPTIONAL_VARS = [
   "EMAIL_SERVICE_URL",
   "EMAIL_API_KEY",
   "FROM_EMAIL",
+  "GOOGLE_AUTH_CLIENT_ID",
+  "GOOGLE_AUTH_CLIENT_SECRET",
+  "AUTH_URL",
 ] as const;
 
 const missing = REQUIRED_VARS.filter((key) => !process.env[key]);
@@ -63,6 +66,8 @@ const envConfig = {
   FROM_EMAIL: process.env.FROM_EMAIL || "",
   ONBOARDING_URL: process.env.NEXT_PUBLIC_ONBOARDING_APP_URL || "",
   QUIZ_APP_URL: process.env.QUIZ_APP_URL || "",
+  GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID || "",
+  GOOGLE_AUTH_CLIENT_SECRET: process.env.GOOGLE_AUTH_CLIENT_SECRET || "",
 };
 
 export { envConfig };
