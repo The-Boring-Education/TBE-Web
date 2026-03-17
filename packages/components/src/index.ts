@@ -89,6 +89,16 @@ export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
 export type { DsaTopicSidebarProps } from "./containers/Cards/DsaTopicSidebar";
 export { default as DsaTopicSidebar } from "./containers/Cards/DsaTopicSidebar";
 export { default as ExampleCard } from "./containers/Cards/ExampleCard";
+export {
+  FirstPrinciplesSection,
+  ConstraintsSection,
+  EnhancedExamplesSection,
+  WaysToSolveSection,
+  HowToApproachSection,
+  PseudoCodeSection,
+  WorkingCodeSection,
+  CommonMistakesSection,
+} from "./containers/Cards/dsa-sections";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
 export { default as Leaderboard } from "./containers/Cards/Leaderboard";
