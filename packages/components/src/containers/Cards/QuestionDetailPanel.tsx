@@ -1,16 +1,96 @@
 import {
+  CommonMistakesSection,
+  ConstraintsSection,
+  EnhancedExamplesSection,
   ExampleCard,
+  FirstPrinciplesSection,
   FlexContainer,
+  HowToApproachSection,
   LeetCodeIcon,
+  PseudoCodeSection,
   Text,
+  WaysToSolveSection,
+  WorkingCodeSection,
   YouTubeIcon,
 } from "@tbe/components";
-import type { DsaSectionTabs } from "@tbe/interface";
-import type { QuestionDetailProps } from "@tbe/interface";
+import type { DsaQuestion, DsaSectionTabs } from "@tbe/interface";
 import markdownit from "markdown-it";
 import { useState } from "react";
 
 const md = markdownit();
+
+// ---------------------------------------------------------------------------
+// snake_case → camelCase mappers (agent JSON → React props)
+// ---------------------------------------------------------------------------
+
+const mapConstraints = (
+  raw: NonNullable<DsaQuestion["sections"]>["constraints"],
+) =>
+  (raw || []).map((c) => ({
+    constraint: c.constraint,
+    plainMeaning: c.plain_meaning,
+    implication: c.implication,
+  }));
+
+const mapExamples = (raw: NonNullable<DsaQuestion["sections"]>["examples"]) =>
+  (raw || []).map((e) => ({
+    label: e.label,
+    input: e.input,
+    output: e.output,
+    explanation: e.explanation,
+    stepByStep: e.step_by_step,
+  }));
+
+const mapApproaches = (
+  raw: NonNullable<DsaQuestion["sections"]>["ways_to_solve"],
+) =>
+  (raw || []).map((a) => ({
+    approachNumber: a.approach_number,
+    name: a.name,
+    description: a.description,
+    timeComplexity: a.time_complexity,
+    timeReason: a.time_reason,
+    spaceComplexity: a.space_complexity,
+    spaceReason: a.space_reason,
+    verdict: a.verdict,
+    verdictLabel: a.verdict_label,
+  }));
+
+const mapSteps = (
+  raw: NonNullable<DsaQuestion["sections"]>["how_to_approach"],
+) =>
+  (raw?.steps || []).map((s) => ({
+    stepNumber: s.step_number,
+    heading: s.heading,
+    body: s.body,
+  }));
+
+const mapAnnotations = (
+  raw: NonNullable<DsaQuestion["sections"]>["pseudo_code"],
+) =>
+  (raw?.annotations || []).map((a) => ({
+    lineReference: a.line_reference,
+    note: a.note,
+  }));
+
+const mapMistakes = (
+  raw: NonNullable<DsaQuestion["sections"]>["common_mistakes"],
+) =>
+  (raw || []).map((m) => ({
+    mistakeNumber: m.mistake_number,
+    title: m.title,
+    wrongCode: m.wrong_code,
+    explanation: m.explanation,
+    fix: m.fix,
+  }));
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+interface QuestionDetailProps {
+  question: DsaQuestion | null;
+}
 
 const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
   const [activeTab, setActiveTab] = useState<DsaSectionTabs>("description");
@@ -22,6 +102,9 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
       </div>
     );
   }
+
+  const sections = question.sections;
+  const hasSections = sections && Object.keys(sections).length > 0;
 
   return (
     <FlexContainer
@@ -57,61 +140,135 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
       <div className="space-y-3">
         {activeTab === "description" && (
           <div className="space-y-3 w-full">
-            {/* Answer / Description (Markdown) */}
-            <div className="space-y-2 pb-3 border-b border-gray-700 w-full">
-              <div
-                className="text-gray-300 leading-relaxed text-sm prose prose-invert max-w-none prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
-                dangerouslySetInnerHTML={{
-                  __html: md.render(question.answer || ""),
-                }}
-              />
-            </div>
-
-            {/* Examples */}
-            {question.examples && question.examples.length > 0 && (
-              <div className="space-y-4 pt-2">
-                {question.examples.map((example, index) => (
-                  <ExampleCard
-                    key={example._id || index}
-                    index={index}
-                    inputText={example.inputText}
-                    outputText={example.outputText}
-                    explanation={example.explanation}
-                    image={example.image}
+            {/* ----------------------------------------------------------- */}
+            {/* RICH SECTIONS (agent-generated) — shown when available       */}
+            {/* ----------------------------------------------------------- */}
+            {hasSections ? (
+              <div className="space-y-6">
+                {/* 1. First Principles */}
+                {sections.first_principles && (
+                  <FirstPrinciplesSection
+                    paragraphs={sections.first_principles.paragraphs}
+                    keyObservation={sections.first_principles.key_observation}
                   />
-                ))}
-              </div>
-            )}
+                )}
 
-            {/* Constraints */}
-            {question.constraints && question.constraints.length > 0 && (
-              <div className="space-y-2 pt-1">
-                <Text
-                  level="h2"
-                  className="text-white hover:text-red-500 transition-colors duration-200 font-bold text-sm cursor-default"
-                >
-                  Constraints
-                </Text>
-                <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-2.5">
-                  <ul className="list-disc pl-4 space-y-1">
-                    {question.constraints.map((constraint, index) => (
-                      <li
-                        key={index}
-                        className="text-gray-300 text-xs font-mono leading-relaxed"
-                      >
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: md.renderInline(constraint),
-                          }}
-                        />
-                      </li>
-                    ))}
-                  </ul>
+                {/* 2. Constraints */}
+                {sections.constraints && sections.constraints.length > 0 && (
+                  <ConstraintsSection
+                    constraints={mapConstraints(sections.constraints)}
+                  />
+                )}
+
+                {/* 3. Examples */}
+                {sections.examples && sections.examples.length > 0 && (
+                  <EnhancedExamplesSection
+                    examples={mapExamples(sections.examples)}
+                  />
+                )}
+
+                {/* 4. Ways to Solve */}
+                {sections.ways_to_solve &&
+                  sections.ways_to_solve.length > 0 && (
+                    <WaysToSolveSection
+                      approaches={mapApproaches(sections.ways_to_solve)}
+                    />
+                  )}
+
+                {/* 5. How to Approach */}
+                {sections.how_to_approach?.steps &&
+                  sections.how_to_approach.steps.length > 0 && (
+                    <HowToApproachSection
+                      steps={mapSteps(sections.how_to_approach)}
+                    />
+                  )}
+
+                {/* 6. Pseudo Code */}
+                {sections.pseudo_code?.code && (
+                  <PseudoCodeSection
+                    code={sections.pseudo_code.code}
+                    annotations={mapAnnotations(sections.pseudo_code)}
+                  />
+                )}
+
+                {/* 7. Working Code */}
+                {sections.working_code?.languages && (
+                  <WorkingCodeSection
+                    defaultLanguage={sections.working_code.default_language}
+                    languages={sections.working_code.languages}
+                  />
+                )}
+
+                {/* 8. Common Mistakes */}
+                {sections.common_mistakes &&
+                  sections.common_mistakes.length > 0 && (
+                    <CommonMistakesSection
+                      mistakes={mapMistakes(sections.common_mistakes)}
+                    />
+                  )}
+              </div>
+            ) : (
+              /* ----------------------------------------------------------- */
+              /* FALLBACK: existing markdown rendering                        */
+              /* ----------------------------------------------------------- */
+              <>
+                {/* Answer / Description (Markdown) */}
+                <div className="space-y-2 pb-3 border-b border-gray-700 w-full">
+                  <div
+                    className="text-gray-300 leading-relaxed text-sm prose prose-invert max-w-none prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
+                    dangerouslySetInnerHTML={{
+                      __html: md.render(question.answer || ""),
+                    }}
+                  />
                 </div>
-              </div>
+
+                {/* Examples */}
+                {question.examples && question.examples.length > 0 && (
+                  <div className="space-y-4 pt-2">
+                    {question.examples.map((example, index) => (
+                      <ExampleCard
+                        key={example._id || index}
+                        index={index}
+                        inputText={example.inputText}
+                        outputText={example.outputText}
+                        explanation={example.explanation}
+                        image={example.image}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Constraints */}
+                {question.constraints && question.constraints.length > 0 && (
+                  <div className="space-y-2 pt-1">
+                    <Text
+                      level="h2"
+                      className="text-white hover:text-red-500 transition-colors duration-200 font-bold text-sm cursor-default"
+                    >
+                      Constraints
+                    </Text>
+                    <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-2.5">
+                      <ul className="list-disc pl-4 space-y-1">
+                        {question.constraints.map((constraint, index) => (
+                          <li
+                            key={index}
+                            className="text-gray-300 text-xs font-mono leading-relaxed"
+                          >
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: md.renderInline(constraint),
+                              }}
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
 
-            {/* Resources */}
+            {/* Resources — always shown */}
             <div className="space-y-1.5 pt-1">
               <Text level="h2" className="text-red-500 font-bold text-sm">
                 Resources

@@ -76,12 +76,12 @@ export interface LinkButtonProps extends LinkProps {
 
 export interface ButtonProps {
   variant:
-  | "PRIMARY"
-  | "OUTLINE"
-  | "GHOST"
-  | "SUCCESS"
-  | "SECONDARY"
-  | "NEUTRAL";
+    | "PRIMARY"
+    | "OUTLINE"
+    | "GHOST"
+    | "SUCCESS"
+    | "SECONDARY"
+    | "NEUTRAL";
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -849,9 +849,9 @@ export interface ResumeEvaluationData {
 
 export interface PaymentCardProps {
   course:
-  | BaseShikshaCourseResponseProps
-  | BaseInterviewSheetResponseProps
-  | BaseProductProps;
+    | BaseShikshaCourseResponseProps
+    | BaseInterviewSheetResponseProps
+    | BaseProductProps;
   onClose: () => void;
   productType: string;
 }
@@ -890,13 +890,13 @@ export interface StarButtonProps {
 
 export interface LoginCardNewProps {
   variant?:
-  | "default"
-  | "platform"
-  | "prepyatra"
-  | "quizes"
-  | "resume-yatra"
-  | "oncampus"
-  | "dsayatra";
+    | "default"
+    | "platform"
+    | "prepyatra"
+    | "quizes"
+    | "resume-yatra"
+    | "oncampus"
+    | "dsayatra";
   customRedirectPath?: string;
   theme?: "light" | "dark";
 }
@@ -1046,6 +1046,74 @@ export interface ExampleCardProps {
   outputText: string;
   explanation?: string;
   image?: string;
+}
+
+export interface FirstPrinciplesSectionProps {
+  paragraphs: string[];
+  keyObservation: string;
+}
+
+export interface ConstraintsSectionProps {
+  constraints: {
+    constraint: string;
+    plainMeaning: string;
+    implication: string;
+  }[];
+}
+
+export interface EnhancedExamplesSectionProps {
+  examples: {
+    label: string;
+    input: string;
+    output: string;
+    explanation: string;
+    stepByStep: string[] | null;
+  }[];
+}
+
+export interface WaysToSolveSectionProps {
+  approaches: {
+    approachNumber: number;
+    name: string;
+    description: string;
+    timeComplexity: string;
+    timeReason: string;
+    spaceComplexity: string;
+    spaceReason: string;
+    verdict: "too_slow" | "acceptable" | "optimal";
+    verdictLabel: string;
+  }[];
+}
+
+export interface HowToApproachSectionProps {
+  steps: {
+    stepNumber: number;
+    heading: string;
+    body: string;
+  }[];
+}
+
+export interface PseudoCodeSectionProps {
+  code: string;
+  annotations: {
+    lineReference: string;
+    note: string;
+  }[];
+}
+
+export interface WorkingCodeSectionProps {
+  defaultLanguage: string;
+  languages: Record<string, { code: string }>;
+}
+
+export interface CommonMistakesSectionProps {
+  mistakes: {
+    mistakeNumber: number;
+    title: string;
+    wrongCode: string;
+    explanation: string;
+    fix: string;
+  }[];
 }
 
 export interface RoadmapNode {

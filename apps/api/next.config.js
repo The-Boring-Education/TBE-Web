@@ -19,6 +19,7 @@ const nextConfig = {
     "@tbe/utils",
     "@tbe/interface",
     "@tbe/services",
+    "@tbe/query",
   ],
 
   env: {},

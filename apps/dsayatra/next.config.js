@@ -3,7 +3,17 @@ const path = require("path");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@tbe/components"],
+  transpilePackages: [
+    "@tbe/components",
+    "@tbe/hooks",
+    "@tbe/utils",
+    "@tbe/types",
+    "@tbe/services",
+    "@tbe/constants",
+    "@tbe/auth",
+    "@tbe/config",
+    "@tbe/query",
+  ],
   images: {
     domains: [
       "lh3.googleusercontent.com",
