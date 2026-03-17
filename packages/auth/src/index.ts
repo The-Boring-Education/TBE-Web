@@ -22,6 +22,10 @@ export {
 export { AUTH_CONFIG, getAuthApiUrl } from "./config";
 
 // Middleware
+export type {
+  AuthenticatedRequest,
+  AuthenticatedUser,
+} from "./middleware/withAuth";
 export {
   decodeJwtPayload,
   getAuthFromRequest,

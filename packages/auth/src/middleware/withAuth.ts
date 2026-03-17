@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { AUTH_CONFIG } from "../config";
 
-interface AuthenticatedUser {
+export interface AuthenticatedUser {
   id: string;
   email: string;
   name?: string;
@@ -10,7 +10,7 @@ interface AuthenticatedUser {
   isOnboarded?: boolean;
 }
 
-interface AuthenticatedRequest extends NextApiRequest {
+export interface AuthenticatedRequest extends NextApiRequest {
   user: AuthenticatedUser;
 }
 
