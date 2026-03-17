@@ -1,10 +1,12 @@
+import { envConfig } from "@/lib/constants";
+
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
 
 const getCredentials = () => {
-  const clientId = process.env.GOOGLE_AUTH_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_AUTH_CLIENT_SECRET;
+  const clientId = envConfig.GOOGLE_AUTH_CLIENT_ID;
+  const clientSecret = envConfig.GOOGLE_AUTH_CLIENT_SECRET;
   if (!clientId || !clientSecret) {
     throw new Error(
       "GOOGLE_AUTH_CLIENT_ID and GOOGLE_AUTH_CLIENT_SECRET are required",
@@ -14,7 +16,7 @@ const getCredentials = () => {
 };
 
 const getCallbackUrl = (): string => {
-  const baseUrl = process.env.AUTH_URL;
+  const baseUrl = envConfig.AUTH_URL;
   if (!baseUrl) {
     throw new Error(
       "AUTH_URL must be set to the API app base URL (e.g. https://api.example.com) for OAuth callback",
