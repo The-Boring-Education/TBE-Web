@@ -149,6 +149,14 @@
     "test:ci": {
       "dependsOn": ["test:unit", "test:api"],
       "cache": false
+    },
+    "test:e2e": {
+      "cache": false,
+      "inputs": ["src/e2e/**/*.{ts,tsx}", "playwright.config.ts"]
+    },
+    "test:e2e:ui": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

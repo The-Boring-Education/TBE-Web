@@ -68,6 +68,14 @@ export default defineConfig({
       "@tbe/query": path.resolve(__dirname, "../../packages/api/src"),
       "@tbe/services": path.resolve(__dirname, "../../packages/services/src"),
       "@tbe/auth": path.resolve(__dirname, "../../packages/auth/src"),
+      "@tbe/config/quizes": path.resolve(
+        __dirname,
+        "../../packages/config/src/quizes.ts",
+      ),
+      "@tbe/config": path.resolve(
+        __dirname,
+        "../../packages/config/src/onboarding.ts",
+      ),
       // API app path aliases for testing API routes
       "@api": path.resolve(__dirname, "../api/src"),
     },

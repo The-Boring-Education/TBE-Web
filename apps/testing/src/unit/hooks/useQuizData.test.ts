@@ -1,4 +1,5 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHookWithQuery } from "@test-utils/query-wrapper";
+import { waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockGetCategories = vi.fn();
@@ -24,7 +25,7 @@ describe("useQuizData", () => {
   it("starts in loading state", () => {
     mockGetCategories.mockImplementation(() => new Promise(() => {}));
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     expect(result.current.loading).toBe(true);
   });
@@ -35,7 +36,7 @@ describe("useQuizData", () => {
       data: mockCategories,
     });
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -51,7 +52,7 @@ describe("useQuizData", () => {
       data: mockCategories,
     });
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -63,7 +64,7 @@ describe("useQuizData", () => {
   it("sets error on failed fetch", async () => {
     mockGetCategories.mockRejectedValue(new Error("Network error"));
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -72,20 +73,23 @@ describe("useQuizData", () => {
     expect(result.current.error).toBe("Network error");
   });
 
-  it("sets error when API returns unsuccessful", async () => {
+  it("returns empty categories when API returns unsuccessful (non-throwing)", async () => {
     mockGetCategories.mockResolvedValue({
       success: false,
       status: false,
       message: "Unauthorized",
     });
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(result.current.error).toBe("Unauthorized");
+    // A resolved-but-unsuccessful response is not a react-query error;
+    // the hook just yields an empty category list.
+    expect(result.current.error).toBe(null);
+    expect(result.current.categories).toEqual([]);
   });
 
   it("refetch re-fetches categories", async () => {
@@ -94,7 +98,7 @@ describe("useQuizData", () => {
       data: mockCategories,
     });
 
-    const { result } = renderHook(() => useQuizData());
+    const { result } = renderHookWithQuery(() => useQuizData());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);

@@ -1,4 +1,5 @@
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { renderHookWithQuery } from "@test-utils/query-wrapper";
+import { act, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockGetOnboardingConfig = vi.fn();
@@ -63,7 +64,7 @@ describe("useOnboarding", () => {
   it("starts in loading state", () => {
     mockSendRequest.mockImplementation(() => new Promise(() => {}));
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",
@@ -75,7 +76,7 @@ describe("useOnboarding", () => {
   });
 
   it("sets loading=false when userId is missing", async () => {
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({ userId: "", productId: "test-product", redirect: "" }),
     );
 
@@ -87,7 +88,7 @@ describe("useOnboarding", () => {
   it("sets loading=false for invalid product", async () => {
     mockIsValidOnboardingProduct.mockReturnValue(false);
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "invalid-product",
@@ -106,7 +107,7 @@ describe("useOnboarding", () => {
       data: mockUser,
     });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",
@@ -130,7 +131,7 @@ describe("useOnboarding", () => {
   it("handleNext increments step clamped to totalSteps", async () => {
     mockSendRequest.mockResolvedValue({ success: true, data: mockUser });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",
@@ -160,7 +161,7 @@ describe("useOnboarding", () => {
   it("handleBack decrements step clamped to 1", async () => {
     mockSendRequest.mockResolvedValue({ success: true, data: mockUser });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",
@@ -194,7 +195,7 @@ describe("useOnboarding", () => {
   it("isFieldValid returns false when required text field is empty", async () => {
     mockSendRequest.mockResolvedValue({ success: true, data: mockUser });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",
@@ -212,7 +213,7 @@ describe("useOnboarding", () => {
   it("isFieldValid returns false when required multiselect is empty array", async () => {
     mockSendRequest.mockResolvedValue({ success: true, data: mockUser });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",
@@ -253,7 +254,7 @@ describe("useOnboarding", () => {
   it("isFieldValid respects checkAvailability and usernameAvailable", async () => {
     mockSendRequest.mockResolvedValue({ success: true, data: mockUser });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",
@@ -289,7 +290,7 @@ describe("useOnboarding", () => {
     mockSendRequest.mockResolvedValueOnce({ success: true, data: mockUser });
     mockSendRequest.mockResolvedValueOnce({ success: true });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",
@@ -336,7 +337,7 @@ describe("useOnboarding", () => {
     mockSendRequest.mockResolvedValueOnce({ success: true, data: mockUser });
     mockSendRequest.mockRejectedValueOnce(new Error("Server error"));
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",
@@ -370,7 +371,7 @@ describe("useOnboarding", () => {
     mockGetOnboardingConfig.mockReturnValue(null);
     mockSendRequest.mockResolvedValue({ success: true, data: mockUser });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "unknown-product",
@@ -396,7 +397,7 @@ describe("useOnboarding", () => {
   it("totalSteps calculated from unique step numbers with fields", async () => {
     mockSendRequest.mockResolvedValue({ success: true, data: mockUser });
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useOnboarding({
         userId: "user-1",
         productId: "test-product",

@@ -1,4 +1,5 @@
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { renderHookWithQuery } from "@test-utils/query-wrapper";
+import { act, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@tbe/services", () => ({
@@ -46,21 +47,22 @@ describe("useChallenges", () => {
     vi.clearAllMocks();
   });
 
-  it("sets error when no userId", async () => {
-    const { result } = renderHook(() => useChallenges(""));
+  it("disables query and returns empty state when no userId", async () => {
+    const { result } = renderHookWithQuery(() => useChallenges(""));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(result.current.error).toBe("User ID is required");
+    expect(result.current.error).toBe(null);
+    expect(result.current.challenges).toEqual([]);
     expect(mockGetByUserId).not.toHaveBeenCalled();
   });
 
   it("loads challenges on mount", async () => {
     mockGetByUserId.mockResolvedValue(mockChallenges);
 
-    const { result } = renderHook(() => useChallenges("user-1"));
+    const { result } = renderHookWithQuery(() => useChallenges("user-1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -73,7 +75,7 @@ describe("useChallenges", () => {
   it("computes activeChallenges and completedChallenges correctly", async () => {
     mockGetByUserId.mockResolvedValue(mockChallenges);
 
-    const { result } = renderHook(() => useChallenges("user-1"));
+    const { result } = renderHookWithQuery(() => useChallenges("user-1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -93,7 +95,7 @@ describe("useChallenges", () => {
   it("currentChallenge is most recent active by createdAt", async () => {
     mockGetByUserId.mockResolvedValue(mockChallenges);
 
-    const { result } = renderHook(() => useChallenges("user-1"));
+    const { result } = renderHookWithQuery(() => useChallenges("user-1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -105,7 +107,7 @@ describe("useChallenges", () => {
   it("totalDaysCommitted sums correctly", async () => {
     mockGetByUserId.mockResolvedValue(mockChallenges);
 
-    const { result } = renderHook(() => useChallenges("user-1"));
+    const { result } = renderHookWithQuery(() => useChallenges("user-1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -117,7 +119,7 @@ describe("useChallenges", () => {
   it("completionRate calculated correctly", async () => {
     mockGetByUserId.mockResolvedValue(mockChallenges);
 
-    const { result } = renderHook(() => useChallenges("user-1"));
+    const { result } = renderHookWithQuery(() => useChallenges("user-1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -129,7 +131,7 @@ describe("useChallenges", () => {
   it("recentChallenges filters last 30 days", async () => {
     mockGetByUserId.mockResolvedValue(mockChallenges);
 
-    const { result } = renderHook(() => useChallenges("user-1"));
+    const { result } = renderHookWithQuery(() => useChallenges("user-1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -147,7 +149,7 @@ describe("useChallenges", () => {
   it("refetch triggers re-fetch", async () => {
     mockGetByUserId.mockResolvedValue(mockChallenges);
 
-    const { result } = renderHook(() => useChallenges("user-1"));
+    const { result } = renderHookWithQuery(() => useChallenges("user-1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -177,7 +179,7 @@ describe("useChallenges", () => {
   it("handles fetch error", async () => {
     mockGetByUserId.mockRejectedValue(new Error("Network error"));
 
-    const { result } = renderHook(() => useChallenges("user-1"));
+    const { result } = renderHookWithQuery(() => useChallenges("user-1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -193,7 +195,7 @@ describe("useChallengeProgress", () => {
   });
 
   it("returns null when no challengeId", () => {
-    const { result } = renderHook(() => useChallengeProgress(null));
+    const { result } = renderHookWithQuery(() => useChallengeProgress(null));
 
     expect(result.current.progress).toBe(null);
     expect(mockGetProgress).not.toHaveBeenCalled();
@@ -203,7 +205,7 @@ describe("useChallengeProgress", () => {
     const mockProgress = { challengeId: "1", completedDays: 10, totalDays: 30 };
     mockGetProgress.mockResolvedValue(mockProgress);
 
-    const { result } = renderHook(() => useChallengeProgress("1"));
+    const { result } = renderHookWithQuery(() => useChallengeProgress("1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -216,7 +218,7 @@ describe("useChallengeProgress", () => {
   it("handles error", async () => {
     mockGetProgress.mockRejectedValue(new Error("Failed to load progress"));
 
-    const { result } = renderHook(() => useChallengeProgress("1"));
+    const { result } = renderHookWithQuery(() => useChallengeProgress("1"));
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
