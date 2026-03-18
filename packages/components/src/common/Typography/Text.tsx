@@ -1,4 +1,5 @@
 import type { TextProps } from "@tbe/interface";
+import type { CSSProperties } from "react";
 
 const Text = ({
   level,
@@ -19,7 +20,7 @@ const Text = ({
       className={`${className} ${variantClasses} ${
         textCenter ? "text-center" : ""
       }`}
-      style={style}
+      style={style as CSSProperties | undefined}
     >
       {children}
     </HeadingTag>

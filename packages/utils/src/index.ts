@@ -17,7 +17,6 @@ export * from "./quiz";
 export * from "./discount";
 export * from "./functions";
 export * from "./global";
-export * from "./sentry";
 // Re-exporting only default export to avoid name conflicts
 export * from "./dsaHelpers";
 export * from "./health";

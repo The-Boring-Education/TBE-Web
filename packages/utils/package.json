@@ -11,6 +11,7 @@
     "./analytics": "./src/analytics.ts",
     "./api": "./src/api.ts",
     "./auth": "./src/auth.ts",
+    "./sentry": "./src/sentry.ts",
     "./mongodb": "./src/mongodb.ts",
     "./cors": "./src/cors.ts",
     "./mdx": "./src/mdx/index.ts"
