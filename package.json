@@ -13,7 +13,6 @@
     "check-types": "turbo run check-types",
     "quality:fix": "pnpm lint && pnpm format",
     "quality:check": "pnpm lint:check && pnpm format:check && pnpm check-types",
-    "clean": "turbo run clean",
     "dev:platform": "turbo run dev --filter=@tbe/platform",
     "dev:prep-yatra": "turbo run dev --filter=@tbe/prep-yatra",
     "dev:quizes": "turbo run dev --filter=@tbe/quizes",
