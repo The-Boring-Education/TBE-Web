@@ -142,7 +142,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                 href={question.resources.leetcodeURL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+                className="transition-all duration-300 opacity-90 hover:opacity-100"
                 title="LeetCode Problem"
               >
                 <LeetCodeIcon className="w-5 h-5" />
@@ -153,7 +153,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                 href={question.resources.youtubeURL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+                className="transition-all duration-300 opacity-90 hover:opacity-100"
                 title="YouTube Explanation"
               >
                 <YouTubeIcon className="w-5 h-5" />
@@ -322,7 +322,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                       href={question.resources.leetcodeURL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
+                      className="transition-all duration-300 opacity-90 hover:opacity-100"
                       title="LeetCode Problem"
                     >
                       <LeetCodeIcon className="w-5 h-5" />
@@ -334,7 +334,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
                       href={question.resources.youtubeURL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
+                      className="transition-all duration-300 opacity-90 hover:opacity-100"
                       title="YouTube Explanation"
                     >
                       <YouTubeIcon className="w-5 h-5" />

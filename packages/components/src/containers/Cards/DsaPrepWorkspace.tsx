@@ -2,9 +2,10 @@ import { TOPIC_LABELS } from "@tbe/constants";
 import type { TopicWithCount } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import { cn } from "@tbe/utils";
-import { Target } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import type { ReactNode } from "react";
 
+import Button from "../../common/Buttons/Button";
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../Page/common/FlexContainer";
 import DsaQuestionList from "./DsaQuestionList";
@@ -47,79 +48,107 @@ const DsaPrepWorkspace = ({
     : [];
 
   return (
-    <FlexContainer
-      direction="col"
-      className={cn("lg:flex-row flex-1 min-h-0 w-full", className)}
-      itemCenter={false}
-      justifyCenter={false}
-      wrap={false}
-    >
-      {/* Left Sidebar - Topics or Questions */}
-      <div
-        className={cn(
-          "flex flex-col flex-shrink-0 border-r border-gray-800/60 bg-[#0A0A0A] transition-all duration-300",
-          selectedTopic
-            ? "w-full lg:w-[340px]"
-            : "flex-1 lg:flex-none w-full lg:w-[320px]",
-        )}
-      >
-        <div className="flex-1 overflow-y-auto px-4 py-5 scrollbar-thin-grey">
+    <div className={cn("flex flex-col h-full w-full", className)}>
+      {/* Header Banner — sidebar border extends through here */}
+      <div className="w-full border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
+        {/* Left column — aligns with sidebar width */}
+        <div
+          className={cn(
+            "border-r border-gray-800/60 px-4 py-3 shrink-0 transition-all duration-300",
+            selectedTopic ? "w-full lg:w-[340px]" : "w-full lg:w-[280px]",
+          )}
+        >
           {!selectedTopic ? (
-            <div className="flex flex-col">
-              {topicSidebarHeader}
-
-              <div className="mb-5">
-                <Text
-                  level="span"
-                  className="text-[9px] text-gray-600 uppercase font-bold tracking-[0.15em] block mb-1.5"
-                >
-                  DSA Sheet
-                </Text>
-                <Text level="h2" className="text-lg font-bold text-white">
-                  Explore Topics
-                </Text>
-                <Text level="p" className="text-[11px] text-gray-500 mt-0.5">
-                  Choose a topic to begin your preparation
-                </Text>
-              </div>
-
-              <DsaTopicSidebar
-                topics={topicsWithCounts}
-                selectedTopic={selectedTopic}
-                onTopicClick={onTopicClick}
-                completionMap={completionMap}
-              />
+            <div>
+              <Text
+                level="h2"
+                className="text-[14px] font-black text-white mb-0.5 tracking-tight"
+              >
+                Explore Topics
+              </Text>
+              <Text
+                level="p"
+                className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]"
+              >
+                Choose a topic to practice
+              </Text>
             </div>
           ) : (
-            <div className="space-y-4">
-              <button
-                onClick={onBackToTopics}
-                className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-500 hover:text-white transition-colors duration-200 group"
+            <div>
+              <Text
+                level="h2"
+                className="text-[14px] font-black text-white mb-0.5 tracking-tight"
               >
-                <span className="transition-transform duration-200 group-hover:-translate-x-0.5">
-                  ←
-                </span>
-                Back to Topics
-              </button>
+                Questions
+              </Text>
+              <Text
+                level="p"
+                className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]"
+              >
+                {filteredQuestions.length} question
+                {filteredQuestions.length !== 1 ? "s" : ""} available
+              </Text>
+            </div>
+          )}
+        </div>
 
-              <div>
-                <Text
-                  level="span"
-                  className="text-[9px] text-gray-600 uppercase font-bold tracking-[0.15em] block mb-1.5"
-                >
-                  {TOPIC_LABELS[selectedTopic] || selectedTopic}
-                </Text>
-                <Text level="h2" className="text-lg font-bold text-white">
-                  Questions
-                </Text>
-                <Text
-                  level="p"
-                  className="text-[11px] text-gray-500 mt-0.5 mb-4"
-                >
-                  {filteredQuestions.length} question
-                  {filteredQuestions.length !== 1 ? "s" : ""} available
-                </Text>
+        {/* Right column — DSA Preparation title */}
+        <div className="hidden lg:flex flex-1 items-center justify-between px-5 py-3">
+          <div>
+            <Text level="h1" className="text-xl font-bold text-white mb-0.5">
+              {selectedTopic
+                ? TOPIC_LABELS[selectedTopic] || selectedTopic
+                : "DSA Preparation"}
+            </Text>
+            <Text level="p" className="text-xs text-gray-400">
+              {selectedTopic
+                ? `Continue your DSA preparation. Solving problems on ${TOPIC_LABELS[selectedTopic] || selectedTopic}.`
+                : "Select a topic from the sidebar to start practicing interactively."}
+            </Text>
+          </div>
+          {selectedTopic && (
+            <Button
+              onClick={onBackToTopics}
+              variant="OUTLINE"
+              size="SMALL"
+              text="View All Topics"
+              className="border-gray-700 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap"
+            />
+          )}
+        </div>
+      </div>
 
+      {/* Split Layout: Sidebar + Content */}
+      <FlexContainer
+        direction="col"
+        className="lg:flex-row flex-1 min-h-0 w-full"
+        itemCenter={false}
+        justifyCenter={false}
+        wrap={false}
+      >
+        {/* Left Sidebar - Topics or Questions */}
+        <div
+          className={cn(
+            "flex flex-col flex-shrink-0 border-r border-gray-800/60 bg-[#0A0A0A] transition-all duration-300",
+            selectedTopic
+              ? "w-full lg:w-[340px]"
+              : "flex-1 lg:flex-none w-full lg:w-[280px]",
+          )}
+        >
+          <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
+            {!selectedTopic ? (
+              <div className="flex flex-col">
+                {topicSidebarHeader}
+
+                <DsaTopicSidebar
+                  topics={topicsWithCounts}
+                  selectedTopic={selectedTopic}
+                  onTopicClick={onTopicClick}
+                  completionMap={completionMap}
+                />
+              </div>
+            ) : (
+              <div className="space-y-3">
                 <DsaQuestionList
                   questions={filteredQuestions}
                   selectedQuestionId={selectedQuestion?.id}
@@ -128,63 +157,74 @@ const DsaPrepWorkspace = ({
                   onToggleComplete={onToggleComplete}
                 />
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Main Content Area */}
-      <div
-        className={cn(
-          "flex-1 flex flex-col min-w-0 bg-[#0A0A0A]",
-          !selectedTopic ? "hidden lg:flex" : "flex",
-        )}
-      >
+        {/* Main Content Area */}
         <div
-          className="flex-1 overflow-y-auto scrollbar-thin-grey px-6 py-5 scroll-smooth"
-          id="right-scroll-area"
-        >
-          {!selectedTopic ? (
-            emptyStateContent || (
-              <FlexContainer
-                className="h-full"
-                itemCenter
-                justifyCenter
-                fullWidth
-                wrap={false}
-              >
-                <div className="text-center space-y-3 bg-gray-900 p-10 rounded-2xl border border-gray-800 max-w-lg">
-                  <Target className="w-12 h-12 text-red-500/50 mx-auto" />
-                  <Text level="p" className="text-gray-300 text-base font-bold">
-                    Select a topic from the left
-                  </Text>
-                  <Text level="p" className="text-gray-500 text-xs">
-                    Start your focused preparation today. Click on any topic to
-                    view the curated list of questions.
-                  </Text>
-                </div>
-              </FlexContainer>
-            )
-          ) : (
-            <div className="w-full max-w-3xl mx-auto">
-              <div className="mb-6 pb-4 border-b border-gray-800">
-                <Text level="h2" className="text-2xl font-bold text-white mb-1">
-                  {TOPIC_LABELS[selectedTopic] || selectedTopic}
-                </Text>
-                <Text level="p" className="text-sm text-gray-400">
-                  Continue your {TOPIC_LABELS[selectedTopic] || selectedTopic}{" "}
-                  preparation journey.
-                </Text>
-              </div>
-
-              <div className="pb-1 w-full">
-                <QuestionDetailPanel question={selectedQuestion} />
-              </div>
-            </div>
+          className={cn(
+            "flex-1 flex flex-col min-w-0 bg-[#0A0A0A]",
+            !selectedTopic ? "hidden lg:flex" : "flex",
           )}
+        >
+          <div
+            className="flex-1 overflow-y-auto scrollbar-thin-grey px-6 py-5 scroll-smooth"
+            id="right-scroll-area"
+          >
+            {!selectedTopic ? (
+              emptyStateContent || (
+                <div className="hidden lg:flex flex-1 flex-col min-w-0 bg-[#050505] relative overflow-hidden h-full">
+                  {/* Subtle Background Glows */}
+                  <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/10 rounded-full blur-[100px] pointer-events-none" />
+                  <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
+
+                  <FlexContainer
+                    className="h-full z-10"
+                    itemCenter
+                    justifyCenter
+                    fullWidth
+                    wrap={false}
+                  >
+                    <div className="text-center space-y-5 max-w-md px-6">
+                      <div className="relative mx-auto w-24 h-24 mb-6">
+                        <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
+                        <div className="relative w-full h-full bg-[#111] border border-gray-800 rounded-2xl flex items-center justify-center shadow-2xl">
+                          <Lightbulb className="w-10 h-10 text-white opacity-80 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Text
+                          level="h2"
+                          className="text-white text-3xl font-extrabold tracking-tight mb-2"
+                        >
+                          DSA Vault
+                        </Text>
+                        <Text
+                          level="p"
+                          className="text-gray-400 text-[15px] leading-relaxed"
+                        >
+                          Master data structures and algorithms with curated
+                          problems. Pick a topic on the left to begin your
+                          preparation journey.
+                        </Text>
+                      </div>
+                    </div>
+                  </FlexContainer>
+                </div>
+              )
+            ) : (
+              <div className="w-full max-w-3xl mx-auto">
+                <div className="pb-1 w-full">
+                  <QuestionDetailPanel question={selectedQuestion} />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </FlexContainer>
+      </FlexContainer>
+    </div>
   );
 };
 

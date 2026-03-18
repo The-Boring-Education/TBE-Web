@@ -91,13 +91,9 @@ const EnhancedExamplesSection = ({
                   </Text>
                   <Text
                     level="span"
-                    className="text-gray-500 text-xs transition-transform duration-300"
-                    style={{
-                      transform:
-                        expandedIndex === index
-                          ? "rotate(180deg)"
-                          : "rotate(0deg)",
-                    }}
+                    className={`text-gray-500 text-xs transition-transform duration-300 ${
+                      expandedIndex === index ? "rotate-180" : "rotate-0"
+                    }`}
                   >
                     ▼
                   </Text>
@@ -112,8 +108,11 @@ const EnhancedExamplesSection = ({
                 >
                   <div className="px-3 pb-3 space-y-2">
                     {example.stepByStep.map((step, stepIndex) => (
-                      <div key={stepIndex} className="flex gap-2.5 items-start">
-                        <div className="w-5 h-5 rounded-full bg-red-950/40 border border-red-900/60 flex items-center justify-center shrink-0 mt-0.5">
+                      <div
+                        key={stepIndex}
+                        className="flex gap-2.5 items-center"
+                      >
+                        <div className="w-5 h-5 rounded-full bg-red-950/40 border border-red-900/60 flex items-center justify-center shrink-0">
                           <Text
                             level="span"
                             className="text-[9px] text-red-400 font-mono font-bold"
@@ -123,7 +122,7 @@ const EnhancedExamplesSection = ({
                         </div>
                         <Text
                           level="p"
-                          className="text-xs text-gray-400 leading-relaxed pt-0.5"
+                          className="text-xs text-gray-400 leading-relaxed"
                         >
                           {step}
                         </Text>
