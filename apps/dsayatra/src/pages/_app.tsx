@@ -14,7 +14,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <link rel="icon" type="image/svg+xml" href="/dsayatra_favicon.svg" />
       </Head>
-      <Providers session={pageProps.session}>
+      <Providers>
         <OnboardingCheck />
         <Layout>
           <Component {...pageProps} />
