@@ -33,6 +33,16 @@ function resolveSingletonPackage(packageName, startDir) {
   }
 }
 
+function resolveSingletonModule(moduleName, startDir) {
+  try {
+    return require.resolve(moduleName, { paths: [startDir] });
+  } catch {
+    throw new Error(
+      `[prep-yatra/next.config] Could not resolve module "${moduleName}" from ${startDir}`,
+    );
+  }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -77,6 +87,16 @@ const nextConfig = {
       ...config.resolve.alias,
       react: reactDir,
       "react-dom": reactDomDir,
+      "react/jsx-runtime": resolveSingletonModule(
+        "react/jsx-runtime",
+        __dirname,
+      ),
+      "react/jsx-dev-runtime": resolveSingletonModule(
+        "react/jsx-dev-runtime",
+        __dirname,
+      ),
+      "react-dom/client": resolveSingletonModule("react-dom/client", __dirname),
+      "react-dom/server": resolveSingletonModule("react-dom/server", __dirname),
     };
 
     return config;
