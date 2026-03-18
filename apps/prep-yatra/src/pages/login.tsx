@@ -44,3 +44,7 @@ const Auth = () => {
 };
 
 export default Auth;
+
+export async function getServerSideProps() {
+  return { props: {} };
+}
