@@ -6,6 +6,7 @@ const Text = ({
   variant,
   textCenter,
   className = "",
+  style,
 }: TextProps) => {
   const HeadingTag = level;
   let variantClasses = "";
@@ -18,6 +19,7 @@ const Text = ({
       className={`${className} ${variantClasses} ${
         textCenter ? "text-center" : ""
       }`}
+      style={style}
     >
       {children}
     </HeadingTag>
