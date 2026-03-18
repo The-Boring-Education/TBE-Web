@@ -5,7 +5,6 @@ import { cn } from "@tbe/utils";
 import { Target } from "lucide-react";
 import type { ReactNode } from "react";
 
-import Button from "../../common/Buttons/Button";
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../Page/common/FlexContainer";
 import DsaQuestionList from "./DsaQuestionList";
@@ -58,23 +57,29 @@ const DsaPrepWorkspace = ({
       {/* Left Sidebar - Topics or Questions */}
       <div
         className={cn(
-          "flex flex-col flex-shrink-0 border-r border-gray-800 bg-black transition-all duration-300",
+          "flex flex-col flex-shrink-0 border-r border-gray-800/60 bg-[#0A0A0A] transition-all duration-300",
           selectedTopic
-            ? "w-full lg:w-[350px]"
-            : "flex-1 lg:flex-none w-full lg:w-[340px]",
+            ? "w-full lg:w-[340px]"
+            : "flex-1 lg:flex-none w-full lg:w-[320px]",
         )}
       >
-        <div className="flex-1 overflow-y-auto px-5 py-5 scrollbar-thin-grey">
+        <div className="flex-1 overflow-y-auto px-4 py-5 scrollbar-thin-grey">
           {!selectedTopic ? (
             <div className="flex flex-col">
               {topicSidebarHeader}
 
-              <div className="mb-4">
-                <Text level="h2" className="text-xl font-bold text-white">
+              <div className="mb-5">
+                <Text
+                  level="span"
+                  className="text-[9px] text-gray-600 uppercase font-bold tracking-[0.15em] block mb-1.5"
+                >
+                  DSA Sheet
+                </Text>
+                <Text level="h2" className="text-lg font-bold text-white">
                   Explore Topics
                 </Text>
-                <Text level="p" className="text-xs text-gray-400">
-                  Choose a Topic to Begin
+                <Text level="p" className="text-[11px] text-gray-500 mt-0.5">
+                  Choose a topic to begin your preparation
                 </Text>
               </div>
 
@@ -87,20 +92,32 @@ const DsaPrepWorkspace = ({
             </div>
           ) : (
             <div className="space-y-4">
-              <Button
+              <button
                 onClick={onBackToTopics}
-                variant="OUTLINE"
-                size="SMALL"
-                text="← Back to Topics"
-                className="border-gray-700 bg-transparent hover:border-red-500 hover:bg-red-500/10 text-white"
-              />
+                className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-500 hover:text-white transition-colors duration-200 group"
+              >
+                <span className="transition-transform duration-200 group-hover:-translate-x-0.5">
+                  ←
+                </span>
+                Back to Topics
+              </button>
 
-              <div className="mb-1">
-                <Text level="h2" className="mt-2 text-xl font-bold text-white">
-                  Questions in {TOPIC_LABELS[selectedTopic] || selectedTopic}
+              <div>
+                <Text
+                  level="span"
+                  className="text-[9px] text-gray-600 uppercase font-bold tracking-[0.15em] block mb-1.5"
+                >
+                  {TOPIC_LABELS[selectedTopic] || selectedTopic}
                 </Text>
-                <Text level="p" className="mb-4 text-xs text-gray-400 mt-1">
-                  Select a question to view details
+                <Text level="h2" className="text-lg font-bold text-white">
+                  Questions
+                </Text>
+                <Text
+                  level="p"
+                  className="text-[11px] text-gray-500 mt-0.5 mb-4"
+                >
+                  {filteredQuestions.length} question
+                  {filteredQuestions.length !== 1 ? "s" : ""} available
                 </Text>
 
                 <DsaQuestionList
@@ -124,7 +141,7 @@ const DsaPrepWorkspace = ({
         )}
       >
         <div
-          className="flex-1 overflow-y-auto scrollbar-thin-grey px-4 py-4 scroll-smooth"
+          className="flex-1 overflow-y-auto scrollbar-thin-grey px-6 py-5 scroll-smooth"
           id="right-scroll-area"
         >
           {!selectedTopic ? (
@@ -149,7 +166,7 @@ const DsaPrepWorkspace = ({
               </FlexContainer>
             )
           ) : (
-            <div className="w-full max-w-4xl px-4">
+            <div className="w-full max-w-3xl mx-auto">
               <div className="mb-6 pb-4 border-b border-gray-800">
                 <Text level="h2" className="text-2xl font-bold text-white mb-1">
                   {TOPIC_LABELS[selectedTopic] || selectedTopic}

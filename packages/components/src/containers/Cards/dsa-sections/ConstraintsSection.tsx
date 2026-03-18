@@ -3,30 +3,33 @@ import type { ConstraintsSectionProps } from "@tbe/interface";
 
 const ConstraintsSection = ({ constraints }: ConstraintsSectionProps) => {
   return (
-    <div className="space-y-3">
-      <Text
-        level="h2"
-        className="text-white hover:text-red-500 transition-colors duration-200 font-bold text-sm cursor-default uppercase tracking-wider"
-      >
-        Constraints
-      </Text>
+    <div className="space-y-4">
+      <div className="flex items-center gap-2.5">
+        <div className="w-1 h-5 rounded-full bg-red-500 shrink-0" />
+        <Text
+          level="h2"
+          className="text-white font-bold text-base tracking-tight"
+        >
+          Constraints
+        </Text>
+      </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {constraints.map((entry, index) => (
           <div
             key={index}
-            className="bg-[#1a1a1a] border border-gray-800 rounded-lg overflow-hidden"
+            className="bg-[#141414] border border-gray-800/80 rounded-lg overflow-hidden"
           >
-            <div className="p-2.5 border-b border-gray-800/50 bg-[#161616]">
-              <code className="text-xs text-red-400 font-mono">
+            <div className="px-3 py-2 border-b border-gray-800/50 bg-[#111]">
+              <code className="text-xs text-red-400 font-mono font-medium">
                 {entry.constraint}
               </code>
             </div>
-            <div className="p-2.5 space-y-1.5">
+            <div className="px-3 py-2.5 grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <Text
                   level="span"
-                  className="text-[10px] text-gray-500 font-mono uppercase tracking-wider"
+                  className="text-[10px] text-gray-500 font-mono uppercase tracking-wider block mb-1"
                 >
                   Meaning
                 </Text>
@@ -40,7 +43,7 @@ const ConstraintsSection = ({ constraints }: ConstraintsSectionProps) => {
               <div>
                 <Text
                   level="span"
-                  className="text-[10px] text-gray-500 font-mono uppercase tracking-wider"
+                  className="text-[10px] text-gray-500 font-mono uppercase tracking-wider block mb-1"
                 >
                   Implication
                 </Text>
