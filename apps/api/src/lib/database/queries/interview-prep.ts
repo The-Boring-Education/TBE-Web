@@ -603,11 +603,71 @@ const getAllDSAQuestionsFromDB = async (
 
     const totalCount = await DSAQuestion.countDocuments(matchStage);
 
-    const questions = await DSAQuestion.find(matchStage)
-      .sort({ order: 1, createdAt: -1 }) // Sort by order first, then by createdAt
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    const DSA_TOPIC_SORT_ORDER = [
+      "ARRAY",
+      "STRING",
+      "HASHMAP",
+      "TWO_POINTERS",
+      "SLIDING_WINDOW",
+      "PREFIX_SUM",
+      "SORTING",
+      "BINARY_SEARCH",
+      "MATH",
+      "BIT_MANIPULATION",
+      "RECURSION",
+      "LINKED_LIST",
+      "STACK",
+      "QUEUE",
+      "BINARY_TREE",
+      "TREE",
+      "BST",
+      "HEAP",
+      "TRIE",
+      "GRAPH",
+      "DFS",
+      "BFS",
+      "BACKTRACKING",
+      "DYNAMIC_PROGRAMMING",
+      "GREEDY",
+      "UNION_FIND",
+    ];
+
+    const questions = await DSAQuestion.aggregate([
+      { $match: matchStage },
+      {
+        $addFields: {
+          _topicOrder: {
+            $let: {
+              vars: {
+                idx: {
+                  $indexOfArray: [
+                    DSA_TOPIC_SORT_ORDER,
+                    { $arrayElemAt: ["$topics", 0] },
+                  ],
+                },
+              },
+              in: { $cond: [{ $eq: ["$$idx", -1] }, 999, "$$idx"] },
+            },
+          },
+          _difficultyOrder: {
+            $switch: {
+              branches: [
+                { case: { $eq: ["$difficulty", "EASY"] }, then: 1 },
+                { case: { $eq: ["$difficulty", "MEDIUM"] }, then: 2 },
+                { case: { $eq: ["$difficulty", "HARD"] }, then: 3 },
+              ],
+              default: 4,
+            },
+          },
+        },
+      },
+      {
+        $sort: { _topicOrder: 1, _difficultyOrder: 1, order: 1, createdAt: -1 },
+      },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+      { $project: { _topicOrder: 0, _difficultyOrder: 0 } },
+    ]);
 
     return {
       data: {
@@ -758,9 +818,24 @@ const getDSAQuestionsGroupedByTopic = async (
       matchStage.companyTypes = { $in: [companyType] };
     }
 
-    // Use aggregation to group questions by topic
+    // Use aggregation to group questions by topic, sorted Easy → Medium → Hard within each
     const groupedQuestions = await DSAQuestion.aggregate([
       { $match: matchStage },
+      {
+        $addFields: {
+          _difficultyOrder: {
+            $switch: {
+              branches: [
+                { case: { $eq: ["$difficulty", "EASY"] }, then: 1 },
+                { case: { $eq: ["$difficulty", "MEDIUM"] }, then: 2 },
+                { case: { $eq: ["$difficulty", "HARD"] }, then: 3 },
+              ],
+              default: 4,
+            },
+          },
+        },
+      },
+      { $sort: { _difficultyOrder: 1, order: 1, createdAt: -1 } },
       { $unwind: "$topics" },
       {
         $group: {
