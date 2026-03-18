@@ -9,6 +9,7 @@ import type {
   NavbarVariantConfig,
 } from "@tbe/interface";
 import type { TopNavbarLinkProps } from "@tbe/types";
+import { cn } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
 import { Fragment, useMemo, useState } from "react";
@@ -59,6 +60,7 @@ const Navbar = ({
   sidebarContent,
   showBackButton = false,
   backButtonHref = "/",
+  compact = false,
 }: MainNavbarProps = {}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
@@ -149,7 +151,11 @@ const Navbar = ({
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       <nav
-        className={`flex items-center justify-between p-[12px] lg:px-[32px] ${borderClass}`}
+        className={cn(
+          "flex items-center justify-between",
+          compact ? "p-[6px] lg:px-[16px]" : "p-[12px] lg:px-[32px]",
+          borderClass,
+        )}
       >
         <div className="flex items-center gap-[16px]">
           {showBackButton && (
