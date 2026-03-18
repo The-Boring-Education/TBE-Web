@@ -51,10 +51,14 @@ const nextConfig = {
     unoptimized: true,
   },
 
-  // 👇 ADD THIS: transpile TypeScript packages from your monorepo
+  // Bundle all dependencies into the server output so webpack React aliases
+  // apply during SSG — prevents duplicate-React "useContext is null" errors
+  // on Vercel where pnpm node_modules layout can differ from local.
+  bundlePagesRouterDependencies: true,
+  serverExternalPackages: [],
+
   transpilePackages: ["@tbe/auth", "@tbe/components", "@tbe/utils"],
 
-  // Disable ESLint during Next.js build (we run it separately in package.json)
   eslint: {
     ignoreDuringBuilds: true,
   },
