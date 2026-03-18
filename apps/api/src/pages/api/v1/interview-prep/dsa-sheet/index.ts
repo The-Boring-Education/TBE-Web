@@ -29,7 +29,7 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const { title, answer, content, domain, difficulty, companyTypes, topics } =
+  const { title, answer, content, domain, difficulty, companyTypes, topics, sections } =
     req.body;
 
   const questionAnswer = answer || content;
@@ -56,6 +56,7 @@ const handleCreateQuestion = async (
     difficulty,
     companyTypes: Array.isArray(companyTypes) ? companyTypes : [companyTypes],
     topics: Array.isArray(topics) ? topics : [topics],
+    ...(sections && { sections }),
   });
 
   if (error) {

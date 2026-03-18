@@ -15,6 +15,15 @@ export interface DSAQuestionRaw {
   companyTypes: string[];
   topics: string[];
   resources?: any;
+  examples?: {
+    _id?: string;
+    inputText: string;
+    outputText: string;
+    explanation?: string;
+    image?: string;
+  }[];
+  constraints?: string[];
+  sections?: any;
 }
 
 export interface DSATopicGroup {

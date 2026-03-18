@@ -217,6 +217,77 @@ export interface UserSheetQuestionModel {
   isStarred?: boolean;
 }
 
+export interface DSAFirstPrinciples {
+  paragraphs: string[];
+  key_observation: string;
+}
+
+export interface DSAConstraintEntry {
+  constraint: string;
+  plain_meaning: string;
+  implication: string;
+}
+
+export interface DSAExampleEntry {
+  label: string;
+  input: string;
+  output: string;
+  explanation: string;
+  step_by_step: string[] | null;
+}
+
+export interface DSAApproachEntry {
+  approach_number: number;
+  name: string;
+  description: string;
+  time_complexity: string;
+  time_reason: string;
+  space_complexity: string;
+  space_reason: string;
+  verdict: "too_slow" | "acceptable" | "optimal";
+  verdict_label: string;
+}
+
+export interface DSAHowToApproach {
+  steps: {
+    step_number: number;
+    heading: string;
+    body: string;
+  }[];
+}
+
+export interface DSAPseudoCode {
+  code: string;
+  annotations: {
+    line_reference: string;
+    note: string;
+  }[];
+}
+
+export interface DSAWorkingCode {
+  default_language: string;
+  languages: Record<string, { code: string }>;
+}
+
+export interface DSACommonMistake {
+  mistake_number: number;
+  title: string;
+  wrong_code: string;
+  explanation: string;
+  fix: string;
+}
+
+export interface DSAQuestionSections {
+  first_principles?: DSAFirstPrinciples;
+  constraints?: DSAConstraintEntry[];
+  examples?: DSAExampleEntry[];
+  ways_to_solve?: DSAApproachEntry[];
+  how_to_approach?: DSAHowToApproach;
+  pseudo_code?: DSAPseudoCode;
+  working_code?: DSAWorkingCode;
+  common_mistakes?: DSACommonMistake[];
+}
+
 export interface DSAQuestionModel extends Document {
   _id: typeof Schema.Types.ObjectId;
   title: string;
@@ -226,6 +297,7 @@ export interface DSAQuestionModel extends Document {
   difficulty: DSADifficultyType;
   companyTypes: CompanyType[];
   topics: DSATopicType[];
+  sections?: DSAQuestionSections;
   order?: number;
   createdAt: Date;
   updatedAt: Date;
@@ -723,6 +795,18 @@ export interface CreateUserRequestPayloadProps {
   provider: string;
   providerAccountId?: string;
 }
+export interface UpdateDSAQuestionRequestPayloadProps {
+  title?: string;
+  answer?: string;
+  resources?: QuestionResourcesModel;
+  domain?: DSADomainType[];
+  difficulty?: DSADifficultyType;
+  companyTypes?: CompanyType[];
+  topics?: DSATopicType[];
+  sections?: DSAQuestionSections;
+  order?: number;
+}
+
 export interface AddOnboardingPayloadProps {
   userId: string;
   userName: string;
