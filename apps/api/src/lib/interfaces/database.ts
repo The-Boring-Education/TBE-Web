@@ -795,6 +795,18 @@ export interface CreateUserRequestPayloadProps {
   provider: string;
   providerAccountId?: string;
 }
+export interface UpdateDSAQuestionRequestPayloadProps {
+  title?: string;
+  answer?: string;
+  resources?: QuestionResourcesModel;
+  domain?: DSADomainType[];
+  difficulty?: DSADifficultyType;
+  companyTypes?: CompanyType[];
+  topics?: DSATopicType[];
+  sections?: DSAQuestionSections;
+  order?: number;
+}
+
 export interface AddOnboardingPayloadProps {
   userId: string;
   userName: string;

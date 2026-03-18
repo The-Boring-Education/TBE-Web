@@ -36,6 +36,7 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     domain: question.domain,
     examples: examples,
     constraints: constraints as string[],
+    sections: question.sections,
   };
 };
 
