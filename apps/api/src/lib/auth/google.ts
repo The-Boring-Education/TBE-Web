@@ -16,10 +16,10 @@ const getCredentials = () => {
 };
 
 const getCallbackUrl = (): string => {
-  const baseUrl = envConfig.AUTH_URL;
+  const baseUrl = envConfig.API_URL;
   if (!baseUrl) {
     throw new Error(
-      "AUTH_URL must be set to the API app base URL (e.g. https://api.example.com) for OAuth callback",
+      "API_URL must be set to the API app base URL (e.g. https://api.example.com) for OAuth callback",
     );
   }
   return `${baseUrl.replace(/\/$/, "")}/api/v1/auth/callback/google`;

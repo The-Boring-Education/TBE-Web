@@ -1,7 +1,6 @@
 const NODE_ENV = process.env.NODE_ENV as string;
 const PLATFORM_URL = process.env.NEXT_PUBLIC_PLATFORM_URL as string;
 const MONGODB_URI = process.env.MONGODB_URI as string;
-const AUTH_URL = process.env.NEXT_PUBLIC_AUTH_URL as string;
 const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 const GOOGLE_AUTH_CLIENT_ID = process.env.GOOGLE_AUTH_CLIENT_ID as string;
 const GOOGLE_AUTH_CLIENT_SECRET = process.env
@@ -35,7 +34,6 @@ const envConfig = {
   ADMIN_SECRET,
   YOUTUBE_API_KEY,
   NEXTAUTH_SECRET,
-  AUTH_URL,
   GA_TRACKING_ID,
   ADMIN_BASE_URL,
   CASHFREE_BASE_URL,
