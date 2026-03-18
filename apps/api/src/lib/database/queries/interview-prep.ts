@@ -7,6 +7,7 @@ import type {
   DSADifficultyType,
   DSADomainType,
   SheetEnrollmentRequestProps,
+  UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
 } from "@/lib/interfaces";
 import { generateYouTubeSearchLink } from "@/lib/utils";
@@ -693,6 +694,51 @@ const addDSAQuestionToDB = async (questionPayload: {
   }
 };
 
+const updateDSAQuestionInDB = async (
+  questionId: string,
+  updatedData: UpdateDSAQuestionRequestPayloadProps,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const updatedQuestion = await DSAQuestion.findByIdAndUpdate(
+      questionId,
+      { $set: updatedData },
+      { new: true },
+    );
+
+    if (!updatedQuestion) {
+      return { error: "DSA question not found" };
+    }
+
+    return { data: updatedQuestion };
+  } catch (error) {
+    logger.error("DB: updateDSAQuestionInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update DSA question", details: error };
+  }
+};
+
+const getDSAQuestionByIDFromDB = async (
+  questionId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const question = await DSAQuestion.findById(questionId);
+
+    if (!question) {
+      return { error: "DSA question not found" };
+    }
+
+    return { data: question };
+  } catch (error) {
+    logger.error("DB: getDSAQuestionByIDFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch DSA question", details: error };
+  }
+};
+
 const getDSAQuestionsGroupedByTopic = async (
   domain: DSADomainType,
   difficulty?: DSADifficultyType,
@@ -728,6 +774,8 @@ const getDSAQuestionsGroupedByTopic = async (
               difficulty: "$difficulty",
               companyTypes: "$companyTypes",
               topics: "$topics",
+              sections: "$sections",
+              resources: "$resources",
             },
           },
           count: { $sum: 1 },
@@ -775,6 +823,7 @@ export {
   getAllInterviewSheetsFromDB,
   getAllQuestionsByUser,
   getASheetForUserFromDB,
+  getDSAQuestionByIDFromDB,
   getDSAQuestionsGroupedByTopic,
   getDSASheetMetadataFromDB,
   getEnrolledSheetFromDB,
@@ -783,6 +832,7 @@ export {
   getStarredQuestionsFromDB,
   markQuestionCompletedByUser,
   markQuestionStarredByUser,
+  updateDSAQuestionInDB,
   updateInterviewQuestionInDB,
   updateInterviewSheetInDB,
 };

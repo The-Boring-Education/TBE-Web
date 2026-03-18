@@ -12,6 +12,7 @@ const nextConfig = {
     "@tbe/constants",
     "@tbe/auth",
     "@tbe/config",
+    "@tbe/query",
   ],
 
   // Disable ESLint during Next.js build

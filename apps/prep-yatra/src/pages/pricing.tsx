@@ -296,3 +296,7 @@ const PricingPage: React.FC = () => {
 };
 
 export default PricingPage;
+
+export async function getServerSideProps() {
+  return { props: {} };
+}

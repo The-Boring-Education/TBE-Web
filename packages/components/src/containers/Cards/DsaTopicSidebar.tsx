@@ -1,5 +1,6 @@
 import type { TopicWithCount } from "@tbe/hooks";
 import { cn } from "@tbe/utils";
+import { Folder, FolderOpen } from "lucide-react";
 
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../Page/common/FlexContainer";
@@ -26,64 +27,65 @@ const DsaTopicSidebar = ({
       itemCenter={false}
       justifyCenter={false}
       wrap={false}
-      className={cn("gap-2", className)}
+      className={cn("gap-1", className)}
     >
-      {topics.map(({ topic, count, label }, index) => {
+      {topics.map(({ topic, count, label }) => {
         const isCompleted = completionMap?.[topic] ?? false;
         const isSelected = selectedTopic === topic;
 
         return (
-          <div
+          <button
             key={topic}
-            className={cn(
-              "w-full border rounded-xl px-4 py-3 transition-all duration-200 cursor-pointer group flex items-center justify-between",
-              isCompleted
-                ? "border-green-500/30 hover:border-green-500/50 hover:bg-green-500/10 bg-transparent"
-                : isSelected
-                  ? "border-red-500/50 bg-red-500/5"
-                  : "border-gray-800 hover:border-red-500 hover:bg-transparent bg-transparent",
-            )}
             onClick={() => onTopicClick(topic)}
+            aria-pressed={isSelected}
+            className={cn(
+              "w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
+              isCompleted
+                ? "border-green-500 bg-green-500/[0.03]"
+                : isSelected
+                  ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)]"
+                  : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800",
+            )}
           >
-            <div className="flex items-center gap-3.5 min-w-0">
-              <div
-                className={cn(
-                  "flex items-center justify-center w-5.5 h-5.5 rounded-full border text-xs font-bold transition-all duration-200 shrink-0",
-                  isCompleted
-                    ? "border-green-500 text-green-500"
-                    : isSelected
-                      ? "border-red-500 text-red-500"
-                      : "border-gray-700 text-gray-500 group-hover:border-red-500 group-hover:text-red-500",
-                )}
-              >
-                {index + 1}
-              </div>
+            <FlexContainer
+              className="items-center w-full gap-3"
+              itemCenter
+              justifyCenter={false}
+            >
+              {isSelected ? (
+                <FolderOpen
+                  className={cn(
+                    "w-[15px] h-[15px] shrink-0",
+                    isCompleted
+                      ? "text-green-500"
+                      : "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]",
+                  )}
+                />
+              ) : (
+                <Folder
+                  className={cn(
+                    "w-[15px] h-[15px] shrink-0 transition-colors",
+                    isCompleted
+                      ? "text-green-500/60"
+                      : "text-gray-600 group-hover:text-gray-400",
+                  )}
+                />
+              )}
               <Text
                 level="p"
                 className={cn(
-                  "text-sm font-bold truncate transition-colors",
+                  "text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1",
                   isCompleted
-                    ? "text-green-500"
+                    ? "text-green-400"
                     : isSelected
                       ? "text-white"
-                      : "text-white",
+                      : "text-gray-400 group-hover:text-gray-300",
                 )}
               >
                 {label}
               </Text>
-            </div>
-            <div className="ml-3 shrink-0">
-              <Text
-                level="span"
-                className={cn(
-                  "text-xs font-medium",
-                  isCompleted ? "text-green-500/80" : "text-gray-500",
-                )}
-              >
-                {count}
-              </Text>
-            </div>
-          </div>
+            </FlexContainer>
+          </button>
         );
       })}
     </FlexContainer>

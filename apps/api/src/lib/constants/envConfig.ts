@@ -7,7 +7,6 @@ const REQUIRED_VARS = [
 const OPTIONAL_VARS = [
   "NODE_ENV",
   "NEXT_PUBLIC_PLATFORM_URL",
-  "NEXT_PUBLIC_AUTH_URL",
   "NEXT_PUBLIC_API_URL",
   "NEXT_PUBLIC_GOOGLE_ANALYTICS",
   "YOUTUBE_API_KEY",
@@ -24,7 +23,6 @@ const OPTIONAL_VARS = [
   "FROM_EMAIL",
   "GOOGLE_AUTH_CLIENT_ID",
   "GOOGLE_AUTH_CLIENT_SECRET",
-  "AUTH_URL",
 ] as const;
 
 const missing = REQUIRED_VARS.filter((key) => !process.env[key]);
@@ -53,7 +51,6 @@ const envConfig = {
   ADMIN_SECRET: process.env.ADMIN_SECRET as string,
   YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY || "",
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET as string,
-  AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL || "",
   GA_TRACKING_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || "",
   ADMIN_BASE_URL: process.env.ADMIN_BASE_URL || "",
   CASHFREE_BASE_URL: process.env.CASHFREE_BASE_URL || "",
