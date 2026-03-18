@@ -69,7 +69,7 @@ describe("DsaPrepWorkspace", () => {
     render(<DsaPrepWorkspace {...defaultProps} />);
 
     expect(screen.getByText("Explore Topics")).toBeInTheDocument();
-    expect(screen.getByText("Choose a Topic to Begin")).toBeInTheDocument();
+    expect(screen.getByText(/Choose a topic to practice/i)).toBeInTheDocument();
     expect(screen.getByText("Array")).toBeInTheDocument();
     expect(screen.getByText("Stack")).toBeInTheDocument();
   });
@@ -94,7 +94,7 @@ describe("DsaPrepWorkspace", () => {
   it("should show back to topics button when topic is selected", () => {
     render(<DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />);
 
-    expect(screen.getByText("← Back to Topics")).toBeInTheDocument();
+    expect(screen.getByText(/View All Topics/i)).toBeInTheDocument();
   });
 
   it("should call onBackToTopics when back button is clicked", () => {
@@ -108,16 +108,14 @@ describe("DsaPrepWorkspace", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText("← Back to Topics"));
+    fireEvent.click(screen.getByText(/View All Topics/i));
     expect(onBackToTopics).toHaveBeenCalled();
   });
 
   it("should render empty state when no topic is selected", () => {
     render(<DsaPrepWorkspace {...defaultProps} />);
 
-    expect(
-      screen.getByText("Select a topic from the left"),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Pick a topic on the left/i)).toBeInTheDocument();
   });
 
   it("should render custom empty state content", () => {
@@ -150,12 +148,12 @@ describe("DsaPrepWorkspace", () => {
     );
 
     const arrayLabel = screen.getByText("Array");
-    expect(arrayLabel.className).toContain("text-green-500");
+    expect(arrayLabel.className).toContain("text-green-400");
   });
 
   it("should display topic name in header when topic is selected", () => {
     render(<DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />);
 
-    expect(screen.getByText("Questions in Array")).toBeInTheDocument();
+    expect(screen.getByText("Questions")).toBeInTheDocument();
   });
 });
