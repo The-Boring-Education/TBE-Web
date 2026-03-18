@@ -1,22 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHookWithQuery } from "@test-utils/query-wrapper";
+import { waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock sendRequest from utils first
 vi.mock("@tbe/utils", () => ({
   sendRequest: vi.fn(),
 }));
 
-// Mock react-query
-const mockFetchQuery = vi.fn();
-const mockQueryClient = {
-  fetchQuery: mockFetchQuery,
-};
-
-vi.mock("react-query", () => ({
-  useQueryClient: () => mockQueryClient,
-}));
-
-// Import after mocks
 import useApi from "@tbe/hooks/useApi";
 import { sendRequest } from "@tbe/utils";
 
@@ -33,7 +22,7 @@ describe("useApi Hook", () => {
 
   describe("Initial State", () => {
     it("should return initial state with null data", () => {
-      const { result } = renderHook(() =>
+      const { result } = renderHookWithQuery(() =>
         useApi("test-key", undefined, { enabled: false }),
       );
 
@@ -44,7 +33,7 @@ describe("useApi Hook", () => {
     });
 
     it("should have makeRequest function", () => {
-      const { result } = renderHook(() =>
+      const { result } = renderHookWithQuery(() =>
         useApi("test-key", undefined, { enabled: false }),
       );
 
@@ -59,17 +48,12 @@ describe("useApi Hook", () => {
         url: "/api/test",
       };
 
-      mockFetchQuery.mockResolvedValue({
-        success: true,
-        data: { id: 1 },
-      });
-
-      const { result } = renderHook(() =>
+      const { result } = renderHookWithQuery(() =>
         useApi("test-key", params, { enabled: true }),
       );
 
       await waitFor(() => {
-        expect(mockFetchQuery).toHaveBeenCalled();
+        expect(mockSendRequest).toHaveBeenCalledWith(params);
       });
     });
 
@@ -79,9 +63,9 @@ describe("useApi Hook", () => {
         url: "/api/test",
       };
 
-      renderHook(() => useApi("test-key", params, { enabled: false }));
+      renderHookWithQuery(() => useApi("test-key", params, { enabled: false }));
 
-      expect(mockFetchQuery).not.toHaveBeenCalled();
+      expect(mockSendRequest).not.toHaveBeenCalled();
     });
 
     it("should call makeRequest with correct params", async () => {
@@ -90,21 +74,13 @@ describe("useApi Hook", () => {
         url: "/api/test",
       };
 
-      mockFetchQuery.mockResolvedValue({
-        success: true,
-        data: { id: 1 },
-      });
-
-      const { result } = renderHook(() =>
+      const { result } = renderHookWithQuery(() =>
         useApi("test-key", params, { enabled: false }),
       );
 
       await result.current.makeRequest();
 
-      expect(mockFetchQuery).toHaveBeenCalledWith(
-        ["test-key", params],
-        expect.any(Function),
-      );
+      expect(mockSendRequest).toHaveBeenCalledWith(params);
     });
 
     it("should allow override params in makeRequest", async () => {
@@ -119,73 +95,13 @@ describe("useApi Hook", () => {
         body: { name: "New" },
       };
 
-      mockFetchQuery.mockResolvedValue({
-        success: true,
-        data: { id: 1 },
-      });
-
-      const { result } = renderHook(() =>
+      const { result } = renderHookWithQuery(() =>
         useApi("test-key", initialParams, { enabled: false }),
       );
 
       await result.current.makeRequest(overrideParams);
 
-      expect(mockFetchQuery).toHaveBeenCalledWith(
-        ["test-key", overrideParams],
-        expect.any(Function),
-      );
-    });
-  });
-
-  describe("Loading State", () => {
-    it("should set loading to true during request", async () => {
-      const params = {
-        method: "GET" as const,
-        url: "/api/test",
-      };
-
-      // Create a promise that we can control
-      let resolveRequest: any;
-      const requestPromise = new Promise((resolve) => {
-        resolveRequest = resolve;
-      });
-
-      mockFetchQuery.mockReturnValue(requestPromise);
-      mockSendRequest.mockReturnValue(requestPromise);
-
-      const { result } = renderHook(() =>
-        useApi("test-key", params, { enabled: false }),
-      );
-
-      const requestPromise2 = result.current.makeRequest();
-
-      // Loading should be true during request
-      // Note: This is tricky to test with the current implementation
-      // as loading state is managed internally in fetchFunction
-      expect(result.current.loading).toBe(false); // Initially false when not enabled
-    });
-  });
-
-  describe("Error Handling", () => {
-    it("should handle API errors", async () => {
-      const params = {
-        method: "GET" as const,
-        url: "/api/test",
-      };
-
-      const errorMessage = "Network error";
-      mockSendRequest.mockRejectedValue(new Error(errorMessage));
-      mockFetchQuery.mockRejectedValue(new Error(errorMessage));
-
-      const { result } = renderHook(() =>
-        useApi("test-key", params, { enabled: false }),
-      );
-
-      try {
-        await result.current.makeRequest();
-      } catch (error: any) {
-        expect(error.message).toBe(errorMessage);
-      }
+      expect(mockSendRequest).toHaveBeenCalledWith(overrideParams);
     });
   });
 
@@ -200,19 +116,41 @@ describe("useApi Hook", () => {
         success: true,
         data: { id: 1, name: "Test User" },
       };
-
-      mockFetchQuery.mockResolvedValue(mockResponse);
       mockSendRequest.mockResolvedValue(mockResponse);
 
-      const { result } = renderHook(() =>
-        useApi("test-key", params, { enabled: false }),
+      const { result } = renderHookWithQuery(() =>
+        useApi("test-key-response", params, { enabled: true }),
       );
 
-      await result.current.makeRequest();
+      await waitFor(() => {
+        expect(result.current.response).toEqual(mockResponse);
+      });
+      expect(result.current.isSuccess).toBe(true);
+    });
+  });
 
-      // The response is set internally via fetchFunction
-      // We verify makeRequest was called correctly
-      expect(mockFetchQuery).toHaveBeenCalled();
+  describe("Error Handling", () => {
+    it("should handle API errors", async () => {
+      const params = {
+        method: "GET" as const,
+        url: "/api/test",
+      };
+
+      mockSendRequest.mockRejectedValue(new Error("Network error"));
+
+      const { result } = renderHookWithQuery(() =>
+        useApi("test-key-error", params, { enabled: false }),
+      );
+
+      try {
+        await result.current.makeRequest();
+      } catch {
+        // expected to throw
+      }
+
+      await waitFor(() => {
+        expect(result.current.error).toBe("Network error");
+      });
     });
   });
 });

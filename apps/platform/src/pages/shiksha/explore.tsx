@@ -7,14 +7,21 @@ import {
   Text,
 } from '@tbe/components';
 import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
-import { useApi, useAPIResponseMapper } from '@tbe/hooks';
+import { useAPIResponseMapper } from '@tbe/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
-import { getPreFetchProps, mapCourseResponseToCard } from '@tbe/utils';
+import { CACHE_TIMES, queryKeys, useQuery } from '@tbe/query';
+import {
+  getPreFetchProps,
+  mapCourseResponseToCard,
+  sendRequest,
+} from '@tbe/utils';
 import { Fragment } from 'react';
 
 const Home = ({ seoMeta }: PageProps) => {
-  const { response, loading } = useApi('shiksha', {
-    url: routes.api.shiksha,
+  const { data: response, isLoading: loading } = useQuery<any>({
+    queryKey: queryKeys.shiksha.lists(),
+    queryFn: () => sendRequest({ url: routes.api.shiksha }),
+    ...CACHE_TIMES.STATIC,
   });
 
   const courses: PrimaryCardWithCTAProps[] = useAPIResponseMapper(

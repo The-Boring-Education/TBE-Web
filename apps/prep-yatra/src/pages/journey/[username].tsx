@@ -18,8 +18,20 @@ import {
   Linkedin,
   User,
 } from "lucide-react";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+
+// Skip static prerender for this dynamic route to avoid "Cannot read properties of null (reading 'useEffect')"
+// during build (e.g. duplicate React in monorepo). Pages are generated on-demand.
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: [],
+  fallback: "blocking",
+});
+
+export const getStaticProps: GetStaticProps = async () => ({
+  props: {},
+});
 
 const PrepLogsShowcase = () => {
   const router = useRouter();

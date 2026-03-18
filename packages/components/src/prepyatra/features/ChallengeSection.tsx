@@ -103,7 +103,7 @@ const ChallengeSection = ({
           <CardContent className="pt-6">
             <p className="text-red-400">Failed to load challenges: {error}</p>
             <Button
-              onClick={refetch}
+              onClick={() => refetch()}
               variant="outline"
               size="sm"
               className="mt-2"

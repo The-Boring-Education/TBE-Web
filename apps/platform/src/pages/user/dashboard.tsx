@@ -12,8 +12,10 @@ import {
   Text,
 } from '@tbe/components';
 import { LINKS, routes, STATIC_FILE_PATH } from '@tbe/constants';
-import { useApi, useAPIResponseMapper, useUser } from '@tbe/hooks';
+import { useAPIResponseMapper, useUser } from '@tbe/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
+import { CACHE_TIMES, useQuery } from '@tbe/query';
+import { sendRequest } from '@tbe/utils';
 import {
   getPreFetchProps,
   mapCourseResponseToCard,
@@ -28,13 +30,13 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
   const router = useRouter();
   const { user, isAuth, loading: loadingUser } = useUser();
 
-  const { response, loading } = useApi(
-    'user-dashboard',
-    {
-      url: `${routes.api.userDashboard}?userId=${user?.id}`,
-    },
-    { enabled: !!user?.id },
-  );
+  const { data: response, isLoading: loading } = useQuery<any>({
+    queryKey: ['user-dashboard', user?.id],
+    queryFn: () =>
+      sendRequest({ url: `${routes.api.userDashboard}?userId=${user?.id}` }),
+    ...CACHE_TIMES.STANDARD,
+    enabled: !!user?.id,
+  });
 
   const courses: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
     response?.data.enrolledCourses,

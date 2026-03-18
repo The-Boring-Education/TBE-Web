@@ -2,32 +2,18 @@ import "@tbe/components/styles/common.css";
 import "@/styles/globals.css";
 
 import { AuthProvider } from "@tbe/auth";
+import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import React from "react";
 
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false,
-            retry: 1,
-          },
-        },
-      }),
-  );
 
   return (
     <>
@@ -58,14 +44,14 @@ export default function App({
         <meta name="apple-mobile-web-app-title" content="Resume Yatra" />
       </Head>
 
-      <AuthProvider session={session}>
-        <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TBEQueryProvider>
           <TooltipProvider>
             <Toaster />
             <Sonner />
             <Component {...pageProps} />
           </TooltipProvider>
-        </QueryClientProvider>
+        </TBEQueryProvider>
       </AuthProvider>
     </>
   );

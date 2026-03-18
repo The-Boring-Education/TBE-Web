@@ -32,11 +32,7 @@ const Dashboard = () => {
   const router = useRouter();
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
   const { showCelebration } = usePrepYatraGamificationContext();
-  const {
-    logs: prepLogs,
-    refetch: refetchPrepLogs,
-    setLogs: setPrepLogs,
-  } = usePrepLogs(user?.id);
+  const { logs: prepLogs, refetch: refetchPrepLogs } = usePrepLogs(user?.id);
 
   // State management
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -145,10 +141,8 @@ const Dashboard = () => {
     }
   };
 
-  const handleLogDeleted = (deletedLogId: string) => {
-    setPrepLogs((prevLogs) =>
-      prevLogs.filter((log) => log._id !== deletedLogId),
-    );
+  const handleLogDeleted = (_deletedLogId: string) => {
+    refetchPrepLogs();
     toast.success("Prep log deleted successfully!");
   };
 
@@ -327,3 +321,7 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+export async function getServerSideProps() {
+  return { props: {} };
+}

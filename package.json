@@ -13,7 +13,6 @@
     "check-types": "turbo run check-types",
     "quality:fix": "pnpm lint && pnpm format",
     "quality:check": "pnpm lint:check && pnpm format:check && pnpm check-types",
-    "clean": "turbo run clean",
     "dev:platform": "turbo run dev --filter=@tbe/platform",
     "dev:prep-yatra": "turbo run dev --filter=@tbe/prep-yatra",
     "dev:quizes": "turbo run dev --filter=@tbe/quizes",
@@ -41,6 +40,8 @@
     "test:api": "turbo run test:api --filter=@tbe/testing",
     "test:coverage": "turbo run test:coverage --filter=@tbe/testing",
     "test:ci": "turbo run test:ci --filter=@tbe/testing",
+    "test:e2e": "turbo run test:e2e --filter=@tbe/testing",
+    "test:e2e:ui": "turbo run test:e2e:ui --filter=@tbe/testing",
     "seo:audit": "lhci autorun",
     "seo:audit:prod": "LHCI_ENV=production lhci autorun",
     "seo:audit:app": "LHCI_ENV=production lhci autorun",
@@ -65,6 +66,15 @@
     "turbo": "^2.5.6"
   },
   "packageManager": "pnpm@10.30.3+sha512.c961d1e0a2d8e354ecaa5166b822516668b7f44cb5bd95122d590dd81922f606f5473b6d23ec4a5be05e7fcd18e8488d47d978bbe981872f1145d06e9a740017",
+  "pnpm": {
+    "overrides": {
+      "react": "^18.3.1",
+      "react-dom": "^18.3.1",
+      "@types/react": "18.3.24",
+      "@types/react-dom": "18.3.7",
+      "csstype": "3.2.3"
+    }
+  },
   "engines": {
     "node": ">=20.x",
     "pnpm": ">=9.12.0"

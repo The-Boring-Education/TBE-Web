@@ -9,7 +9,7 @@ import { Providers } from "@/components/Providers";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Providers session={pageProps.session}>
+    <Providers>
       <OnboardingCheck />
       <Layout>
         <Component {...pageProps} />

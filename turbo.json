@@ -6,12 +6,15 @@
       "dependsOn": ["^build"],
       "env": [
         "GOOGLE_AUTH_CLIENT_ID",
+        "GOOGLE_AUTH_CLIENT_SECRET",
         "MONGODB_URI",
         "API_URL",
         "AUTH_URL",
-        "GOOGLE_AUTH_CLIENT_SECRET",
+        "AUTH_JWT_SECRET",
         "ADMIN_SECRET",
         "NEXTAUTH_SECRET",
+        "NEXTAUTH_URL",
+        "ALLOWED_AUTH_ORIGINS",
         "NODE_ENV",
         "OPENAI_API_KEY",
         "YOUTUBE_API_KEY",
@@ -27,7 +30,6 @@
         "SENTRY_AUTH_TOKEN",
         "ONBOARDING_APP_URL",
         "QUIZZES_APP_URL",
-        "NEXTAUTH_URL",
         "NEXT_PUBLIC_UNSKILLED_API_URL",
         "NEXT_PUBLIC_API_URL",
         "NEXT_PUBLIC_ONBOARDING_URL",
@@ -36,7 +38,6 @@
         "NEXT_PUBLIC_GOOGLE_ANALYTICS",
         "NEXT_PUBLIC_SENTRY_DSN",
         "NEXT_PUBLIC_ONBOARDING_APP_URL",
-        "COOKIE_DOMAIN",
         "VITE_BASE_API_URL",
         "NEXT_PUBLIC_PREPYATRA_BASE_URL",
         "MONGO_URI",
@@ -55,12 +56,15 @@
       "dependsOn": ["^build"],
       "env": [
         "GOOGLE_AUTH_CLIENT_ID",
+        "GOOGLE_AUTH_CLIENT_SECRET",
         "MONGODB_URI",
         "API_URL",
         "AUTH_URL",
-        "GOOGLE_AUTH_CLIENT_SECRET",
+        "AUTH_JWT_SECRET",
         "ADMIN_SECRET",
         "NEXTAUTH_SECRET",
+        "NEXTAUTH_URL",
+        "ALLOWED_AUTH_ORIGINS",
         "NODE_ENV",
         "OPENAI_API_KEY",
         "YOUTUBE_API_KEY",
@@ -76,7 +80,6 @@
         "SENTRY_AUTH_TOKEN",
         "ONBOARDING_APP_URL",
         "QUIZZES_APP_URL",
-        "NEXTAUTH_URL",
         "NEXT_PUBLIC_UNSKILLED_API_URL",
         "NEXT_PUBLIC_API_URL",
         "NEXT_PUBLIC_ONBOARDING_URL",
@@ -85,7 +88,6 @@
         "NEXT_PUBLIC_GOOGLE_ANALYTICS",
         "NEXT_PUBLIC_SENTRY_DSN",
         "NEXT_PUBLIC_ONBOARDING_APP_URL",
-        "COOKIE_DOMAIN",
         "VITE_BASE_API_URL",
         "NEXT_PUBLIC_PREPYATRA_BASE_URL",
         "MONGO_URI",
@@ -147,6 +149,14 @@
     "test:ci": {
       "dependsOn": ["test:unit", "test:api"],
       "cache": false
+    },
+    "test:e2e": {
+      "cache": false,
+      "inputs": ["src/e2e/**/*.{ts,tsx}", "playwright.config.ts"]
+    },
+    "test:e2e:ui": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

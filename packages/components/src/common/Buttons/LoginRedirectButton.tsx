@@ -1,8 +1,8 @@
+import { useAuth } from "@tbe/auth";
 import { Button } from "@tbe/components";
 import type { LoginRedirectButtonProps } from "@tbe/interface";
 import { trackEvent } from "@tbe/utils";
 import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 const LoginRedirectButton = ({
@@ -11,7 +11,7 @@ const LoginRedirectButton = ({
 }: LoginRedirectButtonProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { status } = useSession();
+  const { isAuthenticated } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const LoginRedirectButton = ({
   };
 
   const handleLoginRedirect = () => {
-    if (status === "unauthenticated") {
+    if (!isAuthenticated) {
       try {
         trackEvent("login_redirect_click", {
           category: "auth",
@@ -54,11 +54,7 @@ const LoginRedirectButton = ({
 
   const authRoute = getAuthRoute();
   if (!isClient) return null;
-  if (
-    status === "authenticated" ||
-    pathname === "/login" ||
-    pathname === "/auth"
-  ) {
+  if (isAuthenticated || pathname === "/login" || pathname === "/auth") {
     return null;
   }
 

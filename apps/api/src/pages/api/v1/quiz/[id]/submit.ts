@@ -34,7 +34,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    return handleSubmitQuiz(id, req, res);
+    return await handleSubmitQuiz(id, req, res);
   } catch (error) {
     logger.error("Quiz submit API error", {
       error: error instanceof Error ? error.message : String(error),

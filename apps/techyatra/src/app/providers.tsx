@@ -1,22 +1,18 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SessionProvider } from "next-auth/react";
+import { AuthProvider } from "@tbe/auth";
+import { TBEQueryProvider } from "@tbe/query";
 import React from "react";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
-
 export function Providers({ children }: { children: React.ReactNode }) {
+  // Cast to avoid ReactNode mismatch when monorepo packages use different
+  // @types/react (e.g. one allows bigint in ReactNode, the other does not).
+  const content = children as Parameters<
+    typeof TBEQueryProvider
+  >[0]["children"];
   return (
-    <SessionProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </SessionProvider>
+    <AuthProvider>
+      <TBEQueryProvider>{content}</TBEQueryProvider>
+    </AuthProvider>
   );
 }

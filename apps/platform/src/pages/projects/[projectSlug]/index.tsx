@@ -13,9 +13,14 @@ import {
 } from '@tbe/components';
 import { useGamifiedAction } from '@tbe/components';
 import { routes } from '@tbe/constants';
-import { useAnalytics, useApi, useUser } from '@tbe/hooks';
+import { useAnalytics, useUser } from '@tbe/hooks';
 import type { ProjectPageProps } from '@tbe/interface';
-import { getProjectPageProps, getSelectedProjectChapterMeta } from '@tbe/utils';
+import { useMutation } from '@tbe/query';
+import {
+  getProjectPageProps,
+  getSelectedProjectChapterMeta,
+  sendRequest,
+} from '@tbe/utils';
 import { Fragment, useEffect, useRef, useState } from 'react';
 
 const ProjectPage = ({
@@ -55,7 +60,10 @@ const ProjectPage = ({
     0,
   );
 
-  const { makeRequest } = useApi(`projects/${slug}`);
+  const { mutateAsync: makeRequest } = useMutation({
+    mutationFn: (params: Parameters<typeof sendRequest>[0]) =>
+      sendRequest(params),
+  });
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();

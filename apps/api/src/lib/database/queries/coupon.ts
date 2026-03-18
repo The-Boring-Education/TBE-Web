@@ -245,8 +245,16 @@ const updateCouponFromDB = async (
       stack: error instanceof Error ? error.stack : undefined,
     });
     // Handle Mongoose validation errors
-    if (isCouponValidationError(error)) {
-      const messages = Object.values(error.errors).map((err) => err.message);
+    if (
+      error &&
+      typeof error === "object" &&
+      "name" in error &&
+      (error as { name: string }).name === "ValidationError"
+    ) {
+      const messages = Object.values(
+        (error as unknown as { errors: Record<string, { message: string }> })
+          .errors,
+      ).map((err) => err.message);
       return { error: messages.join(", "), details: error };
     }
 

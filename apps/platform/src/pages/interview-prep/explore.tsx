@@ -8,14 +8,21 @@ import {
   Text,
 } from '@tbe/components';
 import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
-import { useApi, useUser } from '@tbe/hooks';
+import { useUser } from '@tbe/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
-import { getPreFetchProps, mapInterviewSheetResponseToCard } from '@tbe/utils';
+import { CACHE_TIMES, queryKeys, useQuery } from '@tbe/query';
+import {
+  getPreFetchProps,
+  mapInterviewSheetResponseToCard,
+  sendRequest,
+} from '@tbe/utils';
 import Image from 'next/image';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 const Home = ({ seoMeta }: PageProps) => {
-  const { response, loading } = useApi('interview-prep', {
-    url: routes.api.interviewPrep,
+  const { data: response, isLoading: loading } = useQuery<any>({
+    queryKey: queryKeys.interviewPrep.lists(),
+    queryFn: () => sendRequest({ url: routes.api.interviewPrep }),
+    ...CACHE_TIMES.STATIC,
   });
   const { user } = useUser();
   const [purchaseStatuses, setPurchaseStatuses] = useState<

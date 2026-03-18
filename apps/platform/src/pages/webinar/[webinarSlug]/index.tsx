@@ -15,12 +15,13 @@ import {
   WebinarHeroContainer,
 } from '@tbe/components';
 import { routes, TESTIMONIALS } from '@tbe/constants';
-import { useAnalytics, useApi, useUser } from '@tbe/hooks';
+import { useAnalytics, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   WebinarPageProps,
 } from '@tbe/interface';
-import { formatDate, getWebinarPageProps } from '@tbe/utils';
+import { useMutation } from '@tbe/query';
+import { formatDate, getWebinarPageProps, sendRequest } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import { FiCalendar } from 'react-icons/fi';
@@ -61,8 +62,9 @@ const WebinarPage = ({
     }
   }, [user]);
 
-  const { makeRequest } = useApi('webinar', {
-    url: `${routes.api.webinar}/${slug}`,
+  const { mutateAsync: makeRequest } = useMutation({
+    mutationFn: (params: Parameters<typeof sendRequest>[0]) =>
+      sendRequest(params),
   });
 
   const onGenerateCertificate = async (certificateName: string) => {

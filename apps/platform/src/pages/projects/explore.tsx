@@ -1,13 +1,20 @@
 import { CardContainerB, LoadingSpinner, SEO } from '@tbe/components';
 import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
-import { useApi, useAPIResponseMapper } from '@tbe/hooks';
+import { useAPIResponseMapper } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
-import { getPreFetchProps, mapProjectResponseToCard } from '@tbe/utils';
+import { CACHE_TIMES, queryKeys, useQuery } from '@tbe/query';
+import {
+  getPreFetchProps,
+  mapProjectResponseToCard,
+  sendRequest,
+} from '@tbe/utils';
 import { Fragment } from 'react';
 
 const Home = ({ seoMeta }: PageProps) => {
-  const { response, loading } = useApi('projects', {
-    url: routes.api.projects,
+  const { data: response, isLoading: loading } = useQuery<any>({
+    queryKey: queryKeys.projects.lists(),
+    queryFn: () => sendRequest({ url: routes.api.projects }),
+    ...CACHE_TIMES.STATIC,
   });
 
   const projects = useAPIResponseMapper(

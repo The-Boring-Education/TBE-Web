@@ -56,7 +56,7 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@tanstack/react-query": "^5.90.6",
+    "@tbe/query": "workspace:*",
     "@tbe/auth": "workspace:*",
     "@tbe/config": "workspace:*",
     "@tbe/constants": "workspace:*",
@@ -74,12 +74,8 @@
     "lucide-react": "^0.462.0",
     "markdown-it": "^14.1.0",
     "markdown-it-texmath": "^1.0.0",
-    "next": "14.2.35",
-    "next-auth": "^4.24.11",
     "next-themes": "^0.3.0",
-    "react": "^18.3.1",
     "react-datepicker": "^6.6.0",
-    "react-dom": "^18.3.1",
     "react-hook-form": "^7.48.2",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.1",
@@ -106,6 +102,7 @@
   },
   "peerDependencies": {
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "next": ">=14.0.0"
   }
 }

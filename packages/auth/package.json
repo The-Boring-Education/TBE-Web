@@ -1,6 +1,6 @@
 {
   "name": "@tbe/auth",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "type": "module",
   "private": true,
   "main": "./src/index.ts",
@@ -8,17 +8,15 @@
   "scripts": {
     "lint": "eslint ."
   },
-  "dependencies": {
-    "next-auth": "^4.24.5",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "next": "14.2.35",
-    "axios": "^1.6.0"
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "next": ">=14.0.0"
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
     "@tbe/typescript-config": "workspace:*",
-    "@tbe/constants": "workspace:*",
     "@types/node": "^18.19.124",
     "@types/react": "^18.3.24",
     "@types/react-dom": "^18.3.7",

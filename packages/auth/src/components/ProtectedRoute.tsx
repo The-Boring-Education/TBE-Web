@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/router";
-import { type ReactNode, useEffect } from "react";
+import type { ReactNode } from "react";
+import { useEffect } from "react";
 
 import { useAuth } from "../hooks/useAuth";
 
@@ -12,46 +12,51 @@ interface ProtectedRouteProps {
   loadingComponent?: ReactNode;
 }
 
-/**
- * Client-side route protection component
- * Redirects unauthenticated users to sign-in page
- */
 export const ProtectedRoute = ({
   children,
-  redirectTo = "/auth/signin",
+  redirectTo = "/login",
   requireAuth = true,
   loadingComponent,
 }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading } = useAuth();
-  const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && requireAuth && !isAuthenticated) {
-      // Store the intended destination
-      const returnUrl = router.asPath;
-      router.push(`${redirectTo}?callbackUrl=${encodeURIComponent(returnUrl)}`);
+      const returnUrl = window.location.pathname + window.location.search;
+      window.location.href = `${redirectTo}?returnTo=${encodeURIComponent(returnUrl)}`;
     }
-  }, [isLoading, isAuthenticated, requireAuth, router, redirectTo]);
+  }, [isLoading, isAuthenticated, requireAuth, redirectTo]);
 
-  // Show loading state
   if (isLoading) {
     return (
       loadingComponent || (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto" />
-            <p className="mt-4 text-gray-600">Loading...</p>
-          </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "100vh",
+          }}
+        >
+          <div
+            style={{
+              width: "40px",
+              height: "40px",
+              border: "3px solid #e5e7eb",
+              borderTopColor: "#3b82f6",
+              borderRadius: "50%",
+              animation: "tbe-auth-spin 0.8s linear infinite",
+            }}
+          />
+          <style>{`@keyframes tbe-auth-spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       )
     );
   }
 
-  // If auth is not required or user is authenticated, render children
   if (!requireAuth || isAuthenticated) {
     return <>{children}</>;
   }
 
-  // Don't render anything while redirecting
   return null;
 };

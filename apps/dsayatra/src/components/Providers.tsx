@@ -1,31 +1,21 @@
 "use client";
 
 import { AuthProvider } from "@tbe/auth";
+import { TBEQueryProvider } from "@tbe/query";
 import { Toaster as Sonner } from "@ui/sonner";
 import { Toaster } from "@ui/toaster";
 import { TooltipProvider } from "@ui/tooltip";
-import { type Session } from "next-auth";
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
 
-export function Providers({
-  children,
-  session,
-}: {
-  children: React.ReactNode;
-  session: Session | null;
-}) {
-  const [queryClient] = useState(() => new QueryClient());
-
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider session={session}>
-      <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <TBEQueryProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
           {children}
         </TooltipProvider>
-      </QueryClientProvider>
+      </TBEQueryProvider>
     </AuthProvider>
   );
 }

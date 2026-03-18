@@ -1,6 +1,6 @@
-import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react() as any],
@@ -65,8 +65,17 @@ export default defineConfig({
       "@tbe/types": path.resolve(__dirname, "../../packages/types/src"),
       "@tbe/interface": path.resolve(__dirname, "../../packages/interface/src"),
       "@tbe/hooks": path.resolve(__dirname, "../../packages/hooks/src"),
+      "@tbe/query": path.resolve(__dirname, "../../packages/api/src"),
       "@tbe/services": path.resolve(__dirname, "../../packages/services/src"),
       "@tbe/auth": path.resolve(__dirname, "../../packages/auth/src"),
+      "@tbe/config/quizes": path.resolve(
+        __dirname,
+        "../../packages/config/src/quizes.ts",
+      ),
+      "@tbe/config": path.resolve(
+        __dirname,
+        "../../packages/config/src/onboarding.ts",
+      ),
       // API app path aliases for testing API routes
       "@api": path.resolve(__dirname, "../api/src"),
     },

@@ -62,7 +62,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     sendAPIResponse({
       status: true,
       data,
-      message: `Uploaded ${data.questionsInserted} questions for topic "${topic}"`,
+      message: `Topic "${topic}": ${data.questionsAdded} added, ${data.questionsUpdated} updated, ${data.totalQuestions} total`,
     }),
   );
 };
