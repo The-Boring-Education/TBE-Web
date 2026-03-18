@@ -43,8 +43,6 @@ Create `.env.local` in the `apps/oncampus` directory:
 ```bash
 # NextAuth Configuration (REQUIRED) ⚠️
 # Generate with: openssl rand -base64 32
-NEXTAUTH_SECRET=your-secret-key-here
-NEXT_PUBLIC_AUTH_URL=http://localhost:3007
 
 # Google OAuth (REQUIRED) ⚠️
 GOOGLE_AUTH_CLIENT_ID=your-google-client-id
@@ -61,7 +59,7 @@ COOKIE_DOMAIN=.theboringeducation.com
 NODE_ENV=development
 ```
 
-#### How to Generate NEXTAUTH_SECRET:
+#### How to Generate NEXTAUTH_SECRET
 
 ```bash
 # Using OpenSSL (recommended)
@@ -118,9 +116,6 @@ The app is configured for automatic deployment on Vercel.
 **⚠️ CRITICAL:** All these environment variables MUST be set in Vercel/Production:
 
 ```bash
-# NextAuth Configuration (REQUIRED) ⚠️
-NEXTAUTH_SECRET=your-production-secret-here
-NEXT_PUBLIC_AUTH_URL=https://oncampus.theboringeducation.com
 
 # Google OAuth (REQUIRED) ⚠️
 GOOGLE_AUTH_CLIENT_ID=your-google-client-id
@@ -147,7 +142,6 @@ NODE_ENV=production
 
 - **NextAuth 500 Error in Production**
   - Verify `NEXTAUTH_SECRET` is set
-  - Check `NEXT_PUBLIC_AUTH_URL` matches your production URL
   - Ensure Google OAuth credentials are correct
 
 ### CSS Not Loading

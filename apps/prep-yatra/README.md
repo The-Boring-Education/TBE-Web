@@ -57,7 +57,6 @@ Create `.env.local` in the app directory:
 ```bash
 # Authentication
 NEXTAUTH_SECRET=your-secret-key
-NEXT_PUBLIC_AUTH_URL=http://localhost:3001
 
 # API Configuration
 NEXT_PUBLIC_API_URL=http://localhost:3004
@@ -264,7 +263,6 @@ vercel
 # NextAuth Configuration (REQUIRED) ⚠️
 # Generate with: openssl rand -base64 32
 NEXTAUTH_SECRET=your-production-secret-here
-NEXT_PUBLIC_AUTH_URL=https://prep-yatra-git-development-tbe.vercel.app
 
 # API Configuration (REQUIRED) ⚠️
 NEXT_PUBLIC_API_URL=https://api.theboringeducation.com/api/v1
@@ -291,7 +289,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
 NODE_ENV=production
 ```
 
-#### How to Generate NEXTAUTH_SECRET:
+#### How to Generate NEXTAUTH_SECRET
 
 ```bash
 # Using OpenSSL (recommended)
@@ -301,7 +299,7 @@ openssl rand -base64 32
 node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ```
 
-#### Setting Environment Variables in Vercel:
+#### Setting Environment Variables in Vercel
 
 1. Go to: `https://vercel.com/your-team/prep-yatra/settings/environment-variables`
 2. Add each variable above
@@ -355,15 +353,11 @@ Unexpected token '<', "<!DOCTYPE "... is not valid JSON
    - Solution: Add `NEXTAUTH_SECRET` in Vercel environment variables
    - Generate: `openssl rand -base64 32`
 
-2. **Missing `NEXT_PUBLIC_AUTH_URL`** ❌
-   - Error: Session endpoint returns HTML instead of JSON
-   - Solution: Set `NEXT_PUBLIC_AUTH_URL=https://your-production-url.vercel.app`
-
-3. **Missing `API_URL`** ❌
+2. **Missing `API_URL`** ❌
    - Error: User creation/fetch fails in callbacks
    - Solution: Add both `API_URL` and `NEXT_PUBLIC_API_URL`
 
-4. **Missing Google OAuth credentials** ❌
+3. **Missing Google OAuth credentials** ❌
    - Error: Provider authentication fails
    - Solution: Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
 

@@ -61,7 +61,6 @@ MONGODB_URI=mongodb://localhost:27017/tbe-platform
 
 # Authentication
 NEXTAUTH_SECRET=your-secret-key
-NEXT_PUBLIC_AUTH_URL=http://localhost:3000
 GOOGLE_AUTH_CLIENT_ID=your-google-client-id
 GOOGLE_AUTH_CLIENT_SECRET=your-google-client-secret
 
@@ -251,7 +250,7 @@ pnpm test components/CourseCard.test.tsx
 
 **Authentication Issues:**
 
-- Verify `NEXTAUTH_SECRET` and `NEXT_PUBLIC_AUTH_URL` are set
+- Verify `NEXTAUTH_SECRET` is set
 - Check Google OAuth credentials
 - Ensure MongoDB connection is working
 

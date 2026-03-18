@@ -6,7 +6,6 @@ const envChecks: EnvVarCheck[] = [
   // Authentication & core URLs (required)
   { name: 'NEXTAUTH_SECRET' },
   { name: 'NEXTAUTH_URL' },
-  { name: 'NEXT_PUBLIC_AUTH_URL' }, // Required: Tells NextAuth where auth endpoints are
   { name: 'NEXT_PUBLIC_API_URL' },
   { name: 'GOOGLE_AUTH_CLIENT_ID' },
   { name: 'GOOGLE_AUTH_CLIENT_SECRET' },
