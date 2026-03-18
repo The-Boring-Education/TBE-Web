@@ -45,7 +45,7 @@
     "seo:audit": "lhci autorun",
     "seo:audit:prod": "LHCI_ENV=production lhci autorun",
     "seo:audit:app": "LHCI_ENV=production lhci autorun",
-    "prepare": "husky install"
+    "prepare": "husky install || true"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,cjs,mjs}": [
