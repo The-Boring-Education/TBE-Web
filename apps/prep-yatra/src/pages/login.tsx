@@ -1,8 +1,16 @@
 import { useAuth } from "@tbe/auth";
-import { Footer, LoginCardNew, Navbar } from "@tbe/components";
+import { Footer, Navbar } from "@tbe/components";
 import { InstallButton } from "@tbe/components";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+
+const LoginCardNew = dynamic(
+  () => import("@tbe/components").then((mod) => mod.LoginCardNew),
+  {
+    ssr: false,
+  },
+);
 
 const Auth = () => {
   const router = useRouter();
