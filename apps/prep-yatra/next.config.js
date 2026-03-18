@@ -1,4 +1,37 @@
+const fs = require("fs");
 const path = require("path");
+
+/**
+ * Resolve a single install of react / react-dom for webpack so workspace packages
+ * (@tbe/components, etc.) share the same instance — avoids prerender errors like
+ * "Cannot read properties of null (reading 'useEffect')" on Vercel/pnpm.
+ */
+function resolveSingletonPackage(packageName, startDir) {
+  let current = startDir;
+  for (let i = 0; i < 8; i++) {
+    const pkgJson = path.join(
+      current,
+      "node_modules",
+      packageName,
+      "package.json",
+    );
+    if (fs.existsSync(pkgJson)) {
+      return path.dirname(pkgJson);
+    }
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  try {
+    return path.dirname(
+      require.resolve(`${packageName}/package.json`, { paths: [startDir] }),
+    );
+  } catch {
+    throw new Error(
+      `[prep-yatra/next.config] Could not resolve "${packageName}" from ${startDir}`,
+    );
+  }
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -37,6 +70,14 @@ const nextConfig = {
     if (!config.resolve.modules.includes(appNodeModules)) {
       config.resolve.modules.unshift(appNodeModules);
     }
+
+    const reactDir = resolveSingletonPackage("react", __dirname);
+    const reactDomDir = resolveSingletonPackage("react-dom", __dirname);
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      react: reactDir,
+      "react-dom": reactDomDir,
+    };
 
     return config;
   },
