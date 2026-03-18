@@ -141,7 +141,7 @@ const Dashboard = () => {
     }
   };
 
-  const handleLogDeleted = (deletedLogId: string) => {
+  const handleLogDeleted = (_deletedLogId: string) => {
     refetchPrepLogs();
     toast.success("Prep log deleted successfully!");
   };
@@ -321,3 +321,7 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+export async function getServerSideProps() {
+  return { props: {} };
+}
