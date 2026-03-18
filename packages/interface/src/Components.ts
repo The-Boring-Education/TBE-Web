@@ -1,7 +1,6 @@
 import type { FeedbackType } from "@tbe/constants";
 import type {
   ChangeEvent,
-  CSSProperties,
   ElementType,
   HTMLInputTypeAttribute,
   MouseEventHandler,
@@ -51,7 +50,6 @@ export interface TextProps {
   variant?: "SUCCESS" | "ERROR";
   className?: string;
   textCenter?: boolean;
-  style?: CSSProperties;
 }
 
 export interface ImageContainerProps {
