@@ -14,6 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # One job per frontend app. Apps without Playwright specs exit immediately (--pass-with-no-tests).
+        # Dev servers start only for apps that have *.spec.ts under apps/testing/src/e2e/<app>/ (see playwright.config.ts).
         app:
           - platform
           - prep-yatra
