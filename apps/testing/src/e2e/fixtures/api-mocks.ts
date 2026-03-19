@@ -11,6 +11,7 @@ export const mockCourses = {
   data: [
     {
       _id: "course-1",
+      name: "Logic Building for Everyone",
       title: "Logic Building for Everyone",
       slug: "logic-building-for-everyone",
       description:
@@ -23,6 +24,7 @@ export const mockCourses = {
     },
     {
       _id: "course-2",
+      name: "Zero to One Frontend Development",
       title: "Zero to One Frontend Development",
       slug: "zero-to-one-frontend-development",
       description:
@@ -41,6 +43,7 @@ export const mockInterviewSheets = {
   data: [
     {
       _id: "sheet-1",
+      name: "JavaScript Interview Questions",
       title: "JavaScript Interview Questions",
       slug: "javascript-interview-questions",
       description: "Comprehensive JS interview preparation sheet.",
@@ -51,6 +54,7 @@ export const mockInterviewSheets = {
     },
     {
       _id: "sheet-2",
+      name: "React Interview Questions",
       title: "React Interview Questions",
       slug: "react-interview-questions",
       description: "Top React interview questions for frontend roles.",

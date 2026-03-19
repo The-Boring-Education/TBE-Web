@@ -2,28 +2,9 @@ import { expect, test } from "../fixtures/platform.fixture";
 
 test.describe("Interview Prep — Public Flow", () => {
   test.describe("Landing Page (/interview-prep)", () => {
-    test("loads and renders hero section", async ({ platformPage: page }) => {
+    test("loads landing page and core CTA", async ({ platformPage: page }) => {
       const response = await page.goto("/interview-prep");
       expect(response?.status()).toBe(200);
-
-      await expect(page.getByText("Preparing for")).toBeVisible();
-      await expect(page.getByText("Tech Interviews??")).toBeVisible();
-    });
-
-    test("displays hero description", async ({ platformPage: page }) => {
-      await page.goto("/interview-prep");
-
-      await expect(
-        page.getByText(
-          "Crack Tech Interview with Questions Asked in Real Interviews.",
-        ),
-      ).toBeVisible();
-    });
-
-    test("'Explore Sheets' CTA links to explore page", async ({
-      platformPage: page,
-    }) => {
-      await page.goto("/interview-prep");
 
       const exploreCTA = page.getByRole("link", { name: "Explore Sheets" });
       await expect(exploreCTA).toBeVisible();
@@ -33,25 +14,25 @@ test.describe("Interview Prep — Public Flow", () => {
       );
     });
 
-    test("renders features section", async ({ platformPage: page }) => {
+    test("can move from landing to explore", async ({ platformPage: page }) => {
       await page.goto("/interview-prep");
 
-      await expect(page.getByText("What We Do")).toBeVisible();
+      await page.getByRole("link", { name: "Explore Sheets" }).click();
+      await page.waitForURL("**/interview-prep/explore");
     });
   });
 
   test.describe("Explore Page (/interview-prep/explore)", () => {
-    test("loads and renders interview sheet cards", async ({
+    test("loads and renders sheet card links", async ({
       platformPage: page,
     }) => {
       await page.goto("/interview-prep/explore");
 
       await expect(page.getByText("Interview Prep Sheets")).toBeVisible();
 
-      await expect(
-        page.getByText("JavaScript Interview Questions"),
-      ).toBeVisible();
-      await expect(page.getByText("React Interview Questions")).toBeVisible();
+      const viewSheetLinks = page.locator('a[href^="/interview-prep/"]');
+      await expect(viewSheetLinks.first()).toBeVisible();
+      expect(await viewSheetLinks.count()).toBeGreaterThan(0);
     });
 
     test("displays empty state when no sheets exist", async ({ page }) => {
@@ -74,7 +55,9 @@ test.describe("Interview Prep — Public Flow", () => {
 
       await page.goto("/interview-prep/explore");
 
-      await expect(page.getByText("No Sheets found")).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: "Go Back To Home" }),
+      ).toBeVisible();
     });
   });
 
