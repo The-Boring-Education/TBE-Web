@@ -128,6 +128,7 @@ const DSA_QUESTION_SYNC_FIELDS = [
   "topics",
   "order",
   "resources",
+  "sections",
 ] as const;
 
 const syncDSAQuestionsToDB = async (

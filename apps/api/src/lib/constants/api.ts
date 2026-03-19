@@ -2585,7 +2585,18 @@ const ALLOWED_IPS = [
 
 const PRIORITY_LEVELS: PriorityType[] = ["High", "Medium", "Low"];
 
-const COMPANY_TYPES: CompanyType[] = ["Startup", "MidSize", "MNC", "FAANG"];
+const COMPANY_TYPES: CompanyType[] = [
+  "Startup",
+  "MidSize",
+  "MNC",
+  "FAANG",
+  "GOOGLE",
+  "MICROSOFT",
+  "META",
+  "AMAZON",
+  "AIRBNB",
+  "UBER",
+];
 
 const GOAL_TYPES: GoalType[] = ["3Months", "6Months", "1Year"];
 
@@ -3062,6 +3073,7 @@ const DSA_DOMAIN: DSADomainType[] = [
   "BACKEND",
   "GENERAL",
   "FULLSTACK",
+  "DSA",
 ];
 
 const DSA_DIFFICULTY: DSADifficultyType[] = ["EASY", "MEDIUM", "HARD"];
@@ -3092,6 +3104,10 @@ const DSA_TOPICS: DSATopicType[] = [
   "TRIE",
   "HEAP",
   "UNION_FIND",
+  "RECURSION",
+  "SIMULATION",
+  "DESIGN",
+  "MONOTONIC_STACK",
 ];
 
 export {
