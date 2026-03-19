@@ -962,6 +962,60 @@ export interface DsaQuestion {
     image?: string;
   }[];
   constraints?: string[];
+  sections?: {
+    first_principles?: {
+      paragraphs: string[];
+      key_observation: string;
+    };
+    constraints?: {
+      constraint: string;
+      plain_meaning: string;
+      implication: string;
+    }[];
+    examples?: {
+      label: string;
+      input: string;
+      output: string;
+      explanation: string;
+      step_by_step: string[] | null;
+    }[];
+    ways_to_solve?: {
+      approach_number: number;
+      name: string;
+      description: string;
+      time_complexity: string;
+      time_reason: string;
+      space_complexity: string;
+      space_reason: string;
+      verdict: "too_slow" | "acceptable" | "optimal";
+      verdict_label: string;
+    }[];
+    how_to_approach?: {
+      steps: {
+        step_number: number;
+        heading: string;
+        body: string;
+      }[];
+    };
+    pseudo_code?: {
+      code: string;
+      annotations: {
+        line_reference: string;
+        note: string;
+      }[];
+    };
+    working_code?: {
+      default_language: string;
+      languages: Record<string, { code: string }>;
+    };
+    common_mistakes?: {
+      mistake_number: number;
+      title: string;
+      wrong_code: string;
+      explanation: string;
+      fix: string;
+    }[];
+  };
 }
 
 export interface DsaQuestionListProps {
@@ -994,6 +1048,74 @@ export interface ExampleCardProps {
   image?: string;
 }
 
+export interface FirstPrinciplesSectionProps {
+  paragraphs: string[];
+  keyObservation: string;
+}
+
+export interface ConstraintsSectionProps {
+  constraints: {
+    constraint: string;
+    plainMeaning: string;
+    implication: string;
+  }[];
+}
+
+export interface EnhancedExamplesSectionProps {
+  examples: {
+    label: string;
+    input: string;
+    output: string;
+    explanation: string;
+    stepByStep: string[] | null;
+  }[];
+}
+
+export interface WaysToSolveSectionProps {
+  approaches: {
+    approachNumber: number;
+    name: string;
+    description: string;
+    timeComplexity: string;
+    timeReason: string;
+    spaceComplexity: string;
+    spaceReason: string;
+    verdict: "too_slow" | "acceptable" | "optimal";
+    verdictLabel: string;
+  }[];
+}
+
+export interface HowToApproachSectionProps {
+  steps: {
+    stepNumber: number;
+    heading: string;
+    body: string;
+  }[];
+}
+
+export interface PseudoCodeSectionProps {
+  code: string;
+  annotations: {
+    lineReference: string;
+    note: string;
+  }[];
+}
+
+export interface WorkingCodeSectionProps {
+  defaultLanguage: string;
+  languages: Record<string, { code: string }>;
+}
+
+export interface CommonMistakesSectionProps {
+  mistakes: {
+    mistakeNumber: number;
+    title: string;
+    wrongCode: string;
+    explanation: string;
+    fix: string;
+  }[];
+}
+
 export interface RoadmapNode {
   id: string;
   name: string;
@@ -1002,4 +1124,38 @@ export interface RoadmapNode {
   isLocked: boolean;
   explanation: string;
   difficulty: number;
+}
+
+// ---------------------------------------------------------------------------
+// Study Guide
+// ---------------------------------------------------------------------------
+
+export interface StudyGuideSection {
+  id: string;
+  label: string;
+}
+
+export interface StudyGuideDivider {
+  divider: string | null;
+}
+
+export type StudyGuideNavItem = StudyGuideSection | StudyGuideDivider;
+
+export interface StudyGuideConfig {
+  topic: string;
+  sections: StudyGuideNavItem[];
+  hasStudyGuide: boolean;
+}
+
+export interface StudyGuideNavProps {
+  config: StudyGuideConfig;
+  activeId: string;
+  onSectionClick: (id: string) => void;
+  className?: string;
+}
+
+export interface StudyGuideReaderProps {
+  topic: string;
+  sectionId: string;
+  className?: string;
 }

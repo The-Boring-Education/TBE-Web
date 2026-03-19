@@ -1,3 +1,5 @@
+import "./src/edge-polyfill";
+
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({

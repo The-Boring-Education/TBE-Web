@@ -7,6 +7,7 @@ import type {
   DSADifficultyType,
   DSADomainType,
   SheetEnrollmentRequestProps,
+  UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
 } from "@/lib/interfaces";
 import { generateYouTubeSearchLink } from "@/lib/utils";
@@ -602,11 +603,71 @@ const getAllDSAQuestionsFromDB = async (
 
     const totalCount = await DSAQuestion.countDocuments(matchStage);
 
-    const questions = await DSAQuestion.find(matchStage)
-      .sort({ order: 1, createdAt: -1 }) // Sort by order first, then by createdAt
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    const DSA_TOPIC_SORT_ORDER = [
+      "ARRAY",
+      "STRING",
+      "HASHMAP",
+      "TWO_POINTERS",
+      "SLIDING_WINDOW",
+      "PREFIX_SUM",
+      "SORTING",
+      "BINARY_SEARCH",
+      "MATH",
+      "BIT_MANIPULATION",
+      "RECURSION",
+      "LINKED_LIST",
+      "STACK",
+      "QUEUE",
+      "BINARY_TREE",
+      "TREE",
+      "BST",
+      "HEAP",
+      "TRIE",
+      "GRAPH",
+      "DFS",
+      "BFS",
+      "BACKTRACKING",
+      "DYNAMIC_PROGRAMMING",
+      "GREEDY",
+      "UNION_FIND",
+    ];
+
+    const questions = await DSAQuestion.aggregate([
+      { $match: matchStage },
+      {
+        $addFields: {
+          _topicOrder: {
+            $let: {
+              vars: {
+                idx: {
+                  $indexOfArray: [
+                    DSA_TOPIC_SORT_ORDER,
+                    { $arrayElemAt: ["$topics", 0] },
+                  ],
+                },
+              },
+              in: { $cond: [{ $eq: ["$$idx", -1] }, 999, "$$idx"] },
+            },
+          },
+          _difficultyOrder: {
+            $switch: {
+              branches: [
+                { case: { $eq: ["$difficulty", "EASY"] }, then: 1 },
+                { case: { $eq: ["$difficulty", "MEDIUM"] }, then: 2 },
+                { case: { $eq: ["$difficulty", "HARD"] }, then: 3 },
+              ],
+              default: 4,
+            },
+          },
+        },
+      },
+      {
+        $sort: { _topicOrder: 1, _difficultyOrder: 1, order: 1, createdAt: -1 },
+      },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+      { $project: { _topicOrder: 0, _difficultyOrder: 0 } },
+    ]);
 
     return {
       data: {
@@ -693,6 +754,51 @@ const addDSAQuestionToDB = async (questionPayload: {
   }
 };
 
+const updateDSAQuestionInDB = async (
+  questionId: string,
+  updatedData: UpdateDSAQuestionRequestPayloadProps,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const updatedQuestion = await DSAQuestion.findByIdAndUpdate(
+      questionId,
+      { $set: updatedData },
+      { new: true },
+    );
+
+    if (!updatedQuestion) {
+      return { error: "DSA question not found" };
+    }
+
+    return { data: updatedQuestion };
+  } catch (error) {
+    logger.error("DB: updateDSAQuestionInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to update DSA question", details: error };
+  }
+};
+
+const getDSAQuestionByIDFromDB = async (
+  questionId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const question = await DSAQuestion.findById(questionId);
+
+    if (!question) {
+      return { error: "DSA question not found" };
+    }
+
+    return { data: question };
+  } catch (error) {
+    logger.error("DB: getDSAQuestionByIDFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch DSA question", details: error };
+  }
+};
+
 const getDSAQuestionsGroupedByTopic = async (
   domain: DSADomainType,
   difficulty?: DSADifficultyType,
@@ -712,9 +818,24 @@ const getDSAQuestionsGroupedByTopic = async (
       matchStage.companyTypes = { $in: [companyType] };
     }
 
-    // Use aggregation to group questions by topic
+    // Use aggregation to group questions by topic, sorted Easy → Medium → Hard within each
     const groupedQuestions = await DSAQuestion.aggregate([
       { $match: matchStage },
+      {
+        $addFields: {
+          _difficultyOrder: {
+            $switch: {
+              branches: [
+                { case: { $eq: ["$difficulty", "EASY"] }, then: 1 },
+                { case: { $eq: ["$difficulty", "MEDIUM"] }, then: 2 },
+                { case: { $eq: ["$difficulty", "HARD"] }, then: 3 },
+              ],
+              default: 4,
+            },
+          },
+        },
+      },
+      { $sort: { _difficultyOrder: 1, order: 1, createdAt: -1 } },
       { $unwind: "$topics" },
       {
         $group: {
@@ -728,6 +849,8 @@ const getDSAQuestionsGroupedByTopic = async (
               difficulty: "$difficulty",
               companyTypes: "$companyTypes",
               topics: "$topics",
+              sections: "$sections",
+              resources: "$resources",
             },
           },
           count: { $sum: 1 },
@@ -775,6 +898,7 @@ export {
   getAllInterviewSheetsFromDB,
   getAllQuestionsByUser,
   getASheetForUserFromDB,
+  getDSAQuestionByIDFromDB,
   getDSAQuestionsGroupedByTopic,
   getDSASheetMetadataFromDB,
   getEnrolledSheetFromDB,
@@ -783,6 +907,7 @@ export {
   getStarredQuestionsFromDB,
   markQuestionCompletedByUser,
   markQuestionStarredByUser,
+  updateDSAQuestionInDB,
   updateInterviewQuestionInDB,
   updateInterviewSheetInDB,
 };

@@ -60,7 +60,6 @@ MONGODB_URI=mongodb://localhost:27017/tbe-platform
 
 # Authentication
 NEXTAUTH_SECRET=your-secret-key
-NEXT_PUBLIC_AUTH_URL=http://localhost:3004
 
 # Google OAuth
 GOOGLE_AUTH_CLIENT_ID=your-google-client-id

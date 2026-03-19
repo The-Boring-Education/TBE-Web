@@ -4,7 +4,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 const envChecks: EnvVarCheck[] = [
   { name: "NEXTAUTH_SECRET" },
-  { name: "NEXT_PUBLIC_AUTH_URL" },
   { name: "NEXT_PUBLIC_API_URL" },
   { name: "GOOGLE_AUTH_CLIENT_ID" },
   { name: "GOOGLE_AUTH_CLIENT_SECRET" },

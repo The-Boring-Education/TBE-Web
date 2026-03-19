@@ -1,6 +1,6 @@
 # Resume Yatra - Setup & Quick Start Guide
 
-## ✅ Migration Complete!
+## ✅ Migration Complete
 
 Resume Yatra has been successfully migrated from a standalone Vite app to a Next.js app within the TBE monorepo at `apps/resume-yatra/`.
 
@@ -20,7 +20,6 @@ Create `.env.local` in `apps/resume-yatra/`:
 
 ```env
 # NextAuth Configuration
-NEXT_PUBLIC_AUTH_URL=http://localhost:3002
 NEXTAUTH_SECRET=generate-a-random-secret-here
 
 # GitHub OAuth (for authentication)
@@ -51,7 +50,7 @@ cd apps/resume-yatra
 pnpm dev
 ```
 
-Access the app at: **http://localhost:3002**
+Access the app at: **<http://localhost:3002>**
 
 ### 4. Build for Production
 
@@ -281,7 +280,6 @@ The `vercel.json` is pre-configured for monorepo deployment.
 ### Environment Variables for Production
 
 ```env
-NEXT_PUBLIC_AUTH_URL=https://your-domain.com
 NEXTAUTH_SECRET=your-production-secret
 GITHUB_CLIENT_ID=your-github-client-id
 GITHUB_CLIENT_SECRET=your-github-secret
@@ -350,7 +348,7 @@ ist items toggle correctly
 - [React Query Documentation](https://tanstack.com/query/v3)
 - [shadcn/ui Documentation](https://ui.shadcn.com)
 
-## 🎉 Success!
+## 🎉 Success
 
 Your Resume Yatra app is now fully integrated into the TBE monorepo!
 

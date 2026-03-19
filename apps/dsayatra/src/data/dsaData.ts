@@ -28,7 +28,7 @@ export const DSA_YATRA_FAQS = [
   {
     question: "Is DSA Yatra free?",
     answer:
-      "Yes. You get free access to structured content and practice. We also offer premium paths with tailored roadmaps, company-focused question sets, and deeper tracking—so you can start free and upgrade when you want more focus.",
+      "Yes. You get free access to structured content and practice. We also have premium paths with tailored roadmaps, company-focused question sets, and deeper tracking. Start free and upgrade when you want more focus.",
   },
   {
     question: "How is this different from solving random LeetCode problems?",
