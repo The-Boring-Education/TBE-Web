@@ -181,10 +181,8 @@ export default defineConfig({
   testDir: "./src/e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI
-    ? Math.max(5, Number(process.env.PLAYWRIGHT_WORKERS) || 5)
-    : undefined,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 10 : undefined,
   reporter: process.env.CI
     ? [
         ["html", { open: "never" }],
