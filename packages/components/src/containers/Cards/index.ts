@@ -3,3 +3,5 @@ export { default as CardContainerA } from "./CardContainerA";
 export { default as CardContainerB } from "./CardContainerB";
 export { default as GitHubIssuesContainer } from "./GitHubIssuesContainer";
 export { default as PaymentCard } from "./PaymentCard";
+export { default as StudyGuideNav } from "./StudyGuideNav";
+export { default as StudyGuideReader } from "./StudyGuideReader";

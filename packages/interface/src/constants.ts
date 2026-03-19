@@ -42,7 +42,8 @@ export type NavbarVariant =
   | "dsayatra"
   | "resume-yatra"
   | "oncampus"
-  | "learning";
+  | "learning"
+  | "study-guide";
 
 interface MainNavbarProps extends Partial<NavbarProps> {
   variant?: NavbarVariant;
@@ -57,6 +58,7 @@ interface MainNavbarProps extends Partial<NavbarProps> {
   sidebarContent?: React.ReactNode;
   showBackButton?: boolean;
   backButtonHref?: string;
+  compact?: boolean;
 }
 /**
  * Controls visibility of a single navbar section.

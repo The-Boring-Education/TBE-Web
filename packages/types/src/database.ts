@@ -75,6 +75,12 @@ export type CompanyType =
   | "EDTECH"
   | "E-COMMERCE"
   | "HEALTHCARE"
+  | "GOOGLE"
+  | "MICROSOFT"
+  | "META"
+  | "AMAZON"
+  | "AIRBNB"
+  | "UBER"
   | "OTHER";
 
 export type InterviewCategoryType =
