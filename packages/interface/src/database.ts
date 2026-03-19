@@ -3,6 +3,7 @@ import type {
   FeedbackType,
   InterestEventType,
   LeaderboardEnum,
+  PaymentStatusType,
   ProductType,
 } from "@tbe/constants";
 import type { Document, Schema, Types } from "mongoose";
@@ -351,18 +352,17 @@ export interface PaymentModel extends Document {
   orderId: string;
   paymentId?: string;
   paymentLink: string;
-  isPaid: boolean;
-  subscriptionType?: SubscriptionType;
-  subscriptionDuration?: number;
-  expiresAt?: Date;
+  status: PaymentStatusType;
+  gateway: string;
   appliedCoupon?: typeof Schema.Types.ObjectId;
   couponCode?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface WebhookEvent {
   order_id: string;
   payment_id?: string;
-  isPaid: boolean;
   payment_status: "SUCCESS" | "FAILED";
 }
 

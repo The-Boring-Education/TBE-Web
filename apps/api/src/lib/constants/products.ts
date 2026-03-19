@@ -1,30 +1,51 @@
 import type { ProductType } from "./database";
 
+export type EnrollmentHandlerName =
+  | "enrollInSheet"
+  | "enrollInCourse"
+  | "createSubscription";
+
+export type AccessType = "ONE_TIME" | "SUBSCRIPTION";
+
 export interface ProductConfig {
   type: ProductType;
-  requiresEnrollment: boolean;
-  enrollmentHandler?: string;
-  prepYatraAccess: boolean;
+  accessType: AccessType;
+  enrollmentHandler?: EnrollmentHandlerName;
 }
 
-export const PRODUCT_REGISTRY: Record<ProductType, ProductConfig> = {
+export const PRODUCT_REGISTRY: Partial<Record<ProductType, ProductConfig>> = {
   INTERVIEW_SHEET: {
     type: "INTERVIEW_SHEET",
-    requiresEnrollment: true,
+    accessType: "ONE_TIME",
     enrollmentHandler: "enrollInSheet",
-    prepYatraAccess: true,
   },
   SHIKSHA: {
     type: "SHIKSHA",
-    requiresEnrollment: true,
+    accessType: "ONE_TIME",
     enrollmentHandler: "enrollInCourse",
-    prepYatraAccess: true,
+  },
+  PROJECTS: {
+    type: "PROJECTS",
+    accessType: "ONE_TIME",
   },
   PREPYATRA: {
     type: "PREPYATRA",
-    requiresEnrollment: false,
+    accessType: "SUBSCRIPTION",
     enrollmentHandler: "createSubscription",
-    prepYatraAccess: false,
+  },
+  DSA_YATRA: {
+    type: "DSA_YATRA",
+    accessType: "SUBSCRIPTION",
+    enrollmentHandler: "createSubscription",
+  },
+  ONCAMPUS: {
+    type: "ONCAMPUS",
+    accessType: "SUBSCRIPTION",
+    enrollmentHandler: "createSubscription",
+  },
+  WEBINAR: {
+    type: "WEBINAR",
+    accessType: "ONE_TIME",
   },
 };
 

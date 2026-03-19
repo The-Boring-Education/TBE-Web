@@ -1,4 +1,5 @@
 import { planTypeMap } from "@/lib/constants";
+import type { EnrollmentHandlerName } from "@/lib/constants/products";
 import {
   createSubscriptionInDB,
   enrollInACourse,
@@ -11,6 +12,7 @@ import {
 } from "@/lib/database";
 import type { PaymentModel } from "@/lib/interfaces";
 import { getPYSubscriptionFeaturesByType } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 
 type EnrollmentHandler = (
   payment: PaymentModel,
@@ -33,16 +35,17 @@ const enrollInSheet: EnrollmentHandler = async (payment) => {
     });
 
     if (error) {
-      console.error("Sheet enrollment failed:", error);
       return { success: false, error };
     }
 
-    // Add points for enrollment
     await updateUserPointsInDB(payment.user.toString(), "ENROLL_SHEET");
 
     return { success: true, data };
   } catch (error: any) {
-    console.error("Sheet enrollment error:", error);
+    logger.error("Sheet enrollment error", {
+      error: error.message,
+      orderId: payment.orderId,
+    });
     return { success: false, error: error.message };
   }
 };
@@ -64,16 +67,17 @@ const enrollInCourse: EnrollmentHandler = async (payment) => {
     });
 
     if (error) {
-      console.error("Course enrollment failed:", error);
       return { success: false, error };
     }
 
-    // Add points for enrollment
     await updateUserPointsInDB(payment.user.toString(), "ENROLL_COURSE");
 
     return { success: true, data };
   } catch (error: any) {
-    console.error("Course enrollment error:", error);
+    logger.error("Course enrollment error", {
+      error: error.message,
+      orderId: payment.orderId,
+    });
     return { success: false, error: error.message };
   }
 };
@@ -83,7 +87,7 @@ const createSubscription: EnrollmentHandler = async (payment) => {
     const plan = planTypeMap[
       String(payment.productId) as keyof typeof planTypeMap
     ] || {
-      type: "3Months",
+      type: "3Months" as const,
       duration: 1,
     };
 
@@ -117,7 +121,6 @@ const createSubscription: EnrollmentHandler = async (payment) => {
     });
 
     if (createError) {
-      console.error("Subscription creation failed:", createError);
       return { success: false, error: createError };
     }
 
@@ -128,25 +131,27 @@ const createSubscription: EnrollmentHandler = async (payment) => {
     });
 
     if (updateError) {
-      console.error("Subscription status update failed:", updateError);
       return { success: false, error: updateError };
     }
 
     return { success: true, data: { plan: plan.type, expiryDate } };
   } catch (error: any) {
-    console.error("Subscription enrollment error:", error);
+    logger.error("Subscription enrollment error", {
+      error: error.message,
+      orderId: payment.orderId,
+    });
     return { success: false, error: error.message };
   }
 };
 
-const ENROLLMENT_HANDLERS: Record<string, EnrollmentHandler> = {
+const ENROLLMENT_HANDLERS: Record<EnrollmentHandlerName, EnrollmentHandler> = {
   enrollInSheet,
   enrollInCourse,
   createSubscription,
 };
 
 const executeEnrollmentHandler = async (
-  handlerName: string,
+  handlerName: EnrollmentHandlerName,
   payment: PaymentModel,
 ) => {
   const handler = ENROLLMENT_HANDLERS[handlerName];

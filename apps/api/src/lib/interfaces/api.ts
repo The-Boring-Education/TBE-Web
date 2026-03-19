@@ -142,12 +142,7 @@ export type FeedbackType =
   | "INTERVIEW_SHEET"
   | "CERTIFICATE";
 
-export type ProductType =
-  | "COURSE"
-  | "PROJECT"
-  | "SHEET"
-  | "WEBINAR"
-  | "SUBSCRIPTION";
+export type { PaymentStatusType, ProductType } from "@/lib/constants/database";
 
 export type InterestEventType =
   | "SUBSCRIPTION_INTEREST"

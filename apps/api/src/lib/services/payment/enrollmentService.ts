@@ -1,5 +1,6 @@
 import { getProductConfig } from "@/lib/constants/products";
 import type { PaymentModel } from "@/lib/interfaces";
+import { logger } from "@/lib/utils/logger";
 
 import { executeEnrollmentHandler } from "./enrollmentHandlers";
 
@@ -9,51 +10,38 @@ const processPostPaymentEnrollment = async (
   try {
     const productConfig = getProductConfig(payment.productType);
 
-    if (!productConfig.requiresEnrollment) {
-      if (productConfig.enrollmentHandler) {
-        return await executeEnrollmentHandler(
-          productConfig.enrollmentHandler,
-          payment,
-        );
-      }
-      // No enrollment needed
+    if (!productConfig.enrollmentHandler) {
       return {
         success: true,
         data: { noEnrollmentRequired: true },
       };
     }
 
-    // Check if enrollment handler exists
-    if (!productConfig.enrollmentHandler) {
-      console.warn(
-        `No enrollment handler configured for ${payment.productType}`,
-      );
-      return {
-        success: false,
-        error: `No enrollment handler configured for ${payment.productType}`,
-      };
-    }
-
-    // Execute enrollment handler
     const result = await executeEnrollmentHandler(
       productConfig.enrollmentHandler,
       payment,
     );
 
     if (!result.success) {
-      console.error(
-        `Enrollment failed for ${payment.productType}:`,
-        result.error,
-      );
+      logger.error("Post-payment enrollment failed", {
+        productType: payment.productType,
+        orderId: payment.orderId,
+        error: result.error,
+      });
     } else {
-      console.log(
-        `Successfully enrolled user in ${payment.productType} - Order: ${payment.orderId}`,
-      );
+      logger.info("Post-payment enrollment succeeded", {
+        productType: payment.productType,
+        orderId: payment.orderId,
+      });
     }
 
     return result;
   } catch (error: any) {
-    console.error("Payment enrollment processing error:", error);
+    logger.error("Post-payment enrollment error", {
+      error: error.message || String(error),
+      productType: payment.productType,
+      orderId: payment.orderId,
+    });
     return {
       success: false,
       error: error.message || "Unknown enrollment error",

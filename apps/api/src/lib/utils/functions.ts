@@ -138,7 +138,7 @@ const validateWebhookEvent = (
   if (!order_id || typeof payment_status !== "string") {
     return {
       isValid: false,
-      error: "Missing order_id or invalid isPaid status in webhook payload",
+      error: "Missing order_id or invalid payment status in webhook payload",
     };
   }
 

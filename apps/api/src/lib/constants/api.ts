@@ -2622,10 +2622,10 @@ const SUBSCRIPTION_FEATURES: SubscriptionFeature[] = [
 ];
 
 const planTypeMap = {
-  "1months": { type: "3Months", duration: 1 },
-  "3months": { type: "5Months", duration: 3 },
-  "6months": { type: "5Months", duration: 6 },
-  lifetime: { type: "Lifetime", duration: 999 },
+  "1months": { type: "3Months" as const, duration: 1 },
+  "3months": { type: "5Months" as const, duration: 3 },
+  "6months": { type: "5Months" as const, duration: 6 },
+  lifetime: { type: "Lifetime" as const, duration: 999 },
 };
 
 enum LeaderboardEnum {
