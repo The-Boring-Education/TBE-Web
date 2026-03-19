@@ -121,12 +121,12 @@ const SheetsPageClient = () => {
           backButtonHref={routes.dsayatra.dashboard}
         />
         <main className="flex-1 pt-[54px] flex flex-col items-center justify-center px-4">
-          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 max-w-lg text-center">
-            <Target className="w-16 h-16 text-[#ff5757] mx-auto mb-4" />
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 max-w-md text-center">
+            <Target className="w-14 h-14 text-[#ff5757] mx-auto mb-3" />
             <Text level="h3" className="text-xl font-bold text-white mb-2">
               Sheet Currently Unavailable
             </Text>
-            <Text level="p" className="text-gray-400 mb-6">
+            <Text level="p" className="text-gray-400 mb-4 text-sm">
               This specific sheet is curated for users targeting{" "}
               <strong>Product-based companies</strong> within{" "}
               <strong>4-6 months</strong> with <strong>Fresher (0-1 yr)</strong>{" "}
@@ -135,13 +135,15 @@ const SheetsPageClient = () => {
               Update your goals to access the SA PREP sheet, or explore topics
               directly.
             </Text>
-            <Button
-              variant="PRIMARY"
-              onClick={() => setIsEditModalOpen(true)}
-              className="bg-[#ff5757] hover:bg-[#ff4444] text-white font-bold px-8 py-3 rounded-xl transition-all hover:scale-105"
-            >
-              Adjust My Goals
-            </Button>
+            <div className="flex justify-center w-full">
+              <Button
+                variant="PRIMARY"
+                onClick={() => setIsEditModalOpen(true)}
+                className="bg-[#ff5757] hover:bg-[#ff4444] text-white font-bold px-8 py-3 rounded-xl transition-all hover:scale-105"
+              >
+                Adjust My Goals
+              </Button>
+            </div>
           </div>
         </main>
         <Footer isMini />
