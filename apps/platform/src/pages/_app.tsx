@@ -4,7 +4,6 @@ import '@/styles/colors.css';
 
 import { AuthProvider } from '@tbe/auth';
 import { Layout } from '@tbe/components';
-import { GamificationProvider } from '@tbe/components';
 import {
   initGA,
   installGlobalAnalyticsListeners,
@@ -12,6 +11,7 @@ import {
 } from '@tbe/components/analytics';
 // import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
 import { envConfig, routes } from '@tbe/constants';
+import { GamificationProvider } from '@tbe/gamification';
 import { useUser } from '@tbe/hooks';
 import { TBEQueryProvider } from '@tbe/query';
 import { getRedirectUrl } from '@tbe/utils';

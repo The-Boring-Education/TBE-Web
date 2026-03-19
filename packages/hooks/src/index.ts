@@ -7,9 +7,10 @@ export { default as useAPIResponseMapper } from "./useAPIResponseMapper";
 export { default as useCashfreePayment } from "./useCashfreePayment";
 export { default as useCertificate } from "./useCertificate";
 export { default as useFeedback } from "./useFeedback";
+/** @deprecated Use `useGamification` from `@tbe/gamification` instead */
 export { default as useGamification } from "./useGamification";
-// useGamifiedAction moved to @tbe/components package
-// GamificationProvider moved to @tbe/components package
+// useGamifiedAction → @tbe/gamification
+// GamificationProvider → @tbe/gamification
 export * from "./use-mobile";
 export * from "./use-toast";
 export { default as useChallenges } from "./useChallenges";
@@ -20,6 +21,7 @@ export { default as useDsaQuestions } from "./useDsaQuestions";
 export type { TopicWithCount } from "./useDsaTopics";
 export { default as useDsaTopics } from "./useDsaTopics";
 export * from "./useInstallPrompt";
+/** @deprecated Use `useLeaderboard` from `@tbe/gamification` instead */
 export { default as useLeaderboard } from "./useLeaderboard";
 export { default as useMediaQuery } from "./useMediaQuery";
 export { default as useNotifications } from "./useNotifications";
@@ -31,6 +33,7 @@ export { default as usePDFFile } from "./usePDFFile";
 export { default as useResumeParser } from "./usePDFFile";
 export { usePrepLogs } from "./usePrepLogs";
 export { usePrepStats } from "./usePrepStats";
+/** @deprecated Use `useGamification` from `@tbe/gamification` instead */
 export { usePyGamification } from "./usePyGamification";
 export { default as useQuestionStarred } from "./useQuestionStarred";
 export { default as useQuizData } from "./useQuizData";

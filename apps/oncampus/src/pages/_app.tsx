@@ -3,12 +3,12 @@ import "@/styles/globals.css";
 import "@/styles/colors.css";
 
 import { AuthProvider } from "@tbe/auth";
-import { GamificationProvider } from "@tbe/components";
 import {
   initGA,
   installGlobalAnalyticsListeners,
   trackPageview,
 } from "@tbe/components/analytics";
+import { GamificationProvider } from "@tbe/gamification";
 import { useUser } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";

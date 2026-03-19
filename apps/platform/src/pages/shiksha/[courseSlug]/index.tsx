@@ -14,8 +14,8 @@ import {
   SEO,
   Text,
 } from '@tbe/components';
-import { useGamificationContext, useGamifiedAction } from '@tbe/components';
 import { routes, SCREEN_BREAKPOINTS } from '@tbe/constants';
+import { useGamificationContext, useGamifiedAction } from '@tbe/gamification';
 import { useAnalytics, useMediaQuery, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
