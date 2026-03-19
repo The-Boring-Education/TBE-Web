@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 
 import { defineConfig, devices } from "@playwright/test";
@@ -10,8 +11,8 @@ import { defineConfig, devices } from "@playwright/test";
  * is not supported by Playwright and is ignored.
  *
  * Usage:
- *   pnpm test:e2e                              # all projects (server: platform if sole E2E app)
- *   pnpm test:e2e -- --project=platform        # platform only
+ *   pnpm test:e2e                              # all projects; webServer only if exactly one app has specs
+ *   pnpm test:e2e -- --project=platform        # platform only (typical when several apps have specs)
  *   PLAYWRIGHT_E2E_APP=platform pnpm test:e2e -- --project=platform
  *
  * Env overrides for baseURL (app already running):
@@ -64,10 +65,34 @@ const APPS = {
   },
 } as const;
 
-/** Apps with Playwright specs under src/e2e — only these keys start a dev server. */
-const APPS_WITH_E2E = new Set<keyof typeof APPS>(["platform"]);
-
 const REPO_ROOT = path.resolve(__dirname, "../..");
+const E2E_ROOT = path.join(__dirname, "src/e2e");
+
+function dirContainsSpecTs(dir: string): boolean {
+  if (!fs.existsSync(dir)) return false;
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, ent.name);
+    if (ent.isDirectory()) {
+      if (dirContainsSpecTs(full)) return true;
+    } else if (ent.isFile() && ent.name.endsWith(".spec.ts")) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** Apps that have at least one `*.spec.ts` under `src/e2e/<testDir>/` — only these start `webServer`. */
+function discoverAppsWithE2e(): Set<keyof typeof APPS> {
+  const found = new Set<keyof typeof APPS>();
+  for (const key of Object.keys(APPS) as (keyof typeof APPS)[]) {
+    if (dirContainsSpecTs(path.join(E2E_ROOT, APPS[key].testDir))) {
+      found.add(key);
+    }
+  }
+  return found;
+}
+
+const APPS_WITH_E2E = discoverAppsWithE2e();
 
 function getProjectFromArgv(): keyof typeof APPS | undefined {
   const argv = process.argv;

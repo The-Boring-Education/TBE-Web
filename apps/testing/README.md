@@ -97,7 +97,7 @@ pnpm test:e2e:ui
 pnpm --filter @tbe/testing exec playwright show-report
 ```
 
-When you add Playwright specs for another app, register it in `playwright.config.ts` (`APPS_WITH_E2E`) and add that app to the E2E workflow matrix in `.github/workflows/test-e2e.yml`.
+CI runs one workflow job per app (`test-e2e.yml` matrix). Apps without specs still run Playwright with `--pass-with-no-tests` and finish immediately. Apps **with** specs get a dev server automatically: `playwright.config.ts` scans `src/e2e/<testDir>/` for `*.spec.ts` to decide which app to start. When you add a **new** frontend app to the monorepo, add it to the `APPS` map in `playwright.config.ts` and to the matrix in `test-e2e.yml`.
 
 ## 📝 API Testing
 
@@ -312,7 +312,7 @@ Tests run automatically in CI/CD pipeline:
 - All unit tests
 - All API tests
 - Coverage reports
-- E2E tests (Playwright against `@tbe/platform`; see workflow `test-e2e.yml`)
+- E2E tests (Playwright; one matrix job per app — see `test-e2e.yml`)
 
 ## 🤝 Contributing
 
