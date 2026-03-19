@@ -68,7 +68,7 @@ jobs:
         env:
           CI: "true"
         run: |
-          pnpm --filter @tbe/testing test:e2e -- --project=${{ matrix.app }} --pass-with-no-tests
+          pnpm --filter @tbe/testing exec playwright test --project=${{ matrix.app }} --pass-with-no-tests
 
       - name: 📤 Upload Playwright Report (${{ matrix.app }})
         if: always()
