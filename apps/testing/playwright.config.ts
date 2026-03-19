@@ -1,18 +1,21 @@
+import path from "node:path";
+
 import { defineConfig, devices } from "@playwright/test";
 
 /**
  * TBE Multi-App Playwright Config
  *
- * Supports E2E testing across all TBE frontend apps. Each app has its own
- * project with app-specific baseURL and webServer.
+ * Each app is a Playwright project (baseURL + testDir). The dev server is
+ * started via the **root** `webServer` only — `webServer` on project entries
+ * is not supported by Playwright and is ignored.
  *
  * Usage:
- *   pnpm test:e2e                    # Run all app tests
- *   pnpm test:e2e --project=platform # Run only platform tests
- *   pnpm test:e2e --project=prep-yatra
+ *   pnpm test:e2e                              # all projects (server: platform if sole E2E app)
+ *   pnpm test:e2e -- --project=platform        # platform only
+ *   PLAYWRIGHT_E2E_APP=platform pnpm test:e2e -- --project=platform
  *
- * Env overrides (for CI or deployed URLs):
- *   PLATFORM_URL, PREP_YATRA_URL, QUIZES_URL, etc.
+ * Env overrides for baseURL (app already running):
+ *   PLATFORM_URL, TBE_PREP_YATRA_URL, QUIZES_URL, etc.
  */
 
 // ---------------------------------------------------------------------------
@@ -61,8 +64,39 @@ const APPS = {
   },
 } as const;
 
-// API (3004) is backend — typically tested via frontend or separate API tests
-// Add an "api" project if you need direct API E2E tests
+/** Apps with Playwright specs under src/e2e — only these keys start a dev server. */
+const APPS_WITH_E2E = new Set<keyof typeof APPS>(["platform"]);
+
+const REPO_ROOT = path.resolve(__dirname, "../..");
+
+function getProjectFromArgv(): keyof typeof APPS | undefined {
+  const argv = process.argv;
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--project" && argv[i + 1] && argv[i + 1] in APPS) {
+      return argv[i + 1] as keyof typeof APPS;
+    }
+    if (arg.startsWith("--project=")) {
+      const name = arg.slice("--project=".length);
+      if (name in APPS) return name as keyof typeof APPS;
+    }
+  }
+  return undefined;
+}
+
+function resolveWebAppKey(): keyof typeof APPS | undefined {
+  const fromEnv = process.env.PLAYWRIGHT_E2E_APP as
+    | keyof typeof APPS
+    | undefined;
+  if (fromEnv && fromEnv in APPS && APPS_WITH_E2E.has(fromEnv)) return fromEnv;
+
+  const fromArgv = getProjectFromArgv();
+  if (fromArgv && APPS_WITH_E2E.has(fromArgv)) return fromArgv;
+  if (fromArgv) return undefined;
+
+  if (APPS_WITH_E2E.size === 1) return [...APPS_WITH_E2E][0];
+  return undefined;
+}
 
 function getAppUrl(appKey: keyof typeof APPS): string {
   const app = APPS[appKey];
@@ -72,6 +106,27 @@ function getAppUrl(appKey: keyof typeof APPS): string {
     (appKey === "platform" ? process.env.PLATFORM_URL : undefined);
   if (envUrl) return envUrl;
   return `http://localhost:${app.port}`;
+}
+
+type WebServerConfig = {
+  command: string;
+  url: string;
+  cwd: string;
+  reuseExistingServer: boolean;
+  timeout: number;
+};
+
+function buildWebServer(): WebServerConfig | undefined {
+  const appKey = resolveWebAppKey();
+  if (!appKey) return undefined;
+  const app = APPS[appKey];
+  return {
+    command: `pnpm --filter ${app.filter} dev`,
+    url: getAppUrl(appKey),
+    cwd: REPO_ROOT,
+    reuseExistingServer: !process.env.CI,
+    timeout: process.env.CI ? 120_000 : 60_000,
+  };
 }
 
 function buildProjects() {
@@ -89,30 +144,22 @@ function buildProjects() {
       },
       testMatch,
       testDir: "./src/e2e",
-      // Start app when running this project's tests (local dev only)
-      ...(process.env.CI
-        ? {}
-        : {
-            webServer: {
-              command: `pnpm --filter ${app.filter} dev`,
-              url: baseURL,
-              reuseExistingServer: true,
-              cwd: "../../",
-              timeout: 60_000,
-            },
-          }),
     });
   }
 
   return projects;
 }
 
+const webServer = buildWebServer();
+
 export default defineConfig({
   testDir: "./src/e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI
+    ? Math.max(5, Number(process.env.PLAYWRIGHT_WORKERS) || 5)
+    : undefined,
   reporter: process.env.CI
     ? [
         ["html", { open: "never" }],
@@ -125,6 +172,8 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
   },
+
+  ...(webServer ? { webServer } : {}),
 
   projects: buildProjects(),
 

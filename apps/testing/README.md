@@ -22,6 +22,7 @@ apps/testing/
 │   │   ├── shiksha/           # Shiksha API tests
 │   │   ├── utils/             # API test utilities
 │   │   └── mocks/             # Mock handlers and server
+│   ├── e2e/                   # Playwright E2E (per-app subfolders)
 │   ├── unit/                  # Unit tests
 │   │   ├── components/        # Component tests
 │   │   ├── hooks/            # Hook tests
@@ -62,6 +63,41 @@ pnpm test:unit:watch
 ```bash
 pnpm test:coverage
 ```
+
+### End-to-end (Playwright)
+
+From the **repository root**, install browsers once (Chromium is enough for CI parity):
+
+```bash
+pnpm --filter @tbe/testing exec playwright install chromium
+```
+
+Run all E2E projects that have specs (today: `@tbe/platform` only). Playwright starts the matching dev server automatically:
+
+```bash
+pnpm test:e2e
+```
+
+Run only the platform app (typical while iterating):
+
+```bash
+pnpm test:e2e -- --project=platform
+```
+
+Same thing via the testing package:
+
+```bash
+pnpm --filter @tbe/testing exec playwright test --project=platform
+```
+
+UI mode and HTML report:
+
+```bash
+pnpm test:e2e:ui
+pnpm --filter @tbe/testing exec playwright show-report
+```
+
+When you add Playwright specs for another app, register it in `playwright.config.ts` (`APPS_WITH_E2E`) and add that app to the E2E workflow matrix in `.github/workflows/test-e2e.yml`.
 
 ## 📝 API Testing
 
@@ -276,7 +312,7 @@ Tests run automatically in CI/CD pipeline:
 - All unit tests
 - All API tests
 - Coverage reports
-- E2E tests (optional, can be run separately)
+- E2E tests (Playwright against `@tbe/platform`; see workflow `test-e2e.yml`)
 
 ## 🤝 Contributing
 
@@ -294,6 +330,7 @@ When adding new tests:
 - React Testing Library for component tests
 - node-mocks-http for API route testing
 - MSW (Mock Service Worker) available for API mocking
+- E2E uses Playwright; dev servers are started from root `webServer` in `playwright.config.ts` (not per-project)
 
 ---
 

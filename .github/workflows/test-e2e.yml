@@ -14,15 +14,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Only apps with specs under apps/testing/src/e2e/<app>/ (see APPS_WITH_E2E in playwright.config.ts)
         app:
           - platform
-          - prep-yatra
-          - quizes
-          - techyatra
-          - dsayatra
-          - resume-yatra
-          - oncampus
-          - onboarding
 
     steps:
       - name: 📥 Checkout Repository
