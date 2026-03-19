@@ -13,7 +13,7 @@ import type {
 import { generateYouTubeSearchLink } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
-import { DSAQuestion, InterviewSheet, UserSheet } from "../models";
+import { DSAQuestion, InterviewSheet, StudyGuide, UserSheet } from "../models";
 import { toObjectId } from "./common";
 import { updateUserPointsInDB } from "./gamification";
 
@@ -799,6 +799,24 @@ const getDSAQuestionByIDFromDB = async (
   }
 };
 
+const getStudyGuideByTopicFromDB = async (
+  topicId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const studyGuide = await StudyGuide.findOne({ topicId });
+    if (!studyGuide) {
+      return { error: "Study guide not found" };
+    }
+    return { data: studyGuide };
+  } catch (error) {
+    logger.error("DB: getStudyGuideByTopicFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch study guide", details: error };
+  }
+};
+
 const getDSAQuestionsGroupedByTopic = async (
   domain: DSADomainType,
   difficulty?: DSADifficultyType,
@@ -905,6 +923,7 @@ export {
   getInterviewSheetByIDFromDB,
   getInterviewSheetBySlugFromDB,
   getStarredQuestionsFromDB,
+  getStudyGuideByTopicFromDB,
   markQuestionCompletedByUser,
   markQuestionStarredByUser,
   updateDSAQuestionInDB,
