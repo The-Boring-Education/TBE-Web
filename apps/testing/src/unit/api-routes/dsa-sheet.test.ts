@@ -28,6 +28,11 @@ vi.mock("../../../../api/src/lib/constants", () => ({
     BAD_REQUEST: 400,
     INTERNAL_SERVER_ERROR: 500,
   },
+  PAGINATION_LIMITS: {
+    DEFAULT: 50,
+    DSA_SHEET: 1000,
+    APTITUDE_ROADMAP: 1000,
+  },
 }));
 
 import handler from "../../../../api/src/pages/api/v1/interview-prep/dsa-sheet/index";
@@ -237,18 +242,18 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       });
     });
 
-    it("should cap limit at 100", async () => {
+    it("should cap limit at 1000", async () => {
       mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "GET",
-        query: { limit: "500" },
+        query: { limit: "5000" },
       });
 
       await handler(req, res);
 
       expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
-        expect.objectContaining({ limit: 100 }),
+        expect.objectContaining({ limit: 1000 }),
       );
     });
 

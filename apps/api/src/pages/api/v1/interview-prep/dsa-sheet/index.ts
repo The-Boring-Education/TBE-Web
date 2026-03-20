@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes } from "@/lib/constants";
+import { apiStatusCodes, PAGINATION_LIMITS } from "@/lib/constants";
 import {
   addDSAQuestionToDB,
   getAllDSAQuestionsFromDB,
@@ -29,8 +29,16 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const { title, answer, content, domain, difficulty, companyTypes, topics, sections } =
-    req.body;
+  const {
+    title,
+    answer,
+    content,
+    domain,
+    difficulty,
+    companyTypes,
+    topics,
+    sections,
+  } = req.body;
 
   const questionAnswer = answer || content;
   if (
@@ -98,7 +106,9 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     companyTypes: toArray(companyType),
     topics: toArray(topic),
     page: page ? parseInt(page as string) : 1,
-    limit: limit ? Math.min(parseInt(limit as string), 100) : 50,
+    limit: limit
+      ? Math.min(parseInt(limit as string), PAGINATION_LIMITS.DSA_SHEET)
+      : PAGINATION_LIMITS.DEFAULT,
   });
 
   if (error)
