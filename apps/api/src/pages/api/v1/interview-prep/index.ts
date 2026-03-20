@@ -7,6 +7,7 @@ import {
   COMPANY_TYPES,
   DSA_DIFFICULTY,
   DSA_DOMAIN,
+  PAGINATION_LIMITS,
 } from "@/lib/constants";
 import {
   addAInterviewSheetToDB,
@@ -278,7 +279,12 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
       {
         difficulty: difficulty as DSADifficultyType | undefined,
         page: page ? parseInt(page as string) : 1,
-        limit: limit ? Math.min(parseInt(limit as string), 100) : 50,
+        limit: limit
+          ? Math.min(
+              parseInt(limit as string),
+              PAGINATION_LIMITS.APTITUDE_ROADMAP,
+            )
+          : PAGINATION_LIMITS.DEFAULT,
       },
     );
 
