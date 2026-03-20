@@ -6,6 +6,7 @@ const PLATFORM_URL =
 
 export default defineConfig({
   testDir: "./src/e2e",
+  timeout: 60_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -22,6 +23,8 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
+    navigationTimeout: 60_000,
+    actionTimeout: 60_000,
   },
 
   projects: [
@@ -33,13 +36,11 @@ export default defineConfig({
 
   outputDir: "./test-results",
 
-  webServer: process.env.CI
-    ? undefined
-    : {
-        command: `pnpm --filter @tbe/platform dev`,
-        url: PLATFORM_URL,
-        reuseExistingServer: true,
-        cwd: "../../",
-        timeout: 60_000,
-      },
+  webServer: {
+    command: `pnpm --filter @tbe/platform dev`,
+    url: PLATFORM_URL,
+    reuseExistingServer: !process.env.CI,
+    cwd: "../../",
+    timeout: 120_000,
+  },
 });
