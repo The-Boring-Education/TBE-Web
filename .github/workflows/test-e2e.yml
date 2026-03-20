@@ -18,13 +18,6 @@ jobs:
         # Dev servers start only for apps that have *.spec.ts under apps/testing/src/e2e/<app>/ (see playwright.config.ts).
         app:
           - platform
-          - prep-yatra
-          - quizes
-          - techyatra
-          - dsayatra
-          - resume-yatra
-          - oncampus
-          - onboarding
 
     steps:
       - name: 📥 Checkout Repository

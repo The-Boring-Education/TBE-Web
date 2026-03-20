@@ -202,12 +202,4 @@ export default defineConfig({
   ...(webServer ? { webServer } : {}),
 
   projects: buildProjects(),
-
-  webServer: {
-    command: `pnpm --filter @tbe/platform dev`,
-    url: PLATFORM_URL,
-    reuseExistingServer: !process.env.CI,
-    cwd: "../../",
-    timeout: 120_000,
-  },
 });
