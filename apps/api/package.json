@@ -12,7 +12,8 @@
     "docker:build": "cd ../.. && docker build -f apps/api/Dockerfile -t tbe-api .",
     "docker:run": "docker run -p 3000:3000 tbe-api",
     "docker:test": "./test-docker-build.sh",
-    "deploy": "./deploy.sh"
+    "deploy": "./deploy.sh",
+    "seed:study-guide": "tsx src/scripts/seed-study-guide.ts"
   },
   "dependencies": {
     "@sentry/nextjs": "^9.38.0",

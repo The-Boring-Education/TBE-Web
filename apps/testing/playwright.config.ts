@@ -179,6 +179,7 @@ const webServer = buildWebServer();
 
 export default defineConfig({
   testDir: "./src/e2e",
+  timeout: 60_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
@@ -194,11 +195,11 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
+    navigationTimeout: 60_000,
+    actionTimeout: 60_000,
   },
 
   ...(webServer ? { webServer } : {}),
 
   projects: buildProjects(),
-
-  outputDir: "./test-results",
 });
