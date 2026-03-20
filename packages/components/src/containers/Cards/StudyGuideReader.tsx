@@ -244,8 +244,8 @@ const StudyGuideReader = ({
             level="span"
             className="px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-black uppercase tracking-widest"
           >
-            {content.subtitle.includes("·")
-              ? content.subtitle.split("·")[1].trim()
+            {content.subtitle?.includes("·")
+              ? (content.subtitle.split("·")[1]?.trim() ?? "Medium")
               : "Medium"}
           </Text>
           <Text
@@ -253,9 +253,9 @@ const StudyGuideReader = ({
             className="text-gray-500 text-[11px] font-medium flex items-center gap-1.5"
           >
             <Clock className="w-3.5 h-3.5" />
-            {content.subtitle.includes("·")
+            {content.subtitle?.includes("·")
               ? (content.subtitle.split("·")[2] || "25 min").trim()
-              : content.subtitle}
+              : (content.subtitle ?? "")}
           </Text>
         </div>
       </div>

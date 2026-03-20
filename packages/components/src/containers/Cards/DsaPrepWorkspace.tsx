@@ -1,4 +1,4 @@
-import { TOPIC_LABELS } from "@tbe/constants";
+import { TOP_NAVIGATION, TOPIC_LABELS } from "@tbe/constants";
 import { type TopicWithCount, useStudyGuideTopic } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import { cn } from "@tbe/utils";
@@ -6,6 +6,7 @@ import { BookOpen, Lightbulb } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
+import Link from "../../common/Typography/Link";
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../Page/common/FlexContainer";
 import DsaQuestionList from "./DsaQuestionList";
@@ -104,10 +105,10 @@ const DsaPrepWorkspace = ({
             </div>
           ) : (
             <div>
-              <div className="flex items-center justify-between w-full">
+              <div className="flex items-center justify-between w-full mb-0.5">
                 <Text
                   level="h2"
-                  className="text-[14px] font-black text-white mb-0.5 tracking-tight"
+                  className="text-[14px] font-black text-white tracking-tight"
                 >
                   Questions
                 </Text>
@@ -116,7 +117,7 @@ const DsaPrepWorkspace = ({
                     onClick={handleToggleStudyGuide}
                     disabled={isStudyGuideLoading}
                     className={cn(
-                      "flex items-center justify-center w-[38px] h-[38px] rounded-[8px] border-[0.5px] transition-all duration-300",
+                      "flex items-center justify-center w-[34px] h-[34px] rounded-[8px] border-[0.5px] transition-all duration-300",
                       isStudyGuideLoading && "animate-pulse opacity-50",
                       isStudyGuideOpen
                         ? "bg-red-500/15 border-red-500/50 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.35)] scale-105"
@@ -130,7 +131,7 @@ const DsaPrepWorkspace = ({
                   >
                     <BookOpen
                       className={cn(
-                        "w-[22px] h-[22px] transition-all duration-300",
+                        "w-[18px] h-[18px] transition-all duration-300",
                         isStudyGuideOpen ? "scale-110" : "",
                       )}
                       strokeWidth={2}
@@ -166,14 +167,18 @@ const DsaPrepWorkspace = ({
           ) : (
             <div />
           )}
-          {selectedTopic && (
-            <Button
-              onClick={handleBackToTopics}
-              variant="OUTLINE"
-              size="SMALL"
-              text="View All Topics"
-              className="border-gray-700 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap"
-            />
+          {isStudyGuideOpen && (
+            <div className="flex items-center gap-4">
+              {TOP_NAVIGATION?.issues?.[0] && (
+                <Link
+                  className="text-[11px] font-bold text-gray-400 hover:text-red-500 transition-colors uppercase tracking-widest"
+                  href={TOP_NAVIGATION.issues[0].href}
+                  target={TOP_NAVIGATION.issues[0]?.target as any}
+                >
+                  {TOP_NAVIGATION.issues[0]?.name}
+                </Link>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -203,7 +208,15 @@ const DsaPrepWorkspace = ({
                 />
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
+                <Button
+                  onClick={onBackToTopics}
+                  variant="OUTLINE"
+                  size="SMALL"
+                  className="border-red-500/40 text-red-500 bg-transparent hover:border-red-500 hover:bg-red-500/10 font-bold px-4 self-start"
+                >
+                  ← Back
+                </Button>
                 {isStudyGuideOpen && studyGuideData ? (
                   <StudyGuideNav
                     data={studyGuideData}
