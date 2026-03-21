@@ -6,6 +6,12 @@ import type { StudyGuideModel } from "@/lib/interfaces";
 
 const StudyGuideSchema = new Schema<StudyGuideModel>(
   {
+    contentId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     topicId: {
       type: String,
       required: true,

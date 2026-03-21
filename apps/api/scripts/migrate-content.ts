@@ -3,6 +3,17 @@
  * as backfill: `.env.local`, `.env.development`, `.env.production` under `apps/api/`.
  * Backfill the source DB first if documents lack `contentId`.
  *
+ * How updates work:
+ * - Each run sends a **full document snapshot** from source (minus `_id`) via `$set`.
+ *   Adding an embedded interview question, editing a Shiksha chapter, etc. on **source**
+ *   will replace those arrays/objects on **target** on the next migrate — no partial-merge
+ *   beyond MongoDB field semantics.
+ * - **New** content (new sheet / DSA / quiz / …) works as long as the doc has `contentId`
+ *   (assigned at create time or by backfill).
+ * - **Caveat:** fields that store **other collections’ `_id`s** (e.g. InterviewSheet
+ *   `dsaQuestions` refs) still point at **source** ObjectIds. Migrate referenced collections
+ *   in the same order you expect, or resolve links by `contentId` in app code.
+ *
  * From monorepo root (examples):
  *   pnpm --filter @tbe/api run migrate -- --from dev --to local --entity all --dry-run
  *   pnpm --filter @tbe/api run migrate -- --from dev --to local --entity all
@@ -10,7 +21,7 @@
  *
  * From `apps/api/`: `pnpm run migrate -- --from dev --to local --entity all`
  *
- * `--entity`: interviewSheets | dsaQuestions | aptitudeTopics | courses | projects | quizzes | all
+ * `--entity`: interviewSheets | dsaQuestions | studyGuides | aptitudeTopics | courses | projects | quizzes | all
  * `--to prod` only with `--from dev`; prod writes wait 5s (Ctrl+C to cancel).
  */
 import chalk from "chalk";
@@ -21,21 +32,17 @@ import { fileURLToPath } from "url";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
+import {
+  ENTITY_MAP,
+  type EntityMapKey,
+  migrateCollectionByContentId,
+  type MigrateEntityResult,
+} from "../src/lib/migration/content-migrate-entity";
+
 const API_ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
 );
-
-const ENTITY_MAP = {
-  interviewSheets: "interviewsheets",
-  dsaQuestions: "dsaquestions",
-  aptitudeTopics: "aptitudetopics",
-  courses: "courses",
-  projects: "projects",
-  quizzes: "quizzes",
-} as const;
-
-type EntityMapKey = keyof typeof ENTITY_MAP;
 
 const ENTITY_CHOICES = [...Object.keys(ENTITY_MAP), "all"] as const;
 
@@ -78,112 +85,6 @@ function loadUri(env: EnvOption): string {
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-interface EntityResult {
-  entity: string;
-  collection: string;
-  inserted: number;
-  updated: number;
-  skipped: number;
-  total: number;
-  errors: number;
-}
-
-async function migrateEntity(
-  sourceConn: mongoose.Connection,
-  targetConn: mongoose.Connection,
-  entityName: string,
-  collectionName: string,
-  dryRun: boolean,
-): Promise<EntityResult> {
-  const sourceCollection = sourceConn.collection(collectionName);
-  const targetCollection = targetConn.collection(collectionName);
-
-  const sourceDocs = await sourceCollection.find({}).toArray();
-  const result: EntityResult = {
-    entity: entityName,
-    collection: collectionName,
-    inserted: 0,
-    updated: 0,
-    skipped: 0,
-    total: sourceDocs.length,
-    errors: 0,
-  };
-
-  console.log(
-    chalk.blue(
-      `  [${entityName}] Found ${sourceDocs.length} documents in source`,
-    ),
-  );
-
-  for (const doc of sourceDocs) {
-    if (!doc.contentId) {
-      console.log(
-        chalk.yellow(
-          `  [${entityName}] SKIP: document ${doc._id} has no contentId`,
-        ),
-      );
-      result.skipped++;
-      continue;
-    }
-
-    const { _id, ...docWithoutId } = doc;
-
-    if (dryRun) {
-      const existing = await targetCollection.findOne({
-        contentId: doc.contentId,
-      });
-      if (existing) {
-        console.log(
-          chalk.blue(
-            `  [${entityName}] DRY-RUN would update: contentId=${doc.contentId}`,
-          ),
-        );
-        result.updated++;
-      } else {
-        console.log(
-          chalk.green(
-            `  [${entityName}] DRY-RUN would insert: contentId=${doc.contentId}`,
-          ),
-        );
-        result.inserted++;
-      }
-      continue;
-    }
-
-    try {
-      const writeResult = await targetCollection.updateOne(
-        { contentId: doc.contentId },
-        { $set: docWithoutId },
-        { upsert: true },
-      );
-
-      if (writeResult.upsertedCount > 0) {
-        result.inserted++;
-      } else if (writeResult.modifiedCount > 0) {
-        result.updated++;
-      }
-    } catch (error) {
-      const msg = error instanceof Error ? error.message : String(error);
-      console.error(
-        chalk.red(
-          `  [${entityName}] ERROR on contentId=${doc.contentId}: ${msg}`,
-        ),
-      );
-      result.errors++;
-    }
-  }
-
-  const modeLabel = dryRun ? "DRY-RUN" : "DONE";
-  console.log(
-    chalk.green(
-      `  [${entityName}] ${modeLabel}: ${result.inserted} inserted, ` +
-        `${result.updated} updated, ${result.skipped} skipped, ${result.errors} errors`,
-    ),
-  );
-
-  return result;
 }
 
 /** pnpm/tsx sometimes pass a bare `--` in argv; yargs then misses flags. */
@@ -270,16 +171,16 @@ async function main() {
     entitiesToMigrate = [[key, ENTITY_MAP[key]]];
   }
 
-  const results: EntityResult[] = [];
+  const results: MigrateEntityResult[] = [];
 
   for (const [entityName, collectionName] of entitiesToMigrate) {
     try {
-      const result = await migrateEntity(
+      const result = await migrateCollectionByContentId(
         sourceConn,
         targetConn,
         entityName,
         collectionName,
-        argv["dry-run"],
+        { dryRun: argv["dry-run"], verbose: true },
       );
       results.push(result);
     } catch (error) {

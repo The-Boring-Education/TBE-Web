@@ -2,6 +2,10 @@ import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import path from "path";
 import { fileURLToPath } from "url";
+import { v5 as uuidv5 } from "uuid";
+
+/** Namespace UUID for deterministic `contentId` per `topicId` when none exists yet. */
+const STUDY_GUIDE_CONTENT_ID_NAMESPACE = "a3b8c9d2-4e1f-4a2b-9c3d-8e7f6a5b4c3d";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1335,11 +1339,24 @@ async function seed() {
     const collection = db.collection("studyguides");
 
     for (const guide of STUDY_GUIDE_DATA) {
-      // @ts-ignore
-      guide.updatedAt = new Date();
+      const existing = await collection.findOne(
+        { topicId: guide.topicId },
+        { projection: { contentId: 1 } },
+      );
+      const contentId =
+        typeof existing?.contentId === "string" && existing.contentId.length > 0
+          ? existing.contentId
+          : uuidv5(guide.topicId, STUDY_GUIDE_CONTENT_ID_NAMESPACE);
+
+      const payload = {
+        ...guide,
+        contentId,
+        updatedAt: new Date(),
+      };
+
       await collection.updateOne(
         { topicId: guide.topicId },
-        { $set: guide, $setOnInsert: { createdAt: new Date() } },
+        { $set: payload, $setOnInsert: { createdAt: new Date() } },
         { upsert: true },
       );
       console.log(`Seeded topic: ${guide.topicId}`);

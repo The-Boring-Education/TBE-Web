@@ -31,6 +31,7 @@ const API_ROOT = path.resolve(
 const ENTITY_MAP: Record<string, string> = {
   interviewSheets: "interviewsheets",
   dsaQuestions: "dsaquestions",
+  studyGuides: "studyguides",
   aptitudeTopics: "aptitudetopics",
   courses: "courses",
   projects: "projects",
