@@ -58,6 +58,12 @@ const AptitudeQuestionSchema = new Schema<AptitudeQuestionModel>(
 
 const AptitudeTopicSchema = new Schema<AptitudeTopicModel>(
   {
+    contentId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     topic: {
       type: String,
       required: [true, "Topic slug is required"],

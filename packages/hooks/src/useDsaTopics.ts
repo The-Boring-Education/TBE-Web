@@ -17,8 +17,13 @@ interface UseDsaTopicsReturn {
 const useDsaTopics = (
   questions: DsaQuestion[],
   completedIds: (string | number)[] = [],
+  topicSummaries?: TopicWithCount[],
 ): UseDsaTopicsReturn => {
   const topicsWithCounts = useMemo(() => {
+    if (topicSummaries?.length) {
+      return topicSummaries;
+    }
+
     const topicMap = new Map<string, number>();
 
     questions.forEach((question) => {
@@ -41,7 +46,7 @@ const useDsaTopics = (
         if (priorityA !== -1 && priorityB !== -1) return priorityA - priorityB;
         return a.label.localeCompare(b.label);
       });
-  }, [questions]);
+  }, [questions, topicSummaries]);
 
   const topicsCompletionMap = useMemo(() => {
     const map: Record<string, boolean> = {};

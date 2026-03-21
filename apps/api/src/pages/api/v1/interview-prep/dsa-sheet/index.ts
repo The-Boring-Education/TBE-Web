@@ -5,6 +5,7 @@ import {
   addDSAQuestionToDB,
   getAllDSAQuestionsFromDB,
   getDSASheetMetadataFromDB,
+  getDSATopicSummariesFromDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
@@ -29,8 +30,16 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const { title, answer, content, domain, difficulty, companyTypes, topics, sections } =
-    req.body;
+  const {
+    title,
+    answer,
+    content,
+    domain,
+    difficulty,
+    companyTypes,
+    topics,
+    sections,
+  } = req.body;
 
   const questionAnswer = answer || content;
   if (
@@ -75,8 +84,29 @@ const handleCreateQuestion = async (
 };
 
 const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { domain, difficulty, companyType, topic, page, limit, metadata } =
-    req.query;
+  const {
+    domain,
+    difficulty,
+    companyType,
+    topic,
+    page,
+    limit,
+    metadata,
+    query,
+  } = req.query;
+
+  /** Lightweight topic list + counts only (no question bodies). */
+  if (query === "topics") {
+    const { data, error } = await getDSATopicSummariesFromDB();
+    if (error) {
+      return res
+        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(sendAPIResponse({ status: false, error }));
+    }
+    return res
+      .status(apiStatusCodes.OKAY)
+      .json(sendAPIResponse({ status: true, data }));
+  }
 
   if (metadata === "true") {
     const { data, error } = await getDSASheetMetadataFromDB();
@@ -89,16 +119,23 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
       .json(sendAPIResponse({ status: true, data }));
   }
 
-  const toArray = (val: any) =>
+  const toArray = (val: unknown) =>
     val ? (Array.isArray(val) ? val : [val]) : undefined;
+
+  const parsePositiveInt = (value: unknown): number | undefined => {
+    if (value === undefined || value === "") return undefined;
+    const n = parseInt(String(value), 10);
+    if (Number.isNaN(n) || n <= 0) return undefined;
+    return n;
+  };
 
   const { data, error } = await getAllDSAQuestionsFromDB({
     domain: toArray(domain),
     difficulty: toArray(difficulty),
     companyTypes: toArray(companyType),
     topics: toArray(topic),
-    page: page ? parseInt(page as string) : 1,
-    limit: limit ? Math.min(parseInt(limit as string), 100) : 50,
+    page: parsePositiveInt(page) ?? 1,
+    limit: parsePositiveInt(limit),
   });
 
   if (error)

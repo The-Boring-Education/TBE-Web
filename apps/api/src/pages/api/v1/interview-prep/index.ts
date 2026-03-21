@@ -32,6 +32,13 @@ import { withApiHandler } from "@/middleware/requestLogger";
 
 type RoadmapType = "DSA" | "APTITUDE";
 
+const parsePositiveInt = (value: unknown): number | undefined => {
+  if (value === undefined || value === "") return undefined;
+  const n = parseInt(String(value), 10);
+  if (Number.isNaN(n) || n <= 0) return undefined;
+  return n;
+};
+
 const ROADMAP_HANDLERS: Record<
   RoadmapType,
   (req: NextApiRequest, res: NextApiResponse) => Promise<void>
@@ -277,8 +284,8 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
       topic as string,
       {
         difficulty: difficulty as DSADifficultyType | undefined,
-        page: page ? parseInt(page as string) : 1,
-        limit: limit ? Math.min(parseInt(limit as string), 100) : 50,
+        page: page ? parseInt(page as string, 10) : 1,
+        limit: parsePositiveInt(limit),
       },
     );
 

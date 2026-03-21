@@ -10,11 +10,15 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (handler: any) => handler,
 }));
 
+const mockGetDSATopicSummaries = vi.fn();
+
 vi.mock("../../../../api/src/lib/database", () => ({
   addDSAQuestionToDB: (...args: any[]) => mockAddDSAQuestion(...args),
   getAllDSAQuestionsFromDB: (...args: any[]) => mockGetAllDSAQuestions(...args),
   getDSASheetMetadataFromDB: (...args: any[]) =>
     mockGetDSASheetMetadata(...args),
+  getDSATopicSummariesFromDB: (...args: any[]) =>
+    mockGetDSATopicSummaries(...args),
 }));
 
 vi.mock("../../../../api/src/lib/utils", () => ({
@@ -27,6 +31,9 @@ vi.mock("../../../../api/src/lib/constants", () => ({
     RESOURCE_CREATED: 201,
     BAD_REQUEST: 400,
     INTERNAL_SERVER_ERROR: 500,
+  },
+  PAGINATION_LIMITS: {
+    DEFAULT: 50,
   },
 }));
 
@@ -237,18 +244,36 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       });
     });
 
-    it("should cap limit at 100", async () => {
+    it("should pass through client limit without an artificial cap", async () => {
       mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "GET",
-        query: { limit: "500" },
+        query: { limit: "5000" },
       });
 
       await handler(req, res);
 
       expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
-        expect.objectContaining({ limit: 100 }),
+        expect.objectContaining({ limit: 5000 }),
+      );
+    });
+
+    it("should omit limit for topic-scoped fetch so DB returns all matching rows", async () => {
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: { topic: "ARRAY" },
+      });
+
+      await handler(req, res);
+
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({
+          topics: ["ARRAY"],
+          limit: undefined,
+        }),
       );
     });
 

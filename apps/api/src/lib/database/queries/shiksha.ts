@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { modelSelectParams } from "@/lib/constants";
 import type {
   AddChapterToCourseRequestProps,
@@ -18,7 +20,7 @@ const addACourseToDB = async (
   courseDetails: AddCourseRequestPayloadProps,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = new Course(courseDetails);
+    const course = new Course({ ...courseDetails, contentId: uuidv4() });
     await course.save();
     return { data: course };
   } catch (error) {
