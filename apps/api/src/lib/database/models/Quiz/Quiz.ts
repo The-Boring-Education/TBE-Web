@@ -13,6 +13,7 @@ export interface QuizQuestionModel {
 
 export interface QuizModel {
   _id?: string;
+  contentId?: string;
   categoryName: string;
   categoryDescription: string;
   categoryIcon: string;
@@ -63,6 +64,12 @@ const QuizQuestionSchema = new Schema<QuizQuestionModel>(
 
 const QuizSchema = new Schema<QuizModel>(
   {
+    contentId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     categoryName: {
       type: String,
       required: [true, "Category name is required"],

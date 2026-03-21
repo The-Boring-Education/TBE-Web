@@ -1,4 +1,4 @@
-import fs from "fs";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   APTITUDE_SUB_CATEGORY_FORMAT_MAP,
@@ -248,7 +248,7 @@ const bulkUploadAptitudeDataToDB = async (
     let topicDoc = await AptitudeTopic.findOne({ topic });
 
     if (!topicDoc) {
-      topicDoc = new AptitudeTopic({ topic, questions });
+      topicDoc = new AptitudeTopic({ topic, questions, contentId: uuidv4() });
       await topicDoc.save();
       return {
         data: {
@@ -341,77 +341,6 @@ const upsertAptitudeStudyGuideToDB = async (
   }
 };
 
-// ─── Migration Helper ────────────────────────────────────────────────────────
-
-const migrateExistingAptitudeData =
-  async (): Promise<DatabaseQueryResponseType> => {
-    const logFile = "migration.log"; // Define logFile here
-    const log = (msg: string) => {
-      logger.info(msg);
-      try {
-        fs.appendFileSync(logFile, msg + "\n");
-      } catch (e) {
-        logger.error("Failed to write to log file", {
-          error: e instanceof Error ? e.message : String(e),
-        });
-      }
-    };
-
-    try {
-      fs.writeFileSync(logFile, "Starting migration...\n");
-      const db = AptitudeTopic.db;
-      const guides = await db
-        .collection("aptitudestudyguides")
-        .find({})
-        .toArray();
-      const allQuestions = await db
-        .collection("aptitudequestions")
-        .find({})
-        .toArray();
-
-      log(`Found ${guides.length} guides and ${allQuestions.length} questions`);
-
-      const results = [];
-
-      for (const slug of APTITUDE_TOPIC_SLUGS) {
-        const topicGuide = guides.find((g: any) => g.topic === slug);
-        const topicQuestions = allQuestions
-          .filter((q: any) => q.topic === slug)
-          .map((q: any) => {
-            const { topic: _unused, _id, ...rest } = q;
-            return rest;
-          });
-
-        if (topicGuide || topicQuestions.length > 0) {
-          log(
-            `Migrating topic: ${slug} (${topicQuestions.length} questions, guide: ${!!topicGuide})`,
-          );
-          const updated = await AptitudeTopic.findOneAndUpdate(
-            { topic: slug },
-            {
-              $set: {
-                studyGuide: topicGuide?.content || "",
-                questions: topicQuestions,
-              },
-            },
-            { new: true, upsert: true },
-          );
-          results.push({
-            topic: slug,
-            questions: updated.questions.length,
-            hasGuide: !!updated.studyGuide,
-          });
-        }
-      }
-
-      log(`Migration complete. Migrated ${results.length} topics.`);
-      return { data: { migratedTopics: results.length, details: results } };
-    } catch (error) {
-      log(`Migration failed: ${error}`);
-      return { error: "Migration failed", details: error };
-    }
-  };
-
 export {
   addAptitudeQuestionToDB,
   bulkUploadAptitudeDataToDB,
@@ -419,7 +348,6 @@ export {
   getAptitudeQuestionsByTopicFromDB,
   getAptitudeStudyGuideByTopicFromDB,
   getAptitudeTopicsWithQuestionCountFromDB,
-  migrateExistingAptitudeData,
   updateAptitudeQuestionInDB,
   upsertAptitudeStudyGuideToDB,
 };

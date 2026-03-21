@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { modelSelectParams } from "@/lib/constants";
 import type {
   AddInterviewQuestionRequestPayloadProps,
@@ -21,7 +23,7 @@ const addAInterviewSheetToDB = async (
   sheetPayload: AddInterviewSheetRequestPayloadProps,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const sheet = new InterviewSheet(sheetPayload);
+    const sheet = new InterviewSheet({ ...sheetPayload, contentId: uuidv4() });
     await sheet.save();
     return { data: sheet };
   } catch (error) {
@@ -742,6 +744,7 @@ const addDSAQuestionToDB = async (questionPayload: {
     const question = new DSAQuestion({
       ...questionPayload,
       youtubeSearchLink,
+      contentId: uuidv4(),
     });
     await question.save();
     return { data: question };
