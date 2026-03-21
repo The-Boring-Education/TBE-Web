@@ -1,11 +1,4 @@
-import type { PipelineStage } from "mongoose";
-import { v4 as uuidv4 } from "uuid";
-
-import {
-  DSA_TOPICS,
-  modelSelectParams,
-  PAGINATION_LIMITS,
-} from "@/lib/constants";
+import { modelSelectParams } from "@/lib/constants";
 import type {
   AddInterviewQuestionRequestPayloadProps,
   AddInterviewSheetRequestPayloadProps,
@@ -13,7 +6,6 @@ import type {
   DatabaseQueryResponseType,
   DSADifficultyType,
   DSADomainType,
-  DSATopicType,
   SheetEnrollmentRequestProps,
   UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
@@ -21,7 +13,7 @@ import type {
 import { generateYouTubeSearchLink } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
-import { DSAQuestion, InterviewSheet, StudyGuide, UserSheet } from "../models";
+import { DSAQuestion, InterviewSheet, UserSheet } from "../models";
 import { toObjectId } from "./common";
 import { updateUserPointsInDB } from "./gamification";
 
@@ -29,7 +21,7 @@ const addAInterviewSheetToDB = async (
   sheetPayload: AddInterviewSheetRequestPayloadProps,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const sheet = new InterviewSheet({ ...sheetPayload, contentId: uuidv4() });
+    const sheet = new InterviewSheet(sheetPayload);
     await sheet.save();
     return { data: sheet };
   } catch (error) {
@@ -581,11 +573,11 @@ const getAllDSAQuestionsFromDB = async (
       companyTypes,
       topics,
       page = 1,
-      limit: limitInput,
+      limit = 50,
     } = filters;
 
     // Build match stage for filtering
-    const matchStage: Record<string, unknown> = {};
+    const matchStage: any = {};
 
     if (domain) {
       const domains = Array.isArray(domain) ? domain : [domain];
@@ -609,28 +601,38 @@ const getAllDSAQuestionsFromDB = async (
       matchStage.topics = { $in: topicsList };
     }
 
-    const hasTopicFilter = Boolean(
-      topics &&
-      (Array.isArray(topics) ? topics.length > 0 : String(topics).length > 0),
-    );
-
-    /**
-     * - Topic-scoped sheet fetch with no explicit limit → return all matching rows.
-     * - Unscoped list with no limit → default page size (protects accidental full scans).
-     * - Explicit limit → honor client (no artificial cap).
-     */
-    let effectiveLimit: number | null;
-    if (limitInput !== undefined && limitInput !== null) {
-      effectiveLimit = limitInput;
-    } else if (hasTopicFilter) {
-      effectiveLimit = null;
-    } else {
-      effectiveLimit = PAGINATION_LIMITS.DEFAULT;
-    }
-
     const totalCount = await DSAQuestion.countDocuments(matchStage);
 
-    const sortStages: PipelineStage[] = [
+    const DSA_TOPIC_SORT_ORDER = [
+      "ARRAY",
+      "STRING",
+      "HASHMAP",
+      "TWO_POINTERS",
+      "SLIDING_WINDOW",
+      "PREFIX_SUM",
+      "SORTING",
+      "BINARY_SEARCH",
+      "MATH",
+      "BIT_MANIPULATION",
+      "RECURSION",
+      "LINKED_LIST",
+      "STACK",
+      "QUEUE",
+      "BINARY_TREE",
+      "TREE",
+      "BST",
+      "HEAP",
+      "TRIE",
+      "GRAPH",
+      "DFS",
+      "BFS",
+      "BACKTRACKING",
+      "DYNAMIC_PROGRAMMING",
+      "GREEDY",
+      "UNION_FIND",
+    ];
+
+    const questions = await DSAQuestion.aggregate([
       { $match: matchStage },
       {
         $addFields: {
@@ -639,7 +641,7 @@ const getAllDSAQuestionsFromDB = async (
               vars: {
                 idx: {
                   $indexOfArray: [
-                    [...DSA_TOPICS],
+                    DSA_TOPIC_SORT_ORDER,
                     { $arrayElemAt: ["$topics", 0] },
                   ],
                 },
@@ -662,35 +664,20 @@ const getAllDSAQuestionsFromDB = async (
       {
         $sort: { _topicOrder: 1, _difficultyOrder: 1, order: 1, createdAt: -1 },
       },
-    ];
-
-    if (effectiveLimit !== null) {
-      sortStages.push({ $skip: (page - 1) * effectiveLimit });
-      sortStages.push({ $limit: effectiveLimit });
-    }
-
-    sortStages.push({ $project: { _topicOrder: 0, _difficultyOrder: 0 } });
-
-    const questions = await DSAQuestion.aggregate(sortStages);
-
-    const limitForMeta = effectiveLimit === null ? totalCount : effectiveLimit;
-    const totalPages =
-      effectiveLimit === null
-        ? 1
-        : Math.max(1, Math.ceil(totalCount / effectiveLimit));
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+      { $project: { _topicOrder: 0, _difficultyOrder: 0 } },
+    ]);
 
     return {
       data: {
         questions,
         pagination: {
           total: totalCount,
-          page: effectiveLimit === null ? 1 : page,
-          limit: limitForMeta,
-          totalPages,
-          hasMore:
-            effectiveLimit === null
-              ? false
-              : page * effectiveLimit < totalCount,
+          page,
+          limit,
+          totalPages: Math.ceil(totalCount / limit),
+          hasMore: page * limit < totalCount,
         },
       },
     };
@@ -702,55 +689,6 @@ const getAllDSAQuestionsFromDB = async (
     return { error: "Failed to fetch DSA questions", details: error };
   }
 };
-
-/** Topic list + counts using primary topic only (topics[0]), for lightweight sheet landing. */
-const getDSATopicSummariesFromDB =
-  async (): Promise<DatabaseQueryResponseType> => {
-    try {
-      const rows = await DSAQuestion.aggregate<{
-        _id: string;
-        count: number;
-      }>([
-        {
-          $project: {
-            primaryTopic: { $arrayElemAt: ["$topics", 0] },
-          },
-        },
-        {
-          $match: {
-            primaryTopic: { $exists: true, $nin: [null, ""] },
-          },
-        },
-        {
-          $group: {
-            _id: "$primaryTopic",
-            count: { $sum: 1 },
-          },
-        },
-      ]);
-
-      const orderMap = new Map<string, number>(
-        [...DSA_TOPICS].map((topicId, index) => [topicId, index]),
-      );
-
-      const topics: DSATopicType[] = rows
-        .map((row) => row._id as DSATopicType)
-        .sort((a, b) => {
-          const ia = orderMap.get(a as string) ?? 999;
-          const ib = orderMap.get(b as string) ?? 999;
-          if (ia !== ib) return ia - ib;
-          return a.localeCompare(b);
-        }) as DSATopicType[];
-
-      return { data: { topics } };
-    } catch (error) {
-      logger.error("DB: getDSATopicSummariesFromDB failed", {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-      return { error: "Failed to fetch DSA topic summaries", details: error };
-    }
-  };
 
 const getDSASheetMetadataFromDB =
   async (): Promise<DatabaseQueryResponseType> => {
@@ -793,15 +731,17 @@ const addDSAQuestionToDB = async (questionPayload: {
   topics: string[];
   order?: number;
   leetcodeLink?: string;
+  youtubeSearchLink?: string;
 }): Promise<DatabaseQueryResponseType> => {
   try {
     // Auto-generate YouTube search link if not provided
-    const youtubeSearchLink = generateYouTubeSearchLink(questionPayload.title);
+    const youtubeSearchLink =
+      questionPayload.youtubeSearchLink ||
+      generateYouTubeSearchLink(questionPayload.title);
 
     const question = new DSAQuestion({
       ...questionPayload,
       youtubeSearchLink,
-      contentId: uuidv4(),
     });
     await question.save();
     return { data: question };
@@ -856,24 +796,6 @@ const getDSAQuestionByIDFromDB = async (
       stack: error instanceof Error ? error.stack : undefined,
     });
     return { error: "Failed to fetch DSA question", details: error };
-  }
-};
-
-const getStudyGuideByTopicFromDB = async (
-  topicId: string,
-): Promise<DatabaseQueryResponseType> => {
-  try {
-    const studyGuide = await StudyGuide.findOne({ topicId: { $eq: topicId } });
-    if (!studyGuide) {
-      return { error: "Study guide not found" };
-    }
-    return { data: studyGuide };
-  } catch (error) {
-    logger.error("DB: getStudyGuideByTopicFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Failed to fetch study guide", details: error };
   }
 };
 
@@ -979,12 +901,10 @@ export {
   getDSAQuestionByIDFromDB,
   getDSAQuestionsGroupedByTopic,
   getDSASheetMetadataFromDB,
-  getDSATopicSummariesFromDB,
   getEnrolledSheetFromDB,
   getInterviewSheetByIDFromDB,
   getInterviewSheetBySlugFromDB,
   getStarredQuestionsFromDB,
-  getStudyGuideByTopicFromDB,
   markQuestionCompletedByUser,
   markQuestionStarredByUser,
   updateDSAQuestionInDB,

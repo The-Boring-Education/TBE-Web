@@ -62,12 +62,6 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
 
 const InterviewSheetSchema = new Schema<InterviewSheetModel>(
   {
-    contentId: {
-      type: String,
-      unique: true,
-      sparse: true,
-      index: true,
-    },
     name: {
       type: String,
       required: [true, "InterviewSheet name is required"],

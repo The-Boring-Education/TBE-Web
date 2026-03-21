@@ -21,13 +21,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const { data, error } = await getDSAQuestionByIDFromDB(questionId);
       if (error) {
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-          sendAPIResponse({
-            status: false,
-            message: "Failed to fetch DSA question",
-            error,
-          }),
-        );
+        return res
+          .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+          .json(
+            sendAPIResponse({
+              status: false,
+              message: "Failed to fetch DSA question",
+              error,
+            }),
+          );
       }
       return res
         .status(apiStatusCodes.OKAY)

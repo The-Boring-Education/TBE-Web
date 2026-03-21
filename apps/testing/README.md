@@ -22,7 +22,6 @@ apps/testing/
 │   │   ├── shiksha/           # Shiksha API tests
 │   │   ├── utils/             # API test utilities
 │   │   └── mocks/             # Mock handlers and server
-│   ├── e2e/                   # Playwright E2E (per-app subfolders)
 │   ├── unit/                  # Unit tests
 │   │   ├── components/        # Component tests
 │   │   ├── hooks/            # Hook tests
@@ -63,41 +62,6 @@ pnpm test:unit:watch
 ```bash
 pnpm test:coverage
 ```
-
-### End-to-end (Playwright)
-
-From the **repository root**, install browsers once (Chromium is enough for CI parity):
-
-```bash
-pnpm --filter @tbe/testing exec playwright install chromium
-```
-
-Run all E2E projects that have specs (today: `@tbe/platform` only). Playwright starts the matching dev server automatically:
-
-```bash
-pnpm test:e2e
-```
-
-Run only the platform app (typical while iterating):
-
-```bash
-pnpm test:e2e -- --project=platform
-```
-
-Same thing via the testing package:
-
-```bash
-pnpm --filter @tbe/testing exec playwright test --project=platform
-```
-
-UI mode and HTML report:
-
-```bash
-pnpm test:e2e:ui
-pnpm --filter @tbe/testing exec playwright show-report
-```
-
-CI runs one workflow job per app (`test-e2e.yml` matrix). Apps without specs still run Playwright with `--pass-with-no-tests` and finish immediately. Apps **with** specs get a dev server automatically: `playwright.config.ts` scans `src/e2e/<testDir>/` for `*.spec.ts` to decide which app to start. When you add a **new** frontend app to the monorepo, add it to the `APPS` map in `playwright.config.ts` and to the matrix in `test-e2e.yml`.
 
 ## 📝 API Testing
 
@@ -312,7 +276,7 @@ Tests run automatically in CI/CD pipeline:
 - All unit tests
 - All API tests
 - Coverage reports
-- E2E tests (Playwright; one matrix job per app — see `test-e2e.yml`)
+- E2E tests (optional, can be run separately)
 
 ## 🤝 Contributing
 
@@ -330,7 +294,6 @@ When adding new tests:
 - React Testing Library for component tests
 - node-mocks-http for API route testing
 - MSW (Mock Service Worker) available for API mocking
-- E2E uses Playwright; dev servers are started from root `webServer` in `playwright.config.ts` (not per-project)
 
 ---
 

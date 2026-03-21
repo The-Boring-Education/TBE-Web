@@ -22,12 +22,6 @@ const chapterSchema = new Schema<CourseChapterModel>(
 
 const CourseSchema = new Schema<CourseModel>(
   {
-    contentId: {
-      type: String,
-      unique: true,
-      sparse: true,
-      index: true,
-    },
     name: {
       type: String,
       required: [true, "Course name is required"],

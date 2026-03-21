@@ -1,7 +1,6 @@
 import { DsaPrepWorkspace } from "@tbe/components";
 import type { TopicWithCount } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
-import { TBEQueryProvider } from "@tbe/query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
@@ -66,49 +65,42 @@ describe("DsaPrepWorkspace", () => {
     onBackToTopics: vi.fn(),
   };
 
-  const renderWithQueryClient = (ui: React.ReactElement) =>
-    render(<TBEQueryProvider devtools={false}>{ui}</TBEQueryProvider>);
-
   it("should render topic sidebar when no topic is selected", () => {
-    renderWithQueryClient(<DsaPrepWorkspace {...defaultProps} />);
+    render(<DsaPrepWorkspace {...defaultProps} />);
 
     expect(screen.getByText("Explore Topics")).toBeInTheDocument();
     expect(screen.getByText(/Choose a topic to practice/i)).toBeInTheDocument();
+    expect(screen.getByText("Array")).toBeInTheDocument();
+    expect(screen.getByText("Stack")).toBeInTheDocument();
   });
 
   it("should call onTopicClick when a topic is clicked", () => {
     const onTopicClick = vi.fn();
 
-    renderWithQueryClient(
-      <DsaPrepWorkspace {...defaultProps} onTopicClick={onTopicClick} />,
-    );
+    render(<DsaPrepWorkspace {...defaultProps} onTopicClick={onTopicClick} />);
 
     fireEvent.click(screen.getByText("Array"));
     expect(onTopicClick).toHaveBeenCalledWith("ARRAY");
   });
 
   it("should show questions list when a topic is selected", () => {
-    renderWithQueryClient(
-      <DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />,
-    );
+    render(<DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />);
 
     expect(screen.getByText("Two Sum")).toBeInTheDocument();
     expect(screen.getByText("Three Sum")).toBeInTheDocument();
     expect(screen.queryByText("Valid Parentheses")).not.toBeInTheDocument();
   });
 
-  it("should show back button when topic is selected", () => {
-    renderWithQueryClient(
-      <DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />,
-    );
+  it("should show back to topics button when topic is selected", () => {
+    render(<DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />);
 
-    expect(screen.getByText(/Back/i)).toBeInTheDocument();
+    expect(screen.getByText(/View All Topics/i)).toBeInTheDocument();
   });
 
   it("should call onBackToTopics when back button is clicked", () => {
     const onBackToTopics = vi.fn();
 
-    renderWithQueryClient(
+    render(
       <DsaPrepWorkspace
         {...defaultProps}
         selectedTopic="ARRAY"
@@ -116,18 +108,18 @@ describe("DsaPrepWorkspace", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText(/Back/i));
+    fireEvent.click(screen.getByText(/View All Topics/i));
     expect(onBackToTopics).toHaveBeenCalled();
   });
 
   it("should render empty state when no topic is selected", () => {
-    renderWithQueryClient(<DsaPrepWorkspace {...defaultProps} />);
+    render(<DsaPrepWorkspace {...defaultProps} />);
 
-    expect(screen.getByText(/Ready to level up?/i)).toBeInTheDocument();
+    expect(screen.getByText(/Pick a topic on the left/i)).toBeInTheDocument();
   });
 
   it("should render custom empty state content", () => {
-    renderWithQueryClient(
+    render(
       <DsaPrepWorkspace
         {...defaultProps}
         emptyStateContent={<div>Custom empty state</div>}
@@ -138,7 +130,7 @@ describe("DsaPrepWorkspace", () => {
   });
 
   it("should render topic sidebar header when provided", () => {
-    renderWithQueryClient(
+    render(
       <DsaPrepWorkspace
         {...defaultProps}
         topicSidebarHeader={<div>Back to Dashboard</div>}
@@ -151,19 +143,16 @@ describe("DsaPrepWorkspace", () => {
   it("should show completion indicators when completionMap is provided", () => {
     const completionMap = { ARRAY: true, STACK: false };
 
-    renderWithQueryClient(
+    render(
       <DsaPrepWorkspace {...defaultProps} completionMap={completionMap} />,
     );
 
     const arrayLabel = screen.getByText("Array");
-    // Updated to match the current DsaTopicSidebar styling for completed topics
     expect(arrayLabel.className).toContain("text-green-400");
   });
 
   it("should display topic name in header when topic is selected", () => {
-    renderWithQueryClient(
-      <DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />,
-    );
+    render(<DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />);
 
     expect(screen.getByText("Questions")).toBeInTheDocument();
   });

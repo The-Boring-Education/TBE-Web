@@ -11,10 +11,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    environmentMatchGlobs: [
-      // MongoDB / Node-only integration tests
-      ["src/integration/**", "node"],
-    ],
     setupFiles: ["./src/test-utils/setup.ts"],
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     exclude: ["node_modules", "dist", "src/e2e/**/*"],

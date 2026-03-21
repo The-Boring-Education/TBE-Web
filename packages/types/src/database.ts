@@ -149,7 +149,6 @@ export interface CourseChapterModel {
 
 export interface CourseModel {
   _id: string;
-  contentId?: string;
   title: string;
   description: string;
   coverImageURL: string;
@@ -167,7 +166,6 @@ export interface CourseModel {
 
 export interface ProjectDocumentModel {
   _id: string;
-  contentId?: string;
   name: string;
   description: string;
   coverImageURL: string;
@@ -187,7 +185,6 @@ export interface ProjectDocumentModel {
 
 export interface InterviewSheetModel {
   _id: string;
-  contentId?: string;
   title: string;
   description: string;
   coverImageURL: string;

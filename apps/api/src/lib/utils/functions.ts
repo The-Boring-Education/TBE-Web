@@ -326,6 +326,19 @@ const extractPlaylistId = (url: string) => {
   return match ? match[1] : null;
 };
 
+const isVercelInternalIP = (ip?: string) => {
+  if (!ip) return false;
+  return (
+    ip.startsWith("::ffff:10.") || // Vercel internal LB
+    ip.startsWith("10.") ||
+    ip.startsWith("192.168.") ||
+    ip.startsWith("172.") ||
+    ip === "::1" ||
+    ip.startsWith("::ffff:172.") ||
+    ip.startsWith("::ffff:192.168.")
+  );
+};
+
 const generateYouTubeSearchLink = (questionTitle: string): string => {
   if (!questionTitle || questionTitle.trim() === "") {
     return "";
@@ -350,6 +363,7 @@ export {
   generateYouTubeSearchLink,
   getPYSubscriptionFeaturesByType,
   isProgramActive,
+  isVercelInternalIP,
   normalizeAPIPayload,
   sendAPIResponse,
   validateWebhookEvent,

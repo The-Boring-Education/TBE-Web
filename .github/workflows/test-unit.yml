@@ -47,7 +47,7 @@ jobs:
 
       - name: 🏗️ Build Shared Packages
         run: |
-          pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth --filter=@tbe/query --filter=@tbe/config
+          pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth
 
       - name: 🧪 Run Unit Tests
         run: pnpm --filter @tbe/testing test:unit
