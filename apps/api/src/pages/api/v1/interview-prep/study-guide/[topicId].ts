@@ -34,7 +34,16 @@ const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const { data, error } = await getStudyGuideByTopicFromDB(topicId as string);
+    if (Array.isArray(topicId) || typeof topicId !== "string") {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "topicId must be a string",
+        }),
+      );
+    }
+
+    const { data, error } = await getStudyGuideByTopicFromDB(topicId);
 
     if (error || !data) {
       return res.status(apiStatusCodes.NOT_FOUND).json(

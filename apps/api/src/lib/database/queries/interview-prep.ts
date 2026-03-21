@@ -806,7 +806,7 @@ const getStudyGuideByTopicFromDB = async (
   topicId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const studyGuide = await StudyGuide.findOne({ topicId });
+    const studyGuide = await StudyGuide.findOne({ topicId: { $eq: topicId } });
     if (!studyGuide) {
       return { error: "Study guide not found" };
     }
