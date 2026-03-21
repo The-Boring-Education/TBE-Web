@@ -29,16 +29,8 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const {
-    title,
-    answer,
-    content,
-    domain,
-    difficulty,
-    companyTypes,
-    topics,
-    sections,
-  } = req.body;
+  const { title, answer, content, domain, difficulty, companyTypes, topics, sections } =
+    req.body;
 
   const questionAnswer = answer || content;
   if (
