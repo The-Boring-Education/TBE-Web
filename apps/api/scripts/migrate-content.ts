@@ -1,18 +1,41 @@
+/**
+ * Copy content between MongoDB environments using `contentId` (upsert). Same env files
+ * as backfill: `.env.local`, `.env.development`, `.env.production` under `apps/api/`.
+ * Backfill the source DB first if documents lack `contentId`.
+ *
+ * From monorepo root (examples):
+ *   pnpm --filter @tbe/api run migrate -- --from dev --to local --entity all --dry-run
+ *   pnpm --filter @tbe/api run migrate -- --from dev --to local --entity all
+ *   pnpm --filter @tbe/api run migrate -- --from dev --to prod --entity all
+ *
+ * From `apps/api/`: `pnpm run migrate -- --from dev --to local --entity all`
+ *
+ * `--entity`: interviewSheets | dsaQuestions | aptitudeTopics | courses | projects | quizzes | all
+ * `--to prod` only with `--from dev`; prod writes wait 5s (Ctrl+C to cancel).
+ */
 import chalk from "chalk";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import path from "path";
+import { fileURLToPath } from "url";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-const ENTITY_MAP: Record<string, string> = {
+const API_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
+
+const ENTITY_MAP = {
   interviewSheets: "interviewsheets",
   dsaQuestions: "dsaquestions",
   aptitudeTopics: "aptitudetopics",
   courses: "courses",
   projects: "projects",
   quizzes: "quizzes",
-};
+} as const;
+
+type EntityMapKey = keyof typeof ENTITY_MAP;
 
 const ENTITY_CHOICES = [...Object.keys(ENTITY_MAP), "all"] as const;
 
@@ -26,15 +49,16 @@ interface MigrateArgs {
   "dry-run": boolean;
 }
 
+/** Must match backfill-content-ids.ts so both CLIs read the same DB URIs per env. */
 const ENV_FILE_MAP: Record<EnvOption, string> = {
   local: ".env.local",
-  dev: ".env.dev",
-  prod: ".env.prod",
+  dev: ".env.development",
+  prod: ".env.production",
 };
 
 function loadUri(env: EnvOption): string {
   const envFile = ENV_FILE_MAP[env];
-  const envPath = path.resolve(__dirname, "..", envFile);
+  const envPath = path.resolve(API_ROOT, envFile);
   const result = dotenv.config({ path: envPath, override: true });
 
   if (result.error) {
@@ -162,8 +186,13 @@ async function migrateEntity(
   return result;
 }
 
+/** pnpm/tsx sometimes pass a bare `--` in argv; yargs then misses flags. */
+function cliArgv(): string[] {
+  return hideBin(process.argv).filter((a) => a !== "--");
+}
+
 async function main() {
-  const argv = (await yargs(hideBin(process.argv))
+  const argv = (await yargs(cliArgv())
     .option("from", {
       type: "string",
       choices: ["local", "dev", "prod"] as const,
@@ -233,10 +262,13 @@ async function main() {
   const targetConn = await mongoose.createConnection(targetUri).asPromise();
   console.log(chalk.green(`Connected to target (${argv.to})\n`));
 
-  const entitiesToMigrate: Array<[string, string]> =
-    argv.entity === "all"
-      ? Object.entries(ENTITY_MAP)
-      : [[argv.entity, ENTITY_MAP[argv.entity]]];
+  let entitiesToMigrate: Array<[string, string]>;
+  if (argv.entity === "all") {
+    entitiesToMigrate = Object.entries(ENTITY_MAP) as Array<[string, string]>;
+  } else {
+    const key = argv.entity as EntityMapKey;
+    entitiesToMigrate = [[key, ENTITY_MAP[key]]];
+  }
 
   const results: EntityResult[] = [];
 

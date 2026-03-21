@@ -1,10 +1,32 @@
+/**
+ * Backfill `contentId` (UUID v4) on existing documents in content collections.
+ *
+ * Env files (next to `apps/api/package.json`): `.env.local`, `.env.development`,
+ * `.env.production` — each must define `MONGODB_URI`.
+ *
+ * From monorepo root (recommended):
+ *   Local:  pnpm --filter @tbe/api run backfill -- --env local
+ *   Dev:    pnpm --filter @tbe/api run backfill -- --env dev
+ *   Prod:   pnpm --filter @tbe/api run backfill -- --env prod --confirm-prod
+ *
+ * From `apps/api/`: `pnpm run backfill -- --env local` (same flags).
+ *
+ * Then use `migrate-content.ts` to copy data between environments after backfill.
+ */
 import chalk from "chalk";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import path from "path";
+import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+
+/** `apps/api/` — scripts run as ESM (`"type": "module"`), so use import.meta.url not __dirname */
+const API_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
 
 const ENTITY_MAP: Record<string, string> = {
   interviewSheets: "interviewsheets",
@@ -24,13 +46,13 @@ interface BackfillArgs {
 
 const ENV_FILE_MAP: Record<EnvOption, string> = {
   local: ".env.local",
-  dev: ".env.dev",
-  prod: ".env.prod",
+  dev: ".env.development",
+  prod: ".env.production",
 };
 
 function loadEnv(env: EnvOption): string {
   const envFile = ENV_FILE_MAP[env];
-  const envPath = path.resolve(__dirname, "..", envFile);
+  const envPath = path.resolve(API_ROOT, envFile);
   const result = dotenv.config({ path: envPath });
 
   if (result.error) {
@@ -93,8 +115,13 @@ async function backfillCollection(
   return { total: totalDocs, updated };
 }
 
+/** pnpm/tsx sometimes pass a bare `--` in argv; yargs then misses `--env`. */
+function cliArgv(): string[] {
+  return hideBin(process.argv).filter((a) => a !== "--");
+}
+
 async function main() {
-  const argv = (await yargs(hideBin(process.argv))
+  const argv = (await yargs(cliArgv())
     .option("env", {
       type: "string",
       choices: ["local", "dev", "prod"] as const,
