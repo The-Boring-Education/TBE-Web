@@ -52,7 +52,7 @@ const getAptitudeQuestionsByTopicFromDB = async (
   } = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const { difficulty, page = 1, limit = 50 } = filters;
+    const { difficulty, page = 1, limit: limitInput } = filters;
 
     const topicDoc = await AptitudeTopic.findOne({
       topic,
@@ -63,7 +63,13 @@ const getAptitudeQuestionsByTopicFromDB = async (
       return {
         data: {
           questions: [],
-          pagination: { total: 0, page, limit, totalPages: 0, hasMore: false },
+          pagination: {
+            total: 0,
+            page: 1,
+            limit: 0,
+            totalPages: 0,
+            hasMore: false,
+          },
         },
       };
     }
@@ -75,9 +81,26 @@ const getAptitudeQuestionsByTopicFromDB = async (
     }
 
     const totalCount = questions.length;
+
+    /** No limit → return full topic (same idea as DSA topic fetch). */
+    if (limitInput === undefined || limitInput === null) {
+      return {
+        data: {
+          questions,
+          pagination: {
+            total: totalCount,
+            page: 1,
+            limit: totalCount,
+            totalPages: 1,
+            hasMore: false,
+          },
+        },
+      };
+    }
+
     const paginatedQuestions = questions.slice(
-      (page - 1) * limit,
-      page * limit,
+      (page - 1) * limitInput,
+      page * limitInput,
     );
 
     return {
@@ -86,9 +109,9 @@ const getAptitudeQuestionsByTopicFromDB = async (
         pagination: {
           total: totalCount,
           page,
-          limit,
-          totalPages: Math.ceil(totalCount / limit),
-          hasMore: page * limit < totalCount,
+          limit: limitInput,
+          totalPages: Math.ceil(totalCount / limitInput) || 1,
+          hasMore: page * limitInput < totalCount,
         },
       },
     };

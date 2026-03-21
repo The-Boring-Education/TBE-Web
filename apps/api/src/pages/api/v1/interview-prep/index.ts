@@ -7,7 +7,6 @@ import {
   COMPANY_TYPES,
   DSA_DIFFICULTY,
   DSA_DOMAIN,
-  PAGINATION_LIMITS,
 } from "@/lib/constants";
 import {
   addAInterviewSheetToDB,
@@ -32,6 +31,13 @@ import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 type RoadmapType = "DSA" | "APTITUDE";
+
+const parsePositiveInt = (value: unknown): number | undefined => {
+  if (value === undefined || value === "") return undefined;
+  const n = parseInt(String(value), 10);
+  if (Number.isNaN(n) || n <= 0) return undefined;
+  return n;
+};
 
 const ROADMAP_HANDLERS: Record<
   RoadmapType,
@@ -278,13 +284,8 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
       topic as string,
       {
         difficulty: difficulty as DSADifficultyType | undefined,
-        page: page ? parseInt(page as string) : 1,
-        limit: limit
-          ? Math.min(
-              parseInt(limit as string),
-              PAGINATION_LIMITS.APTITUDE_ROADMAP,
-            )
-          : PAGINATION_LIMITS.DEFAULT,
+        page: page ? parseInt(page as string, 10) : 1,
+        limit: parsePositiveInt(limit),
       },
     );
 

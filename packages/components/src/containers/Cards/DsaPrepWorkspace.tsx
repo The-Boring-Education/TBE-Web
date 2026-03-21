@@ -50,12 +50,6 @@ const DsaPrepWorkspace = ({
   const { data: studyGuideData, isLoading: isStudyGuideLoading } =
     useStudyGuideTopic(selectedTopic || "");
 
-  console.log("StudyGuide State:", {
-    selectedTopic,
-    studyGuideData,
-    isStudyGuideLoading,
-  });
-
   const [isStudyGuideOpen, setIsStudyGuideOpen] = useState(false);
   const [activeGuideSection, setActiveGuideSection] = useState("");
 

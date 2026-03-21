@@ -65,7 +65,7 @@ const AptitudePrepPage = () => {
     queryKey: queryKeys.aptitude.questions(selectedTopic ?? ""),
     queryFn: () =>
       sendRequest({
-        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}&limit=100`,
+        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}`,
       }),
     ...CACHE_TIMES.STABLE,
     enabled: !!selectedTopic && topicHasQuestions,

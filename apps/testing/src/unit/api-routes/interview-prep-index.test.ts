@@ -32,8 +32,6 @@ vi.mock("../../../../api/src/lib/constants", () => ({
   DSA_DOMAIN: ["FRONTEND", "BACKEND", "GENERAL", "FULLSTACK"],
   PAGINATION_LIMITS: {
     DEFAULT: 50,
-    DSA_SHEET: 1000,
-    APTITUDE_ROADMAP: 1000,
   },
 }));
 
