@@ -35,12 +35,6 @@ const sectionSchema: Schema<ProjectSection> = new Schema(
 const projectSchema: Schema<ProjectDocumentModel> =
   new Schema<ProjectDocumentModel>(
     {
-      contentId: {
-        type: String,
-        unique: true,
-        sparse: true,
-        index: true,
-      },
       name: { type: String, required: true },
       description: { type: String, required: true },
       coverImageURL: { type: String, required: true },

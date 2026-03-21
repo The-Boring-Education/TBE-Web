@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 import { modelSelectParams } from "@/lib/constants";
 import type {
   AddChapterRequestPayloadProps,
@@ -37,7 +35,6 @@ const addAProjectToDB = async ({
       requiredSkills,
       roadmap,
       difficultyLevel,
-      contentId: uuidv4(),
     });
 
     try {

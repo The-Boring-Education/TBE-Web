@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
 
@@ -12,7 +10,7 @@ const addAQuizToDB = async (
   quizData: Omit<QuizModel, "_id" | "createdAt" | "updatedAt">,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const quiz = new Quiz({ ...quizData, contentId: uuidv4() });
+    const quiz = new Quiz(quizData);
     await quiz.save();
     return { data: quiz };
   } catch (error) {

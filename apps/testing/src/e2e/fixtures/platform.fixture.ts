@@ -49,20 +49,11 @@ async function mockPlatformAPIs(page: Page) {
   );
 }
 
+/**
+ * Extended test fixture with pre-configured API mocks for Platform E2E tests.
+ */
 export const test = base.extend<{ platformPage: Page }>({
-  platformPage: async ({ page, baseURL }, use) => {
-    // Wait for the server to be ready before each test
-    // We use a retry loop because initial startup can be slow in CI
-    const MAX_RETRIES = 5;
-    for (let i = 0; i < MAX_RETRIES; i++) {
-      try {
-        await page.goto("/", { waitUntil: "commit", timeout: 10_000 });
-        break;
-      } catch (e) {
-        if (i === MAX_RETRIES - 1) throw e;
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-      }
-    }
+  platformPage: async ({ page }, use) => {
     await mockPlatformAPIs(page);
     await use(page);
   },

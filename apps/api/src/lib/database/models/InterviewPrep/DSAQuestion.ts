@@ -11,12 +11,6 @@ import type { DSAQuestionModel } from "@/lib/interfaces";
 
 const DSAQuestionSchema = new Schema<DSAQuestionModel>(
   {
-    contentId: {
-      type: String,
-      unique: true,
-      sparse: true,
-      index: true,
-    },
     title: {
       type: String,
       required: [true, "Question Title is required"],

@@ -14,10 +14,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # One job per frontend app. Apps without Playwright specs exit immediately (--pass-with-no-tests).
-        # Dev servers start only for apps that have *.spec.ts under apps/testing/src/e2e/<app>/ (see playwright.config.ts).
         app:
           - platform
+          - prep-yatra
+          - quizes
+          - techyatra
+          - dsayatra
+          - resume-yatra
+          - oncampus
+          - onboarding
 
     steps:
       - name: 📥 Checkout Repository
@@ -54,7 +59,7 @@ jobs:
 
       - name: 🏗️ Build Shared Packages
         run: |
-          pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth --filter=@tbe/query --filter=@tbe/config
+          pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth
 
       - name: 🎭 Install Playwright Browsers
         run: pnpm --filter @tbe/testing exec playwright install --with-deps chromium
@@ -63,7 +68,7 @@ jobs:
         env:
           CI: "true"
         run: |
-          pnpm --filter @tbe/testing exec playwright test --project=${{ matrix.app }} --pass-with-no-tests
+          pnpm --filter @tbe/testing test:e2e -- --project=${{ matrix.app }} --pass-with-no-tests
 
       - name: 📤 Upload Playwright Report (${{ matrix.app }})
         if: always()
