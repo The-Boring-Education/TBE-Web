@@ -6,7 +6,7 @@ import {
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import { useDsaQuestions, useDsaTopics, useUser } from "@tbe/hooks";
+import { useDsaMetadata, useUser } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -20,8 +20,7 @@ const DSAPrepPage = () => {
   );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
-  const { questions, loading: sheetsLoading } = useDsaQuestions();
-  const { topicsWithCounts } = useDsaTopics(questions);
+  const { topicsWithCounts, loading: metadataLoading } = useDsaMetadata();
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -43,7 +42,7 @@ const DSAPrepPage = () => {
     setSelectedQuestion(null);
   };
 
-  if (sheetsLoading || userLoading) {
+  if (metadataLoading || userLoading) {
     return (
       <LearningEnvironmentLayout backHref={routes.oncampus.dashboard} isLoading>
         <div className="flex-1 flex items-center justify-center">
@@ -62,7 +61,6 @@ const DSAPrepPage = () => {
       layoutMode="workspace"
     >
       <DsaPrepWorkspace
-        questions={questions}
         topicsWithCounts={topicsWithCounts}
         selectedTopic={selectedTopic}
         selectedQuestion={selectedQuestion}

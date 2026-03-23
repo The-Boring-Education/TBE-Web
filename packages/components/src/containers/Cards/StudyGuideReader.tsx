@@ -34,7 +34,7 @@ const StudyGuideReader = ({
     }
   }, [sectionId]);
 
-  const activeSection = data.sections.find((s) => s.id === sectionId);
+  const activeSection = data?.sections?.find((s) => s.id === sectionId);
 
   if (!activeSection || activeSection.isDivider) {
     return (
@@ -81,7 +81,7 @@ const StudyGuideReader = ({
         </Text>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {content.prereqCards.map((card, idx) => (
+          {content.prereqCards?.map((card, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 10 }}
@@ -110,7 +110,7 @@ const StudyGuideReader = ({
       </div>
 
       <div className="space-y-4">
-        {content.callouts.map((callout, idx) => (
+        {content.callouts?.map((callout, idx) => (
           <div
             key={idx}
             className={cn(
@@ -143,7 +143,7 @@ const StudyGuideReader = ({
           {content.howToUseHeading}
         </Text>
         <div className="space-y-4">
-          {content.howToUseParagraphs.map((p, idx) => (
+          {content.howToUseParagraphs?.map((p, idx) => (
             <Text key={idx} level="p" className="text-gray-400 leading-relaxed">
               {p}
             </Text>
@@ -167,7 +167,7 @@ const StudyGuideReader = ({
         </Text>
       </div>
 
-      {content.subsections.map((sub, idx) => (
+      {content.subsections?.map((sub, idx) => (
         <div key={idx} className="space-y-6">
           <Text
             level="h2"
@@ -283,7 +283,7 @@ const StudyGuideReader = ({
               Trigger Phrases
             </Text>
             <div className="flex flex-wrap gap-2">
-              {content.triggerPhrases.map((p, idx) => (
+              {content.triggerPhrases?.map((p, idx) => (
                 <span
                   key={idx}
                   className="px-2.5 py-1 rounded-lg bg-green-500/[0.03] border border-green-500/10 text-green-400/80 text-[12px] font-medium"
@@ -319,7 +319,7 @@ const StudyGuideReader = ({
           Code Blueprint
         </Text>
         <div className="space-y-4">
-          {content.codeTemplates.map((tpl, idx) => (
+          {content.codeTemplates?.map((tpl, idx) => (
             <div
               key={idx}
               className="rounded-2xl border border-white/5 bg-[#050505] overflow-hidden group"
@@ -431,7 +431,7 @@ const StudyGuideReader = ({
               Visual Walkthrough
             </Text>
             <div className="space-y-3">
-              {content.workedExample.dryRunSteps.map((step, sIdx) => (
+              {content.workedExample.dryRunSteps?.map((step, sIdx) => (
                 <div
                   key={sIdx}
                   className="p-4 rounded-xl bg-white/[0.02] border border-white/5 flex gap-4 items-start"
@@ -513,7 +513,7 @@ const StudyGuideReader = ({
           Next Practice Challenge
         </Text>
         <div className="space-y-3">
-          {content.practiceQuestions.map((q, idx) => (
+          {content.practiceQuestions?.map((q, idx) => (
             <motion.div
               key={idx}
               whileHover={{ x: 6 }}
@@ -593,7 +593,7 @@ const StudyGuideReader = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {content.patternRows.map((row, idx) => (
+              {content.patternRows?.map((row, idx) => (
                 <tr key={idx} className="hover:bg-white/[0.01]">
                   <td className="px-6 py-5 font-black text-white">
                     {row.patternName}
@@ -623,7 +623,7 @@ const StudyGuideReader = ({
             Strategic Roadmaps
           </Text>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {content.questionGroups.map((group, idx) => (
+            {content.questionGroups?.map((group, idx) => (
               <div
                 key={idx}
                 className="p-6 rounded-3xl bg-white/[0.01] border border-white/5 space-y-4"
@@ -638,7 +638,7 @@ const StudyGuideReader = ({
                   </span>
                 </Text>
                 <div className="space-y-2.5">
-                  {group.questions.map((q, qIdx) => (
+                  {group.questions?.map((q, qIdx) => (
                     <a
                       key={qIdx}
                       href={q.leetcodeUrl}
@@ -671,7 +671,7 @@ const StudyGuideReader = ({
           <div className="p-8 rounded-3xl bg-red-500/[0.02] border border-red-500/10 space-y-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/[0.05] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
             <div className="space-y-6 relative z-10">
-              {content.oneThingToRemember.map((rule, idx) => {
+              {content.oneThingToRemember?.map((rule, idx) => {
                 const [pattern, text] = rule.split(": ");
                 return (
                   <div key={idx} className="space-y-1">

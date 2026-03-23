@@ -16,7 +16,7 @@ import StudyGuideNav from "./StudyGuideNav";
 import StudyGuideReader from "./StudyGuideReader";
 
 export interface DsaPrepWorkspaceProps {
-  questions: DsaQuestion[];
+  questions?: DsaQuestion[];
   topicsWithCounts: TopicWithCount[];
   selectedTopic: string | null;
   selectedQuestion: DsaQuestion | null;
@@ -60,7 +60,9 @@ const DsaPrepWorkspace = ({
   const [activeGuideSection, setActiveGuideSection] = useState("");
 
   const filteredQuestions = selectedTopic
-    ? questions.filter((q) => q.topics?.[0] === selectedTopic)
+    ? (questions && questions.length > 0
+        ? questions.filter((q) => q.topics?.[0] === selectedTopic)
+        : studyGuideData?.questions) || []
     : [];
 
   const handleToggleStudyGuide = () => {
@@ -217,13 +219,13 @@ const DsaPrepWorkspace = ({
                 >
                   ← Back
                 </Button>
-                {isStudyGuideOpen && studyGuideData ? (
+                {isStudyGuideOpen && studyGuideData?.hasGuide ? (
                   <StudyGuideNav
                     data={studyGuideData}
                     activeId={activeGuideSection}
                     onSectionClick={setActiveGuideSection}
                   />
-                ) : isStudyGuideLoading && isStudyGuideOpen ? (
+                ) : isStudyGuideLoading ? (
                   <div className="space-y-2 p-2">
                     {[1, 2, 3, 4, 5].map((i) => (
                       <div
@@ -252,7 +254,7 @@ const DsaPrepWorkspace = ({
             !selectedTopic ? "hidden lg:flex" : "flex",
           )}
         >
-          {isStudyGuideOpen && studyGuideData ? (
+          {isStudyGuideOpen && studyGuideData?.hasGuide ? (
             <StudyGuideReader
               data={studyGuideData}
               sectionId={activeGuideSection}

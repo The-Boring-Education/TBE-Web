@@ -10,12 +10,7 @@ import {
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import {
-  useDsaCompletedQuestions,
-  useDsaQuestions,
-  useDsaTopics,
-  useUser,
-} from "@tbe/hooks";
+import { useDsaCompletedQuestions, useDsaMetadata, useUser } from "@tbe/hooks";
 import type { DsaQuestion, PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
 import { getPreFetchProps } from "@tbe/utils";
@@ -38,12 +33,12 @@ const SheetsPageClient = () => {
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { questions, loading: sheetsLoading } = useDsaQuestions();
   const { completedIds, toggleComplete } = useDsaCompletedQuestions();
-  const { topicsWithCounts, topicsCompletionMap } = useDsaTopics(
-    questions,
-    completedIds,
-  );
+  const {
+    topicsWithCounts,
+    topicsCompletionMap,
+    loading: metadataLoading,
+  } = useDsaMetadata(completedIds);
 
   useEffect(() => {
     if (user?.id) {
@@ -86,7 +81,7 @@ const SheetsPageClient = () => {
     setSelectedQuestion(null);
   };
 
-  if (sheetsLoading || userLoading || isProfileLoading) {
+  if (metadataLoading || userLoading || isProfileLoading) {
     return (
       <div className="flex flex-col min-h-screen bg-[#0A0A0A] font-sans items-center justify-center">
         <div className="flex items-center">
@@ -170,7 +165,6 @@ const SheetsPageClient = () => {
     <div className="flex flex-col h-screen overflow-hidden bg-[#0A0A0A] font-sans">
       <main className="flex-1 pt-0 flex flex-col min-h-0 overflow-hidden">
         <DsaPrepWorkspace
-          questions={questions}
           topicsWithCounts={topicsWithCounts}
           selectedTopic={selectedTopic}
           selectedQuestion={selectedQuestion}

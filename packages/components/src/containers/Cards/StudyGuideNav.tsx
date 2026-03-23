@@ -24,7 +24,7 @@ const StudyGuideNav = ({
       </div>
 
       <div className="space-y-1">
-        {data.sections.map((section, index) => {
+        {data?.sections?.map((section, index) => {
           if (section.isDivider) {
             if (!section.dividerLabel) {
               return (

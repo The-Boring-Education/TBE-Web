@@ -693,14 +693,42 @@ const getAllDSAQuestionsFromDB = async (
 const getDSASheetMetadataFromDB =
   async (): Promise<DatabaseQueryResponseType> => {
     try {
-      const [domains, difficulties, companyTypes, topics, totalCount] =
-        await Promise.all([
-          DSAQuestion.distinct("domain"),
-          DSAQuestion.distinct("difficulty"),
-          DSAQuestion.distinct("companyTypes"),
-          DSAQuestion.distinct("topics"),
-          DSAQuestion.countDocuments(),
-        ]);
+      const [
+        domains,
+        difficulties,
+        companyTypes,
+        totalCount,
+        topicsWithCounts,
+      ] = await Promise.all([
+        DSAQuestion.distinct("domain"),
+        DSAQuestion.distinct("difficulty"),
+        DSAQuestion.distinct("companyTypes"),
+        DSAQuestion.countDocuments(),
+        DSAQuestion.aggregate([
+          { $unwind: "$topics" },
+          {
+            $addFields: {
+              normalizedTopic: { $toUpper: "$topics" },
+            },
+          },
+          {
+            $group: {
+              _id: "$normalizedTopic",
+              count: { $addToSet: "$_id" },
+              questions: { $addToSet: "$_id" },
+            },
+          },
+          {
+            $project: {
+              topic: "$_id",
+              count: { $size: "$count" },
+              questions: 1,
+              _id: 0,
+            },
+          },
+          { $sort: { topic: 1 } },
+        ]),
+      ]);
 
       return {
         data: {
@@ -709,7 +737,7 @@ const getDSASheetMetadataFromDB =
             domains: domains.sort(),
             difficulties,
             companyTypes: companyTypes.sort(),
-            topics: topics.sort(),
+            topics: topicsWithCounts,
           },
         },
       };
@@ -803,11 +831,22 @@ const getStudyGuideByTopicFromDB = async (
   topicId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const studyGuide = await StudyGuide.findOne({ topicId });
-    if (!studyGuide) {
-      return { error: "Study guide not found" };
-    }
-    return { data: studyGuide };
+    const [studyGuide, questions] = await Promise.all([
+      StudyGuide.findOne({
+        topicId: { $regex: new RegExp(`^${topicId}$`, "i") },
+      }),
+      DSAQuestion.find({
+        topics: { $regex: new RegExp(`^${topicId}$`, "i") },
+      }).sort({ order: 1, createdAt: -1 }),
+    ]);
+
+    return {
+      data: {
+        ...(studyGuide ? studyGuide.toObject() : {}),
+        hasGuide: !!studyGuide,
+        questions: questions || [],
+      },
+    };
   } catch (error) {
     logger.error("DB: getStudyGuideByTopicFromDB failed", {
       error: error instanceof Error ? error.message : String(error),
