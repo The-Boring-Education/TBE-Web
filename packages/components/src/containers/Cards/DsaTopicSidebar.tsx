@@ -84,6 +84,19 @@ const DsaTopicSidebar = ({
               >
                 {label}
               </Text>
+              <Text
+                level="span"
+                className={cn(
+                  "text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center transition-colors duration-300",
+                  isCompleted
+                    ? "bg-green-500/10 text-green-500/60"
+                    : isSelected
+                      ? "bg-red-500/10 text-red-500/80"
+                      : "bg-white/[0.03] text-gray-600 group-hover:text-gray-500",
+                )}
+              >
+                {count}
+              </Text>
             </FlexContainer>
           </button>
         );

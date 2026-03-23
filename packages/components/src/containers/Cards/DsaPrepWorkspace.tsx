@@ -3,7 +3,7 @@ import { type TopicWithCount, useStudyGuideTopic } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import { cn } from "@tbe/utils";
 import { BookOpen, Lightbulb } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
 import Link from "../../common/Typography/Link";
@@ -50,14 +50,14 @@ const DsaPrepWorkspace = ({
   const { data: studyGuideData, isLoading: isStudyGuideLoading } =
     useStudyGuideTopic(selectedTopic || "");
 
-  console.log("StudyGuide State:", {
-    selectedTopic,
-    studyGuideData,
-    isStudyGuideLoading,
-  });
-
   const [isStudyGuideOpen, setIsStudyGuideOpen] = useState(false);
   const [activeGuideSection, setActiveGuideSection] = useState("");
+
+  // Reset state when topic changes
+  useEffect(() => {
+    setIsStudyGuideOpen(false);
+    setActiveGuideSection("");
+  }, [selectedTopic]);
 
   const filteredQuestions = selectedTopic
     ? (questions && questions.length > 0

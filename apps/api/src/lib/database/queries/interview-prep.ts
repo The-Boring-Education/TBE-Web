@@ -664,21 +664,13 @@ const getAllDSAQuestionsFromDB = async (
       {
         $sort: { _topicOrder: 1, _difficultyOrder: 1, order: 1, createdAt: -1 },
       },
-      { $skip: (page - 1) * limit },
-      { $limit: limit },
       { $project: { _topicOrder: 0, _difficultyOrder: 0 } },
     ]);
 
     return {
       data: {
         questions,
-        pagination: {
-          total: totalCount,
-          page,
-          limit,
-          totalPages: Math.ceil(totalCount / limit),
-          hasMore: page * limit < totalCount,
-        },
+        total: totalCount,
       },
     };
   } catch (error) {
