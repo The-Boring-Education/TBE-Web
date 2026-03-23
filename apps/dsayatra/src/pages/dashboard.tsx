@@ -335,19 +335,19 @@ function DsaClient() {
   const timelineLabel = profile?.dsaYatra?.timeline || "4-6 months";
   const expLabel = profile?.dsaYatra?.experienceLevel || "Fresher (0-1 yr)";
 
-  const dailyGoalHours = 4;
-  const dailyGoalProgress = Math.min(
-    100,
-    Math.round((solvedToday / expectedDailyQuestions) * 100),
-  );
-  const todayTotalHours = (solvedToday / expectedDailyQuestions) * 4;
-
   const todayLog = weeklyLogs?.find(
     (log: any) =>
       new Date(log.createdAt).toDateString() === new Date().toDateString(),
   );
 
   const sessionMinutes = Math.floor(seconds / 60);
+  const todayTotalMinutes = sessionMinutes + (todayLog?.timeSpent || 0);
+
+  const dailyGoalHours = 4;
+  const dailyGoalProgress = Math.min(
+    100,
+    Math.round((todayTotalMinutes / (dailyGoalHours * 60)) * 100),
+  );
 
   // Total invested
   const totalMinutes = totalTimeSpent + sessionMinutes;
@@ -565,7 +565,7 @@ function DsaClient() {
 
           <StatCard
             title="Today's Progress"
-            value={todayTotalHours}
+            value={solvedToday}
             subtext="Questions solved today"
             icon={Code2}
             secondaryInfo={`Active: ${formattedTime}`}
@@ -578,14 +578,14 @@ function DsaClient() {
           />
           <StatCard
             title="Time Invested"
-            value={totalHours}
-            subtext="Hours total"
-            secondaryInfo={`Last: ${todayLog?.timeSpent || 0}m`}
+            value={(thisWeekMinutes / 60).toFixed(1)}
+            subtext="Hours this week"
+            secondaryInfo={`All time: ${totalHours}h`}
           />
           <StatCard
             title="Daily Goal"
-            value={`${todayTotalHours}/${dailyGoalHours}`}
-            subtext="Hours completed"
+            value={`${(todayTotalMinutes / 60).toFixed(1)}/${dailyGoalHours}`}
+            subtext="Hours completed today"
             progress={dailyGoalProgress}
           />
         </div>
