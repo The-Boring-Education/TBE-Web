@@ -29,8 +29,16 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const { title, answer, content, domain, difficulty, companyTypes, topics, sections } =
-    req.body;
+  const {
+    title,
+    answer,
+    content,
+    domain,
+    difficulty,
+    companyTypes,
+    topics,
+    sections,
+  } = req.body;
 
   const questionAnswer = answer || content;
   if (
@@ -98,7 +106,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     companyTypes: toArray(companyType),
     topics: toArray(topic),
     page: page ? parseInt(page as string) : 1,
-    limit: limit ? Math.min(parseInt(limit as string), 100) : 50,
+    limit: limit ? Math.min(parseInt(limit as string), 1000) : 50,
   });
 
   if (error)
