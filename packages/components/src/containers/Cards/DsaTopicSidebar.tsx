@@ -29,7 +29,7 @@ const DsaTopicSidebar = ({
       wrap={false}
       className={cn("gap-1", className)}
     >
-      {topics.map(({ topic, count, label }) => {
+      {topics.map(({ topic, label }) => {
         const isCompleted = completionMap?.[topic] ?? false;
         const isSelected = selectedTopic === topic;
 
@@ -39,12 +39,14 @@ const DsaTopicSidebar = ({
             onClick={() => onTopicClick(topic)}
             aria-pressed={isSelected}
             className={cn(
-              "w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
-              isCompleted
-                ? "border-green-500 bg-green-500/[0.03]"
-                : isSelected
-                  ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)]"
-                  : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800",
+              "w-full group relative py-2 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
+              isSelected
+                ? isCompleted
+                  ? "border-green-500 bg-green-500/[0.05]"
+                  : "bg-red-500/[0.05] border-red-500 shadow-[0_1px_8px_rgba(239,68,68,0.05)]"
+                : isCompleted
+                  ? "border-transparent bg-transparent hover:bg-green-500/[0.03] hover:border-green-500/30"
+                  : "border-transparent bg-transparent hover:bg-white/[0.03] hover:border-red-500/30",
             )}
           >
             <FlexContainer
@@ -74,7 +76,7 @@ const DsaTopicSidebar = ({
               <Text
                 level="p"
                 className={cn(
-                  "text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1",
+                  "text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left whitespace-nowrap flex-1",
                   isCompleted
                     ? "text-green-400"
                     : isSelected

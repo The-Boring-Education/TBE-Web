@@ -80,7 +80,7 @@ const DsaPrepWorkspace = ({
         {/* Left column — aligns with sidebar width */}
         <div
           className={cn(
-            "border-r border-gray-800/60 px-3 flex items-center shrink-0 transition-all duration-300 w-full lg:w-[240px]",
+            "border-r border-gray-800/60 px-3 flex items-center shrink-0 transition-all duration-300 w-full lg:w-[260px]",
           )}
         >
           {!selectedTopic ? (
@@ -192,7 +192,7 @@ const DsaPrepWorkspace = ({
         <div
           className={cn(
             "flex flex-col flex-shrink-0 border-r border-gray-800/60 bg-[#0A0A0A] transition-all duration-300",
-            "w-full lg:w-[240px]",
+            "w-full lg:w-[260px]",
           )}
         >
           <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
