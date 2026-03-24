@@ -32,7 +32,7 @@ const LearningEnvironmentLayout = ({
 
   return (
     <div
-      className={`flex flex-col bg-black text-white ${layoutMode === "workspace" ? "h-screen overflow-hidden" : "min-h-screen"}`}
+      className={`flex flex-col bg-[#0A0A0A] text-white ${layoutMode === "workspace" ? "h-screen overflow-hidden" : "min-h-screen"}`}
     >
       {/* Top Navbar */}
       <LearningNavbar

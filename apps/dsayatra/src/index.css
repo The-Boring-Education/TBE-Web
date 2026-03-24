@@ -286,7 +286,7 @@
   }
 
   .scrollbar-thin-grey::-webkit-scrollbar-track {
-    background: transparent;
+    background: #1a1a1a;
   }
 
   .scrollbar-thin-grey::-webkit-scrollbar-thumb {

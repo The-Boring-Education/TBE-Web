@@ -1,5 +1,9 @@
 import type { RoadmapStatItem } from "@tbe/components";
-import { InteractiveRoadmap, SEO } from "@tbe/components";
+import {
+  InteractiveRoadmap,
+  LearningEnvironmentLayout,
+  SEO,
+} from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
 import type { PageProps, RoadmapNode } from "@tbe/interface";
@@ -139,25 +143,32 @@ function TopicsClient() {
   };
 
   return (
-    <InteractiveRoadmap
-      nodes={nodes}
-      onNodeClick={handleNodeClick}
-      title={
-        <>
-          DATA
-          <br />
-          <span className="text-[#ff5757]">STRUCTURES</span>
-        </>
+    <LearningEnvironmentLayout
+      backHref="/dashboard"
+      layoutMode="workspace"
+      headerRightContent={
+        <span className="text-gray-400 text-sm font-medium">Found a Bug?</span>
       }
-      subtitle="Master the fundamentals of computer science through a structured and interactive milestone journey."
-      stats={stats}
-      overallProgress={overallProgress}
-      accentColor="#ff5757"
-      iconMap={TOPIC_ICON_MAP}
-      defaultIcon={Code}
-      backButtonLabel="Back to Dashboard"
-      onBackClick={() => router.push("/dashboard")}
-    />
+    >
+      <InteractiveRoadmap
+        nodes={nodes}
+        onNodeClick={handleNodeClick}
+        title={
+          <>
+            DATA
+            <br />
+            <span className="text-[#ff5757]">STRUCTURES</span>
+          </>
+        }
+        subtitle="Master the fundamentals of computer science through a structured and interactive milestone journey."
+        stats={stats}
+        overallProgress={overallProgress}
+        accentColor="#ff5757"
+        iconMap={TOPIC_ICON_MAP}
+        defaultIcon={Code}
+        className="flex-1 w-full"
+      />
+    </LearningEnvironmentLayout>
   );
 }
 

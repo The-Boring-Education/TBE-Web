@@ -191,11 +191,11 @@ const InteractiveRoadmap = ({
   return (
     <div
       className={cn(
-        "min-h-[calc(100vh-72px)] bg-[#0a0a0a] text-white relative font-sans overflow-x-hidden pt-4 pb-0 flex flex-col items-center",
+        "min-h-[calc(100vh-72px)] bg-[#0A0A0A] text-white relative font-sans overflow-x-hidden pt-4 pb-0 flex flex-col items-center",
         className,
       )}
     >
-      <div className="absolute -top-px left-0 right-0 h-[3px] bg-[#0a0a0a] z-[100]" />
+      <div className="absolute -top-px left-0 right-0 h-[3px] bg-[#0A0A0A] z-[100]" />
       <NoiseOverlay />
       <FloatingParticles accentColor={accentColor} />
 
@@ -352,12 +352,6 @@ const InteractiveRoadmap = ({
             const isShaking = shakingId === node.id;
             const isRippling = rippleId === node.id;
 
-            const diffColor =
-              node.difficulty <= 2
-                ? "#51cf66"
-                : node.difficulty <= 4
-                  ? "#ffb946"
-                  : accentColor;
             const diffLabel =
               node.difficulty <= 2
                 ? "EASY"
@@ -401,10 +395,16 @@ const InteractiveRoadmap = ({
                     </span>
                     {!node.isLocked && (
                       <div
-                        className="mt-3 text-[8px] font-black px-2 py-0.5 rounded text-black tracking-widest"
-                        style={{ backgroundColor: diffColor }}
+                        className={cn(
+                          "mt-3 text-[9px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider",
+                          node.difficulty <= 2
+                            ? "text-green-500 bg-green-950/30 border-green-500/30"
+                            : node.difficulty <= 4
+                              ? "text-orange-400 bg-orange-950/30 border-orange-500/20"
+                              : "text-red-400 bg-red-950/30 border-red-500/20",
+                        )}
                       >
-                        {diffLabel}
+                        {diffLabel === "MEDIUM" ? "MED." : diffLabel}
                       </div>
                     )}
                   </div>

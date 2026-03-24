@@ -3,7 +3,7 @@ import type { TopicWithCount } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import type { StudyGuideConfig } from "@tbe/interface";
 import { cn } from "@tbe/utils";
-import { BookOpen, Lightbulb } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
@@ -76,45 +76,54 @@ const DsaPrepWorkspace = ({
   return (
     <div className={cn("flex flex-col h-full w-full", className)}>
       {/* Header Banner — sidebar border extends through here */}
-      <div className="w-full border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
+      <div className="w-full h-[56px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
         {/* Left column — aligns with sidebar width */}
         <div
           className={cn(
-            "border-r border-gray-800/60 px-2 py-2 shrink-0 transition-all duration-300 w-full lg:w-[280px]",
+            "border-r border-gray-800/60 px-3 flex items-center shrink-0 transition-all duration-300 w-full lg:w-[240px]",
           )}
         >
           {!selectedTopic ? (
             <div>
               <Text
                 level="h2"
-                className="text-[14px] font-black text-white mb-0.5 tracking-tight"
+                className="text-[13px] font-black text-white mb-0.5 tracking-tight"
               >
                 Explore Topics
               </Text>
               <Text
                 level="p"
-                className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]"
+                className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.1em]"
               >
-                Choose a topic to practice
+                Choose a topic
               </Text>
             </div>
           ) : (
-            <div>
-              <div className="flex items-center justify-between w-full">
-                <Text
-                  level="h2"
-                  className="text-[14px] font-black text-white mb-0.5 tracking-tight"
-                >
-                  Questions
-                </Text>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col">
+                  <Text
+                    level="h3"
+                    className="text-white text-[15px] font-bold tracking-tight"
+                  >
+                    Questions
+                  </Text>
+                  <Text
+                    level="p"
+                    className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.1em]"
+                  >
+                    {filteredQuestions.length} available
+                  </Text>
+                </div>
+
                 {currentTopicConfig?.hasStudyGuide && (
                   <button
                     onClick={handleToggleStudyGuide}
                     className={cn(
-                      "flex items-center justify-center w-[38px] h-[38px] rounded-[8px] border-[0.5px] transition-all duration-300",
+                      "flex items-center justify-center w-[30px] h-[30px] rounded-[6px] border-[0.5px] transition-all duration-300 flex-shrink-0",
                       isStudyGuideOpen
-                        ? "bg-red-500/15 border-red-500/50 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.35)] scale-105"
-                        : "bg-red-500/[0.04] border-red-500/20 text-red-400 group-hover:border-red-500/40 hover:text-red-300 shadow-[0_0_12px_rgba(239,68,68,0.15)]",
+                        ? "bg-red-500/15 border-red-500/50 text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.25)] scale-105"
+                        : "bg-red-500/[0.04] border-red-500/20 text-red-400 group-hover:border-red-500/40 hover:text-red-300 shadow-[0_0_8px_rgba(239,68,68,0.1)]",
                     )}
                     title={
                       isStudyGuideOpen
@@ -124,7 +133,7 @@ const DsaPrepWorkspace = ({
                   >
                     <BookOpen
                       className={cn(
-                        "w-[22px] h-[22px] transition-all duration-300",
+                        "w-[16px] h-[16px] transition-all duration-300",
                         isStudyGuideOpen ? "scale-110" : "",
                       )}
                       strokeWidth={2}
@@ -132,29 +141,28 @@ const DsaPrepWorkspace = ({
                   </button>
                 )}
               </div>
-              <Text
-                level="p"
-                className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]"
-              >
-                {filteredQuestions.length} question
-                {filteredQuestions.length !== 1 ? "s" : ""} available
-              </Text>
             </div>
           )}
         </div>
 
-        <div className="hidden lg:flex flex-1 items-center justify-between px-4 py-2">
+        <div className="hidden lg:flex flex-1 items-center justify-between px-4">
           {!isStudyGuideOpen ? (
-            <div>
-              <Text level="h1" className="text-xl font-bold text-white mb-0.5">
+            <div className="flex flex-col">
+              <Text
+                level="h1"
+                className="text-[16px] font-bold text-white mb-0.5 tracking-tight"
+              >
                 {selectedTopic
                   ? TOPIC_LABELS[selectedTopic] || selectedTopic
                   : "DSA Preparation"}
               </Text>
-              <Text level="p" className="text-xs text-gray-400">
+              <Text
+                level="p"
+                className="text-[10px] font-medium text-gray-500 uppercase tracking-wider"
+              >
                 {selectedTopic
-                  ? `Continue your DSA preparation. Solving problems on ${TOPIC_LABELS[selectedTopic] || selectedTopic}.`
-                  : "Select a topic from the sidebar to start practicing interactively."}
+                  ? `Solving problems on ${TOPIC_LABELS[selectedTopic] || selectedTopic}`
+                  : "Select a topic to start practicing"}
               </Text>
             </div>
           ) : (
@@ -162,11 +170,11 @@ const DsaPrepWorkspace = ({
           )}
           {selectedTopic && (
             <Button
-              onClick={handleBackToTopics}
+              onClick={onBackToTopics}
               variant="OUTLINE"
               size="SMALL"
               text="View All Topics"
-              className="border-gray-700 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap"
+              className="border-red-500/40 text-red-500 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
             />
           )}
         </div>
@@ -184,7 +192,7 @@ const DsaPrepWorkspace = ({
         <div
           className={cn(
             "flex flex-col flex-shrink-0 border-r border-gray-800/60 bg-[#0A0A0A] transition-all duration-300",
-            "w-full lg:w-[280px]",
+            "w-full lg:w-[240px]",
           )}
         >
           <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
@@ -239,11 +247,7 @@ const DsaPrepWorkspace = ({
             >
               {!selectedTopic ? (
                 emptyStateContent || (
-                  <div className="hidden lg:flex flex-1 flex-col min-w-0 bg-[#050505] relative overflow-hidden h-full">
-                    {/* Subtle Background Glows */}
-                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/10 rounded-full blur-[100px] pointer-events-none" />
-                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
-
+                  <div className="hidden lg:flex flex-1 flex-col min-w-0 bg-[#0A0A0A] relative overflow-hidden h-full">
                     <FlexContainer
                       className="h-full z-10"
                       itemCenter
@@ -251,30 +255,16 @@ const DsaPrepWorkspace = ({
                       fullWidth
                       wrap={false}
                     >
-                      <div className="text-center space-y-5 max-w-md px-6">
-                        <div className="relative mx-auto w-24 h-24 mb-6">
-                          <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
-                          <div className="relative w-full h-full bg-[#111] border border-gray-800 rounded-2xl flex items-center justify-center shadow-2xl">
-                            <Lightbulb className="w-10 h-10 text-white opacity-80 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
-                          </div>
-                        </div>
-
-                        <div>
-                          <Text
-                            level="h2"
-                            className="text-white text-3xl font-extrabold tracking-tight mb-2"
-                          >
-                            DSA Vault
-                          </Text>
-                          <Text
-                            level="p"
-                            className="text-gray-400 text-[15px] leading-relaxed"
-                          >
-                            Master data structures and algorithms with curated
-                            problems. Pick a topic on the left to begin your
-                            preparation journey.
-                          </Text>
-                        </div>
+                      <div className="text-center space-y-2">
+                        <Text level="p" className="text-gray-400 text-lg">
+                          Select a topic from the left to start practicing
+                        </Text>
+                        <Text
+                          level="p"
+                          className="text-gray-500 text-sm italic"
+                        >
+                          Unlock your potential with structured learning
+                        </Text>
                       </div>
                     </FlexContainer>
                   </div>
