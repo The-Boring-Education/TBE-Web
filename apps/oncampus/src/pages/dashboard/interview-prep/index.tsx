@@ -89,7 +89,7 @@ const InterviewPrepDashboardPage = () => {
       let roadmap = sheet?.roadmap || "Tech";
 
       // Auto-categorize Database related sheets
-      const title = sheet.title?.toLowerCase() || "";
+      const title = sheet.name?.toLowerCase() || "";
       const slug = sheet.slug?.toLowerCase() || "";
       if (
         title.includes("database") ||
