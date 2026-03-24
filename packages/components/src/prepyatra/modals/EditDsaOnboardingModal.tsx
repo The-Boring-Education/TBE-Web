@@ -134,7 +134,7 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
 
         <div className="space-y-2 mt-0.5 px-1.5 pb-3">
           {/* Basic Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="">
             <div className="space-y-0.5">
               <label className="block text-[9px] font-black text-[#606060] uppercase tracking-[0.2em]">
                 Full Name
@@ -143,17 +143,6 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                className="w-full px-2 py-1.5 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#e0e0e0] text-xs font-bold focus:border-[#ff5757] outline-none transition-all"
-              />
-            </div>
-            <div className="space-y-0.5">
-              <label className="block text-[9px] font-black text-[#606060] uppercase tracking-[0.2em]">
-                Username
-              </label>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => handleInputChange("username", e.target.value)}
                 className="w-full px-2 py-1.5 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#e0e0e0] text-xs font-bold focus:border-[#ff5757] outline-none transition-all"
               />
             </div>

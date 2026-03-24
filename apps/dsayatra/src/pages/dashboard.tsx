@@ -408,7 +408,7 @@ function DsaClient() {
               {user?.name || "Shivani Jha"}
             </h3>
             <p className="text-[#a0a0a0] text-xs mt-0.5">
-              @{user?.userName || "shivanijhavats"}
+              @{user?.email?.split("@")[0] || "shivanijhavats"}
             </p>
 
             <div className="flex gap-3 my-4">
