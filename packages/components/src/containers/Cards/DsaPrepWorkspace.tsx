@@ -104,16 +104,38 @@ const DsaPrepWorkspace = ({
                 <div className="flex flex-col">
                   <Text
                     level="h3"
-                    className="text-white text-[15px] font-bold tracking-tight"
+                    className="text-white text-[15px] font-bold tracking-tight leading-none mb-1.5"
                   >
                     Questions
                   </Text>
-                  <Text
-                    level="p"
-                    className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.1em]"
-                  >
-                    {filteredQuestions.length} available
-                  </Text>
+                  {selectedTopic && (
+                    <div className="flex flex-col gap-1.5 w-full">
+                      {(() => {
+                        const solvedCount = filteredQuestions.filter((q) =>
+                          completedQuestionIds?.includes(q.id || q.name),
+                        ).length;
+                        const totalCount = filteredQuestions.length || 1;
+                        const progress = (solvedCount / totalCount) * 100;
+
+                        return (
+                          <>
+                            <Text
+                              level="p"
+                              className="text-[10px] font-bold text-gray-400 uppercase tracking-wider"
+                            >
+                              {solvedCount} / {filteredQuestions.length} Solved
+                            </Text>
+                            <div className="h-[3px] w-[140px] bg-gray-800/80 rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-green-500 transition-all duration-700 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.4)]"
+                                style={{ width: `${progress}%` }}
+                              />
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+                  )}
                 </div>
 
                 {currentTopicConfig?.hasStudyGuide && (
