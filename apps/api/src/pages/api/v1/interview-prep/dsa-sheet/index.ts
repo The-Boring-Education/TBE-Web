@@ -95,14 +95,12 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     query,
   } = req.query;
 
-  /** Lightweight topic list + counts only (no question bodies). */
   if (query === "topics") {
     const { data, error } = await getDSATopicSummariesFromDB();
-    if (error) {
+    if (error)
       return res
         .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
         .json(sendAPIResponse({ status: false, error }));
-    }
     return res
       .status(apiStatusCodes.OKAY)
       .json(sendAPIResponse({ status: true, data }));
@@ -119,23 +117,16 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
       .json(sendAPIResponse({ status: true, data }));
   }
 
-  const toArray = (val: unknown) =>
+  const toArray = (val: any) =>
     val ? (Array.isArray(val) ? val : [val]) : undefined;
-
-  const parsePositiveInt = (value: unknown): number | undefined => {
-    if (value === undefined || value === "") return undefined;
-    const n = parseInt(String(value), 10);
-    if (Number.isNaN(n) || n <= 0) return undefined;
-    return n;
-  };
 
   const { data, error } = await getAllDSAQuestionsFromDB({
     domain: toArray(domain),
     difficulty: toArray(difficulty),
     companyTypes: toArray(companyType),
     topics: toArray(topic),
-    page: parsePositiveInt(page) ?? 1,
-    limit: parsePositiveInt(limit),
+    page: page ? parseInt(page as string) : 1,
+    limit: limit ? Math.min(parseInt(limit as string), 100) : 50,
   });
 
   if (error)
