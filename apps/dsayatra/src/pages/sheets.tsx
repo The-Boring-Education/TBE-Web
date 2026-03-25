@@ -3,13 +3,13 @@ import {
   DsaPrepWorkspace,
   EditDsaOnboardingModal,
   Footer,
-  LinkButton,
+  LearningEnvironmentLayout,
   LoadingSpinner,
   Navbar,
   SEO,
   Text,
 } from "@tbe/components";
-import { routes, TOPIC_LABELS } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
@@ -23,8 +23,6 @@ import { getPreFetchProps } from "@tbe/utils";
 import { Target } from "lucide-react";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useState } from "react";
-
-import { STUDY_GUIDE_CONFIGS } from "../data/studyGuideData";
 
 const SheetsPageClient = () => {
   const router = useRouter();
@@ -204,36 +202,21 @@ const SheetsPageClient = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#0A0A0A] font-sans">
-      <main className="flex-1 pt-0 flex flex-col min-h-0 overflow-hidden">
-        <DsaPrepWorkspace
-          questions={questions}
-          topicsWithCounts={topicsWithCounts}
-          selectedTopic={selectedTopic}
-          selectedQuestion={selectedQuestion}
-          onTopicClick={handleTopicClick}
-          onQuestionClick={handleQuestionClick}
-          onBackToTopics={handleBackToTopics}
-          completionMap={topicsCompletionMap}
-          completedQuestionIds={completedIds}
-          onToggleComplete={toggleComplete}
-          studyGuideConfigs={STUDY_GUIDE_CONFIGS}
-          topicSidebarHeader={
-            <LinkButton
-              href={routes.dsayatra.dashboard}
-              className="mb-4 inline-block self-start"
-              buttonProps={{
-                variant: "OUTLINE",
-                size: "SMALL",
-                text: "← Back",
-                className:
-                  "border-red-500/40 text-red-500 bg-transparent hover:border-red-500 hover:bg-red-500/10 font-bold px-4",
-              }}
-            />
-          }
-        />
-      </main>
-    </div>
+    <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
+      <DsaPrepWorkspace
+        questions={questions}
+        topicsWithCounts={topicsWithCounts}
+        selectedTopic={selectedTopic}
+        selectedQuestion={selectedQuestion}
+        onTopicClick={handleTopicClick}
+        onQuestionClick={handleQuestionClick}
+        onBackToTopics={handleBackToTopics}
+        completionMap={topicsCompletionMap}
+        completedQuestionIds={completedIds}
+        onToggleComplete={toggleComplete}
+        studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
+      />
+    </LearningEnvironmentLayout>
   );
 };
 

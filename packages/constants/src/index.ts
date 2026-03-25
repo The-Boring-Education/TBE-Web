@@ -3,6 +3,7 @@ export * from "./campusPrep";
 export * from "./challenges";
 export * from "./component";
 export * from "./database";
+export * from "./dsaStudyGuides";
 export * from "./emailLogger";
 export * from "./envConfig";
 export * from "./github";
