@@ -20,7 +20,6 @@ export { default as useDsaQuestions } from "./useDsaQuestions";
 export { useDsaQuestionsForTopic } from "./useDsaQuestionsForTopic";
 export type { TopicWithCount } from "./useDsaTopics";
 export { default as useDsaTopics } from "./useDsaTopics";
-export type { DsaTopicSummaryRow } from "./useDsaTopicSummaries";
 export { useDsaTopicSummaries } from "./useDsaTopicSummaries";
 export * from "./useInstallPrompt";
 export { default as useLeaderboard } from "./useLeaderboard";

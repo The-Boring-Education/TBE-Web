@@ -1133,6 +1133,7 @@ export interface RoadmapNode {
 import type {
   StudyGuideConfig,
   StudyGuideDivider,
+  StudyGuideModel,
   StudyGuideNavItem,
   StudyGuideNavProps,
   StudyGuideReaderProps,
@@ -1142,6 +1143,7 @@ import type {
 export type {
   StudyGuideConfig,
   StudyGuideDivider,
+  StudyGuideModel,
   StudyGuideNavItem,
   StudyGuideNavProps,
   StudyGuideReaderProps,
