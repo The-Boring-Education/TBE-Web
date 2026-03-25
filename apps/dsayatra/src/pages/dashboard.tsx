@@ -5,7 +5,6 @@ import {
   useDsaCompletedQuestions,
   useDsaQuestions,
   usePrepStats,
-  useTimeTracker,
 } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
@@ -131,7 +130,7 @@ function StatCard({
   );
 }
 
-function DsaClient() {
+const DsaClient = () => {
   "use client";
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -140,7 +139,6 @@ function DsaClient() {
     null,
   );
 
-  const { seconds, formattedTime } = useTimeTracker(user?.id);
   const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
 
   const { rawQuestions: allQuestions } = useDsaQuestions({
@@ -347,11 +345,8 @@ function DsaClient() {
       new Date(log.createdAt).toDateString() === new Date().toDateString(),
   );
 
-  const sessionMinutes = Math.floor(seconds / 60);
-
-  // Total invested
-  const totalMinutes = totalTimeSpent + sessionMinutes;
-  const totalHours = (totalMinutes / 60).toFixed(1);
+  // Total invested (minutes from prep logs only)
+  const totalHours = (totalTimeSpent / 60).toFixed(1);
 
   return (
     <div className="flex bg-[#0f0f0f] font-sans selection:bg-[#ff5757]/30 selection:text-white">
@@ -403,11 +398,8 @@ function DsaClient() {
               )}
             </div>
             <h3 className="text-base font-bold text-[#e0e0e0] leading-tight">
-              {user?.name || "Shivani Jha"}
+              {user?.name}
             </h3>
-            <p className="text-[#a0a0a0] text-xs mt-0.5">
-              @{user?.userName || "shivanijhavats"}
-            </p>
 
             <div className="flex gap-3 my-4">
               {[
@@ -566,7 +558,11 @@ function DsaClient() {
             value={todayTotalHours}
             subtext="Questions solved today"
             icon={Code2}
-            secondaryInfo={`Active: ${formattedTime}`}
+            secondaryInfo={
+              todayLog
+                ? `${todayLog.timeSpent || 0}m logged in prep today`
+                : undefined
+            }
           />
           <StatCard
             title="Total Solved"
@@ -858,7 +854,7 @@ function DsaClient() {
       />
     </div>
   );
-}
+};
 
 const Dashboard = ({ seoMeta }: PageProps) => {
   return (
