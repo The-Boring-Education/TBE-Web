@@ -291,13 +291,6 @@ const DsaPrepWorkspace = ({
                           Pick a topic from the left to dive in
                         </Text>
                         <div className="h-px w-24 bg-gray-800/15 mx-auto my-6" />
-                        <Text
-                          level="p"
-                          className="text-gray-600 text-[13px] font-medium tracking-normal"
-                        >
-                          {topicsWithCounts.length} Topics · {questions.length}+
-                          Questions · Start Anytime
-                        </Text>
                       </div>
                     </FlexContainer>
                   </div>
