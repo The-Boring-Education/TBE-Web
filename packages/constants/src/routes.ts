@@ -143,7 +143,8 @@ const routes = {
     myPlaylists: "/user/playlists",
     interviewPrep: "/interview-prep",
     dsaSheet: "/interview-prep/dsa-sheet",
-    studyGuide: (topicId: string) => `/interview-prep/study-guide/${topicId}`,
+    studyGuide: (topicId: string) =>
+      `/interview-prep/dsa-sheet/study-guide?topic=${topicId}`,
     enrollCourse: "/user/shiksha/enroll",
     enrollProject: "/user/projects/enroll",
     enrollSheet: "/user/interview-prep/enroll",
