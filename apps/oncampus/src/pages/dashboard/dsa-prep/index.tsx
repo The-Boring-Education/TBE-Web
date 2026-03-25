@@ -1,6 +1,5 @@
 import {
   DsaPrepWorkspace,
-  FlexContainer,
   LearningEnvironmentLayout,
   LoadingSpinner,
   Text,
@@ -81,24 +80,6 @@ const DSAPrepPage = () => {
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
         onToggleComplete={toggleComplete}
-        emptyStateContent={
-          <FlexContainer
-            className="h-full"
-            itemCenter
-            justifyCenter
-            fullWidth
-            wrap={false}
-          >
-            <div className="text-center space-y-2">
-              <Text level="p" className="text-gray-400 text-lg">
-                Select a topic from the left to start practicing
-              </Text>
-              <Text level="p" className="text-gray-500 text-sm italic">
-                Unlock your potential with structured learning
-              </Text>
-            </div>
-          </FlexContainer>
-        }
       />
     </LearningEnvironmentLayout>
   );

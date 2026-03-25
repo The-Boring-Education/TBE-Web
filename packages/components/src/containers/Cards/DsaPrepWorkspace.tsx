@@ -277,15 +277,26 @@ const DsaPrepWorkspace = ({
                       fullWidth
                       wrap={false}
                     >
-                      <div className="text-center space-y-3">
+                      <div className="text-center">
                         <Text
                           level="h1"
-                          className="text-white text-3xl font-bold tracking-tight"
+                          className="text-white text-2xl font-bold tracking-tight mb-2"
                         >
-                          Select a topic to start practicing
+                          Where do you want to start today?
                         </Text>
-                        <Text level="p" className="text-gray-500 text-base">
-                          Unlock your potential with structured learning
+                        <Text
+                          level="p"
+                          className="text-gray-500 text-base font-medium"
+                        >
+                          Pick a topic from the left to dive in
+                        </Text>
+                        <div className="h-px w-24 bg-gray-800/15 mx-auto my-6" />
+                        <Text
+                          level="p"
+                          className="text-gray-600 text-[13px] font-medium tracking-normal"
+                        >
+                          {topicsWithCounts.length} Topics · {questions.length}+
+                          Questions · Start Anytime
                         </Text>
                       </div>
                     </FlexContainer>
