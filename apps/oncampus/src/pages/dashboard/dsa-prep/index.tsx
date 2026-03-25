@@ -4,7 +4,7 @@ import {
   LoadingSpinner,
   Text,
 } from "@tbe/components";
-import { DSA_STUDY_GUIDE_CONFIGS, routes } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
   useDsaQuestionsForTopic,
   useDsaTopicSummaries,

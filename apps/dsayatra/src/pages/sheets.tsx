@@ -3,12 +3,13 @@ import {
   DsaPrepWorkspace,
   EditDsaOnboardingModal,
   Footer,
+  LearningEnvironmentLayout,
   LoadingSpinner,
   Navbar,
   SEO,
   Text,
 } from "@tbe/components";
-import { DSA_STUDY_GUIDE_CONFIGS, routes } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
