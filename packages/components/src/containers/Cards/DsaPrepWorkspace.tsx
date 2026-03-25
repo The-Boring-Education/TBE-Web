@@ -3,7 +3,7 @@ import type { TopicWithCount } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import type { StudyGuideConfig } from "@tbe/interface";
 import { cn } from "@tbe/utils";
-import { BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
@@ -277,20 +277,53 @@ const DsaPrepWorkspace = ({
                       fullWidth
                       wrap={false}
                     >
-                      <div className="text-center space-y-2">
-                        <Text level="p" className="text-gray-400 text-lg">
-                          Select a topic from the left to start practicing
-                        </Text>
+                      <div className="text-center space-y-3">
                         <Text
-                          level="p"
-                          className="text-gray-500 text-sm italic"
+                          level="h1"
+                          className="text-white text-3xl font-bold tracking-tight"
                         >
+                          Select a topic to start practicing
+                        </Text>
+                        <Text level="p" className="text-gray-500 text-base">
                           Unlock your potential with structured learning
                         </Text>
                       </div>
                     </FlexContainer>
                   </div>
                 )
+              ) : !selectedQuestion ? (
+                <div className="flex flex-1 flex-col items-center justify-center h-full min-h-[400px]">
+                  <div className="text-center space-y-6 max-w-[500px] mx-auto px-6 w-full">
+                    <div className="space-y-3.5">
+                      <Text
+                        level="h2"
+                        className="text-white text-[22px] font-bold tracking-tight whitespace-nowrap"
+                      >
+                        Select a question to view details
+                      </Text>
+                      <Text
+                        level="p"
+                        className="text-gray-500 text-sm font-medium leading-relaxed max-w-[440px] mx-auto text-center"
+                      >
+                        Choose any problem from the list on the left to see the
+                        full problem statement, examples, and solutions.
+                      </Text>
+                    </div>
+
+                    <button
+                      onClick={() =>
+                        filteredQuestions[0] &&
+                        onQuestionClick(filteredQuestions[0])
+                      }
+                      className="group flex items-center justify-center gap-2.5 mx-auto px-8 py-3.5 rounded-full bg-red-600 hover:bg-red-500 text-white shadow-[0_4px_15px_rgba(220,38,38,0.25)] transition-all duration-300 transform hover:scale-[1.03] active:scale-95 whitespace-nowrap"
+                    >
+                      <span className="font-bold uppercase tracking-widest text-[11px]">
+                        Start with the first question
+                      </span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <div className="w-full max-w-3xl mx-auto">
                   <div className="pb-1 w-full">

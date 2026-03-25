@@ -69,7 +69,7 @@ const DsaTopicSidebar = ({
                     "w-[15px] h-[15px] shrink-0 transition-colors",
                     isCompleted
                       ? "text-green-500/60"
-                      : "text-gray-600 group-hover:text-gray-400",
+                      : "text-gray-500 group-hover:text-gray-300",
                   )}
                 />
               )}
@@ -81,7 +81,7 @@ const DsaTopicSidebar = ({
                     ? "text-green-400"
                     : isSelected
                       ? "text-white"
-                      : "text-gray-400 group-hover:text-gray-300",
+                      : "text-gray-200 group-hover:text-white",
                 )}
               >
                 {label}
