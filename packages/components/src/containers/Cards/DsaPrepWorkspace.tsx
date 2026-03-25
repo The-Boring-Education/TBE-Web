@@ -194,7 +194,7 @@ const DsaPrepWorkspace = ({
               >
                 <Text
                   level="h1"
-                  className="text-[16px] font-bold text-white mb-0.5 tracking-tight"
+                  className="strong-text font-bold text-white mb-0.5 tracking-tight"
                 >
                   {selectedTopic
                     ? TOPIC_LABELS[selectedTopic] || selectedTopic
