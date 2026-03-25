@@ -53,7 +53,7 @@ function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-2 px-2.5 py-1.5 text-xs font-semibold transition-all duration-200 rounded-lg group",
+                "flex items-center gap-2 px-3 py-2 strong-text font-semibold transition-all duration-200 rounded-lg group",
                 item.active
                   ? "bg-[#ff5757] text-white shadow-md shadow-[#ff5757]/10"
                   : "text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-[#e0e0e0]",
@@ -357,7 +357,7 @@ const DsaClient = () => {
         <header className="flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold text-[#e0e0e0]">
-              Welcome back, {user?.name?.split(" ")[0] || "Yatree"}! 👋
+              Welcome back, {user?.name?.split(" ")[0]}! 👋
             </h2>
             <p className="text-[#a0a0a0] text-xs mt-0.5">
               Ready to master DSA today?
