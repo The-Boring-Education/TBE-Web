@@ -137,6 +137,15 @@ const DsaPrepWorkspace = ({
                     </div>
                   )}
                 </div>
+                {selectedTopic && (
+                  <Button
+                    onClick={onBackToTopics}
+                    variant="OUTLINE"
+                    size="SMALL"
+                    text="←"
+                    className="border-red-500/40 text-red-500 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
+                  />
+                )}
 
                 {currentTopicConfig?.hasStudyGuide && (
                   <button
@@ -169,35 +178,33 @@ const DsaPrepWorkspace = ({
 
         <div className="hidden lg:flex flex-1 items-center justify-between px-4">
           {!isStudyGuideOpen ? (
-            <div className="flex flex-col">
-              <Text
-                level="h1"
-                className="text-[16px] font-bold text-white mb-0.5 tracking-tight"
+            <FlexContainer wrap={false} className="gap-2">
+              <FlexContainer
+                direction="col"
+                itemCenter={false}
+                justifyCenter={false}
+                wrap={false}
               >
-                {selectedTopic
-                  ? TOPIC_LABELS[selectedTopic] || selectedTopic
-                  : "DSA Preparation"}
-              </Text>
-              <Text
-                level="p"
-                className="text-[10px] font-medium text-gray-500 uppercase tracking-wider"
-              >
-                {selectedTopic
-                  ? `Solving problems on ${TOPIC_LABELS[selectedTopic] || selectedTopic}`
-                  : "Select a topic to start practicing"}
-              </Text>
-            </div>
+                <Text
+                  level="h1"
+                  className="text-[16px] font-bold text-white mb-0.5 tracking-tight"
+                >
+                  {selectedTopic
+                    ? TOPIC_LABELS[selectedTopic] || selectedTopic
+                    : "DSA Preparation"}
+                </Text>
+                <Text
+                  level="p"
+                  className="text-[10px] font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {selectedTopic
+                    ? `Solving problems on ${TOPIC_LABELS[selectedTopic] || selectedTopic}`
+                    : "Select a topic to start practicing"}
+                </Text>
+              </FlexContainer>
+            </FlexContainer>
           ) : (
             <div />
-          )}
-          {selectedTopic && (
-            <Button
-              onClick={onBackToTopics}
-              variant="OUTLINE"
-              size="SMALL"
-              text="View All Topics"
-              className="border-red-500/40 text-red-500 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
-            />
           )}
         </div>
       </div>
