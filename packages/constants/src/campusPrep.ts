@@ -89,9 +89,13 @@ export const TOPIC_LABELS: Record<string, string> = {
   DYNAMIC_PROGRAMMING: "Dynamic Programming",
   GREEDY: "Greedy",
   MATH: "Math",
+  RECURSION: "Recursion",
   BIT_MANIPULATION: "Bit Manipulation",
   TRIE: "Trie",
   HEAP: "Heap",
   UNION_FIND: "Union Find",
   PREFIX_SUM: "Prefix Sum",
+  SIMULATION: "Simulation",
+  DESIGN: "Design",
+  MONOTONIC_STACK: "Monotonic Stack",
 };

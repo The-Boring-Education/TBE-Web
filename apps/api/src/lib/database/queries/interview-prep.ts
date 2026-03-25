@@ -733,14 +733,17 @@ const getDSATopicSummariesFromDB =
         [...DSA_TOPICS].map((topicId, index) => [topicId, index]),
       );
 
-      const topics: DSATopicType[] = rows
-        .map((row) => row._id as DSATopicType)
+      const topics = rows
+        .map((row) => ({
+          topic: row._id as DSATopicType,
+          count: row.count,
+        }))
         .sort((a, b) => {
-          const ia = orderMap.get(a as string) ?? 999;
-          const ib = orderMap.get(b as string) ?? 999;
+          const ia = orderMap.get(a.topic as string) ?? 999;
+          const ib = orderMap.get(b.topic as string) ?? 999;
           if (ia !== ib) return ia - ib;
-          return a.localeCompare(b);
-        }) as DSATopicType[];
+          return (a.topic as string).localeCompare(b.topic as string);
+        });
 
       return { data: { topics } };
     } catch (error) {
