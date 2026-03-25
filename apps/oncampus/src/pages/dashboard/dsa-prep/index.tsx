@@ -4,7 +4,7 @@ import {
   LoadingSpinner,
   Text,
 } from "@tbe/components";
-import { routes } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
   useDsaQuestions,
@@ -80,6 +80,7 @@ const DSAPrepPage = () => {
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
         onToggleComplete={toggleComplete}
+        studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
     </LearningEnvironmentLayout>
   );

@@ -9,7 +9,7 @@ import {
   SEO,
   Text,
 } from "@tbe/components";
-import { routes } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
   useDsaQuestions,
@@ -22,8 +22,6 @@ import { getPreFetchProps } from "@tbe/utils";
 import { Target } from "lucide-react";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
-
-import { STUDY_GUIDE_CONFIGS } from "../data/studyGuideData";
 
 const SheetsPageClient = () => {
   const router = useRouter();
@@ -179,7 +177,7 @@ const SheetsPageClient = () => {
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
         onToggleComplete={toggleComplete}
-        studyGuideConfigs={STUDY_GUIDE_CONFIGS}
+        studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
     </LearningEnvironmentLayout>
   );

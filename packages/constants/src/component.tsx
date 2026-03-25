@@ -1,5 +1,4 @@
-// @ts-nocheck
-import type { NavbarVariantConfig } from "@tbe/interface";
+import type { NavbarVariantConfig } from "@tbe/types";
 import {
   Award,
   BookOpen,
