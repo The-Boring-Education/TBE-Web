@@ -70,14 +70,19 @@ const DsaQuestionList = ({
       <div className="flex flex-col w-full">
         {filteredQuestions.length > 0 ? (
           filteredQuestions.map((question) => {
-            const qId = question.id || question.name;
+            const qId = String(question.id || question.name);
+            const isCompleted = completedQuestionIds.some(
+              (id) => String(id) === qId,
+            );
+            const isSelected = String(selectedQuestionId) === qId;
+
             return (
               <DsaQuestionCard
                 key={qId}
                 name={question.name}
                 difficultyLevel={question.difficultyLevel}
-                isSelected={selectedQuestionId === question.id}
-                isCompleted={completedQuestionIds.includes(qId)}
+                isSelected={isSelected}
+                isCompleted={isCompleted}
                 onClick={() => onQuestionClick?.(question)}
                 onToggleComplete={() => onToggleComplete?.(qId)}
               />

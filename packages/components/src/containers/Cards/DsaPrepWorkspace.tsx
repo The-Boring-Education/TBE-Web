@@ -76,11 +76,11 @@ const DsaPrepWorkspace = ({
   return (
     <div className={cn("flex flex-col h-full w-full", className)}>
       {/* Header Banner — sidebar border extends through here */}
-      <div className="w-full h-[56px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
+      <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
         {/* Left column — aligns with sidebar width */}
         <div
           className={cn(
-            "border-r border-gray-800/60 px-3 flex items-center shrink-0 transition-all duration-300 w-full lg:w-[260px]",
+            "border-r border-gray-800/60 px-3 py-3.5 flex items-center shrink-0 transition-all duration-300 w-full lg:w-[260px]",
           )}
         >
           {!selectedTopic ? (
@@ -293,11 +293,11 @@ const DsaPrepWorkspace = ({
                 )
               ) : !selectedQuestion ? (
                 <div className="flex flex-1 flex-col items-center justify-center h-full min-h-[400px]">
-                  <div className="text-center space-y-6 max-w-[500px] mx-auto px-6 w-full">
-                    <div className="space-y-3.5">
+                  <div className="flex flex-col items-center text-center space-y-6 max-w-[500px] mx-auto px-6 w-full">
+                    <div className="space-y-3.5 flex flex-col items-center">
                       <Text
                         level="h2"
-                        className="text-white text-[22px] font-bold tracking-tight whitespace-nowrap"
+                        className="text-white text-[22px] font-bold tracking-tight whitespace-nowrap text-center"
                       >
                         Select a question to view details
                       </Text>
@@ -315,9 +315,9 @@ const DsaPrepWorkspace = ({
                         filteredQuestions[0] &&
                         onQuestionClick(filteredQuestions[0])
                       }
-                      className="group flex items-center justify-center gap-2.5 mx-auto px-8 py-3.5 rounded-full bg-red-600 hover:bg-red-500 text-white shadow-[0_4px_15px_rgba(220,38,38,0.25)] transition-all duration-300 transform hover:scale-[1.03] active:scale-95 whitespace-nowrap"
+                      className="group flex items-center justify-center gap-2.5 mx-auto w-full max-w-[320px] py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white shadow-[0_4px_15px_rgba(220,38,38,0.25)] transition-all duration-300 transform hover:scale-[1.03] active:scale-95 whitespace-nowrap"
                     >
-                      <span className="font-bold uppercase tracking-widest text-[11px]">
+                      <span className="font-bold text-[13px]">
                         Start with the first question
                       </span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />

@@ -1033,7 +1033,7 @@ export interface DsaQuestionCardProps {
   isSelected?: boolean;
   isCompleted?: boolean;
   onClick?: () => void;
-  onToggleComplete?: (e: React.MouseEvent) => void;
+  onToggleComplete?: () => void;
 }
 
 export interface QuestionDetailProps {

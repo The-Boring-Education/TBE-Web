@@ -27,7 +27,7 @@ export const DsaQuestionCard = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onToggleComplete?.(e);
+            onToggleComplete?.();
           }}
           className={`flex-shrink-0 focus:outline-none transition-all duration-200 ${
             isCompleted

@@ -47,11 +47,12 @@ const useDsaCompletedQuestions = (
 
   const toggleComplete = useCallback(
     (questionId: string | number) => {
+      const qId = String(questionId);
       setCompletedIds((prev) => {
-        const isCompletedNow = !prev.includes(questionId);
+        const isCompletedNow = !prev.some((id) => String(id) === qId);
         const next = isCompletedNow
-          ? [...prev, questionId]
-          : prev.filter((id) => id !== questionId);
+          ? [...prev, qId]
+          : prev.filter((id) => String(id) !== qId);
 
         localStorage.setItem(storageKey, JSON.stringify(next));
 
