@@ -1,4 +1,6 @@
-export const STUDY_GUIDE_CONFIGS: Record<string, any> = {
+import type { StudyGuideConfig } from "@tbe/types";
+
+export const DSA_STUDY_GUIDE_CONFIGS: Record<string, StudyGuideConfig> = {
   ARRAY: {
     topic: "Arrays",
     hasStudyGuide: true,
