@@ -20,10 +20,16 @@ export const useDsaTopicSummaries = () => {
         method: "GET",
       });
 
-      const rows = result.data?.topics as DsaTopicSummaryRow[] | undefined;
-      if (!Array.isArray(rows)) {
+      const raw = result.data?.topics;
+      if (!Array.isArray(raw)) {
         throw new Error(result.message || "Failed to fetch DSA topics");
       }
+      // API may return legacy string[]; sheet UI expects { topic, count }.
+      const rows: DsaTopicSummaryRow[] = raw.map((item: unknown) =>
+        typeof item === "string"
+          ? { topic: item, count: 0 }
+          : (item as DsaTopicSummaryRow),
+      );
       return rows;
     },
     ...CACHE_TIMES.STABLE,
