@@ -1,9 +1,12 @@
 import { TOPIC_LABELS } from "@tbe/constants";
-import type { TopicWithCount } from "@tbe/hooks";
-import type { DsaQuestion } from "@tbe/interface";
-import type { StudyGuideConfig } from "@tbe/interface";
+import { type TopicWithCount, useStudyGuideTopic } from "@tbe/hooks";
+import type {
+  DsaQuestion,
+  StudyGuideConfig,
+  StudyGuideModel,
+} from "@tbe/interface";
 import { cn } from "@tbe/utils";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen, Lightbulb, Sparkles } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
@@ -48,6 +51,9 @@ const DsaPrepWorkspace = ({
   studyGuideConfigs,
   className,
 }: DsaPrepWorkspaceProps) => {
+  const { data: studyGuideData, isLoading: isStudyGuideLoading } =
+    useStudyGuideTopic(selectedTopic || "");
+
   const [isStudyGuideOpen, setIsStudyGuideOpen] = useState(false);
   const [activeGuideSection, setActiveGuideSection] =
     useState("before-you-start");
@@ -104,7 +110,7 @@ const DsaPrepWorkspace = ({
                 <div className="flex flex-col">
                   <Text
                     level="h3"
-                    className="text-white text-[15px] font-bold tracking-tight leading-none mb-1.5"
+                    className="text-white text-[14px] font-black tracking-tight leading-none mb-1.5"
                   >
                     Questions
                   </Text>
@@ -121,13 +127,13 @@ const DsaPrepWorkspace = ({
                           <>
                             <Text
                               level="p"
-                              className="text-[10px] font-bold text-gray-400 uppercase tracking-wider"
+                              className="text-[9px] font-bold text-gray-500 uppercase tracking-wider"
                             >
                               {solvedCount} / {filteredQuestions.length} Solved
                             </Text>
                             <div className="h-[3px] w-[140px] bg-gray-800/80 rounded-full overflow-hidden">
                               <div
-                                className="h-full bg-green-500 transition-all duration-700 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.4)]"
+                                className="h-full bg-red-500 transition-all duration-700 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.4)]"
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
@@ -137,40 +143,41 @@ const DsaPrepWorkspace = ({
                     </div>
                   )}
                 </div>
-                {selectedTopic && (
-                  <Button
-                    onClick={onBackToTopics}
-                    variant="OUTLINE"
-                    size="SMALL"
-                    text="←"
-                    className="border-red-500/40 text-red-500 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
-                  />
-                )}
-
-                {currentTopicConfig?.hasStudyGuide && (
-                  <button
-                    onClick={handleToggleStudyGuide}
-                    className={cn(
-                      "flex items-center justify-center w-[30px] h-[30px] rounded-[6px] border-[0.5px] transition-all duration-300 flex-shrink-0",
-                      isStudyGuideOpen
-                        ? "bg-red-500/15 border-red-500/50 text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.25)] scale-105"
-                        : "bg-red-500/[0.04] border-red-500/20 text-red-400 group-hover:border-red-500/40 hover:text-red-300 shadow-[0_0_8px_rgba(239,68,68,0.1)]",
-                    )}
-                    title={
-                      isStudyGuideOpen
-                        ? "Back to Questions"
-                        : "Open Study Guide"
-                    }
-                  >
-                    <BookOpen
-                      className={cn(
-                        "w-[16px] h-[16px] transition-all duration-300",
-                        isStudyGuideOpen ? "scale-110" : "",
-                      )}
-                      strokeWidth={2}
+                <div className="flex items-center gap-2">
+                  {selectedTopic && (
+                    <Button
+                      onClick={onBackToTopics}
+                      variant="OUTLINE"
+                      size="SMALL"
+                      text="←"
+                      className="border-gray-800 text-gray-400 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
                     />
-                  </button>
-                )}
+                  )}
+                  {selectedTopic && (
+                    <button
+                      onClick={handleToggleStudyGuide}
+                      className={cn(
+                        "flex items-center justify-center w-[30px] h-[30px] rounded-[6px] border-[0.5px] transition-all duration-300 flex-shrink-0",
+                        isStudyGuideOpen
+                          ? "bg-red-500/15 border-red-500/50 text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.25)] scale-105"
+                          : "bg-red-500/[0.04] border-red-500/20 text-red-400 group-hover:border-red-500/40 hover:text-red-300 shadow-[0_0_8px_rgba(239,68,68,0.1)]",
+                      )}
+                      title={
+                        isStudyGuideOpen
+                          ? "Back to Questions"
+                          : "Open Study Guide"
+                      }
+                    >
+                      <BookOpen
+                        className={cn(
+                          "w-[16px] h-[16px] transition-all duration-300",
+                          isStudyGuideOpen ? "scale-110" : "",
+                        )}
+                        strokeWidth={2}
+                      />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -206,6 +213,15 @@ const DsaPrepWorkspace = ({
           ) : (
             <div />
           )}
+          {selectedTopic && (
+            <Button
+              onClick={handleBackToTopics}
+              variant="OUTLINE"
+              size="SMALL"
+              text="View All Topics"
+              className="border-gray-700 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap"
+            />
+          )}
         </div>
       </div>
 
@@ -238,12 +254,26 @@ const DsaPrepWorkspace = ({
               </div>
             ) : (
               <div className="space-y-3">
-                {isStudyGuideOpen && currentTopicConfig ? (
-                  <StudyGuideNav
-                    config={currentTopicConfig}
-                    activeId={activeGuideSection}
-                    onSectionClick={setActiveGuideSection}
-                  />
+                {isStudyGuideOpen ? (
+                  currentTopicConfig ? (
+                    <StudyGuideNav
+                      config={currentTopicConfig}
+                      activeId={activeGuideSection}
+                      onSectionClick={setActiveGuideSection}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-12 px-4 text-center gap-3">
+                      <Sparkles className="w-8 h-8 text-gray-800 animate-pulse opacity-30" />
+                      <Text
+                        level="p"
+                        className="text-[10px] font-black text-gray-600 uppercase tracking-widest leading-relaxed"
+                      >
+                        Navigation will be
+                        <br />
+                        available shortly
+                      </Text>
+                    </div>
+                  )
                 ) : (
                   <DsaQuestionList
                     questions={filteredQuestions}
@@ -264,10 +294,11 @@ const DsaPrepWorkspace = ({
             !selectedTopic ? "hidden lg:flex" : "flex",
           )}
         >
-          {isStudyGuideOpen && currentTopicConfig ? (
+          {isStudyGuideOpen && selectedTopic ? (
             <StudyGuideReader
-              topic={currentTopicConfig.topic}
+              topic={selectedTopic}
               sectionId={activeGuideSection}
+              data={studyGuideData as StudyGuideModel}
             />
           ) : (
             <div
@@ -277,6 +308,10 @@ const DsaPrepWorkspace = ({
               {!selectedTopic ? (
                 emptyStateContent || (
                   <div className="hidden lg:flex flex-1 flex-col min-w-0 bg-[#0A0A0A] relative overflow-hidden h-full">
+                    {/* Subtle Background Glows */}
+                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/10 rounded-full blur-[100px] pointer-events-none" />
+                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
+
                     <FlexContainer
                       className="h-full z-10"
                       itemCenter
@@ -284,20 +319,30 @@ const DsaPrepWorkspace = ({
                       fullWidth
                       wrap={false}
                     >
-                      <div className="text-center">
-                        <Text
-                          level="h1"
-                          className="text-white text-2xl font-bold tracking-tight mb-2"
-                        >
-                          Where do you want to start today?
-                        </Text>
-                        <Text
-                          level="p"
-                          className="text-gray-500 text-base font-medium"
-                        >
-                          Pick a topic from the left to dive in
-                        </Text>
-                        <div className="h-px w-24 bg-gray-800/15 mx-auto my-6" />
+                      <div className="text-center space-y-5 max-w-md px-6 z-10">
+                        <div className="relative mx-auto w-24 h-24 mb-6">
+                          <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
+                          <div className="relative w-full h-full bg-[#111] border border-gray-800 rounded-2xl flex items-center justify-center shadow-2xl">
+                            <Lightbulb className="w-10 h-10 text-white opacity-80 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
+                          </div>
+                        </div>
+
+                        <div>
+                          <Text
+                            level="h2"
+                            className="text-white text-3xl font-extrabold tracking-tight mb-2"
+                          >
+                            DSA Vault
+                          </Text>
+                          <Text
+                            level="p"
+                            className="text-gray-400 text-[15px] leading-relaxed"
+                          >
+                            Master data structures and algorithms with curated
+                            problems. Pick a topic on the left to begin your
+                            preparation journey.
+                          </Text>
+                        </div>
                       </div>
                     </FlexContainer>
                   </div>
