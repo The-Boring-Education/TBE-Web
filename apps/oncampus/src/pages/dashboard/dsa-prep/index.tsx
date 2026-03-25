@@ -1,12 +1,20 @@
 import {
   DsaPrepWorkspace,
-  FlexContainer,
   LearningEnvironmentLayout,
   LoadingSpinner,
   Text,
 } from "@tbe/components";
+<<<<<<< HEAD
 import { routes } from "@tbe/constants";
 import { useDsaQuestions, useDsaTopics, useUser } from "@tbe/hooks";
+=======
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
+import {
+  useDsaQuestionsForTopic,
+  useDsaTopicSummaries,
+  useUser,
+} from "@tbe/hooks";
+>>>>>>> bd5a408ac7897c4543dedd9fdd0b0780abc164af
 import type { DsaQuestion } from "@tbe/interface";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -69,24 +77,10 @@ const DSAPrepPage = () => {
         onTopicClick={handleTopicClick}
         onQuestionClick={handleQuestionClick}
         onBackToTopics={handleBackToTopics}
-        emptyStateContent={
-          <FlexContainer
-            className="h-full"
-            itemCenter
-            justifyCenter
-            fullWidth
-            wrap={false}
-          >
-            <div className="text-center space-y-2">
-              <Text level="p" className="text-gray-400 text-lg">
-                Select a topic from the left to start practicing
-              </Text>
-              <Text level="p" className="text-gray-500 text-sm italic">
-                Unlock your potential with structured learning
-              </Text>
-            </div>
-          </FlexContainer>
-        }
+        completionMap={topicsCompletionMap}
+        completedQuestionIds={completedIds}
+        onToggleComplete={toggleComplete}
+        studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
     </LearningEnvironmentLayout>
   );

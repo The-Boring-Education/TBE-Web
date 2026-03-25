@@ -19,6 +19,7 @@ export { default as useDsaCompletedQuestions } from "./useDsaCompletedQuestions"
 export { default as useDsaQuestions } from "./useDsaQuestions";
 export type { TopicWithCount } from "./useDsaTopics";
 export { default as useDsaTopics } from "./useDsaTopics";
+export { useDsaTopicSummaries } from "./useDsaTopicSummaries";
 export * from "./useInstallPrompt";
 export { default as useLeaderboard } from "./useLeaderboard";
 export { default as useMediaQuery } from "./useMediaQuery";
@@ -38,7 +39,7 @@ export { default as useResumeEvaluation } from "./useResumeEvaluation";
 export { default as useScrollDirection } from "./useScrollDirection";
 export { default as useScrollPosition } from "./useScrollPosition";
 export { default as useSkillPlaylist } from "./useSkillPlaylist";
-export { useTimeTracker } from "./useTimeTracker";
+export { useStudyGuideTopic } from "./useStudyGuide";
 export { default as useUnskilledGraphData } from "./useUnskilledGraphData";
 export { default as useUser } from "./useUser";
 export { default as useUsername } from "./useUsername";

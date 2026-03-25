@@ -75,8 +75,32 @@ const handleCreateQuestion = async (
 };
 
 const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
+<<<<<<< HEAD
   const { domain, difficulty, companyType, topic, page, limit, metadata } =
     req.query;
+=======
+  const {
+    domain,
+    difficulty,
+    companyType,
+    topic,
+    page,
+    limit,
+    metadata,
+    query,
+  } = req.query;
+
+  if (query === "topics") {
+    const { data, error } = await getDSATopicSummariesFromDB();
+    if (error)
+      return res
+        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(sendAPIResponse({ status: false, error }));
+    return res
+      .status(apiStatusCodes.OKAY)
+      .json(sendAPIResponse({ status: true, data }));
+  }
+>>>>>>> bd5a408ac7897c4543dedd9fdd0b0780abc164af
 
   if (metadata === "true") {
     const { data, error } = await getDSASheetMetadataFromDB();

@@ -1,4 +1,4 @@
-import { modelSelectParams } from "@/lib/constants";
+import { DSA_TOPICS, modelSelectParams } from "@/lib/constants";
 import type {
   AddInterviewQuestionRequestPayloadProps,
   AddInterviewSheetRequestPayloadProps,
@@ -13,7 +13,7 @@ import type {
 import { generateYouTubeSearchLink } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
-import { DSAQuestion, InterviewSheet, UserSheet } from "../models";
+import { DSAQuestion, InterviewSheet, StudyGuide, UserSheet } from "../models";
 import { toObjectId } from "./common";
 import { updateUserPointsInDB } from "./gamification";
 
@@ -690,6 +690,48 @@ const getAllDSAQuestionsFromDB = async (
   }
 };
 
+/** Topic list + counts using primary topic only (topics[0]), for lightweight sheet landing. */
+const getDSATopicSummariesFromDB =
+  async (): Promise<DatabaseQueryResponseType> => {
+    try {
+      const rows = await DSAQuestion.aggregate([
+        { $unwind: "$topics" },
+        {
+          $group: {
+            _id: "$topics",
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      if (!rows || rows.length === 0) {
+        return { data: { topics: [] } };
+      }
+
+      const topics = rows
+        .map((row) => ({
+          topic: (row._id as string).toUpperCase(),
+          count: row.count,
+        }))
+        .filter((t) => t.topic)
+        .sort((a, b) => {
+          const idxA = DSA_TOPICS.indexOf(a.topic as any);
+          if (idxA !== -1 && b.topic) {
+            const idxB = DSA_TOPICS.indexOf(b.topic as any);
+            if (idxB !== -1) return idxA - idxB;
+            return -1;
+          }
+          return a.topic.localeCompare(b.topic);
+        });
+
+      return { data: { topics } };
+    } catch (error) {
+      logger.error("DB: getDSATopicSummariesFromDB failed", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return { error: "Failed to fetch DSA topic summaries", details: error };
+    }
+  };
 const getDSASheetMetadataFromDB =
   async (): Promise<DatabaseQueryResponseType> => {
     try {
@@ -728,7 +770,7 @@ const addDSAQuestionToDB = async (questionPayload: {
   domain: DSADomainType[];
   difficulty: DSADifficultyType;
   companyTypes: string[];
-  topics: string[];
+  topics: DSATopicType[];
   order?: number;
   leetcodeLink?: string;
   youtubeSearchLink?: string;
@@ -741,7 +783,11 @@ const addDSAQuestionToDB = async (questionPayload: {
 
     const question = new DSAQuestion({
       ...questionPayload,
-      youtubeSearchLink,
+      resources: {
+        youtubeURL: youtubeSearchLink,
+        leetcodeURL: questionPayload.leetcodeLink || null,
+        blogURL: null,
+      },
     });
     await question.save();
     return { data: question };
@@ -799,6 +845,23 @@ const getDSAQuestionByIDFromDB = async (
   }
 };
 
+const getStudyGuideByTopicFromDB = async (
+  topicId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const studyGuide = await StudyGuide.findOne({ topicId });
+    if (!studyGuide) {
+      return { error: "Study guide not found" };
+    }
+    return { data: studyGuide };
+  } catch (error) {
+    logger.error("DB: getStudyGuideByTopicFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch study guide", details: error };
+  }
+};
 const getDSAQuestionsGroupedByTopic = async (
   domain: DSADomainType,
   difficulty?: DSADifficultyType,
@@ -901,10 +964,12 @@ export {
   getDSAQuestionByIDFromDB,
   getDSAQuestionsGroupedByTopic,
   getDSASheetMetadataFromDB,
+  getDSATopicSummariesFromDB,
   getEnrolledSheetFromDB,
   getInterviewSheetByIDFromDB,
   getInterviewSheetBySlugFromDB,
   getStarredQuestionsFromDB,
+  getStudyGuideByTopicFromDB,
   markQuestionCompletedByUser,
   markQuestionStarredByUser,
   updateDSAQuestionInDB,

@@ -1130,32 +1130,22 @@ export interface RoadmapNode {
 // Study Guide
 // ---------------------------------------------------------------------------
 
-export interface StudyGuideSection {
-  id: string;
-  label: string;
-}
+import type {
+  StudyGuideConfig,
+  StudyGuideDivider,
+  StudyGuideModel,
+  StudyGuideNavItem,
+  StudyGuideNavProps,
+  StudyGuideReaderProps,
+  StudyGuideSection,
+} from "@tbe/types";
 
-export interface StudyGuideDivider {
-  divider: string | null;
-}
-
-export type StudyGuideNavItem = StudyGuideSection | StudyGuideDivider;
-
-export interface StudyGuideConfig {
-  topic: string;
-  sections: StudyGuideNavItem[];
-  hasStudyGuide: boolean;
-}
-
-export interface StudyGuideNavProps {
-  config: StudyGuideConfig;
-  activeId: string;
-  onSectionClick: (id: string) => void;
-  className?: string;
-}
-
-export interface StudyGuideReaderProps {
-  topic: string;
-  sectionId: string;
-  className?: string;
-}
+export type {
+  StudyGuideConfig,
+  StudyGuideDivider,
+  StudyGuideModel,
+  StudyGuideNavItem,
+  StudyGuideNavProps,
+  StudyGuideReaderProps,
+  StudyGuideSection,
+};
