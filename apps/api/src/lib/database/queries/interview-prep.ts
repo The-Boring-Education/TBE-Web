@@ -304,30 +304,34 @@ const getAllEnrolledSheetsFromDB = async (
       .exec();
 
     return {
-      data: enrolledSheets.map((userSheet) => {
-        const sheet = userSheet.sheet as any;
-        const totalQuestions = sheet?.questions?.length || 0;
-        const completedQuestions =
-          userSheet.questions?.filter((q: any) => q.isCompleted).length || 0;
-        const progressPercentage =
-          totalQuestions > 0
-            ? Math.round((completedQuestions / totalQuestions) * 100)
-            : 0;
+      data: enrolledSheets
+        .map((userSheet) => {
+          const sheet = userSheet.sheet as any;
+          const totalQuestions = sheet?.questions?.length || 0;
+          const completedQuestions =
+            userSheet.questions?.filter((q: any) => q.isCompleted).length || 0;
+          const progressPercentage =
+            totalQuestions > 0
+              ? Math.round((completedQuestions / totalQuestions) * 100)
+              : 0;
 
-        // Access updatedAt from the document (Mongoose adds it via timestamps)
-        const userSheetObj = userSheet.toObject() as any;
+          // Access updatedAt from the document (Mongoose adds it via timestamps)
+          const userSheetObj = userSheet.toObject() as any;
 
-        return {
-          ...sheet.toObject(),
-          isEnrolled: true,
-          lastUpdated: userSheetObj.updatedAt || userSheetObj.createdAt,
-          progress: {
-            completed: completedQuestions,
-            total: totalQuestions,
-            percentage: progressPercentage,
-          },
-        };
-      }),
+          if (!sheet) return null;
+
+          return {
+            ...sheet.toObject(),
+            isEnrolled: true,
+            lastUpdated: userSheetObj.updatedAt || userSheetObj.createdAt,
+            progress: {
+              completed: completedQuestions,
+              total: totalQuestions,
+              percentage: progressPercentage,
+            },
+          };
+        })
+        .filter(Boolean),
     };
   } catch (error) {
     logger.error("DB: getAllEnrolledSheetsFromDB failed", {

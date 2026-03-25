@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import {
-  getAllQuestionsByUser,
+  getAllEnrolledSheetsFromDB,
   handleGamificationPoints,
   markQuestionCompletedByUser,
 } from "@/lib/database";
@@ -92,13 +92,13 @@ const handleGetAllQuestions = async (
   const { userId } = req.query as unknown as GetAllQuestionsRequestProps;
 
   try {
-    const { data, error } = await getAllQuestionsByUser(userId);
+    const { data, error } = await getAllEnrolledSheetsFromDB(userId);
 
     if (error || !data) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
-          message: "Failed to retrieve questions",
+          message: "Failed to retrieve enrolled sheets",
         }),
       );
     }
@@ -107,7 +107,7 @@ const handleGetAllQuestions = async (
       sendAPIResponse({
         status: true,
         data,
-        message: "Questions retrieved successfully",
+        message: "Enrolled sheets retrieved successfully",
       }),
     );
   } catch (error) {
