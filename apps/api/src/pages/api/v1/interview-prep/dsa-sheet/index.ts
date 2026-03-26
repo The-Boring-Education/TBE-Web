@@ -5,6 +5,7 @@ import {
   addDSAQuestionToDB,
   getAllDSAQuestionsFromDB,
   getDSASheetMetadataFromDB,
+  getDSATopicSummariesFromDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
@@ -29,8 +30,16 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const { title, answer, content, domain, difficulty, companyTypes, topics, sections } =
-    req.body;
+  const {
+    title,
+    answer,
+    content,
+    domain,
+    difficulty,
+    companyTypes,
+    topics,
+    sections,
+  } = req.body;
 
   const questionAnswer = answer || content;
   if (
@@ -75,10 +84,6 @@ const handleCreateQuestion = async (
 };
 
 const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
-<<<<<<< HEAD
-  const { domain, difficulty, companyType, topic, page, limit, metadata } =
-    req.query;
-=======
   const {
     domain,
     difficulty,
@@ -100,7 +105,6 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
       .status(apiStatusCodes.OKAY)
       .json(sendAPIResponse({ status: true, data }));
   }
->>>>>>> bd5a408ac7897c4543dedd9fdd0b0780abc164af
 
   if (metadata === "true") {
     const { data, error } = await getDSASheetMetadataFromDB();

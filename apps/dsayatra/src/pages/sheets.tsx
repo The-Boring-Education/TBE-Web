@@ -5,22 +5,19 @@ import {
   SEO,
   Text,
 } from "@tbe/components";
-<<<<<<< HEAD
-import { routes } from "@tbe/constants";
-=======
 import { DSA_STUDY_GUIDE_CONFIGS, TOPIC_LABELS } from "@tbe/constants";
->>>>>>> bd5a408ac7897c4543dedd9fdd0b0780abc164af
 import {
   useDsaCompletedQuestions,
-  useDsaQuestions,
+  useDsaQuestionsForTopic,
   useDsaTopics,
+  useDsaTopicSummaries,
   useUser,
 } from "@tbe/hooks";
 import type { DsaQuestion, PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
 import { getPreFetchProps } from "@tbe/utils";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 const SheetsPageClient = () => {
   const router = useRouter();
@@ -35,12 +32,48 @@ const SheetsPageClient = () => {
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { questions, loading: sheetsLoading } = useDsaQuestions();
-  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
-  const { topicsWithCounts, topicsCompletionMap } = useDsaTopics(
-    questions,
-    completedIds,
+  const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
+  const topicsWithCounts = useMemo(
+    () =>
+      (topicRows ?? []).map((t) => ({
+        topic: t.topic,
+        count: t.count,
+        label: TOPIC_LABELS[t.topic] || t.topic,
+      })),
+    [topicRows],
   );
+
+  const { questions: topicQuestions, loading: topicQuestionsLoading } =
+    useDsaQuestionsForTopic(selectedTopic);
+
+  const [topicQuestionsCache, setTopicQuestionsCache] = useState<
+    Record<string, DsaQuestion[]>
+  >({});
+
+  useEffect(() => {
+    if (selectedTopic && topicQuestions.length > 0) {
+      setTopicQuestionsCache((prev) => ({
+        ...prev,
+        [selectedTopic]: topicQuestions,
+      }));
+    }
+  }, [selectedTopic, topicQuestions]);
+
+  const questionsForCompletion = useMemo(
+    () => Object.values(topicQuestionsCache).flat(),
+    [topicQuestionsCache],
+  );
+
+  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+  const { topicsCompletionMap } = useDsaTopics(
+    questionsForCompletion,
+    completedIds,
+    topicsWithCounts,
+  );
+
+  const questions = topicQuestions;
+  const sheetsLoading =
+    topicsLoading || (!!selectedTopic && topicQuestionsLoading);
 
   useEffect(() => {
     if (user?.id) {

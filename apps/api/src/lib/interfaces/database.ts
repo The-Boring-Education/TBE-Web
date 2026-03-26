@@ -104,6 +104,7 @@ export interface ProjectSection {
 }
 
 export interface ProjectDocumentModel extends Document {
+  contentId?: string;
   name: string;
   meta: string;
   slug: string;
@@ -133,6 +134,7 @@ export interface UserProjectChapterModel {
 }
 
 export interface CourseModel extends Document {
+  contentId?: string;
   name: string;
   meta: string;
   slug: string;
@@ -170,6 +172,7 @@ export interface UserCourseChapterModel {
 }
 
 export interface InterviewSheetModel extends Document {
+  contentId?: string;
   name: string;
   meta: string;
   slug: string;
@@ -290,6 +293,7 @@ export interface DSAQuestionSections {
 
 export interface DSAQuestionModel extends Document {
   _id: typeof Schema.Types.ObjectId;
+  contentId?: string;
   title: string;
   answer: string;
   resources: QuestionResourcesModel;
@@ -1089,6 +1093,7 @@ export interface AptitudeQuestionOptionModel {
 
 export interface AptitudeTopicModel extends Document {
   _id: typeof Schema.Types.ObjectId;
+  contentId?: string;
   topic: string;
   studyGuide?: string;
   questions: AptitudeQuestionModel[];
@@ -1132,8 +1137,6 @@ export interface AptitudeStudyGuideUploadPayload {
   topic: string;
   content: string;
 }
-<<<<<<< HEAD
-=======
 
 // Section types for StudyGuide
 export type StudyGuideSectionType =
@@ -1319,4 +1322,3 @@ export interface StudyGuideModel extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
->>>>>>> bd5a408ac7897c4543dedd9fdd0b0780abc164af

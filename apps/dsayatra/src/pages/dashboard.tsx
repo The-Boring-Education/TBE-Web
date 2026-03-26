@@ -364,11 +364,9 @@ const DsaClient = () => {
             </p>
           </div>
           <div className="flex gap-3">
-            <Link href="/sheets" tabIndex={-1}>
-              <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-4 py-2 h-auto font-semibold text-xs rounded-md transition-all hover:scale-105">
-                Continue Learning
-              </Button>
-            </Link>
+            <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-4 py-2 h-auto font-semibold text-xs rounded-md transition-all hover:scale-105">
+              Continue Learning
+            </Button>
             <Button
               onClick={() => setIsEditModalOpen(true)}
               className="bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-4 py-2 font-semibold text-xs rounded-md"
@@ -402,12 +400,6 @@ const DsaClient = () => {
             <h3 className="text-base font-bold text-[#e0e0e0] leading-tight">
               {user?.name}
             </h3>
-<<<<<<< HEAD
-            <p className="text-[#a0a0a0] text-xs mt-0.5">
-              @{user?.email?.split("@")[0] || "shivanijhavats"}
-            </p>
-=======
->>>>>>> bd5a408ac7897c4543dedd9fdd0b0780abc164af
 
             <div className="flex gap-3 my-4">
               {[

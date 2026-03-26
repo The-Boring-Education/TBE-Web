@@ -17,6 +17,7 @@ export { useChallengeProgress } from "./useChallenges";
 export { useDailyPrepEncouragement } from "./useDailyPrepEncouragement";
 export { default as useDsaCompletedQuestions } from "./useDsaCompletedQuestions";
 export { default as useDsaQuestions } from "./useDsaQuestions";
+export { useDsaQuestionsForTopic } from "./useDsaQuestionsForTopic";
 export type { TopicWithCount } from "./useDsaTopics";
 export { default as useDsaTopics } from "./useDsaTopics";
 export { useDsaTopicSummaries } from "./useDsaTopicSummaries";
