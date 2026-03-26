@@ -104,7 +104,7 @@ describe("DsaPrepWorkspace", () => {
       <DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />,
     );
 
-    expect(screen.getByText(/Back/i)).toBeInTheDocument();
+    expect(screen.getByText(/View All Topics/i)).toBeInTheDocument();
   });
 
   it("should call onBackToTopics when back button is clicked", () => {
@@ -118,7 +118,7 @@ describe("DsaPrepWorkspace", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText(/Back/i));
+    fireEvent.click(screen.getByText(/View All Topics/i));
     expect(onBackToTopics).toHaveBeenCalled();
   });
 
