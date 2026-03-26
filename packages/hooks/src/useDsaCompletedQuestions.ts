@@ -47,37 +47,38 @@ const useDsaCompletedQuestions = (
 
   const toggleComplete = useCallback(
     (questionId: string | number) => {
-      setCompletedIds((prev) => {
-        const isCompletedNow = !prev.includes(questionId);
-        const next = isCompletedNow
-          ? [...prev, questionId]
-          : prev.filter((id) => id !== questionId);
+      // Determine the next state based on the current completedIds from closure
+      const isCompletedNow = !completedIds.includes(questionId);
+      const next = isCompletedNow
+        ? [...completedIds, questionId]
+        : completedIds.filter((id) => id !== questionId);
 
-        localStorage.setItem(storageKey, JSON.stringify(next));
+      // 1. Update React state
+      setCompletedIds(next);
 
-        const todayStr = new Date().toDateString();
-        const todayStatsStr = localStorage.getItem(todayStatsKey);
-        let todayStats: TodayStats = todayStatsStr
-          ? JSON.parse(todayStatsStr)
-          : { date: todayStr, solvedCount: 0 };
+      // 2. Perform side effects (LocalStorage, etc.)
+      localStorage.setItem(storageKey, JSON.stringify(next));
 
-        if (todayStats.date !== todayStr) {
-          todayStats = { date: todayStr, solvedCount: 0 };
-        }
+      const todayStr = new Date().toDateString();
+      const todayStatsStr = localStorage.getItem(todayStatsKey);
+      let todayStats: TodayStats = todayStatsStr
+        ? JSON.parse(todayStatsStr)
+        : { date: todayStr, solvedCount: 0 };
 
-        if (isCompletedNow) {
-          todayStats.solvedCount += 1;
-        } else if (todayStats.solvedCount > 0) {
-          todayStats.solvedCount -= 1;
-        }
+      if (todayStats.date !== todayStr) {
+        todayStats = { date: todayStr, solvedCount: 0 };
+      }
 
-        localStorage.setItem(todayStatsKey, JSON.stringify(todayStats));
-        setSolvedToday(todayStats.solvedCount);
+      if (isCompletedNow) {
+        todayStats.solvedCount += 1;
+      } else if (todayStats.solvedCount > 0) {
+        todayStats.solvedCount -= 1;
+      }
 
-        return next;
-      });
+      localStorage.setItem(todayStatsKey, JSON.stringify(todayStats));
+      setSolvedToday(todayStats.solvedCount);
     },
-    [storageKey, todayStatsKey],
+    [completedIds, storageKey, todayStatsKey],
   );
 
   return { completedIds, toggleComplete, solvedToday };
