@@ -605,7 +605,6 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                               href={q.resources.leetcodeURL}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="grayscale hover:grayscale-0 transition-all duration-300 opacity-50 hover:opacity-100"
                               title="Solve on LeetCode"
                               onClick={(e) => e.stopPropagation()}
                             >
@@ -617,7 +616,6 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                               href={q.resources.youtubeURL}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="grayscale hover:grayscale-0 transition-all duration-300 opacity-50 hover:opacity-100"
                               title="Watch explanation on YouTube"
                               onClick={(e) => e.stopPropagation()}
                             >
