@@ -5,7 +5,6 @@ import {
   useDsaCompletedQuestions,
   useDsaQuestions,
   usePrepStats,
-  useTimeTracker,
 } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
@@ -54,7 +53,7 @@ function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-2 px-2.5 py-1.5 text-xs font-semibold transition-all duration-200 rounded-lg group",
+                "flex items-center gap-2 px-3 py-2 strong-text font-semibold transition-all duration-200 rounded-lg group",
                 item.active
                   ? "bg-[#ff5757] text-white shadow-md shadow-[#ff5757]/10"
                   : "text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-[#e0e0e0]",
@@ -131,7 +130,7 @@ function StatCard({
   );
 }
 
-function DsaClient() {
+const DsaClient = () => {
   "use client";
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -140,7 +139,6 @@ function DsaClient() {
     null,
   );
 
-  const { seconds, formattedTime } = useTimeTracker(user?.id);
   const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
 
   const { rawQuestions: allQuestions } = useDsaQuestions({
@@ -347,11 +345,8 @@ function DsaClient() {
       new Date(log.createdAt).toDateString() === new Date().toDateString(),
   );
 
-  const sessionMinutes = Math.floor(seconds / 60);
-
-  // Total invested
-  const totalMinutes = totalTimeSpent + sessionMinutes;
-  const totalHours = (totalMinutes / 60).toFixed(1);
+  // Total invested (minutes from prep logs only)
+  const totalHours = (totalTimeSpent / 60).toFixed(1);
 
   return (
     <div className="flex bg-[#0f0f0f] font-sans selection:bg-[#ff5757]/30 selection:text-white">
@@ -362,7 +357,7 @@ function DsaClient() {
         <header className="flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold text-[#e0e0e0]">
-              Welcome back, {user?.name?.split(" ")[0] || "Yatree"}! 👋
+              Welcome back, {user?.name?.split(" ")[0]}! 👋
             </h2>
             <p className="text-[#a0a0a0] text-xs mt-0.5">
               Ready to master DSA today?
@@ -403,11 +398,8 @@ function DsaClient() {
               )}
             </div>
             <h3 className="text-base font-bold text-[#e0e0e0] leading-tight">
-              {user?.name || "Shivani Jha"}
+              {user?.name}
             </h3>
-            <p className="text-[#a0a0a0] text-xs mt-0.5">
-              @{user?.userName || "shivanijhavats"}
-            </p>
 
             <div className="flex gap-3 my-4">
               {[
@@ -566,7 +558,11 @@ function DsaClient() {
             value={todayTotalHours}
             subtext="Questions solved today"
             icon={Code2}
-            secondaryInfo={`Active: ${formattedTime}`}
+            secondaryInfo={
+              todayLog
+                ? `${todayLog.timeSpent || 0}m logged in prep today`
+                : undefined
+            }
           />
           <StatCard
             title="Total Solved"
@@ -858,7 +854,7 @@ function DsaClient() {
       />
     </div>
   );
-}
+};
 
 const Dashboard = ({ seoMeta }: PageProps) => {
   return (

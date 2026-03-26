@@ -39,7 +39,7 @@ const DsaTopicSidebar = ({
             onClick={() => onTopicClick(topic)}
             aria-pressed={isSelected}
             className={cn(
-              "w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
+              "w-full group relative py-2.5 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
               isCompleted
                 ? "border-green-500 bg-green-500/[0.03]"
                 : isSelected
