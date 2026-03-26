@@ -1,6 +1,5 @@
 import { useAuth } from "@tbe/auth";
 import {
-  Button,
   CelebrationAnimation,
   LearningEnvironmentLayout,
   Progress,
@@ -16,6 +15,7 @@ import {
   CheckCircle2,
   ChevronUp,
   Clock,
+  Monitor,
   RotateCcw,
   Target,
   XCircle,
@@ -105,7 +105,7 @@ export default function ResultsPage() {
 
   if (loadingQuiz) {
     return (
-      <LearningEnvironmentLayout backHref="/dashboard/quizzes" isLoading>
+      <LearningEnvironmentLayout backHref="/dashboard" isLoading>
         <div className="flex-1 flex items-center justify-center">
           <Text level="p" className="text-gray-400">
             Loading results...
@@ -117,7 +117,7 @@ export default function ResultsPage() {
 
   if (!quiz || questions.length === 0) {
     return (
-      <LearningEnvironmentLayout backHref="/dashboard/quizzes">
+      <LearningEnvironmentLayout backHref="/dashboard">
         <div className="flex-1 flex items-center justify-center">
           <div className="text-red-400">
             Failed to load results. Please try again.
@@ -128,10 +128,7 @@ export default function ResultsPage() {
   }
 
   return (
-    <LearningEnvironmentLayout
-      backHref="/dashboard/quizzes"
-      layoutMode="workspace"
-    >
+    <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
       <div className="flex flex-col h-full w-full">
         {/* Workspace Header Section — Centered Title Mode */}
         <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0 sticky top-0 z-20">
@@ -165,8 +162,8 @@ export default function ResultsPage() {
 
             {/* Right-aligned Result Badge */}
             <div className="flex-1 flex justify-end items-center gap-6">
-              <div className="flex items-center gap-3 bg-red-500/5 border border-red-500/20 rounded-lg px-2.5 py-1">
-                <div className="flex flex-col items-end mr-1">
+              <div className="flex items-center bg-red-500/5 border border-red-500/20 rounded-lg px-2.5 py-1.5">
+                <div className="flex flex-col items-end">
                   <Text
                     level="p"
                     className="text-[8px] font-bold text-red-500/70 uppercase tracking-wider leading-none"
@@ -175,28 +172,29 @@ export default function ResultsPage() {
                   </Text>
                   <Text
                     level="p"
-                    className="text-[13px] font-black text-red-500 leading-none mt-1"
+                    className="text-[14px] font-black text-red-500 leading-none mt-1"
                   >
                     {percentage}%
                   </Text>
                 </div>
-                <Target className="w-3.5 h-3.5 text-red-500" />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex-1 w-full overflow-y-auto scrollbar-hide">
-          <CelebrationAnimation
-            isActive={showCelebration}
-            type="achievement"
-            intensity="high"
-          />
+        <div className="flex-1 w-full overflow-y-auto scrollbar-hide relative">
+          <div className="absolute inset-x-0 top-0 pointer-events-none z-[100]">
+            <CelebrationAnimation
+              isActive={showCelebration}
+              type="achievement"
+              intensity="high"
+            />
+          </div>
 
-          <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">
+          <div className="w-full max-w-6xl mx-auto px-4 md:px-6">
             <div className="flex flex-col lg:flex-row gap-8 items-start">
               {/* Left Column - Score Summary */}
-              <div className="w-full lg:w-[320px] space-y-4 lg:sticky lg:top-24">
+              <div className="w-full lg:w-[320px] lg:sticky lg:top-0 h-fit pt-6 md:pt-8 pb-4 z-10">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -257,8 +255,11 @@ export default function ResultsPage() {
 
                   {/* Quiz Info Card */}
                   <div className="bg-[#0A0A0A] border border-gray-800 rounded-xl p-3 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center text-xl shrink-0">
-                      {quiz.categoryIcon}
+                    <div className="w-10 h-10 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center shrink-0">
+                      <Monitor
+                        className="w-3.5 h-3.5 text-gray-400"
+                        strokeWidth={2}
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-[9px] text-gray-500 uppercase font-bold tracking-wider mb-0.5">
@@ -271,27 +272,27 @@ export default function ResultsPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex items-center justify-center gap-2 pt-2">
-                    <Button
-                      variant="OUTLINE"
+                  <div className="flex items-center justify-center gap-3 pt-2">
+                    <button
                       onClick={() => router.push(`/quiz/${quizId}`)}
-                      className="flex-1 max-w-[120px] bg-red-500 hover:bg-red-500/90 text-white font-bold py-2 rounded-lg text-xs"
-                      icon={<RotateCcw className="w-3.5 h-3.5 text-white" />}
-                      text="Try Again"
-                    />
-                    <Button
-                      variant="OUTLINE"
-                      onClick={() => router.push("/dashboard/quizzes")}
-                      className="flex-1 max-w-[120px] bg-red-500 hover:bg-red-500/90 text-white font-bold py-2 rounded-lg text-xs"
-                      icon={<ArrowLeft className="w-3.5 h-3.5 text-white" />}
-                      text="Quizzes"
-                    />
+                      className="flex-1 w-full flex items-center justify-center gap-2 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-bold h-10 rounded-lg text-xs whitespace-nowrap transition-colors"
+                    >
+                      <span>Try Again</span>
+                      <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+                    </button>
+                    <button
+                      onClick={() => router.push("/dashboard")}
+                      className="flex-1 w-full flex items-center justify-center gap-2 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-bold h-10 rounded-lg text-xs whitespace-nowrap transition-colors"
+                    >
+                      <span>Quizzes</span>
+                      <ArrowLeft className="w-3.5 h-3.5 rotate-180 shrink-0" />
+                    </button>
                   </div>
                 </motion.div>
               </div>
 
               {/* Right Column - Review List */}
-              <div className="flex-1 w-full space-y-6 min-w-0">
+              <div className="flex-1 w-full space-y-6 min-w-0 pt-6 md:pt-8 pb-8">
                 <div className="flex items-center justify-between">
                   <h1 className="text-2xl font-black text-white tracking-tight">
                     Review Answers

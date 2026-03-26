@@ -9,7 +9,7 @@ import {
 import { routes } from "@tbe/constants";
 import { useQuizData } from "@tbe/hooks";
 import { cn } from "@tbe/utils";
-import { ArrowLeft, Folder, FolderOpen, Play } from "lucide-react";
+import { ArrowLeft, Folder, FolderOpen, Monitor, Play } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
@@ -210,8 +210,15 @@ const QuizzesDashboardPage = () => {
                           itemCenter
                           justifyCenter={false}
                         >
-                          <span className="w-[15px] h-[15px] flex items-center justify-center text-[13px] shrink-0">
-                            {category.categoryIcon}
+                          <span className="w-[15px] h-[15px] flex items-center justify-center shrink-0">
+                            <Monitor
+                              className={cn(
+                                "w-3.5 h-3.5",
+                                isActive
+                                  ? "text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+                                  : "text-gray-500 group-hover:text-gray-400 transition-colors",
+                              )}
+                            />
                           </span>
                           <Text
                             level="p"
@@ -261,7 +268,10 @@ const QuizzesDashboardPage = () => {
                         {/* Icon & Badge */}
                         <div className="flex items-center justify-between mb-2">
                           <div className="text-2xl bg-gray-900/50 w-10 h-10 flex items-center justify-center rounded-lg border border-gray-800 group-hover:scale-110 transition-transform duration-300">
-                            {category.categoryIcon}
+                            <Monitor
+                              className="w-3.5 h-3.5 text-gray-400 group-hover:text-red-500 transition-colors duration-300"
+                              strokeWidth={2}
+                            />
                           </div>
                           <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-900 text-gray-500 uppercase tracking-tighter border border-gray-800 group-hover:border-red-500/20 group-hover:text-red-500/70 transition-colors">
                             Quiz Module

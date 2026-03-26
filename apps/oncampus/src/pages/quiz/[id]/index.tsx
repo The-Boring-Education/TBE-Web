@@ -232,10 +232,7 @@ export default function QuizPage() {
   const selectedAnswer = selectedAnswers[currentQuestionIndex];
 
   return (
-    <LearningEnvironmentLayout
-      backHref="/dashboard/quizzes"
-      layoutMode="workspace"
-    >
+    <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
       <div className="flex flex-col h-full w-full">
         {/* Workspace Header Section — Centered Title Mode */}
         <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0 sticky top-0 z-20">
