@@ -17,6 +17,7 @@ import { logger } from "@/lib/utils/logger";
 import { DSAQuestion, InterviewSheet, StudyGuide, UserSheet } from "../models";
 import { toObjectId } from "./common";
 import { updateUserPointsInDB } from "./gamification";
+import { checkPaymentStatusFromDB } from "./payment";
 
 const addAInterviewSheetToDB = async (
   sheetPayload: AddInterviewSheetRequestPayloadProps,
@@ -349,14 +350,52 @@ const markQuestionCompletedByUser = async (
   isCompleted: boolean,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const updatedSheet = await UserSheet.findOneAndUpdate(
-      { userId, sheetId, "questions.questionId": questionId },
+    let userSheet = await UserSheet.findOne({ userId, sheetId });
+
+    if (!userSheet) {
+      // Auto-enroll if accessible
+      const sheet = await InterviewSheet.findById(sheetId);
+      if (!sheet) return { error: "Sheet not found" };
+
+      const isPremium = sheet.isPremium;
+      let hasAccess = !isPremium;
+
+      if (isPremium) {
+        const { data: paymentData } = await checkPaymentStatusFromDB(
+          userId,
+          sheetId,
+          "INTERVIEW_SHEET",
+        );
+        if (paymentData?.purchased) hasAccess = true;
+      }
+
+      if (hasAccess) {
+        await enrollInASheet({ userId, sheetId });
+        userSheet = await UserSheet.findOne({ userId, sheetId });
+      } else {
+        return {
+          error:
+            "User is not enrolled and does not have access to this premium sheet",
+        };
+      }
+    }
+
+    if (!userSheet) return { error: "Failed to auto-enroll user" };
+
+    const qid = toObjectId(questionId);
+    let updatedSheet = await UserSheet.findOneAndUpdate(
+      { userId, sheetId, "questions.questionId": qid },
       { $set: { "questions.$.isCompleted": isCompleted } },
       { new: true },
     );
 
+    // If question not found in UserSheet, it might be a newly added question
     if (!updatedSheet) {
-      return { error: "User or question not found" };
+      updatedSheet = await UserSheet.findOneAndUpdate(
+        { userId, sheetId },
+        { $push: { questions: { questionId: qid, isCompleted } } },
+        { new: true },
+      );
     }
 
     return { data: updatedSheet };
@@ -482,16 +521,52 @@ const markQuestionStarredByUser = async (
   isStarred: boolean,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const qid = toObjectId(questionId);
+    let userSheet = await UserSheet.findOne({ userId, sheetId });
 
-    const updatedSheet = await UserSheet.findOneAndUpdate(
+    if (!userSheet) {
+      // Auto-enroll if accessible
+      const sheet = await InterviewSheet.findById(sheetId);
+      if (!sheet) return { error: "Sheet not found" };
+
+      const isPremium = sheet.isPremium;
+      let hasAccess = !isPremium;
+
+      if (isPremium) {
+        const { data: paymentData } = await checkPaymentStatusFromDB(
+          userId,
+          sheetId,
+          "INTERVIEW_SHEET",
+        );
+        if (paymentData?.purchased) hasAccess = true;
+      }
+
+      if (hasAccess) {
+        await enrollInASheet({ userId, sheetId });
+        userSheet = await UserSheet.findOne({ userId, sheetId });
+      } else {
+        return {
+          error:
+            "User is not enrolled and does not have access to this premium sheet",
+        };
+      }
+    }
+
+    if (!userSheet) return { error: "Failed to auto-enroll user" };
+
+    const qid = toObjectId(questionId);
+    let updatedSheet = await UserSheet.findOneAndUpdate(
       { userId, sheetId, "questions.questionId": qid },
       { $set: { "questions.$.isStarred": isStarred } },
       { new: true },
     );
 
+    // If question not found in UserSheet, it might be a newly added question
     if (!updatedSheet) {
-      return { error: "User or question not found" };
+      updatedSheet = await UserSheet.findOneAndUpdate(
+        { userId, sheetId },
+        { $push: { questions: { questionId: qid, isStarred } } },
+        { new: true },
+      );
     }
 
     return { data: updatedSheet };
@@ -720,11 +795,12 @@ const getDSATopicSummariesFromDB =
         }))
         .filter((t) => t.topic)
         .sort((a, b) => {
-          const idxA = DSA_TOPICS.indexOf(a.topic as DSATopicType);
-          const idxB = DSA_TOPICS.indexOf(b.topic as DSATopicType);
-          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-          if (idxA !== -1) return -1;
-          if (idxB !== -1) return 1;
+          const idxA = DSA_TOPICS.indexOf(a.topic as any);
+          if (idxA !== -1 && b.topic) {
+            const idxB = DSA_TOPICS.indexOf(b.topic as any);
+            if (idxB !== -1) return idxA - idxB;
+            return -1;
+          }
           return a.topic.localeCompare(b.topic);
         });
 
@@ -866,7 +942,6 @@ const getStudyGuideByTopicFromDB = async (
     return { error: "Failed to fetch study guide", details: error };
   }
 };
-
 const getDSAQuestionsGroupedByTopic = async (
   domain: DSADomainType,
   difficulty?: DSADifficultyType,

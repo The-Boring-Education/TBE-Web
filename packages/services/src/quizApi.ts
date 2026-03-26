@@ -1,6 +1,5 @@
 import { API_ENDPOINTS, config } from "@tbe/config/quizes";
-
-import { apiClient } from "./api";
+import { sendRequest } from "@tbe/utils";
 
 export interface QuizQuestion {
   question: string;
@@ -41,21 +40,18 @@ export interface QuizResult {
 export const quizApi = {
   // Get quiz categories
   getCategories: async () => {
-    try {
-      return await apiClient.get(API_ENDPOINTS.QUIZ_CATEGORIES);
-    } catch (error) {
-      console.error("Error fetching quiz categories:", error);
-      throw error;
-    }
+    return sendRequest({
+      url: `/quiz`,
+      baseURL: config.API_BASE_URL,
+    });
   },
 
   // Get quiz questions for a category
   getQuestions: async (quizId: string, shuffle: boolean = true) => {
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/${quizId}?shuffle=${shuffle}`,
-    );
-    if (!response.ok) throw new Error("Failed to fetch quiz questions");
-    return response.json();
+    return sendRequest({
+      url: `/quiz/${quizId}?shuffle=${shuffle}`,
+      baseURL: config.API_BASE_URL,
+    });
   },
 
   // Start a quiz session
@@ -65,15 +61,12 @@ export const quizApi = {
     difficulty?: "easy" | "medium" | "hard" | "mixed";
     questionCount?: number;
   }) => {
-    const response = await fetch(`${config.API_BASE_URL}/quiz/session/start`, {
+    return sendRequest({
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+      url: `/quiz/session/start`,
+      body: payload,
+      baseURL: config.API_BASE_URL,
     });
-    if (!response.ok) throw new Error("Failed to start quiz session");
-    return response.json();
   },
 
   // Submit an answer
@@ -85,70 +78,54 @@ export const quizApi = {
       timeSpent: number;
     },
   ) => {
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/session/${sessionId}/answer`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      },
-    );
-    if (!response.ok) throw new Error("Failed to submit answer");
-    return response.json();
+    return sendRequest({
+      method: "POST",
+      url: `/quiz/session/${sessionId}/answer`,
+      body: payload,
+      baseURL: config.API_BASE_URL,
+    });
   },
 
   // Complete a quiz session
   completeSession: async (sessionId: string) => {
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/session/${sessionId}/complete`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    if (!response.ok) throw new Error("Failed to complete quiz session");
-    return response.json();
+    return sendRequest({
+      method: "POST",
+      url: `/quiz/session/${sessionId}/complete`,
+      baseURL: config.API_BASE_URL,
+    });
   },
 
   // Get user analytics
   getUserAnalytics: async (userId: string, categoryName?: string) => {
-    const params = new URLSearchParams();
-    if (categoryName) params.append("categoryName", categoryName);
+    let url = `/quiz/analytics/${userId}`;
+    if (categoryName) url += `?categoryName=${categoryName}`;
 
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/analytics/${userId}?${params}`,
-    );
-    if (!response.ok) throw new Error("Failed to fetch user analytics");
-    return response.json();
+    return sendRequest({
+      url,
+      baseURL: config.API_BASE_URL,
+    });
   },
 
   // Get leaderboard
   getLeaderboard: async (categoryName?: string, limit: number = 50) => {
-    const params = new URLSearchParams();
-    if (categoryName) params.append("categoryName", categoryName);
-    params.append("limit", limit.toString());
+    let url = `/quiz/leaderboard?limit=${limit}`;
+    if (categoryName) url += `&categoryName=${categoryName}`;
 
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/leaderboard?${params}`,
-    );
-    if (!response.ok) throw new Error("Failed to fetch leaderboard");
-    return response.json();
+    return sendRequest({
+      url,
+      baseURL: config.API_BASE_URL,
+    });
   },
 
   // Get user quiz sessions/history
   getUserSessions: async (userId: string, status?: string) => {
-    const params = new URLSearchParams();
-    if (status) params.append("status", status);
+    let url = `/quiz/sessions/${userId}`;
+    if (status) url += `?status=${status}`;
 
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/sessions/${userId}?${params}`,
-    );
-    if (!response.ok) throw new Error("Failed to fetch user sessions");
-    return response.json();
+    return sendRequest({
+      url,
+      baseURL: config.API_BASE_URL,
+    });
   },
 
   // Submit quiz answers
@@ -165,18 +142,12 @@ export const quizApi = {
       totalTimeSpent: number;
     },
   ) => {
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/${quizId}/submit`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      },
-    );
-    if (!response.ok) throw new Error("Failed to submit quiz");
-    return response.json();
+    return sendRequest({
+      method: "POST",
+      url: `/quiz/${quizId}/submit`,
+      body: payload,
+      baseURL: config.API_BASE_URL,
+    });
   },
 
   submitAttempt: async (
@@ -187,14 +158,11 @@ export const quizApi = {
       timeTaken: number;
     },
   ) => {
-    try {
-      return await apiClient.post(
-        `${API_ENDPOINTS.QUIZ_QUESTIONS(id)}/attempt`,
-        data,
-      );
-    } catch (error) {
-      console.error("Error submitting quiz attempt:", error);
-      throw error;
-    }
+    return sendRequest({
+      method: "POST",
+      url: `${API_ENDPOINTS.QUIZ_QUESTIONS(id)}/attempt`,
+      body: data,
+      baseURL: config.API_BASE_URL,
+    });
   },
 };
