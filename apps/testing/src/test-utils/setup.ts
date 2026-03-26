@@ -3,6 +3,17 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 
+// Set default env vars for tests to avoid "Missing required environment variables" or "baseURL is undefined"
+if (typeof process !== "undefined") {
+  process.env.NEXT_PUBLIC_API_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3004/api/v1";
+  process.env.MONGODB_URI =
+    process.env.MONGODB_URI || "mongodb://localhost:27017/tbe-test";
+  process.env.NEXTAUTH_SECRET =
+    process.env.NEXTAUTH_SECRET || "test-secret-at-least-32-chars-long-123";
+  process.env.ADMIN_SECRET = process.env.ADMIN_SECRET || "admin-secret-test";
+}
+
 // Cleanup after each test (skip DOM cleanup in node / integration tests)
 afterEach(() => {
   vi.clearAllMocks();

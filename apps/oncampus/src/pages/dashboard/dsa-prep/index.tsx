@@ -6,6 +6,7 @@ import {
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
+  useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
   useDsaTopicSummaries,
   useUser,
@@ -36,6 +37,21 @@ const DSAPrepPage = () => {
 
   const { questions, loading: topicQuestionsLoading } =
     useDsaQuestionsForTopic(selectedTopic);
+
+  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+
+  const topicsCompletionMap = useMemo(() => {
+    return (topicRows ?? []).reduce(
+      (acc, row) => {
+        // Since we don't have individual question completion status here without fetching each topic,
+        // we'll leave this as false for now or implement a more complex check if needed.
+        // For now, let's just provide the object to fix the ReferenceError.
+        acc[row.topic] = false;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    );
+  }, [topicRows]);
 
   const pageLoading =
     userLoading || topicsLoading || (!!selectedTopic && topicQuestionsLoading);
