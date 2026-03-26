@@ -16,7 +16,8 @@ import { routes } from "@tbe/constants";
 import { useAnalytics, usePaymentAccess, useUser } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
 import { useMutation } from "@tbe/query";
-import { getSheetPageProps, sendRequest } from "@tbe/utils";
+import { cn, getSheetPageProps, sendRequest } from "@tbe/utils";
+import { ArrowLeft, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FaLock } from "react-icons/fa";
@@ -27,6 +28,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();
   const [sheetMeta, setSheetMeta] = useState<string>(meta || "");
   const [questions, setQuestions] = useState(sheet.questions || []);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const firstQuestionId = questions?.[0]?._id?.toString() || "";
   const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
   const [isQuestionCompleted, setIsQuestionCompleted] = useState<boolean>(
@@ -320,110 +322,212 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-
       <LearningEnvironmentLayout
         backHref={routes.oncampus.interviewPrep}
-        sidebarContent={questionsSidebar}
         isLoading={isDataLoading}
+        layoutMode="workspace"
       >
+        {/* Workspace Header Section */}
+        <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
+          <div
+            className={cn(
+              "border-r border-gray-800/60 px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 overflow-hidden",
+              isSidebarOpen
+                ? "w-full lg:w-[260px]"
+                : "w-0 lg:w-0 border-r-0 px-0",
+            )}
+          >
+            <div className="flex flex-col min-w-[140px]">
+              <Text
+                level="h2"
+                className="text-[13px] font-bold text-white tracking-wide"
+              >
+                Explore Questions
+              </Text>
+              <Text
+                level="p"
+                className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.1em]"
+              >
+                Choose a question
+              </Text>
+            </div>
+            <button
+              onClick={() => router.push(routes.oncampus.interviewPrep)}
+              className="flex items-center justify-center w-[28px] h-[28px] rounded-[6px] border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
+              title="Back to Sheets"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="hidden lg:flex flex-1 items-center justify-between px-4">
+            <FlexContainer wrap={false} className="gap-4">
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="flex items-center justify-center w-[32px] h-[32px] rounded-md border border-gray-800 bg-gray-900/50 text-gray-400 hover:text-white hover:border-gray-600 transition-all duration-200 shrink-0"
+                title={isSidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+              >
+                {isSidebarOpen ? (
+                  <PanelLeftClose className="w-4 h-4" />
+                ) : (
+                  <PanelLeftOpen className="w-4 h-4" />
+                )}
+              </button>
+
+              <FlexContainer
+                direction="col"
+                itemCenter={false}
+                justifyCenter={false}
+                wrap={false}
+              >
+                <Text
+                  level="h1"
+                  className="strong-text font-bold text-white mb-0.5 tracking-tight"
+                >
+                  {sheet.name}
+                </Text>
+                <Text
+                  level="p"
+                  className="text-[10px] font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Practicing {(sheet.name || "").toUpperCase()} interview
+                  questions
+                </Text>
+              </FlexContainer>
+            </FlexContainer>
+          </div>
+        </div>
+
         <FlexContainer
-          className="w-full bg-[#0A0A0A] max-w-4xl"
+          className="lg:flex-row flex-1 min-h-0 w-full h-full"
+          direction="col"
           itemCenter={false}
           justifyCenter={false}
+          wrap={false}
         >
-          {isLocked ? (
-            <div className="w-full">
-              <Text level="h2" className="heading-4 mb-4 text-contentDark">
-                Interview Sheet Overview
-              </Text>
-              <MDXRenderer theme="dark" mdxSource={sheet.meta || ""} />
-              <div className="mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm">
-                <Text level="h4" className="mb-2 flex items-center gap-2">
-                  <FaLock className="text-yellow-600" />
-                  🚀 This is a Premium Interview Sheet
-                </Text>
-                <Text level="p" className="mb-4">
-                  To access all the interview questions and detailed solutions,
-                  please complete the payment. Once payment is confirmed, all
-                  questions will be unlocked instantly.
-                </Text>
-                {!showPayment && (
-                  <Button
-                    text="Pay Now to Unlock"
-                    variant="PRIMARY"
-                    className="w-fit"
-                    onClick={handleShowPayment}
-                  />
-                )}
-              </div>
-              {showPayment && (
-                <div ref={paymentSectionRef}>
-                  <PaymentCard
-                    course={sheet}
-                    onClose={() => setShowPayment(false)}
-                    productType="INTERVIEW_SHEET"
+          {/* Sidebar Area - 260px wide to match header */}
+          <div
+            className={cn(
+              "flex-shrink-0 border-r border-gray-800 flex flex-col bg-[#0A0A0A] overflow-y-auto min-h-0 scrollbar-thin-grey transition-all duration-300",
+              isSidebarOpen
+                ? "w-full lg:w-[260px]"
+                : "w-0 opacity-0 overflow-hidden border-r-0",
+            )}
+          >
+            <div className="px-1 py-2 min-w-[260px]">
+              <LearningQuestionList
+                questions={questions ?? []}
+                currentQuestionId={currentQuestionId}
+                isLocked={isLocked}
+                href={router.asPath.split("?")[0]}
+                onQuestionSelect={handleQuestionClick}
+                theme="dark"
+              />
+            </div>
+          </div>
+
+          {/* Main Question Detail Area */}
+          <div className="flex-1 flex flex-col h-full w-full overflow-y-auto bg-[#050505] p-6 lg:p-8 scrollbar-thin-grey">
+            <FlexContainer
+              className="w-full max-w-4xl mx-auto h-fit"
+              itemCenter={false}
+              justifyCenter={false}
+            >
+              {isLocked ? (
+                <div className="w-full">
+                  <Text level="h2" className="heading-4 mb-4 text-contentDark">
+                    Interview Sheet Overview
+                  </Text>
+                  <MDXRenderer theme="dark" mdxSource={sheet.meta || ""} />
+                  <div className="mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm text-black">
+                    <Text level="h4" className="mb-2 flex items-center gap-2">
+                      <FaLock className="text-yellow-600" />
+                      🚀 This is a Premium Interview Sheet
+                    </Text>
+                    <Text level="p" className="mb-4">
+                      To access all the interview questions and detailed
+                      solutions, please complete the payment. Once payment is
+                      confirmed, all questions will be unlocked instantly.
+                    </Text>
+                    {!showPayment && (
+                      <Button
+                        text="Pay Now to Unlock"
+                        variant="PRIMARY"
+                        className="w-fit"
+                        onClick={handleShowPayment}
+                      />
+                    )}
+                  </div>
+                  {showPayment && (
+                    <div ref={paymentSectionRef} className="mt-6">
+                      <PaymentCard
+                        course={sheet}
+                        onClose={() => setShowPayment(false)}
+                        productType="INTERVIEW_SHEET"
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="w-full">
+                  <InterviewQuestionContent
+                    questionTitle={currentQuestion?.title || ""}
+                    question={currentQuestion?.question || ""}
+                    answer={currentQuestion?.answer || ""}
+                    frequency={currentQuestion?.frequency}
+                    priority={currentQuestion?.priority}
+                    companyTypes={currentQuestion?.companyTypes}
+                    actions={[
+                      currentQuestionId && (
+                        <Button
+                          key="complete"
+                          className="w-fit mt-2"
+                          isLoading={isLoading}
+                          disabled={isLocked}
+                          text={
+                            isLoading
+                              ? "Marking..."
+                              : isLocked
+                                ? "Enroll to Mark Complete"
+                                : isQuestionCompleted
+                                  ? "Completed"
+                                  : "Mark As Completed"
+                          }
+                          variant={
+                            isQuestionCompleted
+                              ? "SUCCESS"
+                              : isLocked
+                                ? "SECONDARY"
+                                : isLoading
+                                  ? "SECONDARY"
+                                  : "PRIMARY"
+                          }
+                          onClick={toggleCompletion}
+                        />
+                      ),
+                      currentQuestionId && (
+                        <StarButton
+                          key="star"
+                          isStarred={isQuestionStarred}
+                          onToggle={toggleStar}
+                          isLoading={isStarLoading}
+                          className="mt-2 ml-2"
+                        />
+                      ),
+                      currentQuestionId && questionResources && (
+                        <ResourceTooltip
+                          key="resources"
+                          resources={questionResources}
+                          theme="dark"
+                          className="mt-2 ml-2"
+                        />
+                      ),
+                    ]}
                   />
                 </div>
               )}
-            </div>
-          ) : (
-            <div className="w-full">
-              <InterviewQuestionContent
-                questionTitle={currentQuestion?.title || ""}
-                question={currentQuestion?.question || ""}
-                answer={currentQuestion?.answer || ""}
-                frequency={currentQuestion?.frequency}
-                priority={currentQuestion?.priority}
-                companyTypes={currentQuestion?.companyTypes}
-                actions={[
-                  currentQuestionId && (
-                    <Button
-                      key="complete"
-                      className="w-fit mt-2"
-                      isLoading={isLoading}
-                      disabled={isLocked}
-                      text={
-                        isLoading
-                          ? "Marking..."
-                          : isLocked
-                            ? "Enroll to Mark Complete"
-                            : isQuestionCompleted
-                              ? "Completed"
-                              : "Mark As Completed"
-                      }
-                      variant={
-                        isQuestionCompleted
-                          ? "SUCCESS"
-                          : isLocked
-                            ? "SECONDARY"
-                            : isLoading
-                              ? "SECONDARY"
-                              : "PRIMARY"
-                      }
-                      onClick={toggleCompletion}
-                    />
-                  ),
-                  currentQuestionId && (
-                    <StarButton
-                      key="star"
-                      isStarred={isQuestionStarred}
-                      onToggle={toggleStar}
-                      isLoading={isStarLoading}
-                      className="mt-2 ml-2"
-                    />
-                  ),
-                  currentQuestionId && questionResources && (
-                    <ResourceTooltip
-                      key="resources"
-                      resources={questionResources}
-                      theme="dark"
-                      className="mt-2 ml-2"
-                    />
-                  ),
-                ]}
-              />
-            </div>
-          )}
+            </FlexContainer>
+          </div>
         </FlexContainer>
       </LearningEnvironmentLayout>
 
