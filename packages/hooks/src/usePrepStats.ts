@@ -2,6 +2,17 @@ import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import type { PrepStats } from "@tbe/services";
 import { prepStatsService } from "@tbe/services";
 
+// Single Responsibility: Get the Date object for the Monday of the current week at 00:00:00
+const getStartOfWeekMonday = (): Date => {
+  const now = new Date();
+  const day = now.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const mondayDate = new Date(now);
+  mondayDate.setDate(now.getDate() + diffToMonday);
+  mondayDate.setHours(0, 0, 0, 0);
+  return mondayDate;
+};
+
 export function usePrepStats(userId: string) {
   const {
     data: stats,
@@ -15,9 +26,19 @@ export function usePrepStats(userId: string) {
     enabled: !!userId,
   });
 
+  const startOfWeek = getStartOfWeekMonday();
+
   const totalTimeSpent =
     stats?.weeklyLogs?.reduce(
-      (acc: number, log: { timeSpent?: number }) => acc + (log.timeSpent || 0),
+      (acc: number, log: { timeSpent?: number; createdAt?: string }) => {
+        if (!log.createdAt) return acc;
+
+        const logDate = new Date(log.createdAt);
+        if (logDate >= startOfWeek) {
+          return acc + (log.timeSpent || 0);
+        }
+        return acc;
+      },
       0,
     ) || 0;
 

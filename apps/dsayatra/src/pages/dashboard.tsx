@@ -338,7 +338,7 @@ const DsaClient = () => {
     100,
     Math.round((solvedToday / expectedDailyQuestions) * 100),
   );
-  const todayTotalHours = (solvedToday / expectedDailyQuestions) * 4;
+  const todayTotalHours = solvedToday;
 
   const todayLog = weeklyLogs?.find(
     (log: any) =>
@@ -557,7 +557,7 @@ const DsaClient = () => {
 
           <StatCard
             title="Today's Progress"
-            value={todayTotalHours}
+            value={solvedToday}
             subtext="Questions solved today"
             icon={Code2}
             secondaryInfo={
@@ -574,13 +574,12 @@ const DsaClient = () => {
           />
           <StatCard
             title="Time Invested"
-            value={totalHours}
-            subtext="Hours total"
-            secondaryInfo={`Last: ${todayLog?.timeSpent || 0}m`}
+            value={(totalTimeSpent / 60).toFixed(1)}
+            subtext="Hours this week"
           />
           <StatCard
             title="Daily Goal"
-            value={`${todayTotalHours}/${dailyGoalHours}`}
+            value={`${todayTotalHours}`}
             subtext="Hours completed"
             progress={dailyGoalProgress}
           />
