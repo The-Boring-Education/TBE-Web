@@ -331,37 +331,11 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
           <div
             className={cn(
-              "border-r border-gray-800/60 px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 overflow-hidden",
-              isSidebarOpen
-                ? "w-full lg:w-[260px]"
-                : "w-0 lg:w-0 border-r-0 px-0",
+              "border-r border-gray-800/60 px-4 py-3.5 flex items-center gap-3 shrink-0 transition-all duration-300 overflow-hidden",
+              isSidebarOpen ? "w-full lg:w-[260px]" : "w-[100px] lg:w-[110px]",
             )}
           >
-            <div className="flex flex-col min-w-[140px]">
-              <Text
-                level="h2"
-                className="text-[13px] font-bold text-white tracking-wide"
-              >
-                Explore Questions
-              </Text>
-              <Text
-                level="p"
-                className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.1em]"
-              >
-                Choose a question
-              </Text>
-            </div>
-            <button
-              onClick={() => router.push(routes.oncampus.interviewPrep)}
-              className="flex items-center justify-center w-[28px] h-[28px] rounded-[6px] border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
-              title="Back to Sheets"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <div className="hidden lg:flex flex-1 items-center justify-between px-4">
-            <FlexContainer wrap={false} className="gap-4">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 className="flex items-center justify-center w-[32px] h-[32px] rounded-md border border-gray-800 bg-gray-900/50 text-gray-400 hover:text-white hover:border-gray-600 transition-all duration-200 shrink-0"
@@ -374,27 +348,50 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                 )}
               </button>
 
-              <FlexContainer
-                direction="col"
-                itemCenter={false}
-                justifyCenter={false}
-                wrap={false}
+              <button
+                onClick={() => router.push(routes.oncampus.interviewPrep)}
+                className="flex items-center justify-center w-[32px] h-[32px] rounded-md border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
+                title="Back to Sheets"
               >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            </div>
+
+            {isSidebarOpen && (
+              <div className="flex flex-col min-w-[100px] hidden lg:flex">
                 <Text
-                  level="h1"
-                  className="strong-text font-bold text-white mb-0.5 tracking-tight"
+                  level="h2"
+                  className="text-[12px] font-bold text-white tracking-wide leading-none mb-1"
                 >
-                  {sheet.name}
+                  Explore Questions
                 </Text>
                 <Text
                   level="p"
-                  className="text-[10px] font-medium text-gray-500 uppercase tracking-wider"
+                  className="text-[8px] font-bold text-gray-500 uppercase tracking-[0.1em] leading-none"
                 >
-                  Practicing {(sheet.name || "").toUpperCase()} interview
-                  questions
+                  {questions.length} Items
                 </Text>
-              </FlexContainer>
-            </FlexContainer>
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-1 items-center justify-between px-4">
+            <div className="flex flex-col">
+              <Text
+                level="h1"
+                className="text-sm md:text-base font-bold text-white mb-0.5 tracking-tight line-clamp-1"
+              >
+                {sheet.name}
+              </Text>
+              <Text
+                level="p"
+                className="text-[9px] md:text-[10px] font-medium text-gray-500 uppercase tracking-wider hidden sm:block"
+              >
+                {isLocked
+                  ? "Overview & Enrollment"
+                  : `Question ${questions.findIndex((q) => q._id.toString() === currentQuestionId) + 1} of ${questions.length}`}
+              </Text>
+            </div>
           </div>
         </div>
 

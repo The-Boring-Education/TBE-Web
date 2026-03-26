@@ -1,11 +1,12 @@
 import { useAuth } from "@tbe/auth";
-import { LearningEnvironmentLayout } from "@tbe/components";
+import { LearningEnvironmentLayout, Text } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { config } from "@tbe/config/quizes";
 import { gamificationApi, quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
 import { cleanOptionText } from "@tbe/utils";
-import { CheckCircle2 } from "lucide-react";
+import { cn } from "@tbe/utils";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -194,148 +195,198 @@ export default function QuizPage() {
 
   if (gameState === "loading") {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-        <div className="text-gray-300">Loading quiz...</div>
-      </div>
+      <LearningEnvironmentLayout backHref="/dashboard/quizzes" isLoading>
+        <div className="flex-1 flex items-center justify-center">
+          <Text level="p" className="text-gray-400">
+            Loading quiz...
+          </Text>
+        </div>
+      </LearningEnvironmentLayout>
     );
   }
 
   if (gameState === "submitting") {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-        <div className="text-center">
-          {/* Animated Spinner */}
-          <div className="flex justify-center mb-6">
-            <div className="relative w-10 h-10">
-              <div className="absolute inset-0 border-4 border-gray-800 rounded-full" />
-              <div className="absolute inset-0 border-4 border-transparent border-t-primary rounded-full animate-spin" />
+      <LearningEnvironmentLayout backHref="/dashboard/quizzes" isLoading>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            {/* Animated Spinner */}
+            <div className="flex justify-center mb-6">
+              <div className="relative w-10 h-10">
+                <div className="absolute inset-0 border-4 border-gray-800 rounded-full" />
+                <div className="absolute inset-0 border-4 border-transparent border-t-red-500 rounded-full animate-spin" />
+              </div>
             </div>
-          </div>
-          <div className="text-white font-semibold text-lg">
-            Submitting quiz...
-          </div>
-          <div className="text-gray-400 text-sm mt-2">
-            Please wait while we process your results
+            <Text level="h1" className="text-white font-bold text-lg">
+              Submitting quiz...
+            </Text>
+            <Text level="p" className="text-gray-400 text-sm mt-2">
+              Please wait while we process your results
+            </Text>
           </div>
         </div>
-      </div>
+      </LearningEnvironmentLayout>
     );
   }
-
-  if (!quiz || !currentQuestion) return null;
 
   const selectedAnswer = selectedAnswers[currentQuestionIndex];
 
   return (
     <LearningEnvironmentLayout
       backHref="/dashboard/quizzes"
-      headerCenterContent={
-        <h1 className="text-xl font-bold text-white hover:text-primary transition-all truncate px-2">
-          {quiz.categoryName}
-        </h1>
-      }
-      headerRightContent={
-        <div className="flex items-center gap-3">
-          <div className="relative w-[44px] h-[44px]">
-            <svg
-              className="w-full h-full transform -rotate-90"
-              viewBox="0 0 100 100"
-            >
-              <circle
-                cx="50"
-                cy="50"
-                r="45"
-                fill="none"
-                stroke="#1F2937"
-                strokeWidth="6"
-              />
-              <circle
-                cx="50"
-                cy="50"
-                r="45"
-                fill="none"
-                stroke="#FF5757"
-                strokeWidth="6"
-                strokeDasharray={`${2 * Math.PI * 45}`}
-                strokeDashoffset={`${2 * Math.PI * 45 * (1 - currentQuestionIndex / questions.length)}`}
-                strokeLinecap="round"
-                style={{ transition: "stroke-dashoffset 0.3s ease" }}
-              />
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-[10px] font-bold text-gray-300">
-                {Math.round((currentQuestionIndex / questions.length) * 100)}%
-              </span>
-            </div>
-          </div>
-          <div className="text-right hidden sm:block mr-2">
-            <div className="text-xs text-gray-400 font-medium">Progress</div>
-            <div className="text-[10px] text-gray-500">
-              {currentQuestionIndex + 1} of {questions.length}
-            </div>
-          </div>
-        </div>
-      }
+      layoutMode="workspace"
     >
-      <div className="w-full max-w-5xl mx-auto px-2 py-4">
-        {/* Question */}
-        <div className="border border-gray-800 rounded-xl bg-[#0F0F0F]">
-          <div className="p-3 border-b border-gray-800">
-            <div className="text-white text-lg leading-relaxed">
-              <CodeRenderer
-                content={currentQuestion.question}
-                theme="dark"
-                className="max-w-none"
-              />
+      <div className="flex flex-col h-full w-full">
+        {/* Workspace Header Section — Centered Title Mode */}
+        <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0 sticky top-0 z-20">
+          <div className="relative w-full h-full flex items-center px-6">
+            {/* Left Back Navigation */}
+            <div className="flex-1 flex items-center">
+              <button
+                onClick={() => router.push("/dashboard/quizzes")}
+                className="flex items-center justify-center w-[28px] h-[28px] rounded-[6px] border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
+                title="Back to Quizzes"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+              </button>
             </div>
-          </div>
 
-          {/* Options */}
-          <div className="p-1 space-y-1">
-            {currentQuestion.options.map((option, index) => {
-              const isSelected = selectedAnswer === index;
-              return (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => selectAnswer(index)}
-                  className={[
-                    "w-full text-left px-1 py-1 rounded-lg border transition-all flex items-center",
-                    isSelected
-                      ? "border-[#FF5757]/10 bg-blue-500/10"
-                      : "border-gray-800 hover:border-[#FF5757] hover:bg-blue-500/5",
-                  ].join(" ")}
-                >
-                  <div className="flex items-center gap-1">
-                    <div
-                      className={[
-                        " w-3 h-3 rounded-full border flex items-center justify-center text-xs leading-[1] font-semibold flex-shrink-0 ",
-                        isSelected
-                          ? "border-[#FF5757] bg-[#FF5757] text-white"
-                          : "border-gray-700 text-gray-300",
-                      ].join(" ")}
-                    >
-                      {String.fromCharCode(65 + index)}
-                    </div>
-                    <div className="ml-1 flex-1 text-primary text-base font-bold flex items-center">
-                      <CodeRenderer
-                        content={cleanOptionText(option)}
-                        theme="dark"
-                        className="max-w-none"
-                      />
-                    </div>
-                    {isSelected && (
-                      <CheckCircle2 className="w-5 h-5 text-[#FF5757] ml-3 flex-shrink-0" />
+            {/* Absolute Centered Header Info */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+              <Text
+                level="h1"
+                className="text-[13px] font-bold text-white tracking-tight leading-none mb-1"
+              >
+                {quiz?.categoryName || "Quiz"}
+              </Text>
+              <Text
+                level="p"
+                className="text-[8px] font-bold text-gray-500 uppercase tracking-widest leading-none bg-gray-900/50 px-2 py-0.5 rounded border border-gray-800"
+              >
+                Question {currentQuestionIndex + 1} of {questions.length}
+              </Text>
+            </div>
+
+            {/* Right-aligned Progress Tracker */}
+            <div className="flex-1 flex justify-end items-center gap-6">
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col items-end mr-1">
+                  <Text
+                    level="p"
+                    className="text-[8px] font-bold text-gray-500 uppercase tracking-wider"
+                  >
+                    Progress
+                  </Text>
+                  <Text
+                    level="p"
+                    className="text-[13px] font-black text-white leading-none mt-0.5"
+                  >
+                    {Math.round(
+                      ((currentQuestionIndex + 1) / questions.length) * 100,
                     )}
-                  </div>
-                </button>
-              );
-            })}
+                    %
+                  </Text>
+                </div>
+                <div className="w-20 h-1 bg-gray-900 border border-gray-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] transition-all duration-500"
+                    style={{
+                      width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="mt-2 text-center text-xs text-gray-500">
-          Selecting an option will auto-advance to the next question.
+        <div className="flex-1 w-full max-w-6xl mx-auto px-4 py-8 md:py-12 overflow-y-auto scrollbar-hide">
+          <div className="flex flex-col gap-3">
+            {/* Question Card */}
+            <div className="bg-[#0A0A0A] border border-gray-800 rounded-xl overflow-hidden shadow-2xl transition-all duration-300">
+              <div className="p-4 md:p-5 border-b border-gray-800/50">
+                <div className="text-white text-[15px] leading-relaxed font-semibold">
+                  <CodeRenderer
+                    content={currentQuestion.question}
+                    theme="dark"
+                    className="max-w-none text-white selection:bg-red-500/30"
+                  />
+                </div>
+              </div>
+
+              {/* Options List */}
+              <div className="p-3 md:p-4 bg-black/10">
+                <div className="grid grid-cols-1 gap-1.5">
+                  {currentQuestion.options.map((option, index) => {
+                    const isSelected = selectedAnswer === index;
+                    return (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => selectAnswer(index)}
+                        className={cn(
+                          "group w-full text-left py-2 px-3 rounded-lg border transition-all duration-300 flex items-center relative overflow-hidden",
+                          isSelected
+                            ? "border-red-500/50 bg-red-500/5 shadow-[0_0_10px_rgba(239,68,68,0.02)]"
+                            : "border-gray-800/60 bg-transparent hover:border-gray-700 hover:bg-white/[0.02]",
+                        )}
+                      >
+                        <div className="flex items-center gap-3 w-full">
+                          <div
+                            className={cn(
+                              "w-6 h-6 rounded-md border flex items-center justify-center text-[10px] font-black shrink-0 transition-all duration-300",
+                              isSelected
+                                ? "border-red-500 bg-red-500 text-white shadow-[0_0_10px_rgba(239,68,68,0.4)]"
+                                : "border-gray-700 bg-[#111] text-gray-500 group-hover:border-gray-500 group-hover:text-gray-200",
+                            )}
+                          >
+                            {String.fromCharCode(65 + index)}
+                          </div>
+
+                          <div
+                            className={cn(
+                              "flex-1 text-[14px] font-medium leading-tight",
+                              isSelected
+                                ? "text-white font-bold"
+                                : "text-gray-400",
+                            )}
+                          >
+                            <CodeRenderer
+                              content={cleanOptionText(option)}
+                              theme="dark"
+                              className="max-w-none transition-transform"
+                            />
+                          </div>
+
+                          <div
+                            className={cn(
+                              "shrink-0 transition-all duration-300 transform",
+                              isSelected
+                                ? "opacity-100 scale-100"
+                                : "opacity-0 scale-50",
+                            )}
+                          >
+                            <CheckCircle2 className="w-4 h-4 text-red-500" />
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 text-gray-500">
+              <div className="h-px w-8 bg-gray-800" />
+              <Text
+                level="p"
+                className="text-[11px] font-bold uppercase tracking-widest text-gray-600"
+              >
+                Auto-advancing on selection
+              </Text>
+              <div className="h-px w-8 bg-gray-800" />
+            </div>
+          </div>
         </div>
       </div>
     </LearningEnvironmentLayout>
