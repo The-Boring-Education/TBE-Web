@@ -4,15 +4,16 @@ import {
   LoadingSpinner,
   Text,
 } from "@tbe/components";
-import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes } from "@tbe/constants";
 import {
-  useDsaQuestionsForTopic,
-  useDsaTopicSummaries,
+  useDsaCompletedQuestions,
+  useDsaQuestions,
+  useDsaTopics,
   useUser,
 } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const DSAPrepPage = () => {
   const router = useRouter();
@@ -23,22 +24,15 @@ const DSAPrepPage = () => {
   );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
-  const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
-  const topicsWithCounts = useMemo(
-    () =>
-      (topicRows ?? []).map((t) => ({
-        topic: t.topic,
-        count: t.count,
-        label: TOPIC_LABELS[t.topic] || t.topic,
-      })),
-    [topicRows],
+  const { questions: allQuestions, loading: allQuestionsLoading } =
+    useDsaQuestions();
+  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+  const { topicsWithCounts, topicsCompletionMap } = useDsaTopics(
+    allQuestions,
+    completedIds,
   );
 
-  const { questions, loading: topicQuestionsLoading } =
-    useDsaQuestionsForTopic(selectedTopic);
-
-  const pageLoading =
-    userLoading || topicsLoading || (!!selectedTopic && topicQuestionsLoading);
+  const pageLoading = userLoading || allQuestionsLoading;
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -79,7 +73,7 @@ const DSAPrepPage = () => {
       layoutMode="workspace"
     >
       <DsaPrepWorkspace
-        questions={questions}
+        questions={allQuestions}
         topicsWithCounts={topicsWithCounts}
         selectedTopic={selectedTopic}
         selectedQuestion={selectedQuestion}

@@ -13,12 +13,7 @@ import {
 } from "@tbe/components";
 import { useGamifiedAction } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import {
-  useAnalytics,
-  usePaymentAccess,
-  useQuestionStarred,
-  useUser,
-} from "@tbe/hooks";
+import { useAnalytics, usePaymentAccess, useUser } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
 import { useMutation } from "@tbe/query";
 import { getSheetPageProps, sendRequest } from "@tbe/utils";
@@ -34,13 +29,13 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const [questions, setQuestions] = useState(sheet.questions || []);
   const firstQuestionId = questions?.[0]?._id?.toString() || "";
   const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
-  const [isQuestionCompleted, setIsQuestionCompleted] = useState(
+  const [isQuestionCompleted, setIsQuestionCompleted] = useState<boolean>(
     questions.find((question) => question._id.toString() === currentQuestionId)
-      ?.isCompleted,
+      ?.isCompleted || false,
   );
-  const [isQuestionStarred, setIsQuestionStarred] = useState(
+  const [isQuestionStarred, setIsQuestionStarred] = useState<boolean>(
     questions.find((question) => question._id.toString() === currentQuestionId)
-      ?.isStarred,
+      ?.isStarred || false,
   );
   const [showFeedback, setShowFeedback] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -70,19 +65,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     isEnrolled: sheet?.isEnrolled,
   });
 
-  const {
-    isStarred,
-    isLoading: isStarLoading,
-    toggleStar,
-    setIsStarred,
-  } = useQuestionStarred({
-    userId: user?.id || "",
-    sheetId: sheet._id?.toString() || "",
-    questionId: currentQuestionId || "",
-    initialIsStarred:
-      questions.find((q) => q._id.toString() === currentQuestionId)
-        ?.isStarred || false,
-  });
+  // State for completion and starring
+  const [isStarLoading, setIsStarLoading] = useState(false);
 
   // Get current question and its resources
   const currentQuestion = useMemo(
@@ -113,9 +97,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   }, [currentQuestion]);
 
   useEffect(() => {
-    setIsQuestionCompleted(currentQuestion?.isCompleted);
-    setIsQuestionStarred(currentQuestion?.isStarred);
-    setIsStarred(currentQuestion?.isStarred || false);
+    setIsQuestionCompleted(currentQuestion?.isCompleted || false);
+    setIsQuestionStarred(currentQuestion?.isStarred || false);
 
     if (currentQuestion) {
       const updatedMeta = `${currentQuestion.question}\n\n${currentQuestion.answer}`;
@@ -146,13 +129,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     }
 
     setShowFeedback(allCompleted);
-  }, [
-    currentQuestionId,
-    questions,
-    gamifiedAction,
-    setIsStarred,
-    currentQuestion,
-  ]);
+  }, [currentQuestionId, questions, gamifiedAction, currentQuestion]);
 
   if (!sheet) return null;
 
@@ -179,9 +156,62 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     }, 100);
   };
 
+  const toggleStar = async () => {
+    if (!user?.id || !currentQuestionId) return;
+
+    const oldState = isQuestionStarred;
+    const newStarStatus = !oldState;
+
+    // Optimistic update
+    setIsQuestionStarred(newStarStatus);
+    setIsStarLoading(true);
+
+    try {
+      const response = await makeRequest({
+        method: "POST",
+        url: routes.api.markSheetQuestionAsStarred,
+        body: {
+          userId: user?.id,
+          sheetId: sheet._id,
+          questionId: currentQuestionId,
+          isStarred: newStarStatus,
+        },
+      });
+
+      if (response?.status) {
+        // Update the master questions array so sidebar/navigation stays in sync
+        const updatedQuestions = questions.map((question) =>
+          question._id.toString() === currentQuestionId
+            ? { ...question, isStarred: newStarStatus }
+            : question,
+        );
+        setQuestions(updatedQuestions);
+
+        trackEvent({
+          action: "INTERVIEW_SHEET_PROGRESS",
+          category: "InterviewSheet",
+          label: "Interview Sheet Progress",
+          value: {
+            userId: user?.id,
+            sheetId: sheet._id,
+            questionId: currentQuestionId,
+            isStarred: newStarStatus,
+          },
+        });
+      } else {
+        setIsQuestionStarred(oldState);
+      }
+    } catch (error) {
+      console.error("Failed to toggle star:", error);
+      setIsQuestionStarred(oldState);
+    } finally {
+      setIsStarLoading(false);
+    }
+  };
+
   const toggleCompletion = async () => {
-    // Don't allow completion if user is not enrolled
-    if (!sheet.isEnrolled) {
+    // Don't allow completion if user doesn't have access
+    if (isLocked) {
       return;
     }
 
@@ -351,11 +381,11 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       key="complete"
                       className="w-fit mt-2"
                       isLoading={isLoading}
-                      disabled={!sheet.isEnrolled}
+                      disabled={isLocked}
                       text={
                         isLoading
                           ? "Marking..."
-                          : !sheet.isEnrolled
+                          : isLocked
                             ? "Enroll to Mark Complete"
                             : isQuestionCompleted
                               ? "Completed"
@@ -364,7 +394,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       variant={
                         isQuestionCompleted
                           ? "SUCCESS"
-                          : !sheet.isEnrolled
+                          : isLocked
                             ? "SECONDARY"
                             : isLoading
                               ? "SECONDARY"
@@ -376,7 +406,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                   currentQuestionId && (
                     <StarButton
                       key="star"
-                      isStarred={isStarred}
+                      isStarred={isQuestionStarred}
                       onToggle={toggleStar}
                       isLoading={isStarLoading}
                       className="mt-2 ml-2"
