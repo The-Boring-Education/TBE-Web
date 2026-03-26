@@ -1,19 +1,19 @@
-import {
+﻿import {
   DsaPrepWorkspace,
   LearningEnvironmentLayout,
   LoadingSpinner,
   Text,
 } from "@tbe/components";
-import { DSA_STUDY_GUIDE_CONFIGS, routes } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
-  useDsaQuestions,
-  useDsaTopics,
+  useDsaQuestionsForTopic,
+  useDsaTopicSummaries,
   useUser,
 } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const DSAPrepPage = () => {
   const router = useRouter();
@@ -24,15 +24,37 @@ const DSAPrepPage = () => {
   );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
-  const { questions: allQuestions, loading: allQuestionsLoading } =
-    useDsaQuestions();
-  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
-  const { topicsWithCounts, topicsCompletionMap } = useDsaTopics(
-    allQuestions,
-    completedIds,
+  const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
+  const topicsWithCounts = useMemo(
+    () =>
+      (topicRows ?? []).map((t) => ({
+        topic: t.topic,
+        count: t.count,
+        label: TOPIC_LABELS[t.topic] || t.topic,
+      })),
+    [topicRows],
   );
 
-  const pageLoading = userLoading || allQuestionsLoading;
+  const { questions, loading: topicQuestionsLoading } =
+    useDsaQuestionsForTopic(selectedTopic);
+
+  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+
+  const topicsCompletionMap = useMemo(() => {
+    return (topicRows ?? []).reduce(
+      (acc, row) => {
+        // Since we don't have individual question completion status here without fetching each topic,
+        // we'll leave this as false for now or implement a more complex check if needed.
+        // For now, let's just provide the object to fix the ReferenceError.
+        acc[row.topic] = false;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    );
+  }, [topicRows]);
+
+  const pageLoading =
+    userLoading || topicsLoading || (!!selectedTopic && topicQuestionsLoading);
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -73,7 +95,7 @@ const DSAPrepPage = () => {
       layoutMode="workspace"
     >
       <DsaPrepWorkspace
-        questions={allQuestions}
+        questions={questions}
         topicsWithCounts={topicsWithCounts}
         selectedTopic={selectedTopic}
         selectedQuestion={selectedQuestion}

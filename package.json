@@ -45,6 +45,7 @@
     "seo:audit": "lhci autorun",
     "seo:audit:prod": "LHCI_ENV=production lhci autorun",
     "seo:audit:app": "LHCI_ENV=production lhci autorun",
+    "seed:study-guide": "pnpm --filter=@tbe/api run seed:study-guide",
     "prepare": "husky install || true"
   },
   "lint-staged": {

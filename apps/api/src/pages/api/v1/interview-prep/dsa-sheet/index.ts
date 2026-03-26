@@ -126,7 +126,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     companyTypes: toArray(companyType),
     topics: toArray(topic),
     page: page ? parseInt(page as string) : 1,
-    limit: limit ? Math.min(parseInt(limit as string), 100) : 50,
+    limit: limit ? parseInt(limit as string) : topic ? undefined : 50,
   });
 
   if (error)
