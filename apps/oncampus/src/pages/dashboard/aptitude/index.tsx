@@ -11,8 +11,14 @@ import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import type { AptitudeQuestion } from "@tbe/interface";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
-import { sendRequest } from "@tbe/utils";
-import { AlertTriangle, Folder, FolderOpen, Lightbulb } from "lucide-react";
+import { cn, sendRequest } from "@tbe/utils";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Folder,
+  FolderOpen,
+  Lightbulb,
+} from "lucide-react";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 
@@ -150,27 +156,59 @@ const AptitudePrepPage = () => {
       layoutMode="workspace"
     >
       <div className="flex flex-col h-full w-full">
-        {/* Header - Always visible, title adapts if topic selected */}
-        <div className="w-full border-b border-gray-800 px-5 py-3 bg-[#0A0A0A] flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between shrink-0">
-          <div>
-            <Text level="h1" className="text-xl font-bold text-white mb-0.5">
-              {selectedTopic ? selectedTopicLabel : "Aptitude Preparation"}
-            </Text>
-            <Text level="p" className="text-xs text-gray-400">
-              {selectedTopic
-                ? `Continue your aptitude preparation. Solving problems on ${selectedTopicLabel}.`
-                : "Select a topic from the sidebar to start practicing interactively."}
-            </Text>
+        <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
+          {/* Left column — aligns with sidebar width */}
+          <div className="border-r border-gray-800/60 px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 w-full lg:w-[260px]">
+            <div>
+              <Text
+                level="h2"
+                className="text-[13px] font-black text-white mb-0.5 tracking-tight"
+              >
+                Explore Topics
+              </Text>
+              <Text
+                level="p"
+                className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.1em]"
+              >
+                Choose a topic
+              </Text>
+            </div>
+            {selectedTopic && (
+              <button
+                onClick={handleBackToTopics}
+                className="flex items-center justify-center w-[28px] h-[28px] rounded-[6px] border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
+                title="Back to Topics"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
-          {selectedTopic && (
-            <Button
-              onClick={handleBackToTopics}
-              variant="OUTLINE"
-              size="SMALL"
-              text="View All Topics"
-              className="border-gray-700 bg-transparent hover:border-primary hover:bg-primary/10 shrink-0 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap"
-            />
-          )}
+
+          <div className="hidden lg:flex flex-1 items-center justify-between px-4">
+            <FlexContainer wrap={false} className="gap-2">
+              <FlexContainer
+                direction="col"
+                itemCenter={false}
+                justifyCenter={false}
+                wrap={false}
+              >
+                <Text
+                  level="h1"
+                  className="strong-text font-bold text-white mb-0.5 tracking-tight"
+                >
+                  {selectedTopic ? selectedTopicLabel : "Aptitude Preparation"}
+                </Text>
+                <Text
+                  level="p"
+                  className="text-[10px] font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {selectedTopic
+                    ? `Solving problems on ${selectedTopicLabel}`
+                    : "Select a topic to start practicing"}
+                </Text>
+              </FlexContainer>
+            </FlexContainer>
+          </div>
         </div>
 
         <FlexContainer
@@ -181,24 +219,9 @@ const AptitudePrepPage = () => {
           wrap={false}
         >
           {/* Always Visible Left Sidebar - Topics List */}
-          <div className="w-full lg:w-72 flex-shrink-0 border-r border-gray-800 flex flex-col bg-[#0A0A0A]">
+          <div className="w-full lg:w-[260px] flex-shrink-0 border-r border-gray-800 flex flex-col bg-[#0A0A0A]">
             <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
-              <div className="space-y-3">
-                <div className="mb-2.5 px-1 pt-1">
-                  <Text
-                    level="h2"
-                    className="text-[14px] font-black text-white mb-0.5 tracking-tight"
-                  >
-                    Explore Topics
-                  </Text>
-                  <Text
-                    level="p"
-                    className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]"
-                  >
-                    Choose a Topic to practice
-                  </Text>
-                </div>
-
+              <div className="space-y-1">
                 <FlexContainer
                   direction="col"
                   fullWidth
@@ -213,11 +236,12 @@ const AptitudePrepPage = () => {
                       <button
                         key={topic}
                         onClick={() => handleTopicClick(topic, label)}
-                        className={`w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none ${
+                        className={cn(
+                          "w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
                           isActive
-                            ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)]"
-                            : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800"
-                        }`}
+                            ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)] text-white"
+                            : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800 text-gray-400 group-hover:text-gray-300",
+                        )}
                         aria-pressed={isActive}
                       >
                         <FlexContainer
@@ -232,11 +256,7 @@ const AptitudePrepPage = () => {
                           )}
                           <Text
                             level="p"
-                            className={`text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1 ${
-                              isActive
-                                ? "text-white"
-                                : "text-gray-400 group-hover:text-gray-300"
-                            }`}
+                            className="text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1"
                           >
                             {label}
                           </Text>
