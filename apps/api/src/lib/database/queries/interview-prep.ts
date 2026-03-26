@@ -6,6 +6,7 @@ import type {
   DatabaseQueryResponseType,
   DSADifficultyType,
   DSADomainType,
+  DSATopicType,
   SheetEnrollmentRequestProps,
   UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
@@ -16,6 +17,7 @@ import { logger } from "@/lib/utils/logger";
 import { DSAQuestion, InterviewSheet, StudyGuide, UserSheet } from "../models";
 import { toObjectId } from "./common";
 import { updateUserPointsInDB } from "./gamification";
+import { checkPaymentStatusFromDB } from "./payment";
 
 const addAInterviewSheetToDB = async (
   sheetPayload: AddInterviewSheetRequestPayloadProps,
@@ -344,14 +346,52 @@ const markQuestionCompletedByUser = async (
   isCompleted: boolean,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const updatedSheet = await UserSheet.findOneAndUpdate(
-      { userId, sheetId, "questions.questionId": questionId },
+    let userSheet = await UserSheet.findOne({ userId, sheetId });
+
+    if (!userSheet) {
+      // Auto-enroll if accessible
+      const sheet = await InterviewSheet.findById(sheetId);
+      if (!sheet) return { error: "Sheet not found" };
+
+      const isPremium = sheet.isPremium;
+      let hasAccess = !isPremium;
+
+      if (isPremium) {
+        const { data: paymentData } = await checkPaymentStatusFromDB(
+          userId,
+          sheetId,
+          "INTERVIEW_SHEET",
+        );
+        if (paymentData?.purchased) hasAccess = true;
+      }
+
+      if (hasAccess) {
+        await enrollInASheet({ userId, sheetId });
+        userSheet = await UserSheet.findOne({ userId, sheetId });
+      } else {
+        return {
+          error:
+            "User is not enrolled and does not have access to this premium sheet",
+        };
+      }
+    }
+
+    if (!userSheet) return { error: "Failed to auto-enroll user" };
+
+    const qid = toObjectId(questionId);
+    let updatedSheet = await UserSheet.findOneAndUpdate(
+      { userId, sheetId, "questions.questionId": qid },
       { $set: { "questions.$.isCompleted": isCompleted } },
       { new: true },
     );
 
+    // If question not found in UserSheet, it might be a newly added question
     if (!updatedSheet) {
-      return { error: "User or question not found" };
+      updatedSheet = await UserSheet.findOneAndUpdate(
+        { userId, sheetId },
+        { $push: { questions: { questionId: qid, isCompleted } } },
+        { new: true },
+      );
     }
 
     return { data: updatedSheet };
@@ -477,16 +517,52 @@ const markQuestionStarredByUser = async (
   isStarred: boolean,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const qid = toObjectId(questionId);
+    let userSheet = await UserSheet.findOne({ userId, sheetId });
 
-    const updatedSheet = await UserSheet.findOneAndUpdate(
+    if (!userSheet) {
+      // Auto-enroll if accessible
+      const sheet = await InterviewSheet.findById(sheetId);
+      if (!sheet) return { error: "Sheet not found" };
+
+      const isPremium = sheet.isPremium;
+      let hasAccess = !isPremium;
+
+      if (isPremium) {
+        const { data: paymentData } = await checkPaymentStatusFromDB(
+          userId,
+          sheetId,
+          "INTERVIEW_SHEET",
+        );
+        if (paymentData?.purchased) hasAccess = true;
+      }
+
+      if (hasAccess) {
+        await enrollInASheet({ userId, sheetId });
+        userSheet = await UserSheet.findOne({ userId, sheetId });
+      } else {
+        return {
+          error:
+            "User is not enrolled and does not have access to this premium sheet",
+        };
+      }
+    }
+
+    if (!userSheet) return { error: "Failed to auto-enroll user" };
+
+    const qid = toObjectId(questionId);
+    let updatedSheet = await UserSheet.findOneAndUpdate(
       { userId, sheetId, "questions.questionId": qid },
       { $set: { "questions.$.isStarred": isStarred } },
       { new: true },
     );
 
+    // If question not found in UserSheet, it might be a newly added question
     if (!updatedSheet) {
-      return { error: "User or question not found" };
+      updatedSheet = await UserSheet.findOneAndUpdate(
+        { userId, sheetId },
+        { $push: { questions: { questionId: qid, isStarred } } },
+        { new: true },
+      );
     }
 
     return { data: updatedSheet };
