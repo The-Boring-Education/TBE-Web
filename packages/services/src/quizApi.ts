@@ -40,24 +40,38 @@ export interface QuizResult {
 export const quizApi = {
   // Get quiz categories
   getCategories: async () => {
-    const result = await sendRequest({
-      url: `/quiz`,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to fetch categories");
-    return result;
+    try {
+      const result = await sendRequest({
+        url: `/quiz`,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch categories");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to fetch categories",
+      );
+    }
   },
 
   // Get quiz questions for a category
   getQuestions: async (quizId: string, shuffle: boolean = true) => {
-    const result = await sendRequest({
-      url: `/quiz/${quizId}?shuffle=${shuffle}`,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to fetch questions");
-    return result;
+    try {
+      const result = await sendRequest({
+        url: `/quiz/${quizId}?shuffle=${shuffle}`,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch quiz questions");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch quiz questions",
+      );
+    }
   },
 
   // Start a quiz session
@@ -67,15 +81,21 @@ export const quizApi = {
     difficulty?: "easy" | "medium" | "hard" | "mixed";
     questionCount?: number;
   }) => {
-    const result = await sendRequest({
-      method: "POST",
-      url: `/quiz/session/start`,
-      body: payload,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to start session");
-    return result;
+    try {
+      const result = await sendRequest({
+        method: "POST",
+        url: `/quiz/session/start`,
+        body: payload,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to start quiz session");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to start quiz session",
+      );
+    }
   },
 
   // Submit an answer
@@ -87,69 +107,103 @@ export const quizApi = {
       timeSpent: number;
     },
   ) => {
-    const result = await sendRequest({
-      method: "POST",
-      url: `/quiz/session/${sessionId}/answer`,
-      body: payload,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to submit answer");
-    return result;
+    try {
+      const result = await sendRequest({
+        method: "POST",
+        url: `/quiz/session/${sessionId}/answer`,
+        body: payload,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to submit answer");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to submit answer",
+      );
+    }
   },
 
   // Complete a quiz session
   completeSession: async (sessionId: string) => {
-    const result = await sendRequest({
-      method: "POST",
-      url: `/quiz/session/${sessionId}/complete`,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to complete session");
-    return result;
+    try {
+      const result = await sendRequest({
+        method: "POST",
+        url: `/quiz/session/${sessionId}/complete`,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to complete quiz session");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to complete quiz session",
+      );
+    }
   },
 
   // Get user analytics
   getUserAnalytics: async (userId: string, categoryName?: string) => {
-    let url = `/quiz/analytics/${userId}`;
-    if (categoryName) url += `?categoryName=${categoryName}`;
+    try {
+      let url = `/quiz/analytics/${userId}`;
+      if (categoryName) url += `?categoryName=${categoryName}`;
 
-    const result = await sendRequest({
-      url,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to fetch analytics");
-    return result;
+      const result = await sendRequest({
+        url,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch analytics");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to fetch analytics",
+      );
+    }
   },
 
   // Get leaderboard
   getLeaderboard: async (categoryName?: string, limit: number = 50) => {
-    let url = `/quiz/leaderboard?limit=${limit}`;
-    if (categoryName) url += `&categoryName=${categoryName}`;
+    try {
+      let url = `/quiz/leaderboard?limit=${limit}`;
+      if (categoryName) url += `&categoryName=${categoryName}`;
 
-    const result = await sendRequest({
-      url,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to fetch leaderboard");
-    return result;
+      const result = await sendRequest({
+        url,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch leaderboard");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to fetch leaderboard",
+      );
+    }
   },
 
   // Get user quiz sessions/history
   getUserSessions: async (userId: string, status?: string) => {
-    let url = `/quiz/sessions/${userId}`;
-    if (status) url += `?status=${status}`;
+    try {
+      let url = `/quiz/sessions/${userId}`;
+      if (status) url += `?status=${status}`;
 
-    const result = await sendRequest({
-      url,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to fetch user sessions");
-    return result;
+      const result = await sendRequest({
+        url,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch user sessions");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch user sessions",
+      );
+    }
   },
 
   // Submit quiz answers
@@ -166,15 +220,21 @@ export const quizApi = {
       totalTimeSpent: number;
     },
   ) => {
-    const result = await sendRequest({
-      method: "POST",
-      url: `/quiz/${quizId}/submit`,
-      body: payload,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to submit quiz");
-    return result;
+    try {
+      const result = await sendRequest({
+        method: "POST",
+        url: `/quiz/${quizId}/submit`,
+        body: payload,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to submit quiz");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to submit quiz",
+      );
+    }
   },
 
   submitAttempt: async (
@@ -185,14 +245,20 @@ export const quizApi = {
       timeTaken: number;
     },
   ) => {
-    const result = await sendRequest({
-      method: "POST",
-      url: `${API_ENDPOINTS.QUIZ_QUESTIONS(id)}/attempt`,
-      body: data,
-      baseURL: config.API_BASE_URL,
-    });
-    if (!result.success)
-      throw new Error(result.message || "Failed to submit attempt");
-    return result;
+    try {
+      const result = await sendRequest({
+        method: "POST",
+        url: `${API_ENDPOINTS.QUIZ_QUESTIONS(id)}/attempt`,
+        body: data,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to submit attempt");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to submit attempt",
+      );
+    }
   },
 };
