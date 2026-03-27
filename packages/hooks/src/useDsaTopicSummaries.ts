@@ -1,6 +1,8 @@
-import { routes } from "@tbe/constants";
+import { routes, TOPIC_LABELS } from "@tbe/constants";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import { sendRequest } from "@tbe/utils";
+
+import type { TopicWithCount } from "./useDsaTopics";
 
 export interface DsaTopicSummaryRow {
   topic: string;
@@ -24,15 +26,6 @@ export const useDsaTopicSummaries = () => {
       if (!Array.isArray(raw)) {
         throw new Error(result.message || "Failed to fetch DSA topics");
       }
-<<<<<<< HEAD
-      // API may return legacy string[]; sheet UI expects { topic, count }.
-      const rows: DsaTopicSummaryRow[] = raw.map((item: unknown) =>
-        typeof item === "string"
-          ? { topic: item, count: 0 }
-          : (item as DsaTopicSummaryRow),
-      );
-=======
-
       const rows: TopicWithCount[] = raw
         .map((item: any) => {
           const topic = typeof item === "string" ? item : item.topic;
@@ -51,8 +44,6 @@ export const useDsaTopicSummaries = () => {
           if (idxA !== -1 && idxB !== -1) return idxA - idxB;
           return a.label!.localeCompare(b.label!);
         }) as TopicWithCount[];
-
->>>>>>> c4aadea2 (feat(dsa): seed graph and queue content, stabilization, and topic cleanup)
       return rows;
     },
     ...CACHE_TIMES.STABLE,
