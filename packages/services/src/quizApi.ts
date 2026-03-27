@@ -40,18 +40,24 @@ export interface QuizResult {
 export const quizApi = {
   // Get quiz categories
   getCategories: async () => {
-    return sendRequest({
+    const result = await sendRequest({
       url: `/quiz`,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to fetch categories");
+    return result;
   },
 
   // Get quiz questions for a category
   getQuestions: async (quizId: string, shuffle: boolean = true) => {
-    return sendRequest({
+    const result = await sendRequest({
       url: `/quiz/${quizId}?shuffle=${shuffle}`,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to fetch questions");
+    return result;
   },
 
   // Start a quiz session
@@ -61,12 +67,15 @@ export const quizApi = {
     difficulty?: "easy" | "medium" | "hard" | "mixed";
     questionCount?: number;
   }) => {
-    return sendRequest({
+    const result = await sendRequest({
       method: "POST",
       url: `/quiz/session/start`,
       body: payload,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to start session");
+    return result;
   },
 
   // Submit an answer
@@ -78,21 +87,27 @@ export const quizApi = {
       timeSpent: number;
     },
   ) => {
-    return sendRequest({
+    const result = await sendRequest({
       method: "POST",
       url: `/quiz/session/${sessionId}/answer`,
       body: payload,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to submit answer");
+    return result;
   },
 
   // Complete a quiz session
   completeSession: async (sessionId: string) => {
-    return sendRequest({
+    const result = await sendRequest({
       method: "POST",
       url: `/quiz/session/${sessionId}/complete`,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to complete session");
+    return result;
   },
 
   // Get user analytics
@@ -100,10 +115,13 @@ export const quizApi = {
     let url = `/quiz/analytics/${userId}`;
     if (categoryName) url += `?categoryName=${categoryName}`;
 
-    return sendRequest({
+    const result = await sendRequest({
       url,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to fetch analytics");
+    return result;
   },
 
   // Get leaderboard
@@ -111,10 +129,13 @@ export const quizApi = {
     let url = `/quiz/leaderboard?limit=${limit}`;
     if (categoryName) url += `&categoryName=${categoryName}`;
 
-    return sendRequest({
+    const result = await sendRequest({
       url,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to fetch leaderboard");
+    return result;
   },
 
   // Get user quiz sessions/history
@@ -122,10 +143,13 @@ export const quizApi = {
     let url = `/quiz/sessions/${userId}`;
     if (status) url += `?status=${status}`;
 
-    return sendRequest({
+    const result = await sendRequest({
       url,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to fetch user sessions");
+    return result;
   },
 
   // Submit quiz answers
@@ -142,12 +166,15 @@ export const quizApi = {
       totalTimeSpent: number;
     },
   ) => {
-    return sendRequest({
+    const result = await sendRequest({
       method: "POST",
       url: `/quiz/${quizId}/submit`,
       body: payload,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to submit quiz");
+    return result;
   },
 
   submitAttempt: async (
@@ -158,11 +185,14 @@ export const quizApi = {
       timeTaken: number;
     },
   ) => {
-    return sendRequest({
+    const result = await sendRequest({
       method: "POST",
       url: `${API_ENDPOINTS.QUIZ_QUESTIONS(id)}/attempt`,
       body: data,
       baseURL: config.API_BASE_URL,
     });
+    if (!result.success)
+      throw new Error(result.message || "Failed to submit attempt");
+    return result;
   },
 };
