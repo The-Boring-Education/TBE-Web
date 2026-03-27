@@ -64,7 +64,7 @@ const DsaPrepWorkspace = ({
 
   const currentTopicConfig =
     selectedTopic && studyGuideConfigs
-      ? studyGuideConfigs[selectedTopic]
+      ? studyGuideConfigs[selectedTopic.toUpperCase().replace(/\s+/g, "_")]
       : null;
 
   const handleToggleStudyGuide = () => {
@@ -153,7 +153,7 @@ const DsaPrepWorkspace = ({
                       className="border-gray-800 text-gray-400 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
                     />
                   )}
-                  {selectedTopic && (
+                  {currentTopicConfig?.hasStudyGuide && (
                     <button
                       onClick={handleToggleStudyGuide}
                       className={cn(

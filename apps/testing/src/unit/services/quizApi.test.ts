@@ -1,6 +1,14 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock apiClient first
+// Mock sendRequest FIRST before importing quizApi
+vi.mock("@tbe/utils", () => {
+  const mockSendRequest = vi.fn();
+  return {
+    sendRequest: mockSendRequest,
+  };
+});
+
+// Mock apiClient
 vi.mock("@tbe/services/api", () => {
   const mockGet = vi.fn();
   const mockPost = vi.fn();
@@ -13,13 +21,12 @@ vi.mock("@tbe/services/api", () => {
   };
 });
 
-// Mock fetch for quizApi methods that use fetch
-global.fetch = vi.fn();
-
 // Import after mocks
 import { quizApi } from "@tbe/services";
 import { apiClient } from "@tbe/services/api";
+import { sendRequest } from "@tbe/utils";
 
+const mockSendRequest = vi.mocked(sendRequest);
 const mockGet = vi.mocked(apiClient.get);
 const mockPost = vi.mocked(apiClient.post);
 
@@ -28,7 +35,6 @@ describe("quizApi Service", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    // Suppress console.error for expected error cases
     consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
@@ -39,22 +45,20 @@ describe("quizApi Service", () => {
   describe("getCategories", () => {
     it("should fetch quiz categories", async () => {
       const mockResponse = {
-        data: {
-          success: true,
-          data: [{ id: "1", categoryName: "JavaScript" }],
-        },
+        success: true,
+        data: [{ id: "1", categoryName: "JavaScript" }],
       };
-      mockGet.mockResolvedValue(mockResponse);
+      mockSendRequest.mockResolvedValue(mockResponse);
 
       const result = await quizApi.getCategories();
 
-      expect(mockGet).toHaveBeenCalled();
+      expect(mockSendRequest).toHaveBeenCalled();
       expect(result).toEqual(mockResponse);
     });
 
     it("should handle errors", async () => {
       const error = new Error("Failed to fetch");
-      mockGet.mockRejectedValue(error);
+      mockSendRequest.mockRejectedValue(error);
 
       await expect(quizApi.getCategories()).rejects.toThrow("Failed to fetch");
     });
@@ -63,25 +67,22 @@ describe("quizApi Service", () => {
   describe("getQuestions", () => {
     it("should fetch quiz questions", async () => {
       const mockData = {
-        questions: [
+        success: true,
+        data: [
           { question: "What is React?", options: ["A", "B"], correctAnswer: 0 },
         ],
       };
-      (global.fetch as any).mockResolvedValue({
-        ok: true,
-        json: async () => mockData,
-      });
+      mockSendRequest.mockResolvedValue(mockData);
 
       const result = await quizApi.getQuestions("quiz-123");
 
-      expect(global.fetch).toHaveBeenCalled();
+      expect(mockSendRequest).toHaveBeenCalled();
       expect(result).toEqual(mockData);
     });
 
     it("should throw error when fetch fails", async () => {
-      (global.fetch as any).mockResolvedValue({
-        ok: false,
-      });
+      const error = new Error("Failed to fetch quiz questions");
+      mockSendRequest.mockRejectedValue(error);
 
       await expect(quizApi.getQuestions("quiz-123")).rejects.toThrow(
         "Failed to fetch quiz questions",
@@ -91,11 +92,11 @@ describe("quizApi Service", () => {
 
   describe("startSession", () => {
     it("should start a quiz session", async () => {
-      const mockData = { sessionId: "session-123", currentQuestion: {} };
-      (global.fetch as any).mockResolvedValue({
-        ok: true,
-        json: async () => mockData,
-      });
+      const mockData = {
+        success: true,
+        data: { sessionId: "session-123", currentQuestion: {} },
+      };
+      mockSendRequest.mockResolvedValue(mockData);
 
       const payload = {
         userId: "user-123",
@@ -106,14 +107,13 @@ describe("quizApi Service", () => {
 
       const result = await quizApi.startSession(payload);
 
-      expect(global.fetch).toHaveBeenCalled();
+      expect(mockSendRequest).toHaveBeenCalled();
       expect(result).toEqual(mockData);
     });
 
     it("should throw error when session start fails", async () => {
-      (global.fetch as any).mockResolvedValue({
-        ok: false,
-      });
+      const error = new Error("Failed to start quiz session");
+      mockSendRequest.mockRejectedValue(error);
 
       await expect(
         quizApi.startSession({
@@ -126,11 +126,11 @@ describe("quizApi Service", () => {
 
   describe("submitAnswer", () => {
     it("should submit an answer", async () => {
-      const mockData = { isCorrect: true, nextQuestion: {} };
-      (global.fetch as any).mockResolvedValue({
-        ok: true,
-        json: async () => mockData,
-      });
+      const mockData = {
+        success: true,
+        data: { isCorrect: true, nextQuestion: {} },
+      };
+      mockSendRequest.mockResolvedValue(mockData);
 
       const result = await quizApi.submitAnswer("session-123", {
         questionIndex: 0,
@@ -138,14 +138,13 @@ describe("quizApi Service", () => {
         timeSpent: 30,
       });
 
-      expect(global.fetch).toHaveBeenCalled();
+      expect(mockSendRequest).toHaveBeenCalled();
       expect(result).toEqual(mockData);
     });
 
     it("should throw error when answer submission fails", async () => {
-      (global.fetch as any).mockResolvedValue({
-        ok: false,
-      });
+      const error = new Error("Failed to submit answer");
+      mockSendRequest.mockRejectedValue(error);
 
       await expect(
         quizApi.submitAnswer("session-123", {
@@ -159,22 +158,21 @@ describe("quizApi Service", () => {
 
   describe("completeSession", () => {
     it("should complete a quiz session", async () => {
-      const mockData = { completed: true, score: 85 };
-      (global.fetch as any).mockResolvedValue({
-        ok: true,
-        json: async () => mockData,
-      });
+      const mockData = {
+        success: true,
+        data: { completed: true, score: 85 },
+      };
+      mockSendRequest.mockResolvedValue(mockData);
 
       const result = await quizApi.completeSession("session-123");
 
-      expect(global.fetch).toHaveBeenCalled();
+      expect(mockSendRequest).toHaveBeenCalled();
       expect(result).toEqual(mockData);
     });
 
     it("should throw error when completion fails", async () => {
-      (global.fetch as any).mockResolvedValue({
-        ok: false,
-      });
+      const error = new Error("Failed to complete quiz session");
+      mockSendRequest.mockRejectedValue(error);
 
       await expect(quizApi.completeSession("session-123")).rejects.toThrow(
         "Failed to complete quiz session",
@@ -185,12 +183,10 @@ describe("quizApi Service", () => {
   describe("submitAttempt", () => {
     it("should submit quiz attempt using apiClient", async () => {
       const mockResponse = {
-        data: {
-          success: true,
-          data: { score: 85, totalQuestions: 10 },
-        },
+        success: true,
+        data: { score: 85, totalQuestions: 10 },
       };
-      mockPost.mockResolvedValue(mockResponse);
+      mockSendRequest.mockResolvedValue(mockResponse);
 
       const result = await quizApi.submitAttempt("quiz-123", {
         userId: "user-123",
@@ -198,13 +194,13 @@ describe("quizApi Service", () => {
         timeTaken: 300,
       });
 
-      expect(mockPost).toHaveBeenCalled();
+      expect(mockSendRequest).toHaveBeenCalled();
       expect(result).toEqual(mockResponse);
     });
 
     it("should handle errors in submitAttempt", async () => {
       const error = new Error("Submission failed");
-      mockPost.mockRejectedValue(error);
+      mockSendRequest.mockRejectedValue(error);
 
       await expect(
         quizApi.submitAttempt("quiz-123", {
