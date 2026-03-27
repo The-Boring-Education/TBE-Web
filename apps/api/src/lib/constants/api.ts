@@ -3081,9 +3081,11 @@ const DSA_DIFFICULTY: DSADifficultyType[] = ["EASY", "MEDIUM", "HARD"];
 /** Sheet order, Mongo `$indexOfArray`, and validation — single source of truth. */
 const DSA_TOPICS: DSATopicType[] = [
   "ARRAY",
+<<<<<<< HEAD
   "STRING",
+=======
+>>>>>>> c4aadea2 (feat(dsa): seed graph and queue content, stabilization, and topic cleanup)
   "HASHMAP",
-  "TWO_POINTERS",
   "SLIDING_WINDOW",
   "PREFIX_SUM",
   "SORTING",
@@ -3100,14 +3102,21 @@ const DSA_TOPICS: DSATopicType[] = [
   "HEAP",
   "TRIE",
   "GRAPH",
-  "DFS",
-  "BFS",
   "BACKTRACKING",
   "DYNAMIC_PROGRAMMING",
   "GREEDY",
+<<<<<<< HEAD
   "UNION_FIND",
   "SIMULATION",
   "DESIGN",
+=======
+  "STRING",
+  "MATH",
+  "TRIE",
+  "HEAP",
+  "UNION_FIND",
+  "RECURSION",
+>>>>>>> c4aadea2 (feat(dsa): seed graph and queue content, stabilization, and topic cleanup)
   "MONOTONIC_STACK",
 ];
 

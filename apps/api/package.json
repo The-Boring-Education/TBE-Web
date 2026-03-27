@@ -13,9 +13,13 @@
     "docker:run": "docker run -p 3000:3000 tbe-api",
     "docker:test": "./test-docker-build.sh",
     "deploy": "./deploy.sh",
+<<<<<<< HEAD
     "seed:study-guide": "tsx src/scripts/seed-study-guide.ts",
     "backfill": "tsx scripts/backfill-content-ids.ts",
     "migrate": "tsx scripts/migrate-content.ts"
+=======
+    "seed:study-guide": "tsx src/scripts/seed-study-guide.ts"
+>>>>>>> c4aadea2 (feat(dsa): seed graph and queue content, stabilization, and topic cleanup)
   },
   "dependencies": {
     "@sentry/nextjs": "^9.38.0",

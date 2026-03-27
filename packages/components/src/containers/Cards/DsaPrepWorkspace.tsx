@@ -64,7 +64,7 @@ const DsaPrepWorkspace = ({
 
   const currentTopicConfig =
     selectedTopic && studyGuideConfigs
-      ? studyGuideConfigs[selectedTopic]
+      ? studyGuideConfigs[selectedTopic.toUpperCase().replace(/\s+/g, "_")]
       : null;
 
   const handleToggleStudyGuide = () => {
