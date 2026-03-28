@@ -1,6 +1,5 @@
 import { API_ENDPOINTS, config } from "@tbe/config/quizes";
-
-import { apiClient } from "./api";
+import { sendRequest } from "@tbe/utils";
 
 export interface QuizQuestion {
   question: string;
@@ -42,20 +41,37 @@ export const quizApi = {
   // Get quiz categories
   getCategories: async () => {
     try {
-      return await apiClient.get(API_ENDPOINTS.QUIZ_CATEGORIES);
+      const result = await sendRequest({
+        url: `/quiz`,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch categories");
+      return result;
     } catch (error) {
-      console.error("Error fetching quiz categories:", error);
-      throw error;
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to fetch categories",
+      );
     }
   },
 
   // Get quiz questions for a category
   getQuestions: async (quizId: string, shuffle: boolean = true) => {
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/${quizId}?shuffle=${shuffle}`,
-    );
-    if (!response.ok) throw new Error("Failed to fetch quiz questions");
-    return response.json();
+    try {
+      const result = await sendRequest({
+        url: `/quiz/${quizId}?shuffle=${shuffle}`,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch quiz questions");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch quiz questions",
+      );
+    }
   },
 
   // Start a quiz session
@@ -65,15 +81,21 @@ export const quizApi = {
     difficulty?: "easy" | "medium" | "hard" | "mixed";
     questionCount?: number;
   }) => {
-    const response = await fetch(`${config.API_BASE_URL}/quiz/session/start`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) throw new Error("Failed to start quiz session");
-    return response.json();
+    try {
+      const result = await sendRequest({
+        method: "POST",
+        url: `/quiz/session/start`,
+        body: payload,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to start quiz session");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to start quiz session",
+      );
+    }
   },
 
   // Submit an answer
@@ -85,70 +107,103 @@ export const quizApi = {
       timeSpent: number;
     },
   ) => {
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/session/${sessionId}/answer`,
-      {
+    try {
+      const result = await sendRequest({
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      },
-    );
-    if (!response.ok) throw new Error("Failed to submit answer");
-    return response.json();
+        url: `/quiz/session/${sessionId}/answer`,
+        body: payload,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to submit answer");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to submit answer",
+      );
+    }
   },
 
   // Complete a quiz session
   completeSession: async (sessionId: string) => {
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/session/${sessionId}/complete`,
-      {
+    try {
+      const result = await sendRequest({
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    if (!response.ok) throw new Error("Failed to complete quiz session");
-    return response.json();
+        url: `/quiz/session/${sessionId}/complete`,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to complete quiz session");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to complete quiz session",
+      );
+    }
   },
 
   // Get user analytics
   getUserAnalytics: async (userId: string, categoryName?: string) => {
-    const params = new URLSearchParams();
-    if (categoryName) params.append("categoryName", categoryName);
+    try {
+      let url = `/quiz/analytics/${userId}`;
+      if (categoryName) url += `?categoryName=${categoryName}`;
 
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/analytics/${userId}?${params}`,
-    );
-    if (!response.ok) throw new Error("Failed to fetch user analytics");
-    return response.json();
+      const result = await sendRequest({
+        url,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch analytics");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to fetch analytics",
+      );
+    }
   },
 
   // Get leaderboard
   getLeaderboard: async (categoryName?: string, limit: number = 50) => {
-    const params = new URLSearchParams();
-    if (categoryName) params.append("categoryName", categoryName);
-    params.append("limit", limit.toString());
+    try {
+      let url = `/quiz/leaderboard?limit=${limit}`;
+      if (categoryName) url += `&categoryName=${categoryName}`;
 
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/leaderboard?${params}`,
-    );
-    if (!response.ok) throw new Error("Failed to fetch leaderboard");
-    return response.json();
+      const result = await sendRequest({
+        url,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch leaderboard");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to fetch leaderboard",
+      );
+    }
   },
 
   // Get user quiz sessions/history
   getUserSessions: async (userId: string, status?: string) => {
-    const params = new URLSearchParams();
-    if (status) params.append("status", status);
+    try {
+      let url = `/quiz/sessions/${userId}`;
+      if (status) url += `?status=${status}`;
 
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/sessions/${userId}?${params}`,
-    );
-    if (!response.ok) throw new Error("Failed to fetch user sessions");
-    return response.json();
+      const result = await sendRequest({
+        url,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch user sessions");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch user sessions",
+      );
+    }
   },
 
   // Submit quiz answers
@@ -165,18 +220,21 @@ export const quizApi = {
       totalTimeSpent: number;
     },
   ) => {
-    const response = await fetch(
-      `${config.API_BASE_URL}/quiz/${quizId}/submit`,
-      {
+    try {
+      const result = await sendRequest({
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      },
-    );
-    if (!response.ok) throw new Error("Failed to submit quiz");
-    return response.json();
+        url: `/quiz/${quizId}/submit`,
+        body: payload,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to submit quiz");
+      return result;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to submit quiz",
+      );
+    }
   },
 
   submitAttempt: async (
@@ -188,13 +246,19 @@ export const quizApi = {
     },
   ) => {
     try {
-      return await apiClient.post(
-        `${API_ENDPOINTS.QUIZ_QUESTIONS(id)}/attempt`,
-        data,
-      );
+      const result = await sendRequest({
+        method: "POST",
+        url: `${API_ENDPOINTS.QUIZ_QUESTIONS(id)}/attempt`,
+        body: data,
+        baseURL: config.API_BASE_URL,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to submit attempt");
+      return result;
     } catch (error) {
-      console.error("Error submitting quiz attempt:", error);
-      throw error;
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to submit attempt",
+      );
     }
   },
 };

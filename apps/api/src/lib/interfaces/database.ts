@@ -1144,7 +1144,9 @@ export type StudyGuideSectionType =
   | "concept"
   | "pattern"
   | "cheatsheet";
+
 export type StudyGuideDifficulty = "Easy" | "Medium" | "Hard";
+
 export type StudyGuideCodeLanguage =
   | "python"
   | "java"
@@ -1152,6 +1154,7 @@ export type StudyGuideCodeLanguage =
   | "javascript"
   | "go"
   | "pseudocode";
+
 export type StudyGuideCalloutVariant =
   | "info"
   | "success"
@@ -1294,7 +1297,7 @@ export interface StudyGuideCheatsheetContent {
 }
 
 // Section (nav item or divider)
-export interface StudyGuideSection {
+export interface StudyGuideContentSection {
   id: string | null;
   label: string | null;
   type: StudyGuideSectionType | null;
@@ -1306,17 +1309,16 @@ export interface StudyGuideSection {
     | StudyGuideConceptContent
     | StudyGuidePatternContent
     | StudyGuideCheatsheetContent
-    | null;
+    | any;
 }
 
 // Top-level document
 export interface StudyGuideModel extends Document {
-  contentId?: string;
   topicId: string;
   title: string;
   hasGuide: boolean;
   sortOrder: number;
-  sections: StudyGuideSection[];
+  sections: StudyGuideContentSection[];
   createdAt: Date;
   updatedAt: Date;
 }

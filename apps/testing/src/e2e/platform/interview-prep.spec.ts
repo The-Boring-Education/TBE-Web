@@ -18,6 +18,7 @@ test.describe("Interview Prep — Public Flow", () => {
       await page.goto("/interview-prep");
 
       await page.getByRole("link", { name: "Explore Sheets" }).click();
+      await page.waitForLoadState("networkidle");
       await page.waitForURL("**/interview-prep/explore");
     });
   });
@@ -69,6 +70,7 @@ test.describe("Interview Prep — Public Flow", () => {
 
       await page.getByRole("link", { name: "Explore Sheets" }).click();
 
+      await page.waitForLoadState("networkidle");
       await page.waitForURL("**/interview-prep/explore");
       await expect(page.getByText("Interview Prep Sheets")).toBeVisible();
     });

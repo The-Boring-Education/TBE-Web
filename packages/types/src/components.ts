@@ -1003,3 +1003,112 @@ export type GenerateSectionPathProps = {
   basePath: string;
   sectionID: string;
 };
+
+// ================================
+// STUDY GUIDE COMPONENTS
+// ================================
+
+export interface StudyGuideSection {
+  id: string;
+  label: string;
+}
+
+export interface StudyGuideDivider {
+  divider: string | null;
+}
+
+export type StudyGuideNavItem = StudyGuideSection | StudyGuideDivider;
+
+export interface StudyGuideConfig {
+  topic: string;
+  sections: StudyGuideNavItem[];
+  hasStudyGuide: boolean;
+}
+
+export interface StudyGuideNavProps {
+  config: StudyGuideConfig;
+  activeId: string;
+  onSectionClick: (id: string) => void;
+  className?: string;
+}
+
+export interface StudyGuideReaderProps {
+  topic: string;
+  sectionId: string;
+  className?: string;
+}
+
+// ================================
+// NAVBAR & FOOTER COMPONENTS
+// ================================
+
+export type NavbarVariant =
+  | "default"
+  | "transparent"
+  | "prepyatra"
+  | "quizes"
+  | "techyatra"
+  | "dsayatra"
+  | "resume-yatra"
+  | "oncampus"
+  | "learning"
+  | "study-guide";
+
+export type NavbarSectionVisibility = boolean | string[];
+
+export interface NavbarNavigationConfig {
+  issues?: NavbarSectionVisibility;
+  cohorts?: NavbarSectionVisibility;
+  learn?: NavbarSectionVisibility;
+  tools?: NavbarSectionVisibility;
+  links?: NavbarSectionVisibility;
+}
+
+export interface NavbarVariantConfig {
+  branding?: ReactNode;
+  productName?: string;
+  subText?: string;
+  dashboardRoute: string;
+  borderClass?: string;
+  requiresAuth?: boolean;
+  showGamification?: boolean;
+  showNotifications?: boolean;
+  navigation?: NavbarNavigationConfig;
+}
+
+export type FooterVariant =
+  | "default"
+  | "prepyatra"
+  | "quizes"
+  | "techyatra"
+  | "dsayatra"
+  | "resumeyatra"
+  | "platform"
+  | "oncampus";
+
+export interface FooterProps {
+  variant?: FooterVariant;
+  isMini?: boolean;
+}
+
+export interface MainNavbarProps {
+  variant?: NavbarVariant;
+  showFullNavigation?: boolean;
+  customBranding?: ReactNode;
+  customActions?: ReactNode[];
+  dashboardRoute?: string;
+  theme?: "light" | "dark";
+  totalChapters?: number;
+  completedChapters?: number;
+  sidebarTitle?: string;
+  sidebarContent?: ReactNode;
+  showBackButton?: boolean;
+  backButtonHref?: string;
+  compact?: boolean;
+  onSignOut?: () => void;
+  userId?: string;
+}
+
+export type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";
+
+export type DsaSectionTabs = "description" | "topics" | "companies" | "code";

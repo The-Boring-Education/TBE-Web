@@ -23,7 +23,7 @@ const LearningNavbar = ({
     <header className="fixed top-0 left-0 right-0 h-[72px] z-40 bg-black shadow-md shadow-white/5 dark:shadow-[0_1px_15px_rgba(255,255,255,0.1)]">
       <nav className="relative flex items-center justify-between h-full px-[12px] lg:px-[32px] border-0">
         {/* Left Section */}
-        <div className="flex items-center gap-[16px] min-w-0">
+        <div className="flex items-center">
           <LinkButton
             href={backHref}
             buttonProps={{

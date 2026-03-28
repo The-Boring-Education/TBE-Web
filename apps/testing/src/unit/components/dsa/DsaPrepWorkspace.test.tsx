@@ -73,7 +73,9 @@ describe("DsaPrepWorkspace", () => {
     renderWithQueryClient(<DsaPrepWorkspace {...defaultProps} />);
 
     expect(screen.getByText("Explore Topics")).toBeInTheDocument();
-    expect(screen.getByText(/Choose a topic to practice/i)).toBeInTheDocument();
+    expect(screen.getByText(/Choose a topic/i)).toBeInTheDocument();
+    expect(screen.getByText("Array")).toBeInTheDocument();
+    expect(screen.getByText("Stack")).toBeInTheDocument();
   });
 
   it("should call onTopicClick when a topic is clicked", () => {
@@ -102,7 +104,7 @@ describe("DsaPrepWorkspace", () => {
       <DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />,
     );
 
-    expect(screen.getByText(/Back/i)).toBeInTheDocument();
+    expect(screen.getByText(/View All Topics/i)).toBeInTheDocument();
   });
 
   it("should call onBackToTopics when back button is clicked", () => {
@@ -116,14 +118,16 @@ describe("DsaPrepWorkspace", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText(/Back/i));
+    fireEvent.click(screen.getByText(/View All Topics/i));
     expect(onBackToTopics).toHaveBeenCalled();
   });
 
   it("should render empty state when no topic is selected", () => {
     renderWithQueryClient(<DsaPrepWorkspace {...defaultProps} />);
 
-    expect(screen.getByText(/Ready to level up?/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Select a topic to start practicing/i),
+    ).toBeInTheDocument();
   });
 
   it("should render custom empty state content", () => {

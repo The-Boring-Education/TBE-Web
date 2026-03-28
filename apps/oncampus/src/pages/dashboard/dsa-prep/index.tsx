@@ -1,12 +1,12 @@
-import {
+﻿import {
   DsaPrepWorkspace,
-  FlexContainer,
   LearningEnvironmentLayout,
   LoadingSpinner,
   Text,
 } from "@tbe/components";
-import { routes, TOPIC_LABELS } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
+  useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
   useDsaTopicSummaries,
   useUser,
@@ -37,6 +37,21 @@ const DSAPrepPage = () => {
 
   const { questions, loading: topicQuestionsLoading } =
     useDsaQuestionsForTopic(selectedTopic);
+
+  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+
+  const topicsCompletionMap = useMemo(() => {
+    return (topicRows ?? []).reduce(
+      (acc, row) => {
+        // Since we don't have individual question completion status here without fetching each topic,
+        // we'll leave this as false for now or implement a more complex check if needed.
+        // For now, let's just provide the object to fix the ReferenceError.
+        acc[row.topic] = false;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    );
+  }, [topicRows]);
 
   const pageLoading =
     userLoading || topicsLoading || (!!selectedTopic && topicQuestionsLoading);
@@ -87,24 +102,10 @@ const DSAPrepPage = () => {
         onTopicClick={handleTopicClick}
         onQuestionClick={handleQuestionClick}
         onBackToTopics={handleBackToTopics}
-        emptyStateContent={
-          <FlexContainer
-            className="h-full"
-            itemCenter
-            justifyCenter
-            fullWidth
-            wrap={false}
-          >
-            <div className="text-center space-y-2">
-              <Text level="p" className="text-gray-400 text-lg">
-                Select a topic from the left to start practicing
-              </Text>
-              <Text level="p" className="text-gray-500 text-sm italic">
-                Unlock your potential with structured learning
-              </Text>
-            </div>
-          </FlexContainer>
-        }
+        completionMap={topicsCompletionMap}
+        completedQuestionIds={completedIds}
+        onToggleComplete={toggleComplete}
+        studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
     </LearningEnvironmentLayout>
   );

@@ -3,11 +3,13 @@ import { useQuery } from "@tbe/query";
 import { sendRequest } from "@tbe/utils";
 
 export const useStudyGuideTopic = (topicId: string) => {
+  const normalizedTopicId = topicId.toUpperCase().replace(/\s+/g, "_");
+
   return useQuery({
-    queryKey: ["study-guide", topicId],
+    queryKey: ["study-guide", normalizedTopicId],
     queryFn: async () => {
       const result = await sendRequest({
-        url: `${routes.api.base}${routes.api.studyGuide(topicId)}`,
+        url: `${routes.api.base}${routes.api.studyGuide(normalizedTopicId)}`,
         method: "GET",
       });
 

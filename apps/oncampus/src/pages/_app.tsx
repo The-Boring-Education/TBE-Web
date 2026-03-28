@@ -59,12 +59,19 @@ const AppContent = ({
   const isDSAMainRoute = router.pathname === "/dashboard/dsa-prep";
   // Exclude the Aptitude page for fullscreen workspace experience
   const isAptitudeRoute = router.pathname === "/dashboard/aptitude";
+  // Exclude the Interview Prep main page for fullscreen workspace experience
+  const isInterviewPrepMainRoute =
+    router.pathname === "/dashboard/interview-prep";
+  // Exclude the Quizzes page for fullscreen workspace experience
+  const isQuizzesRoute = router.pathname === "/dashboard/quizzes";
 
   const shouldUseDashboardLayout =
     (isDashboardRoute || isDSAPrepRoute) &&
     !isStudyRoute &&
     !isDSAMainRoute &&
-    !isAptitudeRoute;
+    !isAptitudeRoute &&
+    !isInterviewPrepMainRoute &&
+    !isQuizzesRoute;
 
   const pageContent = <Component {...pageProps} />;
 
