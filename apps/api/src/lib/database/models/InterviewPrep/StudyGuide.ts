@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import type { Model } from "mongoose";
 import { model, models, Schema } from "mongoose";
 
@@ -6,6 +7,12 @@ import type { StudyGuideModel } from "@/lib/interfaces";
 
 const StudyGuideSchema = new Schema<StudyGuideModel>(
   {
+    contentId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     topicId: {
       type: String,
       required: true,
@@ -46,6 +53,8 @@ const StudyGuideSchema = new Schema<StudyGuideModel>(
     collection: "studyguides",
   },
 );
+
+applyContentIdOnCreate(StudyGuideSchema);
 
 const StudyGuide =
   (models[DATABASE_MODELS.STUDY_GUIDE] as Model<StudyGuideModel>) ||

@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
 import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from "@/lib/constants";
@@ -87,6 +88,8 @@ const CourseSchema = new Schema<CourseModel>(
     },
   },
 );
+
+applyContentIdOnCreate(CourseSchema);
 
 const Course: Model<CourseModel> =
   models?.Course || model<CourseModel>(DATABASE_MODELS.COURSE, CourseSchema);

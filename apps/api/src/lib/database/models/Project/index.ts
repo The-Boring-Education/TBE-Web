@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
@@ -58,6 +59,8 @@ const projectSchema: Schema<ProjectDocumentModel> =
     },
     { timestamps: true },
   );
+
+applyContentIdOnCreate(projectSchema);
 
 const Project: Model<ProjectDocumentModel> =
   models?.Project ||

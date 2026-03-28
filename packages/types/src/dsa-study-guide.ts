@@ -176,6 +176,7 @@ export interface StudyGuideContentSection {
 
 // Top-level document
 export interface StudyGuideModel extends Document {
+  contentId?: string;
   topicId: string;
   title: string;
   hasGuide: boolean;
