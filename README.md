@@ -321,6 +321,8 @@ pnpm test:coverage       # Generate coverage report
 
 **Documentation:** See [`apps/testing/README.md`](apps/testing/README.md) for detailed guide
 
+**Code stability backlog:** Refactor, quality, and test expansion tasks live in [`docs/code-stability.md`](docs/code-stability.md) (checkboxes for parallel work).
+
 ## 📖 Contributing
 
 1. **Fork** the repository
