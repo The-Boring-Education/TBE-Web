@@ -36,17 +36,7 @@ vi.mock("next/router", () => ({
   }),
 }));
 
-// Mock Next.js navigation
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-    prefetch: vi.fn(),
-    back: vi.fn(),
-  }),
-  usePathname: () => "/",
-  useSearchParams: () => new URLSearchParams(),
-}));
+// Next.js App Router: `next/navigation` is aliased in vitest.config to `next-navigation-mock.ts`
 
 // Mock NextAuth
 vi.mock("next-auth/react", () => ({

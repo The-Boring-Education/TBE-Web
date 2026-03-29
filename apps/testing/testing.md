@@ -4,6 +4,8 @@
 
 This document outlines a comprehensive testing strategy for the TBE Platform monorepo. The plan categorizes all modules that need testing and defines testing approaches for each category, ensuring robust coverage from UI components to API endpoints.
 
+**Maintenance:** After each testing task (new specs, refactors, or CI changes), update the checklists in this file, the **Current Test Coverage Status** counts (`pnpm test:unit`), and **Recommended Next Steps** so the plan stays the single source of truth.
+
 ## Testing Philosophy
 
 - **Test Behavior, Not Implementation**: Focus on what components/functions do, not how they do it
@@ -25,14 +27,15 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 - [x] `Card` ✅ (Already tested)
 - [x] `LoadingSpinner` ✅ (Already tested)
 - [x] `Accordion` ✅ (Tested)
-- [ ] `AccordionLinkItem` (Pending)
+- [x] `AccordionLinkItem` ✅ (Tested — `AccordionLinkItem.test.tsx`)
 - [x] `Alert` ✅ (Tested)
-- [ ] `Banner` (ActionBanner, BannerVariantA/B/C) (Pending)
-- [ ] `Carousel` (Pending)
+- [x] `Banner` (ActionBanner, BannerVariantA/B/C) ✅ (Tested — `Banner.test.tsx`)
+- [x] `Carousel` ✅ (Tested — common `Carousel`; `Carousel.test.tsx` imports `packages/components/src/common/Carousel` because `export * from "./ui"` shadows the barrel `Carousel`)
 - [x] `CheckboxButton` ✅ (Tested)
-- [ ] `InputFieldContainer` (Pending)
-- [ ] `RadioButton` / `RadioInputField` (Pending)
-- [ ] `SelectInput` (Pending)
+- [x] `InputFieldContainer` ✅ (Tested — `InputFieldContainer.test.tsx`)
+- [x] `RadioButton` ✅ (`RadioButton.test.tsx`)
+- [x] `RadioInputField` ✅ (`RadioInputField.test.tsx`)
+- [x] `SelectInput` ✅ (`SelectInput.test.tsx`)
 - [x] `Pill` / `IconPill` ✅ (Tested)
 - [x] `TabComponent` ✅ (Tested)
 - [x] `Toast` ✅ (Tested)
@@ -51,9 +54,9 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 
 **Image Components** (Priority: Medium)
 
-- `BackgroundImage`
-- `Image` / `ImageLink`
-- `Logo`
+- [x] `BackgroundImage` ✅ (`BackgroundImage.test.tsx`)
+- [x] `Image` ✅ (`Image.test.tsx`; `ImageLink` pending)
+- [x] `Logo` ✅ (`Logo.test.tsx`)
 - `UserAvatar`
 
 **Learning Components** (Priority: Medium)
@@ -63,15 +66,15 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 
 **Button Variants** (Priority: High)
 
-- [ ] `FloatingActionButton` (Pending)
+- [x] `FloatingActionButton` ✅ (`FloatingActionButton.test.tsx`)
 - [x] `LinkButton` ✅ (Tested)
-- [ ] `LoginRedirectButton` (Pending)
-- [ ] `LoginWithGoogleButton` (Pending)
+- [x] `LoginRedirectButton` ✅ (`LoginRedirectButton.test.tsx`; `next/navigation` aliased in Vitest — see Test File Structure note)
+- [x] `LoginWithGoogleButton` ✅ (`LoginWithGoogleButton.test.tsx`)
 - [x] `LogoutButton` ✅ (Tested)
-- [ ] `ScrollToTopBottomButton` (Pending)
+- [x] `ScrollToTopBottomButton` ✅ (`ScrollToTopBottomButton.test.tsx`)
 - [x] `StarButton` ✅ (Tested)
 - [x] `ToggleButton` ✅ (Tested)
-- [ ] `UserPointButton` (Pending)
+- [x] `UserPointButton` ✅ (`UserPointButton.test.tsx`)
 
 **Testing Strategy for Components:**
 
@@ -534,6 +537,7 @@ apps/testing/src/
 ├── unit/
 │   ├── components/
 │   │   ├── common/          # Common component tests
+│   │   ├── integration/     # Cross-component RTL integration (e.g. form-fields)
 │   │   ├── containers/      # Container component tests
 │   │   ├── layout/          # Layout component tests
 │   │   ├── prepyatra/       # PrepYatra component tests
@@ -552,6 +556,8 @@ apps/testing/src/
     ├── payment/
     └── ...
 ```
+
+**Vitest / App Router:** `vitest.config.ts` aliases `next/navigation` → `src/test-utils/next-navigation-mock.ts` so components under `@tbe/components` can call `useRouter` / `usePathname` in unit tests. Mutate `nextNavigationTest` when a spec needs a custom pathname or `push` spy.
 
 ## Testing Best Practices
 
@@ -620,12 +626,12 @@ apps/testing/src/
 - [x] `LoadingSpinner` - Already tested
 - [x] `Accordion` / `AccordionLinkItem`
 - [x] `Alert`
-- [ ] `Banner` (ActionBanner, BannerVariantA/B/C)
-- [ ] `Carousel`
+- [x] `Banner` (ActionBanner, BannerVariantA/B/C)
+- [x] `Carousel` (common carousel component)
 - [x] `CheckboxButton`
-- [ ] `InputFieldContainer`
-- [ ] `RadioButton` / `RadioInputField`
-- [ ] `SelectInput`
+- [x] `InputFieldContainer`
+- [x] `RadioButton` / `RadioInputField` (`RadioButton.test.tsx`, `RadioInputField.test.tsx`)
+- [x] `SelectInput` (`SelectInput.test.tsx`)
 - [x] `Pill` / `IconPill`
 - [x] `TabComponent`
 - [x] `Toast`
@@ -633,15 +639,15 @@ apps/testing/src/
 
 #### Button Variants
 
-- [ ] `FloatingActionButton`
+- [x] `FloatingActionButton`
 - [x] `LinkButton`
-- [ ] `LoginRedirectButton`
-- [ ] `LoginWithGoogleButton`
+- [x] `LoginRedirectButton`
+- [x] `LoginWithGoogleButton`
 - [x] `LogoutButton`
-- [ ] `ScrollToTopBottomButton`
+- [x] `ScrollToTopBottomButton`
 - [x] `StarButton`
 - [x] `ToggleButton`
-- [ ] `UserPointButton`
+- [x] `UserPointButton`
 
 #### Complex Components
 
@@ -656,9 +662,9 @@ apps/testing/src/
 
 #### Image Components
 
-- [ ] `BackgroundImage`
-- [ ] `Image` / `ImageLink`
-- [ ] `Logo`
+- [x] `BackgroundImage`
+- [x] `Image` (`ImageLink` pending)
+- [x] `Logo`
 - [ ] `UserAvatar`
 
 #### Learning Components
@@ -937,6 +943,9 @@ apps/testing/src/
 
 ### Phase 12: Integration Tests (Future)
 
+- [x] **Component composition (RTL):** `InputFieldContainer` + `RadioButton` — `unit/components/integration/form-fields.integration.test.tsx`
+- [x] **Select + styled radio:** `SelectInput` + `RadioInputField` — `unit/components/integration/select-radio-field.integration.test.tsx`
+- [x] **Background + foreground image:** `BackgroundImage` + `Image` — `unit/components/integration/image-strip.integration.test.tsx`
 - [ ] Authentication across apps
 - [ ] Payment flow
 - [ ] Certificate generation
@@ -945,9 +954,9 @@ apps/testing/src/
 
 ### ✅ Completed Modules
 
-**Components (Common):** 14/55 components tested
+**Components (Common):** 29/55 components tested
 
-- Button, Modal, Card, LoadingSpinner, Accordion, Alert, CheckboxButton, Pill, TabComponent, Toast, Link, Text, StarButton, ToggleButton, LinkButton, LogoutButton
+- Button, Modal, Card, LoadingSpinner, Accordion, AccordionLinkItem, Alert, Banner (ActionBanner + variants), Carousel (common), CheckboxButton, InputFieldContainer, Pill, RadioButton, RadioInputField, SelectInput, TabComponent, Toast, Link, Text, StarButton, ToggleButton, LinkButton, LogoutButton, FloatingActionButton, LoginRedirectButton, LoginWithGoogleButton, ScrollToTopBottomButton, UserPointButton, BackgroundImage, Image, Logo
 
 **Hooks:** 7/30+ hooks tested
 
@@ -967,9 +976,36 @@ apps/testing/src/
 
 **Total Test Statistics:**
 
-- ✅ **39 test files** passing
-- ✅ **393 tests** passing
-- ✅ All console output suppressed (clean test runs)
+- ✅ **116 test files** passing (`pnpm test:unit`; 1 skipped)
+- ✅ **1025 tests** passing (1 skipped)
+- Some component suites may log React/jsdom warnings (e.g. Radix prop forwarding); treat noisy output as follow-up, not a reason to skip updating this doc.
+
+**Serial batch — common “Basic UI Elements” (completed):**
+
+1. `AccordionLinkItem` → `common/AccordionLinkItem.test.tsx`
+2. `Banner` (ActionBanner + A/B/C) → `common/Banner.test.tsx`
+3. `Carousel` (common) → `common/Carousel.test.tsx` (direct import; barrel `Carousel` is shadowed by `./ui`)
+4. `InputFieldContainer` → `common/InputFieldContainer.test.tsx`
+5. `RadioButton` → `common/RadioButton.test.tsx`
+6. **Integration:** `unit/components/integration/form-fields.integration.test.tsx`
+
+**Serial batch — forms + auth CTAs (completed):**
+
+1. `SelectInput` → `common/SelectInput.test.tsx`
+2. `RadioInputField` → `common/RadioInputField.test.tsx`
+3. `FloatingActionButton` → `common/FloatingActionButton.test.tsx`
+4. `LoginRedirectButton` → `common/LoginRedirectButton.test.tsx` (uses `nextNavigationTest` from `next-navigation-mock.ts`)
+5. `LoginWithGoogleButton` → `common/LoginWithGoogleButton.test.tsx`
+6. **Integration:** `unit/components/integration/select-radio-field.integration.test.tsx`
+
+**Serial batch — scroll, points, images (completed):**
+
+1. `ScrollToTopBottomButton` → `common/ScrollToTopBottomButton.test.tsx` (mocks `useScrollPosition`)
+2. `UserPointButton` → `common/UserPointButton.test.tsx` (mocks `useUser` + `useGamification`)
+3. `BackgroundImage` → `common/BackgroundImage.test.tsx`
+4. `Image` → `common/Image.test.tsx`
+5. `Logo` → `common/Logo.test.tsx` (`next/link` mock)
+6. **Integration:** `unit/components/integration/image-strip.integration.test.tsx`
 
 ### 📋 Pending Work
 
@@ -977,11 +1013,12 @@ apps/testing/src/
 
 **Components:**
 
-- [ ] AccordionLinkItem
-- [ ] InputFieldContainer, RadioButton, SelectInput
-- [ ] Banner components (ActionBanner, BannerVariantA/B/C)
-- [ ] Carousel
-- [ ] Button variants: FloatingActionButton, LoginRedirectButton, LoginWithGoogleButton, ScrollToTopBottomButton, UserPointButton
+- [x] AccordionLinkItem
+- [x] SelectInput, RadioInputField
+- [x] Banner components (ActionBanner, BannerVariantA/B/C)
+- [x] Carousel (common)
+- [x] Button variants: ScrollToTopBottomButton, UserPointButton (`FloatingActionButton`, `LoginRedirectButton`, `LoginWithGoogleButton` covered)
+- [ ] Image: `ImageLink`, `UserAvatar`; **Complex:** `CelebrationAnimation`, `ComingSoon`, …
 
 **Hooks:**
 
@@ -1022,24 +1059,24 @@ apps/testing/src/
 
 ### 📊 Progress Summary
 
-- **Components:** ~25% complete (14/55 common components)
+- **Components:** ~53% complete (29/55 common components with dedicated coverage; see list above)
 - **Hooks:** ~23% complete (7/30+ hooks)
 - **Services:** ~20% complete (2/10+ services)
 - **Utilities:** ~47% complete (7/15+ utilities)
 - **API Routes:** ~3% complete (3/100+ endpoints)
-- **Overall:** ~15% of total testing plan complete
+- **Overall:** ~19% of total testing plan complete (rough estimate; rises as containers/hooks/API expand)
 
 ### 🎯 Recommended Next Steps
 
-1. Continue with remaining common components (InputFieldContainer, RadioButton, SelectInput)
+1. **Next serial common batch:** `ImageLink`, `UserAvatar`, then **Complex** (`CelebrationAnimation`, `ComingSoon`, `ResourceTooltip`, …) — note `CircularProgressBar` / `LinerProgressBar` / `GamificationToast` already have specs under `common/`.
 2. Add tests for more hooks (useAuth, useQuizData, usePrepLogs)
 3. Expand API route coverage (authentication, quiz endpoints)
 4. Add container component tests
 
 ## Next Steps
 
-1. Review and approve this plan
-2. Set up test utilities and helpers
-3. Begin Phase 1 implementation
+1. Keep this document aligned with the repo after each merge (checklists + `pnpm test:unit` counts).
+2. Continue **Phase 2** common components (`ImageLink`, `UserAvatar`, learning links, then remaining complex items).
+3. Extend **Phase 12** with more RTL integration slices before full auth/payment E2E-style flows.
 4. Establish testing cadence and review process
 5. Create test templates for each category
