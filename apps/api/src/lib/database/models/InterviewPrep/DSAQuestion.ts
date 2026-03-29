@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
 import {
@@ -97,6 +98,8 @@ DSAQuestionSchema.index({ difficulty: 1 });
 DSAQuestionSchema.index({ topics: 1 });
 DSAQuestionSchema.index({ companyTypes: 1 });
 DSAQuestionSchema.index({ order: 1 }); // For sorting by custom order
+
+applyContentIdOnCreate(DSAQuestionSchema);
 
 const DSAQuestion: Model<DSAQuestionModel> =
   models?.DSAQuestion ||

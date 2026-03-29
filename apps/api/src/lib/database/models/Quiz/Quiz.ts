@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
 import { DATABASE_MODELS } from "@/lib/constants";
@@ -90,6 +91,8 @@ const QuizSchema = new Schema<QuizModel>(
   },
   { timestamps: true },
 );
+
+applyContentIdOnCreate(QuizSchema);
 
 const Quiz: Model<QuizModel> =
   models?.Quiz || model<QuizModel>(DATABASE_MODELS.QUIZ, QuizSchema);

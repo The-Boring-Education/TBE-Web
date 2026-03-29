@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
 import {
@@ -108,6 +109,8 @@ const AptitudeTopicSchema = new Schema<AptitudeTopicModel>(
     },
   },
 );
+
+applyContentIdOnCreate(AptitudeTopicSchema);
 
 const AptitudeTopic: Model<AptitudeTopicModel> =
   models?.AptitudeTopic ||

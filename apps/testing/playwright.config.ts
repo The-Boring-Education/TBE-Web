@@ -11,8 +11,9 @@ import { defineConfig, devices } from "@playwright/test";
  * is not supported by Playwright and is ignored.
  *
  * Usage:
- *   pnpm test:e2e                              # all projects; webServer only if exactly one app has specs
+ *   pnpm test:e2e                              # all projects; auto-starts servers for apps that have specs
  *   pnpm test:e2e -- --project=platform        # platform only (typical when several apps have specs)
+ *   pnpm test:e2e -- --project=platform --project=prep-yatra
  *   PLAYWRIGHT_E2E_APP=platform pnpm test:e2e -- --project=platform
  *
  * Env overrides for baseURL (app already running):
@@ -94,33 +95,37 @@ function discoverAppsWithE2e(): Set<keyof typeof APPS> {
 
 const APPS_WITH_E2E = discoverAppsWithE2e();
 
-function getProjectFromArgv(): keyof typeof APPS | undefined {
+function getProjectsFromArgv(): (keyof typeof APPS)[] {
   const argv = process.argv;
+  const projects = new Set<keyof typeof APPS>();
+
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--project" && argv[i + 1] && argv[i + 1] in APPS) {
-      return argv[i + 1] as keyof typeof APPS;
+      projects.add(argv[i + 1] as keyof typeof APPS);
     }
     if (arg.startsWith("--project=")) {
       const name = arg.slice("--project=".length);
-      if (name in APPS) return name as keyof typeof APPS;
+      if (name in APPS) projects.add(name as keyof typeof APPS);
     }
   }
-  return undefined;
+
+  return [...projects];
 }
 
-function resolveWebAppKey(): keyof typeof APPS | undefined {
+function resolveWebAppKeys(): (keyof typeof APPS)[] {
   const fromEnv = process.env.PLAYWRIGHT_E2E_APP as
     | keyof typeof APPS
     | undefined;
-  if (fromEnv && fromEnv in APPS && APPS_WITH_E2E.has(fromEnv)) return fromEnv;
+  if (fromEnv && fromEnv in APPS && APPS_WITH_E2E.has(fromEnv))
+    return [fromEnv];
 
-  const fromArgv = getProjectFromArgv();
-  if (fromArgv && APPS_WITH_E2E.has(fromArgv)) return fromArgv;
-  if (fromArgv) return undefined;
+  const fromArgv = getProjectsFromArgv().filter((key) =>
+    APPS_WITH_E2E.has(key),
+  );
+  if (fromArgv.length > 0) return fromArgv;
 
-  if (APPS_WITH_E2E.size === 1) return [...APPS_WITH_E2E][0];
-  return undefined;
+  return [...APPS_WITH_E2E];
 }
 
 function getAppUrl(appKey: keyof typeof APPS): string {
@@ -141,17 +146,24 @@ type WebServerConfig = {
   timeout: number;
 };
 
-function buildWebServer(): WebServerConfig | undefined {
-  const appKey = resolveWebAppKey();
-  if (!appKey) return undefined;
+function toWebServerConfig(appKey: keyof typeof APPS): WebServerConfig {
   const app = APPS[appKey];
   return {
     command: `pnpm --filter ${app.filter} dev`,
     url: getAppUrl(appKey),
     cwd: REPO_ROOT,
-    reuseExistingServer: !process.env.CI,
+    // Keep local runs reliable even when CI env vars are exported in the shell.
+    reuseExistingServer: true,
     timeout: process.env.CI ? 120_000 : 60_000,
   };
+}
+
+function buildWebServer(): WebServerConfig | WebServerConfig[] | undefined {
+  const appKeys = resolveWebAppKeys();
+  if (appKeys.length === 1) return toWebServerConfig(appKeys[0]);
+  if (appKeys.length > 1) return appKeys.map((key) => toWebServerConfig(key));
+
+  return undefined;
 }
 
 function buildProjects() {
