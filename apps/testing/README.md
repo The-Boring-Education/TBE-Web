@@ -72,7 +72,7 @@ From the **repository root**, install browsers once (Chromium is enough for CI p
 pnpm --filter @tbe/testing exec playwright install chromium
 ```
 
-Run all E2E projects that have specs (today: `@tbe/platform` only). Playwright starts the matching dev server automatically:
+Run all E2E projects that have specs. Playwright starts required app dev servers automatically:
 
 ```bash
 pnpm test:e2e

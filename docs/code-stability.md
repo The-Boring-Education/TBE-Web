@@ -69,9 +69,17 @@ Parallel work tracker: pick an unchecked `[ ]` item, branch, implement, PR, then
 
 ## 5. Tests — E2E
 
-- [ ] **Expand Playwright matrix in CI** ([.github/workflows/test-e2e.yml](../.github/workflows/test-e2e.yml)): add jobs per app as `src/e2e/<app>/*.spec.ts` appear (prep-yatra, quizes, oncampus, onboarding, etc.).
-- [ ] **Smoke flows per app**: login or public landing, one critical user journey (enrollment, quiz start, prep dashboard) — start with highest-traffic apps.
-- [ ] **API + E2E contract**: optional tests against running `@tbe/api` for critical mobile/web clients (requires compose or scripted `dev`).
+- [x] **Expand Playwright matrix in CI** ([.github/workflows/test-e2e.yml](../.github/workflows/test-e2e.yml)): matrix now includes all registered Playwright projects (`platform`, `prep-yatra`, `quizes`, `techyatra`, `dsayatra`, `resume-yatra`, `oncampus`, `onboarding`); projects without specs pass via `--pass-with-no-tests`.
+- [ ] **Smoke flows per app**: add one smoke spec per app under `apps/testing/src/e2e/<app>/` with:
+  - public landing (or login) renders successfully
+  - one critical journey for that app (e.g., enrollment, quiz start, prep dashboard)
+  - stable selectors (`getByRole`, `data-testid`) and deterministic mocks/fixtures where needed
+  - rollout order: `platform` → `quizes` → `prep-yatra` → `oncampus` → remaining apps
+  - progress: smoke coverage now includes `platform`, `prep-yatra`, `quizes`, `dsayatra`, and `oncampus` (`smoke.spec.ts`)
+- [ ] **API + E2E contract**: add optional contract-mode runs that point E2E to a running `@tbe/api`:
+  - add a dedicated script/profile (e.g., `test:e2e:contract`) that exports API URL env vars and starts required services
+  - run a focused critical set (auth, enrollment, quiz attempt start) against live API responses
+  - keep this lane non-blocking initially; promote to required after flake budget is stable
 
 ---
 
