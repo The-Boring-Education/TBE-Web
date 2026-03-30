@@ -1,7 +1,9 @@
 import { UserPointButton } from "@tbe/components";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { renderWithProviders } from "../../../test-utils/test-helpers";
 
 vi.mock("@tbe/hooks", async (importOriginal) => {
   const mod = await importOriginal<typeof import("@tbe/hooks")>();
@@ -33,7 +35,7 @@ describe("UserPointButton", () => {
   });
 
   it("shows points after hydration when authenticated", async () => {
-    render(<UserPointButton />);
+    renderWithProviders(<UserPointButton />);
 
     expect(await screen.findByText("42")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /42/i })).toBeInTheDocument();
@@ -41,7 +43,7 @@ describe("UserPointButton", () => {
 
   it("opens popover with gamification summary on click", async () => {
     const user = userEvent.setup();
-    render(<UserPointButton />);
+    renderWithProviders(<UserPointButton />);
 
     await screen.findByText("42");
     await user.click(screen.getByRole("button", { name: /42/i }));
