@@ -41,6 +41,18 @@ export const DSA_STUDY_GUIDE_CONFIGS: Record<string, StudyGuideConfig> = {
       { id: "cheat-sheet", label: "Cheat sheet" },
     ],
   },
+  TWO_POINTERS: {
+    topic: "Two Pointers",
+    hasStudyGuide: true,
+    sections: [
+      { id: "introduction", label: "Introduction" },
+      { divider: "Patterns" },
+      { id: "opposite-ends", label: "Opposite ends" },
+      { id: "fast-and-slow", label: "Fast and slow pointers" },
+      { divider: null },
+      { id: "cheat-sheet", label: "Cheat sheet" },
+    ],
+  },
   BINARY_SEARCH: {
     topic: "Binary Search",
     hasStudyGuide: true,
@@ -97,6 +109,18 @@ export const DSA_STUDY_GUIDE_CONFIGS: Record<string, StudyGuideConfig> = {
     sections: [
       { id: "before-you-start", label: "Introduction" },
       { id: "graph-roadmap", label: "Study Roadmap" },
+      { divider: null },
+      { id: "cheat-sheet", label: "Cheat sheet" },
+    ],
+  },
+  DYNAMIC_PROGRAMMING: {
+    topic: "Dynamic Programming",
+    hasStudyGuide: true,
+    sections: [
+      { id: "before-you-start", label: "Introduction" },
+      { id: "knapsack-fundamentals", label: "Knapsack Fundamentals" },
+      { divider: "Patterns" },
+      { id: "01-knapsack-pattern", label: "0/1 Knapsack Pattern" },
       { divider: null },
       { id: "cheat-sheet", label: "Cheat sheet" },
     ],

@@ -1657,6 +1657,180 @@ const STUDY_GUIDE_DATA = [
       },
     ],
   },
+  {
+    topicId: "DYNAMIC_PROGRAMMING",
+    title: "Dynamic Programming",
+    hasGuide: true,
+    sortOrder: 10,
+    sections: [
+      {
+        id: "before-you-start",
+        label: "Introduction",
+        type: "intro",
+        isDivider: false,
+        dividerLabel: null,
+        sortOrder: 0,
+        content: {
+          pageTitle: "The Art of Caching",
+          subtitle:
+            "Mastering complex optimizations by never solving the same subproblem twice.",
+          openingParagraph:
+            "Dynamic Programming (DP) is an optimization technique that solves complex problems by breaking them down into simpler overlapping subproblems. Instead of solving the same subproblem multiple times, DP stores the results and reuses them — a technique called memoization. If you can write a recursive solution, you are already 90% of the way to DP.",
+          prereqCards: [
+            {
+              title: "Optimal Substructure",
+              body: "The solution to a larger problem can be built using solutions to its smaller subproblems.",
+              sortOrder: 0,
+            },
+            {
+              title: "Overlapping Subproblems",
+              body: "The same subproblems are solved repeatedly in a naive recursive approach.",
+              sortOrder: 1,
+            },
+            {
+              title: "State and Transition",
+              body: "DP is all about defining a 'state' and a 'transition' (recurrence relation).",
+              sortOrder: 2,
+            },
+          ],
+          callouts: [
+            {
+              variant: "info",
+              body: "Don't get intimidated by 'DP'. It's just recursion with a 'notebook' (cache). Start by drawing the recursion tree.",
+              sortOrder: 0,
+            },
+          ],
+          howToUseHeading: "The DP Roadmap",
+          howToUseParagraphs: [
+            "We have broken down DP into its most common interview patterns. Master 0/1 Knapsack first — it's the parent of nearly half of all DP problems.",
+          ],
+        },
+      },
+      {
+        id: "knapsack-fundamentals",
+        label: "Knapsack Fundamentals",
+        type: "concept",
+        isDivider: false,
+        dividerLabel: null,
+        sortOrder: 1,
+        content: {
+          pageTitle: "The Knapsack Family",
+          subtitle: "The most important foundation in DP.",
+          subsections: [
+            {
+              subheading: "What is a Knapsack Problem?",
+              bodyText:
+                "You have a set of items, each with a weight and a value. You have a knapsack with a fixed capacity. Your goal is to maximize the total value.\n\nNearly every DP problem involves 'picking' or 'not picking' something to optimize a value under a constraint.",
+              sortOrder: 0,
+            },
+            {
+              subheading: "0/1 vs Unbounded",
+              bodyText:
+                "0/1 Knapsack: You have only ONE of each item (Take or Leave).\nUnbounded Knapsack: You have INFINITE copies of each item (Take again or Leave).",
+              sortOrder: 1,
+            },
+          ],
+        },
+      },
+      {
+        id: "01-knapsack-pattern",
+        label: "0/1 Knapsack Pattern",
+        type: "pattern",
+        isDivider: false,
+        dividerLabel: null,
+        sortOrder: 3,
+        content: {
+          pageTitle: "0/1 Knapsack Pattern",
+          subtitle: "Pattern 1 of 3 · Medium · ~30 min",
+          whatIsIt:
+            "The 0/1 Knapsack pattern handles scenarios where you have a set of items and for each item, you must decide whether to include it in a subset or not (0 or 1 choice).",
+          triggerPhrases: [
+            "at most once",
+            "pick or not pick",
+            "maximize profit",
+            "subset target sum",
+          ],
+          whenNotToUse:
+            "Do not use when items can be used multiple times or when items can be cut into pieces (Fractional).",
+          codeTemplates: [
+            {
+              language: "python",
+              label: "Memoization (Top-Down)",
+              code: "def solve(idx, cap):\n    if idx < 0 or cap <= 0: return 0\n    if (idx, cap) in memo: return memo[(idx, cap)]\n\n    # Option 1: Skip item\n    res = solve(idx - 1, cap)\n\n    # Option 2: Take item (if it fits)\n    if weights[idx] <= cap:\n        res = max(res, values[idx] + solve(idx - 1, cap - weights[idx]))\n\n    memo[(idx, cap)] = res\n    return res",
+              sortOrder: 0,
+            },
+          ],
+          workedExample: {
+            problemTitle: "0/1 Knapsack Problem",
+            problemStatement:
+              "Given weights and values of n items, put these items in a knapsack of capacity W to get the maximum total value.",
+            inputExample:
+              "vals = [1, 4, 4, 5, 7], weights = [1, 2, 3, 4, 5], W = 7",
+            outputExample: "11 (items with weights 2 and 5)",
+            keyInsight:
+              "By exploring both 'take' and 'not take' paths and caching the result, we avoid redundant calculations.",
+            dryRunSteps: [
+              {
+                stepNumber: 1,
+                description: "Start at idx 4 (wt=5, val=7), cap 7.",
+                pointerState: "idx=4, W=7",
+              },
+              {
+                stepNumber: 2,
+                description:
+                  "Option: Take wt 5. New cap 2. Solve for idx 3, cap 2.",
+                pointerState: "idx=3, W=2",
+              },
+              {
+                stepNumber: 3,
+                description:
+                  "Option: Skip wt 5. Cap remains 7. Solve for idx 3, cap 7.",
+                pointerState: "idx=3, W=7",
+              },
+            ],
+            timeComplexity: "O(n * W)",
+            spaceComplexity: "O(n * W)",
+          },
+          practiceQuestions: [
+            {
+              name: "Partition Equal Subset Sum",
+              difficulty: "Medium",
+            },
+          ],
+          patternRows: [
+            {
+              patternName: "0/1 Knapsack",
+              timeComplexity: "O(n*W)",
+              spaceComplexity: "O(n*W) or O(W)",
+              coreTrick: "dp[i][w] = max(dp[i-1][w], val + dp[i-1][w-wt])",
+              sortOrder: 0,
+            },
+          ],
+          oneThingToRemember: [
+            "Binary Choice: Every item is either in or out.",
+            "1D Array Optimization: 0/1 needs reverse loop, Unbounded needs forward loop.",
+          ],
+          questionGroups: [
+            {
+              groupName: "Knapsack Variants",
+              sortOrder: 0,
+              questions: [
+                {
+                  name: "Subset Sum Problem",
+                  difficulty: "Medium",
+                  leetcodeUrl: "https://leetcode.com/problems/subset-sum/",
+                },
+                {
+                  name: "Target Sum",
+                  leetcodeUrl: "https://leetcode.com/problems/target-sum/",
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ],
+  },
 ];
 
 const HASHMAP_QUESTIONS = [
@@ -2559,6 +2733,76 @@ async function seed() {
     }
     console.log(`Seeded ${GRAPH_QUESTIONS.length} Graph questions`);
 
+    // Seed Dynamic Programming Questions
+    for (const q of DYNAMIC_PROGRAMMING_QUESTIONS) {
+      const payload = {
+        ...q,
+        resources: {
+          youtubeURL: `https://www.youtube.com/results?search_query=${q.title.replace(/\s+/g, "+")}+leetcode`,
+          leetcodeURL: q.leetcodeLink,
+          blogURL: null,
+        },
+        updatedAt: new Date(),
+      };
+
+      delete (payload as any).leetcodeLink;
+
+      await questionsCollection.updateOne(
+        { title: q.title },
+        { $set: payload, $setOnInsert: { createdAt: new Date() } },
+        { upsert: true },
+      );
+    }
+    console.log(
+      `Seeded ${DYNAMIC_PROGRAMMING_QUESTIONS.length} Dynamic Programming questions`,
+    );
+
+    // Seed Greedy Questions
+    for (const q of GREEDY_QUESTIONS) {
+      const payload = {
+        ...q,
+        resources: {
+          youtubeURL: `https://www.youtube.com/results?search_query=${q.title.replace(/\s+/g, "+")}+leetcode`,
+          leetcodeURL: q.leetcodeLink,
+          blogURL: null,
+        },
+        updatedAt: new Date(),
+      };
+
+      delete (payload as any).leetcodeLink;
+
+      await questionsCollection.updateOne(
+        { title: q.title },
+        { $set: payload, $setOnInsert: { createdAt: new Date() } },
+        { upsert: true },
+      );
+    }
+    console.log(`Seeded ${GREEDY_QUESTIONS.length} Greedy questions`);
+
+    // Seed Monotonic Stack Questions
+    for (const q of MONOTONIC_STACK_QUESTIONS) {
+      const payload = {
+        ...q,
+        resources: {
+          youtubeURL: `https://www.youtube.com/results?search_query=${q.title.replace(/\s+/g, "+")}+leetcode`,
+          leetcodeURL: q.leetcodeLink,
+          blogURL: null,
+        },
+        updatedAt: new Date(),
+      };
+
+      delete (payload as any).leetcodeLink;
+
+      await questionsCollection.updateOne(
+        { title: q.title },
+        { $set: payload, $setOnInsert: { createdAt: new Date() } },
+        { upsert: true },
+      );
+    }
+    console.log(
+      `Seeded ${MONOTONIC_STACK_QUESTIONS.length} Monotonic Stack questions`,
+    );
+
     console.log("Seeding complete!");
   } catch (error) {
     console.error("Seeding failed:", error);
@@ -2566,5 +2810,730 @@ async function seed() {
     await client.close();
   }
 }
+
+const DYNAMIC_PROGRAMMING_QUESTIONS = [
+  {
+    title: "Climbing Stairs",
+    answer: "Ways to reach step n is sum of ways to reach (n-1) and (n-2).",
+    difficulty: "EASY",
+    domain: ["DSA"],
+    companyTypes: ["MNC", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/climbing-stairs/",
+    order: 1,
+  },
+  {
+    title: "Min Cost Climbing Stairs",
+    answer: "dp[i] = cost[i] + min(dp[i-1], dp[i-2])",
+    difficulty: "EASY",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/min-cost-climbing-stairs/",
+    order: 2,
+  },
+  {
+    title: "House Robber",
+    answer: "dp[i] = max(dp[i-1], nums[i] + dp[i-2])",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "MNC"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/house-robber/",
+    order: 3,
+  },
+  {
+    title: "Partition Equal Subset Sum",
+    answer: "Subset sum problem with target = total_sum / 2.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/partition-equal-subset-sum/",
+    order: 4,
+  },
+  {
+    title: "Closest Dessert Cost",
+    answer: "Use DP or recursion to find a sum closest to the target budget.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/closest-dessert-cost/",
+    order: 5,
+  },
+  {
+    title: "Minimum Cost to Connect Sticks",
+    answer:
+      "Use a Min-Priority Queue to merge the smallest sticks at each step.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink:
+      "https://leetcode.com/problems/minimum-cost-to-connect-sticks/",
+    order: 6,
+  },
+  {
+    title: "Kth Smallest Element in a Sorted Matrix",
+    answer: "Find the kth smallest element using binary search or DP variants.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["DYNAMIC_PROGRAMMING", "BINARY_SEARCH"],
+    leetcodeLink:
+      "https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/",
+    order: 7,
+  },
+  {
+    title: "Target Sum",
+    answer:
+      "Find number of ways to assign +/- symbols to get a target sum. Equivalent to Count Subsets with Given Difference.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "MNC"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/target-sum/",
+    order: 8,
+  },
+  {
+    title: "Coin Change II (Max Ways / Unbounded)",
+    answer: "Number of ways to make a total using infinite supply of coins.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/coin-change-2/",
+    order: 9,
+  },
+  {
+    title: "Minimum Cost to Cut a Stick",
+    answer:
+      "Find the minimum cost to cut a wooden stick at specific positions using partition DP.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/minimum-cost-to-cut-a-stick/",
+    order: 10,
+  },
+  {
+    title: "Coin Change (Min Coins)",
+    answer: "Minimum number of coins to make a total.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/coin-change/",
+    order: 11,
+  },
+  {
+    title: "Longest Common Subsequence",
+    answer: "Standard 2D DP to find LCS between two strings.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "MNC"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/longest-common-subsequence/",
+    order: 12,
+  },
+  {
+    title: "Maximum Length of Repeated Subarray",
+    answer:
+      "Find the maximum length of a common subarray (substring) between two arrays.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink:
+      "https://leetcode.com/problems/maximum-length-of-repeated-subarray/",
+    order: 13,
+  },
+  {
+    title: "Shortest Common Supersequence",
+    answer:
+      "Length = (m+n) - LCS_length. Print the sequence by following DP table.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink:
+      "https://leetcode.com/problems/shortest-common-supersequence/",
+    order: 14,
+  },
+  {
+    title: "Delete Operation for Two Strings",
+    answer: "Min insertions/deletions = (m+n) - 2*LCS_length.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["MNC"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink:
+      "https://leetcode.com/problems/delete-operation-for-two-strings/",
+    order: 15,
+  },
+  {
+    title: "Longest Palindromic Subsequence",
+    answer: "LCS of string and its reverse.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink:
+      "https://leetcode.com/problems/longest-palindromic-subsequence/",
+    order: 16,
+  },
+  {
+    title: "Longest Repeating Character Replacement",
+    answer:
+      "Sliding window with frequency count to find maximum repeating sequence.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING", "SLIDING_WINDOW"],
+    leetcodeLink:
+      "https://leetcode.com/problems/longest-repeating-character-replacement/",
+    order: 17,
+  },
+  {
+    title: "Is Subsequence",
+    answer:
+      "Check if one string is a subsequence of another using two pointers or DP.",
+    difficulty: "EASY",
+    domain: ["DSA"],
+    companyTypes: ["MNC", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING", "TWO_POINTERS"],
+    leetcodeLink: "https://leetcode.com/problems/is-subsequence/",
+    order: 18,
+  },
+  {
+    title: "Minimum Insertion Steps to Make a String Palindrome",
+    answer: "Length - LPS_length.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink:
+      "https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/",
+    order: 19,
+  },
+  {
+    title: "Minimum Cost Tree From Leaf Values",
+    answer:
+      "Use partition DP or greedy approach with stack to minimize tree cost.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink:
+      "https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/",
+    order: 20,
+  },
+  {
+    title: "Palindrome Partitioning II",
+    answer: "Find minimum cuts needed to partition a string into palindromes.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/palindrome-partitioning-ii/",
+    order: 21,
+  },
+  {
+    title: "Different Ways to Add Parentheses",
+    answer:
+      "Compute all possible results of expressions with different groupings.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink:
+      "https://leetcode.com/problems/different-ways-to-add-parentheses/",
+    order: 22,
+  },
+  {
+    title: "Scramble String",
+    answer:
+      "Check if one string is a scramble version of another using recursive partition DP.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/scramble-string/",
+    order: 23,
+  },
+  {
+    title: "Super Egg Drop",
+    answer:
+      "Find the minimum number of attempts to find the critical floor with k eggs and n floors.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/super-egg-drop/",
+    order: 24,
+  },
+  {
+    title: "Word Break",
+    answer: "dp[i] is true if s[:i] can be segmented using dictionary words.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/word-break/",
+    order: 25,
+  },
+  {
+    title: "Edit Distance",
+    answer:
+      "Min operations (insert, delete, replace) to convert one string to another.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["DYNAMIC_PROGRAMMING"],
+    leetcodeLink: "https://leetcode.com/problems/edit-distance/",
+    order: 26,
+  },
+];
+
+const GREEDY_QUESTIONS = [
+  {
+    title: "Bag of Tokens",
+    answer:
+      "Use two pointers. Gain score by sacrificing tokens at left (min cost) and gain tokens by sacrificing score at right (max gain).",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/bag-of-tokens/",
+    order: 1,
+  },
+  {
+    title: "Boats to Save People",
+    answer:
+      "Sort the people by weight. Use two pointers to pair the heaviest and lightest people together if their combined weight fits in a boat.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/boats-to-save-people/",
+    order: 2,
+  },
+  {
+    title: "Break a Palindrome",
+    answer:
+      "Iterate through the first half of the string and replace the first non-'a' character with 'a'. If all are 'a', replace the last character with 'b'.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/break-a-palindrome/",
+    order: 3,
+  },
+  {
+    title: "Broken Calculator",
+    answer:
+      "Work backwards from target to X. If target is even, divide by 2. If odd, add 1. This minimizes operations.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/broken-calculator/",
+    order: 4,
+  },
+  {
+    title: "Minimum Time to Make Rope Colorful",
+    answer:
+      "For consecutive balloons of the same color, keep the one with the maximum removal cost and add the rest to the total cost.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/minimum-time-to-make-rope-colorful/",
+    order: 5,
+  },
+  {
+    title: "Earliest Possible Day of Full Bloom",
+    answer:
+      "Sort plants by their grow time in descending order. This ensures plants that take longer to grow start growing as early as possible.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/earliest-possible-day-of-full-bloom/",
+    order: 6,
+  },
+  {
+    title: "Longest Palindrome by Concatenating Two Letter Words",
+    answer:
+      "Use a map to count frequencies of words. Pair words with their reverse. Handle symmetrical words specially.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY", "HASHMAP"],
+    leetcodeLink:
+      "https://leetcode.com/problems/longest-palindrome-by-concatenating-two-letter-words/",
+    order: 7,
+  },
+  {
+    title: "Maximum 69 Number",
+    answer:
+      "Find the first occurrence of the digit '6' from the left and change it to '9' to get the maximum number.",
+    difficulty: "EASY",
+    domain: ["DSA"],
+    companyTypes: ["MNC"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/maximum-69-number/",
+    order: 8,
+  },
+  {
+    title: "Maximum Bags With Full Capacity of Rocks",
+    answer:
+      "Calculate remaining capacity for each bag. Sort these capacities in ascending order and fill bags using additional rocks.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/maximum-bags-with-full-capacity-of-rocks/",
+    order: 9,
+  },
+  {
+    title: "Maximum Number of Rounds to Complete All Tasks",
+    answer:
+      "Count frequencies of tasks. For each frequency f, if f=1 return -1. Else, number of rounds is ceil(f/3).",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["MNC"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/minimum-rounds-to-complete-all-tasks/",
+    order: 10,
+  },
+  {
+    title: "Maximum Ice Cream Bars",
+    answer:
+      "Sort costs in ascending order. Buy ice cream bars starting from the cheapest until you run out of coins.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/maximum-ice-cream-bars/",
+    order: 11,
+  },
+  {
+    title: "Gas Station",
+    answer:
+      "If total gas is less than total cost, return -1. Otherwise, find the start station where current gas never drops below zero.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/gas-station/",
+    order: 12,
+  },
+  {
+    title: "Optimal Partition of String",
+    answer:
+      "Iterate through the string and keep adding characters to a current substring until you find a duplicate.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/optimal-partition-of-string/",
+    order: 13,
+  },
+  {
+    title: "Minimum Replacements to Sort the Array",
+    answer:
+      "Iterate backwards and replace each number such that it's just smaller than or equal to the next number.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/minimum-replacements-to-sort-the-array/",
+    order: 14,
+  },
+  {
+    title: "Minimum Number of Taps to Open to Water a Garden",
+    answer:
+      "Convert each tap's range to an interval [start, end]. Solve by finding the minimum number of intervals to cover [0, n].",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/minimum-number-taps-to-open-to-water-a-garden/",
+    order: 15,
+  },
+  {
+    title: "Minimum Deletions to Make Character Frequencies Unique",
+    answer:
+      "Count frequencies and use a set to track used frequencies. Decrement counts until you find a unique available one.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["MNC", "Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/minimum-deletions-to-make-character-frequencies-unique/",
+    order: 16,
+  },
+  {
+    title: "Candy",
+    answer:
+      "Two-pass greedy approach: left to right to satisfy right neighbors, and right to left to satisfy left neighbors.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/candy/",
+    order: 17,
+  },
+  {
+    title: "Remove Colored Pieces if Both Neighbors are the Same Color",
+    answer:
+      "Count number of 'A' triplets and 'B' triplets. Alice wins if count(A) > count(B).",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/remove-colored-pieces-if-both-neighbors-are-the-same-color/",
+    order: 18,
+  },
+  {
+    title: "Minimum Maximum Element After Decreasing and Rearranging",
+    answer:
+      "Sort the array, then adjust each element to be at most 1 greater than its predecessor.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["MNC"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/minimum-maximum-element-after-decreasing-and-rearranging/",
+    order: 19,
+  },
+  {
+    title: "Maximum Points You Can Obtain from Cards",
+    answer:
+      "Sliding window approach: calculate points of first k cards, then slide from right to take cards from both ends.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/maximum-points-you-can-obtain-from-cards/",
+    order: 20,
+  },
+  {
+    title: "Watering Plants",
+    answer:
+      "Iterate through plants. If current water is enough, move 1 step. Else, move back to source and back again.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/watering-plants/",
+    order: 21,
+  },
+  {
+    title: "Find Polygon With the Largest Perimeter",
+    answer:
+      "Sort sides in ascending order. Find the largest prefix sum that is greater than the next side length.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/find-polygon-with-the-largest-perimeter/",
+    order: 22,
+  },
+  {
+    title: "Patching Array",
+    answer:
+      "Maintain the maximum range [1, miss) that can be covered. If next element > miss, patch by adding miss.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/patching-array/",
+    order: 23,
+  },
+  {
+    title: "Maximum Distance in Arrays",
+    answer:
+      "Iterate arrays once while tracking global min and max seen so far to calculate distance with current ends.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink: "https://leetcode.com/problems/maximum-distance-in-arrays/",
+    order: 24,
+  },
+  {
+    title: "Maximum Manhattan Distance After K Changes",
+    answer:
+      "Greedily change a move to its opposite direction to maximize distance from the origin.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/maximum-manhattan-distance-after-k-changes/",
+    order: 25,
+  },
+  {
+    title: "Maximum Difference by Changing an Integer",
+    answer:
+      "Change the first non-'9' digit to '9' for max, and the first non-'1'/'0' digit to '1'/'0' for min.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/max-difference-you-can-get-from-changing-an-integer/",
+    order: 26,
+  },
+  {
+    title: "Partition into Minimum Number of Deci-Binary Numbers",
+    answer: "The answer is the maximum digit in the input string.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["MNC"],
+    topics: ["GREEDY"],
+    leetcodeLink:
+      "https://leetcode.com/problems/partitioning-into-minimum-number-of-deci-binary-numbers/",
+    order: 27,
+  },
+  {
+    title: "Merge Intervals",
+    answer:
+      "Sort intervals by start time, then greedily merge overlapping ones by updating current end.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "MNC"],
+    topics: ["GREEDY", "SORTING"],
+    leetcodeLink: "https://leetcode.com/problems/merge-intervals/",
+    order: 28,
+  },
+];
+
+const MONOTONIC_STACK_QUESTIONS = [
+  {
+    title: "Next Greater Element I",
+    answer:
+      "Use a monotonic decreasing stack to find the next greater element for each number. Map results back to the original array.",
+    difficulty: "EASY",
+    domain: ["DSA"],
+    companyTypes: ["MNC", "Startup"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink: "https://leetcode.com/problems/next-greater-element-i/",
+    order: 1,
+  },
+  {
+    title: "Next Greater Element II",
+    answer:
+      "Iterate through the circular array twice using a monotonic stack to resolve next greater elements for all indices.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink: "https://leetcode.com/problems/next-greater-element-ii/",
+    order: 2,
+  },
+  {
+    title: "Daily Temperatures",
+    answer:
+      "Use a monotonic stack to track temperatures and their indices. Pop from the stack once a warmer temperature is encountered.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink: "https://leetcode.com/problems/daily-temperatures/",
+    order: 3,
+  },
+  {
+    title: "Final Prices With a Special Discount in a Shop",
+    answer:
+      "Find the next smaller element for each price using a monotonic stack to calculate the discounted price.",
+    difficulty: "EASY",
+    domain: ["DSA"],
+    companyTypes: ["Startup"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink:
+      "https://leetcode.com/problems/final-prices-with-a-special-discount-in-a-shop/",
+    order: 4,
+  },
+  {
+    title: "Stock Span Problem (Online Stock Span)",
+    answer:
+      "Use a monotonic stack to store [price, span] pairs. Pop elements that are smaller or equal to current price and add their spans.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "MNC"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink: "https://leetcode.com/problems/online-stock-span/",
+    order: 5,
+  },
+  {
+    title: "Remove K Digits",
+    answer:
+      "Maintain a monotonic increasing stack. If a smaller digit is found, pop larger digits from the stack to minimize the resulting number.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink: "https://leetcode.com/problems/remove-k-digits/",
+    order: 6,
+  },
+  {
+    title: "Remove Duplicate Letters",
+    answer:
+      "Use a monotonic stack to keep the smallest lexicographical result. Only pop if the character is larger and will appear again later.",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink: "https://leetcode.com/problems/remove-duplicate-letters/",
+    order: 7,
+  },
+  {
+    title: "Largest Rectangle in Histogram",
+    answer:
+      "Calculate the width for each bar (next smaller to left and right) using monotonic stacks to find the largest area.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink:
+      "https://leetcode.com/problems/largest-rectangle-in-histogram/",
+    order: 8,
+  },
+  {
+    title: "Maximal Rectangle",
+    answer:
+      "Apply 'Largest Rectangle in Histogram' on each row of the grid, treating the consecutive 1s above as heights.",
+    difficulty: "HARD",
+    domain: ["DSA"],
+    companyTypes: ["FAANG"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink: "https://leetcode.com/problems/maximal-rectangle/",
+    order: 9,
+  },
+  {
+    title: "Sum of Subarray Minimums",
+    answer:
+      "Calculate contribution of each element as a minimum in subarrays using (distance to next smaller left) * (distance to next smaller right).",
+    difficulty: "MEDIUM",
+    domain: ["DSA"],
+    companyTypes: ["FAANG", "Startup"],
+    topics: ["MONOTONIC_STACK"],
+    leetcodeLink: "https://leetcode.com/problems/sum-of-subarray-minimums/",
+    order: 10,
+  },
+];
 
 seed();
