@@ -1,7 +1,15 @@
 import { UserPointButton } from "@tbe/components";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import { renderWithProviders } from "../../../test-utils/test-helpers";
 
@@ -29,6 +37,20 @@ vi.mock("@tbe/hooks", async (importOriginal) => {
   };
 });
 
+// Prevent actual network calls from reaching the network in CI
+const originalFetch = global.fetch;
+beforeAll(() => {
+  global.fetch = vi.fn(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ points: 42 }),
+    } as Response),
+  );
+});
+afterAll(() => {
+  global.fetch = originalFetch;
+});
+
 describe("UserPointButton", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -37,7 +59,8 @@ describe("UserPointButton", () => {
   it("shows points after hydration when authenticated", async () => {
     renderWithProviders(<UserPointButton />);
 
-    expect(await screen.findByText("42")).toBeInTheDocument();
+    const pointsElement = await screen.findByText("42");
+    expect(pointsElement).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /42/i })).toBeInTheDocument();
   });
 
@@ -45,8 +68,8 @@ describe("UserPointButton", () => {
     const user = userEvent.setup();
     renderWithProviders(<UserPointButton />);
 
-    await screen.findByText("42");
-    await user.click(screen.getByRole("button", { name: /42/i }));
+    const button = await screen.findByRole("button", { name: /42/i });
+    await user.click(button);
 
     await waitFor(() => {
       expect(screen.getByText(/YOU'RE AT/i)).toBeVisible();
