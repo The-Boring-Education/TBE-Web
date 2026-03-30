@@ -150,7 +150,10 @@ export async function mockShikshaExploreAPI(page: Page) {
  */
 export async function mockCoursePageSSR(
   page: Page,
-  courseData: typeof unenrolledCourse,
+  courseData: {
+    pageProps: Record<string, unknown>;
+    __N_SSP: boolean;
+  },
 ) {
   await page.route(
     (url) => {

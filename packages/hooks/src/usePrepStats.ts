@@ -17,7 +17,9 @@ export function usePrepStats(userId: string) {
 
   const totalTimeSpent =
     stats?.weeklyLogs?.reduce(
-      (acc: number, log: { timeSpent?: number }) => acc + (log.timeSpent || 0),
+      (acc: number, log: { timeSpent?: number; createdAt?: string }) => {
+        return acc + (log.timeSpent || 0);
+      },
       0,
     ) || 0;
 

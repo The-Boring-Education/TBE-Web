@@ -1,0 +1,87 @@
+name: 🎭 Reusable E2E Tests (Per App)
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e-tests:
+    name: E2E - ${{ matrix.app }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # One job per frontend app. Apps without Playwright specs exit immediately (--pass-with-no-tests).
+        # Dev servers start only for apps that have *.spec.ts under apps/testing/src/e2e/<app>/ (see playwright.config.ts).
+        app:
+          - platform
+          - prep-yatra
+          - quizes
+          - techyatra
+          - dsayatra
+          - resume-yatra
+          - oncampus
+          - onboarding
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: 🔍 Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: 🗂️ Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📦 Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build Shared Packages
+        run: |
+          pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth --filter=@tbe/query --filter=@tbe/config
+
+      - name: 🎭 Install Playwright Browsers
+        run: pnpm --filter @tbe/testing exec playwright install --with-deps chromium
+
+      - name: 🎭 Run E2E for ${{ matrix.app }}
+        env:
+          CI: "true"
+          MONGODB_URI: "mongodb://localhost:27017/tbe-test"
+          NEXTAUTH_SECRET: "test-secret-at-least-32-chars-long-123"
+          ADMIN_SECRET: "admin-secret-test"
+        run: |
+          pnpm --filter @tbe/testing exec playwright test --project=${{ matrix.app }} --pass-with-no-tests
+
+      - name: 📤 Upload Playwright Report (${{ matrix.app }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.app }}
+          path: |
+            apps/testing/playwright-report
+            apps/testing/test-results
+          if-no-files-found: ignore
+          retention-days: 7

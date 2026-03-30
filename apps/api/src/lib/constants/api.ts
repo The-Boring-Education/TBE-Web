@@ -2588,7 +2588,18 @@ const ALLOWED_IPS = [
 
 const PRIORITY_LEVELS: PriorityType[] = ["High", "Medium", "Low"];
 
-const COMPANY_TYPES: CompanyType[] = ["Startup", "MidSize", "MNC", "FAANG"];
+const COMPANY_TYPES: CompanyType[] = [
+  "Startup",
+  "MidSize",
+  "MNC",
+  "FAANG",
+  "GOOGLE",
+  "MICROSOFT",
+  "META",
+  "AMAZON",
+  "AIRBNB",
+  "UBER",
+];
 
 const GOAL_TYPES: GoalType[] = ["3Months", "6Months", "1Year"];
 
@@ -3068,36 +3079,39 @@ const DSA_DOMAIN: DSADomainType[] = [
   "BACKEND",
   "GENERAL",
   "FULLSTACK",
+  "DSA",
 ];
 
 const DSA_DIFFICULTY: DSADifficultyType[] = ["EASY", "MEDIUM", "HARD"];
 
+/** Sheet order, Mongo `$indexOfArray`, and validation — single source of truth. */
 const DSA_TOPICS: DSATopicType[] = [
   "ARRAY",
-  "PREFIX_SUM",
+  "STRING",
   "HASHMAP",
-  "TWO_POINTERS",
   "SLIDING_WINDOW",
-  "BINARY_SEARCH",
+  "PREFIX_SUM",
   "SORTING",
+  "BINARY_SEARCH",
+  "MATH",
+  "BIT_MANIPULATION",
+  "RECURSION",
   "LINKED_LIST",
   "STACK",
   "QUEUE",
-  "TREE",
   "BINARY_TREE",
+  "TREE",
   "BST",
+  "HEAP",
+  "TRIE",
   "GRAPH",
-  "DFS",
-  "BFS",
   "BACKTRACKING",
   "DYNAMIC_PROGRAMMING",
   "GREEDY",
-  "STRING",
-  "MATH",
-  "BIT_MANIPULATION",
-  "TRIE",
-  "HEAP",
   "UNION_FIND",
+  "SIMULATION",
+  "DESIGN",
+  "MONOTONIC_STACK",
 ];
 
 export {

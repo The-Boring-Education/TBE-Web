@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
 import {
@@ -11,6 +12,12 @@ import type { DSAQuestionModel } from "@/lib/interfaces";
 
 const DSAQuestionSchema = new Schema<DSAQuestionModel>(
   {
+    contentId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     title: {
       type: String,
       required: [true, "Question Title is required"],
@@ -91,6 +98,8 @@ DSAQuestionSchema.index({ difficulty: 1 });
 DSAQuestionSchema.index({ topics: 1 });
 DSAQuestionSchema.index({ companyTypes: 1 });
 DSAQuestionSchema.index({ order: 1 }); // For sorting by custom order
+
+applyContentIdOnCreate(DSAQuestionSchema);
 
 const DSAQuestion: Model<DSAQuestionModel> =
   models?.DSAQuestion ||

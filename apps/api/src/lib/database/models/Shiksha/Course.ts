@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
 import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from "@/lib/constants";
@@ -22,6 +23,12 @@ const chapterSchema = new Schema<CourseChapterModel>(
 
 const CourseSchema = new Schema<CourseModel>(
   {
+    contentId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     name: {
       type: String,
       required: [true, "Course name is required"],
@@ -81,6 +88,8 @@ const CourseSchema = new Schema<CourseModel>(
     },
   },
 );
+
+applyContentIdOnCreate(CourseSchema);
 
 const Course: Model<CourseModel> =
   models?.Course || model<CourseModel>(DATABASE_MODELS.COURSE, CourseSchema);

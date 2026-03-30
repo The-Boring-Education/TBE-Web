@@ -1125,3 +1125,27 @@ export interface RoadmapNode {
   explanation: string;
   difficulty: number;
 }
+
+// ---------------------------------------------------------------------------
+// Study Guide
+// ---------------------------------------------------------------------------
+
+import type {
+  StudyGuideConfig,
+  StudyGuideDivider,
+  StudyGuideModel,
+  StudyGuideNavItem,
+  StudyGuideNavProps,
+  StudyGuideReaderProps,
+  StudyGuideSection,
+} from "@tbe/types";
+
+export type {
+  StudyGuideConfig,
+  StudyGuideDivider,
+  StudyGuideModel,
+  StudyGuideNavItem,
+  StudyGuideNavProps,
+  StudyGuideReaderProps,
+  StudyGuideSection,
+};

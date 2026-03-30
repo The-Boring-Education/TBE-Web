@@ -5,7 +5,6 @@ import {
   useDsaCompletedQuestions,
   useDsaQuestions,
   usePrepStats,
-  useTimeTracker,
 } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
@@ -54,7 +53,7 @@ function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-2 px-2.5 py-1.5 text-xs font-semibold transition-all duration-200 rounded-lg group",
+                "flex items-center gap-2 px-3 py-2 strong-text font-semibold transition-all duration-200 rounded-lg group",
                 item.active
                   ? "bg-[#ff5757] text-white shadow-md shadow-[#ff5757]/10"
                   : "text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-[#e0e0e0]",
@@ -131,7 +130,7 @@ function StatCard({
   );
 }
 
-function DsaClient() {
+const DsaClient = () => {
   "use client";
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -140,7 +139,6 @@ function DsaClient() {
     null,
   );
 
-  const { seconds, formattedTime } = useTimeTracker(user?.id);
   const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
 
   const { rawQuestions: allQuestions } = useDsaQuestions({
@@ -340,18 +338,15 @@ function DsaClient() {
     100,
     Math.round((solvedToday / expectedDailyQuestions) * 100),
   );
-  const todayTotalHours = (solvedToday / expectedDailyQuestions) * 4;
+  const todayTotalHours = solvedToday;
 
   const todayLog = weeklyLogs?.find(
     (log: any) =>
       new Date(log.createdAt).toDateString() === new Date().toDateString(),
   );
 
-  const sessionMinutes = Math.floor(seconds / 60);
-
-  // Total invested
-  const totalMinutes = totalTimeSpent + sessionMinutes;
-  const totalHours = (totalMinutes / 60).toFixed(1);
+  // Total invested (minutes from prep logs only)
+  const totalHours = (totalTimeSpent / 60).toFixed(1);
 
   return (
     <div className="flex bg-[#0f0f0f] font-sans selection:bg-[#ff5757]/30 selection:text-white">
@@ -362,16 +357,18 @@ function DsaClient() {
         <header className="flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold text-[#e0e0e0]">
-              Welcome back, {user?.name?.split(" ")[0] || "Yatree"}! 👋
+              Welcome back, {user?.name?.split(" ")[0]}! 👋
             </h2>
             <p className="text-[#a0a0a0] text-xs mt-0.5">
               Ready to master DSA today?
             </p>
           </div>
           <div className="flex gap-3">
-            <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-4 py-2 h-auto font-semibold text-xs rounded-md transition-all hover:scale-105">
-              Continue Learning
-            </Button>
+            <Link href="/sheets" tabIndex={-1}>
+              <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-4 py-2 h-auto font-semibold text-xs rounded-md transition-all hover:scale-105">
+                Continue Learning
+              </Button>
+            </Link>
             <Button
               onClick={() => setIsEditModalOpen(true)}
               className="bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-4 py-2 font-semibold text-xs rounded-md"
@@ -403,11 +400,8 @@ function DsaClient() {
               )}
             </div>
             <h3 className="text-base font-bold text-[#e0e0e0] leading-tight">
-              {user?.name || "Shivani Jha"}
+              {user?.name}
             </h3>
-            <p className="text-[#a0a0a0] text-xs mt-0.5">
-              @{user?.userName || "shivanijhavats"}
-            </p>
 
             <div className="flex gap-3 my-4">
               {[
@@ -563,10 +557,14 @@ function DsaClient() {
 
           <StatCard
             title="Today's Progress"
-            value={todayTotalHours}
+            value={solvedToday}
             subtext="Questions solved today"
             icon={Code2}
-            secondaryInfo={`Active: ${formattedTime}`}
+            secondaryInfo={
+              todayLog
+                ? `${todayLog.timeSpent || 0}m logged in prep today`
+                : undefined
+            }
           />
           <StatCard
             title="Total Solved"
@@ -576,13 +574,12 @@ function DsaClient() {
           />
           <StatCard
             title="Time Invested"
-            value={totalHours}
-            subtext="Hours total"
-            secondaryInfo={`Last: ${todayLog?.timeSpent || 0}m`}
+            value={(totalTimeSpent / 60).toFixed(1)}
+            subtext="Hours this week"
           />
           <StatCard
             title="Daily Goal"
-            value={`${todayTotalHours}/${dailyGoalHours}`}
+            value={`${todayTotalHours}`}
             subtext="Hours completed"
             progress={dailyGoalProgress}
           />
@@ -599,23 +596,26 @@ function DsaClient() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
             {topicProgress.length > 0 ? (
               topicProgress.map((topic) => (
-                <div
+                <Link
                   key={topic.key}
-                  className="bg-[#0f0f0f] border border-[#2a2a2a] p-4 rounded-lg text-center cursor-pointer hover:border-[#ff5757] transition-all group"
+                  href={`/sheets?topic=${topic.key}`}
+                  className="block"
                 >
-                  <p className="text-xs font-bold text-[#e0e0e0] uppercase">
-                    {topic.name}
-                  </p>
-                  <p className="text-[10px] text-[#a0a0a0] my-1.5">
-                    {topic.solved}/{topic.total}
-                  </p>
-                  <Progress
-                    value={
-                      topic.total > 0 ? (topic.solved / topic.total) * 100 : 0
-                    }
-                    className="h-1.5 bg-[#1a1a1a] rounded"
-                  />
-                </div>
+                  <div className="bg-[#0f0f0f] border border-[#2a2a2a] p-4 rounded-lg text-center cursor-pointer hover:border-[#ff5757] transition-all group">
+                    <p className="text-xs font-bold text-[#e0e0e0] uppercase">
+                      {topic.name}
+                    </p>
+                    <p className="text-[10px] text-[#a0a0a0] my-1.5">
+                      {topic.solved}/{topic.total}
+                    </p>
+                    <Progress
+                      value={
+                        topic.total > 0 ? (topic.solved / topic.total) * 100 : 0
+                      }
+                      className="h-1.5 bg-[#1a1a1a] rounded"
+                    />
+                  </div>
+                </Link>
               ))
             ) : (
               <div className="col-span-full text-center py-6">
@@ -858,7 +858,7 @@ function DsaClient() {
       />
     </div>
   );
-}
+};
 
 const Dashboard = ({ seoMeta }: PageProps) => {
   return (

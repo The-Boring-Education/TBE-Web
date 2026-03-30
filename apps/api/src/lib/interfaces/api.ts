@@ -64,7 +64,17 @@ export type PlatformUsageType =
 
 export type DifficultyType = "Beginner" | "Intermediate" | "Advanced";
 
-export type CompanyType = "Startup" | "MidSize" | "MNC" | "FAANG";
+export type CompanyType =
+  | "Startup"
+  | "MidSize"
+  | "MNC"
+  | "FAANG"
+  | "GOOGLE"
+  | "MICROSOFT"
+  | "META"
+  | "AMAZON"
+  | "AIRBNB"
+  | "UBER";
 export type PriorityType = "High" | "Medium" | "Low";
 export type GoalType = "3Months" | "6Months" | "1Year";
 export type SubscriptionStatus = "Active" | "Expired" | "Trial" | "Cancelled";
@@ -211,7 +221,12 @@ export interface CreateSubscriptionPayload {
 
 export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY";
 
-export type DSADomainType = "FRONTEND" | "BACKEND" | "GENERAL" | "FULLSTACK";
+export type DSADomainType =
+  | "FRONTEND"
+  | "BACKEND"
+  | "GENERAL"
+  | "FULLSTACK"
+  | "DSA";
 
 export type DSADifficultyType = "EASY" | "MEDIUM" | "HARD";
 
@@ -267,7 +282,11 @@ export type DSATopicType =
   | "BIT_MANIPULATION"
   | "TRIE"
   | "HEAP"
-  | "UNION_FIND";
+  | "UNION_FIND"
+  | "RECURSION"
+  | "SIMULATION"
+  | "DESIGN"
+  | "MONOTONIC_STACK";
 
 export type ProjectPickedPageProps = Pick<
   ProjectDocumentModel,

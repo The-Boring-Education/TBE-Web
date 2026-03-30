@@ -29,61 +29,71 @@ const isAllowedRedirect = (url: string): boolean => {
 };
 
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "GET") {
-    return res.status(405).json(
-      sendAPIResponse({
-        status: false,
-        message: "Method not allowed",
-      }),
-    );
-  }
+  try {
+    if (req.method !== "GET") {
+      return res.status(405).json(
+        sendAPIResponse({
+          status: false,
+          message: "Method not allowed",
+        }),
+      );
+    }
 
-  const { provider, redirect_uri } = req.query;
+    const { provider, redirect_uri } = req.query;
 
-  if (!redirect_uri || typeof redirect_uri !== "string") {
+    if (!redirect_uri || typeof redirect_uri !== "string") {
+      return res.status(400).json(
+        sendAPIResponse({
+          status: false,
+          message: "redirect_uri is required",
+        }),
+      );
+    }
+
+    if (!isAllowedRedirect(redirect_uri)) {
+      return res.status(400).json(
+        sendAPIResponse({
+          status: false,
+          message: "Invalid redirect_uri origin",
+        }),
+      );
+    }
+
+    const providerStr = (provider as string) || "google";
+    if (
+      !ALLOWED_PROVIDERS.includes(
+        providerStr as (typeof ALLOWED_PROVIDERS)[number],
+      )
+    ) {
+      return res.status(400).json(
+        sendAPIResponse({
+          status: false,
+          message: `Unsupported provider: ${providerStr}. Supported: ${ALLOWED_PROVIDERS.join(", ")}`,
+        }),
+      );
+    }
+
+    const state = signOAuthState(redirect_uri, providerStr);
+
+    if (providerStr === "google") {
+      return res.redirect(302, buildGoogleAuthUrl(state));
+    }
+
     return res.status(400).json(
       sendAPIResponse({
         status: false,
-        message: "redirect_uri is required",
+        message: "Provider not implemented",
       }),
     );
-  }
-
-  if (!isAllowedRedirect(redirect_uri)) {
-    return res.status(400).json(
+  } catch (error: any) {
+    console.error("[Login Handler Error]:", error);
+    return res.status(500).json(
       sendAPIResponse({
         status: false,
-        message: "Invalid redirect_uri origin",
+        message: error.message || "Internal server error",
       }),
     );
   }
-
-  const providerStr = (provider as string) || "google";
-  if (
-    !ALLOWED_PROVIDERS.includes(
-      providerStr as (typeof ALLOWED_PROVIDERS)[number],
-    )
-  ) {
-    return res.status(400).json(
-      sendAPIResponse({
-        status: false,
-        message: `Unsupported provider: ${providerStr}. Supported: ${ALLOWED_PROVIDERS.join(", ")}`,
-      }),
-    );
-  }
-
-  const state = signOAuthState(redirect_uri, providerStr);
-
-  if (providerStr === "google") {
-    return res.redirect(302, buildGoogleAuthUrl(state));
-  }
-
-  return res.status(400).json(
-    sendAPIResponse({
-      status: false,
-      message: "Provider not implemented",
-    }),
-  );
 };
 
 export default handler;

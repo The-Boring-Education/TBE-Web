@@ -1,5 +1,4 @@
-// @ts-nocheck
-import type { NavbarVariantConfig } from "@tbe/interface";
+import type { NavbarVariantConfig } from "@tbe/types";
 import {
   Award,
   BookOpen,
@@ -236,6 +235,22 @@ const getNavbarVariantConfig = (
     requiresAuth: true,
     showGamification: false,
     showNotifications: false,
+    navigation: {
+      issues: false,
+      cohorts: false,
+      learn: false,
+      tools: false,
+      links: false,
+    },
+  },
+  "study-guide": {
+    productName: "DSA Yatra",
+    subText: "Study Guide",
+    dashboardRoute: "/dashboard",
+    borderClass: "border-b border-gray-800",
+    requiresAuth: true,
+    showNotifications: false,
+    showGamification: false,
     navigation: {
       issues: false,
       cohorts: false,
