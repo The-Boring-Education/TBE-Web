@@ -21,6 +21,7 @@
     "@tbe/config": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/eslint-config": "workspace:*",
+    "@tbe/gamification": "workspace:*",
     "@tbe/hooks": "workspace:*",
     "@tbe/interface": "workspace:*",
     "@tbe/query": "workspace:*",

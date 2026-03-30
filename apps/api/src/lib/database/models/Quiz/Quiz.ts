@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
 import { DATABASE_MODELS } from "@/lib/constants";
@@ -13,6 +14,7 @@ export interface QuizQuestionModel {
 
 export interface QuizModel {
   _id?: string;
+  contentId?: string;
   categoryName: string;
   categoryDescription: string;
   categoryIcon: string;
@@ -63,6 +65,12 @@ const QuizQuestionSchema = new Schema<QuizQuestionModel>(
 
 const QuizSchema = new Schema<QuizModel>(
   {
+    contentId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     categoryName: {
       type: String,
       required: [true, "Category name is required"],
@@ -83,6 +91,8 @@ const QuizSchema = new Schema<QuizModel>(
   },
   { timestamps: true },
 );
+
+applyContentIdOnCreate(QuizSchema);
 
 const Quiz: Model<QuizModel> =
   models?.Quiz || model<QuizModel>(DATABASE_MODELS.QUIZ, QuizSchema);

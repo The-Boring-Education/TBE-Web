@@ -108,6 +108,10 @@ const SCREEN_BREAKPOINTS = {
   LG: "(min-width: 1025px)",
 };
 
+const PAGINATION_LIMITS = {
+  DEFAULT: 50,
+};
+
 const PORTFOLIO_CARDS = [
   {
     id: 1,
@@ -225,6 +229,7 @@ export {
   LINKS,
   localStorageKeys,
   PAGE_REFRESH_TIMEOUT,
+  PAGINATION_LIMITS,
   PORTFOLIO_CARDS,
   projectGroupWhatsapp,
   SCREEN_BREAKPOINTS,

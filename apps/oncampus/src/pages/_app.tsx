@@ -3,12 +3,12 @@ import "@/styles/globals.css";
 import "@/styles/colors.css";
 
 import { AuthProvider } from "@tbe/auth";
-import { GamificationProvider } from "@tbe/components";
 import {
   initGA,
   installGlobalAnalyticsListeners,
   trackPageview,
 } from "@tbe/components/analytics";
+import { GamificationProvider } from "@tbe/gamification";
 import { useUser } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
@@ -59,12 +59,19 @@ const AppContent = ({
   const isDSAMainRoute = router.pathname === "/dashboard/dsa-prep";
   // Exclude the Aptitude page for fullscreen workspace experience
   const isAptitudeRoute = router.pathname === "/dashboard/aptitude";
+  // Exclude the Interview Prep main page for fullscreen workspace experience
+  const isInterviewPrepMainRoute =
+    router.pathname === "/dashboard/interview-prep";
+  // Exclude the Quizzes page for fullscreen workspace experience
+  const isQuizzesRoute = router.pathname === "/dashboard/quizzes";
 
   const shouldUseDashboardLayout =
     (isDashboardRoute || isDSAPrepRoute) &&
     !isStudyRoute &&
     !isDSAMainRoute &&
-    !isAptitudeRoute;
+    !isAptitudeRoute &&
+    !isInterviewPrepMainRoute &&
+    !isQuizzesRoute;
 
   const pageContent = <Component {...pageProps} />;
 

@@ -1,15 +1,19 @@
-import {
+﻿import {
   DsaPrepWorkspace,
-  FlexContainer,
   LearningEnvironmentLayout,
   LoadingSpinner,
   Text,
 } from "@tbe/components";
-import { routes } from "@tbe/constants";
-import { useDsaQuestions, useDsaTopics, useUser } from "@tbe/hooks";
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
+import {
+  useDsaCompletedQuestions,
+  useDsaQuestionsForTopic,
+  useDsaTopicSummaries,
+  useUser,
+} from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const DSAPrepPage = () => {
   const router = useRouter();
@@ -20,8 +24,37 @@ const DSAPrepPage = () => {
   );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
-  const { questions, loading: sheetsLoading } = useDsaQuestions();
-  const { topicsWithCounts } = useDsaTopics(questions);
+  const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
+  const topicsWithCounts = useMemo(
+    () =>
+      (topicRows ?? []).map((t) => ({
+        topic: t.topic,
+        count: t.count,
+        label: TOPIC_LABELS[t.topic] || t.topic,
+      })),
+    [topicRows],
+  );
+
+  const { questions, loading: topicQuestionsLoading } =
+    useDsaQuestionsForTopic(selectedTopic);
+
+  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+
+  const topicsCompletionMap = useMemo(() => {
+    return (topicRows ?? []).reduce(
+      (acc, row) => {
+        // Since we don't have individual question completion status here without fetching each topic,
+        // we'll leave this as false for now or implement a more complex check if needed.
+        // For now, let's just provide the object to fix the ReferenceError.
+        acc[row.topic] = false;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    );
+  }, [topicRows]);
+
+  const pageLoading =
+    userLoading || topicsLoading || (!!selectedTopic && topicQuestionsLoading);
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -43,7 +76,7 @@ const DSAPrepPage = () => {
     setSelectedQuestion(null);
   };
 
-  if (sheetsLoading || userLoading) {
+  if (pageLoading) {
     return (
       <LearningEnvironmentLayout backHref={routes.oncampus.dashboard} isLoading>
         <div className="flex-1 flex items-center justify-center">
@@ -69,24 +102,10 @@ const DSAPrepPage = () => {
         onTopicClick={handleTopicClick}
         onQuestionClick={handleQuestionClick}
         onBackToTopics={handleBackToTopics}
-        emptyStateContent={
-          <FlexContainer
-            className="h-full"
-            itemCenter
-            justifyCenter
-            fullWidth
-            wrap={false}
-          >
-            <div className="text-center space-y-2">
-              <Text level="p" className="text-gray-400 text-lg">
-                Select a topic from the left to start practicing
-              </Text>
-              <Text level="p" className="text-gray-500 text-sm italic">
-                Unlock your potential with structured learning
-              </Text>
-            </div>
-          </FlexContainer>
-        }
+        completionMap={topicsCompletionMap}
+        completedQuestionIds={completedIds}
+        onToggleComplete={toggleComplete}
+        studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
     </LearningEnvironmentLayout>
   );

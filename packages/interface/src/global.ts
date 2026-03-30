@@ -117,6 +117,9 @@ const UserPointsActionType = [
   "COMPLETE_QUIZ",
   "QUIZ_PERFECT_SCORE",
   "QUIZ_STREAK",
+  "COMPLETE_DSA_QUESTION",
+  "COMPLETE_DSA_TOPIC",
+  "COMPLETE_APTITUDE_QUESTION",
 ] as const;
 
 export type UserPointsActionType = (typeof UserPointsActionType)[number];

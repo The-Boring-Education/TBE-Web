@@ -14,6 +14,7 @@ const nextConfig = {
     '@tbe/typescript-config',
     '@tbe/eslint-config',
     '@tbe/config',
+    '@tbe/gamification',
   ],
 
   eslint: {

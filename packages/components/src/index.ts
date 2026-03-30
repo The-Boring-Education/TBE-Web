@@ -36,6 +36,7 @@ export { default as StarButton } from "./common/Buttons/StarButton";
 export { default as ToggleButton } from "./common/Buttons/ToggleButton";
 export { default as UserPointButton } from "./common/Buttons/UserPointButton";
 export { default as Carousel } from "./common/Carousel";
+/** @deprecated Use `CelebrationAnimation` from `@tbe/gamification` instead */
 export { default as CelebrationAnimation } from "./common/CelebrationAnimation";
 export { default as CertificateBanner } from "./common/Certificate/CertificateBanner";
 export { default as CertificateContent } from "./common/Certificate/CertificateContent";
@@ -47,6 +48,7 @@ export { default as RadioButton } from "./common/Form/RadioButton";
 export { default as RadioInputField } from "./common/Form/RadioInputField";
 export { default as SelectInput } from "./common/Form/SelectInput";
 export { default as GamificationDemo } from "./common/GamificationDemo";
+/** @deprecated Use `GamificationToast` from `@tbe/gamification` instead */
 export { default as GamificationToast } from "./common/GamificationToast";
 export { default as BackgroundImage } from "./common/Images/BackgroundImage";
 export { default as Image } from "./common/Images/Image";
@@ -82,6 +84,16 @@ export { default as AptitudeQuizPanel } from "./containers/Cards/AptitudeQuizPan
 export { default as AptitudeStudyGuide } from "./containers/Cards/AptitudeStudyGuide";
 export { default as CardContainerA } from "./containers/Cards/CardContainerA";
 export { default as CardContainerB } from "./containers/Cards/CardContainerB";
+export {
+  CommonMistakesSection,
+  ConstraintsSection,
+  EnhancedExamplesSection,
+  FirstPrinciplesSection,
+  HowToApproachSection,
+  PseudoCodeSection,
+  WaysToSolveSection,
+  WorkingCodeSection,
+} from "./containers/Cards/dsa-sections";
 export type { DsaPrepWorkspaceProps } from "./containers/Cards/DsaPrepWorkspace";
 export { default as DsaPrepWorkspace } from "./containers/Cards/DsaPrepWorkspace";
 export { DsaQuestionCard } from "./containers/Cards/DsaQuestionCard";
@@ -89,16 +101,6 @@ export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
 export type { DsaTopicSidebarProps } from "./containers/Cards/DsaTopicSidebar";
 export { default as DsaTopicSidebar } from "./containers/Cards/DsaTopicSidebar";
 export { default as ExampleCard } from "./containers/Cards/ExampleCard";
-export {
-  FirstPrinciplesSection,
-  ConstraintsSection,
-  EnhancedExamplesSection,
-  WaysToSolveSection,
-  HowToApproachSection,
-  PseudoCodeSection,
-  WorkingCodeSection,
-  CommonMistakesSection,
-} from "./containers/Cards/dsa-sections";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
 export { default as Leaderboard } from "./containers/Cards/Leaderboard";
@@ -186,10 +188,12 @@ export { default as WebinarHeroContainer } from "./containers/Page/Webinar/Webin
 export { default as ExplorePlaylistContainer } from "./containers/Page/YouFocus/ExplorePlaylistContainer";
 export { default as PlaylistContainer } from "./containers/Page/YouFocus/PlaylistContainer";
 // Layout Components
+/** @deprecated Use `GamificationProvider` and `useGamificationContext` from `@tbe/gamification` instead */
 export {
   GamificationProvider,
   useGamificationContext,
 } from "./common/GamificationDemo/GamificationProvider";
+/** @deprecated Use `useGamifiedAction` from `@tbe/gamification` instead */
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
 export { default as Footer } from "./layout/Footer";
 export { default as LearningEnvironmentLayout } from "./layout/LearningEnvironmentLayout";

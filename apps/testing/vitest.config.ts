@@ -11,6 +11,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    environmentMatchGlobs: [
+      // MongoDB / Node-only integration tests
+      ["src/integration/**", "node"],
+    ],
     setupFiles: ["./src/test-utils/setup.ts"],
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     exclude: ["node_modules", "dist", "src/e2e/**/*"],
@@ -47,6 +51,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      // Stable App Router stub for unit tests (workspace packages import `next/navigation` from source)
+      "next/navigation": path.resolve(
+        __dirname,
+        "./src/test-utils/next-navigation-mock.ts",
+      ),
       // API app @ alias - must come first for proper resolution
       "@/lib/constants": path.resolve(__dirname, "../api/src/lib/constants"),
       "@/lib/database": path.resolve(__dirname, "../api/src/lib/database"),

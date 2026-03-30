@@ -98,6 +98,9 @@ const USER_POINTS_ACTION: UserPointsActionType[] = [
   "HELP_COMMUNITY",
   "RECRUITER_ADDED",
   "PREPLOG_CREATED",
+  "COMPLETE_DSA_QUESTION",
+  "COMPLETE_DSA_TOPIC",
+  "COMPLETE_APTITUDE_QUESTION",
 ];
 
 const NOTIFICATION_TYPE: NotificationType[] = [
@@ -2675,6 +2678,9 @@ const POINTS_RULES: Record<UserPointsActionType, number> = {
   COMPLETE_QUIZ: 30,
   QUIZ_PERFECT_SCORE: 50,
   QUIZ_STREAK: 20,
+  COMPLETE_DSA_QUESTION: 10,
+  COMPLETE_DSA_TOPIC: 50,
+  COMPLETE_APTITUDE_QUESTION: 10,
 };
 
 const LEADERBOARD_TYPES: LeaderboardType[] = ["DAILY", "WEEKLY", "MONTHLY"];
@@ -3078,33 +3084,31 @@ const DSA_DOMAIN: DSADomainType[] = [
 
 const DSA_DIFFICULTY: DSADifficultyType[] = ["EASY", "MEDIUM", "HARD"];
 
+/** Sheet order, Mongo `$indexOfArray`, and validation — single source of truth. */
 const DSA_TOPICS: DSATopicType[] = [
   "ARRAY",
-  "PREFIX_SUM",
+  "STRING",
   "HASHMAP",
-  "TWO_POINTERS",
   "SLIDING_WINDOW",
-  "BINARY_SEARCH",
+  "PREFIX_SUM",
   "SORTING",
+  "BINARY_SEARCH",
+  "MATH",
+  "BIT_MANIPULATION",
+  "RECURSION",
   "LINKED_LIST",
   "STACK",
   "QUEUE",
-  "TREE",
   "BINARY_TREE",
+  "TREE",
   "BST",
+  "HEAP",
+  "TRIE",
   "GRAPH",
-  "DFS",
-  "BFS",
   "BACKTRACKING",
   "DYNAMIC_PROGRAMMING",
   "GREEDY",
-  "STRING",
-  "MATH",
-  "BIT_MANIPULATION",
-  "TRIE",
-  "HEAP",
   "UNION_FIND",
-  "RECURSION",
   "SIMULATION",
   "DESIGN",
   "MONOTONIC_STACK",

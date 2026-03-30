@@ -7,7 +7,6 @@ export * from "./email";
 export * from "./prep-logs";
 export * from "./prep-stats";
 export * from "./quizApi";
-export * from "./quizApi";
 export * from "./recruiters";
 export * from "./resumeService";
 export * from "./templates";

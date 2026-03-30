@@ -13,6 +13,7 @@ const nextConfig = {
     "@tbe/auth",
     "@tbe/config",
     "@tbe/query",
+    "@tbe/gamification",
   ],
   images: {
     domains: [

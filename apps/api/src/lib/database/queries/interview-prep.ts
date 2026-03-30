@@ -1,4 +1,4 @@
-import { modelSelectParams } from "@/lib/constants";
+import { DSA_TOPICS, modelSelectParams } from "@/lib/constants";
 import type {
   AddInterviewQuestionRequestPayloadProps,
   AddInterviewSheetRequestPayloadProps,
@@ -6,6 +6,7 @@ import type {
   DatabaseQueryResponseType,
   DSADifficultyType,
   DSADomainType,
+  DSATopicType,
   SheetEnrollmentRequestProps,
   UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
@@ -13,9 +14,10 @@ import type {
 import { generateYouTubeSearchLink } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
-import { DSAQuestion, InterviewSheet, UserSheet } from "../models";
+import { DSAQuestion, InterviewSheet, StudyGuide, UserSheet } from "../models";
 import { toObjectId } from "./common";
 import { updateUserPointsInDB } from "./gamification";
+import { checkPaymentStatusFromDB } from "./payment";
 
 const addAInterviewSheetToDB = async (
   sheetPayload: AddInterviewSheetRequestPayloadProps,
@@ -303,30 +305,34 @@ const getAllEnrolledSheetsFromDB = async (
       .exec();
 
     return {
-      data: enrolledSheets.map((userSheet) => {
-        const sheet = userSheet.sheet as any;
-        const totalQuestions = sheet?.questions?.length || 0;
-        const completedQuestions =
-          userSheet.questions?.filter((q: any) => q.isCompleted).length || 0;
-        const progressPercentage =
-          totalQuestions > 0
-            ? Math.round((completedQuestions / totalQuestions) * 100)
-            : 0;
+      data: enrolledSheets
+        .map((userSheet) => {
+          const sheet = userSheet.sheet as any;
+          const totalQuestions = sheet?.questions?.length || 0;
+          const completedQuestions =
+            userSheet.questions?.filter((q: any) => q.isCompleted).length || 0;
+          const progressPercentage =
+            totalQuestions > 0
+              ? Math.round((completedQuestions / totalQuestions) * 100)
+              : 0;
 
-        // Access updatedAt from the document (Mongoose adds it via timestamps)
-        const userSheetObj = userSheet.toObject() as any;
+          // Access updatedAt from the document (Mongoose adds it via timestamps)
+          const userSheetObj = userSheet.toObject() as any;
 
-        return {
-          ...sheet.toObject(),
-          isEnrolled: true,
-          lastUpdated: userSheetObj.updatedAt || userSheetObj.createdAt,
-          progress: {
-            completed: completedQuestions,
-            total: totalQuestions,
-            percentage: progressPercentage,
-          },
-        };
-      }),
+          if (!sheet) return null;
+
+          return {
+            ...sheet.toObject(),
+            isEnrolled: true,
+            lastUpdated: userSheetObj.updatedAt || userSheetObj.createdAt,
+            progress: {
+              completed: completedQuestions,
+              total: totalQuestions,
+              percentage: progressPercentage,
+            },
+          };
+        })
+        .filter(Boolean),
     };
   } catch (error) {
     logger.error("DB: getAllEnrolledSheetsFromDB failed", {
@@ -344,14 +350,52 @@ const markQuestionCompletedByUser = async (
   isCompleted: boolean,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const updatedSheet = await UserSheet.findOneAndUpdate(
-      { userId, sheetId, "questions.questionId": questionId },
+    let userSheet = await UserSheet.findOne({ userId, sheetId });
+
+    if (!userSheet) {
+      // Auto-enroll if accessible
+      const sheet = await InterviewSheet.findById(sheetId);
+      if (!sheet) return { error: "Sheet not found" };
+
+      const isPremium = sheet.isPremium;
+      let hasAccess = !isPremium;
+
+      if (isPremium) {
+        const { data: paymentData } = await checkPaymentStatusFromDB(
+          userId,
+          sheetId,
+          "INTERVIEW_SHEET",
+        );
+        if (paymentData?.purchased) hasAccess = true;
+      }
+
+      if (hasAccess) {
+        await enrollInASheet({ userId, sheetId });
+        userSheet = await UserSheet.findOne({ userId, sheetId });
+      } else {
+        return {
+          error:
+            "User is not enrolled and does not have access to this premium sheet",
+        };
+      }
+    }
+
+    if (!userSheet) return { error: "Failed to auto-enroll user" };
+
+    const qid = toObjectId(questionId);
+    let updatedSheet = await UserSheet.findOneAndUpdate(
+      { userId, sheetId, "questions.questionId": qid },
       { $set: { "questions.$.isCompleted": isCompleted } },
       { new: true },
     );
 
+    // If question not found in UserSheet, it might be a newly added question
     if (!updatedSheet) {
-      return { error: "User or question not found" };
+      updatedSheet = await UserSheet.findOneAndUpdate(
+        { userId, sheetId },
+        { $push: { questions: { questionId: qid, isCompleted } } },
+        { new: true },
+      );
     }
 
     return { data: updatedSheet };
@@ -477,16 +521,52 @@ const markQuestionStarredByUser = async (
   isStarred: boolean,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const qid = toObjectId(questionId);
+    let userSheet = await UserSheet.findOne({ userId, sheetId });
 
-    const updatedSheet = await UserSheet.findOneAndUpdate(
+    if (!userSheet) {
+      // Auto-enroll if accessible
+      const sheet = await InterviewSheet.findById(sheetId);
+      if (!sheet) return { error: "Sheet not found" };
+
+      const isPremium = sheet.isPremium;
+      let hasAccess = !isPremium;
+
+      if (isPremium) {
+        const { data: paymentData } = await checkPaymentStatusFromDB(
+          userId,
+          sheetId,
+          "INTERVIEW_SHEET",
+        );
+        if (paymentData?.purchased) hasAccess = true;
+      }
+
+      if (hasAccess) {
+        await enrollInASheet({ userId, sheetId });
+        userSheet = await UserSheet.findOne({ userId, sheetId });
+      } else {
+        return {
+          error:
+            "User is not enrolled and does not have access to this premium sheet",
+        };
+      }
+    }
+
+    if (!userSheet) return { error: "Failed to auto-enroll user" };
+
+    const qid = toObjectId(questionId);
+    let updatedSheet = await UserSheet.findOneAndUpdate(
       { userId, sheetId, "questions.questionId": qid },
       { $set: { "questions.$.isStarred": isStarred } },
       { new: true },
     );
 
+    // If question not found in UserSheet, it might be a newly added question
     if (!updatedSheet) {
-      return { error: "User or question not found" };
+      updatedSheet = await UserSheet.findOneAndUpdate(
+        { userId, sheetId },
+        { $push: { questions: { questionId: qid, isStarred } } },
+        { new: true },
+      );
     }
 
     return { data: updatedSheet };
@@ -690,6 +770,48 @@ const getAllDSAQuestionsFromDB = async (
   }
 };
 
+/** Topic list + counts using primary topic only (topics[0]), for lightweight sheet landing. */
+const getDSATopicSummariesFromDB =
+  async (): Promise<DatabaseQueryResponseType> => {
+    try {
+      const rows = await DSAQuestion.aggregate([
+        { $unwind: "$topics" },
+        {
+          $group: {
+            _id: "$topics",
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      if (!rows || rows.length === 0) {
+        return { data: { topics: [] } };
+      }
+
+      const topics = rows
+        .map((row) => ({
+          topic: (row._id as string).toUpperCase(),
+          count: row.count,
+        }))
+        .filter((t) => t.topic)
+        .sort((a, b) => {
+          const idxA = DSA_TOPICS.indexOf(a.topic as any);
+          if (idxA !== -1 && b.topic) {
+            const idxB = DSA_TOPICS.indexOf(b.topic as any);
+            if (idxB !== -1) return idxA - idxB;
+            return -1;
+          }
+          return a.topic.localeCompare(b.topic);
+        });
+
+      return { data: { topics } };
+    } catch (error) {
+      logger.error("DB: getDSATopicSummariesFromDB failed", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return { error: "Failed to fetch DSA topic summaries", details: error };
+    }
+  };
 const getDSASheetMetadataFromDB =
   async (): Promise<DatabaseQueryResponseType> => {
     try {
@@ -728,7 +850,7 @@ const addDSAQuestionToDB = async (questionPayload: {
   domain: DSADomainType[];
   difficulty: DSADifficultyType;
   companyTypes: string[];
-  topics: string[];
+  topics: DSATopicType[];
   order?: number;
   leetcodeLink?: string;
   youtubeSearchLink?: string;
@@ -741,7 +863,11 @@ const addDSAQuestionToDB = async (questionPayload: {
 
     const question = new DSAQuestion({
       ...questionPayload,
-      youtubeSearchLink,
+      resources: {
+        youtubeURL: youtubeSearchLink,
+        leetcodeURL: questionPayload.leetcodeLink || null,
+        blogURL: null,
+      },
     });
     await question.save();
     return { data: question };
@@ -799,6 +925,23 @@ const getDSAQuestionByIDFromDB = async (
   }
 };
 
+const getStudyGuideByTopicFromDB = async (
+  topicId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const studyGuide = await StudyGuide.findOne({ topicId });
+    if (!studyGuide) {
+      return { error: "Study guide not found" };
+    }
+    return { data: studyGuide };
+  } catch (error) {
+    logger.error("DB: getStudyGuideByTopicFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch study guide", details: error };
+  }
+};
 const getDSAQuestionsGroupedByTopic = async (
   domain: DSADomainType,
   difficulty?: DSADifficultyType,
@@ -901,10 +1044,12 @@ export {
   getDSAQuestionByIDFromDB,
   getDSAQuestionsGroupedByTopic,
   getDSASheetMetadataFromDB,
+  getDSATopicSummariesFromDB,
   getEnrolledSheetFromDB,
   getInterviewSheetByIDFromDB,
   getInterviewSheetBySlugFromDB,
   getStarredQuestionsFromDB,
+  getStudyGuideByTopicFromDB,
   markQuestionCompletedByUser,
   markQuestionStarredByUser,
   updateDSAQuestionInDB,

@@ -33,6 +33,7 @@ export * from "./database";
 
 // API types and request/response interfaces
 export * from "./api";
+export * from "./dsa-study-guide";
 
 // Component interfaces and UI types
 export * from "./components";

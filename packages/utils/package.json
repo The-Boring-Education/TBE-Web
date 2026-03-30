@@ -13,7 +13,8 @@
     "./auth": "./src/auth.ts",
     "./mongodb": "./src/mongodb.ts",
     "./cors": "./src/cors.ts",
-    "./mdx": "./src/mdx/index.ts"
+    "./mdx": "./src/mdx/index.ts",
+    "./content-id": "./src/content-id.ts"
   },
   "scripts": {
     "lint": "eslint ."
@@ -28,7 +29,8 @@
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "mongoose": "^7.4.1"
+    "mongoose": "^7.4.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",

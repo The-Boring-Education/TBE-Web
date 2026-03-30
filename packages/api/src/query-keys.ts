@@ -39,7 +39,7 @@ export const queryKeys = {
     all: ["dsa"] as const,
     sheets: () => [...queryKeys.dsa.all, "sheets"] as const,
     sheet: (slug: string) => [...queryKeys.dsa.all, "sheet", slug] as const,
-    questions: (filters?: { limit?: number }) =>
+    questions: (filters?: { limit?: number; topic?: string }) =>
       [...queryKeys.dsa.all, "questions", filters] as const,
     completedQuestions: (userId: string) =>
       [...queryKeys.dsa.all, "completed", userId] as const,

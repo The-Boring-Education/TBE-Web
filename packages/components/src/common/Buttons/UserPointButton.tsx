@@ -5,7 +5,8 @@ import {
   Transition,
 } from "@headlessui/react";
 import { UserLevelProgressContainer } from "@tbe/components";
-import { useGamification, useUser } from "@tbe/hooks";
+import { useGamification } from "@tbe/gamification";
+import { useUser } from "@tbe/hooks";
 import { Fragment, useEffect, useState } from "react";
 
 const UserPointButton = () => {

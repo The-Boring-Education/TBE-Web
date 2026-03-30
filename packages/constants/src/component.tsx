@@ -1,5 +1,4 @@
-// @ts-nocheck
-import type { NavbarVariantConfig } from "@tbe/interface";
+import type { NavbarVariantConfig } from "@tbe/types";
 import {
   Award,
   BookOpen,
@@ -122,6 +121,7 @@ const getNavbarVariantConfig = (
     dashboardRoute: "/dashboard",
     borderClass: "border-b border-greyLight",
     requiresAuth: true,
+    showGamification: true,
     navigation: {
       issues: true,
       cohorts: false,
@@ -141,7 +141,8 @@ const getNavbarVariantConfig = (
     dashboardRoute: "/dashboard",
     borderClass: "border",
     requiresAuth: true,
-    showNotifications: false,
+    showNotifications: true,
+    showGamification: true,
     navigation: {
       issues: true,
       cohorts: false,
@@ -181,6 +182,7 @@ const getNavbarVariantConfig = (
     dashboardRoute: "/dashboard",
     borderClass: "border-b border-greyLight",
     requiresAuth: true,
+    showGamification: true,
     navigation: {
       issues: true,
       cohorts: false,
@@ -215,7 +217,7 @@ const getNavbarVariantConfig = (
     dashboardRoute: "/dashboard",
     borderClass: "border-0 dark:border-0",
     requiresAuth: true,
-    showGamification: false,
+    showGamification: true,
     navigation: {
       issues: true,
       cohorts: false,

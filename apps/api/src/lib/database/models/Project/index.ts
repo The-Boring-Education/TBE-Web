@@ -1,3 +1,4 @@
+import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
@@ -35,6 +36,12 @@ const sectionSchema: Schema<ProjectSection> = new Schema(
 const projectSchema: Schema<ProjectDocumentModel> =
   new Schema<ProjectDocumentModel>(
     {
+      contentId: {
+        type: String,
+        unique: true,
+        sparse: true,
+        index: true,
+      },
       name: { type: String, required: true },
       description: { type: String, required: true },
       coverImageURL: { type: String, required: true },
@@ -52,6 +59,8 @@ const projectSchema: Schema<ProjectDocumentModel> =
     },
     { timestamps: true },
   );
+
+applyContentIdOnCreate(projectSchema);
 
 const Project: Model<ProjectDocumentModel> =
   models?.Project ||

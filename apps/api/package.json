@@ -12,7 +12,10 @@
     "docker:build": "cd ../.. && docker build -f apps/api/Dockerfile -t tbe-api .",
     "docker:run": "docker run -p 3000:3000 tbe-api",
     "docker:test": "./test-docker-build.sh",
-    "deploy": "./deploy.sh"
+    "deploy": "./deploy.sh",
+    "seed:study-guide": "tsx src/scripts/seed-study-guide.ts",
+    "backfill": "tsx scripts/backfill-content-ids.ts",
+    "migrate": "tsx scripts/migrate-content.ts"
   },
   "dependencies": {
     "@sentry/nextjs": "^9.38.0",
@@ -42,9 +45,12 @@
     "@types/raw-body": "^2.1.4",
     "@types/react": "^18.3.24",
     "@types/uuid": "^9.0.1",
+    "@types/yargs": "^17.0.35",
+    "chalk": "^4.1.2",
     "eslint": "^9.34.0",
     "eslint-config-next": "^13.2.4",
     "tsx": "^4.21.0",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "yargs": "^18.0.0"
   }
 }

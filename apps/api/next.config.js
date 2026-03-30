@@ -20,6 +20,7 @@ const nextConfig = {
     "@tbe/interface",
     "@tbe/services",
     "@tbe/query",
+    "@tbe/gamification",
   ],
 
   env: {},

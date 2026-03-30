@@ -1,18 +1,23 @@
+import fs from "node:fs";
+import path from "node:path";
+
 import { defineConfig, devices } from "@playwright/test";
 
 /**
  * TBE Multi-App Playwright Config
  *
- * Supports E2E testing across all TBE frontend apps. Each app has its own
- * project with app-specific baseURL and webServer.
+ * Each app is a Playwright project (baseURL + testDir). The dev server is
+ * started via the **root** `webServer` only — `webServer` on project entries
+ * is not supported by Playwright and is ignored.
  *
  * Usage:
- *   pnpm test:e2e                    # Run all app tests
- *   pnpm test:e2e --project=platform # Run only platform tests
- *   pnpm test:e2e --project=prep-yatra
+ *   pnpm test:e2e                              # all projects; auto-starts servers for apps that have specs
+ *   pnpm test:e2e -- --project=platform        # platform only (typical when several apps have specs)
+ *   pnpm test:e2e -- --project=platform --project=prep-yatra
+ *   PLAYWRIGHT_E2E_APP=platform pnpm test:e2e -- --project=platform
  *
- * Env overrides (for CI or deployed URLs):
- *   PLATFORM_URL, PREP_YATRA_URL, QUIZES_URL, etc.
+ * Env overrides for baseURL (app already running):
+ *   PLATFORM_URL, TBE_PREP_YATRA_URL, QUIZES_URL, etc.
  */
 
 // ---------------------------------------------------------------------------
@@ -61,8 +66,67 @@ const APPS = {
   },
 } as const;
 
-// API (3004) is backend — typically tested via frontend or separate API tests
-// Add an "api" project if you need direct API E2E tests
+const REPO_ROOT = path.resolve(__dirname, "../..");
+const E2E_ROOT = path.join(__dirname, "src/e2e");
+
+function dirContainsSpecTs(dir: string): boolean {
+  if (!fs.existsSync(dir)) return false;
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, ent.name);
+    if (ent.isDirectory()) {
+      if (dirContainsSpecTs(full)) return true;
+    } else if (ent.isFile() && ent.name.endsWith(".spec.ts")) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** Apps that have at least one `*.spec.ts` under `src/e2e/<testDir>/` — only these start `webServer`. */
+function discoverAppsWithE2e(): Set<keyof typeof APPS> {
+  const found = new Set<keyof typeof APPS>();
+  for (const key of Object.keys(APPS) as (keyof typeof APPS)[]) {
+    if (dirContainsSpecTs(path.join(E2E_ROOT, APPS[key].testDir))) {
+      found.add(key);
+    }
+  }
+  return found;
+}
+
+const APPS_WITH_E2E = discoverAppsWithE2e();
+
+function getProjectsFromArgv(): (keyof typeof APPS)[] {
+  const argv = process.argv;
+  const projects = new Set<keyof typeof APPS>();
+
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--project" && argv[i + 1] && argv[i + 1] in APPS) {
+      projects.add(argv[i + 1] as keyof typeof APPS);
+    }
+    if (arg.startsWith("--project=")) {
+      const name = arg.slice("--project=".length);
+      if (name in APPS) projects.add(name as keyof typeof APPS);
+    }
+  }
+
+  return [...projects];
+}
+
+function resolveWebAppKeys(): (keyof typeof APPS)[] {
+  const fromEnv = process.env.PLAYWRIGHT_E2E_APP as
+    | keyof typeof APPS
+    | undefined;
+  if (fromEnv && fromEnv in APPS && APPS_WITH_E2E.has(fromEnv))
+    return [fromEnv];
+
+  const fromArgv = getProjectsFromArgv().filter((key) =>
+    APPS_WITH_E2E.has(key),
+  );
+  if (fromArgv.length > 0) return fromArgv;
+
+  return [...APPS_WITH_E2E];
+}
 
 function getAppUrl(appKey: keyof typeof APPS): string {
   const app = APPS[appKey];
@@ -72,6 +136,34 @@ function getAppUrl(appKey: keyof typeof APPS): string {
     (appKey === "platform" ? process.env.PLATFORM_URL : undefined);
   if (envUrl) return envUrl;
   return `http://localhost:${app.port}`;
+}
+
+type WebServerConfig = {
+  command: string;
+  url: string;
+  cwd: string;
+  reuseExistingServer: boolean;
+  timeout: number;
+};
+
+function toWebServerConfig(appKey: keyof typeof APPS): WebServerConfig {
+  const app = APPS[appKey];
+  return {
+    command: `pnpm --filter ${app.filter} dev`,
+    url: getAppUrl(appKey),
+    cwd: REPO_ROOT,
+    // Keep local runs reliable even when CI env vars are exported in the shell.
+    reuseExistingServer: true,
+    timeout: process.env.CI ? 120_000 : 60_000,
+  };
+}
+
+function buildWebServer(): WebServerConfig | WebServerConfig[] | undefined {
+  const appKeys = resolveWebAppKeys();
+  if (appKeys.length === 1) return toWebServerConfig(appKeys[0]);
+  if (appKeys.length > 1) return appKeys.map((key) => toWebServerConfig(key));
+
+  return undefined;
 }
 
 function buildProjects() {
@@ -89,30 +181,21 @@ function buildProjects() {
       },
       testMatch,
       testDir: "./src/e2e",
-      // Start app when running this project's tests (local dev only)
-      ...(process.env.CI
-        ? {}
-        : {
-            webServer: {
-              command: `pnpm --filter ${app.filter} dev`,
-              url: baseURL,
-              reuseExistingServer: true,
-              cwd: "../../",
-              timeout: 60_000,
-            },
-          }),
     });
   }
 
   return projects;
 }
 
+const webServer = buildWebServer();
+
 export default defineConfig({
   testDir: "./src/e2e",
+  timeout: 90_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 6 : undefined,
   reporter: process.env.CI
     ? [
         ["html", { open: "never" }],
@@ -124,9 +207,11 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
+    navigationTimeout: 90_000,
+    actionTimeout: 60_000,
   },
 
-  projects: buildProjects(),
+  ...(webServer ? { webServer } : {}),
 
-  outputDir: "./test-results",
+  projects: buildProjects(),
 });
