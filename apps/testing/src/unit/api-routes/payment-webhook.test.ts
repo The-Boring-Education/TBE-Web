@@ -26,6 +26,7 @@ vi.mock("../../../../api/src/lib/constants", () => ({
     NODE_ENV: "test",
   },
   isDevelopmentEnv: false,
+  PAYMENT_STATUS: ["PENDING", "SUCCESS", "FAILED", "REFUNDED"],
 }));
 
 vi.mock("../../../../api/src/lib/database", () => ({
@@ -272,7 +273,7 @@ describe("Payment Webhook API Route", () => {
       data: mockPayment,
     });
     mockUpdatePaymentStatusToDB.mockResolvedValue({
-      data: { ...mockPayment, isPaid: true },
+      data: { ...mockPayment, status: "SUCCESS" },
     });
     mockProcessPostPaymentEnrollment.mockResolvedValue({
       success: true,
@@ -330,7 +331,7 @@ describe("Payment Webhook API Route", () => {
       data: { orderId: "order_123" },
     });
     mockUpdatePaymentStatusToDB.mockResolvedValue({
-      data: { orderId: "order_123", isPaid: false },
+      data: { orderId: "order_123", status: "FAILED" },
     });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({

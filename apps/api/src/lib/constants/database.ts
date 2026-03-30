@@ -52,9 +52,20 @@ export const PRODUCT_TYPE = [
   "SHIKSHA",
   "PROJECTS",
   "PREPYATRA",
+  "DSA_YATRA",
+  "ONCAMPUS",
+  "WEBINAR",
   "GENERAL",
-];
+] as const;
 export type ProductType = (typeof PRODUCT_TYPE)[number];
+
+export const PAYMENT_STATUS = [
+  "PENDING",
+  "SUCCESS",
+  "FAILED",
+  "REFUNDED",
+] as const;
+export type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
 
 export const APPLICATION_STATUS = [
   "Screening",

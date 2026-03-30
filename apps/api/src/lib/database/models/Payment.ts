@@ -1,6 +1,6 @@
 import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, PRODUCT_TYPE } from "@/lib/constants";
+import { DATABASE_MODELS, PAYMENT_STATUS, PRODUCT_TYPE } from "@/lib/constants";
 import type { PaymentModel } from "@/lib/interfaces";
 
 const PaymentSchema: Schema<PaymentModel> = new Schema(
@@ -35,9 +35,14 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
       type: String,
       required: true,
     },
-    isPaid: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: PAYMENT_STATUS,
+      default: "PENDING",
+    },
+    gateway: {
+      type: String,
+      default: "CASHFREE",
     },
     appliedCoupon: {
       type: Schema.Types.ObjectId,
@@ -53,6 +58,8 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
     timestamps: true,
   },
 );
+
+PaymentSchema.index({ user: 1, productId: 1 });
 
 const Payment: Model<PaymentModel> =
   models?.Payment ||

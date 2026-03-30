@@ -108,7 +108,7 @@ describe("Payment Check Status API Route", () => {
 
   it("should return purchased=true for active subscription", async () => {
     mockCheckPaymentStatusFromDB.mockResolvedValue({
-      data: { purchased: true, accessType: "PREPYATRA_SUBSCRIPTION" },
+      data: { purchased: true, accessType: "SUBSCRIPTION" },
     });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -120,7 +120,7 @@ describe("Payment Check Status API Route", () => {
 
     const data = JSON.parse(res._getData());
     expect(data.status).toBe(true);
-    expect(data.data.accessType).toBe("PREPYATRA_SUBSCRIPTION");
+    expect(data.data.accessType).toBe("SUBSCRIPTION");
   });
 
   it("should return purchased=false when payment not completed", async () => {

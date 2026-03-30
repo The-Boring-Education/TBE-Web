@@ -20,6 +20,31 @@ vi.mock("../../../../api/src/lib/constants", () => ({
     CASHFREE_SECRET_KEY: "test-secret",
   },
   isDevelopmentEnv: false,
+  PAYMENT_STATUS: ["PENDING", "SUCCESS", "FAILED", "REFUNDED"],
+  PRODUCT_TYPE: [
+    "INTERVIEW_SHEET",
+    "SHIKSHA",
+    "PROJECTS",
+    "PREPYATRA",
+    "DSA_YATRA",
+    "ONCAMPUS",
+    "WEBINAR",
+    "GENERAL",
+  ],
+}));
+
+vi.mock("../../../../api/src/lib/constants/products", () => ({
+  isValidProductType: (type: string) =>
+    [
+      "INTERVIEW_SHEET",
+      "SHIKSHA",
+      "PROJECTS",
+      "PREPYATRA",
+      "DSA_YATRA",
+      "ONCAMPUS",
+      "WEBINAR",
+      "GENERAL",
+    ].includes(type),
 }));
 
 vi.mock("../../../../api/src/lib/database", () => ({

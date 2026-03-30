@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes, envConfig, isDevelopmentEnv } from "@/lib/constants";
+import { isValidProductType } from "@/lib/constants/products";
 import { addPaymentToDB } from "@/lib/database";
 import {
   buildOrderPayload,
@@ -63,6 +64,15 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    if (!isValidProductType(productType)) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Invalid product type: ${productType}`,
+        }),
+      );
+    }
+
     const orderId = generatePaymentOrderId();
 
     const orderPayload = buildOrderPayload({
@@ -107,7 +117,6 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    // 13. Send success response
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,

@@ -25,7 +25,7 @@ const addPaymentToDB = async ({
       amount,
       orderId,
       paymentLink,
-      isPaid: false,
+      status: "PENDING",
       ...(appliedCoupon && { appliedCoupon }),
       ...(couponCode && { couponCode }),
     });
@@ -65,18 +65,20 @@ const updatePaymentStatusToDB = async ({
   status,
 }: UpdatePaymentStatusPayloadProps): Promise<DatabaseQueryResponseType> => {
   try {
-    const payment = await Payment.findOne({ orderId });
-    if (!payment) {
+    const updated = await Payment.findOneAndUpdate(
+      { orderId },
+      {
+        status,
+        ...(paymentId && { paymentId }),
+      },
+      { new: true },
+    );
+
+    if (!updated) {
       return { error: "Payment not found" };
     }
 
-    payment.isPaid = status === "SUCCESS";
-    if (paymentId) {
-      payment.paymentId = paymentId;
-    }
-
-    await payment.save();
-    return { data: payment };
+    return { data: updated };
   } catch (error) {
     logger.error("DB: updatePaymentStatusToDB failed", {
       error: error instanceof Error ? error.message : String(error),
@@ -95,8 +97,6 @@ const checkPaymentStatusFromDB = async (
   productType?: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    // Step 1: Check if user has active PrepYatra subscription
-    // PrepYatra subscribers get access to all products
     const activeSubscription = await PrepYatraSubscription.findOne({
       userId,
       isActive: true,
@@ -106,13 +106,11 @@ const checkPaymentStatusFromDB = async (
       return {
         data: {
           purchased: true,
-          accessType: "PREPYATRA_SUBSCRIPTION",
+          accessType: "SUBSCRIPTION",
         },
       };
     }
 
-    // Step 2: Check specific payment for this product
-    // This works for all product types: INTERVIEW_SHEET, SHIKSHA, PROJECTS, etc.
     const payment = await Payment.findOne({
       user: userId,
       productId,
@@ -126,7 +124,7 @@ const checkPaymentStatusFromDB = async (
       };
     }
 
-    if (payment.isPaid) {
+    if (payment.status === "SUCCESS") {
       return {
         data: {
           purchased: true,

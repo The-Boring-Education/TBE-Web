@@ -111,7 +111,7 @@ const getRevenueAnalytics = async (
   const revenueData = await Payment.aggregate([
     {
       $match: {
-        isPaid: true,
+        status: "SUCCESS",
         createdAt: { $gte: start, $lte: end },
       },
     },
@@ -133,7 +133,7 @@ const getRevenueAnalytics = async (
   const productRevenue = await Payment.aggregate([
     {
       $match: {
-        isPaid: true,
+        status: "SUCCESS",
         createdAt: { $gte: start, $lte: end },
       },
     },
@@ -171,7 +171,7 @@ const getRevenueAnalytics = async (
   });
 
   const paidUsers = await Payment.distinct("user", {
-    isPaid: true,
+    status: "SUCCESS",
     createdAt: { $gte: start, $lte: end },
   });
 

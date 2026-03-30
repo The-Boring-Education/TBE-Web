@@ -28,7 +28,9 @@ export interface ProductConfigProps {
   };
 }
 
-export const PRODUCT_CONFIGS: Record<ProductType, ProductConfigProps> = {
+export const PRODUCT_CONFIGS: Partial<
+  Record<ProductType, ProductConfigProps>
+> & { GENERAL: ProductConfigProps } = {
   INTERVIEW_SHEET: {
     name: "Interview Sheet",
     icon: ShieldCheckIcon,
