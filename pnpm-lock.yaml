@@ -1751,6 +1751,9 @@ importers:
       "@tbe/constants":
         specifier: workspace:*
         version: link:../constants
+      "@tbe/gamification":
+        specifier: workspace:*
+        version: link:../gamification
       "@tbe/hooks":
         specifier: workspace:*
         version: link:../hooks
