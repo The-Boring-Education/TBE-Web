@@ -6,7 +6,12 @@ const nextConfig = {
     unoptimized: true,
   },
 
-  transpilePackages: ["@tbe/auth", "@tbe/components", "@tbe/utils"],
+  transpilePackages: [
+    "@tbe/auth",
+    "@tbe/components",
+    "@tbe/utils",
+    "@tbe/gamification",
+  ],
 
   eslint: {
     ignoreDuringBuilds: true,
