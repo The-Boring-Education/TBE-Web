@@ -124,7 +124,10 @@ export type UserPointsActionType =
   | "PREPLOG_STREAK_30"
   | "COMPLETE_QUIZ"
   | "QUIZ_PERFECT_SCORE"
-  | "QUIZ_STREAK";
+  | "QUIZ_STREAK"
+  | "COMPLETE_DSA_QUESTION"
+  | "COMPLETE_DSA_TOPIC"
+  | "COMPLETE_APTITUDE_QUESTION";
 
 export type WorkDomainType =
   | "MERN Full-stack"

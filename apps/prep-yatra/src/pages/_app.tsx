@@ -3,11 +3,11 @@ import "@/styles/globals.css";
 
 import { AuthProvider } from "@tbe/auth";
 import { useAuth } from "@tbe/auth";
-import { PrepYatraGamificationProvider } from "@tbe/components";
 import { Toaster as Sonner } from "@tbe/components";
 import { Toaster } from "@tbe/components";
 import { TooltipProvider } from "@tbe/components";
 import { initGA, trackPageview } from "@tbe/components/analytics";
+import { GamificationProvider } from "@tbe/gamification";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -150,9 +150,9 @@ const AppContent = ({
   return (
     <>
       <CacheManager />
-      <PrepYatraGamificationProvider>
+      <GamificationProvider>
         <Component {...pageProps} />
-      </PrepYatraGamificationProvider>
+      </GamificationProvider>
     </>
   );
 };

@@ -11,8 +11,8 @@ import {
   LoadingSpinner,
   Navbar,
   ProfileSection,
-  usePrepYatraGamificationContext,
 } from "@tbe/components";
+import { POINTS_RULES, useGamificationContext } from "@tbe/gamification";
 import { usePrepLogs } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import { recruitersService, userService } from "@tbe/services";
@@ -31,7 +31,7 @@ import { toast } from "sonner";
 const Dashboard = () => {
   const router = useRouter();
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
-  const { showCelebration } = usePrepYatraGamificationContext();
+  const { triggerCelebration, showToast } = useGamificationContext();
   const { logs: prepLogs, refetch: refetchPrepLogs } = usePrepLogs(user?.id);
 
   // State management
@@ -122,16 +122,24 @@ const Dashboard = () => {
   const handleLogAdded = () => {
     if (user?.id) {
       refetchPrepLogs();
-      showCelebration(10);
-      toast.success("Prep log added successfully!");
+      triggerCelebration({ type: "points", intensity: "low" });
+      showToast({
+        type: "points",
+        message: "Prep log added!",
+        points: POINTS_RULES.PREPLOG_CREATED,
+      });
     }
   };
 
   const handleContactAdded = () => {
     if (user?.id) {
       fetchRecruiterContacts(user.id);
-      showCelebration(5);
-      toast.success("Recruiter contact added successfully!");
+      triggerCelebration({ type: "points", intensity: "medium" });
+      showToast({
+        type: "points",
+        message: "Recruiter contact added!",
+        points: POINTS_RULES.RECRUITER_ADDED,
+      });
     }
   };
 
