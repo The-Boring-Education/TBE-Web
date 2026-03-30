@@ -34,7 +34,8 @@ const Layout = ({ children }: LayoutProps) => {
       <main
         className={cn(
           "min-h-screen pt-[72px]",
-          (isDashboard || isRevisions || isTopics) && "bg-[#0A0A0A]",
+          (isDashboard || isRevisions || isTopics || router.pathname === "/") &&
+            "bg-[#0A0A0A]",
         )}
       >
         {children}

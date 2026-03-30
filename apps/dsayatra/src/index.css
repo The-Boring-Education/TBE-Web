@@ -5,42 +5,40 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 6%;
+    --foreground: 0 0% 88%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 88%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 88%;
 
-    /* Updated Primary/Secondary to match styling preferences if needed, or keeping default red/yellow from prep */
     --primary: 0 84.2% 60.2%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 42 87% 55%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 63%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 0 0% 14%;
+    --accent-foreground: 0 0% 88%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 0 84.2% 60.2%;
 
     --radius: 0.5rem;
   }
 
   html {
     @apply scroll-smooth;
-    background: #ffd5d5;
-    /* Light pink background from prep-yatra */
+    background: #0f0f0f;
   }
 }
 
@@ -50,8 +48,9 @@
   }
 
   body {
-    @apply text-contentLight scroll-smooth font-primary;
-    background: #fff0f0;
+    @apply scroll-smooth font-primary;
+    background: #0a0a0a;
+    color: #e0e0e0;
     min-height: 100vh;
   }
 }
@@ -161,14 +160,14 @@
 
 @layer utilities {
   .glass {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(26, 26, 26, 0.85);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   }
 
   .glass-dark {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(15, 15, 15, 0.9);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 87, 87, 0.2);
   }
