@@ -962,6 +962,8 @@ export interface DsaQuestion {
     image?: string;
   }[];
   constraints?: string[];
+  notes?: string;
+  _priorityScore?: number;
   sections?: {
     first_principles?: {
       paragraphs: string[];
@@ -1025,6 +1027,7 @@ export interface DsaQuestionListProps {
   className?: string;
   completedQuestionIds?: (string | number)[];
   onToggleComplete?: (questionId: string | number) => void;
+  isRecommendedMap?: Record<string, boolean>;
 }
 
 export interface DsaQuestionCardProps {
@@ -1032,6 +1035,8 @@ export interface DsaQuestionCardProps {
   difficultyLevel: QuestionDifficulty;
   isSelected?: boolean;
   isCompleted?: boolean;
+  isRecommended?: boolean;
+  hasNotes?: boolean;
   onClick?: () => void;
   onToggleComplete?: (e: React.MouseEvent) => void;
 }

@@ -1,12 +1,14 @@
 import type { DsaQuestionCardProps } from "@tbe/interface";
 import { getDifficultyConfig } from "@tbe/utils";
-import { CheckCircle2, Circle } from "lucide-react";
+import { CheckCircle2, Circle, Sparkles } from "lucide-react";
 
 export const DsaQuestionCard = ({
   name,
   difficultyLevel,
   isSelected = false,
   isCompleted = false,
+  isRecommended = false,
+  hasNotes = false,
   onClick,
   onToggleComplete,
 }: DsaQuestionCardProps) => {
@@ -41,23 +43,38 @@ export const DsaQuestionCard = ({
             <Circle className="w-[18px] h-[18px]" />
           )}
         </button>
-        <p
-          className={`text-[13px] font-medium truncate transition-colors duration-200 ${
-            isSelected
-              ? "text-white"
-              : isCompleted
-                ? "text-green-100/80"
-                : "text-gray-400 group-hover:text-gray-200"
-          }`}
-        >
-          {name}
-        </p>
+        <div className="flex flex-col min-w-0">
+          <p
+            className={`text-[13px] font-medium truncate transition-colors duration-200 flex items-center gap-1.5 ${
+              isSelected
+                ? "text-white"
+                : isCompleted
+                  ? "text-green-100/80"
+                  : "text-gray-400 group-hover:text-gray-200"
+            }`}
+          >
+            {isRecommended && (
+              <Sparkles className="w-3 h-3 text-red-500 fill-red-500/20 shrink-0" />
+            )}
+            {name}
+          </p>
+          {hasNotes && (
+            <div className="flex items-center gap-1 mt-0.5 opacity-60">
+              <span className="text-[10px] text-gray-500 font-medium lowercase">
+                Has notes
+              </span>
+            </div>
+          )}
+        </div>
       </div>
-      <span
-        className={`text-[9px] font-bold px-2 py-0.5 flex-shrink-0 rounded border uppercase tracking-wider ${color}`}
-      >
-        {label}
-      </span>
+      <div className="flex items-center gap-2">
+        {hasNotes && <div className="w-1 h-1 rounded-full bg-red-500" />}
+        <span
+          className={`text-[9px] font-bold px-2 py-0.5 flex-shrink-0 rounded border uppercase tracking-wider ${color}`}
+        >
+          {label}
+        </span>
+      </div>
     </div>
   );
 };

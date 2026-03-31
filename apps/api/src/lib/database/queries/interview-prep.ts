@@ -14,10 +14,18 @@ import type {
 import { generateYouTubeSearchLink } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
-import { DSAQuestion, InterviewSheet, StudyGuide, UserSheet } from "../models";
+import {
+  DSAQuestion,
+  InterviewSheet,
+  StudyGuide,
+  User,
+  UserSheet,
+} from "../models";
 import { toObjectId } from "./common";
 import { updateUserPointsInDB } from "./gamification";
 import { checkPaymentStatusFromDB } from "./payment";
+
+const DSA_YATRA_SYSTEM_SHEET_ID = "650000000000000000000d5a";
 
 const addAInterviewSheetToDB = async (
   sheetPayload: AddInterviewSheetRequestPayloadProps,
@@ -641,6 +649,7 @@ interface DSASheetFilters {
   topics?: string | string[];
   page?: number;
   limit?: number;
+  userId?: string;
 }
 
 const getAllDSAQuestionsFromDB = async (
@@ -654,6 +663,7 @@ const getAllDSAQuestionsFromDB = async (
       topics,
       page = 1,
       limit = 50,
+      userId,
     } = filters;
 
     // Build match stage for filtering
@@ -712,7 +722,18 @@ const getAllDSAQuestionsFromDB = async (
       "UNION_FIND",
     ];
 
-    const questions = await DSAQuestion.aggregate([
+    // Fetch user preferences for personalization
+    let targetCompanies: string[] = [];
+    if (userId) {
+      const user = await User.findById(userId)
+        .select("prepYatra.targetCompanies")
+        .lean();
+      if (user?.prepYatra?.targetCompanies) {
+        targetCompanies = user.prepYatra.targetCompanies;
+      }
+    }
+
+    const aggregate: any[] = [
       { $match: matchStage },
       {
         $addFields: {
@@ -739,15 +760,94 @@ const getAllDSAQuestionsFromDB = async (
               default: 4,
             },
           },
+          _priorityScore: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $setIntersection: ["$companyTypes", targetCompanies],
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: 1,
+              else: 0,
+            },
+          },
         },
       },
+    ];
+
+    // If userId provided, join with UserSheet to get status and notes
+    if (userId) {
+      aggregate.push(
+        {
+          $lookup: {
+            from: "usersheets", // MongoDB collection name for UserSheet
+            let: { qId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  userId: toObjectId(userId),
+                  sheetId: toObjectId(DSA_YATRA_SYSTEM_SHEET_ID),
+                },
+              },
+              { $unwind: "$questions" },
+              {
+                $match: { $expr: { $eq: ["$questions.questionId", "$$qId"] } },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  isCompleted: "$questions.isCompleted",
+                  isStarred: "$questions.isStarred",
+                  notes: "$questions.notes",
+                },
+              },
+            ],
+            as: "userStatus",
+          },
+        },
+        {
+          $addFields: {
+            userStatus: { $arrayElemAt: ["$userStatus", 0] },
+          },
+        },
+        {
+          $addFields: {
+            isCompleted: { $ifNull: ["$userStatus.isCompleted", false] },
+            isStarred: { $ifNull: ["$userStatus.isStarred", false] },
+            notes: { $ifNull: ["$userStatus.notes", ""] },
+          },
+        },
+      );
+    }
+
+    aggregate.push(
       {
-        $sort: { _topicOrder: 1, _difficultyOrder: 1, order: 1, createdAt: -1 },
+        $sort: {
+          _priorityScore: -1,
+          _topicOrder: 1,
+          _difficultyOrder: 1,
+          order: 1,
+          createdAt: -1,
+        },
       },
       { $skip: (page - 1) * limit },
       { $limit: limit },
-      { $project: { _topicOrder: 0, _difficultyOrder: 0 } },
-    ]);
+      {
+        $project: {
+          _topicOrder: 0,
+          _difficultyOrder: 0,
+          _priorityScore: 0,
+          userStatus: 0,
+        },
+      },
+    );
+
+    const questions = await DSAQuestion.aggregate(aggregate);
 
     return {
       data: {
@@ -946,6 +1046,7 @@ const getDSAQuestionsGroupedByTopic = async (
   domain: DSADomainType,
   difficulty?: DSADifficultyType,
   companyType?: string,
+  userId?: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     // Build match stage for filtering
@@ -961,8 +1062,18 @@ const getDSAQuestionsGroupedByTopic = async (
       matchStage.companyTypes = { $in: [companyType] };
     }
 
-    // Use aggregation to group questions by topic, sorted Easy → Medium → Hard within each
-    const groupedQuestions = await DSAQuestion.aggregate([
+    // Fetch user preferences for personalization
+    let targetCompanies: string[] = [];
+    if (userId) {
+      const user = await User.findById(userId)
+        .select("prepYatra.targetCompanies")
+        .lean();
+      if (user?.prepYatra?.targetCompanies) {
+        targetCompanies = user.prepYatra.targetCompanies;
+      }
+    }
+
+    const aggregationPipeline: any[] = [
       { $match: matchStage },
       {
         $addFields: {
@@ -976,9 +1087,79 @@ const getDSAQuestionsGroupedByTopic = async (
               default: 4,
             },
           },
+          _priorityScore: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $setIntersection: ["$companyTypes", targetCompanies],
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: 1,
+              else: 0,
+            },
+          },
         },
       },
-      { $sort: { _difficultyOrder: 1, order: 1, createdAt: -1 } },
+    ];
+
+    if (userId) {
+      aggregationPipeline.push(
+        {
+          $lookup: {
+            from: "usersheets",
+            let: { qId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  userId: toObjectId(userId),
+                  sheetId: toObjectId(DSA_YATRA_SYSTEM_SHEET_ID),
+                },
+              },
+              { $unwind: "$questions" },
+              {
+                $match: { $expr: { $eq: ["$questions.questionId", "$$qId"] } },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  isCompleted: "$questions.isCompleted",
+                  isStarred: "$questions.isStarred",
+                  notes: "$questions.notes",
+                },
+              },
+            ],
+            as: "userStatus",
+          },
+        },
+        {
+          $addFields: {
+            userStatus: { $arrayElemAt: ["$userStatus", 0] },
+          },
+        },
+        {
+          $addFields: {
+            isCompleted: { $ifNull: ["$userStatus.isCompleted", false] },
+            isStarred: { $ifNull: ["$userStatus.isStarred", false] },
+            notes: { $ifNull: ["$userStatus.notes", ""] },
+          },
+        },
+      );
+    }
+
+    aggregationPipeline.push(
+      {
+        $sort: {
+          _priorityScore: -1,
+          _difficultyOrder: 1,
+          order: 1,
+          createdAt: -1,
+        },
+      },
       { $unwind: "$topics" },
       {
         $group: {
@@ -994,13 +1175,19 @@ const getDSAQuestionsGroupedByTopic = async (
               topics: "$topics",
               sections: "$sections",
               resources: "$resources",
+              notes: "$notes",
+              isCompleted: "$isCompleted",
+              isStarred: "$isStarred",
+              _priorityScore: "$_priorityScore",
             },
           },
           count: { $sum: 1 },
         },
       },
       { $sort: { _id: 1 } },
-    ]);
+    );
+
+    const groupedQuestions = await DSAQuestion.aggregate(aggregationPipeline);
 
     // Transform to a more usable format
     const result = {
@@ -1024,6 +1211,119 @@ const getDSAQuestionsGroupedByTopic = async (
       stack: error instanceof Error ? error.stack : undefined,
     });
     return { error: "Failed to fetch DSA questions by topic", details: error };
+  }
+};
+
+const saveDSAQuestionNote = async (
+  userId: string,
+  questionId: string,
+  notes: string,
+  sheetId: string = DSA_YATRA_SYSTEM_SHEET_ID,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const qid = toObjectId(questionId);
+    const uid = toObjectId(userId);
+    const sid = toObjectId(sheetId);
+
+    let userSheet = await UserSheet.findOne({ userId: uid, sheetId: sid });
+
+    if (!userSheet) {
+      userSheet = await UserSheet.create({
+        userId: uid,
+        sheetId: sid,
+        questions: [{ questionId: qid, notes, isCompleted: false }],
+      });
+    } else {
+      if (!userSheet.questions) userSheet.questions = [];
+      const questionIndex = userSheet.questions.findIndex(
+        (uq) => uq.questionId.toString() === questionId,
+      );
+
+      if (questionIndex > -1) {
+        userSheet.questions[questionIndex].notes = notes;
+      } else {
+        userSheet.questions.push({
+          questionId: qid,
+          notes,
+          isCompleted: false,
+        } as any);
+      }
+      await userSheet.save();
+    }
+
+    return { data: userSheet };
+  } catch (error) {
+    logger.error("DB: saveDSAQuestionNote failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to save question note", details: error };
+  }
+};
+
+const syncDSAQuestionsProgress = async (
+  userId: string,
+  questions: Array<{
+    questionId: string;
+    isCompleted: boolean;
+    notes?: string;
+  }>,
+  sheetId: string = DSA_YATRA_SYSTEM_SHEET_ID,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const uid = toObjectId(userId);
+    const sid = toObjectId(sheetId);
+
+    let userSheet = await UserSheet.findOne({ userId: uid, sheetId: sid });
+
+    if (!userSheet) {
+      const newQuestions = questions.map((q) => ({
+        questionId: toObjectId(q.questionId),
+        isCompleted: q.isCompleted,
+        notes: q.notes || "",
+      }));
+
+      userSheet = await UserSheet.create({
+        userId: uid,
+        sheetId: sid,
+        questions: newQuestions,
+      });
+    } else {
+      if (!userSheet.questions) userSheet.questions = [];
+
+      // Merge logic: update if exists, or push if new
+      for (const q of questions) {
+        const questionIndex = userSheet.questions.findIndex(
+          (uq) => uq.questionId.toString() === q.questionId,
+        );
+
+        if (questionIndex > -1) {
+          // Update existing: only update isCompleted if true, and notes if provided
+          if (q.isCompleted) {
+            userSheet.questions[questionIndex].isCompleted = true;
+          }
+          if (q.notes) {
+            userSheet.questions[questionIndex].notes = q.notes;
+          }
+        } else {
+          // Add new
+          userSheet.questions.push({
+            questionId: toObjectId(q.questionId),
+            isCompleted: q.isCompleted,
+            notes: q.notes || "",
+          } as any);
+        }
+      }
+      await userSheet.save();
+    }
+
+    return { data: userSheet };
+  } catch (error) {
+    logger.error("DB: syncDSAQuestionsProgress failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to sync progress", details: error };
   }
 };
 
@@ -1052,6 +1352,8 @@ export {
   getStudyGuideByTopicFromDB,
   markQuestionCompletedByUser,
   markQuestionStarredByUser,
+  saveDSAQuestionNote,
+  syncDSAQuestionsProgress,
   updateDSAQuestionInDB,
   updateInterviewQuestionInDB,
   updateInterviewSheetInDB,

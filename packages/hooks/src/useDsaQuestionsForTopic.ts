@@ -4,6 +4,8 @@ import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import { sendRequest, transformDsaQuestion } from "@tbe/utils";
 import { useMemo } from "react";
 
+import useUser from "./useUser";
+
 interface UseDsaQuestionsForTopicReturn {
   questions: DsaQuestion[];
   rawQuestions: unknown[];
@@ -17,13 +19,17 @@ interface UseDsaQuestionsForTopicReturn {
 export const useDsaQuestionsForTopic = (
   topic: string | null,
 ): UseDsaQuestionsForTopicReturn => {
+  const { user } = useUser();
+  const userId = user?.id;
+
   const { data: response, isLoading } = useQuery({
     queryKey: queryKeys.dsa.questions({
       topic: topic ?? "",
+      userId,
     }),
     queryFn: () =>
       sendRequest({
-        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}`,
+        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}`,
         method: "GET",
       }),
     enabled: !!topic,
