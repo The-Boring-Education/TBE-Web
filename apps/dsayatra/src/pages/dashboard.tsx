@@ -84,9 +84,15 @@ function StatCard({
   progress,
   status,
   secondaryInfo,
+  className,
 }: any) {
   return (
-    <Card className="bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:scale-[1.02] group rounded-xl p-4 h-full relative overflow-hidden">
+    <Card
+      className={cn(
+        "bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 hover:scale-[1.02] group rounded-xl p-4 h-full relative overflow-hidden flex flex-col justify-center",
+        className,
+      )}
+    >
       <div className="absolute inset-0 bg-gradient-to-br from-[#ff5757]/0 to-[#ff5757]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       <div className="flex flex-row items-center justify-between pb-1.5 relative z-10">
         <p className="text-xs font-semibold text-[#a0a0a0] uppercase tracking-wide">
@@ -565,23 +571,15 @@ const DsaClient = () => {
                 ? `${todayLog.timeSpent || 0}m logged in prep today`
                 : undefined
             }
+            className="lg:col-span-2"
           />
           <StatCard
             title="Total Solved"
             value={String(totalSolved)}
             subtext={`Out of ${totalQuestions} questions`}
             progress={overallPercentage}
-          />
-          <StatCard
-            title="Time Invested"
-            value={(totalTimeSpent / 60).toFixed(1)}
-            subtext="Hours this week"
-          />
-          <StatCard
-            title="Daily Goal"
-            value={`${todayTotalHours}`}
-            subtext="Hours completed"
-            progress={dailyGoalProgress}
+            icon={TrendingUp}
+            className="lg:col-span-2"
           />
         </div>
 
