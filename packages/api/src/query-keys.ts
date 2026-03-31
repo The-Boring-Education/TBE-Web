@@ -28,8 +28,13 @@ export const queryKeys = {
   aptitude: {
     all: ["aptitude"] as const,
     topics: () => [...queryKeys.aptitude.all, "topics"] as const,
-    questions: (topic: string) =>
-      [...queryKeys.aptitude.all, "questions", topic] as const,
+    questions: (topic: string, userId?: string) =>
+      [
+        ...queryKeys.aptitude.all,
+        "questions",
+        topic,
+        userId ?? "__no_user__",
+      ] as const,
     studyGuide: (topic: string) =>
       [...queryKeys.aptitude.all, "study-guide", topic] as const,
   },

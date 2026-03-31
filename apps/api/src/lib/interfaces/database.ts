@@ -221,6 +221,18 @@ export interface UserSheetQuestionModel {
   isStarred?: boolean;
 }
 
+export interface UserAptitudeTopicModel extends Document {
+  userId: typeof Schema.Types.ObjectId;
+  topicSlug: string;
+  questions: UserAptitudeTopicQuestionModel[];
+}
+
+/** Per-question progress for an aptitude topic (mirrors UserSheet question rows). */
+export interface UserAptitudeTopicQuestionModel {
+  questionId: typeof Schema.Types.ObjectId;
+  isCompleted?: boolean;
+}
+
 export interface DSAFirstPrinciples {
   paragraphs: string[];
   key_observation: string;
@@ -885,6 +897,13 @@ export interface BaseInterviewSheetResponseProps extends Partial<InterviewSheetM
 export interface MarkQuestionCompletedRequestProps {
   userId: string;
   sheetId: string;
+  questionId: string;
+  isCompleted: boolean;
+}
+
+export interface MarkAptitudeQuestionCompletedRequestProps {
+  userId: string;
+  topicSlug: string;
   questionId: string;
   isCompleted: boolean;
 }

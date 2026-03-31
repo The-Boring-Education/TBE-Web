@@ -314,10 +314,41 @@ describe("Interview Prep Index API Route", () => {
 
     await handler(req, res);
 
+    expect(mockGetAptitudeQuestionsByTopicFromDB).toHaveBeenCalledWith(
+      "arithmetic",
+      expect.objectContaining({ mergeProgressForUserId: undefined }),
+    );
+
     expect(res._getStatusCode()).toBe(200);
     const data = JSON.parse(res._getData());
     expect(data.status).toBe(true);
     expect(data.data).toEqual(questions);
+  });
+
+  it("GET (roadmap=APTITUDE, topic=slug, userId) passes mergeProgressForUserId", async () => {
+    mockGetAptitudeQuestionsByTopicFromDB.mockResolvedValue({
+      data: { questions: [], pagination: {} },
+      error: null,
+    });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: {
+        roadmap: "APTITUDE",
+        topic: "arithmetic",
+        userId: "507f1f77bcf86cd799439011",
+      },
+    });
+
+    await handler(req, res);
+
+    expect(mockGetAptitudeQuestionsByTopicFromDB).toHaveBeenCalledWith(
+      "arithmetic",
+      expect.objectContaining({
+        mergeProgressForUserId: "507f1f77bcf86cd799439011",
+      }),
+    );
+    expect(res._getStatusCode()).toBe(200);
   });
 
   it("GET (roadmap=APTITUDE, category filter) → 200", async () => {

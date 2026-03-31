@@ -10,7 +10,7 @@ import {
 import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import type { AptitudeQuestion } from "@tbe/interface";
-import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import { CACHE_TIMES, queryKeys, useQuery, useQueryClient } from "@tbe/query";
 import { cn, sendRequest } from "@tbe/utils";
 import {
   AlertTriangle,
@@ -20,14 +20,23 @@ import {
   Lightbulb,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 const AptitudePrepPage = () => {
   const router = useRouter();
-  const { loading: userLoading, isAuth } = useUser();
+  const queryClient = useQueryClient();
+  const { user, loading: userLoading, isAuth } = useUser();
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedTopicLabel, setSelectedTopicLabel] = useState<string>("");
   const [viewMode, setViewMode] = useState<"STUDY" | "QUIZ">("STUDY");
+
+  const handleAptitudeProgressSaved = useCallback(() => {
+    if (selectedTopic && user?.id) {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.aptitude.questions(selectedTopic, user.id),
+      });
+    }
+  }, [queryClient, selectedTopic, user?.id]);
 
   // Fetch Topics (auto-fetch)
   const { data: topicsResponse, isLoading: topicsLoading } = useQuery<any>({
@@ -68,13 +77,23 @@ const AptitudePrepPage = () => {
     isLoading: questionsLoading,
     refetch: refetchQuestions,
   } = useQuery<any>({
-    queryKey: queryKeys.aptitude.questions(selectedTopic ?? ""),
-    queryFn: () =>
-      sendRequest({
-        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}`,
-      }),
+    queryKey: queryKeys.aptitude.questions(
+      selectedTopic ?? "",
+      user?.id ?? undefined,
+    ),
+    queryFn: () => {
+      const userParam = user?.id
+        ? `&userId=${encodeURIComponent(user.id)}`
+        : "";
+      return sendRequest({
+        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}${userParam}`,
+      });
+    },
     ...CACHE_TIMES.STABLE,
-    enabled: !!selectedTopic && topicHasQuestions,
+    enabled:
+      !!selectedTopic &&
+      topicHasQuestions &&
+      (!isAuth || (!!user?.id && !userLoading)),
   });
 
   // Fetch Study Guide (enabled when topic selected)
@@ -381,7 +400,12 @@ const AptitudePrepPage = () => {
                       onStartQuiz={() => setViewMode("QUIZ")}
                     />
                   ) : (
-                    <AptitudeQuizPanel questions={questions} />
+                    <AptitudeQuizPanel
+                      questions={questions}
+                      topicSlug={selectedTopic ?? undefined}
+                      userId={user?.id ?? undefined}
+                      onProgressSaved={handleAptitudeProgressSaved}
+                    />
                   )}
                 </div>
               )}
