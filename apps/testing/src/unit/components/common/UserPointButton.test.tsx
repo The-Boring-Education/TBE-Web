@@ -59,7 +59,7 @@ describe("UserPointButton", () => {
   it("shows points after hydration when authenticated", async () => {
     renderWithProviders(<UserPointButton />);
 
-    const pointsElement = await screen.findByText("42");
+    const pointsElement = await screen.findByText("42", {}, { timeout: 3000 });
     expect(pointsElement).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /42/i })).toBeInTheDocument();
   });

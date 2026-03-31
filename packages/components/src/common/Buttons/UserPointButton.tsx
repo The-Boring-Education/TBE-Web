@@ -24,7 +24,9 @@ const UserPointButton = () => {
     setIsClient(true);
   }, []);
 
-  if (!isClient || !isAuth || loading) return null;
+  if (!isAuth || loading) return null;
+
+  if (!isClient) return <div className="w-10 h-10" />;
 
   return (
     <Popover className="relative">
