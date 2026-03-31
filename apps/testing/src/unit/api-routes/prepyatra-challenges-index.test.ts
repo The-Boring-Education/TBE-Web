@@ -10,7 +10,7 @@ const { mockChallengeSave, mockChallengeFind, mockUserFindOne } = vi.hoisted(
   }),
 );
 
-vi.mock("../../../../api/src/lib/constants", () => ({
+vi.mock("@/lib/constants", () => ({
   apiStatusCodes: {
     OKAY: 200,
     BAD_REQUEST: 400,
@@ -20,7 +20,7 @@ vi.mock("../../../../api/src/lib/constants", () => ({
   },
 }));
 
-vi.mock("../../../../api/src/lib/database", () => {
+vi.mock("@/lib/database", () => {
   const MockChallenge = vi.fn().mockImplementation(function (
     data: Record<string, unknown>,
   ) {
@@ -37,11 +37,11 @@ vi.mock("../../../../api/src/lib/database", () => {
   };
 });
 
-vi.mock("../../../../api/src/lib/utils", () => ({
+vi.mock("@/lib/utils", () => ({
   sendAPIResponse: (payload: unknown) => payload,
 }));
 
-vi.mock("../../../../api/src/lib/utils/logger", () => ({
+vi.mock("@/lib/utils/logger", () => ({
   logger: {
     info: vi.fn(),
     error: vi.fn(),
@@ -50,7 +50,7 @@ vi.mock("../../../../api/src/lib/utils/logger", () => ({
   },
 }));
 
-vi.mock("../../../../api/src/middleware/requestLogger", () => ({
+vi.mock("@/middleware/requestLogger", () => ({
   withApiHandler: (
     fn: (req: NextApiRequest, res: NextApiResponse) => Promise<void>,
   ) => fn,
