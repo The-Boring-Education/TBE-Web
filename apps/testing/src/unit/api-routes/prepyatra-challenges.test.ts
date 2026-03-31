@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createMocks } from "node-mocks-http";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createMocks } from "node-mocks-http";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Hoist mocks
 const {
@@ -44,6 +44,22 @@ vi.mock("@/lib/utils", () => ({
 
 vi.mock("@/middleware/api", () => ({
   connectDB: () => mockConnectDB(),
+}));
+
+// Mock requestLogger middleware to avoid @sentry/nextjs import chain
+vi.mock("@/middleware/requestLogger", () => ({
+  withApiHandler: (handler: any) => handler,
+}));
+
+// Mock logger to avoid side-effects
+vi.mock("@/lib/utils/logger", () => ({
+  logger: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    request: vi.fn(),
+  },
 }));
 
 vi.mock("@/lib/constants", () => ({
