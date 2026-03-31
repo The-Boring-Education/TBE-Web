@@ -14,6 +14,8 @@ interface UseDsaCompletedQuestionsReturn {
   toggleComplete: (questionId: string | number) => void;
   solvedToday: number;
   isSyncing: boolean;
+  localNotes: Record<string, string>;
+  saveNote: (questionId: string | number, notes: string) => Promise<void>;
 }
 
 const DEFAULT_STORAGE_KEY = "dsayatra_completed_questions";
@@ -27,6 +29,7 @@ const useDsaCompletedQuestions = (
   const [completedIds, setCompletedIds] = useState<(string | number)[]>([]);
   const [solvedToday, setSolvedToday] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [localNotes, setLocalNotes] = useState<Record<string, string>>({});
   const hasSyncedInitial = useRef(false);
 
   // Load from localStorage on mount
@@ -48,6 +51,15 @@ const useDsaCompletedQuestions = (
         if (data.date === todayStr) {
           setSolvedToday(data.solvedCount || 0);
         }
+      } catch {
+        /* corrupted data, start fresh */
+      }
+    }
+
+    const notes = localStorage.getItem("dsayatra_question_notes");
+    if (notes) {
+      try {
+        setLocalNotes(JSON.parse(notes));
       } catch {
         /* corrupted data, start fresh */
       }
@@ -130,6 +142,7 @@ const useDsaCompletedQuestions = (
             "dsayatra_question_notes",
             JSON.stringify(mergedNotes),
           );
+          setLocalNotes(mergedNotes);
 
           hasSyncedInitial.current = true;
         }
@@ -205,7 +218,45 @@ const useDsaCompletedQuestions = (
     [isAuth, user?.id, storageKey, todayStatsKey],
   );
 
-  return { completedIds, toggleComplete, solvedToday, isSyncing };
+  const saveNote = useCallback(
+    async (questionId: string | number, notes: string) => {
+      const qId = String(questionId);
+
+      // 1. Update local state
+      setLocalNotes((prev) => {
+        const next = { ...prev, [qId]: notes };
+        localStorage.setItem("dsayatra_question_notes", JSON.stringify(next));
+        return next;
+      });
+
+      // 2. Update DB if logged in
+      if (isAuth && user?.id) {
+        try {
+          await sendRequest({
+            url: `${routes.api.base}${routes.api.dsaQuestionNote}`,
+            method: "POST",
+            body: {
+              userId: user.id,
+              questionId: qId,
+              notes,
+            },
+          });
+        } catch (error) {
+          console.error("Failed to sync note to DB", error);
+        }
+      }
+    },
+    [isAuth, user?.id],
+  );
+
+  return {
+    completedIds,
+    toggleComplete,
+    solvedToday,
+    isSyncing,
+    localNotes,
+    saveNote,
+  };
 };
 
 export default useDsaCompletedQuestions;

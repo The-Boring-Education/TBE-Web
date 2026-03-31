@@ -1,4 +1,4 @@
-﻿import {
+import {
   DsaPrepWorkspace,
   LearningEnvironmentLayout,
   LoadingSpinner,
@@ -38,7 +38,8 @@ const DSAPrepPage = () => {
   const { questions, loading: topicQuestionsLoading } =
     useDsaQuestionsForTopic(selectedTopic);
 
-  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+  const { completedIds, toggleComplete, localNotes, saveNote } =
+    useDsaCompletedQuestions();
 
   const topicsCompletionMap = useMemo(() => {
     return (topicRows ?? []).reduce(
@@ -105,6 +106,8 @@ const DSAPrepPage = () => {
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
         onToggleComplete={toggleComplete}
+        localNotes={localNotes}
+        onSaveNote={saveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
     </LearningEnvironmentLayout>

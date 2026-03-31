@@ -64,7 +64,12 @@ const SheetsPageClient = () => {
     [topicQuestionsCache],
   );
 
-  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+  const {
+    completedIds,
+    toggleComplete,
+    localNotes,
+    saveNote: onSaveNote,
+  } = useDsaCompletedQuestions();
   const { topicsCompletionMap } = useDsaTopics(
     questionsForCompletion,
     completedIds,
@@ -142,6 +147,8 @@ const SheetsPageClient = () => {
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
         onToggleComplete={toggleComplete}
+        localNotes={localNotes}
+        onSaveNote={onSaveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
     </LearningEnvironmentLayout>

@@ -90,9 +90,13 @@ const mapMistakes = (
 
 interface QuestionDetailProps {
   question: DsaQuestion | null;
+  onNoteSaveSuccess?: (note: string) => void;
 }
 
-const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
+const QuestionDetailPanel = ({
+  question,
+  onNoteSaveSuccess,
+}: QuestionDetailProps) => {
   const { user, isAuth } = useUser();
   const [activeTab, setActiveTab] = useState<DsaSectionTabs>("description");
   const [noteText, setNoteText] = useState("");
@@ -143,6 +147,7 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
 
       if (response.status) {
         setSaveSuccess(true);
+        onNoteSaveSuccess?.(noteText);
         (question as any).notes = noteText; // Optimistic update
         setTimeout(() => setSaveSuccess(false), 3000);
       }

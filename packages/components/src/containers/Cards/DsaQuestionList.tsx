@@ -10,6 +10,7 @@ const DsaQuestionList = ({
   className = "",
   completedQuestionIds = [],
   onToggleComplete,
+  localNotes = {},
 }: DsaQuestionListProps) => {
   return (
     <div className={cn("flex flex-col w-full", className)}>
@@ -24,7 +25,8 @@ const DsaQuestionList = ({
             const isSelected = String(selectedQuestionId) === qId;
 
             const isRecommended = (question as any)._priorityScore > 0;
-            const hasNotes = !!question.notes;
+            const hasNotes =
+              !!question.notes || !!(localNotes && localNotes[qId]);
 
             return (
               <DsaQuestionCard

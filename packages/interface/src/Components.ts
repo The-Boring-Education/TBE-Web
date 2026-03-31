@@ -1027,6 +1027,8 @@ export interface DsaQuestionListProps {
   className?: string;
   completedQuestionIds?: (string | number)[];
   onToggleComplete?: (questionId: string | number) => void;
+  localNotes?: Record<string, string>;
+  topicSidebarHeader?: ReactNode;
   isRecommendedMap?: Record<string, boolean>;
 }
 
@@ -1043,6 +1045,7 @@ export interface DsaQuestionCardProps {
 
 export interface QuestionDetailProps {
   question: DsaQuestion | null;
+  onNoteSaveSuccess?: (note: string) => void;
 }
 
 export interface ExampleCardProps {
