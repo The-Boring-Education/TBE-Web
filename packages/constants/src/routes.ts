@@ -149,6 +149,7 @@ const routes = {
     markCourseChapterAsCompleted: "/user/shiksha/course",
     markProjectChapterAsCompleted: "/user/projects/project",
     markSheetQuestionAsCompleted: "/user/interview-prep/sheet",
+    dsaYatraProgress: "/user/dsayatra/progress",
     submitUserFeedback: "/feedback",
     createOrder: "/payment/create-order",
     checkStatus: "/payment/checkstatus",

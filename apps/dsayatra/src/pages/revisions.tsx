@@ -17,7 +17,7 @@ import { Fragment, useEffect, useState } from "react";
 
 export default function RevisionsUI({ seoMeta }: PageProps) {
   const router = useRouter();
-  const { loading: userLoading, isAuth } = useUser();
+  const { loading: userLoading, isAuth, user } = useUser();
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null);
   const [weeklyAssignments, setWeeklyAssignments] = useState<
     Record<number, string[]>
@@ -27,7 +27,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
   );
 
   const { questions: dsaQuestions, loading: sheetsLoading } = useDsaQuestions();
-  const { completedIds } = useDsaCompletedQuestions();
+  const { completedIds } = useDsaCompletedQuestions({ userId: user?.id });
   const globalCompleted = completedIds.map(String);
 
   useEffect(() => {

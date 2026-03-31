@@ -64,7 +64,9 @@ const SheetsPageClient = () => {
     [topicQuestionsCache],
   );
 
-  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+  const { completedIds, toggleComplete } = useDsaCompletedQuestions({
+    userId: user?.id,
+  });
   const { topicsCompletionMap } = useDsaTopics(
     questionsForCompletion,
     completedIds,

@@ -202,6 +202,32 @@ export interface DSAYatraOnboardingPayload {
   targetTopics: DSATopicType[];
 }
 
+export interface DsaYatraTodayStatsPayload {
+  date: string;
+  solvedCount: number;
+}
+
+export interface DsaYatraProgressResponseProps {
+  completedQuestionIds: string[];
+  solvedToday: number;
+}
+
+export interface GetDsaYatraProgressQueryProps {
+  userId: string;
+}
+
+export interface PatchDsaYatraQuestionCompletionProps {
+  userId: string;
+  questionId: string;
+  isCompleted: boolean;
+}
+
+export interface PutDsaYatraProgressMergeProps {
+  userId: string;
+  addCompletedQuestionIds: string[];
+  todayStats?: DsaYatraTodayStatsPayload;
+}
+
 export interface UpdateCompanyTypePayload {
   questionIds: string[];
   companyTypes: CompanyType[];

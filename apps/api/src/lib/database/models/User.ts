@@ -87,6 +87,21 @@ const DSAYatraSchema = new Schema({
     enum: DSA_TOPICS,
     default: [],
   },
+  progress: {
+    completedQuestionIds: {
+      type: [String],
+      default: [],
+    },
+    todayStats: {
+      date: {
+        type: String,
+      },
+      solvedCount: {
+        type: Number,
+        default: 0,
+      },
+    },
+  },
 });
 
 const UserSchema: Schema<UserModel> = new Schema(
