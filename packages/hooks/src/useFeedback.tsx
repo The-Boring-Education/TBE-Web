@@ -1,7 +1,9 @@
 import { routes } from "@tbe/constants";
-import { useApi, useUser } from "@tbe/hooks";
 import type { useFeedbackProps } from "@tbe/interface";
 import { useState } from "react";
+
+import useApi from "./useApi";
+import useUser from "./useUser";
 
 const useFeedback = ({ type, refId }: useFeedbackProps) => {
   const { user } = useUser();

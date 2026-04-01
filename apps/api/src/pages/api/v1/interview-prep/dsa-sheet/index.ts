@@ -93,10 +93,11 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     limit,
     metadata,
     query,
+    userId,
   } = req.query;
 
   if (query === "topics") {
-    const { data, error } = await getDSATopicSummariesFromDB();
+    const { data, error } = await getDSATopicSummariesFromDB(userId as string);
     if (error)
       return res
         .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
@@ -127,6 +128,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     topics: toArray(topic),
     page: page ? parseInt(page as string) : 1,
     limit: limit ? parseInt(limit as string) : topic ? undefined : 50,
+    userId: userId as string,
   });
 
   if (error)

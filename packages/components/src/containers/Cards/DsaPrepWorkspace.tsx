@@ -29,9 +29,12 @@ export interface DsaPrepWorkspaceProps {
   completionMap?: Record<string, boolean>;
   completedQuestionIds?: (string | number)[];
   onToggleComplete?: (questionId: string | number) => void;
+  onSaveNote?: (questionId: string | number, notes: string) => Promise<void>;
+  localNotes?: Record<string, string>;
   topicSidebarHeader?: ReactNode;
   emptyStateContent?: ReactNode;
   studyGuideConfigs?: Record<string, StudyGuideConfig>;
+  userTargetCompanies?: string[];
   className?: string;
 }
 
@@ -46,9 +49,12 @@ const DsaPrepWorkspace = ({
   completionMap,
   completedQuestionIds,
   onToggleComplete,
+  onSaveNote,
+  localNotes = {},
   topicSidebarHeader,
   emptyStateContent,
   studyGuideConfigs,
+  userTargetCompanies = [],
   className,
 }: DsaPrepWorkspaceProps) => {
   const { data: studyGuideData, isLoading: isStudyGuideLoading } =
@@ -281,6 +287,8 @@ const DsaPrepWorkspace = ({
                     onQuestionClick={onQuestionClick}
                     completedQuestionIds={completedQuestionIds}
                     onToggleComplete={onToggleComplete}
+                    localNotes={localNotes}
+                    userTargetCompanies={userTargetCompanies}
                   />
                 )}
               </div>
@@ -383,7 +391,23 @@ const DsaPrepWorkspace = ({
               ) : (
                 <div className="w-full max-w-3xl mx-auto">
                   <div className="pb-1 w-full">
-                    <QuestionDetailPanel question={selectedQuestion} />
+                    <QuestionDetailPanel
+                      question={{
+                        ...selectedQuestion,
+                        notes:
+                          localNotes[
+                            String(selectedQuestion.id || selectedQuestion.name)
+                          ] || selectedQuestion.notes,
+                      }}
+                      onNoteSaveSuccess={(note) => {
+                        if (onSaveNote) {
+                          onSaveNote(
+                            selectedQuestion.id || selectedQuestion.name,
+                            note,
+                          );
+                        }
+                      }}
+                    />
                   </div>
                 </div>
               )}

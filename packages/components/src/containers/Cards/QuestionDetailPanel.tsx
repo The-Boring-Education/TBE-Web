@@ -13,9 +13,13 @@ import {
   WorkingCodeSection,
   YouTubeIcon,
 } from "@tbe/components";
+import { routes } from "@tbe/constants";
+import { useUser } from "@tbe/hooks";
 import type { DsaQuestion, DsaSectionTabs } from "@tbe/interface";
+import { sendRequest } from "@tbe/utils";
+import { Check, Loader2, Save, Sparkles } from "lucide-react";
 import markdownit from "markdown-it";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const md = markdownit();
 
@@ -84,16 +88,28 @@ const mapMistakes = (
     fix: m.fix,
   }));
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
 interface QuestionDetailProps {
   question: DsaQuestion | null;
+  onNoteSaveSuccess?: (note: string) => void;
 }
 
-const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
+const QuestionDetailPanel = ({
+  question,
+  onNoteSaveSuccess,
+}: QuestionDetailProps) => {
+  const { user, isAuth } = useUser();
   const [activeTab, setActiveTab] = useState<DsaSectionTabs>("description");
+  const [noteText, setNoteText] = useState("");
+  const [isSavingNote, setIsSavingNote] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Sync internal note state with question data
+  useEffect(() => {
+    if (question) {
+      setNoteText((question as any).notes || "");
+      setSaveSuccess(false);
+    }
+  }, [question]);
 
   if (!question) {
     return (
@@ -103,8 +119,48 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
     );
   }
 
+  const handleSaveNote = async () => {
+    if (!isAuth || !user?.id) return;
+    setIsSavingNote(true);
+    setSaveSuccess(false);
+
+    try {
+      // 1. Update LocalStorage first for immediate feedback/offline
+      const qId = String(question.id || (question as any)._id);
+      const localNotesData = localStorage.getItem("dsayatra_question_notes");
+      const localNotes = localNotesData ? JSON.parse(localNotesData) : {};
+      localNotes[qId] = noteText;
+      localStorage.setItem(
+        "dsayatra_question_notes",
+        JSON.stringify(localNotes),
+      );
+
+      const response = await sendRequest({
+        url: `${routes.api.base}${routes.api.dsaQuestionNote}`,
+        method: "POST",
+        body: {
+          userId: user.id,
+          questionId: qId,
+          notes: noteText,
+        },
+      });
+
+      if (response.status) {
+        setSaveSuccess(true);
+        onNoteSaveSuccess?.(noteText);
+        (question as any).notes = noteText; // Optimistic update
+        setTimeout(() => setSaveSuccess(false), 3000);
+      }
+    } catch (error) {
+      console.error("Failed to save note", error);
+    } finally {
+      setIsSavingNote(false);
+    }
+  };
+
   const sections = question.sections;
   const hasSections = sections && Object.keys(sections).length > 0;
+  const isRecommended = (question as any)._priorityScore > 0;
 
   return (
     <FlexContainer
@@ -119,9 +175,16 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
       <div className="space-y-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <Text level="h1" className="text-2xl font-bold tracking-tight">
-              {question.name}
-            </Text>
+            <div className="flex flex-col gap-1">
+              {isRecommended && (
+                <div className="flex items-center gap-1 text-[9px] font-black text-red-500 uppercase tracking-widest">
+                  <Sparkles className="w-3 h-3" /> Recommended for you
+                </div>
+              )}
+              <Text level="h1" className="text-2xl font-bold tracking-tight">
+                {question.name}
+              </Text>
+            </div>
             <span
               className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0 ${
                 question.difficultyLevel === "EASY"
@@ -162,18 +225,21 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
           </div>
         </div>
 
-        <div className="flex gap-1.5">
-          {["description", "topics", "companies"].map((tab) => (
+        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+          {["description", "topics", "companies", "notes"].map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab as DsaSectionTabs)}
-              className={`px-2.5 py-1.5 text-xs rounded-full border transition-all duration-200 font-medium ${
+              onClick={() => setActiveTab(tab as any)}
+              className={`px-3 py-1.5 text-xs rounded-full border transition-all duration-200 font-medium whitespace-nowrap ${
                 activeTab === tab
                   ? "border-red-500 text-red-400 bg-red-950/30"
                   : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200"
               }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab === "notes" && (question as any).notes && (
+                <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
+              )}
             </button>
           ))}
         </div>
@@ -397,21 +463,61 @@ const QuestionDetailPanel = ({ question }: QuestionDetailProps) => {
           </div>
         )}
 
-        {activeTab === "code" && (
-          <div className="h-64 flex flex-col items-center justify-center text-gray-500 border border-gray-800 rounded-lg bg-[#111]">
-            <p className="mb-2">Code editor integration coming soon.</p>
-            {question.resources?.leetcodeURL && (
-              <a
-                href={question.resources.leetcodeURL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-red-400 hover:text-red-300 underline text-sm"
-              >
-                Solve on LeetCode →
-              </a>
+        {activeTab === ("notes" as any) && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Text level="h2" className="text-red-500 font-semibold">
+                YOUR NOTES
+              </Text>
+              {isAuth ? (
+                <button
+                  onClick={handleSaveNote}
+                  disabled={isSavingNote}
+                  className="flex items-center gap-1.5 px-3 py-1 bg-red-600 hover:bg-red-500 disabled:bg-gray-800 text-white text-[11px] font-bold rounded-md transition-all uppercase tracking-wider shadow-lg shadow-red-900/20"
+                >
+                  {isSavingNote ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : saveSuccess ? (
+                    <Check className="w-3 h-3" />
+                  ) : (
+                    <Save className="w-3 h-3" />
+                  )}
+                  {isSavingNote
+                    ? "Saving..."
+                    : saveSuccess
+                      ? "Saved!"
+                      : "Save Note"}
+                </button>
+              ) : (
+                <div className="text-[10px] text-gray-500 font-bold uppercase">
+                  Login to save notes
+                </div>
+              )}
+            </div>
+
+            <textarea
+              value={noteText}
+              onChange={(e) => setNoteText(e.target.value)}
+              placeholder="Jot down your logic, edge cases, or anything you want to remember about this problem..."
+              className="w-full h-64 bg-[#111] border border-gray-800 rounded-xl p-4 text-gray-300 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 outline-none transition-all resize-none scrollbar-thin-grey placeholder:text-gray-700"
+            />
+
+            {!isAuth && (
+              <div className="p-4 bg-red-900/10 border border-red-900/30 rounded-xl">
+                <Text
+                  level="p"
+                  className="text-xs text-red-400 leading-relaxed"
+                >
+                  <strong>Wait!</strong> You need to be logged in to sync your
+                  notes across devices. Otherwise, they won't be saved
+                  permanently.
+                </Text>
+              </div>
             )}
           </div>
         )}
+
+        {/* ... (existing code tabs etc) */}
       </div>
     </FlexContainer>
   );

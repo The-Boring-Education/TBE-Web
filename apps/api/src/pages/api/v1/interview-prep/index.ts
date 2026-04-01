@@ -198,7 +198,7 @@ async function handleSheetsMode(req: NextApiRequest, res: NextApiResponse) {
 //   (default)              → all questions grouped by topic
 
 async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
-  const { metadata, domain, difficulty, companyType } = req.query;
+  const { metadata, domain, difficulty, companyType, userId } = req.query;
 
   if (metadata === "true") {
     const { data, error } = await getDSASheetMetadataFromDB();
@@ -235,6 +235,7 @@ async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
     validDomain,
     validDifficulty,
     validCompanyType,
+    userId as string,
   );
 
   if (error || !data) {
