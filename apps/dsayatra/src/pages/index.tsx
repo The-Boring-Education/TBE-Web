@@ -28,9 +28,13 @@ const LandingPage = ({ seoMeta }: PageProps) => (
       [&_.from-white]:!from-dark 
       [&_.to-\\[\\#f0faff\\]]:!to-[#19191B] 
       [&_section]:!bg-transparent
+      [&_h1]:!text-contentDark
       [&_h2.text-primary]:!text-primary
       [&_h2:not(.text-primary)]:!text-contentDark
       [&_h3]:!text-contentDark
+      [&_h4]:!text-contentDark
+      [&_h5]:!text-contentDark
+      [&_h6]:!text-contentDark
       [&_.text-contentLight]:!text-contentDark
       [&_.text-greyDark]:!text-grey"
   >
