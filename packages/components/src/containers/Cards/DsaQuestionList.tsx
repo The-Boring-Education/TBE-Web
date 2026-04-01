@@ -11,6 +11,7 @@ const DsaQuestionList = ({
   completedQuestionIds = [],
   onToggleComplete,
   localNotes = {},
+  userTargetCompanies = [],
 }: DsaQuestionListProps) => {
   return (
     <div className={cn("flex flex-col w-full", className)}>
@@ -37,6 +38,9 @@ const DsaQuestionList = ({
                 isCompleted={isCompleted}
                 isRecommended={isRecommended}
                 hasNotes={hasNotes}
+                topics={question.topics}
+                companyTypes={question.companyType}
+                userTargetCompanies={userTargetCompanies}
                 onClick={() => onQuestionClick?.(question)}
                 onToggleComplete={() => onToggleComplete?.(qId)}
               />

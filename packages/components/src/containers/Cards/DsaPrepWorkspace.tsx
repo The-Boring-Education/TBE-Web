@@ -34,6 +34,7 @@ export interface DsaPrepWorkspaceProps {
   topicSidebarHeader?: ReactNode;
   emptyStateContent?: ReactNode;
   studyGuideConfigs?: Record<string, StudyGuideConfig>;
+  userTargetCompanies?: string[];
   className?: string;
 }
 
@@ -53,6 +54,7 @@ const DsaPrepWorkspace = ({
   topicSidebarHeader,
   emptyStateContent,
   studyGuideConfigs,
+  userTargetCompanies = [],
   className,
 }: DsaPrepWorkspaceProps) => {
   const { data: studyGuideData, isLoading: isStudyGuideLoading } =
@@ -286,6 +288,7 @@ const DsaPrepWorkspace = ({
                     completedQuestionIds={completedQuestionIds}
                     onToggleComplete={onToggleComplete}
                     localNotes={localNotes}
+                    userTargetCompanies={userTargetCompanies}
                   />
                 )}
               </div>

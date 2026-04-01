@@ -1030,6 +1030,7 @@ export interface DsaQuestionListProps {
   localNotes?: Record<string, string>;
   topicSidebarHeader?: ReactNode;
   isRecommendedMap?: Record<string, boolean>;
+  userTargetCompanies?: string[];
 }
 
 export interface DsaQuestionCardProps {
@@ -1039,6 +1040,9 @@ export interface DsaQuestionCardProps {
   isCompleted?: boolean;
   isRecommended?: boolean;
   hasNotes?: boolean;
+  topics?: string[];
+  companyTypes?: string[];
+  userTargetCompanies?: string[];
   onClick?: () => void;
   onToggleComplete?: (e: React.MouseEvent) => void;
 }

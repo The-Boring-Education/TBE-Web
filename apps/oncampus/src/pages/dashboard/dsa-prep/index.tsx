@@ -17,8 +17,7 @@ import { useEffect, useMemo, useState } from "react";
 
 const DSAPrepPage = () => {
   const router = useRouter();
-  const { loading: userLoading, isAuth } = useUser();
-
+  const { user, loading: userLoading, isAuth } = useUser();
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
     null,
   );

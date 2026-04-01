@@ -32,7 +32,7 @@ export const useDsaQuestionsForTopic = (
         url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}`,
         method: "GET",
       }),
-    enabled: !!topic,
+    enabled: !!topic && !!userId,
     ...CACHE_TIMES.STABLE,
   });
 

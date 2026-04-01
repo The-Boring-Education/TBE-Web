@@ -33,6 +33,20 @@ const SheetsPageClient = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
+  const userTargetCompanies = useMemo(() => {
+    const pyTargets = (user as any)?.prepYatra?.targetCompanies || [];
+    const dsaTarget = (user as any)?.dsaYatra?.target;
+
+    let dsaMapped: string[] = [];
+    if (dsaTarget === "Product-based") {
+      dsaMapped = ["MNC", "FAANG"];
+    } else if (dsaTarget === "Startups") {
+      dsaMapped = ["Startup"];
+    }
+
+    return Array.from(new Set([...pyTargets, ...dsaMapped]));
+  }, [user]);
+
   const topicsWithCounts = useMemo(
     () =>
       (topicRows ?? []).map((t) => ({
@@ -150,6 +164,7 @@ const SheetsPageClient = () => {
         localNotes={localNotes}
         onSaveNote={onSaveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
+        userTargetCompanies={userTargetCompanies}
       />
     </LearningEnvironmentLayout>
   );

@@ -26,11 +26,14 @@ const useDsaQuestions = (
   const userId = user?.id;
 
   const { data: response, isLoading } = useQuery<any>({
-    queryKey: queryKeys.dsa.questions({ limit, userId }),
+    queryKey: options.queryKey
+      ? [options.queryKey, userId]
+      : queryKeys.dsa.questions({ limit, userId }),
     queryFn: () =>
       sendRequest({
         url: `${routes.api.base}${routes.api.dsaSheet}?limit=${limit}${userId ? `&userId=${userId}` : ""}`,
       }),
+    enabled: !!userId,
     ...CACHE_TIMES.STABLE,
   });
 

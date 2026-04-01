@@ -97,7 +97,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   } = req.query;
 
   if (query === "topics") {
-    const { data, error } = await getDSATopicSummariesFromDB();
+    const { data, error } = await getDSATopicSummariesFromDB(userId as string);
     if (error)
       return res
         .status(apiStatusCodes.INTERNAL_SERVER_ERROR)

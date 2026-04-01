@@ -47,7 +47,10 @@ export const queryKeys = {
     }) => [...queryKeys.dsa.all, "questions", filters] as const,
     completedQuestions: (userId: string) =>
       [...queryKeys.dsa.all, "completed", userId] as const,
-    topics: () => [...queryKeys.dsa.all, "topics"] as const,
+    topics: (userId?: string) =>
+      userId
+        ? ([...queryKeys.dsa.all, "topics", userId] as const)
+        : ([...queryKeys.dsa.all, "topics"] as const),
   },
 
   // ── Courses (Shiksha) ──

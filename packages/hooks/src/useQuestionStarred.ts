@@ -1,7 +1,8 @@
 import { routes } from "@tbe/constants";
-import { useApi } from "@tbe/hooks";
 import type { useQuestionStarredProps } from "@tbe/interface";
 import { useEffect, useState } from "react";
+
+import useApi from "./useApi";
 
 const useQuestionStarred = ({
   userId,

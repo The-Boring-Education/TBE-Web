@@ -1,3 +1,4 @@
+import { TOPIC_LABELS } from "@tbe/constants";
 import type { DsaQuestionCardProps } from "@tbe/interface";
 import { getDifficultyConfig } from "@tbe/utils";
 import { CheckCircle2, Circle, Sparkles } from "lucide-react";
@@ -9,10 +10,14 @@ export const DsaQuestionCard = ({
   isCompleted = false,
   isRecommended = false,
   hasNotes = false,
+  topics = [],
+  companyTypes = [],
+  userTargetCompanies = [],
   onClick,
   onToggleComplete,
 }: DsaQuestionCardProps) => {
-  const { label, color } = getDifficultyConfig(difficultyLevel);
+  const { label: diffLabel, color: diffColor } =
+    getDifficultyConfig(difficultyLevel);
 
   return (
     <div
@@ -58,21 +63,60 @@ export const DsaQuestionCard = ({
             )}
             {name}
           </p>
-          {hasNotes && (
-            <div className="flex items-center gap-1 mt-0.5 opacity-60">
-              <span className="text-[10px] text-gray-500 font-medium lowercase">
-                Has notes
+          <div className="flex flex-wrap items-center gap-1.5 mt-1">
+            {hasNotes && (
+              <div className="flex items-center gap-1 opacity-60">
+                <span className="text-[9px] text-red-400 font-bold uppercase tracking-tighter">
+                  Notes
+                </span>
+              </div>
+            )}
+            {topics.slice(0, 1).map((topic) => (
+              <span
+                key={topic}
+                className="text-[9px] text-gray-600 font-bold uppercase tracking-tighter"
+              >
+                {TOPIC_LABELS[topic] || topic}
               </span>
-            </div>
-          )}
+            ))}
+            {(() => {
+              // Priority: Show labels that match user's target companies first
+              const matchedCompanies = companyTypes.filter((c) =>
+                userTargetCompanies.includes(c),
+              );
+
+              // If we have matches, show the first matched one.
+              // Otherwise show the first available one ONLY if no target is set.
+              // This strictly hides "STARTUP" if user selected "Product-based"
+              const labelToShow =
+                matchedCompanies.length > 0
+                  ? matchedCompanies[0]
+                  : userTargetCompanies.length === 0
+                    ? companyTypes[0]
+                    : null;
+
+              if (!labelToShow) return null;
+
+              return (
+                <span
+                  key={labelToShow}
+                  className="text-[9px] text-gray-700 font-bold uppercase tracking-tighter bg-gray-900/40 px-1 rounded transition-all duration-300"
+                >
+                  {labelToShow}
+                </span>
+              );
+            })()}
+          </div>
         </div>
       </div>
       <div className="flex items-center gap-2">
-        {hasNotes && <div className="w-1 h-1 rounded-full bg-red-500" />}
+        {hasNotes && (
+          <div className="w-1 h-1 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
+        )}
         <span
-          className={`text-[9px] font-bold px-2 py-0.5 flex-shrink-0 rounded border uppercase tracking-wider ${color}`}
+          className={`text-[8px] font-black px-1.5 py-0.5 flex-shrink-0 rounded-[4px] border uppercase tracking-widest ${diffColor} opacity-90`}
         >
-          {label}
+          {diffLabel}
         </span>
       </div>
     </div>
