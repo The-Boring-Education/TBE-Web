@@ -222,8 +222,8 @@ const useDsaCompletedQuestions = (
 
         const optimistic: DsaProgressPayload = {
           completedQuestionIds: nextCompleted
-            ? [...serverIds, qid]
-            : [...serverIds].filter((id) => id !== qid),
+            ? Array.from(serverIds)
+            : Array.from(serverIds).filter((id) => id !== qid),
           solvedToday: nextSolvedToday,
         };
 

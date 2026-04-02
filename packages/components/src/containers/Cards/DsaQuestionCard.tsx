@@ -1,7 +1,7 @@
 import { TOPIC_LABELS } from "@tbe/constants";
 import type { DsaQuestionCardProps } from "@tbe/interface";
 import { getDifficultyConfig } from "@tbe/utils";
-import { CheckCircle2, Circle, Sparkles } from "lucide-react";
+import { CheckCircle2, Circle, Globe, Sparkles } from "lucide-react";
 
 export const DsaQuestionCard = ({
   name,
@@ -10,6 +10,7 @@ export const DsaQuestionCard = ({
   isCompleted = false,
   isRecommended = false,
   hasNotes = false,
+  isRealWorld = false,
   topics = [],
   companyTypes = [],
   userTargetCompanies = [],
@@ -112,6 +113,15 @@ export const DsaQuestionCard = ({
       <div className="flex items-center gap-2">
         {hasNotes && (
           <div className="w-1 h-1 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
+        )}
+        {isRealWorld && (
+          <div
+            className="flex items-center gap-1 text-blue-400"
+            title="Real World Question"
+          >
+            <Globe className="w-3 h-3" />
+            <span className="text-[8px] font-bold uppercase">Real</span>
+          </div>
         )}
         <span
           className={`text-[8px] font-black px-1.5 py-0.5 flex-shrink-0 rounded-[4px] border uppercase tracking-widest ${diffColor} opacity-90`}
