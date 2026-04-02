@@ -1,4 +1,4 @@
-﻿import {
+import {
   DsaPrepWorkspace,
   LearningEnvironmentLayout,
   LoadingSpinner,
@@ -17,8 +17,7 @@ import { useEffect, useMemo, useState } from "react";
 
 const DSAPrepPage = () => {
   const router = useRouter();
-  const { loading: userLoading, isAuth } = useUser();
-
+  const { loading: userLoading, isAuth, user } = useUser();
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
     null,
   );
@@ -38,7 +37,8 @@ const DSAPrepPage = () => {
   const { questions, loading: topicQuestionsLoading } =
     useDsaQuestionsForTopic(selectedTopic);
 
-  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+  const { completedIds, toggleComplete, localNotes, saveNote } =
+    useDsaCompletedQuestions({ userId: user?.id });
 
   const topicsCompletionMap = useMemo(() => {
     return (topicRows ?? []).reduce(
@@ -105,6 +105,8 @@ const DSAPrepPage = () => {
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
         onToggleComplete={toggleComplete}
+        localNotes={localNotes}
+        onSaveNote={saveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
     </LearningEnvironmentLayout>

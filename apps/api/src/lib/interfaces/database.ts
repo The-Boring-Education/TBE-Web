@@ -71,6 +71,13 @@ export interface UserModel {
     target?: string;
     preferredLanguage?: string;
     targetTopics?: DSATopicType[];
+    progress?: {
+      completedQuestionIds?: string[];
+      todayStats?: {
+        date?: string;
+        solvedCount?: number;
+      };
+    };
   };
 }
 
@@ -219,6 +226,7 @@ export interface UserSheetQuestionModel {
   questionId: typeof Schema.Types.ObjectId;
   isCompleted?: boolean;
   isStarred?: boolean;
+  notes?: string;
 }
 
 export interface UserAptitudeTopicModel extends Document {

@@ -16,6 +16,7 @@ export * from "./use-toast";
 export { default as useChallenges } from "./useChallenges";
 export { useChallengeProgress } from "./useChallenges";
 export { useDailyPrepEncouragement } from "./useDailyPrepEncouragement";
+export type { UseDsaCompletedQuestionsOptions } from "./useDsaCompletedQuestions";
 export { default as useDsaCompletedQuestions } from "./useDsaCompletedQuestions";
 export { default as useDsaQuestions } from "./useDsaQuestions";
 export { useDsaQuestionsForTopic } from "./useDsaQuestionsForTopic";

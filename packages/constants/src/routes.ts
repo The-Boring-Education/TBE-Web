@@ -141,6 +141,8 @@ const routes = {
     myPlaylists: "/user/playlists",
     interviewPrep: "/interview-prep",
     dsaSheet: "/interview-prep/dsa-sheet",
+    dsaSync: "/interview-prep/dsa-sheet/sync",
+    dsaQuestionNote: "/interview-prep/dsa-sheet/question/note",
     studyGuide: (topicId: string) =>
       `/interview-prep/dsa-sheet/study-guide?topic=${topicId}`,
     enrollCourse: "/user/shiksha/enroll",
@@ -150,6 +152,7 @@ const routes = {
     markProjectChapterAsCompleted: "/user/projects/project",
     markSheetQuestionAsCompleted: "/user/interview-prep/sheet",
     markAptitudeQuestionProgress: "/user/interview-prep/aptitude/progress",
+    dsaYatraProgress: "/user/dsayatra/progress",
     submitUserFeedback: "/feedback",
     createOrder: "/payment/create-order",
     checkStatus: "/payment/checkstatus",

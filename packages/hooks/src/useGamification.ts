@@ -1,7 +1,8 @@
 import { routes } from "@tbe/constants";
-import { useUser } from "@tbe/hooks";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import { getUserGamificationLevel, sendRequest } from "@tbe/utils";
+
+import useUser from "./useUser";
 
 const useGamification = () => {
   const { user } = useUser();
