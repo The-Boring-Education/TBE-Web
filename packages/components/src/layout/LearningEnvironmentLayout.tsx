@@ -13,6 +13,8 @@ export interface LearningEnvironmentLayoutProps {
   layoutMode?: "centered" | "workspace";
   headerCenterContent?: ReactNode;
   headerRightContent?: ReactNode;
+  /** Show UserPointButton in the top bar (GamificationProvider required). */
+  showGamification?: boolean;
   totalItems?: number;
   completedItems?: number;
 }
@@ -25,6 +27,7 @@ const LearningEnvironmentLayout = ({
   layoutMode = "centered",
   headerCenterContent,
   headerRightContent,
+  showGamification = false,
   totalItems = 0,
   completedItems = 0,
 }: LearningEnvironmentLayoutProps) => {
@@ -40,6 +43,7 @@ const LearningEnvironmentLayout = ({
         onMenuToggle={sidebarContent ? () => setSidebarOpen(true) : undefined}
         headerCenterContent={headerCenterContent}
         headerRightContent={headerRightContent}
+        showGamification={showGamification}
       />
 
       {/* Main Content Area */}

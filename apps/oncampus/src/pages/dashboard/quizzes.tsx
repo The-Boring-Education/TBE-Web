@@ -1,17 +1,13 @@
 import { useAuth } from "@tbe/auth";
-import {
-  Button,
-  FlexContainer,
-  LearningEnvironmentLayout,
-  LoadingSpinner,
-  Text,
-} from "@tbe/components";
+import { Button, FlexContainer, LoadingSpinner, Text } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useQuizData } from "@tbe/hooks";
 import { cn } from "@tbe/utils";
 import { ArrowLeft, Folder, FolderOpen, Monitor, Play } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
+
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const QuizzesDashboardPage = () => {
   const router = useRouter();
@@ -38,7 +34,7 @@ const QuizzesDashboardPage = () => {
 
   if (authLoading || quizLoading) {
     return (
-      <LearningEnvironmentLayout
+      <OnCampusLearningLayout
         backHref={routes.oncampus.dashboard}
         layoutMode="workspace"
         isLoading
@@ -49,13 +45,13 @@ const QuizzesDashboardPage = () => {
             Loading quizzes...
           </Text>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   if (error) {
     return (
-      <LearningEnvironmentLayout
+      <OnCampusLearningLayout
         backHref={routes.oncampus.dashboard}
         layoutMode="workspace"
       >
@@ -70,7 +66,7 @@ const QuizzesDashboardPage = () => {
             />
           </div>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
@@ -79,7 +75,7 @@ const QuizzesDashboardPage = () => {
   };
 
   return (
-    <LearningEnvironmentLayout
+    <OnCampusLearningLayout
       backHref={routes.oncampus.dashboard}
       layoutMode="workspace"
     >
@@ -312,7 +308,7 @@ const QuizzesDashboardPage = () => {
           </div>
         </FlexContainer>
       </div>
-    </LearningEnvironmentLayout>
+    </OnCampusLearningLayout>
   );
 };
 

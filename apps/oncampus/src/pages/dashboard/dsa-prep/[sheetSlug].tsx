@@ -2,7 +2,6 @@ import {
   Button,
   FeedbackPopup,
   FlexContainer,
-  LearningEnvironmentLayout,
   MDXRenderer,
   PaymentCard,
   QuestionLink,
@@ -12,7 +11,11 @@ import {
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import { useGamifiedAction } from "@tbe/gamification";
+import {
+  calculateUserPointsForAction,
+  useGamificationContext,
+  useGamifiedAction,
+} from "@tbe/gamification";
 import {
   useAnalytics,
   usePaymentAccess,
@@ -20,11 +23,13 @@ import {
   useUser,
 } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
-import { useMutation } from "@tbe/query";
+import { queryKeys, useMutation, useQueryClient } from "@tbe/query";
 import { getSheetPageProps, sendRequest } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FaLock } from "react-icons/fa";
+
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();
@@ -59,6 +64,8 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
+  const { triggerCelebration, showToast } = useGamificationContext();
+  const queryClient = useQueryClient();
 
   // Universal payment access hook - handles all payment status and locked logic
   const { isLocked, isPurchased } = usePaymentAccess({
@@ -113,6 +120,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         analytics: {
           action: "INTERVIEW_SHEET_COMPLETE",
           category: "Achievement",
+          label: "DSA Sheet Completed",
         },
         celebrationType: "achievement",
         customMessage: "DSA sheet completed! You're ready!",
@@ -174,14 +182,26 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       if (response?.status) {
         // Fire gamified action on completion
         if (newCompletionStatus) {
-          await gamifiedAction.triggerGamifiedAction({
-            gamificationAction: "COMPLETE_QUESTION",
-            analytics: {
-              action: "QUESTION_COMPLETE",
-              category: "Learning",
-            },
-            customMessage: "DSA question solved! Great work!",
-            metadata: {
+          // Points are awarded server-side on PATCH; refresh UI + celebration only.
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(user?.id ?? ""),
+          });
+          const pointsEarned =
+            calculateUserPointsForAction("COMPLETE_QUESTION");
+          const intensity =
+            pointsEarned >= 50 ? "high" : pointsEarned >= 20 ? "medium" : "low";
+          triggerCelebration({ type: "points", intensity });
+          showToast({
+            type: "points",
+            message: "DSA question solved! Great work!",
+            points: pointsEarned,
+          });
+          trackEvent({
+            action: "QUESTION_COMPLETE",
+            category: "Learning",
+            label: "DSA Question Completed",
+            value: {
+              userId: user?.id,
               sheetId: sheet._id,
               questionId: currentQuestionId,
               sheetName: sheet.name,
@@ -284,7 +304,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <LearningEnvironmentLayout
+      <OnCampusLearningLayout
         backHref={routes.oncampus.dsa}
         isLoading={isDataLoading}
         layoutMode="workspace"
@@ -402,7 +422,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
             )}
           </FlexContainer>
         </FlexContainer>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
 
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type="INTERVIEW_SHEET" />

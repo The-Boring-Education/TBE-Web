@@ -1,13 +1,16 @@
 import { useAuth } from "@tbe/auth";
-import { LearningEnvironmentLayout, Text } from "@tbe/components";
+import { Text } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { routes } from "@tbe/constants";
+import { queryKeys, useQueryClient } from "@tbe/query";
 import { gamificationApi, quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
 import { cleanOptionText, cn, sendRequest } from "@tbe/utils";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 type GameState = "loading" | "playing" | "submitting";
 
@@ -56,6 +59,7 @@ const resolveUserIdToMongoId = async (
 
 export default function QuizPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { user, isAuthenticated, isLoading } = useAuth();
   const quizId = router.query.id as string | undefined;
 
@@ -158,6 +162,11 @@ export default function QuizPage() {
             userId: mongoUserId,
             actionType: "COMPLETE_QUIZ",
           } as any)
+          .then(() => {
+            void queryClient.invalidateQueries({
+              queryKey: queryKeys.gamification.points(mongoUserId),
+            });
+          })
           .catch(() => {});
       }
     } catch {
@@ -179,6 +188,7 @@ export default function QuizPage() {
     selectedAnswers,
     questionTimes,
     router,
+    queryClient,
   ]);
 
   const selectAnswer = (answerIndex: number) => {
@@ -204,19 +214,19 @@ export default function QuizPage() {
 
   if (gameState === "loading") {
     return (
-      <LearningEnvironmentLayout backHref="/dashboard/quizzes" isLoading>
+      <OnCampusLearningLayout backHref="/dashboard/quizzes" isLoading>
         <div className="flex-1 flex items-center justify-center">
           <Text level="p" className="text-gray-400">
             Loading quiz...
           </Text>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   if (gameState === "submitting") {
     return (
-      <LearningEnvironmentLayout backHref="/dashboard/quizzes" isLoading>
+      <OnCampusLearningLayout backHref="/dashboard/quizzes" isLoading>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             {/* Animated Spinner */}
@@ -234,14 +244,14 @@ export default function QuizPage() {
             </Text>
           </div>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   const selectedAnswer = selectedAnswers[currentQuestionIndex];
 
   return (
-    <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
+    <OnCampusLearningLayout backHref="/dashboard" layoutMode="workspace">
       <div className="flex flex-col h-full w-full">
         {/* Workspace Header Section — Centered Title Mode */}
         <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0 sticky top-0 z-20">
@@ -395,6 +405,6 @@ export default function QuizPage() {
           </div>
         </div>
       </div>
-    </LearningEnvironmentLayout>
+    </OnCampusLearningLayout>
   );
 }

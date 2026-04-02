@@ -1,9 +1,4 @@
-import {
-  DsaPrepWorkspace,
-  LearningEnvironmentLayout,
-  LoadingSpinner,
-  Text,
-} from "@tbe/components";
+import { DsaPrepWorkspace, LoadingSpinner, Text } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
@@ -14,6 +9,8 @@ import {
 import type { DsaQuestion } from "@tbe/interface";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
+
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const DSAPrepPage = () => {
   const router = useRouter();
@@ -78,19 +75,19 @@ const DSAPrepPage = () => {
 
   if (pageLoading) {
     return (
-      <LearningEnvironmentLayout backHref={routes.oncampus.dashboard} isLoading>
+      <OnCampusLearningLayout backHref={routes.oncampus.dashboard} isLoading>
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner height={8} width={8} />
           <Text level="p" className="text-gray-400 ml-3">
             Loading...
           </Text>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   return (
-    <LearningEnvironmentLayout
+    <OnCampusLearningLayout
       backHref={routes.oncampus.dashboard}
       layoutMode="workspace"
     >
@@ -109,7 +106,7 @@ const DSAPrepPage = () => {
         onSaveNote={saveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
-    </LearningEnvironmentLayout>
+    </OnCampusLearningLayout>
   );
 };
 

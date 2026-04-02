@@ -1,7 +1,6 @@
 import {
   CardContainerB,
   FlexContainer,
-  LearningEnvironmentLayout,
   LoadingSpinner,
   Text,
 } from "@tbe/components";
@@ -13,6 +12,8 @@ import { cn, mapInterviewSheetResponseToCard, sendRequest } from "@tbe/utils";
 import { ArrowLeft, Folder, FolderOpen } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
+
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const InterviewPrepDashboardPage = () => {
   const router = useRouter();
@@ -162,7 +163,7 @@ const InterviewPrepDashboardPage = () => {
 
   if (overallLoading) {
     return (
-      <LearningEnvironmentLayout
+      <OnCampusLearningLayout
         backHref={routes.oncampus.dashboard}
         layoutMode="workspace"
         isLoading
@@ -173,14 +174,14 @@ const InterviewPrepDashboardPage = () => {
             Loading...
           </Text>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   const hasSheets = sheets.length > 0;
 
   return (
-    <LearningEnvironmentLayout
+    <OnCampusLearningLayout
       backHref={routes.oncampus.dashboard}
       layoutMode="workspace"
     >
@@ -357,7 +358,7 @@ const InterviewPrepDashboardPage = () => {
           </div>
         </FlexContainer>
       </div>
-    </LearningEnvironmentLayout>
+    </OnCampusLearningLayout>
   );
 };
 
