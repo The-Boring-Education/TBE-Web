@@ -1,19 +1,30 @@
 import { routes } from "@tbe/constants";
+import { CACHE_TIMES, queryKeys, useQuery, useQueryClient } from "@tbe/query";
 import { sendRequest } from "@tbe/utils";
-import { useCallback, useEffect, useRef, useState } from "react";
-
-import useUser from "./useUser";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface TodayStats {
   date: string;
   solvedCount: number;
 }
 
+interface DsaProgressPayload {
+  completedQuestionIds: string[];
+  solvedToday: number;
+}
+
+export interface UseDsaCompletedQuestionsOptions {
+  userId?: string | null;
+  storageKey?: string;
+  todayStatsKey?: string;
+}
+
 interface UseDsaCompletedQuestionsReturn {
   completedIds: (string | number)[];
   toggleComplete: (questionId: string | number) => void;
   solvedToday: number;
-  isSyncing: boolean;
+  /** True while loading server progress for an authenticated user */
+  isProgressLoading: boolean;
   localNotes: Record<string, string>;
   saveNote: (questionId: string | number, notes: string) => Promise<void>;
 }
@@ -21,25 +32,74 @@ interface UseDsaCompletedQuestionsReturn {
 const DEFAULT_STORAGE_KEY = "dsayatra_completed_questions";
 const DEFAULT_TODAY_STATS_KEY = "dsayatra_today_stats";
 
-const useDsaCompletedQuestions = (
-  storageKey = DEFAULT_STORAGE_KEY,
-  todayStatsKey = DEFAULT_TODAY_STATS_KEY,
-): UseDsaCompletedQuestionsReturn => {
-  const { user, isAuth } = useUser();
-  const [completedIds, setCompletedIds] = useState<(string | number)[]>([]);
-  const [solvedToday, setSolvedToday] = useState(0);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [localNotes, setLocalNotes] = useState<Record<string, string>>({});
-  const hasSyncedInitial = useRef(false);
+function resolveArgs(
+  optionsOrLegacyStorageKey?: UseDsaCompletedQuestionsOptions | string,
+  legacyTodayStatsKey?: string,
+): Required<Omit<UseDsaCompletedQuestionsOptions, "userId">> & {
+  userId?: string | null;
+} {
+  if (typeof optionsOrLegacyStorageKey === "string") {
+    return {
+      userId: undefined,
+      storageKey: optionsOrLegacyStorageKey,
+      todayStatsKey: legacyTodayStatsKey ?? DEFAULT_TODAY_STATS_KEY,
+    };
+  }
+  const o = optionsOrLegacyStorageKey ?? {};
+  return {
+    userId: o.userId,
+    storageKey: o.storageKey ?? DEFAULT_STORAGE_KEY,
+    todayStatsKey: o.todayStatsKey ?? DEFAULT_TODAY_STATS_KEY,
+  };
+}
 
-  // Load from localStorage on mount
+const useDsaCompletedQuestions = (
+  optionsOrLegacyStorageKey?: UseDsaCompletedQuestionsOptions | string,
+  legacyTodayStatsKey?: string,
+): UseDsaCompletedQuestionsReturn => {
+  const { userId, storageKey, todayStatsKey } = resolveArgs(
+    optionsOrLegacyStorageKey,
+    legacyTodayStatsKey,
+  );
+
+  const queryClient = useQueryClient();
+
+  const [localCompletedIds, setLocalCompletedIds] = useState<
+    (string | number)[]
+  >([]);
+  const [localSolvedToday, setLocalSolvedToday] = useState(0);
+
+  const remoteQuery = useQuery({
+    queryKey: queryKeys.dsa.completedQuestions(userId ?? ""),
+    enabled: Boolean(userId),
+    queryFn: async () => {
+      const res = await sendRequest({
+        method: "GET",
+        url: `${routes.api.base}${routes.api.dsaYatraProgress}?userId=${encodeURIComponent(userId!)}`,
+      });
+      if (!res?.status) {
+        throw new Error(
+          typeof res?.message === "string"
+            ? res.message
+            : "Failed to load DSA Yatra progress",
+        );
+      }
+      return res.data as DsaProgressPayload;
+    },
+    ...CACHE_TIMES.STANDARD,
+  });
+
   useEffect(() => {
+    if (userId) {
+      return;
+    }
+
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
-        setCompletedIds(JSON.parse(saved));
+        setLocalCompletedIds(JSON.parse(saved));
       } catch {
-        /* corrupted data, start fresh */
+        /* corrupted data */
       }
     }
 
@@ -49,125 +109,168 @@ const useDsaCompletedQuestions = (
       try {
         const data: TodayStats = JSON.parse(statsStr);
         if (data.date === todayStr) {
-          setSolvedToday(data.solvedCount || 0);
+          setLocalSolvedToday(data.solvedCount || 0);
         }
       } catch {
-        /* corrupted data, start fresh */
+        /* corrupted data */
       }
     }
+  }, [storageKey, todayStatsKey, userId]);
 
-    const notes = localStorage.getItem("dsayatra_question_notes");
-    if (notes) {
-      try {
-        setLocalNotes(JSON.parse(notes));
-      } catch {
-        /* corrupted data, start fresh */
-      }
-    }
-  }, [storageKey, todayStatsKey]);
-
-  // Sync with DB when logged in
   useEffect(() => {
-    const syncWithDB = async () => {
-      if (!isAuth || !user?.id || hasSyncedInitial.current) return;
+    if (
+      !userId ||
+      !remoteQuery.isSuccess ||
+      !remoteQuery.data ||
+      typeof window === "undefined"
+    ) {
+      return;
+    }
 
-      setIsSyncing(true);
-      try {
-        // 1. Send current localStorage data to DB (merge)
-        const localData = localStorage.getItem(storageKey);
-        const localIds: (string | number)[] = localData
-          ? JSON.parse(localData)
-          : [];
+    let localIds: string[] = [];
+    let localToday: TodayStats | undefined;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (raw) {
+        localIds = (JSON.parse(raw) as unknown[]).map((id) => String(id));
+      }
+      const t = localStorage.getItem(todayStatsKey);
+      if (t) {
+        localToday = JSON.parse(t) as TodayStats;
+      }
+    } catch {
+      return;
+    }
 
-        // Also look for local notes
-        const localNotesData = localStorage.getItem("dsayatra_question_notes");
-        const localNotes: Record<string, string> = localNotesData
-          ? JSON.parse(localNotesData)
-          : {};
+    const serverIds = new Set(
+      remoteQuery.data.completedQuestionIds.map((id) => String(id)),
+    );
+    const extras = localIds.filter((id) => !serverIds.has(id));
+    if (extras.length === 0) {
+      return;
+    }
 
-        const questionsToSync = localIds.map((id) => ({
-          questionId: String(id),
-          isCompleted: true,
-          notes: localNotes[String(id)] || "",
-        }));
-
-        // Add questions that have notes but aren't completed
-        Object.keys(localNotes).forEach((id) => {
-          if (!localIds.includes(id)) {
-            questionsToSync.push({
-              questionId: id,
-              isCompleted: false,
-              notes: localNotes[id] || "",
-            });
-          }
-        });
-
-        if (questionsToSync.length === 0) {
-          hasSyncedInitial.current = true;
-          setIsSyncing(false);
-          return;
-        }
-
-        const response = await sendRequest({
-          url: `${routes.api.base}${routes.api.dsaSync}`,
-          method: "POST",
-          body: {
-            userId: user.id,
-            questions: questionsToSync,
-          },
-        });
-
-        if (response.status && response.data?.questions) {
-          // 2. Update local state with merged data from DB
-          const dbQuestions = response.data.questions;
-          const dbCompletedIds = dbQuestions
-            .filter((q: any) => q.isCompleted)
-            .map((q: any) => q.questionId);
-
-          const dbNotes: Record<string, string> = {};
-          dbQuestions.forEach((q: any) => {
-            if (q.notes) dbNotes[q.questionId] = q.notes;
-          });
-
-          // Merge local and DB IDs (unique)
-          const mergedIds = Array.from(
-            new Set([...localIds, ...dbCompletedIds]),
-          );
-          setCompletedIds(mergedIds);
-          localStorage.setItem(storageKey, JSON.stringify(mergedIds));
-
-          // Merge notes
-          const mergedNotes = { ...localNotes, ...dbNotes };
-          localStorage.setItem(
-            "dsayatra_question_notes",
-            JSON.stringify(mergedNotes),
-          );
-          setLocalNotes(mergedNotes);
-
-          hasSyncedInitial.current = true;
-        }
-      } catch (error) {
-        console.error("Failed to sync DSA progress with DB", error);
-      } finally {
-        setIsSyncing(false);
+    const run = async () => {
+      const res = await sendRequest({
+        method: "PUT",
+        url: `${routes.api.base}${routes.api.dsaYatraProgress}`,
+        body: {
+          userId,
+          addCompletedQuestionIds: extras,
+          todayStats: localToday,
+        },
+      });
+      if (res?.status && res.data) {
+        queryClient.setQueryData(
+          queryKeys.dsa.completedQuestions(userId),
+          res.data as DsaProgressPayload,
+        );
+        localStorage.removeItem(storageKey);
+        localStorage.removeItem(todayStatsKey);
       }
     };
 
-    syncWithDB();
-  }, [isAuth, user?.id, storageKey]);
+    void run();
+  }, [
+    userId,
+    remoteQuery.isSuccess,
+    remoteQuery.data,
+    storageKey,
+    todayStatsKey,
+    queryClient,
+  ]);
+
+  const completedIds = useMemo<(string | number)[]>(() => {
+    if (userId) {
+      if (!remoteQuery.data) {
+        return [];
+      }
+      return remoteQuery.data.completedQuestionIds;
+    }
+    return localCompletedIds;
+  }, [userId, remoteQuery.data, localCompletedIds]);
+
+  const solvedToday = useMemo(() => {
+    if (userId) {
+      return remoteQuery.data?.solvedToday ?? 0;
+    }
+    return localSolvedToday;
+  }, [userId, remoteQuery.data, localSolvedToday]);
+
+  const isProgressLoading = Boolean(userId && remoteQuery.isPending);
 
   const toggleComplete = useCallback(
-    async (questionId: string | number) => {
-      setCompletedIds((prev) => {
-        const isCompletedNow = !prev.includes(questionId);
-        const next = isCompletedNow
-          ? [...prev, questionId]
-          : prev.filter((id) => id !== questionId);
+    (questionId: string | number) => {
+      const qid = String(questionId);
 
-        // 1. Update LocalStorage
+      if (userId) {
+        const serverIds = new Set(
+          (remoteQuery.data?.completedQuestionIds ?? []).map((id) =>
+            String(id),
+          ),
+        );
+        const had = serverIds.has(qid);
+        const nextCompleted = !had;
+
+        const prevToday = remoteQuery.data?.solvedToday ?? 0;
+        let nextSolvedToday = prevToday;
+        if (nextCompleted && !had) {
+          nextSolvedToday = prevToday + 1;
+        } else if (!nextCompleted && had && prevToday > 0) {
+          nextSolvedToday = prevToday - 1;
+        }
+
+        const optimistic: DsaProgressPayload = {
+          completedQuestionIds: nextCompleted
+            ? [...serverIds, qid]
+            : [...serverIds].filter((id) => id !== qid),
+          solvedToday: nextSolvedToday,
+        };
+
+        queryClient.setQueryData(
+          queryKeys.dsa.completedQuestions(userId),
+          optimistic,
+        );
+
+        void (async () => {
+          try {
+            const res = await sendRequest({
+              method: "PATCH",
+              url: `${routes.api.base}${routes.api.dsaYatraProgress}`,
+              body: {
+                userId,
+                questionId: qid,
+                isCompleted: nextCompleted,
+              },
+            });
+            if (!res?.status) {
+              throw new Error("PATCH failed");
+            }
+            if (res.data) {
+              queryClient.setQueryData(
+                queryKeys.dsa.completedQuestions(userId),
+                res.data as DsaProgressPayload,
+              );
+            }
+          } catch {
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.dsa.completedQuestions(userId),
+            });
+          }
+        })();
+        return;
+      }
+
+      setLocalCompletedIds((completedIdsPrev) => {
+        const isCompletedNow = !completedIdsPrev.some(
+          (id) => String(id) === qid,
+        );
+        const next = isCompletedNow
+          ? [...completedIdsPrev, questionId]
+          : completedIdsPrev.filter((id) => String(id) !== qid);
+
         localStorage.setItem(storageKey, JSON.stringify(next));
 
-        // 2. Update Today Stats
         const todayStr = new Date().toDateString();
         const todayStatsStr = localStorage.getItem(todayStatsKey);
         let todayStats: TodayStats = todayStatsStr
@@ -185,77 +288,21 @@ const useDsaCompletedQuestions = (
         }
 
         localStorage.setItem(todayStatsKey, JSON.stringify(todayStats));
-        setSolvedToday(todayStats.solvedCount);
-
-        // 3. Update DB if logged in
-        if (isAuth && user?.id) {
-          const localNotesData = localStorage.getItem(
-            "dsayatra_question_notes",
-          );
-          const localNotes = localNotesData ? JSON.parse(localNotesData) : {};
-
-          sendRequest({
-            url: `${routes.api.base}${routes.api.dsaSync}`,
-            method: "POST",
-            body: {
-              userId: user.id,
-              questions: [
-                {
-                  questionId: String(questionId),
-                  isCompleted: isCompletedNow,
-                  notes: localNotes[String(questionId)] || "",
-                },
-              ],
-            },
-          }).catch((err) =>
-            console.error("Failed to sync toggle with DB", err),
-          );
-        }
+        setLocalSolvedToday(todayStats.solvedCount);
 
         return next;
       });
     },
-    [isAuth, user?.id, storageKey, todayStatsKey],
-  );
-
-  const saveNote = useCallback(
-    async (questionId: string | number, notes: string) => {
-      const qId = String(questionId);
-
-      // 1. Update local state
-      setLocalNotes((prev) => {
-        const next = { ...prev, [qId]: notes };
-        localStorage.setItem("dsayatra_question_notes", JSON.stringify(next));
-        return next;
-      });
-
-      // 2. Update DB if logged in
-      if (isAuth && user?.id) {
-        try {
-          await sendRequest({
-            url: `${routes.api.base}${routes.api.dsaQuestionNote}`,
-            method: "POST",
-            body: {
-              userId: user.id,
-              questionId: qId,
-              notes,
-            },
-          });
-        } catch (error) {
-          console.error("Failed to sync note to DB", error);
-        }
-      }
-    },
-    [isAuth, user?.id],
+    [userId, remoteQuery.data, queryClient, storageKey, todayStatsKey],
   );
 
   return {
     completedIds,
     toggleComplete,
     solvedToday,
-    isSyncing,
-    localNotes,
-    saveNote,
+    isProgressLoading,
+    localNotes: {},
+    saveNote: async () => {},
   };
 };
 

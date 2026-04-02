@@ -83,7 +83,7 @@ const SheetsPageClient = () => {
     toggleComplete,
     localNotes,
     saveNote: onSaveNote,
-  } = useDsaCompletedQuestions();
+  } = useDsaCompletedQuestions({ userId: user?.id });
   const { topicsCompletionMap } = useDsaTopics(
     questionsForCompletion,
     completedIds,

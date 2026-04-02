@@ -1,5 +1,6 @@
 import { useDsaCompletedQuestions } from "@tbe/hooks";
-import { act, renderHook } from "@testing-library/react";
+import { renderHookWithQuery } from "@test-utils/query-wrapper";
+import { act } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("useDsaCompletedQuestions", () => {
@@ -40,22 +41,23 @@ describe("useDsaCompletedQuestions", () => {
   });
 
   it("should return empty completedIds initially when no localStorage data", () => {
-    const { result } = renderHook(() => useDsaCompletedQuestions());
+    const { result } = renderHookWithQuery(() => useDsaCompletedQuestions());
 
     expect(result.current.completedIds).toEqual([]);
     expect(result.current.solvedToday).toBe(0);
+    expect(result.current.isProgressLoading).toBe(false);
   });
 
   it("should load completed IDs from localStorage", () => {
     store["dsayatra_completed_questions"] = JSON.stringify(["q1", "q2", "q3"]);
 
-    const { result } = renderHook(() => useDsaCompletedQuestions());
+    const { result } = renderHookWithQuery(() => useDsaCompletedQuestions());
 
     expect(result.current.completedIds).toEqual(["q1", "q2", "q3"]);
   });
 
   it("should toggle a question to completed", () => {
-    const { result } = renderHook(() => useDsaCompletedQuestions());
+    const { result } = renderHookWithQuery(() => useDsaCompletedQuestions());
 
     act(() => {
       result.current.toggleComplete("q1");
@@ -68,7 +70,7 @@ describe("useDsaCompletedQuestions", () => {
   it("should toggle a question to incomplete", () => {
     store["dsayatra_completed_questions"] = JSON.stringify(["q1", "q2"]);
 
-    const { result } = renderHook(() => useDsaCompletedQuestions());
+    const { result } = renderHookWithQuery(() => useDsaCompletedQuestions());
 
     act(() => {
       result.current.toggleComplete("q1");
@@ -79,7 +81,7 @@ describe("useDsaCompletedQuestions", () => {
   });
 
   it("should track solved today count", () => {
-    const { result } = renderHook(() => useDsaCompletedQuestions());
+    const { result } = renderHookWithQuery(() => useDsaCompletedQuestions());
 
     act(() => {
       result.current.toggleComplete("q1");
@@ -95,7 +97,7 @@ describe("useDsaCompletedQuestions", () => {
   });
 
   it("should decrement solved today when uncompleting", () => {
-    const { result } = renderHook(() => useDsaCompletedQuestions());
+    const { result } = renderHookWithQuery(() => useDsaCompletedQuestions());
 
     act(() => {
       result.current.toggleComplete("q1");
@@ -112,7 +114,7 @@ describe("useDsaCompletedQuestions", () => {
     const customKey = "custom_completed";
     const customTodayKey = "custom_today";
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithQuery(() =>
       useDsaCompletedQuestions(customKey, customTodayKey),
     );
 
@@ -127,7 +129,7 @@ describe("useDsaCompletedQuestions", () => {
   it("should handle corrupted localStorage data gracefully", () => {
     store["dsayatra_completed_questions"] = "invalid json{{{";
 
-    const { result } = renderHook(() => useDsaCompletedQuestions());
+    const { result } = renderHookWithQuery(() => useDsaCompletedQuestions());
 
     expect(result.current.completedIds).toEqual([]);
   });
@@ -139,7 +141,7 @@ describe("useDsaCompletedQuestions", () => {
       solvedCount: 5,
     });
 
-    const { result } = renderHook(() => useDsaCompletedQuestions());
+    const { result } = renderHookWithQuery(() => useDsaCompletedQuestions());
 
     expect(result.current.solvedToday).toBe(5);
   });
@@ -150,7 +152,7 @@ describe("useDsaCompletedQuestions", () => {
       solvedCount: 5,
     });
 
-    const { result } = renderHook(() => useDsaCompletedQuestions());
+    const { result } = renderHookWithQuery(() => useDsaCompletedQuestions());
 
     expect(result.current.solvedToday).toBe(0);
   });

@@ -71,6 +71,13 @@ export interface UserModel {
     target?: string;
     preferredLanguage?: string;
     targetTopics?: DSATopicType[];
+    progress?: {
+      completedQuestionIds?: string[];
+      todayStats?: {
+        date?: string;
+        solvedCount?: number;
+      };
+    };
   };
 }
 
