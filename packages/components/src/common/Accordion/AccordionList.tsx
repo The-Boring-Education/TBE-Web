@@ -13,6 +13,7 @@ interface AccordionListProps {
   type?: "single" | "multiple";
   itemClassName?: string;
   triggerClassName?: string;
+  triggerTextClassName?: string;
   contentClassName?: string;
   className?: string;
 }
@@ -22,6 +23,7 @@ const AccordionList = ({
   type = "single",
   itemClassName = "border border-gray-200 rounded-xl overflow-hidden shadow-sm bg-white",
   triggerClassName = "w-full flex justify-between items-center px-5 py-2 text-left focus:outline-none",
+  triggerTextClassName = "font-medium text-lg text-gray-800",
   contentClassName = "px-5 pb-2 text-gray-700 text-sm",
   className = "space-y-2 text-left",
 }: AccordionListProps) => {
@@ -51,9 +53,7 @@ const AccordionList = ({
             onClick={() => toggle(index)}
             type="button"
           >
-            <span className="font-medium text-lg text-gray-800">
-              {item.trigger}
-            </span>
+            <span className={triggerTextClassName}>{item.trigger}</span>
             <motion.span
               animate={{
                 rotate: isOpen(index) ? 180 : 0,

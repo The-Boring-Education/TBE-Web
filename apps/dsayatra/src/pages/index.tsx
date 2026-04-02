@@ -54,6 +54,7 @@ const LandingPage = ({ seoMeta }: PageProps) => (
         heading: "Stop Grinding Random",
         focusText: "LeetCode Questions",
       }}
+      theme="dark"
     />
 
     <div id="features">
@@ -63,10 +64,11 @@ const LandingPage = ({ seoMeta }: PageProps) => (
         focusText="DSA Yatra?"
         heading="Why Choose"
         subtext="We make data structures and algorithms less boring and more effective."
+        theme="dark"
       />
     </div>
 
-    <FAQSection faqs={DSA_YATRA_FAQS} heading="Common Questions" />
+    <FAQSection faqs={DSA_YATRA_FAQS} heading="Common Questions" theme="dark" />
   </main>
 );
 

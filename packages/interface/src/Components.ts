@@ -108,6 +108,7 @@ export interface SectionHeaderProps {
   className?: string;
   flexContainerProps?: FlexContainerProps;
   subtext?: string;
+  theme?: "light" | "dark";
 }
 
 export interface CardSectionContainerProps {
@@ -122,6 +123,7 @@ export interface GradientContainerProps {
   className?: string;
   backgroundColor?: string;
   childrenClassName?: string;
+  theme?: "light" | "dark";
 }
 
 export interface PrimaryCardProps {
@@ -131,6 +133,7 @@ export interface PrimaryCardProps {
   title: string;
   content: string;
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
+  theme?: "light" | "dark";
 }
 
 export interface PortfolioCardProps {
@@ -293,6 +296,7 @@ export interface LandingPageHeroProps {
   secondaryButton?: ReactNode;
   backgroundImageUrl: string;
   heroText: string;
+  theme?: "light" | "dark";
 }
 
 interface BaseCardContainerProps {
@@ -300,6 +304,7 @@ interface BaseCardContainerProps {
   focusText?: string;
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
   subtext?: string;
+  theme?: "light" | "dark";
 }
 
 export interface CardContainerAProps extends BaseCardContainerProps {
@@ -1040,6 +1045,7 @@ export interface DsaQuestionCardProps {
   isCompleted?: boolean;
   isRecommended?: boolean;
   hasNotes?: boolean;
+  isRealWorld?: boolean;
   topics?: string[];
   companyTypes?: string[];
   userTargetCompanies?: string[];

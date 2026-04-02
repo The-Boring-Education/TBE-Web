@@ -185,17 +185,24 @@ const QuestionDetailPanel = ({
                 {question.name}
               </Text>
             </div>
-            <span
-              className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0 ${
-                question.difficultyLevel === "EASY"
-                  ? "bg-green-950/30 text-green-400 border-green-900/50"
-                  : question.difficultyLevel === "MEDIUM"
-                    ? "bg-yellow-950/30 text-yellow-400 border-yellow-900/50"
-                    : "bg-red-950/30 text-red-400 border-red-900/50"
-              }`}
-            >
-              {question.difficultyLevel}
-            </span>
+            <div className="flex items-center gap-2">
+              {(question as any).isRealWorld && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 bg-blue-950/30 text-blue-400 border-blue-900/50 uppercase">
+                  Real World
+                </span>
+              )}
+              <span
+                className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0 ${
+                  question.difficultyLevel === "EASY"
+                    ? "bg-green-950/30 text-green-400 border-green-900/50"
+                    : question.difficultyLevel === "MEDIUM"
+                      ? "bg-yellow-950/30 text-yellow-400 border-yellow-900/50"
+                      : "bg-red-950/30 text-red-400 border-red-900/50"
+                }`}
+              >
+                {question.difficultyLevel}
+              </span>
+            </div>
           </div>
 
           {/* Inline resource links */}

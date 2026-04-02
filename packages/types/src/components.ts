@@ -984,6 +984,7 @@ export interface DSAQuestion {
   order?: number;
   leetcodeLink?: string;
   youtubeSearchLink?: string;
+  isRealWorld?: boolean;
 }
 
 export interface DSAQuestionSidebarProps {

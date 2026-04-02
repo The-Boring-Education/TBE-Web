@@ -12,10 +12,12 @@ const LandingPageHero = ({
   secondaryButton,
   backgroundImageUrl,
   heroText,
+  theme = "light",
 }: LandingPageHeroProps) => {
   const { heading, focusText } = sectionHeaderProps;
+  const isDark = theme === "dark";
   return (
-    <Section>
+    <Section className={isDark ? "bg-[#0A0A0A]" : ""}>
       <FlexContainer className="py-2 sm:py-6" direction="col" justifyCenter>
         <FlexContainer
           className="wrap-reverse flex-col-reverse gap-6 lg:flex-row"
@@ -32,9 +34,12 @@ const LandingPageHero = ({
                 focusText={focusText}
                 heading={heading}
                 headingLevel={3}
+                theme={theme}
               />
               <Text
-                className="paragraph mt-1 w-full text-center text-grey lg:text-left"
+                className={`paragraph mt-1 w-full text-center lg:text-left ${
+                  isDark ? "text-gray-300" : "text-grey"
+                }`}
                 level="p"
               >
                 {heroText}

@@ -13,17 +13,24 @@ const CardContainerA = ({
   cards,
   borderColour,
   subtext,
+  theme = "light",
 }: CardContainerAProps) => (
-  <Section>
+  <Section className={theme === "dark" ? "bg-[#0A0A0A]" : ""}>
     <FlexContainer className="gap-4" direction="col">
       <SectionHeaderContainer
         focusText={focusText || ""}
         heading={heading}
         subtext={subtext}
+        theme={theme}
       />
       <CardSectionContainer>
         {cards.map((item) => (
-          <PrimaryCard key={item.id} {...item} borderColour={borderColour} />
+          <PrimaryCard
+            key={item.id}
+            {...item}
+            borderColour={borderColour}
+            theme={theme}
+          />
         ))}
       </CardSectionContainer>
     </FlexContainer>
