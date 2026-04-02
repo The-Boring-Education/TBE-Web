@@ -6,7 +6,11 @@ import {
   Text,
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, TOPIC_LABELS } from "@tbe/constants";
-import { PointsBadge } from "@tbe/gamification";
+import {
+  PointsBadge,
+  useGamification,
+  useGamifiedAction,
+} from "@tbe/gamification";
 import {
   useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
@@ -34,9 +38,8 @@ const SheetsPageClient = () => {
   );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [, setProfile] = useState<UserProfile | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
   const userTargetCompanies = useMemo(() => {
@@ -89,7 +92,10 @@ const SheetsPageClient = () => {
     toggleComplete,
     localNotes,
     saveNote: onSaveNote,
+    isProgressLoading,
   } = useDsaCompletedQuestions({ userId: user?.id });
+  const { triggerGamifiedAction } = useGamifiedAction();
+  const { refetch: refetchGamification } = useGamification();
   const { topicsCompletionMap } = useDsaTopics(
     questionsForCompletion,
     completedIds,
@@ -166,7 +172,7 @@ const SheetsPageClient = () => {
     setSelectedQuestion(null);
   };
 
-  if (sheetsLoading || userLoading || isProfileLoading) {
+  if (sheetsLoading || userLoading || isProfileLoading || isProgressLoading) {
     return (
       <div className="flex flex-col min-h-screen bg-[#0A0A0A] font-sans items-center justify-center">
         <div className="flex items-center">
@@ -195,7 +201,7 @@ const SheetsPageClient = () => {
         onBackToTopics={handleBackToTopics}
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
-        onToggleComplete={toggleComplete}
+        onToggleComplete={handleToggleComplete}
         localNotes={localNotes}
         onSaveNote={onSaveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
