@@ -17,7 +17,7 @@ import { useEffect, useMemo, useState } from "react";
 
 const DSAPrepPage = () => {
   const router = useRouter();
-  const { user, loading: userLoading, isAuth } = useUser();
+  const { loading: userLoading, isAuth, user } = useUser();
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
     null,
   );
@@ -38,7 +38,7 @@ const DSAPrepPage = () => {
     useDsaQuestionsForTopic(selectedTopic);
 
   const { completedIds, toggleComplete, localNotes, saveNote } =
-    useDsaCompletedQuestions();
+    useDsaCompletedQuestions({ userId: user?.id });
 
   const topicsCompletionMap = useMemo(() => {
     return (topicRows ?? []).reduce(

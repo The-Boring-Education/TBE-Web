@@ -1,3 +1,4 @@
+import { useAuth } from "@tbe/auth";
 import type { RoadmapStatItem } from "@tbe/components";
 import { InteractiveRoadmap, SEO } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
@@ -55,8 +56,11 @@ const PREFERRED_ORDER = [
 
 function TopicsClient() {
   const router = useRouter();
+  const { user } = useAuth();
   const { questions: allQuestions } = useDsaQuestions();
-  const { completedIds: completedQuestions } = useDsaCompletedQuestions();
+  const { completedIds: completedQuestions } = useDsaCompletedQuestions({
+    userId: user?.id,
+  });
 
   const nodes: RoadmapNode[] = useMemo(() => {
     const topicMap = new Map<string, { total: number; solved: number }>();

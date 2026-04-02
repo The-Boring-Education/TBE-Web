@@ -151,7 +151,7 @@ const DsaClient = () => {
     queryKey: "dashboard-dsa-sheet",
   });
   const { completedIds: completedQuestions, solvedToday } =
-    useDsaCompletedQuestions();
+    useDsaCompletedQuestions({ userId: user?.id });
 
   const [weeklyAssignments, setWeeklyAssignments] = useState<
     Record<number, string[]>
