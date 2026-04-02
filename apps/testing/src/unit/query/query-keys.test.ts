@@ -45,11 +45,21 @@ describe("queryKeys", () => {
       expect(queryKeys.aptitude.topics()).toEqual(["aptitude", "topics"]);
     });
 
-    it("questions(topic) includes topic", () => {
+    it("questions(topic) includes topic and user placeholder", () => {
       expect(queryKeys.aptitude.questions("probability")).toEqual([
         "aptitude",
         "questions",
         "probability",
+        "__no_user__",
+      ]);
+    });
+
+    it("questions(topic, userId) scopes cache per user", () => {
+      expect(queryKeys.aptitude.questions("probability", "u1")).toEqual([
+        "aptitude",
+        "questions",
+        "probability",
+        "u1",
       ]);
     });
 

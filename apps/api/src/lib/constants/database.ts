@@ -8,6 +8,7 @@ const DATABASE_MODELS = {
   COURSE_CHAPTER: "CourseChapter",
   USER_COURSE: "UserCourse",
   USER_SHEET: "UserSheet",
+  USER_APTITUDE_TOPIC: "UserAptitudeTopic",
   PLAYLIST: "Playlist",
   USER_PLAYLIST: "UserPlaylist",
   WEBINAR: "Webinar",

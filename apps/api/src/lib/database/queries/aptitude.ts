@@ -16,6 +16,7 @@ import type {
 import { logger } from "@/lib/utils/logger";
 
 import { AptitudeTopic } from "../models";
+import { mergeAptitudeProgressIntoQuestions } from "./user-aptitude-topic";
 
 // ─── Question Queries ────────────────────────────────────────────────────────
 
@@ -49,10 +50,17 @@ const getAptitudeQuestionsByTopicFromDB = async (
     difficulty?: DSADifficultyType;
     page?: number;
     limit?: number;
+    /** When set, each question includes `isCompleted` from UserAptitudeTopic. */
+    mergeProgressForUserId?: string;
   } = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const { difficulty, page = 1, limit: limitInput } = filters;
+    const {
+      difficulty,
+      page = 1,
+      limit: limitInput,
+      mergeProgressForUserId,
+    } = filters;
 
     const topicDoc = await AptitudeTopic.findOne({
       topic,
@@ -84,9 +92,14 @@ const getAptitudeQuestionsByTopicFromDB = async (
 
     /** No limit → return full topic (same idea as DSA topic fetch). */
     if (limitInput === undefined || limitInput === null) {
+      const mergedQuestions = await mergeAptitudeProgressIntoQuestions(
+        questions,
+        mergeProgressForUserId,
+        topic,
+      );
       return {
         data: {
-          questions,
+          questions: mergedQuestions,
           pagination: {
             total: totalCount,
             page: 1,
@@ -103,9 +116,15 @@ const getAptitudeQuestionsByTopicFromDB = async (
       page * limitInput,
     );
 
+    const mergedPaginated = await mergeAptitudeProgressIntoQuestions(
+      paginatedQuestions,
+      mergeProgressForUserId,
+      topic,
+    );
+
     return {
       data: {
-        questions: paginatedQuestions,
+        questions: mergedPaginated,
         pagination: {
           total: totalCount,
           page,
