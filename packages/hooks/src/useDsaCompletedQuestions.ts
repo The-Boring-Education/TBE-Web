@@ -25,6 +25,8 @@ interface UseDsaCompletedQuestionsReturn {
   solvedToday: number;
   /** True while loading server progress for an authenticated user */
   isProgressLoading: boolean;
+  localNotes: Record<string, string>;
+  saveNote: (questionId: string | number, notes: string) => Promise<void>;
 }
 
 const DEFAULT_STORAGE_KEY = "dsayatra_completed_questions";
@@ -299,6 +301,8 @@ const useDsaCompletedQuestions = (
     toggleComplete,
     solvedToday,
     isProgressLoading,
+    localNotes: {},
+    saveNote: async () => {},
   };
 };
 
