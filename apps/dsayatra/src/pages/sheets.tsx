@@ -6,11 +6,7 @@ import {
   Text,
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, TOPIC_LABELS } from "@tbe/constants";
-import {
-  PointsBadge,
-  useGamification,
-  useGamifiedAction,
-} from "@tbe/gamification";
+import { PointsBadge } from "@tbe/gamification";
 import {
   useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
@@ -43,6 +39,20 @@ const SheetsPageClient = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
+  const userTargetCompanies = useMemo(() => {
+    const pyTargets = (user as any)?.prepYatra?.targetCompanies || [];
+    const dsaTarget = (user as any)?.dsaYatra?.target;
+
+    let dsaMapped: string[] = [];
+    if (dsaTarget === "Product-based") {
+      dsaMapped = ["MNC", "FAANG"];
+    } else if (dsaTarget === "Startups") {
+      dsaMapped = ["Startup"];
+    }
+
+    return Array.from(new Set([...pyTargets, ...dsaMapped]));
+  }, [user]);
+
   const topicsWithCounts = useMemo(
     () =>
       (topicRows ?? []).map((t) => ({
@@ -74,9 +84,12 @@ const SheetsPageClient = () => {
     [topicQuestionsCache],
   );
 
-  const { completedIds, toggleComplete } = useDsaCompletedQuestions();
-  const { triggerGamifiedAction } = useGamifiedAction();
-  const { refetch: refetchGamification } = useGamification();
+  const {
+    completedIds,
+    toggleComplete,
+    localNotes,
+    saveNote: onSaveNote,
+  } = useDsaCompletedQuestions({ userId: user?.id });
   const { topicsCompletionMap } = useDsaTopics(
     questionsForCompletion,
     completedIds,
@@ -182,8 +195,11 @@ const SheetsPageClient = () => {
         onBackToTopics={handleBackToTopics}
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
-        onToggleComplete={handleToggleComplete}
+        onToggleComplete={toggleComplete}
+        localNotes={localNotes}
+        onSaveNote={onSaveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
+        userTargetCompanies={userTargetCompanies}
       />
     </LearningEnvironmentLayout>
   );

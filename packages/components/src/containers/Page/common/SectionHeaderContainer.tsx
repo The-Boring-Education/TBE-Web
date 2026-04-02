@@ -8,32 +8,40 @@ const SectionHeaderContainer = ({
   className = "",
   flexContainerProps,
   subtext,
-}: SectionHeaderProps) => (
-  <FlexContainer
-    className={`gap-1 ${className}`}
-    {...flexContainerProps}
-    direction="col"
-  >
-    <Text
-      className={`heading-${headingLevel}`}
-      level={`h${headingLevel}`}
-      textCenter
+  theme = "light",
+}: SectionHeaderProps) => {
+  const isDark = theme === "dark";
+  return (
+    <FlexContainer
+      className={`gap-1 ${className}`}
+      {...flexContainerProps}
+      direction="col"
     >
-      {heading}
       <Text
-        className={`heading-${headingLevel} text-primary`}
-        level="span"
+        className={`heading-${headingLevel} ${isDark ? "text-white" : ""}`}
+        level={`h${headingLevel}`}
         textCenter
       >
-        &nbsp;{focusText}
+        {heading}
+        <Text
+          className={`heading-${headingLevel} text-primary`}
+          level="span"
+          textCenter
+        >
+          &nbsp;{focusText}
+        </Text>
       </Text>
-    </Text>
-    {subtext && (
-      <Text className="pre-text text-greyDark" level="span" textCenter>
-        {subtext}
-      </Text>
-    )}
-  </FlexContainer>
-);
+      {subtext && (
+        <Text
+          className={`pre-text ${isDark ? "text-gray-400" : "text-greyDark"}`}
+          level="span"
+          textCenter
+        >
+          {subtext}
+        </Text>
+      )}
+    </FlexContainer>
+  );
+};
 
 export default SectionHeaderContainer;

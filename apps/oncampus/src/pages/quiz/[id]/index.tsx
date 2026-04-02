@@ -1,11 +1,10 @@
 import { useAuth } from "@tbe/auth";
 import { LearningEnvironmentLayout, Text } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
-import { config } from "@tbe/config/quizes";
+import { routes } from "@tbe/constants";
 import { gamificationApi, quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
-import { cleanOptionText } from "@tbe/utils";
-import { cn } from "@tbe/utils";
+import { cleanOptionText, cn, sendRequest } from "@tbe/utils";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -19,38 +18,35 @@ const isMongoObjectId = (val?: string): boolean => {
 
 const resolveUserIdToMongoId = async (
   user: { id?: string; email?: string; name?: string; image?: string } | null,
-) => {
+): Promise<string | null> => {
   const candidateId = user?.id;
   if (candidateId && isMongoObjectId(candidateId)) return candidateId;
   if (!user?.email) return null;
 
-  const base = (config.API_BASE_URL || "").replace(/\/$/, "");
-
   try {
-    const resp = await fetch(
-      `${base}/user?email=${encodeURIComponent(user.email)}`,
-    );
-    const json = await resp.json();
-    const dbId = json?.data?._id;
-    if (isMongoObjectId(dbId)) return dbId;
+    const lookup = await sendRequest({
+      url: `${routes.api.base}${routes.api.user}?email=${encodeURIComponent(user.email)}`,
+    });
+    const dbId = lookup?.data?._id;
+    if (dbId && isMongoObjectId(String(dbId))) return String(dbId);
   } catch {
-    // ignore and try create below
+    // try create below
   }
 
   try {
-    const createResp = await fetch(`${base}/user`, {
+    const created = await sendRequest({
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+      url: `${routes.api.base}${routes.api.user}`,
+      body: {
         name: user?.name || "User",
         email: user.email,
         googleId: user?.id || "",
         image: user?.image || "",
-      }),
+      },
     });
-    const createJson = await createResp.json();
-    const createdId = createJson?.data?._id;
-    if (isMongoObjectId(createdId)) return createdId;
+    const createdId = created?.data?._id;
+    if (createdId && isMongoObjectId(String(createdId)))
+      return String(createdId);
   } catch {
     // ignore
   }
@@ -75,6 +71,7 @@ export default function QuizPage() {
   const [gameState, setGameState] = useState<GameState>("loading");
   const [quizStartTime] = useState(Date.now());
   const hasSubmittedRef = useRef(false);
+  const mongoUserIdRef = useRef<string | null>(null);
 
   // Auth guard (non-dashboard route)
   useEffect(() => {
@@ -82,6 +79,16 @@ export default function QuizPage() {
       router.push("/login");
     }
   }, [isLoading, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (!user?.email && !user?.id) {
+      mongoUserIdRef.current = null;
+      return;
+    }
+    void resolveUserIdToMongoId(user).then((id) => {
+      mongoUserIdRef.current = id;
+    });
+  }, [user]);
 
   const loadQuiz = useCallback(async () => {
     if (!quizId) return;
@@ -125,7 +132,9 @@ export default function QuizPage() {
     hasSubmittedRef.current = true;
     setGameState("submitting");
 
-    const mongoUserId = await resolveUserIdToMongoId(user);
+    const mongoUserId =
+      mongoUserIdRef.current ?? (await resolveUserIdToMongoId(user));
+    if (mongoUserId) mongoUserIdRef.current = mongoUserId;
 
     const totalTimeSpent = Math.floor((Date.now() - quizStartTime) / 1000);
     const answersPayload = questions.map((q, index) => {

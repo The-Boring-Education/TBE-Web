@@ -17,6 +17,10 @@ const UserQuestionSchema = new Schema<UserSheetQuestionModel>(
       type: Boolean,
       default: false,
     },
+    notes: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

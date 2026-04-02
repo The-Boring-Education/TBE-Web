@@ -18,6 +18,7 @@ export { default as AptitudeTopic } from "./InterviewPrep/AptitudeTopic";
 export { default as DSAQuestion } from "./InterviewPrep/DSAQuestion";
 export { default as InterviewSheet } from "./InterviewPrep/Sheet";
 export { default as StudyGuide } from "./InterviewPrep/StudyGuide";
+export { default as UserAptitudeTopic } from "./InterviewPrep/UserAptitudeTopic";
 export { default as UserSheet } from "./InterviewPrep/UserSheet";
 
 // PrepYatra models

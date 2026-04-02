@@ -37,6 +37,8 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     examples: examples,
     constraints: constraints as string[],
     sections: question.sections,
+    notes: question.notes,
+    _priorityScore: question._priorityScore,
   };
 };
 

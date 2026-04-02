@@ -198,7 +198,7 @@ async function handleSheetsMode(req: NextApiRequest, res: NextApiResponse) {
 //   (default)              → all questions grouped by topic
 
 async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
-  const { metadata, domain, difficulty, companyType } = req.query;
+  const { metadata, domain, difficulty, companyType, userId } = req.query;
 
   if (metadata === "true") {
     const { data, error } = await getDSASheetMetadataFromDB();
@@ -235,6 +235,7 @@ async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
     validDomain,
     validDifficulty,
     validCompanyType,
+    userId as string,
   );
 
   if (error || !data) {
@@ -260,8 +261,16 @@ async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
 //   (default)              → topics with question counts
 
 async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
-  const { metadata, topic, category, subCategory, difficulty, page, limit } =
-    req.query;
+  const {
+    metadata,
+    topic,
+    category,
+    subCategory,
+    difficulty,
+    page,
+    limit,
+    userId,
+  } = req.query;
 
   if (metadata === "true") {
     const { data, error } = await getAptitudeMetadataFromDB();
@@ -280,12 +289,18 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
   }
 
   if (topic) {
+    const mergeProgressForUserId =
+      typeof userId === "string" && userId.trim().length > 0
+        ? userId.trim()
+        : undefined;
+
     const { data, error } = await getAptitudeQuestionsByTopicFromDB(
       topic as string,
       {
         difficulty: difficulty as DSADifficultyType | undefined,
         page: page ? parseInt(page as string, 10) : 1,
         limit: parsePositiveInt(limit),
+        mergeProgressForUserId,
       },
     );
 

@@ -28,8 +28,13 @@ export const queryKeys = {
   aptitude: {
     all: ["aptitude"] as const,
     topics: () => [...queryKeys.aptitude.all, "topics"] as const,
-    questions: (topic: string) =>
-      [...queryKeys.aptitude.all, "questions", topic] as const,
+    questions: (topic: string, userId?: string) =>
+      [
+        ...queryKeys.aptitude.all,
+        "questions",
+        topic,
+        userId ?? "__no_user__",
+      ] as const,
     studyGuide: (topic: string) =>
       [...queryKeys.aptitude.all, "study-guide", topic] as const,
   },
@@ -38,12 +43,19 @@ export const queryKeys = {
   dsa: {
     all: ["dsa"] as const,
     sheets: () => [...queryKeys.dsa.all, "sheets"] as const,
-    sheet: (slug: string) => [...queryKeys.dsa.all, "sheet", slug] as const,
-    questions: (filters?: { limit?: number; topic?: string }) =>
-      [...queryKeys.dsa.all, "questions", filters] as const,
+    sheet: (slug: string, userId?: string) =>
+      [...queryKeys.dsa.all, "sheet", slug, userId] as const,
+    questions: (filters?: {
+      limit?: number;
+      topic?: string;
+      userId?: string;
+    }) => [...queryKeys.dsa.all, "questions", filters] as const,
     completedQuestions: (userId: string) =>
       [...queryKeys.dsa.all, "completed", userId] as const,
-    topics: () => [...queryKeys.dsa.all, "topics"] as const,
+    topics: (userId?: string) =>
+      userId
+        ? ([...queryKeys.dsa.all, "topics", userId] as const)
+        : ([...queryKeys.dsa.all, "topics"] as const),
   },
 
   // ── Courses (Shiksha) ──

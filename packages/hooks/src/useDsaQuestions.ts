@@ -5,6 +5,8 @@ import { sendRequest } from "@tbe/utils";
 import { transformDsaQuestion } from "@tbe/utils";
 import { useMemo } from "react";
 
+import useUser from "./useUser";
+
 interface UseDsaQuestionsOptions {
   queryKey?: string;
   limit?: number;
@@ -20,13 +22,18 @@ const useDsaQuestions = (
   options: UseDsaQuestionsOptions = {},
 ): UseDsaQuestionsReturn => {
   const { limit = 1000 } = options;
+  const { user } = useUser();
+  const userId = user?.id;
 
   const { data: response, isLoading } = useQuery<any>({
-    queryKey: queryKeys.dsa.questions({ limit }),
+    queryKey: options.queryKey
+      ? [options.queryKey, userId]
+      : queryKeys.dsa.questions({ limit, userId }),
     queryFn: () =>
       sendRequest({
-        url: `${routes.api.base}${routes.api.dsaSheet}?limit=${limit}`,
+        url: `${routes.api.base}${routes.api.dsaSheet}?limit=${limit}${userId ? `&userId=${userId}` : ""}`,
       }),
+    enabled: !!userId,
     ...CACHE_TIMES.STABLE,
   });
 

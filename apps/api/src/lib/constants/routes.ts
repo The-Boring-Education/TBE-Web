@@ -97,6 +97,8 @@ const routes = {
     markCourseChapterAsCompleted: "/user/shiksha/course",
     markProjectChapterAsCompleted: "/user/projects/project",
     markSheetQuestionAsCompleted: "/user/interview-prep/sheet",
+    markAptitudeQuestionProgress: "/user/interview-prep/aptitude/progress",
+    dsaYatraProgress: "/user/dsayatra/progress",
     submitUserFeedback: "/feedback",
     createOrder: "/payment/create-order",
     checkStatus: "/payment/checkstatus",

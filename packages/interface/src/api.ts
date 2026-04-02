@@ -555,4 +555,6 @@ export interface AptitudeQuestion {
   topic?: string;
   options: AptitudeOption[];
   answer?: string;
+  /** Merged from UserAptitudeTopic when fetching with userId. */
+  isCompleted?: boolean;
 }
