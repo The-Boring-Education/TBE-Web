@@ -7,6 +7,11 @@ import {
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, TOPIC_LABELS } from "@tbe/constants";
 import {
+  PointsBadge,
+  useGamification,
+  useGamifiedAction,
+} from "@tbe/gamification";
+import {
   useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
   useDsaTopics,
@@ -17,7 +22,12 @@ import type { DsaQuestion, PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
 import { getPreFetchProps } from "@tbe/utils";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+
+import {
+  persistAwardedQuestionId,
+  readAwardedQuestionIds,
+} from "@/utils/dsaGamificationAward";
 
 const SheetsPageClient = () => {
   const router = useRouter();
@@ -65,10 +75,37 @@ const SheetsPageClient = () => {
   );
 
   const { completedIds, toggleComplete } = useDsaCompletedQuestions();
+  const { triggerGamifiedAction } = useGamifiedAction();
+  const { refetch: refetchGamification } = useGamification();
   const { topicsCompletionMap } = useDsaTopics(
     questionsForCompletion,
     completedIds,
     topicsWithCounts,
+  );
+
+  const handleToggleComplete = useCallback(
+    (questionId: string | number) => {
+      const idStr = String(questionId);
+      const willComplete = !completedIds.includes(questionId);
+      toggleComplete(questionId);
+
+      if (!willComplete) return;
+      if (readAwardedQuestionIds().has(idStr)) return;
+
+      void (async () => {
+        await triggerGamifiedAction({
+          gamificationAction: "COMPLETE_DSA_QUESTION",
+          analytics: {
+            action: "DSA_QUESTION_COMPLETED",
+            category: "DSA Yatra",
+            label: idStr,
+          },
+        });
+        persistAwardedQuestionId(idStr);
+        await refetchGamification();
+      })();
+    },
+    [completedIds, toggleComplete, triggerGamifiedAction, refetchGamification],
   );
 
   const questions = topicQuestions;
@@ -130,7 +167,11 @@ const SheetsPageClient = () => {
   }
 
   return (
-    <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
+    <LearningEnvironmentLayout
+      backHref="/dashboard"
+      layoutMode="workspace"
+      headerRightContent={<PointsBadge variant="navbar" />}
+    >
       <DsaPrepWorkspace
         questions={questions}
         topicsWithCounts={topicsWithCounts}
@@ -141,7 +182,7 @@ const SheetsPageClient = () => {
         onBackToTopics={handleBackToTopics}
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
-        onToggleComplete={toggleComplete}
+        onToggleComplete={handleToggleComplete}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
       />
     </LearningEnvironmentLayout>

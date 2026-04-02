@@ -77,6 +77,10 @@ export default defineConfig({
       "@tbe/query": path.resolve(__dirname, "../../packages/api/src"),
       "@tbe/services": path.resolve(__dirname, "../../packages/services/src"),
       "@tbe/auth": path.resolve(__dirname, "../../packages/auth/src"),
+      "@tbe/gamification": path.resolve(
+        __dirname,
+        "../../packages/gamification/src/index.ts",
+      ),
       "@tbe/config/quizes": path.resolve(
         __dirname,
         "../../packages/config/src/quizes.ts",
@@ -87,6 +91,10 @@ export default defineConfig({
       ),
       // API app path aliases for testing API routes
       "@api": path.resolve(__dirname, "../api/src"),
+      "@dsayatra/dsa-gamification-award": path.resolve(
+        __dirname,
+        "../dsayatra/src/utils/dsaGamificationAward.ts",
+      ),
     },
   },
 });
