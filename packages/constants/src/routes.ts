@@ -141,6 +141,8 @@ const routes = {
     myPlaylists: "/user/playlists",
     interviewPrep: "/interview-prep",
     dsaSheet: "/interview-prep/dsa-sheet",
+    dsaSync: "/interview-prep/dsa-sheet/sync",
+    dsaQuestionNote: "/interview-prep/dsa-sheet/question/note",
     studyGuide: (topicId: string) =>
       `/interview-prep/dsa-sheet/study-guide?topic=${topicId}`,
     enrollCourse: "/user/shiksha/enroll",

@@ -226,6 +226,7 @@ export interface UserSheetQuestionModel {
   questionId: typeof Schema.Types.ObjectId;
   isCompleted?: boolean;
   isStarred?: boolean;
+  notes?: string;
 }
 
 export interface DSAFirstPrinciples {

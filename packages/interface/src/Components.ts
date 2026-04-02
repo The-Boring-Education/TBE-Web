@@ -962,6 +962,8 @@ export interface DsaQuestion {
     image?: string;
   }[];
   constraints?: string[];
+  notes?: string;
+  _priorityScore?: number;
   sections?: {
     first_principles?: {
       paragraphs: string[];
@@ -1025,6 +1027,10 @@ export interface DsaQuestionListProps {
   className?: string;
   completedQuestionIds?: (string | number)[];
   onToggleComplete?: (questionId: string | number) => void;
+  localNotes?: Record<string, string>;
+  topicSidebarHeader?: ReactNode;
+  isRecommendedMap?: Record<string, boolean>;
+  userTargetCompanies?: string[];
 }
 
 export interface DsaQuestionCardProps {
@@ -1032,12 +1038,18 @@ export interface DsaQuestionCardProps {
   difficultyLevel: QuestionDifficulty;
   isSelected?: boolean;
   isCompleted?: boolean;
+  isRecommended?: boolean;
+  hasNotes?: boolean;
+  topics?: string[];
+  companyTypes?: string[];
+  userTargetCompanies?: string[];
   onClick?: () => void;
   onToggleComplete?: (e: React.MouseEvent) => void;
 }
 
 export interface QuestionDetailProps {
   question: DsaQuestion | null;
+  onNoteSaveSuccess?: (note: string) => void;
 }
 
 export interface ExampleCardProps {

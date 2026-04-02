@@ -9,16 +9,22 @@ export interface DsaTopicSummaryRow {
   count: number;
 }
 
+import useUser from "./useUser";
+
 /**
  * Fetches DSA topic ids + question counts only (no question bodies).
  * Use for sheet landing; pair with {@link useDsaQuestionsForTopic} on topic select.
  */
 export const useDsaTopicSummaries = () => {
+  const { user } = useUser();
+  const userId = user?.id;
+
   return useQuery({
-    queryKey: queryKeys.dsa.topics(),
+    queryKey: queryKeys.dsa.topics(userId),
     queryFn: async () => {
+      const url = `${routes.api.base}${routes.api.dsaSheet}?query=topics${userId ? `&userId=${userId}` : ""}`;
       const result = await sendRequest({
-        url: `${routes.api.base}${routes.api.dsaSheet}?query=topics`,
+        url,
         method: "GET",
       });
 
@@ -46,6 +52,7 @@ export const useDsaTopicSummaries = () => {
         }) as TopicWithCount[];
       return rows;
     },
+    enabled: !!userId,
     ...CACHE_TIMES.STABLE,
   });
 };
