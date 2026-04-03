@@ -129,6 +129,35 @@ describe("migrateCollectionByContentId (integration)", () => {
     expect(await tgt.countDocuments()).toBe(0);
   });
 
+  it("migrates aptitude topics (aptitudetopics collection)", async () => {
+    const coll = ENTITY_MAP.aptitudeTopics;
+    const src = sourceConn.collection(coll);
+    const tgt = targetConn.collection(coll);
+    await src.deleteMany({});
+    await tgt.deleteMany({});
+
+    await src.insertOne({
+      contentId: "55555555-5555-5555-5555-555555555555",
+      title: "Percentages",
+      slug: "percentages",
+    });
+
+    const result = await migrateCollectionByContentId(
+      sourceConn,
+      targetConn,
+      "aptitudeTopics",
+      coll,
+      { dryRun: false, verbose: false },
+    );
+
+    expect(result.inserted).toBe(1);
+    const onTarget = await tgt.findOne({
+      contentId: "55555555-5555-5555-5555-555555555555",
+    });
+    expect(onTarget?.title).toBe("Percentages");
+    expect(onTarget?.slug).toBe("percentages");
+  });
+
   it("migrates DSA study guides (studyguides collection)", async () => {
     const coll = ENTITY_MAP.studyGuides;
     const src = sourceConn.collection(coll);

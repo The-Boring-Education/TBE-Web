@@ -74,6 +74,10 @@ export default defineConfig({
       "@tbe/types": path.resolve(__dirname, "../../packages/types/src"),
       "@tbe/interface": path.resolve(__dirname, "../../packages/interface/src"),
       "@tbe/hooks": path.resolve(__dirname, "../../packages/hooks/src"),
+      "@tbe/gamification": path.resolve(
+        __dirname,
+        "../../packages/gamification/src",
+      ),
       "@tbe/query": path.resolve(__dirname, "../../packages/api/src"),
       "@tbe/services": path.resolve(__dirname, "../../packages/services/src"),
       "@tbe/auth": path.resolve(__dirname, "../../packages/auth/src"),
