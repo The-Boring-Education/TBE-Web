@@ -1,10 +1,5 @@
 import { useAuth } from "@tbe/auth";
-import {
-  CelebrationAnimation,
-  LearningEnvironmentLayout,
-  Progress,
-  Text,
-} from "@tbe/components";
+import { CelebrationAnimation, Progress, Text } from "@tbe/components";
 import { MarkdownRenderer } from "@tbe/components/quizes";
 import { quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
@@ -22,6 +17,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
+
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -105,30 +102,30 @@ export default function ResultsPage() {
 
   if (loadingQuiz) {
     return (
-      <LearningEnvironmentLayout backHref="/dashboard" isLoading>
+      <OnCampusLearningLayout backHref="/dashboard" isLoading>
         <div className="flex-1 flex items-center justify-center">
           <Text level="p" className="text-gray-400">
             Loading results...
           </Text>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   if (!quiz || questions.length === 0) {
     return (
-      <LearningEnvironmentLayout backHref="/dashboard">
+      <OnCampusLearningLayout backHref="/dashboard">
         <div className="flex-1 flex items-center justify-center">
           <div className="text-red-400">
             Failed to load results. Please try again.
           </div>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   return (
-    <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
+    <OnCampusLearningLayout backHref="/dashboard" layoutMode="workspace">
       <div className="flex flex-col h-full w-full">
         {/* Workspace Header Section — Centered Title Mode */}
         <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0 sticky top-0 z-20">
@@ -506,6 +503,6 @@ export default function ResultsPage() {
           </div>
         </div>
       </div>
-    </LearningEnvironmentLayout>
+    </OnCampusLearningLayout>
   );
 }
