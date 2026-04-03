@@ -7,6 +7,11 @@ import {
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, TOPIC_LABELS } from "@tbe/constants";
 import {
+  PointsBadge,
+  useGamification,
+  useGamifiedAction,
+} from "@tbe/gamification";
+import {
   useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
   useDsaTopics,
@@ -17,7 +22,12 @@ import type { DsaQuestion, PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
 import { getPreFetchProps } from "@tbe/utils";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+
+import {
+  persistAwardedQuestionId,
+  readAwardedQuestionIds,
+} from "@/utils/dsaGamificationAward";
 
 const SheetsPageClient = () => {
   const router = useRouter();
@@ -28,9 +38,8 @@ const SheetsPageClient = () => {
   );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [, setProfile] = useState<UserProfile | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
   const userTargetCompanies = useMemo(() => {
@@ -83,11 +92,39 @@ const SheetsPageClient = () => {
     toggleComplete,
     localNotes,
     saveNote: onSaveNote,
+    isProgressLoading,
   } = useDsaCompletedQuestions({ userId: user?.id });
+  const { triggerGamifiedAction } = useGamifiedAction();
+  const { refetch: refetchGamification } = useGamification();
   const { topicsCompletionMap } = useDsaTopics(
     questionsForCompletion,
     completedIds,
     topicsWithCounts,
+  );
+
+  const handleToggleComplete = useCallback(
+    (questionId: string | number) => {
+      const idStr = String(questionId);
+      const willComplete = !completedIds.includes(questionId);
+      toggleComplete(questionId);
+
+      if (!willComplete) return;
+      if (readAwardedQuestionIds().has(idStr)) return;
+
+      void (async () => {
+        await triggerGamifiedAction({
+          gamificationAction: "COMPLETE_DSA_QUESTION",
+          analytics: {
+            action: "DSA_QUESTION_COMPLETED",
+            category: "DSA Yatra",
+            label: idStr,
+          },
+        });
+        persistAwardedQuestionId(idStr);
+        await refetchGamification();
+      })();
+    },
+    [completedIds, toggleComplete, triggerGamifiedAction, refetchGamification],
   );
 
   const questions = topicQuestions;
@@ -135,7 +172,7 @@ const SheetsPageClient = () => {
     setSelectedQuestion(null);
   };
 
-  if (sheetsLoading || userLoading || isProfileLoading) {
+  if (sheetsLoading || userLoading || isProfileLoading || isProgressLoading) {
     return (
       <div className="flex flex-col min-h-screen bg-[#0A0A0A] font-sans items-center justify-center">
         <div className="flex items-center">
@@ -149,7 +186,11 @@ const SheetsPageClient = () => {
   }
 
   return (
-    <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
+    <LearningEnvironmentLayout
+      backHref="/dashboard"
+      layoutMode="workspace"
+      headerRightContent={<PointsBadge variant="navbar" />}
+    >
       <DsaPrepWorkspace
         questions={questions}
         topicsWithCounts={topicsWithCounts}
@@ -160,7 +201,7 @@ const SheetsPageClient = () => {
         onBackToTopics={handleBackToTopics}
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
-        onToggleComplete={toggleComplete}
+        onToggleComplete={handleToggleComplete}
         localNotes={localNotes}
         onSaveNote={onSaveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
