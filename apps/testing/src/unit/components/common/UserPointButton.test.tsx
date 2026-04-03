@@ -3,6 +3,24 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+/**
+ * UserPointButton reads points via useGamification from @tbe/gamification (React Query).
+ * Mock that module so tests stay fast and do not require QueryClientProvider.
+ */
+vi.mock("@tbe/gamification", () => ({
+  useGamification: () => ({
+    loading: false,
+    error: null,
+    points: 42,
+    currentLevel: 2,
+    currentLevelName: "Builder",
+    nextLevelName: "Pro",
+    pointsLeftToNextLevel: 58,
+    percentageProgress: 35,
+    refetch: vi.fn(),
+  }),
+}));
+
 vi.mock("@tbe/hooks", async (importOriginal) => {
   const mod = await importOriginal<typeof import("@tbe/hooks")>();
   return {

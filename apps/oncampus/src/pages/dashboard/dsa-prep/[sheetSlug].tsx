@@ -113,6 +113,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
         analytics: {
           action: "INTERVIEW_SHEET_COMPLETE",
           category: "Achievement",
+          label: "DSA Sheet Completed",
         },
         celebrationType: "achievement",
         customMessage: "DSA sheet completed! You're ready!",
@@ -179,6 +180,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
             analytics: {
               action: "QUESTION_COMPLETE",
               category: "Learning",
+              label: "DSA Question Solved",
             },
             customMessage: "DSA question solved! Great work!",
             metadata: {
