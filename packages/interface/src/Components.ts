@@ -1149,3 +1149,21 @@ export type {
   StudyGuideReaderProps,
   StudyGuideSection,
 };
+
+// ---------------------------------------------------------------------------
+// Tailor Your Journey
+// ---------------------------------------------------------------------------
+
+export interface TailorYourJourneyFeature {
+  label: string;
+  description: string;
+}
+
+export interface TailorYourJourneyProps {
+  heading: string;
+  highlightText: string;
+  description: string;
+  features: TailorYourJourneyFeature[];
+  imageSrc: string;
+  imageAlt: string;
+}
