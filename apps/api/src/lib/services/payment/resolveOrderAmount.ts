@@ -1,3 +1,5 @@
+import { calculatePriceBreakdown } from "@tbe/utils";
+
 import type { ProductType } from "@/lib/constants/database";
 import {
   getACourseFromDBById,
@@ -6,7 +8,8 @@ import {
   validateCouponForProductFromDB,
 } from "@/lib/database";
 import type { CouponModel, InterviewSheetModel } from "@/lib/interfaces";
-import { calculatePriceBreakdown } from "@tbe/utils";
+
+type InterviewSheetForPricing = Parameters<typeof calculatePriceBreakdown>[0];
 
 export interface ResolveOrderAmountParams {
   productType: ProductType;
@@ -56,22 +59,26 @@ export const resolveAuthoritativeOrderAmount = async ({
   productId,
   couponCode,
   userId,
-}: ResolveOrderAmountParams): Promise<{
-  ok: true;
-  data: ResolvedOrderAmount;
-} | { ok: false; error: string }> => {
+}: ResolveOrderAmountParams): Promise<
+  | {
+      ok: true;
+      data: ResolvedOrderAmount;
+    }
+  | { ok: false; error: string }
+> => {
   try {
     let baseAmount = 0;
 
     switch (productType) {
       case "INTERVIEW_SHEET": {
-        const { data: sheet, error } = await getInterviewSheetByIDFromDB(
-          productId,
-        );
+        const { data: sheet, error } =
+          await getInterviewSheetByIDFromDB(productId);
         if (error || !sheet) {
           return { ok: false, error: error || "Interview sheet not found" };
         }
         const sheetModel = sheet as unknown as InterviewSheetModel;
+        const sheetForPricing =
+          sheetModel as unknown as InterviewSheetForPricing;
         baseAmount = sheetModel.price ?? 0;
         if (!baseAmount || baseAmount <= 0) {
           return { ok: false, error: "Invalid sheet price" };
@@ -89,7 +96,10 @@ export const resolveAuthoritativeOrderAmount = async ({
             return { ok: false, error: cErr || "Invalid coupon" };
           }
           const couponModel = toCouponModel(coupon as CouponModel);
-          const breakdown = calculatePriceBreakdown(sheetModel, couponModel);
+          const breakdown = calculatePriceBreakdown(
+            sheetForPricing,
+            couponModel,
+          );
           return {
             ok: true,
             data: {
@@ -101,7 +111,7 @@ export const resolveAuthoritativeOrderAmount = async ({
           };
         }
 
-        const breakdown = calculatePriceBreakdown(sheetModel);
+        const breakdown = calculatePriceBreakdown(sheetForPricing);
         return {
           ok: true,
           data: {
@@ -155,7 +165,10 @@ export const resolveAuthoritativeOrderAmount = async ({
 
       case "PREPYATRA":
       case "DSA_YATRA":
-      case "ONCAMPUS": {
+      case "ONCAMPUS":
+      case "PROJECTS":
+      case "WEBINAR":
+      case "GENERAL": {
         const price = await getSubscriptionPlanPriceFromDB(
           productType,
           productId,
@@ -198,14 +211,6 @@ export const resolveAuthoritativeOrderAmount = async ({
 
         return { ok: true, data: { baseAmount, finalAmount: baseAmount } };
       }
-
-      case "PROJECTS":
-      case "WEBINAR":
-      case "GENERAL":
-        return {
-          ok: false,
-          error: `Price resolution for ${productType} is not implemented — add catalog or DB fields`,
-        };
 
       default:
         return { ok: false, error: "Unsupported product type" };

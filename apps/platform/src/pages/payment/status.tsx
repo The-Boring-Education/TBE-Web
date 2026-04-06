@@ -7,6 +7,20 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
+/** Relative in-app path only — blocks protocol-relative URLs (`//host/...`) and backslashes. */
+const sanitizeRelativeNextPath = (
+  path: string | undefined,
+  fallback: string,
+): string => {
+  if (typeof path !== 'string' || !path.startsWith('/')) {
+    return fallback;
+  }
+  if (path.startsWith('//') || path.includes('\\')) {
+    return fallback;
+  }
+  return path;
+};
+
 const PaymentStatusPage = () => {
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
@@ -17,6 +31,7 @@ const PaymentStatusPage = () => {
     'idle' | 'loading' | 'success' | 'pending' | 'error'
   >('idle');
   const [detail, setDetail] = useState<string | null>(null);
+  const [refetchKey, setRefetchKey] = useState(0);
 
   useEffect(() => {
     if (!router.isReady || !orderId || !user?.id) return;
@@ -31,7 +46,9 @@ const PaymentStatusPage = () => {
       if (!res.status || !res.data) {
         setState('error');
         setDetail(
-          typeof res.message === 'string' ? res.message : 'Unable to verify payment',
+          typeof res.message === 'string'
+            ? res.message
+            : 'Unable to verify payment',
         );
         return;
       }
@@ -48,25 +65,27 @@ const PaymentStatusPage = () => {
     };
 
     void run();
-  }, [router.isReady, orderId, user?.id]);
+  }, [router.isReady, orderId, user?.id, refetchKey]);
 
-  const safeNext =
-    nextPath && nextPath.startsWith('/') ? nextPath : routes.user.dashboard;
+  const safeNext = sanitizeRelativeNextPath(nextPath, routes.user.dashboard);
 
   return (
     <>
       <Head>
         <title>Payment status — The Boring Education</title>
       </Head>
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md rounded-2xl bg-white shadow-sm border border-slate-200 p-6 sm:p-8 text-center">
+      <div className='min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4 py-12'>
+        <div className='w-full max-w-md rounded-2xl bg-white shadow-sm border border-slate-200 p-6 sm:p-8 text-center'>
           {userLoading ? (
-            <Text level="p" className="text-slate-600">
+            <Text level='p' className='text-slate-600'>
               Loading…
             </Text>
           ) : !user ? (
             <>
-              <Text level="h2" className="text-lg font-semibold text-slate-900 mb-2">
+              <Text
+                level='h2'
+                className='text-lg font-semibold text-slate-900 mb-2'
+              >
                 Sign in to view payment status
               </Text>
               <Link
@@ -76,59 +95,76 @@ const PaymentStatusPage = () => {
                     : routes.paymentStatus,
                 )}`}
               >
-                <Button text="Sign in" variant="PRIMARY" className="w-full mt-4" />
+                <Button
+                  text='Sign in'
+                  variant='PRIMARY'
+                  className='w-full mt-4'
+                />
               </Link>
             </>
           ) : !orderId ? (
-            <Text level="p" className="text-slate-600">
-              Missing order reference. Open the link from your payment confirmation
-              email or history.
+            <Text level='p' className='text-slate-600'>
+              Missing order reference. Open the link from your payment
+              confirmation email or history.
             </Text>
           ) : state === 'loading' || state === 'idle' ? (
-            <Text level="p" className="text-slate-600">
+            <Text level='p' className='text-slate-600'>
               Verifying your payment…
             </Text>
           ) : state === 'success' ? (
             <>
-              <Text level="h2" className="text-xl font-semibold text-green-800 mb-2">
+              <Text
+                level='h2'
+                className='text-xl font-semibold text-green-800 mb-2'
+              >
                 Payment successful
               </Text>
-              <Text level="p" className="text-slate-600 mb-6">
+              <Text level='p' className='text-slate-600 mb-6'>
                 Your purchase is confirmed. It may take a moment for access to
                 unlock everywhere.
               </Text>
               <Link href={safeNext}>
-                <Button text="Continue" variant="PRIMARY" className="w-full" />
+                <Button text='Continue' variant='PRIMARY' className='w-full' />
               </Link>
             </>
           ) : state === 'pending' ? (
             <>
-              <Text level="h2" className="text-lg font-semibold text-amber-800 mb-2">
+              <Text
+                level='h2'
+                className='text-lg font-semibold text-amber-800 mb-2'
+              >
                 Payment pending
               </Text>
-              <Text level="p" className="text-slate-600 mb-4">
+              <Text level='p' className='text-slate-600 mb-4'>
                 We are still confirming this with the bank. Refresh in a minute
                 or check your email.
               </Text>
               <Button
-                text="Refresh"
-                variant="SECONDARY"
-                className="w-full"
-                onClick={() => router.replace(router.asPath)}
+                text='Refresh'
+                variant='SECONDARY'
+                className='w-full'
+                onClick={() => setRefetchKey((k) => k + 1)}
               />
             </>
           ) : (
             <>
-              <Text level="h2" className="text-lg font-semibold text-red-800 mb-2">
+              <Text
+                level='h2'
+                className='text-lg font-semibold text-red-800 mb-2'
+              >
                 Could not verify payment
               </Text>
               {detail ? (
-                <Text level="p" className="text-slate-600 mb-4">
+                <Text level='p' className='text-slate-600 mb-4'>
                   {detail}
                 </Text>
               ) : null}
               <Link href={routes.checkout}>
-                <Button text="Back to checkout" variant="PRIMARY" className="w-full" />
+                <Button
+                  text='Back to checkout'
+                  variant='PRIMARY'
+                  className='w-full'
+                />
               </Link>
             </>
           )}
