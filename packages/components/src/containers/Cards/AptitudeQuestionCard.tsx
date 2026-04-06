@@ -190,11 +190,9 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
         <Button
           variant="PRIMARY"
           size="SMALL"
-          text={index === totalQuestions - 1 ? "Finish" : "Next →"}
+          text={index === totalQuestions - 1 ? "Start Again" : "Next →"}
           onClick={onNext}
-          disabled={index === totalQuestions - 1}
-          aria-disabled={index === totalQuestions - 1}
-          className={`px-5 py-1.5 text-xs ${index === totalQuestions - 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+          className="px-5 py-1.5 text-xs"
         />
       </FlexContainer>
     </div>

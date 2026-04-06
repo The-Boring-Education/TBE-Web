@@ -51,7 +51,10 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
+      return;
     }
+
+    setCurrentIndex(0);
   };
 
   const handlePrev = () => {
