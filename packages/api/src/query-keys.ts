@@ -49,6 +49,8 @@ export const queryKeys = {
       limit?: number;
       topic?: string;
       userId?: string;
+      duration?: string;
+      offCampus?: boolean;
     }) => [...queryKeys.dsa.all, "questions", filters] as const,
     completedQuestions: (userId: string) =>
       [...queryKeys.dsa.all, "completed", userId] as const,

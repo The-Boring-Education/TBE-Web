@@ -1,4 +1,8 @@
-import { DSA_TOPICS, modelSelectParams } from "@/lib/constants";
+import {
+  DSA_TOPICS,
+  modelSelectParams,
+  TIMELINE_CONFIGS,
+} from "@/lib/constants";
 import type {
   AddInterviewQuestionRequestPayloadProps,
   AddInterviewSheetRequestPayloadProps,
@@ -689,6 +693,10 @@ interface DSASheetFilters {
   page?: number;
   limit?: number;
   userId?: string;
+  /** Duration key e.g. "3Months", "6Months", "1Year" — uses TIMELINE_CONFIGS to limit question counts per topic */
+  duration?: string;
+  /** Off-campus flag — if true, adds off-campus questions on top */
+  offCampus?: boolean;
 }
 
 const getAllDSAQuestionsFromDB = async (
@@ -703,6 +711,8 @@ const getAllDSAQuestionsFromDB = async (
       page = 1,
       limit = 50,
       userId,
+      duration,
+      offCampus,
     } = filters;
 
     // Build match stage for filtering
@@ -877,16 +887,57 @@ const getAllDSAQuestionsFromDB = async (
       );
     }
 
-    aggregate.push(
-      {
-        $sort: {
-          _priorityScore: -1,
-          _topicOrder: 1,
-          _difficultyOrder: 1,
-          order: 1,
-          createdAt: -1,
-        },
+    // Duration-based filtering: limit questions per topic using TIMELINE_CONFIGS
+    const timelineConfig = duration ? TIMELINE_CONFIGS[duration] : null;
+
+    aggregate.push({
+      $sort: {
+        _priorityScore: -1,
+        _topicOrder: 1,
+        _difficultyOrder: 1,
+        order: 1,
+        createdAt: -1,
       },
+    });
+
+    // Apply duration-based per-topic question limits after sorting but before pagination
+    if (timelineConfig) {
+      // For off-campus, expand the limit by 50% to include more challenging questions
+      const expandedLimits = offCampus
+        ? Object.fromEntries(
+            Object.entries(timelineConfig).map(([k, v]) => [
+              k,
+              Math.ceil(v.count * 1.5),
+            ]),
+          )
+        : null;
+
+      aggregate.push({
+        $addFields: {
+          _topicLimit: {
+            $switch: {
+              branches: Object.entries(expandedLimits || timelineConfig).map(
+                ([topic, count]) => ({
+                  case: { $eq: [{ $arrayElemAt: ["$topics", 0] }, topic] },
+                  then: count,
+                }),
+              ),
+              default: 9999,
+            },
+          },
+        },
+      });
+
+      // Keep only questions where order < _topicLimit for their primary topic
+      aggregate.push({
+        $match: {
+          $expr: { $lt: [{ $ifNull: ["$order", 0] }, "$_topicLimit"] },
+        },
+      });
+    }
+
+    // Paginate
+    aggregate.push(
       { $skip: (page - 1) * limit },
       { $limit: limit },
       {
@@ -894,6 +945,7 @@ const getAllDSAQuestionsFromDB = async (
           _topicOrder: 0,
           _difficultyOrder: 0,
           _priorityScore: 0,
+          _topicLimit: 0,
           userStatus: 0,
         },
       },
@@ -901,15 +953,20 @@ const getAllDSAQuestionsFromDB = async (
 
     const questions = await DSAQuestion.aggregate(aggregate);
 
+    // Total after duration filtering
+    const filteredTotal = timelineConfig
+      ? await DSAQuestion.countDocuments(matchStage)
+      : totalCount;
+
     return {
       data: {
         questions,
         pagination: {
-          total: totalCount,
+          total: filteredTotal,
           page,
           limit,
-          totalPages: Math.ceil(totalCount / limit),
-          hasMore: page * limit < totalCount,
+          totalPages: Math.ceil(filteredTotal / limit),
+          hasMore: page * limit < filteredTotal,
         },
       },
     };

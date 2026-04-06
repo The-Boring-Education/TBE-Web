@@ -65,6 +65,21 @@ const PrepYatraSchema = new Schema({
   },
 });
 
+const OncampusSchema = new Schema({
+  onboardingCompleted: {
+    type: Boolean,
+    default: false,
+  },
+  duration: {
+    type: String,
+    enum: ["1Month", "3Months", "6Months", "1Year"],
+  },
+  offCampus: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const DSAYatraSchema = new Schema({
   dyOnboarded: {
     type: Boolean,
@@ -172,6 +187,7 @@ const UserSchema: Schema<UserModel> = new Schema(
     },
     prepYatra: PrepYatraSchema,
     dsaYatra: DSAYatraSchema,
+    oncampus: OncampusSchema,
   },
   { timestamps: true },
 );

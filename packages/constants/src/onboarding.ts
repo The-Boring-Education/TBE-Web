@@ -137,22 +137,22 @@ export const DSA_GOALS = [
 
 export const DSA_TIMELINES = [
   {
-    value: "2-3 months",
-    label: "2-3 Months",
-    description: "Crash course / Refresher",
+    value: "3Months",
+    label: "3 Months",
+    description: "Quick interview prep",
     icon: "⚡",
   },
   {
-    value: "4-6 months",
-    label: "4-6 Months",
+    value: "6Months",
+    label: "6 Months",
     description: "Comprehensive preparation",
     icon: "🎯",
     popular: true,
   },
   {
-    value: "8-12 months",
-    label: "8-12 Months",
-    description: "Deep dive/Foundational",
+    value: "1Year",
+    label: "1 Year",
+    description: "Deep dive / Foundational",
     icon: "🌟",
   },
 ];

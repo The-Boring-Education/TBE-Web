@@ -94,6 +94,8 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     metadata,
     query,
     userId,
+    duration,
+    offCampus,
   } = req.query;
 
   if (query === "topics") {
@@ -129,6 +131,8 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     page: page ? parseInt(page as string) : 1,
     limit: limit ? parseInt(limit as string) : topic ? undefined : 50,
     userId: userId as string,
+    duration: duration as string,
+    offCampus: offCampus === "true",
   });
 
   if (error)

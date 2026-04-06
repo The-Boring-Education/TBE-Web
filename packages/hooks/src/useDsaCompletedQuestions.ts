@@ -31,6 +31,7 @@ interface UseDsaCompletedQuestionsReturn {
 
 const DEFAULT_STORAGE_KEY = "dsayatra_completed_questions";
 const DEFAULT_TODAY_STATS_KEY = "dsayatra_today_stats";
+const NOTES_STORAGE_KEY = "dsayatra_question_notes";
 
 function resolveArgs(
   optionsOrLegacyStorageKey?: UseDsaCompletedQuestionsOptions | string,
@@ -68,6 +69,20 @@ const useDsaCompletedQuestions = (
     (string | number)[]
   >([]);
   const [localSolvedToday, setLocalSolvedToday] = useState(0);
+  const [localNotes, setLocalNotes] = useState<Record<string, string>>({});
+
+  // Load notes from localStorage on mount (for non-authenticated users)
+  useEffect(() => {
+    if (userId) return;
+    try {
+      const saved = localStorage.getItem(NOTES_STORAGE_KEY);
+      if (saved) {
+        setLocalNotes(JSON.parse(saved));
+      }
+    } catch {
+      /* corrupted data */
+    }
+  }, [userId]);
 
   const remoteQuery = useQuery({
     queryKey: queryKeys.dsa.completedQuestions(userId ?? ""),
@@ -296,13 +311,43 @@ const useDsaCompletedQuestions = (
     [userId, remoteQuery.data, queryClient, storageKey, todayStatsKey],
   );
 
+  const saveNote = useCallback(
+    async (questionId: string | number, notes: string) => {
+      const qid = String(questionId);
+
+      // Always update localStorage first for immediate feedback/offline support
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem(NOTES_STORAGE_KEY);
+        const current = saved ? JSON.parse(saved) : {};
+        current[qid] = notes;
+        localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(current));
+        setLocalNotes((prev) => ({ ...prev, [qid]: notes }));
+      }
+
+      // If not authenticated, we're done (localStorage is the only storage)
+      if (!userId) return;
+
+      // For authenticated users, sync to the server
+      try {
+        await sendRequest({
+          url: `${routes.api.base}${routes.api.dsaQuestionNote}`,
+          method: "POST",
+          body: { userId, questionId: qid, notes },
+        });
+      } catch (error) {
+        console.error("Failed to sync note to server", error);
+      }
+    },
+    [userId],
+  );
+
   return {
     completedIds,
     toggleComplete,
     solvedToday,
     isProgressLoading,
-    localNotes: {},
-    saveNote: async () => {},
+    localNotes,
+    saveNote,
   };
 };
 
