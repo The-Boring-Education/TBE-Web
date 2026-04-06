@@ -3,7 +3,8 @@ import {
   FAQSection,
   LandingPageHero,
   LinkButton,
-  SEO,TailorYourJourney
+  SEO,
+  TailorYourJourney,
 } from "@tbe/components";
 import {
   DSA_YATRA_FEATURES,
@@ -42,7 +43,7 @@ const LandingPage = ({ seoMeta }: PageProps) => (
     />
 
     {/* Tailor Your DSA Journey Section */}
-    <TailorYourJourney/>
+    <TailorYourJourney />
 
     <div id="features">
       <CardContainerA
