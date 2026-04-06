@@ -74,19 +74,17 @@ const InterviewPrepDashboardPage = () => {
   const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
     if (!response?.data) return [];
 
-    return response.data
-      .filter((sheet: any) => sheet?.roadmap?.toLowerCase() !== "dsa")
-      .map((sheet: any) => {
-        const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
-        const isPurchased = purchaseStatuses[sheet._id] || false;
+    return response.data.map((sheet: any) => {
+      const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
+      const isPurchased = purchaseStatuses[sheet._id] || false;
 
-        return {
-          ...baseCard,
-          href: `/dashboard/interview-prep/${sheet.slug}`,
-          isPurchased: sheet.isPremium ? isPurchased : false,
-          isPremium: sheet.isPremium && !isPurchased,
-        };
-      });
+      return {
+        ...baseCard,
+        href: `/dashboard/interview-prep/${sheet.slug}`,
+        isPurchased: sheet.isPremium ? isPurchased : false,
+        isPremium: sheet.isPremium && !isPurchased,
+      };
+    });
   }, [response?.data, purchaseStatuses]);
 
   const groupedByRoadmap = useMemo(() => {
@@ -109,8 +107,6 @@ const InterviewPrepDashboardPage = () => {
         roadmap = "Database";
       }
 
-      if (roadmap.toLowerCase() === "dsa") return;
-
       if (!groups[roadmap]) groups[roadmap] = [];
       const card = sheets.find((c) => c.id === sheet._id);
       if (card) groups[roadmap].push(card);
@@ -121,7 +117,7 @@ const InterviewPrepDashboardPage = () => {
 
   const roadmapKeys = useMemo(() => {
     const keys = Object.keys(groupedByRoadmap).sort((a, b) => {
-      const order = ["Tech", "Frontend", "Database"];
+      const order = ["DSA", "Tech", "Frontend", "Database"];
       const indexA = order.indexOf(a);
       const indexB = order.indexOf(b);
       if (indexA !== -1 && indexB !== -1) return indexA - indexB;
