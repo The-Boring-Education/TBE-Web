@@ -2639,6 +2639,8 @@ const planTypeMap = {
   "1months": { type: "3Months" as const, duration: 1 },
   "3months": { type: "5Months" as const, duration: 3 },
   "6months": { type: "5Months" as const, duration: 6 },
+  /** 1 year — duration in months for subscription expiry */
+  "12months": { type: "5Months" as const, duration: 12 },
   lifetime: { type: "Lifetime" as const, duration: 999 },
 };
 

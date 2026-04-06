@@ -91,6 +91,24 @@ const PricingPage: React.FC = () => {
       ],
     },
     {
+      id: "12months",
+      name: "1 Year Access",
+      price: 1799,
+      duration: "12 months",
+      description: "A full year for deep preparation and revision",
+      buttonText: "Start 1-Year Plan",
+      features: [
+        "✅ Everything in 6-Month Plan",
+        "✅ Long-term roadmap and spaced revision",
+        "✅ Extended mocks and deep dives",
+        "✅ Priority support",
+      ],
+      comingSoon: [
+        "🔄 Auto Cold Email Generation",
+        "🔄 LinkedIn Progress Auto-posting",
+      ],
+    },
+    {
       id: "lifetime",
       name: "Lifetime Access",
       price: 1999,
