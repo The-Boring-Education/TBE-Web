@@ -25,13 +25,20 @@ const InterviewPrepDashboardPage = () => {
       : "all";
 
   const { data: response, isLoading: sheetsLoading } = useQuery<any>({
-    queryKey: queryKeys.interviewPrep.lists(),
+    // Keep this key distinct from "my sheets" queries to avoid cache collisions.
+    queryKey: queryKeys.interviewPrep.list({ roadmap: "all" }),
     queryFn: () =>
       sendRequest({
         url: `${routes.api.base}${routes.api.interviewPrep}`,
       }),
     ...CACHE_TIMES.STATIC,
   });
+  const sheetsData = useMemo(() => {
+    const payload = response?.data;
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.data)) return payload.data;
+    return [];
+  }, [response]);
 
   const [purchaseStatuses, setPurchaseStatuses] = useState<
     Record<string, boolean>
@@ -44,11 +51,11 @@ const InterviewPrepDashboardPage = () => {
   }, [userLoading, isAuth, router]);
 
   useEffect(() => {
-    if (response?.data && user?.id) {
+    if (sheetsData.length > 0 && user?.id) {
       const checkPurchaseStatuses = async () => {
         const statuses: Record<string, boolean> = {};
 
-        for (const sheet of response.data) {
+        for (const sheet of sheetsData) {
           if (sheet.isPremium) {
             try {
               const res = await fetch(
@@ -69,12 +76,11 @@ const InterviewPrepDashboardPage = () => {
 
       checkPurchaseStatuses();
     }
-  }, [response?.data, user?.id]);
+  }, [sheetsData, user?.id]);
 
   const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
-    if (!response?.data) return [];
-
-    return response.data.map((sheet: any) => {
+    if (!sheetsData.length) return [];
+    return sheetsData.map((sheet: any) => {
       const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
       const isPurchased = purchaseStatuses[sheet._id] || false;
 
@@ -85,16 +91,16 @@ const InterviewPrepDashboardPage = () => {
         isPremium: sheet.isPremium && !isPurchased,
       };
     });
-  }, [response?.data, purchaseStatuses]);
+  }, [sheetsData, purchaseStatuses]);
 
   const groupedByRoadmap = useMemo(() => {
     const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
 
-    (response?.data || []).forEach((sheet: any) => {
+    sheetsData.forEach((sheet: any) => {
       let roadmap = sheet?.roadmap || "Tech";
 
       // Auto-categorize Database related sheets
-      const title = sheet.title?.toLowerCase() || "";
+      const title = (sheet.name || sheet.title || "").toLowerCase();
       const slug = sheet.slug?.toLowerCase() || "";
       if (
         title.includes("database") ||
@@ -113,7 +119,7 @@ const InterviewPrepDashboardPage = () => {
     });
 
     return groups;
-  }, [response?.data, sheets]);
+  }, [sheetsData, sheets]);
 
   const roadmapKeys = useMemo(() => {
     const keys = Object.keys(groupedByRoadmap).sort((a, b) => {
