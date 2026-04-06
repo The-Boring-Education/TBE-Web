@@ -6,6 +6,7 @@ export { default as Gamification } from "./Gamification";
 export { default as Leaderboard } from "./Leaderboard";
 export { default as Notification } from "./Notification";
 export { default as Payment } from "./Payment";
+export { default as SubscriptionPlan } from "./SubscriptionPlan";
 export { default as User } from "./User";
 export { default as UserInterest } from "./UserInterest";
 export { default as Webinar } from "./Webinar";

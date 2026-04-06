@@ -15,6 +15,7 @@ export * from "./prepyatra";
 export * from "./project";
 export * from "./quiz";
 export * from "./shiksha";
+export * from "./subscription-plan";
 export * from "./unskilled";
 export * from "./user";
 export * from "./user-aptitude-topic";

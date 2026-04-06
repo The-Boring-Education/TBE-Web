@@ -2,12 +2,11 @@ import type { ProductType } from "@/lib/constants/database";
 import {
   getACourseFromDBById,
   getInterviewSheetByIDFromDB,
+  getSubscriptionPlanPriceFromDB,
   validateCouponForProductFromDB,
 } from "@/lib/database";
 import type { CouponModel, InterviewSheetModel } from "@/lib/interfaces";
 import { calculatePriceBreakdown } from "@tbe/utils";
-
-import { getSubscriptionPlanPrice } from "./subscriptionPlanCatalog";
 
 export interface ResolveOrderAmountParams {
   productType: ProductType;
@@ -157,11 +156,14 @@ export const resolveAuthoritativeOrderAmount = async ({
       case "PREPYATRA":
       case "DSA_YATRA":
       case "ONCAMPUS": {
-        const price = getSubscriptionPlanPrice(productType, productId);
+        const price = await getSubscriptionPlanPriceFromDB(
+          productType,
+          productId,
+        );
         if (price === null || price <= 0) {
           return {
             ok: false,
-            error: `Unknown or invalid plan for ${productType}: ${productId}`,
+            error: `Plan pricing not configured or inactive for ${productType} / ${productId}. Ask an admin to seed subscription plans.`,
           };
         }
         baseAmount = price;
