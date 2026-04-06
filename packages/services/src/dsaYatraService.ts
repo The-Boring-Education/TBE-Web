@@ -14,6 +14,7 @@ export interface DSAQuestionRaw {
   difficulty: string;
   companyTypes: string[];
   topics: string[];
+  isRealWorldProblem?: boolean;
   resources?: any;
   examples?: {
     _id?: string;

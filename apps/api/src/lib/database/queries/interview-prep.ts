@@ -1021,6 +1021,7 @@ const addDSAQuestionToDB = async (questionPayload: {
   order?: number;
   leetcodeLink?: string;
   youtubeSearchLink?: string;
+  isRealWorldProblem?: boolean;
 }): Promise<DatabaseQueryResponseType> => {
   try {
     // Auto-generate YouTube search link if not provided
@@ -1030,6 +1031,7 @@ const addDSAQuestionToDB = async (questionPayload: {
 
     const question = new DSAQuestion({
       ...questionPayload,
+      isRealWorldProblem: questionPayload.isRealWorldProblem ?? false,
       resources: {
         youtubeURL: youtubeSearchLink,
         leetcodeURL: questionPayload.leetcodeLink || null,
@@ -1248,6 +1250,9 @@ const getDSAQuestionsGroupedByTopic = async (
               isCompleted: "$isCompleted",
               isStarred: "$isStarred",
               _priorityScore: "$_priorityScore",
+              isRealWorldProblem: {
+                $ifNull: ["$isRealWorldProblem", false],
+              },
             },
           },
           count: { $sum: 1 },

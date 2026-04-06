@@ -984,7 +984,9 @@ export interface DSAQuestion {
   order?: number;
   leetcodeLink?: string;
   youtubeSearchLink?: string;
+  /** @deprecated Use `isRealWorldProblem` for API/DB alignment */
   isRealWorld?: boolean;
+  isRealWorldProblem?: boolean;
 }
 
 export interface DSAQuestionSidebarProps {

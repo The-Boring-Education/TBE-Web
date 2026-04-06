@@ -1,0 +1,1959 @@
+{
+  "description": "POST each object in `questions` to POST /api/v1/interview-prep/dsa-sheet (with auth). 5 questions per DSA topic; all flagged isRealWorldProblem. Regenerate via: node scripts/generate-realworld-dsa-questions-bank.mjs",
+  "generatedAt": "2026-04-06T13:41:32.963Z",
+  "topicCount": 26,
+  "questionsPerTopic": 5,
+  "totalQuestions": 130,
+  "questions": [
+    {
+      "title": "[Education] Array — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Array** (topic: **ARRAY**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **ARRAY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nStandard array techniques: iteration, prefix/suffix, two pointers, or divide-and-conquer as appropriate.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "ARRAY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Array — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Array** (topic: **ARRAY**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **ARRAY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nStandard array techniques: iteration, prefix/suffix, two pointers, or divide-and-conquer as appropriate.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "ARRAY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Array — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Array** (topic: **ARRAY**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **ARRAY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nStandard array techniques: iteration, prefix/suffix, two pointers, or divide-and-conquer as appropriate.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "ARRAY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Array — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Array** (topic: **ARRAY**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **ARRAY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nStandard array techniques: iteration, prefix/suffix, two pointers, or divide-and-conquer as appropriate.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "ARRAY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Array — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Array** (topic: **ARRAY**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **ARRAY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nStandard array techniques: iteration, prefix/suffix, two pointers, or divide-and-conquer as appropriate.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "ARRAY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] String — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **String** (topic: **STRING**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **STRING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nString processing: two pointers, hashing, rolling hash, or building from characters.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STRING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] String — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **String** (topic: **STRING**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **STRING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nString processing: two pointers, hashing, rolling hash, or building from characters.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STRING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] String — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **String** (topic: **STRING**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **STRING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nString processing: two pointers, hashing, rolling hash, or building from characters.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STRING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] String — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **String** (topic: **STRING**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **STRING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nString processing: two pointers, hashing, rolling hash, or building from characters.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STRING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] String — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **String** (topic: **STRING**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **STRING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nString processing: two pointers, hashing, rolling hash, or building from characters.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STRING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Hashmap — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Hashmap** (topic: **HASHMAP**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **HASHMAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a hash map (frequency, complement lookup, grouping, or deduplication).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HASHMAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Hashmap — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Hashmap** (topic: **HASHMAP**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **HASHMAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a hash map (frequency, complement lookup, grouping, or deduplication).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HASHMAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Hashmap — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Hashmap** (topic: **HASHMAP**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **HASHMAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a hash map (frequency, complement lookup, grouping, or deduplication).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HASHMAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Hashmap — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Hashmap** (topic: **HASHMAP**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **HASHMAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a hash map (frequency, complement lookup, grouping, or deduplication).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HASHMAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Hashmap — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Hashmap** (topic: **HASHMAP**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **HASHMAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a hash map (frequency, complement lookup, grouping, or deduplication).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HASHMAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Sliding Window — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Sliding Window** (topic: **SLIDING_WINDOW**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **SLIDING_WINDOW** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain a valid window with two pointers; optimize updates in amortized O(1) per step.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SLIDING_WINDOW"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Sliding Window — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Sliding Window** (topic: **SLIDING_WINDOW**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **SLIDING_WINDOW** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain a valid window with two pointers; optimize updates in amortized O(1) per step.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SLIDING_WINDOW"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Sliding Window — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Sliding Window** (topic: **SLIDING_WINDOW**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **SLIDING_WINDOW** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain a valid window with two pointers; optimize updates in amortized O(1) per step.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SLIDING_WINDOW"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Sliding Window — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Sliding Window** (topic: **SLIDING_WINDOW**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **SLIDING_WINDOW** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain a valid window with two pointers; optimize updates in amortized O(1) per step.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SLIDING_WINDOW"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Sliding Window — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Sliding Window** (topic: **SLIDING_WINDOW**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **SLIDING_WINDOW** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain a valid window with two pointers; optimize updates in amortized O(1) per step.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SLIDING_WINDOW"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Prefix Sum — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Prefix Sum** (topic: **PREFIX_SUM**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **PREFIX_SUM** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBuild prefix (and sometimes suffix) sums for O(1) range queries after O(n) preprocess.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "PREFIX_SUM"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Prefix Sum — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Prefix Sum** (topic: **PREFIX_SUM**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **PREFIX_SUM** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBuild prefix (and sometimes suffix) sums for O(1) range queries after O(n) preprocess.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "PREFIX_SUM"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Prefix Sum — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Prefix Sum** (topic: **PREFIX_SUM**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **PREFIX_SUM** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBuild prefix (and sometimes suffix) sums for O(1) range queries after O(n) preprocess.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "PREFIX_SUM"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Prefix Sum — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Prefix Sum** (topic: **PREFIX_SUM**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **PREFIX_SUM** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBuild prefix (and sometimes suffix) sums for O(1) range queries after O(n) preprocess.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "PREFIX_SUM"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Prefix Sum — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Prefix Sum** (topic: **PREFIX_SUM**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **PREFIX_SUM** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBuild prefix (and sometimes suffix) sums for O(1) range queries after O(n) preprocess.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "PREFIX_SUM"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Sorting — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Sorting** (topic: **SORTING**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **SORTING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nSort input or sort indices by keys; combine with binary search or greedy pairing.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SORTING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Sorting — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Sorting** (topic: **SORTING**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **SORTING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nSort input or sort indices by keys; combine with binary search or greedy pairing.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SORTING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Sorting — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Sorting** (topic: **SORTING**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **SORTING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nSort input or sort indices by keys; combine with binary search or greedy pairing.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SORTING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Sorting — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Sorting** (topic: **SORTING**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **SORTING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nSort input or sort indices by keys; combine with binary search or greedy pairing.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SORTING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Sorting — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Sorting** (topic: **SORTING**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **SORTING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nSort input or sort indices by keys; combine with binary search or greedy pairing.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SORTING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Binary Search — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Binary Search** (topic: **BINARY_SEARCH**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **BINARY_SEARCH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBinary search on sorted data or on the answer (monotonic predicate).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_SEARCH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Binary Search — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Binary Search** (topic: **BINARY_SEARCH**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **BINARY_SEARCH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBinary search on sorted data or on the answer (monotonic predicate).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_SEARCH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Binary Search — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Binary Search** (topic: **BINARY_SEARCH**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **BINARY_SEARCH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBinary search on sorted data or on the answer (monotonic predicate).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_SEARCH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Binary Search — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Binary Search** (topic: **BINARY_SEARCH**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **BINARY_SEARCH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBinary search on sorted data or on the answer (monotonic predicate).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_SEARCH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Binary Search — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Binary Search** (topic: **BINARY_SEARCH**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **BINARY_SEARCH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBinary search on sorted data or on the answer (monotonic predicate).\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_SEARCH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Math — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Math** (topic: **MATH**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **MATH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nNumber theory / arithmetic invariants; watch overflow and integer division rules.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MATH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Math — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Math** (topic: **MATH**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **MATH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nNumber theory / arithmetic invariants; watch overflow and integer division rules.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MATH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Math — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Math** (topic: **MATH**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **MATH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nNumber theory / arithmetic invariants; watch overflow and integer division rules.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MATH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Math — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Math** (topic: **MATH**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **MATH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nNumber theory / arithmetic invariants; watch overflow and integer division rules.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MATH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Math — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Math** (topic: **MATH**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **MATH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nNumber theory / arithmetic invariants; watch overflow and integer division rules.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MATH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Bit Manipulation — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Bit Manipulation** (topic: **BIT_MANIPULATION**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **BIT_MANIPULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse XOR, masks, bit counts, or powers of two tricks where they apply.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BIT_MANIPULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Bit Manipulation — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Bit Manipulation** (topic: **BIT_MANIPULATION**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **BIT_MANIPULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse XOR, masks, bit counts, or powers of two tricks where they apply.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BIT_MANIPULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Bit Manipulation — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Bit Manipulation** (topic: **BIT_MANIPULATION**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **BIT_MANIPULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse XOR, masks, bit counts, or powers of two tricks where they apply.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BIT_MANIPULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Bit Manipulation — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Bit Manipulation** (topic: **BIT_MANIPULATION**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **BIT_MANIPULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse XOR, masks, bit counts, or powers of two tricks where they apply.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BIT_MANIPULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Bit Manipulation — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Bit Manipulation** (topic: **BIT_MANIPULATION**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **BIT_MANIPULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse XOR, masks, bit counts, or powers of two tricks where they apply.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BIT_MANIPULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Recursion — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Recursion** (topic: **RECURSION**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **RECURSION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDefine recurrence; memoize or convert to iterative DP if needed.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "RECURSION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Recursion — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Recursion** (topic: **RECURSION**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **RECURSION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDefine recurrence; memoize or convert to iterative DP if needed.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "RECURSION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Recursion — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Recursion** (topic: **RECURSION**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **RECURSION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDefine recurrence; memoize or convert to iterative DP if needed.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "RECURSION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Recursion — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Recursion** (topic: **RECURSION**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **RECURSION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDefine recurrence; memoize or convert to iterative DP if needed.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "RECURSION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Recursion — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Recursion** (topic: **RECURSION**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **RECURSION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDefine recurrence; memoize or convert to iterative DP if needed.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "RECURSION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Linked List — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Linked List** (topic: **LINKED_LIST**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **LINKED_LIST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPointer rewiring; dummy node; fast/slow pointers for cycles or middle.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "LINKED_LIST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Linked List — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Linked List** (topic: **LINKED_LIST**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **LINKED_LIST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPointer rewiring; dummy node; fast/slow pointers for cycles or middle.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "LINKED_LIST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Linked List — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Linked List** (topic: **LINKED_LIST**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **LINKED_LIST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPointer rewiring; dummy node; fast/slow pointers for cycles or middle.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "LINKED_LIST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Linked List — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Linked List** (topic: **LINKED_LIST**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **LINKED_LIST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPointer rewiring; dummy node; fast/slow pointers for cycles or middle.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "LINKED_LIST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Linked List — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Linked List** (topic: **LINKED_LIST**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **LINKED_LIST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPointer rewiring; dummy node; fast/slow pointers for cycles or middle.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "LINKED_LIST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Stack — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Stack** (topic: **STACK**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nLIFO ordering for nesting, monotonic stack, or explicit DFS.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STACK"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Stack — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Stack** (topic: **STACK**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nLIFO ordering for nesting, monotonic stack, or explicit DFS.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STACK"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Stack — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Stack** (topic: **STACK**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nLIFO ordering for nesting, monotonic stack, or explicit DFS.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STACK"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Stack — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Stack** (topic: **STACK**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nLIFO ordering for nesting, monotonic stack, or explicit DFS.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STACK"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Stack — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Stack** (topic: **STACK**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nLIFO ordering for nesting, monotonic stack, or explicit DFS.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "STACK"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Queue — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Queue** (topic: **QUEUE**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **QUEUE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFIFO ordering; BFS layers; deque when both ends matter.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "QUEUE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Queue — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Queue** (topic: **QUEUE**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **QUEUE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFIFO ordering; BFS layers; deque when both ends matter.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "QUEUE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Queue — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Queue** (topic: **QUEUE**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **QUEUE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFIFO ordering; BFS layers; deque when both ends matter.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "QUEUE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Queue — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Queue** (topic: **QUEUE**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **QUEUE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFIFO ordering; BFS layers; deque when both ends matter.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "QUEUE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Queue — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Queue** (topic: **QUEUE**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **QUEUE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFIFO ordering; BFS layers; deque when both ends matter.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "QUEUE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Binary Tree — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Binary Tree** (topic: **BINARY_TREE**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **BINARY_TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nTree traversals, subtree properties, divide and conquer on children.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Binary Tree — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Binary Tree** (topic: **BINARY_TREE**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **BINARY_TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nTree traversals, subtree properties, divide and conquer on children.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Binary Tree — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Binary Tree** (topic: **BINARY_TREE**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **BINARY_TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nTree traversals, subtree properties, divide and conquer on children.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Binary Tree — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Binary Tree** (topic: **BINARY_TREE**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **BINARY_TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nTree traversals, subtree properties, divide and conquer on children.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Binary Tree — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Binary Tree** (topic: **BINARY_TREE**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **BINARY_TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nTree traversals, subtree properties, divide and conquer on children.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BINARY_TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Tree — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Tree** (topic: **TREE**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nGeneral trees: adjacency, DFS/BFS, parent pointers, or rerooting.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Tree — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Tree** (topic: **TREE**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nGeneral trees: adjacency, DFS/BFS, parent pointers, or rerooting.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Tree — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Tree** (topic: **TREE**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nGeneral trees: adjacency, DFS/BFS, parent pointers, or rerooting.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Tree — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Tree** (topic: **TREE**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nGeneral trees: adjacency, DFS/BFS, parent pointers, or rerooting.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Tree — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Tree** (topic: **TREE**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **TREE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nGeneral trees: adjacency, DFS/BFS, parent pointers, or rerooting.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TREE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Bst — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Bst** (topic: **BST**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **BST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBST ordering invariant; inorder successor/predecessor; balanced variants if stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Bst — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Bst** (topic: **BST**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **BST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBST ordering invariant; inorder successor/predecessor; balanced variants if stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Bst — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Bst** (topic: **BST**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **BST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBST ordering invariant; inorder successor/predecessor; balanced variants if stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Bst — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Bst** (topic: **BST**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **BST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBST ordering invariant; inorder successor/predecessor; balanced variants if stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Bst — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Bst** (topic: **BST**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **BST** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nBST ordering invariant; inorder successor/predecessor; balanced variants if stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BST"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Heap — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Heap** (topic: **HEAP**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **HEAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a min/max-heap or multiway merge for k-best / streaming order.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HEAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Heap — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Heap** (topic: **HEAP**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **HEAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a min/max-heap or multiway merge for k-best / streaming order.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HEAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Heap — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Heap** (topic: **HEAP**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **HEAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a min/max-heap or multiway merge for k-best / streaming order.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HEAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Heap — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Heap** (topic: **HEAP**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **HEAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a min/max-heap or multiway merge for k-best / streaming order.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HEAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Heap — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Heap** (topic: **HEAP**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **HEAP** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nUse a min/max-heap or multiway merge for k-best / streaming order.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "HEAP"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Trie — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Trie** (topic: **TRIE**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **TRIE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPrefix tree for strings; path compression; XOR trie if bitmask strings.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TRIE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Trie — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Trie** (topic: **TRIE**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **TRIE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPrefix tree for strings; path compression; XOR trie if bitmask strings.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TRIE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Trie — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Trie** (topic: **TRIE**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **TRIE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPrefix tree for strings; path compression; XOR trie if bitmask strings.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TRIE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Trie — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Trie** (topic: **TRIE**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **TRIE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPrefix tree for strings; path compression; XOR trie if bitmask strings.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TRIE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Trie — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Trie** (topic: **TRIE**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **TRIE** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nPrefix tree for strings; path compression; XOR trie if bitmask strings.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "TRIE"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Graph — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Graph** (topic: **GRAPH**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **GRAPH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nAdjacency list; BFS/DFS; shortest path or connectivity as stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GRAPH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Graph — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Graph** (topic: **GRAPH**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **GRAPH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nAdjacency list; BFS/DFS; shortest path or connectivity as stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GRAPH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Graph — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Graph** (topic: **GRAPH**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **GRAPH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nAdjacency list; BFS/DFS; shortest path or connectivity as stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GRAPH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Graph — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Graph** (topic: **GRAPH**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **GRAPH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nAdjacency list; BFS/DFS; shortest path or connectivity as stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GRAPH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Graph — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Graph** (topic: **GRAPH**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **GRAPH** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nAdjacency list; BFS/DFS; shortest path or connectivity as stated.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GRAPH"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Backtracking — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Backtracking** (topic: **BACKTRACKING**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **BACKTRACKING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nExplore choices with pruning; track state; avoid duplicate branches.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BACKTRACKING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Backtracking — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Backtracking** (topic: **BACKTRACKING**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **BACKTRACKING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nExplore choices with pruning; track state; avoid duplicate branches.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BACKTRACKING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Backtracking — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Backtracking** (topic: **BACKTRACKING**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **BACKTRACKING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nExplore choices with pruning; track state; avoid duplicate branches.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BACKTRACKING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Backtracking — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Backtracking** (topic: **BACKTRACKING**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **BACKTRACKING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nExplore choices with pruning; track state; avoid duplicate branches.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BACKTRACKING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Backtracking — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Backtracking** (topic: **BACKTRACKING**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **BACKTRACKING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nExplore choices with pruning; track state; avoid duplicate branches.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "BACKTRACKING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Dynamic Programming — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Dynamic Programming** (topic: **DYNAMIC_PROGRAMMING**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **DYNAMIC_PROGRAMMING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nOptimal substructure; define DP state; bottom-up or top-down memoization.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DYNAMIC_PROGRAMMING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Dynamic Programming — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Dynamic Programming** (topic: **DYNAMIC_PROGRAMMING**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **DYNAMIC_PROGRAMMING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nOptimal substructure; define DP state; bottom-up or top-down memoization.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DYNAMIC_PROGRAMMING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Dynamic Programming — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Dynamic Programming** (topic: **DYNAMIC_PROGRAMMING**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **DYNAMIC_PROGRAMMING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nOptimal substructure; define DP state; bottom-up or top-down memoization.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DYNAMIC_PROGRAMMING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Dynamic Programming — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Dynamic Programming** (topic: **DYNAMIC_PROGRAMMING**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **DYNAMIC_PROGRAMMING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nOptimal substructure; define DP state; bottom-up or top-down memoization.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DYNAMIC_PROGRAMMING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Dynamic Programming — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Dynamic Programming** (topic: **DYNAMIC_PROGRAMMING**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **DYNAMIC_PROGRAMMING** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nOptimal substructure; define DP state; bottom-up or top-down memoization.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DYNAMIC_PROGRAMMING"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Greedy — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Greedy** (topic: **GREEDY**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **GREEDY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nProve greedy choice property; sort by a key; exchange argument sketch.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GREEDY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Greedy — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Greedy** (topic: **GREEDY**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **GREEDY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nProve greedy choice property; sort by a key; exchange argument sketch.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GREEDY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Greedy — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Greedy** (topic: **GREEDY**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **GREEDY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nProve greedy choice property; sort by a key; exchange argument sketch.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GREEDY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Greedy — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Greedy** (topic: **GREEDY**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **GREEDY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nProve greedy choice property; sort by a key; exchange argument sketch.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GREEDY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Greedy — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Greedy** (topic: **GREEDY**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **GREEDY** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nProve greedy choice property; sort by a key; exchange argument sketch.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "GREEDY"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Union Find — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Union Find** (topic: **UNION_FIND**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **UNION_FIND** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDisjoint sets for connectivity; path compression + union by rank.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "UNION_FIND"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Union Find — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Union Find** (topic: **UNION_FIND**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **UNION_FIND** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDisjoint sets for connectivity; path compression + union by rank.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "UNION_FIND"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Union Find — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Union Find** (topic: **UNION_FIND**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **UNION_FIND** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDisjoint sets for connectivity; path compression + union by rank.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "UNION_FIND"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Union Find — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Union Find** (topic: **UNION_FIND**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **UNION_FIND** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDisjoint sets for connectivity; path compression + union by rank.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "UNION_FIND"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Union Find — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Union Find** (topic: **UNION_FIND**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **UNION_FIND** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nDisjoint sets for connectivity; path compression + union by rank.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "UNION_FIND"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Simulation — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Simulation** (topic: **SIMULATION**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **SIMULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFollow process rules stepwise; optimize with heaps/deques if naive is too slow.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SIMULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Simulation — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Simulation** (topic: **SIMULATION**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **SIMULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFollow process rules stepwise; optimize with heaps/deques if naive is too slow.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SIMULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Simulation — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Simulation** (topic: **SIMULATION**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **SIMULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFollow process rules stepwise; optimize with heaps/deques if naive is too slow.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SIMULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Simulation — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Simulation** (topic: **SIMULATION**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **SIMULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFollow process rules stepwise; optimize with heaps/deques if naive is too slow.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SIMULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Simulation — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Simulation** (topic: **SIMULATION**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **SIMULATION** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nFollow process rules stepwise; optimize with heaps/deques if naive is too slow.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "SIMULATION"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Design — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Design** (topic: **DESIGN**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **DESIGN** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nData structure composition (hash + heap + linked list); amortized analysis.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DESIGN"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Design — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Design** (topic: **DESIGN**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **DESIGN** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nData structure composition (hash + heap + linked list); amortized analysis.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DESIGN"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Design — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Design** (topic: **DESIGN**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **DESIGN** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nData structure composition (hash + heap + linked list); amortized analysis.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DESIGN"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Design — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Design** (topic: **DESIGN**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **DESIGN** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nData structure composition (hash + heap + linked list); amortized analysis.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DESIGN"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Design — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Design** (topic: **DESIGN**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **DESIGN** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nData structure composition (hash + heap + linked list); amortized analysis.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "DESIGN"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Education] Monotonic Stack — scenario 1",
+      "answer": "## Problem (Education)\n\nYou are building a feature whose core algorithm is **Monotonic Stack** (topic: **MONOTONIC_STACK**), set in a context involving: school boards, scholarships, attendance, and syllabus planning. Keep all entities fictional.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 1** for topic **MONOTONIC_STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain increasing/decreasing stack for next-greater / histogram problems.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MONOTONIC_STACK"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Healthcare] Monotonic Stack — scenario 2",
+      "answer": "## Problem (Healthcare)\n\nYou are building a feature whose core algorithm is **Monotonic Stack** (topic: **MONOTONIC_STACK**), set in a context involving: hospitals, triage, referrals, and public-health dashboards. No real patient data.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 2** for topic **MONOTONIC_STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain increasing/decreasing stack for next-greater / histogram problems.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MONOTONIC_STACK"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Civic governance] Monotonic Stack — scenario 3",
+      "answer": "## Problem (Civic governance)\n\nYou are building a feature whose core algorithm is **Monotonic Stack** (topic: **MONOTONIC_STACK**), set in a context involving: transparency portals, procurement audits, and service delivery metrics. Neutral framing.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 3** for topic **MONOTONIC_STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain increasing/decreasing stack for next-greater / histogram problems.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "HARD",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MONOTONIC_STACK"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Climate & infrastructure] Monotonic Stack — scenario 4",
+      "answer": "## Problem (Climate & infrastructure)\n\nYou are building a feature whose core algorithm is **Monotonic Stack** (topic: **MONOTONIC_STACK**), set in a context involving: power grids, water supply, transport, and disaster logistics. Use aggregate metrics only.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 4** for topic **MONOTONIC_STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain increasing/decreasing stack for next-greater / histogram problems.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "MEDIUM",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MONOTONIC_STACK"
+      ],
+      "isRealWorldProblem": true
+    },
+    {
+      "title": "[Financial inclusion] Monotonic Stack — scenario 5",
+      "answer": "## Problem (Financial inclusion)\n\nYou are building a feature whose core algorithm is **Monotonic Stack** (topic: **MONOTONIC_STACK**), set in a context involving: subsidies, payments, reconciliation, and fraud signals. No real account numbers.\n\nState **precise input/output**, **constraints** (use typical interview bounds, e.g. $n \\le 2 \\cdot 10^5$ unless a smaller domain is natural), and implement an **efficient** solution.\n\nThis item is **variant 5** for topic **MONOTONIC_STACK** — keep the story aligned with the theme but avoid real persons, parties, or identifiable institutions.\n\n## Approach\n\nMaintain increasing/decreasing stack for next-greater / histogram problems.\n\n## Verification\n\nBriefly note time/space complexity and one edge case (empty input, duplicates, overflow).",
+      "domain": [
+        "DSA"
+      ],
+      "difficulty": "EASY",
+      "companyTypes": [
+        "MNC"
+      ],
+      "topics": [
+        "MONOTONIC_STACK"
+      ],
+      "isRealWorldProblem": true
+    }
+  ]
+}

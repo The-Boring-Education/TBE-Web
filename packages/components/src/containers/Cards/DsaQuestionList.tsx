@@ -129,7 +129,9 @@ const DsaQuestionList = ({
                       isCompleted={isCompleted}
                       isRecommended={isRecommended}
                       hasNotes={hasNotes}
-                      isRealWorld={(question as any).isRealWorld}
+                      isRealWorld={Boolean(
+                        question.isRealWorld ?? question.isRealWorldProblem,
+                      )}
                       topics={question.topics}
                       companyTypes={question.companyType}
                       userTargetCompanies={userTargetCompanies}

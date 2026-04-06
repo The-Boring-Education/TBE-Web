@@ -186,7 +186,7 @@ const QuestionDetailPanel = ({
               </Text>
             </div>
             <div className="flex items-center gap-2">
-              {(question as any).isRealWorld && (
+              {(question.isRealWorld || question.isRealWorldProblem) && (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 bg-blue-950/30 text-blue-400 border-blue-900/50 uppercase">
                   Real World
                 </span>

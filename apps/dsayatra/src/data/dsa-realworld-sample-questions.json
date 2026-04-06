@@ -1,33 +1,4 @@
 {
-  "description": "Two POST-ready DSA Yatra payloads: (1) education finance + prefix sums, (2) healthcare referral network + BFS. For follow-ups: politics/civic ‘merge K sorted disclosure streams’ → HEAP+SORTING; corruption/oversight ‘first duplicate case ref in a log’ → HASHMAP+ARRAY.",
-  "schemaReference": {
-    "mongooseModel": "apps/api/src/lib/database/models/InterviewPrep/DSAQuestion.ts",
-    "createRoute": "POST /api/v1/interview-prep/dsa-sheet",
-    "handler": "apps/api/src/pages/api/v1/interview-prep/dsa-sheet/index.ts",
-    "requiredFields": ["title", "answer", "domain", "difficulty", "companyTypes", "topics"],
-    "enums": {
-      "domain": ["FRONTEND", "BACKEND", "GENERAL", "FULLSTACK", "DSA"],
-      "difficulty": ["EASY", "MEDIUM", "HARD"],
-      "companyTypes": ["Startup", "MidSize", "MNC", "FAANG", "GOOGLE", "MICROSOFT", "META", "AMAZON", "AIRBNB", "UBER"],
-      "topics": "Full list: DSA_TOPICS in apps/api/src/lib/constants/api.ts"
-    }
-  },
-  "questions": [
-    {
-      "title": "[Education] Block grant running totals (prefix sums)",
-      "answer": "## Problem\nA state education department tracks **monthly approved block-grant outflows** (in lakh rupees) for a single district, in chronological order. The array `grant[0..n-1]` is 0-indexed.\n\nAuditors run **q** queries: *What was the total outflow from month `L` through month `R` (inclusive)?*\n\n## Input\n- `grant`: integer array of length `n` (values may be negative if adjustments claw back funds)\n- `queries`: array of pairs `[L, R]` with `0 <= L <= R < n`\n\n## Output\n- Array of `q` integers — one total per query.\n\n## Constraints\n- `1 <= n, q <= 2 * 10^5`\n- `|grant[i]| <= 10^6`\n\n## Approach\n- Build prefix sums `P` with `P[0]=grant[0]`, `P[i]=P[i-1]+grant[i]`.\n- Range sum `[L,R]` = `P[R] - (L>0 ? P[L-1] : 0)`.\n- **Topics**: ARRAY, PREFIX_SUM.\n- Neutral framing: public finance for schools; no real persons or parties.",
-      "domain": ["DSA"],
-      "difficulty": "MEDIUM",
-      "companyTypes": ["MNC"],
-      "topics": ["ARRAY", "PREFIX_SUM"]
-    },
-    {
-      "title": "[Healthcare] Minimum ambulance hops on a referral network (BFS)",
-      "answer": "## Problem\nA state maps **primary health centers (PHCs)** and hospitals as nodes in an **undirected** referral network. An edge `{u,v}` means ambulances may transfer patients between `u` and `v` in one hop.\n\nGiven `start` and `target` nodes, return the **minimum number of hops** to move a patient from `start` to `target`. If impossible, return `-1`.\n\n## Input\n- `n`: nodes labeled `0..n-1`\n- `edges`: list of undirected edges `[u,v]`\n- `start`, `target`: integers in `[0, n-1]`\n\n## Output\n- Integer: shortest path length in edges, or `-1`.\n\n## Constraints\n- `1 <= n <= 2 * 10^5`\n- `0 <= edges.length <= min(2*10^5, n*(n-1)/2)`\n\n## Approach\n- Unweighted shortest path on an undirected graph → **BFS** from `start`.\n- Adjacency list + queue; visited set; level = hop count.\n- **Topics**: GRAPH, QUEUE.\n- Neutral framing: rural–tertiary referral; no real facility or patient data.",
-      "domain": ["DSA"],
-      "difficulty": "MEDIUM",
-      "companyTypes": ["MNC"],
-      "topics": ["GRAPH", "QUEUE"]
-    }
-  ]
+  "description": "The full seed bank (5 questions × each DSA topic) lives in `realworld-dsa-questions-bank.json`. Regenerate with `node scripts/generate-realworld-dsa-questions-bank.mjs`.",
+  "bankFile": "realworld-dsa-questions-bank.json"
 }

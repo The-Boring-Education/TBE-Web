@@ -39,6 +39,7 @@ const handleCreateQuestion = async (
     companyTypes,
     topics,
     sections,
+    isRealWorldProblem,
   } = req.body;
 
   const questionAnswer = answer || content;
@@ -66,6 +67,7 @@ const handleCreateQuestion = async (
     companyTypes: Array.isArray(companyTypes) ? companyTypes : [companyTypes],
     topics: Array.isArray(topics) ? topics : [topics],
     ...(sections && { sections }),
+    ...(typeof isRealWorldProblem === "boolean" && { isRealWorldProblem }),
   });
 
   if (error) {

@@ -43,6 +43,11 @@ export default function QuestionDetails({
             {tag}
           </span>
         ))}
+        {(question.isRealWorld || question.isRealWorldProblem) && (
+          <span className="bg-blue-950/40 text-blue-400 px-3 py-1 text-xs rounded-full border border-blue-900/50">
+            Real world
+          </span>
+        )}
       </div>
 
       <p className="text-zinc-300 leading-relaxed">{question.description}</p>

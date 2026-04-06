@@ -47,6 +47,11 @@ export default function QuestionSidebar({
                 {tag}
               </span>
             ))}
+            {(question.isRealWorld || question.isRealWorldProblem) && (
+              <span className="text-xs bg-blue-950/50 text-blue-400 px-2 py-0.5 rounded-full border border-blue-900/40">
+                Real world
+              </span>
+            )}
           </div>
         </div>
       ))}
