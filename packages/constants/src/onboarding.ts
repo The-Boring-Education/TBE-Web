@@ -137,6 +137,12 @@ export const DSA_GOALS = [
 
 export const DSA_TIMELINES = [
   {
+    value: "1Month",
+    label: "1 Month",
+    description: "Last-minute prep",
+    icon: "🚀",
+  },
+  {
     value: "3Months",
     label: "3 Months",
     description: "Quick interview prep",

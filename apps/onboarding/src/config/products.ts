@@ -299,6 +299,49 @@ export const PRODUCT_CONFIGS: Record<string, OnboardingProductConfig> = {
     },
   },
 
+  oncampus: {
+    id: "oncampus",
+    name: "OnCampus",
+    description: "Campus placement preparation onboarding",
+    fields: [
+      createField(
+        "duration",
+        "When will your On Campus Placements will start?",
+        "select",
+        1,
+        {
+          options: ["1 Month", "3 Months", "6 Months", "1 Year"],
+        },
+      ),
+      createField(
+        "offCampus",
+        "Are you also going to apply Off Campus Jobs?",
+        "select",
+        2,
+        {
+          options: ["Yes", "No"],
+        },
+      ),
+    ],
+    api: {
+      endpoint: () => `${config.API_BASE_URL}/user/oncampus/onboarding`,
+      method: "POST",
+      transformPayload: (form: any, userId: string, from?: string) => ({
+        userId,
+        duration: (form.duration as string).replace(/\s+/g, ""),
+        offCampus: form.offCampus === "Yes",
+        ...(from ? { from } : {}),
+      }),
+    },
+    ui: {
+      theme: "default",
+      branding: {
+        title: "Welcome to OnCampus!",
+        subtitle: "Let's personalize your campus placement prep",
+      },
+    },
+  },
+
   quizapp: {
     id: "quizapp",
     name: "Quiz App",

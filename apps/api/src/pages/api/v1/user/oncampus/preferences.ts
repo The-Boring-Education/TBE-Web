@@ -18,7 +18,7 @@ export default async function handler(
       }
 
       const user = await User.findById(toObjectId(userId))
-        .select("oncampusPreferences")
+        .select("oncampus")
         .lean();
 
       if (!user) {
