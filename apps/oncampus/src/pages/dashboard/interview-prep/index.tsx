@@ -1,7 +1,6 @@
 import {
   CardContainerB,
   FlexContainer,
-  LearningEnvironmentLayout,
   LoadingSpinner,
   Text,
 } from "@tbe/components";
@@ -14,6 +13,8 @@ import { ArrowLeft, Folder, FolderOpen } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
+
 const InterviewPrepDashboardPage = () => {
   const router = useRouter();
   const { user, loading: userLoading, isAuth } = useUser();
@@ -24,13 +25,20 @@ const InterviewPrepDashboardPage = () => {
       : "all";
 
   const { data: response, isLoading: sheetsLoading } = useQuery<any>({
-    queryKey: queryKeys.interviewPrep.lists(),
+    // Keep this key distinct from "my sheets" queries to avoid cache collisions.
+    queryKey: queryKeys.interviewPrep.list({ roadmap: "all" }),
     queryFn: () =>
       sendRequest({
         url: `${routes.api.base}${routes.api.interviewPrep}`,
       }),
     ...CACHE_TIMES.STATIC,
   });
+  const sheetsData = useMemo(() => {
+    const payload = response?.data;
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.data)) return payload.data;
+    return [];
+  }, [response]);
 
   const [purchaseStatuses, setPurchaseStatuses] = useState<
     Record<string, boolean>
@@ -43,11 +51,11 @@ const InterviewPrepDashboardPage = () => {
   }, [userLoading, isAuth, router]);
 
   useEffect(() => {
-    if (response?.data && user?.id) {
+    if (sheetsData.length > 0 && user?.id) {
       const checkPurchaseStatuses = async () => {
         const statuses: Record<string, boolean> = {};
 
-        for (const sheet of response.data) {
+        for (const sheet of sheetsData) {
           if (sheet.isPremium) {
             try {
               const res = await fetch(
@@ -68,34 +76,31 @@ const InterviewPrepDashboardPage = () => {
 
       checkPurchaseStatuses();
     }
-  }, [response?.data, user?.id]);
+  }, [sheetsData, user?.id]);
 
   const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
-    if (!response?.data) return [];
+    if (!sheetsData.length) return [];
+    return sheetsData.map((sheet: any) => {
+      const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
+      const isPurchased = purchaseStatuses[sheet._id] || false;
 
-    return response.data
-      .filter((sheet: any) => sheet?.roadmap?.toLowerCase() !== "dsa")
-      .map((sheet: any) => {
-        const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
-        const isPurchased = purchaseStatuses[sheet._id] || false;
-
-        return {
-          ...baseCard,
-          href: `/dashboard/interview-prep/${sheet.slug}`,
-          isPurchased: sheet.isPremium ? isPurchased : false,
-          isPremium: sheet.isPremium && !isPurchased,
-        };
-      });
-  }, [response?.data, purchaseStatuses]);
+      return {
+        ...baseCard,
+        href: `/dashboard/interview-prep/${sheet.slug}`,
+        isPurchased: sheet.isPremium ? isPurchased : false,
+        isPremium: sheet.isPremium && !isPurchased,
+      };
+    });
+  }, [sheetsData, purchaseStatuses]);
 
   const groupedByRoadmap = useMemo(() => {
     const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
 
-    (response?.data || []).forEach((sheet: any) => {
+    sheetsData.forEach((sheet: any) => {
       let roadmap = sheet?.roadmap || "Tech";
 
       // Auto-categorize Database related sheets
-      const title = sheet.title?.toLowerCase() || "";
+      const title = (sheet.name || sheet.title || "").toLowerCase();
       const slug = sheet.slug?.toLowerCase() || "";
       if (
         title.includes("database") ||
@@ -108,19 +113,17 @@ const InterviewPrepDashboardPage = () => {
         roadmap = "Database";
       }
 
-      if (roadmap.toLowerCase() === "dsa") return;
-
       if (!groups[roadmap]) groups[roadmap] = [];
       const card = sheets.find((c) => c.id === sheet._id);
       if (card) groups[roadmap].push(card);
     });
 
     return groups;
-  }, [response?.data, sheets]);
+  }, [sheetsData, sheets]);
 
   const roadmapKeys = useMemo(() => {
     const keys = Object.keys(groupedByRoadmap).sort((a, b) => {
-      const order = ["Tech", "Frontend", "Database"];
+      const order = ["DSA", "Tech", "Frontend", "Database"];
       const indexA = order.indexOf(a);
       const indexB = order.indexOf(b);
       if (indexA !== -1 && indexB !== -1) return indexA - indexB;
@@ -162,7 +165,7 @@ const InterviewPrepDashboardPage = () => {
 
   if (overallLoading) {
     return (
-      <LearningEnvironmentLayout
+      <OnCampusLearningLayout
         backHref={routes.oncampus.dashboard}
         layoutMode="workspace"
         isLoading
@@ -173,14 +176,14 @@ const InterviewPrepDashboardPage = () => {
             Loading...
           </Text>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   const hasSheets = sheets.length > 0;
 
   return (
-    <LearningEnvironmentLayout
+    <OnCampusLearningLayout
       backHref={routes.oncampus.dashboard}
       layoutMode="workspace"
     >
@@ -357,7 +360,7 @@ const InterviewPrepDashboardPage = () => {
           </div>
         </FlexContainer>
       </div>
-    </LearningEnvironmentLayout>
+    </OnCampusLearningLayout>
   );
 };
 
