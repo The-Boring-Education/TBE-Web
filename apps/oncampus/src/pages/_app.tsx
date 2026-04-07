@@ -18,6 +18,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import DashboardLayout from "@/components/DashboardLayout";
+import { OnboardingCheck } from "@/components/OnboardingCheck";
 
 const AppContent = ({
   Component,
@@ -98,6 +99,7 @@ const OnCampusApp = ({ Component, pageProps }: AppProps) => {
         <title>OnCampus</title>
       </Head>
       <AuthProvider>
+        <OnboardingCheck />
         <AppContent Component={Component} pageProps={pageProps} />
         <Toaster position="top-center" richColors />
       </AuthProvider>
