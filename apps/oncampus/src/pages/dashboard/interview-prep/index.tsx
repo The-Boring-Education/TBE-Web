@@ -352,6 +352,7 @@ const InterviewPrepDashboardPage = () => {
                       heading=""
                       sectionClassName="px-0 py-0"
                       subtext=""
+                      theme="dark"
                     />
                   </section>
                 ))}

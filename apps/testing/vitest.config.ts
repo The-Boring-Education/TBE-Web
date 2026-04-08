@@ -81,10 +81,6 @@ export default defineConfig({
       "@tbe/query": path.resolve(__dirname, "../../packages/api/src"),
       "@tbe/services": path.resolve(__dirname, "../../packages/services/src"),
       "@tbe/auth": path.resolve(__dirname, "../../packages/auth/src"),
-      "@tbe/gamification": path.resolve(
-        __dirname,
-        "../../packages/gamification/src/index.ts",
-      ),
       "@tbe/config/quizes": path.resolve(
         __dirname,
         "../../packages/config/src/quizes.ts",
