@@ -1,6 +1,8 @@
 import {
-  CardContainerB,
   FlexContainer,
+  GradientContainer,
+  Image,
+  LinkButton,
   LoadingSpinner,
   Text,
 } from "@tbe/components";
@@ -14,6 +16,79 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
+
+// ---------------------------------------------------------------------------
+// DarkInterviewSheetCard
+// Follows the Open/Closed Principle: extends card rendering for the dark
+// dashboard theme WITHOUT modifying the shared PrimaryCardWithCTA definition.
+// ---------------------------------------------------------------------------
+const DarkInterviewSheetCard = ({
+  image,
+  imageAltText,
+  title,
+  href,
+  content,
+  active,
+  ctaText,
+  borderColour = 2,
+  target,
+  launchingOn,
+  isPremium,
+  isPurchased,
+}: PrimaryCardWithCTAProps) => (
+  <GradientContainer
+    theme="dark"
+    backgroundColor="bg-[#111111]"
+    childrenClassName="p-3 h-full flex flex-col relative"
+    className={`md:w-[45%] lg:w-[30%] max-w-md border-gray-800 flex-1 cursor-pointer
+      hover:border-red-500/40 hover:shadow-[0_0_20px_rgba(239,68,68,0.08)] transition-all duration-300`}
+  >
+    {isPurchased ? (
+      <div className="absolute top-3 right-3 bg-green-900/60 text-green-300 text-[11px] font-medium px-3 py-[3px] rounded-full border border-green-700/60 shadow-sm z-10">
+        ✅ Purchased
+      </div>
+    ) : isPremium ? (
+      <div className="absolute top-3 right-3 bg-yellow-900/40 text-yellow-300 text-[11px] font-medium px-3 py-[3px] rounded-full border border-yellow-700/50 shadow-sm z-10">
+        🔒 Premium
+      </div>
+    ) : null}
+
+    {image && (
+      <Image
+        alt={imageAltText}
+        className="m-auto w-4/5 rounded-lg object-cover"
+        src={`${image}`}
+      />
+    )}
+
+    <div className="mt-3 flex flex-col flex-1">
+      <Text className="heading-5 truncate text-white font-semibold" level="h5">
+        {title}
+      </Text>
+      <Text className="pre-title mt-1 text-gray-400 line-clamp-1" level="p">
+        {content}
+      </Text>
+      {launchingOn && (
+        <Text className="pre-title mt-1 text-primary" level="p">
+          {launchingOn}
+        </Text>
+      )}
+      <LinkButton
+        active={active}
+        buttonProps={{
+          variant: "PRIMARY",
+          text: active && ctaText ? ctaText : "View Sheet",
+          active,
+          className: "w-full",
+        }}
+        className="mt-3 block"
+        href={href}
+        target={target}
+        noLoader
+      />
+    </div>
+  </GradientContainer>
+);
 
 const InterviewPrepDashboardPage = () => {
   const router = useRouter();
@@ -345,14 +420,17 @@ const InterviewPrepDashboardPage = () => {
                       <div className="h-px bg-gray-800 flex-1" />
                     </div>
 
-                    <CardContainerB
-                      borderColour={2}
-                      cards={cards}
-                      focusText={`${cards.length} Sheet${cards.length > 1 ? "s" : ""} Available`}
-                      heading=""
-                      sectionClassName="px-0 py-0"
-                      subtext=""
-                    />
+                    {/* Dark-themed card grid — uses DarkInterviewSheetCard (local extension)
+                        so the shared CardContainerB/PrimaryCardWithCTA remain untouched. */}
+                    <div className="flex flex-wrap gap-4 w-full">
+                      {cards.map((card) => (
+                        <DarkInterviewSheetCard
+                          key={card.id}
+                          {...card}
+                          borderColour={2}
+                        />
+                      ))}
+                    </div>
                   </section>
                 ))}
               </div>
