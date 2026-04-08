@@ -240,7 +240,7 @@ const getUserSegments = async (
               as: "payment",
               in: {
                 $cond: [
-                  { $eq: ["$$payment.isPaid", true] },
+                  { $eq: ["$$payment.status", "SUCCESS"] },
                   "$$payment.amount",
                   0,
                 ],
@@ -810,7 +810,7 @@ const getFilteredUsers = async (
 
   // Add segment-specific filters
   if (segment === "premium") {
-    const premiumUsers = await Payment.distinct("user", { isPaid: true });
+    const premiumUsers = await Payment.distinct("user", { status: "SUCCESS" });
     matchCriteria._id = { $in: premiumUsers };
   } else if (segment === "onboarded") {
     matchCriteria.isOnboarded = true;
@@ -843,7 +843,7 @@ const getFilteredUsers = async (
           UserProject.countDocuments({ userId: user._id }),
           UserSheet.countDocuments({ userId: user._id }),
           Payment.aggregate([
-            { $match: { user: user._id, isPaid: true } },
+            { $match: { user: user._id, status: "SUCCESS" } },
             { $group: { _id: null, total: { $sum: "$amount" } } },
           ]),
         ]);

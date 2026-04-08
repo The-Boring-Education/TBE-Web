@@ -4,6 +4,15 @@ import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import { sendRequest, transformDsaQuestion } from "@tbe/utils";
 import { useMemo } from "react";
 
+import useUser from "./useUser";
+
+interface UseDsaQuestionsForTopicOptions {
+  /** Duration key e.g. "3Months", "6Months", "1Year" */
+  duration?: string;
+  /** Off-campus flag — if true, adds off-campus questions on top */
+  offCampus?: boolean;
+}
+
 interface UseDsaQuestionsForTopicReturn {
   questions: DsaQuestion[];
   rawQuestions: unknown[];
@@ -16,17 +25,25 @@ interface UseDsaQuestionsForTopicReturn {
  */
 export const useDsaQuestionsForTopic = (
   topic: string | null,
+  options: UseDsaQuestionsForTopicOptions = {},
 ): UseDsaQuestionsForTopicReturn => {
+  const { user } = useUser();
+  const userId = user?.id;
+  const { duration, offCampus } = options;
+
   const { data: response, isLoading } = useQuery({
     queryKey: queryKeys.dsa.questions({
       topic: topic ?? "",
+      userId,
+      duration,
+      offCampus,
     }),
     queryFn: () =>
       sendRequest({
-        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}`,
+        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}`,
         method: "GET",
       }),
-    enabled: !!topic,
+    enabled: !!topic && !!userId,
     ...CACHE_TIMES.STABLE,
   });
 

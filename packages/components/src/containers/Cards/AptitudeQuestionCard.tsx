@@ -1,9 +1,11 @@
 import "katex/dist/katex.min.css";
 
 import { Button, FlexContainer } from "@tbe/components";
+import { routes } from "@tbe/constants";
 import type { AptitudeQuestion } from "@tbe/interface";
+import { sendRequest } from "@tbe/utils";
 import markdownit from "markdown-it";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   normalizeLatexDelimiters,
@@ -19,6 +21,10 @@ export interface AptitudeQuestionCardProps {
   totalQuestions: number;
   onNext: () => void;
   onPrev: () => void;
+  /** Topic slug (e.g. aptitude API `topic` param); required with userId to persist progress. */
+  topicSlug?: string;
+  userId?: string;
+  onProgressSaved?: () => void;
 }
 
 export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
@@ -27,16 +33,61 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
   totalQuestions,
   onNext,
   onPrev,
+  topicSlug,
+  userId,
+  onProgressSaved,
 }) => {
+  const correctOptionIndex = question.options.findIndex((o) => o.isCorrect);
+
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(
-    null,
+    () =>
+      question.isCompleted && correctOptionIndex >= 0
+        ? correctOptionIndex
+        : null,
   );
 
-  const handleOptionSelect = (optIndex: number) => {
+  useEffect(() => {
+    if (question.isCompleted && correctOptionIndex >= 0) {
+      setSelectedOptionIndex(correctOptionIndex);
+    } else {
+      setSelectedOptionIndex(null);
+    }
+  }, [question._id, question.isCompleted, correctOptionIndex]);
+
+  const handleOptionSelect = async (optIndex: number) => {
     setSelectedOptionIndex(optIndex);
+
+    const opt = question.options[optIndex];
+    const shouldPersist =
+      opt?.isCorrect &&
+      userId &&
+      topicSlug &&
+      question._id &&
+      !question.isCompleted;
+
+    if (!shouldPersist) return;
+
+    try {
+      const response = await sendRequest({
+        method: "PATCH",
+        url: routes.api.markAptitudeQuestionProgress,
+        body: {
+          userId,
+          topicSlug,
+          questionId: question._id,
+          isCompleted: true,
+        },
+      });
+      if (response?.status) {
+        onProgressSaved?.();
+      }
+    } catch {
+      // non-blocking; local UI still shows attempt
+    }
   };
 
-  const isAnswered = selectedOptionIndex !== null;
+  const isAnswered =
+    selectedOptionIndex !== null || Boolean(question.isCompleted);
   const isCorrectlyAnswered =
     selectedOptionIndex !== null &&
     question.options[selectedOptionIndex]?.isCorrect;

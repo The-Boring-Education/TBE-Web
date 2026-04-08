@@ -104,7 +104,7 @@ export type NotificationType =
   | "RESUME YATRA"
   | "TOOLS";
 
-export type SubscriptionType = "FREE" | "BASIC" | "PREMIUM" | "ENTERPRISE";
+export type SubscriptionType = "3Months" | "5Months" | "Lifetime";
 
 export type InterestEventType =
   | "COURSE_VIEW"
@@ -277,6 +277,9 @@ const UserPointsActionType = [
   "COMPLETE_QUIZ",
   "QUIZ_PERFECT_SCORE",
   "QUIZ_STREAK",
+  "COMPLETE_DSA_QUESTION",
+  "COMPLETE_DSA_TOPIC",
+  "COMPLETE_APTITUDE_QUESTION",
 ] as const;
 
 export type UserPointsActionType = (typeof UserPointsActionType)[number];

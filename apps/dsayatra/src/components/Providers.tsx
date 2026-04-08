@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthProvider } from "@tbe/auth";
+import { GamificationProvider } from "@tbe/gamification";
 import { TBEQueryProvider } from "@tbe/query";
 import { Toaster as Sonner } from "@ui/sonner";
 import { Toaster } from "@ui/toaster";
@@ -13,7 +14,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          {children}
+          <GamificationProvider>{children}</GamificationProvider>
         </TooltipProvider>
       </TBEQueryProvider>
     </AuthProvider>

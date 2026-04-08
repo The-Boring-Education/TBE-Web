@@ -15,6 +15,7 @@ const nextConfig = {
     "@tbe/types",
     "@tbe/services",
     "@tbe/interface",
+    "@tbe/gamification",
   ],
 
   // Page extensions

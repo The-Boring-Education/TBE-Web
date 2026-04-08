@@ -15,6 +15,7 @@ const nextConfig = {
     "@tbe/hooks",
     "@tbe/interface",
     "@tbe/config",
+    "@tbe/gamification",
   ],
   experimental: {
     // Use 'loose' mode to handle mixed ESM/CJS packages

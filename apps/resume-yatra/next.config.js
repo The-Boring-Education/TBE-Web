@@ -16,6 +16,7 @@ const nextConfig = {
     "@tbe/interface",
     "@tbe/services",
     "@tbe/types",
+    "@tbe/gamification",
   ],
 
   // Disable ESLint during Next.js build (we run it separately in package.json)

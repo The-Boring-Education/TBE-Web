@@ -17,6 +17,7 @@ export * from "./quiz";
 export * from "./shiksha";
 export * from "./unskilled";
 export * from "./user";
+export * from "./user-aptitude-topic";
 export * from "./userInterest";
 export * from "./webinar";
 export * from "./youfocus";

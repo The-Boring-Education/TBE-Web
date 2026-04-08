@@ -2,6 +2,17 @@ import { renderHookWithQuery } from "@test-utils/query-wrapper";
 import { waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+/** useDsaQuestions only fetches when userId is set (enabled: !!userId). */
+vi.mock("../../../../../packages/hooks/src/useUser.ts", () => ({
+  default: () => ({
+    user: { id: "test-user", isOnboarded: true },
+    isAuth: true,
+    loading: false,
+    isOnboarded: true,
+    updateSession: vi.fn(),
+  }),
+}));
+
 vi.mock("@tbe/utils", () => ({
   sendRequest: vi.fn(),
   transformDsaQuestion: vi.fn((q: any) => ({

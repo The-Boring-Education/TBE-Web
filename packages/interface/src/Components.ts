@@ -108,6 +108,7 @@ export interface SectionHeaderProps {
   className?: string;
   flexContainerProps?: FlexContainerProps;
   subtext?: string;
+  theme?: "light" | "dark";
 }
 
 export interface CardSectionContainerProps {
@@ -122,6 +123,9 @@ export interface GradientContainerProps {
   className?: string;
   backgroundColor?: string;
   childrenClassName?: string;
+  theme?: "light" | "dark";
+  /** When true, default hover scale on the container is not applied (e.g. dark cards use translate instead). */
+  suppressHoverScale?: boolean;
 }
 
 export interface PrimaryCardProps {
@@ -131,6 +135,7 @@ export interface PrimaryCardProps {
   title: string;
   content: string;
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
+  theme?: "light" | "dark";
 }
 
 export interface PortfolioCardProps {
@@ -285,6 +290,7 @@ export interface PrimaryCardWithCTAProps {
   isPremium?: boolean;
   roadmap?: string;
   isPurchased?: boolean;
+  theme?: "light" | "dark";
 }
 
 export interface LandingPageHeroProps {
@@ -293,6 +299,7 @@ export interface LandingPageHeroProps {
   secondaryButton?: ReactNode;
   backgroundImageUrl: string;
   heroText: string;
+  theme?: "light" | "dark";
 }
 
 interface BaseCardContainerProps {
@@ -300,6 +307,7 @@ interface BaseCardContainerProps {
   focusText?: string;
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
   subtext?: string;
+  theme?: "light" | "dark";
 }
 
 export interface CardContainerAProps extends BaseCardContainerProps {
@@ -962,6 +970,8 @@ export interface DsaQuestion {
     image?: string;
   }[];
   constraints?: string[];
+  notes?: string;
+  _priorityScore?: number;
   sections?: {
     first_principles?: {
       paragraphs: string[];
@@ -1025,6 +1035,10 @@ export interface DsaQuestionListProps {
   className?: string;
   completedQuestionIds?: (string | number)[];
   onToggleComplete?: (questionId: string | number) => void;
+  localNotes?: Record<string, string>;
+  topicSidebarHeader?: ReactNode;
+  isRecommendedMap?: Record<string, boolean>;
+  userTargetCompanies?: string[];
 }
 
 export interface DsaQuestionCardProps {
@@ -1032,12 +1046,19 @@ export interface DsaQuestionCardProps {
   difficultyLevel: QuestionDifficulty;
   isSelected?: boolean;
   isCompleted?: boolean;
+  isRecommended?: boolean;
+  hasNotes?: boolean;
+  isRealWorld?: boolean;
+  topics?: string[];
+  companyTypes?: string[];
+  userTargetCompanies?: string[];
   onClick?: () => void;
   onToggleComplete?: (e: React.MouseEvent) => void;
 }
 
 export interface QuestionDetailProps {
   question: DsaQuestion | null;
+  onNoteSaveSuccess?: (note: string) => void;
 }
 
 export interface ExampleCardProps {

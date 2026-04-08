@@ -65,6 +65,21 @@ const PrepYatraSchema = new Schema({
   },
 });
 
+const OncampusSchema = new Schema({
+  onboardingCompleted: {
+    type: Boolean,
+    default: false,
+  },
+  duration: {
+    type: String,
+    enum: ["1Month", "3Months", "6Months", "1Year"],
+  },
+  offCampus: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const DSAYatraSchema = new Schema({
   dyOnboarded: {
     type: Boolean,
@@ -86,6 +101,21 @@ const DSAYatraSchema = new Schema({
     type: [String],
     enum: DSA_TOPICS,
     default: [],
+  },
+  progress: {
+    completedQuestionIds: {
+      type: [String],
+      default: [],
+    },
+    todayStats: {
+      date: {
+        type: String,
+      },
+      solvedCount: {
+        type: Number,
+        default: 0,
+      },
+    },
   },
 });
 
@@ -157,6 +187,7 @@ const UserSchema: Schema<UserModel> = new Schema(
     },
     prepYatra: PrepYatraSchema,
     dsaYatra: DSAYatraSchema,
+    oncampus: OncampusSchema,
   },
   { timestamps: true },
 );

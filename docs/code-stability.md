@@ -40,7 +40,7 @@ Parallel work tracker: pick an unchecked `[ ]` item, branch, implement, PR, then
 
 ### 3a. Packages
 
-- [ ] **Hooks without tests**: add unit tests for `useStudyGuide`, `useDsaTopicSummaries` / `useDsaQuestionsForTopic`, `useLeaderboard`, `useGamification`, `usePyGamification`, `useAdmin`, `useCertificate`, `useCashfreePayment`, `usePaymentAccess`, `useResumeEvaluation`, `useQuestionStarred`, `useNotifications`, `useDailyPrepEncouragement`, `useUnskilledGraphData`, `useSkillPlaylist`, etc. ([packages/hooks/src](../packages/hooks/src)).
+- [ ] **Hooks without tests**: add unit tests for `useStudyGuide`, `useDsaTopicSummaries` / `useDsaQuestionsForTopic`, `useGamification`, `usePyGamification`, `useAdmin`, `useCertificate`, `useCashfreePayment`, `usePaymentAccess`, `useResumeEvaluation`, `useQuestionStarred`, `useNotifications`, `useDailyPrepEncouragement`, `useUnskilledGraphData`, `useSkillPlaylist`, etc. ([packages/hooks/src](../packages/hooks/src)). **Progress:** `useLeaderboard` — [useLeaderboard.test.ts](../apps/testing/src/unit/hooks/useLeaderboard.test.ts).
 - [ ] **Utils**: extend coverage for [packages/utils/src](../packages/utils/src) beyond existing quiz/onboarding/dsa tests (auth, analytics edge cases).
 
 ### 3b. Components
@@ -63,19 +63,19 @@ Parallel work tracker: pick an unchecked `[ ]` item, branch, implement, PR, then
 
 - [ ] **Wire `src/integration` into CI** (MongoDB service container or consistent memory-server) and document required env vars.
 - [ ] **Database query integration**: optional tests that call Mongoose models against `mongodb-memory-server` for critical queries (user enrollment, quiz attempt lifecycle, prep logs).
-- [ ] **Migration suite**: expand [content-migrate.integration.test.ts](../apps/testing/src/integration/migration/content-migrate.integration.test.ts) for additional `ENTITY_MAP` entities and failure modes.
+- [ ] **Migration suite**: expand [content-migrate.integration.test.ts](../apps/testing/src/integration/migration/content-migrate.integration.test.ts) for additional `ENTITY_MAP` entities and failure modes (aptitude topics insert path added).
 
 ---
 
 ## 5. Tests — E2E
 
 - [x] **Expand Playwright matrix in CI** ([.github/workflows/test-e2e.yml](../.github/workflows/test-e2e.yml)): matrix now includes all registered Playwright projects (`platform`, `prep-yatra`, `quizes`, `techyatra`, `dsayatra`, `resume-yatra`, `oncampus`, `onboarding`); projects without specs pass via `--pass-with-no-tests`.
-- [ ] **Smoke flows per app**: add one smoke spec per app under `apps/testing/src/e2e/<app>/` with:
+- [x] **Smoke flows per app**: add one smoke spec per app under `apps/testing/src/e2e/<app>/` with:
   - public landing (or login) renders successfully
   - one critical journey for that app (e.g., enrollment, quiz start, prep dashboard)
   - stable selectors (`getByRole`, `data-testid`) and deterministic mocks/fixtures where needed
   - rollout order: `platform` → `quizes` → `prep-yatra` → `oncampus` → remaining apps
-  - progress: smoke coverage now includes `platform`, `prep-yatra`, `quizes`, `dsayatra`, and `oncampus` (`smoke.spec.ts`)
+  - progress: smoke coverage now includes `platform`, `prep-yatra`, `quizes`, `dsayatra`, `oncampus`, `techyatra`, `resume-yatra`, and `onboarding` (`smoke.spec.ts`)
 - [ ] **API + E2E contract**: add optional contract-mode runs that point E2E to a running `@tbe/api`:
   - add a dedicated script/profile (e.g., `test:e2e:contract`) that exports API URL env vars and starts required services
   - run a focused critical set (auth, enrollment, quiz attempt start) against live API responses

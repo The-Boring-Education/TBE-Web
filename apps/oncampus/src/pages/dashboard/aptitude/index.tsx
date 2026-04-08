@@ -3,14 +3,13 @@ import {
   AptitudeStudyGuide,
   Button,
   FlexContainer,
-  LearningEnvironmentLayout,
   LoadingSpinner,
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import type { AptitudeQuestion } from "@tbe/interface";
-import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import { CACHE_TIMES, queryKeys, useQuery, useQueryClient } from "@tbe/query";
 import { cn, sendRequest } from "@tbe/utils";
 import {
   AlertTriangle,
@@ -20,14 +19,29 @@ import {
   Lightbulb,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const AptitudePrepPage = () => {
   const router = useRouter();
-  const { loading: userLoading, isAuth } = useUser();
+  const queryClient = useQueryClient();
+  const { user, loading: userLoading, isAuth } = useUser();
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedTopicLabel, setSelectedTopicLabel] = useState<string>("");
   const [viewMode, setViewMode] = useState<"STUDY" | "QUIZ">("STUDY");
+
+  const handleAptitudeProgressSaved = useCallback(() => {
+    if (selectedTopic && user?.id) {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.aptitude.questions(selectedTopic, user.id),
+      });
+      // Server awards COMPLETE_APTITUDE_QUESTION; refresh navbar points.
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.gamification.points(user.id),
+      });
+    }
+  }, [queryClient, selectedTopic, user?.id]);
 
   // Fetch Topics (auto-fetch)
   const { data: topicsResponse, isLoading: topicsLoading } = useQuery<any>({
@@ -68,13 +82,23 @@ const AptitudePrepPage = () => {
     isLoading: questionsLoading,
     refetch: refetchQuestions,
   } = useQuery<any>({
-    queryKey: queryKeys.aptitude.questions(selectedTopic ?? ""),
-    queryFn: () =>
-      sendRequest({
-        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}`,
-      }),
+    queryKey: queryKeys.aptitude.questions(
+      selectedTopic ?? "",
+      user?.id ?? undefined,
+    ),
+    queryFn: () => {
+      const userParam = user?.id
+        ? `&userId=${encodeURIComponent(user.id)}`
+        : "";
+      return sendRequest({
+        url: `${routes.api.base}${routes.api.interviewPrep}?roadmap=APTITUDE&topic=${selectedTopic}${userParam}`,
+      });
+    },
     ...CACHE_TIMES.STABLE,
-    enabled: !!selectedTopic && topicHasQuestions,
+    enabled:
+      !!selectedTopic &&
+      topicHasQuestions &&
+      (!isAuth || (!!user?.id && !userLoading)),
   });
 
   // Fetch Study Guide (enabled when topic selected)
@@ -119,20 +143,20 @@ const AptitudePrepPage = () => {
 
   if (overallLoading) {
     return (
-      <LearningEnvironmentLayout backHref={routes.oncampus.dashboard} isLoading>
+      <OnCampusLearningLayout backHref={routes.oncampus.dashboard} isLoading>
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner height={8} width={8} />
           <Text level="p" className="text-gray-400 ml-3">
             Loading...
           </Text>
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   if (topicsResponse?.error) {
     return (
-      <LearningEnvironmentLayout backHref={routes.oncampus.dashboard}>
+      <OnCampusLearningLayout backHref={routes.oncampus.dashboard}>
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
           <Text level="h2" className="text-xl font-bold text-red-500 mb-2">
             Failed to load topics
@@ -146,12 +170,12 @@ const AptitudePrepPage = () => {
             text="Retry"
           />
         </div>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
     );
   }
 
   return (
-    <LearningEnvironmentLayout
+    <OnCampusLearningLayout
       backHref={routes.oncampus.dashboard}
       layoutMode="workspace"
     >
@@ -381,7 +405,12 @@ const AptitudePrepPage = () => {
                       onStartQuiz={() => setViewMode("QUIZ")}
                     />
                   ) : (
-                    <AptitudeQuizPanel questions={questions} />
+                    <AptitudeQuizPanel
+                      questions={questions}
+                      topicSlug={selectedTopic ?? undefined}
+                      userId={user?.id ?? undefined}
+                      onProgressSaved={handleAptitudeProgressSaved}
+                    />
                   )}
                 </div>
               )}
@@ -389,7 +418,7 @@ const AptitudePrepPage = () => {
           )}
         </FlexContainer>
       </div>
-    </LearningEnvironmentLayout>
+    </OnCampusLearningLayout>
   );
 };
 

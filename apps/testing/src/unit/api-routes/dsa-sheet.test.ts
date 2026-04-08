@@ -234,14 +234,16 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
 
       await handler(req, res);
 
-      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith({
-        domain: ["frontend"],
-        difficulty: ["hard"],
-        companyTypes: undefined,
-        topics: ["trees"],
-        page: 2,
-        limit: 10,
-      });
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({
+          domain: ["frontend"],
+          difficulty: ["hard"],
+          companyTypes: undefined,
+          topics: ["trees"],
+          page: 2,
+          limit: 10,
+        }),
+      );
     });
 
     it("should pass through client limit without an artificial cap", async () => {

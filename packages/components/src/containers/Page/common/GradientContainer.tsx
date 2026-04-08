@@ -6,10 +6,14 @@ const GradientContainer = ({
   className = "",
   backgroundColor,
   childrenClassName = "p-3",
+  theme = "light",
+  suppressHoverScale = false,
 }: GradientContainerProps) => (
   <div
-    className={`flex-auto rounded-2 border ${className} ${backgroundColor ?? "bg-white "} hover:shadow-2xl
-      transition-all duration-300 hover:scale-105`}
+    className={`flex-auto rounded-2 border ${className} ${
+      backgroundColor ?? (theme === "dark" ? "bg-[#111]" : "bg-white")
+    } hover:shadow-2xl
+      transition-all duration-300 ${suppressHoverScale ? "" : "hover:scale-105"}`}
   >
     <div className={`rounded-2 ${childrenClassName}`}>{children}</div>
   </div>

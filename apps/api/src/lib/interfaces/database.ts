@@ -15,6 +15,7 @@ import type {
   InterviewCategoryType,
   LeaderboardEnum,
   NotificationType,
+  PaymentStatusType,
   PlatformUsageType,
   PriorityType,
   ProductType,
@@ -70,6 +71,18 @@ export interface UserModel {
     target?: string;
     preferredLanguage?: string;
     targetTopics?: DSATopicType[];
+    progress?: {
+      completedQuestionIds?: string[];
+      todayStats?: {
+        date?: string;
+        solvedCount?: number;
+      };
+    };
+  };
+  oncampus?: {
+    onboardingCompleted?: boolean;
+    duration?: "1Month" | "3Months" | "6Months" | "1Year";
+    offCampus?: boolean;
   };
 }
 
@@ -218,6 +231,19 @@ export interface UserSheetQuestionModel {
   questionId: typeof Schema.Types.ObjectId;
   isCompleted?: boolean;
   isStarred?: boolean;
+  notes?: string;
+}
+
+export interface UserAptitudeTopicModel extends Document {
+  userId: typeof Schema.Types.ObjectId;
+  topicSlug: string;
+  questions: UserAptitudeTopicQuestionModel[];
+}
+
+/** Per-question progress for an aptitude topic (mirrors UserSheet question rows). */
+export interface UserAptitudeTopicQuestionModel {
+  questionId: typeof Schema.Types.ObjectId;
+  isCompleted?: boolean;
 }
 
 export interface DSAFirstPrinciples {
@@ -374,18 +400,17 @@ export interface PaymentModel extends Document {
   orderId: string;
   paymentId?: string;
   paymentLink: string;
-  isPaid: boolean;
-  subscriptionType?: SubscriptionType;
-  subscriptionDuration?: number;
-  expiresAt?: Date;
+  status: PaymentStatusType;
+  gateway: string;
   appliedCoupon?: typeof Schema.Types.ObjectId;
   couponCode?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface WebhookEvent {
   order_id: string;
   payment_id?: string;
-  isPaid: boolean;
   payment_status: "SUCCESS" | "FAILED";
 }
 
@@ -885,6 +910,13 @@ export interface BaseInterviewSheetResponseProps extends Partial<InterviewSheetM
 export interface MarkQuestionCompletedRequestProps {
   userId: string;
   sheetId: string;
+  questionId: string;
+  isCompleted: boolean;
+}
+
+export interface MarkAptitudeQuestionCompletedRequestProps {
+  userId: string;
+  topicSlug: string;
   questionId: string;
   isCompleted: boolean;
 }

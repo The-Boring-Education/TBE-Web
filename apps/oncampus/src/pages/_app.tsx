@@ -3,12 +3,12 @@ import "@/styles/globals.css";
 import "@/styles/colors.css";
 
 import { AuthProvider } from "@tbe/auth";
-import { GamificationProvider } from "@tbe/components";
 import {
   initGA,
   installGlobalAnalyticsListeners,
   trackPageview,
 } from "@tbe/components/analytics";
+import { GamificationProvider } from "@tbe/gamification";
 import { useUser } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
@@ -18,6 +18,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import DashboardLayout from "@/components/DashboardLayout";
+import { OnboardingCheck } from "@/components/OnboardingCheck";
 
 const AppContent = ({
   Component,
@@ -98,6 +99,7 @@ const OnCampusApp = ({ Component, pageProps }: AppProps) => {
         <title>OnCampus</title>
       </Head>
       <AuthProvider>
+        <OnboardingCheck />
         <AppContent Component={Component} pageProps={pageProps} />
         <Toaster position="top-center" richColors />
       </AuthProvider>

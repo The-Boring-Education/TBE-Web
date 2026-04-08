@@ -11,8 +11,8 @@ import {
   SEO,
   Text,
 } from '@tbe/components';
-import { useGamifiedAction } from '@tbe/components';
 import { routes } from '@tbe/constants';
+import { useGamifiedAction } from '@tbe/gamification';
 import { useAnalytics, useUser } from '@tbe/hooks';
 import type { ProjectPageProps } from '@tbe/interface';
 import { useMutation } from '@tbe/query';

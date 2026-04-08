@@ -8,6 +8,7 @@ const DATABASE_MODELS = {
   COURSE_CHAPTER: "CourseChapter",
   USER_COURSE: "UserCourse",
   USER_SHEET: "UserSheet",
+  USER_APTITUDE_TOPIC: "UserAptitudeTopic",
   PLAYLIST: "Playlist",
   USER_PLAYLIST: "UserPlaylist",
   WEBINAR: "Webinar",
@@ -52,9 +53,20 @@ export const PRODUCT_TYPE = [
   "SHIKSHA",
   "PROJECTS",
   "PREPYATRA",
+  "DSA_YATRA",
+  "ONCAMPUS",
+  "WEBINAR",
   "GENERAL",
-];
+] as const;
 export type ProductType = (typeof PRODUCT_TYPE)[number];
+
+export const PAYMENT_STATUS = [
+  "PENDING",
+  "SUCCESS",
+  "FAILED",
+  "REFUNDED",
+] as const;
+export type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
 
 export const APPLICATION_STATUS = [
   "Screening",

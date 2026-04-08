@@ -8,8 +8,8 @@ import {
   SEO,
   Text,
 } from "@tbe/components";
-import { useGamifiedAction } from "@tbe/components";
 import { routes } from "@tbe/constants";
+import { useGamifiedAction } from "@tbe/gamification";
 import { useAnalytics, useApi, usePaymentAccess, useUser } from "@tbe/hooks";
 import type { CouponModel, SheetPageProps } from "@tbe/interface";
 import {

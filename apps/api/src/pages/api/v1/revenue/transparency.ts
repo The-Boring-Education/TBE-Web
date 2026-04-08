@@ -55,7 +55,7 @@ const handleGetRevenueData = async (
 ) => {
   try {
     // Get all successful payments from both regular payments and subscriptions
-    const regularPayments = (await Payment.find({ isPaid: true })
+    const regularPayments = (await Payment.find({ status: "SUCCESS" })
       .sort({ createdAt: -1 })
       .populate("user", "name email")
       .select("amount createdAt user productType orderId")

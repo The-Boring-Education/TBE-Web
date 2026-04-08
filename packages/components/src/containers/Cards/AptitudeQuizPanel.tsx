@@ -16,10 +16,16 @@ registerMathPlugin(md);
 
 export interface AptitudeQuizPanelProps {
   questions: AptitudeQuestion[];
+  topicSlug?: string;
+  userId?: string;
+  onProgressSaved?: () => void;
 }
 
 export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
   questions,
+  topicSlug,
+  userId,
+  onProgressSaved,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -55,6 +61,7 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
   };
 
   const currentQuestion = questions[currentIndex];
+  const solvedCount = questions.filter((q) => q.isCompleted).length;
 
   if (!currentQuestion) return null;
 
@@ -77,6 +84,9 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
             totalQuestions={questions.length}
             onNext={handleNext}
             onPrev={handlePrev}
+            topicSlug={topicSlug}
+            userId={userId}
+            onProgressSaved={onProgressSaved}
           />
 
           {/* Explanation Content (In Main Workspace) */}
@@ -126,6 +136,14 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
               {questions.length}
             </span>
           </div>
+          {solvedCount > 0 && (
+            <Text
+              level="p"
+              className="text-[10px] text-gray-500 mt-2 font-semibold"
+            >
+              Solved: {solvedCount} / {questions.length}
+            </Text>
+          )}
         </div>
 
         {/* 2. Topic & Difficulty */}

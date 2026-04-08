@@ -124,7 +124,10 @@ export type UserPointsActionType =
   | "PREPLOG_STREAK_30"
   | "COMPLETE_QUIZ"
   | "QUIZ_PERFECT_SCORE"
-  | "QUIZ_STREAK";
+  | "QUIZ_STREAK"
+  | "COMPLETE_DSA_QUESTION"
+  | "COMPLETE_DSA_TOPIC"
+  | "COMPLETE_APTITUDE_QUESTION";
 
 export type WorkDomainType =
   | "MERN Full-stack"
@@ -152,12 +155,7 @@ export type FeedbackType =
   | "INTERVIEW_SHEET"
   | "CERTIFICATE";
 
-export type ProductType =
-  | "COURSE"
-  | "PROJECT"
-  | "SHEET"
-  | "WEBINAR"
-  | "SUBSCRIPTION";
+export type { PaymentStatusType, ProductType } from "@/lib/constants/database";
 
 export type InterestEventType =
   | "SUBSCRIPTION_INTEREST"
@@ -202,6 +200,32 @@ export interface DSAYatraOnboardingPayload {
   target: string;
   preferredLanguage: string;
   targetTopics: DSATopicType[];
+}
+
+export interface DsaYatraTodayStatsPayload {
+  date: string;
+  solvedCount: number;
+}
+
+export interface DsaYatraProgressResponseProps {
+  completedQuestionIds: string[];
+  solvedToday: number;
+}
+
+export interface GetDsaYatraProgressQueryProps {
+  userId: string;
+}
+
+export interface PatchDsaYatraQuestionCompletionProps {
+  userId: string;
+  questionId: string;
+  isCompleted: boolean;
+}
+
+export interface PutDsaYatraProgressMergeProps {
+  userId: string;
+  addCompletedQuestionIds: string[];
+  todayStats?: DsaYatraTodayStatsPayload;
 }
 
 export interface UpdateCompanyTypePayload {

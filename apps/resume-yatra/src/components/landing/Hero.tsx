@@ -133,7 +133,7 @@ const Hero = () => {
             </div>
 
             {/* Floating badges */}
-            <div className="absolute -top-4 -right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg animate-bounce">
+            <div className="absolute -top-4 sm:-top-2  md:top-1 -right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg animate-bounce">
               ATS Approved ✓
             </div>
             <div className="absolute -bottom-4 -left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg animate-pulse">

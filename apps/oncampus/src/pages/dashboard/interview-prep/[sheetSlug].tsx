@@ -2,7 +2,6 @@ import {
   Button,
   FeedbackPopup,
   FlexContainer,
-  LearningEnvironmentLayout,
   LearningQuestionList,
   MDXRenderer,
   PaymentCard,
@@ -11,16 +10,22 @@ import {
   StarButton,
   Text,
 } from "@tbe/components";
-import { useGamifiedAction } from "@tbe/components";
 import { routes } from "@tbe/constants";
+import {
+  calculateUserPointsForAction,
+  useGamificationContext,
+  useGamifiedAction,
+} from "@tbe/gamification";
 import { useAnalytics, usePaymentAccess, useUser } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
-import { useMutation } from "@tbe/query";
+import { queryKeys, useMutation, useQueryClient } from "@tbe/query";
 import { cn, getSheetPageProps, sendRequest } from "@tbe/utils";
 import { ArrowLeft, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FaLock } from "react-icons/fa";
+
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 import InterviewQuestionContent from "../../../components/InterviewQuestionContent";
 
@@ -58,6 +63,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
+  const { triggerCelebration, showToast } = useGamificationContext();
+  const queryClient = useQueryClient();
 
   // Universal payment access hook - handles all payment status and locked logic
   const { isLocked, isPurchased } = usePaymentAccess({
@@ -236,15 +243,25 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       if (response?.status) {
         // Fire gamified action on completion
         if (newCompletionStatus) {
-          await gamifiedAction.triggerGamifiedAction({
-            gamificationAction: "COMPLETE_QUESTION",
-            analytics: {
-              action: "QUESTION_COMPLETE",
-              category: "Learning",
-              label: "Question Completed",
-            },
-            customMessage: "Question solved! Great work!",
-            metadata: {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(user?.id ?? ""),
+          });
+          const pointsEarned =
+            calculateUserPointsForAction("COMPLETE_QUESTION");
+          const intensity =
+            pointsEarned >= 50 ? "high" : pointsEarned >= 20 ? "medium" : "low";
+          triggerCelebration({ type: "points", intensity });
+          showToast({
+            type: "points",
+            message: "Question solved! Great work!",
+            points: pointsEarned,
+          });
+          trackEvent({
+            action: "QUESTION_COMPLETE",
+            category: "Learning",
+            label: "Question Completed",
+            value: {
+              userId: user?.id,
               sheetId: sheet._id,
               questionId: currentQuestionId,
               sheetName: sheet.name,
@@ -322,7 +339,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <LearningEnvironmentLayout
+      <OnCampusLearningLayout
         backHref={routes.oncampus.interviewPrep}
         isLoading={isDataLoading}
         layoutMode="workspace"
@@ -526,7 +543,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
             </FlexContainer>
           </div>
         </FlexContainer>
-      </LearningEnvironmentLayout>
+      </OnCampusLearningLayout>
 
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type="INTERVIEW_SHEET" />

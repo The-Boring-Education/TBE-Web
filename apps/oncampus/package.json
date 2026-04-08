@@ -23,6 +23,7 @@
     "@tbe/query": "workspace:*",
     "@tbe/auth": "workspace:*",
     "@tbe/config": "workspace:*",
+    "@tbe/gamification": "workspace:*",
     "sonner": "^1.5.0"
   },
   "devDependencies": {
