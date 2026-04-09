@@ -141,6 +141,7 @@ export { default as RadioButtonContainer } from "./containers/Forms/RadioButtonC
 export { default as UploadFileInput } from "./containers/Forms/UploadFileInput";
 
 // Container Components - Page
+export { default as TailorYourJourney} from "./common/TailorYourJourney"
 export { default as FAQSection } from "./common/FAQSection";
 export { default as NotFound } from "./containers/Cards/NotFound";
 export { default as CohortJourneyContainer } from "./containers/Page/Cohort/CohortJourneyContainer";

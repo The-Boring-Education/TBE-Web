@@ -4,6 +4,7 @@ import {
   LandingPageHero,
   LinkButton,
   SEO,
+  TailorYourJourney,
 } from "@tbe/components";
 import {
   DSA_YATRA_FEATURES,
@@ -59,6 +60,29 @@ const LandingPage = ({ seoMeta }: PageProps) => (
         focusText: "LeetCode Questions",
       }}
       theme="dark"
+    />
+
+    {/* Tailor Your DSA Journey Section */}
+    <TailorYourJourney
+      heading="Tailor Your"
+      highlightText="DSA Journey"
+      description="Skip the one-size-fits-all approach. Tell us your target role, available time, and current expertise level. We will automatically generate a dynamic curriculum optimized for exactly what you need to succeed."
+      features={[
+        {
+          label: "Set your target",
+          description: "Product-based or startups",
+        },
+        {
+          label: "Define your timeline",
+          description: "Options from 2 to 12 months",
+        },
+        {
+          label: "Adjust for experience",
+          description: "Fresher to Senior levels",
+        },
+      ]}
+      imageSrc="/tailor-journey.png"
+      imageAlt="Tailor your DSA journey interactive form"
     />
 
     <div id="features">
