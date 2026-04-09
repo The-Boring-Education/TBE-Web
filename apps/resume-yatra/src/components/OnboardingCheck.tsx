@@ -6,25 +6,25 @@ export const OnboardingCheck = () => {
   const router = useRouter();
 
   const buildRedirectUrl = useCallback(() => {
-    if (typeof window === "undefined") return "/dashboard";
-    return `${window.location.origin}/dashboard`;
+    if (typeof window === "undefined") return "/";
+    return `${window.location.origin}/`;
   }, []);
 
   const { isChecking } = useProductOnboardingGate({
     pathname: router.pathname,
     publicRoutes: ["/login", "/", "/auth"],
-    productId: "dsayatra",
-    from: "dsayatra",
+    productId: "resume-yatra",
+    from: "resumeyatra",
     buildRedirectUrl,
     isOnboarded: (data) =>
-      (data as { dsaYatra?: { dyOnboarded?: boolean } })?.dsaYatra
-        ?.dyOnboarded === true,
+      (data as { resumeYatra?: { ryOnboarded?: boolean } })?.resumeYatra
+        ?.ryOnboarded === true,
   });
 
   if (isChecking) {
     return (
-      <div className="fixed inset-0 bg-white z-[9999] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+      <div className="fixed inset-0 bg-background z-[9999] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-500" />
       </div>
     );
   }

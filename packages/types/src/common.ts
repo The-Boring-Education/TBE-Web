@@ -25,6 +25,27 @@ export interface BaseUser {
   purpose?: string[];
   userName?: string;
   prepYatra?: any;
+  dsaYatra?: {
+    dyOnboarded?: boolean;
+    preferredLanguage?: string;
+    timeline?: string;
+    target?: string;
+    experienceLevel?: string;
+    targetTopics?: string[];
+  };
+  oncampus?: {
+    onboardingCompleted?: boolean;
+    duration?: string;
+    offCampus?: boolean;
+  };
+  techYatra?: {
+    tyOnboarded?: boolean;
+    focus?: string;
+  };
+  resumeYatra?: {
+    ryOnboarded?: boolean;
+    experienceBand?: string;
+  };
 }
 
 export interface User {

@@ -358,6 +358,21 @@ importers:
 
   apps/onboarding:
     dependencies:
+      "@tbe/config":
+        specifier: workspace:*
+        version: link:../../packages/config
+      "@tbe/hooks":
+        specifier: workspace:*
+        version: link:../../packages/hooks
+      "@tbe/query":
+        specifier: workspace:*
+        version: link:../../packages/api
+      "@tbe/types":
+        specifier: workspace:*
+        version: link:../../packages/types
+      "@tbe/utils":
+        specifier: workspace:*
+        version: link:../../packages/utils
       "@types/react":
         specifier: 18.3.24
         version: 18.3.24

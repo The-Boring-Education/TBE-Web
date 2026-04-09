@@ -8,11 +8,12 @@ import { Toaster } from "@tbe/components";
 import { TooltipProvider } from "@tbe/components";
 import { initGA, trackPageview } from "@tbe/components/analytics";
 import { GamificationProvider } from "@tbe/gamification";
+import { useProductOnboardingGate } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 // Cache clearing component
 const CacheManager = () => {
@@ -46,10 +47,8 @@ const AppContent = ({
   pageProps: any;
 }) => {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const [isClient, setIsClient] = useState(false);
-  const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(false);
-  const hasCheckedOnboarding = useRef(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -65,81 +64,32 @@ const AppContent = ({
     };
   }, [router]);
 
-  useEffect(() => {
-    // Only run on client side
-    if (!isClient || isLoading || !isAuthenticated || isCheckingOnboarding)
-      return;
+  const buildRedirectUrl = useCallback(() => {
+    if (typeof window === "undefined") return "/dashboard";
+    return `${window.location.origin}/dashboard`;
+  }, []);
 
-    // Skip check for public pages
-    const publicPages = ["/login", "/"];
-    if (publicPages.includes(router.pathname)) return;
+  const { isChecking } = useProductOnboardingGate({
+    pathname: router.pathname,
+    publicRoutes: ["/login", "/", "/auth"],
+    productId: "prepyatra",
+    from: "prepyatra",
+    buildRedirectUrl,
+    isOnboarded: (data) =>
+      (data as { prepYatra?: { pyOnboarded?: boolean } })?.prepYatra
+        ?.pyOnboarded === true,
+  });
 
-    // Skip if already checked
-    if (hasCheckedOnboarding.current) return;
-
-    const checkOnboardingStatus = async () => {
-      if (!user?.email) return;
-
-      hasCheckedOnboarding.current = true;
-      setIsCheckingOnboarding(true);
-      try {
-        const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
-        const resp = await fetch(
-          `${base}/user?email=${encodeURIComponent(user.email)}`,
-        );
-        const json = await resp.json();
-        const isOnboarded = json?.data?.prepYatra?.pyOnboarded === true;
-
-        if (!isOnboarded) {
-          // Redirect to external onboarding app
-          const onboardingBaseUrl = process.env.NEXT_PUBLIC_ONBOARDING_URL;
-          if (onboardingBaseUrl) {
-            const params = new URLSearchParams({
-              userId: user?.id || "",
-              email: user?.email || "",
-              productId: "prepyatra",
-              from: "prepyatra",
-              redirect: `${window.location.origin}/dashboard`,
-            });
-            window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
-          }
-        }
-      } catch (error) {
-        console.error("Error checking onboarding:", error);
-      } finally {
-        setIsCheckingOnboarding(false);
-      }
-    };
-
-    // Run check only once when landing on protected pages
-    void checkOnboardingStatus();
-  }, [
-    isClient,
-    isAuthenticated,
-    isLoading,
-    router.pathname,
-    user?.id,
-    user?.email,
-    isCheckingOnboarding,
-  ]);
-
-  // Show loading spinner while checking onboarding on protected pages
   const publicPages = ["/login", "/auth", "/"];
   const isProtectedPage = !publicPages.includes(router.pathname);
 
-  console.log(
-    "AppContent render - isAuthenticated:",
-    isAuthenticated,
-    "user:",
-    user,
-    "isCheckingOnboarding:",
-    isCheckingOnboarding,
-    "pathname:",
-    router.pathname,
-  );
-
-  if (isProtectedPage && isAuthenticated && isCheckingOnboarding) {
-    console.log("Showing onboarding check spinner");
+  if (
+    isClient &&
+    isProtectedPage &&
+    isAuthenticated &&
+    !isLoading &&
+    isChecking
+  ) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />

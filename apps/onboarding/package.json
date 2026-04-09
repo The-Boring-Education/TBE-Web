@@ -12,6 +12,11 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@tbe/config": "workspace:*",
+    "@tbe/hooks": "workspace:*",
+    "@tbe/query": "workspace:*",
+    "@tbe/types": "workspace:*",
+    "@tbe/utils": "workspace:*",
     "@types/react": "^18.3.24",
     "@types/react-dom": "^18.3.7",
     "react": "^18.3.1",

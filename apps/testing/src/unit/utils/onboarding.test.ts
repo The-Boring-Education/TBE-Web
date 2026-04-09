@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   checkUsernameAvailable,
   getOnboardingUser,
 } from "@tbe/utils/onboarding";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock sendRequest
 vi.mock("@tbe/utils/api", () => ({
@@ -22,15 +22,16 @@ describe("Onboarding Utilities", () => {
     it("should return true when username is available", async () => {
       mockSendRequest.mockResolvedValue({
         success: true,
-        data: { available: true },
+        status: true,
       });
 
       const result = await checkUsernameAvailable("testuser");
 
       expect(mockSendRequest).toHaveBeenCalledWith({
-        url: "/user/username-check?username=testuser",
+        url: "/user/onboarding?userName=testuser",
         method: "GET",
         headers: {},
+        baseURL: undefined,
       });
       expect(result).toBe(true);
     });
@@ -38,7 +39,7 @@ describe("Onboarding Utilities", () => {
     it("should return false when username is not available", async () => {
       mockSendRequest.mockResolvedValue({
         success: true,
-        data: { available: false },
+        status: false,
       });
 
       const result = await checkUsernameAvailable("takenuser");
@@ -56,10 +57,10 @@ describe("Onboarding Utilities", () => {
       expect(result).toBe(false);
     });
 
-    it("should return false when data.available is not true", async () => {
+    it("should return false when status is not true", async () => {
       mockSendRequest.mockResolvedValue({
         success: true,
-        data: { available: false },
+        status: false,
       });
 
       const result = await checkUsernameAvailable("testuser");
@@ -70,31 +71,37 @@ describe("Onboarding Utilities", () => {
     it("should include authorization header when token provided", async () => {
       mockSendRequest.mockResolvedValue({
         success: true,
-        data: { available: true },
+        status: true,
       });
 
       await checkUsernameAvailable("testuser", "token-123");
 
       expect(mockSendRequest).toHaveBeenCalledWith({
-        url: "/user/username-check?username=testuser",
+        url: "/user/onboarding?userName=testuser",
         method: "GET",
         headers: { Authorization: "Bearer token-123" },
+        baseURL: undefined,
       });
+    });
+
+    it("should pass apiBaseUrl to sendRequest", async () => {
+      mockSendRequest.mockResolvedValue({ success: true, status: true });
+
+      await checkUsernameAvailable(
+        "u",
+        undefined,
+        "https://api.example.com/api/v1",
+      );
+
+      expect(mockSendRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          baseURL: "https://api.example.com/api/v1",
+        }),
+      );
     });
 
     it("should handle network errors gracefully", async () => {
       mockSendRequest.mockRejectedValue(new Error("Network error"));
-
-      const result = await checkUsernameAvailable("testuser");
-
-      expect(result).toBe(false);
-    });
-
-    it("should handle missing data property", async () => {
-      mockSendRequest.mockResolvedValue({
-        success: true,
-        data: null,
-      });
 
       const result = await checkUsernameAvailable("testuser");
 
@@ -120,6 +127,7 @@ describe("Onboarding Utilities", () => {
         url: "/user?userId=user-123",
         method: "GET",
         headers: {},
+        baseURL: undefined,
       });
       expect(result).toEqual(mockUser);
     });
@@ -147,6 +155,7 @@ describe("Onboarding Utilities", () => {
         url: "/user?userId=user-123",
         method: "GET",
         headers: { Authorization: "Bearer token-123" },
+        baseURL: undefined,
       });
     });
 

@@ -77,17 +77,15 @@ const AppContent = ({
   const pageContent = <Component {...pageProps} />;
 
   return (
-    <TBEQueryProvider>
-      <GamificationProvider>
-        <div className="bg-[#0A0A0A] min-h-screen">
-          {shouldUseDashboardLayout ? (
-            <DashboardLayout>{pageContent}</DashboardLayout>
-          ) : (
-            pageContent
-          )}
-        </div>
-      </GamificationProvider>
-    </TBEQueryProvider>
+    <GamificationProvider>
+      <div className="bg-[#0A0A0A] min-h-screen">
+        {shouldUseDashboardLayout ? (
+          <DashboardLayout>{pageContent}</DashboardLayout>
+        ) : (
+          pageContent
+        )}
+      </div>
+    </GamificationProvider>
   );
 };
 
@@ -99,8 +97,10 @@ const OnCampusApp = ({ Component, pageProps }: AppProps) => {
         <title>OnCampus</title>
       </Head>
       <AuthProvider>
-        <OnboardingCheck />
-        <AppContent Component={Component} pageProps={pageProps} />
+        <TBEQueryProvider>
+          <OnboardingCheck />
+          <AppContent Component={Component} pageProps={pageProps} />
+        </TBEQueryProvider>
         <Toaster position="top-center" richColors />
       </AuthProvider>
     </Fragment>
