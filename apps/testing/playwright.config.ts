@@ -148,13 +148,26 @@ type WebServerConfig = {
 
 function toWebServerConfig(appKey: keyof typeof APPS): WebServerConfig {
   const app = APPS[appKey];
+  /** Vite `dev` pre-bundles workspace deps and can pull Next.js into the graph (react/compiler-runtime). E2E uses production build + preview instead. */
+  const command =
+    appKey === "onboarding"
+      ? `pnpm --filter ${app.filter} run serve:e2e`
+      : `pnpm --filter ${app.filter} dev`;
+  const timeout =
+    appKey === "onboarding"
+      ? process.env.CI
+        ? 180_000
+        : 120_000
+      : process.env.CI
+        ? 120_000
+        : 60_000;
   return {
-    command: `pnpm --filter ${app.filter} dev`,
+    command,
     url: getAppUrl(appKey),
     cwd: REPO_ROOT,
     // Keep local runs reliable even when CI env vars are exported in the shell.
     reuseExistingServer: true,
-    timeout: process.env.CI ? 120_000 : 60_000,
+    timeout,
   };
 }
 
