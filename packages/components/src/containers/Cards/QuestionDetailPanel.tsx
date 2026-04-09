@@ -17,7 +17,7 @@ import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import type { DsaQuestion, DsaSectionTabs } from "@tbe/interface";
 import { sendRequest } from "@tbe/utils";
-import { Check, Loader2, Save, Sparkles } from "lucide-react";
+import { Check, Crown, Loader2, Save, Sparkles } from "lucide-react";
 import markdownit from "markdown-it";
 import { useEffect, useState } from "react";
 
@@ -161,6 +161,12 @@ const QuestionDetailPanel = ({
   const sections = question.sections;
   const hasSections = sections && Object.keys(sections).length > 0;
   const isRecommended = (question as any)._priorityScore > 0;
+  const isRealWorld = !!(question.isRealWorld || question.isRealWorldProblem);
+
+  // Extract domain context from title like "[Education] Array — scenario 1"
+  const realWorldDomain = isRealWorld
+    ? (question.name || "").match(/^\[([^\]]+)\]/)?.[1] || "Real World"
+    : null;
 
   return (
     <FlexContainer
@@ -175,19 +181,32 @@ const QuestionDetailPanel = ({
       <div className="space-y-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1.5">
               {isRecommended && (
                 <div className="flex items-center gap-1 text-[9px] font-black text-red-500 uppercase tracking-widest">
                   <Sparkles className="w-3 h-3" /> Recommended for you
                 </div>
               )}
-              <Text level="h1" className="text-2xl font-bold tracking-tight">
+              <Text
+                level="h1"
+                className="text-2xl font-bold tracking-tight leading-snug"
+              >
                 {question.name}
               </Text>
             </div>
             <div className="flex items-center gap-2">
-              {(question.isRealWorld || question.isRealWorldProblem) && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 bg-blue-950/30 text-blue-400 border-blue-900/50 uppercase">
+              {isRealWorld && (
+                <span
+                  title="Real-World Problem"
+                  className="inline-flex items-center gap-1.5 text-[9px] font-black px-2.5 py-[3px] rounded-full border shrink-0 uppercase tracking-[0.12em] relative overflow-hidden"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(251,191,36,0.12) 0%, rgba(217,119,6,0.08) 100%)",
+                    borderColor: "rgba(251,191,36,0.35)",
+                    color: "#fbbf24",
+                  }}
+                >
+                  <Crown className="w-2.5 h-2.5" strokeWidth={2.5} />
                   Real World
                 </span>
               )}
@@ -231,6 +250,56 @@ const QuestionDetailPanel = ({
             )}
           </div>
         </div>
+
+        {/* ── Real-World Premium Banner ───────────────────────────── */}
+        {isRealWorld && (
+          <div
+            className="flex items-center gap-3 px-4 py-3 rounded-xl border relative overflow-hidden"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(251,191,36,0.04) 0%, rgba(15,15,15,0) 70%)",
+              borderColor: "rgba(251,191,36,0.15)",
+            }}
+          >
+            {/* Left accent bar */}
+            <div
+              className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(251,191,36,0.7) 0%, rgba(245,158,11,0.2) 100%)",
+              }}
+            />
+
+            {/* Crown icon */}
+            <div
+              className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
+              style={{
+                background: "rgba(251,191,36,0.08)",
+                border: "1px solid rgba(251,191,36,0.2)",
+              }}
+            >
+              <Crown
+                className="w-4 h-4"
+                style={{ color: "#fbbf24" }}
+                strokeWidth={2}
+              />
+            </div>
+
+            {/* Text */}
+            <div className="flex flex-col gap-0.5">
+              <p
+                className="text-[11px] font-black uppercase tracking-[0.1em]"
+                style={{ color: "#fbbf24" }}
+              >
+                Real-World Application · {realWorldDomain}
+              </p>
+              <p className="text-[11px] text-gray-500 font-medium leading-snug">
+                This problem is modelled on a real industry scenario. Apply the
+                algorithm in context.
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
           {["description", "topics", "companies", "notes"].map((tab) => (
