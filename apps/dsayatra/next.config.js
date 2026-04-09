@@ -28,6 +28,11 @@ const nextConfig = {
     formats: ["image/webp", "image/avif"],
     minimumCacheTTL: 60,
   },
+  experimental: {
+    // Use 'loose' mode to handle mixed ESM/CJS packages
+    // This allows webpack to convert require() to import() for ESM packages like date-fns
+    esmExternals: "loose",
+  },
   webpack: (config, { isServer }) => {
     // Ensure webpack resolves from the app's node_modules first
     // This ensures date-fns v3 from app is used instead of v2 from components package

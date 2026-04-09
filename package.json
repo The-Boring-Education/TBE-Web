@@ -60,7 +60,6 @@
   "devDependencies": {
     "@lhci/cli": "^0.13.0",
     "@tbe/eslint-config": "workspace:*",
-    "cross-env": "^10.1.0",
     "eslint": "^9.39.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.3.0",
