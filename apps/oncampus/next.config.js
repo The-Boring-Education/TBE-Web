@@ -10,6 +10,7 @@ const nextConfig = {
     "@tbe/types",
     "@tbe/services",
     "@tbe/constants",
+    "@tbe/interface",
     "@tbe/auth",
     "@tbe/config",
     "@tbe/query",

@@ -14,7 +14,7 @@ import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { Toaster } from "sonner";
 
 import DashboardLayout from "@/components/DashboardLayout";
@@ -28,18 +28,7 @@ const AppContent = ({
   pageProps: any;
 }) => {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-  const userData = useUser();
-  const { user, isAuth, loading } = (userData as any) || {
-    user: null,
-    isAuth: false,
-    loading: true,
-  };
-
-  // Ensure we're on the client side before accessing window
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  useUser();
 
   // ✅ Initialize Google Analytics
   useEffect(() => {

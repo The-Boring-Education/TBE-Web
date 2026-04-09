@@ -26,3 +26,6 @@ export * from "./popovers";
 
 // Dashboard Components
 export * from "./dashboard";
+
+// Full-page compositions (Prep Yatra app routes)
+export * from "./pages";
