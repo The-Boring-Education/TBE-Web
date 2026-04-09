@@ -141,8 +141,8 @@ export { default as RadioButtonContainer } from "./containers/Forms/RadioButtonC
 export { default as UploadFileInput } from "./containers/Forms/UploadFileInput";
 
 // Container Components - Page
-export { default as TailorYourJourney} from "./common/TailorYourJourney"
 export { default as FAQSection } from "./common/FAQSection";
+export { default as TailorYourJourney } from "./common/TailorYourJourney";
 export { default as NotFound } from "./containers/Cards/NotFound";
 export { default as CohortJourneyContainer } from "./containers/Page/Cohort/CohortJourneyContainer";
 export { default as InterviewPrepSection } from "./containers/Page/Cohort/InterviewPrepSection";
@@ -196,6 +196,7 @@ export {
 } from "./common/GamificationDemo/GamificationProvider";
 /** @deprecated Use `useGamifiedAction` from `@tbe/gamification` instead */
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
+export * from "./dsayatra";
 export { default as Footer } from "./layout/Footer";
 export { default as LearningEnvironmentLayout } from "./layout/LearningEnvironmentLayout";
 export { default as LearningNavbar } from "./layout/LearningNavbar";
@@ -219,6 +220,7 @@ export {
   getWebSiteSchema,
 } from "./layout/SEO";
 export { PageSEO, default as SEOWrapper } from "./layout/SEOWrapper";
+export * from "./oncampus";
 export * from "./prepyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names
 // Note: We do not re-export prepyatra `Button` to avoid clashing with existing common Button export.

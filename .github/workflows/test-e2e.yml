@@ -56,6 +56,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      # Avoid `playwright install --with-deps`: it runs apt-get and often stalls on flaky Ubuntu/Azure mirrors.
+      # ubuntu-latest already ships libs Chromium needs; @tbe/testing postinstall also runs `playwright install chromium`.
+      - name: 🎭 Cache Playwright browser binaries
+        uses: actions/cache@v4
+        id: playwright-browser-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-ms-playwright-chromium-${{ hashFiles('**/pnpm-lock.yaml', 'apps/testing/package.json') }}
+
       - name: 📦 Install Dependencies
         run: pnpm install --frozen-lockfile
 
@@ -63,8 +72,8 @@ jobs:
         run: |
           pnpm run build --filter=@tbe/constants --filter=@tbe/types --filter=@tbe/utils --filter=@tbe/interface --filter=@tbe/services --filter=@tbe/components --filter=@tbe/hooks --filter=@tbe/auth --filter=@tbe/query --filter=@tbe/config
 
-      - name: 🎭 Install Playwright Browsers
-        run: pnpm --filter @tbe/testing exec playwright install --with-deps chromium
+      - name: 🎭 Ensure Playwright Chromium is installed
+        run: pnpm --filter @tbe/testing exec playwright install chromium
 
       - name: 🎭 Run E2E for ${{ matrix.app }}
         env:

@@ -267,7 +267,7 @@ const InterviewPrepDashboardPage = () => {
                   <button
                     onClick={() => handleRoadmapClick("all")}
                     className={cn(
-                      "w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
+                      "w-full group relative py-2.5 pl-2 pr-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
                       selectedRoadmap === "all"
                         ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)] text-white"
                         : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800 text-gray-400 group-hover:text-gray-300",
@@ -296,7 +296,7 @@ const InterviewPrepDashboardPage = () => {
                         key={roadmap}
                         onClick={() => handleRoadmapClick(slug)}
                         className={cn(
-                          "w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
+                          "w-full group relative py-2.5 pl-2 pr-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
                           isActive
                             ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)] text-white"
                             : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800 text-gray-400 group-hover:text-gray-300",

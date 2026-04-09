@@ -29,7 +29,7 @@ Parallel work tracker: pick an unchecked `[ ]` item, branch, implement, PR, then
 
 - [ ] **CI naming clarity**: rename or document that "Integration" workflow runs `test:api` (Vitest `src/api`), not `src/integration`; optionally add a job for `test:integration` with Mongo service or document memory-server-only scope.
 - [ ] **Extend `test:ci`**: include `pnpm --filter @tbe/testing test:integration` once stable in CI; or split workflows: "API unit", "DB integration".
-- [ ] **Vitest config**: remove `as any` on Vite react plugin; replace `tsconfigRaw: "{}"` with a proper tsconfig reference for workspace packages ([apps/testing/vitest.config.ts](../apps/testing/vitest.config.ts)).
+- [x] **Vitest config** ([apps/testing/vitest.config.ts](../apps/testing/vitest.config.ts)): React plugin typed (`PluginOption`, no `as any`); `tsconfigRaw` loads real [apps/testing/tsconfig.json](../apps/testing/tsconfig.json) for transforms; `@/lib/auth` alias added for auth route tests.
 - [ ] **ESLint cleanup**: address remaining `eslint-disable` files ([packages/utils/src/initMiddleware.ts](../packages/utils/src/initMiddleware.ts), [packages/components/src/prepyatra/showcase/RecruiterContactsShowcase.tsx](../packages/components/src/prepyatra/showcase/RecruiterContactsShowcase.tsx), etc.) with scoped rules or fixes.
 - [ ] **Coverage**: raise thresholds gradually after adding tests; publish `coverage/` or CI summary artifact from Vitest.
 - [ ] **TODO/FIXME sweep**: resolve or ticket items in e.g. [packages/components/src/quizes/GamificationCard.tsx](../packages/components/src/quizes/GamificationCard.tsx), [apps/api/src/lib/database/queries/enhancedQuiz.ts](../apps/api/src/lib/database/queries/enhancedQuiz.ts).
@@ -40,17 +40,17 @@ Parallel work tracker: pick an unchecked `[ ]` item, branch, implement, PR, then
 
 ### 3a. Packages
 
-- [ ] **Hooks without tests**: add unit tests for `useStudyGuide`, `useDsaTopicSummaries` / `useDsaQuestionsForTopic`, `useGamification`, `usePyGamification`, `useAdmin`, `useCertificate`, `useCashfreePayment`, `usePaymentAccess`, `useResumeEvaluation`, `useQuestionStarred`, `useNotifications`, `useDailyPrepEncouragement`, `useUnskilledGraphData`, `useSkillPlaylist`, etc. ([packages/hooks/src](../packages/hooks/src)). **Progress:** `useLeaderboard` — [useLeaderboard.test.ts](../apps/testing/src/unit/hooks/useLeaderboard.test.ts).
+- [ ] **Hooks without tests**: add unit tests for `useStudyGuide`, `useDsaTopicSummaries` / `useDsaQuestionsForTopic`, `useAdmin`, `useCertificate`, `useCashfreePayment`, `usePaymentAccess`, `useResumeEvaluation`, `useNotifications`, `useUnskilledGraphData`, `useSkillPlaylist`, etc. ([packages/hooks/src](../packages/hooks/src)). **Progress:** `useLeaderboard` — [useLeaderboard.test.ts](../apps/testing/src/unit/hooks/useLeaderboard.test.ts); `useGamification` — [useGamification.test.ts](../apps/testing/src/unit/hooks/useGamification.test.ts); `usePyGamification` — [usePyGamification.test.ts](../apps/testing/src/unit/hooks/usePyGamification.test.ts); `useDailyPrepEncouragement` — [useDailyPrepEncouragement.test.ts](../apps/testing/src/unit/hooks/useDailyPrepEncouragement.test.ts); `useQuestionStarred` — [useQuestionStarred.test.ts](../apps/testing/src/unit/hooks/useQuestionStarred.test.ts); onboarding config — [onboarding-config.test.ts](../apps/testing/src/unit/onboarding/onboarding-config.test.ts); `useOnboarding` — [useOnboarding.test.ts](../apps/testing/src/unit/hooks/useOnboarding.test.ts).
 - [ ] **Utils**: extend coverage for [packages/utils/src](../packages/utils/src) beyond existing quiz/onboarding/dsa tests (auth, analytics edge cases).
 
 ### 3b. Components
 
-- [ ] **High-traffic UI**: add RTL tests for critical `@tbe/components` containers (e.g. prep/workspace cards, payment flows) prioritizing regressions seen in production.
+- [ ] **High-traffic UI**: add RTL tests for critical `@tbe/components` containers (e.g. prep/workspace cards, payment flows) prioritizing regressions seen in production. **Progress (Prep Yatra pages in package):** full-page compositions live under [packages/components/src/prepyatra/pages](../packages/components/src/prepyatra/pages) (`PrepYatraLandingPage`, `PrepYatraDashboardPage`, `PrepYatraPricingPage`, `PrepYatraLoginPage`, `PrepYatraPublicJourneyPage`); app routes re-export them from [apps/prep-yatra/src/pages](../apps/prep-yatra/src/pages). **Progress (On Campus pages in package):** [packages/components/src/oncampus/pages](../packages/components/src/oncampus/pages) (`OnCampusLandingPage`, `OnCampusLoginPage`); re-exported from [apps/oncampus/src/pages](../apps/oncampus/src/pages) (`/`, `/campus-prep`, `/login`). **Progress (DSA Yatra pages in package):** [packages/components/src/dsayatra/pages](../packages/components/src/dsayatra/pages) (`DsaYatraLandingPage`, `DsaYatraLoginPage`, `DsaYatraNotFoundPage`); re-exported from [apps/dsayatra/src/pages](../apps/dsayatra/src/pages) (`/`, `/login`, `404`).
 - [ ] **Quizzes app alignment**: after Gamification dedupe, add tests that assert provider wiring in [apps/quizes](../apps/quizes).
 
 ### 3c. API (handler-level unit tests)
 
-- [ ] **Auth routes**: [apps/api/src/pages/api/v1/auth](../apps/api/src/pages/api/v1/auth) — login, token, session, refresh, logout, callbacks.
+- [ ] **Auth routes**: [apps/api/src/pages/api/v1/auth](../apps/api/src/pages/api/v1/auth) — login, token, session, refresh, logout, callbacks. **Progress:** `session` — [auth-session.test.ts](../apps/testing/src/unit/api-routes/auth-session.test.ts); `logout` (POST) — [auth-logout.test.ts](../apps/testing/src/unit/api-routes/auth-logout.test.ts); `token` (POST auth code exchange) — [auth-token.test.ts](../apps/testing/src/unit/api-routes/auth-token.test.ts); `refresh` (POST) — [auth-refresh.test.ts](../apps/testing/src/unit/api-routes/auth-refresh.test.ts); `login` (GET OAuth start) — [auth-login.test.ts](../apps/testing/src/unit/api-routes/auth-login.test.ts).
 - [ ] **Admin routes**: dashboard, users, content, coupons, quiz analytics, mentorship — batch by domain.
 - [ ] **Projects / webinar / youfocus / unskilled**: greenfield tests per handler group.
 - [ ] **Interview prep** sub-routes: study-guide, aptitude, sheet CRUD, company-types, upload — fill gaps beyond [interview-prep-index](../apps/testing/src/unit/api-routes/interview-prep-index.test.ts) / [dsa-sheet](../apps/testing/src/unit/api-routes/dsa-sheet.test.ts).
@@ -61,9 +61,9 @@ Parallel work tracker: pick an unchecked `[ ]` item, branch, implement, PR, then
 
 ## 4. Tests — integration
 
-- [ ] **Wire `src/integration` into CI** (MongoDB service container or consistent memory-server) and document required env vars.
+- [ ] **Wire `src/integration` into CI** (MongoDB service container or consistent memory-server) and document required env vars. **Progress:** memory-server suites run locally via `pnpm --filter @tbe/testing test:integration` ([onboarding API](../apps/testing/src/integration/onboarding/onboarding-api.integration.test.ts), [migration](../apps/testing/src/integration/migration/content-migrate.integration.test.ts), [smoke contract](../apps/testing/src/integration/e2e/smoke-coverage.integration.test.ts)).
 - [ ] **Database query integration**: optional tests that call Mongoose models against `mongodb-memory-server` for critical queries (user enrollment, quiz attempt lifecycle, prep logs).
-- [ ] **Migration suite**: expand [content-migrate.integration.test.ts](../apps/testing/src/integration/migration/content-migrate.integration.test.ts) for additional `ENTITY_MAP` entities and failure modes (aptitude topics insert path added).
+- [ ] **Migration suite**: expand [content-migrate.integration.test.ts](../apps/testing/src/integration/migration/content-migrate.integration.test.ts) for additional `ENTITY_MAP` entities and failure modes. **Progress:** DSA questions, interview sheets (incremental update), quizzes skip-without-contentId, aptitude topics, study guides, **projects**, courses dry-run; failure-mode coverage (e.g. `updateOne` errors) still open.
 
 ---
 
@@ -75,7 +75,8 @@ Parallel work tracker: pick an unchecked `[ ]` item, branch, implement, PR, then
   - one critical journey for that app (e.g., enrollment, quiz start, prep dashboard)
   - stable selectors (`getByRole`, `data-testid`) and deterministic mocks/fixtures where needed
   - rollout order: `platform` → `quizes` → `prep-yatra` → `oncampus` → remaining apps
-  - progress: smoke coverage now includes `platform`, `prep-yatra`, `quizes`, `dsayatra`, `oncampus`, `techyatra`, `resume-yatra`, and `onboarding` (`smoke.spec.ts`)
+  - progress: smoke coverage now includes `platform`, `prep-yatra`, `quizes`, `dsayatra`, `oncampus`, `techyatra`, `resume-yatra`, and `onboarding` (`smoke.spec.ts`); contract guard — [smoke-coverage.integration.test.ts](../apps/testing/src/integration/e2e/smoke-coverage.integration.test.ts) (required app folders + minimum test count).
+- [x] **Product onboarding gate → standalone onboarding app**: E2E for each app that uses `useProductOnboardingGate` — authenticated user with incomplete product onboarding is redirected to `NEXT_PUBLIC_ONBOARDING_URL` (Playwright starts aux `@tbe/onboarding` + injects URL into app `webServer` env). Specs: `onboarding-redirect.spec.ts` under `prep-yatra`, `techyatra`, `dsayatra`, `oncampus`, `resume-yatra`; shared JWT + API mocks in [onboarding-redirect.ts](../apps/testing/src/e2e/fixtures/onboarding-redirect.ts).
 - [ ] **API + E2E contract**: add optional contract-mode runs that point E2E to a running `@tbe/api`:
   - add a dedicated script/profile (e.g., `test:e2e:contract`) that exports API URL env vars and starts required services
   - run a focused critical set (auth, enrollment, quiz attempt start) against live API responses
@@ -94,4 +95,5 @@ Parallel work tracker: pick an unchecked `[ ]` item, branch, implement, PR, then
 
 - API route files (~126): [apps/api/src/pages/api](../apps/api/src/pages/api)
 - Vitest unit/api tests: [apps/testing/src/unit](../apps/testing/src/unit), [apps/testing/src/api](../apps/testing/src/api)
+- Vitest integration (Mongo memory / contracts): [apps/testing/src/integration](../apps/testing/src/integration)
 - E2E specs: [apps/testing/src/e2e](../apps/testing/src/e2e)

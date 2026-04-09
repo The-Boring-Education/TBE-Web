@@ -14,7 +14,8 @@
     "./mongodb": "./src/mongodb.ts",
     "./cors": "./src/cors.ts",
     "./mdx": "./src/mdx/index.ts",
-    "./content-id": "./src/content-id.ts"
+    "./content-id": "./src/content-id.ts",
+    "./onboarding": "./src/onboarding.ts"
   },
   "scripts": {
     "lint": "eslint ."

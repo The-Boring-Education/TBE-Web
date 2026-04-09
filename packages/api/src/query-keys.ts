@@ -98,6 +98,9 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.user.all, "detail", id] as const,
     profile: (id: string) => [...queryKeys.user.all, "profile", id] as const,
     rank: (id: string) => [...queryKeys.user.all, "rank", id] as const,
+    /** Authenticated full user record for onboarding redirect gates */
+    onboardingGate: (userId: string) =>
+      [...queryKeys.user.all, "onboarding-gate", userId] as const,
   },
 
   // ── Gamification ──

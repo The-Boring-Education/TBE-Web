@@ -3,39 +3,48 @@ import { sendRequest } from "./api";
 /**
  * Onboarding-specific utility functions
  * Extracted from onboarding app to shared utils
+ *
+ * Username availability uses GET `/user/onboarding?userName=` (see apps/api user/onboarding.ts).
+ * Pass `apiBaseUrl` in Vite or non-Next clients so `sendRequest` hits the API directly.
  */
 
-// Check if username is available
 export async function checkUsernameAvailable(
   username: string,
   token?: string,
+  apiBaseUrl?: string,
 ): Promise<boolean> {
   try {
     const response = await sendRequest({
-      url: `/user/username-check?username=${username}`,
+      url: `/user/onboarding?userName=${encodeURIComponent(username)}`,
       method: "GET",
       headers: token ? { Authorization: `Bearer ${token}` } : {},
+      baseURL: apiBaseUrl,
     });
 
-    return Boolean(response.success && response.data?.available === true);
+    return Boolean((response as { status?: boolean }).status === true);
   } catch {
     return false;
   }
 }
 
-// Get user by ID for onboarding
 export async function getOnboardingUser(
   userId: string,
   token?: string,
-): Promise<any> {
+  apiBaseUrl?: string,
+): Promise<unknown> {
   try {
     const response = await sendRequest({
-      url: `/user?userId=${userId}`,
+      url: `/user?userId=${encodeURIComponent(userId)}`,
       method: "GET",
       headers: token ? { Authorization: `Bearer ${token}` } : {},
+      baseURL: apiBaseUrl,
     });
 
-    return response.success ? response.data : null;
+    const r = response as { data?: unknown; success?: boolean };
+    if (r.success === false) {
+      return null;
+    }
+    return r.data ?? null;
   } catch {
     return null;
   }

@@ -8,6 +8,10 @@ import {
   getDSATopicSummariesFromDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import {
+  parseDsaSheetCreateBody,
+  parseDsaSheetGetQuery,
+} from "@/lib/validation";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -30,43 +34,19 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const {
-    title,
-    answer,
-    content,
-    domain,
-    difficulty,
-    companyTypes,
-    topics,
-    sections,
-  } = req.body;
-
-  const questionAnswer = answer || content;
-  if (
-    !title ||
-    !questionAnswer ||
-    !domain ||
-    !difficulty ||
-    !companyTypes ||
-    !topics
-  )
+  const parsed = parseDsaSheetCreateBody(req.body);
+  if (!parsed.ok) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: false,
-        message:
-          "Required: title, answer, domain, difficulty, companyTypes, topics",
+        message: parsed.message,
       }),
     );
+  }
 
   const { data, error } = await addDSAQuestionToDB({
-    title,
-    answer: questionAnswer,
-    domain: Array.isArray(domain) ? domain : [domain],
-    difficulty,
-    companyTypes: Array.isArray(companyTypes) ? companyTypes : [companyTypes],
-    topics: Array.isArray(topics) ? topics : [topics],
-    ...(sections && { sections }),
-  });
+    ...parsed.value,
+  } as Parameters<typeof addDSAQuestionToDB>[0]);
 
   if (error) {
     return res
@@ -84,22 +64,20 @@ const handleCreateQuestion = async (
 };
 
 const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
-  const {
-    domain,
-    difficulty,
-    companyType,
-    topic,
-    page,
-    limit,
-    metadata,
-    query,
-    userId,
-    duration,
-    offCampus,
-  } = req.query;
+  const parsed = parseDsaSheetGetQuery(req.query);
+  if (!parsed.ok) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: parsed.message,
+      }),
+    );
+  }
 
-  if (query === "topics") {
-    const { data, error } = await getDSATopicSummariesFromDB(userId as string);
+  if (parsed.value.mode === "topics") {
+    const { data, error } = await getDSATopicSummariesFromDB(
+      parsed.value.userId,
+    );
     if (error)
       return res
         .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
@@ -109,7 +87,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
       .json(sendAPIResponse({ status: true, data }));
   }
 
-  if (metadata === "true") {
+  if (parsed.value.mode === "metadata") {
     const { data, error } = await getDSASheetMetadataFromDB();
     if (error)
       return res
@@ -120,19 +98,19 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
       .json(sendAPIResponse({ status: true, data }));
   }
 
-  const toArray = (val: any) =>
-    val ? (Array.isArray(val) ? val : [val]) : undefined;
-
+  const { filters } = parsed.value;
   const { data, error } = await getAllDSAQuestionsFromDB({
-    domain: toArray(domain),
-    difficulty: toArray(difficulty),
-    companyTypes: toArray(companyType),
-    topics: toArray(topic),
-    page: page ? parseInt(page as string) : 1,
-    limit: limit ? parseInt(limit as string) : topic ? undefined : 50,
-    userId: userId as string,
-    duration: duration as string,
-    offCampus: offCampus === "true",
+    ...(filters.domain?.length ? { domain: filters.domain } : {}),
+    ...(filters.difficulty?.length ? { difficulty: filters.difficulty } : {}),
+    ...(filters.companyTypes?.length
+      ? { companyTypes: filters.companyTypes }
+      : {}),
+    ...(filters.topics?.length ? { topics: filters.topics } : {}),
+    page: filters.page,
+    limit: filters.limit,
+    ...(filters.userId ? { userId: filters.userId } : {}),
+    ...(filters.duration ? { duration: filters.duration } : {}),
+    offCampus: filters.offCampus,
   });
 
   if (error)
