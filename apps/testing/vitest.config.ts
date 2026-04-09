@@ -1,12 +1,20 @@
+import fs from "node:fs";
+
 import react from "@vitejs/plugin-react";
 import path from "path";
+import type { PluginOption } from "vite";
 import { defineConfig } from "vitest/config";
 
+const testingTsconfig = fs.readFileSync(
+  path.resolve(__dirname, "tsconfig.json"),
+  "utf-8",
+);
+
 export default defineConfig({
-  plugins: [react() as any],
+  plugins: [react() as PluginOption],
   esbuild: {
-    // Skip tsconfig resolution for workspace packages
-    tsconfigRaw: "{}",
+    // esbuild transform() does not accept `tsconfig` path; pass JSON contents explicitly
+    tsconfigRaw: testingTsconfig,
   },
   test: {
     globals: true,
@@ -57,6 +65,7 @@ export default defineConfig({
         "./src/test-utils/next-navigation-mock.ts",
       ),
       // API app @ alias - must come first for proper resolution
+      "@/lib/auth": path.resolve(__dirname, "../api/src/lib/auth"),
       "@/lib/constants": path.resolve(__dirname, "../api/src/lib/constants"),
       "@/lib/database": path.resolve(__dirname, "../api/src/lib/database"),
       "@/lib/interfaces": path.resolve(__dirname, "../api/src/lib/interfaces"),

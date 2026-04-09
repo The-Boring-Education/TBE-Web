@@ -95,6 +95,15 @@ function discoverAppsWithE2e(): Set<keyof typeof APPS> {
 
 const APPS_WITH_E2E = discoverAppsWithE2e();
 
+/** Apps that call `useProductOnboardingGate` and redirect to the standalone onboarding app when product onboarding is incomplete. */
+const APPS_WITH_ONBOARDING_REDIRECT: (keyof typeof APPS)[] = [
+  "prep-yatra",
+  "techyatra",
+  "dsayatra",
+  "oncampus",
+  "resume-yatra",
+];
+
 function getProjectsFromArgv(): (keyof typeof APPS)[] {
   const argv = process.argv;
   const projects = new Set<keyof typeof APPS>();
@@ -144,6 +153,7 @@ type WebServerConfig = {
   cwd: string;
   reuseExistingServer: boolean;
   timeout: number;
+  env?: Record<string, string>;
 };
 
 function toWebServerConfig(appKey: keyof typeof APPS): WebServerConfig {
@@ -161,6 +171,11 @@ function toWebServerConfig(appKey: keyof typeof APPS): WebServerConfig {
       : process.env.CI
         ? 120_000
         : 60_000;
+
+  const onboardingBase = getAppUrl("onboarding");
+  const needsOnboardingUrlInClientBundle =
+    appKey !== "onboarding" && APPS_WITH_ONBOARDING_REDIRECT.includes(appKey);
+
   return {
     command,
     url: getAppUrl(appKey),
@@ -168,15 +183,35 @@ function toWebServerConfig(appKey: keyof typeof APPS): WebServerConfig {
     // Keep local runs reliable even when CI env vars are exported in the shell.
     reuseExistingServer: true,
     timeout,
+    ...(needsOnboardingUrlInClientBundle
+      ? {
+          env: {
+            NEXT_PUBLIC_ONBOARDING_URL: onboardingBase,
+            NEXT_PUBLIC_ONBOARDING_APP_URL: onboardingBase,
+          },
+        }
+      : {}),
   };
 }
 
 function buildWebServer(): WebServerConfig | WebServerConfig[] | undefined {
   const appKeys = resolveWebAppKeys();
-  if (appKeys.length === 1) return toWebServerConfig(appKeys[0]);
-  if (appKeys.length > 1) return appKeys.map((key) => toWebServerConfig(key));
+  if (appKeys.length === 0) return undefined;
 
-  return undefined;
+  const servers: WebServerConfig[] = appKeys.map((key) =>
+    toWebServerConfig(key),
+  );
+
+  const needAuxOnboardingServer =
+    appKeys.some((k) => APPS_WITH_ONBOARDING_REDIRECT.includes(k)) &&
+    !appKeys.includes("onboarding");
+
+  if (needAuxOnboardingServer) {
+    servers.push(toWebServerConfig("onboarding"));
+  }
+
+  if (servers.length === 1) return servers[0];
+  return servers;
 }
 
 function buildProjects() {
