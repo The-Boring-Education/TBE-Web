@@ -5,13 +5,56 @@ import path from "path";
 import type { PluginOption } from "vite";
 import { defineConfig } from "vitest/config";
 
+// --------------------------------------------------------------------------- //
+// sentryStubPlugin
+// --------------------------------------------------------------------------- //
+// @sentry/nextjs is Next.js-only. Stub it so workspace packages that transitively
+// import it (via @tbe/utils → @tbe/constants) don't crash Vitest/jsdom.
+// --------------------------------------------------------------------------- //
+const SENTRY_STUB = `export const captureException=()=>{};
+export const captureMessage=()=>{};
+export const setUser=()=>{};
+export const setTag=()=>{};
+export const setContext=()=>{};
+export const addBreadcrumb=()=>{};
+export const startSpan=async(_n,_o,c)=>c();
+export default{};
+export const captureAPIError=()=>{};
+export const captureDatabaseError=()=>{};
+export const captureAuthError=()=>{};
+export const capturePaymentError=()=>{};
+export const trackPerformance=()=>{};`;
+
+const sentryStubPlugin = () => ({
+  name: "stub-sentry-nextjs",
+  resolveId(id: string) {
+    if (id === "@sentry/nextjs" || id === "@sentry/nextjs/server") {
+      return "virtual:sentry-stub";
+    }
+    return null;
+  },
+  load(id: string) {
+    if (id === "virtual:sentry-stub") {
+      return { code: SENTRY_STUB, map: null };
+    }
+    return null;
+  },
+});
+
+// --------------------------------------------------------------------------- //
+
 const testingTsconfig = fs.readFileSync(
   path.resolve(__dirname, "tsconfig.json"),
   "utf-8",
 );
 
 export default defineConfig({
-  plugins: [react() as PluginOption],
+  plugins: [react() as PluginOption, sentryStubPlugin()],
+  define: {
+    // Stub process.env so packages/constants/envConfig.ts (which uses
+    // process.env.NEXT_PUBLIC_* at module scope) works in jsdom without errors.
+    "process.env": "{}",
+  },
   esbuild: {
     // esbuild transform() does not accept `tsconfig` path; pass JSON contents explicitly
     tsconfigRaw: testingTsconfig,
@@ -49,7 +92,6 @@ export default defineConfig({
     testTimeout: 10000,
     hookTimeout: 10000,
     deps: {
-      // Handle workspace packages properly
       optimizer: {
         web: {
           include: ["@tbe/*"],
@@ -78,11 +120,12 @@ export default defineConfig({
         __dirname,
         "../../packages/components/src",
       ),
-      "@tbe/utils": path.resolve(__dirname, "../../packages/utils/src"),
       "@tbe/constants": path.resolve(__dirname, "../../packages/constants/src"),
       "@tbe/types": path.resolve(__dirname, "../../packages/types/src"),
       "@tbe/interface": path.resolve(__dirname, "../../packages/interface/src"),
+      // Directory aliases so sub-path imports work (e.g. @tbe/hooks/useOnboarding)
       "@tbe/hooks": path.resolve(__dirname, "../../packages/hooks/src"),
+      "@tbe/utils": path.resolve(__dirname, "../../packages/utils/src"),
       "@tbe/gamification": path.resolve(
         __dirname,
         "../../packages/gamification/src",
@@ -97,6 +140,19 @@ export default defineConfig({
       "@tbe/config": path.resolve(
         __dirname,
         "../../packages/config/src/onboarding.ts",
+      ),
+      // Onboarding app components (for onboarding unit tests)
+      "@tbe/onboarding/components/OnboardingForm": path.resolve(
+        __dirname,
+        "../onboarding/src/components/OnboardingForm.tsx",
+      ),
+      "@tbe/onboarding/components/OnboardingLayout": path.resolve(
+        __dirname,
+        "../onboarding/src/components/OnboardingLayout.tsx",
+      ),
+      "@tbe/onboarding/config/products": path.resolve(
+        __dirname,
+        "../onboarding/src/config/products.ts",
       ),
       // API app path aliases for testing API routes
       "@api": path.resolve(__dirname, "../api/src"),
