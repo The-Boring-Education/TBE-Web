@@ -119,7 +119,6 @@ export const DsaQuestionCard = ({
             className="w-2.5 h-2.5 shrink-0"
             style={{ color: "rgba(251,191,36,0.65)" }}
             strokeWidth={2}
-            title="Real World Problem"
           />
         )}
         <span

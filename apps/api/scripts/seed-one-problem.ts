@@ -31,7 +31,7 @@ async function seed() {
       isRealWorldProblem: false,
     };
 
-    const result = await addDSAQuestionToDB(questionPayload);
+    const result = await addDSAQuestionToDB(questionPayload as any);
 
     if (result.error) {
       console.log("Failed to insert question:", result.error);
