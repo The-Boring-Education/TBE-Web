@@ -323,7 +323,7 @@ describe("useOnboarding", () => {
       expect.objectContaining({
         url: "/user/onboarding",
         method: "POST",
-        data: expect.objectContaining({
+        body: expect.objectContaining({
           username: "testuser",
           role: "student",
           skills: ["js"],
