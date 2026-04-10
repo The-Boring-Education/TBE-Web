@@ -1,0 +1,25 @@
+import { expect, test } from "../fixtures/platform.fixture";
+
+test.describe("Platform checkout page", () => {
+  test("checkout loads for subscription query params", async ({
+    platformPage: page,
+  }) => {
+    const response = await page.goto(
+      "/checkout?productType=DSA_YATRA&productId=lifetime",
+    );
+    expect(response?.status()).toBe(200);
+    await expect(
+      page.getByRole("heading", { name: /DSA Yatra/i }),
+    ).toBeVisible();
+  });
+
+  test("checkout shows invalid message without required params", async ({
+    platformPage: page,
+  }) => {
+    const response = await page.goto("/checkout");
+    expect(response?.status()).toBe(200);
+    await expect(
+      page.getByRole("heading", { name: /Invalid checkout link/i }),
+    ).toBeVisible();
+  });
+});

@@ -42,3 +42,6 @@ yarn-error.log*
 .env.*.local
 .env.development
 .env.production
+
+# Local subscription pricing seed (see scripts/subscription-plans.example.json)
+scripts/subscription-plans.local.json

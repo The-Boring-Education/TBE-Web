@@ -1,0 +1,54 @@
+{
+  "plans": [
+    {
+      "productType": "DSA_YATRA",
+      "planKey": "lifetime",
+      "amountInr": 0
+    },
+    {
+      "productType": "PREPYATRA",
+      "planKey": "1months",
+      "amountInr": 0
+    },
+    {
+      "productType": "PREPYATRA",
+      "planKey": "3months",
+      "amountInr": 0
+    },
+    {
+      "productType": "PREPYATRA",
+      "planKey": "6months",
+      "amountInr": 0
+    },
+    {
+      "productType": "PREPYATRA",
+      "planKey": "12months",
+      "amountInr": 0
+    },
+    {
+      "productType": "PREPYATRA",
+      "planKey": "lifetime",
+      "amountInr": 0
+    },
+    {
+      "productType": "ONCAMPUS",
+      "planKey": "1months",
+      "amountInr": 0
+    },
+    {
+      "productType": "ONCAMPUS",
+      "planKey": "3months",
+      "amountInr": 0
+    },
+    {
+      "productType": "ONCAMPUS",
+      "planKey": "6months",
+      "amountInr": 0
+    },
+    {
+      "productType": "ONCAMPUS",
+      "planKey": "12months",
+      "amountInr": 0
+    }
+  ]
+}

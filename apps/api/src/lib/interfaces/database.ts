@@ -416,6 +416,19 @@ export interface PaymentModel extends Document {
   updatedAt?: Date;
 }
 
+/** One row per (productType, planKey) subscription SKU; amounts are authoritative for checkout. */
+export interface SubscriptionPlanModel extends Document {
+  productType: ProductType;
+  /** Normalized to lowercase in DB (e.g. lifetime, 3months). */
+  planKey: string;
+  /** INR, matches Cashfree order_amount units. */
+  amountInr: number;
+  currency: string;
+  isActive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface WebhookEvent {
   order_id: string;
   payment_id?: string;
