@@ -24,33 +24,7 @@ export const sortQuestionsByDifficulty = (
   });
 };
 
-export const DSA_YATRA_FAQS = [
-  {
-    question: "Is DSA Yatra free?",
-    answer:
-      "Yes. You get free access to structured content and practice. We also have premium paths with tailored roadmaps, company-focused question sets, and deeper tracking. Start free and upgrade when you want more focus.",
-  },
-  {
-    question: "How is this different from solving random LeetCode problems?",
-    answer:
-      "DSA Yatra gives you a structured path instead of a random list. You follow a curated sequence by target (e.g. Startups, MNCs, MAANG), build concept mastery with patterns and revisions, and avoid wasting time on problems that don’t match your goal.",
-  },
-  {
-    question: "Do I need prior DSA or coding experience?",
-    answer:
-      "No. We have paths for absolute beginners as well as for developers who already know basics and want to level up for interviews. Pick your current level and we’ll suggest the right starting point.",
-  },
-  {
-    question: "What kind of roles or companies are the paths for?",
-    answer:
-      "Paths are tailored for Startups, MNCs, and MAANG-style interviews. You choose your target and get question sets and a timeline designed for that type of role, so your practice is aligned with real interviews.",
-  },
-  {
-    question: "How much time do I need to commit?",
-    answer:
-      "It depends on your path and deadline. Each path has a suggested timeline; you can follow it as-is or adjust to your pace. The structure helps you stay consistent instead of burning out on random problems.",
-  },
-];
+export { DSA_YATRA_FAQS } from "@tbe/constants";
 
 // DYNAMIC TIMELINE CONFIGURATION
 export const TIMELINE_CONFIGS: Record<

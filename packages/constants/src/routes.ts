@@ -156,6 +156,7 @@ const routes = {
     markSheetQuestionAsCompleted: "/user/interview-prep/sheet",
     markAptitudeQuestionProgress: "/user/interview-prep/aptitude/progress",
     dsaYatraProgress: "/user/dsayatra/progress",
+    oncampusPrefs: "/user/oncampus/preferences",
     submitUserFeedback: "/feedback",
     createOrder: "/payment/create-order",
     checkStatus: "/payment/checkstatus",

@@ -131,6 +131,8 @@ export interface UseOnboardingProps {
   redirect: string;
   token?: string;
   from?: string;
+  /** When set (e.g. Vite `import.meta.env.VITE_API_BASE_URL`), API calls use this base instead of the Next.js proxy */
+  apiBaseUrl?: string;
 }
 
 // ================================

@@ -49,6 +49,8 @@ export const queryKeys = {
       limit?: number;
       topic?: string;
       userId?: string;
+      duration?: string;
+      offCampus?: boolean;
     }) => [...queryKeys.dsa.all, "questions", filters] as const,
     completedQuestions: (userId: string) =>
       [...queryKeys.dsa.all, "completed", userId] as const,
@@ -96,6 +98,9 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.user.all, "detail", id] as const,
     profile: (id: string) => [...queryKeys.user.all, "profile", id] as const,
     rank: (id: string) => [...queryKeys.user.all, "rank", id] as const,
+    /** Authenticated full user record for onboarding redirect gates */
+    onboardingGate: (userId: string) =>
+      [...queryKeys.user.all, "onboarding-gate", userId] as const,
   },
 
   // ── Gamification ──

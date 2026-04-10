@@ -53,4 +53,50 @@ test.describe("Onboarding smoke flow", () => {
 
     await expect(page.getByText(/Step 1 of/)).toBeVisible();
   });
+
+  test("prepyatra alias renders Prep Yatra branding", async ({ page }) => {
+    await page.goto("/?userId=smoke-e2e-user&productId=prepyatra", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("heading", { name: "Welcome to Prep Yatra!" }),
+    ).toBeVisible({ timeout: 20_000 });
+
+    await expect(page.getByText(/Step 1 of/)).toBeVisible();
+  });
+
+  test("dsayatra product renders DSA Yatra branding", async ({ page }) => {
+    await page.goto("/?userId=smoke-e2e-user&productId=dsayatra", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("heading", { name: "Welcome to DSA Yatra!" }),
+    ).toBeVisible({ timeout: 20_000 });
+
+    await expect(page.getByText(/Step 1 of/)).toBeVisible();
+  });
+
+  test("oncampus product renders OnCampus branding", async ({ page }) => {
+    await page.goto("/?userId=smoke-e2e-user&productId=oncampus", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("heading", { name: "Welcome to OnCampus!" }),
+    ).toBeVisible({ timeout: 20_000 });
+
+    await expect(page.getByText(/Step 1 of/)).toBeVisible();
+  });
+
+  test("unknown productId shows invalid link message", async ({ page }) => {
+    await page.goto("/?userId=smoke-e2e-user&productId=not-a-valid-product", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(page.getByText("Invalid onboarding link.")).toBeVisible({
+      timeout: 20_000,
+    });
+  });
 });

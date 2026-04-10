@@ -86,10 +86,7 @@ const Navbar = ({
     () => resolveSection(nav.issues, TOP_NAVIGATION.issues),
     [nav.issues],
   );
-  const cohortsNav = useMemo(
-    () => resolveSection(nav.cohorts, TOP_NAVIGATION.cohorts),
-    [nav.cohorts],
-  );
+
   const learnNav = useMemo(
     () => resolveSection(nav.learn, TOP_NAVIGATION.products),
     [nav.learn],
@@ -250,16 +247,7 @@ const Navbar = ({
                     </Link>
                   </FlexContainer>
                 )}
-                {cohortsNav.visible && (
-                  <PopoverContainer
-                    isOpen={openPopover === "cohorts"}
-                    label="Cohorts"
-                    onToggle={() => handleSetOpen("cohorts")}
-                    theme={theme}
-                  >
-                    <NavbarDropdownContainer links={cohortsNav.links} />
-                  </PopoverContainer>
-                )}
+
                 {learnNav.visible && (
                   <PopoverContainer
                     isOpen={openPopover === "products"}
@@ -371,13 +359,6 @@ const Navbar = ({
                       </FlexContainer>
                     )}
 
-                    {cohortsNav.visible && (
-                      <MobileNavbarLinksContainer
-                        links={cohortsNav.links}
-                        title="Cohorts"
-                        onLinkClick={handleCloseMobileMenu}
-                      />
-                    )}
                     {learnNav.visible && (
                       <MobileNavbarLinksContainer
                         links={learnNav.links}

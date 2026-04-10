@@ -79,6 +79,19 @@ export interface UserModel {
       };
     };
   };
+  oncampus?: {
+    onboardingCompleted?: boolean;
+    duration?: "1Month" | "3Months" | "6Months" | "1Year";
+    offCampus?: boolean;
+  };
+  techYatra?: {
+    tyOnboarded?: boolean;
+    focus?: string;
+  };
+  resumeYatra?: {
+    ryOnboarded?: boolean;
+    experienceBand?: string;
+  };
 }
 
 export interface WebinarEnrolledUsersProps {

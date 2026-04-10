@@ -14,10 +14,11 @@ import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { Toaster } from "sonner";
 
 import DashboardLayout from "@/components/DashboardLayout";
+import { OnboardingCheck } from "@/components/OnboardingCheck";
 
 const AppContent = ({
   Component,
@@ -27,18 +28,7 @@ const AppContent = ({
   pageProps: any;
 }) => {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-  const userData = useUser();
-  const { user, isAuth, loading } = (userData as any) || {
-    user: null,
-    isAuth: false,
-    loading: true,
-  };
-
-  // Ensure we're on the client side before accessing window
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  useUser();
 
   // ✅ Initialize Google Analytics
   useEffect(() => {
@@ -76,17 +66,15 @@ const AppContent = ({
   const pageContent = <Component {...pageProps} />;
 
   return (
-    <TBEQueryProvider>
-      <GamificationProvider>
-        <div className="bg-[#0A0A0A] min-h-screen">
-          {shouldUseDashboardLayout ? (
-            <DashboardLayout>{pageContent}</DashboardLayout>
-          ) : (
-            pageContent
-          )}
-        </div>
-      </GamificationProvider>
-    </TBEQueryProvider>
+    <GamificationProvider>
+      <div className="bg-[#0A0A0A] min-h-screen">
+        {shouldUseDashboardLayout ? (
+          <DashboardLayout>{pageContent}</DashboardLayout>
+        ) : (
+          pageContent
+        )}
+      </div>
+    </GamificationProvider>
   );
 };
 
@@ -98,7 +86,10 @@ const OnCampusApp = ({ Component, pageProps }: AppProps) => {
         <title>OnCampus</title>
       </Head>
       <AuthProvider>
-        <AppContent Component={Component} pageProps={pageProps} />
+        <TBEQueryProvider>
+          <OnboardingCheck />
+          <AppContent Component={Component} pageProps={pageProps} />
+        </TBEQueryProvider>
         <Toaster position="top-center" richColors />
       </AuthProvider>
     </Fragment>

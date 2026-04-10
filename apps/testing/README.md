@@ -66,7 +66,7 @@ pnpm test:coverage
 
 ### End-to-end (Playwright)
 
-From the **repository root**, install browsers once (Chromium is enough for CI parity):
+After a root `pnpm install`, `@tbe/testing` runs `playwright install chromium` automatically. To install manually (Chromium is enough for CI parity):
 
 ```bash
 pnpm --filter @tbe/testing exec playwright install chromium
