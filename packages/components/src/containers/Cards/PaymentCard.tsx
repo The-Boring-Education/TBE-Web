@@ -40,11 +40,9 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
           userId: user?.id,
           productId: course._id,
           productType,
-          amount: course.price,
           customerName: user?.name,
           customerEmail: user?.email,
           ...((course as any).appliedCoupon && {
-            appliedCoupon: (course as any).appliedCoupon._id,
             couponCode: (course as any).appliedCoupon.code,
           }),
         }),

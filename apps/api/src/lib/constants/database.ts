@@ -36,6 +36,8 @@ const DATABASE_MODELS = {
   DSA_QUESTION: "DSAQuestion",
   APTITUDE_TOPIC: "AptitudeTopic",
   STUDY_GUIDE: "StudyGuide",
+  /** Admin-configured INR prices for subscription SKUs (productType + planKey) */
+  SUBSCRIPTION_PLAN: "SubscriptionPlan",
 };
 
 export const FEEDBACK_TYPES = [

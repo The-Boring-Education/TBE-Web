@@ -124,7 +124,7 @@ export default function useOnboarding({
       const response = await sendRequest({
         url: endpoint,
         method: config.api.method,
-        data: payload,
+        body: payload,
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         baseURL: apiBaseUrl,
       });

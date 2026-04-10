@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes, envConfig, isDevelopmentEnv } from "@/lib/constants";
+import type { ProductType } from "@/lib/constants/database";
 import { isValidProductType } from "@/lib/constants/products";
 import { addPaymentToDB } from "@/lib/database";
+import { resolveAuthoritativeOrderAmount } from "@/lib/services/payment";
 import {
   buildOrderPayload,
   createCashfreeOrder,
@@ -41,10 +43,8 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       userId,
       productId,
       productType,
-      amount,
       customerName,
       customerEmail,
-      appliedCoupon,
       couponCode,
     } = req.body;
 
@@ -52,7 +52,6 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       !userId ||
       !productId ||
       !productType ||
-      !amount ||
       !customerName ||
       !customerEmail
     ) {
@@ -73,11 +72,30 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    const resolved = await resolveAuthoritativeOrderAmount({
+      productType: productType as ProductType,
+      productId,
+      couponCode: couponCode ?? undefined,
+      userId,
+    });
+
+    if (!resolved.ok) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: resolved.error,
+        }),
+      );
+    }
+
+    const { finalAmount, appliedCoupon, couponCode: resolvedCoupon } =
+      resolved.data;
+
     const orderId = generatePaymentOrderId();
 
     const orderPayload = buildOrderPayload({
       orderId,
-      amount,
+      amount: finalAmount,
       userId,
       customerName,
       customerEmail,
@@ -101,11 +119,11 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       userId,
       productId,
       productType,
-      amount,
+      amount: finalAmount,
       orderId,
       paymentLink,
-      appliedCoupon,
-      couponCode,
+      ...(appliedCoupon && { appliedCoupon }),
+      ...(resolvedCoupon && { couponCode: resolvedCoupon }),
     });
 
     if (error) {

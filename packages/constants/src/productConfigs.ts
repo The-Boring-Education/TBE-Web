@@ -147,6 +147,80 @@ export const PRODUCT_CONFIGS: Partial<
       buttonText: "Pay Now to Unlock",
     },
   },
+  DSA_YATRA: {
+    name: "DSA Yatra",
+    icon: CodeBracketIcon,
+    reasonsToBuy: [
+      {
+        icon: CodeBracketIcon,
+        title: "Structured DSA Path",
+        description: "Practice patterns and problems curated for interviews",
+      },
+      {
+        icon: StarIcon,
+        title: "Lifetime Access",
+        description: "One-time purchase with long-term access to DSA resources",
+      },
+      {
+        icon: ShieldCheckIcon,
+        title: "Secure Checkout",
+        description: "Payments processed safely via Cashfree",
+      },
+      {
+        icon: ClockIcon,
+        title: "Learn at Your Pace",
+        description: "Return anytime to continue your preparation",
+      },
+    ],
+    defaultFeatures: [
+      "DSA question bank",
+      "Topic-wise practice",
+      "Lifetime access",
+    ],
+    lockedMessage: {
+      title: "Unlock DSA Yatra",
+      description:
+        "Complete payment to unlock full DSA Yatra access for your account.",
+      buttonText: "Pay Now",
+    },
+  },
+  ONCAMPUS: {
+    name: "On Campus",
+    icon: UserGroupIcon,
+    reasonsToBuy: [
+      {
+        icon: UserGroupIcon,
+        title: "Campus Placement Focus",
+        description: "Aptitude, core CS, and interview prep in one place",
+      },
+      {
+        icon: ClockIcon,
+        title: "Flexible Duration",
+        description: "Choose 1, 3, 6, or 12 month plans",
+      },
+      {
+        icon: ShieldCheckIcon,
+        title: "Coupons",
+        description: "Apply campus-specific coupons at checkout",
+      },
+      {
+        icon: StarIcon,
+        title: "Support",
+        description: "Get help when you are stuck",
+      },
+    ],
+    defaultFeatures: [
+      "Placement preparation",
+      "Aptitude and interviews",
+      "Duration-based access",
+    ],
+    lockedMessage: {
+      title: "Subscribe to On Campus",
+      description:
+        "Choose a plan and complete payment to unlock On Campus content.",
+      buttonText: "Subscribe",
+    },
+  },
   PREPYATRA: {
     name: "PrepYatra Subscription",
     icon: StarIcon,

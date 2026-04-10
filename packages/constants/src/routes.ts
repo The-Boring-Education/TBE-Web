@@ -126,6 +126,9 @@ const routes = {
     aptitude: "/dashboard/aptitude",
   },
   unskilled: "/unskilled",
+  /** Shareable, minimal payment entry (query: productType, productId, optional coupon, next) */
+  checkout: "/checkout",
+  paymentStatus: "/payment/status",
   404: "/404",
   api: {
     base: "",
@@ -157,6 +160,8 @@ const routes = {
     submitUserFeedback: "/feedback",
     createOrder: "/payment/create-order",
     checkStatus: "/payment/checkstatus",
+    paymentQuote: "/payment/quote",
+    paymentOrderStatus: "/payment/order-status",
     validateCoupon: "/coupon/validate",
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {
@@ -220,4 +225,21 @@ const generateSectionPath = ({
   sectionID,
 }: GenerateSectionPathProps) => `${basePath}#${sectionID}`;
 
-export { generateSectionPath, routes };
+/** Build a shareable checkout URL for any supported product line. */
+const buildCheckoutUrl = (params: {
+  productType: string;
+  productId: string;
+  coupon?: string;
+  /** Relative path after successful payment (optional) */
+  next?: string;
+}): string => {
+  const qs = new URLSearchParams({
+    productType: params.productType,
+    productId: params.productId,
+  });
+  if (params.coupon) qs.set("coupon", params.coupon);
+  if (params.next) qs.set("next", params.next);
+  return `${routes.checkout}?${qs.toString()}`;
+};
+
+export { buildCheckoutUrl, generateSectionPath, routes };

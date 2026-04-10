@@ -9,3 +9,7 @@ export {
 
 // Export product configuration
 export { getProductConfig, PRODUCT_REGISTRY } from "@/lib/constants/products";
+
+export { resolveAuthoritativeOrderAmount } from "./resolveOrderAmount";
+export { getSubscriptionPlanPrice } from "./subscriptionPlanCatalog";
+export { getSubscriptionPlanPriceFromDB } from "@/lib/database/queries/subscription-plan";

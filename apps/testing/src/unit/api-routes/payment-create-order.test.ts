@@ -51,6 +51,13 @@ vi.mock("../../../../api/src/lib/database", () => ({
   addPaymentToDB: (...args: any[]) => mockAddPaymentToDB(...args),
 }));
 
+const mockResolveAuthoritativeOrderAmount = vi.fn();
+
+vi.mock("@/lib/services/payment", () => ({
+  resolveAuthoritativeOrderAmount: (...args: any[]) =>
+    mockResolveAuthoritativeOrderAmount(...args),
+}));
+
 vi.mock("../../../../api/src/lib/utils", () => ({
   buildOrderPayload: (...args: any[]) => mockBuildOrderPayload(...args),
   createCashfreeOrder: (...args: any[]) => mockCreateCashfreeOrder(...args),
@@ -85,7 +92,6 @@ const validBody = {
   userId: "user_123",
   productId: "prod_456",
   productType: "SHIKSHA",
-  amount: 999,
   customerName: "Test User",
   customerEmail: "test@example.com",
 };
@@ -98,6 +104,13 @@ describe("Payment Create Order API Route", () => {
       order_id: "order_test_123",
       order_amount: 999,
       order_currency: "INR",
+    });
+    mockResolveAuthoritativeOrderAmount.mockResolvedValue({
+      ok: true,
+      data: {
+        baseAmount: 999,
+        finalAmount: 999,
+      },
     });
   });
 
@@ -131,7 +144,6 @@ describe("Payment Create Order API Route", () => {
       "userId",
       "productId",
       "productType",
-      "amount",
       "customerName",
       "customerEmail",
     ];
@@ -244,9 +256,18 @@ describe("Payment Create Order API Route", () => {
     });
     mockAddPaymentToDB.mockResolvedValue({ data: {} });
 
+    mockResolveAuthoritativeOrderAmount.mockResolvedValue({
+      ok: true,
+      data: {
+        baseAmount: 800,
+        finalAmount: 800,
+        appliedCoupon: "coupon_id_1",
+        couponCode: "SAVE20",
+      },
+    });
+
     const bodyWithCoupon = {
       ...validBody,
-      appliedCoupon: "coupon_id_1",
       couponCode: "SAVE20",
     };
 
@@ -261,6 +282,7 @@ describe("Payment Create Order API Route", () => {
       expect.objectContaining({
         appliedCoupon: "coupon_id_1",
         couponCode: "SAVE20",
+        amount: 800,
       }),
     );
   });

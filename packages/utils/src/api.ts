@@ -60,6 +60,7 @@ export const sendRequest = async ({
   headers,
   body,
   baseURL,
+  data,
 }: APIMakeRequestProps): Promise<APIResponseType> => {
   // Check if we're in the browser
   const isBrowser = typeof window !== "undefined";
@@ -91,7 +92,8 @@ export const sendRequest = async ({
       ...headers,
       "Cache-Control": "no-store",
     },
-    data: body,
+    // Support both `body` (legacy) and `data` (preferred) params
+    data: body ?? data,
   };
 
   try {
