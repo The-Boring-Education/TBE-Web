@@ -65,7 +65,14 @@ const DsaPrepWorkspace = ({
     useState("before-you-start");
 
   const filteredQuestions = selectedTopic
-    ? questions.filter((q) => q.topics?.[0] === selectedTopic)
+    ? questions.filter((q) =>
+        q.topics?.some(
+          (t) =>
+            t.toUpperCase() === selectedTopic.toUpperCase() ||
+            t.toUpperCase().replace(/\s+/g, "_") ===
+              selectedTopic.toUpperCase().replace(/\s+/g, "_"),
+        ),
+      )
     : [];
 
   const currentTopicConfig =

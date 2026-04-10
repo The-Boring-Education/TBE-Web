@@ -701,9 +701,11 @@ const getAllDSAQuestionsFromDB = async (
       companyTypes,
       topics,
       page = 1,
-      limit = 50,
+      limit: limitParam,
       userId,
     } = filters;
+
+    const limit = limitParam || (topics ? 200 : 50);
 
     // Build match stage for filtering
     const matchStage: any = {};
@@ -727,23 +729,41 @@ const getAllDSAQuestionsFromDB = async (
 
     if (topics) {
       const topicsList = Array.isArray(topics) ? topics : [topics];
-      matchStage.topics = { $in: topicsList };
+      const normalizedTopics = topicsList.flatMap((t: string) => [
+        t,
+        t.replace(/_/g, " "),
+        t.replace(/\s+/g, "_"),
+      ]);
+      matchStage.topics = { $in: [...new Set(normalizedTopics)] };
     }
 
     // Intersection logic ensures only questions within user's focus are returned
     if (userId) {
       const targets = await getUserDSATargetCompanies(userId);
       if (targets.length > 0) {
+        const targetMatch = { companyTypes: { $in: targets } };
+        const realWorldMatch = {
+          $or: [
+            { isRealWorldProblem: true },
+            { isrealworldproblem: true },
+            { isRealWorld: true },
+            { isRealWorldQuestion: true },
+            { isrealworldquestion: true },
+          ],
+        };
+
         if (matchStage.companyTypes) {
           const currentIn = matchStage.companyTypes.$in || [];
           const intersection = currentIn.filter((t: string) =>
             targets.includes(t),
           );
-          matchStage.companyTypes = {
-            $in: intersection.length > 0 ? intersection : targets,
-          };
+          const finalIn = intersection.length > 0 ? intersection : targets;
+
+          // Merge with OR real-world
+          delete matchStage.companyTypes;
+          matchStage.$or = [{ companyTypes: { $in: finalIn } }, realWorldMatch];
         } else {
-          matchStage.companyTypes = { $in: targets };
+          matchStage.$or = [targetMatch, realWorldMatch];
         }
       }
     }
@@ -1137,9 +1157,20 @@ const getDSAQuestionsGroupedByTopic = async (
       targetCompanies = await getUserDSATargetCompanies(userId);
 
       if (targetCompanies.length > 0) {
+        const targetMatch = { companyTypes: { $in: targetCompanies } };
+        const realWorldMatch = {
+          $or: [
+            { isRealWorldProblem: true },
+            { isrealworldproblem: true },
+            { isRealWorld: true },
+            { isRealWorldQuestion: true },
+            { isrealworldquestion: true },
+          ],
+        };
+
         // Enforce strict matching based on user's target goals
         if (!companyType) {
-          matchStage.companyTypes = { $in: targetCompanies };
+          matchStage.$or = [targetMatch, realWorldMatch];
         }
       }
     }

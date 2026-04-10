@@ -20,7 +20,7 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
   const examples = extractExamples(question.answer || "");
   const constraints = extractConstraints(question.answer || "");
 
-  return {
+  const result: DsaQuestion = {
     id: question._id,
     name: question.title,
     difficultyLevel: question.difficulty,
@@ -36,12 +36,39 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     domain: question.domain,
     examples: examples,
     constraints: constraints as string[],
-    sections: question.sections,
+    sections: question.sections
+      ? JSON.parse(JSON.stringify(question.sections))
+      : null,
     notes: question.notes,
     _priorityScore: question._priorityScore,
-    isRealWorldProblem: Boolean(question.isRealWorldProblem),
-    isRealWorld: Boolean(question.isRealWorldProblem),
+    isRealWorldProblem: !!(
+      question.isRealWorldProblem || question.isrealworldproblem
+    ),
+    isRealWorld: !!(question.isRealWorldProblem || question.isrealworldproblem),
   };
+
+  // Fix messy indentation/newlines in real-world sections (often caused by literal \n strings)
+  if (result.sections) {
+    const unescapeStr = (str: string) =>
+      typeof str === "string" ? str.replace(/\\n/g, "\n") : str;
+
+    const walk = (obj: any) => {
+      if (!obj || typeof obj !== "object") return;
+      for (const key in obj) {
+        if (
+          typeof obj[key] === "string" &&
+          (key === "code" || key.endsWith("_code") || key === "fix")
+        ) {
+          obj[key] = unescapeStr(obj[key]);
+        } else if (typeof obj[key] === "object") {
+          walk(obj[key]);
+        }
+      }
+    };
+    walk(result.sections);
+  }
+
+  return result;
 };
 
 export const extractExamples = (markdown: string) => {
