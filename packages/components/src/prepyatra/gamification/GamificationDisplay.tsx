@@ -52,7 +52,7 @@ const GamificationDisplay = ({ userId }: { userId: string }) => {
           <div className="bg-white rounded-2xl shadow-lg border px-4 py-3 w-[280px]">
             <div className="flex items-center gap-3">
               {/* Progress Circle */}
-              <div className="w-[70px] h-[70px] flex items-center justify-center flex-shrink-0">
+              <div className="w-[70px] h-[70px] flex items-center justify-center flex-shrink-0 relative">
                 <svg width={70} height={70}>
                   <circle
                     cx={35}
@@ -78,18 +78,12 @@ const GamificationDisplay = ({ userId }: { userId: string }) => {
                       transition: "stroke-dashoffset 0.4s ease",
                     }}
                   />
-                  <text
-                    x="50%"
-                    y="50%"
-                    textAnchor="middle"
-                    dy=".3em"
-                    fontSize="15px"
-                    fill="#ef4444"
-                    fontWeight="bold"
-                  >
-                    {points}
-                  </text>
                 </svg>
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <span className="text-[15px] font-bold text-[#ef4444]">
+                    {points}
+                  </span>
+                </div>
               </div>
 
               {/* Info */}
