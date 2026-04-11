@@ -85,11 +85,11 @@ const DsaQuestionList = ({
             {/* Difficulty Group Header */}
             <button
               onClick={() => toggleGroup(difficulty)}
-              className="flex items-center gap-2 w-full px-2 py-1.5 rounded-lg hover:bg-[#1a1a1a] transition-colors duration-200 group"
+              className="flex items-center gap-2 w-full px-1 py-1.5 rounded-lg hover:bg-[#1a1a1a] transition-colors duration-200 group"
             >
               <ChevronDown
                 className={cn(
-                  "w-4 h-4 text-gray-500 transition-transform duration-200",
+                  "w-2 h-2 text-gray-500 transition-transform duration-200",
                   !isExpanded && "-rotate-90",
                 )}
               />
@@ -110,7 +110,16 @@ const DsaQuestionList = ({
             {isExpanded && (
               <div className="flex flex-col w-full">
                 {groupQuestions.map((question) => {
-                  const qId = String(question.id || question.name);
+                  const {
+                    name,
+                    difficultyLevel,
+                    id,
+                    isRealWorldProblem,
+                    topics,
+                    companyType,
+                  } = question;
+
+                  const qId = String(id || name);
                   const isCompleted = completedQuestionIds.some(
                     (id) => String(id) === qId,
                   );
@@ -123,15 +132,15 @@ const DsaQuestionList = ({
                   return (
                     <DsaQuestionCard
                       key={qId}
-                      name={question.name}
-                      difficultyLevel={question.difficultyLevel}
+                      name={name}
+                      difficultyLevel={difficultyLevel}
                       isSelected={isSelected}
                       isCompleted={isCompleted}
                       isRecommended={isRecommended}
                       hasNotes={hasNotes}
-                      isRealWorld={(question as any).isRealWorld}
-                      topics={question.topics}
-                      companyTypes={question.companyType}
+                      isRealWorldProblem={isRealWorldProblem}
+                      topics={topics}
+                      companyTypes={companyType}
                       userTargetCompanies={userTargetCompanies}
                       onClick={() => onQuestionClick?.(question)}
                       onToggleComplete={() => onToggleComplete?.(qId)}

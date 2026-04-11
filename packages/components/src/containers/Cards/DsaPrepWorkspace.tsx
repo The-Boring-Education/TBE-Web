@@ -246,7 +246,7 @@ const DsaPrepWorkspace = ({
             "w-full lg:w-[260px]",
           )}
         >
-          <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
+          <div className="flex-1 overflow-y-auto px-1 py-3 scrollbar-thin-grey">
             {!selectedTopic ? (
               <div className="flex flex-col">
                 {topicSidebarHeader}
@@ -259,7 +259,7 @@ const DsaPrepWorkspace = ({
                 />
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-1">
                 {isStudyGuideOpen ? (
                   currentTopicConfig ? (
                     <StudyGuideNav
@@ -288,7 +288,6 @@ const DsaPrepWorkspace = ({
                     completedQuestionIds={completedQuestionIds}
                     onToggleComplete={onToggleComplete}
                     localNotes={localNotes}
-                    userTargetCompanies={userTargetCompanies}
                   />
                 )}
               </div>

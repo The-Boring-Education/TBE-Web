@@ -39,6 +39,7 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     sections: question.sections,
     notes: question.notes,
     _priorityScore: question._priorityScore,
+    isRealWorldProblem: Boolean(question.isRealWorldProblem),
   };
 };
 

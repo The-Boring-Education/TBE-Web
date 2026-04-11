@@ -1,47 +1,44 @@
-import { TOPIC_LABELS } from "@tbe/constants";
 import type { DsaQuestionCardProps } from "@tbe/interface";
-import { getDifficultyConfig } from "@tbe/utils";
+import { cn } from "@tbe/utils";
 import { CheckCircle2, Circle, Globe, Sparkles } from "lucide-react";
 
 export const DsaQuestionCard = ({
   name,
-  difficultyLevel,
   isSelected = false,
   isCompleted = false,
   isRecommended = false,
   hasNotes = false,
-  isRealWorld = false,
-  topics = [],
-  companyTypes = [],
-  userTargetCompanies = [],
+  isRealWorldProblem = false,
   onClick,
   onToggleComplete,
 }: DsaQuestionCardProps) => {
-  const { label: diffLabel, color: diffColor } =
-    getDifficultyConfig(difficultyLevel);
+  const handleToggleComplete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggleComplete?.(e);
+  };
 
   return (
     <div
-      className={`w-full rounded-lg py-2 px-2.5 mb-1 cursor-pointer transition-all duration-200 group flex items-center justify-between ${
+      className={cn(
+        "w-full rounded-lg py-2 px-2.5 mb-1 cursor-pointer transition-all duration-200 group flex items-start justify-between gap-2",
         isSelected
           ? "bg-red-500/[0.04] border border-red-500/30 shadow-[0_0_12px_rgba(239,68,68,0.06)] border-l-2 border-l-red-500"
           : isCompleted
             ? "bg-green-500/[0.03] border border-green-500/20 border-l-2 border-l-green-500/60"
-            : "bg-transparent border border-transparent hover:bg-[#111] hover:border-gray-800/60"
-      }`}
+            : "bg-transparent border border-transparent hover:bg-[#111] hover:border-gray-800/60",
+      )}
       onClick={onClick}
     >
-      <div className="flex items-center gap-2.5 flex-1 min-w-0 pr-2">
+      <div className="flex items-start gap-2.5 flex-1 min-w-0">
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleComplete?.(e);
-          }}
-          className={`flex-shrink-0 focus:outline-none transition-all duration-200 ${
+          type="button"
+          onClick={handleToggleComplete}
+          className={cn(
+            "mt-0.5 shrink-0 focus:outline-none transition-all duration-200",
             isCompleted
               ? "text-green-500 hover:text-green-400"
-              : "text-gray-700 hover:text-green-500"
-          }`}
+              : "text-gray-700 hover:text-green-500",
+          )}
         >
           {isCompleted ? (
             <CheckCircle2 className="w-[18px] h-[18px]" />
@@ -49,85 +46,45 @@ export const DsaQuestionCard = ({
             <Circle className="w-[18px] h-[18px]" />
           )}
         </button>
-        <div className="flex flex-col min-w-0">
+
+        <div className="flex flex-col min-w-0 gap-1">
           <p
-            className={`text-[13px] font-medium truncate transition-colors duration-200 flex items-center gap-1.5 ${
+            className={cn(
+              "text-[13px] font-medium leading-snug transition-colors duration-200 flex items-center gap-1.5",
               isSelected
                 ? "text-white"
                 : isCompleted
                   ? "text-green-100/80"
-                  : "text-gray-400 group-hover:text-gray-200"
-            }`}
+                  : "text-gray-400 group-hover:text-gray-200",
+            )}
           >
             {isRecommended && (
-              <Sparkles className="w-3 h-3 text-red-500 fill-red-500/20 shrink-0" />
+              <Sparkles className="w-3.5 h-3.5 text-red-500 fill-red-500/20 shrink-0" />
             )}
-            {name}
+            <span className="min-w-0 break-words">{name}</span>
           </p>
-          <div className="flex flex-wrap items-center gap-1.5 mt-1">
-            {hasNotes && (
-              <div className="flex items-center gap-1 opacity-60">
-                <span className="text-[9px] text-red-400 font-bold uppercase tracking-tighter">
-                  Notes
-                </span>
-              </div>
-            )}
-            {topics.slice(0, 1).map((topic) => (
-              <span
-                key={topic}
-                className="text-[9px] text-gray-600 font-bold uppercase tracking-tighter"
-              >
-                {TOPIC_LABELS[topic] || topic}
+
+          {isRealWorldProblem && (
+            <span
+              className="inline-flex items-center gap-1 text-blue-400"
+              title="Real-world style problem"
+            >
+              <Globe className="w-2 h-2 shrink-0" />
+              <span className="text-[8px] font-bold uppercase tracking-wide">
+                Real World
               </span>
-            ))}
-            {(() => {
-              // Priority: Show labels that match user's target companies first
-              const matchedCompanies = companyTypes.filter((c) =>
-                userTargetCompanies.includes(c),
-              );
-
-              // If we have matches, show the first matched one.
-              // Otherwise show the first available one ONLY if no target is set.
-              // This strictly hides "STARTUP" if user selected "Product-based"
-              const labelToShow =
-                matchedCompanies.length > 0
-                  ? matchedCompanies[0]
-                  : userTargetCompanies.length === 0
-                    ? companyTypes[0]
-                    : null;
-
-              if (!labelToShow) return null;
-
-              return (
-                <span
-                  key={labelToShow}
-                  className="text-[9px] text-gray-700 font-bold uppercase tracking-tighter bg-gray-900/40 px-1 rounded transition-all duration-300"
-                >
-                  {labelToShow}
-                </span>
-              );
-            })()}
-          </div>
+            </span>
+          )}
         </div>
       </div>
-      <div className="flex items-center gap-2">
+
+      <div className="flex flex-col items-end gap-1 shrink-0 pt-0.5">
         {hasNotes && (
-          <div className="w-1 h-1 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.45)]"
+            aria-hidden
+          />
         )}
-        {isRealWorld && (
-          <div
-            className="flex items-center gap-1 text-blue-400"
-            title="Real World Question"
-          >
-            <Globe className="w-3 h-3" />
-            <span className="text-[8px] font-bold uppercase">Real</span>
-          </div>
-        )}
-        <span
-          className={`text-[8px] font-black px-1.5 py-0.5 flex-shrink-0 rounded-[4px] border uppercase tracking-widest ${diffColor} opacity-90`}
-        >
-          {diffLabel}
-        </span>
       </div>
     </div>
   );
