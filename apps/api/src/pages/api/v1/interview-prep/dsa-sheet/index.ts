@@ -11,7 +11,7 @@ import { sendAPIResponse } from "@/lib/utils";
 import {
   parseDsaSheetCreateBody,
   parseDsaSheetGetQuery,
-} from "@/lib/validation";
+} from "@/lib/validation/dsaSheet";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
