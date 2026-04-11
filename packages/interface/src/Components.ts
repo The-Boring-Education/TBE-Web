@@ -972,6 +972,10 @@ export interface DsaQuestion {
   constraints?: string[];
   notes?: string;
   _priorityScore?: number;
+  /** Mirrors DB `isRealWorldProblem`; prefer this when reading API payloads. */
+  isRealWorldProblem?: boolean;
+  /** Derived for UI badges (alias of real-world flag). */
+  isRealWorld?: boolean;
   sections?: {
     first_principles?: {
       paragraphs: string[];
