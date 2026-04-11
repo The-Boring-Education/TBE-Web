@@ -740,20 +740,41 @@ const getAllDSAQuestionsFromDB = async (
       matchStage.topics = { $in: topicsList };
     }
 
-    // Intersection logic ensures only questions within user's focus are returned
+    // Intersection logic ensures questions within user's focus OR real-world problems are returned
     if (userId) {
       const targets = await getUserDSATargetCompanies(userId);
       if (targets.length > 0) {
+        // Create a case-insensitive version of targets for matching
+        const targetsUpper = targets.map((t) => t.toUpperCase());
+
+        const companyMatch = { companyTypes: { $in: targets } };
+        const companyMatchUpper = { companyTypes: { $in: targetsUpper } };
+        const realWorldMatch = {
+          $or: [
+            { isRealWorldProblem: true },
+            { isrealworldproblem: true },
+            { isRealWorld: true },
+            { isrealworldquestion: true },
+          ],
+        };
+
         if (matchStage.companyTypes) {
           const currentIn = matchStage.companyTypes.$in || [];
           const intersection = currentIn.filter((t: string) =>
-            targets.includes(t),
+            targetsUpper.includes(t.toUpperCase()),
           );
-          matchStage.companyTypes = {
-            $in: intersection.length > 0 ? intersection : targets,
-          };
+
+          matchStage.$or = [
+            {
+              companyTypes: {
+                $in: intersection.length > 0 ? intersection : targets,
+              },
+            },
+            realWorldMatch,
+          ];
+          delete matchStage.companyTypes;
         } else {
-          matchStage.companyTypes = { $in: targets };
+          matchStage.$or = [companyMatch, companyMatchUpper, realWorldMatch];
         }
       }
     }
@@ -990,8 +1011,18 @@ const getDSATopicSummariesFromDB = async (
     if (userId) {
       const targetCompanies = await getUserDSATargetCompanies(userId);
       if (targetCompanies.length > 0) {
+        const targetsUpper = targetCompanies.map((t) => t.toUpperCase());
         pipeline.push({
-          $match: { companyTypes: { $in: targetCompanies } },
+          $match: {
+            $or: [
+              { companyTypes: { $in: targetCompanies } },
+              { companyTypes: { $in: targetsUpper } },
+              { isRealWorldProblem: true },
+              { isrealworldproblem: true },
+              { isRealWorld: true },
+              { isrealworldquestion: true },
+            ],
+          },
         });
       }
     }
@@ -1192,9 +1223,32 @@ const getDSAQuestionsGroupedByTopic = async (
       targetCompanies = await getUserDSATargetCompanies(userId);
 
       if (targetCompanies.length > 0) {
-        // Enforce strict matching based on user's target goals
+        // Enforce matching based on user's target goals OR real-world problems
+        const targetsUpper = targetCompanies.map((t) => t.toUpperCase());
+        const realWorldMatch = {
+          $or: [
+            { isRealWorldProblem: true },
+            { isrealworldproblem: true },
+            { isRealWorld: true },
+            { isrealworldquestion: true },
+          ],
+        };
+
         if (!companyType) {
-          matchStage.companyTypes = { $in: targetCompanies };
+          matchStage.$or = [
+            { companyTypes: { $in: targetCompanies } },
+            { companyTypes: { $in: targetsUpper } },
+            realWorldMatch,
+          ];
+        } else {
+          // If a specific companyType was requested, we should still respect it but maybe allow real-world too?
+          // Usually if companyType is requested, it's a specific filter, so we keep it.
+          // But here we want to ensure real-world questions are visible.
+          // Let's keep the requested companyType but add real-world as an OR if it's the main view.
+          matchStage.$or = [
+            { companyTypes: { $in: [companyType] } },
+            realWorldMatch,
+          ];
         }
       }
     }

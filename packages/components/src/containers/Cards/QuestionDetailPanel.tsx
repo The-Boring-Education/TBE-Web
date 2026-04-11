@@ -17,7 +17,7 @@ import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import type { DsaQuestion, DsaSectionTabs } from "@tbe/interface";
 import { sendRequest } from "@tbe/utils";
-import { Check, Loader2, Save, Sparkles } from "lucide-react";
+import { Check, Crown, Loader2, Save, Sparkles } from "lucide-react";
 import markdownit from "markdown-it";
 import { useEffect, useState } from "react";
 
@@ -186,11 +186,6 @@ const QuestionDetailPanel = ({
               </Text>
             </div>
             <div className="flex items-center gap-2">
-              {(question as any).isRealWorld && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 bg-blue-950/30 text-blue-400 border-blue-900/50 uppercase">
-                  Real World
-                </span>
-              )}
               <span
                 className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0 ${
                   question.difficultyLevel === "EASY"
@@ -231,6 +226,28 @@ const QuestionDetailPanel = ({
             )}
           </div>
         </div>
+
+        {/* Real World Premium Banner */}
+        {question.isRealWorldProblem && (
+          <div className="relative overflow-hidden rounded-xl border border-amber-500/20 bg-gradient-to-r from-amber-950/30 via-yellow-950/20 to-amber-950/30 px-4 py-3 flex items-center gap-3 shadow-[0_0_24px_rgba(251,191,36,0.06)]">
+            {/* left glow line */}
+            <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-amber-400/60 to-transparent rounded-l-xl" />
+            <Crown
+              className="w-4 h-4 shrink-0"
+              style={{ color: "rgba(251,191,36,0.8)" }}
+              strokeWidth={1.5}
+            />
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-[11px] font-black uppercase tracking-widest text-amber-300/90">
+                Real-World Problem
+              </span>
+              <span className="text-[11px] text-amber-200/40 font-medium leading-relaxed">
+                This problem is inspired by real engineering challenges used in
+                production systems.
+              </span>
+            </div>
+          </div>
+        )}
 
         <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
           {["description", "topics", "companies", "notes"].map((tab) => (
