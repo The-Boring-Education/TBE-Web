@@ -36,9 +36,7 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     domain: question.domain,
     examples: examples,
     constraints: constraints as string[],
-    sections: question.sections
-      ? JSON.parse(JSON.stringify(question.sections))
-      : null,
+    sections: question.sections,
     notes: question.notes,
     _priorityScore: question._priorityScore,
     isRealWorldProblem: !!question.isRealWorldProblem,

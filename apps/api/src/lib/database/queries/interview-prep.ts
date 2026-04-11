@@ -1224,10 +1224,6 @@ const getDSAQuestionsGroupedByTopic = async (
             realWorldMatch,
           ];
         } else {
-          // If a specific companyType was requested, we should still respect it but maybe allow real-world too?
-          // Usually if companyType is requested, it's a specific filter, so we keep it.
-          // But here we want to ensure real-world questions are visible.
-          // Let's keep the requested companyType but add real-world as an OR if it's the main view.
           matchStage.$or = [
             { companyTypes: { $in: [companyType] } },
             realWorldMatch,
