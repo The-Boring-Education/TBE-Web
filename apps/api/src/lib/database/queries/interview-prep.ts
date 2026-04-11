@@ -1076,6 +1076,7 @@ const addDSAQuestionToDB = async (questionPayload: {
   companyTypes: string[];
   topics: DSATopicType[];
   order?: number;
+  isRealWorldProblem?: boolean;
   leetcodeLink?: string;
   youtubeSearchLink?: string;
 }): Promise<DatabaseQueryResponseType> => {

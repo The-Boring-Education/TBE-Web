@@ -972,6 +972,7 @@ export interface DsaQuestion {
   constraints?: string[];
   notes?: string;
   _priorityScore?: number;
+  isRealWorldProblem?: boolean;
   sections?: {
     first_principles?: {
       paragraphs: string[];
@@ -1048,7 +1049,7 @@ export interface DsaQuestionCardProps {
   isCompleted?: boolean;
   isRecommended?: boolean;
   hasNotes?: boolean;
-  isRealWorld?: boolean;
+  isRealWorldProblem?: boolean;
   topics?: string[];
   companyTypes?: string[];
   userTargetCompanies?: string[];

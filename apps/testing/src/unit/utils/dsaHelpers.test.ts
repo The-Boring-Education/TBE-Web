@@ -36,6 +36,22 @@ describe("DSA Helpers", () => {
       expect(result.topics).toEqual(["ARRAY", "HASHMAP"]);
       expect(result.companyType).toEqual(["Google", "Meta"]);
       expect(result.domain).toEqual(["DSA"]);
+      expect(result.isRealWorldProblem).toBe(false);
+    });
+
+    it("should pass through isRealWorldProblem from API", () => {
+      const apiQuestion = {
+        _id: "q-rw",
+        title: "Rate Limiter",
+        difficulty: "MEDIUM",
+        answer: "Token bucket.",
+        topics: ["HASHMAP"],
+        isRealWorldProblem: true,
+      };
+
+      const result = transformDsaQuestion(apiQuestion);
+
+      expect(result.isRealWorldProblem).toBe(true);
     });
 
     it("should strip title from answer text", () => {

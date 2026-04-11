@@ -71,6 +71,12 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
       default: 0,
       index: true,
     },
+    isRealWorldProblem: {
+      type: Boolean,
+      required: false,
+      default: false,
+      index: true,
+    },
   },
   {
     timestamps: true,

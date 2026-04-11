@@ -8,8 +8,6 @@ export interface LearningNavbarProps {
   backHref: string;
   onMenuToggle?: () => void;
   headerCenterContent?: React.ReactNode;
-  headerRightContent?: React.ReactNode;
-  /** Show points badge (requires app root wrapped in GamificationProvider). */
   showGamification?: boolean;
 }
 
@@ -17,10 +15,8 @@ const LearningNavbar = ({
   backHref,
   onMenuToggle,
   headerCenterContent,
-  headerRightContent,
   showGamification = false,
 }: LearningNavbarProps) => {
-  // Explicit theme is dark since this applies to the Learning environment
   const theme = "dark";
 
   return (
@@ -62,7 +58,6 @@ const LearningNavbar = ({
 
         {/* Right Section */}
         <div className="flex items-center gap-[16px] min-w-0">
-          {headerRightContent}
           {showGamification && <UserPointButton />}
           {TOP_NAVIGATION?.issues?.[0]?.href && (
             <FlexContainer direction="col" itemCenter={false}>

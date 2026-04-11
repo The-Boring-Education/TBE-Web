@@ -6,11 +6,7 @@ import {
   Text,
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, TOPIC_LABELS } from "@tbe/constants";
-import {
-  PointsBadge,
-  useGamification,
-  useGamifiedAction,
-} from "@tbe/gamification";
+import { useGamification, useGamifiedAction } from "@tbe/gamification";
 import {
   useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
@@ -176,7 +172,7 @@ const SheetsPageClient = () => {
     return (
       <div className="flex flex-col min-h-screen bg-[#0A0A0A] font-sans items-center justify-center">
         <div className="flex items-center">
-          <LoadingSpinner height={8} width={8} />
+          <LoadingSpinner height={4} width={4} borderColour="white" />
           <Text level="p" className="text-gray-400 ml-3">
             Loading Sheet...
           </Text>
@@ -186,11 +182,7 @@ const SheetsPageClient = () => {
   }
 
   return (
-    <LearningEnvironmentLayout
-      backHref="/dashboard"
-      layoutMode="workspace"
-      headerRightContent={<PointsBadge variant="navbar" />}
-    >
+    <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
       <DsaPrepWorkspace
         questions={questions}
         topicsWithCounts={topicsWithCounts}
