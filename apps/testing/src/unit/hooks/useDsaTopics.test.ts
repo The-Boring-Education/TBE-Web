@@ -116,7 +116,7 @@ describe("useDsaTopics", () => {
 
     const arrayQuestions = result.current.getFilteredQuestions("ARRAY");
     expect(arrayQuestions.length).toBe(2);
-    expect(arrayQuestions.every((q) => q.topics?.[0] === "ARRAY")).toBe(true);
+    expect(arrayQuestions.every((q) => q.topics?.includes("ARRAY"))).toBe(true);
 
     const stackQuestions = result.current.getFilteredQuestions("STACK");
     expect(stackQuestions.length).toBe(1);

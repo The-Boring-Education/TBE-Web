@@ -27,10 +27,9 @@ const useDsaTopics = (
     const topicMap = new Map<string, number>();
 
     questions.forEach((question) => {
-      const primaryTopic = question.topics?.[0];
-      if (primaryTopic) {
-        topicMap.set(primaryTopic, (topicMap.get(primaryTopic) || 0) + 1);
-      }
+      question.topics?.forEach((topic) => {
+        topicMap.set(topic, (topicMap.get(topic) || 0) + 1);
+      });
     });
 
     return Array.from(topicMap.entries())
@@ -51,7 +50,7 @@ const useDsaTopics = (
   const topicsCompletionMap = useMemo(() => {
     const map: Record<string, boolean> = {};
     topicsWithCounts.forEach(({ topic }) => {
-      const topicQuestions = questions.filter((q) => q.topics?.[0] === topic);
+      const topicQuestions = questions.filter((q) => q.topics?.includes(topic));
       const isCompleted =
         topicQuestions.length > 0 &&
         topicQuestions.every((q) => {
@@ -66,7 +65,7 @@ const useDsaTopics = (
   const getFilteredQuestions = useCallback(
     (topic: string | null): DsaQuestion[] => {
       if (!topic) return [];
-      return questions.filter((q) => q.topics?.[0] === topic);
+      return questions.filter((q) => q.topics?.includes(topic));
     },
     [questions],
   );

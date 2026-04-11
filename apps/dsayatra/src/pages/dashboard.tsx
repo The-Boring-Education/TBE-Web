@@ -182,18 +182,17 @@ const DsaClient = () => {
   const topicProgress = useMemo(() => {
     const topicMap = new Map<string, { total: number; solved: number }>();
     allQuestions.forEach((q: any) => {
-      const primaryTopic = q.topics?.[0];
-      if (primaryTopic) {
-        if (!topicMap.has(primaryTopic)) {
-          topicMap.set(primaryTopic, { total: 0, solved: 0 });
+      q.topics?.forEach((topic: string) => {
+        if (!topicMap.has(topic)) {
+          topicMap.set(topic, { total: 0, solved: 0 });
         }
-        const entry = topicMap.get(primaryTopic)!;
+        const entry = topicMap.get(topic)!;
         entry.total += 1;
         const qId = q._id || q.id;
         if (qId && completedQuestions.includes(String(qId))) {
           entry.solved += 1;
         }
-      }
+      });
     });
     return Array.from(topicMap.entries()).map(([topic, data]) => ({
       name: TOPIC_LABELS[topic] || topic,
