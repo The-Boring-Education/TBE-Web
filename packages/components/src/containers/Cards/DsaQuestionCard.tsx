@@ -1,10 +1,8 @@
 import type { DsaQuestionCardProps } from "@tbe/interface";
-import { getDifficultyConfig } from "@tbe/utils";
-import { CheckCircle2, Circle, Globe, Sparkles } from "lucide-react";
+import { CheckCircle2, Circle, Crown, Sparkles } from "lucide-react";
 
 export const DsaQuestionCard = ({
   name,
-  difficultyLevel,
   isSelected = false,
   isCompleted = false,
   isRecommended = false,
@@ -12,19 +10,15 @@ export const DsaQuestionCard = ({
   isRealWorld = false,
   onClick,
   onToggleComplete,
-  hideDifficultyBadge = false,
 }: DsaQuestionCardProps) => {
-  const { label: diffLabel, color: diffColor } =
-    getDifficultyConfig(difficultyLevel);
-
   return (
     <div
-      className={`w-full rounded-lg py-2 px-2.5 mb-0.5 cursor-pointer transition-all duration-200 group flex items-center justify-between ${
+      className={`w-full rounded-md py-1.5 px-2.5 mb-0.5 cursor-pointer transition-all duration-150 group flex items-center justify-between ${
         isSelected
-          ? "bg-white/[0.04] border-l-2 border-l-white/50 border border-transparent pl-2"
+          ? "bg-white/[0.05] border-l-2 border-l-white/40 border border-transparent"
           : isCompleted
-            ? "border border-transparent"
-            : "border border-transparent hover:bg-white/[0.02]"
+            ? "border border-transparent opacity-60"
+            : "border border-transparent hover:bg-white/[0.03]"
       }`}
       onClick={onClick}
     >
@@ -37,7 +31,7 @@ export const DsaQuestionCard = ({
           className={`flex-shrink-0 focus:outline-none transition-all duration-200 ${
             isCompleted
               ? "text-green-500 hover:text-green-400"
-              : "text-gray-700 hover:text-gray-500"
+              : "text-gray-700 hover:text-green-500"
           }`}
         >
           {isCompleted ? (
@@ -47,7 +41,7 @@ export const DsaQuestionCard = ({
           )}
         </button>
         <p
-          className={`text-[13px] font-medium truncate transition-colors duration-200 flex items-center gap-1.5 ${
+          className={`text-[14px] font-medium truncate transition-colors duration-200 flex items-center gap-1.5 ${
             isSelected
               ? "text-white"
               : isCompleted
@@ -61,24 +55,16 @@ export const DsaQuestionCard = ({
           {name}
         </p>
       </div>
-
-      {/* Right side indicators */}
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex items-center gap-2">
         {hasNotes && (
           <div className="w-1 h-1 rounded-full bg-red-500/70 shadow-[0_0_4px_rgba(239,68,68,0.4)]" />
         )}
         {isRealWorld && (
-          <Globe
-            className="w-3 h-3 text-gray-600"
-            title="Real World Question"
+          <Crown
+            className="w-2.5 h-2.5 shrink-0"
+            style={{ color: "rgba(251,191,36,0.65)" }}
+            strokeWidth={2}
           />
-        )}
-        {!hideDifficultyBadge && (
-          <span
-            className={`text-[8px] font-black px-1.5 py-0.5 flex-shrink-0 rounded-[4px] border uppercase tracking-widest ${diffColor} opacity-90`}
-          >
-            {diffLabel}
-          </span>
         )}
       </div>
     </div>
