@@ -42,9 +42,17 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     notes: question.notes,
     _priorityScore: question._priorityScore,
     isRealWorldProblem: !!(
-      question.isRealWorldProblem || question.isrealworldproblem
+      question.isRealWorldProblem ||
+      question.isrealworldproblem ||
+      question.isRealWorld ||
+      question.isrealworldquestion
     ),
-    isRealWorld: !!(question.isRealWorldProblem || question.isrealworldproblem),
+    isRealWorld: !!(
+      question.isRealWorldProblem ||
+      question.isrealworldproblem ||
+      question.isRealWorld ||
+      question.isrealworldquestion
+    ),
   };
 
   // Fix messy indentation/newlines in real-world sections (often caused by literal \n strings)
