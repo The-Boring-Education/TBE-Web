@@ -6,7 +6,7 @@ import {
   SEO,
   Text,
   ToggleButton,
-  WebibarCard,
+  WebinarCard,
 } from '@tbe/components';
 import { routes, STATIC_FILE_PATH } from '@tbe/constants';
 import type { WebinarsLandingPageProps } from '@tbe/interface';
@@ -62,7 +62,7 @@ const Home = ({ seoMeta, webinars }: WebinarsLandingPageProps) => {
           <FlexContainer className='gap-2'>
             {filteredWebinars.length > 0 ? (
               filteredWebinars.map((webinar, index) => (
-                <WebibarCard key={index} {...webinar} />
+                <WebinarCard key={index} {...webinar} />
               ))
             ) : (
               <Text className='text-center strong-text' level='span'>

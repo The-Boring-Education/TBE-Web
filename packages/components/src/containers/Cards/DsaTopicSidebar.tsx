@@ -48,14 +48,14 @@ const DsaTopicSidebar = ({
             )}
           >
             <FlexContainer
-              className="items-center w-full gap-3"
+              className="items-center w-full gap-3 px-1"
               itemCenter
               justifyCenter={false}
             >
               {isSelected ? (
                 <FolderOpen
                   className={cn(
-                    "w-[15px] h-[15px] shrink-0",
+                    "w-3 h-3 shrink-0",
                     isCompleted
                       ? "text-green-500"
                       : "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]",
@@ -64,7 +64,7 @@ const DsaTopicSidebar = ({
               ) : (
                 <Folder
                   className={cn(
-                    "w-[15px] h-[15px] shrink-0 transition-colors",
+                    "w-3 h-3 shrink-0 transition-colors",
                     isCompleted
                       ? "text-green-500/60"
                       : "text-gray-600 group-hover:text-gray-400",
@@ -74,7 +74,7 @@ const DsaTopicSidebar = ({
               <Text
                 level="p"
                 className={cn(
-                  "text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1",
+                  "pre-title font-semibold",
                   isCompleted
                     ? "text-green-400"
                     : isSelected

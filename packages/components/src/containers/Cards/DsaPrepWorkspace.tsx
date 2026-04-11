@@ -10,9 +10,14 @@ import { ArrowRight, BookOpen, Lightbulb, Sparkles } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
+import {
+  STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED,
+  STANDARD_DIFFICULTY_LABELS,
+  STANDARD_DIFFICULTY_ORDER,
+} from "../../common/GroupedList";
+import { DifficultyQuestionList } from "../../common/QuestionList";
 import Text from "../../common/Typography/Text";
 import FlexContainer from "../Page/common/FlexContainer";
-import DsaQuestionList from "./DsaQuestionList";
 import DsaTopicSidebar from "./DsaTopicSidebar";
 import QuestionDetailPanel from "./QuestionDetailPanel";
 import StudyGuideNav from "./StudyGuideNav";
@@ -99,7 +104,7 @@ const DsaPrepWorkspace = ({
             <div>
               <Text
                 level="h2"
-                className="text-[13px] font-black text-white mb-0.5 tracking-tight"
+                className="strong-text font-black text-white mb-0.5 tracking-tight"
               >
                 Explore Topics
               </Text>
@@ -116,7 +121,7 @@ const DsaPrepWorkspace = ({
                 <div className="flex flex-col">
                   <Text
                     level="h3"
-                    className="text-white text-[14px] font-black tracking-tight leading-none mb-1.5"
+                    className="text-white strong-text font-black tracking-tight leading-none mb-1.5"
                   >
                     Questions
                   </Text>
@@ -281,13 +286,42 @@ const DsaPrepWorkspace = ({
                     </div>
                   )
                 ) : (
-                  <DsaQuestionList
-                    questions={filteredQuestions}
-                    selectedQuestionId={selectedQuestion?.id}
-                    onQuestionClick={onQuestionClick}
-                    completedQuestionIds={completedQuestionIds}
-                    onToggleComplete={onToggleComplete}
-                    localNotes={localNotes}
+                  <DifficultyQuestionList
+                    items={filteredQuestions}
+                    getDifficulty={(q) => q.difficultyLevel}
+                    getItemKey={(q) => q.id ?? q.name}
+                    initialExpandedGroups={
+                      STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED
+                    }
+                    difficultyOrder={STANDARD_DIFFICULTY_ORDER}
+                    difficultyLabels={STANDARD_DIFFICULTY_LABELS}
+                    emptyMessage="No questions found."
+                    resolveRow={(question) => {
+                      const qId = String(question.id || question.name);
+                      const isCompleted =
+                        completedQuestionIds?.some(
+                          (cid) => String(cid) === qId,
+                        ) ?? false;
+                      const isSelected = String(selectedQuestion?.id) === qId;
+                      const isRecommended =
+                        ((question as { _priorityScore?: number })
+                          ._priorityScore ?? 0) > 0;
+                      const hasNotes =
+                        !!question.notes || !!(localNotes && localNotes[qId]);
+
+                      return {
+                        name: question.name,
+                        isSelected,
+                        isCompleted,
+                        isRecommended,
+                        hasNotes,
+                        isRealWorldProblem: question.isRealWorldProblem,
+                      };
+                    }}
+                    onItemClick={onQuestionClick}
+                    onToggleItemComplete={(_q, itemKey) =>
+                      onToggleComplete?.(itemKey)
+                    }
                   />
                 )}
               </div>

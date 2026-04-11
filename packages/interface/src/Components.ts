@@ -1029,32 +1029,40 @@ export interface DsaQuestion {
   };
 }
 
-export interface DsaQuestionListProps {
-  questions: DsaQuestion[];
-  selectedQuestionId?: string | number;
-  onQuestionClick?: (question: DsaQuestion) => void;
-  className?: string;
-  completedQuestionIds?: (string | number)[];
-  onToggleComplete?: (questionId: string | number) => void;
-  localNotes?: Record<string, string>;
-  topicSidebarHeader?: ReactNode;
-  isRecommendedMap?: Record<string, boolean>;
-  userTargetCompanies?: string[];
-}
-
-export interface DsaQuestionCardProps {
+/** Single row in a checklist-style question sidebar (DSA, interview prep, etc.) */
+export interface QuestionRowProps {
   name: string;
-  difficultyLevel: QuestionDifficulty;
   isSelected?: boolean;
   isCompleted?: boolean;
   isRecommended?: boolean;
   hasNotes?: boolean;
   isRealWorldProblem?: boolean;
-  topics?: string[];
-  companyTypes?: string[];
-  userTargetCompanies?: string[];
+  /** Override badge text when `isRealWorldProblem` is true */
+  realWorldBadgeLabel?: string;
+  className?: string;
   onClick?: () => void;
   onToggleComplete?: (e: React.MouseEvent) => void;
+}
+
+/**
+ * Difficulty-grouped checklist: maps arbitrary items to {@link QuestionRow} via `resolveRow`.
+ */
+export interface DifficultyQuestionListProps<T = unknown> {
+  items: readonly T[];
+  getDifficulty: (item: T) => string | undefined;
+  getItemKey: (item: T) => string | number;
+  resolveRow: (
+    item: T,
+  ) => Omit<QuestionRowProps, "onClick" | "onToggleComplete">;
+  onItemClick?: (item: T) => void;
+  onToggleItemComplete?: (item: T, itemKey: string) => void;
+  emptyMessage?: string;
+  className?: string;
+  initialExpandedGroups?: Record<string, boolean>;
+  difficultyOrder?: Readonly<Record<string, number>>;
+  difficultyLabels?: Readonly<Record<string, { label: string; color: string }>>;
+  fallbackDifficulty?: string;
+  defaultGroupExpanded?: boolean;
 }
 
 export interface QuestionDetailProps {

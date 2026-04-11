@@ -91,7 +91,7 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 
 - `AboutTBE`
 - `CardContainerA` / `CardContainerB`
-- `DsaQuestionCard` / `DsaQuestionList`
+- `QuestionRow` / `DifficultyQuestionList`
 - `FeedbackPopup`
 - `GitHubIssuesContainer`
 - `Leaderboard`
@@ -105,7 +105,7 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 - `Testimonials`
 - `UserLevelProgressContainer`
 - `WeAlreadyTaughtAt`
-- `WebibarCard`
+- `WebinarCard`
 
 **Card Items** (Priority: Medium)
 
@@ -678,7 +678,7 @@ apps/testing/src/
 
 - [ ] `AboutTBE`
 - [ ] `CardContainerA` / `CardContainerB`
-- [ ] `DsaQuestionCard` / `DsaQuestionList`
+- [ ] `QuestionRow` / `DifficultyQuestionList`
 - [ ] `FeedbackPopup`
 - [ ] `GitHubIssuesContainer`
 - [ ] `Leaderboard`
@@ -692,7 +692,7 @@ apps/testing/src/
 - [ ] `Testimonials`
 - [ ] `UserLevelProgressContainer`
 - [ ] `WeAlreadyTaughtAt`
-- [ ] `WebibarCard`
+- [ ] `WebinarCard`
 
 #### Card Items
 

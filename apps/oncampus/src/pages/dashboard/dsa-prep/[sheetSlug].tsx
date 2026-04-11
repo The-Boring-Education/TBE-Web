@@ -1,13 +1,18 @@
 import {
   Button,
+  DifficultyGroupedList,
   FeedbackPopup,
   FlexContainer,
   LearningEnvironmentLayout,
+  mapInterviewPriorityToDifficultyGroup,
   MDXRenderer,
   PaymentCard,
   QuestionLink,
   ResourceTooltip,
   SEO,
+  STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED,
+  STANDARD_DIFFICULTY_LABELS,
+  STANDARD_DIFFICULTY_ORDER,
   StarButton,
   Text,
 } from "@tbe/components";
@@ -246,9 +251,22 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const isDataLoading = !sheet || !questions || questions.length === 0;
 
   const questionsSidebar = (
-    <FlexContainer className="gap-px flex-grow" justifyCenter={false}>
-      {questions?.map(
-        ({
+    <DifficultyGroupedList
+      className="gap-px flex-grow"
+      items={questions ?? []}
+      getDifficulty={(q) =>
+        mapInterviewPriorityToDifficultyGroup(
+          (q as { priority?: string }).priority,
+        )
+      }
+      getItemKey={(q) => q._id?.toString() ?? ""}
+      initialExpandedGroups={STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED}
+      difficultyOrder={STANDARD_DIFFICULTY_ORDER}
+      difficultyLabels={STANDARD_DIFFICULTY_LABELS}
+      emptyMessage="No questions in this sheet."
+      groupClassName="mb-2 last:mb-0"
+      renderItem={(row) => {
+        const {
           _id,
           title,
           question,
@@ -256,31 +274,30 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           isCompleted,
           frequency,
           isStarred,
-        }) => {
-          const questionId = _id?.toString();
+        } = row;
+        const questionId = _id?.toString() ?? "";
 
-          return (
-            <div key={questionId} className="flex items-center w-full">
-              <QuestionLink
-                currentQuestionId={currentQuestionId}
-                frequency={frequency}
-                handleQuestionClick={() =>
-                  handleQuestionClick(`${question}\n\n${answer}`, questionId)
-                }
-                href={router.asPath.split("?")[0]}
-                isCompleted={isCompleted}
-                question={`${question}\n\n${answer}`}
-                questionId={questionId}
-                title={title}
-                isLocked={isLocked}
-                theme="dark"
-                isStarred={isStarred}
-              />
-            </div>
-          );
-        },
-      )}
-    </FlexContainer>
+        return (
+          <div className="flex items-center w-full">
+            <QuestionLink
+              currentQuestionId={currentQuestionId}
+              frequency={frequency}
+              handleQuestionClick={() =>
+                handleQuestionClick(`${question}\n\n${answer}`, questionId)
+              }
+              href={router.asPath.split("?")[0]}
+              isCompleted={isCompleted}
+              question={`${question}\n\n${answer}`}
+              questionId={questionId}
+              title={title}
+              isLocked={isLocked}
+              theme="dark"
+              isStarred={isStarred}
+            />
+          </div>
+        );
+      }}
+    />
   );
 
   return (
