@@ -23,6 +23,10 @@
       "types": "./src/ui/index.ts",
       "default": "./src/ui/index.ts"
     },
+    "./grouped-list": {
+      "types": "./src/common/GroupedList/index.ts",
+      "default": "./src/common/GroupedList/index.ts"
+    },
     "./analytics": {
       "import": "./src/analytics.ts",
       "require": "./src/analytics.ts"

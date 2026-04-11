@@ -3,7 +3,7 @@ import type { WebinarCardProps } from "@tbe/interface";
 import { formatDate } from "@tbe/utils";
 import { useMemo } from "react";
 
-const WebibarCard = ({
+const WebinarCard = ({
   name,
   description,
   coverImageURL,
@@ -52,4 +52,4 @@ const WebibarCard = ({
   );
 };
 
-export default WebibarCard;
+export default WebinarCard;

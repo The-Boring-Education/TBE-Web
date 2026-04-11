@@ -177,7 +177,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
     return (
       <div className="flex bg-[#0A0A0A] font-sans h-[calc(100vh-72px)]">
         <main className="flex-1 flex items-center justify-center">
-          <LoadingSpinner height={8} width={8} />
+          <LoadingSpinner height={4} width={4} borderColour="white" />
           <Text level="p" className="text-gray-400 ml-3">
             Loading Revisions...
           </Text>
