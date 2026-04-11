@@ -65,6 +65,41 @@ const PrepYatraSchema = new Schema({
   },
 });
 
+const OncampusSchema = new Schema({
+  onboardingCompleted: {
+    type: Boolean,
+    default: false,
+  },
+  duration: {
+    type: String,
+    enum: ["1Month", "3Months", "6Months", "1Year"],
+  },
+  offCampus: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const TechYatraSchema = new Schema({
+  tyOnboarded: {
+    type: Boolean,
+    default: false,
+  },
+  focus: {
+    type: String,
+  },
+});
+
+const ResumeYatraSchema = new Schema({
+  ryOnboarded: {
+    type: Boolean,
+    default: false,
+  },
+  experienceBand: {
+    type: String,
+  },
+});
+
 const DSAYatraSchema = new Schema({
   dyOnboarded: {
     type: Boolean,
@@ -166,12 +201,17 @@ const UserSchema: Schema<UserModel> = new Schema(
         "prepyatra", // From PrepYatra platform
         "dsayatra", // From DSAYatra platform
         "quiz", // From quiz app
+        "techyatra",
+        "resumeyatra",
         "direct", // Direct onboarding (existing users)
       ],
       default: "direct",
     },
     prepYatra: PrepYatraSchema,
     dsaYatra: DSAYatraSchema,
+    oncampus: OncampusSchema,
+    techYatra: TechYatraSchema,
+    resumeYatra: ResumeYatraSchema,
   },
   { timestamps: true },
 );

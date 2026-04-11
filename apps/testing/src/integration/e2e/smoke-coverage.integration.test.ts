@@ -4,11 +4,16 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 const E2E_ROOT = path.resolve(__dirname, "../../e2e");
+/** Must match smoke rollout in docs/code-stability.md §5 (one smoke spec folder per app). */
 const REQUIRED_APPS = [
   "platform",
   "prep-yatra",
+  "quizes",
   "dsayatra",
   "oncampus",
+  "techyatra",
+  "resume-yatra",
+  "onboarding",
 ] as const;
 
 function listSpecFiles(appFolder: string): string[] {

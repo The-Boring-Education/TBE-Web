@@ -14,6 +14,7 @@ const CardContainerB = ({
   subtext,
   id,
   sectionClassName,
+  theme = "light",
 }: CardContainerBProps) => (
   <Section className={sectionClassName} id={id}>
     <FlexContainer className="gap-4" direction="col">
@@ -23,6 +24,7 @@ const CardContainerB = ({
             {...program}
             key={key}
             borderColour={borderColour}
+            theme={program.theme ?? theme}
           />
         ))}
       </CardSectionContainer>

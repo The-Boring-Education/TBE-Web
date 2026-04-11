@@ -1,16 +1,23 @@
+import type { BaseUser, OnboardingFieldConfig } from "@tbe/types";
+import { checkUsernameAvailable } from "@tbe/utils/onboarding";
 import React, { useEffect, useState } from "react";
 
-import type { OnboardingFieldConfig, User } from "../types/onboarding";
-import { checkUsernameAvailable } from "../utils/api";
+type FieldOption = string | { value: string; label: string };
+
+const optionValue = (opt: FieldOption): string =>
+  typeof opt === "string" ? opt : opt.value;
+const optionLabel = (opt: FieldOption): string =>
+  typeof opt === "string" ? opt : opt.label;
 
 interface OnboardingFormProps {
-  config: any;
+  config: { fields: OnboardingFieldConfig[] };
   form: Record<string, unknown>;
   setForm: (_form: any) => void;
   step: number;
   productId: string;
   token?: string;
-  user?: User;
+  apiBaseUrl?: string;
+  user?: BaseUser;
   onUsernameAvailabilityChange?: (
     _available: boolean,
     _checking: boolean,
@@ -23,6 +30,7 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
   setForm,
   step,
   token,
+  apiBaseUrl,
   user,
   onUsernameAvailabilityChange,
 }) => {
@@ -45,6 +53,7 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
         const available = await checkUsernameAvailable(
           form[field.name] as string,
           token,
+          apiBaseUrl,
         );
         setUsernameAvailable(available);
         setUsernameChecking(false);
@@ -53,7 +62,7 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
     } else {
       setUsernameChecking(false);
     }
-  }, [form, config.fields, token, user]);
+  }, [form, config.fields, token, user, apiBaseUrl]);
 
   // Notify parent component of username availability changes
   useEffect(() => {
@@ -135,16 +144,17 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
       case "select":
         return (
           <div className="flex flex-wrap gap-3 justify-center">
-            {field.options?.map((opt) => {
-              const isSelected = val === opt;
+            {(field.options as FieldOption[] | undefined)?.map((opt) => {
+              const v = optionValue(opt);
+              const isSelected = val === v;
               return (
                 <button
-                  key={opt}
+                  key={v}
                   type="button"
                   onClick={() =>
                     setForm((prev: Record<string, unknown>) => ({
                       ...prev,
-                      [field.name]: opt,
+                      [field.name]: v,
                     }))
                   }
                   className={`px-4 py-1.5 rounded-md font-medium transition-all duration-300 border text-sm shadow focus:outline-none focus:ring-1 focus:ring-red-300/30 ${
@@ -154,7 +164,7 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
                   }`}
                   style={{ minWidth: "80px" }}
                 >
-                  {opt}
+                  {optionLabel(opt)}
                 </button>
               );
             })}
@@ -164,13 +174,14 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
       case "multiselect":
         return (
           <div className="flex flex-wrap gap-3 justify-center">
-            {field.options?.map((opt) => {
-              const isSelected = (val as string[]).includes(opt);
+            {(field.options as FieldOption[] | undefined)?.map((opt) => {
+              const v = optionValue(opt);
+              const isSelected = (val as string[]).includes(v);
               return (
                 <button
-                  key={opt}
+                  key={v}
                   type="button"
-                  onClick={() => handleButtonClick(field.name, opt)}
+                  onClick={() => handleButtonClick(field.name, v)}
                   className={`px-4 py-1.5 rounded-md font-medium transition-all duration-300 border text-sm shadow focus:outline-none focus:ring-1 focus:ring-red-300/30 ${
                     isSelected
                       ? "bg-red-400 text-white border-red-400 hover:bg-red-500 hover:border-red-500"
@@ -192,7 +203,7 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
                         />
                       </svg>
                     )}
-                    <span>{opt}</span>
+                    <span>{optionLabel(opt)}</span>
                   </div>
                 </button>
               );

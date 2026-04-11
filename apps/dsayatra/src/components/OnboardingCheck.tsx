@@ -1,67 +1,25 @@
-import { useAuth } from "@tbe/auth";
+import { useProductOnboardingGate } from "@tbe/hooks";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 
 export const OnboardingCheck = () => {
-  const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
-  const hasChecked = useRef(false);
-  const [isChecking, setIsChecking] = useState(false);
 
-  useEffect(() => {
-    // Skip check for public pages
-    const publicPages = ["/login", "/", "/auth"];
-    if (publicPages.includes(router.pathname)) return;
+  const buildRedirectUrl = useCallback(() => {
+    if (typeof window === "undefined") return "/dashboard";
+    return `${window.location.origin}/dashboard`;
+  }, []);
 
-    if (
-      !isLoading &&
-      isAuthenticated &&
-      user &&
-      !hasChecked.current &&
-      !isChecking
-    ) {
-      const checkOnboardingStatus = async () => {
-        if (!user?.email) return;
-
-        hasChecked.current = true;
-        setIsChecking(true);
-        try {
-          const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(
-            /\/$/,
-            "",
-          );
-          const resp = await fetch(
-            `${base}/user?email=${encodeURIComponent(user.email)}`,
-          );
-          const json = await resp.json();
-
-          const isOnboarded = json?.data?.dsaYatra?.dyOnboarded === true;
-
-          if (!isOnboarded) {
-            const onboardingBaseUrl =
-              process.env.NEXT_PUBLIC_ONBOARDING_URL ||
-              process.env.NEXT_PUBLIC_ONBOARDING_APP_URL;
-            if (onboardingBaseUrl) {
-              const params = new URLSearchParams({
-                userId: user?.id || "",
-                email: user?.email || "",
-                productId: "dsayatra",
-                from: "dsayatra",
-                redirect: `${window.location.origin}/dashboard`,
-              });
-              window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
-            }
-          }
-        } catch (error) {
-          console.error("Error checking onboarding:", error);
-        } finally {
-          setIsChecking(false);
-        }
-      };
-
-      void checkOnboardingStatus();
-    }
-  }, [user, isAuthenticated, isLoading, router.pathname, isChecking]);
+  const { isChecking } = useProductOnboardingGate({
+    pathname: router.pathname,
+    publicRoutes: ["/login", "/", "/auth"],
+    productId: "dsayatra",
+    from: "dsayatra",
+    buildRedirectUrl,
+    isOnboarded: (data) =>
+      (data as { dsaYatra?: { dyOnboarded?: boolean } })?.dsaYatra
+        ?.dyOnboarded === true,
+  });
 
   if (isChecking) {
     return (

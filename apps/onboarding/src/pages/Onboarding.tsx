@@ -1,10 +1,12 @@
+import { isValidOnboardingProduct } from "@tbe/config";
+import useOnboarding from "@tbe/hooks/useOnboarding";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 
 import OnboardingForm from "../components/OnboardingForm";
 import OnboardingLayout from "../components/OnboardingLayout";
-import { isValidProduct } from "../config/products";
-import { useOnboarding } from "../hooks/useOnboarding";
+
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
 
 const Onboarding: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -30,7 +32,14 @@ const Onboarding: React.FC = () => {
     isFieldValid,
     setUsernameAvailability,
     setUsernameChecking,
-  } = useOnboarding({ userId, productId, redirect, token, from });
+  } = useOnboarding({
+    userId,
+    productId,
+    redirect,
+    token,
+    from,
+    apiBaseUrl,
+  });
 
   if (loading) {
     return (
@@ -40,7 +49,7 @@ const Onboarding: React.FC = () => {
     );
   }
 
-  if (!userId || !isValidProduct(productId) || !config) {
+  if (!userId || !isValidOnboardingProduct(productId) || !config) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-green-50">
         <div className="text-red-600 font-semibold text-xl">
@@ -69,6 +78,7 @@ const Onboarding: React.FC = () => {
         step={step}
         productId={productId}
         token={token}
+        apiBaseUrl={apiBaseUrl}
         user={user || undefined}
         onUsernameAvailabilityChange={(available, checking) => {
           setUsernameAvailability(available);

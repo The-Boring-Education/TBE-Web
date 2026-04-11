@@ -36,11 +36,7 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
         href: products.youfocus?.slug,
         description: "YouTube Learning",
       },
-      {
-        name: "Portfolio",
-        href: products.portfolio?.slug,
-        description: "Portfolio Builder",
-      },
+
       {
         name: "Projects",
         href: products.projects?.slug,

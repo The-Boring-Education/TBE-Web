@@ -36,6 +36,8 @@ export { default as usePDFFile } from "./usePDFFile";
 export { default as useResumeParser } from "./usePDFFile";
 export { usePrepLogs } from "./usePrepLogs";
 export { usePrepStats } from "./usePrepStats";
+export type { UseProductOnboardingGateOptions } from "./useProductOnboardingGate";
+export { useProductOnboardingGate } from "./useProductOnboardingGate";
 /** @deprecated Use `useGamification` from `@tbe/gamification` instead */
 export { usePyGamification } from "./usePyGamification";
 export { default as useQuestionStarred } from "./useQuestionStarred";

@@ -190,6 +190,35 @@ describe("migrateCollectionByContentId (integration)", () => {
     expect(onTarget?.title).toBe("Arrays");
   });
 
+  it("migrates projects collection by contentId", async () => {
+    const coll = ENTITY_MAP.projects;
+    const src = sourceConn.collection(coll);
+    const tgt = targetConn.collection(coll);
+    await src.deleteMany({});
+    await tgt.deleteMany({});
+
+    await src.insertOne({
+      contentId: "66666666-6666-6666-6666-666666666666",
+      title: "Portfolio API",
+      slug: "portfolio-api",
+    });
+
+    const result = await migrateCollectionByContentId(
+      sourceConn,
+      targetConn,
+      "projects",
+      coll,
+      { dryRun: false, verbose: false },
+    );
+
+    expect(result.inserted).toBe(1);
+    const onTarget = await tgt.findOne({
+      contentId: "66666666-6666-6666-6666-666666666666",
+    });
+    expect(onTarget?.title).toBe("Portfolio API");
+    expect(onTarget?.slug).toBe("portfolio-api");
+  });
+
   it("dry-run does not write to target", async () => {
     const coll = ENTITY_MAP.courses;
     const src = sourceConn.collection(coll);

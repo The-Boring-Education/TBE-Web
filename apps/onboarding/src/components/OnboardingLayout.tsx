@@ -1,7 +1,7 @@
+import type { OnboardingProductConfig } from "@tbe/types";
 import React from "react";
 
 import logo from "../assets/logo.svg";
-import type { OnboardingProductConfig } from "../types/onboarding";
 
 interface OnboardingLayoutProps {
   children: React.ReactNode;

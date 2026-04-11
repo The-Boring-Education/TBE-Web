@@ -14,6 +14,7 @@ export default function useOnboarding({
   redirect,
   token,
   from,
+  apiBaseUrl,
 }: UseOnboardingProps): UseOnboardingReturn {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<Record<string, unknown>>({});
@@ -41,6 +42,7 @@ export default function useOnboarding({
         url: `/user?userId=${userId}`,
         method: "GET",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
+        baseURL: apiBaseUrl,
       });
 
       if (response.success && response.data) {
@@ -122,8 +124,9 @@ export default function useOnboarding({
       const response = await sendRequest({
         url: endpoint,
         method: config.api.method,
-        data: payload,
+        body: payload,
         headers: token ? { Authorization: `Bearer ${token}` } : {},
+        baseURL: apiBaseUrl,
       });
 
       if (response.success) {

@@ -124,6 +124,8 @@ export interface GradientContainerProps {
   backgroundColor?: string;
   childrenClassName?: string;
   theme?: "light" | "dark";
+  /** When true, default hover scale on the container is not applied (e.g. dark cards use translate instead). */
+  suppressHoverScale?: boolean;
 }
 
 export interface PrimaryCardProps {
@@ -288,6 +290,7 @@ export interface PrimaryCardWithCTAProps {
   isPremium?: boolean;
   roadmap?: string;
   isPurchased?: boolean;
+  theme?: "light" | "dark";
 }
 
 export interface LandingPageHeroProps {
@@ -1171,3 +1174,21 @@ export type {
   StudyGuideReaderProps,
   StudyGuideSection,
 };
+
+// ---------------------------------------------------------------------------
+// Tailor Your Journey
+// ---------------------------------------------------------------------------
+
+export interface TailorYourJourneyFeature {
+  label: string;
+  description: string;
+}
+
+export interface TailorYourJourneyProps {
+  heading: string;
+  highlightText: string;
+  description: string;
+  features: TailorYourJourneyFeature[];
+  imageSrc: string;
+  imageAlt: string;
+}

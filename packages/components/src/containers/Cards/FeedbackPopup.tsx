@@ -7,7 +7,7 @@ import {
   StarRatingCard,
   Toast,
 } from "@tbe/components";
-import { useGamifiedAction } from "@tbe/components";
+import { useGamifiedAction } from "@tbe/gamification";
 import { useFeedback } from "@tbe/hooks";
 import type { FeedbackPopupProps } from "@tbe/interface";
 import React, { Fragment } from "react";
