@@ -59,6 +59,9 @@ const dsaQuestionCreateSchema = z
     companyTypes: z.union([z.array(companyEnum), companyEnum]),
     topics: z.union([z.array(topicEnum), topicEnum]),
     sections: z.unknown().optional(),
+    leetcodeLink: z.string().url().trim().optional().or(z.literal("")),
+    youtubeSearchLink: z.string().url().trim().optional().or(z.literal("")),
+    isRealWorldProblem: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
     if (!data.answer?.trim() && !data.content?.trim()) {
@@ -78,6 +81,9 @@ export type DsaSheetCreateBody = {
   companyTypes: string[];
   topics: DSATopicType[];
   sections?: unknown;
+  leetcodeLink?: string;
+  youtubeSearchLink?: string;
+  isRealWorldProblem?: boolean;
 };
 
 export function parseDsaSheetCreateBody(
@@ -113,6 +119,13 @@ export function parseDsaSheetCreateBody(
       companyTypes,
       topics,
       ...(d.sections !== undefined ? { sections: d.sections } : {}),
+      ...(d.leetcodeLink ? { leetcodeLink: d.leetcodeLink } : {}),
+      ...(d.youtubeSearchLink
+        ? { youtubeSearchLink: d.youtubeSearchLink }
+        : {}),
+      ...(typeof d.isRealWorldProblem === "boolean" && {
+        isRealWorldProblem: d.isRealWorldProblem,
+      }),
     },
   };
 }

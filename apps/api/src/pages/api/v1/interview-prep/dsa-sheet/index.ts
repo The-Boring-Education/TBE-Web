@@ -34,27 +34,6 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const {
-    title,
-    answer,
-    content,
-    domain,
-    difficulty,
-    companyTypes,
-    topics,
-    sections,
-    isRealWorldProblem,
-  } = req.body;
-
-  const questionAnswer = answer || content;
-  if (
-    !title ||
-    !questionAnswer ||
-    !domain ||
-    !difficulty ||
-    !companyTypes ||
-    !topics
-  )
   const parsed = parseDsaSheetCreateBody(req.body);
   if (!parsed.ok) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -65,18 +44,31 @@ const handleCreateQuestion = async (
     );
   }
 
+  const {
+    title,
+    answer,
+    domain,
+    difficulty,
+    companyTypes,
+    topics,
+    sections,
+    isRealWorldProblem,
+    leetcodeLink,
+    youtubeSearchLink,
+  } = parsed.value;
+
   const { data, error } = await addDSAQuestionToDB({
     title,
-    answer: questionAnswer,
-    domain: Array.isArray(domain) ? domain : [domain],
+    answer,
+    domain,
     difficulty,
-    companyTypes: Array.isArray(companyTypes) ? companyTypes : [companyTypes],
-    topics: Array.isArray(topics) ? topics : [topics],
-    ...(sections && { sections }),
-    ...(typeof isRealWorldProblem === "boolean" && { isRealWorldProblem }),
+    companyTypes,
+    topics,
+    sections,
+    isRealWorldProblem,
+    leetcodeLink,
+    youtubeSearchLink,
   });
-    ...parsed.value,
-  } as Parameters<typeof addDSAQuestionToDB>[0]);
 
   if (error) {
     return res

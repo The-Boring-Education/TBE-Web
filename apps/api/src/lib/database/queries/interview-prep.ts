@@ -1099,6 +1099,7 @@ const addDSAQuestionToDB = async (questionPayload: {
   leetcodeLink?: string;
   youtubeSearchLink?: string;
   isRealWorldProblem?: boolean;
+  sections?: any;
 }): Promise<DatabaseQueryResponseType> => {
   try {
     // Auto-generate YouTube search link if not provided
