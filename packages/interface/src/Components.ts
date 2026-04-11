@@ -1054,6 +1054,7 @@ export interface DsaQuestionCardProps {
   userTargetCompanies?: string[];
   onClick?: () => void;
   onToggleComplete?: (e: React.MouseEvent) => void;
+  hideDifficultyBadge?: boolean;
 }
 
 export interface QuestionDetailProps {

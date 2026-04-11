@@ -6,11 +6,12 @@ import { useState } from "react";
 import { DsaQuestionCard } from "./DsaQuestionCard";
 
 const DIFFICULTY_ORDER = { EASY: 0, MEDIUM: 1, HARD: 2 };
-const DIFFICULTY_LABELS = {
-  EASY: { label: "Easy", color: "text-green-400" },
-  MEDIUM: { label: "Medium", color: "text-orange-400" },
-  HARD: { label: "Hard", color: "text-red-400" },
-};
+const DIFFICULTY_LABELS: Record<string, { label: string; labelColor: string }> =
+  {
+    EASY: { label: "Easy", labelColor: "text-gray-300" },
+    MEDIUM: { label: "Medium", labelColor: "text-gray-300" },
+    HARD: { label: "Hard", labelColor: "text-gray-300" },
+  };
 
 const DsaQuestionList = ({
   questions,
@@ -70,45 +71,50 @@ const DsaQuestionList = ({
   }
 
   return (
-    <div className={cn("flex flex-col w-full", className)}>
+    <div className={cn("flex flex-col w-full gap-1", className)}>
       {sortedGroups.map(([difficulty, groupQuestions]) => {
         const isExpanded = expandedGroups[difficulty] ?? true;
-        const { label, color } = DIFFICULTY_LABELS[
-          difficulty as keyof typeof DIFFICULTY_LABELS
-        ] || {
+        const { label, labelColor } = DIFFICULTY_LABELS[difficulty] || {
           label: difficulty,
-          color: "text-gray-400",
+          labelColor: "text-gray-400",
         };
 
+        const completedInGroup = groupQuestions.filter((q) => {
+          const qId = String(q.id || q.name);
+          return completedQuestionIds.some((id) => String(id) === qId);
+        }).length;
+
         return (
-          <div key={difficulty} className="mb-2">
-            {/* Difficulty Group Header */}
+          <div key={difficulty} className="flex flex-col">
+            {/* Difficulty Group Header — monochrome sleek */}
             <button
               onClick={() => toggleGroup(difficulty)}
-              className="flex items-center gap-2 w-full px-2 py-1.5 rounded-lg hover:bg-[#1a1a1a] transition-colors duration-200 group"
+              className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-md border border-white/[0.05] bg-white/[0.03] hover:bg-white/[0.05] hover:border-white/[0.08] transition-all duration-200 group"
             >
-              <ChevronDown
-                className={cn(
-                  "w-4 h-4 text-gray-500 transition-transform duration-200",
-                  !isExpanded && "-rotate-90",
-                )}
-              />
+              {/* Neutral dot */}
+              <div className="w-1.5 h-1.5 rounded-full bg-gray-600 flex-shrink-0" />
               <span
                 className={cn(
-                  "text-[11px] font-bold uppercase tracking-wider",
-                  color,
+                  "text-[11px] font-bold uppercase tracking-widest flex-1 text-left",
+                  labelColor,
                 )}
               >
                 {label}
               </span>
-              <span className="text-[10px] text-gray-600 font-medium">
-                ({groupQuestions.length})
+              <span className="text-[9px] text-gray-600 font-medium tabular-nums">
+                {completedInGroup}/{groupQuestions.length}
               </span>
+              <ChevronDown
+                className={cn(
+                  "w-3.5 h-3.5 text-gray-600 transition-transform duration-200 flex-shrink-0",
+                  !isExpanded && "-rotate-90",
+                )}
+              />
             </button>
 
             {/* Questions in Group */}
             {isExpanded && (
-              <div className="flex flex-col w-full">
+              <div className="flex flex-col w-full mt-0.5 pl-1">
                 {groupQuestions.map((question) => {
                   const qId = String(question.id || question.name);
                   const isCompleted = completedQuestionIds.some(
@@ -130,11 +136,9 @@ const DsaQuestionList = ({
                       isRecommended={isRecommended}
                       hasNotes={hasNotes}
                       isRealWorld={(question as any).isRealWorld}
-                      topics={question.topics}
-                      companyTypes={question.companyType}
-                      userTargetCompanies={userTargetCompanies}
                       onClick={() => onQuestionClick?.(question)}
                       onToggleComplete={() => onToggleComplete?.(qId)}
+                      hideDifficultyBadge
                     />
                   );
                 })}
