@@ -749,14 +749,7 @@ const getAllDSAQuestionsFromDB = async (
 
         const companyMatch = { companyTypes: { $in: targets } };
         const companyMatchUpper = { companyTypes: { $in: targetsUpper } };
-        const realWorldMatch = {
-          $or: [
-            { isRealWorldProblem: true },
-            { isrealworldproblem: true },
-            { isRealWorld: true },
-            { isrealworldquestion: true },
-          ],
-        };
+        const realWorldMatch = { isRealWorldProblem: true };
 
         if (matchStage.companyTypes) {
           const currentIn = matchStage.companyTypes.$in || [];
@@ -1018,9 +1011,6 @@ const getDSATopicSummariesFromDB = async (
               { companyTypes: { $in: targetCompanies } },
               { companyTypes: { $in: targetsUpper } },
               { isRealWorldProblem: true },
-              { isrealworldproblem: true },
-              { isRealWorld: true },
-              { isrealworldquestion: true },
             ],
           },
         });
@@ -1225,14 +1215,7 @@ const getDSAQuestionsGroupedByTopic = async (
       if (targetCompanies.length > 0) {
         // Enforce matching based on user's target goals OR real-world problems
         const targetsUpper = targetCompanies.map((t) => t.toUpperCase());
-        const realWorldMatch = {
-          $or: [
-            { isRealWorldProblem: true },
-            { isrealworldproblem: true },
-            { isRealWorld: true },
-            { isrealworldquestion: true },
-          ],
-        };
+        const realWorldMatch = { isRealWorldProblem: true };
 
         if (!companyType) {
           matchStage.$or = [
