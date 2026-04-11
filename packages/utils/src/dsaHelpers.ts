@@ -41,34 +41,8 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
       : null,
     notes: question.notes,
     _priorityScore: question._priorityScore,
-    isRealWorldProblem: !!(
-      question.isRealWorldProblem ||
-      question.isrealworldproblem ||
-      question.isRealWorld ||
-      question.isrealworldquestion
-    ),
+    isRealWorldProblem: !!question.isRealWorldProblem,
   };
-
-  // Fix messy indentation/newlines in real-world sections (often caused by literal \n strings)
-  if (result.sections) {
-    const unescapeStr = (str: string) =>
-      typeof str === "string" ? str.replace(/\\n/g, "\n") : str;
-
-    const walk = (obj: any) => {
-      if (!obj || typeof obj !== "object") return;
-      for (const key in obj) {
-        if (
-          typeof obj[key] === "string" &&
-          (key === "code" || key.endsWith("_code") || key === "fix")
-        ) {
-          obj[key] = unescapeStr(obj[key]);
-        } else if (typeof obj[key] === "object") {
-          walk(obj[key]);
-        }
-      }
-    };
-    walk(result.sections);
-  }
 
   return result;
 };

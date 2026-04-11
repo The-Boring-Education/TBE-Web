@@ -972,7 +972,6 @@ export interface DsaQuestion {
   constraints?: string[];
   notes?: string;
   _priorityScore?: number;
-  /** Flag indicating if this is a real-world problem (mirrors DB `isRealWorldProblem`). */
   isRealWorldProblem?: boolean;
   sections?: {
     first_principles?: {
