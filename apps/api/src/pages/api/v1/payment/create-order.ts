@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 
 import { apiStatusCodes, envConfig, isDevelopmentEnv } from "@/lib/constants";
 import type { ProductType } from "@/lib/constants/database";
@@ -12,6 +13,7 @@ import {
   sendAPIResponse,
 } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -39,6 +41,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const session = await getServerSession(req, res, authOptions);
+    const sessionUser = session?.user as { id?: string } | undefined;
+    if (!session || !sessionUser?.id) {
+      return res.status(apiStatusCodes.UNAUTHORIZED).json(
+        sendAPIResponse({
+          status: false,
+          message: "Authentication required",
+        }),
+      );
+    }
+
     const {
       userId,
       productId,
@@ -47,6 +60,16 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       customerEmail,
       couponCode,
     } = req.body;
+
+    // Ensure the caller can only create orders for themselves
+    if (userId !== sessionUser.id) {
+      return res.status(apiStatusCodes.FORBIDDEN).json(
+        sendAPIResponse({
+          status: false,
+          message: "Cannot create an order for another user",
+        }),
+      );
+    }
 
     if (
       !userId ||
@@ -88,8 +111,11 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const { finalAmount, appliedCoupon, couponCode: resolvedCoupon } =
-      resolved.data;
+    const {
+      finalAmount,
+      appliedCoupon,
+      couponCode: resolvedCoupon,
+    } = resolved.data;
 
     const orderId = generatePaymentOrderId();
 
