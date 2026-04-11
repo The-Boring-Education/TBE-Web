@@ -85,24 +85,24 @@ const DsaQuestionList = ({
             {/* Difficulty Group Header */}
             <button
               onClick={() => toggleGroup(difficulty)}
-              className="flex items-center gap-2 w-full px-2 py-1.5 rounded-lg hover:bg-[#1a1a1a] transition-colors duration-200 group"
+              className="flex items-center gap-2 w-full px-2 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] hover:border-white/[0.1] transition-all duration-200 cursor-pointer mb-1"
             >
               <ChevronDown
                 className={cn(
-                  "w-4 h-4 text-gray-500 transition-transform duration-200",
+                  "w-3.5 h-3.5 text-gray-400 transition-transform duration-200 flex-shrink-0",
                   !isExpanded && "-rotate-90",
                 )}
               />
               <span
                 className={cn(
-                  "text-[12px] font-bold uppercase tracking-wider",
+                  "text-[12px] font-bold uppercase tracking-wider flex-1 text-left",
                   color,
                 )}
               >
                 {label}
               </span>
-              <span className="text-[10px] text-gray-600 font-medium">
-                ({groupQuestions.length})
+              <span className="text-[10px] text-gray-500 font-medium tabular-nums">
+                {groupQuestions.length}
               </span>
             </button>
 
