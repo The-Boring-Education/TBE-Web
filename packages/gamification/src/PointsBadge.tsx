@@ -89,7 +89,7 @@ const PointsBadge = ({
             <div className="bg-white rounded-2xl shadow-xl p-5 w-80 border border-gray-200">
               <div className="flex items-center gap-4">
                 {/* Progress ring */}
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 relative">
                   <svg
                     className="transform -rotate-90"
                     height={radius * 2 + 16}
@@ -116,15 +116,7 @@ const PointsBadge = ({
                       style={{ transition: "stroke-dashoffset 0.5s ease" }}
                     />
                   </svg>
-                  <div
-                    className="absolute flex items-center justify-center"
-                    style={{
-                      width: radius * 2 + 16,
-                      height: radius * 2 + 16,
-                      top: 20,
-                      left: 20,
-                    }}
-                  >
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <span className="text-xl font-bold text-gray-900">
                       {points}
                     </span>
