@@ -1,9 +1,79 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import { getPaymentByOrderIdFromDB } from "@/lib/database";
-import { sendAPIResponse } from "@/lib/utils";
+import {
+  getPaymentByOrderIdFromDB,
+  updatePaymentStatusToDB,
+} from "@/lib/database";
+import type { PaymentModel } from "@/lib/interfaces";
+import { processPostPaymentEnrollment } from "@/lib/services/payment";
+import { fetchCashfreeOrderByOrderId, sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
+
+const resolvePaymentOwnerId = (payment: PaymentModel): string => {
+  if (typeof payment.user === "object" && payment.user !== null) {
+    return String((payment.user as { _id?: unknown })._id ?? payment.user);
+  }
+  return String(payment.user);
+};
+
+const mapCashfreeOrderStatus = (
+  status: string | undefined,
+): "SUCCESS" | "FAILED" | null => {
+  if (status === "PAID") return "SUCCESS";
+  if (status === "EXPIRED") return "FAILED";
+  return null;
+};
+
+const syncPaymentStatusIfPending = async (
+  payment: PaymentModel,
+): Promise<PaymentModel> => {
+  if (payment.status !== "PENDING") {
+    return payment;
+  }
+
+  const cf = await fetchCashfreeOrderByOrderId(payment.orderId);
+  const mappedStatus = cf.ok ? mapCashfreeOrderStatus(cf.order_status) : null;
+
+  if (!mappedStatus) {
+    if (!cf.ok && cf.httpStatus > 0) {
+      logger.warn("order-status: Cashfree order fetch failed", {
+        orderId: payment.orderId,
+        httpStatus: cf.httpStatus,
+      });
+    }
+    return payment;
+  }
+
+  const { data: updated, error } = await updatePaymentStatusToDB({
+    orderId: payment.orderId,
+    paymentId: payment.paymentId,
+    status: mappedStatus,
+  });
+
+  if (error || !updated) {
+    logger.warn("order-status: failed to update payment status", {
+      orderId: payment.orderId,
+      error,
+    });
+    return payment;
+  }
+
+  const updatedPayment = updated as PaymentModel;
+
+  if (mappedStatus === "SUCCESS") {
+    const enrollmentResult = await processPostPaymentEnrollment(updatedPayment);
+    if (!enrollmentResult.success) {
+      logger.error("order-status: post-payment enrollment failed", {
+        orderId: payment.orderId,
+        error: enrollmentResult.error,
+      });
+    }
+  }
+
+  return updatedPayment;
+};
 
 /**
  * Lookup payment state by Cashfree return `order_id`.
@@ -42,10 +112,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const ownerId =
-      typeof payment.user === "object" && payment.user !== null
-        ? String((payment.user as { _id?: unknown })._id ?? payment.user)
-        : String(payment.user);
+    const paymentDoc = payment as PaymentModel;
+    const ownerId = resolvePaymentOwnerId(paymentDoc);
 
     if (ownerId !== String(userId)) {
       return res.status(apiStatusCodes.FORBIDDEN).json(
@@ -56,16 +124,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    const syncedPayment = await syncPaymentStatusIfPending(paymentDoc);
+
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
         message: "Payment found",
         data: {
-          orderId: payment.orderId,
-          paymentStatus: payment.status,
-          productType: payment.productType,
-          productId: payment.productId,
-          amount: payment.amount,
+          orderId: syncedPayment.orderId,
+          paymentStatus: syncedPayment.status,
+          productType: syncedPayment.productType,
+          productId: syncedPayment.productId,
+          amount: syncedPayment.amount,
         },
       }),
     );

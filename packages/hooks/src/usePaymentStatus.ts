@@ -4,6 +4,9 @@ import type { usePaymentStatusProps } from "@tbe/interface";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import { sendRequest } from "@tbe/utils";
 
+/**
+ * Fetches purchase state via `GET .../payment/checkstatus`.
+ */
 const usePaymentStatus = ({
   userId,
   productId,
@@ -27,10 +30,9 @@ const usePaymentStatus = ({
         },
       });
 
-      if (res.status && res.data?.purchased) {
-        return { purchased: true };
-      }
-      return { purchased: false };
+      // API body: `{ status: boolean, data?: { purchased: boolean }, ... }`
+      const purchased = Boolean(res.data?.purchased ?? res.status === true);
+      return { purchased };
     },
     ...CACHE_TIMES.REALTIME,
     enabled: !!isPremium && !!userId && !!productId,

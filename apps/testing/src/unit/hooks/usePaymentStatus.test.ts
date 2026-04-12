@@ -2,6 +2,8 @@ import { renderHookWithQuery } from "@test-utils/query-wrapper";
 import { waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+const mockGetAccessToken = vi.fn().mockReturnValue(null);
+
 vi.mock("@tbe/constants", () => ({
   routes: {
     api: {
@@ -12,7 +14,7 @@ vi.mock("@tbe/constants", () => ({
 }));
 
 vi.mock("@tbe/auth", () => ({
-  getAccessToken: vi.fn().mockReturnValue(null),
+  getAccessToken: () => mockGetAccessToken(),
 }));
 
 vi.mock("@tbe/utils", async (importOriginal) => {
@@ -31,6 +33,7 @@ const mockSendRequest = vi.mocked(sendRequest);
 describe("usePaymentStatus", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockGetAccessToken.mockReturnValue(null);
   });
 
   it("non-premium products always return isPurchased=true, isLocked=false", async () => {
@@ -177,6 +180,47 @@ describe("usePaymentStatus", () => {
       expect(mockSendRequest).toHaveBeenCalled();
       const callArgs = mockSendRequest.mock.calls[0][0];
       expect(callArgs.url).toContain("productType=INTERVIEW_SHEET");
+    });
+  });
+
+  it("sends Authorization Bearer when getAccessToken returns a token", async () => {
+    mockGetAccessToken.mockReturnValue("jwt-access-token");
+    mockSendRequest.mockResolvedValue({
+      status: true,
+      data: { purchased: true },
+    } as any);
+
+    renderHookWithQuery(() =>
+      usePaymentStatus({
+        userId: "user-1",
+        productId: "prod-1",
+        isPremium: true,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(mockSendRequest).toHaveBeenCalled();
+      const callArgs = mockSendRequest.mock.calls[0][0];
+      expect(callArgs.headers?.Authorization).toBe("Bearer jwt-access-token");
+    });
+  });
+
+  it("treats purchased as true when API sets top-level status true without data.purchased", async () => {
+    mockSendRequest.mockResolvedValue({
+      status: true,
+      data: {},
+    } as any);
+
+    const { result } = renderHookWithQuery(() =>
+      usePaymentStatus({
+        userId: "user-1",
+        productId: "prod-1",
+        isPremium: true,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(result.current.isPurchased).toBe(true);
     });
   });
 });

@@ -26,6 +26,22 @@ const PLAN_FEATURES: Record<string, string[]> = {
 
 const PRODUCT_TYPE = "DSA_YATRA";
 
+/** Public API path: `GET /api/v1/subscription-plans` (must match `routes.api.subscriptionPlans`). */
+const SUBSCRIPTION_PLANS_API_PATH = "/subscription-plans";
+
+/**
+ * Checkout lives on the Platform app (`apps/platform`), not on DSA Yatra.
+ * Without `NEXT_PUBLIC_PLATFORM_URL`, subscribe would use a relative `/checkout` on this host → 404.
+ */
+function getPlatformOrigin(): string {
+  const fromEnv = envConfig.PLATFORM_URL?.replace(/\/$/, "") ?? "";
+  if (fromEnv) return fromEnv;
+  if (process.env.NODE_ENV !== "production") {
+    return "http://localhost:3000";
+  }
+  return "";
+}
+
 const DsaYatraPricingPage = () => {
   const { user } = useUser();
 
@@ -42,7 +58,7 @@ const DsaYatraPricingPage = () => {
       try {
         const res = await sendRequest({
           method: "GET",
-          url: `${routes.api.subscriptionPlans}?productType=${PRODUCT_TYPE}`,
+          url: `${SUBSCRIPTION_PLANS_API_PATH}?productType=${PRODUCT_TYPE}`,
         });
 
         if (!res.status || !Array.isArray(res.data)) {
@@ -78,7 +94,13 @@ const DsaYatraPricingPage = () => {
         return;
       }
 
-      const platformBase = (envConfig.PLATFORM_URL || "").replace(/\/$/, "");
+      const platformBase = getPlatformOrigin();
+      if (!platformBase) {
+        console.error(
+          "NEXT_PUBLIC_PLATFORM_URL is missing; cannot open Platform checkout.",
+        );
+        return;
+      }
       window.location.href = `${platformBase}${routes.checkout}?productType=${PRODUCT_TYPE}&productId=${planKey}&next=${encodeURIComponent("/dashboard")}`;
     },
     [user],
