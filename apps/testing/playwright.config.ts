@@ -20,9 +20,6 @@ import { defineConfig, devices } from "@playwright/test";
  *   PLATFORM_URL, TBE_PREP_YATRA_URL, QUIZES_URL, etc.
  */
 
-// ---------------------------------------------------------------------------
-// App registry: name → { port, filter, testDir }
-// ---------------------------------------------------------------------------
 const APPS = {
   platform: {
     port: 3000,

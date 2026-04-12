@@ -5,9 +5,6 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 
-// --------------------------------------------------------------------------- //
-// Mocks
-// --------------------------------------------------------------------------- //
 const mockCheckUsernameAvailable = vi.fn();
 
 vi.mock("@tbe/utils/onboarding", () => ({
@@ -67,9 +64,6 @@ const mockConfig: { fields: OnboardingFieldConfig[] } = {
   ],
 };
 
-// --------------------------------------------------------------------------- //
-// makeSetForm — simulates React's useState functional updater
-// --------------------------------------------------------------------------- //
 function makeSetForm() {
   let currentState: Record<string, unknown> = {};
   const fn = vi.fn(
@@ -90,9 +84,6 @@ function makeSetForm() {
   return { fn, getState: () => currentState };
 }
 
-// --------------------------------------------------------------------------- //
-// Component under test
-// --------------------------------------------------------------------------- //
 import OnboardingForm from "@tbe/onboarding/components/OnboardingForm";
 
 describe("OnboardingForm", () => {
@@ -101,9 +92,6 @@ describe("OnboardingForm", () => {
     mockCheckUsernameAvailable.mockReset();
   });
 
-  // ------------------------------------------------------------------ //
-  // Step rendering
-  // ------------------------------------------------------------------ //
   it("renders only fields for the current step", () => {
     const { getByPlaceholderText, queryByPlaceholderText } = render(
       <OnboardingForm
@@ -139,9 +127,6 @@ describe("OnboardingForm", () => {
     ).not.toBeInTheDocument();
   });
 
-  // ------------------------------------------------------------------ //
-  // Text / email / tel input
-  // ------------------------------------------------------------------ //
   it("calls setForm with updated field value on text input change", () => {
     const { fn, getState } = makeSetForm();
     render(
@@ -196,9 +181,6 @@ describe("OnboardingForm", () => {
     expect(getState()).toMatchObject({ phone: "+91 9876543210" });
   });
 
-  // ------------------------------------------------------------------ //
-  // Select field
-  // ------------------------------------------------------------------ //
   it("renders select options as buttons and updates form on click", () => {
     const { fn, getState } = makeSetForm();
     render(
@@ -215,9 +197,6 @@ describe("OnboardingForm", () => {
     expect(getState()).toMatchObject({ role: "student" });
   });
 
-  // ------------------------------------------------------------------ //
-  // Multiselect field
-  // ------------------------------------------------------------------ //
   it("adds option to multiselect on first click", () => {
     const { fn, getState } = makeSetForm();
     render(
@@ -269,9 +248,6 @@ describe("OnboardingForm", () => {
     expect(getState()).toMatchObject({ skills: ["js", "python"] });
   });
 
-  // ------------------------------------------------------------------ //
-  // Username availability — async tests using RTL's waitFor
-  // ------------------------------------------------------------------ //
   it("shows loading spinner immediately (debounce has not fired yet)", () => {
     mockCheckUsernameAvailable.mockImplementation(() => new Promise(() => {}));
     render(
@@ -284,7 +260,6 @@ describe("OnboardingForm", () => {
         apiBaseUrl="http://localhost:3004/api/v1"
       />,
     );
-    // Debounce hasn't fired yet — spinner should be visible
     expect(
       screen.getByText("Checking username availability..."),
     ).toBeInTheDocument();
@@ -302,7 +277,6 @@ describe("OnboardingForm", () => {
         apiBaseUrl="http://localhost:3004/api/v1"
       />,
     );
-    // waitFor polls until the assertion passes (debounce is 1200ms)
     await waitFor(
       () => {
         expect(screen.getByText("Username is available!")).toBeInTheDocument();
@@ -365,7 +339,6 @@ describe("OnboardingForm", () => {
         apiBaseUrl="http://localhost:3004/api/v1"
       />,
     );
-    // email field has no checkAvailability flag, so the debounce never fires
     expect(mockCheckUsernameAvailable).not.toHaveBeenCalled();
   });
 });
