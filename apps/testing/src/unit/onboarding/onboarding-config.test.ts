@@ -45,4 +45,14 @@ describe("onboarding config helpers (@tbe/config)", () => {
     expect(ONBOARDING_PRODUCT_ALIASES.prepyatra).toBe("prep-yatra");
     expect(Object.keys(ONBOARDING_PRODUCT_ALIASES)).toHaveLength(2);
   });
+
+  it("every onboarding product defines branding, fields, and API metadata", () => {
+    for (const id of getAvailableOnboardingProducts()) {
+      const config = getOnboardingConfig(id);
+      expect(config, id).not.toBeNull();
+      expect(config?.ui?.branding?.title?.trim(), id).toMatch(/\S/);
+      expect(config?.fields?.length ?? 0, id).toBeGreaterThan(0);
+      expect(config?.api?.method, id).toMatch(/POST|PUT|PATCH/);
+    }
+  });
 });

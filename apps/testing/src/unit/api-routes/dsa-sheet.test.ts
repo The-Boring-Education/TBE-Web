@@ -25,17 +25,22 @@ vi.mock("../../../../api/src/lib/utils", () => ({
   sendAPIResponse: (data: any) => data,
 }));
 
-vi.mock("../../../../api/src/lib/constants", () => ({
-  apiStatusCodes: {
-    OKAY: 200,
-    RESOURCE_CREATED: 201,
-    BAD_REQUEST: 400,
-    INTERNAL_SERVER_ERROR: 500,
-  },
-  PAGINATION_LIMITS: {
-    DEFAULT: 50,
-  },
-}));
+vi.mock("../../../../api/src/lib/constants", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../../api/src/lib/constants")>();
+  return {
+    ...actual,
+    apiStatusCodes: {
+      OKAY: 200,
+      RESOURCE_CREATED: 201,
+      BAD_REQUEST: 400,
+      INTERNAL_SERVER_ERROR: 500,
+    },
+    PAGINATION_LIMITS: {
+      DEFAULT: 50,
+    },
+  };
+});
 
 import handler from "../../../../api/src/pages/api/v1/interview-prep/dsa-sheet/index";
 
@@ -47,13 +52,14 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
   // ── POST: create DSA question ───────────────────────────────────────────────
 
   describe("POST — create question", () => {
+    /** Matches `dsaQuestionCreateSchema` (DSA_DOMAIN / COMPANY_TYPES / DSA_TOPICS enums). */
     const validBody = {
       title: "Two Sum",
       answer: "Use a hash map to find complement in O(n)",
-      domain: "dsa",
+      domain: "DSA",
       difficulty: "easy",
-      companyTypes: "product",
-      topics: "arrays",
+      companyTypes: "Startup",
+      topics: "ARRAY",
     };
 
     it("should create a question with answer field", async () => {
@@ -80,10 +86,10 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       const bodyWithContent = {
         title: "Reverse LL",
         content: "Iterate with prev/curr pointers",
-        domain: "dsa",
+        domain: "DSA",
         difficulty: "medium",
-        companyTypes: "product",
-        topics: "linked-list",
+        companyTypes: "MNC",
+        topics: "LINKED_LIST",
       };
       mockAddDSAQuestion.mockResolvedValue({ data: { _id: "q2" } });
 
@@ -139,10 +145,10 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
         method: "POST",
         body: {
           title: "No answer",
-          domain: "dsa",
+          domain: "DSA",
           difficulty: "easy",
-          companyTypes: "product",
-          topics: "arrays",
+          companyTypes: "Startup",
+          topics: "ARRAY",
         },
       });
 
@@ -163,7 +169,7 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
 
       const call = mockAddDSAQuestion.mock.calls[0][0];
       expect(Array.isArray(call.domain)).toBe(true);
-      expect(call.domain).toEqual(["dsa"]);
+      expect(call.domain).toEqual(["DSA"]);
     });
 
     it("should pass array domain as-is", async () => {
@@ -171,13 +177,13 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "POST",
-        body: { ...validBody, domain: ["dsa", "frontend"] },
+        body: { ...validBody, domain: ["DSA", "FRONTEND"] },
       });
 
       await handler(req, res);
 
       const call = mockAddDSAQuestion.mock.calls[0][0];
-      expect(call.domain).toEqual(["dsa", "frontend"]);
+      expect(call.domain).toEqual(["DSA", "FRONTEND"]);
     });
 
     it("should return 500 when DB insert fails", async () => {
@@ -226,7 +232,7 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
         query: {
           domain: "frontend",
           difficulty: "hard",
-          topic: "trees",
+          topic: "binary_tree",
           page: "2",
           limit: "10",
         },
@@ -236,17 +242,20 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
 
       expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
         expect.objectContaining({
-          domain: ["frontend"],
-          difficulty: ["hard"],
-          companyTypes: undefined,
-          topics: ["trees"],
+          domain: ["FRONTEND"],
+          difficulty: ["HARD"],
+          topics: ["BINARY_TREE"],
           page: 2,
           limit: 10,
+          offCampus: false,
         }),
+      );
+      expect(mockGetAllDSAQuestions.mock.calls[0][0]).not.toHaveProperty(
+        "companyTypes",
       );
     });
 
-    it("should pass through client limit without an artificial cap", async () => {
+    it("should cap list limit at DSA_SHEET_MAX_LIMIT (200)", async () => {
       mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -257,7 +266,7 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       await handler(req, res);
 
       expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
-        expect.objectContaining({ limit: 5000 }),
+        expect.objectContaining({ limit: 200 }),
       );
     });
 

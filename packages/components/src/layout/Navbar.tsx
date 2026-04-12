@@ -208,7 +208,7 @@ const Navbar = ({
                 <div key={index}>{action}</div>
               ))}
               {requiresAuth && showNotifications && <NotificationPopover />}
-              {showGamification && <UserPointButton />}
+              {/* {showGamification && <UserPointButton />} */}
               {requiresAuth && <LoginRedirectButton text="Login" />}
               {requiresAuth && (
                 <UserAvatar dashboardRoute={finalDashboardRoute} />

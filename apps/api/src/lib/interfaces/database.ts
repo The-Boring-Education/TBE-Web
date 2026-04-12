@@ -337,6 +337,7 @@ export interface DSAQuestionModel extends Document {
   topics: DSATopicType[];
   sections?: DSAQuestionSections;
   order?: number;
+  isRealWorldProblem?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -855,6 +856,7 @@ export interface UpdateDSAQuestionRequestPayloadProps {
   topics?: DSATopicType[];
   sections?: DSAQuestionSections;
   order?: number;
+  isRealWorldProblem?: boolean;
 }
 
 export interface AddOnboardingPayloadProps {

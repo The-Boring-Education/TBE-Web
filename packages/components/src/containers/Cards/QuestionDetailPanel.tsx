@@ -15,17 +15,47 @@ import {
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
-import type { DsaQuestion, DsaSectionTabs } from "@tbe/interface";
-import { sendRequest } from "@tbe/utils";
-import { Check, Loader2, Save, Sparkles } from "lucide-react";
+import type {
+  DsaQuestion,
+  DsaSectionTabs,
+  QuestionDifficulty,
+} from "@tbe/interface";
+import { cn, sendRequest } from "@tbe/utils";
+import { Check, Crown, Loader2, Save, Sparkles } from "lucide-react";
 import markdownit from "markdown-it";
 import { useEffect, useState } from "react";
 
 const md = markdownit();
 
-// ---------------------------------------------------------------------------
-// snake_case → camelCase mappers (agent JSON → React props)
-// ---------------------------------------------------------------------------
+const LOCAL_NOTES_STORAGE_KEY = "dsayatra_question_notes";
+
+const QUESTION_DETAIL_TABS: readonly DsaSectionTabs[] = [
+  "description",
+  "topics",
+  "companies",
+  "notes",
+] as const;
+
+/** Same key as DsaPrepWorkspace `localNotes[String(id || name)]`. */
+function getQuestionStableId(question: DsaQuestion): string {
+  return String(question.id ?? question.name);
+}
+
+function hasStructuredSections(
+  sections: DsaQuestion["sections"],
+): sections is NonNullable<DsaQuestion["sections"]> {
+  return Boolean(sections && Object.keys(sections).length > 0);
+}
+
+function difficultyBadgeClass(level: QuestionDifficulty): string {
+  if (level === "EASY") {
+    return "bg-green-950/30 text-green-400 border-green-900/50";
+  }
+  if (level === "MEDIUM") {
+    return "bg-yellow-950/30 text-yellow-400 border-yellow-900/50";
+  }
+  return "bg-red-950/30 text-red-400 border-red-900/50";
+}
 
 const mapConstraints = (
   raw: NonNullable<DsaQuestion["sections"]>["constraints"],
@@ -88,6 +118,184 @@ const mapMistakes = (
     fix: m.fix,
   }));
 
+function ExternalResourceIcons({
+  resources,
+  className,
+  iconClassName = "w-5 h-5",
+}: {
+  resources?: DsaQuestion["resources"];
+  className?: string;
+  iconClassName?: string;
+}) {
+  if (!resources?.leetcodeURL && !resources?.youtubeURL) {
+    return null;
+  }
+
+  return (
+    <div className={cn("flex items-center gap-2", className)}>
+      {resources.leetcodeURL && (
+        <a
+          href={resources.leetcodeURL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="transition-all duration-300 opacity-90 hover:opacity-100"
+          title="LeetCode Problem"
+        >
+          <LeetCodeIcon className={iconClassName} />
+        </a>
+      )}
+      {resources.youtubeURL && (
+        <a
+          href={resources.youtubeURL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="transition-all duration-300 opacity-90 hover:opacity-100"
+          title="YouTube Explanation"
+        >
+          <YouTubeIcon className={iconClassName} />
+        </a>
+      )}
+    </div>
+  );
+}
+
+function RealWorldBanner() {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-amber-500/20 bg-gradient-to-r from-amber-950/30 via-yellow-950/20 to-amber-950/30 px-4 py-3 flex items-center gap-3 shadow-[0_0_24px_rgba(251,191,36,0.06)]">
+      <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-amber-400/60 to-transparent rounded-l-xl" />
+      <Crown
+        className="w-4 h-4 shrink-0"
+        style={{ color: "rgba(251,191,36,0.8)" }}
+        strokeWidth={1.5}
+      />
+      <div className="flex flex-col gap-0.5 min-w-0">
+        <span className="text-[11px] font-black uppercase tracking-widest text-amber-300/90">
+          Real-World Problem
+        </span>
+        <span className="text-[11px] text-amber-200/40 font-medium leading-relaxed">
+          This problem is inspired by real world. To make the problem more
+          challenging and realistic.
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function StructuredSections({
+  sections,
+}: {
+  sections: NonNullable<DsaQuestion["sections"]>;
+}) {
+  return (
+    <div className="space-y-10 divide-y divide-gray-800/50 [&>*]:pt-8 [&>*:first-child]:pt-0">
+      {sections.first_principles && (
+        <FirstPrinciplesSection
+          paragraphs={sections.first_principles.paragraphs}
+          keyObservation={sections.first_principles.key_observation}
+        />
+      )}
+
+      {sections.constraints && sections.constraints.length > 0 && (
+        <ConstraintsSection
+          constraints={mapConstraints(sections.constraints)}
+        />
+      )}
+
+      {sections.examples && sections.examples.length > 0 && (
+        <EnhancedExamplesSection examples={mapExamples(sections.examples)} />
+      )}
+
+      {sections.ways_to_solve && sections.ways_to_solve.length > 0 && (
+        <WaysToSolveSection
+          approaches={mapApproaches(sections.ways_to_solve)}
+        />
+      )}
+
+      {sections.how_to_approach?.steps &&
+        sections.how_to_approach.steps.length > 0 && (
+          <HowToApproachSection steps={mapSteps(sections.how_to_approach)} />
+        )}
+
+      {sections.pseudo_code?.code && (
+        <PseudoCodeSection
+          code={sections.pseudo_code.code}
+          annotations={mapAnnotations(sections.pseudo_code)}
+        />
+      )}
+
+      {sections.working_code?.languages && (
+        <WorkingCodeSection
+          defaultLanguage={sections.working_code.default_language}
+          languages={sections.working_code.languages}
+        />
+      )}
+
+      {sections.common_mistakes && sections.common_mistakes.length > 0 && (
+        <CommonMistakesSection
+          mistakes={mapMistakes(sections.common_mistakes)}
+        />
+      )}
+    </div>
+  );
+}
+
+function FallbackMarkdownDescription({ question }: { question: DsaQuestion }) {
+  return (
+    <>
+      <div className="space-y-2 pb-3 border-b border-gray-700 w-full">
+        <div
+          className="text-gray-300 leading-relaxed text-sm prose prose-invert max-w-none prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
+          dangerouslySetInnerHTML={{
+            __html: md.render(question.answer || ""),
+          }}
+        />
+      </div>
+
+      {question.examples && question.examples.length > 0 && (
+        <div className="space-y-4 pt-2">
+          {question.examples.map((example, index) => (
+            <ExampleCard
+              key={example._id || index}
+              index={index}
+              inputText={example.inputText}
+              outputText={example.outputText}
+              explanation={example.explanation}
+              image={example.image}
+            />
+          ))}
+        </div>
+      )}
+
+      {question.constraints && question.constraints.length > 0 && (
+        <div className="space-y-2 pt-1">
+          <Text
+            level="h2"
+            className="text-white hover:text-red-500 transition-colors duration-200 font-bold text-sm cursor-default"
+          >
+            Constraints
+          </Text>
+          <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-2.5">
+            <ul className="list-disc pl-4 space-y-1">
+              {question.constraints.map((constraint, index) => (
+                <li
+                  key={index}
+                  className="text-gray-300 text-xs font-mono leading-relaxed"
+                >
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: md.renderInline(constraint),
+                    }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 interface QuestionDetailProps {
   question: DsaQuestion | null;
   onNoteSaveSuccess?: (note: string) => void;
@@ -103,10 +311,9 @@ const QuestionDetailPanel = ({
   const [isSavingNote, setIsSavingNote] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Sync internal note state with question data
   useEffect(() => {
     if (question) {
-      setNoteText((question as any).notes || "");
+      setNoteText(question.notes ?? "");
       setSaveSuccess(false);
     }
   }, [question]);
@@ -119,21 +326,23 @@ const QuestionDetailPanel = ({
     );
   }
 
+  const structured = question.sections;
+  const hasStructured = hasStructuredSections(structured);
+  const isRecommended = (question._priorityScore ?? 0) > 0;
+  const showNotesTabDot = noteText.trim().length > 0;
+
   const handleSaveNote = async () => {
     if (!isAuth || !user?.id) return;
+    const qId = getQuestionStableId(question);
+
     setIsSavingNote(true);
     setSaveSuccess(false);
 
     try {
-      // 1. Update LocalStorage first for immediate feedback/offline
-      const qId = String(question.id || (question as any)._id);
-      const localNotesData = localStorage.getItem("dsayatra_question_notes");
+      const localNotesData = localStorage.getItem(LOCAL_NOTES_STORAGE_KEY);
       const localNotes = localNotesData ? JSON.parse(localNotesData) : {};
       localNotes[qId] = noteText;
-      localStorage.setItem(
-        "dsayatra_question_notes",
-        JSON.stringify(localNotes),
-      );
+      localStorage.setItem(LOCAL_NOTES_STORAGE_KEY, JSON.stringify(localNotes));
 
       const response = await sendRequest({
         url: `${routes.api.base}${routes.api.dsaQuestionNote}`,
@@ -148,7 +357,7 @@ const QuestionDetailPanel = ({
       if (response.status) {
         setSaveSuccess(true);
         onNoteSaveSuccess?.(noteText);
-        (question as any).notes = noteText; // Optimistic update
+        question.notes = noteText;
         setTimeout(() => setSaveSuccess(false), 3000);
       }
     } catch (error) {
@@ -157,10 +366,6 @@ const QuestionDetailPanel = ({
       setIsSavingNote(false);
     }
   };
-
-  const sections = question.sections;
-  const hasSections = sections && Object.keys(sections).length > 0;
-  const isRecommended = (question as any)._priorityScore > 0;
 
   return (
     <FlexContainer
@@ -171,7 +376,6 @@ const QuestionDetailPanel = ({
       justifyCenter={false}
       wrap={false}
     >
-      {/* Header: Title + Difficulty + Resources */}
       <div className="space-y-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5 flex-wrap">
@@ -186,65 +390,45 @@ const QuestionDetailPanel = ({
               </Text>
             </div>
             <div className="flex items-center gap-2">
-              {(question as any).isRealWorld && (
+              {question.isRealWorldProblem && (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 bg-blue-950/30 text-blue-400 border-blue-900/50 uppercase">
                   Real World
                 </span>
               )}
               <span
-                className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0 ${
-                  question.difficultyLevel === "EASY"
-                    ? "bg-green-950/30 text-green-400 border-green-900/50"
-                    : question.difficultyLevel === "MEDIUM"
-                      ? "bg-yellow-950/30 text-yellow-400 border-yellow-900/50"
-                      : "bg-red-950/30 text-red-400 border-red-900/50"
-                }`}
+                className={cn(
+                  "text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0",
+                  difficultyBadgeClass(question.difficultyLevel),
+                )}
               >
                 {question.difficultyLevel}
               </span>
             </div>
           </div>
 
-          {/* Inline resource links */}
-          <div className="flex items-center gap-2 shrink-0 pt-1">
-            {question.resources?.leetcodeURL && (
-              <a
-                href={question.resources.leetcodeURL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-all duration-300 opacity-90 hover:opacity-100"
-                title="LeetCode Problem"
-              >
-                <LeetCodeIcon className="w-5 h-5" />
-              </a>
-            )}
-            {question.resources?.youtubeURL && (
-              <a
-                href={question.resources.youtubeURL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-all duration-300 opacity-90 hover:opacity-100"
-                title="YouTube Explanation"
-              >
-                <YouTubeIcon className="w-5 h-5" />
-              </a>
-            )}
-          </div>
+          <ExternalResourceIcons
+            resources={question.resources}
+            className="shrink-0 pt-1"
+          />
         </div>
 
+        {question.isRealWorldProblem && <RealWorldBanner />}
+
         <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
-          {["description", "topics", "companies", "notes"].map((tab) => (
+          {QUESTION_DETAIL_TABS.map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab as any)}
-              className={`px-3 py-1.5 text-xs rounded-full border transition-all duration-200 font-medium whitespace-nowrap ${
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={cn(
+                "px-3 py-1.5 text-xs rounded-full border transition-all duration-200 font-medium whitespace-nowrap",
                 activeTab === tab
                   ? "border-red-500 text-red-400 bg-red-950/30"
-                  : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200"
-              }`}
+                  : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200",
+              )}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              {tab === "notes" && (question as any).notes && (
+              {tab === "notes" && showNotesTabDot && (
                 <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
               )}
             </button>
@@ -255,164 +439,22 @@ const QuestionDetailPanel = ({
       <div className="space-y-4">
         {activeTab === "description" && (
           <div className="space-y-4 w-full">
-            {/* ----------------------------------------------------------- */}
-            {/* RICH SECTIONS (agent-generated) — shown when available       */}
-            {/* ----------------------------------------------------------- */}
-            {hasSections ? (
-              <div className="space-y-10 divide-y divide-gray-800/50 [&>*]:pt-8 [&>*:first-child]:pt-0">
-                {/* 1. First Principles */}
-                {sections.first_principles && (
-                  <FirstPrinciplesSection
-                    paragraphs={sections.first_principles.paragraphs}
-                    keyObservation={sections.first_principles.key_observation}
-                  />
-                )}
-
-                {/* 2. Constraints */}
-                {sections.constraints && sections.constraints.length > 0 && (
-                  <ConstraintsSection
-                    constraints={mapConstraints(sections.constraints)}
-                  />
-                )}
-
-                {/* 3. Examples */}
-                {sections.examples && sections.examples.length > 0 && (
-                  <EnhancedExamplesSection
-                    examples={mapExamples(sections.examples)}
-                  />
-                )}
-
-                {/* 4. Ways to Solve */}
-                {sections.ways_to_solve &&
-                  sections.ways_to_solve.length > 0 && (
-                    <WaysToSolveSection
-                      approaches={mapApproaches(sections.ways_to_solve)}
-                    />
-                  )}
-
-                {/* 5. How to Approach */}
-                {sections.how_to_approach?.steps &&
-                  sections.how_to_approach.steps.length > 0 && (
-                    <HowToApproachSection
-                      steps={mapSteps(sections.how_to_approach)}
-                    />
-                  )}
-
-                {/* 6. Pseudo Code */}
-                {sections.pseudo_code?.code && (
-                  <PseudoCodeSection
-                    code={sections.pseudo_code.code}
-                    annotations={mapAnnotations(sections.pseudo_code)}
-                  />
-                )}
-
-                {/* 7. Working Code */}
-                {sections.working_code?.languages && (
-                  <WorkingCodeSection
-                    defaultLanguage={sections.working_code.default_language}
-                    languages={sections.working_code.languages}
-                  />
-                )}
-
-                {/* 8. Common Mistakes */}
-                {sections.common_mistakes &&
-                  sections.common_mistakes.length > 0 && (
-                    <CommonMistakesSection
-                      mistakes={mapMistakes(sections.common_mistakes)}
-                    />
-                  )}
-              </div>
+            {hasStructured && structured ? (
+              <StructuredSections sections={structured} />
             ) : (
-              /* ----------------------------------------------------------- */
-              /* FALLBACK: existing markdown rendering                        */
-              /* ----------------------------------------------------------- */
-              <>
-                {/* Answer / Description (Markdown) */}
-                <div className="space-y-2 pb-3 border-b border-gray-700 w-full">
-                  <div
-                    className="text-gray-300 leading-relaxed text-sm prose prose-invert max-w-none prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
-                    dangerouslySetInnerHTML={{
-                      __html: md.render(question.answer || ""),
-                    }}
-                  />
-                </div>
-
-                {/* Examples */}
-                {question.examples && question.examples.length > 0 && (
-                  <div className="space-y-4 pt-2">
-                    {question.examples.map((example, index) => (
-                      <ExampleCard
-                        key={example._id || index}
-                        index={index}
-                        inputText={example.inputText}
-                        outputText={example.outputText}
-                        explanation={example.explanation}
-                        image={example.image}
-                      />
-                    ))}
-                  </div>
-                )}
-
-                {/* Constraints */}
-                {question.constraints && question.constraints.length > 0 && (
-                  <div className="space-y-2 pt-1">
-                    <Text
-                      level="h2"
-                      className="text-white hover:text-red-500 transition-colors duration-200 font-bold text-sm cursor-default"
-                    >
-                      Constraints
-                    </Text>
-                    <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-2.5">
-                      <ul className="list-disc pl-4 space-y-1">
-                        {question.constraints.map((constraint, index) => (
-                          <li
-                            key={index}
-                            className="text-gray-300 text-xs font-mono leading-relaxed"
-                          >
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: md.renderInline(constraint),
-                              }}
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                )}
-              </>
+              <FallbackMarkdownDescription question={question} />
             )}
 
-            {/* Resources — only shown in fallback mode (rich sections have it in header) */}
-            {!hasSections && (
+            {!hasStructured && (
               <div className="space-y-1.5 pt-1">
                 <Text level="h2" className="text-red-500 font-bold text-sm">
                   Resources
                 </Text>
                 <div className="bg-[#111] border border-gray-800 rounded-lg p-1.5 flex gap-4 items-center justify-center w-fit min-w-[120px]">
-                  {question.resources?.leetcodeURL && (
-                    <a
-                      href={question.resources.leetcodeURL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-all duration-300 opacity-90 hover:opacity-100"
-                      title="LeetCode Problem"
-                    >
-                      <LeetCodeIcon className="w-5 h-5" />
-                    </a>
-                  )}
-
-                  {question.resources?.youtubeURL && (
-                    <a
-                      href={question.resources.youtubeURL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-all duration-300 opacity-90 hover:opacity-100"
-                      title="YouTube Explanation"
-                    >
-                      <YouTubeIcon className="w-5 h-5" />
-                    </a>
-                  )}
+                  <ExternalResourceIcons
+                    resources={question.resources}
+                    className="gap-4 justify-center"
+                  />
                 </div>
               </div>
             )}
@@ -433,7 +475,7 @@ const QuestionDetailPanel = ({
                 >
                   {topic}
                 </Text>
-              )) || (
+              )) ?? (
                 <Text level="p" className="text-gray-500 text-sm">
                   No topics available.
                 </Text>
@@ -461,7 +503,7 @@ const QuestionDetailPanel = ({
                 >
                   {company}
                 </Text>
-              )) || (
+              )) ?? (
                 <Text level="p" className="text-gray-500 text-sm">
                   No companies available.
                 </Text>
@@ -470,7 +512,7 @@ const QuestionDetailPanel = ({
           </div>
         )}
 
-        {activeTab === ("notes" as any) && (
+        {activeTab === "notes" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Text level="h2" className="text-red-500 font-semibold">
@@ -478,6 +520,7 @@ const QuestionDetailPanel = ({
               </Text>
               {isAuth ? (
                 <button
+                  type="button"
                   onClick={handleSaveNote}
                   disabled={isSavingNote}
                   className="flex items-center gap-1.5 px-3 py-1 bg-red-600 hover:bg-red-500 disabled:bg-gray-800 text-white text-[11px] font-bold rounded-md transition-all uppercase tracking-wider shadow-lg shadow-red-900/20"
@@ -516,15 +559,13 @@ const QuestionDetailPanel = ({
                   className="text-xs text-red-400 leading-relaxed"
                 >
                   <strong>Wait!</strong> You need to be logged in to sync your
-                  notes across devices. Otherwise, they won't be saved
+                  notes across devices. Otherwise, they won&apos;t be saved
                   permanently.
                 </Text>
               </div>
             )}
           </div>
         )}
-
-        {/* ... (existing code tabs etc) */}
       </div>
     </FlexContainer>
   );

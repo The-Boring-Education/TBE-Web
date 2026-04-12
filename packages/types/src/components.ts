@@ -984,7 +984,7 @@ export interface DSAQuestion {
   order?: number;
   leetcodeLink?: string;
   youtubeSearchLink?: string;
-  isRealWorld?: boolean;
+  isRealWorldProblem?: boolean;
 }
 
 export interface DSAQuestionSidebarProps {
@@ -1112,4 +1112,4 @@ export interface MainNavbarProps {
 
 export type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";
 
-export type DsaSectionTabs = "description" | "topics" | "companies" | "code";
+export type DsaSectionTabs = "description" | "topics" | "companies" | "notes";

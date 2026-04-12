@@ -39,13 +39,34 @@ async function mockPlatformAPIs(page: Page) {
   );
 
   // Mock user-related endpoints for unauthenticated state
-  await page.route("**/api/proxy/user**", (route) =>
-    route.fulfill({ status: 200, json: { status: true, data: null } }),
-  );
+  await page.route("**/api/proxy/user**", (route) => {
+    if (route.request().method() !== "GET") {
+      return route.continue();
+    }
+    const url = route.request().url();
+    if (url.includes("user/dashboard")) {
+      return route.fulfill({
+        status: 200,
+        json: {
+          status: true,
+          data: {
+            enrolledCourses: [],
+            enrolledProjects: [],
+            enrolledSheets: [],
+            playlists: [],
+          },
+        },
+      });
+    }
+    return route.fulfill({ status: 200, json: { status: true, data: null } });
+  });
 
-  // Mock leaderboard
+  // Mock leaderboard (`useLeaderboard` expects `response.data.entries` to be an array)
   await page.route("**/api/proxy/leaderboard**", (route) =>
-    route.fulfill({ status: 200, json: { status: true, data: [] } }),
+    route.fulfill({
+      status: 200,
+      json: { status: true, data: { entries: [] } },
+    }),
   );
 }
 

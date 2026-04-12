@@ -50,6 +50,23 @@ export { default as SelectInput } from "./common/Form/SelectInput";
 export { default as GamificationDemo } from "./common/GamificationDemo";
 /** @deprecated Use `GamificationToast` from `@tbe/gamification` instead */
 export { default as GamificationToast } from "./common/GamificationToast";
+export type {
+  DifficultyGroupedListProps,
+  DifficultyGroupLabel,
+  ExpandableGroupsState,
+} from "./common/GroupedList";
+export {
+  DifficultyGroupedList,
+  getDifficultyGroupLabel,
+  getSortedDifficultyGroupEntries,
+  groupItemsByDifficulty,
+  mapInterviewPriorityToDifficultyGroup,
+  normalizeDifficultyGroupKey,
+  STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED,
+  STANDARD_DIFFICULTY_LABELS,
+  STANDARD_DIFFICULTY_ORDER,
+  useExpandableGroups,
+} from "./common/GroupedList";
 export { default as BackgroundImage } from "./common/Images/BackgroundImage";
 export { default as Image } from "./common/Images/Image";
 export { default as ImageLink } from "./common/Images/ImageLink";
@@ -71,12 +88,17 @@ export { default as Pill } from "./common/Pill";
 export { default as IconPill } from "./common/Pill/IconPill";
 export { default as CircularProgressBar } from "./common/ProgressBar/CircularProgressBar";
 export { default as LinerProgressBar } from "./common/ProgressBar/LinerProgressBar";
+export { DifficultyQuestionList, QuestionRow } from "./common/QuestionList";
 export type { ResourceTooltipProps } from "./common/ResourceTooltip";
 export { default as ResourceTooltip } from "./common/ResourceTooltip";
 export { default as TabComponent } from "./common/Tab";
 export { default as Toast } from "./common/Toast";
 export { default as Link } from "./common/Typography/Link";
 export { default as Text } from "./common/Typography/Text";
+export type {
+  DifficultyQuestionListProps,
+  QuestionRowProps,
+} from "@tbe/interface";
 // Container Components - Cards
 export { default as AboutTBE } from "./containers/Cards/AboutTBE";
 export { default as AptitudeQuestionCard } from "./containers/Cards/AptitudeQuestionCard";
@@ -96,8 +118,6 @@ export {
 } from "./containers/Cards/dsa-sections";
 export type { DsaPrepWorkspaceProps } from "./containers/Cards/DsaPrepWorkspace";
 export { default as DsaPrepWorkspace } from "./containers/Cards/DsaPrepWorkspace";
-export { DsaQuestionCard } from "./containers/Cards/DsaQuestionCard";
-export { default as DsaQuestionList } from "./containers/Cards/DsaQuestionList";
 export type { DsaTopicSidebarProps } from "./containers/Cards/DsaTopicSidebar";
 export { default as DsaTopicSidebar } from "./containers/Cards/DsaTopicSidebar";
 export { default as ExampleCard } from "./containers/Cards/ExampleCard";
@@ -115,7 +135,7 @@ export { default as QuizSection } from "./containers/Cards/QuizSection";
 export { default as Testimonials } from "./containers/Cards/Testimonials";
 export { default as UserLevelProgressContainer } from "./containers/Cards/UserLevelProgressContainer";
 export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaughtAt";
-export { default as WebibarCard } from "./containers/Cards/WebibarCard";
+export { default as WebinarCard } from "./containers/Cards/WebinarCard";
 
 // Container Components - Card Items
 export { default as ContactCard } from "./containers/Cards/Items/ContactCard";

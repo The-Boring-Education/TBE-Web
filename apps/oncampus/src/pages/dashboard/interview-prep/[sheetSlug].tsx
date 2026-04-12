@@ -1,12 +1,17 @@
 import {
   Button,
+  DifficultyGroupedList,
   FeedbackPopup,
   FlexContainer,
-  LearningQuestionList,
+  mapInterviewPriorityToDifficultyGroup,
   MDXRenderer,
   PaymentCard,
+  QuestionLink,
   ResourceTooltip,
   SEO,
+  STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED,
+  STANDARD_DIFFICULTY_LABELS,
+  STANDARD_DIFFICULTY_ORDER,
   StarButton,
   Text,
 } from "@tbe/components";
@@ -326,13 +331,51 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const isDataLoading = !sheet || !questions || questions.length === 0;
 
   const questionsSidebar = (
-    <LearningQuestionList
-      questions={questions ?? []}
-      currentQuestionId={currentQuestionId}
-      isLocked={isLocked}
-      href={router.asPath.split("?")[0]}
-      onQuestionSelect={handleQuestionClick}
-      theme="dark"
+    <DifficultyGroupedList
+      items={questions ?? []}
+      getDifficulty={(q) =>
+        mapInterviewPriorityToDifficultyGroup(
+          (q as { priority?: string }).priority,
+        )
+      }
+      getItemKey={(q) => q._id?.toString() ?? ""}
+      initialExpandedGroups={STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED}
+      difficultyOrder={STANDARD_DIFFICULTY_ORDER}
+      difficultyLabels={STANDARD_DIFFICULTY_LABELS}
+      emptyMessage="No questions in this sheet."
+      groupClassName="mb-2 last:mb-0"
+      renderItem={(item) => {
+        const {
+          _id,
+          title,
+          question,
+          answer,
+          isCompleted,
+          frequency,
+          isStarred,
+        } = item;
+        const questionId = _id?.toString() ?? "";
+
+        return (
+          <div className="flex items-center w-full">
+            <QuestionLink
+              currentQuestionId={currentQuestionId}
+              frequency={frequency}
+              handleQuestionClick={() =>
+                handleQuestionClick(`${question}\n\n${answer}`, questionId)
+              }
+              href={router.asPath.split("?")[0]}
+              isCompleted={isCompleted}
+              question={`${question}\n\n${answer}`}
+              questionId={questionId}
+              title={title}
+              isLocked={isLocked}
+              theme="dark"
+              isStarred={isStarred}
+            />
+          </div>
+        );
+      }}
     />
   );
 
@@ -428,16 +471,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                 : "w-0 opacity-0 overflow-hidden border-r-0",
             )}
           >
-            <div className="px-1 py-2 min-w-[260px]">
-              <LearningQuestionList
-                questions={questions ?? []}
-                currentQuestionId={currentQuestionId}
-                isLocked={isLocked}
-                href={router.asPath.split("?")[0]}
-                onQuestionSelect={handleQuestionClick}
-                theme="dark"
-              />
-            </div>
+            <div className="px-1 py-2 min-w-[260px]">{questionsSidebar}</div>
           </div>
 
           {/* Main Question Detail Area */}

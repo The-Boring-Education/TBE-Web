@@ -828,7 +828,6 @@ export interface BaseProductProps {
   features?: string[];
   isPremium?: boolean;
   isEnrolled?: boolean;
-  // Allow additional properties for different product types
   [key: string]: any;
 }
 
@@ -953,6 +952,8 @@ export interface DsaQuestion {
   name: string;
   difficultyLevel: QuestionDifficulty;
   id?: string | number;
+  /** MongoDB id when populated from API */
+  _id?: string;
   answer?: string;
   resources?: {
     youtubeURL?: string;
@@ -972,6 +973,7 @@ export interface DsaQuestion {
   constraints?: string[];
   notes?: string;
   _priorityScore?: number;
+  isRealWorldProblem?: boolean;
   sections?: {
     first_principles?: {
       paragraphs: string[];
@@ -1028,32 +1030,40 @@ export interface DsaQuestion {
   };
 }
 
-export interface DsaQuestionListProps {
-  questions: DsaQuestion[];
-  selectedQuestionId?: string | number;
-  onQuestionClick?: (question: DsaQuestion) => void;
-  className?: string;
-  completedQuestionIds?: (string | number)[];
-  onToggleComplete?: (questionId: string | number) => void;
-  localNotes?: Record<string, string>;
-  topicSidebarHeader?: ReactNode;
-  isRecommendedMap?: Record<string, boolean>;
-  userTargetCompanies?: string[];
-}
-
-export interface DsaQuestionCardProps {
+/** Single row in a checklist-style question sidebar (DSA, interview prep, etc.) */
+export interface QuestionRowProps {
   name: string;
-  difficultyLevel: QuestionDifficulty;
   isSelected?: boolean;
   isCompleted?: boolean;
   isRecommended?: boolean;
   hasNotes?: boolean;
-  isRealWorld?: boolean;
-  topics?: string[];
-  companyTypes?: string[];
-  userTargetCompanies?: string[];
+  isRealWorldProblem?: boolean;
+  /** Override badge text when `isRealWorldProblem` is true */
+  realWorldBadgeLabel?: string;
+  className?: string;
   onClick?: () => void;
   onToggleComplete?: (e: React.MouseEvent) => void;
+}
+
+/**
+ * Difficulty-grouped checklist: maps arbitrary items to {@link QuestionRow} via `resolveRow`.
+ */
+export interface DifficultyQuestionListProps<T = unknown> {
+  items: readonly T[];
+  getDifficulty: (item: T) => string | undefined;
+  getItemKey: (item: T) => string | number;
+  resolveRow: (
+    item: T,
+  ) => Omit<QuestionRowProps, "onClick" | "onToggleComplete">;
+  onItemClick?: (item: T) => void;
+  onToggleItemComplete?: (item: T, itemKey: string) => void;
+  emptyMessage?: string;
+  className?: string;
+  initialExpandedGroups?: Record<string, boolean>;
+  difficultyOrder?: Readonly<Record<string, number>>;
+  difficultyLabels?: Readonly<Record<string, { label: string; color: string }>>;
+  fallbackDifficulty?: string;
+  defaultGroupExpanded?: boolean;
 }
 
 export interface QuestionDetailProps {
@@ -1147,10 +1157,6 @@ export interface RoadmapNode {
   difficulty: number;
 }
 
-// ---------------------------------------------------------------------------
-// Study Guide
-// ---------------------------------------------------------------------------
-
 import type {
   StudyGuideConfig,
   StudyGuideDivider,
@@ -1170,10 +1176,6 @@ export type {
   StudyGuideReaderProps,
   StudyGuideSection,
 };
-
-// ---------------------------------------------------------------------------
-// Tailor Your Journey
-// ---------------------------------------------------------------------------
 
 export interface TailorYourJourneyFeature {
   label: string;

@@ -59,6 +59,7 @@ const dsaQuestionCreateSchema = z
     companyTypes: z.union([z.array(companyEnum), companyEnum]),
     topics: z.union([z.array(topicEnum), topicEnum]),
     sections: z.unknown().optional(),
+    isRealWorldProblem: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
     if (!data.answer?.trim() && !data.content?.trim()) {
@@ -78,6 +79,7 @@ export type DsaSheetCreateBody = {
   companyTypes: string[];
   topics: DSATopicType[];
   sections?: unknown;
+  isRealWorldProblem?: boolean;
 };
 
 export function parseDsaSheetCreateBody(
@@ -113,6 +115,9 @@ export function parseDsaSheetCreateBody(
       companyTypes,
       topics,
       ...(d.sections !== undefined ? { sections: d.sections } : {}),
+      ...(d.isRealWorldProblem !== undefined
+        ? { isRealWorldProblem: d.isRealWorldProblem }
+        : {}),
     },
   };
 }
