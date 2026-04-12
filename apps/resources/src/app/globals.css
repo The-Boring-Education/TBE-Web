@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --shell-bg: #0a0a0b;
+  --shell-fg: #fafafa;
+  --shell-muted: #a1a1aa;
+  --shell-border: #27272a;
+  --shell-accent: #22c55e;
+}
+
+body {
+  @apply min-h-screen bg-[var(--shell-bg)] text-[var(--shell-fg)] antialiased;
+}
