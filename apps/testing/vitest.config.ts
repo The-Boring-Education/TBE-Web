@@ -5,12 +5,6 @@ import path from "path";
 import type { PluginOption } from "vite";
 import { defineConfig } from "vitest/config";
 
-// --------------------------------------------------------------------------- //
-// sentryStubPlugin
-// --------------------------------------------------------------------------- //
-// @sentry/nextjs is Next.js-only. Stub it so workspace packages that transitively
-// import it (via @tbe/utils → @tbe/constants) don't crash Vitest/jsdom.
-// --------------------------------------------------------------------------- //
 const SENTRY_STUB = `export const captureException=()=>{};
 export const captureMessage=()=>{};
 export const setUser=()=>{};
@@ -40,8 +34,6 @@ const sentryStubPlugin = () => ({
     return null;
   },
 });
-
-// --------------------------------------------------------------------------- //
 
 const testingTsconfig = fs.readFileSync(
   path.resolve(__dirname, "tsconfig.json"),

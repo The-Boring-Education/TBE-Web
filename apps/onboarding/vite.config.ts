@@ -2,13 +2,6 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
 
-// --------------------------------------------------------------------------- //
-// sentryStubPlugin
-// --------------------------------------------------------------------------- //
-// @sentry/nextjs is Next.js-only (pulls react-dom/server.edge, etc.) and
-// crashes Vite's import analysis.  We intercept it via a proper Vite plugin
-// so any code that imports @sentry/nextjs gets no-op stubs instead.
-// --------------------------------------------------------------------------- //
 const SENTRY_STUB = `export const captureException=()=>{};
 export const captureMessage=()=>{};
 export const setUser=()=>{};
@@ -42,9 +35,6 @@ function sentryStubPlugin() {
   };
 }
 
-// --------------------------------------------------------------------------- //
-// config
-// --------------------------------------------------------------------------- //
 const root = path.resolve(__dirname);
 
 export default defineConfig({

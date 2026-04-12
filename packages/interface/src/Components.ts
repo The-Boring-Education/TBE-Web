@@ -828,7 +828,6 @@ export interface BaseProductProps {
   features?: string[];
   isPremium?: boolean;
   isEnrolled?: boolean;
-  // Allow additional properties for different product types
   [key: string]: any;
 }
 
@@ -953,6 +952,8 @@ export interface DsaQuestion {
   name: string;
   difficultyLevel: QuestionDifficulty;
   id?: string | number;
+  /** MongoDB id when populated from API */
+  _id?: string;
   answer?: string;
   resources?: {
     youtubeURL?: string;
@@ -1156,10 +1157,6 @@ export interface RoadmapNode {
   difficulty: number;
 }
 
-// ---------------------------------------------------------------------------
-// Study Guide
-// ---------------------------------------------------------------------------
-
 import type {
   StudyGuideConfig,
   StudyGuideDivider,
@@ -1179,10 +1176,6 @@ export type {
   StudyGuideReaderProps,
   StudyGuideSection,
 };
-
-// ---------------------------------------------------------------------------
-// Tailor Your Journey
-// ---------------------------------------------------------------------------
 
 export interface TailorYourJourneyFeature {
   label: string;
