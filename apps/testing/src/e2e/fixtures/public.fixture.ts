@@ -44,7 +44,10 @@ async function mockCommonPublicAPIs(page: Page) {
   );
 
   await page.route("**/api/proxy/leaderboard**", (route) =>
-    route.fulfill({ status: 200, json: { status: true, data: [] } }),
+    route.fulfill({
+      status: 200,
+      json: { status: true, data: { entries: [] } },
+    }),
   );
 
   await page.route("**/api/proxy/user/dashboard**", (route) =>

@@ -80,7 +80,10 @@ export async function installOnboardingRedirectMocks(
   );
 
   await page.route("**/api/proxy/leaderboard**", (route) =>
-    route.fulfill({ status: 200, json: { status: true, data: [] } }),
+    route.fulfill({
+      status: 200,
+      json: { status: true, data: { entries: [] } },
+    }),
   );
 
   await page.route("**/api/proxy/user/dashboard**", (route) =>
@@ -105,3 +108,18 @@ export async function installOnboardingRedirectMocks(
 
 /** Matches onboarding app dev/preview (see apps/testing/playwright.config.ts `onboarding` port). */
 export const onboardingAppUrlPattern = /http:\/\/(127\.0\.0\.1|localhost):5173/;
+
+/**
+ * User payload fragments for `installOnboardingRedirectMocks` when the product gate
+ * should treat onboarding as complete (user stays on the app).
+ */
+export const fullyOnboardedProductFieldsByApp = {
+  "prep-yatra": { prepYatra: { pyOnboarded: true } },
+  techyatra: { techYatra: { tyOnboarded: true } },
+  dsayatra: { dsaYatra: { dyOnboarded: true } },
+  oncampus: { oncampus: { onboardingCompleted: true } },
+  "resume-yatra": { resumeYatra: { ryOnboarded: true } },
+} as const;
+
+export type AppKeyWithOnboardingGate =
+  keyof typeof fullyOnboardedProductFieldsByApp;

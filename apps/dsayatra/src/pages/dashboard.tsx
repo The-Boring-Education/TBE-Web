@@ -1,4 +1,4 @@
-import { useAuth } from "@tbe/auth";
+import { ProtectedRoute, useAuth } from "@tbe/auth";
 import { EditDsaOnboardingModal, SEO } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
@@ -674,10 +674,12 @@ const DsaClient = () => {
 
 const Dashboard = ({ seoMeta }: PageProps) => {
   return (
-    <Fragment>
-      <SEO seoMeta={seoMeta} />
-      <DsaClient />
-    </Fragment>
+    <ProtectedRoute redirectTo="/login">
+      <Fragment>
+        <SEO seoMeta={seoMeta} />
+        <DsaClient />
+      </Fragment>
+    </ProtectedRoute>
   );
 };
 
