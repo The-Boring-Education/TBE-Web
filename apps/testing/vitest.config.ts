@@ -105,6 +105,7 @@ export default defineConfig({
       "@/lib/interfaces": path.resolve(__dirname, "../api/src/lib/interfaces"),
       "@/lib/services": path.resolve(__dirname, "../api/src/lib/services"),
       "@/lib/utils": path.resolve(__dirname, "../api/src/lib/utils"),
+      "@/lib/validation": path.resolve(__dirname, "../api/src/lib/validation"),
       "@/middleware": path.resolve(__dirname, "../api/src/middleware"),
       "@test-utils": path.resolve(__dirname, "./src/test-utils"),
       // Map workspace packages to their source

@@ -99,4 +99,64 @@ test.describe("Onboarding smoke flow", () => {
       timeout: 20_000,
     });
   });
+
+  test("quizes product shows TBE Quizes branding", async ({ page }) => {
+    await page.goto("/?userId=smoke-e2e-user&productId=quizes", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("heading", { name: "Welcome to TBE Quizes!" }),
+    ).toBeVisible({ timeout: 20_000 });
+
+    await expect(page.getByText(/Step 1 of/)).toBeVisible();
+  });
+
+  test("tech-yatra product shows Tech Yatra branding", async ({ page }) => {
+    await page.goto("/?userId=smoke-e2e-user&productId=tech-yatra", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("heading", { name: "Welcome to Tech Yatra!" }),
+    ).toBeVisible({ timeout: 20_000 });
+
+    await expect(page.getByText(/Step 1 of/)).toBeVisible();
+  });
+
+  test("resume-yatra product shows Resume Yatra branding", async ({ page }) => {
+    await page.goto("/?userId=smoke-e2e-user&productId=resume-yatra", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("heading", { name: "Welcome to Resume Yatra!" }),
+    ).toBeVisible({ timeout: 20_000 });
+
+    await expect(page.getByText(/Step 1 of/)).toBeVisible();
+  });
+
+  test("platform productId shows platform branding", async ({ page }) => {
+    await page.goto("/?userId=smoke-e2e-user&productId=platform", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("heading", { name: "Welcome to The Boring Education!" }),
+    ).toBeVisible({ timeout: 20_000 });
+
+    await expect(page.getByText(/Step 1 of/)).toBeVisible();
+  });
+
+  test("quizapp alias shows The Boring Quiz branding", async ({ page }) => {
+    await page.goto("/?userId=smoke-e2e-user&productId=quizapp", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("heading", { name: "Welcome to The Boring Quiz!" }),
+    ).toBeVisible({ timeout: 20_000 });
+
+    await expect(page.getByText(/Step 1 of/)).toBeVisible();
+  });
 });

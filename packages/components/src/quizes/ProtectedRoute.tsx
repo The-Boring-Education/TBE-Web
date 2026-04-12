@@ -14,6 +14,13 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      const returnUrl = window.location.pathname + window.location.search;
+      window.location.href = `/login?returnTo=${encodeURIComponent(returnUrl)}`;
+    }
+  }, [isLoading, isAuthenticated]);
+
   const [hasRefreshed, setHasRefreshed] = useState(false);
   const [refreshingUser, setRefreshingUser] = useState(false);
   const [redirectingToOnboarding, setRedirectingToOnboarding] = useState(false);
@@ -140,6 +147,14 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-2xl font-semibold">Refreshing user data...</div>
+      </div>
+    );
+  }
+
+  if (isLoading || !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ef4444]" />
       </div>
     );
   }
