@@ -27,5 +27,11 @@ test.describe("Resume Yatra auth and onboarding gate", () => {
       timeout: 15_000,
     });
     await expect(page).toHaveURL(/\/builder\/?$/);
+
+    await expect(
+      page.getByRole("heading", {
+        name: "Let's Build Your Perfect Resume",
+      }),
+    ).toBeVisible({ timeout: 25_000 });
   });
 });

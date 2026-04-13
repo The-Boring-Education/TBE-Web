@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import { mockOnCampusDashboardApis } from "../fixtures/authenticated-dashboard-smoke";
 import {
   fullyOnboardedProductFieldsByApp,
   installOnboardingRedirectMocks,
@@ -21,11 +22,17 @@ test.describe("OnCampus auth and onboarding gate", () => {
       page,
       fullyOnboardedProductFieldsByApp.oncampus,
     );
+    await mockOnCampusDashboardApis(page);
+
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
 
     await expect(page).not.toHaveURL(onboardingAppUrlPattern, {
       timeout: 15_000,
     });
     await expect(page).toHaveURL(/\/dashboard\/?$/);
+
+    await expect(
+      page.getByRole("heading", { name: /Welcome back,/ }),
+    ).toBeVisible({ timeout: 25_000 });
   });
 });
