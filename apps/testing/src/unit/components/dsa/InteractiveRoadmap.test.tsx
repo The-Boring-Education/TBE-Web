@@ -29,8 +29,8 @@ const sampleNodes: RoadmapNode[] = [
   {
     id: "ARRAY",
     name: "Array",
-    total: 10,
-    solved: 10,
+    total: 0,
+    solved: 0,
     isLocked: false,
     explanation: "Linear data structure",
     difficulty: 1,
@@ -38,8 +38,8 @@ const sampleNodes: RoadmapNode[] = [
   {
     id: "STACK",
     name: "Stack",
-    total: 5,
-    solved: 2,
+    total: 0,
+    solved: 0,
     isLocked: false,
     explanation: "LIFO data structure",
     difficulty: 3,

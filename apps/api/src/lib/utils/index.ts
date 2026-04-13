@@ -6,5 +6,6 @@ export * from "./initMiddleware";
 export * from "./logger";
 export * from "./mdx";
 export * from "./mongodb";
+export * from "./questionBuckets";
 export * from "./sentry";
 export * from "./sitemap";
