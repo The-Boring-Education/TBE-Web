@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blockchain Engineer Roadmap 2026 – The Boring Education</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #FF5757;
+    --red-light: #fff0f0;
+    --red-mid: #ffe0e0;
+    --dark: #111111;
+    --mid: #444444;
+    --soft: #888888;
+    --border: #e5e5e5;
+    --bg: #f9f8f6;
+    --white: #ffffff;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .resource-viewer {
+    font-family: var(--sans);
+    background: #0a0a0b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 32px 16px;
+  }
+
+  .print-bar {
+    width: 794px;
+    max-width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+  .print-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+  }
+  .print-btn:hover { background: #e04040; }
+  .print-btn svg { width: 16px; height: 16px; }
+
+  .page {
+    width: 794px;
+    max-width: 100%;
+    background: var(--white);
+    box-shadow: 0 4px 40px rgba(0,0,0,0.18);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .page + .page { margin-top: 2px; }
+
+  /* COVER */
+  .cover {
+    background: var(--white);
+    height: 1122px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cover-header {
+    padding: 28px 48px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cover-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    background: var(--red-light);
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--red-mid);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .cover-hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 48px 40px;
+    position: relative;
+  }
+
+  .cover-hook {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--red);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cover-hook::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  .cover-title {
+    font-size: 64px;
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+
+  .cover-title span { color: var(--red); }
+
+  .cover-subtitle {
+    font-size: 16px;
+    color: var(--mid);
+    font-weight: 400;
+    max-width: 460px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .cover-quote-block {
+    background: var(--dark);
+    color: white;
+    padding: 28px 36px;
+    border-radius: 16px;
+    max-width: 560px;
+    position: relative;
+    margin-bottom: 48px;
+  }
+
+  .cover-quote-block::before {
+    content: '"';
+    font-size: 80px;
+    color: var(--red);
+    font-family: Georgia, serif;
+    position: absolute;
+    top: -12px;
+    left: 24px;
+    line-height: 1;
+  }
+
+  .cover-quote-text {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.5;
+    padding-top: 24px;
+  }
+
+  .cover-quote-sub {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 10px;
+    font-family: var(--mono);
+  }
+
+  .cover-stats {
+    display: flex;
+    gap: 32px;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-num {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--red);
+    font-family: var(--mono);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--soft);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .cover-decoration {
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cover-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cover-footer-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--soft);
+  }
+
+  .page-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--soft);
+  }
+
+  /* INNER PAGES */
+  .inner-page {
+    height: 1122px;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+  }
+
+  .page-header {
+    padding: 24px 48px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .page-header img {
+    height: 22px;
+    opacity: 0.7;
+  }
+
+  .page-header-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .page-header-logo img {
+    height: 22px;
+    width: auto;
+    display: block;
+  }
+
+  .page-header-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .page-body {
+    flex: 1;
+    padding: 28px 48px;
+    overflow: hidden;
+  }
+
+  .page-footer {
+    border-top: 1px solid var(--border);
+    padding: 14px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  /* SECTION HEADING */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::before { content: '//'; opacity: 0.5; }
+
+  .section-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--dark);
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  /* ROADMAP STEPS */
+  .roadmap { display: flex; flex-direction: column; gap: 0; }
+
+  .step { display: flex; gap: 0; position: relative; }
+
+  .step-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48px;
+    flex-shrink: 0;
+  }
+
+  .step-dot {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-line {
+    width: 2px;
+    flex: 1;
+    min-height: 12px;
+    background: var(--border);
+    margin: 4px 0;
+  }
+
+  .step-content {
+    flex: 1;
+    padding: 2px 0 16px 20px;
+  }
+
+  .step-phase {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .step-heading {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 3px;
+  }
+
+  .step-desc {
+    font-size: 12px;
+    color: var(--mid);
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+
+  .step-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    background: var(--bg);
+    color: var(--mid);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .tag.red {
+    background: var(--red-light);
+    color: var(--red);
+    border-color: var(--red-mid);
+  }
+
+  /* YOUTUBE LINKS */
+  .yt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 4px;
+  }
+
+  .yt-link {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #cc0000;
+    background: #fff5f5;
+    border: 1px solid #ffd0d0;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .yt-link::before {
+    content: '▶';
+    font-size: 8px;
+  }
+
+  /* TIME BADGE */
+  .time-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--soft);
+    margin-bottom: 3px;
+  }
+
+  .time-badge span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--red);
+    display: inline-block;
+  }
+
+  /* RESOURCE CARDS */
+  .resource-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .resource-card {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .resource-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--red);
+  }
+
+  .resource-card-icon { font-size: 18px; margin-bottom: 4px; }
+
+  .resource-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 2px;
+  }
+
+  .resource-card-desc {
+    font-size: 11px;
+    color: var(--mid);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .resource-card-link {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* TIP BLOCK */
+  .tip-block {
+    background: var(--red-light);
+    border: 1px solid var(--red-mid);
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 0;
+  }
+
+  .tip-icon { font-size: 15px; flex-shrink: 0; }
+
+  .tip-text {
+    font-size: 12px;
+    color: var(--dark);
+    line-height: 1.6;
+  }
+
+  .tip-text strong { color: var(--red); }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 14px 0;
+  }
+
+  /* SKILLS TABLE */
+  .skills-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .skill-col { display: flex; flex-direction: column; gap: 5px; }
+
+  .skill-col-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--soft);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--dark);
+  }
+
+  .skill-item::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+
+  /* CHECKLIST */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 0;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--dark);
+    line-height: 1.5;
+  }
+
+  .check-box {
+    width: 15px; height: 15px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* CTA BLOCK */
+  .cta-block {
+    background: var(--dark);
+    border-radius: 14px;
+    padding: 22px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-block::before {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,87,87,0.3) 0%, transparent 70%);
+    top: -60px; right: -60px;
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 6px;
+    position: relative;
+  }
+
+  .cta-sub {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 14px;
+    line-height: 1.5;
+    position: relative;
+  }
+
+  .cta-link {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    padding: 9px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 12px;
+    position: relative;
+  }
+
+  /* SOCIALS */
+  .socials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .social-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .social-icon { width: 22px; height: 22px; margin-bottom: 4px; }
+
+  .social-name {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .social-handle { font-size: 10px; font-weight: 600; color: var(--dark); }
+
+  /* SALARY TABLE */
+  .salary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .salary-table th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--bg);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .salary-table td {
+    padding: 8px 12px;
+    color: var(--dark);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .salary-table td.salary {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--red);
+  }
+
+  /* INFO ROW */
+  .info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .info-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+
+  .info-card-num {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 3px;
+  }
+
+  .info-card-label {
+    font-size: 11px;
+    color: var(--soft);
+    font-weight: 500;
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    body { padding: 0; gap: 0; }
+    .print-bar {
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 0;
+      background: #e8e5df;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .print-btn { width: 100%; justify-content: center; }
+    .page { width: 100%; max-width: 100%; box-shadow: none; border-radius: 0; overflow: visible; }
+    .page + .page { margin-top: 8px; }
+    .cover { height: auto; }
+    .cover-header { padding: 20px 20px 0; }
+    .cover-hero { padding: 28px 20px; justify-content: flex-start; }
+    .cover-decoration { width: 160px; height: 160px; right: -40px; top: 30px; transform: none; }
+    .cover-title { font-size: 34px; }
+    .cover-subtitle { font-size: 13px; max-width: 100%; }
+    .cover-quote-block { max-width: 100%; padding: 18px 18px 14px; }
+    .cover-quote-text { font-size: 14px; }
+    .cover-stats { gap: 18px; flex-wrap: wrap; }
+    .stat-num { font-size: 24px; }
+    .cover-footer { padding: 14px 20px; flex-wrap: wrap; gap: 6px; }
+    .inner-page { height: auto; }
+    .page-header { padding: 14px 20px 12px; flex-wrap: wrap; gap: 4px; }
+    .page-body { padding: 20px; }
+    .page-footer { padding: 12px 20px; }
+    .section-title { font-size: 20px; }
+    .resource-grid { grid-template-columns: 1fr; }
+    .skills-row { grid-template-columns: 1fr; }
+    .info-row { grid-template-columns: 1fr 1fr; }
+    .socials-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .social-card { padding: 8px 6px; }
+    .page-num { display: none; }
+  }
+
+  /* PRINT */
+  @media print {
+    @page { size: A4 portrait; margin: 0; }
+    html, body { margin: 0; padding: 0; background: white; display: block; width: 210mm; }
+    .print-bar { display: none !important; }
+    .page { width: 210mm; height: 297mm; max-width: none; box-shadow: none; margin: 0; page-break-after: always; break-after: page; overflow: hidden; }
+    .page + .page { margin-top: 0; }
+    .cover { height: 297mm; }
+    .inner-page { height: 297mm; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .page:last-child { page-break-after: avoid; break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="resource-viewer">
+
+<!-- PRINT BAR -->
+<div class="print-bar">
+  <button class="print-btn" onclick="window.print()">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+    Save as PDF
+  </button>
+</div>
+
+<!-- ══════════ PAGE 1 — COVER ══════════ -->
+<div class="page cover">
+  <div class="cover-header">
+    <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+    <span class="cover-badge">2026 Edition</span>
+  </div>
+
+  <div class="cover-hero">
+    <div class="cover-decoration"></div>
+
+    <div class="cover-hook">The complete path to Web3</div>
+
+    <h1 class="cover-title">
+      Blockchain<br><span>Engineer</span><br>Roadmap
+    </h1>
+
+    <p class="cover-subtitle">
+      From zero blockchain knowledge to a job-ready Web3 engineer in 2026. Smart contracts, DeFi, NFTs, and everything in between — no fluff, just what works.
+    </p>
+
+    <div class="cover-quote-block">
+      <div class="cover-quote-text">
+        "Blockchain engineers are among the highest-paid developers on the planet. The ecosystem is exploding — but most people don't know where to start. This roadmap changes that."
+      </div>
+      <div class="cover-quote-sub">— The Boring Education Team</div>
+    </div>
+
+    <div class="cover-stats">
+      <div class="stat-item">
+        <div class="stat-num">8–14</div>
+        <div class="stat-label">Months to job-ready</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">9</div>
+        <div class="stat-label">Phases to master</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">$120K+</div>
+        <div class="stat-label">Avg blockchain salary</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Free resources</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+    <span class="page-num">01</span>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 2 — WHY BLOCKCHAIN + PHASES 1–2 ══════════ -->
+<div class="page inner-page">
+  <div class="page-header">
+    <span class="page-header-logo"><img src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE"></span>
+    <span class="page-header-title">Blockchain Engineer · 2026 Roadmap</span>
+    <span class="page-num">02</span>
+  </div>
+
+  <div class="page-body">
+
+    <div class="section-label">Why Blockchain in 2026</div>
+    <h2 class="section-title">The Opportunity Is Real</h2>
+
+    <div class="info-row" style="margin-bottom:14px;">
+      <div class="info-card">
+        <div class="info-card-num">$67B+</div>
+        <div class="info-card-label">Global blockchain market size (2026)</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-num">4,000+</div>
+        <div class="info-card-label">Open Web3 roles on major job boards</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-num">$148K</div>
+        <div class="info-card-label">Avg Solidity dev salary (US, 2026)</div>
+      </div>
+    </div>
+
+    <table class="salary-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Experience</th>
+          <th>Avg Salary (USD)</th>
+          <th>Primary Skills</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Smart Contract Developer</td><td>0–2 yrs</td><td class="salary">$95K – $140K</td><td>Solidity, Hardhat, OpenZeppelin</td></tr>
+        <tr><td>Blockchain Backend Engineer</td><td>2–4 yrs</td><td class="salary">$130K – $175K</td><td>Go / Rust, Node.js, Ethereum</td></tr>
+        <tr><td>DeFi Protocol Engineer</td><td>3–5 yrs</td><td class="salary">$160K – $250K</td><td>Solidity, Yul, MEV, Security</td></tr>
+        <tr><td>Web3 Full-Stack Dev</td><td>1–3 yrs</td><td class="salary">$110K – $160K</td><td>React, ethers.js, Solidity</td></tr>
+        <tr><td>Blockchain Security Auditor</td><td>3+ yrs</td><td class="salary">$180K – $300K+</td><td>Solidity, Fuzzing, Formal Verification</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="divider">
+
+    <div class="section-label">The Learning Path</div>
+    <h2 class="section-title">Your 9-Phase Journey Starts Here</h2>
+
+    <div class="roadmap">
+
+      <!-- PHASE 1 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-dot">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="time-badge"><span></span> Weeks 1–3</div>
+          <div class="step-phase">Phase 01 · Foundation</div>
+          <div class="step-heading">Web & Programming Fundamentals</div>
+          <div class="step-desc">Before touching blockchain, make sure your foundation is solid. Learn how the internet works, basic programming concepts (variables, loops, functions), and get comfortable with the command line. If you already code, jump to Phase 2.</div>
+          <div class="step-tags">
+            <span class="tag red">Non-negotiable</span>
+            <span class="tag">HTTP/HTTPS</span>
+            <span class="tag">JavaScript basics</span>
+            <span class="tag">Git & GitHub</span>
+            <span class="tag">Terminal</span>
+            <span class="tag">JSON & APIs</span>
+          </div>
+          <div class="yt-links">
+            <a class="yt-link" href="https://www.youtube.com/watch?v=ysEN5RaKOlA" target="_blank">CS50 Full Course – freeCodeCamp</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank">JavaScript Full Course – freeCodeCamp</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=RGOj5yH7evk" target="_blank">Git & GitHub Crash Course – freeCodeCamp</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 2 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-dot">2</div>
+        </div>
+        <div class="step-content">
+          <div class="time-badge"><span></span> Weeks 4–6</div>
+          <div class="step-phase">Phase 02 · Blockchain Theory</div>
+          <div class="step-heading">How Blockchain Actually Works</div>
+          <div class="step-desc">Don't skip theory — it will save you weeks of confusion later. Understand what a blockchain is, how consensus mechanisms work (PoW vs PoS), what wallets and private keys are, how transactions get confirmed, and why decentralization matters. Go deep on Ethereum's architecture specifically.</div>
+          <div class="step-tags">
+            <span class="tag red">Must understand</span>
+            <span class="tag">Distributed Ledger</span>
+            <span class="tag">Consensus (PoW/PoS)</span>
+            <span class="tag">Wallets & Keys</span>
+            <span class="tag">Transactions & Gas</span>
+            <span class="tag">EVM Architecture</span>
+            <span class="tag">Merkle Trees</span>
+            <span class="tag">Hashing</span>
+          </div>
+          <div class="yt-links">
+            <a class="yt-link" href="https://www.youtube.com/watch?v=SSo_EIwHSd4" target="_blank">But how does Bitcoin actually work? – 3Blue1Brown</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=gyMwXuJrbJQ" target="_blank">Blockchain Full Course – freeCodeCamp</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=M576WGiDBdQ" target="_blank">How Ethereum Works – Whiteboard Crypto</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=bBC-nXj3Ng4" target="_blank">But how does Bitcoin work? – 3Blue1Brown</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:14px;">
+      <div class="tip-block">
+        <div class="tip-icon">⚡</div>
+        <div class="tip-text"><strong>Don't rush theory.</strong> Every senior blockchain engineer you meet will tell you the same thing — they wish they'd spent more time understanding the fundamentals before diving into code. Theory = fewer bugs later.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="cover-footer-text">theboringeducation.com</span>
+    <span class="page-num">02 / 07</span>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 3 — PHASES 3–5 ══════════ -->
+<div class="page inner-page">
+  <div class="page-header">
+    <span class="page-header-logo"><img src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE"></span>
+    <span class="page-header-title">Blockchain Engineer · 2026 Roadmap</span>
+    <span class="page-num">03</span>
+  </div>
+
+  <div class="page-body">
+    <div class="section-label">Core Engineering Skills</div>
+    <h2 class="section-title">Smart Contracts, Solidity & Testing</h2>
+
+    <div class="roadmap">
+
+      <!-- PHASE 3 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-dot">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="time-badge"><span></span> Weeks 7–12</div>
+          <div class="step-phase">Phase 03 · Smart Contracts</div>
+          <div class="step-heading">Solidity — The Language of Web3</div>
+          <div class="step-desc">Solidity is the primary smart contract language. Learn data types, functions, modifiers, events, mappings, structs, inheritance, and interfaces. Understand the EVM execution model, storage vs memory vs calldata, and gas optimisation basics. Write real contracts from scratch — ERC-20 tokens, simple auctions, voting systems.</div>
+          <div class="step-tags">
+            <span class="tag red">Core language</span>
+            <span class="tag">Solidity 0.8+</span>
+            <span class="tag">Data Types</span>
+            <span class="tag">Mappings & Structs</span>
+            <span class="tag">Events & Modifiers</span>
+            <span class="tag">ERC-20 / ERC-721</span>
+            <span class="tag">Gas Optimisation</span>
+            <span class="tag">Storage Layout</span>
+          </div>
+          <div class="yt-links">
+            <a class="yt-link" href="https://www.youtube.com/watch?v=umepbfKp5rI" target="_blank">Solidity Full Course – Patrick Collins</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=M576WGiDBdQ" target="_blank">Solidity Tutorial for Beginners – Dapp University</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=gyMwXuJrbJQ" target="_blank">Smart Contracts Tutorial – freeCodeCamp</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=ipwxYa-F1uY" target="_blank">Build ERC20 Token from scratch – Dapp University</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 4 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-dot">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="time-badge"><span></span> Weeks 13–18</div>
+          <div class="step-phase">Phase 04 · Dev Tools & Frameworks</div>
+          <div class="step-heading">Hardhat, Foundry & the Ethereum Dev Stack</div>
+          <div class="step-desc">Real blockchain development happens in professional toolchains. Master Hardhat or Foundry for compiling, testing, and deploying contracts. Learn to write unit tests for smart contracts (critical — bugs cost real money), use local testnets (Anvil, Ganache), deploy to public testnets (Sepolia), and verify contracts on Etherscan.</div>
+          <div class="step-tags">
+            <span class="tag red">Dev toolchain</span>
+            <span class="tag">Hardhat</span>
+            <span class="tag">Foundry / Forge</span>
+            <span class="tag">Anvil (local testnet)</span>
+            <span class="tag">Sepolia Testnet</span>
+            <span class="tag">Etherscan Verify</span>
+            <span class="tag">OpenZeppelin</span>
+            <span class="tag">Contract Testing</span>
+          </div>
+          <div class="yt-links">
+            <a class="yt-link" href="https://www.youtube.com/watch?v=9Yh4_8NKiYo" target="_blank">Hardhat Complete Guide – Patrick Collins</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=EhPeHeoKF88" target="_blank">Foundry Full Course – Patrick Collins (Cyfrin)</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=0kx8M4wu-HA" target="_blank">OpenZeppelin Contracts – freeCodeCamp</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 5 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-dot">5</div>
+        </div>
+        <div class="step-content">
+          <div class="time-badge"><span></span> Weeks 19–25</div>
+          <div class="step-phase">Phase 05 · Frontend + Web3</div>
+          <div class="step-heading">Building dApps — ethers.js, wagmi & React</div>
+          <div class="step-desc">Connect your smart contracts to a real UI. Learn ethers.js or web3.js, how to connect wallets with MetaMask, how to read and write to contracts from the browser. Master wagmi + viem for React dApps (the 2026 standard). Build a complete dApp: wallet connect → read contract state → send transactions → show results.</div>
+          <div class="step-tags">
+            <span class="tag red">dApp building</span>
+            <span class="tag">ethers.js v6</span>
+            <span class="tag">wagmi + viem</span>
+            <span class="tag">RainbowKit</span>
+            <span class="tag">MetaMask</span>
+            <span class="tag">React + Vite</span>
+            <span class="tag">IPFS / Pinata</span>
+            <span class="tag">The Graph</span>
+          </div>
+          <div class="yt-links">
+            <a class="yt-link" href="https://www.youtube.com/watch?v=a0osIaAOFSE" target="_blank">Build Full-Stack dApp – Dapp University</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=M576WGiDBdQ" target="_blank">ethers.js Tutorial – Dapp University</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=gyMwXuJrbJQ" target="_blank">wagmi + RainbowKit Crash Course – Nader Dabit</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=p36tXHX1JD8" target="_blank">The Graph Protocol Tutorial – Nader Dabit</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:12px;">
+      <div class="tip-block">
+        <div class="tip-icon">🔥</div>
+        <div class="tip-text"><strong>Test everything.</strong> In traditional software, a bug = a bad user experience. In blockchain, a bug = lost funds, potentially millions of dollars. Write tests obsessively. Use Foundry's fuzzing and coverage tools from the start.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="cover-footer-text">theboringeducation.com</span>
+    <span class="page-num">03 / 07</span>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 4 — PHASES 6–7 ══════════ -->
+<div class="page inner-page">
+  <div class="page-header">
+    <span class="page-header-logo"><img src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE"></span>
+    <span class="page-header-title">Blockchain Engineer · 2026 Roadmap</span>
+    <span class="page-num">04</span>
+  </div>
+
+  <div class="page-body">
+    <div class="section-label">Advanced Engineering</div>
+    <h2 class="section-title">DeFi, Security & Protocol Development</h2>
+
+    <div class="roadmap">
+
+      <!-- PHASE 6 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-dot">6</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="time-badge"><span></span> Months 5–7</div>
+          <div class="step-phase">Phase 06 · DeFi & Token Standards</div>
+          <div class="step-heading">Deep Dive into DeFi Protocols</div>
+          <div class="step-desc">DeFi is where the money is in 2026. Learn how AMMs (Automated Market Makers) work, how lending protocols like Aave/Compound are built, what liquidity pools are, how yield farming and staking work under the hood. Study Uniswap V2/V3 source code — it's one of the best-written Solidity codebases. Build a minimal DEX clone.</div>
+          <div class="step-tags">
+            <span class="tag red">DeFi core</span>
+            <span class="tag">AMM / Uniswap V3</span>
+            <span class="tag">Liquidity Pools</span>
+            <span class="tag">Aave / Compound</span>
+            <span class="tag">Flash Loans</span>
+            <span class="tag">ERC-4626 Vaults</span>
+            <span class="tag">Oracles (Chainlink)</span>
+            <span class="tag">Price Manipulation</span>
+          </div>
+          <div class="yt-links">
+            <a class="yt-link" href="https://www.youtube.com/watch?v=qB2Ulx201wY" target="_blank">DeFi Tutorial – Whiteboard Crypto (Deep Dives)</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=0W6hv4bgEiM" target="_blank">Build a DEX like Uniswap – Smart Contract Programmer</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=sTSMBVEaSAc" target="_blank">Flash Loans Explained & Build – Smart Contract Programmer</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=QD9XfCW76mE" target="_blank">Chainlink Oracles Tutorial – Patrick Collins</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=Wn_Kb3MR_cU" target="_blank">Uniswap V3 Deep Dive – Finematics</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 7 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-dot">7</div>
+        </div>
+        <div class="step-content">
+          <div class="time-badge"><span></span> Months 6–9</div>
+          <div class="step-phase">Phase 07 · Smart Contract Security</div>
+          <div class="step-heading">Security Auditing & Attack Patterns</div>
+          <div class="step-desc">This phase separates junior from senior blockchain engineers. Learn all major attack vectors: Reentrancy (The DAO hack), Integer overflow, Access control bugs, Oracle manipulation, Flash loan attacks, Sandwich attacks, and Signature replay. Use Slither and Aderyn for static analysis, Echidna/Foundry for fuzz testing. Study real hacks on DeFi Hack Labs. Certora for formal verification is bonus points.</div>
+          <div class="step-tags">
+            <span class="tag red">Critical skill</span>
+            <span class="tag">Reentrancy</span>
+            <span class="tag">Access Control</span>
+            <span class="tag">Oracle Manipulation</span>
+            <span class="tag">Slither</span>
+            <span class="tag">Aderyn (Cyfrin)</span>
+            <span class="tag">Fuzz Testing</span>
+            <span class="tag">Formal Verification</span>
+            <span class="tag">DeFiHackLabs</span>
+          </div>
+          <div class="yt-links">
+            <a class="yt-link" href="https://www.youtube.com/watch?v=LLiJK_VeAvQ" target="_blank">Smart Contract Hacking – OpenSense</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=Jm5EC_6l4TA" target="_blank">Reentrancy Attack Explained – Smart Contract Programmer</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=EhPeHeoKF88" target="_blank">Smart Contract Auditing Full Course – Cyfrin (Patrick Collins)</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=sFW3Ra37JRQ" target="_blank">All DeFi Hacks Explained – Finematics</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:12px;">
+      <div class="tip-block">
+        <div class="tip-icon">🛡️</div>
+        <div class="tip-text"><strong>Read real hacks.</strong> Every major DeFi exploit is publicly documented. Go through DeFiHackLabs on GitHub — it has working PoC exploits you can run in Foundry. This is better than any course for understanding real-world security.</div>
+      </div>
+    </div>
+
+    <hr class="divider" style="margin-top:14px;">
+
+    <div class="section-label">Specialisations</div>
+    <div style="font-size:15px;font-weight:800;color:var(--dark);margin-bottom:10px;">Pick Your Path After Phase 7</div>
+
+    <div class="resource-grid">
+      <div class="resource-card">
+        <div class="resource-card-icon">🔐</div>
+        <div class="resource-card-name">Security Auditor</div>
+        <div class="resource-card-desc">Highest paid path. Audit protocols for vulnerabilities before launch. Learn Certora, Foundry fuzzing, manual review techniques. Join Sherlock / Code4rena / Cantina.</div>
+        <a class="resource-card-link" href="https://www.youtube.com/watch?v=EhPeHeoKF88" target="_blank">▶ Cyfrin Audit Course – YouTube</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-card-icon">🏗️</div>
+        <div class="resource-card-name">Protocol Engineer</div>
+        <div class="resource-card-desc">Build the core DeFi protocols. Requires deep Solidity + Yul/assembly knowledge. Study Uniswap, Aave, Compound source code. Learn advanced gas optimisation.</div>
+        <a class="resource-card-link" href="https://www.youtube.com/watch?v=0W6hv4bgEiM" target="_blank">▶ Advanced Solidity – Smart Contract Programmer</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-card-icon">⚙️</div>
+        <div class="resource-card-name">Infrastructure / Node Dev</div>
+        <div class="resource-card-desc">Build the base layer. Work with Ethereum clients (Geth, Reth), write custom RPC nodes, build MEV bots, or contribute to Layer 2 tech like OP Stack / ZKSync.</div>
+        <a class="resource-card-link" href="https://www.youtube.com/watch?v=gyMwXuJrbJQ" target="_blank">▶ Ethereum internals – YouTube (EthResearch)</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-card-icon">🌐</div>
+        <div class="resource-card-name">Full-Stack Web3 Dev</div>
+        <div class="resource-card-desc">Build the complete user-facing product. React + wagmi + Solidity + subgraphs. Most open positions fall here. Great entry point with high upward mobility.</div>
+        <a class="resource-card-link" href="https://www.youtube.com/watch?v=a0osIaAOFSE" target="_blank">▶ Full-Stack Web3 – Dapp University</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="cover-footer-text">theboringeducation.com</span>
+    <span class="page-num">04 / 07</span>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 5 — PHASES 8–9 + L2 / CHAINS ══════════ -->
+<div class="page inner-page">
+  <div class="page-header">
+    <img src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+    <span class="page-header-title">Blockchain Engineer · 2026 Roadmap</span>
+    <span class="page-num">05</span>
+  </div>
+
+  <div class="page-body">
+    <div class="section-label">Layer 2 & Multi-Chain</div>
+    <h2 class="section-title">Advanced Topics, L2s & Getting Hired</h2>
+
+    <div class="roadmap">
+
+      <!-- PHASE 8 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-dot">8</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="time-badge"><span></span> Months 8–11</div>
+          <div class="step-phase">Phase 08 · Layer 2 & Multi-Chain</div>
+          <div class="step-heading">Rollups, ZK Proofs, and Cross-Chain</div>
+          <div class="step-desc">In 2026, most activity happens on L2s. Understand Optimistic Rollups (Optimism, Arbitrum, Base) and ZK Rollups (ZKSync, Polygon zkEVM, Starknet). Learn how cross-chain bridges work and why they get hacked. Explore Solana and other non-EVM chains at a high level. Advanced engineers are expected to deploy on multiple chains and understand bridging security.</div>
+          <div class="step-tags">
+            <span class="tag red">2026 must-know</span>
+            <span class="tag">Optimistic Rollups</span>
+            <span class="tag">ZK Rollups</span>
+            <span class="tag">Base / Arbitrum</span>
+            <span class="tag">ZKSync / Starknet</span>
+            <span class="tag">Bridge Security</span>
+            <span class="tag">Solana basics</span>
+            <span class="tag">Cross-chain messaging</span>
+          </div>
+          <div class="yt-links">
+            <a class="yt-link" href="https://www.youtube.com/watch?v=7pWxCklcNsU" target="_blank">Layer 2 Explained – Finematics</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=BgCgauWVTs0" target="_blank">ZK Proofs Explained Simply – 3Blue1Brown</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=NkTaHsjK7CA" target="_blank">ZKSync & zkEVM Tutorial – Patrick Collins</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=sTSMBVEaSAc" target="_blank">Solana vs Ethereum – Whiteboard Crypto</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=cizLhxSKrAc" target="_blank">Cross-Chain Bridges – Finematics</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 9 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-dot">9</div>
+        </div>
+        <div class="step-content">
+          <div class="time-badge"><span></span> Month 10–14</div>
+          <div class="step-phase">Phase 09 · Ship & Get Hired</div>
+          <div class="step-heading">Build in Public, Audit for Bounties, Land the Job</div>
+          <div class="step-desc">Your GitHub is your resume in Web3. Build at least 3–5 real projects, deploy them to testnets and mainnet, and write about what you learned. Participate in public audits on Code4rena, Sherlock, or Cantina — even 1 valid finding on a competitive audit will set you apart. Start networking on Twitter/X, join Telegram groups for protocols, contribute to open-source Web3 projects on GitHub.</div>
+          <div class="step-tags">
+            <span class="tag red">Endgame</span>
+            <span class="tag">GitHub Portfolio</span>
+            <span class="tag">Mainnet Deployments</span>
+            <span class="tag">Code4rena</span>
+            <span class="tag">Sherlock Audits</span>
+            <span class="tag">Bug Bounties (Immunefi)</span>
+            <span class="tag">Open Source</span>
+            <span class="tag">Twitter/X networking</span>
+          </div>
+          <div class="yt-links">
+            <a class="yt-link" href="https://www.youtube.com/watch?v=0kx8M4wu-HA" target="_blank">How to Get a Web3 Job in 2026 – Patrick Collins</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=EhPeHeoKF88" target="_blank">How to Win Code4rena Contests – Cyfrin</a>
+            <a class="yt-link" href="https://www.youtube.com/watch?v=9Yh4_8NKiYo" target="_blank">Building Your Web3 Portfolio – Dapp University</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="divider" style="margin-top:12px;">
+
+    <div class="section-label">Ecosystem Map 2026</div>
+    <div style="font-size:14px;font-weight:800;color:var(--dark);margin-bottom:8px;">Key Blockchains to Know</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--red);font-weight:700;margin-bottom:4px;">LAYER 1</div>
+        <div style="font-size:11.5px;color:var(--dark);line-height:1.7;">Ethereum (primary)<br>Solana<br>Bitcoin (Taproot/Ordinals)<br>Avalanche<br>BNB Chain</div>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--red);font-weight:700;margin-bottom:4px;">LAYER 2 (EVM)</div>
+        <div style="font-size:11.5px;color:var(--dark);line-height:1.7;">Base (Coinbase)<br>Arbitrum One<br>Optimism<br>Polygon PoS / zkEVM<br>Linea</div>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--red);font-weight:700;margin-bottom:4px;">ZK ROLLUPS</div>
+        <div style="font-size:11.5px;color:var(--dark);line-height:1.7;">ZKSync Era<br>Starknet<br>Scroll<br>Taiko<br>Kakarot</div>
+      </div>
+    </div>
+
+    <div class="tip-block">
+      <div class="tip-icon">💡</div>
+      <div class="tip-text"><strong>Focus on Ethereum + one L2 first.</strong> Base or Arbitrum are the most active ecosystems in 2026. Become excellent there before going multi-chain. Depth beats breadth early in your career.</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="cover-footer-text">theboringeducation.com</span>
+    <span class="page-num">05 / 07</span>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 6 — SKILL MAP + RESOURCES ══════════ -->
+<div class="page inner-page">
+  <div class="page-header">
+    <span class="page-header-logo"><img src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE"></span>
+    <span class="page-header-title">Blockchain Engineer · 2026 Roadmap</span>
+    <span class="page-num">06</span>
+  </div>
+
+  <div class="page-body">
+
+    <div class="section-label">Skill Map</div>
+    <h2 class="section-title">What to Learn & When</h2>
+
+    <div class="skills-row">
+      <div class="skill-col">
+        <div class="skill-col-title">🟥 Month 1–3</div>
+        <div class="skill-item">JavaScript / Python basics</div>
+        <div class="skill-item">Git & GitHub</div>
+        <div class="skill-item">How blockchain works</div>
+        <div class="skill-item">Wallets & Private Keys</div>
+        <div class="skill-item">Ethereum & EVM basics</div>
+        <div class="skill-item">MetaMask & Etherscan</div>
+        <div class="skill-item">Solidity fundamentals</div>
+        <div class="skill-item">First smart contract</div>
+      </div>
+      <div class="skill-col">
+        <div class="skill-col-title">🟧 Month 4–7</div>
+        <div class="skill-item">Hardhat / Foundry</div>
+        <div class="skill-item">Contract testing (unit)</div>
+        <div class="skill-item">OpenZeppelin library</div>
+        <div class="skill-item">ERC-20 / ERC-721 / ERC-1155</div>
+        <div class="skill-item">ethers.js / wagmi</div>
+        <div class="skill-item">Building dApps (React)</div>
+        <div class="skill-item">IPFS & decentralised storage</div>
+        <div class="skill-item">The Graph (indexing)</div>
+      </div>
+      <div class="skill-col">
+        <div class="skill-col-title">🟩 Month 8–14</div>
+        <div class="skill-item">DeFi protocols (AMM, lending)</div>
+        <div class="skill-item">Security auditing (Slither)</div>
+        <div class="skill-item">Fuzz testing (Foundry)</div>
+        <div class="skill-item">Flash loans & MEV basics</div>
+        <div class="skill-item">Layer 2 / ZK proofs</div>
+        <div class="skill-item">Cross-chain development</div>
+        <div class="skill-item">Code4rena audits</div>
+        <div class="skill-item">Mainnet deployments</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Essential YouTube Channels</div>
+    <div style="font-size:14px;font-weight:800;color:var(--dark);margin-bottom:10px;">Follow These — They're the Best in Web3 Education</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:#cc0000;"></div>
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;">Patrick Collins (Cyfrin)</div>
+        <div style="font-size:11px;color:var(--mid);margin-bottom:6px;">The best Solidity + security auditing resource. Full courses from zero to auditor. Foundry curriculum is world-class.</div>
+        <a class="yt-link" href="https://www.youtube.com/@PatrickAlphaC" target="_blank">youtube.com/@PatrickAlphaC</a>
+      </div>
+      <div style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:#cc0000;"></div>
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;">Smart Contract Programmer</div>
+        <div style="font-size:11px;color:var(--mid);margin-bottom:6px;">Deep Solidity patterns, DeFi protocol clones, advanced topics. Perfect for intermediate+ builders who want to go deep.</div>
+        <a class="yt-link" href="https://www.youtube.com/@smartcontractprogrammer" target="_blank">youtube.com/@smartcontractprogrammer</a>
+      </div>
+      <div style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:#cc0000;"></div>
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;">Dapp University</div>
+        <div style="font-size:11px;color:var(--mid);margin-bottom:6px;">Practical full-stack dApp building. Great for learning the frontend + Web3 stack with real project walkthroughs.</div>
+        <a class="yt-link" href="https://www.youtube.com/@DappUniversity" target="_blank">youtube.com/@DappUniversity</a>
+      </div>
+      <div style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:#cc0000;"></div>
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;">Finematics</div>
+        <div style="font-size:11px;color:var(--mid);margin-bottom:6px;">Best visual explanations of DeFi protocols, L2s, and complex blockchain concepts. Essential for understanding the space.</div>
+        <a class="yt-link" href="https://www.youtube.com/@Finematics" target="_blank">youtube.com/@Finematics</a>
+      </div>
+      <div style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:#cc0000;"></div>
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;">Nader Dabit</div>
+        <div style="font-size:11px;color:var(--mid);margin-bottom:6px;">Full-stack Web3 development with Next.js, The Graph, and modern tooling. Great for the frontend-heavy Web3 developer path.</div>
+        <a class="yt-link" href="https://www.youtube.com/@naderdabit" target="_blank">youtube.com/@naderdabit</a>
+      </div>
+      <div style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:#cc0000;"></div>
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;">Whiteboard Crypto</div>
+        <div style="font-size:11px;color:var(--mid);margin-bottom:6px;">Excellent animated explanations of blockchain concepts. Use this for onboarding yourself and explaining concepts to others.</div>
+        <a class="yt-link" href="https://www.youtube.com/@WhiteboardCrypto" target="_blank">youtube.com/@WhiteboardCrypto</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    <span class="cover-footer-text">theboringeducation.com</span>
+    <span class="page-num">06 / 07</span>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 7 — DAILY CHECKLIST + PROJECTS + CTA ══════════ -->
+<div class="page inner-page">
+  <div class="page-header">
+    <span class="page-header-logo"><img src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE"></span>
+    <span class="page-header-title">Blockchain Engineer · 2026 Roadmap</span>
+    <span class="page-num">07</span>
+  </div>
+
+  <div class="page-body">
+
+    <div class="section-label">Must-Build Projects</div>
+    <h2 class="section-title">Your Portfolio — Build All of These</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--red);font-weight:700;margin-bottom:4px;letter-spacing:0.1em;">BEGINNER</div>
+        <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;line-height:1.4;">ERC-20 Token + Faucet dApp</div>
+        <div style="font-size:10.5px;color:var(--mid);line-height:1.5;">Deploy your own ERC-20 token to Sepolia testnet. Build a React dApp with wagmi where users can connect their wallet, check balance, and request tokens from a faucet.</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--red);font-weight:700;margin-bottom:4px;letter-spacing:0.1em;">BEGINNER</div>
+        <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;line-height:1.4;">NFT Collection + Minting Site</div>
+        <div style="font-size:10.5px;color:var(--mid);line-height:1.5;">ERC-721 collection with on-chain or IPFS metadata. Build a minting page with price, supply counter, wallet connection, and reveal mechanism.</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--red);font-weight:700;margin-bottom:4px;letter-spacing:0.1em;">INTERMEDIATE</div>
+        <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;line-height:1.4;">DAO + Governance Contract</div>
+        <div style="font-size:10.5px;color:var(--mid);line-height:1.5;">On-chain governance system. Token holders create proposals, vote, and execute changes. Use OpenZeppelin Governor module with Timelock.</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--red);font-weight:700;margin-bottom:4px;letter-spacing:0.1em;">INTERMEDIATE</div>
+        <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;line-height:1.4;">Minimal DEX (Uniswap clone)</div>
+        <div style="font-size:10.5px;color:var(--mid);line-height:1.5;">Build an AMM with liquidity pools, token swapping, LP tokens, and fee mechanism. Deploy with full test coverage. Study Uniswap V2 source first.</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--red);font-weight:700;margin-bottom:4px;letter-spacing:0.1em;">INTERMEDIATE</div>
+        <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;line-height:1.4;">Stablecoin / Lending Protocol</div>
+        <div style="font-size:10.5px;color:var(--mid);line-height:1.5;">Collateral-backed stablecoin or minimal lending market. Implements liquidation mechanism, interest rate model, and price oracle integration.</div>
+      </div>
+      <div style="background:var(--red-light);border:1px solid var(--red-mid);border-radius:10px;padding:12px;">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--red);font-weight:700;margin-bottom:4px;letter-spacing:0.1em;">ADVANCED</div>
+        <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;line-height:1.4;">Security Audit + Report</div>
+        <div style="font-size:10.5px;color:var(--mid);line-height:1.5;">Pick an open-source protocol, audit it with Slither + Foundry fuzz tests, write a professional audit report, and publish it. This is your senior-level portfolio piece.</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Your Daily Checklist</div>
+    <div style="font-size:14px;font-weight:800;color:var(--dark);margin-bottom:10px;">The Boring Routine That Works</div>
+
+    <div class="checklist" style="margin-bottom:14px;">
+      <div class="check-item"><div class="check-box"></div> Read 1 smart contract from a live protocol (Etherscan → Uniswap, Aave, etc.)</div>
+      <div class="check-item"><div class="check-box"></div> Write or review Solidity code for at least 30 minutes — build something, don't just watch</div>
+      <div class="check-item"><div class="check-box"></div> Follow 1 real DeFi event: a new protocol launch, exploit, or governance vote</div>
+      <div class="check-item"><div class="check-box"></div> Push at least one commit to a public GitHub repo</div>
+      <div class="check-item"><div class="check-box"></div> Write 1 tweet/thread about what you learned today — build in public</div>
+      <div class="check-item"><div class="check-box"></div> Check Code4rena / Sherlock for new audit contests — participate when ready</div>
+    </div>
+
+    <div class="cta-block" style="margin-bottom:14px;">
+      <div class="cta-title">Start Your Web3 Journey Today 🚀</div>
+      <div class="cta-sub">Use DSA Yatra, Prep Yatra, and Tech Yatra alongside this roadmap.<br>Everything on The Boring Education is completely free.</div>
+      <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→ theboringeducation.com</a>
+    </div>
+
+    <div class="section-label">Find Us Everywhere</div>
+    <div class="socials-grid">
+      <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+        <span class="social-name">Instagram</span>
+        <div class="social-handle">@theboringeducation</div>
+      </a>
+      <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+        <span class="social-name">LinkedIn</span>
+        <div class="social-handle">The Boring Education</div>
+      </a>
+      <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+        <span class="social-name">GitHub</span>
+        <div class="social-handle">The-Boring-Education</div>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+    <span class="page-num">07 / 07</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

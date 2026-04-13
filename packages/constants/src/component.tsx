@@ -263,7 +263,7 @@ const getNavbarVariantConfig = (
     },
   },
   resources: {
-    productName: "TBE Resources",
+    productName: "Resources",
     subText: "By The Boring Education",
     dashboardRoute: "/",
     borderClass: "border-b border-greyLight",
@@ -406,7 +406,7 @@ export const getFooterVariantConfig = (
     branding: (
       <div className="flex flex-col gap-0">
         <span className="text-2xl font-bold text-primary leading-tight">
-          TBE Resources
+          Resources
         </span>
         <span className="text-[10px] text-greyDark -mt-0.5">
           By The Boring Education
