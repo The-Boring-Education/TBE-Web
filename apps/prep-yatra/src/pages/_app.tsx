@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 
 import { AuthProvider } from "@tbe/auth";
 import { useAuth } from "@tbe/auth";
+import { PrepYatraGamificationProvider } from "@tbe/components";
 import { Toaster as Sonner } from "@tbe/components";
 import { Toaster } from "@tbe/components";
 import { TooltipProvider } from "@tbe/components";
@@ -101,7 +102,9 @@ const AppContent = ({
     <>
       <CacheManager />
       <GamificationProvider>
-        <Component {...pageProps} />
+        <PrepYatraGamificationProvider>
+          <Component {...pageProps} />
+        </PrepYatraGamificationProvider>
       </GamificationProvider>
     </>
   );
