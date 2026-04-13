@@ -262,6 +262,40 @@ const getNavbarVariantConfig = (
       links: false,
     },
   },
+  resources: {
+    productName: "TBE Resources",
+    subText: "By The Boring Education",
+    dashboardRoute: "/",
+    borderClass: "border-b border-greyLight",
+    requiresAuth: true,
+    showGamification: false,
+    showNotifications: true,
+    navigation: {
+      issues: ["issue-bug-report"],
+      cohorts: false,
+      learn: [
+        "learn-shiksha",
+        "learn-interview-prep",
+        "learn-youfocus",
+        "learn-webinar",
+        "learn-portfolio",
+        "learn-projects",
+      ],
+      tools: [
+        "tool-techyatra",
+        "tool-dsayatra",
+        "tool-resumeyatra",
+        "tool-prepyatra",
+        "tool-oncampus",
+      ],
+      links: [
+        "link-tech-mentorship",
+        "link-instagram",
+        "link-community",
+        "link-host-tbe",
+      ],
+    },
+  },
 });
 
 // Footer Variant Configuration Interface
@@ -367,6 +401,20 @@ export const getFooterVariantConfig = (
     ),
     subtitle:
       "Advance your career with OnCampus. Master DSA, Aptitude, Resume, Interviews, and Projects in one unified dashboard built for students.",
+  },
+  resources: {
+    branding: (
+      <div className="flex flex-col gap-0">
+        <span className="text-2xl font-bold text-primary leading-tight">
+          TBE Resources
+        </span>
+        <span className="text-[10px] text-greyDark -mt-0.5">
+          By The Boring Education
+        </span>
+      </div>
+    ),
+    subtitle:
+      "Free guides, roadmaps, and learning resources from The Boring Education. Start your tech journey today.",
   },
 });
 

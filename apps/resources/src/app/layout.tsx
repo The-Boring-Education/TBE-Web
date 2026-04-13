@@ -6,6 +6,8 @@ import { Inter } from "next/font/google";
 import { Shell } from "@/components/Shell";
 import { getSiteBaseUrl } from "@/lib/site";
 
+import { Providers } from "./providers";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -43,7 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans">
-        <Shell>{children}</Shell>
+        <Providers>
+          <Shell>{children}</Shell>
+        </Providers>
       </body>
     </html>
   );

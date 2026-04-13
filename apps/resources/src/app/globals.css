@@ -8,10 +8,22 @@
   --shell-muted: #a1a1aa;
   --shell-border: #27272a;
   --shell-accent: #22c55e;
+
+  /* Required by @tbe/components shared Navbar/Footer */
+  --primary: 0 100% 67.1%;
+  --primary-foreground: 0 0% 100%;
+  --radius: 0.5rem;
 }
 
 body {
   @apply min-h-screen bg-[var(--shell-bg)] text-[var(--shell-fg)] antialiased;
+}
+
+/* Utility classes used by @tbe/components Navbar */
+.glass-dark {
+  background: rgba(10, 10, 11, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 @media print {
@@ -25,4 +37,16 @@ body {
     margin: 0 !important;
     max-width: none !important;
   }
+}
+
+/* Fix for Navbar interactivity and visibility */
+header {
+  z-index: 100 !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure nothing in the main content overlaps the header */
+main {
+  position: relative;
+  z-index: 10;
 }
