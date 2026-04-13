@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import { mockPrepYatraChallengesEmpty } from "../fixtures/authenticated-dashboard-smoke";
 import {
   fullyOnboardedProductFieldsByApp,
   installOnboardingRedirectMocks,
@@ -21,11 +22,19 @@ test.describe("Prep Yatra auth and onboarding gate", () => {
       page,
       fullyOnboardedProductFieldsByApp["prep-yatra"],
     );
+
+    // Empty challenges → ChallengeSection + CreateChallengeModal (needs PrepYatraGamificationProvider).
+    await mockPrepYatraChallengesEmpty(page);
+
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
 
     await expect(page).not.toHaveURL(onboardingAppUrlPattern, {
       timeout: 15_000,
     });
     await expect(page).toHaveURL(/\/dashboard\/?$/);
+
+    await expect(
+      page.getByRole("heading", { name: "Ready to Transform Your Skills?" }),
+    ).toBeVisible({ timeout: 20_000 });
   });
 });

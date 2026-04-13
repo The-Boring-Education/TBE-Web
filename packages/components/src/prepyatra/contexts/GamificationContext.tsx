@@ -62,7 +62,7 @@ export function usePrepYatraGamificationContext() {
   const context = useContext(PrepYatraGamificationContext);
   if (context === undefined) {
     throw new Error(
-      "useGamificationContext must be used within a GamificationProvider",
+      "usePrepYatraGamificationContext must be used within PrepYatraGamificationProvider",
     );
   }
   return context;
