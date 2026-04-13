@@ -1,3 +1,5 @@
+import { DSA_CANONICAL_TOPICS } from "@tbe/constants";
+
 import type {
   AptitudeAnswerFormatType,
   AptitudeCategoryType,
@@ -3212,34 +3214,7 @@ export const TIMELINE_CONFIGS: Record<
   Record<string, { count: number; title: string }>
 > = TIMELINE_CONFIG_DATA;
 
-const DSA_TOPICS: DSATopicType[] = [
-  "ARRAY",
-  "STRING",
-  "HASHMAP",
-  "SLIDING_WINDOW",
-  "PREFIX_SUM",
-  "SORTING",
-  "BINARY_SEARCH",
-  "MATH",
-  "BIT_MANIPULATION",
-  "RECURSION",
-  "LINKED_LIST",
-  "STACK",
-  "QUEUE",
-  "BINARY_TREE",
-  "TREE",
-  "BST",
-  "HEAP",
-  "TRIE",
-  "GRAPH",
-  "BACKTRACKING",
-  "DYNAMIC_PROGRAMMING",
-  "GREEDY",
-  "UNION_FIND",
-  "SIMULATION",
-  "DESIGN",
-  "MONOTONIC_STACK",
-];
+const DSA_TOPICS: DSATopicType[] = [...DSA_CANONICAL_TOPICS];
 
 export {
   ALLOWED_IPS,

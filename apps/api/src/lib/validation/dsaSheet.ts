@@ -1,3 +1,4 @@
+import { DSA_EXTRA_QUESTION_TOPICS } from "@tbe/constants";
 import { z } from "zod";
 
 import {
@@ -25,8 +26,10 @@ export const DSA_SHEET_MAX_LIMIT = 200;
 
 const DURATION_KEYS = new Set(Object.keys(TIMELINE_CONFIGS));
 
-const EXTRA_TOPICS = ["TWO_POINTERS", "DFS", "BFS"] as const;
-const ALL_DSA_TOPICS = [...DSA_TOPICS, ...EXTRA_TOPICS] as readonly string[];
+const ALL_DSA_TOPICS = [
+  ...DSA_TOPICS,
+  ...DSA_EXTRA_QUESTION_TOPICS,
+] as readonly string[];
 
 const domainEnum = z.enum([DSA_DOMAIN[0], ...DSA_DOMAIN.slice(1)] as [
   string,

@@ -44,6 +44,9 @@ importers:
       "@tbe/auth":
         specifier: workspace:*
         version: link:../../packages/auth
+      "@tbe/constants":
+        specifier: workspace:*
+        version: link:../../packages/constants
       "@tbe/utils":
         specifier: workspace:*
         version: link:../../packages/utils
@@ -1936,6 +1939,9 @@ importers:
       "@tbe/types":
         specifier: workspace:*
         version: link:../types
+      lucide-react:
+        specifier: ^0.462.0
+        version: 0.462.0(react@18.3.1)
       uuid:
         specifier: ^9.0.0
         version: 9.0.1

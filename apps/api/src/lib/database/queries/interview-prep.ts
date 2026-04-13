@@ -1,8 +1,6 @@
-import {
-  DSA_TOPICS,
-  modelSelectParams,
-  TIMELINE_CONFIGS,
-} from "@/lib/constants";
+import { compareDsaTopicKeysForApi } from "@tbe/constants";
+
+import { modelSelectParams, TIMELINE_CONFIGS } from "@/lib/constants";
 import type {
   AddInterviewQuestionRequestPayloadProps,
   AddInterviewSheetRequestPayloadProps,
@@ -1018,15 +1016,7 @@ const getDSATopicSummariesFromDB = async (
         count: row.count,
       }))
       .filter((t) => t.topic)
-      .sort((a, b) => {
-        const idxA = DSA_TOPICS.indexOf(a.topic as any);
-        if (idxA !== -1 && b.topic) {
-          const idxB = DSA_TOPICS.indexOf(b.topic as any);
-          if (idxB !== -1) return idxA - idxB;
-          return -1;
-        }
-        return a.topic.localeCompare(b.topic);
-      });
+      .sort((a, b) => compareDsaTopicKeysForApi(a.topic, b.topic));
 
     return { data: { topics } };
   } catch (error) {

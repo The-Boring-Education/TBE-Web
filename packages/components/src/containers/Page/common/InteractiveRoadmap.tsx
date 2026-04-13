@@ -474,14 +474,19 @@ const InteractiveRoadmap = ({
 
                     <span
                       className={cn(
-                        "text-xs font-black tracking-wide",
+                        "font-black tracking-tight tabular-nums",
+                        node.total > 0
+                          ? "text-[10px] leading-tight"
+                          : "text-xs tracking-wide",
                         isActive && "text-white",
                         isDone && "text-gray-600",
                         node.isLocked && "text-gray-700",
                       )}
                       style={isAvailable ? { color: accentColor } : undefined}
                     >
-                      {String(index + 1).padStart(2, "0")}
+                      {node.total > 0
+                        ? `${node.solved}/${node.total}`
+                        : String(index + 1).padStart(2, "0")}
                     </span>
 
                     {isDone && (

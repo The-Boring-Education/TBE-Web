@@ -1,0 +1,9 @@
+[
+  {
+    "slug": "example-welcome",
+    "title": "Welcome to TBE Resources",
+    "description": "A sample resource showing how HTML content is embedded for SEO. Replace or duplicate this folder to publish new guides.",
+    "keywords": ["sample", "getting started", "TBE"],
+    "tags": ["intro"]
+  }
+]
