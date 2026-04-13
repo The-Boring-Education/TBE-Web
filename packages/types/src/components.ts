@@ -1053,7 +1053,8 @@ export type NavbarVariant =
   | "resume-yatra"
   | "oncampus"
   | "learning"
-  | "study-guide";
+  | "study-guide"
+  | "resources";
 
 export type NavbarSectionVisibility = boolean | string[];
 
@@ -1085,7 +1086,8 @@ export type FooterVariant =
   | "dsayatra"
   | "resumeyatra"
   | "platform"
-  | "oncampus";
+  | "oncampus"
+  | "resources";
 
 export interface FooterProps {
   variant?: FooterVariant;
