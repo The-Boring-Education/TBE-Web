@@ -13,3 +13,16 @@
 body {
   @apply min-h-screen bg-[var(--shell-bg)] text-[var(--shell-fg)] antialiased;
 }
+
+@media print {
+  header,
+  footer {
+    display: none !important;
+  }
+
+  .resource-embed {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+}
