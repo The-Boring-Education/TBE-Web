@@ -6,13 +6,13 @@ export const OnboardingCheck = () => {
   const router = useRouter();
 
   const buildRedirectUrl = useCallback(() => {
-    if (typeof window === "undefined") return "/";
-    return `${window.location.origin}/`;
+    if (typeof window === "undefined") return "/builder";
+    return `${window.location.origin}/builder`;
   }, []);
 
   const { isChecking } = useProductOnboardingGate({
     pathname: router.pathname,
-    publicRoutes: ["/login", "/", "/auth"],
+    publicRoutes: ["/login", "/auth"],
     productId: "resume-yatra",
     from: "resumeyatra",
     buildRedirectUrl,
