@@ -854,7 +854,15 @@ const getAllDSAQuestionsFromDB = async (
                 $gt: [
                   {
                     $size: {
-                      $setIntersection: ["$companyTypes", targetCompanies],
+                      $ifNull: [
+                        {
+                          $setIntersection: [
+                            { $ifNull: ["$companyTypes", []] },
+                            targetCompanies,
+                          ],
+                        },
+                        [],
+                      ],
                     },
                   },
                   0,
@@ -1377,7 +1385,15 @@ const getDSAQuestionsGroupedByTopic = async (
                 $gt: [
                   {
                     $size: {
-                      $setIntersection: ["$companyTypes", targetCompanies],
+                      $ifNull: [
+                        {
+                          $setIntersection: [
+                            { $ifNull: ["$companyTypes", []] },
+                            targetCompanies,
+                          ],
+                        },
+                        [],
+                      ],
                     },
                   },
                   0,

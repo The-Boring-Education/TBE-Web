@@ -162,6 +162,7 @@ const routes = {
     checkStatus: "/payment/checkstatus",
     paymentQuote: "/payment/quote",
     paymentOrderStatus: "/payment/order-status",
+    subscriptionPlans: "/subscription-plans",
     validateCoupon: "/coupon/validate",
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {

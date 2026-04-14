@@ -34,6 +34,7 @@ const usePaymentAccess = ({
     isLocked,
     hasAccess,
     isLoading: isPurchased === null && isPremium === true,
+    isChecking: isPurchased === null && isPremium === true,
   };
 };
 

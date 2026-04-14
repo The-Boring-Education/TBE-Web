@@ -125,7 +125,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     let parsed: any;
     try {
       parsed = JSON.parse(payloadString);
-    } catch (err) {
+    } catch {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,

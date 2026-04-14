@@ -4,6 +4,7 @@ import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
   useDsaQuestions,
+  usePaymentStatus,
   usePrepStats,
 } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
@@ -28,6 +29,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
+
+import { PaymentLockOverlay } from "@/components/PaymentLockOverlay";
 
 const SIDEBAR_ITEMS = [
   { name: "Dashboard", href: "/dashboard", active: true, icon: Home },
@@ -142,6 +145,25 @@ const DsaClient = () => {
   const [activeScheduleItem, setActiveScheduleItem] = useState<number | null>(
     null,
   );
+
+  const { isLocked, isLoading } = usePaymentStatus({
+    userId: user?.id,
+    productId: "lifetime",
+    productType: "DSA_YATRA",
+    isPremium: true,
+  });
+
+  // Prevent body scroll when content is locked
+  useEffect(() => {
+    if (isLocked) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isLocked]);
 
   const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
 
@@ -353,286 +375,299 @@ const DsaClient = () => {
   const totalHours = (totalTimeSpent / 60).toFixed(1);
 
   return (
-    <div className="flex bg-[#0f0f0f] font-sans selection:bg-[#ff5757]/30 selection:text-white">
-      <Sidebar />
+    <div
+      className={`relative flex bg-[#0f0f0f] font-sans selection:bg-[#ff5757]/30 selection:text-white ${isLocked ? "h-screen" : "min-h-screen"}`}
+    >
+      {/* Blur content when locked — prevent all scroll */}
+      <div
+        className={`flex-1 flex min-h-0 ${isLocked ? "overflow-hidden blur-sm select-none pointer-events-none" : ""}`}
+      >
+        <Sidebar />
 
-      <main className="flex-1 px-4 pt-2.5 space-y-4 pb-10">
-        {/* Header Section */}
-        <header className="flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold text-[#e0e0e0]">
-              Welcome back, {user?.name?.split(" ")[0]}! 👋
-            </h2>
-            <p className="text-[#a0a0a0] text-xs mt-0.5">
-              Ready to master DSA today?
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <Link href="/sheets" tabIndex={-1}>
-              <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-4 py-2 h-auto font-semibold text-xs rounded-md transition-all hover:scale-105">
-                Continue Learning
-              </Button>
-            </Link>
-            <Button
-              onClick={() => setIsEditModalOpen(true)}
-              className="bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-4 py-2 font-semibold text-xs rounded-md"
-            >
-              Edit Goal
-            </Button>
-          </div>
-        </header>
-
-        {/* Profile Card Section */}
-        <Card className="w-full bg-gradient-to-b from-[#1a1a1a] to-[#252525] border-[#2a2a2a] rounded-xl p-3.5">
-          <div className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-full overflow-hidden mb-3 shadow-lg border-2 border-[#ff6b6b]/20 flex items-center justify-center">
-              {user?.image ? (
-                <Image
-                  src={user.image}
-                  alt={user.name || "Profile"}
-                  width={64}
-                  height={64}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-[#ff6b6b] to-[#ff9b9b] flex items-center justify-center text-white text-xl font-bold">
-                  {user?.name
-                    ?.split(" ")
-                    .map((n) => n[0])
-                    .join("") || "SJ"}
-                </div>
-              )}
+        <main
+          className={`flex-1 flex flex-col min-h-0 px-4 pt-2.5 space-y-4 pb-10 ${isLocked ? "" : "overflow-y-auto"}`}
+        >
+          {/* Header Section */}
+          <header className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold text-[#e0e0e0]">
+                Welcome back, {user?.name?.split(" ")[0]}! 👋
+              </h2>
+              <p className="text-[#a0a0a0] text-xs mt-0.5">
+                Ready to master DSA today?
+              </p>
             </div>
-            <h3 className="text-base font-bold text-[#e0e0e0] leading-tight">
-              {user?.name}
-            </h3>
-
-            <div className="flex gap-3 my-4">
-              {[
-                {
-                  icon: Linkedin,
-                  label: "Linkedin",
-                  url: profile?.linkedInUrl,
-                },
-                { icon: Github, label: "Github", url: profile?.githubUrl },
-                {
-                  icon: Monitor,
-                  label: "Portfolio",
-                  url: profile?.portfolioUrl,
-                },
-              ].map((social) => (
-                <a
-                  key={social.label}
-                  href={
-                    social.url
-                      ? social.url.startsWith("http")
-                        ? social.url
-                        : `https://${social.url}`
-                      : "#"
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    "rounded-md border border-[#2a2a2a] text-[#ff5757] hover:border-[#ff5757] hover:bg-[#ff5757]/10 flex items-center gap-2 px-4 py-2 text-xs font-semibold transition-all uppercase",
-                    !social.url && "opacity-50 cursor-not-allowed",
-                  )}
-                  onClick={(e) => !social.url && e.preventDefault()}
-                >
-                  <social.icon className="w-4 h-4" /> {social.label}
-                </a>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 w-full max-w-2xl text-center mb-5 px-4">
-              {[
-                { label: "Goal Timeline", value: timelineLabel },
-                {
-                  label: "Experience",
-                  value:
-                    profile?.dsaYatra?.experienceLevel ||
-                    user?.occupation ||
-                    "Tech Student",
-                },
-                {
-                  label: "Focus",
-                  value: targetLabel,
-                },
-                {
-                  label: "Target",
-                  value:
-                    profile?.dsaYatra?.companies &&
-                    profile.dsaYatra.companies.length > 0
-                      ? profile.dsaYatra.companies[0]
-                      : "Top Tech",
-                },
-              ].map((stat, i) => (
-                <div
-                  key={i}
-                  className="bg-[#0f0f0f] p-2.5 rounded-lg border border-[#2a2a2a]"
-                >
-                  <p className="text-[10px] text-[#a0a0a0] uppercase mb-0.5 font-bold">
-                    {stat.label}
-                  </p>
-                  <p className="text-xs font-bold text-[#ff5757]">
-                    {stat.value}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex gap-3 w-full max-w-sm">
+            <div className="flex gap-3">
+              <Link href="/sheets" tabIndex={-1}>
+                <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-4 py-2 h-auto font-semibold text-xs rounded-md transition-all hover:scale-105">
+                  Continue Learning
+                </Button>
+              </Link>
               <Button
                 onClick={() => setIsEditModalOpen(true)}
-                className="flex-1 bg-[#2a2a2a] text-[#a0a0a0] hover:bg-[#333] font-semibold text-xs rounded-md py-2 h-auto"
+                className="bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-4 py-2 font-semibold text-xs rounded-md"
               >
-                Edit Profile
-              </Button>
-              <Button
-                onClick={() => {
-                  if (profile?.userName) {
-                    const url = `${window.location.origin}/journey/${profile.userName}`;
-                    navigator.clipboard.writeText(url);
-                    toast.success("Journey link copied!");
-                  }
-                }}
-                className="flex-1 bg-[#ff6b6b] text-white hover:bg-[#ff5252] font-semibold text-xs rounded-md py-2 h-auto px-6"
-              >
-                Share Journey
+                Edit Goal
               </Button>
             </div>
-          </div>
-        </Card>
+          </header>
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Overall Progress Card */}
-          <Card
-            id="overall-progress"
-            className="md:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-3.5 lg:row-span-2 flex flex-col items-center justify-center rounded-xl hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300"
-          >
-            <div className="flex items-center justify-between w-full mb-5">
-              <p className="text-xs font-semibold text-[#a0a0a0] uppercase tracking-wide">
-                Overall Progress
-              </p>
-              <TrendingUp className="w-3.5 h-3.5 text-[#ff5757]" />
-            </div>
-            <div className="relative w-28 h-28 mb-5">
-              <div
-                className="w-full h-full rounded-full flex items-center justify-center"
-                style={{
-                  background: `conic-gradient(#ff5757 ${overallPercentage * 3.6}deg, #2a2a2a 0deg)`,
-                }}
-              >
-                <div className="w-24 h-24 rounded-full bg-[#1a1a1a] flex flex-col items-center justify-center">
-                  <span className="text-3xl font-bold text-[#e0e0e0]">
-                    {overallPercentage}%
-                  </span>
-                  <span className="text-[9px] text-[#a0a0a0]">
-                    {totalSolved}/{totalQuestions} Questions
-                  </span>
-                </div>
+          {/* Profile Card Section */}
+          <Card className="w-full bg-gradient-to-b from-[#1a1a1a] to-[#252525] border-[#2a2a2a] rounded-xl p-3.5">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 rounded-full overflow-hidden mb-3 shadow-lg border-2 border-[#ff6b6b]/20 flex items-center justify-center">
+                {user?.image ? (
+                  <Image
+                    src={user.image}
+                    alt={user.name || "Profile"}
+                    width={64}
+                    height={64}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-[#ff6b6b] to-[#ff9b9b] flex items-center justify-center text-white text-xl font-bold">
+                    {user?.name
+                      ?.split(" ")
+                      .map((n) => n[0])
+                      .join("") || "SJ"}
+                  </div>
+                )}
               </div>
-            </div>
-            <div className="w-full space-y-1.5">
-              <div className="flex justify-between text-xs text-[#a0a0a0]">
-                <span>Expected vs Actual</span>
-                <span className="font-bold">
-                  {overallPercentage >= 50 ? "On Track" : "Needs Focus"}
-                </span>
+              <h3 className="text-base font-bold text-[#e0e0e0] leading-tight">
+                {user?.name}
+              </h3>
+
+              <div className="flex gap-3 my-4">
+                {[
+                  {
+                    icon: Linkedin,
+                    label: "Linkedin",
+                    url: profile?.linkedInUrl,
+                  },
+                  { icon: Github, label: "Github", url: profile?.githubUrl },
+                  {
+                    icon: Monitor,
+                    label: "Portfolio",
+                    url: profile?.portfolioUrl,
+                  },
+                ].map((social) => (
+                  <a
+                    key={social.label}
+                    href={
+                      social.url
+                        ? social.url.startsWith("http")
+                          ? social.url
+                          : `https://${social.url}`
+                        : "#"
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "rounded-md border border-[#2a2a2a] text-[#ff5757] hover:border-[#ff5757] hover:bg-[#ff5757]/10 flex items-center gap-2 px-4 py-2 text-xs font-semibold transition-all uppercase",
+                      !social.url && "opacity-50 cursor-not-allowed",
+                    )}
+                    onClick={(e) => !social.url && e.preventDefault()}
+                  >
+                    <social.icon className="w-4 h-4" /> {social.label}
+                  </a>
+                ))}
               </div>
-              <Progress
-                value={overallPercentage}
-                className="h-1.5 bg-[#2a2a2a] rounded"
-              />
-              <div className="pt-3 text-center">
-                <span
-                  className={cn(
-                    "text-[9px] font-semibold px-2 py-0.5 rounded uppercase",
-                    overallPercentage >= 50
-                      ? "bg-green-500/20 text-[#51cf66]"
-                      : "bg-orange-500/20 text-[#ffa94d]",
-                  )}
+
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 w-full max-w-2xl text-center mb-5 px-4">
+                {[
+                  { label: "Goal Timeline", value: timelineLabel },
+                  {
+                    label: "Experience",
+                    value:
+                      profile?.dsaYatra?.experienceLevel ||
+                      user?.occupation ||
+                      "Tech Student",
+                  },
+                  {
+                    label: "Focus",
+                    value: targetLabel,
+                  },
+                  {
+                    label: "Target",
+                    value:
+                      profile?.dsaYatra?.companies &&
+                      profile.dsaYatra.companies.length > 0
+                        ? profile.dsaYatra.companies[0]
+                        : "Top Tech",
+                  },
+                ].map((stat, i) => (
+                  <div
+                    key={i}
+                    className="bg-[#0f0f0f] p-2.5 rounded-lg border border-[#2a2a2a]"
+                  >
+                    <p className="text-[10px] text-[#a0a0a0] uppercase mb-0.5 font-bold">
+                      {stat.label}
+                    </p>
+                    <p className="text-xs font-bold text-[#ff5757]">
+                      {stat.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-3 w-full max-w-sm">
+                <Button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="flex-1 bg-[#2a2a2a] text-[#a0a0a0] hover:bg-[#333] font-semibold text-xs rounded-md py-2 h-auto"
                 >
-                  {overallPercentage >= 50 ? "ON TRACK" : "KEEP GOING"}
-                </span>
+                  Edit Profile
+                </Button>
+                <Button
+                  onClick={() => {
+                    if (profile?.userName) {
+                      const url = `${window.location.origin}/journey/${profile.userName}`;
+                      navigator.clipboard.writeText(url);
+                      toast.success("Journey link copied!");
+                    }
+                  }}
+                  className="flex-1 bg-[#ff6b6b] text-white hover:bg-[#ff5252] font-semibold text-xs rounded-md py-2 h-auto px-6"
+                >
+                  Share Journey
+                </Button>
               </div>
             </div>
           </Card>
 
-          <StatCard
-            title="Today's Progress"
-            value={solvedToday}
-            subtext="Questions solved today"
-            icon={Code2}
-            secondaryInfo={
-              todayLog
-                ? `${todayLog.timeSpent || 0}m logged in prep today`
-                : undefined
-            }
-            className="lg:col-span-2"
-          />
-          <StatCard
-            title="Total Solved"
-            value={String(totalSolved)}
-            subtext={`Out of ${totalQuestions} questions`}
-            progress={overallPercentage}
-            icon={TrendingUp}
-            className="lg:col-span-2"
-          />
-        </div>
-
-        {/* Topic-wise Progress Section */}
-        <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-xl hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
-          <div className="flex items-center gap-2 mb-3.5">
-            <PieChart className="w-4.5 h-4.5 text-[#ff5757]" />
-            <h3 className="text-base font-bold text-[#e0e0e0]">
-              Topic-wise Progress
-            </h3>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-            {topicProgress.length > 0 ? (
-              topicProgress.map((topic) => (
-                <Link
-                  key={topic.key}
-                  href={`/sheets?topic=${topic.key}`}
-                  className="block"
-                >
-                  <div className="bg-[#0f0f0f] border border-[#2a2a2a] p-4 rounded-lg text-center cursor-pointer hover:border-[#ff5757] transition-all group">
-                    <p className="text-xs font-bold text-[#e0e0e0] uppercase">
-                      {topic.name}
-                    </p>
-                    <p className="text-[10px] text-[#a0a0a0] my-1.5">
-                      {topic.solved}/{topic.total}
-                    </p>
-                    <Progress
-                      value={
-                        topic.total > 0 ? (topic.solved / topic.total) * 100 : 0
-                      }
-                      className="h-1.5 bg-[#1a1a1a] rounded"
-                    />
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-6">
-                <p className="text-xs text-[#a0a0a0]">Loading topics...</p>
+          {/* Dashboard Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Overall Progress Card */}
+            <Card
+              id="overall-progress"
+              className="md:col-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-3.5 lg:row-span-2 flex flex-col items-center justify-center rounded-xl hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300"
+            >
+              <div className="flex items-center justify-between w-full mb-5">
+                <p className="text-xs font-semibold text-[#a0a0a0] uppercase tracking-wide">
+                  Overall Progress
+                </p>
+                <TrendingUp className="w-3.5 h-3.5 text-[#ff5757]" />
               </div>
-            )}
-          </div>
-        </Card>
-      </main>
+              <div className="relative w-28 h-28 mb-5">
+                <div
+                  className="w-full h-full rounded-full flex items-center justify-center"
+                  style={{
+                    background: `conic-gradient(#ff5757 ${overallPercentage * 3.6}deg, #2a2a2a 0deg)`,
+                  }}
+                >
+                  <div className="w-24 h-24 rounded-full bg-[#1a1a1a] flex flex-col items-center justify-center">
+                    <span className="text-3xl font-bold text-[#e0e0e0]">
+                      {overallPercentage}%
+                    </span>
+                    <span className="text-[9px] text-[#a0a0a0]">
+                      {totalSolved}/{totalQuestions} Questions
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full space-y-1.5">
+                <div className="flex justify-between text-xs text-[#a0a0a0]">
+                  <span>Expected vs Actual</span>
+                  <span className="font-bold">
+                    {overallPercentage >= 50 ? "On Track" : "Needs Focus"}
+                  </span>
+                </div>
+                <Progress
+                  value={overallPercentage}
+                  className="h-1.5 bg-[#2a2a2a] rounded"
+                />
+                <div className="pt-3 text-center">
+                  <span
+                    className={cn(
+                      "text-[9px] font-semibold px-2 py-0.5 rounded uppercase",
+                      overallPercentage >= 50
+                        ? "bg-green-500/20 text-[#51cf66]"
+                        : "bg-orange-500/20 text-[#ffa94d]",
+                    )}
+                  >
+                    {overallPercentage >= 50 ? "ON TRACK" : "KEEP GOING"}
+                  </span>
+                </div>
+              </div>
+            </Card>
 
-      <EditDsaOnboardingModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        onUpdate={() => {
-          if (user?.id) {
-            userService.getProfile(user.id).then(setProfile);
-          }
-        }}
-        currentData={profile as any}
-        userId={user?.id || ""}
-      />
+            <StatCard
+              title="Today's Progress"
+              value={solvedToday}
+              subtext="Questions solved today"
+              icon={Code2}
+              secondaryInfo={
+                todayLog
+                  ? `${todayLog.timeSpent || 0}m logged in prep today`
+                  : undefined
+              }
+              className="lg:col-span-2"
+            />
+            <StatCard
+              title="Total Solved"
+              value={String(totalSolved)}
+              subtext={`Out of ${totalQuestions} questions`}
+              progress={overallPercentage}
+              icon={TrendingUp}
+              className="lg:col-span-2"
+            />
+          </div>
+
+          {/* Topic-wise Progress Section */}
+          <Card className="bg-[#1a1a1a] border-[#2a2a2a] p-3.5 rounded-xl hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] hover:border-[#ff5757]/40 transition-all duration-300">
+            <div className="flex items-center gap-2 mb-3.5">
+              <PieChart className="w-4.5 h-4.5 text-[#ff5757]" />
+              <h3 className="text-base font-bold text-[#e0e0e0]">
+                Topic-wise Progress
+              </h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+              {topicProgress.length > 0 ? (
+                topicProgress.map((topic) => (
+                  <Link
+                    key={topic.key}
+                    href={`/sheets?topic=${topic.key}`}
+                    className="block"
+                  >
+                    <div className="bg-[#0f0f0f] border border-[#2a2a2a] p-4 rounded-lg text-center cursor-pointer hover:border-[#ff5757] transition-all group">
+                      <p className="text-xs font-bold text-[#e0e0e0] uppercase">
+                        {topic.name}
+                      </p>
+                      <p className="text-[10px] text-[#a0a0a0] my-1.5">
+                        {topic.solved}/{topic.total}
+                      </p>
+                      <Progress
+                        value={
+                          topic.total > 0
+                            ? (topic.solved / topic.total) * 100
+                            : 0
+                        }
+                        className="h-1.5 bg-[#1a1a1a] rounded"
+                      />
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-6">
+                  <p className="text-xs text-[#a0a0a0]">Loading topics...</p>
+                </div>
+              )}
+            </div>
+          </Card>
+        </main>
+
+        <EditDsaOnboardingModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onUpdate={() => {
+            if (user?.id) {
+              userService.getProfile(user.id).then(setProfile);
+            }
+          }}
+          currentData={profile as any}
+          userId={user?.id || ""}
+        />
+      </div>
+      {/* Subscription lock overlay */}
+      <PaymentLockOverlay isLocked={!!isLocked} isLoading={!!isLoading} />
     </div>
   );
 };

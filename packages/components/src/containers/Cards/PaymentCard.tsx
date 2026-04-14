@@ -30,7 +30,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
   const ProductIcon = productConfig.icon;
   const reasonsToBuy = productConfig.reasonsToBuy;
 
-  const createPaymentOrder = async (): Promise<string> => {
+  const createPaymentOrder = async (): Promise<{ paymentSessionId: string; orderId: string }> => {
     const response = await fetch(
       `${routes.api.base}${routes.api.createOrder}`,
       {
@@ -51,11 +51,14 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
 
     const data = await response.json();
 
-    if (!data.status || !data.data?.paymentSessionId) {
+    if (!data.status || !data.data?.paymentSessionId || !data.data?.orderId) {
       throw new Error(data.message || "Failed to create order");
     }
 
-    return data.data.paymentSessionId;
+    return {
+      paymentSessionId: data.data.paymentSessionId as string,
+      orderId: data.data.orderId as string,
+    };
   };
 
   const handlePayment = async () => {
@@ -68,13 +71,12 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
     setError(null);
 
     try {
-      const paymentSessionId = await createPaymentOrder();
+      const { paymentSessionId, orderId } = await createPaymentOrder();
+      const returnUrl = `${window.location.origin}${routes.paymentStatus}?order_id=${encodeURIComponent(orderId)}&next=${encodeURIComponent(routes.user.dashboard)}`;
       await launchPayment(
         paymentSessionId,
         (_successData) => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          window.location.assign(returnUrl);
         },
         (_failureData) => {
           setError("Payment failed. Please try again.");
@@ -83,6 +85,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
         () => {
           setIsProcessing(false);
         },
+        returnUrl,
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

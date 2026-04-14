@@ -107,6 +107,10 @@ export default defineConfig({
       "@/lib/utils": path.resolve(__dirname, "../api/src/lib/utils"),
       "@/lib/validation": path.resolve(__dirname, "../api/src/lib/validation"),
       "@/middleware": path.resolve(__dirname, "../api/src/middleware"),
+      "@/pages/api/auth/[...nextauth]": path.resolve(
+        __dirname,
+        "../api/src/pages/api/auth/[...nextauth].ts",
+      ),
       "@test-utils": path.resolve(__dirname, "./src/test-utils"),
       // Map workspace packages to their source
       "@tbe/components": path.resolve(
