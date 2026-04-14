@@ -692,6 +692,14 @@ const deleteInterviewSheetFromDB = async (
 
 type RealWorldFilterMode = "include" | "exclude" | "only";
 
+/** Freemium per-difficulty caps for non-subscribers */
+const FREEMIUM_LIMITS: Record<string, number> = {
+  EASY: 5,
+  MEDIUM: 3,
+  HARD: 1,
+  RW: 1, // real-world problems
+};
+
 interface DSASheetFilters {
   domain?: DSADomainType | DSADomainType[];
   difficulty?: DSADifficultyType | DSADifficultyType[];
@@ -706,6 +714,8 @@ interface DSASheetFilters {
   offCampus?: boolean;
   /** Filter real-world problems when bucketizing */
   realWorld?: RealWorldFilterMode;
+  /** Whether the user has an active paid subscription — determines freemium gating */
+  isPaidUser?: boolean;
 }
 
 const getAllDSAQuestionsFromDB = async (
@@ -723,6 +733,7 @@ const getAllDSAQuestionsFromDB = async (
       duration,
       offCampus,
       realWorld,
+      isPaidUser,
     } = filters;
 
     // Build match stage for filtering
@@ -900,6 +911,81 @@ const getAllDSAQuestionsFromDB = async (
           },
         },
       );
+    }
+
+    // Freemium gating: for non-subscribers, run aggregation and cap per-difficulty in JS.
+    // The aggregation pipeline already applies all filters (match, sort).
+    // For non-paid users, we cap the results to freemium limits BEFORE returning.
+    // Non-subscribers never receive more than freemium-capped question sets.
+    if (!isPaidUser) {
+      // Run the full aggregation pipeline (match + sort, no pagination yet)
+      aggregate.push({
+        $sort: {
+          _priorityScore: -1,
+          _topicOrder: 1,
+          _difficultyOrder: 1,
+          order: 1,
+          createdAt: -1,
+        },
+      });
+
+      const allQuestions = await DSAQuestion.aggregate(aggregate);
+
+      const stripInternalFields = (question: Record<string, unknown>) => {
+        const cleaned = { ...question };
+        delete cleaned._topicOrder;
+        delete cleaned._difficultyOrder;
+        delete cleaned._priorityScore;
+        delete cleaned._topicLimit;
+        delete cleaned.userStatus;
+        return cleaned;
+      };
+
+      // Apply freemium limits in JS: EASY:5, MEDIUM:3, HARD:1, RW:1
+      const getBucket = (q: any): string => {
+        if (q.isRealWorldProblem) return "RW";
+        return (q.difficulty ?? "").toUpperCase();
+      };
+
+      const capped: typeof allQuestions = [];
+      for (const q of allQuestions) {
+        const b = getBucket(q);
+        const limit = FREEMIUM_LIMITS[b] ?? 999;
+        const inBucket = capped.filter((x: any) => getBucket(x) === b).length;
+        if (inBucket < limit) capped.push(q);
+        // Hard stop once we have enough from all buckets
+        if (
+          capped.filter((x: any) => getBucket(x) === "RW").length >=
+            (FREEMIUM_LIMITS.RW ?? 1) &&
+          capped.filter((x: any) => getBucket(x) === "HARD").length >=
+            (FREEMIUM_LIMITS.HARD ?? 1) &&
+          capped.filter((x: any) => getBucket(x) === "MEDIUM").length >=
+            (FREEMIUM_LIMITS.MEDIUM ?? 3) &&
+          capped.filter((x: any) => getBucket(x) === "EASY").length >=
+            (FREEMIUM_LIMITS.EASY ?? 5)
+        ) {
+          break;
+        }
+      }
+
+      const total = capped.length;
+      const paged = capped
+        .slice((page - 1) * limit, (page - 1) * limit + limit)
+        .map((q) => stripInternalFields(q as Record<string, unknown>));
+
+      return {
+        data: {
+          questions: paged,
+          pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            hasMore: page * limit < total,
+          },
+          freemiumPreview: true,
+        },
+      };
     }
 
     aggregate.push({

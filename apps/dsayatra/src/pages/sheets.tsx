@@ -62,12 +62,14 @@ const SheetsPageClient = () => {
     [topicRows],
   );
 
-  const { questions: topicQuestions, loading: topicQuestionsLoading } =
-    useDsaQuestionsForTopic(selectedTopic, {
-      // Prefer user from auth context (set during onboarding), fall back to profile fetch
-      duration:
-        (user as any)?.dsaYatra?.timeline || profile?.dsaYatra?.timeline,
-    });
+  const {
+    questions: topicQuestions,
+    loading: topicQuestionsLoading,
+    isFreemiumPreview,
+  } = useDsaQuestionsForTopic(selectedTopic, {
+    // Prefer user from auth context (set during onboarding), fall back to profile fetch
+    duration: (user as any)?.dsaYatra?.timeline || profile?.dsaYatra?.timeline,
+  });
 
   const [topicQuestionsCache, setTopicQuestionsCache] = useState<
     Record<string, DsaQuestion[]>
@@ -202,6 +204,7 @@ const SheetsPageClient = () => {
         onSaveNote={onSaveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
         userTargetCompanies={userTargetCompanies}
+        isFreemiumPreview={isFreemiumPreview}
       />
     </LearningEnvironmentLayout>
   );
