@@ -44,6 +44,9 @@ export const metadata: Metadata = {
     description:
       "Get personalized learning paths based on your interests and goals. Start your tech journey here!",
   },
+  icons: {
+    icon: "/favicon.svg?v=2",
+  },
 };
 
 export default function RootLayout({

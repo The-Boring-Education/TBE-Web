@@ -22,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
           content="Build a professional resume with guided steps, best practices, and expert tips. Resume Yatra helps you create a resume that gets you hired."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
 
         {/* Open Graph / Social Media */}
         <meta property="og:type" content="website" />
