@@ -3,6 +3,20 @@ import type { DsaQuestion } from "@tbe/interface";
 import { generateYouTubeSearchLink } from "./functions";
 
 export const transformDsaQuestion = (question: any): DsaQuestion => {
+  // If the question is locked by the server, return minimal data
+  if (question.isLocked) {
+    return {
+      id: question._id,
+      name: question.title,
+      difficultyLevel: question.difficulty,
+      topics: question.topics,
+      domain: question.domain,
+      companyType: question.companyTypes,
+      isRealWorldProblem: Boolean(question.isRealWorldProblem),
+      isLocked: true,
+    };
+  }
+
   const escapeRegExp = (str: string) =>
     str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const titleRegex = new RegExp(
@@ -40,6 +54,7 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     notes: question.notes,
     _priorityScore: question._priorityScore,
     isRealWorldProblem: Boolean(question.isRealWorldProblem),
+    isLocked: false,
   };
 };
 

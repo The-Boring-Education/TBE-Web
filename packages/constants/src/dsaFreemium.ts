@@ -1,53 +1,61 @@
 export type DSAFreemiumBucket = "EASY" | "MEDIUM" | "HARD";
 
+/**
+ * How many questions each difficulty bucket allows for free-tier users.
+ * Questions within the limit are unlocked; the rest are locked.
+ */
 export const DSA_FREEMIUM_LIMITS: Record<DSAFreemiumBucket, number> = {
   EASY: 5,
   MEDIUM: 3,
   HARD: 1,
 };
 
-interface DSAFreemiumBucketInput {
-  difficulty?: string | null;
-  isRealWorldProblem?: boolean | null;
-}
-
-export const getDSAFreemiumBucket = ({
-  difficulty,
-  isRealWorldProblem,
-}: DSAFreemiumBucketInput): DSAFreemiumBucket | undefined => {
+/**
+ * Map a question's difficulty (+ real-world flag) to a freemium bucket.
+ * Real-world problems always count toward the EASY bucket.
+ */
+export const getDSAFreemiumBucket = (
+  difficulty: string | undefined | null,
+  isRealWorldProblem?: boolean,
+): DSAFreemiumBucket | undefined => {
   if (isRealWorldProblem) return "EASY";
 
-  const normalizedDifficulty = difficulty?.toUpperCase();
-  if (
-    normalizedDifficulty === "EASY" ||
-    normalizedDifficulty === "MEDIUM" ||
-    normalizedDifficulty === "HARD"
-  ) {
-    return normalizedDifficulty;
-  }
+  const normalized = difficulty?.toUpperCase();
+  if (normalized === "EASY" || normalized === "MEDIUM" || normalized === "HARD")
+    return normalized;
 
   return undefined;
 };
 
-export const selectDSAFreemiumQuestions = <T>(
+/**
+ * Given a flat list of questions, mark each one as `isLocked` based on
+ * per-difficulty freemium caps. Unlocked questions keep all their data;
+ * locked questions are stripped to title + metadata only (by the caller).
+ *
+ * Returns an **ordered** array with every question annotated.
+ */
+export const applyDSAFreemiumGating = <T extends { isLocked?: boolean }>(
   questions: readonly T[],
-  getBucketInput: (question: T) => DSAFreemiumBucketInput,
-): T[] => {
-  const bucketed: Record<DSAFreemiumBucket, T[]> = {
-    EASY: [],
-    MEDIUM: [],
-    HARD: [],
+  getBucket: (q: T) => DSAFreemiumBucket | undefined,
+): (T & { isLocked: boolean })[] => {
+  const seen: Record<DSAFreemiumBucket, number> = {
+    EASY: 0,
+    MEDIUM: 0,
+    HARD: 0,
   };
 
-  for (const question of questions) {
-    const bucket = getDSAFreemiumBucket(getBucketInput(question));
-    if (!bucket) continue;
-    bucketed[bucket].push(question);
-  }
+  return questions.map((q) => {
+    const bucket = getBucket(q);
 
-  return [
-    ...bucketed.EASY.slice(0, DSA_FREEMIUM_LIMITS.EASY),
-    ...bucketed.MEDIUM.slice(0, DSA_FREEMIUM_LIMITS.MEDIUM),
-    ...bucketed.HARD.slice(0, DSA_FREEMIUM_LIMITS.HARD),
-  ];
+    if (!bucket) {
+      // Unknown difficulty → unlocked (don't gate what we can't classify)
+      return { ...q, isLocked: false };
+    }
+
+    const limit = DSA_FREEMIUM_LIMITS[bucket];
+    const isLocked = seen[bucket] >= limit;
+    seen[bucket] += 1;
+
+    return { ...q, isLocked };
+  });
 };

@@ -1,6 +1,7 @@
 import {
+  applyDSAFreemiumGating,
   compareDsaTopicKeysForApi,
-  selectDSAFreemiumQuestions,
+  getDSAFreemiumBucket,
 } from "@tbe/constants";
 
 import {
@@ -916,12 +917,10 @@ const getAllDSAQuestionsFromDB = async (
       );
     }
 
-    // Freemium gating: for non-subscribers, run aggregation and cap per-difficulty in JS.
-    // The aggregation pipeline already applies all filters (match, sort).
-    // For non-paid users, we cap the results to freemium limits BEFORE returning.
-    // Non-subscribers never receive more than freemium-capped question sets.
+    // Freemium gating: for non-subscribers, return ALL questions but mark
+    // locked ones with `isLocked: true` and strip answer/solution details.
+    // Free users see: title, difficulty, topics, isLocked. That's it for locked Qs.
     if (!isPaidUser) {
-      // Run the full aggregation pipeline (match + sort, no pagination yet)
       aggregate.push({
         $sort: {
           _priorityScore: -1,
@@ -934,30 +933,36 @@ const getAllDSAQuestionsFromDB = async (
 
       const allQuestions = await DSAQuestion.aggregate(aggregate);
 
-      const stripInternalFields = (question: Record<string, unknown>) => {
-        const cleaned = { ...question };
-        delete cleaned._topicOrder;
-        delete cleaned._difficultyOrder;
-        delete cleaned._priorityScore;
-        delete cleaned._topicLimit;
-        delete cleaned.userStatus;
-        return cleaned;
-      };
+      // Tag each question with isLocked based on per-difficulty caps
+      const gated = applyDSAFreemiumGating(allQuestions, (q) =>
+        getDSAFreemiumBucket(
+          typeof q.difficulty === "string" ? q.difficulty : undefined,
+          Boolean(q.isRealWorldProblem),
+        ),
+      );
 
-      // Apply freemium limits in JS with priority:
-      // EASY (real-world included) -> MEDIUM -> HARD
-      const capped = selectDSAFreemiumQuestions(allQuestions, (question) => ({
-        difficulty:
-          typeof question.difficulty === "string"
-            ? question.difficulty
-            : undefined,
-        isRealWorldProblem: Boolean(question.isRealWorldProblem),
-      }));
-
-      const total = capped.length;
-      const paged = capped
+      const total = gated.length;
+      const paged = gated
         .slice((page - 1) * limit, (page - 1) * limit + limit)
-        .map((q) => stripInternalFields(q as Record<string, unknown>));
+        .map((q) => {
+          const cleaned: Record<string, unknown> = { ...q };
+          // Strip internal aggregation fields
+          delete cleaned._topicOrder;
+          delete cleaned._difficultyOrder;
+          delete cleaned._priorityScore;
+          delete cleaned._topicLimit;
+          delete cleaned.userStatus;
+
+          // For locked questions, strip answer/solution details — only keep title + metadata
+          if (cleaned.isLocked) {
+            delete cleaned.answer;
+            delete cleaned.sections;
+            delete cleaned.resources;
+            delete cleaned.notes;
+          }
+
+          return cleaned;
+        });
 
       return {
         data: {
@@ -969,7 +974,7 @@ const getAllDSAQuestionsFromDB = async (
             totalPages: Math.ceil(total / limit),
             hasMore: page * limit < total,
           },
-          freemiumPreview: true,
+          isFreemiumUser: true,
         },
       };
     }

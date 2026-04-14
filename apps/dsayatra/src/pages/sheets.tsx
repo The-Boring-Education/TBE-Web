@@ -5,15 +5,8 @@ import {
   SEO,
   Text,
 } from "@tbe/components";
-import {
-  DSA_FREEMIUM_LIMITS,
-  DSA_STUDY_GUIDE_CONFIGS,
-  getDSAFreemiumBucket,
-  routes,
-  TOPIC_LABELS,
-} from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamifiedAction } from "@tbe/gamification";
-import { usePaymentStatus } from "@tbe/hooks";
 import {
   useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
@@ -103,57 +96,18 @@ const SheetsPageClient = () => {
     topicsWithCounts,
   );
 
-  // Freemium detection: DSA_YATRA is a premium product
-  const { isPurchased, isLoading: isPaymentLoading } = usePaymentStatus({
-    userId: user?.id,
-    productId: "lifetime",
-    productType: "DSA_YATRA",
-    isPremium: true,
-  });
-
-  const isFreemiumUser = isPurchased === false;
-
-  /** Compute which question IDs are locked for freemium users and count of unlocked ones */
-  const { freemiumLockedQuestionIds, freemiumUnlockedCount } = useMemo(() => {
-    if (!isFreemiumUser || topicQuestions.length === 0) {
-      return { freemiumLockedQuestionIds: undefined, freemiumUnlockedCount: 0 };
-    }
-
-    const bucketCounts = {
-      EASY: 0,
-      MEDIUM: 0,
-      HARD: 0,
-    };
-    const locked = new Set<string>();
-    let unlocked = 0;
-
+  // Derive freemium state directly from the API response — no client-side bucket logic
+  const hasLockedQuestions = topicQuestions.some((q) => q.isLocked);
+  const lockedQuestionIds = useMemo(() => {
+    if (!hasLockedQuestions) return undefined;
+    const ids = new Set<string>();
     for (const q of topicQuestions) {
-      const qId = String(q.id || q.name);
-      const bucket = getDSAFreemiumBucket({
-        difficulty: q.difficultyLevel,
-        isRealWorldProblem: q.isRealWorldProblem,
-      });
-
-      if (!bucket) {
-        unlocked += 1;
-        continue;
-      }
-
-      const limit = DSA_FREEMIUM_LIMITS[bucket];
-      const count = bucketCounts[bucket];
-      if (count >= limit) {
-        locked.add(qId);
-      } else {
-        unlocked += 1;
-      }
-      bucketCounts[bucket] += 1;
+      if (q.isLocked) ids.add(String(q.id || q.name));
     }
+    return ids;
+  }, [hasLockedQuestions, topicQuestions]);
 
-    return {
-      freemiumLockedQuestionIds: locked,
-      freemiumUnlockedCount: unlocked,
-    };
-  }, [isFreemiumUser, topicQuestions]);
+  const unlockedCount = topicQuestions.filter((q) => !q.isLocked).length;
 
   const handleToggleComplete = useCallback(
     (questionId: string | number) => {
@@ -197,8 +151,7 @@ const SheetsPageClient = () => {
   }, [userLoading, isAuth, router]);
 
   const handleQuestionClick = (question: DsaQuestion) => {
-    const qId = String(question.id || question.name);
-    if (freemiumLockedQuestionIds?.has(qId)) {
+    if (question.isLocked) {
       setShowPayment(true);
       return;
     }
@@ -218,7 +171,7 @@ const SheetsPageClient = () => {
     setShowPayment(false);
   };
 
-  if (sheetsLoading || userLoading || isPaymentLoading || isProgressLoading) {
+  if (sheetsLoading || userLoading || isProgressLoading) {
     return (
       <div className="flex flex-col min-h-screen bg-[#0A0A0A] font-sans items-center justify-center">
         <div className="flex items-center">
@@ -233,13 +186,13 @@ const SheetsPageClient = () => {
 
   return (
     <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
-      {isFreemiumUser && (
+      {hasLockedQuestions && (
         <div className="w-full bg-orange-950/40 border-b border-orange-900/50 px-4 py-2.5 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <FaLock className="text-orange-400 text-xs" />
             <Text level="p" className="text-orange-300 text-[11px] font-medium">
-              Freemium preview — {freemiumUnlockedCount} questions unlocked.
-              Subscribe to access all.
+              Freemium preview — {unlockedCount} questions unlocked. Subscribe
+              to access all.
             </Text>
           </div>
           <button
@@ -265,11 +218,8 @@ const SheetsPageClient = () => {
         onSaveNote={onSaveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
         userTargetCompanies={userTargetCompanies}
-        freemiumLockedQuestionIds={freemiumLockedQuestionIds}
-        onFreemiumLockedClick={(qId) => {
-          void qId;
-          setShowPayment(true);
-        }}
+        freemiumLockedQuestionIds={lockedQuestionIds}
+        onFreemiumLockedClick={() => setShowPayment(true)}
       />
       {showPayment && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">

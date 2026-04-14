@@ -974,6 +974,8 @@ export interface DsaQuestion {
   notes?: string;
   _priorityScore?: number;
   isRealWorldProblem?: boolean;
+  /** Whether this question is locked behind a paywall (freemium gating) */
+  isLocked?: boolean;
   sections?: {
     first_principles?: {
       paragraphs: string[];
