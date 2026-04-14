@@ -30,7 +30,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
   const ProductIcon = productConfig.icon;
   const reasonsToBuy = productConfig.reasonsToBuy;
 
-  const createPaymentOrder = async (): Promise<string> => {
+  const createPaymentOrder = async (): Promise<{ paymentSessionId: string; orderId: string }> => {
     const response = await fetch(
       `${routes.api.base}${routes.api.createOrder}`,
       {
