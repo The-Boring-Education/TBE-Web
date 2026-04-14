@@ -5,7 +5,13 @@ import {
   SEO,
   Text,
 } from "@tbe/components";
-import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
+import {
+  DSA_FREEMIUM_LIMITS,
+  DSA_STUDY_GUIDE_CONFIGS,
+  getDSAFreemiumBucket,
+  routes,
+  TOPIC_LABELS,
+} from "@tbe/constants";
 import { useGamification, useGamifiedAction } from "@tbe/gamification";
 import { usePaymentStatus } from "@tbe/hooks";
 import {
@@ -25,14 +31,6 @@ import {
   persistAwardedQuestionId,
   readAwardedQuestionIds,
 } from "@/utils/dsaGamificationAward";
-
-/** Freemium per-difficulty caps — must match the DB query in interview-prep.ts */
-const FREEMIUM_LIMITS: Record<string, number> = {
-  EASY: 5,
-  MEDIUM: 3,
-  HARD: 1,
-  RW: 1,
-};
 
 const SheetsPageClient = () => {
   const router = useRouter();
@@ -121,26 +119,34 @@ const SheetsPageClient = () => {
       return { freemiumLockedQuestionIds: undefined, freemiumUnlockedCount: 0 };
     }
 
-    const getBucket = (q: DsaQuestion): string => {
-      if (q.isRealWorldProblem) return "RW";
-      return (q.difficultyLevel ?? "").toUpperCase();
+    const bucketCounts = {
+      EASY: 0,
+      MEDIUM: 0,
+      HARD: 0,
     };
-
-    const bucketCounts: Record<string, number> = {};
     const locked = new Set<string>();
     let unlocked = 0;
 
     for (const q of topicQuestions) {
       const qId = String(q.id || q.name);
-      const bucket = getBucket(q);
-      const limit = FREEMIUM_LIMITS[bucket] ?? 999;
-      const count = bucketCounts[bucket] ?? 0;
+      const bucket = getDSAFreemiumBucket({
+        difficulty: q.difficultyLevel,
+        isRealWorldProblem: q.isRealWorldProblem,
+      });
+
+      if (!bucket) {
+        unlocked += 1;
+        continue;
+      }
+
+      const limit = DSA_FREEMIUM_LIMITS[bucket];
+      const count = bucketCounts[bucket];
       if (count >= limit) {
         locked.add(qId);
       } else {
         unlocked += 1;
       }
-      bucketCounts[bucket] = count + 1;
+      bucketCounts[bucket] += 1;
     }
 
     return {

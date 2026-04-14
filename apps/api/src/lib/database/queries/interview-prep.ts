@@ -1,4 +1,7 @@
-import { compareDsaTopicKeysForApi } from "@tbe/constants";
+import {
+  compareDsaTopicKeysForApi,
+  selectDSAFreemiumQuestions,
+} from "@tbe/constants";
 
 import {
   DSA_DIFFICULTY,
@@ -692,14 +695,6 @@ const deleteInterviewSheetFromDB = async (
 
 type RealWorldFilterMode = "include" | "exclude" | "only";
 
-/** Freemium per-difficulty caps for non-subscribers */
-const FREEMIUM_LIMITS: Record<string, number> = {
-  EASY: 5,
-  MEDIUM: 3,
-  HARD: 1,
-  RW: 1, // real-world problems
-};
-
 interface DSASheetFilters {
   domain?: DSADomainType | DSADomainType[];
   difficulty?: DSADifficultyType | DSADifficultyType[];
@@ -949,32 +944,15 @@ const getAllDSAQuestionsFromDB = async (
         return cleaned;
       };
 
-      // Apply freemium limits in JS: EASY:5, MEDIUM:3, HARD:1, RW:1
-      const getBucket = (q: any): string => {
-        if (q.isRealWorldProblem) return "RW";
-        return (q.difficulty ?? "").toUpperCase();
-      };
-
-      const capped: typeof allQuestions = [];
-      for (const q of allQuestions) {
-        const b = getBucket(q);
-        const limit = FREEMIUM_LIMITS[b] ?? 999;
-        const inBucket = capped.filter((x: any) => getBucket(x) === b).length;
-        if (inBucket < limit) capped.push(q);
-        // Hard stop once we have enough from all buckets
-        if (
-          capped.filter((x: any) => getBucket(x) === "RW").length >=
-            (FREEMIUM_LIMITS.RW ?? 1) &&
-          capped.filter((x: any) => getBucket(x) === "HARD").length >=
-            (FREEMIUM_LIMITS.HARD ?? 1) &&
-          capped.filter((x: any) => getBucket(x) === "MEDIUM").length >=
-            (FREEMIUM_LIMITS.MEDIUM ?? 3) &&
-          capped.filter((x: any) => getBucket(x) === "EASY").length >=
-            (FREEMIUM_LIMITS.EASY ?? 5)
-        ) {
-          break;
-        }
-      }
+      // Apply freemium limits in JS with priority:
+      // EASY (real-world included) -> MEDIUM -> HARD
+      const capped = selectDSAFreemiumQuestions(allQuestions, (question) => ({
+        difficulty:
+          typeof question.difficulty === "string"
+            ? question.difficulty
+            : undefined,
+        isRealWorldProblem: Boolean(question.isRealWorldProblem),
+      }));
 
       const total = capped.length;
       const paged = capped
