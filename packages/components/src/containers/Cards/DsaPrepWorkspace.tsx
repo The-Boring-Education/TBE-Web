@@ -6,8 +6,7 @@ import type {
   StudyGuideModel,
 } from "@tbe/interface";
 import { cn } from "@tbe/utils";
-import { ArrowRight, BookOpen, Lightbulb, Lock, Sparkles } from "lucide-react";
-import { useRouter } from "next/router";
+import { ArrowRight, BookOpen, Lightbulb, Sparkles } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
@@ -41,8 +40,10 @@ export interface DsaPrepWorkspaceProps {
   emptyStateContent?: ReactNode;
   studyGuideConfigs?: Record<string, StudyGuideConfig>;
   userTargetCompanies?: string[];
-  /** Shows a freemium preview banner when true */
-  isFreemiumPreview?: boolean;
+  /** Set of question IDs that are locked for freemium users */
+  freemiumLockedQuestionIds?: ReadonlySet<string>;
+  /** Called when a freemium-locked question is clicked — show upgrade UI */
+  onFreemiumLockedClick?: (questionId: string) => void;
   className?: string;
 }
 
@@ -63,7 +64,8 @@ const DsaPrepWorkspace = ({
   emptyStateContent,
   studyGuideConfigs,
   userTargetCompanies = [],
-  isFreemiumPreview = false,
+  freemiumLockedQuestionIds,
+  onFreemiumLockedClick,
   className,
 }: DsaPrepWorkspaceProps) => {
   const { data: studyGuideData, isLoading: isStudyGuideLoading } =
@@ -73,15 +75,13 @@ const DsaPrepWorkspace = ({
   const [activeGuideSection, setActiveGuideSection] =
     useState("before-you-start");
 
-  const router = useRouter();
-
-  const handleUpgradeClick = () => {
-    void router.push("/pricing");
-  };
-
   const filteredQuestions = selectedTopic
     ? questions.filter((q) => q.topics?.[0] === selectedTopic)
     : [];
+
+  const lockedItemKeys = freemiumLockedQuestionIds
+    ? new Set(Array.from(freemiumLockedQuestionIds).map(String))
+    : undefined;
 
   const currentTopicConfig =
     selectedTopic && studyGuideConfigs
@@ -102,28 +102,6 @@ const DsaPrepWorkspace = ({
 
   return (
     <div className={cn("flex flex-col h-full w-full", className)}>
-      {/* Freemium preview banner */}
-      {isFreemiumPreview && (
-        <div className="w-full bg-gradient-to-r from-red-500/10 via-red-600/5 to-red-500/10 border-b border-red-500/20 px-4 py-2.5 flex items-center justify-between gap-3 shrink-0">
-          <div className="flex items-center gap-2">
-            <Lock className="w-3.5 h-3.5 text-red-400 shrink-0" />
-            <Text level="p" className="text-[11px] text-gray-300">
-              <span className="text-red-400 font-semibold">
-                Free Preview —{" "}
-              </span>
-              You're seeing a limited set. Unlock all questions with a
-              subscription.
-            </Text>
-          </div>
-          <button
-            onClick={handleUpgradeClick}
-            className="flex items-center gap-1.5 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-400 text-[10px] font-bold uppercase tracking-wide px-3 py-1.5 rounded transition-colors whitespace-nowrap"
-          >
-            Unlock All
-            <ArrowRight className="w-3 h-3" />
-          </button>
-        </div>
-      )}
       {/* Header Banner — sidebar border extends through here */}
       <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
         {/* Left column — aligns with sidebar width */}
@@ -327,6 +305,7 @@ const DsaPrepWorkspace = ({
                     }
                     difficultyOrder={STANDARD_DIFFICULTY_ORDER}
                     difficultyLabels={STANDARD_DIFFICULTY_LABELS}
+                    lockedItemKeys={lockedItemKeys}
                     emptyMessage="No questions found."
                     resolveRow={(question) => {
                       const qId = String(question.id || question.name);
@@ -350,7 +329,17 @@ const DsaPrepWorkspace = ({
                         isRealWorldProblem: question.isRealWorldProblem,
                       };
                     }}
-                    onItemClick={onQuestionClick}
+                    onItemClick={(question) => {
+                      const qId = String(
+                        (question as DsaQuestion).id ||
+                          (question as DsaQuestion).name,
+                      );
+                      if (lockedItemKeys?.has(qId)) {
+                        onFreemiumLockedClick?.(qId);
+                      } else {
+                        onQuestionClick(question as DsaQuestion);
+                      }
+                    }}
                     onToggleItemComplete={(_q, itemKey) =>
                       onToggleComplete?.(itemKey)
                     }

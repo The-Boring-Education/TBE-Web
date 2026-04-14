@@ -1040,6 +1040,8 @@ export interface QuestionRowProps {
   isRealWorldProblem?: boolean;
   /** Override badge text when `isRealWorldProblem` is true */
   realWorldBadgeLabel?: string;
+  /** Indicates a freemium-locked question (paid content) */
+  isLocked?: boolean;
   className?: string;
   onClick?: () => void;
   onToggleComplete?: (e: React.MouseEvent) => void;
@@ -1064,6 +1066,8 @@ export interface DifficultyQuestionListProps<T = unknown> {
   difficultyLabels?: Readonly<Record<string, { label: string; color: string }>>;
   fallbackDifficulty?: string;
   defaultGroupExpanded?: boolean;
+  /** Per-item lock state for freemium-gated questions */
+  lockedItemKeys?: ReadonlySet<string>;
 }
 
 export interface QuestionDetailProps {

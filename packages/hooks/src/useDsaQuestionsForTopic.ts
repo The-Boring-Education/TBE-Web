@@ -19,8 +19,6 @@ interface UseDsaQuestionsForTopicReturn {
   questions: DsaQuestion[];
   rawQuestions: unknown[];
   loading: boolean;
-  /** True when the user is on a freemium plan and seeing a capped preview */
-  isFreemiumPreview: boolean;
 }
 
 /**
@@ -58,13 +56,9 @@ export const useDsaQuestionsForTopic = (
     return data;
   }, [response]);
 
-  const isFreemiumPreview = useMemo(() => {
-    return response?.data?.freemiumPreview === true;
-  }, [response]);
-
   const questions = useMemo(() => {
     return rawQuestions.map((q) => transformDsaQuestion(q));
   }, [rawQuestions]);
 
-  return { questions, rawQuestions, loading: isLoading, isFreemiumPreview };
+  return { questions, rawQuestions, loading: isLoading };
 };

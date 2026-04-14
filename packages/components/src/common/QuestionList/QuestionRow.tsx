@@ -1,9 +1,9 @@
 import type { QuestionRowProps } from "@tbe/interface";
 import { cn } from "@tbe/utils";
-import { CheckCircle2, Circle, Globe, Sparkles } from "lucide-react";
+import { CheckCircle2, Circle, Globe, Lock, Sparkles } from "lucide-react";
 
 /**
- * Checklist row: completion toggle, title, optional “real world” badge, notes indicator.
+ * Checklist row: completion toggle, title, optional "real world" badge, notes indicator.
  * Use via {@link DifficultyQuestionList} or standalone in custom lists.
  */
 export const QuestionRow = ({
@@ -14,6 +14,7 @@ export const QuestionRow = ({
   hasNotes = false,
   isRealWorldProblem = false,
   realWorldBadgeLabel = "Real World",
+  isLocked = false,
   className,
   onClick,
   onToggleComplete,
@@ -32,7 +33,10 @@ export const QuestionRow = ({
           ? "bg-red-500/[0.04] border border-red-500/30 shadow-[0_0_12px_rgba(239,68,68,0.06)] border-l-2 border-l-red-500"
           : isCompleted
             ? "bg-green-500/[0.03] border border-green-500/20 border-l-2 border-l-green-500/60"
-            : "bg-transparent border border-transparent hover:bg-[#111] hover:border-gray-800/60",
+            : isLocked
+              ? "opacity-60"
+              : "bg-transparent border border-transparent hover:bg-[#111] hover:border-gray-800/60",
+        isLocked && "cursor-pointer",
         className,
       )}
       onClick={onClick}
@@ -44,12 +48,16 @@ export const QuestionRow = ({
           onClick={handleToggleComplete}
           className={cn(
             "mt-0.5 shrink-0 focus:outline-none transition-all duration-200",
-            isCompleted
-              ? "text-green-500 hover:text-green-400"
-              : "text-gray-700 hover:text-green-500",
+            isLocked
+              ? "text-gray-600 cursor-not-allowed"
+              : isCompleted
+                ? "text-green-500 hover:text-green-400"
+                : "text-gray-700 hover:text-green-500",
           )}
         >
-          {isCompleted ? (
+          {isLocked ? (
+            <Lock className="w-[18px] h-[18px] text-gray-500" />
+          ) : isCompleted ? (
             <CheckCircle2 className="w-[18px] h-[18px]" />
           ) : (
             <Circle className="w-[18px] h-[18px]" />
@@ -64,7 +72,9 @@ export const QuestionRow = ({
                 ? "text-white"
                 : isCompleted
                   ? "text-green-100/80"
-                  : "text-gray-400 group-hover:text-gray-200",
+                  : isLocked
+                    ? "text-gray-500"
+                    : "text-gray-400 group-hover:text-gray-200",
             )}
           >
             {isRecommended && (

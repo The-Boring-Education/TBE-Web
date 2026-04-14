@@ -97,9 +97,13 @@ const checkPaymentStatusFromDB = async (
   productType?: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    // PREPYATRA uses PrepYatraSubscription; DSA_YATRA and ONCAMPUS use Payment records.
+    // PREPYATRA, DSA_YATRA, and ONCAMPUS all use createSubscription → stored in PrepYatraSubscription.
     // Other product types (INTERVIEW_SHEET, SHIKSHA, etc.) always fall through to Payment.
-    if (productType === "PREPYATRA") {
+    if (
+      productType === "PREPYATRA" ||
+      productType === "DSA_YATRA" ||
+      productType === "ONCAMPUS"
+    ) {
       const activeSubscription = await PrepYatraSubscription.findOne({
         userId,
         isActive: true,
