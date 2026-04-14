@@ -48,7 +48,7 @@ const handler = async (
   const plans = Array.isArray(data) ? data : [];
   const filteredPlans = plans.filter(
     (plan) =>
-      plan.isActive !== false &&
+      plan.isActive === true &&
       (!productType || plan.productType === productType),
   );
 
