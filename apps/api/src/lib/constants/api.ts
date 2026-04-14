@@ -1,3 +1,5 @@
+import { DSA_CANONICAL_TOPICS } from "@tbe/constants";
+
 import type {
   AptitudeAnswerFormatType,
   AptitudeCategoryType,
@@ -3212,34 +3214,34 @@ export const TIMELINE_CONFIGS: Record<
   Record<string, { count: number; title: string }>
 > = TIMELINE_CONFIG_DATA;
 
-const DSA_TOPICS: DSATopicType[] = [
-  "ARRAY",
-  "STRING",
-  "HASHMAP",
-  "SLIDING_WINDOW",
-  "PREFIX_SUM",
-  "SORTING",
-  "BINARY_SEARCH",
-  "MATH",
-  "BIT_MANIPULATION",
-  "RECURSION",
-  "LINKED_LIST",
-  "STACK",
-  "QUEUE",
-  "BINARY_TREE",
-  "TREE",
-  "BST",
-  "HEAP",
-  "TRIE",
-  "GRAPH",
-  "BACKTRACKING",
-  "DYNAMIC_PROGRAMMING",
-  "GREEDY",
-  "UNION_FIND",
-  "SIMULATION",
-  "DESIGN",
-  "MONOTONIC_STACK",
-];
+/** Duration-based difficulty buckets for DSA sheet personalization. */
+const DSA_DURATION_DIFFICULTY_BUCKETS: Record<
+  string,
+  Record<DSADifficultyType, number>
+> = {
+  "1Month": {
+    EASY: 4,
+    MEDIUM: 2,
+    HARD: 1,
+  },
+  "3Months": {
+    EASY: 8,
+    MEDIUM: 4,
+    HARD: 2,
+  },
+  "6Months": {
+    EASY: 12,
+    MEDIUM: 6,
+    HARD: 3,
+  },
+  "1Year": {
+    EASY: 16,
+    MEDIUM: 8,
+    HARD: 4,
+  },
+};
+
+const DSA_TOPICS: DSATopicType[] = [...DSA_CANONICAL_TOPICS];
 
 export {
   ALLOWED_IPS,
@@ -3254,6 +3256,7 @@ export {
   DIFFICULTY_LEVEL,
   DSA_DIFFICULTY,
   DSA_DOMAIN,
+  DSA_DURATION_DIFFICULTY_BUCKETS,
   DSA_TOPICS,
   GOAL_TYPES,
   INTERVIEW_CATEGORIES,

@@ -1,11 +1,12 @@
+import { DSA_EXTRA_QUESTION_TOPICS } from "@tbe/constants";
 import { z } from "zod";
 
 import {
   COMPANY_TYPES,
   DSA_DIFFICULTY,
   DSA_DOMAIN,
+  DSA_DURATION_DIFFICULTY_BUCKETS,
   DSA_TOPICS,
-  TIMELINE_CONFIGS,
 } from "@/lib/constants";
 import type {
   DSADifficultyType,
@@ -23,10 +24,15 @@ import {
 /** Max page size for DSA sheet listing (prevents unbounded queries). */
 export const DSA_SHEET_MAX_LIMIT = 200;
 
-const DURATION_KEYS = new Set(Object.keys(TIMELINE_CONFIGS));
+const DURATION_KEYS = new Set(Object.keys(DSA_DURATION_DIFFICULTY_BUCKETS));
+const REAL_WORLD_FILTERS = new Set(["include", "exclude", "only"] as const);
 
-const EXTRA_TOPICS = ["TWO_POINTERS", "DFS", "BFS"] as const;
-const ALL_DSA_TOPICS = [...DSA_TOPICS, ...EXTRA_TOPICS] as readonly string[];
+type RealWorldFilterMode = "include" | "exclude" | "only";
+
+const ALL_DSA_TOPICS = [
+  ...DSA_TOPICS,
+  ...DSA_EXTRA_QUESTION_TOPICS,
+] as readonly string[];
 
 const domainEnum = z.enum([DSA_DOMAIN[0], ...DSA_DOMAIN.slice(1)] as [
   string,
@@ -132,6 +138,7 @@ export type DsaSheetListFilters = {
   userId?: string;
   duration?: string;
   offCampus: boolean;
+  realWorld?: RealWorldFilterMode;
 };
 
 export type DsaSheetGetParsed =
@@ -237,6 +244,18 @@ export function parseDsaSheetGetQuery(
     return { ok: false, message: "Invalid duration" };
   }
 
+  const realWorldRaw = firstQueryValue(query.realWorld)?.trim().toLowerCase();
+  let realWorld: RealWorldFilterMode | undefined;
+  if (realWorldRaw) {
+    if (!REAL_WORLD_FILTERS.has(realWorldRaw as RealWorldFilterMode)) {
+      return {
+        ok: false,
+        message: "Invalid realWorld filter (use include, exclude, or only)",
+      };
+    }
+    realWorld = realWorldRaw as RealWorldFilterMode;
+  }
+
   const offCampus = firstQueryValue(query.offCampus) === "true";
 
   return {
@@ -255,6 +274,7 @@ export function parseDsaSheetGetQuery(
         ...(userId ? { userId } : {}),
         ...(duration ? { duration } : {}),
         offCampus,
+        ...(realWorld ? { realWorld } : {}),
       },
     },
   };

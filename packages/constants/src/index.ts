@@ -4,6 +4,8 @@ export * from "./challenges";
 export * from "./component";
 export * from "./database";
 export * from "./dsaStudyGuides";
+export * from "./dsaTopicRoadmapIcons";
+export * from "./dsaTopics";
 export * from "./emailLogger";
 export * from "./envConfig";
 export * from "./github";

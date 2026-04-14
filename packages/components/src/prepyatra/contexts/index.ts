@@ -1,4 +1,4 @@
 export { default as AuthProvider } from "./AuthContext";
-/** @deprecated Use `GamificationProvider` and `useGamificationContext` from `@tbe/gamification` instead */
+/** Prep Yatra challenge celebration UI (`PrepYatraGamificationProvider`) is separate from `@tbe/gamification`. */
 export * from "./GamificationContext";
 export * from "./useAuth";

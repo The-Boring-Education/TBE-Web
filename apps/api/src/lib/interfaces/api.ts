@@ -1,3 +1,5 @@
+import type { DSATopicSlug } from "@tbe/constants";
+
 import type { ProjectDocumentModel } from "./database";
 
 export interface APIResponse<T = any> {
@@ -278,36 +280,7 @@ export interface AptitudeTopicDefinition {
   subCategory: AptitudeSubCategoryType;
 }
 
-export type DSATopicType =
-  | "ARRAY"
-  | "PREFIX_SUM"
-  | "HASHMAP"
-  | "TWO_POINTERS"
-  | "SLIDING_WINDOW"
-  | "BINARY_SEARCH"
-  | "SORTING"
-  | "LINKED_LIST"
-  | "STACK"
-  | "QUEUE"
-  | "TREE"
-  | "BINARY_TREE"
-  | "BST"
-  | "GRAPH"
-  | "DFS"
-  | "BFS"
-  | "BACKTRACKING"
-  | "DYNAMIC_PROGRAMMING"
-  | "GREEDY"
-  | "STRING"
-  | "MATH"
-  | "BIT_MANIPULATION"
-  | "TRIE"
-  | "HEAP"
-  | "UNION_FIND"
-  | "RECURSION"
-  | "SIMULATION"
-  | "DESIGN"
-  | "MONOTONIC_STACK";
+export type DSATopicType = DSATopicSlug;
 
 export type ProjectPickedPageProps = Pick<
   ProjectDocumentModel,
