@@ -15,7 +15,7 @@ type Props = {
 
 const DEFAULT_ARTICLE_CLASS = "resource-embed mx-auto max-w-4xl px-4 py-8";
 const ZEN_ARTICLE_CLASS =
-  "resource-embed mx-auto max-w-3xl px-4 py-8 transition-all duration-500";
+  "resource-embed mx-auto my-6 w-[90%] max-w-none px-4 py-8";
 
 export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
   const [isZenMode, setIsZenMode] = useState(false);
@@ -48,14 +48,12 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
                 : "text-[var(--shell-muted)] underline-offset-4 hover:text-white hover:underline"
             }`}
           >
-            {isZenMode ? "Exit Zen Mode" : "Enable Zen Mode"}
+            {isZenMode ? "Zen Mode active" : "Enable Zen Mode"}
           </button>
-          {!isZenMode && (
-            <>
-              <span className="text-zinc-600"> · </span>
-              <span className="text-zinc-500">Toggle for focused reading</span>
-            </>
-          )}
+          <span className="text-zinc-600"> · </span>
+          <span className="text-zinc-500">
+            {isZenMode ? "Content at 90% width" : "Toggle for focused reading"}
+          </span>
         </p>
         <ResourceArticle
           meta={meta}

@@ -104,6 +104,22 @@ export async function installOnboardingRedirectMocks(
   await page.route("**/api/proxy/feedback**", (route) =>
     route.fulfill({ status: 200, json: { status: true, data: null } }),
   );
+
+  // Keep redirect tests stable even when onboarding preview server is slow/unavailable in CI.
+  await page.route("http://localhost:5173/**", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: "<!doctype html><html><body>Onboarding App</body></html>",
+    }),
+  );
+  await page.route("http://127.0.0.1:5173/**", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: "<!doctype html><html><body>Onboarding App</body></html>",
+    }),
+  );
 }
 
 /** Matches onboarding app dev/preview (see apps/testing/playwright.config.ts `onboarding` port). */
