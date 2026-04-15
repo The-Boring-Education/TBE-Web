@@ -1,24 +1,27 @@
-export type DSAFreemiumBucket = "EASY" | "MEDIUM" | "HARD";
+export type DSAFreemiumBucket = "EASY" | "MEDIUM" | "HARD" | "REAL_WORLD";
 
 /**
  * How many questions each difficulty bucket allows for free-tier users.
  * Questions within the limit are unlocked; the rest are locked.
+ *
+ * Free users get: 3 Easy, 2 Medium, 1 Hard, 1 Real World problem.
  */
 export const DSA_FREEMIUM_LIMITS: Record<DSAFreemiumBucket, number> = {
-  EASY: 5,
-  MEDIUM: 3,
+  EASY: 3,
+  MEDIUM: 2,
   HARD: 1,
+  REAL_WORLD: 1,
 };
 
 /**
  * Map a question's difficulty (+ real-world flag) to a freemium bucket.
- * Real-world problems always count toward the EASY bucket.
+ * Real-world problems get their own dedicated bucket (REAL_WORLD).
  */
 export const getDSAFreemiumBucket = (
   difficulty: string | undefined | null,
   isRealWorldProblem?: boolean,
 ): DSAFreemiumBucket | undefined => {
-  if (isRealWorldProblem) return "EASY";
+  if (isRealWorldProblem) return "REAL_WORLD";
 
   const normalized = difficulty?.toUpperCase();
   if (normalized === "EASY" || normalized === "MEDIUM" || normalized === "HARD")
@@ -42,6 +45,7 @@ export const applyDSAFreemiumGating = <T extends { isLocked?: boolean }>(
     EASY: 0,
     MEDIUM: 0,
     HARD: 0,
+    REAL_WORLD: 0,
   };
 
   return questions.map((q) => {

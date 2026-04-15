@@ -3,52 +3,186 @@
     {
       "productType": "DSA_YATRA",
       "planKey": "lifetime",
-      "amountInr": 0
+      "displayName": "Lifetime Access",
+      "description": "One-time payment for permanent access to all DSA content and future updates",
+      "amountInr": 499,
+      "originalAmountInr": 1999,
+      "accessType": "ONE_TIME",
+      "durationMonths": 0,
+      "features": [
+        "Complete DSA question bank (400+ problems)",
+        "Topic-wise structured practice sheets",
+        "Company-specific question filtering",
+        "Difficulty-based progression system",
+        "Detailed solutions with time/space complexity",
+        "Real-world coding problems",
+        "Progress tracking & revision scheduling",
+        "All future content updates included"
+      ],
+      "isPopular": true,
+      "sortOrder": 1
     },
     {
       "productType": "PREPYATRA",
       "planKey": "1months",
-      "amountInr": 0
+      "displayName": "1 Month",
+      "description": "Try PrepYatra for a month",
+      "amountInr": 149,
+      "originalAmountInr": 299,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 1,
+      "features": [
+        "All prep resources",
+        "Daily practice questions",
+        "Progress tracking"
+      ],
+      "isPopular": false,
+      "sortOrder": 1
     },
     {
       "productType": "PREPYATRA",
       "planKey": "3months",
-      "amountInr": 0
+      "displayName": "3 Months",
+      "description": "Popular plan for focused preparation",
+      "amountInr": 349,
+      "originalAmountInr": 897,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 3,
+      "features": [
+        "All prep resources",
+        "Daily practice questions",
+        "Progress tracking",
+        "Interview simulation access"
+      ],
+      "isPopular": true,
+      "sortOrder": 2
     },
     {
       "productType": "PREPYATRA",
       "planKey": "6months",
-      "amountInr": 0
+      "displayName": "6 Months",
+      "description": "Best for thorough interview preparation",
+      "amountInr": 599,
+      "originalAmountInr": 1794,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 6,
+      "features": [
+        "All prep resources",
+        "Daily practice questions",
+        "Progress tracking",
+        "Interview simulation access",
+        "Resume review"
+      ],
+      "isPopular": false,
+      "sortOrder": 3
     },
     {
       "productType": "PREPYATRA",
       "planKey": "12months",
-      "amountInr": 0
+      "displayName": "12 Months",
+      "description": "Full year of preparation",
+      "amountInr": 999,
+      "originalAmountInr": 3588,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 12,
+      "features": [
+        "All prep resources",
+        "Daily practice questions",
+        "Progress tracking",
+        "Interview simulation access",
+        "Resume review",
+        "Priority support"
+      ],
+      "isPopular": false,
+      "sortOrder": 4
     },
     {
       "productType": "PREPYATRA",
       "planKey": "lifetime",
-      "amountInr": 0
+      "displayName": "Lifetime",
+      "description": "One-time payment, lifetime access",
+      "amountInr": 1499,
+      "originalAmountInr": 4999,
+      "accessType": "ONE_TIME",
+      "durationMonths": 0,
+      "features": [
+        "Everything in 12-month plan",
+        "Lifetime access to all content",
+        "All future updates included",
+        "Priority support forever"
+      ],
+      "isPopular": false,
+      "sortOrder": 5
     },
     {
       "productType": "ONCAMPUS",
       "planKey": "1months",
-      "amountInr": 0
+      "displayName": "1 Month",
+      "description": "Quick campus placement boost",
+      "amountInr": 199,
+      "originalAmountInr": 399,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 1,
+      "features": [
+        "Aptitude prep modules",
+        "Core CS fundamentals",
+        "Interview preparation"
+      ],
+      "isPopular": false,
+      "sortOrder": 1
     },
     {
       "productType": "ONCAMPUS",
       "planKey": "3months",
-      "amountInr": 0
+      "displayName": "3 Months",
+      "description": "Comprehensive placement preparation",
+      "amountInr": 449,
+      "originalAmountInr": 1197,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 3,
+      "features": [
+        "Aptitude prep modules",
+        "Core CS fundamentals",
+        "Interview preparation",
+        "Mock test series",
+        "Company-specific prep"
+      ],
+      "isPopular": true,
+      "sortOrder": 2
     },
     {
       "productType": "ONCAMPUS",
       "planKey": "6months",
-      "amountInr": 0
+      "displayName": "6 Months",
+      "description": "Full placement season coverage",
+      "amountInr": 749,
+      "originalAmountInr": 2394,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 6,
+      "features": [
+        "Everything in 3-month plan",
+        "Extended practice access",
+        "Priority doubt resolution"
+      ],
+      "isPopular": false,
+      "sortOrder": 3
     },
     {
       "productType": "ONCAMPUS",
       "planKey": "12months",
-      "amountInr": 0
+      "displayName": "12 Months",
+      "description": "Complete campus-to-career journey",
+      "amountInr": 1199,
+      "originalAmountInr": 4788,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 12,
+      "features": [
+        "Everything in 6-month plan",
+        "Career guidance sessions",
+        "All future content updates"
+      ],
+      "isPopular": false,
+      "sortOrder": 4
     }
   ]
 }

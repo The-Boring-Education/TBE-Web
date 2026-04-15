@@ -7,8 +7,16 @@ import SubscriptionPlan from "../models/SubscriptionPlan";
 export interface SubscriptionPlanInput {
   productType: ProductType;
   planKey: string;
+  displayName?: string;
+  description?: string;
   amountInr: number;
+  originalAmountInr?: number;
+  accessType?: "ONE_TIME" | "SUBSCRIPTION";
+  durationMonths?: number;
+  features?: string[];
+  isPopular?: boolean;
   isActive?: boolean;
+  sortOrder?: number;
 }
 
 const normalizePlanKey = (key: string) => key.trim().toLowerCase();
@@ -46,7 +54,7 @@ export const listSubscriptionPlansFromDB =
   async (): Promise<DatabaseQueryResponseType> => {
     try {
       const rows = await SubscriptionPlan.find({})
-        .sort({ productType: 1, planKey: 1 })
+        .sort({ productType: 1, sortOrder: 1, planKey: 1 })
         .lean();
       return { data: rows };
     } catch (error) {
@@ -74,9 +82,17 @@ export const upsertSubscriptionPlansInDB = async (
             $set: {
               productType: p.productType,
               planKey,
+              displayName: p.displayName ?? "",
+              description: p.description ?? "",
               amountInr: p.amountInr,
-              isActive: p.isActive ?? true,
+              originalAmountInr: p.originalAmountInr ?? 0,
               currency: "INR",
+              accessType: p.accessType ?? "SUBSCRIPTION",
+              durationMonths: p.durationMonths ?? 0,
+              features: p.features ?? [],
+              isPopular: p.isPopular ?? false,
+              isActive: p.isActive ?? true,
+              sortOrder: p.sortOrder ?? 0,
             },
           },
           upsert: true,
