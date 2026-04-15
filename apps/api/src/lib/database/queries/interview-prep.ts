@@ -1,4 +1,8 @@
-import { compareDsaTopicKeysForApi } from "@tbe/constants";
+import {
+  applyDSAFreemiumGating,
+  compareDsaTopicKeysForApi,
+  getDSAFreemiumBucket,
+} from "@tbe/constants";
 
 import {
   DSA_DIFFICULTY,
@@ -706,6 +710,8 @@ interface DSASheetFilters {
   offCampus?: boolean;
   /** Filter real-world problems when bucketizing */
   realWorld?: RealWorldFilterMode;
+  /** Whether the user has an active paid subscription — determines freemium gating */
+  isPaidUser?: boolean;
 }
 
 const getAllDSAQuestionsFromDB = async (
@@ -723,6 +729,7 @@ const getAllDSAQuestionsFromDB = async (
       duration,
       offCampus,
       realWorld,
+      isPaidUser,
     } = filters;
 
     // Build match stage for filtering
@@ -908,6 +915,68 @@ const getAllDSAQuestionsFromDB = async (
           },
         },
       );
+    }
+
+    // Freemium gating: for non-subscribers, return ALL questions but mark
+    // locked ones with `isLocked: true` and strip answer/solution details.
+    // Free users see: title, difficulty, topics, isLocked. That's it for locked Qs.
+    if (!isPaidUser) {
+      aggregate.push({
+        $sort: {
+          _priorityScore: -1,
+          _topicOrder: 1,
+          _difficultyOrder: 1,
+          order: 1,
+          createdAt: -1,
+        },
+      });
+
+      const allQuestions = await DSAQuestion.aggregate(aggregate);
+
+      // Tag each question with isLocked based on per-difficulty caps
+      const gated = applyDSAFreemiumGating(allQuestions, (q) =>
+        getDSAFreemiumBucket(
+          typeof q.difficulty === "string" ? q.difficulty : undefined,
+          Boolean(q.isRealWorldProblem),
+        ),
+      );
+
+      const total = gated.length;
+      const paged = gated
+        .slice((page - 1) * limit, (page - 1) * limit + limit)
+        .map((q) => {
+          const cleaned: Record<string, unknown> = { ...q };
+          // Strip internal aggregation fields
+          delete cleaned._topicOrder;
+          delete cleaned._difficultyOrder;
+          delete cleaned._priorityScore;
+          delete cleaned._topicLimit;
+          delete cleaned.userStatus;
+
+          // For locked questions, strip answer/solution details — only keep title + metadata
+          if (cleaned.isLocked) {
+            delete cleaned.answer;
+            delete cleaned.sections;
+            delete cleaned.resources;
+            delete cleaned.notes;
+          }
+
+          return cleaned;
+        });
+
+      return {
+        data: {
+          questions: paged,
+          pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            hasMore: page * limit < total,
+          },
+          isFreemiumUser: true,
+        },
+      };
     }
 
     aggregate.push({

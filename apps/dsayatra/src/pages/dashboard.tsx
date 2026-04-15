@@ -4,7 +4,6 @@ import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
   useDsaQuestions,
-  usePaymentStatus,
   usePrepStats,
 } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
@@ -29,8 +28,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
-
-import { PaymentLockOverlay } from "@/components/PaymentLockOverlay";
 
 const SIDEBAR_ITEMS = [
   { name: "Dashboard", href: "/dashboard", active: true, icon: Home },
@@ -145,25 +142,6 @@ const DsaClient = () => {
   const [activeScheduleItem, setActiveScheduleItem] = useState<number | null>(
     null,
   );
-
-  const { isLocked, isLoading } = usePaymentStatus({
-    userId: user?.id,
-    productId: "lifetime",
-    productType: "DSA_YATRA",
-    isPremium: true,
-  });
-
-  // Prevent body scroll when content is locked
-  useEffect(() => {
-    if (isLocked) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [isLocked]);
 
   const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
 
@@ -375,18 +353,11 @@ const DsaClient = () => {
   const totalHours = (totalTimeSpent / 60).toFixed(1);
 
   return (
-    <div
-      className={`relative flex bg-[#0f0f0f] font-sans selection:bg-[#ff5757]/30 selection:text-white ${isLocked ? "h-screen" : "min-h-screen"}`}
-    >
-      {/* Blur content when locked — prevent all scroll */}
-      <div
-        className={`flex-1 flex min-h-0 ${isLocked ? "overflow-hidden blur-sm select-none pointer-events-none" : ""}`}
-      >
+    <div className="relative flex bg-[#0f0f0f] font-sans selection:bg-[#ff5757]/30 selection:text-white min-h-screen">
+      <div className="flex-1 flex min-h-0">
         <Sidebar />
 
-        <main
-          className={`flex-1 flex flex-col min-h-0 px-4 pt-2.5 space-y-4 pb-10 ${isLocked ? "" : "overflow-y-auto"}`}
-        >
+        <main className="flex-1 flex flex-col min-h-0 px-4 pt-2.5 space-y-4 pb-10 overflow-y-auto">
           {/* Header Section */}
           <header className="flex justify-between items-center">
             <div>
@@ -666,8 +637,6 @@ const DsaClient = () => {
           userId={user?.id || ""}
         />
       </div>
-      {/* Subscription lock overlay */}
-      <PaymentLockOverlay isLocked={!!isLocked} isLoading={!!isLoading} />
     </div>
   );
 };
