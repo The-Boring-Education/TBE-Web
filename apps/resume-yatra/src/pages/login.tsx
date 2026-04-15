@@ -2,12 +2,12 @@ import { Footer, LoginCardNew, Navbar } from "@tbe/components";
 
 export default function AuthPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-0">
+    <div className="flex min-h-screen flex-col bg-gray-50">
       <Navbar variant="resume-yatra" />
-      <div className="mt-8">
+      <div className="flex flex-1 items-center justify-center px-4 py-8">
         <LoginCardNew variant="resume-yatra" />
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 }

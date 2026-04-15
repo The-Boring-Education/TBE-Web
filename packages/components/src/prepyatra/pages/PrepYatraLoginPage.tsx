@@ -35,12 +35,12 @@ export default function PrepYatraLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center  relative overflow-hidden bg-lightBG">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-lightBG">
       <Navbar variant="prepyatra" />
-      <div className="mt-8">
+      <div className="flex flex-1 items-center justify-center px-4 py-8">
         <LoginCardNew variant="prepyatra" />
-        <Footer />
       </div>
+      <Footer />
       <InstallButton />
     </div>
   );
