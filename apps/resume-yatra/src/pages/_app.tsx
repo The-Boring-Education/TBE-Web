@@ -2,15 +2,17 @@ import "@tbe/components/styles/common.css";
 import "@/styles/globals.css";
 
 import { AuthProvider } from "@tbe/auth";
+import {
+  RadixToaster,
+  Toaster as SonnerToaster,
+  TooltipProvider,
+} from "@tbe/components/ui";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import React from "react";
 
 import { OnboardingCheck } from "@/components/OnboardingCheck";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -46,8 +48,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <TBEQueryProvider>
           <TooltipProvider>
             <OnboardingCheck />
-            <Toaster />
-            <Sonner />
+            <RadixToaster />
+            <SonnerToaster />
             <Component {...pageProps} />
           </TooltipProvider>
         </TBEQueryProvider>

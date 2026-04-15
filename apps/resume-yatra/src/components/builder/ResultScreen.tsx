@@ -1,10 +1,9 @@
+import { Button, Card, CardContent } from "@tbe/components/ui";
 import { Copy, RotateCcw, Sparkles } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import type { UseResumeBuilderReturn } from "@/types/builder";
 
 interface ResultScreenProps {

@@ -11,6 +11,7 @@ const nextConfig = {
     "@tbe/auth",
     "@tbe/components",
     "@tbe/hooks",
+    "@tbe/query",
     "@tbe/constants",
     "@tbe/utils",
     "@tbe/interface",
