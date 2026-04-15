@@ -207,6 +207,16 @@ export interface PrimaryCardProps {
   borderColour?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
+/** DSA Yatra landing: alternating text + image placeholder rows */
+export interface DsaYatraFeatureSpotlightItem {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  description: string;
+  bullets: string[];
+  imageSide: "left" | "right";
+}
+
 export interface PrimaryCardWithCTAProps {
   id: string;
   image: string;

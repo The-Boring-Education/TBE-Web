@@ -1,6 +1,7 @@
 import type {
   CohortRoadmapProps,
   CohortUserCategoryProps,
+  DsaYatraFeatureSpotlightItem,
   PrimaryCardProps,
   PrimaryCardWithCTAProps,
   TestimonialCardProps,
@@ -616,29 +617,109 @@ const MY_PREV_EXPERIENCE = [
   },
 ];
 
+const DSA_YATRA_FEATURE_SPOTLIGHTS: DsaYatraFeatureSpotlightItem[] = [
+  {
+    id: v4(),
+    eyebrow: "Topic roadmap",
+    title: "Topics in an order that actually builds on itself",
+    description:
+      "Skip the endless random queue. Follow a roadmap that moves from foundations to harder patterns so each step earns the next—without jumping difficulty for no reason.",
+    bullets: [
+      "See what to study next instead of guessing from a global list",
+      "Stay aligned with how concepts connect in interviews",
+      "Reduce context-switching between unrelated problems",
+    ],
+    imageSide: "right",
+  },
+  {
+    id: v4(),
+    eyebrow: "Sheets",
+    title: "Practice sets tuned to your goal—not a generic grind",
+    description:
+      "Your target matters. Work from curated sheets that reflect how you want to interview, whether that is fast-moving startups, large MNCs, or MAANG-style depth.",
+    bullets: [
+      "Align problem selection with the role you are preparing for",
+      "Spend time on patterns employers actually ask",
+      "Avoid one-size-fits-all lists that ignore your timeline",
+    ],
+    imageSide: "left",
+  },
+  {
+    id: v4(),
+    eyebrow: "Revisions",
+    title: "Revisit what matters on a schedule—not only when you panic",
+    description:
+      "Retention beats cramming. Built-in revision rhythm helps patterns stick so you recognize them under interview pressure, not just right after you solved a problem once.",
+    bullets: [
+      "Reinforce weak spots on a cadence you can keep",
+      "Turn solved problems into long-term recall",
+      "Build confidence without re-solving everything from scratch",
+    ],
+    imageSide: "right",
+  },
+  {
+    id: v4(),
+    eyebrow: "Progress",
+    title: "See what you have finished—and what is next",
+    description:
+      "Consistency wins. Track completion and momentum so you always know whether you are on track, instead of guessing from a scattered notebook or spreadsheet.",
+    bullets: [
+      "Clear visibility into done vs remaining work",
+      "Easier to show up daily when progress is visible",
+      "Less mental overhead deciding what to open next",
+    ],
+    imageSide: "left",
+  },
+];
+
 const DSA_YATRA_FEATURES: PrimaryCardProps[] = [
   {
     id: v4(),
-    title: "Structured Learning Path",
+    title: "Structured path",
     content:
-      "Don't get lost in random problems. Follow a curated path designed for your target role.",
+      "A single sequence matched to your role and deadline—not an infinite bag of random problems.",
     image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
-    imageAltText: "Structured learning",
+    imageAltText: "Structured learning path",
   },
   {
     id: v4(),
-    title: "Company Focused",
+    title: "Interview target, not generic prep",
     content:
-      "Prepare specifically for Startups, MNCs, or MAANG with tailored question sets.",
+      "Pick the kind of company and interview style you want; practice follows that choice.",
     image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
-    imageAltText: "Company focused prep",
+    imageAltText: "Target-focused preparation",
   },
   {
     id: v4(),
-    title: "Concept Mastery",
-    content: "Master the underlying patterns, not just memorize solutions.",
+    title: "Patterns over memorization",
+    content:
+      "Learn to recognize problem types and templates—not to resurface blind solutions.",
     image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
-    imageAltText: "Concept mastery",
+    imageAltText: "Pattern-based mastery",
+  },
+  {
+    id: v4(),
+    title: "Roadmap by topic",
+    content:
+      "Move through topics in a sensible order so prerequisites stick before you level up.",
+    image: `${STATIC_FILE_PATH.svg}/roadmaps.svg`,
+    imageAltText: "Topic roadmap",
+  },
+  {
+    id: v4(),
+    title: "Curated sheets",
+    content:
+      "Problem sets you can trust for depth and coverage—without building your own curriculum from scratch.",
+    image: `${STATIC_FILE_PATH.svg}/tools-dsa-yatra.svg`,
+    imageAltText: "Curated problem sheets",
+  },
+  {
+    id: v4(),
+    title: "Revisions and momentum",
+    content:
+      "Revisit important work on a rhythm, and see progress so consistency is easier to hold.",
+    image: `${STATIC_FILE_PATH.svg}/dsa-yatra.svg`,
+    imageAltText: "Revisions and progress tracking",
   },
 ];
 
@@ -1054,6 +1135,7 @@ export {
   BYI_SKILLED_ROADMAP,
   BYI_USER_CATEGORIES,
   DSA_YATRA_FAQS,
+  DSA_YATRA_FEATURE_SPOTLIGHTS,
   DSA_YATRA_FEATURES,
   INTERVIEW_PREP_SHEETS,
   MY_PREV_EXPERIENCE,
