@@ -1,7 +1,9 @@
+import { compareDsaTopicKeysForApi } from "@tbe/constants";
+
 import {
-  DSA_TOPICS,
+  DSA_DIFFICULTY,
+  DSA_DURATION_DIFFICULTY_BUCKETS,
   modelSelectParams,
-  TIMELINE_CONFIGS,
 } from "@/lib/constants";
 import type {
   AddInterviewQuestionRequestPayloadProps,
@@ -15,7 +17,10 @@ import type {
   UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
 } from "@/lib/interfaces";
-import { generateYouTubeSearchLink } from "@/lib/utils";
+import {
+  generateYouTubeSearchLink,
+  selectQuestionsByDifficultyBuckets,
+} from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
 import {
@@ -685,6 +690,8 @@ const deleteInterviewSheetFromDB = async (
   }
 };
 
+type RealWorldFilterMode = "include" | "exclude" | "only";
+
 interface DSASheetFilters {
   domain?: DSADomainType | DSADomainType[];
   difficulty?: DSADifficultyType | DSADifficultyType[];
@@ -693,10 +700,12 @@ interface DSASheetFilters {
   page?: number;
   limit?: number;
   userId?: string;
-  /** Duration key e.g. "3Months", "6Months", "1Year" — uses TIMELINE_CONFIGS to limit question counts per topic */
+  /** Duration key e.g. "3Months", "6Months", "1Year" — uses difficulty buckets */
   duration?: string;
   /** Off-campus flag — if true, adds off-campus questions on top */
   offCampus?: boolean;
+  /** Filter real-world problems when bucketizing */
+  realWorld?: RealWorldFilterMode;
 }
 
 const getAllDSAQuestionsFromDB = async (
@@ -713,6 +722,7 @@ const getAllDSAQuestionsFromDB = async (
       userId,
       duration,
       offCampus,
+      realWorld,
     } = filters;
 
     // Build match stage for filtering
@@ -740,25 +750,36 @@ const getAllDSAQuestionsFromDB = async (
       matchStage.topics = { $in: topicsList };
     }
 
+    if (realWorld === "only") {
+      matchStage.isRealWorldProblem = true;
+    } else if (realWorld === "exclude") {
+      matchStage.isRealWorldProblem = { $ne: true };
+    }
+
+    const targetCompanies = userId
+      ? await getUserDSATargetCompanies(userId)
+      : [];
+
     // Intersection logic ensures only questions within user's focus are returned
     if (userId) {
-      const targets = await getUserDSATargetCompanies(userId);
-      if (targets.length > 0) {
+      if (targetCompanies.length > 0) {
         if (matchStage.companyTypes) {
           const currentIn = matchStage.companyTypes.$in || [];
           const intersection = currentIn.filter((t: string) =>
-            targets.includes(t),
+            targetCompanies.includes(t),
           );
           matchStage.companyTypes = {
-            $in: intersection.length > 0 ? intersection : targets,
+            $in: intersection.length > 0 ? intersection : targetCompanies,
           };
         } else {
-          matchStage.companyTypes = { $in: targets };
+          matchStage.companyTypes = { $in: targetCompanies };
         }
       }
     }
 
-    const totalCount = await DSAQuestion.countDocuments(matchStage);
+    const totalCount = duration
+      ? null
+      : await DSAQuestion.countDocuments(matchStage);
 
     const DSA_TOPIC_SORT_ORDER = [
       "ARRAY",
@@ -788,12 +809,6 @@ const getAllDSAQuestionsFromDB = async (
       "GREEDY",
       "UNION_FIND",
     ];
-
-    // Fetch user preferences for personalization
-    let targetCompanies: string[] = [];
-    if (userId) {
-      targetCompanies = await getUserDSATargetCompanies(userId);
-    }
 
     const aggregate: any[] = [
       { $match: matchStage },
@@ -887,9 +902,6 @@ const getAllDSAQuestionsFromDB = async (
       );
     }
 
-    // Duration-based filtering: limit questions per topic using TIMELINE_CONFIGS
-    const timelineConfig = duration ? TIMELINE_CONFIGS[duration] : null;
-
     aggregate.push({
       $sort: {
         _priorityScore: -1,
@@ -900,73 +912,140 @@ const getAllDSAQuestionsFromDB = async (
       },
     });
 
-    // Apply duration-based per-topic question limits after sorting but before pagination
-    if (timelineConfig) {
-      // For off-campus, expand the limit by 50% to include more challenging questions
-      const expandedLimits = offCampus
-        ? Object.fromEntries(
-            Object.entries(timelineConfig).map(([k, v]) => [
-              k,
-              Math.ceil(v.count * 1.5),
-            ]),
-          )
-        : null;
+    const stripInternalFields = (question: Record<string, unknown>) => {
+      const cleaned = { ...question };
+      delete cleaned._topicOrder;
+      delete cleaned._difficultyOrder;
+      delete cleaned._priorityScore;
+      delete cleaned._topicLimit;
+      delete cleaned.userStatus;
+      return cleaned;
+    };
 
-      aggregate.push({
-        $addFields: {
-          _topicLimit: {
-            $switch: {
-              branches: Object.entries(expandedLimits || timelineConfig).map(
-                ([topic, count]) => ({
-                  case: { $eq: [{ $arrayElemAt: ["$topics", 0] }, topic] },
-                  then: count,
-                }),
-              ),
-              default: 9999,
-            },
+    if (!duration) {
+      // Paginate with default ordering
+      aggregate.push(
+        { $skip: (page - 1) * limit },
+        { $limit: limit },
+        {
+          $project: {
+            _topicOrder: 0,
+            _difficultyOrder: 0,
+            _priorityScore: 0,
+            _topicLimit: 0,
+            userStatus: 0,
           },
         },
-      });
+      );
 
-      // Keep only questions where order < _topicLimit for their primary topic
-      aggregate.push({
-        $match: {
-          $expr: { $lt: [{ $ifNull: ["$order", 0] }, "$_topicLimit"] },
+      const questions = await DSAQuestion.aggregate(aggregate);
+      const total = totalCount ?? 0;
+
+      return {
+        data: {
+          questions,
+          pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            hasMore: page * limit < total,
+          },
         },
-      });
+      };
     }
 
-    // Paginate
-    aggregate.push(
-      { $skip: (page - 1) * limit },
-      { $limit: limit },
-      {
-        $project: {
-          _topicOrder: 0,
-          _difficultyOrder: 0,
-          _priorityScore: 0,
-          _topicLimit: 0,
-          userStatus: 0,
+    const baseQuestions = await DSAQuestion.aggregate(aggregate);
+    const bucketConfig = DSA_DURATION_DIFFICULTY_BUCKETS[duration];
+
+    const normalizeSeedValue = (value?: string | string[]) => {
+      if (!value) return "";
+      const values = Array.isArray(value) ? value : [value];
+      return values
+        .map((entry) => entry.toString().trim().toUpperCase())
+        .sort()
+        .join(",");
+    };
+
+    const seed = [
+      userId ?? "__no_user__",
+      duration,
+      offCampus ? "off-campus" : "on-campus",
+      realWorld ?? "include",
+      normalizeSeedValue(domain as string | string[] | undefined),
+      normalizeSeedValue(difficulty as string | string[] | undefined),
+      normalizeSeedValue(companyTypes as string | string[] | undefined),
+      normalizeSeedValue(topics as string | string[] | undefined),
+    ].join("|");
+
+    const scaledBuckets = bucketConfig
+      ? (Object.fromEntries(
+          Object.entries(bucketConfig).map(([key, count]) => [
+            key,
+            offCampus ? Math.ceil(count * 1.5) : count,
+          ]),
+        ) as Record<DSADifficultyType, number>)
+      : null;
+
+    if (!scaledBuckets) {
+      const total = baseQuestions.length;
+      const paged = baseQuestions
+        .slice((page - 1) * limit, (page - 1) * limit + limit)
+        .map((question) =>
+          stripInternalFields(question as Record<string, unknown>),
+        );
+
+      return {
+        data: {
+          questions: paged,
+          pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            hasMore: page * limit < total,
+          },
         },
+      };
+    }
+
+    const { selected } = selectQuestionsByDifficultyBuckets(baseQuestions, {
+      buckets: scaledBuckets,
+      difficultyOrder: DSA_DIFFICULTY,
+      seed,
+      getDifficulty: (question) => {
+        const raw = String(
+          (question as { difficulty?: unknown }).difficulty || "",
+        )
+          .trim()
+          .toUpperCase();
+        return (DSA_DIFFICULTY as readonly string[]).includes(raw)
+          ? (raw as DSADifficultyType)
+          : null;
       },
-    );
+      getPriorityScore: (question) =>
+        typeof (question as { _priorityScore?: unknown })._priorityScore ===
+        "number"
+          ? ((question as { _priorityScore?: number })._priorityScore as number)
+          : 0,
+    });
 
-    const questions = await DSAQuestion.aggregate(aggregate);
-
-    // Total after duration filtering
-    const filteredTotal = timelineConfig
-      ? await DSAQuestion.countDocuments(matchStage)
-      : totalCount;
+    const total = selected.length;
+    const paged = selected
+      .slice((page - 1) * limit, (page - 1) * limit + limit)
+      .map((question) =>
+        stripInternalFields(question as Record<string, unknown>),
+      );
 
     return {
       data: {
-        questions,
+        questions: paged,
         pagination: {
-          total: filteredTotal,
+          total,
           page,
           limit,
-          totalPages: Math.ceil(filteredTotal / limit),
-          hasMore: page * limit < filteredTotal,
+          totalPages: Math.ceil(total / limit),
+          hasMore: page * limit < total,
         },
       },
     };
@@ -1018,15 +1097,7 @@ const getDSATopicSummariesFromDB = async (
         count: row.count,
       }))
       .filter((t) => t.topic)
-      .sort((a, b) => {
-        const idxA = DSA_TOPICS.indexOf(a.topic as any);
-        if (idxA !== -1 && b.topic) {
-          const idxB = DSA_TOPICS.indexOf(b.topic as any);
-          if (idxB !== -1) return idxA - idxB;
-          return -1;
-        }
-        return a.topic.localeCompare(b.topic);
-      });
+      .sort((a, b) => compareDsaTopicKeysForApi(a.topic, b.topic));
 
     return { data: { topics } };
   } catch (error) {

@@ -34,7 +34,7 @@ const SheetsPageClient = () => {
   );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
-  const [, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
 
   const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
@@ -63,7 +63,11 @@ const SheetsPageClient = () => {
   );
 
   const { questions: topicQuestions, loading: topicQuestionsLoading } =
-    useDsaQuestionsForTopic(selectedTopic);
+    useDsaQuestionsForTopic(selectedTopic, {
+      // Prefer user from auth context (set during onboarding), fall back to profile fetch
+      duration:
+        (user as any)?.dsaYatra?.timeline || profile?.dsaYatra?.timeline,
+    });
 
   const [topicQuestionsCache, setTopicQuestionsCache] = useState<
     Record<string, DsaQuestion[]>

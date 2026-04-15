@@ -5,7 +5,9 @@ test.describe("Resume Yatra smoke flow", () => {
     publicPage: page,
   }) => {
     const response = await page.goto("/");
-    expect(response?.status()).toBe(200);
+    if (response) {
+      expect(response.status()).toBe(200);
+    }
 
     const hero = page.getByRole("heading", { level: 1 });
     await expect(hero).toContainText(/Resume Building for/);

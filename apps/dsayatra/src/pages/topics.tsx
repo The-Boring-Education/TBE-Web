@@ -1,11 +1,17 @@
 import { useAuth } from "@tbe/auth";
 import type { RoadmapStatItem } from "@tbe/components";
 import { InteractiveRoadmap, SEO } from "@tbe/components";
-import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
+import {
+  compareDsaTopicKeys,
+  DSA_TOPIC_ROADMAP_ICON_MAP,
+  PAGE_REFRESH_TIMEOUT,
+  routes,
+  TOPIC_LABELS,
+} from "@tbe/constants";
 import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
 import type { PageProps, RoadmapNode } from "@tbe/interface";
 import { getPreFetchProps } from "@tbe/utils";
-import { Code, Database, Hash, Layers, Link2, Search } from "lucide-react";
+import { Code } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Fragment, useMemo } from "react";
@@ -32,27 +38,20 @@ const EXPLANATIONS: Record<string, string> = {
   Math: "Mathematical algorithms and number theory logic.",
   Greedy: "Making the locally optimal choice at each step.",
   Backtracking: "Algorithmic technique for solving problems recursively.",
+  Recursion:
+    "Functions that call themselves to break problems into subproblems.",
+  DFS: "Depth-first traversal for trees and graphs.",
+  BFS: "Breadth-first traversal layer by layer.",
+  Trie: "Tree-based structure for efficient prefix lookups.",
+  Heap: "Priority queue backed by a complete binary heap.",
+  Graph: "Vertices and edges; modeling relationships and paths.",
+  "Dynamic Programming": "Optimal substructure and overlapping subproblems.",
+  "Union Find": "Disjoint-set connectivity with path compression.",
+  Simulation: "Step-by-step modeling of process or state machines.",
+  Design: "System-style problems: APIs, data structures, and tradeoffs.",
+  "Monotonic Stack":
+    "Stack maintaining order for next-greater and span problems.",
 };
-
-const TOPIC_ICON_MAP: Record<string, any> = {
-  ARRAY: Database,
-  SLIDING_WINDOW: Layers,
-  RECURSION: Hash,
-  BINARY_SEARCH: Search,
-  LINKED_LIST: Link2,
-  STACK: Database,
-  STRING: Code,
-};
-
-const PREFERRED_ORDER = [
-  "ARRAY",
-  "SLIDING_WINDOW",
-  "RECURSION",
-  "BINARY_SEARCH",
-  "LINKED_LIST",
-  "STACK",
-  "STRING",
-];
 
 function TopicsClient() {
   const router = useRouter();
@@ -79,21 +78,12 @@ function TopicsClient() {
       }
     });
 
-    const allTopicKeys = Object.keys(TOPIC_LABELS);
-    const sortedKeys = [...allTopicKeys].sort((a, b) => {
-      const idxA = PREFERRED_ORDER.indexOf(a);
-      const idxB = PREFERRED_ORDER.indexOf(b);
-      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-      if (idxA !== -1) return -1;
-      if (idxB !== -1) return 1;
-      return a.localeCompare(b);
-    });
+    const sortedKeys = Object.keys(TOPIC_LABELS).sort(compareDsaTopicKeys);
 
     return sortedKeys
       .map((topicKey, idx) => {
         const data = topicMap.get(topicKey) || { total: 0, solved: 0 };
-        let name = TOPIC_LABELS[topicKey] || topicKey;
-        if (topicKey === "RECURSION") name = "RECURSION";
+        const name = TOPIC_LABELS[topicKey] || topicKey;
         const isActuallyLocked = data.total === 0;
 
         return {
@@ -108,7 +98,7 @@ function TopicsClient() {
         };
       })
       .filter(
-        (node) => node.total > 0 || node.name === "RECURSION" || node.isLocked,
+        (node) => node.total > 0 || node.id === "RECURSION" || node.isLocked,
       );
   }, [allQuestions, completedQuestions]);
 
@@ -157,7 +147,7 @@ function TopicsClient() {
       stats={stats}
       overallProgress={overallProgress}
       accentColor="#ff5757"
-      iconMap={TOPIC_ICON_MAP}
+      iconMap={DSA_TOPIC_ROADMAP_ICON_MAP}
       defaultIcon={Code}
       backButtonLabel="Back to Dashboard"
       onBackClick={() => router.push("/dashboard")}
