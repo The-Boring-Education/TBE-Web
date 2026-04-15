@@ -2,6 +2,7 @@ import {
   ArrowLeftIcon,
   LockClosedIcon,
   ShieldCheckIcon,
+  SparklesIcon,
 } from '@heroicons/react/20/solid';
 import { getAccessToken } from '@tbe/auth';
 import { Button, Text } from '@tbe/components';
@@ -503,12 +504,24 @@ const CheckoutPage = () => {
                 ))}
               </ul>
               <div className='mt-6 rounded-xl bg-white/80 p-4 ring-1 ring-slate-200/80'>
+                <div className='flex items-center gap-2 mb-2'>
+                  <SparklesIcon
+                    className='h-4 w-4 text-indigo-500'
+                    aria-hidden
+                  />
+                  <Text
+                    level='h3'
+                    className='text-xs font-semibold text-slate-800'
+                  >
+                    Instant Access Guarantee
+                  </Text>
+                </div>
                 <Text
                   level='p'
                   className='text-xs text-slate-600 leading-relaxed'
                 >
-                  After payment, we&apos;ll confirm your order and unlock
-                  access. You can always review status from your dashboard.
+                  After payment, we&apos;ll confirm your order and unlock access
+                  instantly. You can always review status from your dashboard.
                 </Text>
               </div>
             </div>
