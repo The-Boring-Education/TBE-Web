@@ -18,6 +18,8 @@ export { useChallengeProgress } from "./useChallenges";
 export { useDailyPrepEncouragement } from "./useDailyPrepEncouragement";
 export type { UseDsaCompletedQuestionsOptions } from "./useDsaCompletedQuestions";
 export { default as useDsaCompletedQuestions } from "./useDsaCompletedQuestions";
+export type { UseDsaPrepUrlSyncParams } from "./useDsaPrepUrlSync";
+export { useDsaPrepUrlSync } from "./useDsaPrepUrlSync";
 export { default as useDsaQuestions } from "./useDsaQuestions";
 export { useDsaQuestionsForTopic } from "./useDsaQuestionsForTopic";
 export type { TopicWithCount } from "./useDsaTopics";
