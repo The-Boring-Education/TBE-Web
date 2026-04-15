@@ -9,6 +9,7 @@ import { DSA_STUDY_GUIDE_CONFIGS, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamifiedAction } from "@tbe/gamification";
 import {
   useDsaCompletedQuestions,
+  useDsaPrepUrlSync,
   useDsaQuestionsForTopic,
   useDsaTopics,
   useDsaTopicSummaries,
@@ -146,31 +147,21 @@ const SheetsPageClient = () => {
     }
   }, [user?.id, userLoading]);
 
-  useEffect(() => {
-    if (router.isReady && router.query.topic) {
-      setSelectedTopic(router.query.topic as string);
-    }
-  }, [router.isReady, router.query.topic]);
+  const { handleTopicClick, handleQuestionClick, handleBackToTopics } =
+    useDsaPrepUrlSync({
+      router,
+      selectedTopic,
+      setSelectedTopic,
+      setSelectedQuestion,
+      topicQuestions,
+      topicQuestionsLoading,
+    });
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
       router.push("/login");
     }
   }, [userLoading, isAuth, router]);
-
-  const handleQuestionClick = (question: DsaQuestion) => {
-    setSelectedQuestion(question);
-  };
-
-  const handleTopicClick = (topic: string) => {
-    setSelectedTopic(topic);
-    setSelectedQuestion(null);
-  };
-
-  const handleBackToTopics = () => {
-    setSelectedTopic(null);
-    setSelectedQuestion(null);
-  };
 
   if (sheetsLoading || userLoading || isProfileLoading || isProgressLoading) {
     return (

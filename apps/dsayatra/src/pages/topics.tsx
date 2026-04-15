@@ -10,7 +10,7 @@ import {
 } from "@tbe/constants";
 import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
 import type { PageProps, RoadmapNode } from "@tbe/interface";
-import { getPreFetchProps } from "@tbe/utils";
+import { encodeDsaTopicForUrl, getPreFetchProps } from "@tbe/utils";
 import { Code } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -129,7 +129,7 @@ function TopicsClient() {
   }, [nodes]);
 
   const handleNodeClick = (node: RoadmapNode) => {
-    router.push(`/sheets?topic=${node.id}`);
+    router.push(`/sheets?topic=${encodeDsaTopicForUrl(node.id)}`);
   };
 
   return (
