@@ -5,6 +5,7 @@ const TailorYourJourney = ({
   highlightText,
   description,
   features,
+  imageVariant = "src",
   imageSrc,
   imageAlt,
 }: TailorYourJourneyProps) => (
@@ -46,11 +47,19 @@ const TailorYourJourney = ({
         </ul>
       </div>
       <div className="flex w-full flex-1 justify-center lg:justify-end">
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          className="w-full max-w-lg rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl"
-        />
+        {imageVariant === "placeholder" ? (
+          <div
+            role="img"
+            aria-label={imageAlt}
+            className="h-[min(22rem,55vw)] w-full max-w-lg rounded-2xl border border-gray-800 bg-black shadow-xl"
+          />
+        ) : (
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            className="w-full max-w-lg rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl"
+          />
+        )}
       </div>
     </div>
   </div>
