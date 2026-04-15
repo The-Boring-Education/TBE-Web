@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@tbe/typescript-config": "workspace:*",
-    "@tbe/auth": "workspace:*",
     "@tbe/components": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/hooks": "workspace:*",

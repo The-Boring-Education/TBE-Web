@@ -76,3 +76,31 @@ export async function getResourceIndex(): Promise<ResourceIndexEntry[]> {
   }
   return entries;
 }
+
+/** Latest mtime of meta.json and index.html for a resource folder. */
+export async function getResourceLastModified(
+  slug: string,
+): Promise<Date | null> {
+  const metaPath = path.join(CONTENT_DIR, slug, "meta.json");
+  const htmlPath = path.join(CONTENT_DIR, slug, "index.html");
+  try {
+    const [metaStat, htmlStat] = await Promise.all([
+      fs.stat(metaPath),
+      fs.stat(htmlPath),
+    ]);
+    return new Date(Math.max(metaStat.mtimeMs, htmlStat.mtimeMs));
+  } catch {
+    return null;
+  }
+}
+
+/** Latest change across all resource folders; falls back to now if empty. */
+export async function getSiteContentLastModified(): Promise<Date> {
+  const slugs = await listResourceSlugs();
+  let maxMs = 0;
+  for (const slug of slugs) {
+    const d = await getResourceLastModified(slug);
+    if (d) maxMs = Math.max(maxMs, d.getTime());
+  }
+  return maxMs > 0 ? new Date(maxMs) : new Date();
+}

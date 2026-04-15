@@ -3,7 +3,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { Shell } from "@/components/Shell";
 import { getSiteBaseUrl } from "@/lib/site";
 
 import { Providers } from "./providers";
@@ -37,6 +36,34 @@ export const metadata: Metadata = {
   },
 };
 
+function SiteJsonLd() {
+  const base = getSiteBaseUrl();
+  const data = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${base}/#organization`,
+        name: "The Boring Education",
+        url: base,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${base}/#website`,
+        name: "TBE Resources",
+        url: base,
+        publisher: { "@id": `${base}/#organization` },
+      },
+    ],
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -45,9 +72,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans">
-        <Providers>
-          <Shell>{children}</Shell>
-        </Providers>
+        <SiteJsonLd />
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
