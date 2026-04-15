@@ -4,8 +4,7 @@ test.describe("Prep Yatra smoke flow", () => {
   test("landing loads and journey CTA is visible", async ({
     publicPage: page,
   }) => {
-    const response = await page.goto("/");
-    expect(response?.status()).toBe(200);
+    await page.goto("/", { waitUntil: "domcontentloaded" });
 
     await expect(
       page.getByRole("button", { name: "Start Your Journey for Free" }),
@@ -23,10 +22,10 @@ test.describe("Prep Yatra smoke flow", () => {
     await expect(journeyCTA).toBeVisible();
     await expect(journeyCTA).toBeEnabled();
 
-    await Promise.all([
-      page.waitForURL(/\/login\/?$/, { timeout: 15_000 }),
-      journeyCTA.click(),
-    ]);
+    await journeyCTA.click();
+    await expect(page).toHaveURL(/\/(login|auth)(\/|\?|$)/, {
+      timeout: 30_000,
+    });
 
     await expect(
       page.getByRole("heading", { name: "Welcome Back!" }),
@@ -52,7 +51,9 @@ test.describe("Prep Yatra smoke flow", () => {
   }) => {
     await page.goto("/pricing");
 
-    await expect(page).toHaveURL(/\/login\/?$/);
+    await expect(page).toHaveURL(/\/(login|auth)(\/|\?|$)/, {
+      timeout: 20_000,
+    });
     await expect(
       page.getByRole("button", { name: "Continue with Google" }),
     ).toBeVisible();

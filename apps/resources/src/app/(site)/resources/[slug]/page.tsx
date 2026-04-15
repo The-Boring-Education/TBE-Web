@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { ResourceView } from "@/components/ResourceView";
 import {
   listResourceSlugs,
   readResourceHtml,
@@ -11,6 +12,8 @@ import { getSiteBaseUrl } from "@/lib/site";
 
 type Props = { params: { slug: string } };
 
+export const dynamic = "force-static";
+export const revalidate = false;
 export const dynamicParams = false;
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
@@ -59,40 +62,37 @@ export default async function ResourcePage(props: Props) {
   const base = getSiteBaseUrl();
   const url = `${base}/resources/${slug}`;
 
-  const jsonLd = {
+  const breadcrumbLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    headline: meta.title,
-    description: meta.description,
-    url,
-    author: {
-      "@type": "Organization",
-      name: "The Boring Education",
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "The Boring Education",
-    },
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Resources",
+        item: base,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: meta.title,
+        item: url,
+      },
+    ],
   };
 
   return (
-    <>
+    <div className="mx-auto w-full px-4 pb-8 pt-4">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <article className="resource-embed mx-auto max-w-4xl px-4 py-8">
-        {styleTags ? (
-          <div
-            className="resource-embed-styles"
-            dangerouslySetInnerHTML={{ __html: styleTags }}
-          />
-        ) : null}
-        <div
-          className="resource-embed-body max-w-none"
-          dangerouslySetInnerHTML={{ __html: bodyHtml }}
-        />
-      </article>
-    </>
+      <ResourceView
+        meta={meta}
+        pageUrl={url}
+        styleTags={styleTags}
+        bodyHtml={bodyHtml}
+      />
+    </div>
   );
 }

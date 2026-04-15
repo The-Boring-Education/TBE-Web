@@ -267,9 +267,9 @@ const getNavbarVariantConfig = (
     subText: "By The Boring Education",
     dashboardRoute: "/",
     borderClass: "border-b border-greyLight",
-    requiresAuth: true,
+    requiresAuth: false,
     showGamification: false,
-    showNotifications: true,
+    showNotifications: false,
     navigation: {
       issues: ["issue-bug-report"],
       cohorts: false,
