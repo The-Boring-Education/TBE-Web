@@ -50,7 +50,7 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
           </button>
           <span className="text-zinc-600"> · </span>
           <span className="text-zinc-500">
-            {isZenMode ? "Content at 90% width" : "Toggle for focused reading"}
+            {!isZenMode && "Toggle for focused reading"}
           </span>
         </p>
         <ResourceArticle
