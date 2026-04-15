@@ -38,6 +38,10 @@ export function buildE2EAccessJwt(): string {
 /**
  * Sets cookie JWT + mocks user API for apps using `useProductOnboardingGate`.
  * `productFields` should include the nested flags the gate checks (e.g. `prepYatra.pyOnboarded`).
+ *
+ * Uses `context.addCookies()` so the auth token is present in HTTP request headers
+ * from the very first navigation — required for apps that have server-side middleware
+ * (e.g. dsayatra) that checks the cookie before serving protected routes.
  */
 export async function installOnboardingRedirectMocks(
   page: Page,
@@ -45,12 +49,18 @@ export async function installOnboardingRedirectMocks(
 ): Promise<void> {
   const accessToken = buildE2EAccessJwt();
 
-  await page.addInitScript(
-    ([key, token]) => {
-      document.cookie = `${key}=${token}; path=/; max-age=86400; SameSite=Lax`;
+  await page.context().addCookies([
+    {
+      name: TBE_ACCESS_COOKIE,
+      value: accessToken,
+      domain: "localhost",
+      path: "/",
+      sameSite: "Lax",
+      httpOnly: false,
+      secure: false,
+      expires: Math.floor(Date.now() / 1000) + 86400,
     },
-    [TBE_ACCESS_COOKIE, accessToken] as [string, string],
-  );
+  ]);
 
   await page.route("**/api/proxy/user**", (route) => {
     if (route.request().method() !== "GET") {
@@ -103,6 +113,22 @@ export async function installOnboardingRedirectMocks(
 
   await page.route("**/api/proxy/feedback**", (route) =>
     route.fulfill({ status: 200, json: { status: true, data: null } }),
+  );
+
+  // Keep redirect tests stable even when onboarding preview server is slow/unavailable in CI.
+  await page.route("http://localhost:5173/**", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: "<!doctype html><html><body>Onboarding App</body></html>",
+    }),
+  );
+  await page.route("http://127.0.0.1:5173/**", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: "<!doctype html><html><body>Onboarding App</body></html>",
+    }),
   );
 }
 

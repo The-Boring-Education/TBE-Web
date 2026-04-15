@@ -8,7 +8,7 @@ import {
 } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
-import { cn, getPreFetchProps } from "@tbe/utils";
+import { cn, encodeDsaTopicForUrl, getPreFetchProps } from "@tbe/utils";
 import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Progress } from "@ui/progress";
@@ -594,7 +594,7 @@ const DsaClient = () => {
               topicProgress.map((topic) => (
                 <Link
                   key={topic.key}
-                  href={`/sheets?topic=${topic.key}`}
+                  href={`/sheets?topic=${encodeDsaTopicForUrl(topic.key)}`}
                   className="block"
                 >
                   <div className="bg-[#0f0f0f] border border-[#2a2a2a] p-4 rounded-lg text-center cursor-pointer hover:border-[#ff5757] transition-all group">

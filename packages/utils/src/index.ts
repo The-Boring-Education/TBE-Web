@@ -22,5 +22,6 @@ export * from "./global";
 export * from "./sentry";
 // Re-exporting only default export to avoid name conflicts
 export * from "./dsaHelpers";
+export * from "./dsaUrlParams";
 export * from "./health";
 export * from "./socialMediaTemplates";

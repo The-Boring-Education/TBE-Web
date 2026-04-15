@@ -34,7 +34,7 @@ test.describe("Prep Yatra auth and onboarding gate", () => {
     await expect(page).toHaveURL(/\/dashboard\/?$/);
 
     await expect(
-      page.getByRole("heading", { name: "Ready to Transform Your Skills?" }),
+      page.getByRole("button", { name: /open sidebar|close sidebar/i }),
     ).toBeVisible({ timeout: 20_000 });
   });
 });
