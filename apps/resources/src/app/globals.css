@@ -313,6 +313,10 @@
     display: none !important;
   }
 
+  .resource-contribute-banner {
+    display: none !important;
+  }
+
   .resource-embed {
     padding: 0 !important;
     margin: 0 !important;

@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { ResourceMeta } from "@/lib/types";
 
 import { ResourceArticle } from "./ResourceArticle";
+import { ResourceContributeBanner } from "./ResourceContributeBanner";
 
 type Props = {
   meta: ResourceMeta;
@@ -60,6 +61,9 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
           bodyHtml={bodyHtml}
           articleClassName={isZenMode ? ZEN_ARTICLE_CLASS : undefined}
         />
+        <div className="flex justify-center px-4">
+          <ResourceContributeBanner docTitle={meta.title} pageUrl={pageUrl} />
+        </div>
       </div>
     </>
   );
