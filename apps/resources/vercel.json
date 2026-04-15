@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd ../.. && pnpm run build:resources",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && corepack enable && corepack prepare pnpm@10.30.3 --activate && pnpm install --no-frozen-lockfile",
+  "devCommand": "cd ../.. && pnpm run dev:resources",
+  "regions": ["iad1"]
+}
