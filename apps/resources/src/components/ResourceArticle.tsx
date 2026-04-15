@@ -16,7 +16,7 @@ export function ResourceArticle({
   styleTags,
   bodyHtml,
   includeJsonLd = true,
-  articleClassName = "resource-embed mx-auto max-w-4xl px-4 py-8",
+  articleClassName,
 }: Props) {
   const jsonLd = {
     "@context": "https://schema.org",
@@ -50,7 +50,7 @@ export function ResourceArticle({
           />
         ) : null}
         <div
-          className="resource-embed-body max-w-none"
+          className="resource-embed-body"
           dangerouslySetInnerHTML={{ __html: bodyHtml }}
         />
       </article>

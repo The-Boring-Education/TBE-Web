@@ -1,29 +1,310 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
-:root {
-  --shell-bg: #0a0a0b;
-  --shell-fg: #fafafa;
-  --shell-muted: #a1a1aa;
-  --shell-border: #27272a;
-  --shell-accent: #22c55e;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-  /* Required by @tbe/components shared Navbar/Footer */
-  --primary: 0 100% 67.1%;
-  --primary-foreground: 0 0% 100%;
-  --radius: 0.5rem;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Navbar / shell — keep TBE shared components aligned */
+    --primary: 0 100% 67.1%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 42 87% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    /* Resources app shell */
+    --shell-bg: #0a0a0b;
+    --shell-fg: #fafafa;
+    --shell-muted: #a1a1aa;
+    --shell-border: #27272a;
+    --shell-accent: #22c55e;
+  }
+
+  html {
+    @apply scroll-smooth;
+    background: var(--shell-bg);
+  }
 }
 
-body {
-  @apply min-h-screen bg-[var(--shell-bg)] text-[var(--shell-fg)] antialiased;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply min-h-screen scroll-smooth font-primary antialiased;
+    background: var(--shell-bg);
+    color: var(--shell-fg);
+  }
 }
 
-/* Utility classes used by @tbe/components Navbar */
+/* Custom Classes */
+@layer components {
+  /* 1. Gradients */
+  .gradient-1 {
+    @apply bg-gradient-to-r from-[#F6FFBE] to-[#F99156];
+  }
+
+  .gradient-2 {
+    @apply bg-gradient-to-b from-[#2555FF] to-[#9B8BFF];
+  }
+
+  .gradient-3 {
+    @apply bg-gradient-to-b from-[#FFE259] to-[#FFA751];
+  }
+
+  .gradient-4 {
+    @apply bg-gradient-to-b from-[#FF76E1] to-[#D0AA7D];
+  }
+
+  .gradient-5 {
+    @apply bg-gradient-to-b from-[#923CFF] to-[#4E4EFF];
+  }
+
+  .gradient-6 {
+    @apply bg-gradient-to-b from-[#F0F3FF] to-[#FFA4C5];
+  }
+
+  .gradient-7 {
+    @apply bg-gradient-to-b from-[#EEFFBF] to-[#04ADC4];
+  }
+
+  .gradient-8 {
+    @apply bg-gradient-to-b from-[#F0F3FF] to-[#FFCAA4];
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-b from-[#070607] to-[#1B1B1B];
+  }
+
+  /* 2. Fonts */
+  .heading-1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-black text-contentLight;
+  }
+
+  .heading-2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-contentLight;
+  }
+
+  .heading-3 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold text-contentLight;
+  }
+
+  .heading-4,
+  .md-1 {
+    @apply text-xl md:text-2xl lg:text-3xl font-semibold text-contentLight;
+  }
+
+  .heading-5 {
+    @apply text-lg md:text-xl lg:text-2xl font-semibold text-contentLight;
+  }
+
+  .subtitle {
+    @apply text-subtitle font-normal text-contentLight;
+  }
+
+  .paragraph {
+    @apply text-paragraph font-normal text-contentLight;
+  }
+
+  .strong-text {
+    @apply text-strong-text font-semibold text-contentLight;
+  }
+
+  .pre-title {
+    @apply text-pre-title font-normal text-contentLight;
+  }
+
+  .button-text {
+    @apply text-button-text font-bold text-contentLight;
+  }
+
+  .label {
+    @apply text-label font-semibold text-greyDark;
+  }
+
+  .link {
+    @apply text-button-text text-contentLight;
+  }
+
+  .button {
+    @apply rounded-1 text-button-text font-bold text-contentLight;
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
+
+  .checkbox,
+  .radio {
+    @apply flex items-center gap-2 px-3 py-2 border text-label font-semibold text-greyDark rounded-full transition-all duration-150 cursor-pointer shadow-md;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .glass-dark {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 87, 87, 0.2);
+  }
+
+  /* Custom animations for the showcase page */
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(255, 207, 37, 0.3);
+    }
+
+    50% {
+      box-shadow: 0 0 40px rgba(255, 207, 37, 0.6);
+    }
+  }
+
+  @keyframes slide-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.8s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.8s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.6s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-out;
+  }
+
+  /* Line clamp utility */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Navbar: override prep-yatra .glass-dark so shared shell matches resources */
 .glass-dark {
   background: rgba(10, 10, 11, 0.9);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.resource-embed-body {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 900px) {
+  .resource-embed-body {
+    width: 100%;
+  }
 }
 
 @media print {

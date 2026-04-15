@@ -13,9 +13,7 @@ type Props = {
   bodyHtml: string;
 };
 
-const DEFAULT_ARTICLE_CLASS = "resource-embed mx-auto max-w-4xl px-4 py-8";
-const ZEN_ARTICLE_CLASS =
-  "resource-embed mx-auto my-6 w-[90%] max-w-none px-4 py-8";
+const ZEN_ARTICLE_CLASS = "resource-embed mx-auto";
 
 export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
   const [isZenMode, setIsZenMode] = useState(false);
@@ -60,9 +58,7 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
           pageUrl={pageUrl}
           styleTags={styleTags}
           bodyHtml={bodyHtml}
-          articleClassName={
-            isZenMode ? ZEN_ARTICLE_CLASS : DEFAULT_ARTICLE_CLASS
-          }
+          articleClassName={isZenMode ? ZEN_ARTICLE_CLASS : undefined}
         />
       </div>
     </>
