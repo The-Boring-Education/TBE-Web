@@ -111,6 +111,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     ...(filters.userId ? { userId: filters.userId } : {}),
     ...(filters.duration ? { duration: filters.duration } : {}),
     offCampus: filters.offCampus,
+    ...(filters.realWorld ? { realWorld: filters.realWorld } : {}),
   });
 
   if (error)

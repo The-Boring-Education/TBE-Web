@@ -55,6 +55,21 @@ const isProgramActive = (liveOn: Date | string) =>
 const generatePaymentOrderId = (): string =>
   `order_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
 
+/**
+ * Cashfree requires `order_meta.return_url` to be an absolute URL. If
+ * `NEXT_PUBLIC_PLATFORM_URL` is empty, `${base}/path` becomes a relative path only
+ * (`/payment/status?...`), which Cashfree rejects as `order_meta.return_url_invalid`.
+ */
+const buildCashfreePaymentReturnUrl = (orderId: string): string => {
+  const base = envConfig.PLATFORM_URL.trim().replace(/\/+$/, "");
+  if (!base || !/^https?:\/\//i.test(base)) {
+    throw new Error(
+      "Set NEXT_PUBLIC_PLATFORM_URL on the API to the full Platform origin (e.g. http://localhost:3000). Cashfree requires an absolute return_url for order_meta.",
+    );
+  }
+  return `${base}/payment/status?order_id=${encodeURIComponent(orderId)}`;
+};
+
 const buildOrderPayload = ({
   orderId,
   amount,
@@ -73,14 +88,62 @@ const buildOrderPayload = ({
       customer_phone: "0000000000",
     },
     order_meta: {
-      return_url: `${envConfig.PLATFORM_URL}/payment/status?order_id=${orderId}`,
+      return_url: buildCashfreePaymentReturnUrl(orderId),
     },
   };
 };
 
+/**
+ * Cashfree Payment Gateway REST base must include `/pg` (e.g. `https://sandbox.cashfree.com/pg`).
+ * If `CASHFREE_BASE_URL` is set to the host only (`https://sandbox.cashfree.com`), we append `/pg`
+ * so `POST .../pg/orders` matches Cashfree routing. Without `/pg`, the gateway often responds with
+ * "no Route matched with those values".
+ */
+const getCashfreePgBaseUrl = (): string => {
+  const raw = envConfig.CASHFREE_BASE_URL.trim().replace(/\/+$/, "");
+  if (!raw) return raw;
+  return raw.endsWith("/pg") ? raw : `${raw}/pg`;
+};
+
+/** Hosted checkout page lives on the same host without the `/pg` API prefix. */
+const buildCashfreeHostedCheckoutLink = (paymentSessionId: string): string => {
+  const pg = getCashfreePgBaseUrl();
+  const hostBase = pg.endsWith("/pg") ? pg.slice(0, -3) : pg;
+  return `${hostBase}/checkout?paymentSessionId=${encodeURIComponent(paymentSessionId)}`;
+};
+
+/** Best-effort parse of Cashfree Orders API error JSON for clearer 400 responses. */
+const extractCashfreeErrorMessage = (data: unknown): string | undefined => {
+  if (!data || typeof data !== "object") return undefined;
+  const d = data as Record<string, unknown>;
+  if (typeof d.message === "string" && d.message.trim())
+    return d.message.trim();
+  if (typeof d.error === "string" && d.error.trim()) return d.error.trim();
+  if (Array.isArray(d.message) && d.message.length > 0) {
+    const first = d.message[0];
+    if (typeof first === "string") return first;
+  }
+  if (d.error && typeof d.error === "object" && d.error !== null) {
+    const nested = d.error as Record<string, unknown>;
+    if (typeof nested.message === "string" && nested.message.trim()) {
+      return nested.message.trim();
+    }
+  }
+  const sub = d.sub_code;
+  if (typeof sub === "string" && sub.trim()) return sub.trim();
+  return undefined;
+};
+
+type CreateCashfreeOrderResult = {
+  data: unknown;
+  ok: boolean;
+  httpStatus: number;
+  gatewayMessage?: string;
+};
+
 const createCashfreeOrder = async (
   orderPayload: ReturnType<typeof buildOrderPayload>,
-): Promise<{ data: any; ok: boolean }> => {
+): Promise<CreateCashfreeOrderResult> => {
   const clientId = envConfig.CASHFREE_CLIENT_ID;
   const secretKey = envConfig.CASHFREE_SECRET_KEY;
 
@@ -88,7 +151,7 @@ const createCashfreeOrder = async (
     throw new Error("Cashfree credentials not configured");
   }
 
-  const response = await fetch(`${envConfig.CASHFREE_BASE_URL}/orders`, {
+  const response = await fetch(`${getCashfreePgBaseUrl()}/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -100,8 +163,68 @@ const createCashfreeOrder = async (
   });
 
   const data = await response.json();
+  const gatewayMessage = extractCashfreeErrorMessage(data);
 
-  return { data, ok: response.ok };
+  return {
+    data,
+    ok: response.ok,
+    httpStatus: response.status,
+    gatewayMessage,
+  };
+};
+
+/**
+ * Fetches live order state from Cashfree (GET /orders/{order_id}).
+ * Use when DB is still PENDING — e.g. localhost cannot receive webhooks, or webhook is delayed.
+ */
+const fetchCashfreeOrderByOrderId = async (
+  orderId: string,
+): Promise<{
+  ok: boolean;
+  order_status?: string;
+  httpStatus: number;
+}> => {
+  const clientId = envConfig.CASHFREE_CLIENT_ID;
+  const secretKey = envConfig.CASHFREE_SECRET_KEY;
+
+  if (!clientId || !secretKey) {
+    return { ok: false, httpStatus: 0 };
+  }
+
+  const base = getCashfreePgBaseUrl();
+  if (!base) {
+    return { ok: false, httpStatus: 0 };
+  }
+
+  const url = `${base}/orders/${encodeURIComponent(orderId)}`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "x-client-id": clientId,
+      "x-client-secret": secretKey,
+      "x-api-version": "2022-09-01",
+    },
+  });
+
+  let data: unknown = {};
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok) {
+    return { ok: false, httpStatus: response.status };
+  }
+
+  const order_status =
+    data &&
+    typeof data === "object" &&
+    typeof (data as Record<string, unknown>).order_status === "string"
+      ? (data as { order_status: string }).order_status
+      : undefined;
+
+  return { ok: true, order_status, httpStatus: response.status };
 };
 
 // local helper to verify signature exactly per Cashfree docs
@@ -337,6 +460,7 @@ const generateYouTubeSearchLink = (questionTitle: string): string => {
 };
 
 export {
+  buildCashfreeHostedCheckoutLink,
   buildOrderPayload,
   calculateUserPointsForAction,
   checkUserCourseEnrollment,
@@ -345,6 +469,7 @@ export {
   createCashfreeOrder,
   extractPlaylistId,
   fetchAPIData,
+  fetchCashfreeOrderByOrderId,
   fetchPlaylistData,
   generatePaymentOrderId,
   generateYouTubeSearchLink,

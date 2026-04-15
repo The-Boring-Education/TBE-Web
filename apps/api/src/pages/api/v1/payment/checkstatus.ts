@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }),
         );
     }
-  } catch (error) {
+  } catch {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,

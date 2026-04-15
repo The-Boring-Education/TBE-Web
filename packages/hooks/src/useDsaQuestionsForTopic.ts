@@ -11,6 +11,8 @@ interface UseDsaQuestionsForTopicOptions {
   duration?: string;
   /** Off-campus flag — if true, adds off-campus questions on top */
   offCampus?: boolean;
+  /** Filter real-world problems (include/exclude/only) */
+  realWorld?: "include" | "exclude" | "only";
 }
 
 interface UseDsaQuestionsForTopicReturn {
@@ -29,7 +31,7 @@ export const useDsaQuestionsForTopic = (
 ): UseDsaQuestionsForTopicReturn => {
   const { user } = useUser();
   const userId = user?.id;
-  const { duration, offCampus } = options;
+  const { duration, offCampus, realWorld } = options;
 
   const { data: response, isLoading } = useQuery({
     queryKey: queryKeys.dsa.questions({
@@ -37,10 +39,11 @@ export const useDsaQuestionsForTopic = (
       userId,
       duration,
       offCampus,
+      realWorld,
     }),
     queryFn: () =>
       sendRequest({
-        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}`,
+        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}${realWorld ? `&realWorld=${realWorld}` : ""}`,
         method: "GET",
       }),
     enabled: !!topic && !!userId,

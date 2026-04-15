@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes, isDevelopmentEnv } from "@/lib/constants";
+import { verifyToken } from "@/lib/auth/jwt";
+import { apiStatusCodes } from "@/lib/constants";
 import type { ProductType } from "@/lib/constants/database";
 import { isValidProductType } from "@/lib/constants/products";
 import { resolveAuthoritativeOrderAmount } from "@/lib/services/payment";
@@ -18,7 +19,8 @@ const parseQuoteInput = (
   if (req.method === "GET") {
     const q = req.query;
     return {
-      productType: typeof q.productType === "string" ? q.productType : undefined,
+      productType:
+        typeof q.productType === "string" ? q.productType : undefined,
       productId: typeof q.productId === "string" ? q.productId : undefined,
       couponCode: typeof q.coupon === "string" ? q.coupon : undefined,
       userId: typeof q.userId === "string" ? q.userId : undefined,
@@ -44,6 +46,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    // Extract Bearer token from Authorization header (sent by platform via proxy)
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.startsWith("Bearer ")
+      ? authHeader.slice(7)
+      : null;
+
+    let sessionUserId: string | undefined;
+    if (token) {
+      try {
+        const payload = verifyToken<{ sub?: string }>(token);
+        sessionUserId = payload?.sub;
+      } catch {
+        // Token invalid or expired — skip auth validation
+      }
+    }
+
     const { productType, productId, couponCode, userId } = parseQuoteInput(req);
 
     if (!productType || !productId) {
@@ -60,6 +78,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: `Invalid product type: ${productType}`,
+        }),
+      );
+    }
+
+    // Only enforce userId match if we have a valid token; otherwise allow public access
+    if (userId && sessionUserId && userId !== sessionUserId) {
+      return res.status(apiStatusCodes.FORBIDDEN).json(
+        sendAPIResponse({
+          status: false,
+          message: "Cannot fetch a quote for another user",
         }),
       );
     }
@@ -87,12 +115,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         data: resolved.data,
       }),
     );
-  } catch (error) {
+  } catch {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
         message: "Internal Server Error",
-        error: isDevelopmentEnv && error,
       }),
     );
   }

@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI/ML Engineer Roadmap 2026 – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            height: 1122px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: hidden;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 48px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 12px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 2px 0 18px 20px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: var(--mid);
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 10px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── YOUTUBE LINKS ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        /* ── TIME BADGE ── */
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            margin-bottom: 3px;
+        }
+
+        .time-badge span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            display: inline-block;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS TABLE ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        .resource-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+              display: block;
+  margin: 0 auto;
+        }
+   
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── COMPACT TWO-COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── SALARY / STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 600px) {
+            .print-bar {
+                width: 100%;
+                padding: 12px 16px;
+                margin-bottom: 0;
+                background: #e8e5df;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 8px;
+            }
+
+            .cover {
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 20px 20px 0;
+            }
+
+            .cover-hero {
+                padding: 28px 20px 28px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 36px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+            }
+
+            .cover-quote-block {
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 24px;
+            }
+
+            .cover-footer {
+                padding: 14px 20px;
+                flex-wrap: wrap;
+            }
+
+            .inner-page {
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 20px 12px;
+            }
+
+            .page-body {
+                padding: 20px 20px;
+            }
+
+            .page-footer {
+                padding: 12px 20px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .step-content {
+                padding: 2px 0 16px 12px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 8px;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .cover-decoration {
+                width: 140px;
+                height: 140px;
+                right: -30px;
+                top: 20px;
+                transform: none;
+            }
+
+            .stack-table {
+                font-size: 11px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: hidden;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                height: 297mm;
+            }
+
+            .inner-page {
+                height: 297mm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" onclick="window.print()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+
+                <div class="cover-hook">The complete path — no shortcuts</div>
+
+                <h1 class="cover-title">
+                    AI / ML<br><span>Engineer</span><br>Roadmap
+                </h1>
+
+                <p class="cover-subtitle">
+                    From Python basics to deploying production ML models in 2026. Math foundations, machine learning,
+                    deep learning, MLOps, LLMs — everything you need with free YouTube resources for every phase.
+                </p>
+
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "Every company is becoming an AI company. The engineer who can take a model from notebook to
+                        production — reliably, at scale — is the most valuable person in the room."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">10–16</div>
+                        <div class="stat-label">Months to job-ready</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">10</div>
+                        <div class="stat-label">Phases to master</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">40+</div>
+                        <div class="stat-label">Free YT resources</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">∞</div>
+                        <div class="stat-label">Career ceiling</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for
+                    Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — PHASES 1–3 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">AI / ML Engineer Roadmap · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Foundation Layer</div>
+                <h2 class="section-title">Start Here — Math, Python & Data Skills</h2>
+
+                <div class="roadmap">
+
+                    <!-- PHASE 1 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 1–4</div>
+                            <div class="step-phase">Phase 01 · Math Foundations</div>
+                            <div class="step-heading">The Math Every ML Engineer Must Know</div>
+                            <div class="step-desc">ML is applied mathematics. You don't need a PhD but you must be
+                                comfortable with the core toolbox. Study <strong>Linear Algebra</strong>: vectors,
+                                matrices, dot products, matrix multiplication, eigenvalues/eigenvectors. Study
+                                <strong>Calculus</strong>: derivatives, chain rule, partial derivatives, gradients —
+                                this is backpropagation. Study <strong>Statistics &amp; Probability</strong>:
+                                distributions, Bayes' theorem, expectation, variance. Don't skip this — every ML
+                                algorithm is built on these concepts.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Non-negotiable</span>
+                                <span class="tag">Linear Algebra</span>
+                                <span class="tag">Calculus (gradients)</span>
+                                <span class="tag">Probability</span>
+                                <span class="tag">Statistics</span>
+                                <span class="tag">Bayes' Theorem</span>
+                                <span class="tag">Matrix ops</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=fNk_zzaMoSs" target="_blank">Linear Algebra – 3Blue1Brown</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=WUvTyaaNkzM" target="_blank">Essence of Calculus – 3Blue1Brown</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=xxpc-HPKN28" target="_blank">Statistics for ML – StatQuest</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=HZGCoVF3YvM" target="_blank">Probability for ML – Brandon Foltz</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 2 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 2–6</div>
+                            <div class="step-phase">Phase 02 · Python for ML</div>
+                            <div class="step-heading">Python — The Language of AI/ML</div>
+                            <div class="step-desc">Python is the undisputed language of AI. Go deep — not just syntax
+                                but the ML ecosystem. Master <strong>NumPy</strong> for array operations and linear
+                                algebra in code. Master <strong>Pandas</strong> for data manipulation, cleaning, and
+                                aggregation. Learn <strong>Matplotlib &amp; Seaborn</strong> for data visualization.
+                                Build comfort in Jupyter notebooks and virtual environments. These libraries are used
+                                daily in every ML role on the planet.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Core language</span>
+                                <span class="tag">Python OOP</span>
+                                <span class="tag">NumPy</span>
+                                <span class="tag">Pandas</span>
+                                <span class="tag">Matplotlib</span>
+                                <span class="tag">Seaborn</span>
+                                <span class="tag">Jupyter Notebooks</span>
+                                <span class="tag">venv / conda</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank">Python Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=QUT1VHiLmmI" target="_blank">NumPy Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=vmEHCJofslg" target="_blank">Pandas Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=3Xw6FKYP7e4" target="_blank">Matplotlib & Seaborn – Corey Schafer</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 3 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 5–10</div>
+                            <div class="step-phase">Phase 03 · Data Engineering Basics</div>
+                            <div class="step-heading">Data Collection, Cleaning & EDA — Garbage In, Garbage Out</div>
+                            <div class="step-desc">80% of an ML engineer's time is spent on data, not models. Learn
+                                <strong>Exploratory Data Analysis (EDA)</strong>: understanding distributions,
+                                correlations, outliers. Master data cleaning: handling missing values, encoding
+                                categoricals, scaling features. Learn web scraping basics with BeautifulSoup/Scrapy.
+                                Understand SQL for data querying. Study feature engineering — creating meaningful
+                                features is a superpower that beats a better model almost every time.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Daily workflow</span>
+                                <span class="tag">EDA</span>
+                                <span class="tag">Data cleaning</span>
+                                <span class="tag">Feature engineering</span>
+                                <span class="tag">SQL for data</span>
+                                <span class="tag">Web scraping</span>
+                                <span class="tag">Missing values</span>
+                                <span class="tag">Normalization</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=xi0vhXFPegw" target="_blank">EDA with Python – Ken Jee</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=r-uOLxNrNk8" target="_blank">Feature Engineering – Krish Naik</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=XRBs8oDR5kY" target="_blank">Data Cleaning with Pandas – Keith Galli</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=XItFqbUVWZQ" target="_blank">Web Scraping Python – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:16px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">🧮</div>
+                        <div class="tip-text"><strong>Don't skip the math.</strong> Every ML engineer who avoids linear
+                            algebra hits a wall when debugging models. You don't need to be a mathematician — but you
+                            must understand why gradient descent moves in the direction of the negative gradient. Spend
+                            2 weeks on 3Blue1Brown before touching sklearn.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — PHASES 4–5 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">AI / ML Engineer Roadmap · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Core ML Skills</div>
+                <h2 class="section-title">Classical ML & Deep Learning Foundations</h2>
+
+                <div class="roadmap">
+
+                    <!-- PHASE 4 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 8–18</div>
+                            <div class="step-phase">Phase 04 · Classical Machine Learning</div>
+                            <div class="step-heading">Scikit-Learn & Core ML Algorithms</div>
+                            <div class="step-desc">Before neural networks, master classical ML. These algorithms are
+                                faster, more interpretable, and often the right tool. Learn supervised learning:
+                                <strong>Linear &amp; Logistic Regression</strong>, <strong>Decision Trees</strong>,
+                                <strong>Random Forests</strong>, <strong>SVMs</strong>, <strong>KNN</strong>,
+                                <strong>Gradient Boosting (XGBoost / LightGBM)</strong>. Learn unsupervised:
+                                K-Means clustering, PCA for dimensionality reduction. Master the full ML pipeline:
+                                train/test split, cross-validation, hyperparameter tuning, bias-variance tradeoff, and
+                                evaluation metrics (AUC, F1, RMSE, precision/recall).</div>
+                            <div class="step-tags">
+                                <span class="tag red">Core ML</span>
+                                <span class="tag">scikit-learn</span>
+                                <span class="tag">XGBoost / LightGBM</span>
+                                <span class="tag">Cross-validation</span>
+                                <span class="tag">Hyperparameter tuning</span>
+                                <span class="tag">PCA</span>
+                                <span class="tag">Model evaluation</span>
+                                <span class="tag">Pipelines</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=pqNCD_5r0IU" target="_blank">ML with scikit-learn – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=GwIo3gDZCVQ" target="_blank">StatQuest ML Playlist – StatQuest</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=OtD8wVaFm6E" target="_blank">XGBoost Explained – StatQuest</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=Gv9_4yMHFhI" target="_blank">ML Fundamentals – Sentdex</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=ysEN5RaKOlA" target="_blank">ML Pipeline Best Practices – Krish Naik</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 5 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 16–28</div>
+                            <div class="step-phase">Phase 05 · Deep Learning</div>
+                            <div class="step-heading">Neural Networks, PyTorch & the DL Stack</div>
+                            <div class="step-desc">Deep learning is the engine behind modern AI. Start by understanding
+                                neural networks from scratch: perceptrons, activation functions, forward and backward
+                                propagation, loss functions, and optimizers (SGD, Adam). Then learn
+                                <strong>PyTorch</strong> — tensors, autograd, nn.Module, DataLoaders, training loops.
+                                Study core architectures: <strong>CNNs</strong> for vision,
+                                <strong>RNNs/LSTMs</strong> for sequences, <strong>Transformers</strong> for NLP. Use
+                                <strong>Hugging Face</strong> for pre-trained models. Experiment on Kaggle with GPUs.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Modern AI</span>
+                                <span class="tag">PyTorch</span>
+                                <span class="tag">Neural Networks</span>
+                                <span class="tag">CNNs</span>
+                                <span class="tag">RNNs / LSTMs</span>
+                                <span class="tag">Transformers</span>
+                                <span class="tag">Hugging Face</span>
+                                <span class="tag">Transfer learning</span>
+                                <span class="tag">GPU training</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=V_xro1bcAuA" target="_blank">PyTorch Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank">Neural Networks – 3Blue1Brown</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=ySEx_Bqxvvo" target="_blank">CNN Explained – StatQuest</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=4Bdc55j80l8" target="_blank">Transformers Explained – Andrej Karpathy</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=zduSFxRajkE" target="_blank">Hugging Face NLP – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🔥</div>
+                    <div class="tip-text"><strong>Use PyTorch, not TensorFlow.</strong> In 2026, PyTorch dominates ML
+                        research and is rapidly taking industry share. Hugging Face, most papers, and cutting-edge labs
+                        use PyTorch. Don't split your time — go deep on PyTorch and you'll be fluent in the
+                        language researchers and engineers actually speak.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">ML Specialization Tracks — Pick Your Path</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Track</th>
+                                <th>Focus Area</th>
+                                <th>Key Tools</th>
+                                <th>Companies Hiring</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>NLP / LLMs</td>
+                                <td>Language models, chatbots, RAG, fine-tuning</td>
+                                <td>Hugging Face, LangChain, vLLM</td>
+                                <td>OpenAI, Anthropic, Cohere, startups</td>
+                            </tr>
+                            <tr>
+                                <td>Computer Vision</td>
+                                <td>Image classification, detection, segmentation</td>
+                                <td>YOLO, OpenCV, torchvision</td>
+                                <td>Tesla, NVIDIA, medical AI</td>
+                            </tr>
+                            <tr>
+                                <td>MLOps / Platform</td>
+                                <td>Model deployment, pipelines, monitoring</td>
+                                <td>MLflow, Kubeflow, BentoML</td>
+                                <td>Every enterprise AI team</td>
+                            </tr>
+                            <tr>
+                                <td>Data Science</td>
+                                <td>Analytics, forecasting, A/B testing, BI</td>
+                                <td>sklearn, statsmodels, Tableau</td>
+                                <td>Fintech, e-commerce, healthcare</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — PHASES 6–7 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">AI / ML Engineer Roadmap · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">LLMs & Production AI</div>
+                <h2 class="section-title">Large Language Models & MLOps</h2>
+
+                <div class="roadmap">
+
+                    <!-- PHASE 6 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 24–34</div>
+                            <div class="step-phase">Phase 06 · LLMs & Generative AI</div>
+                            <div class="step-heading">LLMs, RAG, Fine-tuning & Prompt Engineering</div>
+                            <div class="step-desc">This is the hottest and most in-demand skill in 2026. Understand how
+                                <strong>LLMs work</strong>: attention mechanisms, tokenization, temperature, sampling
+                                strategies. Learn <strong>Prompt Engineering</strong>: few-shot, chain-of-thought,
+                                system prompts. Build <strong>RAG (Retrieval-Augmented Generation)</strong> pipelines
+                                with vector databases (Pinecone, ChromaDB, Weaviate). Learn
+                                <strong>fine-tuning</strong> with LoRA/QLoRA on open-source models (Llama, Mistral,
+                                Phi). Use <strong>LangChain / LlamaIndex</strong> for building AI apps. Deploy LLM
+                                APIs with vLLM or Ollama.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Most in-demand 2026</span>
+                                <span class="tag">LLMs (Llama / Mistral)</span>
+                                <span class="tag">RAG pipelines</span>
+                                <span class="tag">Vector DBs</span>
+                                <span class="tag">Fine-tuning (LoRA)</span>
+                                <span class="tag">LangChain</span>
+                                <span class="tag">Prompt engineering</span>
+                                <span class="tag">Ollama / vLLM</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=T-D1OfcDW1M" target="_blank">LLMs from Scratch – Andrej Karpathy</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=sVcwVQRHIc8" target="_blank">RAG Tutorial – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=eTieetk2dSw" target="_blank">Fine-tuning LLMs – Hugging Face</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=aywZrzNaKjs" target="_blank">LangChain Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=Yhtjd7yGGGA" target="_blank">Vector Databases Explained – Fireship</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 7 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 28–38</div>
+                            <div class="step-phase">Phase 07 · MLOps & Model Deployment</div>
+                            <div class="step-heading">Ship ML to Production — The Full MLOps Stack</div>
+                            <div class="step-desc">Most ML engineers build models that never reach users. MLOps closes
+                                that gap. Learn <strong>experiment tracking</strong> with MLflow or Weights &amp; Biases
+                                — log metrics, compare runs, version models. Build <strong>ML pipelines</strong> with
+                                Prefect or Airflow. Deploy models as REST APIs using <strong>FastAPI + Docker</strong>.
+                                Learn <strong>model monitoring</strong>: data drift detection, performance degradation,
+                                Evidently AI. Understand <strong>CI/CD for ML</strong> with GitHub Actions. Study cloud
+                                ML services: AWS SageMaker, GCP Vertex AI, Azure ML.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Production-grade</span>
+                                <span class="tag">MLflow / W&amp;B</span>
+                                <span class="tag">FastAPI deployment</span>
+                                <span class="tag">Docker for ML</span>
+                                <span class="tag">Data drift</span>
+                                <span class="tag">Airflow / Prefect</span>
+                                <span class="tag">SageMaker</span>
+                                <span class="tag">CI/CD for ML</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=9BgIDqAzfuA" target="_blank">MLflow Tutorial – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=ENrzD9HAZK4" target="_blank">FastAPI for ML – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=3c-iBn73dDE" target="_blank">Docker Full Course – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=LdNWOiSkMVE" target="_blank">MLOps Full Course – DataTalks.Club</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=k1RI5locZE4" target="_blank">AWS SageMaker – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🚀</div>
+                    <div class="tip-text"><strong>Build an end-to-end project, not just a notebook.</strong> Training a
+                        model in a Jupyter notebook is not MLOps. Deploy it: wrap it in a FastAPI, containerize it with
+                        Docker, log it with MLflow, monitor it. Employers hire people who've shipped ML, not people who
+                        have Kaggle medals. A single deployed project beats 10 notebooks.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">Cloud ML Platforms Comparison</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Best For</th>
+                                <th>Free Tier</th>
+                                <th>When to Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AWS SageMaker</td>
+                                <td>End-to-end ML: train, tune, deploy, monitor</td>
+                                <td>Limited free tier</td>
+                                <td>Enterprise, job skill building</td>
+                            </tr>
+                            <tr>
+                                <td>Google Colab</td>
+                                <td>Free GPU/TPU for experiments &amp; learning</td>
+                                <td>Yes (generous)</td>
+                                <td>Prototyping, early learning</td>
+                            </tr>
+                            <tr>
+                                <td>Hugging Face Spaces</td>
+                                <td>Model demos, Gradio/Streamlit apps</td>
+                                <td>Yes</td>
+                                <td>Portfolio demos, showcasing work</td>
+                            </tr>
+                            <tr>
+                                <td>Modal / RunPod</td>
+                                <td>On-demand GPU for fine-tuning, inference</td>
+                                <td>Credit-based</td>
+                                <td>LLM training, custom model serving</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — PHASES 8–9 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">AI / ML Engineer Roadmap · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Specialization & Advanced AI</div>
+                <h2 class="section-title">Computer Vision, NLP & AI Agents</h2>
+
+                <div class="roadmap">
+
+                    <!-- PHASE 8 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Month 7–10 (Specialization)</div>
+                            <div class="step-phase">Phase 08 · Specialization Track</div>
+                            <div class="step-heading">Go Deep in One Domain — Vision, NLP, or RL</div>
+                            <div class="step-desc">After core ML, pick your specialization. <strong>Computer Vision</strong>:
+                                learn CNNs deeply, object detection (YOLO, DETR), image segmentation (SAM), OpenCV for
+                                image processing, and vision transformers (ViT). <strong>NLP / LLMs</strong>: go deeper
+                                on BERT, GPT architectures, tokenizers, RLHF, and evaluation metrics (BLEU, ROUGE,
+                                perplexity). <strong>Reinforcement Learning</strong>: study Markov decision processes,
+                                Q-learning, policy gradients, and OpenAI Gym. Pick one — employers hire specialists,
+                                not generalists at the senior level.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Specialization</span>
+                                <span class="tag">YOLO / DETR</span>
+                                <span class="tag">OpenCV</span>
+                                <span class="tag">Vision Transformers</span>
+                                <span class="tag">BERT / GPT internals</span>
+                                <span class="tag">RLHF</span>
+                                <span class="tag">Reinforcement Learning</span>
+                                <span class="tag">OpenAI Gym</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=Z78zbnLlPUA" target="_blank">YOLO Object Detection – Ultralytics</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=DFpAmDL5I_o" target="_blank">OpenCV Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=1pykn-19XCY" target="_blank">BERT Explained – CodeEmporium</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=Mut_u40Sqz4" target="_blank">Reinforcement Learning – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=bD6V3rcr_54" target="_blank">Vision Transformers – Yannic Kilcher</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 9 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Month 9–12 (Cutting Edge)</div>
+                            <div class="step-phase">Phase 09 · AI Agents & Advanced Systems</div>
+                            <div class="step-heading">Agentic AI, Multi-modal Models & Responsible AI</div>
+                            <div class="step-desc">In 2026, AI Agents are the frontier. Learn to build
+                                <strong>autonomous agents</strong>: tool-using LLMs, ReAct framework, memory systems,
+                                and multi-agent orchestration with frameworks like CrewAI, AutoGen, and LangGraph.
+                                Understand <strong>multi-modal models</strong>: vision-language (LLaVA, GPT-4V),
+                                text-to-image (Stable Diffusion, DALL-E), and speech models (Whisper). Study
+                                <strong>Responsible AI</strong>: bias detection, model fairness, explainability (SHAP,
+                                LIME), and AI safety fundamentals. These are the skills that unlock senior and
+                                research-adjacent roles.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Frontier skills</span>
+                                <span class="tag">AI Agents</span>
+                                <span class="tag">LangGraph / CrewAI</span>
+                                <span class="tag">Multi-modal AI</span>
+                                <span class="tag">Stable Diffusion</span>
+                                <span class="tag">Whisper / TTS</span>
+                                <span class="tag">SHAP / LIME</span>
+                                <span class="tag">AI Safety basics</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=AxnL-cAM2Q8" target="_blank">AI Agents Tutorial – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=pbAd8O1Lvm4" target="_blank">Stable Diffusion Explained – Andrej Karpathy</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=NFgEgqua-fg" target="_blank">SHAP Explainability – CodeEmporium</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=q9MBvgf-QZk" target="_blank">Whisper ASR – Hugging Face</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Essential ML Architecture Patterns</div>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🔁 Transfer Learning</div>
+                        <div class="resource-card-desc">Use pre-trained models (BERT, ResNet, ViT) and fine-tune on
+                            your domain data. Gets state-of-the-art results with 1% of the training data and compute
+                            cost. The most practical ML technique available.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=yofjFQddwHE" target="_blank">Transfer Learning – StatQuest</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📦 RAG Architecture</div>
+                        <div class="resource-card-desc">Retrieval-Augmented Generation grounds LLMs in external
+                            knowledge. Eliminates hallucinations, enables enterprise document QA, and keeps models
+                            current without expensive retraining. The #1 LLM pattern in production.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=sVcwVQRHIc8" target="_blank">RAG Deep Dive – freeCodeCamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🗜️ Quantization & Pruning</div>
+                        <div class="resource-card-desc">Run large models on smaller hardware. 4-bit and 8-bit
+                            quantization makes 70B models run on consumer GPUs. Essential for production cost
+                            optimization and edge deployment.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=v1oHf1KV6kM" target="_blank">Model Quantization – Hugging Face</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🧩 Ensemble Methods</div>
+                        <div class="resource-card-desc">Combine multiple models to beat any single model. Bagging,
+                            boosting, and stacking. XGBoost and LightGBM are ensemble methods. Dominated Kaggle for a
+                            decade — still relevant for tabular data.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=OtD8wVaFm6E" target="_blank">Ensemble Methods – StatQuest</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — PHASE 10 + SKILL MAP ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">AI / ML Engineer Roadmap · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Endgame</div>
+                <h2 class="section-title">Portfolio, Kaggle & Getting Hired</h2>
+
+                <div class="roadmap">
+                    <!-- PHASE 10 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Month 10–16 (Interview Prep)</div>
+                            <div class="step-phase">Phase 10 · Interview Ready</div>
+                            <div class="step-heading">Kaggle + Projects + ML Interviews</div>
+                            <div class="step-desc">ML interviews test three things: <strong>ML theory</strong>
+                                (explain gradient descent, overfitting, regularization — no hand-waving),
+                                <strong>coding</strong> (implement algorithms from scratch in Python, NumPy
+                                implementations of backprop), and <strong>case studies</strong> (design an ML system:
+                                recommendation engine, fraud detection, content moderation). Build 3 end-to-end
+                                projects: a deployed ML API, a fine-tuned LLM app, and one Kaggle competition (top
+                                10%). Write about what you build on Medium or a blog. Host everything on GitHub with
+                                live demos on Hugging Face Spaces.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Job-ready</span>
+                                <span class="tag">Kaggle competitions</span>
+                                <span class="tag">ML theory interviews</span>
+                                <span class="tag">Deployed projects</span>
+                                <span class="tag">HF Spaces demos</span>
+                                <span class="tag">GitHub portfolio</span>
+                                <span class="tag">Technical writing</span>
+                                <span class="tag">ML system design</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=eTieetk2dSw" target="_blank">ML Interview Prep – Chip Huyen Talk</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=HqN3fHNUKUQ" target="_blank">Kaggle Getting Started – Ken Jee</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=nKW8Ndu7Mjw" target="_blank">ML System Design – Educative</a>
+                                <a class="yt-link" href="https://www.youtube.com/watch?v=UZDiGooFs54" target="_blank">ML Coding Interviews – Patrick Loeber</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Skill Map</div>
+                <div style="font-size:16px; font-weight:800; color:var(--dark); margin-bottom:12px; letter-spacing:-0.01em;">
+                    What to Learn & When — Full Timeline</div>
+
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Month 1–4</div>
+                        <div class="skill-item">Linear algebra &amp; calculus</div>
+                        <div class="skill-item">Python, NumPy, Pandas</div>
+                        <div class="skill-item">Data cleaning &amp; EDA</div>
+                        <div class="skill-item">SQL for data querying</div>
+                        <div class="skill-item">Classical ML (sklearn)</div>
+                        <div class="skill-item">Model evaluation metrics</div>
+                        <div class="skill-item">Jupyter &amp; visualization</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Month 5–9</div>
+                        <div class="skill-item">PyTorch &amp; neural networks</div>
+                        <div class="skill-item">CNNs, RNNs, Transformers</div>
+                        <div class="skill-item">Hugging Face ecosystem</div>
+                        <div class="skill-item">LLMs, RAG, fine-tuning</div>
+                        <div class="skill-item">MLflow / W&amp;B tracking</div>
+                        <div class="skill-item">Docker &amp; FastAPI deploy</div>
+                        <div class="skill-item">Cloud ML (GCP/AWS)</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Month 10–16</div>
+                        <div class="skill-item">AI Agents (LangGraph)</div>
+                        <div class="skill-item">Specialization (CV/NLP/RL)</div>
+                        <div class="skill-item">Model monitoring &amp; drift</div>
+                        <div class="skill-item">Quantization &amp; optimization</div>
+                        <div class="skill-item">Kaggle competitions</div>
+                        <div class="skill-item">ML system design</div>
+                        <div class="skill-item">Published demos &amp; blog</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Daily Routine</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:10px;">The Boring ML
+                    Routine That Works</div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Read one ML paper abstract on arXiv (Papers With Code helps)
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> 1 hour of hands-on coding — notebook or project, not passive watching
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Submit at least one Kaggle kernel or push one GitHub commit
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Write down one concept you don't fully understand — research it tomorrow
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Share one insight, result, or project update on LinkedIn or Twitter
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — RESOURCES + CTA ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">AI / ML Engineer Roadmap · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free YouTube Channels for AI/ML</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 3Blue1Brown</div>
+                        <div class="resource-card-desc">Grant Sanderson's visual math and ML series. The single best
+                            resource for building deep intuition for neural networks, linear algebra, and calculus.
+                            Watch before anything else.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@3blue1brown" target="_blank">@3blue1brown</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Andrej Karpathy</div>
+                        <div class="resource-card-desc">Former Tesla AI Director and OpenAI co-founder. His "Neural
+                            Networks: Zero to Hero" series is the best DL curriculum online. Builds GPT from scratch
+                            in pure Python. Watch everything he posts.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@AndrejKarpathy" target="_blank">@AndrejKarpathy</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 StatQuest with Josh Starmer</div>
+                        <div class="resource-card-desc">The clearest explanations of ML algorithms in existence. Each
+                            algorithm broken down visually and mathematically with zero assumed knowledge. Essential for
+                            understanding the "why" behind every model.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@statquest" target="_blank">@statquest</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Yannic Kilcher</div>
+                        <div class="resource-card-desc">Paper walkthroughs of the most important ML research — GPT-4,
+                            AlphaFold, CLIP, Stable Diffusion, and more. The best channel for understanding what's
+                            actually happening at the research frontier.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@YannicKilcher" target="_blank">@YannicKilcher</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 freeCodeCamp</div>
+                        <div class="resource-card-desc">Full-length courses on PyTorch, TensorFlow, scikit-learn, NLP,
+                            computer vision, and MLOps. Completely free. Covers everything from beginner to
+                            production-grade ML deployment.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@freecodecamp" target="_blank">@freecodecamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Krish Naik</div>
+                        <div class="resource-card-desc">India's most practical ML educator. Deep dives on end-to-end
+                            projects, MLOps, Hugging Face, LangChain, and deployment. Best for bridging the gap between
+                            theory and real-world implementation for ML engineers.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@krishnaik06" target="_blank">@krishnaik06</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">DSA Yatra — Daily practice</span>
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">YouFocus — Distraction-free YT</span>
+                    <span class="tag">Interview Prep — Question banks</span>
+                    <span class="tag">Community — Peer learning</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Your AI/ML Journey Starts Now 🤖</div>
+                    <div class="cta-sub">The models shaping the future were built by people who started exactly where
+                        you are.<br>Consistency over 12 months beats raw talent every single time. Start today.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→
+                        theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                            alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+                            alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png"
+                            alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">07 / 07</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

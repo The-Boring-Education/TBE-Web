@@ -47,6 +47,10 @@ export const PRODUCT_REGISTRY: Partial<Record<ProductType, ProductConfig>> = {
     type: "WEBINAR",
     accessType: "ONE_TIME",
   },
+  GENERAL: {
+    type: "GENERAL",
+    accessType: "ONE_TIME",
+  },
 };
 
 const getProductConfig = (productType: ProductType): ProductConfig => {

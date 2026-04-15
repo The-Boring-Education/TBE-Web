@@ -18,6 +18,7 @@ const Layout = ({ children }: LayoutProps) => {
   const isFullScreen = router.pathname === "/sheets";
   const isRevisions = router.pathname === "/revisions";
   const isTopics = router.pathname === "/topics";
+  const isPricing = router.pathname === "/pricing";
   const isLandingPage = router.pathname === "/";
   const dashboardRoute =
     router.pathname === "/" || router.pathname === "/login"
@@ -35,7 +36,8 @@ const Layout = ({ children }: LayoutProps) => {
       <main
         className={cn(
           "min-h-screen pt-[72px]",
-          (isDashboard || isRevisions || isTopics) && "bg-[#0A0A0A]",
+          (isDashboard || isRevisions || isTopics || isPricing) &&
+            "bg-[#0A0A0A]",
           isLandingPage && "bg-[#040505]",
         )}
       >
