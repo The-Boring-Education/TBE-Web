@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ResourceArticle } from "@/components/ResourceArticle";
+import { ResourceView } from "@/components/ResourceView";
 import {
   listResourceSlugs,
   readResourceHtml,
@@ -83,22 +82,12 @@ export default async function ResourcePage(props: Props) {
   };
 
   return (
-    <div className="mx-auto max-w-4xl px-4 pb-8 pt-4">
+    <div className="mx-auto w-full px-4 pb-8 pt-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <p className="mb-6 text-right text-sm">
-        <Link
-          href={`/read/${slug}`}
-          className="text-[var(--shell-muted)] underline-offset-4 hover:text-white hover:underline"
-        >
-          Reader mode
-        </Link>
-        <span className="text-zinc-600"> · </span>
-        <span className="text-zinc-500">Content only, no chrome</span>
-      </p>
-      <ResourceArticle
+      <ResourceView
         meta={meta}
         pageUrl={url}
         styleTags={styleTags}

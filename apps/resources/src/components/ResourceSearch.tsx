@@ -51,16 +51,6 @@ export function ResourceSearch({ items }: { items: ResourceIndexEntry[] }) {
                   </p>
                 )}
               </Link>
-              <p className="border-t border-[var(--shell-border)] px-4 py-2 text-xs text-zinc-500">
-                <Link
-                  href={`/read/${it.slug}`}
-                  className="text-[var(--shell-accent)] hover:underline"
-                >
-                  Reader mode
-                </Link>
-                <span className="text-zinc-600"> — </span>
-                <span>Content only</span>
-              </p>
             </div>
           </li>
         ))}
