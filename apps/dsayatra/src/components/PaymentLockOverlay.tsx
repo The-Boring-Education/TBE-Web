@@ -17,12 +17,12 @@ export const PaymentLockOverlay = ({
   isLoading,
 }: PaymentLockOverlayProps) => {
   const router = useRouter();
-  const subscribeRef = useRef<HTMLButtonElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Focus trap: focus the subscribe button when overlay appears
+  // Focus the dialog container when overlay appears so screen-readers announce it
   useEffect(() => {
     if (isLocked && !isLoading) {
-      subscribeRef.current?.focus();
+      containerRef.current?.focus();
     }
   }, [isLocked, isLoading]);
 
@@ -49,6 +49,8 @@ export const PaymentLockOverlay = ({
         aria-modal="true"
         aria-labelledby="lock-overlay-title"
         aria-describedby="lock-overlay-desc"
+        ref={containerRef}
+        tabIndex={-1}
         style={{
           background: "rgba(0,0,0,0.80)",
           backdropFilter: "blur(16px)",
@@ -108,7 +110,6 @@ export const PaymentLockOverlay = ({
           </div>
 
           <Button
-            ref={subscribeRef}
             text="Subscribe Now"
             variant="PRIMARY"
             onClick={handleSubscribe}

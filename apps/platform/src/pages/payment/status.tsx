@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-import successAnimation from '../../public/animations/payment-success.json';
+import successAnimation from '../../../public/animations/payment-success.json';
 
 /** Relative in-app path only — blocks protocol-relative URLs (`//host/...`) and backslashes. */
 const sanitizeRelativeNextPath = (
