@@ -1,5 +1,7 @@
 import type { TailorYourJourneyProps } from "@tbe/interface";
 
+import { TailorJourneyVisual } from "../../dsayatra/sections/DsaYatraSpotlightVisuals";
+
 const TailorYourJourney = ({
   heading,
   highlightText,
@@ -48,11 +50,7 @@ const TailorYourJourney = ({
       </div>
       <div className="flex w-full flex-1 justify-center lg:justify-end">
         {imageVariant === "placeholder" ? (
-          <div
-            role="img"
-            aria-label={imageAlt}
-            className="h-[min(22rem,55vw)] w-full max-w-lg rounded-2xl border border-gray-800 bg-black shadow-xl"
-          />
+          <TailorJourneyVisual />
         ) : (
           <img
             src={imageSrc}

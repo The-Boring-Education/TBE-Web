@@ -1,13 +1,39 @@
 import type { DsaYatraFeatureSpotlightItem } from "@tbe/types";
 
 import Section from "../../layout/Section";
+import {
+  ProgressVisual,
+  RevisionsVisual,
+  RoadmapVisual,
+  SheetsVisual,
+} from "./DsaYatraSpotlightVisuals";
 
 export type DsaYatraFeatureSpotlightsProps = {
   items: DsaYatraFeatureSpotlightItem[];
 };
 
 /**
- * Alternating narrative rows with black image placeholders for future screenshots.
+ * Maps an item's eyebrow label to the correct interactive visual.
+ * Falls back to a dark placeholder if no match is found.
+ */
+function SpotlightVisual({ eyebrow }: { eyebrow?: string }) {
+  const key = (eyebrow ?? "").toLowerCase();
+  if (key.includes("roadmap")) return <RoadmapVisual />;
+  if (key.includes("sheet")) return <SheetsVisual />;
+  if (key.includes("revision")) return <RevisionsVisual />;
+  if (key.includes("progress")) return <ProgressVisual />;
+  // Fallback dark placeholder
+  return (
+    <div
+      role="img"
+      aria-label="Feature visual placeholder"
+      className="aspect-[4/3] w-full max-w-lg rounded-2xl border border-[#333333] bg-black"
+    />
+  );
+}
+
+/**
+ * Alternating narrative rows — each with a unique interactive visual.
  */
 export function DsaYatraFeatureSpotlights({
   items,
@@ -62,11 +88,7 @@ export function DsaYatraFeatureSpotlights({
               </div>
 
               <div className="flex w-full flex-1 justify-center lg:max-w-lg lg:justify-end">
-                <div
-                  role="img"
-                  aria-label={`${item.title} — image placeholder`}
-                  className="aspect-[4/3] w-full max-w-lg rounded-2xl border border-[#333333] bg-black"
-                />
+                <SpotlightVisual eyebrow={item.eyebrow} />
               </div>
             </div>
           ))}
