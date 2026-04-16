@@ -1,6 +1,7 @@
+import { Button } from "@tbe/components/ui";
+import { cn } from "@tbe/utils";
 import React, { useState } from "react";
 
-import { Button } from "../ui/button";
 import DomainSection from "./DomainSection";
 import DSASection from "./DSASection";
 import LanguageSection from "./LanguageSection";
@@ -30,34 +31,39 @@ const TabSection = () => {
   ];
 
   return (
-    <section className="px-4 py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <section className="px-4 py-20 bg-lightBG">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-contentLight">
             Choose Your Learning Path
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-greyDark max-w-2xl mx-auto">
             Select any option below to start your personalized tech journey
           </p>
         </div>
 
         {/* Tab Buttons */}
         <div className="flex flex-col md:flex-row gap-4 justify-center mb-12 max-w-4xl mx-auto">
-          {tabs.map((tab) => (
-            <Button
-              key={tab.id}
-              onClick={() => setActiveTab(activeTab === tab.id ? null : tab.id)}
-              variant={activeTab === tab.id ? "default" : "outline"}
-              className={`flex-1 py-6 px-6 min-h-[80px] flex flex-col items-start justify-center transition-all duration-300 ${
-                activeTab === tab.id
-                  ? "bg-red-600 hover:bg-red-700 text-white shadow-lg"
-                  : "border-2 border-gray-300 text-gray-700 hover:border-red-600 hover:text-red-600 bg-white"
-              }`}
-            >
-              <span className="font-bold text-base mb-1">{tab.label}</span>
-              <span className="text-xs opacity-90">{tab.description}</span>
-            </Button>
-          ))}
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <Button
+                key={tab.id}
+                onClick={() => setActiveTab(isActive ? null : tab.id)}
+                variant={isActive ? "default" : "outline"}
+                size="lg"
+                className={cn(
+                  "flex-1 py-6 px-6 min-h-[80px] h-auto flex flex-col items-start justify-center transition-all duration-300",
+                  isActive
+                    ? "shadow-md"
+                    : "border-2 border-border bg-card hover:border-primary hover:text-primary",
+                )}
+              >
+                <span className="font-bold text-base mb-1">{tab.label}</span>
+                <span className="text-xs opacity-90">{tab.description}</span>
+              </Button>
+            );
+          })}
         </div>
 
         {/* Tab Content with smooth transitions */}

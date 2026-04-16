@@ -12,6 +12,9 @@ test.describe("DSA Yatra smoke flow", () => {
         name: "Stop Grinding Random LeetCode Questions",
       }),
     ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Practice that fits your interviews" }),
+    ).toBeVisible();
     await expect(page.getByRole("link", { name: "Get Started" })).toBeVisible();
   });
 

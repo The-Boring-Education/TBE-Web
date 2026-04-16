@@ -1,4 +1,14 @@
 import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Checkbox,
+  Progress,
+} from "@tbe/components/ui";
+import {
   ArrowLeft,
   ArrowRight,
   CheckCircle,
@@ -9,11 +19,6 @@ import {
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Progress } from "@/components/ui/progress";
 import { getAudienceBadgeColor } from "@/lib/utils";
 import type { UseResumeBuilderReturn } from "@/types/builder";
 

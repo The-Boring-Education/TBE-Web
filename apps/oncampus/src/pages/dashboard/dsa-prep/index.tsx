@@ -2,6 +2,7 @@ import { DsaPrepWorkspace, LoadingSpinner, Text } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
+  useDsaPrepUrlSync,
   useDsaQuestionsForTopic,
   useDsaTopicSummaries,
   useUser,
@@ -88,25 +89,21 @@ const DSAPrepPage = () => {
   const pageLoading =
     userLoading || topicsLoading || (!!selectedTopic && topicQuestionsLoading);
 
+  const { handleTopicClick, handleQuestionClick, handleBackToTopics } =
+    useDsaPrepUrlSync({
+      router,
+      selectedTopic,
+      setSelectedTopic,
+      setSelectedQuestion,
+      topicQuestions: questions,
+      topicQuestionsLoading: !!selectedTopic && topicQuestionsLoading,
+    });
+
   useEffect(() => {
     if (!userLoading && !isAuth) {
       router.push("/login");
     }
   }, [userLoading, isAuth, router]);
-
-  const handleQuestionClick = (question: DsaQuestion) => {
-    setSelectedQuestion(question);
-  };
-
-  const handleTopicClick = (topic: string) => {
-    setSelectedTopic(topic);
-    setSelectedQuestion(null);
-  };
-
-  const handleBackToTopics = () => {
-    setSelectedTopic(null);
-    setSelectedQuestion(null);
-  };
 
   if (pageLoading || !prefsLoaded) {
     return (

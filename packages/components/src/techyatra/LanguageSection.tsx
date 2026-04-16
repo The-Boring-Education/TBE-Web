@@ -1,7 +1,11 @@
+import {
+  Badge,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@tbe/components/ui";
 import React, { useState } from "react";
-
-import { Badge } from "../ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const LanguageSection = () => {
   const [expandedLanguage, setExpandedLanguage] = useState<string | null>(null);

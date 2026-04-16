@@ -14,7 +14,6 @@ const nextConfig = {
     ],
   },
   transpilePackages: [
-    "@tbe/auth",
     "@tbe/components",
     "@tbe/hooks",
     "@tbe/constants",
