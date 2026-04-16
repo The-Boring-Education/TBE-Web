@@ -1,13 +1,39 @@
 import type { DsaYatraFeatureSpotlightItem } from "@tbe/types";
 
 import Section from "../../layout/Section";
+import {
+  ProgressVisual,
+  RevisionsVisual,
+  RoadmapVisual,
+  SheetsVisual,
+} from "./DsaYatraSpotlightVisuals";
 
 export type DsaYatraFeatureSpotlightsProps = {
   items: DsaYatraFeatureSpotlightItem[];
 };
 
 /**
- * Alternating narrative rows with black image placeholders for future screenshots.
+ * Maps an item's eyebrow label to the correct interactive visual.
+ * Falls back to a dark placeholder if no match is found.
+ */
+function SpotlightVisual({ eyebrow }: { eyebrow?: string }) {
+  const key = (eyebrow ?? "").toLowerCase();
+  if (key.includes("roadmap")) return <RoadmapVisual />;
+  if (key.includes("sheet")) return <SheetsVisual />;
+  if (key.includes("revision")) return <RevisionsVisual />;
+  if (key.includes("progress")) return <ProgressVisual />;
+  // Fallback dark placeholder
+  return (
+    <div
+      role="img"
+      aria-label="Feature visual placeholder"
+      className="aspect-[4/3] w-full max-w-lg rounded-2xl border border-[#333333] bg-black"
+    />
+  );
+}
+
+/**
+ * Alternating narrative rows — each with a unique interactive visual.
  */
 export function DsaYatraFeatureSpotlights({
   items,
@@ -18,7 +44,7 @@ export function DsaYatraFeatureSpotlights({
       className="bg-[#0A0A0A] px-4 py-10 md:px-8 md:py-14"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="mb-14 text-center">
+        <div className="mb-14 text-center px-4">
           <h2 className="text-3xl font-bold tracking-tight text-contentDark sm:text-4xl">
             Practice that fits your interviews
           </h2>
@@ -36,19 +62,17 @@ export function DsaYatraFeatureSpotlights({
                 item.imageSide === "left" ? "lg:flex-row-reverse" : ""
               }`}
             >
-              <div className="min-w-0 flex-1 space-y-5">
+              <div className="min-w-0 flex-1 space-y-5 text-center lg:text-left">
                 {item.eyebrow ? (
                   <p className="text-sm font-semibold uppercase tracking-wide text-primary">
                     {item.eyebrow}
                   </p>
                 ) : null}
-                <h3 className="text-left text-2xl font-bold tracking-tight text-contentDark sm:text-3xl">
+                <h3 className="text-2xl font-bold tracking-tight text-contentDark sm:text-3xl">
                   {item.title}
                 </h3>
-                <p className="text-left text-lg text-grey">
-                  {item.description}
-                </p>
-                <ul className="space-y-3 text-left text-contentDark">
+                <p className="text-lg text-grey">{item.description}</p>
+                <ul className="inline-flex flex-col space-y-3 text-left text-contentDark">
                   {item.bullets.map((line) => (
                     <li key={line} className="flex gap-3">
                       <span
@@ -62,11 +86,7 @@ export function DsaYatraFeatureSpotlights({
               </div>
 
               <div className="flex w-full flex-1 justify-center lg:max-w-lg lg:justify-end">
-                <div
-                  role="img"
-                  aria-label={`${item.title} — image placeholder`}
-                  className="aspect-[4/3] w-full max-w-lg rounded-2xl border border-[#333333] bg-black"
-                />
+                <SpotlightVisual eyebrow={item.eyebrow} />
               </div>
             </div>
           ))}
