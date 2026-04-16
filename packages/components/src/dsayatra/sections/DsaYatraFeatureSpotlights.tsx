@@ -44,7 +44,7 @@ export function DsaYatraFeatureSpotlights({
       className="bg-[#0A0A0A] px-4 py-10 md:px-8 md:py-14"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="mb-14 text-center">
+        <div className="mb-14 text-center px-4">
           <h2 className="text-3xl font-bold tracking-tight text-contentDark sm:text-4xl">
             Practice that fits your interviews
           </h2>
@@ -62,19 +62,17 @@ export function DsaYatraFeatureSpotlights({
                 item.imageSide === "left" ? "lg:flex-row-reverse" : ""
               }`}
             >
-              <div className="min-w-0 flex-1 space-y-5">
+              <div className="min-w-0 flex-1 space-y-5 text-center lg:text-left">
                 {item.eyebrow ? (
                   <p className="text-sm font-semibold uppercase tracking-wide text-primary">
                     {item.eyebrow}
                   </p>
                 ) : null}
-                <h3 className="text-left text-2xl font-bold tracking-tight text-contentDark sm:text-3xl">
+                <h3 className="text-2xl font-bold tracking-tight text-contentDark sm:text-3xl">
                   {item.title}
                 </h3>
-                <p className="text-left text-lg text-grey">
-                  {item.description}
-                </p>
-                <ul className="space-y-3 text-left text-contentDark">
+                <p className="text-lg text-grey">{item.description}</p>
+                <ul className="inline-flex flex-col space-y-3 text-left text-contentDark">
                   {item.bullets.map((line) => (
                     <li key={line} className="flex gap-3">
                       <span

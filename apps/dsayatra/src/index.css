@@ -39,8 +39,7 @@
 
   html {
     @apply scroll-smooth;
-    background: #ffd5d5;
-    /* Light pink background from prep-yatra */
+    background: #040505;
   }
 }
 
@@ -50,8 +49,8 @@
   }
 
   body {
-    @apply text-contentLight scroll-smooth font-primary;
-    background: #fff0f0;
+    @apply text-contentLight scroll-smooth font-primary overflow-x-hidden;
+    background: #040505;
     min-height: 100vh;
   }
 }

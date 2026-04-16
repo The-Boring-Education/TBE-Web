@@ -23,7 +23,7 @@ export type DsaYatraLandingPageProps = Pick<PageProps, "seoMeta">;
 export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
   return (
     <main
-      className="dark min-h-screen bg-dark text-contentDark
+      className="dark min-h-screen w-full bg-dark text-contentDark
       [&_.bg-white]:!bg-[#19191B]
       [&_.border-gray-200]:!border-[#333333]
       [&_.text-gray-800]:!text-contentDark
