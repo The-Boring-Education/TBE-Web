@@ -630,8 +630,6 @@ export function TailorJourneyVisual() {
     }, 30);
   };
 
-  const logs = ["Analyzing...", "Optimizing...", "Mapping..."];
-
   return (
     <div
       ref={containerRef}
