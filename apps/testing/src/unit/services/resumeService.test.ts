@@ -4,6 +4,7 @@ vi.mock("@tbe/constants", () => ({
   envConfig: {
     UNSKILLED_API_URL: "https://unskilled.test.com",
   },
+  TOPIC_LABELS: {},
 }));
 
 global.fetch = vi.fn();

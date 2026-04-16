@@ -39,9 +39,12 @@ export function buildE2EAccessJwt(): string {
  * Sets cookie JWT + mocks user API for apps using `useProductOnboardingGate`.
  * `productFields` should include the nested flags the gate checks (e.g. `prepYatra.pyOnboarded`).
  *
- * Uses `context.addCookies()` so the auth token is present in HTTP request headers
- * from the very first navigation — required for apps that have server-side middleware
- * (e.g. dsayatra) that checks the cookie before serving protected routes.
+ * Uses BOTH `context.addCookies()` AND `page.addInitScript()` for belt-and-suspenders reliability:
+ * - `context.addCookies()` ensures the auth token is present in HTTP request headers from the very
+ *   first navigation — required for apps with server-side middleware (e.g. dsayatra) that checks
+ *   the cookie before serving protected routes.
+ * - `page.addInitScript()` sets the cookie in `document.cookie` directly, ensuring it is available
+ *   to client-side JavaScript (e.g. `AuthProvider.initializeAuth`) on the very first script execution.
  */
 export async function installOnboardingRedirectMocks(
   page: Page,
@@ -61,6 +64,13 @@ export async function installOnboardingRedirectMocks(
       expires: Math.floor(Date.now() / 1000) + 86400,
     },
   ]);
+
+  await page.addInitScript(
+    ([key, token]) => {
+      document.cookie = `${key}=${token}; path=/; max-age=86400; SameSite=Lax`;
+    },
+    [TBE_ACCESS_COOKIE, accessToken] as [string, string],
+  );
 
   await page.route("**/api/proxy/user**", (route) => {
     if (route.request().method() !== "GET") {
