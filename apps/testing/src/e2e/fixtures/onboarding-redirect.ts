@@ -63,6 +63,16 @@ export async function installOnboardingRedirectMocks(
       secure: false,
       expires: Math.floor(Date.now() / 1000) + 86400,
     },
+    {
+      name: TBE_ACCESS_COOKIE,
+      value: accessToken,
+      domain: "127.0.0.1",
+      path: "/",
+      sameSite: "Lax",
+      httpOnly: false,
+      secure: false,
+      expires: Math.floor(Date.now() / 1000) + 86400,
+    },
   ]);
 
   await page.addInitScript(
@@ -72,24 +82,47 @@ export async function installOnboardingRedirectMocks(
     [TBE_ACCESS_COOKIE, accessToken] as [string, string],
   );
 
-  await page.route("**/api/proxy/user**", (route) => {
-    if (route.request().method() !== "GET") {
-      return route.continue();
-    }
-    return route.fulfill({
+  // The glob `**/api/proxy/user**` also matches `/api/proxy/user/dashboard`, so the profile mock
+  // was served for dashboard requests and broke apps that load `/dashboard` (e.g. dsayatra in CI).
+  await page.route("**/api/proxy/user/dashboard**", (route) =>
+    route.fulfill({
       status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
+      json: {
         status: true,
         data: {
-          _id: ONBOARDING_GATE_E2E_USER.id,
-          email: ONBOARDING_GATE_E2E_USER.email,
-          name: ONBOARDING_GATE_E2E_USER.name,
-          ...productFields,
+          enrolledCourses: [],
+          enrolledProjects: [],
+          enrolledSheets: [],
+          playlists: [],
         },
-      }),
-    });
-  });
+      },
+    }),
+  );
+
+  await page.route(
+    (url) => {
+      const path = url.pathname.replace(/\/$/, "") || "/";
+      return path === "/api/proxy/user";
+    },
+    (route) => {
+      if (route.request().method() !== "GET") {
+        return route.continue();
+      }
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          status: true,
+          data: {
+            _id: ONBOARDING_GATE_E2E_USER.id,
+            email: ONBOARDING_GATE_E2E_USER.email,
+            name: ONBOARDING_GATE_E2E_USER.name,
+            ...productFields,
+          },
+        }),
+      });
+    },
+  );
 
   await page.route("**/api/proxy/notification**", (route) =>
     route.fulfill({ status: 200, json: { status: true, data: [] } }),
@@ -103,21 +136,6 @@ export async function installOnboardingRedirectMocks(
     route.fulfill({
       status: 200,
       json: { status: true, data: { entries: [] } },
-    }),
-  );
-
-  await page.route("**/api/proxy/user/dashboard**", (route) =>
-    route.fulfill({
-      status: 200,
-      json: {
-        status: true,
-        data: {
-          enrolledCourses: [],
-          enrolledProjects: [],
-          enrolledSheets: [],
-          playlists: [],
-        },
-      },
     }),
   );
 
@@ -140,10 +158,18 @@ export async function installOnboardingRedirectMocks(
       body: "<!doctype html><html><body>Onboarding App</body></html>",
     }),
   );
+  await page.route("http://[::1]:5173/**", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: "<!doctype html><html><body>Onboarding App</body></html>",
+    }),
+  );
 }
 
 /** Matches onboarding app dev/preview (see apps/testing/playwright.config.ts `onboarding` port). */
-export const onboardingAppUrlPattern = /http:\/\/(127\.0\.0\.1|localhost):5173/;
+export const onboardingAppUrlPattern =
+  /http:\/\/(\[::1\]|127\.0\.0\.1|localhost):5173/;
 
 /**
  * User payload fragments for `installOnboardingRedirectMocks` when the product gate
