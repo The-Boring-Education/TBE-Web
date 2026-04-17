@@ -72,7 +72,7 @@ SubscriptionSchema.index({ userId: 1, isActive: 1 });
 SubscriptionSchema.index({ expiryDate: 1 });
 
 const Subscription: Model<PrepYatraSubscriptionModel> =
-  models?.Subscription ||
+  models?.[DATABASE_MODELS.SUBSCRIPTIONS] ||
   model<PrepYatraSubscriptionModel>(
     DATABASE_MODELS.SUBSCRIPTIONS,
     SubscriptionSchema,

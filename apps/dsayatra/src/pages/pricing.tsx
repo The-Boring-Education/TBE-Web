@@ -181,7 +181,7 @@ const DsaYatraPricingPage = () => {
           {!loading && !error && plans.length === 0 && (
             <div className="text-center py-16">
               <p className="text-[#808080] text-sm">
-                No plans available right now. Check back soon.
+                No plans available right now. We&apos;re working on it!
               </p>
             </div>
           )}

@@ -12,7 +12,6 @@ const SubscriptionPlanSchema = new Schema<SubscriptionPlanModel>(
     planUuid: {
       type: String,
       trim: true,
-      sparse: true,
     },
     productType: {
       type: String,
