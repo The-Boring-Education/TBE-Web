@@ -120,8 +120,12 @@ export type { DsaPrepWorkspaceProps } from "./containers/Cards/DsaPrepWorkspace"
 export { default as DsaPrepWorkspace } from "./containers/Cards/DsaPrepWorkspace";
 export type { DsaTopicSidebarProps } from "./containers/Cards/DsaTopicSidebar";
 export { default as DsaTopicSidebar } from "./containers/Cards/DsaTopicSidebar";
+export type { DsaUpsellModalProps } from "./containers/Cards/DsaUpsellModal";
+export { default as DsaUpsellModal } from "./containers/Cards/DsaUpsellModal";
 export { default as ExampleCard } from "./containers/Cards/ExampleCard";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
+export type { FreemiumLockBannerProps } from "./containers/Cards/FreemiumLockBanner";
+export { default as FreemiumLockBanner } from "./containers/Cards/FreemiumLockBanner";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
 export { default as Leaderboard } from "./containers/Cards/Leaderboard";
 export { default as LoginCard } from "./containers/Cards/LoginCard";

@@ -1,5 +1,7 @@
 import {
   DsaPrepWorkspace,
+  DsaUpsellModal,
+  FreemiumLockBanner,
   LearningEnvironmentLayout,
   LoadingSpinner,
   SEO,
@@ -18,7 +20,6 @@ import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { getPreFetchProps } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { FaLock } from "react-icons/fa";
 
 import {
   persistAwardedQuestionId,
@@ -60,8 +61,14 @@ const SheetsPageClient = () => {
     [topicRows],
   );
 
+  // DSA Yatra is off-campus prep: pass offCampus=true (×1.5 bucket caps)
+  // and the user-selected timeline so paid users get a study-plan-sized sheet.
+  const dsaTimeline = (user as any)?.dsaYatra?.timeline as string | undefined;
   const { questions: topicQuestions, loading: topicQuestionsLoading } =
-    useDsaQuestionsForTopic(selectedTopic);
+    useDsaQuestionsForTopic(selectedTopic, {
+      duration: dsaTimeline,
+      offCampus: true,
+    });
 
   const [topicQuestionsCache, setTopicQuestionsCache] = useState<
     Record<string, DsaQuestion[]>
@@ -184,24 +191,19 @@ const SheetsPageClient = () => {
     );
   }
 
+  const handleViewPlans = () => router.push(routes.dsayatra.pricing);
+  const handleDismissUpsell = () => {
+    setShowPayment(false);
+    setSelectedQuestion(null);
+  };
+
   return (
     <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
       {hasLockedQuestions && (
-        <div className="w-full bg-orange-950/40 border-b border-orange-900/50 px-4 py-2.5 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2">
-            <FaLock className="text-orange-400 text-xs" />
-            <Text level="p" className="text-orange-300 text-[11px] font-medium">
-              Freemium preview — {unlockedCount} questions unlocked. Subscribe
-              to access all.
-            </Text>
-          </div>
-          <button
-            onClick={() => router.push(routes.dsayatra.pricing)}
-            className="text-[11px] font-bold text-orange-300 hover:text-orange-200 underline underline-offset-2 transition-colors"
-          >
-            View Plans
-          </button>
-        </div>
+        <FreemiumLockBanner
+          unlockedCount={unlockedCount}
+          onUpgradeClick={handleViewPlans}
+        />
       )}
       <DsaPrepWorkspace
         questions={questions}
@@ -221,49 +223,11 @@ const SheetsPageClient = () => {
         freemiumLockedQuestionIds={lockedQuestionIds}
         onFreemiumLockedClick={() => setShowPayment(true)}
       />
-      {showPayment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md relative">
-            <div className="bg-[#111] border border-gray-800 rounded-2xl p-6 shadow-2xl">
-              <div className="flex flex-col items-center text-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-red-500/15 flex items-center justify-center">
-                  <FaLock className="text-red-400 text-xl" />
-                </div>
-                <div>
-                  <Text
-                    level="h3"
-                    className="text-white font-bold mb-1.5 tracking-tight"
-                  >
-                    Unlock DSA Yatra
-                  </Text>
-                  <Text
-                    level="p"
-                    className="text-gray-400 text-sm leading-relaxed"
-                  >
-                    Subscribe to access all questions, solutions, and study
-                    guides. One plan, lifetime access.
-                  </Text>
-                </div>
-                <button
-                  onClick={() => router.push(routes.dsayatra.pricing)}
-                  className="w-full py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-all duration-300 shadow-[0_4px_15px_rgba(220,38,38,0.25)] hover:shadow-[0_4px_20px_rgba(220,38,38,0.35)]"
-                >
-                  View Plans — Subscribe Now
-                </button>
-                <button
-                  onClick={() => {
-                    setShowPayment(false);
-                    setSelectedQuestion(null);
-                  }}
-                  className="text-gray-500 hover:text-gray-300 text-xs font-medium transition-colors"
-                >
-                  Continue with free questions
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <DsaUpsellModal
+        open={showPayment}
+        onViewPlans={handleViewPlans}
+        onDismiss={handleDismissUpsell}
+      />
     </LearningEnvironmentLayout>
   );
 };

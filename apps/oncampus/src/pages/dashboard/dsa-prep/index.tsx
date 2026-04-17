@@ -1,4 +1,10 @@
-import { DsaPrepWorkspace, LoadingSpinner, Text } from "@tbe/components";
+import {
+  DsaPrepWorkspace,
+  DsaUpsellModal,
+  FreemiumLockBanner,
+  LoadingSpinner,
+  Text,
+} from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
@@ -76,6 +82,25 @@ const DSAPrepPage = () => {
   const { completedIds, toggleComplete, localNotes, saveNote } =
     useDsaCompletedQuestions({ userId: user?.id });
 
+  // Freemium state mirrors DSA Yatra sheets: rely on API `isLocked` flags.
+  const [showPayment, setShowPayment] = useState(false);
+  const hasLockedQuestions = questions.some((q) => q.isLocked);
+  const lockedQuestionIds = useMemo(() => {
+    if (!hasLockedQuestions) return undefined;
+    const ids = new Set<string>();
+    for (const q of questions) {
+      if (q.isLocked) ids.add(String(q.id || q.name));
+    }
+    return ids;
+  }, [hasLockedQuestions, questions]);
+  const unlockedCount = questions.filter((q) => !q.isLocked).length;
+
+  const handleUpgrade = () => router.push("/campus-prep");
+  const handleDismissUpsell = () => {
+    setShowPayment(false);
+    setSelectedQuestion(null);
+  };
+
   const topicsCompletionMap = useMemo(() => {
     return (topicRows ?? []).reduce(
       (acc, row) => {
@@ -89,15 +114,29 @@ const DSAPrepPage = () => {
   const pageLoading =
     userLoading || topicsLoading || (!!selectedTopic && topicQuestionsLoading);
 
-  const { handleTopicClick, handleQuestionClick, handleBackToTopics } =
-    useDsaPrepUrlSync({
-      router,
-      selectedTopic,
-      setSelectedTopic,
-      setSelectedQuestion,
-      topicQuestions: questions,
-      topicQuestionsLoading: !!selectedTopic && topicQuestionsLoading,
-    });
+  const {
+    handleTopicClick,
+    handleQuestionClick: handleUrlSyncQuestionClick,
+    handleBackToTopics,
+  } = useDsaPrepUrlSync({
+    router,
+    selectedTopic,
+    setSelectedTopic,
+    setSelectedQuestion,
+    topicQuestions: questions,
+    topicQuestionsLoading: !!selectedTopic && topicQuestionsLoading,
+  });
+
+  // Intercept clicks on locked questions to show the upsell modal instead of
+  // navigating into a locked question.
+  const handleQuestionClick = (question: DsaQuestion) => {
+    if (question.isLocked) {
+      setShowPayment(true);
+      return;
+    }
+    setShowPayment(false);
+    handleUrlSyncQuestionClick(question);
+  };
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -123,11 +162,17 @@ const DSAPrepPage = () => {
       backHref={routes.oncampus.dashboard}
       layoutMode="workspace"
     >
+      {hasLockedQuestions && (
+        <FreemiumLockBanner
+          unlockedCount={unlockedCount}
+          onUpgradeClick={handleUpgrade}
+        />
+      )}
       <DsaPrepWorkspace
         questions={questions}
         topicsWithCounts={topicsWithCounts}
         selectedTopic={selectedTopic}
-        selectedQuestion={selectedQuestion}
+        selectedQuestion={showPayment ? null : selectedQuestion}
         onTopicClick={handleTopicClick}
         onQuestionClick={handleQuestionClick}
         onBackToTopics={handleBackToTopics}
@@ -138,6 +183,13 @@ const DSAPrepPage = () => {
         onSaveNote={saveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
         userTargetCompanies={userTargetCompanies}
+        freemiumLockedQuestionIds={lockedQuestionIds}
+        onFreemiumLockedClick={() => setShowPayment(true)}
+      />
+      <DsaUpsellModal
+        open={showPayment}
+        onViewPlans={handleUpgrade}
+        onDismiss={handleDismissUpsell}
       />
     </OnCampusLearningLayout>
   );

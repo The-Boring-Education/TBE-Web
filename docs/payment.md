@@ -112,7 +112,7 @@ Uses the **`SubscriptionPlan`** collection with these fields:
 
 - `usePaymentStatus` hook checks if user has active subscription
 - `usePaymentAccess` hook combines payment status with enrollment for access control
-- `PaymentLockOverlay` component shows accessible modal dialog with `role="dialog"`, `aria-modal="true"`, and focus management
+- The DSA Yatra `sheets.tsx` page renders a local upsell modal when a user clicks a locked question (`role="dialog"`, `aria-modal="true"`)
 
 ---
 

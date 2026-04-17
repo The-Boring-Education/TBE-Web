@@ -1,6 +1,11 @@
 import { ProtectedRoute, useAuth } from "@tbe/auth";
 import { EditDsaOnboardingModal, SEO } from "@tbe/components";
-import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
+import {
+  DSA_TIMELINES,
+  PAGE_REFRESH_TIMEOUT,
+  routes,
+  TOPIC_LABELS,
+} from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
   useDsaQuestions,
@@ -145,8 +150,15 @@ const DsaClient = () => {
 
   const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
 
+  // Scope dashboard totals to the user's selected study plan (timeline).
+  // Pre-onboarding users (no timeline) see the full sheet.
+  const dsaTimeline = (profile as any)?.dsaYatra?.timeline as
+    | string
+    | undefined;
   const { rawQuestions: allQuestions } = useDsaQuestions({
     queryKey: "dashboard-dsa-sheet",
+    duration: dsaTimeline,
+    offCampus: true,
   });
   const { completedIds: completedQuestions, solvedToday } =
     useDsaCompletedQuestions({ userId: user?.id });
@@ -334,7 +346,10 @@ const DsaClient = () => {
   ];
 
   const targetLabel = profile?.dsaYatra?.target || "Product-based";
-  const timelineLabel = profile?.dsaYatra?.timeline || "4-6 months";
+  const timelineLabel =
+    DSA_TIMELINES.find((t) => t.value === profile?.dsaYatra?.timeline)?.label ||
+    profile?.dsaYatra?.timeline ||
+    "6 Months";
   const expLabel = profile?.dsaYatra?.experienceLevel || "Fresher (0-1 yr)";
 
   const dailyGoalHours = 4;

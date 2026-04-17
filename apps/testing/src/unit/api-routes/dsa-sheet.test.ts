@@ -5,12 +5,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mockAddDSAQuestion = vi.fn();
 const mockGetAllDSAQuestions = vi.fn();
 const mockGetDSASheetMetadata = vi.fn();
+const mockGetDSATopicSummaries = vi.fn();
+const mockCheckPaymentStatus = vi.fn();
 
 vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (handler: any) => handler,
 }));
-
-const mockGetDSATopicSummaries = vi.fn();
 
 vi.mock("../../../../api/src/lib/database", () => ({
   addDSAQuestionToDB: (...args: any[]) => mockAddDSAQuestion(...args),
@@ -19,6 +19,7 @@ vi.mock("../../../../api/src/lib/database", () => ({
     mockGetDSASheetMetadata(...args),
   getDSATopicSummariesFromDB: (...args: any[]) =>
     mockGetDSATopicSummaries(...args),
+  checkPaymentStatusFromDB: (...args: any[]) => mockCheckPaymentStatus(...args),
 }));
 
 vi.mock("../../../../api/src/lib/utils", () => ({
@@ -320,6 +321,201 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       await handler(req, res);
 
       expect(res._getStatusCode()).toBe(500);
+    });
+  });
+
+  // ── Payment / freemium gating ───────────────────────────────────────────────
+
+  // Valid 24-char hex Mongo ObjectId string (validator rejects non-ObjectIds)
+  const MOCK_USER_ID = "507f1f77bcf86cd799439011";
+
+  describe("Payment gating (isPaidUser handoff)", () => {
+    it("should NOT call checkPaymentStatusFromDB when userId is absent (isPaidUser=false)", async () => {
+      mockGetAllDSAQuestions.mockResolvedValue({
+        data: { questions: [], isFreemiumUser: true },
+      });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+      });
+
+      await handler(req, res);
+
+      expect(mockCheckPaymentStatus).not.toHaveBeenCalled();
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({ isPaidUser: false }),
+      );
+    });
+
+    it("should pass productId='lifetime' + productType='DSA_YATRA' to the payment check", async () => {
+      mockCheckPaymentStatus.mockResolvedValue({
+        data: { purchased: true, accessType: "DIRECT_PAYMENT" },
+      });
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: { userId: MOCK_USER_ID },
+      });
+
+      await handler(req, res);
+
+      expect(mockCheckPaymentStatus).toHaveBeenCalledWith(
+        MOCK_USER_ID,
+        "lifetime",
+        "DSA_YATRA",
+      );
+    });
+
+    it("should mark isPaidUser=true when payment returned purchased=true", async () => {
+      mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: { userId: MOCK_USER_ID },
+      });
+
+      await handler(req, res);
+
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({ userId: MOCK_USER_ID, isPaidUser: true }),
+      );
+    });
+
+    it("should mark isPaidUser=false when payment returned purchased=false (freemium)", async () => {
+      mockCheckPaymentStatus.mockResolvedValue({
+        data: { purchased: false },
+        error: "No payment record found",
+      });
+      mockGetAllDSAQuestions.mockResolvedValue({
+        data: { questions: [], isFreemiumUser: true },
+      });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: { userId: MOCK_USER_ID },
+      });
+
+      await handler(req, res);
+
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({ userId: MOCK_USER_ID, isPaidUser: false }),
+      );
+    });
+
+    it("should mark isPaidUser=true for subscription-based access (SUBSCRIPTION)", async () => {
+      // Mirrors PrepYatraSubscription short-circuit in checkPaymentStatusFromDB
+      mockCheckPaymentStatus.mockResolvedValue({
+        data: { purchased: true, accessType: "SUBSCRIPTION" },
+      });
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: { userId: MOCK_USER_ID },
+      });
+
+      await handler(req, res);
+
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({ isPaidUser: true }),
+      );
+    });
+  });
+
+  // ── Duration bucketing params passthrough ───────────────────────────────────
+
+  describe("Duration bucket parameters", () => {
+    it("should forward duration + offCampus flags to the DB query", async () => {
+      mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: {
+          userId: MOCK_USER_ID,
+          duration: "3Months",
+          offCampus: "true",
+          topic: "ARRAY",
+        },
+      });
+
+      await handler(req, res);
+
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({
+          duration: "3Months",
+          offCampus: true,
+          topics: ["ARRAY"],
+          isPaidUser: true,
+        }),
+      );
+    });
+
+    it("should default offCampus=false when not provided", async () => {
+      mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: { userId: MOCK_USER_ID, duration: "1Month" },
+      });
+
+      await handler(req, res);
+
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({ duration: "1Month", offCampus: false }),
+      );
+    });
+
+    it("should forward realWorld filter mode", async () => {
+      mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: { userId: MOCK_USER_ID, realWorld: "only" },
+      });
+
+      await handler(req, res);
+
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({ realWorld: "only" }),
+      );
+    });
+
+    it("should reject unknown duration keys (validation guard)", async () => {
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: { userId: MOCK_USER_ID, duration: "9Months" },
+      });
+
+      await handler(req, res);
+
+      expect(res._getStatusCode()).toBe(400);
+      expect(mockGetAllDSAQuestions).not.toHaveBeenCalled();
+    });
+  });
+
+  // ── Topics summary query ────────────────────────────────────────────────────
+
+  describe("topics summary query", () => {
+    it("should call getDSATopicSummariesFromDB when query=topics", async () => {
+      mockGetDSATopicSummaries.mockResolvedValue({
+        data: [{ topic: "ARRAY", count: 42, completed: 5 }],
+      });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: { query: "topics", userId: MOCK_USER_ID },
+      });
+
+      await handler(req, res);
+
+      expect(res._getStatusCode()).toBe(200);
+      expect(mockGetDSATopicSummaries).toHaveBeenCalledWith(MOCK_USER_ID);
+      expect(mockGetAllDSAQuestions).not.toHaveBeenCalled();
     });
   });
 

@@ -1,8 +1,4 @@
-import {
-  DSA_CANONICAL_TOPICS,
-  DSA_DIFFICULTY,
-  DSA_DURATION_DIFFICULTY_BUCKETS,
-} from "@tbe/constants";
+import { DSA_CANONICAL_TOPICS } from "@tbe/constants";
 
 import type {
   AptitudeAnswerFormatType,
@@ -3102,9 +3098,7 @@ export {
   CERTIFICATE_TYPE,
   COMPANY_TYPES,
   DIFFICULTY_LEVEL,
-  DSA_DIFFICULTY,
   DSA_DOMAIN,
-  DSA_DURATION_DIFFICULTY_BUCKETS,
   DSA_TOPICS,
   GOAL_TYPES,
   INTERVIEW_CATEGORIES,
