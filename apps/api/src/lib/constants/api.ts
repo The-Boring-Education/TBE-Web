@@ -1,4 +1,8 @@
-import { DSA_CANONICAL_TOPICS } from "@tbe/constants";
+import {
+  DSA_CANONICAL_TOPICS,
+  DSA_DIFFICULTY,
+  DSA_DURATION_DIFFICULTY_BUCKETS,
+} from "@tbe/constants";
 
 import type {
   AptitudeAnswerFormatType,
@@ -8,7 +12,6 @@ import type {
   CertificateType,
   CompanyType,
   DifficultyType,
-  DSADifficultyType,
   DSADomainType,
   DSATopicType,
   GoalType,
@@ -3085,161 +3088,6 @@ const DSA_DOMAIN: DSADomainType[] = [
   "FULLSTACK",
   "DSA",
 ];
-
-const DSA_DIFFICULTY: DSADifficultyType[] = ["EASY", "MEDIUM", "HARD"];
-
-/** Sheet order, Mongo `$indexOfArray`, and validation — single source of truth. */
-// Duration-based timeline configs: max question counts per topic per duration
-const TIMELINE_CONFIG_DATA: Record<
-  string,
-  Record<string, { count: number; title: string }>
-> = {
-  "1Month": {
-    ARRAY: { count: 8, title: "Array Quick Review" },
-    STRING: { count: 6, title: "String Basics" },
-    HASHMAP: { count: 5, title: "Hashing Essentials" },
-    LINKED_LIST: { count: 5, title: "Linked Lists" },
-    STACK: { count: 3, title: "Stack Foundations" },
-    QUEUE: { count: 3, title: "Queue Fundamentals" },
-    BINARY_SEARCH: { count: 4, title: "Search Basics" },
-    BINARY_TREE: { count: 8, title: "Basic Trees" },
-    HEAP: { count: 4, title: "Sets & Heaps" },
-    DYNAMIC_PROGRAMMING: { count: 6, title: "Basic DP" },
-    GRAPH: { count: 4, title: "Basic Graphs" },
-    SORTING: { count: 4, title: "Sorting Basics" },
-    TWO_POINTERS: { count: 4, title: "Two Pointers" },
-    SLIDING_WINDOW: { count: 4, title: "Sliding Window" },
-    PREFIX_SUM: { count: 4, title: "Prefix Sum" },
-    MATH: { count: 3, title: "Math Basics" },
-    BIT_MANIPULATION: { count: 3, title: "Bit Manipulation" },
-    RECURSION: { count: 5, title: "Recursion Basics" },
-    BST: { count: 4, title: "Binary Search Trees" },
-    TRIE: { count: 2, title: "Trie Basics" },
-    BACKTRACKING: { count: 3, title: "Backtracking Intro" },
-    GREEDY: { count: 3, title: "Greedy Intro" },
-    UNION_FIND: { count: 2, title: "Disjoint Sets" },
-    DESIGN: { count: 2, title: "Design Problems" },
-    SIMULATION: { count: 2, title: "Simulation" },
-    MONOTONIC_STACK: { count: 2, title: "Monotonic Stack" },
-  },
-  "3Months": {
-    ARRAY: { count: 18, title: "Array Essentials" },
-    STRING: { count: 14, title: "String Basics" },
-    HASHMAP: { count: 12, title: "Hashing Primer" },
-    LINKED_LIST: { count: 12, title: "Linked Lists" },
-    STACK: { count: 6, title: "Stack Foundations" },
-    QUEUE: { count: 6, title: "Queue Fundamentals" },
-    BINARY_SEARCH: { count: 8, title: "Search Algorithms" },
-    BINARY_TREE: { count: 18, title: "Basic Trees" },
-    HEAP: { count: 10, title: "Sets & Heaps" },
-    DYNAMIC_PROGRAMMING: { count: 15, title: "Basic DP" },
-    GRAPH: { count: 10, title: "Basic Graphs" },
-    SORTING: { count: 10, title: "Sorting Mastery" },
-    TWO_POINTERS: { count: 8, title: "Two Pointers" },
-    SLIDING_WINDOW: { count: 8, title: "Sliding Window" },
-    PREFIX_SUM: { count: 8, title: "Prefix Sum" },
-    MATH: { count: 6, title: "Math Basics" },
-    BIT_MANIPULATION: { count: 6, title: "Bit Manipulation" },
-    RECURSION: { count: 10, title: "Recursion Basics" },
-    BST: { count: 8, title: "Binary Search Trees" },
-    TRIE: { count: 4, title: "Trie Basics" },
-    BACKTRACKING: { count: 6, title: "Backtracking Intro" },
-    GREEDY: { count: 6, title: "Greedy Intro" },
-    UNION_FIND: { count: 4, title: "Disjoint Sets" },
-    DESIGN: { count: 4, title: "Design Problems" },
-    SIMULATION: { count: 4, title: "Simulation" },
-    MONOTONIC_STACK: { count: 4, title: "Monotonic Stack" },
-  },
-  "6Months": {
-    ARRAY: { count: 30, title: "Arrays Deep Dive" },
-    STRING: { count: 22, title: "String Processing" },
-    HASHMAP: { count: 18, title: "Advanced Hashing" },
-    TWO_POINTERS: { count: 14, title: "Two Pointers" },
-    SLIDING_WINDOW: { count: 14, title: "Sliding Window" },
-    PREFIX_SUM: { count: 12, title: "Prefix Sum Advanced" },
-    SORTING: { count: 12, title: "Sorting Mastery" },
-    BINARY_SEARCH: { count: 16, title: "Binary Search Deep Dive" },
-    LINKED_LIST: { count: 16, title: "Linked Lists Pro" },
-    STACK: { count: 12, title: "Advanced Stacks" },
-    QUEUE: { count: 10, title: "Advanced Queues" },
-    BINARY_TREE: { count: 24, title: "Trees Deep Dive" },
-    BST: { count: 14, title: "Binary Search Trees" },
-    HEAP: { count: 18, title: "Advanced Heaps" },
-    TRIE: { count: 8, title: "Trie Data Structure" },
-    GRAPH: { count: 22, title: "Intermediate Graphs" },
-    DYNAMIC_PROGRAMMING: { count: 30, title: "Intermediate DP" },
-    BACKTRACKING: { count: 16, title: "Backtracking" },
-    GREEDY: { count: 14, title: "Greedy Algorithms" },
-    RECURSION: { count: 16, title: "Recursion Mastery" },
-    MATH: { count: 10, title: "Math Fundamentals" },
-    BIT_MANIPULATION: { count: 10, title: "Bit Manipulation" },
-    UNION_FIND: { count: 8, title: "Disjoint Sets" },
-    DESIGN: { count: 6, title: "Design Problems" },
-    SIMULATION: { count: 6, title: "Simulation" },
-    MONOTONIC_STACK: { count: 6, title: "Monotonic Stack" },
-  },
-  "1Year": {
-    ARRAY: { count: 40, title: "Array Mastery" },
-    STRING: { count: 28, title: "String Mastery" },
-    HASHMAP: { count: 24, title: "HashMap Mastery" },
-    TWO_POINTERS: { count: 18, title: "Advanced Pointers" },
-    SLIDING_WINDOW: { count: 18, title: "Advanced Sliding Window" },
-    PREFIX_SUM: { count: 16, title: "Prefix Sum Mastery" },
-    SORTING: { count: 16, title: "Sorting Mastery" },
-    BINARY_SEARCH: { count: 22, title: "Binary Search Mastery" },
-    LINKED_LIST: { count: 22, title: "Linked List Mastery" },
-    STACK: { count: 18, title: "Stack Mastery" },
-    QUEUE: { count: 14, title: "Queue Mastery" },
-    BINARY_TREE: { count: 35, title: "Tree Mastery" },
-    BST: { count: 20, title: "BST Mastery" },
-    HEAP: { count: 24, title: "Heap Mastery" },
-    TRIE: { count: 12, title: "Trie Mastery" },
-    GRAPH: { count: 32, title: "Advanced Graphs" },
-    DYNAMIC_PROGRAMMING: { count: 45, title: "Advanced DP" },
-    BACKTRACKING: { count: 24, title: "Advanced Backtracking" },
-    GREEDY: { count: 22, title: "Advanced Greedy" },
-    RECURSION: { count: 22, title: "Recursion Mastery" },
-    MATH: { count: 14, title: "Math Fundamentals" },
-    BIT_MANIPULATION: { count: 14, title: "Bit Manipulation" },
-    UNION_FIND: { count: 12, title: "Disjoint Sets" },
-    DESIGN: { count: 10, title: "Design Problems" },
-    SIMULATION: { count: 10, title: "Simulation" },
-    MONOTONIC_STACK: { count: 10, title: "Monotonic Stack" },
-  },
-};
-
-/** Duration-based timeline configs: max question counts per topic per duration */
-export const TIMELINE_CONFIGS: Record<
-  string,
-  Record<string, { count: number; title: string }>
-> = TIMELINE_CONFIG_DATA;
-
-/** Duration-based difficulty buckets for DSA sheet personalization. */
-const DSA_DURATION_DIFFICULTY_BUCKETS: Record<
-  string,
-  Record<DSADifficultyType, number>
-> = {
-  "1Month": {
-    EASY: 4,
-    MEDIUM: 2,
-    HARD: 1,
-  },
-  "3Months": {
-    EASY: 8,
-    MEDIUM: 4,
-    HARD: 2,
-  },
-  "6Months": {
-    EASY: 12,
-    MEDIUM: 6,
-    HARD: 3,
-  },
-  "1Year": {
-    EASY: 16,
-    MEDIUM: 8,
-    HARD: 4,
-  },
-};
 
 const DSA_TOPICS: DSATopicType[] = [...DSA_CANONICAL_TOPICS];
 

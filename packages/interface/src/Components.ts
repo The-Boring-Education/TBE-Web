@@ -1193,6 +1193,8 @@ export interface TailorYourJourneyProps {
   highlightText: string;
   description: string;
   features: TailorYourJourneyFeature[];
+  /** When `"placeholder"`, renders a black image slot (add real assets later). */
+  imageVariant?: "src" | "placeholder";
   imageSrc: string;
   imageAlt: string;
 }

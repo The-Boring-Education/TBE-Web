@@ -1,9 +1,13 @@
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@tbe/components/ui";
 import { BookOpen, ExternalLink, FileText } from "lucide-react";
 import React from "react";
-
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const LearningSection = () => {
   const courses = [
@@ -89,13 +93,13 @@ const LearningSection = () => {
   ];
 
   return (
-    <section className="px-4 py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <section className="px-4 py-20 bg-lightBG">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-contentLight via-primary to-secondary bg-clip-text text-transparent">
             Learn Tech for Free
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-greyDark max-w-2xl mx-auto">
             Master programming and ace interviews with our comprehensive free
             courses and prep sheets
           </p>
@@ -104,11 +108,11 @@ const LearningSection = () => {
         {/* Courses Section */}
         <div className="mb-16">
           <div className="text-center mb-8">
-            <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3 flex items-center justify-center gap-2">
-              <BookOpen className="text-blue-600" size={32} />
+            <h3 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-3 flex items-center justify-center gap-2">
+              <BookOpen className="text-primary" size={32} />
               Free Courses
             </h3>
-            <p className="text-gray-600">
+            <p className="text-greyDark">
               Structured learning paths with hands-on projects
             </p>
           </div>
@@ -131,15 +135,15 @@ const LearningSection = () => {
                       {course.duration}
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                  <CardTitle className="text-xl text-contentLight">
                     {course.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">{course.description}</p>
+                  <p className="text-greyDark mb-4">{course.description}</p>
 
                   <div className="mb-4">
-                    <h5 className="font-semibold text-gray-800 mb-2 text-sm">
+                    <h5 className="font-semibold text-contentLight mb-2 text-sm">
                       What you'll learn:
                     </h5>
                     <div className="flex flex-wrap gap-2">
@@ -147,7 +151,7 @@ const LearningSection = () => {
                         <Badge
                           key={topic}
                           variant="outline"
-                          className="text-xs bg-gray-50"
+                          className="text-xs bg-greyLight/60"
                         >
                           {topic}
                         </Badge>
@@ -171,11 +175,11 @@ const LearningSection = () => {
         {/* Interview Prep Section */}
         <div>
           <div className="text-center mb-8">
-            <h3 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-3 flex items-center justify-center gap-2">
-              <FileText className="text-green-600" size={32} />
+            <h3 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-3 flex items-center justify-center gap-2">
+              <FileText className="text-primary" size={32} />
               Interview Prep Sheets
             </h3>
-            <p className="text-gray-600">
+            <p className="text-greyDark">
               Curated questions with detailed answers to ace your interviews
             </p>
           </div>
@@ -198,15 +202,15 @@ const LearningSection = () => {
                       Free
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                  <CardTitle className="text-xl text-contentLight">
                     {sheet.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">{sheet.description}</p>
+                  <p className="text-greyDark mb-4">{sheet.description}</p>
 
                   <div className="mb-4">
-                    <h5 className="font-semibold text-gray-800 mb-2 text-sm">
+                    <h5 className="font-semibold text-contentLight mb-2 text-sm">
                       Key Topics:
                     </h5>
                     <div className="flex flex-wrap gap-2">
@@ -214,7 +218,7 @@ const LearningSection = () => {
                         <Badge
                           key={topic}
                           variant="outline"
-                          className="text-xs bg-gray-50"
+                          className="text-xs bg-greyLight/60"
                         >
                           {topic}
                         </Badge>

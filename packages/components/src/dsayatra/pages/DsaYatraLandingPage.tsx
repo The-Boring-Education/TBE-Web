@@ -1,5 +1,6 @@
 import {
   DSA_YATRA_FAQS,
+  DSA_YATRA_FEATURE_SPOTLIGHTS,
   DSA_YATRA_FEATURES,
   routes,
   STATIC_FILE_PATH,
@@ -12,6 +13,7 @@ import TailorYourJourney from "../../common/TailorYourJourney";
 import CardContainerA from "../../containers/Cards/CardContainerA";
 import LandingPageHero from "../../containers/Page/common/Hero";
 import SEO from "../../layout/SEO";
+import { DsaYatraFeatureSpotlights } from "../sections/DsaYatraFeatureSpotlights";
 
 export type DsaYatraLandingPageProps = Pick<PageProps, "seoMeta">;
 
@@ -21,7 +23,7 @@ export type DsaYatraLandingPageProps = Pick<PageProps, "seoMeta">;
 export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
   return (
     <main
-      className="dark min-h-screen bg-dark text-contentDark
+      className="dark min-h-screen w-full bg-dark text-contentDark
       [&_.bg-white]:!bg-[#19191B]
       [&_.border-gray-200]:!border-[#333333]
       [&_.text-gray-800]:!text-contentDark
@@ -82,9 +84,12 @@ export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
             description: "Fresher to Senior levels",
           },
         ]}
-        imageSrc="/tailor-journey.png"
-        imageAlt="Tailor your DSA journey interactive form"
+        imageVariant="placeholder"
+        imageSrc=""
+        imageAlt="Tailor your DSA journey — screenshot placeholder"
       />
+
+      <DsaYatraFeatureSpotlights items={DSA_YATRA_FEATURE_SPOTLIGHTS} />
 
       <div id="features">
         <CardContainerA

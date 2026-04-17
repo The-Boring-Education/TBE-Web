@@ -5,6 +5,7 @@
   "scripts": {
     "prebuild": "node scripts/generate-resources-index.mjs",
     "dev": "next dev -p 3010",
+    "build:resources": "turbo run build --filter=@tbe/resources",
     "build": "next build",
     "start": "next start -p 3010",
     "lint": "eslint .",
@@ -12,7 +13,6 @@
   },
   "dependencies": {
     "@tbe/typescript-config": "workspace:*",
-    "@tbe/auth": "workspace:*",
     "@tbe/components": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/hooks": "workspace:*",

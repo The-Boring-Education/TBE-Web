@@ -1,7 +1,12 @@
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@tbe/components/ui";
 import { CheckCircle, FileText } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { UseResumeBuilderReturn } from "@/types/builder";
 
 interface InitialChoiceProps {

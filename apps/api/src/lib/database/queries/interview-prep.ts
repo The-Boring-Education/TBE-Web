@@ -1,14 +1,12 @@
 import {
   applyDSAFreemiumGating,
   compareDsaTopicKeysForApi,
+  DSA_DIFFICULTY,
+  DSA_DURATION_DIFFICULTY_BUCKETS,
   getDSAFreemiumBucket,
 } from "@tbe/constants";
 
-import {
-  DSA_DIFFICULTY,
-  DSA_DURATION_DIFFICULTY_BUCKETS,
-  modelSelectParams,
-} from "@/lib/constants";
+import { modelSelectParams } from "@/lib/constants";
 import type {
   AddInterviewQuestionRequestPayloadProps,
   AddInterviewSheetRequestPayloadProps,

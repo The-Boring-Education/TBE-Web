@@ -39,20 +39,19 @@ export function ResourceSearch({ items }: { items: ResourceIndexEntry[] }) {
       <ul className="mt-8 space-y-3">
         {filtered.map((it) => (
           <li key={it.slug}>
-            <Link
-              href={`/resources/${it.slug}`}
-              className="block rounded-md border border-[var(--shell-border)] bg-zinc-900/50 px-4 py-3 transition hover:border-zinc-600"
-            >
-              <span className="font-medium text-white">{it.title}</span>
-              <p className="mt-1 text-sm text-[var(--shell-muted)]">
-                {it.description}
-              </p>
-              {(it.tags?.length ?? 0) > 0 && (
-                <p className="mt-2 text-xs text-zinc-500">
-                  {it.tags.join(" · ")}
+            <div className="rounded-md border border-[var(--shell-border)] bg-zinc-900/50 transition hover:border-zinc-600">
+              <Link href={`/resources/${it.slug}`} className="block px-4 py-3">
+                <span className="font-medium text-white">{it.title}</span>
+                <p className="mt-1 text-sm text-[var(--shell-muted)]">
+                  {it.description}
                 </p>
-              )}
-            </Link>
+                {(it.tags?.length ?? 0) > 0 && (
+                  <p className="mt-2 text-xs text-zinc-500">
+                    {it.tags.join(" · ")}
+                  </p>
+                )}
+              </Link>
+            </div>
           </li>
         ))}
       </ul>

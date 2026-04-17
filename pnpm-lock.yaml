@@ -70,10 +70,10 @@ importers:
         version: 7.8.8
       next:
         specifier: ^13.2.4
-        version: 13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: ^4.24.7
-        version: 4.24.11(next@13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 4.24.11(next@13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       openai:
         specifier: ^4.85.2
         version: 4.104.0(ws@8.19.0)(zod@3.25.76)
@@ -421,7 +421,7 @@ importers:
         version: 9.39.2(jiti@1.21.7)
       eslint-plugin-import:
         specifier: ^2.27.5
-        version: 2.32.0(@typescript-eslint/parser@5.62.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@1.21.7))
+        version: 2.32.0(@typescript-eslint/parser@5.62.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.2))(eslint@9.39.2(jiti@1.21.7))
       eslint-plugin-jsx-a11y:
         specifier: ^6.7.1
         version: 6.10.2(eslint@9.39.2(jiti@1.21.7))
@@ -487,7 +487,7 @@ importers:
         version: link:../../packages/utils
       next:
         specifier: 13.5.6
-        version: 13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1119,9 +1119,6 @@ importers:
 
   apps/resources:
     dependencies:
-      "@tbe/auth":
-        specifier: workspace:*
-        version: link:../../packages/auth
       "@tbe/components":
         specifier: workspace:*
         version: link:../../packages/components
@@ -1616,10 +1613,10 @@ importers:
         version: 0.462.0(react@18.3.1)
       next:
         specifier: ^13.5.6
-        version: 13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: ^4.24.7
-        version: 4.24.11(next@13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 4.24.11(next@13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -18853,7 +18850,7 @@ snapshots:
       "@sentry/vercel-edge": 9.47.1(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.4.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
       "@sentry/webpack-plugin": 3.6.1(webpack@5.104.1)
       chalk: 3.0.0
-      next: 13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       resolve: 1.22.8
       rollup: 4.55.2
       stacktrace-parser: 0.1.11
@@ -21224,7 +21221,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.2))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.2))(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -21315,6 +21312,35 @@ snapshots:
       - supports-color
 
   eslint-plugin-import@2.32.0(@typescript-eslint/parser@5.62.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@1.21.7)):
+    dependencies:
+      "@rtsao/scc": 1.1.0
+      array-includes: 3.1.9
+      array.prototype.findlastindex: 1.2.6
+      array.prototype.flat: 1.3.3
+      array.prototype.flatmap: 1.3.3
+      debug: 3.2.7
+      doctrine: 2.1.0
+      eslint: 9.39.2(jiti@1.21.7)
+      eslint-import-resolver-node: 0.3.9
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@5.62.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@1.21.7))
+      hasown: 2.0.2
+      is-core-module: 2.16.1
+      is-glob: 4.0.3
+      minimatch: 3.1.2
+      object.fromentries: 2.0.8
+      object.groupby: 1.0.3
+      object.values: 1.2.1
+      semver: 6.3.1
+      string.prototype.trimend: 1.0.9
+      tsconfig-paths: 3.15.0
+    optionalDependencies:
+      "@typescript-eslint/parser": 5.62.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.2)
+    transitivePeerDependencies:
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - supports-color
+
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@5.62.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.2))(eslint@9.39.2(jiti@1.21.7)):
     dependencies:
       "@rtsao/scc": 1.1.0
       array-includes: 3.1.9
@@ -23529,13 +23555,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  next-auth@4.24.11(next@13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-auth@4.24.11(next@13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       "@babel/runtime": 7.28.6
       "@panva/hkdf": 1.2.1
       cookie: 0.7.2
       jose: 4.15.9
-      next: 13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       oauth: 0.9.15
       openid-client: 5.7.1
       preact: 10.28.2
@@ -23550,7 +23576,7 @@ snapshots:
       "@next/env": 13.5.11
       fast-glob: 3.3.3
       minimist: 1.2.8
-      next: 13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   next-sitemap@4.2.3(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
     dependencies:
@@ -23573,7 +23599,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  next@13.5.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@13.5.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       "@next/env": 13.5.6
       "@swc/helpers": 0.5.2

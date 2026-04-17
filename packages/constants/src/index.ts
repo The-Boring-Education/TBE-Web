@@ -3,6 +3,7 @@ export * from "./campusPrep";
 export * from "./challenges";
 export * from "./component";
 export * from "./database";
+export * from "./dsaDifficulty";
 export * from "./dsaFreemium";
 export * from "./dsaStudyGuides";
 export * from "./dsaTopicRoadmapIcons";

@@ -35,7 +35,7 @@ const Layout = ({ children }: LayoutProps) => {
 
       <main
         className={cn(
-          "min-h-screen pt-[72px]",
+          "min-h-screen w-full overflow-x-hidden pt-[72px]",
           (isDashboard || isRevisions || isTopics || isPricing) &&
             "bg-[#0A0A0A]",
           isLandingPage && "bg-[#040505]",

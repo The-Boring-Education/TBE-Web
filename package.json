@@ -1,7 +1,7 @@
 {
   "name": "tbe-platform",
   "private": true,
-  "version": "2.10.16",
+  "version": "2.10.18",
   "scripts": {
     "build": "turbo run build --concurrency=1",
     "build:all": "turbo run build",
@@ -60,8 +60,8 @@
     ]
   },
   "devDependencies": {
-    "@tbe/eslint-config": "workspace:*",
     "@lhci/cli": "^0.13.0",
+    "@tbe/eslint-config": "workspace:*",
     "eslint": "^9.39.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.3.0",
@@ -76,7 +76,17 @@
       "@types/react": "18.3.24",
       "@types/react-dom": "18.3.7",
       "csstype": "3.2.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@sentry/cli",
+      "canvas",
+      "core-js",
+      "esbuild",
+      "mongodb-memory-server",
+      "msw",
+      "sharp",
+      "unrs-resolver"
+    ]
   },
   "engines": {
     "node": ">=20.x",

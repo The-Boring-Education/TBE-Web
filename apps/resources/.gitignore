@@ -1,3 +1,4 @@
 .next
 node_modules
 public/resources.index.json
+*.tsbuildinfo

@@ -2,15 +2,17 @@ import "@tbe/components/styles/common.css";
 import "@/styles/globals.css";
 
 import { AuthProvider } from "@tbe/auth";
+import {
+  RadixToaster,
+  Toaster as SonnerToaster,
+  TooltipProvider,
+} from "@tbe/components/ui";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import React from "react";
 
 import { OnboardingCheck } from "@/components/OnboardingCheck";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -22,7 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
           content="Build a professional resume with guided steps, best practices, and expert tips. Resume Yatra helps you create a resume that gets you hired."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
 
         {/* Open Graph / Social Media */}
         <meta property="og:type" content="website" />
@@ -46,8 +48,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <TBEQueryProvider>
           <TooltipProvider>
             <OnboardingCheck />
-            <Toaster />
-            <Sonner />
+            <RadixToaster />
+            <SonnerToaster />
             <Component {...pageProps} />
           </TooltipProvider>
         </TBEQueryProvider>

@@ -1,9 +1,79 @@
 [
   {
-    "slug": "example-welcome",
-    "title": "Welcome to TBE Resources",
-    "description": "A sample resource showing how HTML content is embedded for SEO. Replace or duplicate this folder to publish new guides.",
-    "keywords": ["sample", "getting started", "TBE"],
-    "tags": ["intro"]
+    "slug": "aiml-engineer-roadmap",
+    "title": "AI/ML Engineer Roadmap 2026",
+    "description": "A structured, step-by-step roadmap to becoming an AI/ML engineer, covering mathematics, machine learning algorithms, deep learning, model deployment, and real-world applications.",
+    "keywords": [
+      "ai",
+      "machine learning",
+      "ml",
+      "deep learning",
+      "python",
+      "data science",
+      "models"
+    ],
+    "tags": ["roadmap", "aiml"]
+  },
+  {
+    "slug": "backend-engineer-roadmap",
+    "title": "Backend Engineer Roadmap 2026",
+    "description": "A comprehensive, step-by-step guide to becoming a professional backend engineer, covering languages, databases, APIs, and DevOps.",
+    "keywords": [
+      "backend",
+      "roadmap",
+      "developer",
+      "nodejs",
+      "python",
+      "sql",
+      "apis"
+    ],
+    "tags": ["roadmap", "backend"]
+  },
+  {
+    "slug": "blockchain-engineer-roadmap",
+    "title": "Blockchain Engineer Roadmap 2026",
+    "description": "Path to becoming a blockchain engineer in 2026. Learn about Web3, Ethereum, Smart Contracts, Solidity, and DApps.",
+    "keywords": [
+      "blockchain",
+      "roadmap",
+      "engineer",
+      "solidity",
+      "ethereum",
+      "web3",
+      "dapps",
+      "smart contracts"
+    ],
+    "tags": ["roadmap", "blockchain"]
+  },
+  {
+    "slug": "frontend-engineer-roadmap",
+    "title": "Frontend Developer Roadmap 2026",
+    "description": "A comprehensive, step-by-step guide to becoming a professional frontend developer, covering HTML, CSS, JavaScript, React, and modern CSS frameworks.",
+    "keywords": [
+      "frontend",
+      "roadmap",
+      "developer",
+      "react",
+      "javascript",
+      "html",
+      "css",
+      "web development"
+    ],
+    "tags": ["roadmap", "frontend"]
+  },
+  {
+    "slug": "genai-engineer-roadmap",
+    "title": "Generative AI Engineer Roadmap 2026",
+    "description": "A complete roadmap to becoming a Generative AI engineer, focusing on LLMs, prompt engineering, fine-tuning, vector databases, and building real-world GenAI applications.",
+    "keywords": [
+      "generative ai",
+      "genai",
+      "llm",
+      "prompt engineering",
+      "openai",
+      "langchain",
+      "vector database"
+    ],
+    "tags": ["roadmap", "genai"]
   }
 ]

@@ -1,6 +1,33 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getResourceIndex } from "@/lib/content";
+import { getSiteBaseUrl } from "@/lib/site";
+
+export const dynamic = "force-static";
+export const revalidate = false;
+
+const homeDescription =
+  "Free guides, roadmaps, and learning resources from The Boring Education.";
+
+export const metadata: Metadata = {
+  title: "Learning resources",
+  description: homeDescription,
+  alternates: {
+    canonical: getSiteBaseUrl(),
+  },
+  openGraph: {
+    title: "Learning resources",
+    description: homeDescription,
+    url: getSiteBaseUrl(),
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Learning resources | TBE Resources",
+    description: homeDescription,
+  },
+};
 
 export default async function HomePage() {
   const items = await getResourceIndex();
