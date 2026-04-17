@@ -89,13 +89,13 @@ function StatCard({
     >
       <div className="absolute inset-0 bg-gradient-to-br from-[#ff5757]/0 to-[#ff5757]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       <div className="flex flex-row items-center justify-between pb-2 relative z-10">
-        <p className="text-[10px] lg:text-xs font-black text-[#a0a0a0] uppercase tracking-widest">
+        <p className="text-[10px] lg:text-[11px] font-black text-[#a0a0a0] uppercase tracking-widest">
           {title}
         </p>
         {Icon && <Icon className="w-4 h-4 text-[#ff5757]" />}
       </div>
       <div className="mt-1">
-        <div className="text-3xl lg:text-4xl font-black text-[#f0f0f0] leading-tight">
+        <div className="text-3xl lg:text-3xl font-black text-[#f0f0f0] leading-tight">
           {value}
         </div>
         {(subtext || secondaryInfo) && (
@@ -525,18 +525,18 @@ const DsaClient = () => {
           {/* Overall Progress Card */}
           <Card
             id="overall-progress"
-            className="md:col-span-2 lg:row-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-6 lg:p-10 flex flex-col items-center justify-center rounded-2xl hover:border-[#ff5757]/40 hover:shadow-[0_0_30px_rgba(255,87,87,0.1)] transition-all duration-500 group"
+            className="md:col-span-2 lg:row-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-6 lg:p-8 flex flex-col items-center justify-center rounded-2xl hover:border-[#ff5757]/40 hover:shadow-[0_0_30px_rgba(255,87,87,0.1)] transition-all duration-500 group"
           >
-            <div className="flex items-center justify-between w-full mb-8 lg:mb-12">
-              <p className="text-[10px] lg:text-xs font-black text-[#a0a0a0] uppercase tracking-widest">
+            <div className="flex items-center justify-between w-full mb-6 lg:mb-8">
+              <p className="text-[10px] lg:text-[11px] font-black text-[#a0a0a0] uppercase tracking-widest">
                 Overall Progress
               </p>
-              <div className="p-2 lg:p-3 bg-[#ff5757]/10 rounded-lg">
-                <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5 text-[#ff5757]" />
+              <div className="p-2 lg:p-2.5 bg-[#ff5757]/10 rounded-lg">
+                <TrendingUp className="w-4 h-4 lg:w-4.5 lg:h-4.5 text-[#ff5757]" />
               </div>
             </div>
 
-            <div className="relative w-36 h-36 lg:w-48 lg:h-48 mb-8 lg:mb-12">
+            <div className="relative w-32 h-32 lg:w-40 lg:h-40 mb-6 lg:mb-8">
               <div className="absolute inset-0 rounded-full bg-[#252525]" />
               <div
                 className="absolute inset-0 rounded-full transition-all duration-1000 ease-out"
@@ -544,40 +544,40 @@ const DsaClient = () => {
                   background: `conic-gradient(#ff5757 ${overallPercentage * 3.6}deg, transparent 0deg)`,
                 }}
               />
-              <div className="absolute inset-2 lg:inset-3 rounded-full bg-[#1a1a1a] flex flex-col items-center justify-center border-4 border-[#1a1a1a]">
-                <span className="text-4xl lg:text-6xl font-black text-[#f0f0f0]">
+              <div className="absolute inset-2 lg:inset-2.5 rounded-full bg-[#1a1a1a] flex flex-col items-center justify-center border-4 border-[#1a1a1a]">
+                <span className="text-4xl lg:text-5xl font-black text-[#f0f0f0]">
                   {overallPercentage}%
                 </span>
-                <span className="text-[10px] lg:text-xs font-bold text-[#606060] uppercase mt-1 lg:mt-2">
+                <span className="text-[10px] lg:text-[11px] font-bold text-[#606060] uppercase mt-1 lg:mt-1.5">
                   {totalSolved}/{totalQuestions} Qs
                 </span>
               </div>
             </div>
 
-            <div className="w-full space-y-4">
+            <div className="w-full space-y-3 lg:space-y-4">
               <div className="flex justify-between items-end">
-                <span className="text-[11px] lg:text-xs font-bold text-[#808080] uppercase tracking-wider">
+                <span className="text-[11px] lg:text-[11px] font-bold text-[#808080] uppercase tracking-wider">
                   Pace Analysis
                 </span>
                 <span
                   className={cn(
-                    "text-[10px] lg:text-xs font-black px-2 py-0.5 rounded uppercase",
+                    "text-[10px] lg:text-[11px] font-black px-2 py-0.5 rounded uppercase",
                     overallPercentage >= 50
                       ? "text-[#51cf66]"
                       : "text-[#ffa94d]",
                   )}
                 >
-                  {overallPercentage >= 50 ? "Optimal" : "Slow pace"}
+                  {overallPercentage >= 50 ? "On Track" : "Needs Focus"}
                 </span>
               </div>
               <Progress
                 value={overallPercentage}
-                className="h-2.5 lg:h-3 bg-[#252525] rounded-full overflow-hidden"
+                className="h-2 lg:h-2.5 bg-[#252525] rounded-full overflow-hidden"
               />
               <div className="pt-2 text-center">
                 <span
                   className={cn(
-                    "text-[10px] lg:text-xs font-black px-4 py-2 lg:px-6 lg:py-2.5 rounded-lg uppercase tracking-widest border",
+                    "text-[10px] lg:text-[11px] font-black px-4 py-2 lg:px-5 lg:py-2 rounded-lg uppercase tracking-widest border",
                     overallPercentage >= 50
                       ? "bg-[#51cf66]/10 text-[#51cf66] border-[#51cf66]/20"
                       : "bg-[#ffa94d]/10 text-[#ffa94d] border-[#ffa94d]/20",
@@ -597,14 +597,14 @@ const DsaClient = () => {
             secondaryInfo={
               todayLog
                 ? `${todayLog.timeSpent || 0}m logged in prep today`
-                : "No time logged yet"
+                : undefined
             }
             className="md:col-span-1 lg:col-span-2"
           />
           <StatCard
-            title="Consistency"
+            title="Total Solved"
             value={String(totalSolved)}
-            subtext="Total milestones reached"
+            subtext={`Out of ${totalQuestions} questions`}
             progress={overallPercentage}
             icon={Target}
             className="md:col-span-1 lg:col-span-2"
