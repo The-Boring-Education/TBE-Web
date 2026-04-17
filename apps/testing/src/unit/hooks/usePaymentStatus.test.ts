@@ -4,14 +4,20 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockGetAccessToken = vi.fn().mockReturnValue(null);
 
-vi.mock("@tbe/constants", () => ({
-  routes: {
-    api: {
-      base: "https://api.test.com",
-      checkStatus: "/payment/checkstatus",
+vi.mock("@tbe/constants", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@tbe/constants")>();
+  return {
+    ...actual,
+    routes: {
+      ...actual.routes,
+      api: {
+        ...actual.routes.api,
+        base: "https://api.test.com",
+        checkStatus: "/payment/checkstatus",
+      },
     },
-  },
-}));
+  };
+});
 
 vi.mock("@tbe/auth", () => ({
   getAccessToken: () => mockGetAccessToken(),

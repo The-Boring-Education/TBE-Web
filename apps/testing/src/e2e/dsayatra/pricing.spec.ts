@@ -1,5 +1,26 @@
 import { expect, test } from "../fixtures/public.fixture";
 
+/** Shape must satisfy `isSubscriptionPlanCatalogRow` or plans are dropped client-side. */
+const mockDsaLifetimePlan = {
+  productType: "DSA_YATRA",
+  planKey: "lifetime",
+  displayName: "Lifetime Access",
+  description: "One-time payment for permanent access",
+  amountInr: 499,
+  originalAmountInr: 1999,
+  currency: "INR",
+  accessType: "ONE_TIME",
+  durationMonths: 0,
+  features: [
+    "Complete DSA question bank",
+    "Topic-wise practice sheets",
+    "Progress tracking",
+  ],
+  isPopular: true,
+  isActive: true,
+  sortOrder: 1,
+};
+
 test.describe("DSA Yatra pricing page", () => {
   test("pricing page loads successfully", async ({ publicPage: page }) => {
     // Mock subscription plans API
@@ -8,26 +29,7 @@ test.describe("DSA Yatra pricing page", () => {
         status: 200,
         json: {
           status: true,
-          data: [
-            {
-              productType: "DSA_YATRA",
-              planKey: "lifetime",
-              displayName: "Lifetime Access",
-              description: "One-time payment for permanent access",
-              amountInr: 499,
-              originalAmountInr: 1999,
-              accessType: "ONE_TIME",
-              durationMonths: 0,
-              features: [
-                "Complete DSA question bank",
-                "Topic-wise practice sheets",
-                "Progress tracking",
-              ],
-              isPopular: true,
-              isActive: true,
-              sortOrder: 1,
-            },
-          ],
+          data: [mockDsaLifetimePlan],
         },
       }),
     );
@@ -51,18 +53,9 @@ test.describe("DSA Yatra pricing page", () => {
           status: true,
           data: [
             {
-              productType: "DSA_YATRA",
-              planKey: "lifetime",
-              displayName: "Lifetime Access",
+              ...mockDsaLifetimePlan,
               description: "One-time payment",
-              amountInr: 499,
-              originalAmountInr: 1999,
-              accessType: "ONE_TIME",
-              durationMonths: 0,
               features: ["Complete DSA question bank", "Lifetime access"],
-              isPopular: true,
-              isActive: true,
-              sortOrder: 1,
             },
           ],
         },
@@ -100,15 +93,8 @@ test.describe("DSA Yatra pricing page", () => {
           status: true,
           data: [
             {
-              productType: "DSA_YATRA",
-              planKey: "lifetime",
-              displayName: "Lifetime Access",
-              amountInr: 499,
-              originalAmountInr: 1999,
+              ...mockDsaLifetimePlan,
               features: ["All content"],
-              isPopular: true,
-              isActive: true,
-              sortOrder: 1,
             },
           ],
         },

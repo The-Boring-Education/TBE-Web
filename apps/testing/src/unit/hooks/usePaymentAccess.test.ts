@@ -9,14 +9,20 @@ vi.mock("@tbe/hooks/useUser", () => ({
   default: () => mockUseUser(),
 }));
 
-vi.mock("@tbe/constants", () => ({
-  routes: {
-    api: {
-      base: "https://api.test.com",
-      checkStatus: "/payment/checkstatus",
+vi.mock("@tbe/constants", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@tbe/constants")>();
+  return {
+    ...actual,
+    routes: {
+      ...actual.routes,
+      api: {
+        ...actual.routes.api,
+        base: "https://api.test.com",
+        checkStatus: "/payment/checkstatus",
+      },
     },
-  },
-}));
+  };
+});
 
 vi.mock("@tbe/auth", () => ({
   getAccessToken: vi.fn().mockReturnValue(null),
