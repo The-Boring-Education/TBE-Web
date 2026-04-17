@@ -102,7 +102,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   const { filters } = parsed.value;
 
   // Check subscription status for freemium gating.
-  // Pass productType so the PrepYatraSubscription short-circuit in
+  // Pass productType so the Subscription short-circuit in
   // checkPaymentStatusFromDB runs; productId is the one-time-purchase SKU.
   const userId = filters.userId;
   const isPaidUser = userId

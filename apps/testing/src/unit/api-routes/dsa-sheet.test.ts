@@ -405,7 +405,7 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
     });
 
     it("should mark isPaidUser=true for subscription-based access (SUBSCRIPTION)", async () => {
-      // Mirrors PrepYatraSubscription short-circuit in checkPaymentStatusFromDB
+      // Mirrors Subscription short-circuit in checkPaymentStatusFromDB
       mockCheckPaymentStatus.mockResolvedValue({
         data: { purchased: true, accessType: "SUBSCRIPTION" },
       });

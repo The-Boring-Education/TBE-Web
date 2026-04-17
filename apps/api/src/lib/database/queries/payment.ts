@@ -5,7 +5,7 @@ import type {
 } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
 
-import { Payment, PrepYatraSubscription } from "../models";
+import { Payment, Subscription } from "../models";
 
 const addPaymentToDB = async ({
   userId,
@@ -97,14 +97,14 @@ const checkPaymentStatusFromDB = async (
   productType?: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    // PREPYATRA, DSA_YATRA, and ONCAMPUS all use createSubscription → stored in PrepYatraSubscription.
+    // PREPYATRA, DSA_YATRA, and ONCAMPUS all use createSubscription → stored in Subscription.
     // Other product types (INTERVIEW_SHEET, SHIKSHA, etc.) always fall through to Payment.
     if (
       productType === "PREPYATRA" ||
       productType === "DSA_YATRA" ||
       productType === "ONCAMPUS"
     ) {
-      const activeSubscription = await PrepYatraSubscription.findOne({
+      const activeSubscription = await Subscription.findOne({
         userId,
         isActive: true,
       });

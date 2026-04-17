@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import { Payment, PrepYatraSubscription } from "@/lib/database";
+import { Payment, Subscription } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
@@ -61,7 +61,7 @@ const handleGetRevenueData = async (
       .select("amount createdAt user productType orderId")
       .lean()) as PopulatedPayment[];
 
-    const subscriptionPayments = (await PrepYatraSubscription.find({
+    const subscriptionPayments = (await Subscription.find({
       isActive: true,
     })
       .sort({ createdAt: -1 })
