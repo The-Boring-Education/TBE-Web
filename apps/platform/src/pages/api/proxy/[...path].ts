@@ -30,7 +30,10 @@ export default async function handler(
 
     // Construct the full URL
     const url = `${apiUrl}/${apiPath}`;
-    console.log('url', url);
+
+    // Do not forward catch-all `path` as query params — it pollutes upstream URLs
+    // (e.g. `?path[]=payment&path[]=create-order`) and can confuse API logging.
+    const { path: _catchAllPath, ...forwardQuery } = req.query;
 
     // Forward the request
     const response = await axios({
@@ -45,7 +48,7 @@ export default async function handler(
         'x-admin-secret': req.headers['x-admin-secret'],
       },
       data: req.body,
-      params: req.query,
+      params: forwardQuery,
       // Don't throw on error status codes
       validateStatus: () => true,
     });

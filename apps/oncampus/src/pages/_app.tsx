@@ -63,17 +63,24 @@ const AppContent = ({
     !isInterviewPrepMainRoute &&
     !isQuizzesRoute;
 
+  /** Same idea as DSA Yatra: /pricing is full-screen only (no shell, no app chrome wrapper). */
+  const isPricingRoute = router.pathname === "/pricing";
+
   const pageContent = <Component {...pageProps} />;
 
   return (
     <GamificationProvider>
-      <div className="bg-[#0A0A0A] min-h-screen">
-        {shouldUseDashboardLayout ? (
-          <DashboardLayout>{pageContent}</DashboardLayout>
-        ) : (
-          pageContent
-        )}
-      </div>
+      {isPricingRoute ? (
+        pageContent
+      ) : (
+        <div className="bg-[#0A0A0A] min-h-screen">
+          {shouldUseDashboardLayout ? (
+            <DashboardLayout>{pageContent}</DashboardLayout>
+          ) : (
+            pageContent
+          )}
+        </div>
+      )}
     </GamificationProvider>
   );
 };

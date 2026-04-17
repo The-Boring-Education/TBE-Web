@@ -36,7 +36,7 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
     githubUrl: "",
     leetCodeUrl: "",
     goal: "Product-based",
-    timeline: "4-6 months",
+    timeline: "6Months",
     experienceLevel: "Fresher (0-1 yr)",
     preferredLanguage: "C++",
   });
@@ -52,7 +52,7 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
         githubUrl: currentData.githubUrl || "",
         leetCodeUrl: currentData.leetCodeUrl || "",
         goal: currentData.dsaYatra?.target || "Product-based",
-        timeline: currentData.dsaYatra?.timeline || "4-6 months",
+        timeline: currentData.dsaYatra?.timeline || "6Months",
         experienceLevel:
           currentData.dsaYatra?.experienceLevel || "Fresher (0-1 yr)",
         preferredLanguage: currentData.dsaYatra?.preferredLanguage || "C++",

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import {
   addDSAQuestionToDB,
+  checkPaymentStatusFromDB,
   getAllDSAQuestionsFromDB,
   getDSASheetMetadataFromDB,
   getDSATopicSummariesFromDB,
@@ -99,6 +100,16 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { filters } = parsed.value;
+
+  // Check subscription status for freemium gating.
+  // Pass productType so the Subscription short-circuit in
+  // checkPaymentStatusFromDB runs; productId is the one-time-purchase SKU.
+  const userId = filters.userId;
+  const isPaidUser = userId
+    ? (await checkPaymentStatusFromDB(userId, "lifetime", "DSA_YATRA")).data
+        ?.purchased === true
+    : false;
+
   const { data, error } = await getAllDSAQuestionsFromDB({
     ...(filters.domain?.length ? { domain: filters.domain } : {}),
     ...(filters.difficulty?.length ? { difficulty: filters.difficulty } : {}),
@@ -112,6 +123,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     ...(filters.duration ? { duration: filters.duration } : {}),
     offCampus: filters.offCampus,
     ...(filters.realWorld ? { realWorld: filters.realWorld } : {}),
+    isPaidUser,
   });
 
   if (error)

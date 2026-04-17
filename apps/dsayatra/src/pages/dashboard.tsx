@@ -1,6 +1,11 @@
 import { ProtectedRoute, useAuth } from "@tbe/auth";
 import { EditDsaOnboardingModal, SEO } from "@tbe/components";
-import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
+import {
+  DSA_TIMELINES,
+  PAGE_REFRESH_TIMEOUT,
+  routes,
+  TOPIC_LABELS,
+} from "@tbe/constants";
 import {
   useDsaCompletedQuestions,
   useDsaQuestions,
@@ -8,71 +13,26 @@ import {
 } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
-import { cn, encodeDsaTopicForUrl, getPreFetchProps } from "@tbe/utils";
+import { cn, getPreFetchProps } from "@tbe/utils";
 import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Progress } from "@ui/progress";
 import { toast } from "@ui/sonner";
 import {
-  ClipboardList,
   Code2,
-  FileText,
   Github,
-  Home,
   Linkedin,
   Monitor,
   PieChart,
-  Target,
   TrendingUp,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
-const SIDEBAR_ITEMS = [
-  { name: "Dashboard", href: "/dashboard", active: true, icon: Home },
-  { name: "Sheets", href: "/sheets", icon: Target },
-  { name: "Revisions", href: "/revisions", icon: FileText },
-  { name: "Topics", href: "/topics", icon: ClipboardList },
-  { name: "Progress", href: "#overall-progress", icon: TrendingUp },
-];
-
 // TOPICS is now computed from real API data inside DsaClient
 
 // Dynamic revisions now fetched inline using weekly assignments and progress
-
-function Sidebar() {
-  return (
-    <aside className="sticky top-[72px] h-[calc(100vh-72px)] w-52 bg-[#0f0f0f] border-r border-[#2a2a2a] z-40 hidden lg:block shrink-0">
-      <div className="py-2 px-2">
-        <nav className="space-y-0.5">
-          {SIDEBAR_ITEMS.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-2 px-3 py-2 strong-text font-semibold transition-all duration-200 rounded-lg group",
-                item.active
-                  ? "bg-[#ff5757] text-white shadow-md shadow-[#ff5757]/10"
-                  : "text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-[#e0e0e0]",
-              )}
-            >
-              <item.icon
-                className={cn(
-                  "w-3.5 h-3.5 transition-colors shrink-0",
-                  item.active
-                    ? "text-white"
-                    : "text-[#a0a0a0] group-hover:text-[#e0e0e0]",
-                )}
-              />
-              <span className="truncate">{item.name}</span>
-            </Link>
-          ))}
-        </nav>
-      </div>
-    </aside>
-  );
-}
 
 function StatCard({
   title,
@@ -145,8 +105,15 @@ const DsaClient = () => {
 
   const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
 
+  // Scope dashboard totals to the user's selected study plan (timeline).
+  // Pre-onboarding users (no timeline) see the full sheet.
+  const dsaTimeline = (profile as any)?.dsaYatra?.timeline as
+    | string
+    | undefined;
   const { rawQuestions: allQuestions } = useDsaQuestions({
     queryKey: "dashboard-dsa-sheet",
+    duration: dsaTimeline,
+    offCampus: true,
   });
   const { completedIds: completedQuestions, solvedToday } =
     useDsaCompletedQuestions({ userId: user?.id });
@@ -334,7 +301,10 @@ const DsaClient = () => {
   ];
 
   const targetLabel = profile?.dsaYatra?.target || "Product-based";
-  const timelineLabel = profile?.dsaYatra?.timeline || "4-6 months";
+  const timelineLabel =
+    DSA_TIMELINES.find((t) => t.value === profile?.dsaYatra?.timeline)?.label ||
+    profile?.dsaYatra?.timeline ||
+    "6 Months";
   const expLabel = profile?.dsaYatra?.experienceLevel || "Fresher (0-1 yr)";
 
   const dailyGoalHours = 4;
@@ -353,10 +323,8 @@ const DsaClient = () => {
   const totalHours = (totalTimeSpent / 60).toFixed(1);
 
   return (
-    <div className="flex bg-[#0f0f0f] font-sans selection:bg-[#ff5757]/30 selection:text-white">
-      <Sidebar />
-
-      <main className="flex-1 px-4 pt-2.5 space-y-4 pb-10">
+    <div className="relative font-sans selection:bg-[#ff5757]/30 selection:text-white min-h-0">
+      <div className="flex flex-col min-h-0 space-y-4 pb-6 overflow-y-auto">
         {/* Header Section */}
         <header className="flex justify-between items-center">
           <div>
@@ -594,7 +562,7 @@ const DsaClient = () => {
               topicProgress.map((topic) => (
                 <Link
                   key={topic.key}
-                  href={`/sheets?topic=${encodeDsaTopicForUrl(topic.key)}`}
+                  href={`/sheets?topic=${topic.key}`}
                   className="block"
                 >
                   <div className="bg-[#0f0f0f] border border-[#2a2a2a] p-4 rounded-lg text-center cursor-pointer hover:border-[#ff5757] transition-all group">
@@ -620,7 +588,7 @@ const DsaClient = () => {
             )}
           </div>
         </Card>
-      </main>
+      </div>
 
       <EditDsaOnboardingModal
         isOpen={isEditModalOpen}

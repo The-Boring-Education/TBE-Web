@@ -2,7 +2,6 @@ export * from "./api";
 export * from "./base";
 export * from "./challenges";
 export { emailClient } from "./client";
-export * from "./dsaYatraService";
 export * from "./email";
 export * from "./prep-logs";
 export * from "./prep-stats";

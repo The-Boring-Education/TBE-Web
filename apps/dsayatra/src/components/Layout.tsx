@@ -16,6 +16,8 @@ const Layout = ({ children }: LayoutProps) => {
     router.pathname === "/dashboard" ||
     router.pathname.startsWith("/dashboard/");
   const isFullScreen = router.pathname === "/sheets";
+  /** Pricing is a distraction-free page (no nav/footer); content supplies its own back control. */
+  const isPricingStandalone = router.pathname === "/pricing";
   const isRevisions = router.pathname === "/revisions";
   const isTopics = router.pathname === "/topics";
   const isLandingPage = router.pathname === "/";
@@ -24,7 +26,7 @@ const Layout = ({ children }: LayoutProps) => {
       ? "/"
       : "/dashboard";
 
-  if (isFullScreen) {
+  if (isFullScreen || isPricingStandalone) {
     return <Fragment>{children}</Fragment>;
   }
 

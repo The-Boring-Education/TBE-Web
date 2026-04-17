@@ -28,7 +28,7 @@ export { default as ChallengeLog } from "./PrepYatra/ChallengeLog";
 export { default as Mentorship } from "./PrepYatra/Mentorship";
 export { default as PrepLog } from "./PrepYatra/PrepLog";
 export { default as Recruiter } from "./PrepYatra/Recruiters";
-export { default as PrepYatraSubscription } from "./PrepYatra/Subscription";
+export { default as Subscription } from "./PrepYatra/Subscription";
 
 // Project models
 export { default as Project } from "./Project";

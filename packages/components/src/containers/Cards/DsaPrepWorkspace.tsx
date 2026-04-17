@@ -40,6 +40,10 @@ export interface DsaPrepWorkspaceProps {
   emptyStateContent?: ReactNode;
   studyGuideConfigs?: Record<string, StudyGuideConfig>;
   userTargetCompanies?: string[];
+  /** Set of question IDs that are locked for freemium users */
+  freemiumLockedQuestionIds?: ReadonlySet<string>;
+  /** Called when a freemium-locked question is clicked — show upgrade UI */
+  onFreemiumLockedClick?: (questionId: string) => void;
   className?: string;
 }
 
@@ -60,6 +64,8 @@ const DsaPrepWorkspace = ({
   emptyStateContent,
   studyGuideConfigs,
   userTargetCompanies = [],
+  freemiumLockedQuestionIds,
+  onFreemiumLockedClick,
   className,
 }: DsaPrepWorkspaceProps) => {
   const { data: studyGuideData, isLoading: isStudyGuideLoading } =
@@ -89,6 +95,10 @@ const DsaPrepWorkspace = ({
   const filteredQuestions = selectedTopic
     ? questions.filter((q) => q.topics?.[0] === selectedTopic)
     : [];
+
+  const lockedItemKeys = freemiumLockedQuestionIds
+    ? new Set(Array.from(freemiumLockedQuestionIds).map(String))
+    : undefined;
 
   const currentTopicConfig =
     selectedTopic && studyGuideConfigs
@@ -325,6 +335,7 @@ const DsaPrepWorkspace = ({
                     }
                     difficultyOrder={STANDARD_DIFFICULTY_ORDER}
                     difficultyLabels={STANDARD_DIFFICULTY_LABELS}
+                    lockedItemKeys={lockedItemKeys}
                     emptyMessage="No questions found."
                     resolveRow={(question) => {
                       const qId = String(question.id || question.name);
@@ -348,7 +359,17 @@ const DsaPrepWorkspace = ({
                         isRealWorldProblem: question.isRealWorldProblem,
                       };
                     }}
-                    onItemClick={onQuestionClick}
+                    onItemClick={(question) => {
+                      const qId = String(
+                        (question as DsaQuestion).id ||
+                          (question as DsaQuestion).name,
+                      );
+                      if (lockedItemKeys?.has(qId)) {
+                        onFreemiumLockedClick?.(qId);
+                      } else {
+                        onQuestionClick(question as DsaQuestion);
+                      }
+                    }}
                     onToggleItemComplete={(_q, itemKey) =>
                       onToggleComplete?.(itemKey)
                     }

@@ -7,7 +7,7 @@ import {
 } from "@/lib/constants";
 import type { PrepYatraSubscriptionModel } from "@/lib/interfaces";
 
-const PrepYatraSubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
+const SubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -68,14 +68,14 @@ const PrepYatraSubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
 );
 
 // Index for efficient queries
-PrepYatraSubscriptionSchema.index({ userId: 1, isActive: 1 });
-PrepYatraSubscriptionSchema.index({ expiryDate: 1 });
+SubscriptionSchema.index({ userId: 1, isActive: 1 });
+SubscriptionSchema.index({ expiryDate: 1 });
 
-const PrepYatraSubscription: Model<PrepYatraSubscriptionModel> =
-  models?.PrepYatraSubscription ||
+const Subscription: Model<PrepYatraSubscriptionModel> =
+  models?.[DATABASE_MODELS.SUBSCRIPTIONS] ||
   model<PrepYatraSubscriptionModel>(
-    DATABASE_MODELS.PREP_YATRA_SUBSCRIPTION,
-    PrepYatraSubscriptionSchema,
+    DATABASE_MODELS.SUBSCRIPTIONS,
+    SubscriptionSchema,
   );
 
-export default PrepYatraSubscription;
+export default Subscription;

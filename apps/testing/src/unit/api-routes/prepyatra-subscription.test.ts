@@ -20,7 +20,7 @@ vi.mock("../../../../api/src/lib/database", () => ({
     updateOne: (...args: unknown[]) => mockUserUpdateOne(...args),
     findOne: (...args: unknown[]) => mockUserFindOne(...args),
   },
-  PrepYatraSubscription: {
+  Subscription: {
     create: (...args: unknown[]) => mockPrepYatraSubscriptionCreate(...args),
     findOne: (...args: unknown[]) => ({
       sort: (...sortArgs: unknown[]) =>

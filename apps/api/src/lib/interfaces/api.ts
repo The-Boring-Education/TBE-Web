@@ -251,7 +251,7 @@ export type DSADomainType =
   | "FULLSTACK"
   | "DSA";
 
-export type DSADifficultyType = "EASY" | "MEDIUM" | "HARD";
+export type { DSADifficultyType } from "@tbe/constants";
 
 export type AptitudeCategoryType =
   | "QUANTITATIVE"

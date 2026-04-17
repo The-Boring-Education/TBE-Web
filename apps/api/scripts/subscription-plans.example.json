@@ -1,54 +1,101 @@
 {
   "plans": [
     {
+      "planUuid": "964124a3-6e86-5d34-9e74-e01f1227968c",
       "productType": "DSA_YATRA",
       "planKey": "lifetime",
-      "amountInr": 0
+      "displayName": "Lifetime Access",
+      "description": "One-time payment for permanent access to all DSA content and future updates",
+      "amountInr": 499,
+      "originalAmountInr": 1999,
+      "accessType": "ONE_TIME",
+      "durationMonths": 0,
+      "features": [
+        "Complete DSA question bank (400+ problems)",
+        "Topic-wise structured practice sheets",
+        "Company-specific question filtering",
+        "Difficulty-based progression system",
+        "Detailed solutions with time/space complexity",
+        "Real-world coding problems",
+        "Progress tracking & revision scheduling",
+        "All future content updates included"
+      ],
+      "isPopular": true,
+      "sortOrder": 1
     },
     {
-      "productType": "PREPYATRA",
-      "planKey": "1months",
-      "amountInr": 0
-    },
-    {
-      "productType": "PREPYATRA",
-      "planKey": "3months",
-      "amountInr": 0
-    },
-    {
-      "productType": "PREPYATRA",
-      "planKey": "6months",
-      "amountInr": 0
-    },
-    {
-      "productType": "PREPYATRA",
-      "planKey": "12months",
-      "amountInr": 0
-    },
-    {
-      "productType": "PREPYATRA",
-      "planKey": "lifetime",
-      "amountInr": 0
-    },
-    {
+      "planUuid": "334b76ba-d316-50cc-91c3-1564ae63542e",
       "productType": "ONCAMPUS",
       "planKey": "1months",
-      "amountInr": 0
+      "displayName": "1 Month",
+      "description": "Quick campus placement boost",
+      "amountInr": 199,
+      "originalAmountInr": 399,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 1,
+      "features": [
+        "Aptitude prep modules",
+        "Core CS fundamentals",
+        "Interview preparation"
+      ],
+      "isPopular": false,
+      "sortOrder": 1
     },
     {
+      "planUuid": "2f7f3b43-92f2-5882-8ebb-b04f7b05d94a",
       "productType": "ONCAMPUS",
       "planKey": "3months",
-      "amountInr": 0
+      "displayName": "3 Months",
+      "description": "Comprehensive placement preparation",
+      "amountInr": 449,
+      "originalAmountInr": 1197,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 3,
+      "features": [
+        "Aptitude prep modules",
+        "Core CS fundamentals",
+        "Interview preparation",
+        "Mock test series",
+        "Company-specific prep"
+      ],
+      "isPopular": true,
+      "sortOrder": 2
     },
     {
+      "planUuid": "aa36e0e9-17a6-5a1f-ac5c-c50bc25e08d9",
       "productType": "ONCAMPUS",
       "planKey": "6months",
-      "amountInr": 0
+      "displayName": "6 Months",
+      "description": "Full placement season coverage",
+      "amountInr": 749,
+      "originalAmountInr": 2394,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 6,
+      "features": [
+        "Everything in 3-month plan",
+        "Extended practice access",
+        "Priority doubt resolution"
+      ],
+      "isPopular": false,
+      "sortOrder": 3
     },
     {
+      "planUuid": "fdb558ba-9d78-56ba-8cc5-5438296854a6",
       "productType": "ONCAMPUS",
       "planKey": "12months",
-      "amountInr": 0
+      "displayName": "12 Months",
+      "description": "Complete campus-to-career journey",
+      "amountInr": 1199,
+      "originalAmountInr": 4788,
+      "accessType": "SUBSCRIPTION",
+      "durationMonths": 12,
+      "features": [
+        "Everything in 6-month plan",
+        "Career guidance sessions",
+        "All future content updates"
+      ],
+      "isPopular": false,
+      "sortOrder": 4
     }
   ]
 }

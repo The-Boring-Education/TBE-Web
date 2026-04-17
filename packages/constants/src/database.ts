@@ -18,7 +18,7 @@ const DATABASE_MODELS = {
   FEEDBACK: "Feedback",
   JOB_AGGREGATE: "JobAggregate",
   PAYMENT: "Payment",
-  PREP_YATRA_SUBSCRIPTION: "PrepYatraSubscription",
+  SUBSCRIPTIONS: "Subscription",
   RECRUITER: "Recruiters",
   PREP_LOG: "PrepLog",
   CHALLENGE: "Challenge",

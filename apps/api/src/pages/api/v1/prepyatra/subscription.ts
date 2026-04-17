@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { User } from "@/lib/database";
-import { PrepYatraSubscription } from "@/lib/database";
+import { Subscription } from "@/lib/database";
 import { type CreateSubscriptionPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
@@ -71,7 +71,7 @@ const handleCreateSubscription = async (
     }
 
     // Create subscription
-    const subscription = await PrepYatraSubscription.create({
+    const subscription = await Subscription.create({
       userId,
       type,
       amount,
@@ -127,7 +127,7 @@ const handleGetSubscription = async (
     }
 
     // Get user's active subscription
-    const subscription = await PrepYatraSubscription.findOne({
+    const subscription = await Subscription.findOne({
       userId,
       isActive: true,
       expiryDate: { $gt: new Date() },
