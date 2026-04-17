@@ -1,10 +1,6 @@
 import { compareDsaTopicKeysForApi } from "@tbe/constants";
 
-import {
-  DSA_DIFFICULTY,
-  DSA_DURATION_DIFFICULTY_BUCKETS,
-  modelSelectParams,
-} from "@/lib/constants";
+import { modelSelectParams } from "@/lib/constants";
 import type {
   AddInterviewQuestionRequestPayloadProps,
   AddInterviewSheetRequestPayloadProps,
@@ -17,10 +13,7 @@ import type {
   UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
 } from "@/lib/interfaces";
-import {
-  generateYouTubeSearchLink,
-  selectQuestionsByDifficultyBuckets,
-} from "@/lib/utils";
+import { generateYouTubeSearchLink } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
 import {
@@ -31,6 +24,16 @@ import {
   UserSheet,
 } from "../models";
 import { toObjectId } from "./common";
+import {
+  applyDsaDurationBuckets,
+  applyDsaFreemiumGate,
+  applyDsaPaidPagination,
+  buildDsaMatchStage,
+  buildDsaSortFieldsStage,
+  buildUserSheetLookupStages,
+  DSA_SORT_STAGE,
+  type DSASheetFilters,
+} from "./dsaSheet";
 import { updateUserPointsInDB } from "./gamification";
 import { checkPaymentStatusFromDB } from "./payment";
 
@@ -690,365 +693,62 @@ const deleteInterviewSheetFromDB = async (
   }
 };
 
-type RealWorldFilterMode = "include" | "exclude" | "only";
-
-interface DSASheetFilters {
-  domain?: DSADomainType | DSADomainType[];
-  difficulty?: DSADifficultyType | DSADifficultyType[];
-  companyTypes?: string | string[];
-  topics?: string | string[];
-  page?: number;
-  limit?: number;
-  userId?: string;
-  /** Duration key e.g. "3Months", "6Months", "1Year" — uses difficulty buckets */
-  duration?: string;
-  /** Off-campus flag — if true, adds off-campus questions on top */
-  offCampus?: boolean;
-  /** Filter real-world problems when bucketizing */
-  realWorld?: RealWorldFilterMode;
-}
-
+/**
+ * Orchestrates the DSA sheet query pipeline:
+ *  1. Resolve the user's target companies and build a match stage.
+ *  2. Build the base aggregation (match + sort fields + optional user progress).
+ *  3. Branch to one of three response paths:
+ *     - Freemium gate (no paid access)
+ *     - Paid + duration buckets
+ *     - Paid + simple pagination
+ *
+ * All non-trivial logic lives in `./dsaSheet.ts` as pure, testable helpers.
+ */
 const getAllDSAQuestionsFromDB = async (
   filters: DSASheetFilters = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const {
-      domain,
-      difficulty,
-      companyTypes,
-      topics,
-      page = 1,
-      limit = 50,
-      userId,
-      duration,
-      offCampus,
-      realWorld,
-    } = filters;
-
-    // Build match stage for filtering
-    const matchStage: any = {};
-
-    if (domain) {
-      const domains = Array.isArray(domain) ? domain : [domain];
-      matchStage.domain = { $in: domains };
-    }
-
-    if (difficulty) {
-      const difficulties = Array.isArray(difficulty)
-        ? difficulty
-        : [difficulty];
-      matchStage.difficulty = { $in: difficulties };
-    }
-
-    if (companyTypes) {
-      const types = Array.isArray(companyTypes) ? companyTypes : [companyTypes];
-      matchStage.companyTypes = { $in: types };
-    }
-
-    if (topics) {
-      const topicsList = Array.isArray(topics) ? topics : [topics];
-      matchStage.topics = { $in: topicsList };
-    }
-
-    if (realWorld === "only") {
-      matchStage.isRealWorldProblem = true;
-    } else if (realWorld === "exclude") {
-      matchStage.isRealWorldProblem = { $ne: true };
-    }
+    const { userId, duration, page = 1, limit = 50, isPaidUser } = filters;
 
     const targetCompanies = userId
       ? await getUserDSATargetCompanies(userId)
       : [];
 
-    // Intersection logic ensures only questions within user's focus are returned
-    if (userId) {
-      if (targetCompanies.length > 0) {
-        if (matchStage.companyTypes) {
-          const currentIn = matchStage.companyTypes.$in || [];
-          const intersection = currentIn.filter((t: string) =>
-            targetCompanies.includes(t),
-          );
-          matchStage.companyTypes = {
-            $in: intersection.length > 0 ? intersection : targetCompanies,
-          };
-        } else {
-          matchStage.companyTypes = { $in: targetCompanies };
-        }
-      }
-    }
-
-    const totalCount = duration
-      ? null
-      : await DSAQuestion.countDocuments(matchStage);
-
-    const DSA_TOPIC_SORT_ORDER = [
-      "ARRAY",
-      "STRING",
-      "HASHMAP",
-      "TWO_POINTERS",
-      "SLIDING_WINDOW",
-      "PREFIX_SUM",
-      "SORTING",
-      "BINARY_SEARCH",
-      "MATH",
-      "BIT_MANIPULATION",
-      "RECURSION",
-      "LINKED_LIST",
-      "STACK",
-      "QUEUE",
-      "BINARY_TREE",
-      "TREE",
-      "BST",
-      "HEAP",
-      "TRIE",
-      "GRAPH",
-      "DFS",
-      "BFS",
-      "BACKTRACKING",
-      "DYNAMIC_PROGRAMMING",
-      "GREEDY",
-      "UNION_FIND",
-    ];
+    const matchStage = buildDsaMatchStage(filters, targetCompanies);
 
     const aggregate: any[] = [
       { $match: matchStage },
-      {
-        $addFields: {
-          _topicOrder: {
-            $let: {
-              vars: {
-                idx: {
-                  $indexOfArray: [
-                    DSA_TOPIC_SORT_ORDER,
-                    { $arrayElemAt: ["$topics", 0] },
-                  ],
-                },
-              },
-              in: { $cond: [{ $eq: ["$$idx", -1] }, 999, "$$idx"] },
-            },
-          },
-          _difficultyOrder: {
-            $switch: {
-              branches: [
-                { case: { $eq: ["$difficulty", "EASY"] }, then: 1 },
-                { case: { $eq: ["$difficulty", "MEDIUM"] }, then: 2 },
-                { case: { $eq: ["$difficulty", "HARD"] }, then: 3 },
-              ],
-              default: 4,
-            },
-          },
-          _priorityScore: {
-            $cond: {
-              if: {
-                $gt: [
-                  {
-                    $size: {
-                      $setIntersection: ["$companyTypes", targetCompanies],
-                    },
-                  },
-                  0,
-                ],
-              },
-              then: 1,
-              else: 0,
-            },
-          },
-        },
-      },
+      buildDsaSortFieldsStage(targetCompanies),
     ];
 
-    // If userId provided, join with UserSheet to get status and notes
     if (userId) {
       aggregate.push(
-        {
-          $lookup: {
-            from: "usersheets", // MongoDB collection name for UserSheet
-            let: { qId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  userId: toObjectId(userId),
-                  sheetId: toObjectId(DSA_YATRA_SYSTEM_SHEET_ID),
-                },
-              },
-              { $unwind: "$questions" },
-              {
-                $match: { $expr: { $eq: ["$questions.questionId", "$$qId"] } },
-              },
-              {
-                $project: {
-                  _id: 0,
-                  isCompleted: "$questions.isCompleted",
-                  isStarred: "$questions.isStarred",
-                  notes: "$questions.notes",
-                },
-              },
-            ],
-            as: "userStatus",
-          },
-        },
-        {
-          $addFields: {
-            userStatus: { $arrayElemAt: ["$userStatus", 0] },
-          },
-        },
-        {
-          $addFields: {
-            isCompleted: { $ifNull: ["$userStatus.isCompleted", false] },
-            isStarred: { $ifNull: ["$userStatus.isStarred", false] },
-            notes: { $ifNull: ["$userStatus.notes", ""] },
-          },
-        },
+        ...buildUserSheetLookupStages(userId, DSA_YATRA_SYSTEM_SHEET_ID),
       );
     }
 
-    aggregate.push({
-      $sort: {
-        _priorityScore: -1,
-        _topicOrder: 1,
-        _difficultyOrder: 1,
-        order: 1,
-        createdAt: -1,
-      },
-    });
+    aggregate.push(DSA_SORT_STAGE);
 
-    const stripInternalFields = (question: Record<string, unknown>) => {
-      const cleaned = { ...question };
-      delete cleaned._topicOrder;
-      delete cleaned._difficultyOrder;
-      delete cleaned._priorityScore;
-      delete cleaned._topicLimit;
-      delete cleaned.userStatus;
-      return cleaned;
-    };
-
-    if (!duration) {
-      // Paginate with default ordering
-      aggregate.push(
-        { $skip: (page - 1) * limit },
-        { $limit: limit },
-        {
-          $project: {
-            _topicOrder: 0,
-            _difficultyOrder: 0,
-            _priorityScore: 0,
-            _topicLimit: 0,
-            userStatus: 0,
-          },
-        },
-      );
-
-      const questions = await DSAQuestion.aggregate(aggregate);
-      const total = totalCount ?? 0;
-
-      return {
-        data: {
-          questions,
-          pagination: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-            hasMore: page * limit < total,
-          },
-        },
-      };
+    // Freemium path: return ALL matching rows, mark per-difficulty caps.
+    if (!isPaidUser) {
+      const allQuestions = await DSAQuestion.aggregate(aggregate);
+      return { data: applyDsaFreemiumGate(allQuestions, page, limit) };
     }
 
-    const baseQuestions = await DSAQuestion.aggregate(aggregate);
-    const bucketConfig = DSA_DURATION_DIFFICULTY_BUCKETS[duration];
-
-    const normalizeSeedValue = (value?: string | string[]) => {
-      if (!value) return "";
-      const values = Array.isArray(value) ? value : [value];
-      return values
-        .map((entry) => entry.toString().trim().toUpperCase())
-        .sort()
-        .join(",");
-    };
-
-    const seed = [
-      userId ?? "__no_user__",
-      duration,
-      offCampus ? "off-campus" : "on-campus",
-      realWorld ?? "include",
-      normalizeSeedValue(domain as string | string[] | undefined),
-      normalizeSeedValue(difficulty as string | string[] | undefined),
-      normalizeSeedValue(companyTypes as string | string[] | undefined),
-      normalizeSeedValue(topics as string | string[] | undefined),
-    ].join("|");
-
-    const scaledBuckets = bucketConfig
-      ? (Object.fromEntries(
-          Object.entries(bucketConfig).map(([key, count]) => [
-            key,
-            offCampus ? Math.ceil(count * 1.5) : count,
-          ]),
-        ) as Record<DSADifficultyType, number>)
-      : null;
-
-    if (!scaledBuckets) {
-      const total = baseQuestions.length;
-      const paged = baseQuestions
-        .slice((page - 1) * limit, (page - 1) * limit + limit)
-        .map((question) =>
-          stripInternalFields(question as Record<string, unknown>),
-        );
-
-      return {
-        data: {
-          questions: paged,
-          pagination: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-            hasMore: page * limit < total,
-          },
-        },
-      };
+    // Paid + duration buckets path.
+    if (duration) {
+      const rows = await DSAQuestion.aggregate(aggregate);
+      return { data: applyDsaDurationBuckets(rows, filters, page, limit) };
     }
 
-    const { selected } = selectQuestionsByDifficultyBuckets(baseQuestions, {
-      buckets: scaledBuckets,
-      difficultyOrder: DSA_DIFFICULTY,
-      seed,
-      getDifficulty: (question) => {
-        const raw = String(
-          (question as { difficulty?: unknown }).difficulty || "",
-        )
-          .trim()
-          .toUpperCase();
-        return (DSA_DIFFICULTY as readonly string[]).includes(raw)
-          ? (raw as DSADifficultyType)
-          : null;
-      },
-      getPriorityScore: (question) =>
-        typeof (question as { _priorityScore?: unknown })._priorityScore ===
-        "number"
-          ? ((question as { _priorityScore?: number })._priorityScore as number)
-          : 0,
-    });
-
-    const total = selected.length;
-    const paged = selected
-      .slice((page - 1) * limit, (page - 1) * limit + limit)
-      .map((question) =>
-        stripInternalFields(question as Record<string, unknown>),
-      );
-
-    return {
-      data: {
-        questions: paged,
-        pagination: {
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
-          hasMore: page * limit < total,
-        },
-      },
-    };
+    // Paid + simple pagination path (uses countDocuments for accurate total).
+    const totalCount = await DSAQuestion.countDocuments(matchStage);
+    const rows = await DSAQuestion.aggregate([
+      ...aggregate,
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+    ]);
+    return { data: applyDsaPaidPagination(rows, page, limit, totalCount) };
   } catch (error) {
     logger.error("DB: getAllDSAQuestionsFromDB failed", {
       error: error instanceof Error ? error.message : String(error),
@@ -1291,7 +991,15 @@ const getDSAQuestionsGroupedByTopic = async (
                 $gt: [
                   {
                     $size: {
-                      $setIntersection: ["$companyTypes", targetCompanies],
+                      $ifNull: [
+                        {
+                          $setIntersection: [
+                            { $ifNull: ["$companyTypes", []] },
+                            targetCompanies,
+                          ],
+                        },
+                        [],
+                      ],
                     },
                   },
                   0,

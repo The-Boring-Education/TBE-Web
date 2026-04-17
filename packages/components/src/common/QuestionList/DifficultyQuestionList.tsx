@@ -24,6 +24,7 @@ export function DifficultyQuestionList<T>({
   difficultyLabels = STANDARD_DIFFICULTY_LABELS,
   fallbackDifficulty = "MEDIUM",
   defaultGroupExpanded = true,
+  lockedItemKeys,
 }: DifficultyQuestionListProps<T>) {
   return (
     <DifficultyGroupedList
@@ -40,10 +41,12 @@ export function DifficultyQuestionList<T>({
       renderItem={(item) => {
         const row = resolveRow(item);
         const key = String(getItemKey(item));
+        const isLocked = lockedItemKeys?.has(key) ?? false;
 
         return (
           <QuestionRow
             {...row}
+            isLocked={isLocked}
             onClick={() => onItemClick?.(item)}
             onToggleComplete={() => {
               onToggleItemComplete?.(item, key);

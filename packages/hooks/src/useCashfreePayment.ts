@@ -56,11 +56,18 @@ const useCashfreePayment = () => {
     return cleanupCashfreeSDK;
   }, [loadCashfreeSDK]);
 
+  /**
+   * @param returnUrlAfterPayment - **Absolute** URL Cashfree redirects to after payment
+   * (`redirectTarget: "_self"`). Defaults to `window.location.href`. Use your app’s
+   * `/payment/status?order_id=...&next=...` here — if this is the checkout page, a full
+   * redirect reloads the app and `onSuccess` may never run.
+   */
   const launchPayment = async (
     paymentSessionId: string,
     onSuccess?: (data: any) => void,
     onFailure?: (data: any) => void,
     onClose?: () => void,
+    returnUrlAfterPayment?: string,
   ) => {
     const PaymentSDK = window.Cashfree || window.CFPaymentSDK;
     if (!PaymentSDK) {
@@ -78,9 +85,11 @@ const useCashfreePayment = () => {
       mode,
     });
 
+    const returnUrl = returnUrlAfterPayment ?? window.location.href;
+
     await cashfree.checkout({
       paymentSessionId,
-      returnUrl: window.location.href,
+      returnUrl,
       redirectTarget: "_self",
       onSuccess,
       onFailure,

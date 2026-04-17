@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { validate as uuidValidate } from "uuid";
 
 import { apiStatusCodes } from "@/lib/constants";
 import type { ProductType } from "@/lib/constants/database";
 import { isValidProductType } from "@/lib/constants/products";
 import {
   listSubscriptionPlansFromDB,
+  type SubscriptionPlanInput,
   upsertSubscriptionPlansInDB,
 } from "@/lib/database";
 import type { APIResponseType } from "@/lib/interfaces";
@@ -13,16 +15,31 @@ import { logger } from "@/lib/utils/logger";
 import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
-interface SeedBody {
-  plans: Array<{
-    productType: string;
-    planKey: string;
-    amountInr: number;
-    isActive?: boolean;
-  }>;
+/** Payload for POST — all catalog fields optional except core SKU + price. */
+interface SeedPlanBody {
+  productType: string;
+  planKey: string;
+  amountInr: number;
+  planUuid?: string;
+  displayName?: string;
+  description?: string;
+  originalAmountInr?: number;
+  accessType?: "ONE_TIME" | "SUBSCRIPTION";
+  durationMonths?: number;
+  features?: string[];
+  isPopular?: boolean;
+  isActive?: boolean;
+  sortOrder?: number;
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<APIResponseType>) => {
+interface SeedBody {
+  plans: SeedPlanBody[];
+}
+
+const handler = async (
+  req: NextApiRequest,
+  res: NextApiResponse<APIResponseType>,
+) => {
   const adminCheck = await adminMiddleware(req, res);
   if (!adminCheck) return;
 
@@ -103,16 +120,34 @@ const handlePost = async (
         }),
       );
     }
+    const uuid = p.planUuid?.trim();
+    if (uuid && !uuidValidate(uuid)) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Invalid planUuid (expected RFC 4122): ${p.planUuid}`,
+        }),
+      );
+    }
   }
 
-  const { data, error } = await upsertSubscriptionPlansInDB(
-    body.plans.map((p) => ({
-      productType: p.productType as ProductType,
-      planKey: p.planKey,
-      amountInr: p.amountInr,
-      isActive: p.isActive,
-    })),
-  );
+  const inputs: SubscriptionPlanInput[] = body.plans.map((p) => ({
+    productType: p.productType as ProductType,
+    planKey: p.planKey,
+    planUuid: p.planUuid?.trim() || undefined,
+    displayName: p.displayName,
+    description: p.description,
+    amountInr: p.amountInr,
+    originalAmountInr: p.originalAmountInr,
+    accessType: p.accessType,
+    durationMonths: p.durationMonths,
+    features: p.features,
+    isPopular: p.isPopular,
+    isActive: p.isActive,
+    sortOrder: p.sortOrder,
+  }));
+
+  const { data, error } = await upsertSubscriptionPlansInDB(inputs);
 
   if (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(

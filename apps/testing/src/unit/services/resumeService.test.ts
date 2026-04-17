@@ -1,11 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@tbe/constants", () => ({
-  envConfig: {
-    UNSKILLED_API_URL: "https://unskilled.test.com",
-  },
-  TOPIC_LABELS: {},
-}));
+vi.mock("@tbe/constants", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@tbe/constants")>();
+  return {
+    ...actual,
+    envConfig: {
+      ...actual.envConfig,
+      UNSKILLED_API_URL: "https://unskilled.test.com",
+    },
+  };
+});
 
 global.fetch = vi.fn();
 

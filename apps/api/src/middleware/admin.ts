@@ -1,5 +1,5 @@
-import { withAdminAuth as withAdminAuthBase } from "@tbe/auth";
 import type { AuthenticatedRequest } from "@tbe/auth";
+import { withAdminAuth as withAdminAuthBase } from "@tbe/auth";
 import type { NextApiHandler, NextApiResponse } from "next";
 
 const ADMIN_EMAILS = [
@@ -8,5 +8,8 @@ const ADMIN_EMAILS = [
 ];
 
 export const withAdminAuth: (
-  handler: (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void> | void,
+  handler: (
+    req: AuthenticatedRequest,
+    res: NextApiResponse,
+  ) => Promise<void> | void,
 ) => NextApiHandler = withAdminAuthBase(ADMIN_EMAILS);

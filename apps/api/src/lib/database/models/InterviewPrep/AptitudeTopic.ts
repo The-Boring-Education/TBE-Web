@@ -1,11 +1,8 @@
+import { DSA_DIFFICULTY } from "@tbe/constants";
 import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
-import {
-  APTITUDE_TOPIC_SLUGS,
-  DATABASE_MODELS,
-  DSA_DIFFICULTY,
-} from "@/lib/constants";
+import { APTITUDE_TOPIC_SLUGS, DATABASE_MODELS } from "@/lib/constants";
 import type {
   AptitudeQuestionModel,
   AptitudeQuestionOptionModel,

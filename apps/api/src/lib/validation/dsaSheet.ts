@@ -1,13 +1,11 @@
-import { DSA_EXTRA_QUESTION_TOPICS } from "@tbe/constants";
+import {
+  DSA_DIFFICULTY,
+  DSA_DURATION_DIFFICULTY_BUCKETS,
+  DSA_EXTRA_QUESTION_TOPICS,
+} from "@tbe/constants";
 import { z } from "zod";
 
-import {
-  COMPANY_TYPES,
-  DSA_DIFFICULTY,
-  DSA_DOMAIN,
-  DSA_DURATION_DIFFICULTY_BUCKETS,
-  DSA_TOPICS,
-} from "@/lib/constants";
+import { COMPANY_TYPES, DSA_DOMAIN, DSA_TOPICS } from "@/lib/constants";
 import type {
   DSADifficultyType,
   DSADomainType,

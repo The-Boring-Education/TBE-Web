@@ -51,6 +51,128 @@ const applyCouponToFlatPrice = (
   return Math.max(0, Math.round((baseAmount - discount) * 100) / 100);
 };
 
+type CouponResolution = {
+  coupon?: CouponModel;
+  appliedCoupon?: string;
+  couponCode?: string;
+};
+
+const resolveCoupon = async ({
+  couponCode,
+  productId,
+  productType,
+  userId,
+}: {
+  couponCode?: string | null;
+  productId: string;
+  productType: ProductType;
+  userId?: string;
+}): Promise<
+  { ok: true; data: CouponResolution } | { ok: false; error: string }
+> => {
+  if (!couponCode) {
+    return { ok: true, data: {} };
+  }
+
+  const { data: coupon, error } = await validateCouponForProductFromDB(
+    couponCode,
+    productId,
+    productType,
+    userId,
+  );
+
+  if (error || !coupon) {
+    return { ok: false, error: error || "Invalid coupon" };
+  }
+
+  const couponModel = toCouponModel(coupon as CouponModel);
+  return {
+    ok: true,
+    data: {
+      coupon: couponModel,
+      appliedCoupon: coupon._id.toString(),
+      couponCode: coupon.code,
+    },
+  };
+};
+
+const buildResolvedAmount = (
+  baseAmount: number,
+  finalAmount: number,
+  coupon?: CouponResolution,
+): ResolvedOrderAmount => ({
+  baseAmount,
+  finalAmount,
+  ...(coupon?.appliedCoupon ? { appliedCoupon: coupon.appliedCoupon } : {}),
+  ...(coupon?.couponCode ? { couponCode: coupon.couponCode } : {}),
+});
+
+const ensurePositivePrice = (
+  price: number,
+  message: string,
+): { ok: false; error: string } | null => {
+  if (!price || price <= 0) {
+    return { ok: false, error: message };
+  }
+  return null;
+};
+
+const resolveFlatPrice = async ({
+  baseAmount,
+  errorMessage,
+  productId,
+  productType,
+  couponCode,
+  userId,
+}: {
+  baseAmount: number;
+  errorMessage: string;
+  productId: string;
+  productType: ProductType;
+  couponCode?: string | null;
+  userId?: string;
+}): Promise<
+  | {
+      ok: true;
+      data: ResolvedOrderAmount;
+    }
+  | { ok: false; error: string }
+> => {
+  const invalid = ensurePositivePrice(baseAmount, errorMessage);
+  if (invalid) {
+    return invalid;
+  }
+
+  const couponResult = await resolveCoupon({
+    couponCode,
+    productId,
+    productType,
+    userId,
+  });
+
+  if (!couponResult.ok) {
+    return { ok: false, error: couponResult.error };
+  }
+
+  const finalAmount = couponResult.data.coupon
+    ? applyCouponToFlatPrice(baseAmount, productId, couponResult.data.coupon)
+    : baseAmount;
+
+  return {
+    ok: true,
+    data: buildResolvedAmount(baseAmount, finalAmount, couponResult.data),
+  };
+};
+
+const subscriptionPlanProductTypes: ProductType[] = [
+  "PREPYATRA",
+  "DSA_YATRA",
+  "ONCAMPUS",
+  "PROJECTS",
+  "WEBINAR",
+  "GENERAL",
+];
+
 /**
  * Server-side price resolution for Cashfree orders. Never trust client-supplied amounts.
  */
@@ -67,8 +189,6 @@ export const resolveAuthoritativeOrderAmount = async ({
   | { ok: false; error: string }
 > => {
   try {
-    let baseAmount = 0;
-
     switch (productType) {
       case "INTERVIEW_SHEET": {
         const { data: sheet, error } =
@@ -77,47 +197,35 @@ export const resolveAuthoritativeOrderAmount = async ({
           return { ok: false, error: error || "Interview sheet not found" };
         }
         const sheetModel = sheet as unknown as InterviewSheetModel;
-        const sheetForPricing =
-          sheetModel as unknown as InterviewSheetForPricing;
-        baseAmount = sheetModel.price ?? 0;
-        if (!baseAmount || baseAmount <= 0) {
-          return { ok: false, error: "Invalid sheet price" };
+        const baseAmount = sheetModel.price ?? 0;
+        const invalid = ensurePositivePrice(baseAmount, "Invalid sheet price");
+        if (invalid) {
+          return invalid;
         }
 
-        if (couponCode) {
-          const { data: coupon, error: cErr } =
-            await validateCouponForProductFromDB(
-              couponCode,
-              productId,
-              productType,
-              userId,
-            );
-          if (cErr || !coupon) {
-            return { ok: false, error: cErr || "Invalid coupon" };
-          }
-          const couponModel = toCouponModel(coupon as CouponModel);
-          const breakdown = calculatePriceBreakdown(
-            sheetForPricing,
-            couponModel,
-          );
-          return {
-            ok: true,
-            data: {
-              baseAmount,
-              finalAmount: breakdown.finalPrice,
-              appliedCoupon: coupon._id.toString(),
-              couponCode: coupon.code,
-            },
-          };
+        const couponResult = await resolveCoupon({
+          couponCode,
+          productId,
+          productType,
+          userId,
+        });
+
+        if (!couponResult.ok) {
+          return { ok: false, error: couponResult.error };
         }
 
-        const breakdown = calculatePriceBreakdown(sheetForPricing);
+        const breakdown = calculatePriceBreakdown(
+          sheetModel as unknown as InterviewSheetForPricing,
+          couponResult.data.coupon,
+        );
+
         return {
           ok: true,
-          data: {
+          data: buildResolvedAmount(
             baseAmount,
-            finalAmount: breakdown.finalPrice,
-          },
+            breakdown.finalPrice,
+            couponResult.data,
+          ),
         };
       }
 
@@ -126,94 +234,35 @@ export const resolveAuthoritativeOrderAmount = async ({
         if (error || !course) {
           return { ok: false, error: error || "Course not found" };
         }
-        const price = (course as { price?: number }).price ?? 0;
-        if (!price || price <= 0) {
-          return { ok: false, error: "Invalid course price" };
-        }
-        baseAmount = price;
-
-        if (couponCode) {
-          const { data: coupon, error: cErr } =
-            await validateCouponForProductFromDB(
-              couponCode,
-              productId,
-              productType,
-              userId,
-            );
-          if (cErr || !coupon) {
-            return { ok: false, error: cErr || "Invalid coupon" };
-          }
-          const couponModel = toCouponModel(coupon as CouponModel);
-          const finalAmount = applyCouponToFlatPrice(
-            baseAmount,
-            productId,
-            couponModel,
-          );
-          return {
-            ok: true,
-            data: {
-              baseAmount,
-              finalAmount,
-              appliedCoupon: coupon._id.toString(),
-              couponCode: coupon.code,
-            },
-          };
-        }
-
-        return { ok: true, data: { baseAmount, finalAmount: baseAmount } };
+        const baseAmount = (course as { price?: number }).price ?? 0;
+        return resolveFlatPrice({
+          baseAmount,
+          errorMessage: "Invalid course price",
+          productId,
+          productType,
+          couponCode,
+          userId,
+        });
       }
 
-      case "PREPYATRA":
-      case "DSA_YATRA":
-      case "ONCAMPUS":
-      case "PROJECTS":
-      case "WEBINAR":
-      case "GENERAL": {
+      default:
+        if (!subscriptionPlanProductTypes.includes(productType)) {
+          return { ok: false, error: "Unsupported product type" };
+        }
+
         const price = await getSubscriptionPlanPriceFromDB(
           productType,
           productId,
         );
-        if (price === null || price <= 0) {
-          return {
-            ok: false,
-            error: `Plan pricing not configured or inactive for ${productType} / ${productId}. Ask an admin to seed subscription plans.`,
-          };
-        }
-        baseAmount = price;
 
-        if (couponCode) {
-          const { data: coupon, error: cErr } =
-            await validateCouponForProductFromDB(
-              couponCode,
-              productId,
-              productType,
-              userId,
-            );
-          if (cErr || !coupon) {
-            return { ok: false, error: cErr || "Invalid coupon" };
-          }
-          const couponModel = toCouponModel(coupon as CouponModel);
-          const finalAmount = applyCouponToFlatPrice(
-            baseAmount,
-            productId,
-            couponModel,
-          );
-          return {
-            ok: true,
-            data: {
-              baseAmount,
-              finalAmount,
-              appliedCoupon: coupon._id.toString(),
-              couponCode: coupon.code,
-            },
-          };
-        }
-
-        return { ok: true, data: { baseAmount, finalAmount: baseAmount } };
-      }
-
-      default:
-        return { ok: false, error: "Unsupported product type" };
+        return resolveFlatPrice({
+          baseAmount: price ?? 0,
+          errorMessage: `Plan pricing not configured or inactive for ${productType} / ${productId}. Ask an admin to seed subscription plans.`,
+          productId,
+          productType,
+          couponCode,
+          userId,
+        });
     }
   } catch (e) {
     return {
