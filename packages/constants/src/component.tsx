@@ -183,6 +183,7 @@ const getNavbarVariantConfig = (
     borderClass: "border-b border-greyLight",
     requiresAuth: true,
     showGamification: true,
+    pricingNavLink: { href: "/pricing", label: "Pricing" },
     navigation: {
       issues: true,
       cohorts: false,
@@ -218,6 +219,7 @@ const getNavbarVariantConfig = (
     borderClass: "border-0 dark:border-0",
     requiresAuth: true,
     showGamification: true,
+    pricingNavLink: { href: "/pricing", label: "Pricing" },
     navigation: {
       issues: true,
       cohorts: false,

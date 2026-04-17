@@ -233,6 +233,10 @@ export {
 /** @deprecated Use `useGamifiedAction` from `@tbe/gamification` instead */
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
 export * from "./dsayatra";
+export {
+  APP_DASHBOARD_SIDEBAR_BUTTON_CLASS,
+  isDashboardSidebarLinkActive,
+} from "./layout/appDashboardSidebarNav";
 export { default as Footer } from "./layout/Footer";
 export { default as LearningEnvironmentLayout } from "./layout/LearningEnvironmentLayout";
 export { default as LearningNavbar } from "./layout/LearningNavbar";

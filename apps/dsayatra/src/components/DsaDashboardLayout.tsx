@@ -14,34 +14,37 @@ import {
 } from "@tbe/components";
 import { useUser } from "@tbe/hooks";
 import {
-  BrainCircuit,
   ClipboardList,
   FileText,
   Home,
   Target,
+  TrendingUp,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 
-interface DashboardLayoutProps {
+interface DsaDashboardLayoutProps {
   children: ReactNode;
 }
 
-export const DASHBOARD_SIDEBAR_ITEMS = [
+export const DSA_DASHBOARD_SIDEBAR_ITEMS = [
   { name: "Dashboard", icon: Home, href: "/dashboard" },
-  { name: "Interview Sheets", icon: Target, href: "/dashboard/interview-prep" },
-  { name: "DSA", icon: FileText, href: "/dashboard/dsa-prep" },
-  { name: "Quizes", icon: ClipboardList, href: "/dashboard/quizzes" },
-  { name: "Aptitude", icon: BrainCircuit, href: "/dashboard/aptitude" },
+  { name: "Sheets", icon: Target, href: "/sheets" },
+  { name: "Revisions", icon: FileText, href: "/revisions" },
+  { name: "Topics", icon: ClipboardList, href: "/topics" },
+  {
+    name: "Progress",
+    icon: TrendingUp,
+    href: "/dashboard#overall-progress",
+  },
 ];
 
-const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
   const router = useRouter();
   const { isAuth, loading } = useUser();
   const isPricingPage = router.pathname === "/pricing";
 
-  // Centralized auth guard for dashboard routes (pricing stays reachable without login)
   useEffect(() => {
     if (isPricingPage) return;
     if (!loading && !isAuth) {
@@ -66,7 +69,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <Sidebar className="border-r border-gray-800">
         <SidebarContent className="pt-10">
           <SidebarMenu>
-            {DASHBOARD_SIDEBAR_ITEMS.map((item) => (
+            {DSA_DASHBOARD_SIDEBAR_ITEMS.map((item) => (
               <SidebarMenuItem key={item.name}>
                 <SidebarMenuButton
                   isActive={isDashboardSidebarLinkActive(
@@ -86,9 +89,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </SidebarContent>
       </Sidebar>
 
-      {/* SidebarInset is the scrollable main area to the right of the fixed sidebar */}
       <SidebarInset className="bg-[#0A0A0A] flex flex-col">
-        <Navbar variant="oncampus" theme="dark" />
+        <Navbar variant="dsayatra" theme="dark" />
         <main className="flex-1 py-16 px-8 space-y-6">{children}</main>
 
         <div
@@ -99,11 +101,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             zIndex: 20,
           }}
         >
-          <Footer variant="oncampus" />
+          <Footer />
         </div>
       </SidebarInset>
     </SidebarProvider>
   );
 };
 
-export default DashboardLayout;
+export default DsaDashboardLayout;

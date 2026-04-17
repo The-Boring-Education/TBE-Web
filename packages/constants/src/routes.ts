@@ -120,6 +120,7 @@ const routes = {
     home: "/",
     login: "/login",
     dashboard: "/dashboard",
+    pricing: "/pricing",
     dsa: "/dashboard/dsa-prep",
     interviewPrep: "/dashboard/interview-prep",
     quizes: "/dashboard/interview-prep",

@@ -41,6 +41,7 @@ const AppContent = ({
   }, [router.events]);
 
   const isDashboardRoute = router.pathname.startsWith("/dashboard");
+  const isPricingRoute = router.pathname === "/pricing";
   const isDSAPrepRoute = router.pathname.startsWith("/dashboard/dsa-prep");
   // Exclude slug pages from DashboardLayout (they should be full-screen study view)
   // router.pathname for dynamic routes is the pattern like '/dashboard/interview-prep/[sheetSlug]' or '/dsa-prep/[sheetSlug]'
@@ -56,7 +57,7 @@ const AppContent = ({
   const isQuizzesRoute = router.pathname === "/dashboard/quizzes";
 
   const shouldUseDashboardLayout =
-    (isDashboardRoute || isDSAPrepRoute) &&
+    (isDashboardRoute || isDSAPrepRoute || isPricingRoute) &&
     !isStudyRoute &&
     !isDSAMainRoute &&
     !isAptitudeRoute &&

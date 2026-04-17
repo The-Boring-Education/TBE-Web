@@ -95,7 +95,7 @@ const DSAPrepPage = () => {
   }, [hasLockedQuestions, questions]);
   const unlockedCount = questions.filter((q) => !q.isLocked).length;
 
-  const handleUpgrade = () => router.push("/campus-prep");
+  const handleUpgrade = () => router.push(routes.oncampus.pricing);
   const handleDismissUpsell = () => {
     setShowPayment(false);
     setSelectedQuestion(null);
