@@ -419,6 +419,11 @@ export interface PaymentModel extends Document {
 
 /** One row per (productType, planKey) subscription SKU; amounts are authoritative for checkout. */
 export interface SubscriptionPlanModel extends Document {
+  /**
+   * Stable id for the same plan across envs / migrations (seed JSON or derived).
+   * Unique when set; legacy rows may omit until re-seeded.
+   */
+  planUuid?: string;
   productType: ProductType;
   /** Normalized to lowercase in DB (e.g. lifetime, 3months). */
   planKey: string;

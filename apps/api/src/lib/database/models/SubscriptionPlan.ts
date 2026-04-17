@@ -5,6 +5,15 @@ import type { SubscriptionPlanModel } from "@/lib/interfaces";
 
 const SubscriptionPlanSchema = new Schema<SubscriptionPlanModel>(
   {
+    /**
+     * Stable external id for the same logical plan across environments (staging/prod)
+     * and for migrations. Prefer explicit values in seed JSON; otherwise derived in code.
+     */
+    planUuid: {
+      type: String,
+      trim: true,
+      sparse: true,
+    },
     productType: {
       type: String,
       enum: PRODUCT_TYPE,
@@ -77,6 +86,8 @@ const SubscriptionPlanSchema = new Schema<SubscriptionPlanModel>(
 );
 
 SubscriptionPlanSchema.index({ productType: 1, planKey: 1 }, { unique: true });
+/** One canonical UUID per plan (sparse: legacy docs without planUuid remain valid). */
+SubscriptionPlanSchema.index({ planUuid: 1 }, { unique: true, sparse: true });
 
 const SubscriptionPlan: Model<SubscriptionPlanModel> =
   models?.SubscriptionPlan ||

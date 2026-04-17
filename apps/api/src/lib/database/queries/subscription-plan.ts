@@ -1,12 +1,23 @@
+import { v5 as uuidv5 } from "uuid";
+
 import type { ProductType } from "@/lib/constants/database";
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
 
 import SubscriptionPlan from "../models/SubscriptionPlan";
 
+/**
+ * Fixed namespace for UUID v5 derivation when `planUuid` is omitted from seed data.
+ * Same (productType, planKey) always yields the same `planUuid` across environments.
+ */
+export const SUBSCRIPTION_PLAN_UUID_NAMESPACE =
+  "f47ac10b-58cc-4372-a567-0e02b2c3d479";
+
 export interface SubscriptionPlanInput {
   productType: ProductType;
   planKey: string;
+  /** Optional explicit UUID from seed JSON (stable across prod/staging when copied). */
+  planUuid?: string;
   displayName?: string;
   description?: string;
   amountInr: number;
@@ -18,6 +29,21 @@ export interface SubscriptionPlanInput {
   isActive?: boolean;
   sortOrder?: number;
 }
+
+/** Resolve stored plan UUID: explicit seed value, else deterministic v5 from SKU. */
+export const resolveSubscriptionPlanUuid = (
+  input: SubscriptionPlanInput,
+  normalizedPlanKey: string,
+): string => {
+  const explicit = input.planUuid?.trim();
+  if (explicit) {
+    return explicit.toLowerCase();
+  }
+  return uuidv5(
+    `${input.productType}:${normalizedPlanKey}`,
+    SUBSCRIPTION_PLAN_UUID_NAMESPACE,
+  );
+};
 
 const normalizePlanKey = (key: string) => key.trim().toLowerCase();
 
@@ -75,6 +101,7 @@ export const upsertSubscriptionPlansInDB = async (
 
     const bulk = plans.map((p) => {
       const planKey = normalizePlanKey(p.planKey);
+      const planUuid = resolveSubscriptionPlanUuid(p, planKey);
       return {
         updateOne: {
           filter: { productType: p.productType, planKey },
@@ -82,6 +109,7 @@ export const upsertSubscriptionPlansInDB = async (
             $set: {
               productType: p.productType,
               planKey,
+              planUuid,
               displayName: p.displayName ?? "",
               description: p.description ?? "",
               amountInr: p.amountInr,
