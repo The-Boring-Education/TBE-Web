@@ -201,13 +201,13 @@ const InteractiveRoadmap = ({
 
       {/* Back Button */}
       {backButtonLabel && onBackClick && (
-        <div className="absolute top-6 left-6 z-[110]">
+        <div className="relative z-[110] w-full px-6 mt-2 flex justify-start md:absolute md:top-6 md:left-6 md:w-auto md:px-0 md:mt-0">
           <button
             onClick={onBackClick}
-            className="flex items-center gap-2 border border-gray-700 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 transition-all duration-300 bg-transparent"
+            className="group inline-flex items-center gap-2 rounded-full border border-gray-800/70 bg-black/20 px-3 py-1.5 text-[11px] font-semibold text-gray-300 backdrop-blur-md transition-colors hover:border-gray-700 hover:bg-black/35"
           >
-            <ArrowLeft className="w-4 h-4" />
-            {backButtonLabel}
+            <ArrowLeft className="w-4 h-4 opacity-80 transition-opacity group-hover:opacity-100" />
+            <span className="hidden sm:inline">{backButtonLabel}</span>
           </button>
         </div>
       )}
