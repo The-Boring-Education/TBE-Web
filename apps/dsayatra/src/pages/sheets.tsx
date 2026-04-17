@@ -3,7 +3,6 @@ import {
   LearningEnvironmentLayout,
   LoadingSpinner,
   SEO,
-  Text,
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamifiedAction } from "@tbe/gamification";
@@ -165,12 +164,25 @@ const SheetsPageClient = () => {
 
   if (sheetsLoading || userLoading || isProfileLoading || isProgressLoading) {
     return (
-      <div className="flex flex-col min-h-screen bg-[#0A0A0A] font-sans items-center justify-center">
-        <div className="flex items-center">
-          <LoadingSpinner height={4} width={4} borderColour="white" />
-          <Text level="p" className="text-gray-400 ml-3">
-            Loading Sheet...
-          </Text>
+      <div className="flex flex-col min-h-screen bg-[#0A0A0A] font-sans items-center justify-center relative overflow-hidden">
+        {/* Subtle Glows */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#ff5757]/5 rounded-full blur-[80px] pointer-events-none" />
+
+        <div className="relative flex flex-col items-center gap-6">
+          <div className="relative">
+            <div className="absolute inset-0 bg-[#ff5757]/20 rounded-full blur-xl animate-pulse" />
+            <div className="relative p-4 bg-[#111] border border-[#222] rounded-2xl shadow-2xl">
+              <LoadingSpinner height={6} width={6} borderColour="#ff5757" />
+            </div>
+          </div>
+          <div className="text-center space-y-1">
+            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] animate-pulse">
+              Syncing Workspace
+            </h3>
+            <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
+              Preparing your personalized curriculum
+            </p>
+          </div>
         </div>
       </div>
     );

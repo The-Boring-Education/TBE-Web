@@ -3,6 +3,7 @@ import { cn } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 
+import { MobileNav } from "./MobileNav";
 import Navbar from "./NoSSRNavbar";
 
 interface LayoutProps {
@@ -19,6 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
   const isRevisions = router.pathname === "/revisions";
   const isTopics = router.pathname === "/topics";
   const isLandingPage = router.pathname === "/";
+  const showMobileNav = isDashboard || isRevisions || isTopics;
   const dashboardRoute =
     router.pathname === "/" || router.pathname === "/login"
       ? "/"
@@ -37,11 +39,15 @@ const Layout = ({ children }: LayoutProps) => {
           "min-h-screen w-full overflow-x-hidden pt-[72px]",
           (isDashboard || isRevisions || isTopics) && "bg-[#0A0A0A]",
           isLandingPage && "bg-[#040505]",
+          showMobileNav && "pb-[60px] lg:pb-0",
         )}
       >
         {children}
       </main>
-      <Footer />
+
+      {showMobileNav && <MobileNav />}
+
+      {!showMobileNav && <Footer />}
     </Fragment>
   );
 };
