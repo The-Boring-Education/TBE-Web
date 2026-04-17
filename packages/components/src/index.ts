@@ -86,6 +86,18 @@ export { default as Modal } from "./common/Modal";
 export { default as NotificationPopover } from "./common/Notification";
 export { default as Pill } from "./common/Pill";
 export { default as IconPill } from "./common/Pill/IconPill";
+export type {
+  PricingAccentTheme,
+  PricingFaqAccordionProps,
+  PricingFaqItem,
+  SubscriptionPricingPlanCardProps,
+} from "./common/pricing";
+export {
+  getPricingPlanThemeClasses,
+  PricingFaqAccordion,
+  pricingPlanCardClassName,
+  SubscriptionPricingPlanCard,
+} from "./common/pricing";
 export { default as CircularProgressBar } from "./common/ProgressBar/CircularProgressBar";
 export { default as LinerProgressBar } from "./common/ProgressBar/LinerProgressBar";
 export { DifficultyQuestionList, QuestionRow } from "./common/QuestionList";

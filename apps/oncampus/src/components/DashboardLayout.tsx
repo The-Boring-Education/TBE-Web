@@ -16,6 +16,7 @@ import {
   ClipboardList,
   FileText,
   Home,
+  Tags,
   Target,
 } from "lucide-react";
 import { useRouter } from "next/router";
@@ -28,6 +29,7 @@ interface DashboardLayoutProps {
 
 export const DASHBOARD_SIDEBAR_ITEMS = [
   { name: "Dashboard", icon: Home, href: "/dashboard" },
+  { name: "Pricing", icon: Tags, href: "/pricing" },
   { name: "Interview Sheets", icon: Target, href: "/dashboard/interview-prep" },
   { name: "DSA", icon: FileText, href: "/dashboard/dsa-prep" },
   { name: "Quizes", icon: ClipboardList, href: "/dashboard/quizzes" },

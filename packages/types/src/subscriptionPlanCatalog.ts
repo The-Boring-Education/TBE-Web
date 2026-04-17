@@ -1,8 +1,8 @@
 /**
- * Subscription plan row as returned by GET /subscription-plans for catalog UIs.
- * `planUuid` is optional for older API responses; prefer it for React keys when present.
+ * Public subscription catalog row returned by GET /subscription-plans
+ * (and used on product pricing pages).
  */
-export interface DsaSubscriptionPlan {
+export interface SubscriptionPlanCatalogRow {
   planUuid?: string;
   productType: string;
   planKey: string;

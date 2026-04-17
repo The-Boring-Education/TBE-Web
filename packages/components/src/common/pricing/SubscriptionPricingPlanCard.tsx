@@ -1,21 +1,34 @@
-import { Button } from "@tbe/components";
-import { cn } from "@tbe/utils";
+import type { SubscriptionPlanCatalogRow } from "@tbe/types";
+import { calculateDiscountPercent, cn, formatPriceInr } from "@tbe/utils";
 import { motion } from "framer-motion";
 import { CheckCircle2, Crown } from "lucide-react";
 
+import Button from "../Buttons/Button";
 import {
-  calculateDiscountPercent,
-  formatPriceInr,
-} from "../../lib/dsaPricingPageHelpers";
-import type { DsaSubscriptionPlan } from "../../types/dsaSubscriptionPlan";
+  getPricingPlanThemeClasses,
+  type PricingAccentTheme,
+  pricingPlanCardClassName,
+} from "./pricingPlanThemes";
 
-export const DsaPricingPlanCard = ({
+export type SubscriptionPricingPlanCardProps = {
+  plan: SubscriptionPlanCatalogRow;
+  onSubscribe: (planKey: string) => void;
+  /** Visual accent preset; default matches DSA Yatra pricing. */
+  accentTheme?: PricingAccentTheme;
+  popularLabel?: string;
+  freeCtaLabel?: string;
+  paidCtaLabel?: string;
+};
+
+export const SubscriptionPricingPlanCard = ({
   plan,
   onSubscribe,
-}: {
-  plan: DsaSubscriptionPlan;
-  onSubscribe: (planKey: string) => void;
-}) => {
+  accentTheme = "rose",
+  popularLabel = "MOST POPULAR",
+  freeCtaLabel = "Start Free",
+  paidCtaLabel = "Get Started",
+}: SubscriptionPricingPlanCardProps) => {
+  const t = getPricingPlanThemeClasses(accentTheme);
   const discount = calculateDiscountPercent(
     plan.originalAmountInr,
     plan.amountInr,
@@ -27,17 +40,17 @@ export const DsaPricingPlanCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={cn(
-        "relative w-full max-w-sm rounded-2xl border p-6 flex flex-col transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,87,87,0.08)]",
-        plan.isPopular
-          ? "bg-gradient-to-b from-[#1a0a0a] via-[#140808] to-[#0d0d0d] border-[#ff5757]/40 shadow-[0_0_80px_rgba(255,87,87,0.15)] scale-[1.02]"
-          : "bg-[#0f0f0f] border-[#1f1f1f] hover:border-[#ff5757]/20",
-      )}
+      className={pricingPlanCardClassName(accentTheme, plan.isPopular)}
     >
       {plan.isPopular && (
-        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-gradient-to-r from-[#ff5757] to-[#ff3333] text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg shadow-[#ff5757]/25">
+        <div
+          className={cn(
+            "absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg",
+            t.badgePopular,
+          )}
+        >
           <Crown className="w-3 h-3" />
-          MOST POPULAR
+          {popularLabel}
         </div>
       )}
 
@@ -48,7 +61,12 @@ export const DsaPricingPlanCard = ({
       )}
 
       <div className="text-center mb-5 pt-2">
-        <p className="text-[10px] font-bold text-[#ff5757] uppercase tracking-[0.2em] mb-2">
+        <p
+          className={cn(
+            "text-[10px] font-bold uppercase tracking-[0.2em] mb-2",
+            t.labelUppercase,
+          )}
+        >
           {plan.displayName || plan.planKey}
         </p>
 
@@ -90,7 +108,9 @@ export const DsaPricingPlanCard = ({
             key={`${i}-${feature}`}
             className="flex items-start gap-2.5 text-xs"
           >
-            <CheckCircle2 className="w-4 h-4 text-[#ff5757] shrink-0 mt-0.5" />
+            <CheckCircle2
+              className={cn("w-4 h-4 shrink-0 mt-0.5", t.checkIcon)}
+            />
             <span className="text-[#c0c0c0] leading-relaxed">{feature}</span>
           </li>
         ))}
@@ -98,12 +118,12 @@ export const DsaPricingPlanCard = ({
 
       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
         <Button
-          text={isFree ? "Start Free" : "Get Started"}
+          text={isFree ? freeCtaLabel : paidCtaLabel}
           variant="PRIMARY"
           onClick={() => onSubscribe(plan.planKey)}
           className={cn(
             "w-full py-3 font-semibold",
-            plan.isPopular && "shadow-lg shadow-[#ff5757]/20",
+            plan.isPopular && cn("shadow-lg", t.buttonShadow),
           )}
         />
       </motion.div>

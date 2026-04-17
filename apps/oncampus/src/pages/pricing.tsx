@@ -12,25 +12,25 @@ import {
   sendRequest,
 } from "@tbe/utils";
 import { motion } from "framer-motion";
-import { Sparkles, Zap } from "lucide-react";
+import { GraduationCap, Sparkles } from "lucide-react";
 import Head from "next/head";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
-  DSA_PRICING_FAQ_ITEMS,
-  DSA_PRICING_STATS,
-  DSA_PRICING_TRUST_SIGNALS,
-  DSA_YATRA_PRODUCT_TYPE,
-} from "../lib/dsaPricingPageConstants";
+  ONCAMPUS_PRICING_FAQ_ITEMS,
+  ONCAMPUS_PRICING_STATS,
+  ONCAMPUS_PRICING_TRUST_SIGNALS,
+  ONCAMPUS_PRODUCT_TYPE,
+} from "@/lib/oncampusPricingPageConstants";
 
-const DsaYatraPricingPage = () => {
+const OnCampusPricingPage = () => {
   const { user } = useUser();
   const [plans, setPlans] = useState<SubscriptionPlanCatalogRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const productConfig = useMemo(
-    () => getProductConfig(DSA_YATRA_PRODUCT_TYPE),
+    () => getProductConfig(ONCAMPUS_PRODUCT_TYPE),
     [],
   );
 
@@ -43,7 +43,7 @@ const DsaYatraPricingPage = () => {
       try {
         const res = await sendRequest({
           method: "GET",
-          url: buildSubscriptionPlansRequestUrl(DSA_YATRA_PRODUCT_TYPE),
+          url: buildSubscriptionPlansRequestUrl(ONCAMPUS_PRODUCT_TYPE),
         });
 
         if (!res.status || res.data === undefined) {
@@ -82,7 +82,7 @@ const DsaYatraPricingPage = () => {
         );
         return;
       }
-      window.location.href = `${platformBase}${routes.checkout}?productType=${DSA_YATRA_PRODUCT_TYPE}&productId=${planKey}&next=${encodeURIComponent("/dashboard")}`;
+      window.location.href = `${platformBase}${routes.checkout}?productType=${ONCAMPUS_PRODUCT_TYPE}&productId=${planKey}&next=${encodeURIComponent("/dashboard")}`;
     },
     [user],
   );
@@ -90,26 +90,26 @@ const DsaYatraPricingPage = () => {
   return (
     <>
       <Head>
-        <title>Pricing — DSA Yatra | The Boring Education</title>
+        <title>Pricing — On Campus | The Boring Education</title>
         <meta
           name="description"
-          content="Master DSA with structured practice. One-time payment, lifetime access to 400+ problems, topic-wise sheets, and revision tracking."
+          content="Placement-focused aptitude, DSA, interview sheets, and quizzes. Pick a duration that fits your campus timeline."
         />
       </Head>
 
       <div className="bg-[#040505] min-h-screen">
         <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#ff5757]/5 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#ff5757]/8 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" />
 
           <div className="relative max-w-4xl mx-auto px-4 pt-12 pb-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-1.5 bg-[#ff5757]/10 border border-[#ff5757]/20 text-[#ff5757] text-[10px] font-bold px-4 py-1.5 rounded-full mb-5"
+              className="inline-flex items-center gap-1.5 bg-sky-500/10 border border-sky-500/25 text-sky-300 text-[10px] font-bold px-4 py-1.5 rounded-full mb-5"
             >
               <Sparkles className="w-3 h-3" />
-              PRICING
+              ON CAMPUS PRICING
             </motion.div>
 
             <motion.h1
@@ -118,9 +118,9 @@ const DsaYatraPricingPage = () => {
               transition={{ delay: 0.1 }}
               className="text-2xl md:text-4xl font-bold text-white mb-3 leading-tight"
             >
-              Invest in Your{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff5757] to-[#ff8a80]">
-                DSA Mastery
+              Plans Built for{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">
+                Campus Placements
               </span>
             </motion.h1>
 
@@ -130,18 +130,18 @@ const DsaYatraPricingPage = () => {
               transition={{ delay: 0.2 }}
               className="text-[#808080] text-sm md:text-base max-w-xl mx-auto leading-relaxed"
             >
-              One-time payment. Lifetime access. Structured practice with
-              topic-wise sheets, company patterns, and smart revision tools.
+              Aptitude, core CS, DSA, interview sheets, and quizzes — choose a
+              duration that matches your preparation window.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="flex items-center justify-center gap-6 md:gap-10 mt-8"
+              className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-8"
             >
-              {DSA_PRICING_STATS.map((stat, i) => (
-                <div key={i} className="text-center">
+              {ONCAMPUS_PRICING_STATS.map((stat, i) => (
+                <div key={i} className="text-center min-w-[100px]">
                   <p className="text-lg md:text-xl font-bold text-white">
                     {stat.value}
                   </p>
@@ -158,7 +158,7 @@ const DsaYatraPricingPage = () => {
           {loading && (
             <div className="flex justify-center py-20">
               <div className="flex flex-col items-center gap-3">
-                <div className="animate-spin rounded-full h-10 w-10 border-2 border-[#ff5757]/20 border-t-[#ff5757]" />
+                <div className="animate-spin rounded-full h-10 w-10 border-2 border-sky-500/20 border-t-sky-400" />
                 <p className="text-[#606060] text-xs">Loading plans…</p>
               </div>
             </div>
@@ -166,11 +166,11 @@ const DsaYatraPricingPage = () => {
 
           {error && (
             <div className="text-center py-16">
-              <p className="text-[#ff6b6b] mb-4 text-sm">{error}</p>
+              <p className="text-red-400 mb-4 text-sm">{error}</p>
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="text-sm text-[#ff5757] underline hover:text-[#ff8080] transition-colors"
+                className="text-sm text-sky-400 underline hover:text-sky-300 transition-colors"
               >
                 Try again
               </button>
@@ -192,7 +192,8 @@ const DsaYatraPricingPage = () => {
                   key={plan.planUuid ?? plan.planKey}
                   plan={plan}
                   onSubscribe={handleSubscribe}
-                  accentTheme="rose"
+                  accentTheme="sky"
+                  paidCtaLabel="Subscribe"
                 />
               ))}
             </div>
@@ -206,21 +207,18 @@ const DsaYatraPricingPage = () => {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-r from-[#0f0f0f] to-[#111] border border-[#1a1a1a] rounded-2xl p-6 text-center"
+                className="bg-gradient-to-r from-[#0f1418] to-[#111] border border-[#1a1a1a] rounded-2xl p-6 text-center"
               >
                 <div className="inline-flex items-center gap-2 mb-3">
-                  <Zap className="w-4 h-4 text-[#10b981]" />
-                  <span className="text-xs font-bold text-[#10b981] uppercase tracking-wider">
-                    Free Tier Included
+                  <GraduationCap className="w-4 h-4 text-sky-400" />
+                  <span className="text-xs font-bold text-sky-400 uppercase tracking-wider">
+                    Built for students
                   </span>
                 </div>
                 <p className="text-[#b0b0b0] text-sm leading-relaxed max-w-lg mx-auto">
-                  Every user gets access to{" "}
-                  <strong className="text-white">3 Easy</strong>,{" "}
-                  <strong className="text-white">2 Medium</strong>,{" "}
-                  <strong className="text-white">1 Hard</strong>, and{" "}
-                  <strong className="text-white">1 Real-World</strong> problem
-                  per topic — completely free. Upgrade to unlock everything.
+                  Use your dashboard to move between aptitude, sheets, DSA, and
+                  quizzes — all under one On Campus subscription for the plan
+                  duration you choose.
                 </p>
               </motion.div>
             </section>
@@ -232,8 +230,8 @@ const DsaYatraPricingPage = () => {
                 viewport={{ once: true }}
                 className="text-lg font-bold text-white text-center mb-8"
               >
-                Why Learners Choose{" "}
-                <span className="text-[#ff5757]">DSA Yatra</span>
+                Why Choose{" "}
+                <span className="text-sky-400">{productConfig.name}</span>
               </motion.h2>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -244,10 +242,10 @@ const DsaYatraPricingPage = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className="bg-[#0f0f0f] border border-[#1a1a1a] rounded-xl p-4 hover:border-[#ff5757]/30 hover:shadow-[0_0_30px_rgba(255,87,87,0.06)] transition-all group"
+                    className="bg-[#0f0f0f] border border-[#1a1a1a] rounded-xl p-4 hover:border-sky-500/30 hover:shadow-[0_0_30px_rgba(14,165,233,0.06)] transition-all group"
                   >
-                    <div className="w-9 h-9 bg-[#ff5757]/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-[#ff5757]/15 transition-colors">
-                      <reason.icon className="w-4 h-4 text-[#ff5757]" />
+                    <div className="w-9 h-9 bg-sky-500/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-sky-500/15 transition-colors">
+                      <reason.icon className="w-4 h-4 text-sky-400" />
                     </div>
                     <h3 className="font-semibold text-white text-xs mb-1">
                       {reason.title}
@@ -262,15 +260,17 @@ const DsaYatraPricingPage = () => {
 
             <section className="max-w-3xl mx-auto px-4 py-8">
               <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
-                {DSA_PRICING_TRUST_SIGNALS.map(({ icon: Icon, text }, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 text-[#707070]"
-                  >
-                    <Icon className="w-4 h-4 text-[#ff5757]/60" />
-                    <span className="text-xs font-medium">{text}</span>
-                  </div>
-                ))}
+                {ONCAMPUS_PRICING_TRUST_SIGNALS.map(
+                  ({ icon: Icon, text }, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 text-[#707070]"
+                    >
+                      <Icon className="w-4 h-4 text-sky-500/60" />
+                      <span className="text-xs font-medium">{text}</span>
+                    </div>
+                  ),
+                )}
               </div>
             </section>
 
@@ -285,8 +285,8 @@ const DsaYatraPricingPage = () => {
               </motion.h2>
 
               <PricingFaqAccordion
-                items={DSA_PRICING_FAQ_ITEMS}
-                accentTheme="rose"
+                items={ONCAMPUS_PRICING_FAQ_ITEMS}
+                accentTheme="sky"
               />
             </section>
 
@@ -304,4 +304,4 @@ const DsaYatraPricingPage = () => {
   );
 };
 
-export default DsaYatraPricingPage;
+export default OnCampusPricingPage;

@@ -1,3 +1,4 @@
+import type { PricingFaqItem } from "@tbe/components";
 import type { LucideIcon } from "lucide-react";
 import { Shield, Star, Zap } from "lucide-react";
 
@@ -36,6 +37,14 @@ export const DSA_PRICING_FAQS = [
     a: "We offer a hassle-free refund within 7 days of purchase if you're not satisfied. No questions asked.",
   },
 ] as const;
+
+export const DSA_PRICING_FAQ_ITEMS: PricingFaqItem[] = DSA_PRICING_FAQS.map(
+  (faq, i) => ({
+    id: `dsa-pricing-faq-${i}`,
+    question: faq.q,
+    answer: faq.a,
+  }),
+);
 
 export const DSA_PRICING_TRUST_SIGNALS: ReadonlyArray<{
   icon: LucideIcon;
