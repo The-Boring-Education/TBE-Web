@@ -1086,6 +1086,8 @@ export interface NavbarVariantConfig {
   showGamification?: boolean;
   showNotifications?: boolean;
   navigation?: NavbarNavigationConfig;
+  /** Renders a top-nav link immediately before the Tools popover (desktop + mobile). */
+  pricingNavLink?: { href: string; label?: string };
 }
 
 export type FooterVariant =

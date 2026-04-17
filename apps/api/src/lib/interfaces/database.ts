@@ -419,13 +419,34 @@ export interface PaymentModel extends Document {
 
 /** One row per (productType, planKey) subscription SKU; amounts are authoritative for checkout. */
 export interface SubscriptionPlanModel extends Document {
+  /**
+   * Stable id for the same plan across envs / migrations (seed JSON or derived).
+   * Unique when set; legacy rows may omit until re-seeded.
+   */
+  planUuid?: string;
   productType: ProductType;
   /** Normalized to lowercase in DB (e.g. lifetime, 3months). */
   planKey: string;
+  /** User-facing name (e.g. "Lifetime Access", "3-Month Plan") */
+  displayName: string;
+  /** Short description for pricing cards */
+  description: string;
   /** INR, matches Cashfree order_amount units. */
   amountInr: number;
+  /** Original price before discount (for strike-through pricing). 0 = no original price. */
+  originalAmountInr: number;
   currency: string;
+  /** Access type: ONE_TIME = single purchase, SUBSCRIPTION = duration-based */
+  accessType: "ONE_TIME" | "SUBSCRIPTION";
+  /** Duration in months (0 = lifetime) */
+  durationMonths: number;
+  /** Feature list shown on pricing cards */
+  features: string[];
+  /** Whether this plan is highlighted / recommended */
+  isPopular: boolean;
   isActive: boolean;
+  /** Sort order for pricing page display */
+  sortOrder: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

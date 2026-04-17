@@ -39,7 +39,7 @@ const SIDEBAR_ITEMS = [
 
 function Sidebar() {
   return (
-    <aside className="sticky top-[72px] h-[calc(100vh-72px)] w-52 bg-[#0f0f0f] border-r border-[#2a2a2a] z-40 hidden lg:block shrink-0">
+    <aside className="sticky top-[72px] h-[calc(100vh-72px)] w-52 bg-[#0f0f0f] border-r border-[#2a2a2a] z-30 hidden lg:block shrink-0">
       <div className="py-2 px-2">
         <nav className="space-y-0.5">
           {SIDEBAR_ITEMS.map((item) => (

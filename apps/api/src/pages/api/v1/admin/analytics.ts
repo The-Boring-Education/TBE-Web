@@ -9,8 +9,8 @@ import {
   Notification,
   Payment,
   PrepLog,
-  PrepYatraSubscription,
   Project,
+  Subscription,
   User,
   UserCourse,
   Webinar,
@@ -147,7 +147,7 @@ const getRevenueAnalytics = async (
   ]);
 
   // Subscription metrics
-  const subscriptionMetrics = await PrepYatraSubscription.aggregate([
+  const subscriptionMetrics = await Subscription.aggregate([
     {
       $match: {
         createdAt: { $gte: start, $lte: end },

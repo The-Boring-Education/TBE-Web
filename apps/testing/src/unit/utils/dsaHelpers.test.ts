@@ -115,6 +115,46 @@ describe("DSA Helpers", () => {
       expect(result.resources?.youtubeURL).toContain("youtube.com");
     });
 
+    it("should return minimal data for locked questions", () => {
+      const apiQuestion = {
+        _id: "locked-1",
+        title: "Premium Question",
+        difficulty: "HARD",
+        answer: "This should not appear",
+        sections: { first_principles: { paragraphs: [], key_observation: "" } },
+        resources: { leetcodeURL: "https://leetcode.com/premium" },
+        topics: ["GRAPH"],
+        isLocked: true,
+      };
+
+      const result = transformDsaQuestion(apiQuestion);
+
+      expect(result.isLocked).toBe(true);
+      expect(result.name).toBe("Premium Question");
+      expect(result.difficultyLevel).toBe("HARD");
+      expect(result.topics).toEqual(["GRAPH"]);
+      // Answer and solution details should be absent
+      expect(result.answer).toBeUndefined();
+      expect(result.sections).toBeUndefined();
+      expect(result.resources).toBeUndefined();
+    });
+
+    it("should return full data for unlocked questions with isLocked=false", () => {
+      const apiQuestion = {
+        _id: "unlocked-1",
+        title: "Free Question",
+        difficulty: "EASY",
+        answer: "Simple approach.",
+        topics: ["ARRAY"],
+        isLocked: false,
+      };
+
+      const result = transformDsaQuestion(apiQuestion);
+
+      expect(result.isLocked).toBe(false);
+      expect(result.answer).toContain("Simple approach");
+    });
+
     it("should strip examples and constraints from answer body", () => {
       const apiQuestion = {
         _id: "q5",

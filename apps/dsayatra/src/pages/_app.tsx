@@ -8,18 +8,24 @@ import Layout from "@/components/Layout";
 import { OnboardingCheck } from "@/components/OnboardingCheck";
 import { Providers } from "@/components/Providers";
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+function AppWithShell({ Component, pageProps }: AppProps) {
+  const page = <Component {...pageProps} />;
+
+  return (
+    <Providers>
+      <OnboardingCheck />
+      <Layout>{page}</Layout>
+    </Providers>
+  );
+}
+
+export default function MyApp(props: AppProps) {
   return (
     <>
       <Head>
         <link rel="icon" type="image/svg+xml" href="/dsayatra_favicon.svg" />
       </Head>
-      <Providers>
-        <OnboardingCheck />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </Providers>
+      <AppWithShell {...props} />
     </>
   );
 }

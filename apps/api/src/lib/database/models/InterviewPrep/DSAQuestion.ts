@@ -1,10 +1,10 @@
+import { DSA_DIFFICULTY } from "@tbe/constants";
 import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
 import {
   COMPANY_TYPES,
   DATABASE_MODELS,
-  DSA_DIFFICULTY,
   DSA_DOMAIN,
   DSA_TOPICS,
 } from "@/lib/constants";

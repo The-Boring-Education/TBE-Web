@@ -19,7 +19,7 @@ test.describe("Platform checkout page", () => {
     const response = await page.goto("/checkout");
     expect(response?.status()).toBe(200);
     await expect(
-      page.getByRole("heading", { name: /Invalid checkout link/i }),
+      page.getByRole("heading", { name: /checkout link is incomplete/i }),
     ).toBeVisible();
   });
 });

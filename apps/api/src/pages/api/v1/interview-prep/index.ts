@@ -1,3 +1,4 @@
+import { DSA_DIFFICULTY } from "@tbe/constants";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import {
@@ -5,7 +6,6 @@ import {
   APTITUDE_CATEGORIES,
   APTITUDE_SUB_CATEGORIES,
   COMPANY_TYPES,
-  DSA_DIFFICULTY,
   DSA_DOMAIN,
 } from "@/lib/constants";
 import {

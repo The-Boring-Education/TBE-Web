@@ -82,6 +82,9 @@ export * from "./prepyatra";
 
 // Quiz domain
 export * from "./quiz";
+
+// Subscription catalog (pricing pages, checkout product SKUs)
+export * from "./subscriptionPlanCatalog";
 // ================================
 // LEGACY EXPORTS (for backward compatibility)
 // ================================

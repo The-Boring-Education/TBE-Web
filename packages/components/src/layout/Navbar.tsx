@@ -258,6 +258,16 @@ const Navbar = ({
                     <NavbarDropdownContainer links={learnNav.links} />
                   </PopoverContainer>
                 )}
+                {variantConfig.pricingNavLink && (
+                  <FlexContainer direction="col" itemCenter={false}>
+                    <Link
+                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
+                      href={variantConfig.pricingNavLink.href}
+                    >
+                      {variantConfig.pricingNavLink.label ?? "Pricing"}
+                    </Link>
+                  </FlexContainer>
+                )}
                 {toolsNav.visible && (
                   <PopoverContainer
                     isOpen={openPopover === "tools"}
@@ -365,6 +375,21 @@ const Navbar = ({
                         title="Learn"
                         onLinkClick={handleCloseMobileMenu}
                       />
+                    )}
+                    {variantConfig.pricingNavLink && (
+                      <FlexContainer
+                        className="py-2"
+                        direction="col"
+                        itemCenter={false}
+                      >
+                        <Link
+                          className={`text-base font-medium ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
+                          href={variantConfig.pricingNavLink.href}
+                          onClick={handleCloseMobileMenu}
+                        >
+                          {variantConfig.pricingNavLink.label ?? "Pricing"}
+                        </Link>
+                      </FlexContainer>
                     )}
                     {toolsNav.visible && (
                       <MobileNavbarLinksContainer

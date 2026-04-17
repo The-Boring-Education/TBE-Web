@@ -47,18 +47,16 @@ export function MobileNav() {
               <div
                 className={cn(
                   "relative flex items-center justify-center w-9 h-7 rounded-xl transition-all duration-200",
-                  isActive && "bg-[#ff5757]/15",
                 )}
               >
                 <item.icon
                   className={cn(
                     "w-[18px] h-[18px] transition-all duration-200",
-                    isActive ? "text-[#ff5757]" : "text-[#555]",
+                    isActive
+                      ? "text-[#ff5757] drop-shadow-[0_0_10px_rgba(255,87,87,0.65)]"
+                      : "text-[#555]",
                   )}
                 />
-                {isActive && (
-                  <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#ff5757]" />
-                )}
               </div>
               <span
                 className={cn(

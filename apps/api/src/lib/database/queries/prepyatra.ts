@@ -12,8 +12,8 @@ import {
   ChallengeLog,
   Mentorship,
   PrepLog,
-  PrepYatraSubscription,
   Recruiter,
+  Subscription,
   User,
 } from "../models";
 
@@ -164,7 +164,7 @@ const getActiveSubscriptionByUserFromDB = async (
   subscriptionType: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const subscription = await PrepYatraSubscription.findOne({
+    const subscription = await Subscription.findOne({
       userId: new mongoose.Types.ObjectId(userId),
       type: subscriptionType,
       isActive: true,
@@ -192,7 +192,7 @@ const createSubscriptionInDB = async ({
   features: string[];
 }): Promise<DatabaseQueryResponseType> => {
   try {
-    const subscription = await PrepYatraSubscription.create({
+    const subscription = await Subscription.create({
       userId: new mongoose.Types.ObjectId(userId),
       type,
       amount,

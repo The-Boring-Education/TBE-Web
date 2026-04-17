@@ -96,8 +96,7 @@ CouponSchema.virtual("isValid").get(function () {
   return this.isActive && !this.isExpired && !this.isUsageLimitReached;
 });
 
-// Index for efficient queries
-CouponSchema.index({ code: 1 });
+// Index for efficient queries (`code` already has unique: true → do not add a second index on code)
 CouponSchema.index({ isActive: 1, expiryDate: 1 });
 
 const Coupon: Model<CouponModel> =

@@ -1,5 +1,7 @@
 import {
+  APP_DASHBOARD_SIDEBAR_BUTTON_CLASS,
   Footer,
+  isDashboardSidebarLinkActive,
   LoadingSpinner,
   Navbar,
   Sidebar,
@@ -38,7 +40,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const router = useRouter();
   const { isAuth, loading } = useUser();
 
-  // Centralized auth guard for all dashboard routes
   useEffect(() => {
     if (!loading && !isAuth) {
       router.push("/login");
@@ -53,7 +54,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     );
   }
 
-  if (!loading && !isAuth) {
+  if (!isAuth) {
     return null;
   }
 
@@ -65,11 +66,15 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             {DASHBOARD_SIDEBAR_ITEMS.map((item) => (
               <SidebarMenuItem key={item.name}>
                 <SidebarMenuButton
-                  isActive={router.pathname === item.href}
-                  className="text-gray-300 p-4 hover:text-white hover:bg-gray-800 data-[active=true]:bg-[#FF5757] data-[active=true]:text-white"
+                  isActive={isDashboardSidebarLinkActive(
+                    router.pathname,
+                    router.asPath,
+                    item.href,
+                  )}
+                  className={APP_DASHBOARD_SIDEBAR_BUTTON_CLASS}
                   onClick={() => router.push(item.href)}
                 >
-                  {item.icon && <item.icon className="w-2 h-2" />}
+                  {item.icon && <item.icon className="w-4 h-4 shrink-0" />}
                   <span className="ml-2">{item.name}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>

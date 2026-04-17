@@ -66,8 +66,11 @@ const UserInterestSchema = new Schema<UserInterestModel>(
   },
 );
 
-// Compound indexes for efficient queries
-UserInterestSchema.index({ userId: 1, eventType: 1 });
+// Compound indexes for efficient queries (explicit names: same key pattern appears twice below)
+UserInterestSchema.index(
+  { userId: 1, eventType: 1 },
+  { name: "userId_1_eventType_1" },
+);
 UserInterestSchema.index({ eventType: 1, source: 1 });
 UserInterestSchema.index({ createdAt: -1 });
 UserInterestSchema.index({ userId: 1, isActive: 1 });
@@ -78,6 +81,7 @@ UserInterestSchema.index(
   {
     unique: true,
     partialFilterExpression: { isActive: true },
+    name: "userId_1_eventType_1_unique_active",
   },
 );
 

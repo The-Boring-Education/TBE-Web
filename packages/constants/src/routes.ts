@@ -120,6 +120,7 @@ const routes = {
     home: "/",
     login: "/login",
     dashboard: "/dashboard",
+    pricing: "/pricing",
     dsa: "/dashboard/dsa-prep",
     interviewPrep: "/dashboard/interview-prep",
     quizes: "/dashboard/interview-prep",
@@ -162,6 +163,7 @@ const routes = {
     checkStatus: "/payment/checkstatus",
     paymentQuote: "/payment/quote",
     paymentOrderStatus: "/payment/order-status",
+    subscriptionPlans: "/subscription-plans",
     validateCoupon: "/coupon/validate",
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {

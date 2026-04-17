@@ -86,6 +86,18 @@ export { default as Modal } from "./common/Modal";
 export { default as NotificationPopover } from "./common/Notification";
 export { default as Pill } from "./common/Pill";
 export { default as IconPill } from "./common/Pill/IconPill";
+export type {
+  PricingAccentTheme,
+  PricingFaqAccordionProps,
+  PricingFaqItem,
+  SubscriptionPricingPlanCardProps,
+} from "./common/pricing";
+export {
+  getPricingPlanThemeClasses,
+  PricingFaqAccordion,
+  pricingPlanCardClassName,
+  SubscriptionPricingPlanCard,
+} from "./common/pricing";
 export { default as CircularProgressBar } from "./common/ProgressBar/CircularProgressBar";
 export { default as LinerProgressBar } from "./common/ProgressBar/LinerProgressBar";
 export { DifficultyQuestionList, QuestionRow } from "./common/QuestionList";
@@ -120,8 +132,12 @@ export type { DsaPrepWorkspaceProps } from "./containers/Cards/DsaPrepWorkspace"
 export { default as DsaPrepWorkspace } from "./containers/Cards/DsaPrepWorkspace";
 export type { DsaTopicSidebarProps } from "./containers/Cards/DsaTopicSidebar";
 export { default as DsaTopicSidebar } from "./containers/Cards/DsaTopicSidebar";
+export type { DsaUpsellModalProps } from "./containers/Cards/DsaUpsellModal";
+export { default as DsaUpsellModal } from "./containers/Cards/DsaUpsellModal";
 export { default as ExampleCard } from "./containers/Cards/ExampleCard";
 export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
+export type { FreemiumLockBannerProps } from "./containers/Cards/FreemiumLockBanner";
+export { default as FreemiumLockBanner } from "./containers/Cards/FreemiumLockBanner";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
 export { default as Leaderboard } from "./containers/Cards/Leaderboard";
 export { default as LoginCard } from "./containers/Cards/LoginCard";
@@ -217,6 +233,10 @@ export {
 /** @deprecated Use `useGamifiedAction` from `@tbe/gamification` instead */
 export { default as useGamifiedAction } from "./common/GamificationDemo/useGamifiedAction";
 export * from "./dsayatra";
+export {
+  APP_DASHBOARD_SIDEBAR_BUTTON_CLASS,
+  isDashboardSidebarLinkActive,
+} from "./layout/appDashboardSidebarNav";
 export { default as Footer } from "./layout/Footer";
 export { default as LearningEnvironmentLayout } from "./layout/LearningEnvironmentLayout";
 export { default as LearningNavbar } from "./layout/LearningNavbar";

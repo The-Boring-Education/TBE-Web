@@ -1,21 +1,20 @@
 import {
   DsaPrepWorkspace,
+  DsaUpsellModal,
+  FreemiumLockBanner,
   LearningEnvironmentLayout,
-  LoadingSpinner,
   SEO,
 } from "@tbe/components";
-import { DSA_STUDY_GUIDE_CONFIGS, TOPIC_LABELS } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamifiedAction } from "@tbe/gamification";
 import {
   useDsaCompletedQuestions,
-  useDsaPrepUrlSync,
   useDsaQuestionsForTopic,
   useDsaTopics,
   useDsaTopicSummaries,
   useUser,
 } from "@tbe/hooks";
-import type { DsaQuestion, PageProps, UserProfile } from "@tbe/interface";
-import { userService } from "@tbe/services";
+import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { getPreFetchProps } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
@@ -33,9 +32,7 @@ const SheetsPageClient = () => {
     null,
   );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [isProfileLoading, setIsProfileLoading] = useState(true);
+  const [showPayment, setShowPayment] = useState(false);
 
   const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
   const userTargetCompanies = useMemo(() => {
@@ -62,11 +59,13 @@ const SheetsPageClient = () => {
     [topicRows],
   );
 
+  // DSA Yatra is off-campus prep: pass offCampus=true (×1.5 bucket caps)
+  // and the user-selected timeline so paid users get a study-plan-sized sheet.
+  const dsaTimeline = (user as any)?.dsaYatra?.timeline as string | undefined;
   const { questions: topicQuestions, loading: topicQuestionsLoading } =
     useDsaQuestionsForTopic(selectedTopic, {
-      // Prefer user from auth context (set during onboarding), fall back to profile fetch
-      duration:
-        (user as any)?.dsaYatra?.timeline || profile?.dsaYatra?.timeline,
+      duration: dsaTimeline,
+      offCampus: true,
     });
 
   const [topicQuestionsCache, setTopicQuestionsCache] = useState<
@@ -102,6 +101,19 @@ const SheetsPageClient = () => {
     topicsWithCounts,
   );
 
+  // Derive freemium state directly from the API response — no client-side bucket logic
+  const hasLockedQuestions = topicQuestions.some((q) => q.isLocked);
+  const lockedQuestionIds = useMemo(() => {
+    if (!hasLockedQuestions) return undefined;
+    const ids = new Set<string>();
+    for (const q of topicQuestions) {
+      if (q.isLocked) ids.add(String(q.id || q.name));
+    }
+    return ids;
+  }, [hasLockedQuestions, topicQuestions]);
+
+  const unlockedCount = topicQuestions.filter((q) => !q.isLocked).length;
+
   const handleToggleComplete = useCallback(
     (questionId: string | number) => {
       const idStr = String(questionId);
@@ -132,29 +144,10 @@ const SheetsPageClient = () => {
     topicsLoading || (!!selectedTopic && topicQuestionsLoading);
 
   useEffect(() => {
-    if (user?.id) {
-      setIsProfileLoading(true);
-      userService
-        .getProfile(user.id)
-        .then((p) => {
-          setProfile(p);
-          setIsProfileLoading(false);
-        })
-        .catch(() => setIsProfileLoading(false));
-    } else if (!userLoading) {
-      setIsProfileLoading(false);
+    if (router.isReady && router.query.topic) {
+      setSelectedTopic(router.query.topic as string);
     }
-  }, [user?.id, userLoading]);
-
-  const { handleTopicClick, handleQuestionClick, handleBackToTopics } =
-    useDsaPrepUrlSync({
-      router,
-      selectedTopic,
-      setSelectedTopic,
-      setSelectedQuestion,
-      topicQuestions,
-      topicQuestionsLoading,
-    });
+  }, [router.isReady, router.query.topic]);
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -162,39 +155,66 @@ const SheetsPageClient = () => {
     }
   }, [userLoading, isAuth, router]);
 
-  if (sheetsLoading || userLoading || isProfileLoading || isProgressLoading) {
-    return (
-      <div className="flex flex-col min-h-screen bg-[#0A0A0A] font-sans items-center justify-center relative overflow-hidden">
-        {/* Subtle Glows */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#ff5757]/5 rounded-full blur-[80px] pointer-events-none" />
+  const handleQuestionClick = (question: DsaQuestion) => {
+    if (question.isLocked) {
+      setShowPayment(true);
+      return;
+    }
+    setSelectedQuestion(question);
+    setShowPayment(false);
+  };
 
-        <div className="relative flex flex-col items-center gap-6">
-          <div className="relative">
-            <div className="absolute inset-0 bg-[#ff5757]/20 rounded-full blur-xl animate-pulse" />
-            <div className="relative p-4 bg-[#111] border border-[#222] rounded-2xl shadow-2xl">
-              <LoadingSpinner height={6} width={6} borderColour="#ff5757" />
-            </div>
-          </div>
-          <div className="text-center space-y-1">
-            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] animate-pulse">
-              Syncing Workspace
-            </h3>
-            <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
-              Preparing your personalized curriculum
-            </p>
-          </div>
+  const handleTopicClick = (topic: string) => {
+    setSelectedTopic(topic);
+    setSelectedQuestion(null);
+    setShowPayment(false);
+  };
+
+  const handleBackToTopics = () => {
+    setSelectedTopic(null);
+    setSelectedQuestion(null);
+    setShowPayment(false);
+  };
+
+  if (sheetsLoading || userLoading || isProgressLoading) {
+    return (
+      <div className="flex min-h-screen bg-[#0A0A0A] font-sans items-center justify-center px-6 text-center">
+        <div className="space-y-1">
+          <p className="text-[12px] font-semibold text-gray-200 leading-tight">
+            Loading workspace
+            <span className="inline-flex w-4 justify-start" aria-hidden>
+              <span className="animate-pulse">.</span>
+              <span className="animate-pulse [animation-delay:150ms]">.</span>
+              <span className="animate-pulse [animation-delay:300ms]">.</span>
+            </span>
+          </p>
+          <p className="text-[10px] font-medium text-gray-500 leading-tight">
+            Just a moment
+          </p>
         </div>
       </div>
     );
   }
 
+  const handleViewPlans = () => router.push(routes.dsayatra.pricing);
+  const handleDismissUpsell = () => {
+    setShowPayment(false);
+    setSelectedQuestion(null);
+  };
+
   return (
     <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
+      {hasLockedQuestions && (
+        <FreemiumLockBanner
+          unlockedCount={unlockedCount}
+          onUpgradeClick={handleViewPlans}
+        />
+      )}
       <DsaPrepWorkspace
         questions={questions}
         topicsWithCounts={topicsWithCounts}
         selectedTopic={selectedTopic}
-        selectedQuestion={selectedQuestion}
+        selectedQuestion={showPayment ? null : selectedQuestion}
         onTopicClick={handleTopicClick}
         onQuestionClick={handleQuestionClick}
         onBackToTopics={handleBackToTopics}
@@ -205,6 +225,13 @@ const SheetsPageClient = () => {
         onSaveNote={onSaveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
         userTargetCompanies={userTargetCompanies}
+        freemiumLockedQuestionIds={lockedQuestionIds}
+        onFreemiumLockedClick={() => setShowPayment(true)}
+      />
+      <DsaUpsellModal
+        open={showPayment}
+        onViewPlans={handleViewPlans}
+        onDismiss={handleDismissUpsell}
       />
     </LearningEnvironmentLayout>
   );
