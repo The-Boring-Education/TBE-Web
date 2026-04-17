@@ -82,7 +82,8 @@ const DsaYatraPricingPage = () => {
         );
         return;
       }
-      window.location.href = `${platformBase}${routes.checkout}?productType=${DSA_YATRA_PRODUCT_TYPE}&productId=${planKey}&next=${encodeURIComponent("/dashboard")}`;
+      const returnToDashboard = `${window.location.origin}${routes.dsayatra.dashboard}`;
+      window.location.href = `${platformBase}${routes.checkout}?productType=${DSA_YATRA_PRODUCT_TYPE}&productId=${planKey}&next=${encodeURIComponent(returnToDashboard)}`;
     },
     [user],
   );

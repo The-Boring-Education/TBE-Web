@@ -82,7 +82,8 @@ const OnCampusPricingPage = () => {
         );
         return;
       }
-      window.location.href = `${platformBase}${routes.checkout}?productType=${ONCAMPUS_PRODUCT_TYPE}&productId=${planKey}&next=${encodeURIComponent("/dashboard")}`;
+      const returnToDashboard = `${window.location.origin}${routes.oncampus.dashboard}`;
+      window.location.href = `${platformBase}${routes.checkout}?productType=${ONCAMPUS_PRODUCT_TYPE}&productId=${planKey}&next=${encodeURIComponent(returnToDashboard)}`;
     },
     [user],
   );

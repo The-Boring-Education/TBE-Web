@@ -1,28 +1,14 @@
 import { Button, Text } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useUser } from '@tbe/hooks';
-import { sendRequest } from '@tbe/utils';
+import { resolvePaymentSuccessContinueHref, sendRequest } from '@tbe/utils';
 import Lottie from 'lottie-react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import successAnimation from '../../../public/animations/payment-success.json';
-
-/** Relative in-app path only — blocks protocol-relative URLs (`//host/...`) and backslashes. */
-const sanitizeRelativeNextPath = (
-  path: string | undefined,
-  fallback: string,
-): string => {
-  if (typeof path !== 'string' || !path.startsWith('/')) {
-    return fallback;
-  }
-  if (path.startsWith('//') || path.includes('\\')) {
-    return fallback;
-  }
-  return path;
-};
 
 const PaymentStatusPage = () => {
   const router = useRouter();
@@ -36,6 +22,13 @@ const PaymentStatusPage = () => {
   const [detail, setDetail] = useState<string | null>(null);
   const [refetchKey, setRefetchKey] = useState(0);
   const [showContent, setShowContent] = useState(false);
+  const [orderProductType, setOrderProductType] = useState<string | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    setOrderProductType(undefined);
+  }, [orderId]);
 
   useEffect(() => {
     if (!router.isReady || !orderId || !user?.id) return;
@@ -48,6 +41,7 @@ const PaymentStatusPage = () => {
       });
 
       if (!res.status || !res.data) {
+        setOrderProductType(undefined);
         setState('error');
         setDetail(
           typeof res.message === 'string'
@@ -58,6 +52,11 @@ const PaymentStatusPage = () => {
       }
 
       const status = res.data.paymentStatus as string;
+      setOrderProductType(
+        typeof res.data.productType === 'string'
+          ? res.data.productType
+          : undefined,
+      );
       if (status === 'SUCCESS') {
         setState('success');
         // Delay showing text content for animation to play
@@ -75,7 +74,15 @@ const PaymentStatusPage = () => {
     void run();
   }, [router.isReady, orderId, user?.id, refetchKey]);
 
-  const safeNext = sanitizeRelativeNextPath(nextPath, routes.user.dashboard);
+  const continueHref = useMemo(
+    () =>
+      resolvePaymentSuccessContinueHref({
+        nextQuery: nextPath,
+        productType: orderProductType,
+        platformFallbackPath: routes.user.dashboard,
+      }),
+    [nextPath, orderProductType],
+  );
 
   return (
     <>
@@ -176,7 +183,7 @@ const PaymentStatusPage = () => {
                     Time to start your journey!
                   </Text>
 
-                  <Link href={safeNext}>
+                  <Link href={continueHref}>
                     <Button
                       text='Continue to Dashboard →'
                       variant='PRIMARY'
