@@ -94,7 +94,16 @@ export const resolvePaymentSuccessContinueHref = ({
     }
   }
 
-  const path = sanitizeRelativeNextPath(nextQuery, "/dashboard");
+  let path = sanitizeRelativeNextPath(nextQuery, "/dashboard");
+
+  // Checkout used to default missing `next` to the platform path `/user/dashboard`; product apps use `/dashboard`.
+  if (
+    productType &&
+    SUBSCRIPTION_PRODUCT_TYPES.has(productType) &&
+    path === "/user/dashboard"
+  ) {
+    path = "/dashboard";
+  }
 
   if (productType && SUBSCRIPTION_PRODUCT_TYPES.has(productType)) {
     const origin = stripTrailingSlash(getSubscriptionAppOrigin(productType));

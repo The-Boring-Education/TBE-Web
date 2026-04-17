@@ -54,4 +54,16 @@ describe("resolvePaymentSuccessContinueHref", () => {
       }),
     ).toBe("https://custom.example.com/dashboard");
   });
+
+  it("maps legacy platform default /user/dashboard to /dashboard for subscription apps", () => {
+    vi.stubEnv("NODE_ENV", "development");
+
+    expect(
+      resolvePaymentSuccessContinueHref({
+        nextQuery: "/user/dashboard",
+        productType: "DSA_YATRA",
+        platformFallbackPath: "/user/dashboard",
+      }),
+    ).toBe("http://localhost:3005/dashboard");
+  });
 });

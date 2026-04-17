@@ -29,6 +29,13 @@ const SUPPORTED: ProductType[] = [
   'ONCAMPUS',
 ];
 
+/** Product apps use `/dashboard`; platform uses `/user/dashboard` when `next` is omitted. */
+const SUBSCRIPTION_PRODUCT_TYPES: ProductType[] = [
+  'PREPYATRA',
+  'DSA_YATRA',
+  'ONCAMPUS',
+];
+
 const formatInr = (n: number) =>
   `₹${n.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 
@@ -177,8 +184,13 @@ const CheckoutPage = () => {
 
       const { paymentSessionId, orderId } = res.data;
 
+      const defaultNext =
+        productType &&
+        SUBSCRIPTION_PRODUCT_TYPES.includes(productType as ProductType)
+          ? '/dashboard'
+          : routes.user.dashboard;
       const next =
-        nextPath && nextPath.startsWith('/') ? nextPath : routes.user.dashboard;
+        nextPath && nextPath.startsWith('/') ? nextPath : defaultNext;
       const paymentStatusAbsoluteUrl = `${window.location.origin}${routes.paymentStatus}?order_id=${encodeURIComponent(orderId)}&next=${encodeURIComponent(next)}`;
 
       await launchPayment(
