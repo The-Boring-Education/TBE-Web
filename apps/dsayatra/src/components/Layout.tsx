@@ -16,16 +16,17 @@ const Layout = ({ children }: LayoutProps) => {
     router.pathname === "/dashboard" ||
     router.pathname.startsWith("/dashboard/");
   const isFullScreen = router.pathname === "/sheets";
+  /** Pricing is a distraction-free page (no nav/footer); content supplies its own back control. */
+  const isPricingStandalone = router.pathname === "/pricing";
   const isRevisions = router.pathname === "/revisions";
   const isTopics = router.pathname === "/topics";
-  const isPricing = router.pathname === "/pricing";
   const isLandingPage = router.pathname === "/";
   const dashboardRoute =
     router.pathname === "/" || router.pathname === "/login"
       ? "/"
       : "/dashboard";
 
-  if (isFullScreen) {
+  if (isFullScreen || isPricingStandalone) {
     return <Fragment>{children}</Fragment>;
   }
 
@@ -36,8 +37,7 @@ const Layout = ({ children }: LayoutProps) => {
       <main
         className={cn(
           "min-h-screen w-full overflow-x-hidden pt-[72px]",
-          (isDashboard || isRevisions || isTopics || isPricing) &&
-            "bg-[#0A0A0A]",
+          (isDashboard || isRevisions || isTopics) && "bg-[#0A0A0A]",
           isLandingPage && "bg-[#040505]",
         )}
       >

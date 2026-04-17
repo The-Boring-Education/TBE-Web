@@ -43,16 +43,14 @@ export const DSA_DASHBOARD_SIDEBAR_ITEMS = [
 const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
   const router = useRouter();
   const { isAuth, loading } = useUser();
-  const isPricingPage = router.pathname === "/pricing";
 
   useEffect(() => {
-    if (isPricingPage) return;
     if (!loading && !isAuth) {
       router.push("/login");
     }
-  }, [loading, isAuth, router, isPricingPage]);
+  }, [loading, isAuth, router]);
 
-  if (!isPricingPage && loading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A]">
         <LoadingSpinner />
@@ -60,7 +58,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
     );
   }
 
-  if (!isPricingPage && !loading && !isAuth) {
+  if (!isAuth) {
     return null;
   }
 

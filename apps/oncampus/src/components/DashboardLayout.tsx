@@ -39,17 +39,14 @@ export const DASHBOARD_SIDEBAR_ITEMS = [
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const router = useRouter();
   const { isAuth, loading } = useUser();
-  const isPricingPage = router.pathname === "/pricing";
 
-  // Centralized auth guard for dashboard routes (pricing stays reachable without login)
   useEffect(() => {
-    if (isPricingPage) return;
     if (!loading && !isAuth) {
       router.push("/login");
     }
-  }, [loading, isAuth, router, isPricingPage]);
+  }, [loading, isAuth, router]);
 
-  if (!isPricingPage && loading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A]">
         <LoadingSpinner />
@@ -57,7 +54,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     );
   }
 
-  if (!isPricingPage && !loading && !isAuth) {
+  if (!isAuth) {
     return null;
   }
 

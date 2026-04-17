@@ -12,8 +12,9 @@ import {
   sendRequest,
 } from "@tbe/utils";
 import { motion } from "framer-motion";
-import { Sparkles, Zap } from "lucide-react";
+import { ArrowLeft, Sparkles, Zap } from "lucide-react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
@@ -24,7 +25,18 @@ import {
 } from "../lib/dsaPricingPageConstants";
 
 const DsaYatraPricingPage = () => {
+  const router = useRouter();
   const { user } = useUser();
+
+  const handleBack = () => {
+    const ref = typeof document !== "undefined" ? document.referrer : "";
+    const fromOurSite = ref && new URL(ref).origin === window.location.origin;
+    if (fromOurSite && window.history.length > 1) {
+      router.back();
+      return;
+    }
+    void router.push(routes.dsayatra.dashboard);
+  };
   const [plans, setPlans] = useState<SubscriptionPlanCatalogRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -99,11 +111,23 @@ const DsaYatraPricingPage = () => {
       </Head>
 
       <div className="bg-[#040505] min-h-screen">
+        <div className="sticky top-0 z-20 flex justify-start px-4 pt-4 pb-2 bg-[#040505]/90 backdrop-blur-sm border-b border-white/5">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="inline-flex items-center gap-2 text-sm font-medium text-[#b0b0b0] hover:text-white transition-colors"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="w-4 h-4 shrink-0" aria-hidden />
+            Back
+          </button>
+        </div>
+
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-[#ff5757]/5 via-transparent to-transparent pointer-events-none" />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#ff5757]/8 rounded-full blur-[120px] pointer-events-none" />
 
-          <div className="relative max-w-4xl mx-auto px-4 pt-12 pb-8 text-center">
+          <div className="relative max-w-4xl mx-auto px-4 pt-6 pb-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -181,7 +205,7 @@ const DsaYatraPricingPage = () => {
           {!loading && !error && plans.length === 0 && (
             <div className="text-center py-16">
               <p className="text-[#808080] text-sm">
-                No plans available right now. We&apos;re working on it!
+                No plans available right now. We're working on it!
               </p>
             </div>
           )}
