@@ -401,12 +401,13 @@ const DsaClient = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(
-                    "rounded-md border border-[#2a2a2a] text-[#ff5757] hover:border-[#ff5757] hover:bg-[#ff5757]/10 flex items-center gap-2 px-4 py-2 text-xs font-semibold transition-all uppercase",
+                    "rounded-md border border-[#2a2a2a] text-[#ff5757] hover:border-[#ff5757] hover:bg-[#ff5757]/10 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-xs font-semibold transition-all uppercase",
                     !social.url && "opacity-50 cursor-not-allowed",
                   )}
                   onClick={(e) => !social.url && e.preventDefault()}
                 >
-                  <social.icon className="w-4 h-4" /> {social.label}
+                  <social.icon className="w-4 h-4 shrink-0" />{" "}
+                  <span className="hidden sm:inline">{social.label}</span>
                 </a>
               ))}
             </div>
