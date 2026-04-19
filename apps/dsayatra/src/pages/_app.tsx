@@ -39,6 +39,10 @@ export default function MyApp(props: AppProps) {
     <>
       <Head>
         <link rel="icon" type="image/svg+xml" href="/dsayatra_favicon.svg" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+        />
       </Head>
       <AppWithShell {...props} />
     </>
