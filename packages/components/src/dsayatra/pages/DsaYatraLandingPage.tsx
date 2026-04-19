@@ -55,7 +55,7 @@ export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
               text: "Get Started",
               className: "w-full",
             }}
-            className="w-full sm:w-fit"
+            className="w-11/12 sm:w-fit"
             href={routes.dsayatra.dashboard}
           />
         }
