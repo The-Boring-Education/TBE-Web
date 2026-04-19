@@ -175,7 +175,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
 
   if (sheetsLoading || userLoading) {
     return (
-      <div className="flex bg-[#0A0A0A] font-sans h-[calc(100vh-72px)]">
+      <div className="flex bg-[#0f0f0f] font-sans h-[calc(100vh-72px)]">
         <main className="flex-1 flex items-center justify-center">
           <LoadingSpinner height={4} width={4} borderColour="white" />
           <Text level="p" className="text-gray-400 ml-3">
@@ -196,7 +196,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
         </Head>
         <FlexContainer
           direction="col"
-          className="flex-1 min-h-screen w-full bg-[#0A0A0A] mt-0 font-sans px-4 sm:px-8 py-8"
+          className="flex-1 min-h-screen w-full bg-[#0f0f0f] mt-0 font-sans px-4 sm:px-8 py-8 pb-24 lg:pb-8"
           itemCenter={false}
           justifyCenter={false}
           wrap={false}
@@ -207,23 +207,34 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
               variant="OUTLINE"
               size="SMALL"
               text="← Back to Dashboard"
-              className="mb-6 border-[#2a2a2a] text-white hover:border-[#ff5757] hover:bg-[#ff5757]/10 bg-transparent flex items-center justify-center transition-all duration-300 w-max"
+              className="mb-8 border-[#2a2a2a] text-white hover:border-[#ff5757] hover:bg-[#ff5757]/10 bg-transparent flex items-center justify-center transition-all duration-300 w-max h-auto py-2.5 px-5 font-bold text-xs rounded-xl"
             />
-            <header className="mb-10 text-center sm:text-left">
-              <h1 className="text-3xl font-bold text-white mb-2">
+            <header className="mb-12 text-center sm:text-left">
+              <h1 className="text-3xl sm:text-4xl font-black text-white mb-3 tracking-tight">
                 Weekly Revisions
               </h1>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-500 font-medium max-w-2xl">
                 Unlock a new revision week for every 10 questions you complete
-                in the sheet!
+                in the sheet! Master the forgetting curve.
               </p>
-              <p className="text-sm text-[#ff5757] font-semibold mt-1">
-                Total Completed: {globalCompleted.length} / {totalWeeks * 10}{" "}
-                for fully unlocked.
-              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <p className="text-[11px] bg-[#ff5757]/10 text-[#ff5757] border border-[#ff5757]/20 px-3 py-1 rounded-full font-black uppercase tracking-widest">
+                  Total Completed: {globalCompleted.length} Qs
+                </p>
+                <p className="text-[11px] bg-[#2a2a2a] text-gray-400 px-3 py-1 rounded-full font-black uppercase tracking-widest">
+                  Progress:{" "}
+                  {Math.min(
+                    100,
+                    Math.round(
+                      (globalCompleted.length / (totalWeeks * 10)) * 100,
+                    ),
+                  )}
+                  % Unlocked
+                </p>
+              </div>
             </header>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
               {Array.from({ length: totalWeeks }).map((_, i) => {
                 const isUnlocked = i < numUnlockedWeeks;
                 const weekQuestions = (weeklyAssignments[i] || []).filter(
@@ -242,43 +253,60 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                     key={i}
                     onClick={() => isUnlocked && handleSelectWeek(i)}
                     className={cn(
-                      "w-full border rounded-xl p-5 flex items-center justify-between transition-all duration-300",
+                      "w-full border-2 rounded-2xl p-6 flex items-center justify-between transition-all duration-500 relative overflow-hidden group",
                       isUnlocked
-                        ? "cursor-pointer border-[#2a2a2a] bg-[#111] hover:border-[#ff5757] hover:bg-[#1a1a1a] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)] hover:-translate-y-1"
-                        : "cursor-not-allowed border-[#1a1a1a] bg-[#0A0A0A] opacity-60",
+                        ? "cursor-pointer border-[#2a2a2a] bg-[#1a1a1a]/40 hover:border-[#ff5757]/50 hover:bg-[#1a1a1a] hover:shadow-[0_10px_30px_rgba(255,87,87,0.1)] hover:-translate-y-1.5"
+                        : "cursor-not-allowed border-[#1a1a1a] bg-[#0f0f0f] opacity-40",
                       isCompleted &&
-                        "border-green-500/30 bg-green-500/5 hover:border-green-500/50 hover:bg-green-500/10 hover:shadow-[0_0_15px_rgba(74,222,128,0.2)]",
+                        "border-[#51cf66]/30 bg-[#51cf66]/5 hover:border-[#51cf66]/50 hover:bg-[#51cf66]/10 hover:shadow-[0_10px_30px_rgba(81,207,102,0.1)]",
                     )}
                   >
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-1.5 z-10">
+                      <div className="flex items-center gap-2.5">
                         <h3
                           className={cn(
-                            "text-lg font-bold",
-                            isUnlocked ? "text-white" : "text-gray-500",
-                            isCompleted && "text-green-500",
+                            "text-xl font-black tracking-tight",
+                            isUnlocked ? "text-white" : "text-gray-600",
+                            isCompleted && "text-[#51cf66]",
                           )}
                         >
                           Week {i + 1}
                         </h3>
                         {!isUnlocked && (
-                          <Lock className="w-4 h-4 text-gray-500" />
+                          <Lock className="w-4 h-4 text-gray-700" />
                         )}
                         {isCompleted && (
-                          <Check className="w-4 h-4 text-green-500" />
+                          <div className="p-0.5 bg-[#51cf66] rounded-full">
+                            <Check className="w-3 h-3 text-black stroke-[4px]" />
+                          </div>
                         )}
                       </div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">
                         {isUnlocked
                           ? weekQuestions.length > 0
-                            ? `${weekDone.length}/${weekQuestions.length} Completed`
-                            : "Ready to start"
-                          : `Unlocks at ${(i + 1) * 10} overall questions`}
+                            ? `${weekDone.length} / ${weekQuestions.length} COMPLETED`
+                            : "READY TO START"
+                          : `UNLOCKS AT ${(i + 1) * 10} Qs`}
                       </p>
                     </div>
                     {isUnlocked ? (
-                      <ChevronRight className="w-5 h-5 text-gray-500" />
+                      <ChevronRight className="w-6 h-6 text-gray-700 group-hover:text-[#ff5757] transition-colors" />
                     ) : null}
+
+                    {/* Progress bar background on the card */}
+                    {isUnlocked && (
+                      <div className="absolute bottom-0 left-0 h-1 bg-gray-800/50 w-full">
+                        <div
+                          className={cn(
+                            "h-full transition-all duration-1000",
+                            isCompleted ? "bg-[#51cf66]" : "bg-[#ff5757]",
+                          )}
+                          style={{
+                            width: `${(weekDone.length / (weekQuestions.length || 1)) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -309,7 +337,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
       <Head>
         <title>Revision Week {selectedWeek + 1} | DSA Yatra</title>
       </Head>
-      <div className="min-h-screen bg-[#0A0A0A] text-white font-sans p-4 sm:p-8 pb-32 w-full">
+      <div className="min-h-screen bg-[#0f0f0f] text-white font-sans p-4 sm:p-8 pb-32 w-full">
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -353,10 +381,10 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
             width: 100%;
             height: 100%;
             text-align: center;
-            transition: transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
           }
-          .flip-card:hover .flip-card-inner {
+          .flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner {
             transform: rotateY(180deg);
           }
           .flip-card-front, .flip-card-back {
@@ -396,32 +424,35 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
             variant="OUTLINE"
             size="SMALL"
             text="← Back to Weeks"
-            className="mb-8 border-[#2a2a2a] text-white hover:border-[#ff5757] hover:bg-[#ff5757]/10 bg-transparent flex items-center justify-center transition-all duration-300 w-max"
+            className="mb-10 border-[#2a2a2a] text-white hover:border-[#ff5757] hover:bg-[#ff5757]/10 bg-transparent flex items-center justify-center transition-all duration-300 w-max h-auto py-2.5 px-5 font-bold text-xs rounded-xl"
           />
 
-          <header className="mb-8">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#FF5757] to-[#ff8888] bg-clip-text text-transparent inline-block mb-1">
+          <header className="mb-10 text-center sm:text-left">
+            <h1 className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-[#FF5757] to-[#ff8888] bg-clip-text text-transparent inline-block mb-2 tracking-tight">
               Week {selectedWeek + 1} Revision
             </h1>
+            <p className="text-gray-500 text-sm font-medium">
+              Commit these problems to your long-term memory.
+            </p>
           </header>
 
-          <section className="grid grid-cols-1 md:grid-cols-12 gap-5 mb-10 animate-fadeUp">
+          <section className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12 animate-fadeUp">
             {/* Left: Interactive Flip Graph */}
-            <div className="md:col-span-8 flip-card h-[280px]">
-              <div className="flip-card-inner">
-                <div className="flip-card-front glass-panel rounded-xl p-5 relative overflow-hidden flex flex-col items-start justify-start border border-[#2a2a2a] hover:border-[#ff5757] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)] transition-all duration-300">
-                  <div className="w-full flex justify-between items-start z-10">
+            <div className="md:col-span-8 flip-card min-h-[300px] md:h-[320px]">
+              <div className="flip-card-inner h-full">
+                <div className="flip-card-front glass-panel rounded-2xl p-6 relative overflow-hidden flex flex-col items-start justify-start border-2 border-[#2a2a2a] hover:border-[#ff5757]/50 hover:shadow-[0_10px_40px_rgba(255,87,87,0.15)] transition-all duration-500">
+                  <div className="w-full flex justify-between items-start z-10 mb-2">
                     <div className="text-left">
-                      <h3 className="text-sm font-semibold text-[#ff5757]">
+                      <h3 className="text-xs font-black text-[#ff5757] uppercase tracking-widest">
                         Memory Retention
                       </h3>
-                      <p className="text-[10px] text-gray-400">
+                      <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-0.5">
                         Ebbinghaus Curve Visualization
                       </p>
                     </div>
-                    <div className="flex items-center gap-1 bg-[#ff5757]/10 border border-[#ff5757]/30 px-2 py-1 rounded-full text-[10px] text-[#ff5757]">
+                    <div className="flex items-center gap-1.5 bg-[#ff5757]/10 border border-[#ff5757]/20 px-3 py-1.5 rounded-full text-[9px] font-black text-[#ff5757] uppercase tracking-widest">
                       <Info className="w-3 h-3" />
-                      <span>Learn more about the graph</span>
+                      <span>The Forgetting Curve</span>
                     </div>
                   </div>
 
@@ -431,6 +462,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                       height="100%"
                       viewBox="0 0 500 240"
                       preserveAspectRatio="none"
+                      className="opacity-80"
                     >
                       {[0, 1, 2, 3].map((i) => (
                         <g key={i}>
@@ -439,39 +471,42 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                             y1="0"
                             x2={i * 125 + 62.5}
                             y2="220"
-                            stroke="rgba(255,255,255,0.05)"
+                            stroke="rgba(255,255,255,0.03)"
                             strokeWidth="1"
                             strokeDasharray="4 4"
                           />
                           <text
                             x={i * 125 + 62.5}
                             y="235"
-                            fill="#8a8f9d"
-                            fontSize="10"
+                            fill="#444"
+                            fontSize="9"
+                            fontWeight="bold"
                             textAnchor="middle"
+                            className="uppercase tracking-tighter"
                           >
-                            {i}d
+                            DAY {i}
                           </text>
                         </g>
                       ))}
                       <path
                         d="M 0 50 Q 80 180, 187.5 200 T 312.5 220 T 500 225"
                         fill="none"
-                        stroke="rgba(255,87,87,0.15)"
+                        stroke="rgba(255,87,87,0.1)"
                         strokeWidth="2"
                         strokeDasharray="6 6"
                       />
                       <g
                         style={{
-                          filter: `drop-shadow(0 0 ${progress * 0.1}px rgba(255,87,87,0.8))`,
-                          transition: "filter 0.6s ease",
+                          filter: `drop-shadow(0 0 ${progress * 0.15}px rgba(255,87,87,0.6))`,
+                          transition: "filter 1s ease",
                         }}
                       >
                         <path
                           d="M 0 50 Q 40 120, 62.5 140 L 62.5 50 Q 120 95, 187.5 110 L 187.5 50 Q 250 80, 312.5 90 L 312.5 50 Q 400 65, 500 70"
                           fill="none"
                           stroke="url(#revision-gradient)"
-                          strokeWidth="3"
+                          strokeWidth="4"
+                          strokeLinecap="round"
                         />
                       </g>
                       <defs>
@@ -488,56 +523,90 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                       </defs>
                     </svg>
                   </div>
+
+                  <p className="absolute bottom-4 left-6 text-[9px] text-gray-600 font-bold uppercase tracking-[0.2em] animate-pulse">
+                    Hover to understand why you forget
+                  </p>
                 </div>
 
-                <div className="flip-card-back text-left hover:border-[#ff5757] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)] transition-all duration-300">
+                <div className="flip-card-back text-left bg-[#1a1a1a] rounded-2xl border-2 border-[#2a2a2a] hover:border-[#ff5757]/50 hover:shadow-[0_10px_40px_rgba(255,87,87,0.15)] transition-all duration-500">
                   <div>
-                    <h3 className="text-xl font-bold text-[#ff5757] mb-3 flex items-center gap-2">
-                      <Info className="w-5 h-5" /> The Forgetting Curve
+                    <h3 className="text-2xl font-black text-[#ff5757] mb-5 flex items-center gap-3 tracking-tight">
+                      <div className="p-2 bg-[#ff5757]/10 rounded-lg">
+                        <Info className="w-5 h-5" />
+                      </div>
+                      Brain Hack: Spaced Repetition
                     </h3>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      After every three days, we begin to forget what we have
-                      newly learned. To remember and deeply retain concepts,
-                      spaced revision is required. This is why the forgetting
-                      curve drops sharply. By reviewing these questions now,
-                      you're flattening the curve and committing them to
-                      long-term memory!
-                    </p>
+                    <div className="space-y-4 text-gray-400 text-sm leading-relaxed font-medium">
+                      <p>
+                        The human brain is optimized to forget information it
+                        doesn't use. The{" "}
+                        <span className="text-white font-bold">
+                          Ebbinghaus Forgetting Curve
+                        </span>{" "}
+                        shows we forget 50-80% of new knowledge within days.
+                      </p>
+                      <p>
+                        By reviewing these{" "}
+                        <span className="text-[#ff5757] font-bold">
+                          {currentQuestions.length} problems
+                        </span>{" "}
+                        now, you're "flattening the curve." Each revision
+                        session signals to your brain that this data is
+                        critical, moving it from short-term to{" "}
+                        <span className="text-white font-bold underline decoration-[#ff5757] underline-offset-4">
+                          long-term memory
+                        </span>
+                        .
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Right: Compact Stats */}
-            <div className="md:col-span-4 flex flex-col gap-3">
-              <div className="bg-[#111] rounded-xl p-4 border border-[#2a2a2a] flex items-center justify-between hover:border-[#ff5757] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)] hover:-translate-y-1 transition-all duration-300">
-                <span className="text-xs text-gray-400 uppercase tracking-widest">
-                  Completed
-                </span>
-                <span className="text-2xl font-bold text-[#FF5757]">
-                  {completedWeekIds.length}
-                </span>
-              </div>
-              <div className="bg-[#111] rounded-xl p-4 border border-[#2a2a2a] flex items-center justify-between hover:border-[#ff5757] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)] hover:-translate-y-1 transition-all duration-300">
-                <span className="text-xs text-gray-400 uppercase tracking-widest">
-                  Remaining
-                </span>
-                <span className="text-2xl font-bold text-gray-300">
-                  {remaining}
-                </span>
-              </div>
-              <div className="bg-[#111] rounded-xl p-4 border border-[#2a2a2a] flex flex-col justify-center hover:border-[#ff5757] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)] hover:-translate-y-1 transition-all duration-300">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs text-gray-400 uppercase tracking-widest">
-                    Progress
+            <div className="md:col-span-4 flex flex-col gap-4 h-full">
+              <div className="bg-[#1a1a1a] rounded-2xl p-6 border-2 border-[#2a2a2a] flex items-center justify-between hover:border-[#ff5757]/40 transition-all duration-300">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">
+                    Completed
                   </span>
-                  <span className="text-lg font-bold text-[#ff5757]">
+                  <span className="text-3xl font-black text-[#FF5757]">
+                    {completedWeekIds.length}
+                  </span>
+                </div>
+                <div className="p-3 bg-[#51cf66]/10 rounded-xl">
+                  <Check className="w-6 h-6 text-[#51cf66]" />
+                </div>
+              </div>
+
+              <div className="bg-[#1a1a1a] rounded-2xl p-6 border-2 border-[#2a2a2a] flex items-center justify-between hover:border-[#ff5757]/40 transition-all duration-300">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">
+                    Pending
+                  </span>
+                  <span className="text-3xl font-black text-gray-200">
+                    {remaining}
+                  </span>
+                </div>
+                <div className="p-3 bg-gray-800/50 rounded-xl text-gray-500">
+                  <Target className="w-6 h-6" />
+                </div>
+              </div>
+
+              <div className="bg-[#1a1a1a] rounded-2xl p-6 border-2 border-[#2a2a2a] flex flex-col justify-center hover:border-[#ff5757]/40 transition-all duration-300 flex-1">
+                <div className="flex justify-between items-end mb-3">
+                  <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                    Retention Progress
+                  </span>
+                  <span className="text-xl font-black text-[#ff5757]">
                     {Math.round(progress)}%
                   </span>
                 </div>
-                <div className="w-full h-1.5 bg-[#2a2a2a] rounded-full overflow-hidden">
+                <div className="w-full h-2.5 bg-[#2a2a2a] rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-[#ff5757] to-[#ff8888] fill-transition"
+                    className="h-full bg-gradient-to-r from-[#ff5757] to-[#ff8888] fill-transition rounded-full shadow-[0_0_15px_rgba(255,87,87,0.3)]"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -547,13 +616,16 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
 
           <section
             className="animate-fadeUp"
-            style={{ animationDelay: "0.1s" }}
+            style={{ animationDelay: "0.2s" }}
           >
-            <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <Target className="w-5 h-5 text-[#ff5757]" /> Revision Questions
+            <h2 className="text-xl font-black text-white mb-6 flex items-center gap-3 tracking-tight">
+              <div className="p-2 bg-[#ff5757]/10 rounded-lg">
+                <Target className="w-5 h-5 text-[#ff5757]" />
+              </div>
+              Assigned Problems
             </h2>
 
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 gap-3">
               {currentQuestions.map((q) => {
                 const qIdStr = String(q.id || q.name);
                 const isChecked = completedWeekIds.includes(qIdStr);
@@ -561,78 +633,87 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                 return (
                   <div
                     key={qIdStr}
-                    className={`hover-sweep flex gap-3 p-3 rounded-xl border transition-all duration-300 cursor-pointer hover:-translate-y-0.5
-                                            ${
-                                              isChecked
-                                                ? "bg-green-500/5 border-green-500/30 hover:shadow-[0_0_15px_rgba(74,222,128,0.2)]"
-                                                : "bg-[#111] border-[#2a2a2a] hover:border-[#ff5757] hover:shadow-[0_0_15px_rgba(255,87,87,0.3)]"
-                                            }`}
+                    className={cn(
+                      "hover-sweep group flex items-center gap-5 p-4 sm:p-5 rounded-2xl border-2 transition-all duration-500 cursor-pointer hover:-translate-y-1 shadow-lg",
+                      isChecked
+                        ? "bg-[#51cf66]/5 border-[#51cf66]/20 hover:border-[#51cf66]/40 hover:shadow-[0_10px_30px_rgba(81,207,102,0.1)]"
+                        : "bg-[#1a1a1a] border-[#222] hover:border-[#ff5757]/50 hover:bg-[#1f1f1f] hover:shadow-[0_10px_30px_rgba(255,87,87,0.1)]",
+                    )}
                     onClick={() => toggleRevisionQuestion(qIdStr)}
                   >
-                    <div className="flex-shrink-0 pt-0">
+                    <div className="flex-shrink-0">
                       <div
-                        className={`w-4 h-4 rounded border flex items-center justify-center transition-all duration-300
-                                                ${
-                                                  isChecked
-                                                    ? "bg-green-500 border-green-500"
-                                                    : "border-[#444]"
-                                                }`}
+                        className={cn(
+                          "w-7 h-7 rounded-xl border-2 flex items-center justify-center transition-all duration-500",
+                          isChecked
+                            ? "bg-[#51cf66] border-[#51cf66] scale-110 shadow-[0_0_15px_rgba(81,207,102,0.4)]"
+                            : "border-[#333] group-hover:border-[#ff5757]/60",
+                        )}
                       >
                         {isChecked && (
-                          <Check size={10} className="text-black font-bold" />
+                          <Check
+                            size={14}
+                            className="text-black stroke-[4px]"
+                          />
                         )}
                       </div>
                     </div>
 
                     <div className="flex-grow min-w-0">
                       <h3
-                        className={`text-sm font-bold mb-1 truncate transition-all duration-300 ${isChecked ? "line-through text-gray-500" : "text-gray-200"}`}
+                        className={cn(
+                          "text-base font-black mb-1.5 truncate transition-all duration-500 tracking-tight",
+                          isChecked
+                            ? "line-through text-gray-600"
+                            : "text-gray-200",
+                        )}
                       >
                         {q.name}
                       </h3>
                       <div className="flex flex-wrap items-center gap-2">
-                        {q.topics?.slice(0, 3).map((topic, i) => (
+                        {q.topics?.slice(0, 2).map((topic, i) => (
                           <div
                             key={i}
-                            className="bg-[#1a1a1a] border border-[#333] px-2 py-0.5 text-[10px] text-gray-400 rounded"
+                            className="bg-[#252525] border border-[#333] px-2.5 py-1 text-[9px] font-black text-gray-500 rounded-lg uppercase tracking-widest"
                           >
                             {topic}
                           </div>
                         ))}
-                        <div className="flex items-center gap-2 flex-grow justify-end pr-2">
-                          {q.resources?.leetcodeURL && (
-                            <a
-                              href={q.resources.leetcodeURL}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title="Solve on LeetCode"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <LeetCodeIcon className="w-4 h-4" />
-                            </a>
-                          )}
-                          {q.resources?.youtubeURL && (
-                            <a
-                              href={q.resources.youtubeURL}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title="Watch explanation on YouTube"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <YouTubeIcon className="w-4 h-4" />
-                            </a>
-                          )}
-                        </div>
                       </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 flex-shrink-0">
+                      {q.resources?.leetcodeURL && (
+                        <a
+                          href={q.resources.leetcodeURL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2.5 bg-gray-800/50 hover:bg-[#ffb946]/20 rounded-xl transition-all border border-transparent hover:border-[#ffb946]/30 group/icon"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <LeetCodeIcon className="w-5 h-5 opacity-60 group-hover/icon:opacity-100 grayscale group-hover/icon:grayscale-0 transition-all" />
+                        </a>
+                      )}
+                      {q.resources?.youtubeURL && (
+                        <a
+                          href={q.resources.youtubeURL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2.5 bg-gray-800/50 hover:bg-[#ff0000]/20 rounded-xl transition-all border border-transparent hover:border-[#ff0000]/30 group/icon"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <YouTubeIcon className="w-5 h-5 opacity-60 group-hover/icon:opacity-100 grayscale group-hover/icon:grayscale-0 transition-all" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 );
               })}
 
               {currentQuestions.length === 0 && (
-                <div className="text-center p-8 bg-[#111] rounded-xl border border-[#2a2a2a]">
-                  <p className="text-gray-400 text-sm">
-                    No questions found! Make sure you have completed questions.
+                <div className="text-center p-16 bg-[#111] rounded-3xl border-2 border-dashed border-[#222]">
+                  <p className="text-gray-600 font-bold uppercase tracking-widest text-xs">
+                    Initialization error: No questions mapped yet.
                   </p>
                 </div>
               )}
