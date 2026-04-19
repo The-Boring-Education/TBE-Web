@@ -32,7 +32,7 @@ const LearningEnvironmentLayout = ({
 
   return (
     <div
-      className={`flex flex-col bg-black text-white ${layoutMode === "workspace" ? "h-screen overflow-hidden" : "min-h-screen"}`}
+      className={`flex flex-col bg-black text-white ${layoutMode === "workspace" ? "min-h-screen md:h-screen md:overflow-hidden" : "min-h-screen"}`}
     >
       {/* Top Navbar */}
       <LearningNavbar
@@ -43,7 +43,9 @@ const LearningEnvironmentLayout = ({
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 min-h-0 w-full pt-[72px] flex flex-col items-center">
+      <main
+        className={`flex-1 min-h-0 w-full pt-[72px] flex flex-col items-center ${layoutMode === "workspace" ? "overflow-y-auto md:overflow-hidden" : ""}`}
+      >
         {isLoading ? (
           <div className="flex flex-col h-full min-h-[60vh] w-full items-center justify-center">
             <LoadingSpinner height={8} width={8} />

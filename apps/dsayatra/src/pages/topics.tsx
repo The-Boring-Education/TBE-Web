@@ -14,7 +14,7 @@ import {
   usePaymentStatus,
 } from "@tbe/hooks";
 import type { PageProps, RoadmapNode } from "@tbe/interface";
-import { getPreFetchProps } from "@tbe/utils";
+import { cn, getPreFetchProps } from "@tbe/utils";
 import { Code } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -151,6 +151,12 @@ function TopicsClient() {
 
   return (
     <InteractiveRoadmap
+      className={cn(
+        /* Match DsaDashboardLayout inset so the roadmap is not a darker “card”. */
+        "!bg-[#0f0f0f]",
+        /* Bleed past shell horizontal padding (px-3 sm:px-5 lg:px-6 xl:px-8). */
+        "-mx-3 max-w-none sm:-mx-5 lg:-mx-6 xl:-mx-8",
+      )}
       nodes={nodes}
       onNodeClick={handleNodeClick}
       title={
@@ -166,8 +172,6 @@ function TopicsClient() {
       accentColor="#ff5757"
       iconMap={DSA_TOPIC_ROADMAP_ICON_MAP}
       defaultIcon={Code}
-      backButtonLabel="Back to Dashboard"
-      onBackClick={() => router.push("/dashboard")}
     />
   );
 }

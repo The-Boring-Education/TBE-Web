@@ -235,6 +235,7 @@ export { default as useGamifiedAction } from "./common/GamificationDemo/useGamif
 export * from "./dsayatra";
 export {
   APP_DASHBOARD_SIDEBAR_BUTTON_CLASS,
+  DSA_YATRA_SIDEBAR_MENU_BUTTON_CLASS,
   isDashboardSidebarLinkActive,
 } from "./layout/appDashboardSidebarNav";
 export { default as Footer } from "./layout/Footer";

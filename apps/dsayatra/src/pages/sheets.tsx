@@ -3,9 +3,7 @@ import {
   DsaUpsellModal,
   FreemiumLockBanner,
   LearningEnvironmentLayout,
-  LoadingSpinner,
   SEO,
-  Text,
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamifiedAction } from "@tbe/gamification";
@@ -180,12 +178,19 @@ const SheetsPageClient = () => {
 
   if (sheetsLoading || userLoading || isProgressLoading) {
     return (
-      <div className="flex flex-col min-h-screen bg-[#0A0A0A] font-sans items-center justify-center">
-        <div className="flex items-center">
-          <LoadingSpinner height={4} width={4} borderColour="white" />
-          <Text level="p" className="text-gray-400 ml-3">
-            Loading Sheet...
-          </Text>
+      <div className="flex min-h-screen bg-[#0A0A0A] font-sans items-center justify-center px-6 text-center">
+        <div className="space-y-1">
+          <p className="text-[12px] font-semibold text-gray-200 leading-tight">
+            Loading workspace
+            <span className="inline-flex w-4 justify-start" aria-hidden>
+              <span className="animate-pulse">.</span>
+              <span className="animate-pulse [animation-delay:150ms]">.</span>
+              <span className="animate-pulse [animation-delay:300ms]">.</span>
+            </span>
+          </p>
+          <p className="text-[10px] font-medium text-gray-500 leading-tight">
+            Just a moment
+          </p>
         </div>
       </div>
     );
