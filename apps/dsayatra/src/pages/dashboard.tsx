@@ -326,7 +326,7 @@ const DsaClient = () => {
     <div className="relative font-sans selection:bg-[#ff5757]/30 selection:text-white min-h-0">
       <div className="flex flex-col min-h-0 space-y-4 pb-6 overflow-y-auto">
         {/* Header Section */}
-        <header className="flex justify-between items-center">
+        <header className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center md:gap-0">
           <div>
             <h2 className="text-2xl font-bold text-[#e0e0e0]">
               Welcome back, {user?.name?.split(" ")[0]}! 👋
@@ -335,15 +335,15 @@ const DsaClient = () => {
               Ready to master DSA today?
             </p>
           </div>
-          <div className="flex gap-3">
-            <Link href="/sheets" tabIndex={-1}>
-              <Button className="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-4 py-2 h-auto font-semibold text-xs rounded-md transition-all hover:scale-105">
+          <div className="flex gap-3 w-full md:w-auto">
+            <Link href="/sheets" tabIndex={-1} className="flex-1 md:flex-none">
+              <Button className="w-full bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-4 py-2 h-auto font-semibold text-xs rounded-md transition-all hover:scale-105">
                 Continue Learning
               </Button>
             </Link>
             <Button
               onClick={() => setIsEditModalOpen(true)}
-              className="bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-4 py-2 font-semibold text-xs rounded-md"
+              className="flex-1 md:flex-none w-full md:w-auto bg-[#2a2a2a] border border-[#3a3a3a] text-[#e0e0e0] hover:bg-[#333] h-auto px-4 py-2 font-semibold text-xs rounded-md"
             >
               Edit Goal
             </Button>
