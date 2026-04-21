@@ -7667,9 +7667,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{HOST}}/prepyatra/prep-log/stats?userId=686e9213c3eb7c364597d872",
+                  "raw": "{{HOST}}/user/prepyatra/progress?userId=686e9213c3eb7c364597d872",
                   "host": ["{{HOST}}"],
-                  "path": ["prepyatra", "prep-log", "stats"],
+                  "path": ["user", "prepyatra", "progress"],
                   "query": [
                     {
                       "key": "userId",

@@ -8,7 +8,7 @@ import { withApiHandler } from "@/middleware/requestLogger";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET":
-      return handleGetPrepLogStats(req, res);
+      return handleGetProgress(req, res);
     default:
       return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
         sendAPIResponse({
@@ -19,10 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handleGetPrepLogStats = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
-) => {
+const handleGetProgress = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { userId } = req.query;
 
@@ -38,12 +35,19 @@ const handleGetPrepLogStats = async (
     const { data, error } = await getUserPrepLogStats(userId);
 
     if (error) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json(
-        sendAPIResponse({
-          status: false,
-          message: error,
-        }),
-      );
+      const isUserNotFound = error === "User not found";
+      return res
+        .status(
+          isUserNotFound
+            ? apiStatusCodes.NOT_FOUND
+            : apiStatusCodes.INTERNAL_SERVER_ERROR,
+        )
+        .json(
+          sendAPIResponse({
+            status: false,
+            message: error,
+          }),
+        );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
@@ -56,7 +60,7 @@ const handleGetPrepLogStats = async (
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,
-        message: "Something went wrong while fetching prep log stats",
+        message: "Something went wrong while fetching prep progress",
         error,
       }),
     );
