@@ -35,19 +35,12 @@ const handleGetProgress = async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, error } = await getUserPrepLogStats(userId);
 
     if (error) {
-      const isUserNotFound = error === "User not found";
-      return res
-        .status(
-          isUserNotFound
-            ? apiStatusCodes.NOT_FOUND
-            : apiStatusCodes.INTERNAL_SERVER_ERROR,
-        )
-        .json(
-          sendAPIResponse({
-            status: false,
-            message: error,
-          }),
-        );
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: error,
+        }),
+      );
     }
 
     return res.status(apiStatusCodes.OKAY).json(
