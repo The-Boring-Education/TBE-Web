@@ -43,7 +43,7 @@ export async function mockDsayatraDashboardApis(page: Page): Promise<void> {
     });
   });
 
-  await page.route("**/prepyatra/prep-log/stats**", (route) => {
+  await page.route("**/api/proxy/user/prepyatra/progress**", (route) => {
     if (route.request().method() !== "GET") {
       return route.continue();
     }

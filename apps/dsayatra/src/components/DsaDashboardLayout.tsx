@@ -1,11 +1,14 @@
 import {
-  APP_DASHBOARD_SIDEBAR_BUTTON_CLASS,
+  DSA_YATRA_SIDEBAR_MENU_BUTTON_CLASS,
   Footer,
   isDashboardSidebarLinkActive,
   LoadingSpinner,
   Navbar,
   Sidebar,
   SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
@@ -13,6 +16,7 @@ import {
   SidebarProvider,
 } from "@tbe/components";
 import { useUser } from "@tbe/hooks";
+import { cn } from "@tbe/utils";
 import {
   ClipboardList,
   FileText,
@@ -23,6 +27,8 @@ import {
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
+
+import { MobileNav } from "./MobileNav";
 
 interface DsaDashboardLayoutProps {
   children: ReactNode;
@@ -64,43 +70,58 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <Sidebar className="border-r border-gray-800">
-        <SidebarContent className="pt-10">
-          <SidebarMenu>
-            {DSA_DASHBOARD_SIDEBAR_ITEMS.map((item) => (
-              <SidebarMenuItem key={item.name}>
-                <SidebarMenuButton
-                  isActive={isDashboardSidebarLinkActive(
-                    router.pathname,
-                    router.asPath,
-                    item.href,
-                  )}
-                  className={APP_DASHBOARD_SIDEBAR_BUTTON_CLASS}
-                  onClick={() => router.push(item.href)}
-                >
-                  {item.icon && <item.icon className="w-4 h-4 shrink-0" />}
-                  <span className="ml-2">{item.name}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarContent>
-      </Sidebar>
-
-      <SidebarInset className="bg-[#0A0A0A] flex flex-col">
-        <Navbar variant="dsayatra" theme="dark" />
-        <main className="flex-1 py-16 px-8 space-y-6">{children}</main>
-
-        <div
-          className="relative"
-          style={{
-            marginLeft: "calc(var(--sidebar-width) * -1)",
-            width: "calc(100% + var(--sidebar-width))",
-            zIndex: 20,
-          }}
+      {/* Sheet sidebar only applies below md in the UI package; we hide the whole
+          rail below lg so navigation matches the bottom MobileNav breakpoint. */}
+      <div className="max-lg:hidden lg:contents">
+        <Sidebar
+          className={cn(
+            "border-r border-[#222] shadow-[6px_0_32px_rgba(0,0,0,0.32)]",
+            "[&_[data-sidebar=sidebar]]:relative [&_[data-sidebar=sidebar]]:overflow-hidden",
+            "[&_[data-sidebar=sidebar]]:bg-[#101010]",
+            "[&_[data-sidebar=sidebar]]:before:pointer-events-none [&_[data-sidebar=sidebar]]:before:absolute [&_[data-sidebar=sidebar]]:before:inset-0",
+            "[&_[data-sidebar=sidebar]]:before:bg-[radial-gradient(120%_90%_at_50%_-25%,rgba(255,87,87,0.14),transparent_55%)]",
+          )}
         >
+          <SidebarContent className="relative z-10 flex flex-col px-3 pb-8 pt-10">
+            <SidebarGroup className="p-0">
+              <SidebarGroupLabel className="mb-2 px-2 text-[10px] font-black uppercase tracking-widest text-[#505050]">
+                Navigate
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu className="gap-1.5">
+                  {DSA_DASHBOARD_SIDEBAR_ITEMS.map((item) => (
+                    <SidebarMenuItem key={item.name}>
+                      <SidebarMenuButton
+                        isActive={isDashboardSidebarLinkActive(
+                          router.pathname,
+                          router.asPath,
+                          item.href,
+                        )}
+                        className={DSA_YATRA_SIDEBAR_MENU_BUTTON_CLASS}
+                        onClick={() => router.push(item.href)}
+                      >
+                        {item.icon && <item.icon />}
+                        <span>{item.name}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
+      </div>
+
+      <SidebarInset className="flex min-h-svh flex-col bg-[#0f0f0f] text-white">
+        <Navbar variant="dsayatra" theme="dark" />
+        <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col px-3 pt-[72px] pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] sm:px-5 lg:px-6 lg:pb-8 lg:pt-[72px] xl:px-8">
+          {children}
+        </div>
+
+        <div className="relative z-20 mt-auto w-full max-lg:px-0 lg:ml-[calc(-1*var(--sidebar-width))] lg:w-[calc(100%+var(--sidebar-width))]">
           <Footer />
         </div>
+        <MobileNav />
       </SidebarInset>
     </SidebarProvider>
   );

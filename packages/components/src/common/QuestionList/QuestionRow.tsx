@@ -30,9 +30,9 @@ export const QuestionRow = ({
       className={cn(
         "w-full rounded-lg py-2 px-2.5 mb-1 cursor-pointer transition-all duration-200 group flex items-start justify-between gap-2",
         isSelected
-          ? "bg-red-500/[0.04] border border-red-500/30 shadow-[0_0_12px_rgba(239,68,68,0.06)] border-l-2 border-l-red-500"
+          ? "bg-[#111] border border-gray-700/60 shadow-[0_0_12px_rgba(0,0,0,0.25)]"
           : isCompleted
-            ? "bg-green-500/[0.03] border border-green-500/20 border-l-2 border-l-green-500/60"
+            ? "bg-transparent border border-transparent opacity-80"
             : isLocked
               ? "opacity-60"
               : "bg-transparent border border-transparent hover:bg-[#111] hover:border-gray-800/60",
@@ -51,8 +51,8 @@ export const QuestionRow = ({
             isLocked
               ? "text-gray-600 cursor-not-allowed"
               : isCompleted
-                ? "text-green-500 hover:text-green-400"
-                : "text-gray-700 hover:text-green-500",
+                ? "text-gray-300 hover:text-gray-200"
+                : "text-gray-700 hover:text-gray-300",
           )}
         >
           {isLocked ? (
@@ -71,7 +71,7 @@ export const QuestionRow = ({
               isSelected
                 ? "text-white"
                 : isCompleted
-                  ? "text-green-100/80"
+                  ? "text-gray-300"
                   : isLocked
                     ? "text-gray-500"
                     : "text-gray-400 group-hover:text-gray-200",
@@ -102,7 +102,7 @@ export const QuestionRow = ({
         {hasNotes && (
           <span
             data-testid="tbe-question-row-notes-dot"
-            className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.45)]"
+            className="w-1.5 h-1.5 rounded-full bg-gray-400"
             aria-hidden
           />
         )}

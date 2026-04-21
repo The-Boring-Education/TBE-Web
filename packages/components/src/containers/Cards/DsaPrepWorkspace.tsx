@@ -289,6 +289,8 @@ const DsaPrepWorkspace = ({
           className={cn(
             "flex flex-col flex-shrink-0 border-r border-gray-800/60 bg-[#0A0A0A] transition-all duration-300",
             "w-full lg:w-[260px]",
+            // On mobile, prioritize the question detail panel for readability.
+            selectedQuestion && "hidden lg:flex",
           )}
         >
           <div className="flex-1 overflow-y-auto px-1 py-3 scrollbar-thin-grey">
@@ -394,7 +396,7 @@ const DsaPrepWorkspace = ({
             />
           ) : (
             <div
-              className="flex-1 overflow-y-auto scrollbar-thin-grey px-6 py-5 scroll-smooth"
+              className="flex-1 overflow-y-auto scrollbar-thin-grey px-4 sm:px-6 py-5 scroll-smooth"
               id="right-scroll-area"
             >
               {!selectedTopic ? (
