@@ -1,11 +1,7 @@
 import { ProtectedRoute, useAuth } from "@tbe/auth";
 import { EditDsaOnboardingModal, SEO } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
-import {
-  useDsaCompletedQuestions,
-  useDsaQuestions,
-  usePrepStats,
-} from "@tbe/hooks";
+import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
 import { cn, encodeDsaTopicForUrl, getPreFetchProps } from "@tbe/utils";
@@ -102,8 +98,6 @@ const DsaClient = () => {
     null,
   );
 
-  const { totalTimeSpent, stats, weeklyLogs } = usePrepStats(user?.id || "");
-
   const { rawQuestions: allQuestions } = useDsaQuestions({
     queryKey: "dashboard-dsa-sheet",
   });
@@ -169,72 +163,6 @@ const DsaClient = () => {
   ).length;
   const overallPercentage =
     totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
-
-  // Weekly performance strictly mapped from join date (the day they first loaded DSA Yatra)
-  const [joinDateStr, setJoinDateStr] = useState<string | null>(null);
-
-  useEffect(() => {
-    let storedJoinDate = localStorage.getItem("dsayatra_join_date");
-    if (!storedJoinDate) {
-      storedJoinDate = new Date().toISOString();
-      localStorage.setItem("dsayatra_join_date", storedJoinDate);
-    }
-    setJoinDateStr(storedJoinDate);
-  }, []);
-
-  const weeklyPerformance = useMemo(() => {
-    if (!joinDateStr) return [];
-
-    const joinDate = new Date(joinDateStr);
-    joinDate.setHours(0, 0, 0, 0);
-
-    const now = new Date();
-    const msInWeek = 1000 * 60 * 60 * 24 * 7;
-    const currentWeekIndex = Math.max(
-      0,
-      Math.floor((now.getTime() - joinDate.getTime()) / msInWeek),
-    );
-
-    // Map logs to their respective week indices relative to exact join date
-    const weekMap: Record<number, number> = {};
-    if (weeklyLogs) {
-      weeklyLogs.forEach((log: any) => {
-        const logDate = new Date(log.createdAt);
-        if (logDate >= joinDate) {
-          const wIndex = Math.floor(
-            (logDate.getTime() - joinDate.getTime()) / msInWeek,
-          );
-          weekMap[wIndex] = (weekMap[wIndex] || 0) + (log.timeSpent || 0);
-        }
-      });
-    }
-
-    // Always generate exactly 4 contiguous blocks for the UI
-    const weeks: { label: string; minutes: number; isCurrent: boolean }[] = [];
-    const startIdx = Math.max(0, currentWeekIndex - 3);
-    const endIdx = startIdx + 3;
-
-    for (let i = startIdx; i <= endIdx; i++) {
-      weeks.push({
-        label: `Week ${i + 1}`,
-        minutes: weekMap[i] || 0,
-        isCurrent: i === currentWeekIndex,
-      });
-    }
-
-    return weeks;
-  }, [weeklyLogs, joinDateStr]);
-
-  // This week's progress (based on time logged this week vs a weekly goal)
-  const thisWeekMinutes =
-    weeklyPerformance.length > 0
-      ? weeklyPerformance[weeklyPerformance.length - 1]?.minutes || 0
-      : 0;
-  const weeklyGoalHours = 15; // 15 hours/week goal
-  const thisWeekPercentage = Math.min(
-    100,
-    Math.round((thisWeekMinutes / (weeklyGoalHours * 60)) * 100),
-  );
 
   useEffect(() => {
     if (user?.id) {
@@ -302,14 +230,6 @@ const DsaClient = () => {
     Math.round((solvedToday / expectedDailyQuestions) * 100),
   );
   const todayTotalHours = solvedToday;
-
-  const todayLog = weeklyLogs?.find(
-    (log: any) =>
-      new Date(log.createdAt).toDateString() === new Date().toDateString(),
-  );
-
-  // Total invested (minutes from prep logs only)
-  const totalHours = (totalTimeSpent / 60).toFixed(1);
 
   return (
     <div className="w-full min-w-0 font-sans selection:bg-[#ff5757]/30 selection:text-white">
@@ -548,11 +468,6 @@ const DsaClient = () => {
             value={solvedToday}
             subtext="Questions solved today"
             icon={Code2}
-            secondaryInfo={
-              todayLog
-                ? `${todayLog.timeSpent || 0}m logged in prep today`
-                : undefined
-            }
             className="md:col-span-1 lg:col-span-2"
           />
           <StatCard
