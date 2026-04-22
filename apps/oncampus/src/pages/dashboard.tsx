@@ -1,18 +1,9 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  LoadingSpinner,
-  Progress,
-} from "@tbe/components";
+import { Button, Card, LoadingSpinner, Progress } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import { sendRequest } from "@tbe/utils";
-import { TrendingUp, Trophy } from "lucide-react";
+import { Target, Trophy } from "lucide-react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
@@ -138,221 +129,217 @@ const CampusPrepDashboard = () => {
   const userName = user?.name || user?.email?.split("@")[0] || "Student";
 
   return (
-    <div className="space-y-2">
-      {/* Welcome Card with gradient overlay */}
-      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 pointer-events-none" />
+    <div className="w-full min-w-0 space-y-6 pb-6">
+      {/* Header Section */}
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-2">
+        <div>
+          <h2 className="text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
+            Welcome back, {userName}! 👋
+          </h2>
+          <p className="text-[#808080] text-sm font-medium mt-1">
+            Ready to master your interviews today?
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="PRIMARY"
+            className="w-full sm:w-auto bg-[#ff5757] hover:bg-[#ff4040] text-white px-6 py-2.5 h-auto font-bold text-xs rounded-xl transition-all hover:shadow-[0_4px_20px_rgba(255,87,87,0.25)] hover:scale-[1.02]"
+            text="Continue Learning"
+            onClick={() => router.push("/dashboard/interview-prep")}
+          />
+        </div>
+      </header>
 
-        <CardContent className="p-2 relative z-10">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-white mb-px">
-                Welcome back, {userName} 👋
-              </h1>
-              <p className="text-gray-400">Ready to prepare today?</p>
-            </div>
-            <Button
-              variant="PRIMARY"
-              text="Continue learning"
-              size="MEDIUM"
-              onClick={() => router.push("/dashboard/interview-prep")}
-            />
-          </div>
-        </CardContent>
-      </Card>
-      {/* Continue Learning Card with gradient overlay */}
-      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
-        <CardHeader className="p-2 relative z-10">
-          <CardTitle className="text-white">
-            Continue where you left off
-          </CardTitle>
-          <CardDescription className="text-gray-400">
-            Your recently studied interview sheets
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-2 space-y-1.5 relative z-10">
-          {sheetsLoading ? (
-            <div className="flex items-center justify-center py-2">
-              <LoadingSpinner height={4} width={4} />
-            </div>
-          ) : enrolledSheets.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-2">
-              No sheets studied yet. Start your first sheet!
-            </p>
-          ) : (
-            enrolledSheets.map((sheet) => (
-              <div
-                key={sheet._id}
-                className="flex items-center justify-between p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg relative overflow-hidden group/sheet"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/sheet:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      {/* Grid for main sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Continue Learning Column */}
+        <div className="space-y-6">
+          <Card className="bg-[#111] border-[#222] rounded-2xl p-6 relative overflow-hidden group h-full">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#ff5757]/5 blur-[60px] pointer-events-none" />
 
-                <div className="flex-1 relative z-10">
-                  <h4 className="text-sm font-medium text-white mb-px">
-                    {sheet.name}
-                  </h4>
-                  {sheet.progress && sheet.progress.total > 0 && (
-                    <div className="space-y-px">
-                      <Progress
-                        value={sheet.progress.percentage}
-                        className="h-1.5 bg-gray-800"
-                      />
-                      <p className="text-xs text-gray-400">
-                        {sheet.progress.completed} of {sheet.progress.total}{" "}
-                        questions completed ({sheet.progress.percentage}%)
-                      </p>
-                    </div>
-                  )}
-                </div>
-                <Button
-                  variant="OUTLINE"
-                  size="SMALL"
-                  className="border-gray-700 text-white hover:bg-gray-800 ml-2 relative z-10"
-                  text="Continue"
-                  onClick={() =>
-                    router.push(`/dashboard/interview-prep/${sheet.slug}`)
-                  }
-                />
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-black text-[#f0f0f0] tracking-tight">
+                  Continue Learning
+                </h3>
+                <p className="text-[#606060] text-sm font-medium mt-1 uppercase tracking-widest">
+                  Recent Sheets
+                </p>
               </div>
-            ))
-          )}
-        </CardContent>
-      </Card>
+              <div className="p-2.5 bg-[#ff5757]/10 rounded-xl">
+                <Target className="w-5 h-5 text-[#ff5757]" />
+              </div>
+            </div>
 
-      {/* Quiz Insights Card with gradient overlay */}
-      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
-        <CardHeader className="p-2 relative z-10">
-          <CardTitle className="text-white flex items-center gap-1">
-            Quiz Insights
-          </CardTitle>
-          <CardDescription className="text-gray-400">
-            Your recent quiz performance and statistics
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-2 space-y-2 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {/* Total Attempts Card */}
-            <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg relative overflow-hidden group/stat">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="space-y-3">
+              {sheetsLoading ? (
+                <div className="flex items-center justify-center py-10">
+                  <LoadingSpinner />
+                </div>
+              ) : enrolledSheets.length === 0 ? (
+                <div className="text-center py-10 border-2 border-dashed border-[#222] rounded-2xl">
+                  <p className="text-sm font-bold text-[#606060] uppercase tracking-widest">
+                    No sheets studied yet
+                  </p>
+                </div>
+              ) : (
+                enrolledSheets.map((sheet) => (
+                  <div
+                    key={sheet._id}
+                    className="bg-[#1a1a1a] border border-[#2a2a2a] p-4 rounded-xl hover:border-[#ff5757]/40 transition-all group/item"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-black text-[#f0f0f0] truncate pr-4">
+                        {sheet.name}
+                      </h4>
+                      <Button
+                        variant="OUTLINE"
+                        className="bg-transparent border-[#333] text-[#a0a0a0] hover:text-[#ff5757] hover:border-[#ff5757]/50 text-xs font-black h-8 px-4 rounded-lg uppercase tracking-tight"
+                        text="Resume"
+                        onClick={() =>
+                          router.push(`/dashboard/interview-prep/${sheet.slug}`)
+                        }
+                      />
+                    </div>
+                    {sheet.progress && (
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
+                          <span className="text-[#606060]">Progress</span>
+                          <span className="text-[#ff5757]">
+                            {sheet.progress.percentage}%
+                          </span>
+                        </div>
+                        <Progress
+                          value={sheet.progress.percentage}
+                          className="h-1.5 bg-[#252525] rounded-full overflow-hidden"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </Card>
+        </div>
 
-              <div className="flex items-center justify-between mb-1 relative z-10">
-                <p className="text-sm text-gray-400 group-hover/stat:text-white transition-colors">
+        {/* Quiz Insights Column */}
+        <div className="space-y-6">
+          <Card className="bg-[#111] border-[#222] rounded-2xl p-6 h-full relative overflow-hidden group">
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#ff5757]/5 blur-[60px] pointer-events-none" />
+
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-black text-[#f0f0f0] tracking-tight">
+                  Quiz Insights
+                </h3>
+                <p className="text-[#606060] text-sm font-medium mt-1 uppercase tracking-widest">
+                  Performance Data
+                </p>
+              </div>
+              <div className="p-2.5 bg-[#ff5757]/10 rounded-xl">
+                <Trophy className="w-5 h-5 text-yellow-500" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="bg-[#1a1a1a] border border-[#2a2a2a] p-4 rounded-xl">
+                <p className="text-xs text-[#606060] uppercase font-black tracking-widest mb-1">
                   Total Attempts
                 </p>
-                <Trophy className="w-4 h-4 text-yellow-500" />
-              </div>
-              <p className="text-2xl font-bold text-white relative z-10">
-                {quizLoading ? "..." : totalQuizAttempts}
-              </p>
-              <p className="text-xs text-gray-500 mt-px relative z-10">
-                Quizes completed
-              </p>
-            </div>
-
-            {/* Average Score Card */}
-            <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg relative overflow-hidden group/stat">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-              <div className="flex items-center justify-between mb-1 relative z-10">
-                <p className="text-sm text-gray-400 group-hover/stat:text-white transition-colors">
-                  Average Score
+                <p className="text-2xl font-black text-[#f0f0f0]">
+                  {quizLoading ? "..." : totalQuizAttempts}
                 </p>
-                <TrendingUp className="w-4 h-4 text-green-500" />
               </div>
-              <p className="text-2xl font-bold text-white relative z-10">
-                {quizLoading ? "..." : averageScore}%
-              </p>
-              <p className="text-xs text-gray-500 mt-px relative z-10">
-                Based on recent attempts
-              </p>
-            </div>
-          </div>
-
-          {quizAttempts.length > 0 && (
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-gray-400">Recent Scores</p>
-              <div className="space-y-1">
-                {quizAttempts.slice(0, 3).map((attempt) => (
-                  <div
-                    key={attempt._id}
-                    className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg flex items-center justify-between relative overflow-hidden group/attempt"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/attempt:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-                    <div className="flex-1 relative z-10">
-                      <p className="text-sm text-white">
-                        {attempt.categoryName}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-px">
-                        {new Date(attempt.completedAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right relative z-10">
-                      <p className="text-sm font-semibold text-white">
-                        {attempt.score}%
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {Math.round(attempt.totalTimeSpent / 60)} min
-                      </p>
-                    </div>
-                  </div>
-                ))}
+              <div className="bg-[#1a1a1a] border border-[#2a2a2a] p-4 rounded-xl">
+                <p className="text-xs text-[#606060] uppercase font-black tracking-widest mb-1">
+                  Avg. Score
+                </p>
+                <p className="text-2xl font-black text-[#ff5757]">
+                  {quizLoading ? "..." : averageScore}%
+                </p>
               </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
 
-      {/* Practice Card with gradient overlay */}
-      <Card className="rounded-lg border border-gray-800 transition-all duration-300 ease-in-out cursor-pointer hover:border-primary hover:shadow-lg relative overflow-hidden group">
-        <CardHeader className="p-2 relative z-10">
-          <CardTitle className="text-white flex items-center gap-1">
-            Practice
-          </CardTitle>
-          <CardDescription className="text-gray-400">
-            Quick practice modules to keep your streak going
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-2 grid grid-cols-1 md:grid-cols-2 gap-2 relative z-10">
-          {/* Quizzes Card */}
-          <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg flex items-center justify-between relative overflow-hidden group/quiz">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/quiz:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            {quizAttempts.length > 0 && (
+              <div className="space-y-3">
+                <p className="text-xs font-black text-[#606060] uppercase tracking-widest">
+                  Recent Performance
+                </p>
+                <div className="space-y-2">
+                  {quizAttempts.slice(0, 3).map((attempt) => (
+                    <div
+                      key={attempt._id}
+                      className="flex items-center justify-between p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl"
+                    >
+                      <div>
+                        <p className="text-xs font-bold text-[#f0f0f0]">
+                          {attempt.categoryName}
+                        </p>
+                        <p className="text-xs text-[#505050] font-medium">
+                          {new Date(attempt.completedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs font-black text-[#ff5757]">
+                          {attempt.score}%
+                        </p>
+                        <p className="text-xs text-[#505050] font-bold">
+                          {Math.round(attempt.totalTimeSpent / 60)}m
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Card>
+        </div>
+      </div>
 
-            <div className="relative z-10">
-              <p className="text-white font-semibold">Quizes</p>
-              <p className="text-xs text-gray-400 mt-px">
+      {/* Practice Modules */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="h-px bg-[#222] flex-1" />
+          <h3 className="text-xs font-black text-[#505050] uppercase tracking-[0.3em] whitespace-nowrap">
+            Practice Modules
+          </h3>
+          <div className="h-px bg-[#222] flex-1" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-[#111] border border-[#222] p-5 rounded-2xl hover:border-[#ff5757]/40 transition-all flex items-center justify-between group">
+            <div>
+              <h4 className="text-sm font-black text-[#f0f0f0]">Quizzes</h4>
+              <p className="text-[11px] text-[#606060] font-medium mt-0.5">
                 Topic-wise MCQs with instant results
               </p>
             </div>
             <Button
-              variant="OUTLINE"
-              size="SMALL"
-              className="border-gray-700 text-white hover:bg-gray-800 relative z-10"
+              variant="PRIMARY"
+              className="bg-[#1a1a1a] border border-[#2a2a2a] text-[#a0a0a0] group-hover:text-white group-hover:bg-[#ff5757] group-hover:border-transparent transition-all font-black text-xs h-10 px-5 rounded-xl uppercase"
               text="Explore"
               onClick={() => router.push("/dashboard/quizzes")}
             />
           </div>
 
-          {/* Interview Sheets Card */}
-          <div className="p-2 bg-[#1A1A1A] rounded-lg border border-gray-400/60 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg flex items-center justify-between relative overflow-hidden group/interview">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-gray-400/15 to-gray-600/20 opacity-0 group-hover/interview:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-            <div className="relative z-10">
-              <p className="text-white font-semibold">Interview Sheets</p>
-              <p className="text-xs text-gray-400 mt-px">
-                Practice interview questions and mark progress
+          <div className="bg-[#111] border border-[#222] p-5 rounded-2xl hover:border-[#ff5757]/40 transition-all flex items-center justify-between group">
+            <div>
+              <h4 className="text-sm font-black text-[#f0f0f0]">
+                Interview Sheets
+              </h4>
+              <p className="text-[11px] text-[#606060] font-medium mt-0.5">
+                Practice Q&As and mark progress
               </p>
             </div>
             <Button
-              variant="OUTLINE"
-              size="SMALL"
-              className="border-gray-700 text-white hover:bg-gray-800 w-20 h-15 relative z-10"
+              variant="PRIMARY"
+              className="bg-[#1a1a1a] border border-[#2a2a2a] text-[#a0a0a0] group-hover:text-white group-hover:bg-[#ff5757] group-hover:border-transparent transition-all font-black text-xs h-10 px-5 rounded-xl uppercase"
               text="Open"
               onClick={() => router.push("/dashboard/interview-prep")}
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
     </div>
   );
 };

@@ -121,7 +121,7 @@ const routes = {
     login: "/login",
     dashboard: "/dashboard",
     pricing: "/pricing",
-    dsa: "/dashboard/dsa-prep",
+    dsa: "/sheets",
     interviewPrep: "/dashboard/interview-prep",
     quizes: "/dashboard/interview-prep",
     aptitude: "/dashboard/aptitude",

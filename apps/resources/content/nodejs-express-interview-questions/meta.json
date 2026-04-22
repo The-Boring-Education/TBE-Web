@@ -1,0 +1,13 @@
+{
+  "title": "50 Node.js and Express Interview Questions",
+  "description": "A practical collection of Node.js and Express interview questions with concise answers on architecture, middleware, security, performance, and APIs.",
+  "keywords": [
+    "nodejs",
+    "express",
+    "backend",
+    "javascript",
+    "interview questions"
+  ],
+  "tags": ["nodejs", "express", "interview"],
+  "ogImage": "https://theboringeducation.com/images/nodejs-express-interview-og.png"
+}
