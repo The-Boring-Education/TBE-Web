@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>40 Node.js & Express Interview Questions – The Boring Education</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --red: #FF5757;
+      --red-light: #fff0f0;
+      --red-mid: #ffe0e0;
+      --dark: #111111;
+      --mid: #444444;
+      --soft: #888888;
+      --border: #e5e5e5;
+      --bg: #f9f8f6;
+      --white: #ffffff;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .resource-viewer {
+      font-family: var(--sans);
+      background: #0a0a0b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      padding: 32px 16px;
+    }
+
+    .print-bar {
+      width: 794px;
+      max-width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .print-btn {
+      background: var(--red);
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .print-btn:hover {
+      background: #e04040;
+    }
+
+    .print-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .page {
+      width: 794px;
+      max-width: 100%;
+      background: var(--white);
+      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+
+    .page+.page {
+      margin-top: 2px;
+    }
+
+    /* ── COVER ── */
+    .cover {
+      background: var(--white);
+      height: 1122px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cover-header {
+      padding: 28px 48px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cover-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--red);
+      background: var(--red-light);
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--red-mid);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .cover-hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 48px 40px;
+      position: relative;
+    }
+
+    .cover-hook {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--red);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cover-hook::before {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 2px;
+      background: var(--red);
+    }
+
+    .cover-title {
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .cover-title span {
+      color: var(--red);
+    }
+
+    .cover-subtitle {
+      font-size: 16px;
+      color: var(--mid);
+      font-weight: 400;
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+
+    .cover-quote-block {
+      background: var(--dark);
+      color: white;
+      padding: 28px 36px;
+      border-radius: 16px;
+      max-width: 580px;
+      position: relative;
+      margin-bottom: 48px;
+    }
+
+    .cover-quote-block::before {
+      content: '"';
+      font-size: 80px;
+      color: var(--red);
+      font-family: Georgia, serif;
+      position: absolute;
+      top: -12px;
+      left: 24px;
+      line-height: 1;
+    }
+
+    .cover-quote-text {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.5;
+      padding-top: 24px;
+    }
+
+    .cover-quote-sub {
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 10px;
+      font-family: var(--mono);
+    }
+
+    .cover-stats {
+      display: flex;
+      gap: 32px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--red);
+      font-family: var(--mono);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--soft);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .cover-decoration {
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cover-footer {
+      border-top: 1px solid var(--border);
+      padding: 16px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cover-footer-text {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .page-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    /* ── INNER PAGES ── */
+    .inner-page {
+      height: 1122px;
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+    }
+
+    .page-header {
+      padding: 24px 48px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .page-header-logo {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--soft);
+    }
+
+    .page-header-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .page-body {
+      flex: 1;
+      padding: 28px 48px;
+      overflow: hidden;
+    }
+
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 14px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--red);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label::before {
+      content: '//';
+      opacity: 0.5;
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+      line-height: 1.2;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    /* ── TAG ── */
+    .tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      background: var(--bg);
+      color: var(--mid);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .tag.red {
+      background: var(--red-light);
+      color: var(--red);
+      border-color: var(--red-mid);
+    }
+
+    /* ── TIP BLOCK ── */
+    .tip-block {
+      background: var(--red-light);
+      border: 1px solid var(--red-mid);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .tip-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .tip-text {
+      font-size: 12px;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .tip-text strong {
+      color: var(--red);
+    }
+
+    /* ── QUESTION LIST ── */
+    .questions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 24px;
+    }
+
+    .q-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--dark);
+      line-height: 1.5;
+    }
+
+    .q-num {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--red);
+      min-width: 22px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+
+    .q-text {
+      font-size: 12px;
+      color: var(--dark);
+      line-height: 1.5;
+    }
+
+    /* ── CTA BLOCK ── */
+    .cta-block {
+      background: var(--dark);
+      border-radius: 14px;
+      padding: 22px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    .cta-block::before {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+      top: -60px;
+      right: -60px;
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 5px;
+      position: relative;
+    }
+
+    .cta-sub {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 13px;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .cta-link {
+      display: inline-block;
+      background: var(--red);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      position: relative;
+    }
+
+    /* ── SOCIALS ── */
+    .socials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .social-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .social-icon {
+      width: 24px;
+      height: 24px;
+      display: block;
+      margin: 0 auto 6px;
+    }
+
+    .social-name {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .social-handle {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* ── TOPICS BADGE ROW ── */
+    .topics-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      .print-bar {
+        width: 100%;
+        padding: 12px 16px;
+        margin-bottom: 0;
+        background: #e8e5df;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .print-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .page {
+        width: 100%;
+        max-width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+        overflow: visible;
+      }
+
+      .page+.page {
+        margin-top: 8px;
+      }
+
+      .cover {
+        height: auto;
+      }
+
+      .cover-header {
+        padding: 20px 20px 0;
+      }
+
+      .cover-hero {
+        padding: 28px 20px 28px;
+        justify-content: flex-start;
+      }
+
+      .cover-title {
+        font-size: 36px;
+      }
+
+      .cover-subtitle {
+        font-size: 13px;
+        max-width: 100%;
+      }
+
+      .cover-quote-block {
+        padding: 20px;
+        max-width: 100%;
+      }
+
+      .cover-quote-text {
+        font-size: 14px;
+      }
+
+      .cover-stats {
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .stat-num {
+        font-size: 24px;
+      }
+
+      .cover-footer {
+        padding: 14px 20px;
+        flex-wrap: wrap;
+      }
+
+      .inner-page {
+        height: auto;
+      }
+
+      .page-header {
+        padding: 14px 20px 12px;
+      }
+
+      .page-body {
+        padding: 20px 20px;
+      }
+
+      .page-footer {
+        padding: 12px 20px;
+      }
+
+      .section-title {
+        font-size: 20px;
+      }
+
+      .questions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-num {
+        display: none;
+      }
+
+      .cover-decoration {
+        width: 140px;
+        height: 140px;
+        right: -30px;
+        top: 20px;
+        transform: none;
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+
+      .resource-viewer {
+        margin: 0;
+        padding: 0;
+        background: white;
+        display: block;
+        width: 210mm;
+      }
+
+      .print-bar {
+        display: none !important;
+      }
+
+      .page {
+        width: 210mm;
+        height: 297mm;
+        max-width: none;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        page-break-after: always;
+        break-after: page;
+        overflow: hidden;
+      }
+
+      .page+.page {
+        margin-top: 0;
+      }
+
+      .cover {
+        height: 297mm;
+      }
+
+      .inner-page {
+        height: 297mm;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .page:last-child {
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="resource-viewer">
+
+    <!-- PRINT BAR -->
+    <div class="print-bar">
+      <button class="print-btn" onclick="window.print()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+        </svg>
+        Save as PDF
+      </button>
+    </div>
+
+    <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+    <div class="page cover">
+      <div class="cover-header">
+        <img height="22" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+        <span class="cover-badge">Interview Prep 2026</span>
+      </div>
+
+      <div class="cover-hero">
+        <div class="cover-decoration"></div>
+
+        <div class="cover-hook">Crack the Node.js & Express interview — no fluff</div>
+
+        <h1 class="cover-title">
+          40 Node.js<br><span>&amp; Express</span><br>Questions
+        </h1>
+
+        <p class="cover-subtitle">
+          The most frequently asked Node.js & Express questions in 2026 interviews — event loop, async patterns,
+          REST APIs, middleware, authentication, security, and deployment. Curated from real interviews at top
+          companies.
+        </p>
+
+        <div class="cover-quote-block">
+          <div class="cover-quote-text">
+            "Node.js interviews don't just test if you've built a server — they test if you truly understand
+            the event loop, non-blocking I/O, and how to ship production-grade APIs that scale."
+          </div>
+          <div class="cover-quote-sub">— The Boring Education Team</div>
+        </div>
+
+        <div class="cover-stats">
+          <div class="stat-item">
+            <div class="stat-num">40</div>
+            <div class="stat-label">Questions</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Core topics</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Free resource</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">2026</div>
+            <div class="stat-label">Up to date</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cover-footer">
+        <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+        <span class="page-num">01</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ PAGE 2 — QUESTIONS + CTA ══════════════════════ -->
+    <div class="page inner-page">
+      <div class="page-header">
+        <img height="22" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+        <span class="page-header-title">40 Node.js & Express Interview Questions · 2026</span>
+        <span class="page-num">02</span>
+      </div>
+
+      <div class="page-body">
+
+        <div class="section-label">Top 10 Must-Know Questions</div>
+        <h2 class="section-title">Event Loop, Async, REST APIs & Middleware</h2>
+
+        <!-- Topics badge row -->
+        <div class="topics-row">
+          <span class="tag red">Event Loop</span>
+          <span class="tag red">async/await</span>
+          <span class="tag red">Promises</span>
+          <span class="tag red">Middleware</span>
+          <span class="tag red">REST APIs</span>
+          <span class="tag red">Authentication</span>
+          <span class="tag red">CORS</span>
+          <span class="tag red">Clustering</span>
+          <span class="tag red">WebSockets</span>
+          <span class="tag red">Rate Limiting</span>
+          <span class="tag">MongoDB / Mongoose</span>
+          <span class="tag">Socket.IO</span>
+          <span class="tag">GraphQL</span>
+          <span class="tag">Docker / Heroku</span>
+          <span class="tag">Security</span>
+        </div>
+
+        <div class="questions-grid">
+          <div class="q-item">
+            <span class="q-num">01.</span>
+            <span class="q-text">What is Node.js and how does it handle asynchronous operations?</span>
+          </div>
+          <div class="q-item">
+            <span class="q-num">02.</span>
+            <span class="q-text">Explain the event loop in Node.js and its significance in managing concurrency.</span>
+          </div>
+          <div class="q-item">
+            <span class="q-num">03.</span>
+            <span class="q-text">What is middleware in Express and how do you use it to handle requests?</span>
+          </div>
+          <div class="q-item">
+            <span class="q-num">04.</span>
+            <span class="q-text">Explain the difference between blocking and non-blocking I/O with an example.</span>
+          </div>
+          <div class="q-item">
+            <span class="q-num">05.</span>
+            <span class="q-text">How do you implement error handling in an Express application?</span>
+          </div>
+          <div class="q-item">
+            <span class="q-num">06.</span>
+            <span class="q-text">Explain Promises and <code
+                style="font-family:var(--mono);font-size:11px;background:var(--bg);padding:1px 5px;border-radius:3px;">async/await</code>
+              — how they improve async code.</span>
+          </div>
+          <div class="q-item">
+            <span class="q-num">07.</span>
+            <span class="q-text">What is CORS, why is it important, and how do you enable it in Express?</span>
+          </div>
+          <div class="q-item">
+            <span class="q-num">08.</span>
+            <span class="q-text">How would you implement authentication in a Node.js & Express app?</span>
+          </div>
+          <div class="q-item">
+            <span class="q-num">09.</span>
+            <span class="q-text">Explain the concept of clustering in Node.js and how it improves performance.</span>
+          </div>
+          <div class="q-item">
+            <span class="q-num">10.</span>
+            <span class="q-text">What are RESTful API principles? How do you design one using Express?</span>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="tip-block">
+          <div class="tip-icon">🟢</div>
+          <div class="tip-text"><strong>Get all 40 questions with full answers.</strong> The complete list covers the
+            event loop deep-dive, Promises vs callbacks, session management, file uploads, GraphQL integration,
+            WebSockets, rate limiting, load balancing, microservices, security vulnerabilities, testing, and deployment
+            — all with code examples and real-world context.</div>
+        </div>
+
+        <div class="cta-block">
+          <div class="cta-title">All 40 Questions + Detailed Explanations 🚀</div>
+          <div class="cta-sub">Code examples · Best practices · Common pitfalls · Interview tips · Real-world
+            applications<br>Practice all 40 questions and track your progress — completely free.</div>
+          <a href="https://www.theboringeducation.com/interview-prep/node-js-express-interview-questions"
+            class="cta-link" target="_blank">→ Practice All 40 Node.js Questions Free</a>
+        </div>
+
+        <hr class="divider">
+
+        <div class="section-label">Find Us Everywhere</div>
+        <div class="socials-grid">
+          <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+            <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+            <span class="social-name">Instagram</span>
+            <div class="social-handle">@theboringeducation</div>
+          </a>
+          <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+            <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+            <span class="social-name">LinkedIn</span>
+            <div class="social-handle">The Boring Education</div>
+          </a>
+          <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+            <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+            <span class="social-name">GitHub</span>
+            <div class="social-handle">The-Boring-Education</div>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="page-footer">
+        <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+        <span class="page-num">02 / 02</span>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>
