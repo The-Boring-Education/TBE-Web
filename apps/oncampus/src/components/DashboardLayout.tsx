@@ -37,7 +37,7 @@ interface DashboardLayoutProps {
 export const DASHBOARD_SIDEBAR_ITEMS = [
   { name: "Dashboard", icon: Home, href: "/dashboard" },
   { name: "Interview Sheets", icon: Target, href: "/dashboard/interview-prep" },
-  { name: "DSA", icon: FileText, href: "/dashboard/dsa-prep" },
+  { name: "DSA", icon: FileText, href: "/sheets" },
   { name: "Quizes", icon: ClipboardList, href: "/dashboard/quizzes" },
   { name: "Aptitude", icon: BrainCircuit, href: "/dashboard/aptitude" },
 ];
