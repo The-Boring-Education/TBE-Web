@@ -30,14 +30,13 @@ import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FaLock } from "react-icons/fa";
 
+import InterviewQuestionContent from "@/components/InterviewQuestionContent";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
-
-import InterviewQuestionContent from "../../../components/InterviewQuestionContent";
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();
   const [sheetMeta, setSheetMeta] = useState<string>(meta || "");
-  const [questions, setQuestions] = useState(sheet.questions || []);
+  const [questions, setQuestions] = useState(sheet?.questions || []);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const firstQuestionId = questions?.[0]?._id?.toString() || "";
   const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
@@ -383,7 +382,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <OnCampusLearningLayout
-        backHref={routes.oncampus.interviewPrep}
+        backHref="/interview-sheets"
         isLoading={isDataLoading}
         layoutMode="workspace"
       >
@@ -409,7 +408,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
               </button>
 
               <button
-                onClick={() => router.push(routes.oncampus.interviewPrep)}
+                onClick={() => router.push("/interview-sheets")}
                 className="flex items-center justify-center w-[32px] h-[32px] rounded-md border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
                 title="Back to Sheets"
               >

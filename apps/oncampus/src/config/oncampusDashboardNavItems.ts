@@ -23,7 +23,7 @@ export const ONCAMPUS_DASHBOARD_NAV_ITEMS: OncampusDashboardNavItem[] = [
   {
     name: "Sheets",
     shortLabel: "Sheets",
-    href: "/dashboard/interview-prep",
+    href: "/interview-sheets",
     icon: Target,
   },
   { name: "DSA", href: "/sheets", icon: FileText },
