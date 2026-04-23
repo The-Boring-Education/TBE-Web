@@ -14,7 +14,9 @@ const addGamificationDocInDB = async (
   try {
     const gamification = new Gamification({ userId });
     await gamification.save();
-    return { data: gamification };
+    const doc = gamification.toObject();
+    delete doc.actions;
+    return { data: doc };
   } catch (error) {
     logger.error("DB: addGamificationDocInDB failed", {
       error: error instanceof Error ? error.message : String(error),
@@ -28,7 +30,9 @@ const getUserPointsFromDB = async (
   userId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const gamification = await Gamification.findOne({ userId });
+    const gamification = await Gamification.findOne({ userId })
+      .select("-actions")
+      .lean();
 
     if (!gamification) {
       return { error: "User not found" };
@@ -62,7 +66,7 @@ const updateUserPointsInDB = async (
         $push: { actions: action },
         $inc: { points: pointsEarned },
       },
-      { new: true },
+      { new: true, select: "-actions" },
     );
 
     if (!updatedGamification) {
@@ -97,7 +101,7 @@ const deductUserPointsFromDB = async (
           },
         },
       ],
-      { new: true },
+      { new: true, select: "-actions" },
     );
 
     if (!updatedGamification) {
