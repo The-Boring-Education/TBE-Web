@@ -86,7 +86,7 @@ const InterviewPrepDashboardPage = () => {
 
       return {
         ...baseCard,
-        href: `/dashboard/interview-prep/${sheet.slug}`,
+        href: `/interview-sheets/${sheet.slug}`,
         isPurchased: sheet.isPremium ? isPurchased : false,
         isPremium: sheet.isPremium && !isPurchased,
       };
@@ -152,10 +152,10 @@ const InterviewPrepDashboardPage = () => {
 
   const handleRoadmapClick = (slug: string) => {
     if (slug === "all") {
-      router.push("/dashboard/interview-prep");
+      router.push("/interview-sheets");
     } else {
       router.push({
-        pathname: "/dashboard/interview-prep",
+        pathname: "/interview-sheets",
         query: { roadmap: slug },
       });
     }
