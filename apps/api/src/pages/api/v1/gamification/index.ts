@@ -11,7 +11,14 @@ import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { query } = req;
-  const { userId } = query as { userId: string };
+  const { userId } = query;
+
+  if (typeof userId !== "string" || !userId.trim()) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: "Invalid or missing userId",
+    });
+  }
 
   switch (req.method) {
     case "GET":

@@ -30,7 +30,7 @@ const getUserPointsFromDB = async (
   userId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const gamification = await Gamification.findOne({ userId })
+    const gamification = await Gamification.findOne({ userId: { $eq: userId } })
       .select("-actions")
       .lean();
 
