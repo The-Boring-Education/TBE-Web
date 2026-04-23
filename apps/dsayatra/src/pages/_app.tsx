@@ -5,10 +5,10 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import DsaDashboardLayout from "@/components/DsaDashboardLayout";
-import Layout from "@/components/Layout";
-import { OnboardingCheck } from "@/components/OnboardingCheck";
-import { Providers } from "@/components/Providers";
+import DsaDashboardLayout from "@/components/layout/DsaDashboardLayout";
+import Layout from "@/components/layout/Layout";
+import { OnboardingCheck } from "@/components/onboarding/OnboardingCheck";
+import { Providers } from "@/components/providers/Providers";
 
 const DSA_APP_SHELL_PATHS = new Set(["/dashboard", "/revisions", "/topics"]);
 

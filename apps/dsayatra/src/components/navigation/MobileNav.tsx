@@ -1,21 +1,8 @@
 import { cn } from "@tbe/utils";
-import {
-  ClipboardList,
-  FileText,
-  Home,
-  Target,
-  TrendingUp,
-} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const NAV_ITEMS = [
-  { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Sheets", href: "/sheets", icon: Target },
-  { name: "Revisions", href: "/revisions", icon: FileText },
-  { name: "Topics", href: "/topics", icon: ClipboardList },
-  { name: "Progress", href: "/dashboard#overall-progress", icon: TrendingUp },
-];
+import { DSA_DASHBOARD_NAV_ITEMS } from "@/config/dsaDashboardNavItems";
 
 export function MobileNav() {
   const router = useRouter();
@@ -29,7 +16,7 @@ export function MobileNav() {
       <div className="absolute inset-0 bg-[#080808]/95 backdrop-blur-2xl border-t border-[#1e1e1e]" />
 
       <div className="relative flex items-center justify-around h-[60px] px-1 safe-area-inset-bottom">
-        {NAV_ITEMS.map((item) => {
+        {DSA_DASHBOARD_NAV_ITEMS.map((item) => {
           const isActive =
             item.href === "/dashboard#overall-progress"
               ? router.pathname === "/dashboard" &&
@@ -41,7 +28,7 @@ export function MobileNav() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex flex-col items-center justify-center gap-0.5 flex-1 h-full py-2 transition-all duration-200 active:scale-95",
+                "flex flex-col items-center justify-center gap-0.5 flex-1 h-full py-2 transition-all active:scale-95 duration-200",
                 isActive ? "text-[#ff5757]" : "text-[#555]",
               )}
             >

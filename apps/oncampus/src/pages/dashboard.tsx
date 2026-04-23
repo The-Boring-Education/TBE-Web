@@ -126,15 +126,13 @@ const CampusPrepDashboard = () => {
     );
   }
 
-  const userName = user?.name || user?.email?.split("@")[0] || "Student";
-
   return (
     <div className="w-full min-w-0 space-y-6 pb-6">
       {/* Header Section */}
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-2">
+      <header className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between mb-2">
         <div>
           <h2 className="text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
-            Welcome back, {userName}! 👋
+            Welcome back, {user?.name}! 👋
           </h2>
           <p className="text-[#808080] text-sm font-medium mt-1">
             Ready to master your interviews today?

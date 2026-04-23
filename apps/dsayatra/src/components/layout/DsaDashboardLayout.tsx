@@ -16,34 +16,16 @@ import {
 } from "@tbe/components";
 import { useUser } from "@tbe/hooks";
 import { cn } from "@tbe/utils";
-import {
-  ClipboardList,
-  FileText,
-  Home,
-  Target,
-  TrendingUp,
-} from "lucide-react";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 
-import { MobileNav } from "./MobileNav";
+import { MobileNav } from "@/components/navigation/MobileNav";
+import { DSA_DASHBOARD_NAV_ITEMS } from "@/config/dsaDashboardNavItems";
 
 interface DsaDashboardLayoutProps {
   children: ReactNode;
 }
-
-export const DSA_DASHBOARD_SIDEBAR_ITEMS = [
-  { name: "Dashboard", icon: Home, href: "/dashboard" },
-  { name: "Sheets", icon: Target, href: "/sheets" },
-  { name: "Revisions", icon: FileText, href: "/revisions" },
-  { name: "Topics", icon: ClipboardList, href: "/topics" },
-  {
-    name: "Progress",
-    icon: TrendingUp,
-    href: "/dashboard#overall-progress",
-  },
-];
 
 const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
   const router = useRouter();
@@ -85,7 +67,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
             <SidebarGroup className="py-4">
               <SidebarGroupContent>
                 <SidebarMenu className="gap-1.5">
-                  {DSA_DASHBOARD_SIDEBAR_ITEMS.map((item) => (
+                  {DSA_DASHBOARD_NAV_ITEMS.map((item) => (
                     <SidebarMenuItem key={item.name}>
                       <SidebarMenuButton
                         isActive={isDashboardSidebarLinkActive(
@@ -96,7 +78,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
                         className={DSA_YATRA_SIDEBAR_MENU_BUTTON_CLASS}
                         onClick={() => router.push(item.href)}
                       >
-                        {item.icon && <item.icon />}
+                        {item.icon ? <item.icon className="shrink-0" /> : null}
                         <span>{item.name}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

@@ -1,7 +1,7 @@
 "use client";
 
 import { ProtectedRoute, useAuth } from "@tbe/auth";
-import { EditDsaOnboardingModal, SEO } from "@tbe/components";
+import { EditDsaOnboardingModal, SEO, StatCard } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useDsaCompletedQuestions, useDsaTopicSummaries } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
@@ -23,73 +23,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
-
-function StatCard({
-  title,
-  value,
-  subtext,
-  icon: Icon,
-  progress,
-  status,
-  secondaryInfo,
-  className,
-}: any) {
-  return (
-    <Card
-      className={cn(
-        "bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 group rounded-xl p-5 h-full relative overflow-hidden flex flex-col justify-center",
-        className,
-      )}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-[#ff5757]/0 to-[#ff5757]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-      <div className="flex flex-row items-center justify-between pb-2 relative z-10">
-        <p className="text-[10px] lg:text-[11px] font-black text-[#a0a0a0] uppercase tracking-widest">
-          {title}
-        </p>
-        {Icon && <Icon className="w-4 h-4 text-[#ff5757]" />}
-      </div>
-      <div className="mt-1">
-        <div className="text-3xl sm:text-4xl font-black text-[#f0f0f0] leading-tight">
-          {value}
-        </div>
-        {(subtext || secondaryInfo) && (
-          <div className="mt-1.5 space-y-0.5">
-            {subtext && (
-              <p className="text-xs lg:text-sm font-medium text-[#808080]">
-                {subtext}
-              </p>
-            )}
-            {secondaryInfo && (
-              <p className="text-[10px] lg:text-xs text-[#505050] font-medium tracking-tight">
-                {secondaryInfo}
-              </p>
-            )}
-          </div>
-        )}
-        {status && (
-          <div
-            className={cn(
-              "mt-3 text-[9px] font-bold px-2 py-0.5 rounded inline-block uppercase tracking-wider",
-              status === "ON TRACK"
-                ? "bg-[#51cf66]/10 text-[#51cf66] border border-[#51cf66]/20"
-                : "bg-[#ff6b6b]/10 text-[#ff6b6b] border border-[#ff6b6b]/20",
-            )}
-          >
-            {status}
-          </div>
-        )}
-        {progress !== undefined && (
-          <div className="mt-4">
-            <Progress
-              value={progress}
-              className="h-1.5 bg-[#252525] rounded-full overflow-hidden"
-            />
-          </div>
-        )}
-      </div>
-    </Card>
-  );
-}
 
 const DsaClient = () => {
   const { user } = useAuth();
@@ -134,10 +67,10 @@ const DsaClient = () => {
     <div className="w-full min-w-0 font-sans selection:bg-[#ff5757]/30 selection:text-white">
       <div className="w-full min-w-0 space-y-5 overflow-x-hidden pb-2 sm:space-y-6 sm:pb-4 lg:pb-6">
         {/* Header Section */}
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <header className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
-              Welcome back, {user?.name?.split(" ")[0]}! 👋
+              Welcome back, {user?.name}! 👋
             </h2>
             <p className="text-[#808080] text-sm font-medium mt-1">
               Ready to master DSA today?
@@ -365,14 +298,14 @@ const DsaClient = () => {
           <StatCard
             title="Today's Stats"
             value={solvedToday}
-            subtext="Questions solved today"
+            description="Questions solved today"
             icon={Code2}
             className="md:col-span-1 lg:col-span-2"
           />
           <StatCard
             title="Total Solved"
             value={String(totalSolved)}
-            subtext={`Out of ${totalQuestions} questions`}
+            description={`Out of ${totalQuestions} questions`}
             progress={overallPercentage}
             icon={Target}
             className="md:col-span-1 lg:col-span-2"

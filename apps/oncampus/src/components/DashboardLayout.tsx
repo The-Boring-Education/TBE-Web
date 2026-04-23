@@ -8,7 +8,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
@@ -17,30 +16,17 @@ import {
 } from "@tbe/components";
 import { useUser } from "@tbe/hooks";
 import { cn } from "@tbe/utils";
-import {
-  BrainCircuit,
-  ClipboardList,
-  FileText,
-  Home,
-  Target,
-} from "lucide-react";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
+
+import { ONCAMPUS_DASHBOARD_NAV_ITEMS } from "@/config/oncampusDashboardNavItems";
 
 import { MobileNav } from "./MobileNav";
 
 interface DashboardLayoutProps {
   children: ReactNode;
 }
-
-export const DASHBOARD_SIDEBAR_ITEMS = [
-  { name: "Dashboard", icon: Home, href: "/dashboard" },
-  { name: "Interview Sheets", icon: Target, href: "/dashboard/interview-prep" },
-  { name: "DSA", icon: FileText, href: "/sheets" },
-  { name: "Quizes", icon: ClipboardList, href: "/dashboard/quizzes" },
-  { name: "Aptitude", icon: BrainCircuit, href: "/dashboard/aptitude" },
-];
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const router = useRouter();
@@ -66,6 +52,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
+      {/* Rail hidden below lg to match bottom MobileNav breakpoint (same as DSA Yatra). */}
       <div className="max-lg:hidden lg:contents">
         <Sidebar
           className={cn(
@@ -77,13 +64,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           )}
         >
           <SidebarContent className="relative z-10 flex flex-col px-3 pb-8 pt-10">
-            <SidebarGroup className="p-0">
-              <SidebarGroupLabel className="mb-2 px-2 text-[10px] font-black uppercase tracking-widest text-[#505050]">
-                Navigate
-              </SidebarGroupLabel>
+            <SidebarGroup className="py-4">
               <SidebarGroupContent>
                 <SidebarMenu className="gap-1.5">
-                  {DASHBOARD_SIDEBAR_ITEMS.map((item) => (
+                  {ONCAMPUS_DASHBOARD_NAV_ITEMS.map((item) => (
                     <SidebarMenuItem key={item.name}>
                       <SidebarMenuButton
                         isActive={isDashboardSidebarLinkActive(
@@ -94,7 +78,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         className={DSA_YATRA_SIDEBAR_MENU_BUTTON_CLASS}
                         onClick={() => router.push(item.href)}
                       >
-                        {item.icon && <item.icon />}
+                        {item.icon ? <item.icon className="shrink-0" /> : null}
                         <span>{item.name}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

@@ -1,21 +1,8 @@
 import { cn } from "@tbe/utils";
-import {
-  BrainCircuit,
-  ClipboardList,
-  FileText,
-  Home,
-  Target,
-} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const NAV_ITEMS = [
-  { name: "Dashboard", icon: Home, href: "/dashboard" },
-  { name: "Sheets", icon: Target, href: "/dashboard/interview-prep" },
-  { name: "DSA", icon: FileText, href: "/sheets" },
-  { name: "Quizes", icon: ClipboardList, href: "/dashboard/quizzes" },
-  { name: "Aptitude", icon: BrainCircuit, href: "/dashboard/aptitude" },
-];
+import { ONCAMPUS_DASHBOARD_NAV_ITEMS } from "@/config/oncampusDashboardNavItems";
 
 export function MobileNav() {
   const router = useRouter();
@@ -29,7 +16,7 @@ export function MobileNav() {
       <div className="absolute inset-0 bg-[#080808]/95 backdrop-blur-2xl border-t border-[#1e1e1e]" />
 
       <div className="relative flex items-center justify-around px-1 pt-2.5 pb-[calc(10px+env(safe-area-inset-bottom,0px))]">
-        {NAV_ITEMS.map((item) => {
+        {ONCAMPUS_DASHBOARD_NAV_ITEMS.map((item) => {
           const isActive =
             router.pathname === item.href ||
             (item.href !== "/dashboard" &&
@@ -64,7 +51,7 @@ export function MobileNav() {
                   isActive ? "text-[#ff5757]" : "text-[#666]",
                 )}
               >
-                {item.name === "Interview Sheets" ? "Sheets" : item.name}
+                {item.shortLabel ?? item.name}
               </span>
             </Link>
           );
