@@ -8,7 +8,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
@@ -83,10 +82,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
           )}
         >
           <SidebarContent className="relative z-10 flex flex-col px-3 pb-8 pt-10">
-            <SidebarGroup className="p-0">
-              <SidebarGroupLabel className="mb-2 px-2 text-[10px] font-black uppercase tracking-widest text-[#505050]">
-                Navigate
-              </SidebarGroupLabel>
+            <SidebarGroup className="py-4">
               <SidebarGroupContent>
                 <SidebarMenu className="gap-1.5">
                   {DSA_DASHBOARD_SIDEBAR_ITEMS.map((item) => (

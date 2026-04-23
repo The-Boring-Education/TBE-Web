@@ -1,4 +1,5 @@
 import { compareDsaTopicKeysForApi } from "@tbe/constants";
+import mongoose, { type PipelineStage } from "mongoose";
 
 import { modelSelectParams } from "@/lib/constants";
 import type {
@@ -34,6 +35,7 @@ import {
   DSA_SORT_STAGE,
   type DSASheetFilters,
 } from "./dsaSheet";
+import { getDsaYatraProgressFromDB } from "./dsayatra";
 import { updateUserPointsInDB } from "./gamification";
 import { checkPaymentStatusFromDB } from "./payment";
 
@@ -758,44 +760,112 @@ const getAllDSAQuestionsFromDB = async (
   }
 };
 
-/** Topic list + counts using primary topic only (topics[0]), for lightweight sheet landing. */
+/**
+ * Topic list + counts by primary topic only (`topics[0]`), aligned with DSA Yatra UI.
+ * When `userId` is set, each row includes `solved` (completed questions in that topic,
+ * same company-type filter as counts).
+ */
 const getDSATopicSummariesFromDB = async (
   userId?: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const pipeline: any[] = [];
+    const matchStages: PipelineStage[] = [];
 
-    // Filter by user career focus if userId is provided
     if (userId) {
       const targetCompanies = await getUserDSATargetCompanies(userId);
       if (targetCompanies.length > 0) {
-        pipeline.push({
+        matchStages.push({
           $match: { companyTypes: { $in: targetCompanies } },
         });
       }
     }
 
-    pipeline.push(
-      { $unwind: "$topics" },
+    const countPipeline: PipelineStage[] = [
+      ...matchStages,
+      {
+        $addFields: {
+          primaryTopic: { $toUpper: { $arrayElemAt: ["$topics", 0] } },
+        },
+      },
+      {
+        $match: {
+          primaryTopic: { $exists: true, $nin: [null, ""] },
+        },
+      },
       {
         $group: {
-          _id: "$topics",
+          _id: "$primaryTopic",
           count: { $sum: 1 },
         },
       },
-    );
+    ];
 
-    const rows = await DSAQuestion.aggregate(pipeline);
+    const rows = await DSAQuestion.aggregate(countPipeline);
+
+    const solvedByTopic = new Map<string, number>();
+
+    if (userId) {
+      const progressResult = await getDsaYatraProgressFromDB(userId);
+      const completed =
+        progressResult.data &&
+        typeof progressResult.data === "object" &&
+        "completedQuestionIds" in progressResult.data
+          ? (
+              progressResult.data as {
+                completedQuestionIds: string[];
+              }
+            ).completedQuestionIds
+          : [];
+
+      const validIds = completed
+        .map((id) => String(id))
+        .filter((id) => mongoose.isValidObjectId(id))
+        .map((id) => new mongoose.Types.ObjectId(id));
+
+      if (validIds.length > 0) {
+        const solvedPipeline: PipelineStage[] = [
+          ...matchStages,
+          { $match: { _id: { $in: validIds } } },
+          {
+            $addFields: {
+              primaryTopic: { $toUpper: { $arrayElemAt: ["$topics", 0] } },
+            },
+          },
+          {
+            $match: {
+              primaryTopic: { $exists: true, $nin: [null, ""] },
+            },
+          },
+          {
+            $group: {
+              _id: "$primaryTopic",
+              solved: { $sum: 1 },
+            },
+          },
+        ];
+        const solvedRows = await DSAQuestion.aggregate(solvedPipeline);
+        for (const row of solvedRows) {
+          solvedByTopic.set(
+            String(row._id).toUpperCase(),
+            row.solved as number,
+          );
+        }
+      }
+    }
 
     if (!rows || rows.length === 0) {
       return { data: { topics: [] } };
     }
 
     const topics = rows
-      .map((row) => ({
-        topic: (row._id as string).toUpperCase(),
-        count: row.count,
-      }))
+      .map((row) => {
+        const topic = String(row._id).toUpperCase();
+        return {
+          topic,
+          count: row.count as number,
+          solved: solvedByTopic.get(topic) ?? 0,
+        };
+      })
       .filter((t) => t.topic)
       .sort((a, b) => compareDsaTopicKeysForApi(a.topic, b.topic));
 

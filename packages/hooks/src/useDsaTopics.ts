@@ -5,6 +5,8 @@ import { useCallback, useMemo } from "react";
 export interface TopicWithCount {
   topic: string;
   count: number;
+  /** Completed count in-sheet (from `query=topics` when authenticated). */
+  solved?: number;
   label: string;
 }
 
