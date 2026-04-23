@@ -405,7 +405,7 @@ const DevRelLeadSchema = new Schema<DevRelLeadModel>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: function (doc, ret) {
+      transform(doc, ret) {
         delete ret.__v;
         return ret;
       },

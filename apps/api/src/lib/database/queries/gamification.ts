@@ -15,8 +15,8 @@ const addGamificationDocInDB = async (
     const gamification = new Gamification({ userId });
     await gamification.save();
     const doc = gamification.toObject();
-    delete doc.actions;
-    return { data: doc };
+    const { actions: _actions, ...data } = doc;
+    return { data };
   } catch (error) {
     logger.error("DB: addGamificationDocInDB failed", {
       error: error instanceof Error ? error.message : String(error),

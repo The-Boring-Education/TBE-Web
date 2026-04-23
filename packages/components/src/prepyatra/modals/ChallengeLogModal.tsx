@@ -227,7 +227,7 @@ ${
               .map((goal, index) => `${index + 1}. ${goal}`)
               .join("\n")}`,
             timeSpent: hours,
-            userId: userId,
+            userId,
           });
           toast.success("Progress also added to Prep Logs! 📝");
         } catch (prepLogError) {

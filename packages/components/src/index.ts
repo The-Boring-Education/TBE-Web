@@ -100,6 +100,7 @@ export {
 } from "./common/pricing";
 export { default as CircularProgressBar } from "./common/ProgressBar/CircularProgressBar";
 export { default as LinerProgressBar } from "./common/ProgressBar/LinerProgressBar";
+export { PublicPageSpinner } from "./common/publicJourney";
 export { DifficultyQuestionList, QuestionRow } from "./common/QuestionList";
 export type { ResourceTooltipProps } from "./common/ResourceTooltip";
 export { default as ResourceTooltip } from "./common/ResourceTooltip";

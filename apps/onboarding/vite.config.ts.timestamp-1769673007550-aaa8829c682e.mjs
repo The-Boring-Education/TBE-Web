@@ -1,7 +1,7 @@
 // vite.config.ts
 import { defineConfig } from "file:///Users/imsks/Public/git-repos/tbe/tbe-platform/apps/onboarding/node_modules/vite/dist/node/index.js";
 import react from "file:///Users/imsks/Public/git-repos/tbe/tbe-platform/node_modules/@vitejs/plugin-react/dist/index.js";
-var vite_config_default = defineConfig({
+const vite_config_default = defineConfig({
   plugins: [react()],
 });
 export { vite_config_default as default };

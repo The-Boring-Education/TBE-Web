@@ -72,6 +72,13 @@ import { authService, quizService, userService } from "@tbe/services"
 
 ## 🔧 Code Style & Standards
 
+### JavaScript / TypeScript syntax (ES6+)
+
+- Use **const** (or `let` when reassigned). Do not use `var`.
+- Prefer **function expressions** on `const` or **arrow functions** for new code where it fits the file’s style.
+- Use **ES modules** in app source: `import` / `export` (some config files still use `require` by convention).
+- Shared ESLint must stay compatible with **ESLint 8 and 9** across apps; stricter style rules belong in docs or a future major bump, not in the shared config if they break older validators.
+
 ### ESLint Configuration
 
 Follow the established ESLint rules:
@@ -94,28 +101,23 @@ interface UserDashboardProps {
 ### Component Patterns
 
 ```typescript
-// Functional components with TypeScript
+// Components: const + arrow (or const + function expression), not `function` declarations
 interface ComponentProps {
-    title: string;
-    children?: ReactNode;
-    className?: string;
+  title: string
+  children?: ReactNode
+  className?: string
 }
 
-export const Component: React.FC<ComponentProps> = ({
-    title,
-    children,
-    className
-}) => {
-    return (
-        <div className={cn("default-styles", className)}>
-            <h2>{title}</h2>
-            {children}
-        </div>
-    );
-};
+const Component = ({ title, children, className }: ComponentProps) => {
+  return (
+    <div className={cn("default-styles", className)}>
+      <h2>{title}</h2>
+      {children}
+    </div>
+  )
+}
 
-// Export as default for main components
-export default Component;
+export default Component
 ```
 
 ## 🌐 API Development Patterns

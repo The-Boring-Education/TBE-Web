@@ -38,7 +38,7 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     id: question._id,
     name: question.title,
     difficultyLevel: question.difficulty,
-    answer: answer,
+    answer,
     resources: {
       ...question.resources,
       youtubeURL:
@@ -48,7 +48,7 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     topics: question.topics,
     companyType: question.companyTypes,
     domain: question.domain,
-    examples: examples,
+    examples,
     constraints: constraints as string[],
     sections: question.sections,
     notes: question.notes,

@@ -147,6 +147,17 @@ const getAppSpecificSEOMeta = (
         ...seoCommonMeta,
         image: appConfig.defaultImage || seoCommonMeta.image,
       },
+      "/journey": {
+        title: "DSA Learning Journey | DSAYatra",
+        siteName: "DSAYatra",
+        description:
+          "View a learner's DSA Yatra progress — topics solved, goals, and milestones.",
+        url: "/journey",
+        keywords:
+          "DSA Yatra, public profile, learning journey, interview prep, The Boring Education",
+        ...seoCommonMeta,
+        image: appConfig.defaultImage || seoCommonMeta.image,
+      },
     };
 
     return dsaMeta[basePath] || null;

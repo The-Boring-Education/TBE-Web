@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
+import { PublicPageSpinner } from "../../common/publicJourney";
 import Text from "../../common/Typography/Text";
 import NotFound from "../../containers/Cards/NotFound";
 import FlexContainer from "../../containers/Page/common/FlexContainer";
@@ -30,7 +31,7 @@ import {
 /**
  * Public shareable profile + prep logs for a username (`/journey/[username]`).
  */
-export default function PrepYatraPublicJourneyPage() {
+const PrepYatraPublicJourneyPage = () => {
   const router = useRouter();
   const { username } = router.query;
   const [prepLogs, setPrepLogs] = useState<PrepLog[]>([]);
@@ -107,11 +108,7 @@ export default function PrepYatraPublicJourneyPage() {
   }, [username]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
-      </div>
-    );
+    return <PublicPageSpinner />;
   }
 
   if (error || !profile) {
@@ -364,4 +361,6 @@ export default function PrepYatraPublicJourneyPage() {
       <Footer />
     </div>
   );
-}
+};
+
+export default PrepYatraPublicJourneyPage;

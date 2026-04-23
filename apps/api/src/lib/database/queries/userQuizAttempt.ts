@@ -92,8 +92,8 @@ export const getUserQuizPerformanceFromDB = async (
     // Query attempts for the specific user (matching both string and ObjectId formats)
     // and sort by most recent
     const query = userObjectId
-      ? { $or: [{ userId: userId }, { userId: userObjectId }] }
-      : { userId: userId };
+      ? { $or: [{ userId }, { userId: userObjectId }] }
+      : { userId };
 
     const userAttempts = await QuizAttempt.find(query)
       .sort({ completedAt: -1 })
