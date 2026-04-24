@@ -77,7 +77,7 @@ describe("gamification DB queries — client payloads omit actions", () => {
 
       const result = await getUserPointsFromDB("u1");
 
-      expect(mockFindOne).toHaveBeenCalledWith({ userId: "u1" });
+      expect(mockFindOne).toHaveBeenCalledWith({ userId: { $eq: "u1" } });
       expect(mockSelect).toHaveBeenCalledWith("-actions");
       expect(mockLean).toHaveBeenCalled();
       expect(result.data).toEqual(leanDoc);

@@ -82,6 +82,7 @@ export { default as LearningSidebarPanel } from "./common/Learning/LearningSideb
 export { default as QuestionLink } from "./common/Learning/QuestionLink";
 export { default as LoadingIndicator } from "./common/LoadingIndicator";
 export { default as LoadingSpinner } from "./common/LoadingSpinner";
+export { default as Marquee } from "./common/Marquee";
 export { default as MDXRenderer } from "./common/MDXRenderer";
 export { default as Modal } from "./common/Modal";
 export { default as NotificationPopover } from "./common/Notification";
@@ -265,6 +266,7 @@ export {
 export { PageSEO, default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./oncampus";
 export * from "./prepyatra";
+export * from "./resumeyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names
 // Note: We do not re-export prepyatra `Button` to avoid clashing with existing common Button export.
 export {

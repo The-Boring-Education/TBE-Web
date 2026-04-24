@@ -10,6 +10,13 @@ import type { UserPointsActionType } from "@/lib/interfaces";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!["GET", "POST"].includes(req.method ?? "")) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: `Method ${req.method} not allowed`,
+    });
+  }
+
   const { query } = req;
   const { userId } = query;
 

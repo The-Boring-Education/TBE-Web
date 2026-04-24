@@ -61,7 +61,7 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 
 **Learning Components** (Priority: Medium)
 
-- `ChapterLink`
+- [x] `ChapterLink` ✅ ([ChapterLink.test.tsx](src/unit/components/common/ChapterLink.test.tsx))
 - `QuestionLink`
 
 **Button Variants** (Priority: High)
@@ -219,6 +219,7 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 
 - [ ] `useAuth` (Pending)
 - [x] `useUser` ✅ (Tested - data fetching)
+- [x] `useProductOnboardingGate` ✅ ([useProductOnboardingGate.test.ts](src/unit/hooks/useProductOnboardingGate.test.ts)) — product onboarding redirect gate
 - [ ] `useUsername` (Pending)
 - [ ] `useAdmin` / `useAdminData` (Pending)
 
@@ -285,16 +286,16 @@ This document outlines a comprehensive testing strategy for the TBE Platform mon
 **Core Services**
 
 - [x] `api.ts` - Base API client ✅ (Tested - userApi, authApi, analyticsApi, etc.)
-- [ ] `base.ts` - Base service utilities (Pending)
-- [ ] `client.ts` - HTTP client configuration (Pending)
+- [x] `base.ts` - `APIClient` fetch/URL/auth/JSON error handling ✅ ([base.test.ts](src/unit/services/base.test.ts))
+- [ ] `client.ts` - Email client (Brevo/axios) (Pending; env-heavy)
 
 **Feature Services** (Priority: High)
 
 - [x] `quizApi.ts` - Quiz API calls ✅ (Tested)
 - [ ] `challenges.ts` - Challenge management (Pending)
-- [ ] `prep-logs.ts` - Prep log operations (Pending)
+- [x] `prep-logs.ts` - Prep log CRUD ✅ ([prep-logs.test.ts](src/unit/services/prep-logs.test.ts))
 - [ ] `prep-stats.ts` - Statistics operations (Pending)
-- [ ] `user.ts` - User operations (Pending)
+- [x] `user.ts` - `getProfile` ✅ ([user.test.ts](src/unit/services/user.test.ts))
 - [ ] `recruiters.ts` - Recruiter operations (Pending)
 - [ ] `resumeService.ts` - Resume operations (Pending)
 - [ ] `email.ts` - Email operations (Pending)
@@ -669,7 +670,7 @@ apps/testing/src/
 
 #### Learning Components
 
-- [ ] `ChapterLink`
+- [x] `ChapterLink`
 - [ ] `QuestionLink`
 
 ### Phase 3: Container Components
@@ -976,8 +977,8 @@ apps/testing/src/
 
 **Total Test Statistics:**
 
-- ✅ **116 test files** passing (`pnpm test:unit`; 1 skipped)
-- ✅ **1025 tests** passing (1 skipped)
+- ✅ **~150 test files** passing (`pnpm test:unit`; 1 skipped)
+- ✅ **~1275 tests** passing (1 skipped)
 - Some component suites may log React/jsdom warnings (e.g. Radix prop forwarding); treat noisy output as follow-up, not a reason to skip updating this doc.
 
 **Serial batch — common “Basic UI Elements” (completed):**
