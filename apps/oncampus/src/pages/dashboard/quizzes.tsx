@@ -7,6 +7,7 @@ import { ArrowLeft, Folder, FolderOpen, Monitor, Play } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
+import { MobileNav } from "@/components/MobileNav";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const QuizzesDashboardPage = () => {
@@ -82,6 +83,7 @@ const QuizzesDashboardPage = () => {
       <div className="flex flex-col h-full w-full">
         {/* Header Section */}
         <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
+          {/* Left column header — full width on mobile, fixed on desktop */}
           <div className="border-r border-gray-800/60 px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 w-full lg:w-[260px]">
             <div>
               <Text
@@ -135,6 +137,51 @@ const QuizzesDashboardPage = () => {
           </div>
         </div>
 
+        {/* Mobile horizontal category pill strip — visible only on small screens */}
+        <div className="lg:hidden w-full border-b border-gray-800 bg-[#0A0A0A] shrink-0">
+          <div className="flex items-center gap-2 overflow-x-auto px-3 py-2 scrollbar-none">
+            {/* All option */}
+            <button
+              onClick={() => setSelectedCategoryId("all")}
+              className={cn(
+                "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-tight border transition-all duration-200 active:scale-95",
+                selectedCategoryId === "all"
+                  ? "bg-red-500/10 border-red-500/60 text-red-400 shadow-[0_0_8px_rgba(239,68,68,0.2)]"
+                  : "bg-transparent border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300",
+              )}
+            >
+              {selectedCategoryId === "all" ? (
+                <FolderOpen className="w-3 h-3 shrink-0" />
+              ) : (
+                <Folder className="w-3 h-3 shrink-0" />
+              )}
+              All
+            </button>
+            {categories.map((category) => {
+              const isActive = selectedCategoryId === category._id;
+              return (
+                <button
+                  key={category._id}
+                  onClick={() => setSelectedCategoryId(category._id)}
+                  className={cn(
+                    "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-tight border transition-all duration-200 active:scale-95",
+                    isActive
+                      ? "bg-red-500/10 border-red-500/60 text-red-400 shadow-[0_0_8px_rgba(239,68,68,0.2)]"
+                      : "bg-transparent border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300",
+                  )}
+                >
+                  {isActive ? (
+                    <Monitor className="w-3 h-3 shrink-0" />
+                  ) : (
+                    <Monitor className="w-3 h-3 shrink-0" />
+                  )}
+                  {category.categoryName}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <FlexContainer
           className="lg:flex-row flex-1 min-h-0 w-full"
           direction="col"
@@ -142,8 +189,8 @@ const QuizzesDashboardPage = () => {
           justifyCenter={false}
           wrap={false}
         >
-          {/* Categories Sidebar */}
-          <div className="w-full lg:w-[260px] flex-shrink-0 border-r border-gray-800 flex flex-col bg-[#0A0A0A]">
+          {/* Desktop Categories Sidebar — hidden on mobile */}
+          <div className="hidden lg:flex w-full lg:w-[260px] flex-shrink-0 border-r border-gray-800 flex-col bg-[#0A0A0A]">
             <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
               <div className="space-y-1">
                 <FlexContainer
@@ -237,7 +284,7 @@ const QuizzesDashboardPage = () => {
           </div>
 
           {/* Main Quiz Grid Area */}
-          <div className="flex-1 flex flex-col h-full w-full overflow-y-auto bg-[#050505] p-6 lg:p-8 scrollbar-thin-grey">
+          <div className="flex-1 w-full overflow-y-auto bg-[#050505] p-4 lg:p-8 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-8 scrollbar-thin-grey">
             {filteredCategories.length === 0 ? (
               <div className="flex flex-col items-center justify-center min-h-[40vh]">
                 <Text level="p" className="text-gray-400">
@@ -307,6 +354,9 @@ const QuizzesDashboardPage = () => {
             )}
           </div>
         </FlexContainer>
+
+        {/* Mobile bottom navigation — mirrors DashboardLayout MobileNav */}
+        <MobileNav />
       </div>
     </OnCampusLearningLayout>
   );
