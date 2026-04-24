@@ -48,6 +48,7 @@ export { default as RadioButton } from "./common/Form/RadioButton";
 export { default as RadioInputField } from "./common/Form/RadioInputField";
 export { default as SelectInput } from "./common/Form/SelectInput";
 export { default as GamificationDemo } from "./common/GamificationDemo";
+export { default as Marquee } from "./common/Marquee";
 /** @deprecated Use `GamificationToast` from `@tbe/gamification` instead */
 export { default as GamificationToast } from "./common/GamificationToast";
 export type {
