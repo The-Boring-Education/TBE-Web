@@ -38,9 +38,10 @@ test.describe("OnCampus smoke flow", () => {
     expect(response?.status()).toBe(200);
 
     await expect(
-      page.getByRole("heading", { name: "Our Resources" }),
+      page.getByRole("heading", { name: /What[’']?s Coming Soon/i }),
     ).toBeVisible();
-    const resourceLinks = page.locator("section a[href]");
-    expect(await resourceLinks.count()).toBeGreaterThan(0);
+    await expect(
+      page.getByText(/Upcoming additions to OnCampus/i),
+    ).toBeVisible();
   });
 });

@@ -18,6 +18,8 @@ const Layout = ({ children }: LayoutProps) => {
   const isFullScreen = router.pathname === "/sheets";
   /** Pricing is a distraction-free page (no nav/footer); content supplies its own back control. */
   const isPricingStandalone = router.pathname === "/pricing";
+  /** Public journey uses Prep Yatra nav/footer from the page component. */
+  const isPublicJourney = router.pathname === "/journey/[username]";
   const isRevisions = router.pathname === "/revisions";
   const isTopics = router.pathname === "/topics";
   const isLandingPage = router.pathname === "/";
@@ -26,7 +28,7 @@ const Layout = ({ children }: LayoutProps) => {
       ? "/"
       : "/dashboard";
 
-  if (isFullScreen || isPricingStandalone) {
+  if (isFullScreen || isPricingStandalone || isPublicJourney) {
     return <Fragment>{children}</Fragment>;
   }
 

@@ -25,20 +25,26 @@ import { useAnalytics, usePaymentAccess, useUser } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
 import { queryKeys, useMutation, useQueryClient } from "@tbe/query";
 import { cn, getSheetPageProps, sendRequest } from "@tbe/utils";
-import { ArrowLeft, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import {
+  ArrowLeft,
+  ListFilter,
+  PanelLeftClose,
+  PanelLeftOpen,
+} from "lucide-react";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FaLock } from "react-icons/fa";
 
+import InterviewQuestionContent from "@/components/InterviewQuestionContent";
+import { MobileNav } from "@/components/MobileNav";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
-
-import InterviewQuestionContent from "../../../components/InterviewQuestionContent";
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();
   const [sheetMeta, setSheetMeta] = useState<string>(meta || "");
-  const [questions, setQuestions] = useState(sheet.questions || []);
+  const [questions, setQuestions] = useState(sheet?.questions || []);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileQuestionsOpen, setIsMobileQuestionsOpen] = useState(false);
   const firstQuestionId = questions?.[0]?._id?.toString() || "";
   const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
   const [isQuestionCompleted, setIsQuestionCompleted] = useState<boolean>(
@@ -383,42 +389,43 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <OnCampusLearningLayout
-        backHref={routes.oncampus.interviewPrep}
+        backHref="/interview-sheets"
         isLoading={isDataLoading}
         layoutMode="workspace"
       >
         {/* Workspace Header Section */}
         <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
+          {/* Left control strip — sidebar toggle (desktop only) + back button */}
           <div
             className={cn(
-              "border-r border-gray-800/60 px-4 py-3.5 flex items-center gap-3 shrink-0 transition-all duration-300 overflow-hidden",
-              isSidebarOpen ? "w-full lg:w-[260px]" : "w-[100px] lg:w-[110px]",
+              "border-r border-gray-800/60 px-4 py-3.5 flex items-center gap-2 shrink-0 transition-all duration-300",
+              isSidebarOpen ? "w-auto lg:w-[260px]" : "w-auto lg:w-[110px]",
             )}
           >
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="flex items-center justify-center w-[32px] h-[32px] rounded-md border border-gray-800 bg-gray-900/50 text-gray-400 hover:text-white hover:border-gray-600 transition-all duration-200 shrink-0"
-                title={isSidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
-              >
-                {isSidebarOpen ? (
-                  <PanelLeftClose className="w-4 h-4" />
-                ) : (
-                  <PanelLeftOpen className="w-4 h-4" />
-                )}
-              </button>
+            {/* Sidebar toggle — desktop only */}
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="hidden lg:flex items-center justify-center w-[32px] h-[32px] rounded-md border border-gray-800 bg-gray-900/50 text-gray-400 hover:text-white hover:border-gray-600 transition-all duration-200 shrink-0"
+              title={isSidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+            >
+              {isSidebarOpen ? (
+                <PanelLeftClose className="w-4 h-4" />
+              ) : (
+                <PanelLeftOpen className="w-4 h-4" />
+              )}
+            </button>
 
-              <button
-                onClick={() => router.push(routes.oncampus.interviewPrep)}
-                className="flex items-center justify-center w-[32px] h-[32px] rounded-md border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
-                title="Back to Sheets"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-            </div>
+            {/* Back button — always visible */}
+            <button
+              onClick={() => router.push("/interview-sheets")}
+              className="flex items-center justify-center w-[32px] h-[32px] rounded-md border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
+              title="Back to Sheets"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
 
             {isSidebarOpen && (
-              <div className="flex flex-col min-w-[100px] hidden lg:flex">
+              <div className="hidden lg:flex flex-col min-w-[100px]">
                 <Text
                   level="h2"
                   className="text-[12px] font-bold text-white tracking-wide leading-none mb-1"
@@ -436,7 +443,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           </div>
 
           <div className="flex flex-1 items-center justify-between px-4">
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0">
               <Text
                 level="h1"
                 className="text-sm md:text-base font-bold text-white mb-0.5 tracking-tight line-clamp-1"
@@ -452,30 +459,55 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                   : `Question ${questions.findIndex((q) => q._id.toString() === currentQuestionId) + 1} of ${questions.length}`}
               </Text>
             </div>
+
+            {/* Mobile-only: questions list toggle pill */}
+            <button
+              onClick={() => setIsMobileQuestionsOpen(!isMobileQuestionsOpen)}
+              className={cn(
+                "lg:hidden flex items-center gap-1.5 shrink-0 ml-2 px-3 py-1.5 rounded-lg border text-[11px] font-semibold transition-all duration-200 active:scale-95",
+                isMobileQuestionsOpen
+                  ? "bg-red-500/10 border-red-500/60 text-red-400"
+                  : "bg-gray-900/50 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600",
+              )}
+              title="Toggle questions list"
+            >
+              <ListFilter className="w-3.5 h-3.5" />
+              <span>{questions.length} Q</span>
+            </button>
           </div>
         </div>
 
+        {/* Mobile collapsible questions drawer */}
+        <div
+          className={cn(
+            "lg:hidden w-full bg-[#0A0A0A] border-b border-gray-800 overflow-y-auto scrollbar-thin-grey transition-[max-height] duration-300 ease-in-out",
+            isMobileQuestionsOpen ? "max-h-[50vh]" : "max-h-0 overflow-hidden",
+          )}
+        >
+          <div className="px-2 py-2">{questionsSidebar}</div>
+        </div>
+
         <FlexContainer
-          className="lg:flex-row flex-1 min-h-0 w-full h-full"
+          className="lg:flex-row flex-1 min-h-0 w-full"
           direction="col"
           itemCenter={false}
           justifyCenter={false}
           wrap={false}
         >
-          {/* Sidebar Area - 260px wide to match header */}
+          {/* Sidebar Area — always hidden on mobile, toggle-controlled on desktop */}
           <div
             className={cn(
-              "flex-shrink-0 border-r border-gray-800 flex flex-col bg-[#0A0A0A] overflow-y-auto min-h-0 scrollbar-thin-grey transition-all duration-300",
+              "flex-shrink-0 border-r border-gray-800 flex-col bg-[#0A0A0A] overflow-y-auto min-h-0 scrollbar-thin-grey transition-all duration-300",
               isSidebarOpen
-                ? "w-full lg:w-[260px]"
-                : "w-0 opacity-0 overflow-hidden border-r-0",
+                ? "hidden lg:flex lg:w-[260px]"
+                : "hidden lg:flex lg:w-0 lg:opacity-0 lg:overflow-hidden lg:border-r-0",
             )}
           >
             <div className="px-1 py-2 min-w-[260px]">{questionsSidebar}</div>
           </div>
 
-          {/* Main Question Detail Area */}
-          <div className="flex-1 flex flex-col h-full w-full overflow-y-auto bg-[#050505] p-6 lg:p-8 scrollbar-thin-grey">
+          {/* Main Question Detail Area — full width on mobile, flex-1 on desktop */}
+          <div className="flex-1 w-full overflow-y-auto bg-[#050505] p-4 lg:p-8 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-8 scrollbar-thin-grey">
             <FlexContainer
               className="w-full max-w-4xl mx-auto h-fit"
               itemCenter={false}
@@ -578,6 +610,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           </div>
         </FlexContainer>
       </OnCampusLearningLayout>
+
+      {/* Mobile bottom navigation — mirrors DashboardLayout MobileNav */}
+      <MobileNav />
 
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type="INTERVIEW_SHEET" />

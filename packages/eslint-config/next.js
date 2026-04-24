@@ -83,6 +83,17 @@ export const config = [
       "@typescript-eslint/consistent-type-imports": "warn",
       "@typescript-eslint/no-unused-expressions": "off",
       "@typescript-eslint/no-empty-object-type": "off",
+      /**
+       * ES6+ style (core rules — same on ESLint 8.x and 9.x).
+       * `func-style` here uses ONLY `{ allowArrowFunctions }` (ESLint 8 schema).
+       * Do not add `allowTypeAnnotation` / `overrides` — ESLint 8 rejects them and lint crashes.
+       */
+      "no-var": "warn",
+      "prefer-const": "warn",
+      "object-shorthand": "warn",
+      "prefer-arrow-callback": "warn",
+      "prefer-numeric-literals": "warn",
+      "func-style": ["warn", "expression", { allowArrowFunctions: true }],
     },
   },
   {

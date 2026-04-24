@@ -4,6 +4,7 @@ import type {
   DsaYatraFeatureSpotlightItem,
   PrimaryCardProps,
   PrimaryCardWithCTAProps,
+  ResumeYatraFeatureSpotlightItem,
   TestimonialCardProps,
   TopNavbarContainerProps,
 } from "@tbe/types";
@@ -1129,6 +1130,145 @@ const PORTFOLIO_FEATURES: PrimaryCardProps[] = [
   },
 ];
 
+/* ─────────────────────────────────────────────
+   RESUME YATRA LANDING PAGE CONSTANTS
+   ───────────────────────────────────────────── */
+
+const RESUME_YATRA_FEATURE_SPOTLIGHTS: ResumeYatraFeatureSpotlightItem[] = [
+  {
+    id: v4(),
+    eyebrow: "Checklist",
+    title: "Build your resume step-by-step with a recruiter's eye",
+    description:
+      "No more guessing what to include. Follow an interactive checklist built on real recruiter feedback — every section, every bullet point, every word optimized for what hiring managers actually look for.",
+    bullets: [
+      "Know exactly what to write in each resume section",
+      "Get recruiter-perspective tips on what stands out",
+      "Avoid the most common mistakes that get resumes rejected",
+    ],
+    imageSide: "right",
+  },
+  {
+    id: v4(),
+    eyebrow: "ATS Score",
+    title: "Beat the bots before a human ever reads it",
+    description:
+      "Over 75% of resumes are rejected by Applicant Tracking Systems before a recruiter sees them. Our ATS-optimized format ensures your resume passes automated filters and lands in the right inbox.",
+    bullets: [
+      "Format built to pass ATS keyword matching",
+      "See your resume's ATS compatibility score live",
+      "Understand which keywords to include for your target roles",
+    ],
+    imageSide: "left",
+  },
+  {
+    id: v4(),
+    eyebrow: "Templates",
+    title: "Proven templates used by developers at top companies",
+    description:
+      "The exact resume format that helped thousands of developers land roles at Google, Microsoft, Amazon, and top startups. Not a generic Word template — a battle-tested, FAANG-approved structure.",
+    bullets: [
+      "Shortlisted in 200+ companies worldwide",
+      "Used by 10,000+ developers to land their dream jobs",
+      "One-click to start building — no design skills needed",
+    ],
+    imageSide: "right",
+  },
+  {
+    id: v4(),
+    eyebrow: "Progress",
+    title: "Track every section until your resume is complete",
+    description:
+      "A resume half-built is a resume never sent. Track your completion across every section so you always know what's done, what needs work, and what's left — and ship a polished resume faster.",
+    bullets: [
+      "Clear progress view across all resume sections",
+      "Resume completeness score to keep you on track",
+      "Never lose your work — auto-saves as you go",
+    ],
+    imageSide: "left",
+  },
+];
+
+const RESUME_YATRA_FEATURES: PrimaryCardProps[] = [
+  {
+    id: v4(),
+    title: "Build from Scratch or Improve",
+    content:
+      "Start fresh or polish an existing resume with guided checklists. Both paths lead to a world-class result.",
+    image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
+    imageAltText: "Build or improve your resume",
+  },
+  {
+    id: v4(),
+    title: "Recruiter POV Insights",
+    content:
+      "Get insider tips on what recruiters actually look for so every bullet point works in your favour.",
+    image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
+    imageAltText: "Recruiter perspective",
+  },
+  {
+    id: v4(),
+    title: "FAANG + Remote-Ready Tips",
+    content:
+      "Learn strategies used by developers landing at top companies and remote-first teams globally.",
+    image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
+    imageAltText: "FAANG ready tips",
+  },
+  {
+    id: v4(),
+    title: "ATS-Optimized Format",
+    content:
+      "A format proven to pass Applicant Tracking Systems so your resume reaches human eyes — not the trash.",
+    image: `${STATIC_FILE_PATH.svg}/roadmaps.svg`,
+    imageAltText: "ATS optimized",
+  },
+  {
+    id: v4(),
+    title: "Real Examples & Writing Tricks",
+    content:
+      "See before/after examples and master the art of writing impactful resume bullets like a senior engineer.",
+    image: `${STATIC_FILE_PATH.svg}/tools-resume-yatra.svg`,
+    imageAltText: "Real resume examples",
+  },
+  {
+    id: v4(),
+    title: "10,000+ Developers Trust It",
+    content:
+      "Join a growing community of developers who have used Resume Yatra to land interviews and job offers.",
+    image: `${STATIC_FILE_PATH.svg}/dsa-yatra.svg`,
+    imageAltText: "Community trust",
+  },
+];
+
+/** Landing page FAQ copy for Resume Yatra. */
+const RESUME_YATRA_FAQS = [
+  {
+    question: "Is Resume Yatra free to use?",
+    answer:
+      "Yes. The core resume builder and checklist are completely free. You can build and export your resume without any cost.",
+  },
+  {
+    question: "Will this resume pass ATS systems?",
+    answer:
+      "Yes. The template and format are specifically designed to pass Applicant Tracking Systems used by most companies. We focus on clean formatting, keyword optimization, and structure that ATS bots can parse correctly.",
+  },
+  {
+    question: "Can I use this if I am a fresher with no experience?",
+    answer:
+      "Absolutely. Resume Yatra has specific guidance for freshers, including how to present projects, internships, and skills effectively to land your first developer role.",
+  },
+  {
+    question: "How is this different from other resume builders?",
+    answer:
+      "Most resume builders just give you a pretty template. Resume Yatra gives you a step-by-step checklist with recruiter-perspective guidance on what to write in each section — not just how it looks, but what it says.",
+  },
+  {
+    question: "What kind of roles is this resume format best for?",
+    answer:
+      "Resume Yatra is built specifically for software developers and engineers. It covers roles at startups, MNCs, product companies, and FAANG-style interviews.",
+  },
+];
+
 export {
   BYI_BEGINNER_ROADMAP,
   BYI_INTERMEDIATE_ROADMAP,
@@ -1143,6 +1283,9 @@ export {
   OS_GETTING_STARTED_STEPS,
   PORTFOLIO_FEATURES,
   PRODUCTS,
+  RESUME_YATRA_FAQS,
+  RESUME_YATRA_FEATURE_SPOTLIGHTS,
+  RESUME_YATRA_FEATURES,
   TBIP_FEATURES,
   TBP_FEATURES,
   TBP_PROJECTS,

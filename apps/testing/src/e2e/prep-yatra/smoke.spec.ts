@@ -1,14 +1,21 @@
+import type { Page } from "@playwright/test";
+
 import { expect, test } from "../fixtures/public.fixture";
 
 test.describe("Prep Yatra smoke flow", () => {
+  const getJourneyCTA = (page: Page) =>
+    page
+      .locator("button, a", {
+        hasText: /Start Your (Prep )?Journey|Get Started for Free/i,
+      })
+      .first();
+
   test("landing loads and journey CTA is visible", async ({
     publicPage: page,
   }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    await expect(
-      page.getByRole("button", { name: "Start Your Journey for Free" }),
-    ).toBeVisible();
+    await expect(getJourneyCTA(page)).toBeVisible();
   });
 
   test("user can navigate from landing to login", async ({
@@ -16,9 +23,7 @@ test.describe("Prep Yatra smoke flow", () => {
   }) => {
     await page.goto("/");
 
-    const journeyCTA = page.getByRole("button", {
-      name: "Start Your Journey for Free",
-    });
+    const journeyCTA = getJourneyCTA(page);
     await expect(journeyCTA).toBeVisible();
     await expect(journeyCTA).toBeEnabled();
 

@@ -71,7 +71,7 @@ const handleUpdateSheetPricing = async (
 
     const updatedData: { isPremium: boolean; price: number } = {
       isPremium: true,
-      price: price,
+      price,
     };
 
     const { data: updatedSheet, error } = await updateInterviewSheetInDB({

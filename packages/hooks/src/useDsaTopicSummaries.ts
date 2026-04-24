@@ -7,6 +7,7 @@ import type { TopicWithCount } from "./useDsaTopics";
 export interface DsaTopicSummaryRow {
   topic: string;
   count: number;
+  solved: number;
 }
 
 import useUser from "./useUser";
@@ -36,9 +37,14 @@ export const useDsaTopicSummaries = () => {
         .map((item: any) => {
           const topic = typeof item === "string" ? item : item.topic;
           const count = typeof item === "string" ? 0 : item.count || 0;
+          const solved =
+            typeof item === "string" || typeof item.solved !== "number"
+              ? 0
+              : item.solved;
           return {
             topic,
             count,
+            solved,
             label: TOPIC_LABELS[topic],
           };
         })

@@ -317,7 +317,7 @@ export const JOB_DOMAIN_NORMALIZER = [
 
 export const JOB_DOMAINS = JOB_DOMAIN_NORMALIZER.map(({ value }) => ({
   label: value,
-  value: value,
+  value,
 }));
 
 const modelSelectParams = {

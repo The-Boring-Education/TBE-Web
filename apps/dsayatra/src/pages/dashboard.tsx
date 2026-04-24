@@ -1,7 +1,9 @@
+"use client";
+
 import { ProtectedRoute, useAuth } from "@tbe/auth";
-import { EditDsaOnboardingModal, SEO } from "@tbe/components";
+import { EditDsaOnboardingModal, SEO, StatCard } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
-import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
+import { useDsaCompletedQuestions, useDsaTopicSummaries } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
 import { cn, encodeDsaTopicForUrl, getPreFetchProps } from "@tbe/utils";
@@ -22,145 +24,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
-function StatCard({
-  title,
-  value,
-  subtext,
-  icon: Icon,
-  progress,
-  status,
-  secondaryInfo,
-  className,
-}: any) {
-  return (
-    <Card
-      className={cn(
-        "bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 group rounded-xl p-5 h-full relative overflow-hidden flex flex-col justify-center",
-        className,
-      )}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-[#ff5757]/0 to-[#ff5757]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-      <div className="flex flex-row items-center justify-between pb-2 relative z-10">
-        <p className="text-[10px] lg:text-[11px] font-black text-[#a0a0a0] uppercase tracking-widest">
-          {title}
-        </p>
-        {Icon && <Icon className="w-4 h-4 text-[#ff5757]" />}
-      </div>
-      <div className="mt-1">
-        <div className="text-3xl sm:text-4xl font-black text-[#f0f0f0] leading-tight">
-          {value}
-        </div>
-        {(subtext || secondaryInfo) && (
-          <div className="mt-1.5 space-y-0.5">
-            {subtext && (
-              <p className="text-xs lg:text-sm font-medium text-[#808080]">
-                {subtext}
-              </p>
-            )}
-            {secondaryInfo && (
-              <p className="text-[10px] lg:text-xs text-[#505050] font-medium tracking-tight">
-                {secondaryInfo}
-              </p>
-            )}
-          </div>
-        )}
-        {status && (
-          <div
-            className={cn(
-              "mt-3 text-[9px] font-bold px-2 py-0.5 rounded inline-block uppercase tracking-wider",
-              status === "ON TRACK"
-                ? "bg-[#51cf66]/10 text-[#51cf66] border border-[#51cf66]/20"
-                : "bg-[#ff6b6b]/10 text-[#ff6b6b] border border-[#ff6b6b]/20",
-            )}
-          >
-            {status}
-          </div>
-        )}
-        {progress !== undefined && (
-          <div className="mt-4">
-            <Progress
-              value={progress}
-              className="h-1.5 bg-[#252525] rounded-full overflow-hidden"
-            />
-          </div>
-        )}
-      </div>
-    </Card>
-  );
-}
-
 const DsaClient = () => {
-  "use client";
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [activeScheduleItem, setActiveScheduleItem] = useState<number | null>(
-    null,
-  );
 
-  const { rawQuestions: allQuestions } = useDsaQuestions({
-    queryKey: "dashboard-dsa-sheet",
-  });
-  const { completedIds: completedQuestions, solvedToday } =
-    useDsaCompletedQuestions({ userId: user?.id });
+  const { data: topicRows } = useDsaTopicSummaries();
+  const { solvedToday } = useDsaCompletedQuestions({ userId: user?.id });
 
-  const [weeklyAssignments, setWeeklyAssignments] = useState<
-    Record<number, string[]>
-  >({});
-  const [weekProgress, setWeekProgress] = useState<Record<number, string[]>>(
-    {},
-  );
-
-  useEffect(() => {
-    const savedAssignments = localStorage.getItem("dsayatra_weekly_revisions");
-    if (savedAssignments) {
-      try {
-        setWeeklyAssignments(JSON.parse(savedAssignments));
-      } catch {
-        /* corrupted data */
-      }
-    }
-
-    const savedProgress = localStorage.getItem("dsayatra_revision_completed");
-    if (savedProgress) {
-      try {
-        setWeekProgress(JSON.parse(savedProgress));
-      } catch {
-        /* corrupted data */
-      }
-    }
-  }, []);
-
-  // Compute topic-wise progress from real data
   const topicProgress = useMemo(() => {
-    const topicMap = new Map<string, { total: number; solved: number }>();
-    allQuestions.forEach((q: any) => {
-      const primaryTopic = q.topics?.[0];
-      if (primaryTopic) {
-        if (!topicMap.has(primaryTopic)) {
-          topicMap.set(primaryTopic, { total: 0, solved: 0 });
-        }
-        const entry = topicMap.get(primaryTopic)!;
-        entry.total += 1;
-        const qId = q._id || q.id;
-        if (qId && completedQuestions.includes(String(qId))) {
-          entry.solved += 1;
-        }
-      }
-    });
-    return Array.from(topicMap.entries()).map(([topic, data]) => ({
-      name: TOPIC_LABELS[topic] || topic,
-      key: topic,
-      solved: data.solved,
-      total: data.total,
+    if (!topicRows?.length) return [];
+    return topicRows.map((row) => ({
+      name: row.label || TOPIC_LABELS[row.topic] || row.topic,
+      key: row.topic,
+      solved: row.solved ?? 0,
+      total: row.count,
     }));
-  }, [allQuestions, completedQuestions]);
+  }, [topicRows]);
 
-  // Overall progress
-  const totalQuestions = allQuestions.length;
-  const totalSolved = completedQuestions.filter((id) =>
-    allQuestions.some((q: any) => String(q._id || q.id) === String(id)),
-  ).length;
+  const totalQuestions = useMemo(
+    () => topicProgress.reduce((acc, t) => acc + t.total, 0),
+    [topicProgress],
+  );
+  const totalSolved = useMemo(
+    () => topicProgress.reduce((acc, t) => acc + t.solved, 0),
+    [topicProgress],
+  );
   const overallPercentage =
     totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
 
@@ -170,75 +59,18 @@ const DsaClient = () => {
     }
   }, [user?.id]);
 
-  // Resolve dynamic revisions
-  const allRevisions = useMemo(() => {
-    const revs: { title: string; weekInfo: string; completed: boolean }[] = [];
-    Object.keys(weeklyAssignments).forEach((weekIdx) => {
-      const idx = parseInt(weekIdx);
-      const qIds = weeklyAssignments[idx] || [];
-      const completedQs = weekProgress[idx] || [];
-
-      qIds.forEach((qId) => {
-        const q = allQuestions.find(
-          (q: any) => String(q._id || q.id) === String(qId),
-        );
-        if (q) {
-          revs.push({
-            title: q.name,
-            weekInfo: `Week ${idx + 1} Assignment`,
-            completed: completedQs.includes(qId),
-          });
-        }
-      });
-    });
-    return revs;
-  }, [weeklyAssignments, weekProgress, allQuestions]);
-
-  const incompleteRevisions = allRevisions.filter((r) => !r.completed);
-  const completedRevisionsCount = allRevisions.filter(
-    (r) => r.completed,
-  ).length;
-  const dueRevisionsCount = incompleteRevisions.length;
-  const displayRevisions = incompleteRevisions.slice(0, 3);
-
-  // Dynamic Schedule Data
-  const expectedDailyQuestions = 5;
-  const toSolve = Math.max(0, expectedDailyQuestions - solvedToday);
-
-  const todaysScheduleData = [
-    { label: "To Solve", value: toSolve, details: "Goal calculation" },
-    { label: "Solved", value: solvedToday, details: "Cleared today" },
-    {
-      label: "Due Revisions",
-      value: dueRevisionsCount,
-      details: "Pending queue",
-    },
-    {
-      label: "Completed",
-      value: completedRevisionsCount,
-      details: "Revisions done",
-    },
-  ];
-
   const targetLabel = profile?.dsaYatra?.target || "Product-based";
   const timelineLabel = profile?.dsaYatra?.timeline || "4-6 months";
   const expLabel = profile?.dsaYatra?.experienceLevel || "Fresher (0-1 yr)";
-
-  const dailyGoalHours = 4;
-  const dailyGoalProgress = Math.min(
-    100,
-    Math.round((solvedToday / expectedDailyQuestions) * 100),
-  );
-  const todayTotalHours = solvedToday;
 
   return (
     <div className="w-full min-w-0 font-sans selection:bg-[#ff5757]/30 selection:text-white">
       <div className="w-full min-w-0 space-y-5 overflow-x-hidden pb-2 sm:space-y-6 sm:pb-4 lg:pb-6">
         {/* Header Section */}
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <header className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
-              Welcome back, {user?.name?.split(" ")[0]}! 👋
+              Welcome back, {user?.name}! 👋
             </h2>
             <p className="text-[#808080] text-sm font-medium mt-1">
               Ready to master DSA today?
@@ -466,14 +298,14 @@ const DsaClient = () => {
           <StatCard
             title="Today's Stats"
             value={solvedToday}
-            subtext="Questions solved today"
+            description="Questions solved today"
             icon={Code2}
             className="md:col-span-1 lg:col-span-2"
           />
           <StatCard
             title="Total Solved"
             value={String(totalSolved)}
-            subtext={`Out of ${totalQuestions} questions`}
+            description={`Out of ${totalQuestions} questions`}
             progress={overallPercentage}
             icon={Target}
             className="md:col-span-1 lg:col-span-2"

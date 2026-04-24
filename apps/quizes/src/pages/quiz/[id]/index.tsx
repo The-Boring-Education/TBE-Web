@@ -73,8 +73,8 @@ function QuizContent() {
         },
         body: JSON.stringify({
           name: sessionData?.user?.name || "User",
-          email: email,
-          googleId: googleId,
+          email,
+          googleId,
           image: sessionData?.user?.image || "",
         }),
       });
@@ -254,7 +254,7 @@ function QuizContent() {
       }
 
       const submission = {
-        userId: userId,
+        userId,
         answers,
         totalTimeSpent,
       };
@@ -272,7 +272,7 @@ function QuizContent() {
         // Trigger gamification action for completing quiz (don't await to speed up)
         gamificationApi
           .updateuserGamificationPoints({
-            userId: userId,
+            userId,
             actionType: "COMPLETE_QUIZ",
           })
           .catch(() => {}); // Ignore errors

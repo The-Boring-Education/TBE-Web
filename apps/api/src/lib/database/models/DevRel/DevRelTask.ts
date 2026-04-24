@@ -226,7 +226,7 @@ const DevRelTaskSchema = new Schema<DevRelTaskModel>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: function (doc, ret) {
+      transform(doc, ret) {
         delete ret.__v;
         // Convert Map to Object for JSON serialization
         if (ret.completionTracking instanceof Map) {

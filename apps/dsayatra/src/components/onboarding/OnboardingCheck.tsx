@@ -12,7 +12,7 @@ export const OnboardingCheck = () => {
 
   const { isChecking } = useProductOnboardingGate({
     pathname: router.pathname,
-    publicRoutes: ["/login", "/", "/auth"],
+    publicRoutes: ["/login", "/", "/auth", "/journey/[username]"],
     productId: "dsayatra",
     from: "dsayatra",
     buildRedirectUrl,

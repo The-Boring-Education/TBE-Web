@@ -17,6 +17,7 @@ import {
   Folder,
   FolderOpen,
   Lightbulb,
+  ListFilter,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -30,6 +31,7 @@ const AptitudePrepPage = () => {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedTopicLabel, setSelectedTopicLabel] = useState<string>("");
   const [viewMode, setViewMode] = useState<"STUDY" | "QUIZ">("STUDY");
+  const [isMobileTopicsOpen, setIsMobileTopicsOpen] = useState(false);
 
   const handleAptitudeProgressSaved = useCallback(() => {
     if (selectedTopic && user?.id) {
@@ -131,12 +133,14 @@ const AptitudePrepPage = () => {
     setSelectedTopic(topic);
     setSelectedTopicLabel(label);
     setViewMode("STUDY");
+    setIsMobileTopicsOpen(false); // auto-close drawer on mobile after selection
   };
 
   const handleBackToTopics = () => {
     setSelectedTopic(null);
     setSelectedTopicLabel("");
     setViewMode("STUDY");
+    setIsMobileTopicsOpen(true); // re-open topics drawer so user can pick another
   };
 
   const overallLoading = userLoading || topicsLoading;
@@ -181,9 +185,18 @@ const AptitudePrepPage = () => {
     >
       <div className="flex flex-col h-full w-full">
         <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
-          {/* Left column — aligns with sidebar width */}
-          <div className="border-r border-gray-800/60 px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 w-full lg:w-[260px]">
-            <div>
+          {/* Left column — aligns with sidebar width on desktop */}
+          <div className="border-r border-gray-800/60 px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 w-auto lg:w-[260px]">
+            {selectedTopic && (
+              <button
+                onClick={handleBackToTopics}
+                className="flex items-center justify-center w-[28px] h-[28px] rounded-[6px] border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
+                title="Back to Topics"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <div className="hidden lg:block">
               <Text
                 level="h2"
                 className="text-[13px] font-black text-white mb-0.5 tracking-tight"
@@ -197,34 +210,26 @@ const AptitudePrepPage = () => {
                 Choose a topic
               </Text>
             </div>
-            {selectedTopic && (
-              <button
-                onClick={handleBackToTopics}
-                className="flex items-center justify-center w-[28px] h-[28px] rounded-[6px] border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
-                title="Back to Topics"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-              </button>
-            )}
           </div>
 
-          <div className="hidden lg:flex flex-1 items-center justify-between px-4">
-            <FlexContainer wrap={false} className="gap-2">
+          <div className="flex flex-1 items-center justify-between px-4">
+            <FlexContainer wrap={false} className="gap-2 min-w-0">
               <FlexContainer
                 direction="col"
                 itemCenter={false}
                 justifyCenter={false}
                 wrap={false}
+                className="min-w-0"
               >
                 <Text
                   level="h1"
-                  className="strong-text font-bold text-white mb-0.5 tracking-tight"
+                  className="strong-text font-bold text-white mb-0.5 tracking-tight line-clamp-1"
                 >
                   {selectedTopic ? selectedTopicLabel : "Aptitude Preparation"}
                 </Text>
                 <Text
                   level="p"
-                  className="text-[10px] font-medium text-gray-500 uppercase tracking-wider"
+                  className="text-[10px] font-medium text-gray-500 uppercase tracking-wider hidden sm:block"
                 >
                   {selectedTopic
                     ? `Solving problems on ${selectedTopicLabel}`
@@ -232,6 +237,66 @@ const AptitudePrepPage = () => {
                 </Text>
               </FlexContainer>
             </FlexContainer>
+
+            {/* Mobile-only: topics list toggle pill */}
+            <button
+              onClick={() => setIsMobileTopicsOpen(!isMobileTopicsOpen)}
+              className={cn(
+                "lg:hidden flex items-center gap-1.5 shrink-0 ml-2 px-3 py-1.5 rounded-lg border text-[11px] font-semibold transition-all duration-200 active:scale-95",
+                isMobileTopicsOpen
+                  ? "bg-red-500/10 border-red-500/60 text-red-400"
+                  : "bg-gray-900/50 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600",
+              )}
+              title="Toggle topics list"
+            >
+              <ListFilter className="w-3.5 h-3.5" />
+              <span>{topicsWithCounts.length} Topics</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile collapsible topics drawer */}
+        <div
+          className={cn(
+            "lg:hidden w-full bg-[#0A0A0A] border-b border-gray-800 overflow-y-auto scrollbar-thin-grey transition-[max-height] duration-300 ease-in-out",
+            isMobileTopicsOpen ? "max-h-[50vh]" : "max-h-0 overflow-hidden",
+          )}
+        >
+          <div className="px-3 py-2 space-y-1">
+            {topicsWithCounts.map(({ topic, count, label }) => {
+              const isActive = selectedTopic === topic;
+              return (
+                <button
+                  key={topic}
+                  onClick={() => handleTopicClick(topic, label)}
+                  className={cn(
+                    "w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
+                    isActive
+                      ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)] text-white"
+                      : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800 text-gray-400",
+                  )}
+                  aria-pressed={isActive}
+                >
+                  <FlexContainer
+                    className="items-center w-full gap-3"
+                    itemCenter
+                    justifyCenter={false}
+                  >
+                    {isActive ? (
+                      <FolderOpen className="w-[15px] h-[15px] shrink-0 text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                    ) : (
+                      <Folder className="w-[15px] h-[15px] shrink-0 text-gray-600 group-hover:text-gray-400 transition-colors" />
+                    )}
+                    <Text
+                      level="p"
+                      className="text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1"
+                    >
+                      {label}
+                    </Text>
+                  </FlexContainer>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -242,8 +307,8 @@ const AptitudePrepPage = () => {
           justifyCenter={false}
           wrap={false}
         >
-          {/* Always Visible Left Sidebar - Topics List */}
-          <div className="w-full lg:w-[260px] flex-shrink-0 border-r border-gray-800 flex flex-col bg-[#0A0A0A]">
+          {/* Desktop-only Left Sidebar - Topics List */}
+          <div className="hidden lg:flex lg:w-[260px] flex-shrink-0 border-r border-gray-800 flex-col bg-[#0A0A0A]">
             <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
               <div className="space-y-1">
                 <FlexContainer
@@ -292,8 +357,9 @@ const AptitudePrepPage = () => {
               </div>
             </div>
           </div>
+          {/* On mobile with no topic, show a prompt to use the Topics button */}
           {!selectedTopic ? (
-            <div className="hidden lg:flex flex-1 flex-col min-w-0 bg-[#050505] relative overflow-hidden">
+            <div className="flex flex-1 flex-col min-w-0 bg-[#050505] relative overflow-hidden">
               {/* Subtle Background Glows */}
               <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/10 rounded-full blur-[100px] pointer-events-none" />
               <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />

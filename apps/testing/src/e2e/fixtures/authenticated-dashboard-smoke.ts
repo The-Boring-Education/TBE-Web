@@ -26,7 +26,10 @@ export async function mockDsayatraDashboardApis(page: Page): Promise<void> {
     }
     return route.fulfill({
       status: 200,
-      json: { status: true, data: { questions: [] } },
+      json: {
+        status: true,
+        data: { topics: [], questions: [] },
+      },
     });
   });
 

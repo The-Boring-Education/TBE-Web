@@ -126,15 +126,13 @@ const CampusPrepDashboard = () => {
     );
   }
 
-  const userName = user?.name || user?.email?.split("@")[0] || "Student";
-
   return (
     <div className="w-full min-w-0 space-y-6 pb-6">
       {/* Header Section */}
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-2">
+      <header className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between mb-2">
         <div>
           <h2 className="text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
-            Welcome back, {userName}! 👋
+            Welcome back, {user?.name}! 👋
           </h2>
           <p className="text-[#808080] text-sm font-medium mt-1">
             Ready to master your interviews today?
@@ -145,7 +143,7 @@ const CampusPrepDashboard = () => {
             variant="PRIMARY"
             className="w-full sm:w-auto bg-[#ff5757] hover:bg-[#ff4040] text-white px-6 py-2.5 h-auto font-bold text-xs rounded-xl transition-all hover:shadow-[0_4px_20px_rgba(255,87,87,0.25)] hover:scale-[1.02]"
             text="Continue Learning"
-            onClick={() => router.push("/dashboard/interview-prep")}
+            onClick={() => router.push("/interview-sheets")}
           />
         </div>
       </header>
@@ -197,7 +195,7 @@ const CampusPrepDashboard = () => {
                         className="bg-transparent border-[#333] text-[#a0a0a0] hover:text-[#ff5757] hover:border-[#ff5757]/50 text-xs font-black h-8 px-4 rounded-lg uppercase tracking-tight"
                         text="Resume"
                         onClick={() =>
-                          router.push(`/dashboard/interview-prep/${sheet.slug}`)
+                          router.push(`/interview-sheets/${sheet.slug}`)
                         }
                       />
                     </div>
@@ -335,7 +333,7 @@ const CampusPrepDashboard = () => {
               variant="PRIMARY"
               className="bg-[#1a1a1a] border border-[#2a2a2a] text-[#a0a0a0] group-hover:text-white group-hover:bg-[#ff5757] group-hover:border-transparent transition-all font-black text-xs h-10 px-5 rounded-xl uppercase"
               text="Open"
-              onClick={() => router.push("/dashboard/interview-prep")}
+              onClick={() => router.push("/interview-sheets")}
             />
           </div>
         </div>

@@ -48,7 +48,6 @@ export { default as RadioButton } from "./common/Form/RadioButton";
 export { default as RadioInputField } from "./common/Form/RadioInputField";
 export { default as SelectInput } from "./common/Form/SelectInput";
 export { default as GamificationDemo } from "./common/GamificationDemo";
-/** @deprecated Use `GamificationToast` from `@tbe/gamification` instead */
 export { default as GamificationToast } from "./common/GamificationToast";
 export type {
   DifficultyGroupedListProps,
@@ -81,6 +80,7 @@ export { default as LearningSidebarPanel } from "./common/Learning/LearningSideb
 export { default as QuestionLink } from "./common/Learning/QuestionLink";
 export { default as LoadingIndicator } from "./common/LoadingIndicator";
 export { default as LoadingSpinner } from "./common/LoadingSpinner";
+export { default as Marquee } from "./common/Marquee";
 export { default as MDXRenderer } from "./common/MDXRenderer";
 export { default as Modal } from "./common/Modal";
 export { default as NotificationPopover } from "./common/Notification";
@@ -100,6 +100,7 @@ export {
 } from "./common/pricing";
 export { default as CircularProgressBar } from "./common/ProgressBar/CircularProgressBar";
 export { default as LinerProgressBar } from "./common/ProgressBar/LinerProgressBar";
+export { PublicPageSpinner } from "./common/publicJourney";
 export { DifficultyQuestionList, QuestionRow } from "./common/QuestionList";
 export type { ResourceTooltipProps } from "./common/ResourceTooltip";
 export { default as ResourceTooltip } from "./common/ResourceTooltip";
@@ -263,6 +264,7 @@ export {
 export { PageSEO, default as SEOWrapper } from "./layout/SEOWrapper";
 export * from "./oncampus";
 export * from "./prepyatra";
+export * from "./resumeyatra";
 // Re-export selected UI primitives from prepyatra/ui with their original names
 // Note: We do not re-export prepyatra `Button` to avoid clashing with existing common Button export.
 export {
