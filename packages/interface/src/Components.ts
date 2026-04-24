@@ -109,6 +109,7 @@ export interface SectionHeaderProps {
   flexContainerProps?: FlexContainerProps;
   subtext?: string;
   theme?: "light" | "dark";
+  textCenter?: boolean;
 }
 
 export interface CardSectionContainerProps {

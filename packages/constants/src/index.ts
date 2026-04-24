@@ -44,6 +44,7 @@ export {
 export * from "./onboarding";
 export * from "./pages";
 export * from "./pages/seo";
+export * from "./prepYatra";
 export * from "./productConfigs";
 export * from "./routes";
 export * from "./seo";

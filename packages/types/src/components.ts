@@ -174,6 +174,7 @@ export interface SectionHeaderProps {
   className?: string;
   flexContainerProps?: FlexContainerProps;
   subtext?: string;
+  textCenter?: boolean;
 }
 
 export interface ProjectHeroMetaContainerProps {
@@ -219,6 +220,16 @@ export interface DsaYatraFeatureSpotlightItem {
 
 /** Resume Yatra landing: alternating text + interactive visual rows */
 export interface ResumeYatraFeatureSpotlightItem {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  description: string;
+  bullets: string[];
+  imageSide: "left" | "right";
+}
+
+/** Prep Yatra landing: alternating text + interactive visual rows */
+export interface PrepYatraFeatureSpotlightItem {
   id: string;
   eyebrow?: string;
   title: string;
