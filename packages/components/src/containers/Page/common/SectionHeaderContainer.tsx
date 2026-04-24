@@ -9,6 +9,7 @@ const SectionHeaderContainer = ({
   flexContainerProps,
   subtext,
   theme = "light",
+  textCenter = true,
 }: SectionHeaderProps) => {
   const isDark = theme === "dark";
   return (
@@ -16,17 +17,19 @@ const SectionHeaderContainer = ({
       className={`gap-1 ${className}`}
       {...flexContainerProps}
       direction="col"
+      itemCenter={textCenter}
+      justifyCenter={textCenter}
     >
       <Text
         className={`heading-${headingLevel} ${isDark ? "text-white" : ""}`}
         level={`h${headingLevel}`}
-        textCenter
+        textCenter={textCenter}
       >
         {heading}
         <Text
           className={`heading-${headingLevel} text-primary`}
           level="span"
-          textCenter
+          textCenter={textCenter}
         >
           &nbsp;{focusText}
         </Text>
@@ -35,7 +38,7 @@ const SectionHeaderContainer = ({
         <Text
           className={`pre-text ${isDark ? "text-gray-400" : "text-greyDark"}`}
           level="span"
-          textCenter
+          textCenter={textCenter}
         >
           {subtext}
         </Text>

@@ -26,15 +26,23 @@ const LandingPageHero = ({
           wrap={false}
         >
           <FlexContainer
-            className="justify-center lg:justify-start"
+            className="items-center lg:items-start lg:justify-start"
             direction="col"
+            itemCenter={false}
+            justifyCenter={false}
           >
-            <FlexContainer direction="col">
+            <FlexContainer
+              direction="col"
+              itemCenter={false}
+              className="items-center lg:items-start"
+            >
               <SectionHeaderContainer
                 focusText={focusText}
                 heading={heading}
                 headingLevel={3}
                 theme={theme}
+                textCenter={false}
+                className="items-center lg:items-start text-center lg:text-left"
               />
               <Text
                 className={`paragraph mt-1 w-full text-center lg:text-left ${
@@ -52,7 +60,7 @@ const LandingPageHero = ({
           </FlexContainer>
           <Image
             alt="landing-page-hero-image"
-            className="w-64"
+            className="w-80 md:w-96 lg:w-[450px]"
             fullWidth={false}
             loading="lazy"
             src={backgroundImageUrl}
