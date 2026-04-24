@@ -31,13 +31,20 @@ import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FaLock } from "react-icons/fa";
 
 import InterviewQuestionContent from "@/components/InterviewQuestionContent";
+import { MobileNav } from "@/components/MobileNav";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();
   const [sheetMeta, setSheetMeta] = useState<string>(meta || "");
   const [questions, setQuestions] = useState(sheet?.questions || []);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    // On small screens (window width < 1024px) default sidebar closed so content is immediately visible
+    if (typeof window !== "undefined") {
+      return window.innerWidth >= 1024;
+    }
+    return true;
+  });
   const firstQuestionId = questions?.[0]?._id?.toString() || "";
   const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
   const [isQuestionCompleted, setIsQuestionCompleted] = useState<boolean>(
@@ -474,7 +481,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           </div>
 
           {/* Main Question Detail Area */}
-          <div className="flex-1 flex flex-col h-full w-full overflow-y-auto bg-[#050505] p-6 lg:p-8 scrollbar-thin-grey">
+          <div className="flex-1 flex flex-col h-full w-full overflow-y-auto bg-[#050505] p-4 lg:p-8 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-8 scrollbar-thin-grey">
             <FlexContainer
               className="w-full max-w-4xl mx-auto h-fit"
               itemCenter={false}
@@ -577,6 +584,9 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           </div>
         </FlexContainer>
       </OnCampusLearningLayout>
+
+      {/* Mobile bottom navigation — mirrors DashboardLayout MobileNav */}
+      <MobileNav />
 
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type="INTERVIEW_SHEET" />
