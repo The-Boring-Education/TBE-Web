@@ -217,6 +217,16 @@ export interface DsaYatraFeatureSpotlightItem {
   imageSide: "left" | "right";
 }
 
+/** Resume Yatra landing: alternating text + interactive visual rows */
+export interface ResumeYatraFeatureSpotlightItem {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  description: string;
+  bullets: string[];
+  imageSide: "left" | "right";
+}
+
 export interface PrimaryCardWithCTAProps {
   id: string;
   image: string;
