@@ -13,6 +13,7 @@ import { ArrowLeft, Folder, FolderOpen } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
+import { MobileNav } from "@/components/MobileNav";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const InterviewPrepDashboardPage = () => {
@@ -244,6 +245,51 @@ const InterviewPrepDashboardPage = () => {
           </div>
         </div>
 
+        {/* Mobile horizontal category tab strip — visible only on small screens */}
+        <div className="lg:hidden w-full border-b border-gray-800 bg-[#0A0A0A] shrink-0">
+          <div className="flex items-center gap-2 overflow-x-auto px-3 py-2 scrollbar-none">
+            <button
+              onClick={() => handleRoadmapClick("all")}
+              className={cn(
+                "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-tight border transition-all duration-200 active:scale-95",
+                selectedRoadmap === "all"
+                  ? "bg-red-500/10 border-red-500/60 text-red-400 shadow-[0_0_8px_rgba(239,68,68,0.2)]"
+                  : "bg-transparent border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300",
+              )}
+            >
+              {selectedRoadmap === "all" ? (
+                <FolderOpen className="w-3 h-3 shrink-0" />
+              ) : (
+                <Folder className="w-3 h-3 shrink-0" />
+              )}
+              All
+            </button>
+            {roadmapKeys.map((roadmap) => {
+              const slug = roadmap.toLowerCase();
+              const isActive = selectedRoadmap === slug;
+              return (
+                <button
+                  key={roadmap}
+                  onClick={() => handleRoadmapClick(slug)}
+                  className={cn(
+                    "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-tight border transition-all duration-200 active:scale-95",
+                    isActive
+                      ? "bg-red-500/10 border-red-500/60 text-red-400 shadow-[0_0_8px_rgba(239,68,68,0.2)]"
+                      : "bg-transparent border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300",
+                  )}
+                >
+                  {isActive ? (
+                    <FolderOpen className="w-3 h-3 shrink-0" />
+                  ) : (
+                    <Folder className="w-3 h-3 shrink-0" />
+                  )}
+                  {roadmap}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <FlexContainer
           direction="col"
           className="lg:flex-row flex-1 min-h-0 w-full"
@@ -251,8 +297,8 @@ const InterviewPrepDashboardPage = () => {
           justifyCenter={false}
           wrap={false}
         >
-          {/* Always Visible Left Sidebar - Categories List */}
-          <div className="w-full lg:w-[260px] flex-shrink-0 border-r border-gray-800 flex flex-col bg-[#0A0A0A]">
+          {/* Desktop Left Sidebar - Categories List (hidden on mobile) */}
+          <div className="hidden lg:flex w-full lg:w-[260px] flex-shrink-0 border-r border-gray-800 flex-col bg-[#0A0A0A]">
             <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
               <div className="space-y-1">
                 <FlexContainer
@@ -323,7 +369,7 @@ const InterviewPrepDashboardPage = () => {
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col h-full w-full overflow-y-auto bg-[#050505] p-6 lg:p-8 scrollbar-thin-grey">
+          <div className="flex-1 flex flex-col h-full w-full overflow-y-auto bg-[#050505] p-4 lg:p-8 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-8 scrollbar-thin-grey">
             {!hasSheets ? (
               <div className="flex flex-col items-center justify-center min-h-[40vh]">
                 <Text level="p" className="text-gray-400">
@@ -360,6 +406,9 @@ const InterviewPrepDashboardPage = () => {
             )}
           </div>
         </FlexContainer>
+
+        {/* Mobile bottom navigation — mirrors DashboardLayout MobileNav */}
+        <MobileNav />
       </div>
     </OnCampusLearningLayout>
   );
