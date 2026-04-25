@@ -5,15 +5,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 /* ------------------------------------------------------------------ */
 
 const {
-  mockFind,
   mockFindOne,
   mockFindById,
   mockFindByIdAndUpdate,
   mockFindByIdAndDelete,
   mockSave,
-  mockPopulate,
   mockSort,
-  mockLean,
   MockCouponConstructor,
 } = vi.hoisted(() => {
   const mockFindInner = vi.fn();
@@ -394,11 +391,10 @@ describe("incrementCouponUsageFromDB", () => {
 
   it("atomically increments currentUsage", async () => {
     const updated = makeCouponDoc({ currentUsage: 6 });
-    const populate = vi.fn().mockResolvedValue(updated);
     mockFindByIdAndUpdate.mockReturnValue(updated);
 
     // The actual function calls findByIdAndUpdate directly (no populate chain)
-    const result = await incrementCouponUsageFromDB("coupon_abc");
+    await incrementCouponUsageFromDB("coupon_abc");
 
     expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
       "coupon_abc",
@@ -410,9 +406,14 @@ describe("incrementCouponUsageFromDB", () => {
   it("returns error when coupon not found", async () => {
     mockFindByIdAndUpdate.mockReturnValue(null);
 
-    // Need to handle the null return from findByIdAndUpdate
     const result = await incrementCouponUsageFromDB("nonexistent");
-    // Function should handle this by checking updatedCoupon
+
+    expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
+      "nonexistent",
+      { $inc: { currentUsage: 1 } },
+      { new: true },
+    );
+    expect(result.error).toBeTruthy();
   });
 });
 

@@ -36,7 +36,6 @@ const mockGetCouponById = vi.fn();
 const mockUpdateCoupon = vi.fn();
 const mockDeleteCoupon = vi.fn();
 const mockApplyCouponToSheets = vi.fn();
-const mockGetCouponByIdForBulk = vi.fn();
 
 vi.mock("@/lib/database", () => ({
   getAllCouponsFromDB: (...args: any[]) => mockGetAllCoupons(...args),

@@ -82,11 +82,6 @@ test.describe("Checkout coupon flow", () => {
   }) => {
     await page.goto(CHECKOUT_URL);
 
-    // Look for coupon input by placeholder or label
-    const couponInput = page
-      .getByPlaceholder(/coupon/i)
-      .or(page.getByLabel(/coupon/i))
-      .first();
     // Coupon input may or may not be present depending on the product
     // This test verifies the page loads without error
     await expect(page.locator("body")).toBeVisible();

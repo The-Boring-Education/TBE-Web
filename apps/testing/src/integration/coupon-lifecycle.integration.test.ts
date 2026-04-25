@@ -16,7 +16,6 @@ const {
   mockFindById,
   mockFindByIdAndUpdate,
   mockFindByIdAndDelete,
-  mockSave,
   MockCoupon,
 } = vi.hoisted(() => {
   const mockFindOneInner = vi.fn();
@@ -69,7 +68,6 @@ const {
     mockFindById: mockFindByIdInner,
     mockFindByIdAndUpdate: mockFindByIdAndUpdateInner,
     mockFindByIdAndDelete: mockFindByIdAndDeleteInner,
-    mockSave: mockSaveInner,
     MockCoupon: MockCouponInner,
   };
 });
