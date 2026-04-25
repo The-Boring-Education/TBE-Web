@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@tbe/components";
-import { useUser } from "@tbe/hooks";
+import { usePaymentStatus, useUser } from "@tbe/hooks";
 import { cn } from "@tbe/utils";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
@@ -30,7 +30,14 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const router = useRouter();
-  const { isAuth, loading } = useUser();
+  const { user, isAuth, loading } = useUser();
+
+  const { isPurchased } = usePaymentStatus({
+    userId: user?.id,
+    productId: "oncampus",
+    productType: "ONCAMPUS",
+    isPremium: true,
+  });
 
   useEffect(() => {
     if (!loading && !isAuth) {
@@ -91,7 +98,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </div>
 
       <SidebarInset className="flex min-h-svh flex-col bg-[#0f0f0f] text-white">
-        <Navbar variant="oncampus" theme="dark" />
+        <Navbar
+          variant="oncampus"
+          theme="dark"
+          hidePricingLink={isPurchased === true}
+        />
         <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col px-3 pt-[72px] pb-[calc(8rem+env(safe-area-inset-bottom,0px))] sm:px-5 lg:px-6 lg:pb-8 lg:pt-[72px] xl:px-8">
           {children}
         </div>

@@ -1,4 +1,5 @@
 import { Footer } from "@tbe/components";
+import { usePaymentStatus, useUser } from "@tbe/hooks";
 import { cn } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
@@ -11,6 +12,14 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
+  const { user } = useUser();
+
+  const { isPurchased } = usePaymentStatus({
+    userId: user?.id,
+    productId: "lifetime",
+    productType: "DSA_YATRA",
+    isPremium: true,
+  });
 
   const isDashboard =
     router.pathname === "/dashboard" ||
@@ -34,7 +43,12 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <Fragment>
-      <Navbar variant="dsayatra" theme="dark" dashboardRoute={dashboardRoute} />
+      <Navbar
+        variant="dsayatra"
+        theme="dark"
+        dashboardRoute={dashboardRoute}
+        hidePricingLink={isPurchased === true}
+      />
 
       <main
         className={cn(
