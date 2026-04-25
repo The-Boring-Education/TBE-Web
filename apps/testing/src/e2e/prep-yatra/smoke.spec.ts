@@ -51,16 +51,16 @@ test.describe("Prep Yatra smoke flow", () => {
     ).toBeVisible();
   });
 
-  test("pricing redirects unauthenticated users to login", async ({
+  test("pricing is accessible to unauthenticated users", async ({
     publicPage: page,
   }) => {
     await page.goto("/pricing");
 
-    await expect(page).toHaveURL(/\/(login|auth)(\/|\?|$)/, {
+    await expect(page).toHaveURL(/\/pricing(\/|\?|$)/, {
       timeout: 20_000,
     });
     await expect(
-      page.getByRole("button", { name: "Continue with Google" }),
+      page.getByRole("heading", { name: /One plan for everything/i }),
     ).toBeVisible();
   });
 });
