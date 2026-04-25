@@ -15,6 +15,9 @@ import {
 import type { ComponentType } from "react";
 import React from "react";
 
+import { toPlatformUrl } from "./platformUrl";
+import { routes } from "./routes";
+
 interface NavbarDropdownLink {
   id: string;
   name: string;
@@ -465,8 +468,8 @@ export const getLoginCardVariantConfig = (): Record<
       },
     ],
     redirectPath: "/",
-    termsHref: "/terms-and-conditions",
-    privacyHref: "/privacy",
+    termsHref: toPlatformUrl(routes.termsAndConditions),
+    privacyHref: toPlatformUrl("/privacy"),
   },
   platform: {
     title: "Welcome Back!",
@@ -490,8 +493,8 @@ export const getLoginCardVariantConfig = (): Record<
       },
     ],
     redirectPath: "/",
-    termsHref: "/terms-and-conditions",
-    privacyHref: "/privacy",
+    termsHref: toPlatformUrl(routes.termsAndConditions),
+    privacyHref: toPlatformUrl("/privacy"),
   },
   prepyatra: {
     title: "Welcome Back!",
@@ -515,8 +518,8 @@ export const getLoginCardVariantConfig = (): Record<
       },
     ],
     redirectPath: "/dashboard",
-    termsHref: "/terms-and-conditions",
-    privacyHref: "/privacy",
+    termsHref: toPlatformUrl(routes.termsAndConditions),
+    privacyHref: toPlatformUrl("/privacy"),
   },
   quizes: {
     title: "Welcome Back!",
@@ -545,8 +548,8 @@ export const getLoginCardVariantConfig = (): Record<
       },
     ],
     redirectPath: "/dashboard",
-    termsHref: "/terms-and-conditions",
-    privacyHref: "/privacy",
+    termsHref: toPlatformUrl(routes.termsAndConditions),
+    privacyHref: toPlatformUrl("/privacy"),
   },
   "resume-yatra": {
     title: "Welcome to Resume Yatra",
@@ -570,8 +573,8 @@ export const getLoginCardVariantConfig = (): Record<
       },
     ],
     redirectPath: "/builder",
-    termsHref: "/terms-and-conditions",
-    privacyHref: "/privacy",
+    termsHref: toPlatformUrl(routes.termsAndConditions),
+    privacyHref: toPlatformUrl("/privacy"),
   },
   oncampus: {
     title: "Welcome to OnCampus",
@@ -615,8 +618,8 @@ export const getLoginCardVariantConfig = (): Record<
       },
     ],
     redirectPath: "/dashboard",
-    termsHref: "/terms-and-conditions",
-    privacyHref: "/privacy",
+    termsHref: toPlatformUrl(routes.termsAndConditions),
+    privacyHref: toPlatformUrl("/privacy"),
   },
 });
 

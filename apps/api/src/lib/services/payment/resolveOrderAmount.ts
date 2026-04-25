@@ -23,6 +23,10 @@ export interface ResolvedOrderAmount {
   finalAmount: number;
   appliedCoupon?: string;
   couponCode?: string;
+  /** Present when a valid coupon was applied (for checkout UI). */
+  couponDescription?: string;
+  couponDiscountPercentage?: number;
+  couponMinimumAmount?: number;
 }
 
 const toCouponModel = (doc: CouponModel): CouponModel => {
@@ -105,6 +109,13 @@ const buildResolvedAmount = (
   finalAmount,
   ...(coupon?.appliedCoupon ? { appliedCoupon: coupon.appliedCoupon } : {}),
   ...(coupon?.couponCode ? { couponCode: coupon.couponCode } : {}),
+  ...(coupon?.coupon
+    ? {
+        couponDescription: coupon.coupon.description,
+        couponDiscountPercentage: coupon.coupon.discountPercentage,
+        couponMinimumAmount: coupon.coupon.minimumAmount,
+      }
+    : {}),
 });
 
 const ensurePositivePrice = (

@@ -20,6 +20,7 @@ interface UpdateCouponRequest {
   maxUsage?: number;
   minimumAmount?: number;
   applicableProducts?: string[];
+  showOnPricingBanner?: boolean;
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

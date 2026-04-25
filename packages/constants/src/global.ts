@@ -14,6 +14,7 @@ import type {
 import type { ComponentPropsWithoutRef } from "react";
 
 import { envConfig } from "./envConfig";
+import { toPlatformUrl } from "./platformUrl";
 import { routes } from "./routes";
 
 // Paths
@@ -34,47 +35,47 @@ const imageMeta = {
 const products: ProductDataProps = {
   roadmaps: {
     label: "Roadmaps",
-    slug: "/roadmaps",
+    slug: toPlatformUrl(routes.roadmaps),
     description: "Create Your Personalized Roadmap",
   },
   projects: {
     label: "Projects",
-    slug: "/projects",
+    slug: toPlatformUrl(routes.projects),
     description: "Build Real Life Projects with Peers",
   },
   shiksha: {
     label: "Shiksha",
-    slug: routes.shiksha,
+    slug: toPlatformUrl(routes.shiksha),
     description: "Learn Tech with Free Bite-sized Courses",
   },
   interviewPrep: {
     label: "Interview Prep",
-    slug: routes.interviewPrep,
+    slug: toPlatformUrl(routes.interviewPrep),
     description: "Prepare for Tech Interviews with Real Questions",
   },
   webinar: {
     label: "Webinar",
-    slug: routes.webinar,
+    slug: toPlatformUrl(routes.webinar),
     description: "Attend Free Webinars on Latest Technologies",
   },
   os: {
     label: "Open Source",
-    slug: routes.contribute,
+    slug: toPlatformUrl(routes.contribute),
     description: "Learn and Contribute with Open Source",
   },
   portfolio: {
     label: "Portfolio",
-    slug: routes.portfolio,
+    slug: toPlatformUrl(routes.portfolio),
     description: "Create Your Personal Portfolio Website",
   },
   youfocus: {
     label: "YouFocus",
-    slug: routes.youfocus,
+    slug: toPlatformUrl(routes.youfocus),
     description: "Learn Tech From YouTube with 0 Distractions",
   },
   unskilled: {
     label: "UnSkilled",
-    slug: routes.unskilled,
+    slug: toPlatformUrl(routes.unskilled),
     description: "Find Your Next Tech Job with Insights",
   },
   // PrepYatra - External Product
@@ -104,7 +105,7 @@ const products: ProductDataProps = {
 const cohorts: CohortDataProps = {
   bringYourIdea: {
     label: "Bring Your Idea",
-    slug: routes.cohort.bringYourIdea,
+    slug: toPlatformUrl(routes.cohort.bringYourIdea),
     description: "Build & Launch Your First Startup with Mentorship",
   },
 };

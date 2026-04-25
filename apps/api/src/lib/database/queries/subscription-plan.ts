@@ -91,6 +91,89 @@ export const listSubscriptionPlansFromDB =
     }
   };
 
+type SubscriptionPlanLean = {
+  planUuid?: string;
+  displayName?: string;
+  description?: string;
+  originalAmountInr?: number;
+  accessType?: "ONE_TIME" | "SUBSCRIPTION";
+  durationMonths?: number;
+  features?: string[];
+  isPopular?: boolean;
+  isActive?: boolean;
+  sortOrder?: number;
+};
+
+/**
+ * Merges DB row with request body so **omitted** optional fields keep existing values
+ * (partial API/admin payloads do not wipe catalog copy on edit).
+ * Explicit `""` or `[]` still clears (caller sent the key).
+ */
+export const mergeSubscriptionPlanFieldsForUpsert = (
+  existing: SubscriptionPlanLean | null,
+  p: SubscriptionPlanInput,
+  planKey: string,
+): {
+  productType: ProductType;
+  planKey: string;
+  planUuid: string;
+  displayName: string;
+  description: string;
+  amountInr: number;
+  originalAmountInr: number;
+  currency: string;
+  accessType: "ONE_TIME" | "SUBSCRIPTION";
+  durationMonths: number;
+  features: string[];
+  isPopular: boolean;
+  isActive: boolean;
+  sortOrder: number;
+} => {
+  const ex = existing;
+  const planUuid = (() => {
+    if (p.planUuid !== undefined) {
+      const t = p.planUuid.trim();
+      if (t.length > 0) {
+        return t.toLowerCase();
+      }
+    }
+    const prev = ex?.planUuid?.toString().trim();
+    if (prev) {
+      return prev.toLowerCase();
+    }
+    return resolveSubscriptionPlanUuid(p, planKey);
+  })();
+
+  return {
+    productType: p.productType,
+    planKey,
+    planUuid,
+    displayName:
+      p.displayName !== undefined ? p.displayName : (ex?.displayName ?? ""),
+    description:
+      p.description !== undefined ? p.description : (ex?.description ?? ""),
+    amountInr: p.amountInr,
+    originalAmountInr:
+      p.originalAmountInr !== undefined
+        ? p.originalAmountInr
+        : (ex?.originalAmountInr ?? 0),
+    currency: "INR",
+    accessType:
+      p.accessType !== undefined
+        ? p.accessType
+        : (ex?.accessType ?? "SUBSCRIPTION"),
+    durationMonths:
+      p.durationMonths !== undefined
+        ? p.durationMonths
+        : (ex?.durationMonths ?? 0),
+    features: p.features !== undefined ? p.features : (ex?.features ?? []),
+    isPopular:
+      p.isPopular !== undefined ? p.isPopular : (ex?.isPopular ?? false),
+    isActive: p.isActive !== undefined ? p.isActive : (ex?.isActive ?? true),
+    sortOrder: p.sortOrder !== undefined ? p.sortOrder : (ex?.sortOrder ?? 0),
+  };
+};
+
 export const upsertSubscriptionPlansInDB = async (
   plans: SubscriptionPlanInput[],
 ): Promise<DatabaseQueryResponseType> => {
@@ -99,41 +182,41 @@ export const upsertSubscriptionPlansInDB = async (
       return { error: "No plans provided" };
     }
 
-    const bulk = plans.map((p) => {
-      const planKey = normalizePlanKey(p.planKey);
-      const planUuid = resolveSubscriptionPlanUuid(p, planKey);
-      return {
-        updateOne: {
-          filter: { productType: p.productType, planKey },
-          update: {
-            $set: {
-              productType: p.productType,
-              planKey,
-              planUuid,
-              displayName: p.displayName ?? "",
-              description: p.description ?? "",
-              amountInr: p.amountInr,
-              originalAmountInr: p.originalAmountInr ?? 0,
-              currency: "INR",
-              accessType: p.accessType ?? "SUBSCRIPTION",
-              durationMonths: p.durationMonths ?? 0,
-              features: p.features ?? [],
-              isPopular: p.isPopular ?? false,
-              isActive: p.isActive ?? true,
-              sortOrder: p.sortOrder ?? 0,
-            },
-          },
-          upsert: true,
-        },
-      };
-    });
+    let matched = 0;
+    let modified = 0;
+    let upserted = 0;
 
-    const result = await SubscriptionPlan.bulkWrite(bulk, { ordered: false });
+    for (const p of plans) {
+      const planKey = normalizePlanKey(p.planKey);
+      const existing = await SubscriptionPlan.findOne({
+        productType: p.productType,
+        planKey,
+      }).lean<SubscriptionPlanLean | null>();
+
+      const $set = mergeSubscriptionPlanFieldsForUpsert(existing, p, planKey);
+
+      const res = await SubscriptionPlan.updateOne(
+        { productType: p.productType, planKey },
+        { $set },
+        { upsert: true },
+      );
+
+      if (res.matchedCount > 0) {
+        matched += 1;
+      }
+      if (res.modifiedCount > 0) {
+        modified += 1;
+      }
+      if (res.upsertedCount > 0) {
+        upserted += 1;
+      }
+    }
+
     return {
       data: {
-        matched: result.matchedCount,
-        modified: result.modifiedCount,
-        upserted: result.upsertedCount,
+        matched,
+        modified,
+        upserted,
       },
     };
   } catch (error) {
@@ -141,5 +224,26 @@ export const upsertSubscriptionPlansInDB = async (
       error: error instanceof Error ? error.message : String(error),
     });
     return { error: "Failed to upsert subscription plans" };
+  }
+};
+
+export const deleteSubscriptionPlanFromDB = async (
+  productType: ProductType,
+  planKey: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const key = normalizePlanKey(planKey);
+    const res = await SubscriptionPlan.deleteOne({ productType, planKey: key });
+    if (res.deletedCount === 0) {
+      return { data: { deleted: false } };
+    }
+    return { data: { deleted: true } };
+  } catch (error) {
+    logger.error("DB: deleteSubscriptionPlanFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      productType,
+      planKey,
+    });
+    return { error: "Failed to delete subscription plan" };
   }
 };

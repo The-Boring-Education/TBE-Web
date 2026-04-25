@@ -14,6 +14,7 @@ import {
   generatePaymentOrderId,
   sendAPIResponse,
 } from "@/lib/utils";
+import { rateLimit } from "@/lib/utils/rateLimit";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -72,6 +73,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Rate limit: 5 requests per minute per IP
+  const allowed = rateLimit(req, res, { maxRequests: 5, windowMs: 60_000 });
+  if (!allowed) return;
+
   try {
     const authenticatedUserId = getAuthenticatedUserIdFromBearer(req);
     if (!authenticatedUserId) {
