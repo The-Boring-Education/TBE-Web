@@ -5,6 +5,7 @@ import {
   LINKS,
   products,
   routes,
+  toPlatformUrl,
 } from "@tbe/constants";
 import type { FooterProps } from "@tbe/interface";
 import { useMemo } from "react";
@@ -80,20 +81,24 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
       },
     ],
     company: [
-      { name: "Contact", href: routes.contactUs, description: "Get in Touch" },
+      {
+        name: "Contact",
+        href: toPlatformUrl(routes.contactUs),
+        description: "Get in Touch",
+      },
       {
         name: "Terms & Conditions",
-        href: routes.termsAndConditions,
+        href: toPlatformUrl(routes.termsAndConditions),
         description: "Legal Terms",
       },
       {
         name: "Refund Policy",
-        href: routes.refund,
+        href: toPlatformUrl(routes.refund),
         description: "Refund Info",
       },
       {
         name: "Contribute to TBE",
-        href: routes.contribute,
+        href: toPlatformUrl(routes.contribute),
         description: "Learn and Contribute",
       },
     ],
