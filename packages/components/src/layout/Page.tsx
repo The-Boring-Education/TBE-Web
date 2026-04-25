@@ -1,5 +1,5 @@
 import { Footer, Navbar } from "@tbe/components";
-import { envConfig } from "@tbe/constants";
+import { envConfig, routes } from "@tbe/constants";
 import type { PageLayoutProps } from "@tbe/interface";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
@@ -33,6 +33,12 @@ const PageLayout = ({ children }: PageLayoutProps) => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [isClient, router.events]);
+
+  if (router.pathname === routes.checkout) {
+    return (
+      <main className="bg-lightBG flex min-h-screen flex-col">{children}</main>
+    );
+  }
 
   return (
     <main className="bg-lightBG flex flex-col min-h-screen">

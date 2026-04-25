@@ -12,7 +12,7 @@ import {
   sendRequest,
 } from "@tbe/utils";
 import { motion } from "framer-motion";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles, Tag, X } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -23,6 +23,35 @@ import {
   PREPYATRA_PRICING_TRUST_SIGNALS,
   PREPYATRA_PRODUCT_TYPE,
 } from "@/lib/prepYatraPricingConstants";
+
+const BANNER_DISMISSED_KEY = "prepYatra_pricing_coupon_banner_dismissed";
+
+type PricingBanner = {
+  code: string;
+  discountPercentage: number;
+  description: string;
+  expiryDate: string;
+  minimumAmount: number;
+};
+
+function formatTimeLeft(expiryIso: string): string {
+  const end = new Date(expiryIso).getTime();
+  const now = Date.now();
+  const diff = Math.max(0, end - now);
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  if (h >= 48) {
+    const d = Math.floor(h / 24);
+    return `${d} day${d !== 1 ? "s" : ""} left`;
+  }
+  if (h > 0) {
+    return `${h}h ${m}m left`;
+  }
+  if (m > 0) {
+    return `${m}m left`;
+  }
+  return "Ending soon";
+}
 
 const PrepYatraPricingPage = () => {
   const router = useRouter();
@@ -41,6 +70,8 @@ const PrepYatraPricingPage = () => {
   const [plans, setPlans] = useState<SubscriptionPlanCatalogRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pricingBanners, setPricingBanners] = useState<PricingBanner[]>([]);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   const productConfig = useMemo(
     () => getProductConfig(PREPYATRA_PRODUCT_TYPE),
@@ -48,6 +79,34 @@ const PrepYatraPricingPage = () => {
   );
 
   const showPricingContent = !loading && !error && plans.length > 0;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (sessionStorage.getItem(BANNER_DISMISSED_KEY) === "1") {
+        setBannerDismissed(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const res = await sendRequest({
+          method: "GET",
+          url: `${routes.api.couponPricingBanners}?productType=${encodeURIComponent(PREPYATRA_PRODUCT_TYPE)}`,
+        });
+        if (res.status && Array.isArray(res.data)) {
+          setPricingBanners(res.data as PricingBanner[]);
+        }
+      } catch {
+        setPricingBanners([]);
+      }
+    };
+    void fetchBanners();
+  }, []);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -93,9 +152,13 @@ const PrepYatraPricingPage = () => {
         return;
       }
       const returnToDashboard = `${window.location.origin}${routes.prepYatra.dashboard}`;
-      window.location.href = `${platformBase}${routes.checkout}?productType=${PREPYATRA_PRODUCT_TYPE}&productId=${planKey}&next=${encodeURIComponent(returnToDashboard)}`;
+      const primaryCoupon =
+        !bannerDismissed && pricingBanners[0]
+          ? `&coupon=${encodeURIComponent(pricingBanners[0].code)}`
+          : "";
+      window.location.href = `${platformBase}${routes.checkout}?productType=${PREPYATRA_PRODUCT_TYPE}&productId=${planKey}&next=${encodeURIComponent(returnToDashboard)}${primaryCoupon}`;
     },
-    [user],
+    [user, bannerDismissed, pricingBanners],
   );
 
   return (
@@ -120,6 +183,51 @@ const PrepYatraPricingPage = () => {
             Back
           </button>
         </div>
+
+        {pricingBanners.length > 0 && !bannerDismissed && (
+          <div className="max-w-4xl mx-auto px-4 pt-3">
+            <div className="relative flex items-start gap-3 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-3 pr-10 text-left">
+              <Tag
+                className="w-4 h-4 text-rose-300 shrink-0 mt-0.5"
+                aria-hidden
+              />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold text-rose-200">
+                  {pricingBanners[0].description}
+                </p>
+                <p className="text-[11px] text-rose-200/80 mt-1">
+                  Use code{" "}
+                  <span className="font-mono font-bold text-white">
+                    {pricingBanners[0].code}
+                  </span>{" "}
+                  for {pricingBanners[0].discountPercentage}% off ·{" "}
+                  {formatTimeLeft(pricingBanners[0].expiryDate)}
+                </p>
+                {pricingBanners[0].minimumAmount > 0 && (
+                  <p className="text-[10px] text-rose-200/60 mt-1">
+                    Min. order ₹
+                    {pricingBanners[0].minimumAmount.toLocaleString("en-IN")}
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    sessionStorage.setItem(BANNER_DISMISSED_KEY, "1");
+                  } catch {
+                    // ignore
+                  }
+                  setBannerDismissed(true);
+                }}
+                className="absolute top-2 right-2 p-1 rounded-md text-rose-300/80 hover:text-white hover:bg-white/10"
+                aria-label="Dismiss offer banner"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
 
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-rose-500/10 via-transparent to-transparent pointer-events-none" />

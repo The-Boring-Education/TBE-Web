@@ -16,6 +16,7 @@ interface CreateCouponRequest {
   maxUsage?: number;
   minimumAmount?: number;
   applicableProducts?: string[];
+  showOnPricingBanner?: boolean;
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -91,6 +92,7 @@ const handleCreateCoupon = async (
       maxUsage,
       minimumAmount = 0,
       applicableProducts = [],
+      showOnPricingBanner = false,
     }: CreateCouponRequest = req.body;
 
     // Basic validation
@@ -138,6 +140,7 @@ const handleCreateCoupon = async (
       maxUsage,
       minimumAmount,
       applicableProducts,
+      showOnPricingBanner,
       createdBy,
     };
 

@@ -51,6 +51,10 @@ const CouponSchema = new Schema<CouponModel>(
       default: 0,
       min: [0, "Minimum amount cannot be negative"],
     },
+    showOnPricingBanner: {
+      type: Boolean,
+      default: false,
+    },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: DATABASE_MODELS.USER,
