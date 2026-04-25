@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import mongoose from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -73,7 +74,21 @@ const adminMiddleware = async (
       return false;
     }
 
-    if (!adminHeader || adminHeader !== expectedSecret) {
+    if (
+      !adminHeader ||
+      typeof adminHeader !== "string" ||
+      adminHeader.length !== expectedSecret.length ||
+      !crypto.timingSafeEqual(
+        Buffer.from(adminHeader),
+        Buffer.from(expectedSecret),
+      )
+    ) {
+      logger.warn("Admin auth failed", {
+        ip:
+          (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
+          "unknown",
+        timestamp: new Date().toISOString(),
+      });
       res.status(apiStatusCodes.UNAUTHORIZED).json(
         sendAPIResponse({
           success: false,

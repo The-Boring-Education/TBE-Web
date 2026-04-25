@@ -82,14 +82,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    // Only enforce userId match if we have a valid token; otherwise allow public access
-    if (userId && sessionUserId && userId !== sessionUserId) {
-      return res.status(apiStatusCodes.FORBIDDEN).json(
-        sendAPIResponse({
-          status: false,
-          message: "Cannot fetch a quote for another user",
-        }),
-      );
+    // If userId is provided, require a valid token that matches
+    if (userId) {
+      if (!sessionUserId) {
+        return res.status(apiStatusCodes.UNAUTHORIZED).json(
+          sendAPIResponse({
+            status: false,
+            message: "Authentication required when userId is specified",
+          }),
+        );
+      }
+      if (userId !== sessionUserId) {
+        return res.status(apiStatusCodes.FORBIDDEN).json(
+          sendAPIResponse({
+            status: false,
+            message: "Cannot fetch a quote for another user",
+          }),
+        );
+      }
     }
 
     const resolved = await resolveAuthoritativeOrderAmount({
