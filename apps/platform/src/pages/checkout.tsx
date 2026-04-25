@@ -41,6 +41,36 @@ type PricingBannerRow = {
 const formatInr = (n: number) =>
   `₹${n.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 
+function formatShortDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return '';
+  }
+}
+
+function formatRelativeEnd(iso: string): string {
+  const end = new Date(iso).getTime();
+  const now = Date.now();
+  const diff = Math.max(0, end - now);
+  const d = Math.floor(diff / 86400000);
+  if (d >= 1) {
+    return `${d}d left`;
+  }
+  const h = Math.floor(diff / 3600000);
+  if (h >= 1) {
+    return `${h}h left`;
+  }
+  const m = Math.floor(diff / 60000);
+  return m > 0 ? `${m}m left` : 'Ending soon';
+}
+
 const QuoteSkeleton = () => (
   <div className='space-y-3 animate-pulse' aria-hidden>
     <div className='h-4 w-24 rounded bg-slate-200' />
@@ -82,6 +112,9 @@ const CheckoutPage = () => {
     baseAmount: number;
     finalAmount: number;
     couponCode?: string;
+    couponDescription?: string;
+    couponDiscountPercentage?: number;
+    couponMinimumAmount?: number;
   } | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [isQuoting, setIsQuoting] = useState(false);
@@ -134,14 +167,7 @@ const CheckoutPage = () => {
   }, [router.isReady, router.query.coupon]);
 
   useEffect(() => {
-    if (!router.isReady || !isSupported) return;
-    if (
-      !productType ||
-      !SUBSCRIPTION_PRODUCT_TYPES.includes(productType as ProductType)
-    ) {
-      setPricingBanners([]);
-      return;
-    }
+    if (!router.isReady || !isSupported || !productType) return;
     let cancelled = false;
     const run = async () => {
       setBannersError(false);
@@ -162,6 +188,15 @@ const CheckoutPage = () => {
       cancelled = true;
     };
   }, [router.isReady, isSupported, productType]);
+
+  const activeBannerMatch = useMemo(() => {
+    if (!coupon) return null;
+    return (
+      pricingBanners.find(
+        (b) => b.code.toUpperCase() === coupon.toUpperCase(),
+      ) ?? null
+    );
+  }, [coupon, pricingBanners]);
 
   const loadQuote = useCallback(async () => {
     if (!productType || !productId) return;
@@ -195,6 +230,9 @@ const CheckoutPage = () => {
       baseAmount: res.data.baseAmount,
       finalAmount: res.data.finalAmount,
       couponCode: res.data.couponCode,
+      couponDescription: res.data.couponDescription,
+      couponDiscountPercentage: res.data.couponDiscountPercentage,
+      couponMinimumAmount: res.data.couponMinimumAmount,
     });
   }, [productType, productId, coupon, user?.id]);
 
@@ -416,32 +454,41 @@ const CheckoutPage = () => {
                   </div>
                 </div>
 
-                <div>
+                <div className='rounded-xl border border-slate-200/90 bg-slate-50/80 p-4'>
                   <Text
                     level='h2'
-                    className='mb-2 text-sm font-semibold text-slate-800'
+                    className='mb-0.5 text-sm font-semibold text-slate-900'
                   >
-                    Coupon
+                    Discount code
                   </Text>
+                  <p className='mb-4 text-xs text-slate-500'>
+                    Enter a code below, or choose an available offer. Codes from
+                    your product&apos;s pricing page may appear here.
+                  </p>
+
                   <div className='flex flex-col gap-2 sm:flex-row sm:items-stretch'>
+                    <label className='sr-only' htmlFor='checkout-coupon-code'>
+                      Coupon code
+                    </label>
                     <input
+                      id='checkout-coupon-code'
                       type='text'
                       value={couponDraft}
                       onChange={(e) =>
                         setCouponDraft(e.target.value.toUpperCase())
                       }
-                      placeholder='Enter code'
-                      className='min-h-11 w-full flex-1 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                      placeholder='e.g. LAUNCH20'
+                      className='min-h-11 w-full min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20'
                       maxLength={20}
                       autoComplete='off'
                       name='coupon'
                     />
-                    <div className='flex gap-2'>
+                    <div className='flex gap-2 sm:shrink-0'>
                       <Button
                         type='button'
                         text='Apply'
-                        variant='SECONDARY'
-                        className='w-full min-h-11 sm:w-auto sm:shrink-0 sm:px-4'
+                        variant='PRIMARY'
+                        className='w-full min-h-11 min-w-[5.5rem] sm:w-auto sm:px-5'
                         onClick={() => void handleApplyCoupon()}
                         active
                       />
@@ -450,37 +497,146 @@ const CheckoutPage = () => {
                           type='button'
                           text='Remove'
                           variant='SECONDARY'
-                          className='w-full min-h-11 sm:w-auto sm:shrink-0 sm:px-4'
+                          className='w-full min-h-11 min-w-[4.5rem] sm:w-auto sm:px-3'
                           onClick={() => void handleRemoveCoupon()}
                           active
                         />
                       ) : null}
                     </div>
                   </div>
-                  {productType &&
-                    SUBSCRIPTION_PRODUCT_TYPES.includes(
-                      productType as ProductType,
-                    ) &&
-                    pricingBanners.length > 0 && (
-                      <div className='mt-3 flex flex-wrap gap-2'>
-                        {pricingBanners.map((b) => (
-                          <button
-                            key={b.code}
-                            type='button'
-                            onClick={() => {
-                              setCouponDraft(b.code);
-                              setCouponInUrl(b.code);
-                            }}
-                            className='rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-900 transition-colors hover:bg-indigo-100'
-                          >
-                            {b.code} · {b.discountPercentage}%
-                          </button>
-                        ))}
-                      </div>
-                    )}
+
+                  {quote?.couponCode && (
+                    <div
+                      className='mt-4 rounded-lg border border-emerald-200 bg-emerald-50/90 p-3'
+                      role='status'
+                    >
+                      <p className='text-xs font-semibold uppercase tracking-wide text-emerald-800'>
+                        Applied
+                      </p>
+                      <p className='mt-1 text-sm font-semibold text-slate-900'>
+                        {quote.couponDescription ||
+                          activeBannerMatch?.description ||
+                          `Coupon ${quote.couponCode}`}
+                      </p>
+                      <dl className='mt-2 space-y-1 text-xs text-emerald-900/90'>
+                        <div className='flex flex-wrap justify-between gap-x-4 gap-y-0.5'>
+                          <dt className='text-emerald-800/80'>Code</dt>
+                          <dd className='font-mono font-semibold text-slate-900'>
+                            {quote.couponCode}
+                          </dd>
+                        </div>
+                        {(quote.couponDiscountPercentage != null ||
+                          activeBannerMatch) && (
+                          <div className='flex flex-wrap justify-between gap-x-4 gap-y-0.5'>
+                            <dt className='text-emerald-800/80'>Discount</dt>
+                            <dd className='font-medium'>
+                              {quote.couponDiscountPercentage ??
+                                activeBannerMatch?.discountPercentage}
+                              % off list price
+                            </dd>
+                          </div>
+                        )}
+                        {(quote.couponMinimumAmount != null &&
+                          quote.couponMinimumAmount > 0) ||
+                        (activeBannerMatch != null &&
+                          activeBannerMatch.minimumAmount > 0) ? (
+                          <div className='flex flex-wrap justify-between gap-x-4 gap-y-0.5'>
+                            <dt className='text-emerald-800/80'>
+                              Minimum order
+                            </dt>
+                            <dd className='font-medium'>
+                              {formatInr(
+                                quote.couponMinimumAmount ??
+                                  activeBannerMatch?.minimumAmount ??
+                                  0,
+                              )}
+                            </dd>
+                          </div>
+                        ) : null}
+                      </dl>
+                      {quote.couponCode &&
+                        quote.baseAmount === quote.finalAmount && (
+                          <p className='mt-2 rounded-md bg-amber-100/80 px-2 py-1.5 text-xs text-amber-950'>
+                            No discount on this order — usually the cart total
+                            is below the code&apos;s minimum, or the code
+                            doesn&apos;t apply to this plan. You can still pay
+                            the list price.
+                          </p>
+                        )}
+                    </div>
+                  )}
+
+                  {pricingBanners.length > 0 && (
+                    <div className='mt-4'>
+                      <p className='mb-2 text-xs font-medium text-slate-600'>
+                        Available offers
+                      </p>
+                      <ul className='space-y-2'>
+                        {pricingBanners.map((b) => {
+                          const isActive =
+                            coupon?.toUpperCase() === b.code.toUpperCase();
+                          return (
+                            <li
+                              key={b.code}
+                              className={`rounded-lg border p-3 transition-colors ${
+                                isActive
+                                  ? 'border-indigo-300 bg-indigo-50/80'
+                                  : 'border-slate-200 bg-white'
+                              }`}
+                            >
+                              <p className='text-sm font-medium leading-snug text-slate-900'>
+                                {b.description?.trim() ||
+                                  `${b.discountPercentage}% off your order`}
+                              </p>
+                              <div className='mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-600'>
+                                <span>
+                                  Code:{' '}
+                                  <code className='rounded bg-slate-100 px-1 py-0.5 font-mono font-semibold text-slate-900'>
+                                    {b.code}
+                                  </code>
+                                </span>
+                                <span className='text-slate-500'>·</span>
+                                <span>{b.discountPercentage}% off</span>
+                                <span className='text-slate-500'>·</span>
+                                <span
+                                  className='text-slate-600'
+                                  title={formatShortDate(b.expiryDate)}
+                                >
+                                  {formatRelativeEnd(b.expiryDate)} (
+                                  {formatShortDate(b.expiryDate)})
+                                </span>
+                                {b.minimumAmount > 0 && (
+                                  <>
+                                    <span className='text-slate-500'>·</span>
+                                    <span>
+                                      Min. {formatInr(b.minimumAmount)}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                              <button
+                                type='button'
+                                onClick={() => {
+                                  setCouponDraft(b.code);
+                                  setCouponInUrl(b.code);
+                                }}
+                                className='mt-3 w-full rounded-lg border border-indigo-200 bg-indigo-600/10 py-2 text-xs font-semibold text-indigo-900 transition hover:bg-indigo-600/20 sm:w-auto sm:px-4'
+                              >
+                                {isActive
+                                  ? 'Selected — re-apply to refresh'
+                                  : 'Use this offer'}
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )}
+
                   {bannersError ? (
-                    <p className='mt-1 text-xs text-slate-400'>
-                      Offers list unavailable
+                    <p className='mt-3 text-xs text-slate-500'>
+                      Couldn&apos;t load current offers. You can still enter a
+                      code manually.
                     </p>
                   ) : null}
                 </div>
@@ -514,7 +670,9 @@ const CheckoutPage = () => {
                         {quote.baseAmount > quote.finalAmount ? (
                           <>
                             <div className='flex items-baseline justify-between text-sm'>
-                              <span className='text-slate-500'>List price</span>
+                              <span className='text-slate-500'>
+                                Subtotal (list price)
+                              </span>
                               <span className='text-slate-400 line-through'>
                                 {formatInr(quote.baseAmount)}
                               </span>
@@ -528,11 +686,6 @@ const CheckoutPage = () => {
                               </span>
                             </div>
                           </>
-                        ) : null}
-                        {quote.couponCode ? (
-                          <div className='rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-900 ring-1 ring-emerald-100'>
-                            Coupon &ldquo;{quote.couponCode}&rdquo; applied
-                          </div>
                         ) : null}
                         <div className='flex items-end justify-between border-t border-slate-100 pt-3'>
                           <span className='text-sm font-medium text-slate-600'>

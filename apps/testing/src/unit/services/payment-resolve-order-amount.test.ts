@@ -76,4 +76,32 @@ describe("resolveAuthoritativeOrderAmount guardrails", () => {
       expect(result.error).toContain(productType);
     }
   });
+
+  it("returns coupon marketing fields on subscription quote when coupon applies", async () => {
+    mockGetSubscriptionPlanPriceFromDB.mockResolvedValue(1000);
+    mockValidateCouponForProductFromDB.mockResolvedValue({
+      data: {
+        _id: { toString: () => "coupon_id" },
+        code: "LAUNCH20",
+        description: "Launch week — 20% off",
+        discountPercentage: 20,
+        minimumAmount: 500,
+        applicableProducts: ["lifetime"],
+      },
+    });
+
+    const result = await resolveAuthoritativeOrderAmount({
+      productType: "DSA_YATRA",
+      productId: "lifetime",
+      couponCode: "LAUNCH20",
+    });
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.couponCode).toBe("LAUNCH20");
+      expect(result.data.couponDescription).toBe("Launch week — 20% off");
+      expect(result.data.couponDiscountPercentage).toBe(20);
+      expect(result.data.couponMinimumAmount).toBe(500);
+    }
+  });
 });
