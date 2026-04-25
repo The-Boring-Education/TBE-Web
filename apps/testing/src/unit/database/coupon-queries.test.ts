@@ -65,12 +65,8 @@ const {
       mockFindByIdInner(...args);
       return mockFindByIdInner._mockReturn;
     },
-    findByIdAndUpdate: (...args: unknown[]) => {
-      mockFindByIdAndUpdateInner(...args);
-      return {
-        populate: updatePopulate,
-      };
-    },
+    findByIdAndUpdate: (...args: unknown[]) =>
+      mockFindByIdAndUpdateInner(...args),
     findByIdAndDelete: (...args: unknown[]) => {
       mockFindByIdAndDeleteInner(...args);
       return mockFindByIdAndDeleteInner._mockReturn;
@@ -413,7 +409,7 @@ describe("incrementCouponUsageFromDB", () => {
       { $inc: { currentUsage: 1 } },
       { new: true },
     );
-    expect(result.error).toBeTruthy();
+    expect(result.error).toBe("Coupon not found");
   });
 });
 
