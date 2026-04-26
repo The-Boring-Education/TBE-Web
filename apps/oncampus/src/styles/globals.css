@@ -8,6 +8,15 @@
   html {
     @apply scroll-smooth;
   }
+
+  /* Smooth transitions for theme changes */
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html:not(.dark) {
+    color-scheme: light;
+  }
 }
 
 /* Custom Classes */
@@ -55,44 +64,44 @@
 
   /* 2. Fonts */
   .heading-1 {
-    @apply text-4xl md:text-5xl lg:text-6xl font-black text-contentLight;
+    @apply text-4xl md:text-5xl lg:text-6xl font-black text-contentLight dark:text-contentDark;
   }
 
   .heading-2 {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-contentLight;
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-contentLight dark:text-contentDark;
   }
 
   .heading-3 {
-    @apply text-2xl md:text-3xl lg:text-4xl font-bold text-contentLight;
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold text-contentLight dark:text-contentDark;
   }
 
   .heading-4,
   .md-1 {
-    @apply text-xl md:text-2xl lg:text-3xl font-semibold text-contentLight;
+    @apply text-xl md:text-2xl lg:text-3xl font-semibold text-contentLight dark:text-contentDark;
   }
 
   .heading-5 {
-    @apply text-lg md:text-xl lg:text-2xl font-semibold text-contentLight;
+    @apply text-lg md:text-xl lg:text-2xl font-semibold text-contentLight dark:text-contentDark;
   }
 
   .subtitle {
-    @apply text-subtitle font-normal text-contentLight;
+    @apply text-subtitle font-normal text-contentLight dark:text-contentDark;
   }
 
   .paragraph {
-    @apply text-paragraph font-normal text-contentLight;
+    @apply text-paragraph font-normal text-contentLight dark:text-contentDark;
   }
 
   .strong-text {
-    @apply text-strong-text font-semibold text-contentLight;
+    @apply text-strong-text font-semibold text-contentLight dark:text-contentDark;
   }
 
   .pre-title {
-    @apply text-pre-title font-normal text-contentLight;
+    @apply text-pre-title font-normal text-contentLight dark:text-contentDark;
   }
 
   .button-text {
-    @apply text-button-text font-bold text-contentLight;
+    @apply text-button-text font-bold text-contentLight dark:text-contentDark;
   }
 
   .label {
@@ -101,11 +110,11 @@
 
   /* Link */
   .link {
-    @apply text-button-text text-contentLight;
+    @apply text-button-text text-contentLight dark:text-contentDark;
   }
 
   .button {
-    @apply rounded-1 text-button-text font-bold text-contentLight;
+    @apply rounded-1 text-button-text font-bold text-contentLight dark:text-contentDark;
   }
 
   .disabled {
@@ -117,7 +126,7 @@
   }
 
   .error {
-    @apply text-grey text-contentLight font-semibold;
+    @apply text-grey text-contentLight dark:text-contentDark font-semibold;
   }
 
   .text-accent {

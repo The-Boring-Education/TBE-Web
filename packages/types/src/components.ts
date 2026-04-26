@@ -1143,6 +1143,7 @@ export interface MainNavbarProps {
   compact?: boolean;
   onSignOut?: () => void;
   userId?: string;
+  showThemeToggle?: boolean;
 }
 
 export type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";

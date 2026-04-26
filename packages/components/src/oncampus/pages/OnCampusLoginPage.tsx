@@ -10,8 +10,8 @@ import Navbar from "../../layout/Navbar";
 export default function OnCampusLoginPage() {
   return (
     <Fragment>
-      <Navbar variant="oncampus" theme="dark" />
-      <div className="bg-[#0A0A0A] pt-20 min-h-screen">
+      <Navbar variant="oncampus" theme="dark" showThemeToggle />
+      <div className="bg-white dark:bg-[#0A0A0A] pt-20 min-h-screen transition-colors duration-300">
         <LoginCardNew variant="oncampus" theme="dark" />
       </div>
       <Footer variant="oncampus" />

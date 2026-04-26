@@ -18,6 +18,7 @@ export type {
   LeaderboardEntry as CommonLeaderboardEntry,
   QuizCategory as CommonQuizCategory,
   GamificationAction,
+  Theme,
   TrackEventProps,
   UserPoints,
 } from "./common";

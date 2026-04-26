@@ -91,7 +91,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </div>
 
       <SidebarInset className="flex min-h-svh flex-col bg-[#0f0f0f] text-white">
-        <Navbar variant="oncampus" theme="dark" />
+        <Navbar variant="oncampus" theme="dark" showThemeToggle />
         <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col px-3 pt-[72px] pb-[calc(8rem+env(safe-area-inset-bottom,0px))] sm:px-5 lg:px-6 lg:pb-8 lg:pt-[72px] xl:px-8">
           {children}
         </div>

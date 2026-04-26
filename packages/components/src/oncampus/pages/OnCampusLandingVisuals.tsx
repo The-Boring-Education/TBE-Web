@@ -61,14 +61,14 @@ export const OnCampusFeatureSection = ({
       <span className="inline-block rounded-full border border-[#ff5757]/30 bg-[#ff5757]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#ff8f8f]">
         {eyebrow}
       </span>
-      <h3 className="mt-3 text-2xl font-bold leading-tight text-white sm:text-3xl">
+      <h3 className="mt-3 text-2xl font-bold leading-tight text-black dark:text-white sm:text-3xl">
         {title}
       </h3>
-      <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/65 sm:text-base">
+      <p className="mt-3 max-w-lg text-sm leading-relaxed text-black/65 dark:text-white/65 sm:text-base">
         {description}
       </p>
       {subheadingLines.length ? (
-        <ul className="mt-4 inline-flex flex-col space-y-3 text-left text-gray-300">
+        <ul className="mt-4 inline-flex flex-col space-y-3 text-left text-gray-700 dark:text-gray-300">
           {subheadingLines.slice(0, 3).map((line) => (
             <li key={line} className="flex items-center gap-3">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
@@ -86,7 +86,9 @@ export const OnCampusFeatureSection = ({
                   />
                 </svg>
               </div>
-              <span className="text-sm text-white/75">{line}</span>
+              <span className="text-sm text-black/75 dark:text-white/75">
+                {line}
+              </span>
             </li>
           ))}
         </ul>

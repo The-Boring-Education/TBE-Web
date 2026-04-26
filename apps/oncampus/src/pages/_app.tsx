@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import "@/styles/colors.css";
 
 import { AuthProvider } from "@tbe/auth";
+import { ThemeProvider } from "@tbe/components";
 import {
   initGA,
   installGlobalAnalyticsListeners,
@@ -72,7 +73,7 @@ const AppContent = ({
       {isPricingRoute ? (
         pageContent
       ) : (
-        <div className="bg-[#0A0A0A] min-h-screen">
+        <div className="bg-white dark:bg-[#0A0A0A] min-h-screen transition-colors duration-300">
           {shouldUseDashboardLayout ? (
             <DashboardLayout>{pageContent}</DashboardLayout>
           ) : (
@@ -93,8 +94,10 @@ const OnCampusApp = ({ Component, pageProps }: AppProps) => {
       </Head>
       <AuthProvider>
         <TBEQueryProvider>
-          <OnboardingCheck />
-          <AppContent Component={Component} pageProps={pageProps} />
+          <ThemeProvider defaultTheme="dark" storageKey="tbe-theme">
+            <OnboardingCheck />
+            <AppContent Component={Component} pageProps={pageProps} />
+          </ThemeProvider>
         </TBEQueryProvider>
         <Toaster position="top-center" richColors />
       </AuthProvider>

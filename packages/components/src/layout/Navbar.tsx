@@ -27,6 +27,7 @@ import {
   PopoverContainer,
   ProductLogo,
   Text,
+  ThemeToggle,
   UserAvatar,
   UserPointButton,
 } from "..";
@@ -61,6 +62,7 @@ const Navbar = ({
   showBackButton = false,
   backButtonHref = "/",
   compact = false,
+  showThemeToggle = false,
 }: MainNavbarProps = {}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
@@ -103,6 +105,9 @@ const Navbar = ({
   const getBackgroundClass = () => {
     if (variant === "transparent") {
       return "glass-dark backdrop-blur-md";
+    }
+    if (showThemeToggle) {
+      return "bg-white dark:bg-black transition-colors duration-300";
     }
     if (theme === "dark") {
       return "bg-black";
@@ -188,6 +193,7 @@ const Navbar = ({
         {shouldUseCustomActions ? (
           <>
             <div className="flex lg:hidden gap-[8px] items-center">
+              {showThemeToggle && <ThemeToggle />}
               {requiresAuth && (
                 <UserAvatar dashboardRoute={finalDashboardRoute} />
               )}
@@ -207,6 +213,7 @@ const Navbar = ({
               {customActions.map((action: React.ReactNode, index: number) => (
                 <div key={index}>{action}</div>
               ))}
+              {showThemeToggle && <ThemeToggle />}
               {requiresAuth && showNotifications && <NotificationPopover />}
               {/* {showGamification && <UserPointButton />} */}
               {requiresAuth && <LoginRedirectButton text="Login" />}
@@ -218,6 +225,7 @@ const Navbar = ({
         ) : (
           <>
             <div className="flex lg:hidden gap-[8px] items-center">
+              {showThemeToggle && <ThemeToggle />}
               {requiresAuth && showNotifications && <NotificationPopover />}
               {showGamification && <UserPointButton />}
               {requiresAuth && (
@@ -290,6 +298,7 @@ const Navbar = ({
                   </PopoverContainer>
                 )}
 
+                {showThemeToggle && <ThemeToggle />}
                 {requiresAuth && showNotifications && <NotificationPopover />}
                 {showGamification && <UserPointButton />}
                 {requiresAuth && <LoginRedirectButton text="Login" />}

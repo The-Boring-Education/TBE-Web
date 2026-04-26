@@ -105,6 +105,7 @@ export { DifficultyQuestionList, QuestionRow } from "./common/QuestionList";
 export type { ResourceTooltipProps } from "./common/ResourceTooltip";
 export { default as ResourceTooltip } from "./common/ResourceTooltip";
 export { default as TabComponent } from "./common/Tab";
+export { ThemeProvider, ThemeToggle, useTheme } from "./common/ThemeToggle";
 export { default as Toast } from "./common/Toast";
 export { default as Link } from "./common/Typography/Link";
 export { default as Text } from "./common/Typography/Text";

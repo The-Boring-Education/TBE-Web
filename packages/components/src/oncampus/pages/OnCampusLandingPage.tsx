@@ -33,16 +33,18 @@ export default function OnCampusLandingPage() {
 
   return (
     <Fragment>
-      <Navbar variant="oncampus" theme="dark" />
-      <main className="dark min-h-screen bg-[#0A0A0A] pt-20 text-white">
+      <Navbar variant="oncampus" theme="dark" showThemeToggle />
+      <main className="min-h-screen bg-white dark:bg-[#0A0A0A] pt-20 text-black dark:text-white transition-colors duration-300">
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 md:py-24">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
             <div className="space-y-3 text-left">
               <h1 className="text-4xl font-bold leading-tight md:text-4xl lg:text-4xl">
-                <span className="text-white">Advance Your Career with </span>
+                <span className="text-black dark:text-white">
+                  Advance Your Career with{" "}
+                </span>
                 <span className="text-[#FF5757]">OnCampus</span>
               </h1>
-              <p className="text-sm leading-relaxed text-white/70">
+              <p className="text-sm leading-relaxed text-black/70 dark:text-white/70">
                 Prepare smarter for placements with guided aptitude, quizzes,
                 interview prep, and resume resources in one focused dashboard.
               </p>
@@ -56,7 +58,7 @@ export default function OnCampusLandingPage() {
                   animationType="BOUNCE"
                 />
               </div>
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-black/40 dark:text-white/40">
                 Built for campus schedules
               </p>
             </div>
@@ -121,10 +123,10 @@ export default function OnCampusLandingPage() {
 
         <section className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
           <h2 className="text-center text-2xl font-semibold sm:text-3xl">
-            <span className="text-white">What’s </span>
+            <span className="text-black dark:text-white">What’s </span>
             <span className="text-[#FF5757]">Coming Soon</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-white/65 sm:text-base">
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-black/65 dark:text-white/65 sm:text-base">
             Upcoming additions to OnCampus. Subtle preview only, full modules
             are rolling out in phases.
           </p>
