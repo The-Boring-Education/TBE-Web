@@ -50,6 +50,12 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Custom colors for TBE */
+    --tbe-bg-light: 0 0% 97%;
+    --tbe-content-light: 240 4% 10%;
+    --tbe-grey-dark: 0 0% 45%;
+    --tbe-grey-light: 0 0% 89%;
   }
 
   .dark {
@@ -88,6 +94,12 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Custom colors for TBE - Dark mode mapping */
+    --tbe-bg-light: 222.2 84% 7%;
+    --tbe-content-light: 210 40% 98%;
+    --tbe-grey-dark: 215 20.2% 65.1%;
+    --tbe-grey-light: 217.2 32.6% 17.5%;
   }
 }
 

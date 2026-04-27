@@ -4,9 +4,10 @@ import "@/styles/globals.css";
 import { AuthProvider } from "@tbe/auth";
 import {
   RadixToaster,
-  Toaster as SonnerToaster,
+  SonnerToaster,
   TooltipProvider,
 } from "@tbe/components/ui";
+import { ThemeProvider } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -47,10 +48,12 @@ export default function App({ Component, pageProps }: AppProps) {
       <AuthProvider>
         <TBEQueryProvider>
           <TooltipProvider>
-            <OnboardingCheck />
-            <RadixToaster />
-            <SonnerToaster />
-            <Component {...pageProps} />
+            <ThemeProvider>
+              <OnboardingCheck />
+              <RadixToaster />
+              <SonnerToaster />
+              <Component {...pageProps} />
+            </ThemeProvider>
           </TooltipProvider>
         </TBEQueryProvider>
       </AuthProvider>

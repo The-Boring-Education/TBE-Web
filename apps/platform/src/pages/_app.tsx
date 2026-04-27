@@ -12,7 +12,7 @@ import {
 // import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
 import { envConfig, routes } from '@tbe/constants';
 import { GamificationProvider } from '@tbe/gamification';
-import { useUser } from '@tbe/hooks';
+import { ThemeProvider, useUser } from '@tbe/hooks';
 import { TBEQueryProvider } from '@tbe/query';
 import { getRedirectUrl } from '@tbe/utils';
 import type { AppProps } from 'next/app';
@@ -129,11 +129,13 @@ const AppContent = ({
 
   return (
     <TBEQueryProvider>
-      <GamificationProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </GamificationProvider>
+      <ThemeProvider>
+        <GamificationProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </GamificationProvider>
+      </ThemeProvider>
     </TBEQueryProvider>
   );
 };

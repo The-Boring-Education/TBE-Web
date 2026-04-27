@@ -5,15 +5,47 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
 @layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --primary: 0 100% 67.1%;
+    --primary-foreground: 0 0% 100%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --tbe-bg-light: 0 0% 97%;
+    --tbe-content-light: 240 4% 10%;
+    --tbe-grey-dark: 0 0% 45%;
+    --tbe-grey-light: 0 0% 89%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --tbe-bg-light: 222.2 84% 7%;
+    --tbe-content-light: 210 40% 98%;
+    --tbe-grey-dark: 215 20.2% 65.1%;
+    --tbe-grey-light: 217.2 32.6% 17.5%;
+  }
+
   html {
     @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
   }
 }
 
 /* Custom Classes */
 @layer components {
   body {
-    @apply scroll-smooth font-primary;
+    @apply scroll-smooth font-primary overflow-x-hidden;
   }
 
   /* 1. Gradients */

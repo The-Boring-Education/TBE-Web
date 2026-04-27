@@ -15,7 +15,7 @@ const CardContainerA = ({
   subtext,
   theme = "light",
 }: CardContainerAProps) => (
-  <Section className={theme === "dark" ? "bg-[#0A0A0A]" : ""}>
+  <Section className="bg-background transition-colors duration-300">
     <FlexContainer className="gap-4" direction="col">
       <SectionHeaderContainer
         focusText={focusText || ""}

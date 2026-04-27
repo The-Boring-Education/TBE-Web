@@ -9,7 +9,7 @@ import {
   trackPageview,
 } from "@tbe/components/analytics";
 import { GamificationProvider } from "@tbe/gamification";
-import { useUser } from "@tbe/hooks";
+import { ThemeProvider, useUser } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -72,7 +72,7 @@ const AppContent = ({
       {isPricingRoute ? (
         pageContent
       ) : (
-        <div className="bg-[#0A0A0A] min-h-screen">
+        <div className="bg-background text-foreground min-h-screen transition-colors duration-300">
           {shouldUseDashboardLayout ? (
             <DashboardLayout>{pageContent}</DashboardLayout>
           ) : (
@@ -93,8 +93,10 @@ const OnCampusApp = ({ Component, pageProps }: AppProps) => {
       </Head>
       <AuthProvider>
         <TBEQueryProvider>
-          <OnboardingCheck />
-          <AppContent Component={Component} pageProps={pageProps} />
+          <ThemeProvider>
+            <OnboardingCheck />
+            <AppContent Component={Component} pageProps={pageProps} />
+          </ThemeProvider>
         </TBEQueryProvider>
         <Toaster position="top-center" richColors />
       </AuthProvider>

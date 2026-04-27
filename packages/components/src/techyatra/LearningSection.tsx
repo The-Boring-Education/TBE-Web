@@ -93,13 +93,13 @@ const LearningSection = () => {
   ];
 
   return (
-    <section className="px-4 py-20 bg-lightBG">
+    <section className="px-4 py-20 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-contentLight via-primary to-secondary bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground/90">
             Learn Tech for Free
           </h2>
-          <p className="text-lg text-greyDark max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Master programming and ace interviews with our comprehensive free
             courses and prep sheets
           </p>
@@ -135,15 +135,17 @@ const LearningSection = () => {
                       {course.duration}
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl text-contentLight">
+                  <CardTitle className="text-xl text-foreground">
                     {course.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-greyDark mb-4">{course.description}</p>
+                  <p className="text-muted-foreground mb-4">
+                    {course.description}
+                  </p>
 
                   <div className="mb-4">
-                    <h5 className="font-semibold text-contentLight mb-2 text-sm">
+                    <h5 className="font-semibold text-foreground/80 mb-2 text-sm">
                       What you'll learn:
                     </h5>
                     <div className="flex flex-wrap gap-2">

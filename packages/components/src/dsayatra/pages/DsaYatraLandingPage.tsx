@@ -22,27 +22,7 @@ export type DsaYatraLandingPageProps = Pick<PageProps, "seoMeta">;
  */
 export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
   return (
-    <main
-      className="dark min-h-screen w-full bg-dark text-contentDark
-      [&_.bg-white]:!bg-[#19191B]
-      [&_.border-gray-200]:!border-[#333333]
-      [&_.text-gray-800]:!text-contentDark
-      [&_.text-gray-700]:!text-grey
-      [&_.text-gray-600]:!text-grey
-      [&_.text-gray-500]:!text-greyDark
-      [&_.from-white]:!from-dark
-      [&_.to-\\[\\#f0faff\\]]:!to-[#19191B]
-      [&_section]:!bg-transparent
-      [&_h1]:!text-contentDark
-      [&_h2.text-primary]:!text-primary
-      [&_h2:not(.text-primary)]:!text-contentDark
-      [&_h3]:!text-contentDark
-      [&_h4]:!text-contentDark
-      [&_h5]:!text-contentDark
-      [&_h6]:!text-contentDark
-      [&_.text-contentLight]:!text-contentDark
-      [&_.text-greyDark]:!text-grey"
-    >
+    <main className="min-h-screen w-full bg-background text-foreground transition-colors duration-300">
       <SEO seoMeta={seoMeta} />
 
       <LandingPageHero
@@ -63,7 +43,6 @@ export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
           heading: "Stop Grinding Random",
           focusText: "LeetCode Questions",
         }}
-        theme="dark"
       />
 
       <TailorYourJourney
@@ -98,15 +77,10 @@ export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
           focusText="DSA Yatra?"
           heading="Why Choose"
           subtext="We make data structures and algorithms less boring and more effective."
-          theme="dark"
         />
       </div>
 
-      <FAQSection
-        faqs={DSA_YATRA_FAQS}
-        heading="Common Questions"
-        theme="dark"
-      />
+      <FAQSection faqs={DSA_YATRA_FAQS} heading="Common Questions" />
     </main>
   );
 }

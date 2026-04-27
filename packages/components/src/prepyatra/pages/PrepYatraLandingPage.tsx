@@ -33,7 +33,7 @@ export function PrepYatraLandingPage({ seoMeta }: PrepYatraLandingPageProps) {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <main className="min-h-screen w-full bg-white text-contentLight">
+      <main className="min-h-screen w-full bg-background text-foreground transition-colors duration-300">
         <Navbar variant="prepyatra" />
         <InstallButton />
 
@@ -56,7 +56,6 @@ export function PrepYatraLandingPage({ seoMeta }: PrepYatraLandingPageProps) {
               heading: "Master Your",
               focusText: "Interview Prep",
             }}
-            theme="light"
           />
         </div>
 
@@ -69,7 +68,6 @@ export function PrepYatraLandingPage({ seoMeta }: PrepYatraLandingPageProps) {
                 focusText="Prep Yatra?"
                 heading="Why Choose"
                 subtext="Everything you need to organize your preparation and land your dream job."
-                theme="light"
               />
               <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
                 <Marquee
@@ -80,18 +78,14 @@ export function PrepYatraLandingPage({ seoMeta }: PrepYatraLandingPageProps) {
                 />
 
                 {/* Add a fade effect on edges for a better marquee look */}
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-1/12 bg-gradient-to-r from-white dark:from-background" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-1/12 bg-gradient-to-l from-white dark:from-background" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-1/12 bg-gradient-to-r from-background to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-1/12 bg-gradient-to-l from-background to-transparent" />
               </div>
             </FlexContainer>
           </Section>
         </div>
 
-        <FAQSection
-          faqs={PREP_YATRA_FAQS}
-          heading="Common Questions"
-          theme="light"
-        />
+        <FAQSection faqs={PREP_YATRA_FAQS} heading="Common Questions" />
 
         <Footer variant="prepyatra" />
       </main>

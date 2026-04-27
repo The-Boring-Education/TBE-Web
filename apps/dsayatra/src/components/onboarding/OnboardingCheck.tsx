@@ -23,7 +23,7 @@ export const OnboardingCheck = () => {
 
   if (isChecking) {
     return (
-      <div className="fixed inset-0 bg-white z-[9999] flex items-center justify-center">
+      <div className="fixed inset-0 bg-background z-[9999] flex items-center justify-center transition-colors duration-300">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
       </div>
     );

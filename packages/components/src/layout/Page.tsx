@@ -1,13 +1,14 @@
-import { Footer, Navbar } from "@tbe/components";
+import { FlexContainer, Footer, Navbar } from "@tbe/components";
 import { envConfig } from "@tbe/constants";
+import { useThemeProvider } from "@tbe/hooks";
 import type { PageLayoutProps } from "@tbe/interface";
-import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const PageLayout = ({ children }: PageLayoutProps) => {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
+  const { isMounted } = useThemeProvider();
 
   useEffect(() => {
     setIsClient(true);
@@ -35,19 +36,16 @@ const PageLayout = ({ children }: PageLayoutProps) => {
   }, [isClient, router.events]);
 
   return (
-    <main className="bg-lightBG flex flex-col min-h-screen">
+    <FlexContainer
+      as="main"
+      className={`bg-background text-foreground transition-colors duration-300 flex flex-col min-h-screen ${
+        !isMounted ? "invisible" : ""
+      }`}
+    >
       <Navbar />
-      <motion.div
-        animate={{ opacity: 1, scale: 1 }}
-        className="flex-1 pt-20"
-        exit={{ opacity: 0, scale: 0.98 }}
-        initial={{ opacity: 0, scale: 0.98 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-      >
-        {children}
-      </motion.div>
+      <div className="flex-1 pt-20">{children}</div>
       <Footer />
-    </main>
+    </FlexContainer>
   );
 };
 

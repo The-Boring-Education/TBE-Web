@@ -175,10 +175,10 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
 
   if (sheetsLoading || userLoading) {
     return (
-      <div className="flex bg-[#0f0f0f] font-sans h-[calc(100vh-72px)]">
+      <div className="flex bg-background text-foreground transition-colors duration-300 font-sans h-[calc(100vh-72px)]">
         <main className="flex-1 flex items-center justify-center">
-          <LoadingSpinner height={4} width={4} borderColour="white" />
-          <Text level="p" className="text-gray-400 ml-3">
+          <LoadingSpinner height={4} width={4} borderColour="gray" />
+          <Text level="p" className="text-muted-foreground ml-3">
             Loading Revisions...
           </Text>
         </main>
@@ -196,7 +196,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
         </Head>
         <FlexContainer
           direction="col"
-          className="flex-1 min-h-screen w-full bg-[#0f0f0f] mt-0 font-sans px-4 sm:px-8 py-8 pb-24 lg:pb-8"
+          className="flex-1 min-h-screen w-full bg-background mt-0 font-sans px-4 sm:px-8 py-8 pb-24 lg:pb-8 transition-colors duration-300"
           itemCenter={false}
           justifyCenter={false}
           wrap={false}
@@ -207,7 +207,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
               variant="OUTLINE"
               size="SMALL"
               text="← Back to Dashboard"
-              className="mb-8 border-[#2a2a2a] text-white hover:border-[#ff5757] hover:bg-[#ff5757]/10 bg-transparent flex items-center justify-center transition-all duration-300 w-max h-auto py-2.5 px-5 font-bold text-xs rounded-xl"
+              className="mb-8 border-border text-foreground hover:border-primary hover:bg-primary/10 bg-transparent flex items-center justify-center transition-all duration-300 w-max h-auto py-2.5 px-5 font-bold text-xs rounded-xl"
             />
             <header className="mb-12 text-center sm:text-left">
               <h1 className="text-3xl sm:text-4xl font-black text-white mb-3 tracking-tight">

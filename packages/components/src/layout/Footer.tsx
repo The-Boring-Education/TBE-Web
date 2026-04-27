@@ -111,7 +111,10 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
   ];
 
   return (
-    <footer className="bg-dark w-full border-t border-gray-800">
+    <FlexContainer
+      as="footer"
+      className="bg-background w-full border-t border-border transition-colors duration-300"
+    >
       <div className={`max-w-7xl mx-auto px-4 ${isMini ? "py-6" : "py-12"}`}>
         {/* Main Footer Content */}
         {!isMini && (
@@ -121,7 +124,7 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
               <div className="flex items-center justify-between mb-4">
                 {variantConfig.branding}
               </div>
-              <Text className="text-gray-300 mb-4 max-w-md" level="p">
+              <Text className="text-muted-foreground mb-4 max-w-md" level="p">
                 {variantConfig.subtitle}
               </Text>
               <FlexContainer className="gap-4" justifyCenter={false}>
@@ -305,7 +308,7 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
           </Text>
         </div>
       </div>
-    </footer>
+    </FlexContainer>
   );
 };
 

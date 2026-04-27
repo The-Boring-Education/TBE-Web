@@ -31,21 +31,23 @@ export default function PageHeader({
 
   return (
     <header
-      className={`sticky top-0 z-10 bg-[#0A0A0A]/90 backdrop-blur border-b border-gray-800 ${className}`}
+      className={`sticky top-0 z-10 bg-background/90 backdrop-blur border-b border-border transition-colors duration-300 ${className}`}
     >
       <div className="max-w-screen-2xl mx-auto px-3 md:px-4 py-2 md:py-3 flex items-center justify-between">
         <button
           onClick={handleBack}
-          className="flex items-center gap-2 text-gray-300 hover:text-primary transition-all"
+          className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
           <span className="hidden sm:inline">{backText}</span>
         </button>
         <div className="text-right">
-          <h1 className="text-base md:text-lg font-semibold text-white">
+          <h1 className="text-base md:text-lg font-semibold text-foreground">
             {title}
           </h1>
-          {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
+          {subtitle && (
+            <p className="text-xs text-muted-foreground">{subtitle}</p>
+          )}
         </div>
       </div>
     </header>

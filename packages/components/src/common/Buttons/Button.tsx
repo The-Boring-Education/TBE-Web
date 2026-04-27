@@ -31,17 +31,17 @@ const getButtonClasses = (
 
   const variantClasses: Record<string, string> = {
     PRIMARY:
-      "bg-primary text-white border border-primary/70 transition-colors duration-200 ease-in-out",
+      "bg-primary !text-white border border-primary/70 transition-colors duration-200 ease-in-out dark:bg-[#FF4D4D] dark:!text-white",
     SECONDARY:
-      "bg-secondary text-white border border-secondary/70 transition-colors duration-200 ease-in-out",
+      "bg-secondary !text-white border border-secondary/70 transition-colors duration-200 ease-in-out dark:bg-secondary dark:!text-white",
     OUTLINE:
-      "bg-transparent border border-primary text-primary transition-colors duration-200 ease-in-out",
+      "bg-transparent border border-primary !text-primary transition-colors duration-200 ease-in-out dark:border-primary dark:!text-primary",
     GHOST:
-      "bg-accent text-contentLight border border-black/10 transition-colors duration-200 ease-in-out",
+      "bg-accent !text-gray-900 border border-black/10 transition-colors duration-200 ease-in-out dark:bg-white/10 dark:!text-white dark:border-white/20",
     SUCCESS:
-      "bg-success text-white border border-success/70 transition-colors duration-200 ease-in-out",
+      "bg-success !text-white border border-success/70 transition-colors duration-200 ease-in-out dark:bg-success dark:!text-white",
     NEUTRAL:
-      "bg-primary text-black border border-black/10 transition-colors duration-200 ease-in-out",
+      "bg-primary !text-black border border-black/10 transition-colors duration-200 ease-in-out dark:bg-primary dark:!text-black",
   };
 
   return `${baseClasses} ${variantClasses[variant] || ""}`;
@@ -50,12 +50,14 @@ const getButtonClasses = (
 const animationVariants: any = {
   DEFAULT: {
     scale: 1,
+    opacity: 1,
     boxShadow:
       "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
     transition: { duration: 0.2, ease: "easeInOut" },
   },
   HOVER: {
     scale: 1.02,
+    opacity: 1,
     boxShadow:
       "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
     transition: { duration: 0.2, ease: "easeInOut" },
@@ -63,21 +65,25 @@ const animationVariants: any = {
   BOUNCE: {
     scale: 1,
     y: 0,
+    opacity: 1,
     transition: { duration: 0.2, ease: "easeInOut" },
   },
   BOUNCE_HOVER: {
     scale: 1.05,
     y: -2,
+    opacity: 1,
     transition: { duration: 0.2, ease: "easeInOut" },
   },
   GLOW: {
     scale: 1,
+    opacity: 1,
     boxShadow:
       "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
     transition: { duration: 0.3, ease: "easeInOut" },
   },
   GLOW_HOVER: {
     scale: 1.03,
+    opacity: 1,
     boxShadow:
       "0 0 20px rgba(59, 130, 246, 0.3), 0 10px 15px -3px rgba(0, 0, 0, 0.1)",
     transition: { duration: 0.3, ease: "easeInOut" },
@@ -160,7 +166,7 @@ const Button = ({
       className={`${animationClasses} ${isFullWidth ? "w-full" : ""}`}
     >
       <motion.button
-        className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-0.5`}
+        className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-0.5 !opacity-100`}
         disabled={!active || isLoading}
         onClick={handleClick}
         type={type}

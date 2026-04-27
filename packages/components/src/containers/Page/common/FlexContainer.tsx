@@ -1,5 +1,4 @@
 import type { FlexContainerProps } from "@tbe/interface";
-import { motion } from "framer-motion";
 
 const FlexContainer = ({
   children,
@@ -11,22 +10,27 @@ const FlexContainer = ({
   fullWidth = false,
   id = "",
   disabled = false,
-}: FlexContainerProps) => (
-  <motion.div
-    animate={{ opacity: 1, scale: 1 }}
-    aria-disabled={disabled} // For accessibility
-    className={`flex flex-${direction} ${itemCenter && "items-center"} ${
-      justifyCenter && "justify-center"
-    } ${className} ${wrap && "flex-wrap"} ${fullWidth && "w-full"} ${
-      disabled ? "pointer-events-none opacity-40" : ""
-    }`}
-    exit={{ opacity: 0, scale: 0.98 }}
-    id={id}
-    initial={{ opacity: 0, scale: 0.98 }}
-    transition={{ duration: 0.6, ease: "easeInOut" }}
-  >
-    {children}
-  </motion.div>
-);
+  as = "div",
+}: FlexContainerProps) => {
+  const Component = as as any;
+
+  // Clean up direction-based classes
+  const directionClass = direction === "col" ? "flex-col" : "flex-row";
+  const alignClass = itemCenter ? "items-center" : "";
+  const justifyClass = justifyCenter ? "justify-center" : "";
+  const wrapClass = wrap ? "flex-wrap" : "flex-nowrap";
+  const widthClass = fullWidth ? "w-full" : "";
+  const disabledClass = disabled ? "pointer-events-none opacity-40" : "";
+
+  return (
+    <Component
+      aria-disabled={disabled}
+      className={`flex ${directionClass} ${alignClass} ${justifyClass} ${wrapClass} ${widthClass} ${disabledClass} ${className}`}
+      id={id}
+    >
+      {children}
+    </Component>
+  );
+};
 
 export default FlexContainer;

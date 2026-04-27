@@ -178,9 +178,9 @@ const SheetsPageClient = () => {
 
   if (sheetsLoading || userLoading || isProgressLoading) {
     return (
-      <div className="flex min-h-screen bg-[#0A0A0A] font-sans items-center justify-center px-6 text-center">
+      <div className="flex min-h-screen bg-background text-foreground font-sans items-center justify-center px-6 text-center">
         <div className="space-y-1">
-          <p className="text-[12px] font-semibold text-gray-200 leading-tight">
+          <p className="text-[12px] font-semibold text-foreground leading-tight">
             Loading workspace
             <span className="inline-flex w-4 justify-start" aria-hidden>
               <span className="animate-pulse">.</span>
@@ -188,7 +188,7 @@ const SheetsPageClient = () => {
               <span className="animate-pulse [animation-delay:300ms]">.</span>
             </span>
           </p>
-          <p className="text-[10px] font-medium text-gray-500 leading-tight">
+          <p className="text-[10px] font-medium text-muted-foreground leading-tight">
             Just a moment
           </p>
         </div>

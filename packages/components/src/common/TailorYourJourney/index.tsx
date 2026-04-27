@@ -13,17 +13,15 @@ const TailorYourJourney = ({
 }: TailorYourJourneyProps) => (
   <div
     id="tailor-journey"
-    className="mx-auto w-full max-w-7xl px-4 py-12 lg:px-8 md:py-16"
+    className="mx-auto w-full max-w-7xl px-4 py-12 lg:px-8 md:py-16 bg-background transition-colors duration-300"
   >
     <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center">
       <div className="flex-1 space-y-6 text-center lg:text-left">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+        <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {heading} <span className="text-primary">{highlightText}</span>
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          {description}
-        </p>
-        <ul className="inline-flex flex-col space-y-4 text-left text-gray-700 dark:text-gray-300">
+        <p className="text-lg text-muted-foreground">{description}</p>
+        <ul className="inline-flex flex-col space-y-4 text-left text-foreground/80">
           {features.map((feature) => (
             <li key={feature.label} className="flex items-center gap-3">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">

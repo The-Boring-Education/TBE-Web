@@ -57,7 +57,7 @@ export function ResumeYatraLandingPage({
   faqs = RESUME_YATRA_FAQS,
 }: ResumeYatraLandingPageProps) {
   return (
-    <main className="min-h-screen w-full bg-white text-contentLight">
+    <main className="min-h-screen w-full bg-background text-foreground transition-colors duration-300">
       <SEO seoMeta={seoMeta} />
 
       <Navbar variant="resume-yatra" />
@@ -83,7 +83,6 @@ export function ResumeYatraLandingPage({
             heading: "Stop Sending Resumes",
             focusText: "That Get Ignored",
           }}
-          theme="light"
         />
       )}
 
@@ -96,7 +95,6 @@ export function ResumeYatraLandingPage({
               focusText="Resume Yatra?"
               heading="Why Choose"
               subtext="Everything you need to build a resume that gets noticed — not filtered out."
-              theme="light"
             />
             <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
               <Marquee

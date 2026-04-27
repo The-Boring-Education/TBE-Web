@@ -14,7 +14,7 @@ const PrimaryCard = ({
 
   return (
     <GradientContainer
-      className={`max-w-sm ${border} ${isDark ? "bg-[#111] border-gray-800" : ""}`}
+      className={`max-w-sm ${border} bg-card text-card-foreground border-border transition-colors duration-300`}
     >
       <Image
         alt={imageAltText}
@@ -23,17 +23,11 @@ const PrimaryCard = ({
         fullWidth={false}
         src={`${image}`}
       />
-      <Text
-        className={`heading-5 mt-4 ${isDark ? "text-white" : ""}`}
-        level="h5"
-      >
+      <Text className="heading-5 mt-4 text-foreground" level="h5">
         {title}
       </Text>
 
-      <Text
-        className={`paragraph mt-1 ${isDark ? "text-gray-400" : "text-greyDark"}`}
-        level="p"
-      >
+      <Text className="paragraph mt-1 text-muted-foreground" level="p">
         {content}
       </Text>
     </GradientContainer>

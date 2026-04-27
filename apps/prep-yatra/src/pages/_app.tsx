@@ -9,7 +9,7 @@ import { Toaster } from "@tbe/components";
 import { TooltipProvider } from "@tbe/components";
 import { initGA, trackPageview } from "@tbe/components/analytics";
 import { GamificationProvider } from "@tbe/gamification";
-import { useProductOnboardingGate } from "@tbe/hooks";
+import { ThemeProvider, useProductOnboardingGate } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -135,9 +135,11 @@ export default function App({ Component, pageProps }: AppProps) {
       <AuthProvider>
         <TBEQueryProvider>
           <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <AppContent Component={Component} pageProps={pageProps} />
+            <ThemeProvider>
+              <Toaster />
+              <Sonner />
+              <AppContent Component={Component} pageProps={pageProps} />
+            </ThemeProvider>
           </TooltipProvider>
         </TBEQueryProvider>
       </AuthProvider>

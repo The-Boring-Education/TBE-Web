@@ -34,13 +34,11 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <Fragment>
-      <Navbar variant="dsayatra" theme="dark" dashboardRoute={dashboardRoute} />
+      <Navbar variant="dsayatra" dashboardRoute={dashboardRoute} />
 
       <main
         className={cn(
-          "min-h-screen w-full overflow-x-hidden pt-[72px]",
-          (isDashboard || isRevisions || isTopics) && "bg-[#0A0A0A]",
-          isLandingPage && "bg-[#040505]",
+          "min-h-screen w-full overflow-x-hidden pt-[72px] bg-background text-foreground transition-colors duration-300",
         )}
       >
         {children}

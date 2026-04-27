@@ -44,7 +44,7 @@ tbe-platform/
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd tbe-platform
+cd TBE-Web
 
 # Install all dependencies
 pnpm install

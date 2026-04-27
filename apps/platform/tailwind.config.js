@@ -1,7 +1,7 @@
 const { fontFamily } = require('tailwindcss/defaultTheme');
 
-/** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: ['class'],
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx}',
     './src/components/**/*.{js,ts,jsx,tsx}',
@@ -52,17 +52,19 @@ module.exports = {
         widest: '.25em',
       },
       colors: {
-        primary: '#FF5757',
+        primary: 'hsl(var(--primary))',
         secondary: '#E0B034',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         dark: '#040505',
         success: '#31ad6b',
-        contentLight: '#19191B',
+        contentLight: 'hsl(var(--tbe-content-light))',
         contentDark: '#FDFDFD',
         grey: '#B0B0B0',
-        greyLight: '#e3e3e3',
-        greyDark: '#848484',
+        greyLight: 'hsl(var(--tbe-grey-light))',
+        greyDark: 'hsl(var(--tbe-grey-dark))',
         accent: '#ECF1F4',
-        lightBG: '#F8F8F8',
+        lightBG: 'hsl(var(--tbe-bg-light))',
       },
       spacing: {
         1: '8px',

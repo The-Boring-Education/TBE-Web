@@ -69,10 +69,10 @@ const DsaClient = () => {
         {/* Header Section */}
         <header className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
+            <h2 className="text-[1.35rem] font-black leading-snug tracking-tight text-[#050b18] dark:text-[#f0f0f0] sm:text-2xl md:text-3xl">
               Welcome back, {user?.name}! 👋
             </h2>
-            <p className="text-[#808080] text-sm font-medium mt-1">
+            <p className="text-[#606060] dark:text-[#808080] text-sm font-medium mt-1">
               Ready to master DSA today?
             </p>
           </div>
@@ -84,7 +84,7 @@ const DsaClient = () => {
             </Link>
             <Button
               onClick={() => setIsEditModalOpen(true)}
-              className="flex-1 sm:flex-none bg-[#1a1a1a] border border-[#2a2a2a] text-[#f0f0f0] hover:bg-[#222] hover:border-[#ff5757]/30 h-auto px-6 py-2.5 font-bold text-xs rounded-xl"
+              className="flex-1 sm:flex-none bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-[#2a2a2a] text-[#050b18] dark:text-[#f0f0f0] hover:bg-gray-50 dark:hover:bg-[#222] hover:border-[#ff5757]/30 h-auto px-6 py-2.5 font-bold text-xs rounded-xl"
             >
               Edit Goal
             </Button>
@@ -92,7 +92,7 @@ const DsaClient = () => {
         </header>
 
         {/* Profile Card Section - Redesigned to be more compact and legible */}
-        <Card className="w-full bg-[#111] border-[#222] rounded-2xl p-5 sm:p-6 lg:p-8 relative overflow-hidden group">
+        <Card className="w-full bg-white dark:bg-[#111] border-gray-100 dark:border-[#222] rounded-2xl p-5 sm:p-6 lg:p-8 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5757]/5 blur-[100px] pointer-events-none" />
 
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-12 relative z-10">
@@ -100,7 +100,7 @@ const DsaClient = () => {
             <div className="flex flex-col items-center lg:items-start shrink-0">
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#ff5757] to-[#ff9b9b] rounded-full blur-md opacity-20 group-hover:opacity-40 transition-opacity" />
-                <div className="relative w-20 h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden border-4 border-[#1a1a1a] shadow-2xl flex items-center justify-center bg-[#1a1a1a]">
+                <div className="relative w-20 h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden border-4 border-gray-50 dark:border-[#1a1a1a] shadow-2xl flex items-center justify-center bg-gray-50 dark:bg-[#1a1a1a]">
                   {user?.image ? (
                     <Image
                       src={user.image}
@@ -121,7 +121,7 @@ const DsaClient = () => {
               </div>
 
               <div className="mt-4 text-center lg:text-left">
-                <h3 className="text-xl lg:text-2xl font-black text-[#f0f0f0] tracking-tight leading-none">
+                <h3 className="text-xl lg:text-2xl font-black text-[#050b18] dark:text-[#f0f0f0] tracking-tight leading-none">
                   {user?.name}
                 </h3>
                 <p className="text-[#606060] text-[10px] lg:text-xs font-bold uppercase tracking-widest mt-2">
@@ -156,7 +156,7 @@ const DsaClient = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "p-2.5 rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] text-[#a0a0a0] hover:text-white hover:border-[#ff5757]/50 hover:bg-[#ff5757]/10 transition-all",
+                      "p-2.5 rounded-xl border border-gray-100 dark:border-[#2a2a2a] bg-gray-50 dark:bg-[#1a1a1a] text-[#606060] dark:text-[#a0a0a0] hover:text-[#050b18] dark:hover:text-white hover:border-[#ff5757]/50 hover:bg-[#ff5757]/10 transition-all",
                       !social.url && "opacity-20 cursor-not-allowed",
                     )}
                     onClick={(e) => !social.url && e.preventDefault()}
@@ -190,9 +190,9 @@ const DsaClient = () => {
                 ].map((stat, i) => (
                   <div
                     key={i}
-                    className="bg-[#1a1a1a]/50 p-3 lg:p-4 rounded-xl border border-[#222] transition-colors hover:border-[#333]"
+                    className="bg-gray-50/50 dark:bg-[#1a1a1a]/50 p-3 lg:p-4 rounded-xl border border-gray-100 dark:border-[#222] transition-colors hover:border-[#333]"
                   >
-                    <p className="text-[9px] lg:text-[10px] text-[#606060] uppercase mb-1 font-black tracking-widest">
+                    <p className="text-[9px] lg:text-[10px] text-[#050b18]/40 dark:text-[#606060] uppercase mb-1 font-black tracking-widest">
                       {stat.label}
                     </p>
                     <p className="text-xs lg:text-sm font-black text-[#ff5757] truncate">
@@ -313,12 +313,12 @@ const DsaClient = () => {
         </div>
 
         {/* Topic-wise Progress Section */}
-        <Card className="bg-[#111] border-[#222] p-6 sm:p-8 rounded-2xl">
+        <Card className="bg-white dark:bg-[#111] border-gray-100 dark:border-[#222] p-6 sm:p-8 rounded-2xl">
           <div className="flex items-center gap-3 mb-8">
             <div className="p-2.5 bg-[#ff5757]/10 rounded-xl">
               <PieChart className="w-5 h-5 text-[#ff5757]" />
             </div>
-            <h3 className="text-xl font-black text-[#f0f0f0] tracking-tight">
+            <h3 className="text-xl font-black text-[#050b18] dark:text-[#f0f0f0] tracking-tight">
               Topic Wise Progress
             </h3>
           </div>
@@ -331,9 +331,9 @@ const DsaClient = () => {
                   href={`/sheets?topic=${encodeDsaTopicForUrl(topic.key)}`}
                   className="block group"
                 >
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] p-5 rounded-2xl cursor-pointer hover:border-[#ff5757]/50 transition-all group-hover:bg-[#1f1f1f] group-hover:-translate-y-1">
+                  <div className="bg-[#f8f9fa] dark:bg-[#1a1a1a] border border-gray-100 dark:border-[#2a2a2a] p-5 rounded-2xl cursor-pointer hover:border-[#ff5757]/50 transition-all group-hover:bg-white dark:group-hover:bg-[#1f1f1f] group-hover:-translate-y-1">
                     <div className="flex justify-between items-start mb-4">
-                      <p className="text-xs lg:text-sm font-black text-[#f0f0f0] uppercase tracking-widest leading-tight pr-4">
+                      <p className="text-xs lg:text-sm font-black text-[#050b18] dark:text-[#f0f0f0] uppercase tracking-widest leading-tight pr-4">
                         {topic.name}
                       </p>
                       <span className="text-[11px] lg:text-xs font-black text-[#ff5757]">
@@ -342,15 +342,17 @@ const DsaClient = () => {
                     </div>
                     <div className="flex items-end justify-between mb-3">
                       <p className="text-[11px] lg:text-xs font-bold text-[#606060]">
-                        <span className="text-[#a0a0a0]">{topic.solved}</span> /{" "}
-                        {topic.total} Solved
+                        <span className="text-[#050b18]/60 dark:text-[#a0a0a0]">
+                          {topic.solved}
+                        </span>{" "}
+                        / {topic.total} Solved
                       </p>
                     </div>
                     <Progress
                       value={
                         topic.total > 0 ? (topic.solved / topic.total) * 100 : 0
                       }
-                      className="h-1.5 bg-[#252525] rounded-full overflow-hidden"
+                      className="h-1.5 bg-gray-200 dark:bg-[#252525] rounded-full overflow-hidden"
                     />
                   </div>
                 </Link>

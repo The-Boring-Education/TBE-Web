@@ -169,6 +169,7 @@ export interface FlexContainerProps {
   fullWidth?: boolean;
   id?: string;
   disabled?: boolean;
+  as?: string;
 }
 
 export interface TestimonialCardProps {

@@ -15,7 +15,7 @@ export type TechYatraHeroProps = {
  */
 const TechYatraHero = ({ onExplore, onLearnFree }: TechYatraHeroProps) => {
   return (
-    <Section className="bg-lightBG px-4 py-24 text-center mt-16">
+    <Section className="bg-background px-4 py-24 text-center mt-16">
       <div className="max-w-5xl mx-auto">
         <Text
           level="h1"
@@ -33,7 +33,7 @@ const TechYatraHero = ({ onExplore, onLearnFree }: TechYatraHeroProps) => {
 
         <Text
           level="h2"
-          className="text-3xl md:text-4xl font-bold text-contentLight mb-6"
+          className="text-3xl md:text-4xl font-bold text-foreground mb-6"
           textCenter
         >
           Start Your Yatra Here 🚀
@@ -41,7 +41,7 @@ const TechYatraHero = ({ onExplore, onLearnFree }: TechYatraHeroProps) => {
 
         <Text
           level="p"
-          className="text-xl text-greyDark mb-10 max-w-3xl mx-auto leading-relaxed"
+          className="text-xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed"
           textCenter
         >
           Get personalized learning paths based on your interests and goals.

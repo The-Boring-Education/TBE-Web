@@ -7,7 +7,6 @@ import {
   Text,
 } from "@tbe/components";
 import { OPEN_SOURCE_BENEFITS, OPEN_SOURCE_STATS } from "@tbe/constants";
-import { motion } from "framer-motion";
 
 const OpenSourceStatsSection = () => (
   <GradientContainer className="border-borderColor2 p-8">
@@ -23,15 +22,8 @@ const OpenSourceStatsSection = () => (
 
     {/* Stats Grid */}
     <GridContainer className="grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-      {OPEN_SOURCE_STATS.map((stat, index) => (
-        <motion.div
-          key={stat.label}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
+      {OPEN_SOURCE_STATS.map((stat) => (
+        <div key={stat.label} className="text-center">
           <GradientContainer className="border-borderColor3 p-6 h-full">
             <FlexContainer direction="col" itemCenter className="gap-3">
               <Text level="span" className="text-3xl">
@@ -45,7 +37,7 @@ const OpenSourceStatsSection = () => (
               </Text>
             </FlexContainer>
           </GradientContainer>
-        </motion.div>
+        </div>
       ))}
     </GridContainer>
 
@@ -62,14 +54,8 @@ const OpenSourceStatsSection = () => (
       </FlexContainer>
 
       <GridContainer className="grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {OPEN_SOURCE_BENEFITS.map((benefit, index) => (
-          <motion.div
-            key={benefit.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            viewport={{ once: true }}
-          >
+        {OPEN_SOURCE_BENEFITS.map((benefit) => (
+          <div key={benefit.title}>
             <GradientContainer className="border-borderColor4 p-6 h-full text-center hover:shadow-lg transition-shadow">
               <FlexContainer direction="col" itemCenter className="gap-4">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
@@ -85,7 +71,7 @@ const OpenSourceStatsSection = () => (
                 </Text>
               </FlexContainer>
             </GradientContainer>
-          </motion.div>
+          </div>
         ))}
       </GridContainer>
     </div>
@@ -136,13 +122,7 @@ const OpenSourceStatsSection = () => (
       </FlexContainer>
 
       {/* Student Testimonial */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3 }}
-        viewport={{ once: true }}
-        className="bg-white/50 rounded-xl p-6 max-w-3xl text-center border border-gray-200"
-      >
+      <div className="bg-white/50 rounded-xl p-6 max-w-3xl text-center border border-gray-200">
         <Text level="p" className="text-gray-700 italic mb-4">
           "Contributing to TBE was my first open source experience. The
           community is so welcoming and the mentors helped me understand
@@ -163,7 +143,7 @@ const OpenSourceStatsSection = () => (
             </Text>
           </FlexContainer>
         </FlexContainer>
-      </motion.div>
+      </div>
     </FlexContainer>
   </GradientContainer>
 );

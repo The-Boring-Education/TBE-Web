@@ -41,14 +41,14 @@ export function DsaYatraFeatureSpotlights({
   return (
     <Section
       id="feature-spotlights"
-      className="bg-[#0A0A0A] px-4 py-10 md:px-8 md:py-14"
+      className="bg-background px-4 py-10 md:px-8 md:py-14"
     >
       <div className="mx-auto max-w-7xl">
         <div className="mb-14 text-center px-4">
-          <h2 className="text-3xl font-bold tracking-tight text-contentDark sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Practice that fits your interviews
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-lg text-grey">
+          <p className="mx-auto mt-3 max-w-2xl text-lg text-muted-foreground">
             Roadmap, sheets, revisions, and progress—built for consistency, not
             chaos.
           </p>
@@ -68,18 +68,20 @@ export function DsaYatraFeatureSpotlights({
                     {item.eyebrow}
                   </p>
                 ) : null}
-                <h3 className="text-2xl font-bold tracking-tight text-contentDark sm:text-3xl">
+                <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                   {item.title}
                 </h3>
-                <p className="text-lg text-grey">{item.description}</p>
-                <ul className="inline-flex flex-col space-y-3 text-left text-contentDark">
+                <p className="text-lg text-muted-foreground">
+                  {item.description}
+                </p>
+                <ul className="inline-flex flex-col space-y-3 text-left text-foreground">
                   {item.bullets.map((line) => (
                     <li key={line} className="flex gap-3">
                       <span
                         className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
                         aria-hidden
                       />
-                      <span className="text-grey">{line}</span>
+                      <span className="text-muted-foreground">{line}</span>
                     </li>
                   ))}
                 </ul>

@@ -140,8 +140,8 @@ const DsaYatraPublicJourneyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar variant="dsayatra" theme="dark" />
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <Navbar variant="dsayatra" />
 
       <Section className="container mx-auto px-4 mt-12 px-6 lg:px-8 py-8 md:py-12 lg:py-16">
         <FlexContainer

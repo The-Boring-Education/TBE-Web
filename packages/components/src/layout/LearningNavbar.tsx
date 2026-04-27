@@ -1,8 +1,11 @@
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { TOP_NAVIGATION } from "@tbe/constants";
+import { useTheme } from "@tbe/hooks";
+import React from "react";
 
 import { FlexContainer, Link, LinkButton } from "..";
 import UserPointButton from "../common/Buttons/UserPointButton";
+import { ThemeToggle } from "./Navbar";
 
 export interface LearningNavbarProps {
   backHref: string;
@@ -17,11 +20,23 @@ const LearningNavbar = ({
   headerCenterContent,
   showGamification = false,
 }: LearningNavbarProps) => {
-  const theme = "dark";
+  const { theme } = useTheme();
 
-  return (
-    <header className="fixed top-0 left-0 right-0 h-[72px] z-40 bg-black shadow-md shadow-white/5 dark:shadow-[0_1px_15px_rgba(255,255,255,0.1)]">
-      <nav className="relative flex items-center justify-between h-full px-[12px] lg:px-[32px] border-0">
+  return React.createElement(
+    FlexContainer,
+    {
+      as: "header",
+      className:
+        "fixed top-0 left-0 right-0 h-[72px] z-40 bg-background border-b border-border shadow-md",
+    },
+    React.createElement(
+      FlexContainer,
+      {
+        as: "nav",
+        className:
+          "relative flex items-center justify-between h-full px-[12px] lg:px-[32px] border-0",
+      },
+      <>
         {/* Left Section */}
         <div className="flex items-center">
           <LinkButton
@@ -37,13 +52,13 @@ const LearningNavbar = ({
 
           {onMenuToggle && (
             <button
-              className={`flex items-center justify-center rounded-md p-[6px] ${theme === "dark" ? "text-white hover:bg-gray-800" : "text-black hover:bg-gray-100"}`}
+              className="flex items-center justify-center rounded-md p-[6px] text-foreground hover:bg-accent"
               type="button"
               onClick={onMenuToggle}
             >
               <Bars3Icon
                 aria-hidden="true"
-                className={`h-[16px] w-[16px] ${theme === "dark" ? "text-white" : "text-black"}`}
+                className="h-[16px] w-[16px] text-foreground"
               />
             </button>
           )}
@@ -58,11 +73,12 @@ const LearningNavbar = ({
 
         {/* Right Section */}
         <div className="flex items-center gap-[16px] min-w-0">
+          <ThemeToggle />
           {showGamification && <UserPointButton />}
           {TOP_NAVIGATION?.issues?.[0]?.href && (
             <FlexContainer direction="col" itemCenter={false}>
               <Link
-                className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary whitespace-nowrap`}
+                className="text-base text-foreground hover:text-primary whitespace-nowrap"
                 href={TOP_NAVIGATION.issues[0].href}
                 target={TOP_NAVIGATION.issues[0]?.target}
               >
@@ -71,8 +87,8 @@ const LearningNavbar = ({
             </FlexContainer>
           )}
         </div>
-      </nav>
-    </header>
+      </>,
+    ),
   );
 };
 

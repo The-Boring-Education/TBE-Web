@@ -33,16 +33,16 @@ export default function OnCampusLandingPage() {
 
   return (
     <Fragment>
-      <Navbar variant="oncampus" theme="dark" />
-      <main className="dark min-h-screen bg-[#0A0A0A] pt-20 text-white">
+      <Navbar variant="oncampus" />
+      <main className="min-h-screen bg-white dark:bg-background pt-20 text-[#050b18] dark:text-foreground transition-colors duration-300">
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 md:py-24">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
             <div className="space-y-3 text-left">
-              <h1 className="text-4xl font-bold leading-tight md:text-4xl lg:text-4xl">
-                <span className="text-white">Advance Your Career with </span>
-                <span className="text-[#FF5757]">OnCampus</span>
+              <h1 className="text-4xl font-bold leading-tight md:text-4xl lg:text-4xl text-[#050b18] dark:text-foreground">
+                Advance Your Career with{" "}
+                <span className="text-primary">OnCampus</span>
               </h1>
-              <p className="text-sm leading-relaxed text-white/70">
+              <p className="text-sm leading-relaxed text-[#050b18]/65 dark:text-muted-foreground">
                 Prepare smarter for placements with guided aptitude, quizzes,
                 interview prep, and resume resources in one focused dashboard.
               </p>
@@ -51,12 +51,12 @@ export default function OnCampusLandingPage() {
                   text="Get Started for Free"
                   onClick={handleGetStarted}
                   variant="PRIMARY"
-                  className="bg-[#FF5757] text-sm font-semibold text-white hover:bg-[#FF5757]/90"
+                  className="bg-primary text-sm font-semibold text-white hover:bg-primary/90"
                   size="MEDIUM"
                   animationType="BOUNCE"
                 />
               </div>
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-muted-foreground/60">
                 Built for campus schedules
               </p>
             </div>
@@ -121,14 +121,18 @@ export default function OnCampusLandingPage() {
 
         <section className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
           <h2 className="text-center text-2xl font-semibold sm:text-3xl">
-            <span className="text-white">What’s </span>
-            <span className="text-[#FF5757]">Coming Soon</span>
+            <span className="text-[#050b18] dark:text-foreground">What’s </span>
+            <span className="text-primary">Coming Soon</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-white/65 sm:text-base">
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-[#050b18]/65 dark:text-muted-foreground sm:text-base">
             Upcoming additions to OnCampus. Subtle preview only, full modules
             are rolling out in phases.
           </p>
-          <Marquee className="mt-8" items={comingSoonItems} />
+          <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
+            <Marquee className="mt-8" items={comingSoonItems} />
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-1/12 bg-gradient-to-r from-background to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-1/12 bg-gradient-to-l from-background to-transparent" />
+          </div>
         </section>
       </main>
       <Footer variant="oncampus" />

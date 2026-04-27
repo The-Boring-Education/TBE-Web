@@ -29,10 +29,10 @@ const VisualCard = ({
   className?: string;
 }) => (
   <div
-    className={`relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#161621] to-[#0d0d14] ${className}`}
+    className={`relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#161621] to-[#0d0d14] dark:from-[#161621] dark:to-[#0d0d14] border border-white/5 ${className}`}
   >
     {/* subtle radial red glow in top-right corner */}
-    <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#ff5757]/8 blur-3xl" />
+    <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#ff5757]/8 blur-3xl opacity-50" />
     {children}
   </div>
 );
@@ -61,17 +61,17 @@ export const OnCampusFeatureSection = ({
       <span className="inline-block rounded-full border border-[#ff5757]/30 bg-[#ff5757]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#ff8f8f]">
         {eyebrow}
       </span>
-      <h3 className="mt-3 text-2xl font-bold leading-tight text-white sm:text-3xl">
+      <h3 className="mt-3 text-2xl font-bold leading-tight text-[#050b18] dark:text-white sm:text-3xl">
         {title}
       </h3>
-      <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/65 sm:text-base">
+      <p className="mt-3 max-w-lg text-sm leading-relaxed text-[#050b18]/65 dark:text-white/65 sm:text-base">
         {description}
       </p>
       {subheadingLines.length ? (
-        <ul className="mt-4 inline-flex flex-col space-y-3 text-left text-gray-300">
+        <ul className="mt-4 inline-flex flex-col space-y-3 text-left">
           {subheadingLines.slice(0, 3).map((line) => (
             <li key={line} className="flex items-center gap-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ff5757]/20 text-[#ff5757]">
                 <svg
                   className="h-4 w-4"
                   fill="none"
@@ -86,7 +86,9 @@ export const OnCampusFeatureSection = ({
                   />
                 </svg>
               </div>
-              <span className="text-sm text-white/75">{line}</span>
+              <span className="text-sm text-[#050b18]/75 dark:text-white/75">
+                {line}
+              </span>
             </li>
           ))}
         </ul>
@@ -320,7 +322,7 @@ export const DsaPreparationVisual = () => {
           return (
             <div
               key={topic.label}
-              className="group cursor-default rounded-xl border border-white/[0.06] bg-white/[0.03] px-3 py-2.5 transition-colors duration-150 hover:border-white/15 hover:bg-white/[0.06]"
+              className="group cursor-default rounded-xl border border-white/[0.06] bg-white/[0.03] dark:border-white/[0.06] dark:bg-white/[0.03] px-3 py-2.5 transition-colors duration-150 hover:border-white/15 hover:bg-white/[0.06]"
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
             >
@@ -354,7 +356,7 @@ export const DsaPreparationVisual = () => {
       </div>
 
       {/* summary row */}
-      <div className="mt-4 flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2">
+      <div className="mt-4 flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] dark:border-white/8 dark:bg-white/[0.03] px-3 py-2">
         <span className="text-[11px] text-white/45">Total Solved</span>
         <span className="text-sm font-bold text-white">
           {DSA_TOPICS.reduce((s, t) => s + t.done, 0)}

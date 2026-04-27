@@ -31,13 +31,13 @@ const TabSection = () => {
   ];
 
   return (
-    <section className="px-4 py-20 bg-lightBG">
+    <section className="px-4 py-20 bg-background/50">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-contentLight">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
             Choose Your Learning Path
           </h2>
-          <p className="text-lg text-greyDark max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Select any option below to start your personalized tech journey
           </p>
         </div>

@@ -39,7 +39,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A]">
+      <div className="flex items-center justify-center min-h-screen bg-background">
         <LoadingSpinner />
       </div>
     );
@@ -56,11 +56,10 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
       <div className="max-lg:hidden lg:contents">
         <Sidebar
           className={cn(
-            "border-r border-[#222] shadow-[6px_0_32px_rgba(0,0,0,0.32)]",
+            "border-r border-border shadow-sm",
             "[&_[data-sidebar=sidebar]]:relative [&_[data-sidebar=sidebar]]:overflow-hidden",
-            "[&_[data-sidebar=sidebar]]:bg-[#101010]",
+            "[&_[data-sidebar=sidebar]]:bg-background/95",
             "[&_[data-sidebar=sidebar]]:before:pointer-events-none [&_[data-sidebar=sidebar]]:before:absolute [&_[data-sidebar=sidebar]]:before:inset-0",
-            "[&_[data-sidebar=sidebar]]:before:bg-[radial-gradient(120%_90%_at_50%_-25%,rgba(255,87,87,0.14),transparent_55%)]",
           )}
         >
           <SidebarContent className="relative z-10 flex flex-col px-3 pb-8 pt-10">
@@ -90,8 +89,8 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
         </Sidebar>
       </div>
 
-      <SidebarInset className="flex min-h-svh flex-col bg-[#0f0f0f] text-white">
-        <Navbar variant="dsayatra" theme="dark" />
+      <SidebarInset className="flex min-h-svh flex-col bg-background text-foreground transition-colors duration-300">
+        <Navbar variant="dsayatra" />
         <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col px-3 pt-[72px] pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] sm:px-5 lg:px-6 lg:pb-8 lg:pt-[72px] xl:px-8">
           {children}
         </div>

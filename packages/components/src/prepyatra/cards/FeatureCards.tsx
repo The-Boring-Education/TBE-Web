@@ -4,7 +4,6 @@ import {
   IconCard,
   SectionHeaderContainer,
 } from "@tbe/components";
-import { motion } from "framer-motion";
 import { BookOpen, Share2, Target, Users } from "lucide-react";
 
 const features = [
@@ -48,12 +47,8 @@ const FeatureCards = () => {
 
         <GridContainer className="grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {features.map((feature, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
               className="hover:shadow-xl transition-all duration-300 hover:scale-105 border-borderColor2 bg-gradient-to-br from-white to-gray-100"
             >
               <IconCard
@@ -63,7 +58,7 @@ const FeatureCards = () => {
                 className="glass rounded-2xl p-8 h-full border border-blue-400"
                 bgColor="black"
               />
-            </motion.div>
+            </div>
           ))}
         </GridContainer>
       </FlexContainer>
