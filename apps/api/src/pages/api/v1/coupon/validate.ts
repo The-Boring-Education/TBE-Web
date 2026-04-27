@@ -4,6 +4,7 @@ import { apiStatusCodes } from "@/lib/constants";
 import { validateCouponForProductFromDB } from "@/lib/database";
 import type { APIResponseType } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
+import { rateLimit } from "@/lib/utils/rateLimit";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 interface ValidateCouponRequest {
@@ -11,22 +12,6 @@ interface ValidateCouponRequest {
   productId: string;
   productType: string;
   userId?: string;
-}
-
-interface ValidateCouponResponse {
-  coupon: {
-    _id: string;
-    code: string;
-    discountPercentage: number;
-    description: string;
-    isActive: boolean;
-    expiryDate: string;
-    maxUsage?: number;
-    currentUsage: number;
-    applicableProducts: string[];
-    minimumAmount: number;
-    isValid: boolean;
-  };
 }
 
 const validateCoupon = async (
@@ -40,6 +25,10 @@ const validateCoupon = async (
       data: null,
     });
   }
+
+  // Rate limit: 10 requests per minute per IP
+  const allowed = rateLimit(req, res, { maxRequests: 10, windowMs: 60_000 });
+  if (!allowed) return;
 
   try {
     const { code, productId, productType, userId }: ValidateCouponRequest =
@@ -69,20 +58,16 @@ const validateCoupon = async (
       });
     }
 
+    // Return only safe, non-sensitive fields
     return res.status(apiStatusCodes.OKAY).json({
       status: true,
       message: "Coupon validated successfully",
       data: {
-        _id: coupon._id.toString(),
         code: coupon.code,
         discountPercentage: coupon.discountPercentage,
         description: coupon.description,
-        isActive: coupon.isActive,
-        expiryDate: coupon.expiryDate.toISOString(),
-        maxUsage: coupon.maxUsage,
-        currentUsage: coupon.currentUsage,
-        applicableProducts: coupon.applicableProducts,
         minimumAmount: coupon.minimumAmount,
+        expiryDate: coupon.expiryDate.toISOString(),
         isValid: coupon.isValid,
       },
     });

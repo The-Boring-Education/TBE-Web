@@ -4,12 +4,15 @@ import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockListSubscriptionPlansFromDB = vi.fn();
 const mockUpsertSubscriptionPlansInDB = vi.fn();
+const mockDeleteSubscriptionPlanFromDB = vi.fn();
 
 vi.mock("../../../../api/src/lib/database", () => ({
   listSubscriptionPlansFromDB: (...args: unknown[]) =>
     mockListSubscriptionPlansFromDB(...args),
   upsertSubscriptionPlansInDB: (...args: unknown[]) =>
     mockUpsertSubscriptionPlansInDB(...args),
+  deleteSubscriptionPlanFromDB: (...args: unknown[]) =>
+    mockDeleteSubscriptionPlanFromDB(...args),
 }));
 
 vi.mock("../../../../api/src/lib/constants", () => ({
@@ -17,6 +20,7 @@ vi.mock("../../../../api/src/lib/constants", () => ({
     OKAY: 200,
     BAD_REQUEST: 400,
     UNAUTHORIZED: 401,
+    NOT_FOUND: 404,
     INTERNAL_SERVER_ERROR: 500,
     METHOD_NOT_ALLOWED: 405,
   },
@@ -132,5 +136,114 @@ describe("Admin subscription-plans API", () => {
     });
     await handler(req, res);
     expect(res._getStatusCode()).toBe(400);
+  });
+
+  it("DELETE removes a plan when productType and planKey are valid", async () => {
+    mockDeleteSubscriptionPlanFromDB.mockResolvedValue({
+      data: { deleted: true },
+    });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "DELETE",
+      headers: { "x-admin-secret": "test-admin-secret" },
+      query: { productType: "DSA_YATRA", planKey: "lifetime" },
+    });
+    await handler(req, res);
+    expect(res._getStatusCode()).toBe(200);
+    expect(mockDeleteSubscriptionPlanFromDB).toHaveBeenCalledWith(
+      "DSA_YATRA",
+      "lifetime",
+    );
+  });
+
+  it("DELETE returns 404 when no plan matched", async () => {
+    mockDeleteSubscriptionPlanFromDB.mockResolvedValue({
+      data: { deleted: false },
+    });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "DELETE",
+      headers: { "x-admin-secret": "test-admin-secret" },
+      query: { productType: "DSA_YATRA", planKey: "missing" },
+    });
+    await handler(req, res);
+    expect(res._getStatusCode()).toBe(404);
+  });
+
+  it("DELETE returns 400 when productType is missing from query", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "DELETE",
+      headers: { "x-admin-secret": "test-admin-secret" },
+      query: { planKey: "lifetime" },
+    });
+    await handler(req, res);
+    expect(res._getStatusCode()).toBe(400);
+    expect(mockDeleteSubscriptionPlanFromDB).not.toHaveBeenCalled();
+  });
+
+  it("DELETE returns 400 for invalid productType", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "DELETE",
+      headers: { "x-admin-secret": "test-admin-secret" },
+      query: { productType: "NOT_A_TYPE", planKey: "x" },
+    });
+    await handler(req, res);
+    expect(res._getStatusCode()).toBe(400);
+    expect(mockDeleteSubscriptionPlanFromDB).not.toHaveBeenCalled();
+  });
+
+  it("returns 405 for unsupported methods", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "PATCH",
+      headers: { "x-admin-secret": "test-admin-secret" },
+    });
+    await handler(req, res);
+    expect(res._getStatusCode()).toBe(405);
+  });
+
+  it("POST maps full seed fields into SubscriptionPlanInput", async () => {
+    mockUpsertSubscriptionPlansInDB.mockResolvedValue({
+      data: { matched: 1, modified: 1, upserted: 0 },
+    });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      headers: { "x-admin-secret": "test-admin-secret" },
+      body: {
+        plans: [
+          {
+            productType: "PREPYATRA",
+            planKey: "3months",
+            amountInr: 499,
+            planUuid: "a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1",
+            displayName: "3-Month",
+            description: "Quarter access",
+            originalAmountInr: 999,
+            accessType: "SUBSCRIPTION",
+            durationMonths: 3,
+            features: ["All courses", "All sheets"],
+            isPopular: true,
+            isActive: true,
+            sortOrder: 2,
+          },
+        ],
+      },
+    });
+    await handler(req, res);
+    expect(res._getStatusCode()).toBe(200);
+    expect(mockUpsertSubscriptionPlansInDB).toHaveBeenCalledWith([
+      {
+        productType: "PREPYATRA",
+        planKey: "3months",
+        planUuid: "a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1",
+        displayName: "3-Month",
+        description: "Quarter access",
+        amountInr: 499,
+        originalAmountInr: 999,
+        accessType: "SUBSCRIPTION",
+        durationMonths: 3,
+        features: ["All courses", "All sheets"],
+        isPopular: true,
+        isActive: true,
+        sortOrder: 2,
+      },
+    ]);
   });
 });

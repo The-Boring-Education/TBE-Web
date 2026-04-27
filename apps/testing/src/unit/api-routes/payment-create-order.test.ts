@@ -67,6 +67,11 @@ vi.mock("../../../../api/src/middleware/api", () => ({
   connectDB: vi.fn().mockResolvedValue(undefined),
 }));
 
+// Mock rate limiter to always allow (rate limit logic tested separately)
+vi.mock("../../../../api/src/lib/utils/rateLimit", () => ({
+  rateLimit: () => true,
+}));
+
 import handler from "../../../../api/src/pages/api/v1/payment/create-order";
 
 const validBody = {

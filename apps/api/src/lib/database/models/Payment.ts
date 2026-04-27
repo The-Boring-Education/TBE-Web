@@ -22,6 +22,7 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
     amount: {
       type: Number,
       required: true,
+      min: [0, "Amount cannot be negative"],
     },
     orderId: {
       type: String,
@@ -60,6 +61,9 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
 );
 
 PaymentSchema.index({ user: 1, productId: 1 });
+PaymentSchema.index({ status: 1 });
+PaymentSchema.index({ createdAt: -1 });
+PaymentSchema.index({ paymentId: 1 }, { sparse: true });
 
 const Payment: Model<PaymentModel> =
   models?.Payment ||

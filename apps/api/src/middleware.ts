@@ -3,12 +3,29 @@ import "./edge-polyfill";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-  "Access-Control-Allow-Headers":
-    "Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, cache, Cache-Control, x-admin-secret",
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+  : [];
+
+const SECURITY_HEADERS = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "0",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
 };
+
+const ALLOWED_METHODS = "GET, POST, PUT, DELETE, PATCH, OPTIONS";
+const ALLOWED_HEADERS =
+  "Content-Type, Authorization, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, cache, Cache-Control, x-admin-secret";
+
+function resolveOrigin(request: NextRequest): string | undefined {
+  const origin = request.headers.get("origin");
+  if (!origin) return undefined;
+  // In development or when no allowlist is configured, allow all origins
+  if (ALLOWED_ORIGINS.length === 0) return origin;
+  return ALLOWED_ORIGINS.includes(origin) ? origin : undefined;
+}
 
 function generateRequestId(): string {
   return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
@@ -39,6 +56,16 @@ export function middleware(request: NextRequest) {
   );
 
   if (method === "OPTIONS") {
+    const preflightOrigin = resolveOrigin(request);
+    const preflightHeaders: Record<string, string> = {
+      "Access-Control-Allow-Methods": ALLOWED_METHODS,
+      "Access-Control-Allow-Headers": ALLOWED_HEADERS,
+      "Access-Control-Max-Age": "86400",
+      ...SECURITY_HEADERS,
+    };
+    if (preflightOrigin) {
+      preflightHeaders["Access-Control-Allow-Origin"] = preflightOrigin;
+    }
     console.log(
       JSON.stringify({
         level: "info",
@@ -52,14 +79,24 @@ export function middleware(request: NextRequest) {
     );
     return new NextResponse(null, {
       status: 204,
-      headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "86400" },
+      headers: preflightHeaders,
     });
   }
 
   const response = NextResponse.next();
 
   response.headers.set("x-request-id", requestId);
-  Object.entries(CORS_HEADERS).forEach(([key, value]) => {
+
+  // CORS
+  const allowedOrigin = resolveOrigin(request);
+  if (allowedOrigin) {
+    response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
+  }
+  response.headers.set("Access-Control-Allow-Methods", ALLOWED_METHODS);
+  response.headers.set("Access-Control-Allow-Headers", ALLOWED_HEADERS);
+
+  // Security headers
+  Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
     response.headers.set(key, value);
   });
 

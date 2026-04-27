@@ -167,6 +167,7 @@ const routes = {
     paymentOrderStatus: "/payment/order-status",
     subscriptionPlans: "/subscription-plans",
     validateCoupon: "/coupon/validate",
+    couponPricingBanners: "/coupon/pricing-banners",
     courseById: (course: string) => `/shiksha/${course}`,
     courseByIdWithUser: (course: string, userId?: string) => {
       let url = `/shiksha/${course}`;

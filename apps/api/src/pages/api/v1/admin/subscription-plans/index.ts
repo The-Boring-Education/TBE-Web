@@ -5,6 +5,7 @@ import { apiStatusCodes } from "@/lib/constants";
 import type { ProductType } from "@/lib/constants/database";
 import { isValidProductType } from "@/lib/constants/products";
 import {
+  deleteSubscriptionPlanFromDB,
   listSubscriptionPlansFromDB,
   type SubscriptionPlanInput,
   upsertSubscriptionPlansInDB,
@@ -49,6 +50,8 @@ const handler = async (
         return handleGet(res);
       case "POST":
         return handlePost(req, res);
+      case "DELETE":
+        return handleDelete(req, res);
       default:
         return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
           sendAPIResponse({
@@ -162,6 +165,61 @@ const handlePost = async (
     sendAPIResponse({
       status: true,
       message: "Subscription plans upserted",
+      data,
+    }),
+  );
+};
+
+const handleDelete = async (
+  req: NextApiRequest,
+  res: NextApiResponse<APIResponseType>,
+) => {
+  const productType = req.query.productType;
+  const planKey = req.query.planKey;
+  if (typeof productType !== "string" || typeof planKey !== "string") {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: "Query params productType and planKey are required",
+      }),
+    );
+  }
+  if (!isValidProductType(productType)) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: `Invalid productType: ${productType}`,
+      }),
+    );
+  }
+
+  const { data, error } = await deleteSubscriptionPlanFromDB(
+    productType as ProductType,
+    planKey,
+  );
+
+  if (error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: error,
+      }),
+    );
+  }
+
+  if (!data?.deleted) {
+    return res.status(apiStatusCodes.NOT_FOUND).json(
+      sendAPIResponse({
+        status: false,
+        message: "No plan found for that productType and planKey",
+      }),
+    );
+  }
+
+  return res.status(apiStatusCodes.OKAY).json(
+    sendAPIResponse({
+      status: true,
+      message: "Subscription plan deleted",
       data,
     }),
   );

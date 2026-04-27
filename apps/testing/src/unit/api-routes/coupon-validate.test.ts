@@ -43,6 +43,11 @@ vi.mock("../../../../api/src/middleware/api", () => ({
   connectDB: vi.fn().mockResolvedValue(undefined),
 }));
 
+// Mock rate limiter to always allow
+vi.mock("../../../../api/src/lib/utils/rateLimit", () => ({
+  rateLimit: () => true,
+}));
+
 import handler from "../../../../api/src/pages/api/v1/coupon/validate";
 
 const mockCoupon = {
@@ -131,8 +136,45 @@ describe("Coupon Validate API Route", () => {
     expect(data.message).toBe("Coupon validated successfully");
     expect(data.data.code).toBe("SAVE20");
     expect(data.data.discountPercentage).toBe(20);
-    expect(data.data.isActive).toBe(true);
     expect(data.data.isValid).toBe(true);
+
+    // Verify sensitive fields are NOT leaked (sanitized in Phase 1.4)
+    expect(data.data._id).toBeUndefined();
+    expect(data.data.maxUsage).toBeUndefined();
+    expect(data.data.currentUsage).toBeUndefined();
+    expect(data.data.applicableProducts).toBeUndefined();
+    expect(data.data.isActive).toBeUndefined();
+    expect(data.data.createdBy).toBeUndefined();
+  });
+
+  it("should only return safe fields: code, discountPercentage, description, minimumAmount, expiryDate, isValid", async () => {
+    mockValidateCouponForProductFromDB.mockResolvedValue({
+      data: mockCoupon,
+    });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: {
+        code: "SAVE20",
+        productId: "prod_456",
+        productType: "SHIKSHA",
+      },
+    });
+
+    await handler(req, res);
+
+    const data = JSON.parse(res._getData());
+    const keys = Object.keys(data.data);
+    expect(keys.sort()).toEqual(
+      [
+        "code",
+        "discountPercentage",
+        "description",
+        "minimumAmount",
+        "expiryDate",
+        "isValid",
+      ].sort(),
+    );
   });
 
   it("should pass all parameters to DB query including userId", async () => {

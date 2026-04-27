@@ -2,6 +2,7 @@ import type { DatabaseQueryResponseType } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
 
 import Coupon from "../models/Coupon";
+import SubscriptionPlan from "../models/SubscriptionPlan";
 
 type CouponValidationError = {
   name: string;
@@ -137,6 +138,7 @@ const createCouponFromDB = async (couponData: {
   maxUsage?: number;
   minimumAmount: number;
   applicableProducts?: string[];
+  showOnPricingBanner?: boolean;
   createdBy: string;
 }): Promise<DatabaseQueryResponseType> => {
   try {
@@ -198,6 +200,7 @@ const updateCouponFromDB = async (
     maxUsage?: number;
     minimumAmount?: number;
     applicableProducts?: string[];
+    showOnPricingBanner?: boolean;
   },
 ): Promise<DatabaseQueryResponseType> => {
   try {
@@ -360,6 +363,80 @@ const removeCouponFromSheetFromDB = async (
   }
 };
 
+export type CouponPricingBannerRow = {
+  code: string;
+  discountPercentage: number;
+  description: string;
+  expiryDate: string;
+  minimumAmount: number;
+};
+
+const isWithinUsageLimit = (coupon: {
+  maxUsage?: number | null;
+  currentUsage: number;
+}): boolean => {
+  if (coupon.maxUsage == null || coupon.maxUsage === 0) {
+    return true;
+  }
+  return coupon.currentUsage < coupon.maxUsage;
+};
+
+const getPricingBannersForProductTypeFromDB = async (
+  productType: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const planRows = await SubscriptionPlan.find({ productType })
+      .select("planKey")
+      .lean();
+    // DB stores planKey lowercased (schema `lowercase: true`); coupon ids may be mixed case.
+    const planKeySet = new Set(
+      (planRows as { planKey: string }[]).map((p) =>
+        String(p.planKey).toLowerCase(),
+      ),
+    );
+
+    const now = new Date();
+    const coupons = await Coupon.find({
+      isActive: true,
+      showOnPricingBanner: true,
+      expiryDate: { $gt: now },
+    })
+      .sort({ expiryDate: 1 })
+      .lean();
+
+    const applicable = (coupons as Record<string, unknown>[]).filter((c) => {
+      if (
+        !isWithinUsageLimit(c as { maxUsage?: number; currentUsage: number })
+      ) {
+        return false;
+      }
+      const apps = (c.applicableProducts as string[] | undefined) || [];
+      if (apps.length === 0) {
+        return true;
+      }
+      return apps.some((id) => planKeySet.has(String(id).toLowerCase()));
+    });
+
+    const data: CouponPricingBannerRow[] = applicable.map(
+      (c: Record<string, unknown>) => ({
+        code: c.code as string,
+        discountPercentage: c.discountPercentage as number,
+        description: c.description as string,
+        expiryDate: (c.expiryDate as Date).toISOString(),
+        minimumAmount: (c.minimumAmount as number) ?? 0,
+      }),
+    );
+
+    return { data };
+  } catch (error) {
+    logger.error("DB: getPricingBannersForProductTypeFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch pricing banners", details: error };
+  }
+};
+
 const incrementCouponUsageFromDB = async (
   couponId: string,
 ): Promise<DatabaseQueryResponseType> => {
@@ -393,6 +470,7 @@ export {
   // Admin functions
   getAllCouponsFromDB,
   getCouponByIdFromDB,
+  getPricingBannersForProductTypeFromDB,
   incrementCouponUsageFromDB,
   removeCouponFromSheetFromDB,
   updateCouponFromDB,

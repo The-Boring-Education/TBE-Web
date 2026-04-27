@@ -2,9 +2,13 @@ import Cors from "cors";
 
 import initMiddleware from "./initMiddleware";
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+  : [];
+
 export const cors = initMiddleware(
   Cors({
-    origin: "*",
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: false,
     allowedHeaders: [

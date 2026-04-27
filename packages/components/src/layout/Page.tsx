@@ -35,6 +35,12 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     };
   }, [isClient, router.events]);
 
+  if (router.pathname === routes.checkout) {
+    return (
+      <main className="bg-lightBG flex min-h-screen flex-col">{children}</main>
+    );
+  }
+
   return (
     <FlexContainer
       as="main"

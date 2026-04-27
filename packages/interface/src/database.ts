@@ -170,6 +170,7 @@ export interface CouponModel extends Document {
   currentUsage: number;
   applicableProducts: string[];
   minimumAmount: number;
+  showOnPricingBanner?: boolean;
   createdBy: typeof Schema.Types.ObjectId;
   isExpired: boolean;
   isUsageLimitReached: boolean;
