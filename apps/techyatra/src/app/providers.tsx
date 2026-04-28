@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthProvider } from "@tbe/auth";
+import { AnalyticsWrapper } from "@tbe/components";
 import { TBEQueryProvider } from "@tbe/query";
 import React from "react";
 
@@ -15,8 +16,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
       <TBEQueryProvider>
-        <TechYatraOnboardingGate />
-        {content}
+        <AnalyticsWrapper>
+          <TechYatraOnboardingGate />
+          {content}
+        </AnalyticsWrapper>
       </TBEQueryProvider>
     </AuthProvider>
   );

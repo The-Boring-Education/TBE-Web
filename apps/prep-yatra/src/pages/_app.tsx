@@ -7,7 +7,11 @@ import { PrepYatraGamificationProvider } from "@tbe/components";
 import { Toaster as Sonner } from "@tbe/components";
 import { Toaster } from "@tbe/components";
 import { TooltipProvider } from "@tbe/components";
-import { initGA, trackPageview } from "@tbe/components/analytics";
+import {
+  initGA,
+  installGlobalAnalyticsListeners,
+  trackPageview,
+} from "@tbe/components/analytics";
 import { GamificationProvider } from "@tbe/gamification";
 import { useProductOnboardingGate } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
@@ -57,6 +61,7 @@ const AppContent = ({
 
   useEffect(() => {
     initGA();
+    installGlobalAnalyticsListeners();
     trackPageview(router.asPath);
     const handleRouteChange = (url: string) => trackPageview(url);
     router.events.on("routeChangeComplete", handleRouteChange);

@@ -60,10 +60,43 @@ export const trackEvent = (
 //   installGlobalAnalyticsListeners
 // };
 export function installGlobalAnalyticsListeners() {
-  if (typeof window !== "undefined") {
-    window.addEventListener("click", (event) => {
-      // Example: custom analytics tracking for global clicks
-      // Event tracking handled by GA
-    });
-  }
+  if (typeof window === "undefined") return;
+  if ((window as any).__ga_global_listeners_installed) return;
+  (window as any).__ga_global_listeners_installed = true;
+
+  // Auto-track all button and link clicks via event delegation
+  document.addEventListener("click", (e) => {
+    const el = (e.target as HTMLElement)?.closest(
+      "a,button,[data-analytics]",
+    ) as HTMLElement | null;
+    if (!el) return;
+
+    const label = (
+      el.getAttribute("data-analytics-label") ||
+      el.textContent ||
+      ""
+    )
+      .trim()
+      .slice(0, 120);
+    const href = (el as HTMLAnchorElement).href;
+    const isOutbound = !!href && !href.includes(window.location.host);
+
+    trackEvent(
+      isOutbound ? "outbound_click" : "click",
+      "interaction",
+      label,
+    );
+  });
+
+  // Auto-track form submissions
+  document.addEventListener(
+    "submit",
+    (e) => {
+      const form = e.target as HTMLFormElement;
+      if (!form) return;
+      const name = form.getAttribute("name") || form.id || "form";
+      trackEvent("form_submit", "form", name);
+    },
+    true,
+  );
 }

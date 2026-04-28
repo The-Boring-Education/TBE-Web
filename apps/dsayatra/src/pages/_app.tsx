@@ -1,9 +1,15 @@
 import "@tbe/components/styles/common.css";
 import "@/index.css";
 
+import {
+  initGA,
+  installGlobalAnalyticsListeners,
+  trackPageview,
+} from "@tbe/components/analytics";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import DsaDashboardLayout from "@/components/layout/DsaDashboardLayout";
 import Layout from "@/components/layout/Layout";
@@ -15,6 +21,15 @@ const DSA_APP_SHELL_PATHS = new Set(["/dashboard", "/revisions", "/topics"]);
 function AppWithShell({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const useDsaShell = DSA_APP_SHELL_PATHS.has(router.pathname);
+
+  useEffect(() => {
+    initGA();
+    installGlobalAnalyticsListeners();
+
+    const handleRouteChange = (url: string) => trackPageview(url);
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => router.events.off("routeChangeComplete", handleRouteChange);
+  }, [router.events]);
   const page = <Component {...pageProps} />;
 
   if (useDsaShell) {
