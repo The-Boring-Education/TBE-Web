@@ -258,7 +258,6 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
                 <FlexContainer className='gap-2 w-full items-center flex-nowrap'>
                   <SelectInput
                     aria-label='Country Code'
-                    className=''
                     list={codeList}
                     selectedItem={code}
                     onChange={(val) =>
