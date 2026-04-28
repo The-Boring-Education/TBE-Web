@@ -61,6 +61,7 @@ const Navbar = ({
   showBackButton = false,
   backButtonHref = "/",
   compact = false,
+  hidePricingLink = false,
 }: MainNavbarProps = {}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
@@ -258,7 +259,7 @@ const Navbar = ({
                     <NavbarDropdownContainer links={learnNav.links} />
                   </PopoverContainer>
                 )}
-                {variantConfig.pricingNavLink && (
+                {variantConfig.pricingNavLink && !hidePricingLink && (
                   <FlexContainer direction="col" itemCenter={false}>
                     <Link
                       className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
@@ -376,7 +377,7 @@ const Navbar = ({
                         onLinkClick={handleCloseMobileMenu}
                       />
                     )}
-                    {variantConfig.pricingNavLink && (
+                    {variantConfig.pricingNavLink && !hidePricingLink && (
                       <FlexContainer
                         className="py-2"
                         direction="col"
