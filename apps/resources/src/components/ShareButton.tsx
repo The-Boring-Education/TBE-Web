@@ -64,7 +64,7 @@ export function ShareButton({ pageUrl, title }: Props) {
   }, [pageUrl, title]);
 
   const shareToWhatsApp = useCallback(() => {
-    const text = encodeURIComponent(`${title}\n${pageUrl}`);
+    const text = encodeURIComponent(`${title}\n\n${pageUrl}`);
     window.open(
       `https://wa.me/?text=${text}`,
       "_blank",
