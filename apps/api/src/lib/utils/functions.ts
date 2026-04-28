@@ -1,3 +1,4 @@
+import { getCashfreePgBaseUrl, paymentConfig } from "@tbe/constants";
 import crypto from "crypto";
 
 import type {
@@ -93,18 +94,6 @@ const buildOrderPayload = ({
   };
 };
 
-/**
- * Cashfree Payment Gateway REST base must include `/pg` (e.g. `https://sandbox.cashfree.com/pg`).
- * If `CASHFREE_BASE_URL` is set to the host only (`https://sandbox.cashfree.com`), we append `/pg`
- * so `POST .../pg/orders` matches Cashfree routing. Without `/pg`, the gateway often responds with
- * "no Route matched with those values".
- */
-const getCashfreePgBaseUrl = (): string => {
-  const raw = envConfig.CASHFREE_BASE_URL.trim().replace(/\/+$/, "");
-  if (!raw) return raw;
-  return raw.endsWith("/pg") ? raw : `${raw}/pg`;
-};
-
 /** Hosted checkout page lives on the same host without the `/pg` API prefix. */
 const buildCashfreeHostedCheckoutLink = (paymentSessionId: string): string => {
   const pg = getCashfreePgBaseUrl();
@@ -144,8 +133,8 @@ type CreateCashfreeOrderResult = {
 const createCashfreeOrder = async (
   orderPayload: ReturnType<typeof buildOrderPayload>,
 ): Promise<CreateCashfreeOrderResult> => {
-  const clientId = envConfig.CASHFREE_CLIENT_ID;
-  const secretKey = envConfig.CASHFREE_SECRET_KEY;
+  const clientId = paymentConfig.CASHFREE_CLIENT_ID;
+  const secretKey = paymentConfig.CASHFREE_SECRET_KEY;
 
   if (!clientId || !secretKey) {
     throw new Error("Cashfree credentials not configured");
@@ -184,8 +173,8 @@ const fetchCashfreeOrderByOrderId = async (
   order_status?: string;
   httpStatus: number;
 }> => {
-  const clientId = envConfig.CASHFREE_CLIENT_ID;
-  const secretKey = envConfig.CASHFREE_SECRET_KEY;
+  const clientId = paymentConfig.CASHFREE_CLIENT_ID;
+  const secretKey = paymentConfig.CASHFREE_SECRET_KEY;
 
   if (!clientId || !secretKey) {
     return { ok: false, httpStatus: 0 };
