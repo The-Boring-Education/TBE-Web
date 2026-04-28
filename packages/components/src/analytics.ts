@@ -79,7 +79,14 @@ export function installGlobalAnalyticsListeners() {
       .trim()
       .slice(0, 120);
     const href = (el as HTMLAnchorElement).href;
-    const isOutbound = !!href && !href.includes(window.location.host);
+    let isOutbound = false;
+    if (href) {
+      try {
+        isOutbound = new URL(href).host !== window.location.host;
+      } catch {
+        // ignore malformed URLs
+      }
+    }
 
     trackEvent(
       isOutbound ? "outbound_click" : "click",
