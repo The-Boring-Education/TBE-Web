@@ -1,5 +1,5 @@
 import { FlexContainer, Footer, Navbar } from "@tbe/components";
-import { envConfig } from "@tbe/constants";
+import { envConfig, routes } from "@tbe/constants";
 import { useThemeProvider } from "@tbe/hooks";
 import type { PageLayoutProps } from "@tbe/interface";
 import { useRouter } from "next/router";
