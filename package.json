@@ -1,7 +1,7 @@
 {
   "name": "tbe-platform",
   "private": true,
-  "version": "2.11.5",
+  "version": "2.11.7",
   "scripts": {
     "build": "turbo run build --concurrency=1",
     "build:all": "turbo run build",
