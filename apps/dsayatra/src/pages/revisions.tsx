@@ -683,7 +683,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                     </div>
 
                     <div className="flex items-center gap-4 flex-shrink-0">
-                      {q.resources?.leetcodeURL && (
+                      {!q.isRealWorldProblem && q.resources?.leetcodeURL && (
                         <a
                           href={q.resources.leetcodeURL}
                           target="_blank"
@@ -694,7 +694,7 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                           <LeetCodeIcon className="w-5 h-5 opacity-60 group-hover/icon:opacity-100 grayscale group-hover/icon:grayscale-0 transition-all" />
                         </a>
                       )}
-                      {q.resources?.youtubeURL && (
+                      {!q.isRealWorldProblem && q.resources?.youtubeURL && (
                         <a
                           href={q.resources.youtubeURL}
                           target="_blank"

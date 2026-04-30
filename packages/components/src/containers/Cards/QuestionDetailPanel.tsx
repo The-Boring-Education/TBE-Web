@@ -406,10 +406,12 @@ const QuestionDetailPanel = ({
             </div>
           </div>
 
-          <ExternalResourceIcons
-            resources={question.resources}
-            className="shrink-0 pt-1"
-          />
+          {!question.isRealWorldProblem && (
+            <ExternalResourceIcons
+              resources={question.resources}
+              className="shrink-0 pt-1"
+            />
+          )}
         </div>
 
         {question.isRealWorldProblem && <RealWorldBanner />}
@@ -445,7 +447,7 @@ const QuestionDetailPanel = ({
               <FallbackMarkdownDescription question={question} />
             )}
 
-            {!hasStructured && (
+            {!hasStructured && !question.isRealWorldProblem && (
               <div className="space-y-1.5 pt-1">
                 <Text level="h2" className="text-red-500 font-bold text-sm">
                   Resources

@@ -47,11 +47,17 @@ describe("DSA Helpers", () => {
         answer: "Token bucket.",
         topics: ["HASHMAP"],
         isRealWorldProblem: true,
+        resources: {
+          leetcodeURL: "https://leetcode.com/problems/rate-limiter",
+          youtubeURL: "https://youtube.com/watch?v=xyz",
+        },
       };
 
       const result = transformDsaQuestion(apiQuestion);
 
       expect(result.isRealWorldProblem).toBe(true);
+      expect(result.resources?.leetcodeURL).toBeUndefined();
+      expect(result.resources?.youtubeURL).toBeUndefined();
     });
 
     it("should strip title from answer text", () => {
