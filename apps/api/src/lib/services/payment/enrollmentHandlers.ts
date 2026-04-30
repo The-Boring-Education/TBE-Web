@@ -114,6 +114,7 @@ const createSubscription: EnrollmentHandler = async (payment) => {
     const { error: createError } = await createSubscriptionInDB({
       userId: payment.user.toString(),
       type: plan.type,
+      productType: payment.productType,
       amount: payment.amount,
       duration: plan.duration,
       expiryDate,

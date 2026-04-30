@@ -107,6 +107,7 @@ const checkPaymentStatusFromDB = async (
       const activeSubscription = await Subscription.findOne({
         userId,
         isActive: true,
+        productType,
       });
 
       if (activeSubscription) {
