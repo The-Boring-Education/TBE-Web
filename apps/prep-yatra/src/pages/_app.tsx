@@ -7,13 +7,8 @@ import { PrepYatraGamificationProvider } from "@tbe/components";
 import { Toaster as Sonner } from "@tbe/components";
 import { Toaster } from "@tbe/components";
 import { TooltipProvider } from "@tbe/components";
-import {
-  initGA,
-  installGlobalAnalyticsListeners,
-  trackPageview,
-} from "@tbe/components/analytics";
 import { GamificationProvider } from "@tbe/gamification";
-import { useProductOnboardingGate } from "@tbe/hooks";
+import { useProductOnboardingGate, useTracking } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -55,20 +50,11 @@ const AppContent = ({
   const { isAuthenticated, isLoading } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
+  useTracking();
+
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  useEffect(() => {
-    initGA();
-    installGlobalAnalyticsListeners();
-    trackPageview(router.asPath);
-    const handleRouteChange = (url: string) => trackPageview(url);
-    router.events.on("routeChangeComplete", handleRouteChange);
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [router]);
 
   const buildRedirectUrl = useCallback(() => {
     if (typeof window === "undefined") return "/dashboard";
