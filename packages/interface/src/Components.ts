@@ -264,6 +264,8 @@ export interface LoadingSpinnerProps {
   marginClass?: string;
   className?: string;
   borderColour?: string;
+  fullPage?: boolean;
+  label?: string;
 }
 
 export interface NavbarDropdownContainerProps {

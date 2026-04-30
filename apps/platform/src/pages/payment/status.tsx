@@ -1,4 +1,4 @@
-import { Button, Text } from '@tbe/components';
+import { Button, LoadingSpinner, Text } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useUser } from '@tbe/hooks';
 import { resolvePaymentSuccessContinueHref, sendRequest } from '@tbe/utils';
@@ -130,7 +130,7 @@ const PaymentStatusPage = () => {
           ) : state === 'loading' || state === 'idle' ? (
             <div className='rounded-2xl bg-white shadow-sm border border-slate-200 p-8'>
               <div className='flex flex-col items-center gap-4'>
-                <div className='animate-spin rounded-full h-10 w-10 border-2 border-indigo-600/20 border-t-indigo-600' />
+                <LoadingSpinner height={10} width={10} />
                 <Text level='p' className='text-slate-600 font-medium'>
                   Verifying your payment…
                 </Text>
