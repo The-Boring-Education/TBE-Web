@@ -6,9 +6,11 @@ import Lottie from 'lottie-react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import successAnimation from '../../../public/animations/payment-success.json';
+
+const AUTO_REDIRECT_SECONDS = 5;
 
 const PaymentStatusPage = () => {
   const router = useRouter();
@@ -83,6 +85,38 @@ const PaymentStatusPage = () => {
       }),
     [nextPath, orderProductType],
   );
+
+  // Auto-redirect countdown after payment success
+  const [countdown, setCountdown] = useState(AUTO_REDIRECT_SECONDS);
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startAutoRedirect = useCallback(() => {
+    setCountdown(AUTO_REDIRECT_SECONDS);
+    countdownRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current) clearInterval(countdownRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    if (state === 'success' && showContent) {
+      startAutoRedirect();
+    }
+    return () => {
+      if (countdownRef.current) clearInterval(countdownRef.current);
+    };
+  }, [state, showContent, startAutoRedirect]);
+
+  useEffect(() => {
+    if (countdown === 0 && state === 'success' && showContent) {
+      router.push(continueHref);
+    }
+  }, [countdown, state, showContent, continueHref, router]);
 
   return (
     <>
@@ -190,6 +224,15 @@ const PaymentStatusPage = () => {
                       className='w-full py-3 font-semibold shadow-sm'
                     />
                   </Link>
+
+                  <Text
+                    level='p'
+                    className='text-slate-400 text-xs mt-3'
+                    aria-live='polite'
+                    aria-atomic='true'
+                  >
+                    Redirecting automatically in {countdown}s…
+                  </Text>
                 </div>
               )}
             </div>
