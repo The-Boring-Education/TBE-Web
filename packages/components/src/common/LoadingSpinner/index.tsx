@@ -4,24 +4,25 @@ const LoadingSpinner = ({
   className,
   height = 12,
   width = 12,
-  marginClass = "",
+  marginClass = "ml-1",
   borderColour = "primary",
   fullPage = false,
   label,
 }: LoadingSpinnerProps) => {
   const sizeClass = `h-${height} w-${width}`;
   const borderColourClass = `border-${borderColour}`;
+  const appliedMargin = fullPage ? "" : marginClass;
 
   const spinner = (
     <div
-      className={`animate-spin rounded-full border-b-2 ${borderColourClass} ${sizeClass} ${marginClass} ${className ?? ""}`}
+      className={`animate-spin rounded-full border-b-2 ${borderColourClass} ${sizeClass} ${appliedMargin} ${className ?? ""}`.trim()}
     />
   );
 
   if (fullPage) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+        <div className="flex flex-col items-center">
           {spinner}
           {label && (
             <p className="mt-4 text-sm text-gray-500">{label}</p>
