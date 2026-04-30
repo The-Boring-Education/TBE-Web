@@ -140,6 +140,11 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       name: "Dashboard",
       href: routes.user.dashboard,
     },
+    {
+      id: "user-profile",
+      name: "Profile",
+      href: routes.user.profile,
+    },
   ],
   issues: [
     {
