@@ -24,6 +24,8 @@ const SubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
     productType: {
       type: String,
       enum: PRODUCT_TYPE,
+      // Optional for backward-compat with legacy subscriptions.
+      // New subscriptions always include productType; legacy rows need a one-time migration.
     },
     amount: {
       type: Number,
