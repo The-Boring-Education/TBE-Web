@@ -16,7 +16,7 @@ export interface TrackingEventParams {
 }
 
 /**
- * useTracking – single hook that initialises GA, installs global click/form
+ * useTracking – single hook that initializes GA, installs global click/form
  * listeners, tracks page-views on route changes, and exposes a `trackEvent`
  * helper for custom events.
  *
@@ -26,17 +26,17 @@ export interface TrackingEventParams {
 const useTracking = () => {
   const router = useRouter();
 
-  // Initialise GA & global listeners once
+  // Initialize GA & global listeners once
   useEffect(() => {
     initGA();
     installGlobalAnalyticsListeners();
+    // Track the initial page view on mount
+    trackPageview(router.asPath);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Track page views on route changes
   useEffect(() => {
-    // Track the initial page view
-    trackPageview(router.asPath);
-
     const handleRouteChange = (url: string) => {
       trackPageview(url);
     };
@@ -45,7 +45,7 @@ const useTracking = () => {
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, [router.events, router.asPath]);
+  }, [router.events]);
 
   // Expose a typed trackEvent helper
   const trackEvent = useCallback(
