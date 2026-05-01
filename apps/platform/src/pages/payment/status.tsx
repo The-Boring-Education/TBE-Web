@@ -209,29 +209,28 @@ const PaymentStatusPage = () => {
                   >
                     You&apos;re all set! 🎉
                   </Text>
-                  <Text
-                    level='p'
-                    className='text-slate-600 mb-6 leading-relaxed'
-                  >
+                  <Text level='p' className='text-slate-600 mb-4 leading-relaxed'>
                     Your purchase is confirmed and access has been unlocked.
-                    Time to start your journey!
                   </Text>
 
-                  <Link href={continueHref}>
-                    <Button
-                      text='Continue to Dashboard →'
-                      variant='PRIMARY'
-                      className='w-full py-3 font-semibold shadow-sm'
-                    />
-                  </Link>
+                  <div className='text-left rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 mb-4'>
+                    <Text level='p' className='text-sm font-semibold text-slate-800'>
+                      What&apos;s coming next
+                    </Text>
+                    <ul className='mt-2 space-y-1 text-xs text-slate-600 list-disc list-inside'>
+                      <li>Personalized learning dashboard</li>
+                      <li>Ready-to-start roadmap</li>
+                      <li>Progress tracking and streaks</li>
+                    </ul>
+                  </div>
 
                   <Text
                     level='p'
-                    className='text-slate-400 text-xs mt-3'
+                    className='text-slate-500 text-sm font-medium'
                     aria-live='polite'
                     aria-atomic='true'
                   >
-                    Redirecting automatically in {countdown}s…
+                    Taking you there in {countdown}s…
                   </Text>
                 </div>
               )}
@@ -310,10 +309,6 @@ const PaymentStatusPage = () => {
             </div>
           )}
 
-          {/* Subtle footer */}
-          <p className='text-xs text-slate-400 mt-8'>
-            Order reference: {orderId || '—'}
-          </p>
         </div>
       </div>
     </>
