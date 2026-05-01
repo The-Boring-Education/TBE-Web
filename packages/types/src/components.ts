@@ -1143,6 +1143,8 @@ export interface MainNavbarProps {
   compact?: boolean;
   onSignOut?: () => void;
   userId?: string;
+  /** When true, the pricing nav link defined by the variant config is hidden (e.g. user already subscribed). */
+  hidePricingLink?: boolean;
 }
 
 export type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";

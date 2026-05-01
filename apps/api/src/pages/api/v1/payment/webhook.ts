@@ -1,7 +1,8 @@
+import { paymentConfig } from "@tbe/constants";
 import type { NextApiRequest, NextApiResponse } from "next";
 import getRawBody from "raw-body";
 
-import { apiStatusCodes, envConfig, isDevelopmentEnv } from "@/lib/constants";
+import { apiStatusCodes, isDevelopmentEnv } from "@/lib/constants";
 import {
   getPaymentByOrderIdFromDB,
   updatePaymentStatusToDB,
@@ -11,7 +12,7 @@ import { sendAPIResponse, verifyWebhookSignature } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
 
-const WEBHOOK_SECRET = envConfig.CASHFREE_SECRET_KEY;
+const WEBHOOK_SECRET = paymentConfig.CASHFREE_SECRET_KEY;
 
 export const config = {
   api: {

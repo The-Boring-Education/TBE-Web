@@ -22,12 +22,26 @@ vi.mock("../../../../api/src/lib/constants", () => ({
     METHOD_NOT_ALLOWED: 405,
   },
   envConfig: {
-    CASHFREE_SECRET_KEY: "test-webhook-secret",
     NODE_ENV: "test",
   },
   isDevelopmentEnv: false,
   PAYMENT_STATUS: ["PENDING", "SUCCESS", "FAILED", "REFUNDED"],
 }));
+
+vi.mock("@tbe/constants", async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+  return {
+    ...actual,
+    paymentConfig: {
+      getCashfreeMode: () => "sandbox",
+      isCashfreeSandbox: () => true,
+      getCashfreePgBaseUrl: () => "https://sandbox.cashfree.com/pg",
+      CASHFREE_BASE_URL: "https://sandbox.cashfree.com/pg",
+      CASHFREE_CLIENT_ID: "test-client-id",
+      CASHFREE_SECRET_KEY: "test-webhook-secret",
+    },
+  };
+});
 
 vi.mock("../../../../api/src/lib/database", () => ({
   getPaymentByOrderIdFromDB: (...args: any[]) =>

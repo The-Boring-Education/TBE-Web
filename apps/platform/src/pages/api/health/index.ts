@@ -26,6 +26,7 @@ const envChecks: EnvVarCheck[] = [
   { name: 'YOUTUBE_API_KEY', optional: true },
 
   // Payment gateway
+  { name: 'NEXT_PUBLIC_CASHFREE_MODE', optional: true },
   { name: 'CASHFREE_BASE_URL', optional: true },
   { name: 'CASHFREE_CLIENT_ID', optional: true },
   { name: 'CASHFREE_SECRET_KEY', optional: true },
