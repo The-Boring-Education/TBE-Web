@@ -36,7 +36,7 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
       )}
 
       <div className={isZenMode ? "min-h-screen bg-[var(--shell-bg)]" : ""}>
-        <p
+        <div
           className={`mb-6 flex items-center justify-end gap-3 text-sm ${isZenMode ? "fixed right-6 top-6 z-[300]" : ""}`}
         >
           <ShareButton pageUrl={pageUrl} title={meta.title} />
@@ -55,7 +55,7 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
           {!isZenMode && (
             <span className="text-zinc-500">Toggle for focused reading</span>
           )}
-        </p>
+        </div>
         <ResourceArticle
           meta={meta}
           pageUrl={pageUrl}

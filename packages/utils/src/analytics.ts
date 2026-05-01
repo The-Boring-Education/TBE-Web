@@ -1,4 +1,4 @@
-export const GA_TRACKING_ID = "G-SR3M17B588";
+export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || "";
 declare global {
   interface Window {
     gtag?: (...args: any[]) => void;
@@ -25,7 +25,10 @@ export const initGA = () => {
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '${GA_TRACKING_ID}', { page_path: window.location.pathname });
+    gtag('config', '${GA_TRACKING_ID}', { 
+      page_path: window.location.pathname,
+      debug_mode: true 
+    });
   `;
   document.head.appendChild(s2);
 
@@ -41,6 +44,7 @@ export const trackPageView = (url: string) => {
   if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("config", GA_TRACKING_ID, {
       page_path: url,
+      debug_mode: true,
     });
   }
 };
