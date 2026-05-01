@@ -35,6 +35,13 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
         />
       )}
 
+      {/* Top unlock banner — shown to unauthenticated users only, full-width */}
+      {!isZenMode && (
+        <div className="-mx-4 -mt-4 mb-6">
+          <SignUpBanner />
+        </div>
+      )}
+
       <div className={isZenMode ? "min-h-screen bg-[var(--shell-bg)]" : ""}>
         <div
           className={`mb-6 flex items-center justify-end gap-3 text-sm ${isZenMode ? "fixed right-6 top-6 z-[300]" : ""}`}
@@ -64,7 +71,6 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
           articleClassName={isZenMode ? ZEN_ARTICLE_CLASS : undefined}
         />
         <div className="flex flex-col items-center px-4">
-          <SignUpBanner />
           <ResourceContributeBanner docTitle={meta.title} pageUrl={pageUrl} />
         </div>
       </div>

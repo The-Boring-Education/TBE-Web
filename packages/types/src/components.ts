@@ -1106,9 +1106,13 @@ export interface NavbarVariantConfig {
   requiresAuth?: boolean;
   showGamification?: boolean;
   showNotifications?: boolean;
+  /** When false, the Login redirect button is hidden (e.g. resources app handles auth via its own CTA). */
+  showLoginButton?: boolean;
   navigation?: NavbarNavigationConfig;
   /** Renders a top-nav link immediately before the Tools popover (desktop + mobile). */
   pricingNavLink?: { href: string; label?: string };
+  /** Custom accent color for variant (e.g. 'emerald-500' for resources). */
+  accentColor?: string;
 }
 
 export type FooterVariant =
