@@ -71,7 +71,7 @@ NEXT_PUBLIC_PLATFORM_URL=http://localhost:3000
 NEXT_PUBLIC_PREP_YATRA_URL=http://localhost:3001
 
 # Analytics & Tracking
-NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+NEXT_PUBLIC_ANALYTICS_ID=your-ga-id
 NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
 
 # Quiz Configuration

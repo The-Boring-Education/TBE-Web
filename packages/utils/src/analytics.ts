@@ -1,4 +1,9 @@
-export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || "";
+export const GA_TRACKING_ID =
+  process.env.NEXT_PUBLIC_ANALYTICS_ID ||
+  process.env.NEXT_PUBLIC_GA_TRACKING_ID ||
+  process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ||
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ||
+  "";
 declare global {
   interface Window {
     gtag?: (...args: any[]) => void;
@@ -10,9 +15,12 @@ export {};
     LOAD GA
 ------------------------------ */
 export const initGA = () => {
-  console.log("Initializing Google Analytics...");
-
   if (typeof window === "undefined") return;
+  if (!GA_TRACKING_ID) return;
+
+  // Prevent double-initialization
+  if ((window as any).__ga_initialized) return;
+  (window as any).__ga_initialized = true;
 
   // gtag script
   const s1 = document.createElement("script");
@@ -28,16 +36,12 @@ export const initGA = () => {
     gtag('config', '${GA_TRACKING_ID}', { page_path: window.location.pathname });
   `;
   document.head.appendChild(s2);
-
-  console.log("✅ GA scripts added");
 };
 
 /* -----------------------------
     PAGE VIEW
 ------------------------------ */
 export const trackPageView = (url: string) => {
-  console.log("📄 Page view:", url);
-
   if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("config", GA_TRACKING_ID, {
       page_path: url,
@@ -52,8 +56,6 @@ export const trackPageview = trackPageView;
     GENERAL EVENT
 ------------------------------ */
 export const trackEvent = (name: string, params: Record<string, any> = {}) => {
-  console.log("🎯 Tracking event:", name, params);
-
   if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("event", name, params);
   }

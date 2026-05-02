@@ -11,7 +11,7 @@ export interface TrackingEventParams {
   action: string;
   category?: string;
   label?: string;
-  value?: number;
+  value?: number | Record<string, any>;
   [key: string]: unknown;
 }
 
