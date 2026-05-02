@@ -6,9 +6,11 @@ import Lottie from 'lottie-react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import successAnimation from '../../../public/animations/payment-success.json';
+
+const AUTO_REDIRECT_SECONDS = 5;
 
 const PaymentStatusPage = () => {
   const router = useRouter();
@@ -83,6 +85,38 @@ const PaymentStatusPage = () => {
       }),
     [nextPath, orderProductType],
   );
+
+  // Auto-redirect countdown after payment success
+  const [countdown, setCountdown] = useState(AUTO_REDIRECT_SECONDS);
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startAutoRedirect = useCallback(() => {
+    setCountdown(AUTO_REDIRECT_SECONDS);
+    countdownRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current) clearInterval(countdownRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    if (state === 'success' && showContent) {
+      startAutoRedirect();
+    }
+    return () => {
+      if (countdownRef.current) clearInterval(countdownRef.current);
+    };
+  }, [state, showContent, startAutoRedirect]);
+
+  useEffect(() => {
+    if (countdown === 0 && state === 'success' && showContent) {
+      router.push(continueHref);
+    }
+  }, [countdown, state, showContent, continueHref, router]);
 
   return (
     <>
@@ -175,21 +209,29 @@ const PaymentStatusPage = () => {
                   >
                     You&apos;re all set! 🎉
                   </Text>
-                  <Text
-                    level='p'
-                    className='text-slate-600 mb-6 leading-relaxed'
-                  >
+                  <Text level='p' className='text-slate-600 mb-4 leading-relaxed'>
                     Your purchase is confirmed and access has been unlocked.
-                    Time to start your journey!
                   </Text>
 
-                  <Link href={continueHref}>
-                    <Button
-                      text='Continue to Dashboard →'
-                      variant='PRIMARY'
-                      className='w-full py-3 font-semibold shadow-sm'
-                    />
-                  </Link>
+                  <div className='text-left rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 mb-4'>
+                    <Text level='p' className='text-sm font-semibold text-slate-800'>
+                      What&apos;s coming next
+                    </Text>
+                    <ul className='mt-2 space-y-1 text-xs text-slate-600 list-disc list-inside'>
+                      <li>Personalized learning dashboard</li>
+                      <li>Ready-to-start roadmap</li>
+                      <li>Progress tracking and streaks</li>
+                    </ul>
+                  </div>
+
+                  <Text
+                    level='p'
+                    className='text-slate-500 text-sm font-medium'
+                    aria-live='polite'
+                    aria-atomic='true'
+                  >
+                    Taking you there in {countdown}s…
+                  </Text>
                 </div>
               )}
             </div>
@@ -267,10 +309,6 @@ const PaymentStatusPage = () => {
             </div>
           )}
 
-          {/* Subtle footer */}
-          <p className='text-xs text-slate-400 mt-8'>
-            Order reference: {orderId || '—'}
-          </p>
         </div>
       </div>
     </>
