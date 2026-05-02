@@ -33,6 +33,7 @@ const PopoverContainer = ({
   }, [onToggle]);
 
   useEffect(() => {
+    // Close popover when route changes (works with both Pages and App Router)
     if (pathname !== previousPathname.current && isOpen) {
       onToggle();
       previousPathname.current = pathname;
