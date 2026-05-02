@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "python3 .github/hooks/scripts/suggest-tests.py",
+        "cwd": "${workspaceFolder}",
+        "timeout": 10
+      }
+    ]
+  }
+}
