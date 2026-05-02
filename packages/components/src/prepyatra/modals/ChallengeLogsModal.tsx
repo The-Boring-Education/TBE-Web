@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import Button from "../../common/Buttons/Button";
+import LoadingSpinner from "../../common/LoadingSpinner";
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
@@ -324,7 +325,7 @@ ${
 
               {loading ? (
                 <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+                  <LoadingSpinner height={8} width={8} />
                   <p className="text-greyDark mt-2">Loading logs...</p>
                 </div>
               ) : logs.length === 0 ? (

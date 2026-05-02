@@ -95,7 +95,16 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       ),
     [questions, currentQuestionId],
   );
-  const questionResources = currentQuestion?.resources;
+  const questionResources = useMemo(() => {
+    if (!currentQuestion?.resources) return undefined;
+    // Hide leetcode and youtube links for real world problems
+    if ((currentQuestion as any).isRealWorldProblem) {
+      const { youtubeURL, leetcodeURL, ...rest } =
+        currentQuestion.resources as any;
+      return Object.keys(rest).length > 0 ? rest : undefined;
+    }
+    return currentQuestion.resources;
+  }, [currentQuestion]);
 
   useEffect(() => {
     setIsQuestionCompleted(currentQuestion?.isCompleted);

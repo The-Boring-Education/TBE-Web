@@ -1,3 +1,4 @@
+import { LoadingSpinner } from "@tbe/components";
 import { useProductOnboardingGate } from "@tbe/hooks";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
@@ -24,7 +25,7 @@ export const OnboardingCheck = () => {
   if (isChecking) {
     return (
       <div className="fixed inset-0 bg-[#0A0A0A] z-[9999] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500" />
+        <LoadingSpinner />
       </div>
     );
   }

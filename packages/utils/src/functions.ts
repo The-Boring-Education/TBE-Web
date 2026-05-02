@@ -2,6 +2,7 @@ import {
   envConfig,
   JOB_SKILL_NORMALIZER,
   LINKS,
+  paymentConfig,
   POINTS_RULES,
   routes,
   SKILL_BLACKLIST,
@@ -644,23 +645,26 @@ const buildOrderPayload = ({
 const createCashfreeOrder = async (
   orderPayload: ReturnType<typeof buildOrderPayload>,
 ): Promise<{ data: any; ok: boolean }> => {
-  const clientId = envConfig.CASHFREE_CLIENT_ID;
-  const secretKey = envConfig.CASHFREE_SECRET_KEY;
+  const clientId = paymentConfig.CASHFREE_CLIENT_ID;
+  const secretKey = paymentConfig.CASHFREE_SECRET_KEY;
 
   if (!clientId || !secretKey) {
     throw new Error("Cashfree credentials not configured");
   }
 
-  const response = await fetch(`${envConfig.CASHFREE_BASE_URL}/orders`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-client-id": clientId,
-      "x-client-secret": secretKey,
-      "x-api-version": "2022-09-01",
+  const response = await fetch(
+    `${paymentConfig.getCashfreePgBaseUrl()}/orders`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-client-id": clientId,
+        "x-client-secret": secretKey,
+        "x-api-version": "2022-09-01",
+      },
+      body: JSON.stringify(orderPayload),
     },
-    body: JSON.stringify(orderPayload),
-  });
+  );
 
   const data = await response.json();
 

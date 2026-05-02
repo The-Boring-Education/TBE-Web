@@ -26,12 +26,13 @@ const envChecks: EnvVarCheck[] = [
   { name: 'YOUTUBE_API_KEY', optional: true },
 
   // Payment gateway
+  { name: 'NEXT_PUBLIC_CASHFREE_MODE', optional: true },
   { name: 'CASHFREE_BASE_URL', optional: true },
   { name: 'CASHFREE_CLIENT_ID', optional: true },
   { name: 'CASHFREE_SECRET_KEY', optional: true },
 
   // Monitoring & analytics
-  { name: 'NEXT_PUBLIC_GA_MEASUREMENT_ID', optional: true },
+  { name: 'NEXT_PUBLIC_ANALYTICS_ID', optional: true },
   { name: 'NEXT_PUBLIC_SENTRY_DSN', optional: true },
   { name: 'SENTRY_AUTH_TOKEN', optional: true },
 

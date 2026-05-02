@@ -623,6 +623,7 @@ export interface PrepYatraSubscriptionModel extends Document {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   type: SubscriptionType;
+  productType?: string;
   amount: number;
   duration: number;
   startDate: Date;

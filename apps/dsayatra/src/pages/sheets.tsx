@@ -3,6 +3,7 @@ import {
   DsaUpsellModal,
   FreemiumLockBanner,
   LearningEnvironmentLayout,
+  LoadingSpinner,
   SEO,
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
@@ -178,20 +179,8 @@ const SheetsPageClient = () => {
 
   if (sheetsLoading || userLoading || isProgressLoading) {
     return (
-      <div className="flex min-h-screen bg-[#0A0A0A] font-sans items-center justify-center px-6 text-center">
-        <div className="space-y-1">
-          <p className="text-[12px] font-semibold text-gray-200 leading-tight">
-            Loading workspace
-            <span className="inline-flex w-4 justify-start" aria-hidden>
-              <span className="animate-pulse">.</span>
-              <span className="animate-pulse [animation-delay:150ms]">.</span>
-              <span className="animate-pulse [animation-delay:300ms]">.</span>
-            </span>
-          </p>
-          <p className="text-[10px] font-medium text-gray-500 leading-tight">
-            Just a moment
-          </p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A]">
+        <LoadingSpinner />
       </div>
     );
   }

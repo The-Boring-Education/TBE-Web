@@ -1,6 +1,7 @@
 import "@tbe/components/styles/common.css";
 import "@/index.css";
 
+import { useTracking } from "@tbe/hooks";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -15,6 +16,8 @@ const DSA_APP_SHELL_PATHS = new Set(["/dashboard", "/revisions", "/topics"]);
 function AppWithShell({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const useDsaShell = DSA_APP_SHELL_PATHS.has(router.pathname);
+
+  useTracking();
   const page = <Component {...pageProps} />;
 
   if (useDsaShell) {

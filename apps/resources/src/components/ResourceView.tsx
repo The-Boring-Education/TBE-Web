@@ -6,6 +6,8 @@ import type { ResourceMeta } from "@/lib/types";
 
 import { ResourceArticle } from "./ResourceArticle";
 import { ResourceContributeBanner } from "./ResourceContributeBanner";
+import { ShareButton } from "./ShareButton";
+import { SignUpBanner } from "./SignUpBanner";
 
 type Props = {
   meta: ResourceMeta;
@@ -33,10 +35,18 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
         />
       )}
 
+      {/* Top unlock banner — shown to unauthenticated users only, full-width */}
+      {!isZenMode && (
+        <div className="-mx-4 -mt-4 mb-6">
+          <SignUpBanner />
+        </div>
+      )}
+
       <div className={isZenMode ? "min-h-screen bg-[var(--shell-bg)]" : ""}>
-        <p
-          className={`mb-6 text-right text-sm ${isZenMode ? "fixed right-6 top-6 z-[300]" : ""}`}
+        <div
+          className={`mb-6 flex items-center justify-end gap-3 text-sm ${isZenMode ? "fixed right-6 top-6 z-[300]" : ""}`}
         >
+          <ShareButton pageUrl={pageUrl} title={meta.title} />
           <button
             type="button"
             onClick={() => setIsZenMode((prev) => !prev)}
@@ -49,11 +59,10 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
           >
             {isZenMode ? "Zen Mode active" : "Enable Zen Mode"}
           </button>
-          <span className="text-zinc-600"> · </span>
-          <span className="text-zinc-500">
-            {!isZenMode && "Toggle for focused reading"}
-          </span>
-        </p>
+          {!isZenMode && (
+            <span className="text-zinc-500">Toggle for focused reading</span>
+          )}
+        </div>
         <ResourceArticle
           meta={meta}
           pageUrl={pageUrl}
@@ -61,7 +70,7 @@ export function ResourceView({ meta, pageUrl, styleTags, bodyHtml }: Props) {
           bodyHtml={bodyHtml}
           articleClassName={isZenMode ? ZEN_ARTICLE_CLASS : undefined}
         />
-        <div className="flex justify-center px-4">
+        <div className="flex flex-col items-center px-4">
           <ResourceContributeBanner docTitle={meta.title} pageUrl={pageUrl} />
         </div>
       </div>

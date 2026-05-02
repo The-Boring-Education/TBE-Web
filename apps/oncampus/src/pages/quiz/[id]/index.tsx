@@ -1,5 +1,5 @@
 import { useAuth } from "@tbe/auth";
-import { Text } from "@tbe/components";
+import { LoadingSpinner, Text } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { routes } from "@tbe/constants";
 import { queryKeys, useQueryClient } from "@tbe/query";
@@ -229,12 +229,8 @@ export default function QuizPage() {
       <OnCampusLearningLayout backHref="/dashboard/quizzes" isLoading>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            {/* Animated Spinner */}
             <div className="flex justify-center mb-6">
-              <div className="relative w-10 h-10">
-                <div className="absolute inset-0 border-4 border-gray-800 rounded-full" />
-                <div className="absolute inset-0 border-4 border-transparent border-t-red-500 rounded-full animate-spin" />
-              </div>
+              <LoadingSpinner height={10} width={10} />
             </div>
             <Text level="h1" className="text-white font-bold text-lg">
               Submitting quiz...

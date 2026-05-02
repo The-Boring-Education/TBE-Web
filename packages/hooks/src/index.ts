@@ -50,5 +50,7 @@ export { default as useScrollPosition } from "./useScrollPosition";
 export { default as useSkillPlaylist } from "./useSkillPlaylist";
 export { useStudyGuideTopic } from "./useStudyGuide";
 export { default as useUnskilledGraphData } from "./useUnskilledGraphData";
+export { default as useTracking } from "./useTracking";
+export type { TrackingEventParams } from "./useTracking";
 export { default as useUser } from "./useUser";
 export { default as useUsername } from "./useUsername";

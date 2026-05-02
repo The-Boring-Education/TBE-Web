@@ -100,6 +100,21 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const questionResources = useMemo(() => {
     if (!currentQuestion?.resources) return undefined;
 
+    // Hide leetcode and youtube links for real world problems
+    if ((currentQuestion as any).isRealWorldProblem) {
+      if (Array.isArray(currentQuestion.resources)) {
+        const res: any = {};
+        currentQuestion.resources.forEach((r: any) => {
+          const type = r.type?.toLowerCase();
+          if (type === "blog" || type === "article") res.blogURL = r.url;
+        });
+        return Object.keys(res).length > 0 ? res : undefined;
+      }
+      const { youtubeURL, leetcodeURL, ...rest } =
+        currentQuestion.resources as any;
+      return Object.keys(rest).length > 0 ? rest : undefined;
+    }
+
     // Handle new array format
     if (Array.isArray(currentQuestion.resources)) {
       const res: any = {};

@@ -4,15 +4,10 @@ import '@/styles/colors.css';
 
 import { AuthProvider } from '@tbe/auth';
 import { Layout } from '@tbe/components';
-import {
-  initGA,
-  installGlobalAnalyticsListeners,
-  trackPageview,
-} from '@tbe/components/analytics';
 // import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
 import { envConfig, routes } from '@tbe/constants';
 import { GamificationProvider } from '@tbe/gamification';
-import { useUser } from '@tbe/hooks';
+import { useTracking, useUser } from '@tbe/hooks';
 import { TBEQueryProvider } from '@tbe/query';
 import { getRedirectUrl } from '@tbe/utils';
 import type { AppProps } from 'next/app';
@@ -42,17 +37,7 @@ const AppContent = ({
     setIsClient(true);
   }, []);
 
-  // ✅ Initialize Google Analytics
-  useEffect(() => {
-    initGA();
-    installGlobalAnalyticsListeners();
-
-    const handleRouteChange = (url: string) => {
-      trackPageview(url);
-    };
-    router.events.on('routeChangeComplete', handleRouteChange);
-    return () => router.events.off('routeChangeComplete', handleRouteChange);
-  }, [router.events]);
+  useTracking();
 
   const [isSyncingSession, setIsSyncingSession] = useState(false);
 

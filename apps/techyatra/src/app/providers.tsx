@@ -1,8 +1,10 @@
 "use client";
 
 import { AuthProvider } from "@tbe/auth";
+import { AnalyticsWrapper } from "@tbe/components";
 import { TBEQueryProvider } from "@tbe/query";
 import React from "react";
+import { Suspense } from "react";
 
 import { TechYatraOnboardingGate } from "@/components/TechYatraOnboardingGate";
 
@@ -15,8 +17,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
       <TBEQueryProvider>
-        <TechYatraOnboardingGate />
-        {content}
+        <Suspense fallback={<>{content}</>}>
+          <AnalyticsWrapper>
+            <TechYatraOnboardingGate />
+            {content}
+          </AnalyticsWrapper>
+        </Suspense>
       </TBEQueryProvider>
     </AuthProvider>
   );
