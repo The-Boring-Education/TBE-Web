@@ -107,6 +107,14 @@ const checkPaymentStatusFromDB = async (
       const activeSubscription = await Subscription.findOne({
         userId,
         isActive: true,
+        // Match either the exact productType or legacy rows (no productType stored)
+        // that were created before product-scoping was added (originally all were PrepYatra).
+        $or: [
+          { productType },
+          ...(productType === "PREPYATRA"
+            ? [{ productType: { $exists: false } }]
+            : []),
+        ],
       });
 
       if (activeSubscription) {

@@ -1,13 +1,11 @@
-import {
-  Popover,
-  PopoverButton,
-  PopoverPanel,
-  Transition,
-} from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import type { PopoverContainerProps } from "@tbe/interface";
 import { usePathname } from "next/navigation";
-import { Fragment, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+
+/** How long (ms) to wait after mouse-leave before closing, so the cursor
+ *  can travel from the trigger button down to the panel without flickering. */
+const HOVER_CLOSE_DELAY_MS = 200;
 
 const PopoverContainer = ({
   label,
@@ -18,15 +16,14 @@ const PopoverContainer = ({
   theme,
 }: PopoverContainerProps & { theme?: "light" | "dark" }) => {
   const pathname = usePathname();
-  const popoverButtonRef = useRef<HTMLButtonElement>(null);
   const previousPathname = useRef(pathname);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // ── Close when the route changes ────────────────────────────────────────
   useEffect(() => {
     // Close popover when route changes (works with both Pages and App Router)
     if (pathname !== previousPathname.current && propOpen) {
       onToggle();
-      previousPathname.current = pathname;
     }
   }, [pathname, propOpen, onToggle]);
 
@@ -58,6 +55,33 @@ const PopoverContainer = ({
     }, 200);
   };
 
+  // ── Clear the timer when the component unmounts ──────────────────────────
+  useEffect(() => {
+    return () => {
+      if (closeTimer.current !== null) clearTimeout(closeTimer.current);
+    };
+  }, []);
+
+  // ── Hover helpers ────────────────────────────────────────────────────────
+  const cancelClose = () => {
+    if (closeTimer.current !== null) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  const handleMouseEnter = () => {
+    cancelClose();
+    if (!openRef.current) onToggle(); // open only if currently closed
+  };
+
+  const handleMouseLeave = () => {
+    closeTimer.current = setTimeout(() => {
+      if (openRef.current) onToggle(); // close only if still open
+    }, HOVER_CLOSE_DELAY_MS);
+  };
+
+  // ── Render ───────────────────────────────────────────────────────────────
   return (
     <Popover className="relative">
       {/* Ignore headlessui's internal click-only open state — use propOpen (parent-controlled) instead */}

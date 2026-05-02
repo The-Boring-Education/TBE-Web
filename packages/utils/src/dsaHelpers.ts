@@ -41,9 +41,13 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     answer,
     resources: {
       ...question.resources,
-      youtubeURL:
-        question.resources?.youtubeURL ||
-        generateYouTubeSearchLink(question.title),
+      youtubeURL: question.isRealWorldProblem
+        ? undefined
+        : question.resources?.youtubeURL ||
+          generateYouTubeSearchLink(question.title),
+      leetcodeURL: question.isRealWorldProblem
+        ? undefined
+        : question.resources?.leetcodeURL,
     },
     topics: question.topics,
     companyType: question.companyTypes,

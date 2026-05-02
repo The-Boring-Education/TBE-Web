@@ -141,6 +141,11 @@ const Navbar = ({
 
   const showNotifications = variantConfig.showNotifications !== false;
 
+  const showLoginButton = variantConfig.showLoginButton !== false;
+
+  // Compute accent color class from variant config, fallback to primary
+  const accentColorClass = variantConfig.accentColor || "primary";
+
   return (
     <motion.header
       animate={{ y: isVisible ? 0 : -100 }}
@@ -210,7 +215,9 @@ const Navbar = ({
               ))}
               {requiresAuth && showNotifications && <NotificationPopover />}
               {/* {showGamification && <UserPointButton />} */}
-              {requiresAuth && <LoginRedirectButton text="Login" />}
+              {requiresAuth && showLoginButton && (
+                <LoginRedirectButton text="Login" />
+              )}
               {requiresAuth && (
                 <UserAvatar dashboardRoute={finalDashboardRoute} />
               )}
@@ -240,7 +247,7 @@ const Navbar = ({
                 {issuesNav.visible && issuesNav.links[0]?.href && (
                   <FlexContainer direction="col" itemCenter={false}>
                     <Link
-                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
+                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-${accentColorClass}`}
                       href={issuesNav.links[0].href}
                       target={issuesNav.links[0]?.target}
                     >
@@ -262,7 +269,7 @@ const Navbar = ({
                 {variantConfig.pricingNavLink && !hidePricingLink && (
                   <FlexContainer direction="col" itemCenter={false}>
                     <Link
-                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
+                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-${accentColorClass}`}
                       href={variantConfig.pricingNavLink.href}
                     >
                       {variantConfig.pricingNavLink.label ?? "Pricing"}
@@ -293,7 +300,9 @@ const Navbar = ({
 
                 {requiresAuth && showNotifications && <NotificationPopover />}
                 {showGamification && <UserPointButton />}
-                {requiresAuth && <LoginRedirectButton text="Login" />}
+                {requiresAuth && showLoginButton && (
+                  <LoginRedirectButton text="Login" />
+                )}
                 {requiresAuth && (
                   <UserAvatar dashboardRoute={finalDashboardRoute} />
                 )}
@@ -359,7 +368,7 @@ const Navbar = ({
                         {showGamification && <UserPointButton />}
                       </FlexContainer>
                     )}
-                    {requiresAuth && (
+                    {requiresAuth && showLoginButton && (
                       <FlexContainer
                         className="gap-1"
                         direction="col"
@@ -384,7 +393,7 @@ const Navbar = ({
                         itemCenter={false}
                       >
                         <Link
-                          className={`text-base font-medium ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
+                          className={`text-base font-medium ${theme === "dark" ? "text-white" : "text-black"} hover:text-${accentColorClass}`}
                           href={variantConfig.pricingNavLink.href}
                           onClick={handleCloseMobileMenu}
                         >

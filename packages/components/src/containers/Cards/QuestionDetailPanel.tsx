@@ -390,11 +390,6 @@ const QuestionDetailPanel = ({
               </Text>
             </div>
             <div className="flex items-center gap-2">
-              {question.isRealWorldProblem && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 bg-blue-950/30 text-blue-400 border-blue-900/50 uppercase">
-                  Real World
-                </span>
-              )}
               <span
                 className={cn(
                   "text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0",
@@ -406,10 +401,12 @@ const QuestionDetailPanel = ({
             </div>
           </div>
 
-          <ExternalResourceIcons
-            resources={question.resources}
-            className="shrink-0 pt-1"
-          />
+          {!question.isRealWorldProblem && (
+            <ExternalResourceIcons
+              resources={question.resources}
+              className="shrink-0 pt-1"
+            />
+          )}
         </div>
 
         {question.isRealWorldProblem && <RealWorldBanner />}
@@ -445,7 +442,7 @@ const QuestionDetailPanel = ({
               <FallbackMarkdownDescription question={question} />
             )}
 
-            {!hasStructured && (
+            {!hasStructured && !question.isRealWorldProblem && (
               <div className="space-y-1.5 pt-1">
                 <Text level="h2" className="text-red-500 font-bold text-sm">
                   Resources

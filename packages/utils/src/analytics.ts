@@ -1,4 +1,4 @@
-export const GA_TRACKING_ID = "G-SR3M17B588";
+export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || "";
 declare global {
   interface Window {
     gtag?: (...args: any[]) => void;

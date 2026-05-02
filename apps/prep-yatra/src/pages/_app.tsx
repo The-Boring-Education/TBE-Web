@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 
 import { AuthProvider } from "@tbe/auth";
 import { useAuth } from "@tbe/auth";
-import { PrepYatraGamificationProvider } from "@tbe/components";
+import { LoadingSpinner, PrepYatraGamificationProvider } from "@tbe/components";
 import { Toaster as Sonner } from "@tbe/components";
 import { Toaster } from "@tbe/components";
 import { TooltipProvider } from "@tbe/components";
@@ -93,7 +93,7 @@ const AppContent = ({
   ) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+        <LoadingSpinner />
       </div>
     );
   }
