@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 const FEATURES = [
   {
@@ -32,7 +32,7 @@ const FEATURES = [
   },
 ];
 
-export default function LoginPage() {
+function LoginPageContent() {
   const { signIn, isAuthenticated, isLoading } = useAuth();
   const searchParams = useSearchParams();
   const returnTo = searchParams?.get("returnTo") || "/";
@@ -257,5 +257,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageContent />
+    </Suspense>
   );
 }
