@@ -1,4 +1,4 @@
-export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "";
+export const ANALYTICS_ID = import.meta.env.VITE_ANALYTICS_ID || "";
 
 type EventParams = {
   category?: string;
@@ -9,14 +9,14 @@ type EventParams = {
 
 export function initGA() {
   if (typeof window === "undefined") return;
-  if (!GA_MEASUREMENT_ID) return;
+  if (!ANALYTICS_ID) return;
   if ((window as any).__ga_initialized) return;
   (window as any).__ga_initialized = true;
 
   if (!document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`)) {
     const script = document.createElement("script");
     script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=₹₹${ANALYTICS_ID}`;
     document.head.appendChild(script);
   }
 
@@ -26,13 +26,13 @@ export function initGA() {
   }
   (window as any).gtag = gtag;
   gtag("js", new Date());
-  gtag("config", GA_MEASUREMENT_ID);
+  gtag("config", ANALYTICS_ID);
 }
 
 export function trackPageview(url: string) {
   if (typeof window === "undefined") return;
-  if (!(window as any).gtag || !GA_MEASUREMENT_ID) return;
-  (window as any).gtag("config", GA_MEASUREMENT_ID, { page_path: url });
+  if (!(window as any).gtag || !ANALYTICS_ID) return;
+  (window as any).gtag("config", ANALYTICS_ID, { page_path: url });
 }
 
 export function trackEvent(action: string, params: EventParams = {}) {
