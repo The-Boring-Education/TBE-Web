@@ -1,7 +1,7 @@
 export const GA_TRACKING_ID =
   process.env.NEXT_PUBLIC_ANALYTICS_ID ||
   process.env.NEXT_PUBLIC_GA_TRACKING_ID ||
-  process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ||
+  process.env.NEXT_PUBLIC_ANALYTICS_ID ||
   process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ||
   "";
 declare global {

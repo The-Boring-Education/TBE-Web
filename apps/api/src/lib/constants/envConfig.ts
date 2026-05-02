@@ -48,10 +48,7 @@ const envConfig = {
   ADMIN_SECRET: process.env.ADMIN_SECRET as string,
   YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY || "",
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET as string,
-  GA_TRACKING_ID:
-    process.env.NEXT_PUBLIC_ANALYTICS_ID ||
-    process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ||
-    "",
+  GA_TRACKING_ID: process.env.NEXT_PUBLIC_ANALYTICS_ID || "",
   ADMIN_BASE_URL: process.env.ADMIN_BASE_URL || "",
   SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN || "",
   PREPYATRA_APP_URL: process.env.PREPYATRA_APP_URL || "",
