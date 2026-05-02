@@ -25,10 +25,7 @@ export const initGA = () => {
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '${GA_TRACKING_ID}', { 
-      page_path: window.location.pathname,
-      debug_mode: true 
-    });
+    gtag('config', '${GA_TRACKING_ID}', { page_path: window.location.pathname });
   `;
   document.head.appendChild(s2);
 
@@ -44,7 +41,6 @@ export const trackPageView = (url: string) => {
   if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("config", GA_TRACKING_ID, {
       page_path: url,
-      debug_mode: true,
     });
   }
 };

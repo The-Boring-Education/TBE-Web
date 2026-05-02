@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
+import { RestrictedResourceList } from "@/components/RestrictedResourceList";
 import { getResourceIndex } from "@/lib/content";
 import { getSiteBaseUrl } from "@/lib/site";
 
@@ -34,35 +34,15 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12">
-      <h1 className="text-2xl font-semibold tracking-tight text-white">
+      <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
         Learning resources
       </h1>
-      <p className="mt-2 text-[var(--shell-muted)]">
+      <p className="mt-4 text-lg text-zinc-400">
         Guides and roadmaps from our team. New drops ship with regular deploys.
       </p>
-      <p className="mt-6">
-        <Link
-          href="/search"
-          className="text-[var(--shell-accent)] underline-offset-4 hover:underline"
-        >
-          Search all resources
-        </Link>
-      </p>
-      <ul className="mt-10 space-y-3">
-        {items.map((it) => (
-          <li key={it.slug}>
-            <Link
-              href={`/resources/${it.slug}`}
-              className="block rounded-md border border-[var(--shell-border)] bg-zinc-900/40 px-4 py-3 transition hover:border-zinc-600"
-            >
-              <span className="font-medium text-white">{it.title}</span>
-              <p className="mt-1 text-sm text-[var(--shell-muted)]">
-                {it.description}
-              </p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+
+      <RestrictedResourceList items={items} />
+
       {items.length === 0 && (
         <p className="mt-8 text-sm text-[var(--shell-muted)]">
           No resources yet. Add folders under{" "}

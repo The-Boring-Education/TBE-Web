@@ -2,6 +2,7 @@ import { useAuth } from "@tbe/auth";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+import LoadingSpinner from "../../common/LoadingSpinner";
 import LoginCardNew from "../../containers/Cards/LoginCardNew";
 import Footer from "../../layout/Footer";
 import Navbar from "../../layout/Navbar";
@@ -29,7 +30,7 @@ export default function PrepYatraLoginPage() {
   if (isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+        <LoadingSpinner />
       </div>
     );
   }

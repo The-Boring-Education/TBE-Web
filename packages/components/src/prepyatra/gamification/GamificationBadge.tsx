@@ -2,6 +2,7 @@ import { usePyGamification } from "@tbe/hooks";
 import type { GamificationBadgeProps } from "@tbe/interface";
 import { Star } from "lucide-react";
 
+import LoadingSpinner from "../../common/LoadingSpinner";
 import { Badge } from "../ui/badge";
 
 export function GamificationBadge({
@@ -15,7 +16,7 @@ export function GamificationBadge({
       <div
         className={`flex items-center gap-2 px-3 py-1 rounded-full bg-gray-800/50 ${className}`}
       >
-        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
+        <LoadingSpinner height={4} width={4} />
       </div>
     );
   }

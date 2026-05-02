@@ -179,6 +179,7 @@ const getActiveSubscriptionByUserFromDB = async (
 const createSubscriptionInDB = async ({
   userId,
   type,
+  productType,
   amount,
   duration,
   expiryDate,
@@ -186,6 +187,7 @@ const createSubscriptionInDB = async ({
 }: {
   userId: string;
   type: string;
+  productType?: string;
   amount: number;
   duration: number;
   expiryDate: Date;
@@ -195,6 +197,7 @@ const createSubscriptionInDB = async ({
     const subscription = await Subscription.create({
       userId: new mongoose.Types.ObjectId(userId),
       type,
+      ...(productType && { productType }),
       amount,
       duration,
       expiryDate,

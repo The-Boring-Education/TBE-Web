@@ -1,6 +1,6 @@
 "use client";
 
-import { AnalyticsWrapper } from "@tbe/components";
+import { AuthProvider } from "@tbe/auth";
 import { TBEQueryProvider } from "@tbe/query";
 import React, { Suspense } from "react";
 
@@ -10,9 +10,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const content = children as Parameters<
     typeof TBEQueryProvider
   >[0]["children"];
+
   return (
-    <AnalyticsWrapper>
-      <TBEQueryProvider>{content}</TBEQueryProvider>
-    </AnalyticsWrapper>
+    <AuthProvider>
+      <TBEQueryProvider>
+        <Suspense fallback={null}>
+          <AnalyticsProvider>{content}</AnalyticsProvider>
+        </Suspense>
+      </TBEQueryProvider>
+    </AuthProvider>
   );
 }
