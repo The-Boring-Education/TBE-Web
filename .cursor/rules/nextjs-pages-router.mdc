@@ -1,0 +1,140 @@
+---
+description: Rules for creating Next.js pages in the Pages Router apps (platform, prep-yatra, quizes, etc.)
+globs: ["apps/*/src/pages/**/*.tsx", "apps/*/src/pages/**/*.ts"]
+alwaysApply: false
+---
+
+# Next.js Pages Router Skill
+
+## Purpose
+All frontend apps in TBE-Web (except onboarding) use Next.js Pages Router (`pages/` directory). This skill prevents SSR/SSG mistakes, ensures SEO is always included, and enforces the `PageLayout` + `getPreFetchProps` pattern used consistently across apps.
+
+## Rules
+1. **Every public page must include `<SEO>`** — import from `@tbe/components` and pass `seoMeta` from `getStaticProps` / `getServerSideProps`.
+2. **Use `getPreFetchProps` from `@tbe/utils`** for all pages that need SEO metadata — it handles the SEO API call pattern.
+3. **Wrap every page in `<PageLayout>`** — imported from `@tbe/components`. Exceptions: checkout and payment status pages (already handled inside PageLayout).
+4. **Page component must accept `PageProps` from `@tbe/interface`** as its props type.
+5. **`_app.tsx` is the only place for global providers** — never add providers inside a page component.
+6. **Dynamic routes must use `getStaticPaths` with `fallback: "blocking"`** — never `fallback: false` unless the data set is small and static.
+7. **Use `useRouter()` only for navigation and query params** — never for auth guards (use middleware or `useUser`).
+8. **Auth gates must use `useUser()` from `@tbe/hooks`** — check `isAuth` and `loading` before redirecting.
+9. **Never use `next/image` `layout="fill"` prop** — it's removed in Next.js 14. Use `fill` boolean prop.
+10. **Route constants must come from `@tbe/constants` `routes` object** — never hardcode `/dashboard` strings.
+
+## Patterns
+
+### Standard page structure
+```tsx
+// apps/platform/src/pages/some-feature.tsx
+import { SEO, PageSection } from "@tbe/components";
+import { routes } from "@tbe/constants";
+import type { PageProps } from "@tbe/interface";
+import { getPreFetchProps } from "@tbe/utils";
+import type { GetStaticProps } from "next";
+import { Fragment } from "react";
+
+const SomeFeaturePage = ({ seoMeta }: PageProps) => {
+  return (
+    <Fragment>
+      <SEO seoMeta={seoMeta} />
+      <PageSection>
+        {/* page content */}
+      </PageSection>
+    </Fragment>
+  );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  return await getPreFetchProps({ pageId: "some-feature" });
+};
+
+export default SomeFeaturePage;
+```
+
+### Auth-gated page
+```tsx
+import { useUser } from "@tbe/hooks";
+import { routes } from "@tbe/constants";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
+const ProtectedPage = ({ seoMeta }: PageProps) => {
+  const { isAuth, loading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !isAuth) {
+      router.replace(routes.login);
+    }
+  }, [isAuth, loading, router]);
+
+  if (loading) return <LoadingSpinner />;
+  if (!isAuth) return null;
+
+  return (
+    <Fragment>
+      <SEO seoMeta={seoMeta} />
+      {/* protected content */}
+    </Fragment>
+  );
+};
+```
+
+### Dynamic route with getStaticPaths
+```tsx
+// apps/platform/src/pages/courses/[slug].tsx
+import type { GetStaticPaths, GetStaticProps } from "next";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const slugs = await fetchAllSlugs(); // fetch from @tbe/services
+  return {
+    paths: slugs.map((slug) => ({ params: { slug } })),
+    fallback: "blocking", // always blocking, not false
+  };
+};
+```
+
+## Anti-Patterns
+
+### ❌ Page without SEO component
+```tsx
+// BAD
+const CoursePage = () => {
+  return <div>Course content</div>;
+};
+```
+```tsx
+// GOOD
+const CoursePage = ({ seoMeta }: PageProps) => {
+  return (
+    <Fragment>
+      <SEO seoMeta={seoMeta} />
+      <div>Course content</div>
+    </Fragment>
+  );
+};
+```
+
+### ❌ Hardcoded route string
+```tsx
+// BAD
+router.push("/user/dashboard");
+```
+```tsx
+// GOOD
+import { routes } from "@tbe/constants";
+router.push(routes.userDashboard);
+```
+
+### ❌ Provider inside a page
+```tsx
+// BAD
+const SomePage = () => (
+  <QueryClientProvider client={queryClient}>
+    <PageContent />
+  </QueryClientProvider>
+);
+```
+```tsx
+// GOOD — providers only in _app.tsx
+```

@@ -1,0 +1,155 @@
+---
+description: Rules for all tests — unit (Vitest), integration (Vitest + node env), and E2E (Playwright) in apps/testing/
+globs: ["apps/testing/src/**/*.test.ts", "apps/testing/src/**/*.test.tsx", "apps/testing/src/**/*.spec.ts", "apps/testing/src/e2e/**/*.ts"]
+alwaysApply: false
+---
+
+# Testing Skill
+
+## Purpose
+All tests live in `apps/testing`. Unit tests use Vitest in jsdom environment, integration tests use Vitest in node environment, and E2E tests use Playwright. This skill enforces consistent test structure, proper mocking of `@tbe/*` packages, and the mock-service-worker (MSW) pattern for API tests.
+
+## Rules
+1. **All tests live in `apps/testing/src/`** — never add `.test.ts` files inside individual app or package `src/` directories.
+2. **Use `describe` + `it` structure** — tests must be grouped inside `describe` blocks. Flat `it()` at the top level is not allowed.
+3. **Every describe block should group by behavior**, not by function name — `describe("Loading State")` not `describe("useUser")`.
+4. **Use `vi.mock()` for all module mocks** — always clear mocks in `beforeEach(() => vi.clearAllMocks())`.
+5. **Mock entire `@tbe/*` packages** — never try to mock individual exported members without mocking the whole module.
+6. **Integration tests (src/integration/) run in `node` environment** — set via `environmentMatchGlobs` in vitest.config.ts. Never import DOM APIs there.
+7. **API tests use MSW server** — `beforeAll(() => server.listen())`, `afterEach(() => server.resetHandlers())`, `afterAll(() => server.close())`.
+8. **E2E tests use page fixtures and `expect(page).toHaveURL()`** — never `page.waitForTimeout()` — use `page.waitForSelector()` or `page.waitForResponse()`.
+9. **Render hooks with `renderHook()` from `@testing-library/react`** — never call hooks outside of `renderHook` or a component.
+10. **Always import from `vitest`** — never from `jest`. Use `describe, it, expect, vi, beforeEach, beforeAll, afterAll, afterEach`.
+11. **Test file naming** matches the source: `useUser.ts` → `useUser.test.ts`, `Button.tsx` → `Button.test.tsx`.
+
+## Patterns
+
+### Hook unit test
+```ts
+// apps/testing/src/unit/hooks/useResourceData.test.ts
+import useResourceData from "@tbe/hooks/useResourceData";
+import { renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const mockQuery = vi.fn();
+
+vi.mock("@tbe/query", () => ({
+  useQuery: () => mockQuery(),
+}));
+
+describe("useResourceData Hook", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("Loading State", () => {
+    it("returns isLoading true while fetching", () => {
+      mockQuery.mockReturnValue({ data: undefined, isLoading: true, error: null });
+      const { result } = renderHook(() => useResourceData("resource-123"));
+      expect(result.current.isLoading).toBe(true);
+    });
+  });
+
+  describe("Success State", () => {
+    it("returns resource data on success", () => {
+      const mockResource = { id: "resource-123", title: "React Basics" };
+      mockQuery.mockReturnValue({ data: { data: mockResource }, isLoading: false, error: null });
+      const { result } = renderHook(() => useResourceData("resource-123"));
+      expect(result.current.resource).toEqual(mockResource);
+    });
+  });
+});
+```
+
+### API integration test with MSW
+```ts
+// apps/testing/src/api/resource/resource.test.ts
+import { describe, it, expect, beforeAll, afterAll, afterEach } from "vitest";
+import { server } from "../mocks/server";
+import { http, HttpResponse } from "msw";
+
+describe("Resource API", () => {
+  const API_URL = process.env.API_URL || "http://localhost:3004";
+
+  beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
+  it("GET /api/v1/resource returns resource data", async () => {
+    server.use(
+      http.get(`${API_URL}/api/v1/resource`, () =>
+        HttpResponse.json({ status: true, data: { id: "r1", title: "Test" } }),
+      ),
+    );
+
+    const response = await fetch(`${API_URL}/api/v1/resource?id=r1`);
+    const data = await response.json();
+
+    expect(response.ok).toBe(true);
+    expect(data.status).toBe(true);
+    expect(data.data.title).toBe("Test");
+  });
+});
+```
+
+### E2E test with Playwright
+```ts
+// apps/testing/src/e2e/platform/home.spec.ts
+import { test, expect } from "@playwright/test";
+
+test.describe("Home Page", () => {
+  test("loads and shows hero section", async ({ page }) => {
+    await page.goto("/");
+    await expect(page).toHaveURL("/");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  test("navigates to login on CTA click", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: "Get Started" }).click();
+    await page.waitForSelector("[data-testid='login-form']");
+  });
+});
+```
+
+## Anti-Patterns
+
+### ❌ Test outside apps/testing
+```ts
+// BAD — test in packages/hooks/src/
+// packages/hooks/src/useUser.test.ts  ← WRONG LOCATION
+```
+```ts
+// GOOD
+// apps/testing/src/unit/hooks/useUser.test.ts
+```
+
+### ❌ Flat describe-less test
+```ts
+// BAD
+it("returns user data", () => { /* ... */ });
+it("returns loading state", () => { /* ... */ });
+```
+```ts
+// GOOD
+describe("useUser", () => {
+  describe("when authenticated", () => {
+    it("returns user data", () => { /* ... */ });
+  });
+  describe("when loading", () => {
+    it("returns loading state", () => { /* ... */ });
+  });
+});
+```
+
+### ❌ page.waitForTimeout in E2E
+```ts
+// BAD
+await page.click("#submit");
+await page.waitForTimeout(2000);  // flaky!
+```
+```ts
+// GOOD
+await page.click("#submit");
+await page.waitForSelector("[data-testid='success-message']");
+```

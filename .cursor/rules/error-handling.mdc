@@ -1,0 +1,151 @@
+---
+description: Rules for error handling, logging, and Sentry integration across TBE-Web
+globs: ["apps/api/src/**/*.ts", "apps/api/src/middleware/**/*.ts", "packages/**/*.ts", "packages/**/*.tsx"]
+alwaysApply: false
+---
+
+# Error Handling Skill
+
+## Purpose
+TBE-Web uses a structured logger for development and Sentry for production error tracking. The `withApiHandler` middleware provides a global catch-all. This skill ensures errors are always caught, categorized, and reported with full context — never silently swallowed or logged with `console.log`.
+
+## Rules
+1. **Never use `console.log` in any file** — use `logger.info()`, `logger.warn()`, `logger.error()`, or `logger.debug()` from `@/lib/utils/logger` (API) or omit entirely in frontend packages.
+2. **All API route errors must call the appropriate `capture*` function from `@/lib/utils/sentry`** before returning an error response:
+   - Database errors → `captureDatabaseError`
+   - Auth errors → `captureAuthError`
+   - Payment errors → `capturePaymentError`
+   - General API errors → `captureAPIError`
+3. **Never re-throw errors caught in query functions** — return `{ error: "message" }`.
+4. **Frontend components must render error states gracefully** — never let an error reach the React error boundary if it's a network error.
+5. **`withApiHandler` is the global error boundary for API routes** — it catches unhandled exceptions and logs them with Sentry automatically.
+6. **Logger output format**:
+   - Dev: colorized, human-readable console output
+   - Prod: structured JSON (handled automatically by the logger)
+7. **Always pass context to `captureAPIError`** — include `endpoint`, `method`, `statusCode`, and relevant payload details.
+8. **Rate limit errors must respond with `apiStatusCodes.TOO_MANY_REQUESTS`** (429).
+9. **Validation errors must respond with `apiStatusCodes.BAD_REQUEST`** (400) — never 500.
+10. **`logger.info()` at route entry/exit is automatic** via `withApiHandler` — no need to add manual `logger.info("→ GET /api/...")` calls.
+
+## Patterns
+
+### API route error handling
+```ts
+import { captureAPIError, captureDatabaseError } from "@/lib/utils/sentry";
+import { logger } from "@/lib/utils/logger";
+import { apiStatusCodes } from "@/lib/constants";
+import { sendAPIResponse } from "@/lib/utils";
+
+const handleGetUser = async (req: NextApiRequest, res: NextApiResponse, userId: string) => {
+  const { data, error } = await getUserByIdFromDB(userId);
+
+  if (error) {
+    captureDatabaseError(
+      new Error(error),
+      "getUserByIdFromDB",
+      apiStatusCodes.INTERNAL_SERVER_ERROR,
+      { userId },
+    );
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({ status: false, error, message: "Error fetching user" }),
+    );
+  }
+
+  if (!data) {
+    return res.status(apiStatusCodes.NOT_FOUND).json(
+      sendAPIResponse({ status: false, message: "User not found" }),
+    );
+  }
+
+  return res.status(apiStatusCodes.OKAY).json(sendAPIResponse({ status: true, data }));
+};
+```
+
+### Frontend graceful error state
+```tsx
+const ResourceList = () => {
+  const { resource, isLoading, error } = useResourceData("r1");
+
+  if (isLoading) return <LoadingSpinner />;
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <p>Failed to load resources. Please try again.</p>
+      </Alert>
+    );
+  }
+
+  return <div>{/* render resource */}</div>;
+};
+```
+
+### Logger usage in API
+```ts
+import { logger } from "@/lib/utils/logger";
+
+// Info — general events
+logger.info("User enrolled in course", { userId, courseId });
+
+// Warn — unexpected but non-fatal
+logger.warn("Stale session detected", { userId });
+
+// Error — always pair with Sentry capture
+logger.error("Payment webhook signature mismatch", { orderId, signature });
+capturePaymentError(new Error("Signature mismatch"), "/api/v1/payment/webhook", { orderId });
+```
+
+## Anti-Patterns
+
+### ❌ console.log in production code
+```ts
+// BAD
+console.log("User fetched:", user);
+console.error("Error:", error);
+```
+```ts
+// GOOD
+logger.info("User fetched", { userId: user._id });
+logger.error("Error fetching user", { error });
+captureAPIError(error as Error, endpoint, method, statusCode, context);
+```
+
+### ❌ Silent error swallow
+```ts
+// BAD
+try {
+  await riskyOperation();
+} catch {
+  // silently swallowed — never do this
+}
+```
+```ts
+// GOOD
+try {
+  await riskyOperation();
+} catch (error) {
+  logger.error("risky operation failed", { error });
+  captureAPIError(error as Error, endpoint, "POST", 500, context);
+  return res.status(500).json(sendAPIResponse({ status: false, message: "Operation failed" }));
+}
+```
+
+### ❌ Throwing from a query function to a route
+```ts
+// BAD — throws bubble up uncaught to the route
+export const getUser = async (id: string) => {
+  const user = await UserModel.findById(id); // throws if ObjectId is invalid
+  return user;
+};
+```
+```ts
+// GOOD — always catch in query, return error object
+export const getUser = async (id: string): Promise<DatabaseQueryResponseType> => {
+  try {
+    const user = await UserModel.findById(id).lean();
+    return { data: user };
+  } catch (error) {
+    return { error: "Invalid user ID or database error" };
+  }
+};
+```
