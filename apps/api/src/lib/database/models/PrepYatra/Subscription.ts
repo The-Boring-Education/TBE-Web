@@ -5,6 +5,7 @@ import {
   SUBSCRIPTION_FEATURES,
   SUBSCRIPTION_TYPES,
 } from "@/lib/constants";
+import { PRODUCT_TYPE } from "@/lib/constants/database";
 import type { PrepYatraSubscriptionModel } from "@/lib/interfaces";
 
 const SubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
@@ -19,6 +20,10 @@ const SubscriptionSchema = new Schema<PrepYatraSubscriptionModel>(
       type: String,
       enum: SUBSCRIPTION_TYPES,
       required: [true, "Subscription type is required"],
+    },
+    productType: {
+      type: String,
+      enum: PRODUCT_TYPE,
     },
     amount: {
       type: Number,
