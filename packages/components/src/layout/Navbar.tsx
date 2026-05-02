@@ -12,7 +12,7 @@ import type { TopNavbarLinkProps } from "@tbe/types";
 import { cn } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 
 import {
@@ -67,6 +67,22 @@ const Navbar = ({
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [learningSidebarOpen, setLearningSidebarOpen] = useState(false);
   const { isVisible } = useScrollDirection(100);
+  const navRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        openPopover &&
+        navRef.current &&
+        !navRef.current.contains(event.target as Node)
+      ) {
+        setOpenPopover(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [openPopover]);
 
   const handleSetOpen = (popoverName: string) => {
     setOpenPopover(openPopover === popoverName ? null : popoverName);
@@ -148,6 +164,7 @@ const Navbar = ({
 
   return (
     <motion.header
+      ref={navRef}
       animate={{ y: isVisible ? 0 : -100 }}
       className={`fixed top-0 left-0 right-0 z-40 ${getBackgroundClass()} shadow-md shadow-white/5 dark:shadow-[0_1px_15px_rgba(255,255,255,0.1)]`}
       initial={{ y: 0 }}
