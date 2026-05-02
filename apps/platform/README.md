@@ -74,7 +74,7 @@ NEXT_PUBLIC_QUIZ_URL=http://localhost:3002
 NEXT_PUBLIC_API_URL=http://localhost:3004
 
 # Analytics & Monitoring
-NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+NEXT_PUBLIC_ANALYTICS_ID=your-ga-id
 NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
 ```
 

@@ -3,18 +3,13 @@ import "@/styles/globals.css";
 import "@/styles/colors.css";
 
 import { AuthProvider } from "@tbe/auth";
-import {
-  initGA,
-  installGlobalAnalyticsListeners,
-  trackPageview,
-} from "@tbe/components/analytics";
 import { GamificationProvider } from "@tbe/gamification";
-import { useUser } from "@tbe/hooks";
+import { useTracking, useUser } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { Toaster } from "sonner";
 
 import DashboardLayout from "@/components/DashboardLayout";
@@ -29,16 +24,7 @@ const AppContent = ({
 }) => {
   const router = useRouter();
   useUser();
-
-  // ✅ Initialize Google Analytics
-  useEffect(() => {
-    initGA();
-    installGlobalAnalyticsListeners();
-
-    const handleRouteChange = (url: string) => trackPageview(url);
-    router.events.on("routeChangeComplete", handleRouteChange);
-    return () => router.events.off("routeChangeComplete", handleRouteChange);
-  }, [router.events]);
+  useTracking();
 
   const isDashboardRoute = router.pathname.startsWith("/dashboard");
   const isDSAPrepRoute = router.pathname.startsWith("/sheets");

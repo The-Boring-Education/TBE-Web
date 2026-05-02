@@ -70,7 +70,7 @@ NEXT_PUBLIC_QUIZ_URL=http://localhost:3002
 MONGODB_URI=mongodb://localhost:27017/prep-yatra
 
 # Analytics
-NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+NEXT_PUBLIC_ANALYTICS_ID=your-ga-id
 ```
 
 ## 📁 Project Structure
@@ -283,7 +283,7 @@ NEXT_PUBLIC_PLATFORM_URL=https://platform.theboringeducation.com
 NEXT_PUBLIC_QUIZ_URL=https://quiz.theboringeducation.com
 
 # Analytics
-NEXT_PUBLIC_GA_MEASUREMENT_ID=your-ga-id
+NEXT_PUBLIC_ANALYTICS_ID=your-ga-id
 
 # Node Environment
 NODE_ENV=production

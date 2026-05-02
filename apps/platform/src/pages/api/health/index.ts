@@ -32,7 +32,7 @@ const envChecks: EnvVarCheck[] = [
   { name: 'CASHFREE_SECRET_KEY', optional: true },
 
   // Monitoring & analytics
-  { name: 'NEXT_PUBLIC_GA_MEASUREMENT_ID', optional: true },
+  { name: 'NEXT_PUBLIC_ANALYTICS_ID', optional: true },
   { name: 'NEXT_PUBLIC_SENTRY_DSN', optional: true },
   { name: 'SENTRY_AUTH_TOKEN', optional: true },
 

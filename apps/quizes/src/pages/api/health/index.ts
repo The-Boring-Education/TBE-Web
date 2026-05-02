@@ -8,7 +8,7 @@ const envChecks: EnvVarCheck[] = [
   { name: "GOOGLE_AUTH_CLIENT_ID" },
   { name: "GOOGLE_AUTH_CLIENT_SECRET" },
   { name: "NEXT_PUBLIC_ONBOARDING_URL" },
-  { name: "NEXT_PUBLIC_GA_MEASUREMENT_ID" },
+  { name: "NEXT_PUBLIC_ANALYTICS_ID" },
 ];
 
 export default function handler(
