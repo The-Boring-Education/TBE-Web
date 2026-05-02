@@ -54,3 +54,6 @@ apps/testing/playwright-report/
 
 # Local subscription plan pricing (copy from subscription-plans.example.json — never commit real amounts)
 apps/api/scripts/subscription-plans.local.json
+
+# Build artifacts
+*.tsbuildinfo
