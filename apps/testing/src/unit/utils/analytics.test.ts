@@ -1,17 +1,18 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
-  trackPageView,
+  GA_TRACKING_ID,
+  trackCourseView,
+  trackEnrollClick,
   trackEvent,
-  trackQuizStart,
+  trackLoginSuccess,
+  trackLogout,
+  trackPageView,
   trackQuizAnswer,
   trackQuizComplete,
   trackQuizScore,
-  trackCourseView,
-  trackEnrollClick,
-  trackLoginSuccess,
+  trackQuizStart,
   trackSignupSuccess,
-  trackLogout,
 } from "@tbe/utils/analytics";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("Analytics Utilities", () => {
   let mockGtag: any;
@@ -42,7 +43,7 @@ describe("Analytics Utilities", () => {
     it("should track page view", () => {
       trackPageView("/test-page");
 
-      expect(mockGtag).toHaveBeenCalledWith("config", "G-SR3M17B588", {
+      expect(mockGtag).toHaveBeenCalledWith("config", GA_TRACKING_ID, {
         page_path: "/test-page",
       });
     });
