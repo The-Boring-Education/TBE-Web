@@ -1,4 +1,5 @@
 import { useAuth } from "@tbe/auth";
+import { LoadingSpinner } from "@tbe/components";
 import { Card, CardContent, CardHeader } from "@tbe/components/quizes";
 import { Progress } from "@tbe/components/quizes";
 import { Layout } from "@tbe/components/quizes";
@@ -315,10 +316,7 @@ function QuizContent() {
     return (
       <Layout showNavbar>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#ef4444] mx-auto" />
-            <p className="mt-4 text-lg text-gray-600">Loading quiz...</p>
-          </div>
+          <LoadingSpinner label="Loading quiz..." />
         </div>
       </Layout>
     );
@@ -328,13 +326,7 @@ function QuizContent() {
     return (
       <Layout showNavbar>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#ef4444] mx-auto" />
-            <p className="mt-4 text-lg text-gray-600">Submitting quiz...</p>
-            <p className="mt-2 text-sm text-gray-500">
-              Please wait while we process your results
-            </p>
-          </div>
+          <LoadingSpinner label="Submitting quiz..." />
         </div>
       </Layout>
     );

@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import Footer from "../../layout/Footer";
 import Navbar from "../../layout/Navbar";
 import DashboardTabs from "../dashboard/DashboardTabs";
-import LoadingSpinner from "../dashboard/LoadingSpinner";
+import LoadingSpinner from "../../common/LoadingSpinner";
 import ProfileSection from "../dashboard/ProfileSection";
 import BuildYourStack from "../features/BuildYourStack";
 import DailyPrepEncouragement from "../features/DailyPrepEncouragement";

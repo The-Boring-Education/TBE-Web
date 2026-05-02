@@ -1,5 +1,5 @@
 import { useAuth } from "@tbe/auth";
-import { SEO } from "@tbe/components";
+import { LoadingSpinner, SEO } from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes } from "@tbe/constants";
 import type { PageProps } from "@tbe/interface";
 import { getPreFetchProps } from "@tbe/utils";
@@ -49,20 +49,14 @@ function QuizesClient() {
       {/* Show loading state while auth is loading */}
       {isLoading && (
         <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto" />
-            <p className="mt-4 text-lg text-gray-600">Loading...</p>
-          </div>
+          <LoadingSpinner label="Loading..." />
         </div>
       )}
 
       {/* Show redirecting state */}
       {isRedirecting && (
         <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#ef4444] mx-auto" />
-            <p className="mt-4 text-lg text-gray-600">Redirecting...</p>
-          </div>
+          <LoadingSpinner label="Redirecting..." />
         </div>
       )}
 

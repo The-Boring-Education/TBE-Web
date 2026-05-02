@@ -1,4 +1,5 @@
 import {
+  LoadingSpinner,
   PricingFaqAccordion,
   SubscriptionPricingPlanCard,
 } from "@tbe/components";
@@ -183,7 +184,7 @@ const DsaYatraPricingPage = () => {
           {loading && (
             <div className="flex justify-center py-20">
               <div className="flex flex-col items-center gap-3">
-                <div className="animate-spin rounded-full h-10 w-10 border-2 border-[#ff5757]/20 border-t-[#ff5757]" />
+                <LoadingSpinner height={10} width={10} />
                 <p className="text-[#606060] text-xs">Loading plans…</p>
               </div>
             </div>
