@@ -12,7 +12,6 @@ import {
   STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED,
   STANDARD_DIFFICULTY_LABELS,
   STANDARD_DIFFICULTY_ORDER,
-  StarButton,
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
@@ -25,20 +24,24 @@ import { useAnalytics, usePaymentAccess, useUser } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
 import { queryKeys, useMutation, useQueryClient } from "@tbe/query";
 import { cn, getSheetPageProps, sendRequest } from "@tbe/utils";
-import { useRouter } from "next/router";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-
+import { useRouter } from "next/router";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { FaLock } from "react-icons/fa";
-
-import { MobileNav } from "@/components/MobileNav";
-import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
-import InterviewQuestionContent from "@/components/InterviewQuestionContent";
-import { motion, AnimatePresence } from "framer-motion";
-import { FiCopy, FiCheck } from "react-icons/fi";
+import { FiCheck, FiCopy } from "react-icons/fi";
 import { toast } from "sonner";
 
-
+import InterviewQuestionContent from "@/components/InterviewQuestionContent";
+import { MobileNav } from "@/components/MobileNav";
+import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const slugify = (text: string) =>
   text
@@ -48,13 +51,18 @@ const slugify = (text: string) =>
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-
-const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuestionId }: SheetPageProps) => {
+const SheetPage = ({
+  sheet,
+  meta,
+  slug,
+  seoMeta,
+  currentQuestionId: initialQuestionId,
+}: SheetPageProps) => {
   const router = useRouter();
   const [sheetMeta, setSheetMeta] = useState<string>(meta || "");
   const [questions, setQuestions] = useState(sheet?.questions || []);
   const firstQuestionId = questions?.[0]?._id?.toString() || "";
-  
+
   const [copied, setCopied] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
 
@@ -91,14 +99,29 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
 
   const currentQuestion = useMemo(() => {
     if (!urlQuestionSlug) {
-      return questions.find(q => q._id.toString() === initialQuestionId) || questions[0];
+      return (
+        questions.find((q) => q._id.toString() === initialQuestionId) ||
+        questions[0]
+      );
     }
-    return questions.find((q) => slugify(q.title) === urlQuestionSlug) || questions[0];
+    return (
+      questions.find((q) => slugify(q.title) === urlQuestionSlug) ||
+      questions[0]
+    );
   }, [questions, urlQuestionSlug, initialQuestionId]);
 
-  const currentQuestionId = useMemo(() => currentQuestion?._id?.toString() || "", [currentQuestion]);
-  const isQuestionCompleted = useMemo(() => currentQuestion?.isCompleted || false, [currentQuestion]);
-  const isQuestionStarred = useMemo(() => currentQuestion?.isStarred || false, [currentQuestion]);
+  const currentQuestionId = useMemo(
+    () => currentQuestion?._id?.toString() || "",
+    [currentQuestion],
+  );
+  const isQuestionCompleted = useMemo(
+    () => currentQuestion?.isCompleted || false,
+    [currentQuestion],
+  );
+  const isQuestionStarred = useMemo(
+    () => currentQuestion?.isStarred || false,
+    [currentQuestion],
+  );
 
   const currentIndex = useMemo(
     () => questions.findIndex((q) => q._id.toString() === currentQuestionId),
@@ -136,7 +159,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
   // Handle completion state & feedback
   useEffect(() => {
     if (!currentQuestion) return;
-    
+
     const allCompleted =
       questions.length > 0 && questions.every((q) => q.isCompleted);
 
@@ -163,24 +186,26 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
 
   if (!sheet) return null;
 
-  const handleQuestionClick = useCallback((questionMeta: string, questionId: string) => {
-    if (!isLocked) {
-      const selectedQuestion = questions.find(
-        (q) => q._id.toString() === questionId,
-      );
-      
-      if (selectedQuestion) {
-        // Update URL to match selected question slug
-        const questionSlug = slugify(selectedQuestion.title);
-        const newPath = `/interview-sheets/${sheet.slug}/${questionSlug}`;
-        
-        if (router.asPath !== newPath) {
-          router.push(newPath, undefined, { shallow: true });
+  const handleQuestionClick = useCallback(
+    (questionMeta: string, questionId: string) => {
+      if (!isLocked) {
+        const selectedQuestion = questions.find(
+          (q) => q._id.toString() === questionId,
+        );
+
+        if (selectedQuestion) {
+          // Update URL to match selected question slug
+          const questionSlug = slugify(selectedQuestion.title);
+          const newPath = `/interview-sheets/${sheet.slug}/${questionSlug}`;
+
+          if (router.asPath !== newPath) {
+            router.push(newPath, undefined, { shallow: true });
+          }
         }
       }
-    }
-  }, [isLocked, questions, router, sheet.slug]);
-
+    },
+    [isLocked, questions, router, sheet.slug],
+  );
 
   const handleCopyLink = () => {
     const url = window.location.href;
@@ -188,11 +213,11 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
     setCopied(true);
     toast.success("Link copied to clipboard!", {
       duration: 2000,
-      className: "bg-[#0A0A0A] border border-white/10 text-white text-xs rounded-lg",
+      className:
+        "bg-[#0A0A0A] border border-white/10 text-white text-xs rounded-lg",
     });
     setTimeout(() => setCopied(false), 2000);
   };
-
 
   const handleShowPayment = () => {
     setShowPayment(true);
@@ -205,10 +230,16 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
     if (!user?.id || !currentQuestionId) return;
     const oldQuestions = [...questions];
     const newStarStatus = !isQuestionStarred;
-    
+
     // Optimistic update
-    setQuestions(prev => prev.map(q => q._id.toString() === currentQuestionId ? { ...q, isStarred: newStarStatus } : q));
-    
+    setQuestions((prev) =>
+      prev.map((q) =>
+        q._id.toString() === currentQuestionId
+          ? { ...q, isStarred: newStarStatus }
+          : q,
+      ),
+    );
+
     setIsStarLoading(true);
     try {
       const response = await makeRequest({
@@ -249,9 +280,15 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
     const oldQuestions = [...questions];
     try {
       const newCompletionStatus = !isQuestionCompleted;
-      
+
       // Optimistic update
-      setQuestions(prev => prev.map(q => q._id.toString() === currentQuestionId ? { ...q, isCompleted: newCompletionStatus } : q));
+      setQuestions((prev) =>
+        prev.map((q) =>
+          q._id.toString() === currentQuestionId
+            ? { ...q, isCompleted: newCompletionStatus }
+            : q,
+        ),
+      );
 
       const response = await makeRequest({
         method: "PATCH",
@@ -309,12 +346,18 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
               : question,
           );
           const next =
-            updatedQuestions.slice(currentIndex + 1).find((q) => !q.isCompleted) ||
+            updatedQuestions
+              .slice(currentIndex + 1)
+              .find((q) => !q.isCompleted) ||
             updatedQuestions.find((q) => !q.isCompleted);
           if (next) {
             // Update URL for the next question
             const questionSlug = slugify(next.title);
-            router.push(`/interview-sheets/${sheet.slug}/${questionSlug}`, undefined, { shallow: true });
+            router.push(
+              `/interview-sheets/${sheet.slug}/${questionSlug}`,
+              undefined,
+              { shallow: true },
+            );
           }
         }
       } else {
@@ -334,50 +377,60 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
 
   const isDataLoading = !sheet || !questions || questions.length === 0;
 
-  const questionsSidebar = useMemo(() => (
-    <DifficultyGroupedList
-      className="gap-px flex-grow"
-      items={questions ?? []}
-      getDifficulty={(q) =>
-        mapInterviewPriorityToDifficultyGroup(
-          (q as { priority?: string }).priority,
-        )
-      }
-      getItemKey={(q) => q._id?.toString() ?? ""}
-      initialExpandedGroups={STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED}
-      difficultyOrder={STANDARD_DIFFICULTY_ORDER}
-      difficultyLabels={STANDARD_DIFFICULTY_LABELS}
-      emptyMessage="No questions in this sheet."
-      groupClassName="mb-2 last:mb-0"
-      renderItem={(item) => {
-        const { _id, title, question, answer, isCompleted, frequency, isStarred } =
-          item;
-        const questionId = _id?.toString() ?? "";
-        const questionSlug = slugify(title);
-        const questionHref = `/interview-sheets/${sheet.slug}/${questionSlug}`;
+  const questionsSidebar = useMemo(
+    () => (
+      <DifficultyGroupedList
+        className="gap-px flex-grow"
+        items={questions ?? []}
+        getDifficulty={(q) =>
+          mapInterviewPriorityToDifficultyGroup(
+            (q as { priority?: string }).priority,
+          )
+        }
+        getItemKey={(q) => q._id?.toString() ?? ""}
+        initialExpandedGroups={STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED}
+        difficultyOrder={STANDARD_DIFFICULTY_ORDER}
+        difficultyLabels={STANDARD_DIFFICULTY_LABELS}
+        emptyMessage="No questions in this sheet."
+        groupClassName="mb-2 last:mb-0"
+        renderItem={(item) => {
+          const {
+            _id,
+            title,
+            question,
+            answer,
+            isCompleted,
+            frequency,
+            isStarred,
+          } = item;
+          const questionId = _id?.toString() ?? "";
+          const questionSlug = slugify(title);
+          const questionHref = `/interview-sheets/${sheet.slug}/${questionSlug}`;
 
-        return (
-          <div key={questionId} className="flex items-center w-full">
-            <QuestionLink
-              currentQuestionId={currentQuestionId}
-              frequency={frequency}
-              handleQuestionClick={() =>
-                handleQuestionClick(`${question}\n\n${answer}`, questionId)
-              }
-              href={questionHref}
-              isCompleted={isCompleted}
-              question={`${question}\n\n${answer}`}
-              questionId={questionId}
-              title={title}
-              isLocked={isLocked}
-              theme="dark"
-              isStarred={isStarred}
-            />
-          </div>
-        );
-      }}
-    />
-  ), [questions, currentQuestionId, isLocked, handleQuestionClick, sheet.slug]);
+          return (
+            <div key={questionId} className="flex items-center w-full">
+              <QuestionLink
+                currentQuestionId={currentQuestionId}
+                frequency={frequency}
+                handleQuestionClick={() =>
+                  handleQuestionClick(`${question}\n\n${answer}`, questionId)
+                }
+                href={questionHref}
+                isCompleted={isCompleted}
+                question={`${question}\n\n${answer}`}
+                questionId={questionId}
+                title={title}
+                isLocked={isLocked}
+                theme="dark"
+                isStarred={isStarred}
+              />
+            </div>
+          );
+        }}
+      />
+    ),
+    [questions, currentQuestionId, isLocked, handleQuestionClick, sheet.slug],
+  );
 
   return (
     <Fragment>
@@ -398,47 +451,94 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
           <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
             <div className="border-r border-gray-800/60 px-4 lg:px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 w-full lg:w-[260px]">
               <div className="flex flex-col">
-                <Text level="h3" className="text-white strong-text font-black tracking-tight leading-none mb-1.5">
+                <Text
+                  level="h3"
+                  className="text-white strong-text font-black tracking-tight leading-none mb-1.5"
+                >
                   Questions
                 </Text>
                 <div className="flex flex-col gap-1.5 w-full">
-                  <Text level="p" className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">
+                  <Text
+                    level="p"
+                    className="text-[9px] font-bold text-gray-500 uppercase tracking-wider"
+                  >
                     {completedQuestions} / {totalQuestions} Solved
                   </Text>
                   <div className="h-[3px] w-[140px] bg-gray-800/80 rounded-full overflow-hidden">
-                    <div className="h-full bg-red-500 transition-all duration-700 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.4)]" style={{ width: `${(completedQuestions/totalQuestions)*100}%` }} />
+                    <div
+                      className="h-full bg-red-500 transition-all duration-700 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.4)]"
+                      style={{
+                        width: `${(completedQuestions / totalQuestions) * 100}%`,
+                      }}
+                    />
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-2 lg:hidden">
-                {currentQuestionId && (
-                  <Button onClick={() => setCurrentQuestionId("")} variant="OUTLINE" size="SMALL" text="←" className="border-gray-800 text-gray-400 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap" />
+                {urlQuestionSlug && (
+                  <Button
+                    onClick={() =>
+                      router.push(
+                        `/interview-sheets/${sheet.slug}`,
+                        undefined,
+                        { shallow: true },
+                      )
+                    }
+                    variant="OUTLINE"
+                    size="SMALL"
+                    text="←"
+                    className="border-gray-800 text-gray-400 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
+                  />
                 )}
               </div>
             </div>
             <div className="hidden lg:flex flex-1 items-center justify-between px-4">
-              <FlexContainer direction="col" itemCenter={false} justifyCenter={false} wrap={false}>
-                <Text level="h1" className="strong-text font-bold text-white mb-0.5 tracking-tight">
+              <FlexContainer
+                direction="col"
+                itemCenter={false}
+                justifyCenter={false}
+                wrap={false}
+              >
+                <Text
+                  level="h1"
+                  className="strong-text font-bold text-white mb-0.5 tracking-tight"
+                >
                   {sheet.name || "Interview Sheet"}
                 </Text>
-                <Text level="p" className="text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                <Text
+                  level="p"
+                  className="text-[10px] font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Interview questions and answers
                 </Text>
               </FlexContainer>
               <div className="flex items-center gap-2 shrink-0">
-                <Button 
+                <Button
                   onClick={handleCopyLink}
-                  variant="OUTLINE" 
-                  size="SMALL" 
-                  text={copied ? "Copied!" : "Copy Link"} 
+                  variant="OUTLINE"
+                  size="SMALL"
+                  text={copied ? "Copied!" : "Copy Link"}
                   className={cn(
                     "border-gray-700 bg-transparent transition-all duration-300 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap gap-1.5",
-                    copied ? "border-green-500/50 text-green-400" : "hover:border-red-500 hover:bg-red-500/10"
+                    copied
+                      ? "border-green-500/50 text-green-400"
+                      : "hover:border-red-500 hover:bg-red-500/10",
                   )}
-                  icon={copied ? <FiCheck className="text-[10px]" /> : <FiCopy className="text-[10px]" />}
+                  icon={
+                    copied ? (
+                      <FiCheck className="text-[10px]" />
+                    ) : (
+                      <FiCopy className="text-[10px]" />
+                    )
+                  }
                 />
                 <Link href="/interview-sheets">
-                  <Button variant="OUTLINE" size="SMALL" text="View All Sheets" className="border-gray-700 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap" />
+                  <Button
+                    variant="OUTLINE"
+                    size="SMALL"
+                    text="View All Sheets"
+                    className="border-gray-700 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap"
+                  />
                 </Link>
               </div>
             </div>
@@ -453,128 +553,123 @@ const SheetPage = ({ sheet, meta, slug, seoMeta, currentQuestionId: initialQuest
             wrap={false}
           >
             {/* Sidebar */}
-            <div className={cn(
-              "flex flex-col flex-shrink-0 border-r border-gray-800/50 bg-[#0A0A0A] w-full lg:w-[260px] scrollbar-thin-grey overflow-y-auto",
-              currentQuestionId ? "hidden lg:flex" : "flex"
-            )}>
-
-
-              <div className="p-2 w-full h-full">
-                {questionsSidebar}
-              </div>
+            <div
+              className={cn(
+                "flex flex-col flex-shrink-0 border-r border-gray-800/50 bg-[#0A0A0A] w-full lg:w-[260px] scrollbar-thin-grey overflow-y-auto",
+                urlQuestionSlug ? "hidden lg:flex" : "flex",
+              )}
+            >
+              <div className="p-2 w-full h-full">{questionsSidebar}</div>
             </div>
 
-
-          {/* Main Content Area */}
-          <FlexContainer
-            className={cn(
-              "flex-1 min-w-0 w-full bg-[#0A0A0A] overflow-y-auto h-full relative scrollbar-thin-grey",
-              !currentQuestionId ? "hidden lg:flex" : "flex flex-col"
-            )}
-            itemCenter={false}
-            justifyCenter={false}
-          >
-            {isLocked ? (
-              <div className="w-full p-4 md:p-6 lg:p-8">
-                <Text level="h2" className="heading-4 mb-4 text-contentDark">
-                  Interview Sheet Overview
-                </Text>
-                <MDXRenderer theme="dark" mdxSource={sheet.meta || ""} />
-                <div className="mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm text-black">
-                  <Text level="h4" className="mb-2 flex items-center gap-2">
-                    <FaLock className="text-yellow-600" />
-                    🚀 This is a Premium Interview Sheet
+            {/* Main Content Area */}
+            <FlexContainer
+              className={cn(
+                "flex-1 min-w-0 w-full bg-[#0A0A0A] overflow-y-auto h-full relative scrollbar-thin-grey",
+                !urlQuestionSlug ? "hidden lg:flex" : "flex flex-col",
+              )}
+              itemCenter={false}
+              justifyCenter={false}
+            >
+              {isLocked ? (
+                <div className="w-full p-4 md:p-6 lg:p-8">
+                  <Text level="h2" className="heading-4 mb-4 text-contentDark">
+                    Interview Sheet Overview
                   </Text>
-                  <Text level="p" className="mb-4">
-                    To access all the interview questions and detailed solutions,
-                    please complete the payment. Once payment is confirmed, all
-                    questions will be unlocked instantly.
-                  </Text>
-                  {!showPayment && (
-                    <Button
-                      text="Pay Now to Unlock"
-                      variant="PRIMARY"
-                      className="w-fit"
-                      onClick={handleShowPayment}
-                    />
+                  <MDXRenderer theme="dark" mdxSource={sheet.meta || ""} />
+                  <div className="mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm text-black">
+                    <Text level="h4" className="mb-2 flex items-center gap-2">
+                      <FaLock className="text-yellow-600" />
+                      🚀 This is a Premium Interview Sheet
+                    </Text>
+                    <Text level="p" className="mb-4">
+                      To access all the interview questions and detailed
+                      solutions, please complete the payment. Once payment is
+                      confirmed, all questions will be unlocked instantly.
+                    </Text>
+                    {!showPayment && (
+                      <Button
+                        text="Pay Now to Unlock"
+                        variant="PRIMARY"
+                        className="w-fit"
+                        onClick={handleShowPayment}
+                      />
+                    )}
+                  </div>
+                  {showPayment && (
+                    <div ref={paymentSectionRef} className="mt-6">
+                      <PaymentCard
+                        course={sheet}
+                        onClose={() => setShowPayment(false)}
+                        productType="INTERVIEW_SHEET"
+                      />
+                    </div>
                   )}
                 </div>
-                {showPayment && (
-                  <div ref={paymentSectionRef} className="mt-6">
-                    <PaymentCard
-                      course={sheet}
-                      onClose={() => setShowPayment(false)}
-                      productType="INTERVIEW_SHEET"
-                    />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.div
-                  key={currentQuestionId}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-                  className="w-full p-4 md:p-8 lg:p-12"
-                >
-                  <InterviewQuestionContent
-                    questionTitle={currentQuestion?.title || ""}
-                    question={currentQuestion?.question || ""}
-                    answer={currentQuestion?.answer || ""}
-                    frequency={currentQuestion?.frequency}
-                    priority={currentQuestion?.priority}
-                    companyTypes={currentQuestion?.companyTypes}
-                    actions={[
-                      currentQuestionId && (
-                        <Button
-                          key="complete"
-                          className="w-fit mt-2"
-                          isLoading={isLoading}
-                          disabled={isLocked}
-                          text={
-                            isLoading
-                              ? "Marking..."
-                              : isLocked
-                                ? "Enroll to Mark Complete"
-                                : isQuestionCompleted
-                                  ? "Completed"
-                                  : "Mark As Completed"
-                          }
-                          variant={
-                            isQuestionCompleted
-                              ? "SUCCESS"
-                              : isLocked
-                                ? "SECONDARY"
-                                : isLoading
+              ) : (
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.div
+                    key={currentQuestionId}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+                    className="w-full p-4 md:p-8 lg:p-12"
+                  >
+                    <InterviewQuestionContent
+                      questionTitle={currentQuestion?.title || ""}
+                      question={currentQuestion?.question || ""}
+                      answer={currentQuestion?.answer || ""}
+                      frequency={currentQuestion?.frequency}
+                      priority={currentQuestion?.priority}
+                      companyTypes={currentQuestion?.companyTypes}
+                      actions={[
+                        currentQuestionId && (
+                          <Button
+                            key="complete"
+                            className="w-fit mt-2"
+                            isLoading={isLoading}
+                            disabled={isLocked}
+                            text={
+                              isLoading
+                                ? "Marking..."
+                                : isLocked
+                                  ? "Enroll to Mark Complete"
+                                  : isQuestionCompleted
+                                    ? "Completed"
+                                    : "Mark As Completed"
+                            }
+                            variant={
+                              isQuestionCompleted
+                                ? "SUCCESS"
+                                : isLocked
                                   ? "SECONDARY"
-                                  : "PRIMARY"
-                          }
-                          onClick={toggleCompletion}
-                        />
-                      ),
-                      currentQuestionId && questionResources && (
-                        <ResourceTooltip
-                          key="resources"
-                          resources={questionResources}
-                          theme="dark"
-                          className="mt-2"
-                        />
-                      ),
-                    ]}
-                    isStarred={isQuestionStarred}
-                    onToggleStar={toggleStar}
-                  />
-
-                </motion.div>
-              </AnimatePresence>
-            )}
-
+                                  : isLoading
+                                    ? "SECONDARY"
+                                    : "PRIMARY"
+                            }
+                            onClick={toggleCompletion}
+                          />
+                        ),
+                        currentQuestionId && questionResources && (
+                          <ResourceTooltip
+                            key="resources"
+                            resources={questionResources}
+                            theme="dark"
+                            className="mt-2"
+                          />
+                        ),
+                      ]}
+                      isStarred={isQuestionStarred}
+                      onToggleStar={toggleStar}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </FlexContainer>
           </FlexContainer>
         </FlexContainer>
-      </FlexContainer>
-    </OnCampusLearningLayout>
+      </OnCampusLearningLayout>
 
       {/* Mobile bottom nav */}
       <MobileNav />
