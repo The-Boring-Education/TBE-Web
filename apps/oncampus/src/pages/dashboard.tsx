@@ -195,7 +195,7 @@ const CampusPrepDashboard = () => {
                         className="bg-transparent border-[#333] text-[#a0a0a0] hover:text-[#ff5757] hover:border-[#ff5757]/50 text-xs font-black h-8 px-4 rounded-lg uppercase tracking-tight"
                         text="Resume"
                         onClick={() =>
-                          router.push(`/interview-sheets/${sheet.slug}`)
+                          router.push(`/interview-sheets?topic=${sheet.slug}`)
                         }
                       />
                     </div>

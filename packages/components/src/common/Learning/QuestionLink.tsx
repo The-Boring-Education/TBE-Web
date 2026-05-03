@@ -30,14 +30,12 @@ const QuestionLink = ({
 
   let additionalClasses =
     currentQuestionId === questionId
-      ? isCompleted
-        ? isDark
-          ? "text-contentDark font-semibold bg-green-800"
-          : "text-dark font-semibold bg-green-200"
-        : isDark
-          ? "text-contentDark font-semibold bg-gray-800"
-          : "text-dark font-semibold bg-gray-200"
-      : "";
+      ? isDark
+        ? "bg-[#111] border-gray-700/60 shadow-[0_0_12px_rgba(0,0,0,0.25)] text-white font-medium"
+        : "bg-gray-100 border-gray-300 shadow-sm text-dark font-medium"
+      : isCompleted
+        ? "border-transparent opacity-80"
+        : "border-transparent";
 
   const iconColor = isCompleted
     ? isDark
@@ -47,22 +45,17 @@ const QuestionLink = ({
       ? "text-gray-400"
       : "text-greyDark";
 
-  if (frequency === "Most Asked") {
-    additionalClasses += " border-l-4 border-primary";
-  } else if (frequency === "Asked Frequently") {
-    additionalClasses += " border-l-4 border-secondary";
-  } else if (frequency === "Asked Sometimes") {
-    additionalClasses += " border-l-4 border-greyDark";
-  }
+  // Frequency borders removed as per UI request
+
 
   return (
     <Link
       key={questionId}
-      className={`flex items-center gap-1 w-full p-2 mb-1 rounded text-left pre-title ${
+      className={`flex items-center gap-1 w-full p-2 mb-1 rounded border text-left pre-title ${
         isLocked
           ? isDark
-            ? "text-gray-500 cursor-not-allowed"
-            : "text-gray-700 cursor-not-allowed"
+            ? "text-gray-500 cursor-not-allowed border-transparent"
+            : "text-gray-700 cursor-not-allowed border-transparent"
           : `${defaultTextColor} ${hoverBgClass} ${hoverTextClass} ${additionalClasses}`
       }`}
       href={href}
@@ -73,6 +66,8 @@ const QuestionLink = ({
           e.preventDefault();
           return;
         }
+
+        e.preventDefault(); // Prevent full page navigation to support shallow routing
 
         // Track question start
         trackEvent({
