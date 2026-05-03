@@ -10,6 +10,7 @@ import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamifiedAction } from "@tbe/gamification";
 import {
   useDsaCompletedQuestions,
+  useDsaPrepUrlSync,
   useDsaQuestionsForTopic,
   useDsaTopics,
   useDsaTopicSummaries,
@@ -144,11 +145,18 @@ const SheetsPageClient = () => {
   const sheetsLoading =
     topicsLoading || (!!selectedTopic && topicQuestionsLoading);
 
-  useEffect(() => {
-    if (router.isReady && router.query.topic) {
-      setSelectedTopic(router.query.topic as string);
-    }
-  }, [router.isReady, router.query.topic]);
+  const {
+    handleTopicClick,
+    handleQuestionClick: handleUrlSyncQuestionClick,
+    handleBackToTopics,
+  } = useDsaPrepUrlSync({
+    router,
+    selectedTopic,
+    setSelectedTopic,
+    setSelectedQuestion,
+    topicQuestions: questions,
+    topicQuestionsLoading: !!selectedTopic && topicQuestionsLoading,
+  });
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -161,20 +169,8 @@ const SheetsPageClient = () => {
       setShowPayment(true);
       return;
     }
-    setSelectedQuestion(question);
     setShowPayment(false);
-  };
-
-  const handleTopicClick = (topic: string) => {
-    setSelectedTopic(topic);
-    setSelectedQuestion(null);
-    setShowPayment(false);
-  };
-
-  const handleBackToTopics = () => {
-    setSelectedTopic(null);
-    setSelectedQuestion(null);
-    setShowPayment(false);
+    handleUrlSyncQuestionClick(question);
   };
 
   if (sheetsLoading || userLoading || isProgressLoading) {
