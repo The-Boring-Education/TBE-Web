@@ -7,6 +7,23 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
   : [];
 
+// Origins that are always allowed regardless of ALLOWED_ORIGINS env var
+function isDefaultAllowedOrigin(origin: string): boolean {
+  try {
+    const { hostname } = new URL(origin);
+    if (hostname === "localhost" || hostname === "127.0.0.1") return true;
+    if (
+      hostname === "theboringeducation.com" ||
+      hostname.endsWith(".theboringeducation.com")
+    )
+      return true;
+    if (hostname.endsWith(".vercel.app")) return true;
+  } catch {
+    return false;
+  }
+  return false;
+}
+
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
@@ -24,7 +41,9 @@ function resolveOrigin(request: NextRequest): string | undefined {
   if (!origin) return undefined;
   // In development or when no allowlist is configured, allow all origins
   if (ALLOWED_ORIGINS.length === 0) return origin;
-  return ALLOWED_ORIGINS.includes(origin) ? origin : undefined;
+  if (ALLOWED_ORIGINS.includes(origin)) return origin;
+  // Always allow TBE production domains, localhost, and Vercel previews
+  return isDefaultAllowedOrigin(origin) ? origin : undefined;
 }
 
 function generateRequestId(): string {
