@@ -1,5 +1,34 @@
-// TEMPORARY: Onboarding check disabled for UI development
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { LoadingSpinner } from "@tbe/components";
+import { useProductOnboardingGate } from "@tbe/hooks";
+import { useRouter } from "next/router";
+import { useCallback } from "react";
+
 export const OnboardingCheck = () => {
+  const router = useRouter();
+
+  const buildRedirectUrl = useCallback(() => {
+    if (typeof window === "undefined") return "/dashboard";
+    return `${window.location.origin}/dashboard`;
+  }, []);
+
+  const { isChecking } = useProductOnboardingGate({
+    pathname: router.pathname,
+    publicRoutes: ["/login", "/", "/auth", "/onboarding"],
+    productId: "oncampus",
+    from: "oncampus",
+    buildRedirectUrl,
+    isOnboarded: (data) =>
+      (data as { oncampus?: { onboardingCompleted?: boolean } })?.oncampus
+        ?.onboardingCompleted === true,
+  });
+
+  if (isChecking) {
+    return (
+      <div className="fixed inset-0 bg-[#0A0A0A] z-[9999] flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return null;
 };
