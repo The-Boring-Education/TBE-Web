@@ -297,7 +297,8 @@ const slugify = (text: string) =>
 
 const getSheetPageProps = async (context: any) => {
   const { req, query } = context;
-  const { sheetSlug, question: questionParams } = query;
+  const { sheetSlug: rawSheetSlug, topic, question: questionParams } = query;
+  const sheetSlug = (rawSheetSlug || topic) as string;
   const urlQuestionSlug = Array.isArray(questionParams)
     ? questionParams[0]
     : questionParams;

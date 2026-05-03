@@ -23,7 +23,7 @@ import {
 import { useAnalytics, usePaymentAccess, useUser } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
 import { queryKeys, useMutation, useQueryClient } from "@tbe/query";
-import { cn, getSheetPageProps, sendRequest } from "@tbe/utils";
+import { cn, sendRequest } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -51,7 +51,7 @@ const slugify = (text: string) =>
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-const SheetPage = ({
+export const InterviewSheetWorkspace = ({
   sheet,
   meta,
   slug,
@@ -196,11 +196,16 @@ const SheetPage = ({
         if (selectedQuestion) {
           // Update URL to match selected question slug
           const questionSlug = slugify(selectedQuestion.title);
-          const newPath = `/interview-sheets/${sheet.slug}/${questionSlug}`;
+          const newQuery = { ...router.query, question: questionSlug };
 
-          if (router.asPath !== newPath) {
-            router.push(newPath, undefined, { shallow: true });
-          }
+          router.push(
+            {
+              pathname: router.pathname,
+              query: newQuery,
+            },
+            undefined,
+            { shallow: true },
+          );
         }
       }
     },
@@ -353,8 +358,12 @@ const SheetPage = ({
           if (next) {
             // Update URL for the next question
             const questionSlug = slugify(next.title);
+            const newQuery = { ...router.query, question: questionSlug };
             router.push(
-              `/interview-sheets/${sheet.slug}/${questionSlug}`,
+              {
+                pathname: router.pathname,
+                query: newQuery,
+              },
               undefined,
               { shallow: true },
             );
@@ -405,7 +414,12 @@ const SheetPage = ({
           } = item;
           const questionId = _id?.toString() ?? "";
           const questionSlug = slugify(title);
-          const questionHref = `/interview-sheets/${sheet.slug}/${questionSlug}`;
+
+          const newQuery = { ...router.query, question: questionSlug };
+          const questionHref = {
+            pathname: router.pathname,
+            query: newQuery,
+          };
 
           return (
             <div key={questionId} className="flex items-center w-full">
@@ -429,7 +443,14 @@ const SheetPage = ({
         }}
       />
     ),
-    [questions, currentQuestionId, isLocked, handleQuestionClick, sheet.slug],
+    [
+      questions,
+      currentQuestionId,
+      isLocked,
+      handleQuestionClick,
+      router.query,
+      router.pathname,
+    ],
   );
 
   return (
@@ -477,13 +498,17 @@ const SheetPage = ({
               <div className="flex items-center gap-2 lg:hidden">
                 {urlQuestionSlug && (
                   <Button
-                    onClick={() =>
+                    onClick={() => {
+                      const { question, ...rest } = router.query;
                       router.push(
-                        `/interview-sheets/${sheet.slug}`,
+                        {
+                          pathname: router.pathname,
+                          query: rest,
+                        },
                         undefined,
                         { shallow: true },
-                      )
-                    }
+                      );
+                    }}
                     variant="OUTLINE"
                     size="SMALL"
                     text="←"
@@ -680,7 +705,3 @@ const SheetPage = ({
     </Fragment>
   );
 };
-
-export const getServerSideProps = getSheetPageProps;
-
-export default SheetPage;

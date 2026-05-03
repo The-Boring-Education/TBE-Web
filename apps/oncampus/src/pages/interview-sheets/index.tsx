@@ -1,13 +1,14 @@
-import {
-  FlexContainer,
-  LoadingSpinner,
-  Text,
-} from "@tbe/components";
+import { FlexContainer, LoadingSpinner, Text } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
-import type { PrimaryCardWithCTAProps } from "@tbe/interface";
+import type { PrimaryCardWithCTAProps, SheetPageProps } from "@tbe/interface";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
-import { cn, mapInterviewSheetResponseToCard, sendRequest } from "@tbe/utils";
+import {
+  cn,
+  getSheetPageProps,
+  mapInterviewSheetResponseToCard,
+  sendRequest,
+} from "@tbe/utils";
 import {
   ArrowLeft,
   BookOpen,
@@ -21,10 +22,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
+import { InterviewSheetWorkspace } from "@/components/InterviewSheetWorkspace";
 import { MobileNav } from "@/components/MobileNav";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
-const InterviewPrepDashboardPage = () => {
+const InterviewPrepDashboardPage = (props: SheetPageProps) => {
   const router = useRouter();
   const { user, loading: userLoading, isAuth } = useUser();
 
@@ -91,7 +93,10 @@ const InterviewPrepDashboardPage = () => {
       const isPurchased = purchaseStatuses[sheet._id] || false;
       return {
         ...baseCard,
-        href: `/interview-sheets/${sheet.slug}`,
+        href: {
+          pathname: "/interview-sheets",
+          query: { topic: sheet.slug },
+        },
         isPurchased: sheet.isPremium ? isPurchased : false,
         isPremium: sheet.isPremium && !isPurchased,
       };
@@ -158,6 +163,11 @@ const InterviewPrepDashboardPage = () => {
 
   const overallLoading = userLoading || sheetsLoading;
 
+  // If a topic is selected, render the workspace
+  if (router.query.topic && props.sheet) {
+    return <InterviewSheetWorkspace {...props} />;
+  }
+
   if (overallLoading) {
     return (
       <OnCampusLearningLayout
@@ -167,7 +177,9 @@ const InterviewPrepDashboardPage = () => {
       >
         <div className="flex-1 flex items-center justify-center gap-3">
           <LoadingSpinner height={6} width={6} />
-          <Text level="p" className="text-white/30 text-sm">Loading sheets…</Text>
+          <Text level="p" className="text-white/30 text-sm">
+            Loading sheets…
+          </Text>
         </div>
       </OnCampusLearningLayout>
     );
@@ -182,9 +194,11 @@ const InterviewPrepDashboardPage = () => {
       layoutMode="workspace"
     >
       <div className="flex flex-col h-full w-full items-center">
-
         {/* ── TOP HEADER ── */}
-        <div className="w-full border-b border-white/[0.05] bg-[#080808] flex shrink-0" style={{ minHeight: 60 }}>
+        <div
+          className="w-full border-b border-white/[0.05] bg-[#080808] flex shrink-0"
+          style={{ minHeight: 60 }}
+        >
           {/* Left: sidebar header */}
           <div className="border-r border-white/[0.05] px-4 py-3 flex items-center justify-between shrink-0 w-full lg:w-[264px]">
             <div>
@@ -295,12 +309,14 @@ const InterviewPrepDashboardPage = () => {
                   <span className="text-[13px] font-semibold leading-none flex-1">
                     All Sheets
                   </span>
-                  <span className={cn(
-                    "text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full",
-                    selectedRoadmap === "all"
-                      ? "bg-indigo-500/15 text-indigo-400"
-                      : "bg-white/[0.04] text-white/25",
-                  )}>
+                  <span
+                    className={cn(
+                      "text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full",
+                      selectedRoadmap === "all"
+                        ? "bg-indigo-500/15 text-indigo-400"
+                        : "bg-white/[0.04] text-white/25",
+                    )}
+                  >
                     {totalSheets}
                   </span>
                 </button>
@@ -332,12 +348,14 @@ const InterviewPrepDashboardPage = () => {
                       <span className="text-[13px] font-semibold leading-none flex-1">
                         {roadmap}
                       </span>
-                      <span className={cn(
-                        "text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full",
-                        isActive
-                          ? "bg-indigo-500/15 text-indigo-400"
-                          : "bg-white/[0.04] text-white/25",
-                      )}>
+                      <span
+                        className={cn(
+                          "text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full",
+                          isActive
+                            ? "bg-indigo-500/15 text-indigo-400"
+                            : "bg-white/[0.04] text-white/25",
+                        )}
+                      >
                         {count}
                       </span>
                     </button>
@@ -363,9 +381,7 @@ const InterviewPrepDashboardPage = () => {
                     {/* Category heading */}
                     <div className="category-section-heading">
                       <div className="category-section-line" />
-                      <span className="category-section-label">
-                        {roadmap}
-                      </span>
+                      <span className="category-section-label">{roadmap}</span>
                       <div className="category-section-line" />
                     </div>
 
@@ -379,14 +395,19 @@ const InterviewPrepDashboardPage = () => {
                         return (
                           <Link
                             key={card.id}
-                            href={card.href || `/interview-sheets/${rawSheet?.slug}`}
+                            href={
+                              card.href ||
+                              `/interview-sheets?topic=${rawSheet?.slug}`
+                            }
                             className="group block"
                           >
-                            <div className={cn(
-                              "relative h-full rounded-xl border p-4 transition-all duration-200",
-                              "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.1]",
-                              "hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]",
-                            )}>
+                            <div
+                              className={cn(
+                                "relative h-full rounded-xl border p-4 transition-all duration-200",
+                                "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.1]",
+                                "hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]",
+                              )}
+                            >
                               {/* Premium badge */}
                               {isLocked && (
                                 <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
@@ -436,6 +457,14 @@ const InterviewPrepDashboardPage = () => {
       </div>
     </OnCampusLearningLayout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  const { topic } = context.query;
+  if (topic) {
+    return getSheetPageProps(context);
+  }
+  return { props: {} };
 };
 
 export default InterviewPrepDashboardPage;
