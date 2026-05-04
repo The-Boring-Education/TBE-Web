@@ -47,14 +47,6 @@ const ContactCard = () => (
                 }}
                 href="mailto:theboringeducation@gmail.com"
               />
-              <LinkButton
-                buttonProps={{
-                  variant: "OUTLINE",
-                  text: "Call Us",
-                  className: "w-full sm:w-auto",
-                }}
-                href="tel:+91-8884966267"
-              />
             </FlexContainer>
           </FlexContainer>
           {/* Hero Image */}
@@ -99,31 +91,6 @@ const ContactCard = () => (
                 className: "text-sm",
               }}
               href="mailto:theboringeducation@gmail.com"
-            />
-          </FlexContainer>
-        </GradientContainer>
-
-        {/* Phone Card */}
-        <GradientContainer className="border-borderColor3 p-6 text-center">
-          <FlexContainer direction="col" itemCenter className="gap-4">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-              <Text className="text-3xl" level="span">
-                📞
-              </Text>
-            </div>
-            <Text className="heading-5" level="h5">
-              Call Us
-            </Text>
-            <Text className="paragraph text-greyDark text-sm" level="p">
-              Speak directly with our team for immediate assistance
-            </Text>
-            <LinkButton
-              buttonProps={{
-                variant: "PRIMARY",
-                text: "+91-8884966267",
-                className: "text-sm",
-              }}
-              href="tel:+91-8884966267"
             />
           </FlexContainer>
         </GradientContainer>
