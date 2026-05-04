@@ -146,10 +146,12 @@ const PrepYatraDashboardPage = () => {
     toast.success("Recruiter contact deleted successfully!");
   };
 
-  const handleSkillsUpdated = () => {
+  const handleSkillsUpdated = (updatedSkills: string[]) => {
     if (user?.id) {
+      setProfile((prev) =>
+        prev ? { ...prev, userSkills: updatedSkills } : prev,
+      );
       fetchProfile(user.id);
-      toast.success("Skills updated successfully!");
     }
   };
 
