@@ -36,16 +36,18 @@ function LoginPageContent() {
   const { signIn, isAuthenticated, isLoading } = useAuth();
   const searchParams = useSearchParams();
   const returnTo = searchParams?.get("returnTo") || "/";
+  const safeReturnTo =
+    returnTo.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/";
 
   // Auto-redirect already-authenticated users
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      window.location.href = returnTo;
+      window.location.href = safeReturnTo;
     }
-  }, [isLoading, isAuthenticated, returnTo]);
+  }, [isLoading, isAuthenticated, safeReturnTo]);
 
   const handleSignIn = () => {
-    signIn();
+    signIn(safeReturnTo);
   };
 
   return (

@@ -143,7 +143,7 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
     {
       id: "user-profile",
       name: "Profile",
-      href: routes.user.profile,
+      href: toPlatformUrl(routes.user.profile),
     },
   ],
   issues: [
