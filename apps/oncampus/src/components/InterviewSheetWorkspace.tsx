@@ -59,9 +59,8 @@ export const InterviewSheetWorkspace = ({
   currentQuestionId: initialQuestionId,
 }: SheetPageProps) => {
   const router = useRouter();
-  const [sheetMeta, setSheetMeta] = useState<string>(meta || "");
+  const [, setSheetMeta] = useState<string>(meta || "");
   const [questions, setQuestions] = useState(sheet?.questions || []);
-  const firstQuestionId = questions?.[0]?._id?.toString() || "";
 
   const [copied, setCopied] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -89,8 +88,6 @@ export const InterviewSheetWorkspace = ({
     isPremium: sheet?.isPremium,
     isEnrolled: sheet?.isEnrolled,
   });
-
-  const [isStarLoading, setIsStarLoading] = useState(false);
 
   const urlQuestionSlug = useMemo(() => {
     const questionParams = router.query.question;
@@ -384,7 +381,7 @@ export const InterviewSheetWorkspace = ({
     }
   };
 
-  const isDataLoading = !sheet || !questions || questions.length === 0;
+  const isDataLoading = !questions || questions.length === 0;
 
   const questionsSidebar = useMemo(
     () => (
@@ -658,20 +655,16 @@ export const InterviewSheetWorkspace = ({
                             text={
                               isLoading
                                 ? "Marking..."
-                                : isLocked
-                                  ? "Enroll to Mark Complete"
-                                  : isQuestionCompleted
-                                    ? "Completed"
-                                    : "Mark As Completed"
+                                : isQuestionCompleted
+                                  ? "Completed"
+                                  : "Mark As Completed"
                             }
                             variant={
                               isQuestionCompleted
                                 ? "SUCCESS"
-                                : isLocked
+                                : isLoading
                                   ? "SECONDARY"
-                                  : isLoading
-                                    ? "SECONDARY"
-                                    : "PRIMARY"
+                                  : "PRIMARY"
                             }
                             onClick={toggleCompletion}
                           />
