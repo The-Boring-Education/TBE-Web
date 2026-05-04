@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stuck in Tutorial Hell? DSA Escape Plan – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        /* ── PRINT BAR ── */
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ── PAGE SHELL ── */
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .cover-logo {
+            height: 22px;
+            opacity: 0.85;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 48px 48px 32px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 58px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 15px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        /* ── HELL BLOCK (cover) ── */
+        .hell-block {
+            background: var(--dark);
+            border-radius: 16px;
+            padding: 24px 32px;
+            max-width: 580px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hell-block::before {
+            content: '⚠';
+            font-size: 64px;
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.08;
+        }
+
+        .hell-block-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .hell-block-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .hell-symptoms {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .hell-symptom {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        .hell-symptom-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGE ── */
+        .inner-page {
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-logo-img {
+            height: 20px;
+            opacity: 0.7;
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION LABELS ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 48px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-dot.outline {
+            background: white;
+            color: var(--red);
+            border: 2px solid var(--red);
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 12px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 2px 0 18px 20px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: var(--mid);
+            line-height: 1.65;
+            margin-bottom: 6px;
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 6px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 10px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── YT LINKS ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        /* ── TIME BADGE ── */
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            margin-bottom: 3px;
+        }
+
+        .time-badge span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            display: inline-block;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DARK TIP ── */
+        .dark-tip {
+            background: var(--dark);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .dark-tip .tip-text {
+            color: #ccc;
+        }
+
+        .dark-tip .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── DSA TOPIC CARDS ── */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .topic-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .topic-card-icon {
+            font-size: 18px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .topic-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .topic-card-hook {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-style: italic;
+        }
+
+        .topic-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.55;
+            margin-bottom: 7px;
+        }
+
+        .topic-card-problems {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-bottom: 7px;
+        }
+
+        .problem-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 11px;
+            color: var(--dark);
+        }
+
+        .prob-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── COMPARISON TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── SKILLS ROW ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 5px;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── RESOURCE GRID ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        /* ── TWO COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── REALITY CHECK BOX ── */
+        .reality-box {
+            background: #fff8f0;
+            border: 1.5px solid #ffe4b5;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+        }
+
+        .reality-box-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: #cc6600;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reality-box-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.65;
+        }
+
+        .reality-box-text strong {
+            color: #cc4400;
+        }
+
+        /* ── PATTERN PILL ── */
+        .pattern-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3px 10px;
+            color: var(--dark);
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .pattern-pill span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--red);
+        }
+
+        /* ══════════════════════════
+     MOBILE — FULL RESPONSIVE
+  ══════════════════════════ */
+        @media (max-width: 600px) {
+            .resource-viewer {
+                padding: 0;
+                gap: 0;
+                background: #0a0a0b;
+            }
+
+            .print-bar {
+                width: 100%;
+                padding: 12px 16px;
+                margin-bottom: 0;
+                background: #e8e5df;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 8px;
+            }
+
+            /* Cover mobile */
+            .cover {
+                min-height: unset;
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 18px 18px 0;
+            }
+
+            .cover-logo {
+                height: 18px;
+            }
+
+            .cover-hero {
+                padding: 24px 18px 24px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 34px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .hell-block {
+                padding: 18px 20px;
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .hell-block::before {
+                display: none;
+            }
+
+            .hell-block-title {
+                font-size: 14px;
+            }
+
+            .hell-symptom {
+                font-size: 12px;
+            }
+
+            .cover-stats {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 22px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            .cover-footer {
+                padding: 14px 18px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .cover-footer-text {
+                font-size: 10px;
+            }
+
+            /* Inner pages mobile */
+            .inner-page {
+                min-height: unset;
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 18px 12px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
+                letter-spacing: 0.04em;
+                max-width: 55%;
+                text-align: right;
+            }
+
+            .page-header-logo-img {
+                height: 16px;
+            }
+
+            .page-body {
+                padding: 18px 18px;
+            }
+
+            .page-footer {
+                padding: 12px 18px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            /* Typography mobile */
+            .section-title {
+                font-size: 18px;
+            }
+
+            .section-label {
+                font-size: 10px;
+            }
+
+            .step-heading {
+                font-size: 14px;
+            }
+
+            .step-desc {
+                font-size: 12px;
+            }
+
+            /* Step layout mobile */
+            .step-left {
+                width: 36px;
+            }
+
+            .step-dot {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+
+            .step-content {
+                padding: 0 0 16px 12px;
+            }
+
+            /* Grids — all single column on mobile */
+            .topic-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 6px;
+            }
+
+            .social-handle {
+                font-size: 10px;
+            }
+
+            /* Tables — scrollable on mobile */
+            .stack-table-wrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .stack-table {
+                font-size: 11px;
+                min-width: 480px;
+            }
+
+            /* CTA mobile */
+            .cta-block {
+                padding: 20px 18px;
+            }
+
+            .cta-title {
+                font-size: 17px;
+            }
+
+            .cta-sub {
+                font-size: 12px;
+            }
+
+            .page-num {
+                display: none;
+            }
+        }
+
+        /* ══════════════
+     PRINT STYLES
+  ══════════════ */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: hidden;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                height: 297mm;
+                min-height: 0;
+            }
+
+            .inner-page {
+                height: 297mm;
+                min-height: 0;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+
+            .stack-table-wrap {
+                overflow: visible;
+            }
+
+            .stack-table {
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+    <!-- PRINT BAR -->
+    <div class="print-bar">
+        <button class="print-btn" onclick="window.print()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path
+                    d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+            </svg>
+            Save as PDF
+        </button>
+    </div>
+
+    <!-- ══════════════════ PAGE 1 — COVER ══════════════════ -->
+    <div class="page cover">
+        <div class="cover-header">
+            <img class="cover-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+            <span class="cover-badge">DSA Escape Plan 2026</span>
+        </div>
+
+        <div class="cover-hero">
+            <div class="cover-decoration"></div>
+
+            <div class="cover-hook">Stop watching. Start solving.</div>
+
+            <h1 class="cover-title">
+                Stuck in<br><span>Tutorial</span><br>Hell?
+            </h1>
+
+            <p class="cover-subtitle">
+                You've watched 47 videos on arrays. You're back at arrays again. This guide breaks the cycle — with the
+                exact DSA topics, practice strategy, and DSA Yatra plan that actually gets you hired.
+            </p>
+
+            <div class="hell-block">
+                <div class="hell-block-label">⚠ You might be in tutorial hell if...</div>
+                <div class="hell-block-title">"I understand the concept, but I can't solve problems on my own."</div>
+                <div class="hell-symptoms">
+                    <div class="hell-symptom">
+                        <div class="hell-symptom-dot"></div>You've rewatched the same DSA playlist 3+ times but still
+                        blank on LeetCode
+                    </div>
+                    <div class="hell-symptom">
+                        <div class="hell-symptom-dot"></div>You take notes during videos but can't code from a blank
+                        file
+                    </div>
+                    <div class="hell-symptom">
+                        <div class="hell-symptom-dot"></div>You feel "almost ready" to start practicing — for the past 4
+                        months
+                    </div>
+                    <div class="hell-symptom">
+                        <div class="hell-symptom-dot"></div>You switch topics every time you get stuck instead of
+                        sitting with it
+                    </div>
+                    <div class="hell-symptom">
+                        <div class="hell-symptom-dot"></div>Your GitHub has zero commits but your YouTube watch history
+                        is a PhD
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-stats">
+                <div class="stat-item">
+                    <div class="stat-num">90%</div>
+                    <div class="stat-label">of learners never escape</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">8</div>
+                    <div class="stat-label">Core DSA topics</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">2/day</div>
+                    <div class="stat-label">Problems. Non-negotiable</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">90</div>
+                    <div class="stat-label">Days to interview-ready</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cover-footer">
+            <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; DSA Yatra — Practice. Everyday.</span>
+            <span class="page-num">01</span>
+        </div>
+    </div>
+
+    <!-- ══════════════════ PAGE 2 — THE ESCAPE PLAN + PHASE 1–2 ══════════════════ -->
+    <div class="page inner-page">
+        <div class="page-header">
+            <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+            <span class="page-header-title">DSA Escape Plan · The Boring Education</span>
+            <span class="page-num">02</span>
+        </div>
+
+        <div class="page-body">
+
+            <div class="reality-box">
+                <div class="reality-box-title">🔥 The Hard Truth First</div>
+                <div class="reality-box-text">
+                    Watching someone solve a problem does <strong>NOT</strong> mean you can solve it. The brain tricks
+                    you into "recognition" — you see the steps, nod along, and feel like you understand. But
+                    understanding ≠ solving. <strong>The only way out is to close the video, open a blank file, and
+                        suffer productively.</strong> This document is your structured suffering plan.
+                </div>
+            </div>
+
+            <div class="section-label">The Escape Framework</div>
+            <h2 class="section-title">Phase-by-Phase Breakout Plan</h2>
+
+            <div class="roadmap">
+
+                <!-- PHASE 1 -->
+                <div class="step">
+                    <div class="step-left">
+                        <div class="step-dot">1</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="time-badge"><span></span> Week 1–2 · The Reset</div>
+                        <div class="step-phase">Phase 01 · Stop the Loop</div>
+                        <div class="step-heading">Delete Your Playlist. Open DSA Yatra. Now.</div>
+                        <div class="step-desc">The first move is drastic: stop consuming. No new videos until you've
+                            attempted 20 problems on DSA Yatra — even if you fail all 20. Failure is the curriculum. Set
+                            a 25-minute timer per problem (Pomodoro). If you can't solve it in 25 minutes, read only the
+                            hint — not the full solution. Attempt again. Then and only then, look at the solution.
+                            Understand the pattern, not just the answer. Write the pattern name in your notebook.</div>
+                        <div class="step-tags">
+                            <span class="tag red">Do this first</span>
+                            <span class="tag">DSA Yatra daily</span>
+                            <span class="tag">25-min timer rule</span>
+                            <span class="tag">Hint-first, not solution-first</span>
+                            <span class="tag">Pattern journaling</span>
+                        </div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">DSA Yatra
+                                — Start Here</a>
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=o-k7h2G3Gco"
+                                target="_blank">NeetCode DSA Roadmap</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PHASE 2 -->
+                <div class="step">
+                    <div class="step-left">
+                        <div class="step-dot">2</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="time-badge"><span></span> Week 2–4 · Arrays & Hashing</div>
+                        <div class="step-phase">Phase 02 · Back to Arrays (The Right Way)</div>
+                        <div class="step-heading">"Back to arrays again" — but this time, you're solving, not watching
+                        </div>
+                        <div class="step-desc">Arrays are not boring — you just never truly solved them. The real skill
+                            isn't knowing what an array is; it's pattern recognition. Master <strong>Two
+                                Pointers</strong>, <strong>Sliding Window</strong>, and <strong>Prefix Sum</strong> on
+                            arrays before moving anywhere. These three patterns solve 60% of array problems. Do 15 array
+                            problems on DSA Yatra — sorted by difficulty. Every problem you solve, tag the pattern used.
+                        </div>
+                        <div class="step-tags">
+                            <span class="tag red">Most important topic</span>
+                            <span class="tag">Two Pointers</span>
+                            <span class="tag">Sliding Window</span>
+                            <span class="tag">Prefix Sum</span>
+                            <span class="tag">Hash Maps</span>
+                            <span class="tag">Frequency counting</span>
+                            <span class="tag">Sorting tricks</span>
+                        </div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=GcW4mgmgSbw" target="_blank">Two
+                                Pointers – NeetCode</a>
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=MK-NZ4hN7rs"
+                                target="_blank">Sliding Window – NeetCode</a>
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=7pJo_rM0z_s" target="_blank">Prefix
+                                Sum Explained – Greg Hogg</a>
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=9YkT5_EOAEM" target="_blank">Arrays
+                                & Hashing – NeetCode</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PHASE 3 -->
+                <div class="step">
+                    <div class="step-left">
+                        <div class="step-dot">3</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="time-badge"><span></span> Week 3–5 · Strings</div>
+                        <div class="step-phase">Phase 03 · Strings are Just Char Arrays</div>
+                        <div class="step-heading">"Why is this string problem hard?" — because you skipped patterns
+                        </div>
+                        <div class="step-desc">Strings share patterns with arrays but have gotchas: immutability,
+                            Unicode, anagram detection, palindromes, and substring problems. Master <strong>sliding
+                                window on strings</strong>, <strong>two pointers for palindromes</strong>, and
+                            <strong>character frequency maps</strong>. Build a mental model: every string problem is
+                            either a window problem, a sorting trick, or a map problem. Do 10 string problems on DSA
+                            Yatra — identify which of the 3 buckets each falls into.</div>
+                        <div class="step-tags">
+                            <span class="tag red">Tied to arrays</span>
+                            <span class="tag">Anagram detection</span>
+                            <span class="tag">Palindrome</span>
+                            <span class="tag">Substring search</span>
+                            <span class="tag">Character maps</span>
+                            <span class="tag">String DP intro</span>
+                        </div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=qbeV31GCBQQ" target="_blank">String
+                                Problems – NeetCode</a>
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=jSto0O4AJbM"
+                                target="_blank">Sliding Window on Strings – Errichto</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tip-block">
+                <div class="tip-icon">🧠</div>
+                <div class="tip-text"><strong>The Pattern Journal Rule:</strong> After every solved problem, write: (1)
+                    topic, (2) pattern name, (3) why you were stuck, (4) the key insight. After 50 problems, you'll see
+                    the matrix — 80% of problems are 10 patterns in disguise. DSA Yatra helps you track this
+                    automatically.</div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span class="cover-footer-text">theboringeducation.com</span>
+            <span class="page-num">02 / 06</span>
+        </div>
+    </div>
+
+    <!-- ══════════════════ PAGE 3 — DSA TOPIC DEEP DIVE ══════════════════ -->
+    <div class="page inner-page">
+        <div class="page-header">
+            <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+            <span class="page-header-title">DSA Escape Plan · The Boring Education</span>
+            <span class="page-num">03</span>
+        </div>
+
+        <div class="page-body">
+            <div class="section-label">Critical DSA Topics</div>
+            <h2 class="section-title">The 8 Topics That Decide Your Interview</h2>
+
+            <div class="topic-grid">
+
+                <div class="topic-card">
+                    <span class="topic-card-icon">🔢</span>
+                    <div class="topic-card-name">Arrays & Hashing</div>
+                    <div class="topic-card-hook">"I know what an array is" ≠ knowing how to use it</div>
+                    <div class="topic-card-desc">Foundation of everything. Master prefix sums, two-pointer, sliding
+                        window, and frequency maps before moving on.</div>
+                    <div class="topic-card-problems">
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Two Sum · Best Time to Buy Stock
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Contains Duplicate · Product of Array
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Longest Consecutive Sequence
+                        </div>
+                    </div>
+                    <div class="yt-links">
+                        <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">Practice on
+                            DSA Yatra</a>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <span class="topic-card-icon">📚</span>
+                    <div class="topic-card-name">Stack & Queue</div>
+                    <div class="topic-card-hook">"It's just push and pop" — until it's not</div>
+                    <div class="topic-card-desc">Monotonic stacks are the hidden gem here. They power 10+ hard problems
+                        that look impossible until you see the pattern.</div>
+                    <div class="topic-card-problems">
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Valid Parentheses · Min Stack
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Daily Temperatures · Next Greater Element
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Largest Rectangle in Histogram
+                        </div>
+                    </div>
+                    <div class="yt-links">
+                        <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">Practice on
+                            DSA Yatra</a>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <span class="topic-card-icon">🔗</span>
+                    <div class="topic-card-name">Linked Lists</div>
+                    <div class="topic-card-hook">"I'll draw it on paper... and still get it wrong"</div>
+                    <div class="topic-card-desc">Slow & fast pointers (Floyd's cycle detection) solve 80% of linked list
+                        problems. Reversal and merging are the other 20%.</div>
+                    <div class="topic-card-problems">
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Reverse Linked List · Merge Two Sorted
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Linked List Cycle · Middle of LL
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Reorder List · LRU Cache
+                        </div>
+                    </div>
+                    <div class="yt-links">
+                        <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">Practice on
+                            DSA Yatra</a>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <span class="topic-card-icon">🌲</span>
+                    <div class="topic-card-name">Trees & BST</div>
+                    <div class="topic-card-hook">"Recursion makes no sense to me"</div>
+                    <div class="topic-card-desc">Trees ARE recursion in disguise. Once you see "left + right + root =
+                        answer" as a template, trees click instantly. DFS and BFS are everything.</div>
+                    <div class="topic-card-problems">
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Invert Binary Tree · Max Depth
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Level Order Traversal · Diameter
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Lowest Common Ancestor · Serialize
+                        </div>
+                    </div>
+                    <div class="yt-links">
+                        <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">Practice on
+                            DSA Yatra</a>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <span class="topic-card-icon">🗺️</span>
+                    <div class="topic-card-name">Graphs</div>
+                    <div class="topic-card-hook">"This looks scary" — it's just trees with cycles</div>
+                    <div class="topic-card-desc">Graphs are the senior-level topic. BFS for shortest path, DFS for
+                        connected components, Union-Find for grouping. Most graph problems are one of these 3.</div>
+                    <div class="topic-card-problems">
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Number of Islands · Clone Graph
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Course Schedule · Pacific Atlantic
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Dijkstra's shortest path
+                        </div>
+                    </div>
+                    <div class="yt-links">
+                        <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">Practice on
+                            DSA Yatra</a>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <span class="topic-card-icon">⚡</span>
+                    <div class="topic-card-name">Dynamic Programming</div>
+                    <div class="topic-card-hook">"This is impossible" — you're just not seeing the subproblem</div>
+                    <div class="topic-card-desc">DP is pattern recognition. Fibonacci → 1D DP. Knapsack → 2D DP. Every
+                        DP problem has a "try all choices, cache the result" skeleton. Start simple, go deeper.</div>
+                    <div class="topic-card-problems">
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Climbing Stairs · House Robber
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Coin Change · Longest Common Subsequence
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>0/1 Knapsack · Edit Distance
+                        </div>
+                    </div>
+                    <div class="yt-links">
+                        <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">Practice on
+                            DSA Yatra</a>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <span class="topic-card-icon">🔍</span>
+                    <div class="topic-card-name">Binary Search</div>
+                    <div class="topic-card-hook">"I know how binary search works, the code is just weird"</div>
+                    <div class="topic-card-desc">Stop memorizing lo/hi/mid. Learn the template: binary search on the
+                        ANSWER space. This applies far beyond sorted arrays — it shows up in capacity, scheduling, and
+                        matrix problems.</div>
+                    <div class="topic-card-problems">
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Binary Search · Search in Rotated Array
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Find Minimum in Rotated Array
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Median of Two Sorted Arrays
+                        </div>
+                    </div>
+                    <div class="yt-links">
+                        <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">Practice on
+                            DSA Yatra</a>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <span class="topic-card-icon">🏔️</span>
+                    <div class="topic-card-name">Heaps / Priority Queue</div>
+                    <div class="topic-card-hook">"When do I even use a heap??"</div>
+                    <div class="topic-card-desc">Anytime you need "the k-th largest/smallest" or "stream processing" —
+                        use a heap. Min-heap and max-heap are interchangeable with a sign flip. Underrated, high-yield
+                        topic.</div>
+                    <div class="topic-card-problems">
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Kth Largest Element · Top K Frequent
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>K Closest Points to Origin
+                        </div>
+                        <div class="problem-item">
+                            <div class="prob-dot"></div>Find Median from Data Stream
+                        </div>
+                    </div>
+                    <div class="yt-links">
+                        <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">Practice on
+                            DSA Yatra</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tip-block">
+                <div class="tip-icon">📊</div>
+                <div class="tip-text"><strong>Interview frequency breakdown:</strong> Arrays & Hashing (25%) ·
+                    Trees/Graphs (30%) · DP (20%) · Binary Search (10%) · Stack/Queue (8%) · Linked Lists (7%). Spend
+                    more time where interviews spend more time. DSA Yatra filters problems by topic and company
+                    frequency.</div>
+            </div>
+
+        </div>
+
+        <div class="page-footer">
+            <span class="cover-footer-text">theboringeducation.com</span>
+            <span class="page-num">03 / 06</span>
+        </div>
+    </div>
+
+    <!-- ══════════════════ PAGE 4 — PREP STRATEGY ══════════════════ -->
+    <div class="page inner-page">
+        <div class="page-header">
+            <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+            <span class="page-header-title">DSA Escape Plan · The Boring Education</span>
+            <span class="page-num">04</span>
+        </div>
+
+        <div class="page-body">
+            <div class="section-label">The 90-Day Strategy</div>
+            <h2 class="section-title">How to Use DSA Yatra to Actually Get Hired</h2>
+
+            <div class="roadmap">
+
+                <!-- MONTH 1 -->
+                <div class="step">
+                    <div class="step-left">
+                        <div class="step-dot">M1</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="time-badge"><span></span> Days 1–30 · Pattern Lock-In</div>
+                        <div class="step-phase">Month 01 · Build the Foundation</div>
+                        <div class="step-heading">60 problems. Every day counts. No skipping.</div>
+                        <div class="step-desc">Open DSA Yatra. Set topic to <strong>Arrays → Strings → Stack</strong> in
+                            sequence. Do 2 problems per day — one easy, one medium. Time every attempt. After each
+                            problem, write the pattern. On weekends: revisit problems you failed earlier that week. Do
+                            not jump to trees yet. Build the habit muscle before the topic breadth. By day 30, you'll
+                            have 60 solved problems and 10–12 patterns identified.</div>
+                        <div class="step-tags">
+                            <span class="tag red">60 problems</span>
+                            <span class="tag">Arrays → Strings → Stack</span>
+                            <span class="tag">Easy + Medium mix</span>
+                            <span class="tag">Weekend review</span>
+                            <span class="tag">Pattern journaling</span>
+                        </div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">DSA Yatra
+                                — Month 1 Filter</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MONTH 2 -->
+                <div class="step">
+                    <div class="step-left">
+                        <div class="step-dot">M2</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="time-badge"><span></span> Days 31–60 · Tree & Graph Unlock</div>
+                        <div class="step-phase">Month 02 · Recursion + Non-Linear DSA</div>
+                        <div class="step-heading">Trees, Graphs, Binary Search — your interview heavy-hitters</div>
+                        <div class="step-desc">Shift DSA Yatra filter to <strong>Binary Search → Linked Lists → Trees →
+                                Graphs</strong>. At this point you have the habit — now build depth. Do 2 problems per
+                            day but allow 1 hard problem per week. The goal: understand BFS/DFS so deeply you can code
+                            them from scratch in 3 minutes. Study graphs via BFS first — it's more intuitive. Implement
+                            Dijkstra once from scratch. Mock yourself: cover the code, re-code from memory.</div>
+                        <div class="step-tags">
+                            <span class="tag red">60 more problems</span>
+                            <span class="tag">Binary Search</span>
+                            <span class="tag">Trees + DFS/BFS</span>
+                            <span class="tag">Graph patterns</span>
+                            <span class="tag">1 hard/week</span>
+                            <span class="tag">Re-code from memory</span>
+                        </div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">DSA Yatra
+                                — Month 2 Filter</a>
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=EgI5nU9etnU" target="_blank">Graph
+                                Algorithms – WilliamFiset</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MONTH 3 -->
+                <div class="step">
+                    <div class="step-left">
+                        <div class="step-dot">M3</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="time-badge"><span></span> Days 61–90 · DP + Interview Mode</div>
+                        <div class="step-phase">Month 03 · DP + Mock Interviews + Apply</div>
+                        <div class="step-heading">Stop prepping. Start applying. These things must happen at the same
+                            time.</div>
+                        <div class="step-desc">Tackle DP and Heaps this month. Use DSA Yatra's <strong>timed mock
+                                mode</strong> — simulate real interview pressure (30 min per problem, no hints). Do 1
+                            full mock per week: 2 problems, timed, spoken aloud as if explaining to an interviewer.
+                            Simultaneously: apply to 5 companies per week. The feedback loop of real interviews beats
+                            any amount of isolated practice. You're not "almost ready" — you're ready enough. Ship it.
+                        </div>
+                        <div class="step-tags">
+                            <span class="tag red">Apply NOW</span>
+                            <span class="tag">DP: 1D → 2D</span>
+                            <span class="tag">Heaps</span>
+                            <span class="tag">Timed mock mode</span>
+                            <span class="tag">Think aloud practice</span>
+                            <span class="tag">5 apps/week</span>
+                        </div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://dsayatra.theboringeducation.com" target="_blank">DSA Yatra
+                                — Mock Mode</a>
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=oBt53YbR9Kk" target="_blank">DP for
+                                Beginners – freeCodeCamp</a>
+                            <a class="yt-link" href="https://www.youtube.com/watch?v=nOIjCDFQbP0" target="_blank">DP
+                                Patterns – Neetcode</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="divider">
+
+            <div class="section-label">Time Investment Guide</div>
+            <div class="stack-table-wrap">
+                <table class="stack-table">
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Daily Time</th>
+                            <th>Problems/Day</th>
+                            <th>When to Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Survival mode</td>
+                            <td>30 min</td>
+                            <td>1 problem</td>
+                            <td>During college exams, heavy work periods</td>
+                        </tr>
+                        <tr>
+                            <td>Standard grind</td>
+                            <td>1–1.5 hrs</td>
+                            <td>2 problems</td>
+                            <td>Every normal day. Non-negotiable baseline</td>
+                        </tr>
+                        <tr>
+                            <td>Interview sprint</td>
+                            <td>2–3 hrs</td>
+                            <td>3–4 problems + 1 mock</td>
+                            <td>30 days before interview season</td>
+                        </tr>
+                        <tr>
+                            <td>Full-send mode</td>
+                            <td>4–5 hrs</td>
+                            <td>5+ problems + revision</td>
+                            <td>If you have an interview in &lt; 2 weeks</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="dark-tip">
+                <div class="tip-icon">🎯</div>
+                <div class="tip-text"><strong>The 2-problem rule is sacred.</strong> Not 5 on Monday and 0 on Tuesday.
+                    Not a 6-hour Sunday grind after a week off. Consistency builds pattern recognition. One easy and one
+                    medium, every single day, beats binging every single time. DSA Yatra streaks hold you accountable.
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span class="cover-footer-text">theboringeducation.com</span>
+            <span class="page-num">04 / 06</span>
+        </div>
+    </div>
+
+    <!-- ══════════════════ PAGE 5 — PATTERNS + ANTI-PATTERNS ══════════════════ -->
+    <div class="page inner-page">
+        <div class="page-header">
+            <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+            <span class="page-header-title">DSA Escape Plan · The Boring Education</span>
+            <span class="page-num">05</span>
+        </div>
+
+        <div class="page-body">
+            <div class="section-label">Pattern Recognition Cheat Sheet</div>
+            <h2 class="section-title">See a Problem Type → Know the Pattern Instantly</h2>
+
+            <div class="stack-table-wrap">
+                <table class="stack-table">
+                    <thead>
+                        <tr>
+                            <th>Problem Keyword</th>
+                            <th>Pattern to Reach For</th>
+                            <th>Why</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Subarray / Substring</td>
+                            <td>Sliding Window or Prefix Sum</td>
+                            <td>Contiguous range → window or cumulative</td>
+                        </tr>
+                        <tr>
+                            <td>Two elements sum to X</td>
+                            <td>Two Pointers or Hash Map</td>
+                            <td>Sort + converge OR store complements</td>
+                        </tr>
+                        <tr>
+                            <td>Find duplicates / frequency</td>
+                            <td>Hash Map / Set</td>
+                            <td>O(1) lookup for membership check</td>
+                        </tr>
+                        <tr>
+                            <td>Kth largest / smallest</td>
+                            <td>Heap (Priority Queue)</td>
+                            <td>Maintain k elements efficiently</td>
+                        </tr>
+                        <tr>
+                            <td>Valid parentheses / matching</td>
+                            <td>Stack</td>
+                            <td>LIFO for matching open/close pairs</td>
+                        </tr>
+                        <tr>
+                            <td>Next greater / smaller element</td>
+                            <td>Monotonic Stack</td>
+                            <td>Maintains ascending/descending order</td>
+                        </tr>
+                        <tr>
+                            <td>Shortest path (unweighted)</td>
+                            <td>BFS</td>
+                            <td>Level-by-level expansion = shortest</td>
+                        </tr>
+                        <tr>
+                            <td>Shortest path (weighted)</td>
+                            <td>Dijkstra (Heap + BFS)</td>
+                            <td>Greedy expansion by minimum cost</td>
+                        </tr>
+                        <tr>
+                            <td>Connected components</td>
+                            <td>DFS / Union-Find</td>
+                            <td>Flood fill or group by root</td>
+                        </tr>
+                        <tr>
+                            <td>Sorted array → find target</td>
+                            <td>Binary Search</td>
+                            <td>Halve search space each step</td>
+                        </tr>
+                        <tr>
+                            <td>Max/min of something feasible</td>
+                            <td>Binary Search on Answer</td>
+                            <td>Monotone feasibility → binary on range</td>
+                        </tr>
+                        <tr>
+                            <td>Count ways / optimal value</td>
+                            <td>Dynamic Programming</td>
+                            <td>Overlapping subproblems + optimal substructure</td>
+                        </tr>
+                        <tr>
+                            <td>Detect cycle in linked list</td>
+                            <td>Fast & Slow Pointers</td>
+                            <td>Floyd's cycle detection algorithm</td>
+                        </tr>
+                        <tr>
+                            <td>All combinations / subsets</td>
+                            <td>Backtracking (DFS)</td>
+                            <td>Explore all branches, prune invalid ones</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section-label">Tutorial Hell Anti-Patterns</div>
+            <div
+                style="font-size:15px; font-weight:800; color:var(--dark); margin-bottom:12px; letter-spacing:-0.01em;">
+                Stop doing these. Seriously.</div>
+
+            <div class="two-col">
+                <div>
+                    <div class="reality-box" style="margin-bottom:10px;">
+                        <div class="reality-box-title">❌ Anti-Pattern #1</div>
+                        <div class="reality-box-text"><strong>"I'll watch one more video before I start"</strong> —
+                            You've been saying this for months. The video is not the blocker. Fear of being wrong is the
+                            blocker. Start wrong. Fix it. That's how it works.</div>
+                    </div>
+                    <div class="reality-box" style="margin-bottom:10px;">
+                        <div class="reality-box-title">❌ Anti-Pattern #2</div>
+                        <div class="reality-box-text"><strong>Reading the solution after 5 minutes</strong> — That's not
+                            solving, that's memorizing. You need to be stuck for at least 25 minutes before reading
+                            anything. Productive struggle IS the learning.</div>
+                    </div>
+                    <div class="reality-box">
+                        <div class="reality-box-title">❌ Anti-Pattern #3</div>
+                        <div class="reality-box-text"><strong>Solving 20 easy problems in a row</strong> — Easy problems
+                            don't prepare you for interviews. They give you false confidence. Mix in mediums from day 1.
+                            Hard problems after day 30.</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="tip-block" style="margin-bottom:10px;">
+                        <div class="tip-icon">✅</div>
+                        <div class="tip-text"><strong>Pattern #1 — Think first, code later:</strong> Spend 5–10 minutes
+                            on paper before typing. Draw examples. Identify the pattern. Then code. This mimics real
+                            interviews and builds muscle memory.</div>
+                    </div>
+                    <div class="tip-block" style="margin-bottom:10px;">
+                        <div class="tip-icon">✅</div>
+                        <div class="tip-text"><strong>Pattern #2 — Spaced repetition:</strong> Re-attempt problems you
+                            failed, 3 days later — without looking at your solution. If you can't solve it again, the
+                            learning didn't stick. DSA Yatra tracks this for you.</div>
+                    </div>
+                    <div class="tip-block">
+                        <div class="tip-icon">✅</div>
+                        <div class="tip-text"><strong>Pattern #3 — Explain it aloud:</strong> After solving, explain the
+                            solution in 60 seconds as if teaching someone. If you can't explain it simply, you don't
+                            understand it yet. This is the #1 interview skill.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="page-footer">
+            <span class="cover-footer-text">theboringeducation.com</span>
+            <span class="page-num">05 / 06</span>
+        </div>
+    </div>
+
+    <!-- ══════════════════ PAGE 6 — DAILY ROUTINE + CTA ══════════════════ -->
+    <div class="page inner-page">
+        <div class="page-header">
+            <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+            <span class="page-header-title">DSA Escape Plan · The Boring Education</span>
+            <span class="page-num">06</span>
+        </div>
+
+        <div class="page-body">
+            <div class="section-label">Daily Routine</div>
+            <h2 class="section-title">The Boring DSA Routine That Actually Works</h2>
+
+            <div class="checklist" style="margin-bottom:16px;">
+                <div class="check-item">
+                    <div class="check-box"></div> Open DSA Yatra — not YouTube. First 5 minutes: review yesterday's
+                    problem pattern notes
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div> Problem 1 (Easy/Medium): 25-min timer. Close tabs. No hints for first
+                    15 min
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div> After solving: write pattern name, key insight, and time taken in your
+                    notebook
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div> Problem 2 (Medium): same rules. If stuck after 25 min — hint only, no
+                    full solution
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div> Read the editorial after both problems — even if you solved them.
+                    There's always a cleaner approach
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div> Post 1 thing you learned on LinkedIn or Twitter — forces you to
+                    articulate it clearly
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div> Mark your DSA Yatra streak. Protect it like it's your rating.
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section-label">DSA Yatra Features — Use All of Them</div>
+            <div class="resource-grid" style="margin-bottom:14px;">
+                <div class="resource-card">
+                    <div class="resource-card-name">📅 Streak Tracking</div>
+                    <div class="resource-card-desc">Daily streak counter that resets on a miss. The psychological weight
+                        of protecting a 30-day streak is more powerful than any motivation video you'll watch.</div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-card-name">🔖 Topic Filters</div>
+                    <div class="resource-card-desc">Filter problems by DSA topic, difficulty, and company tag. Follow
+                        the escape plan — don't random-pick. Structured progression beats spray-and-pray.</div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-card-name">⏱️ Timed Mock Mode</div>
+                    <div class="resource-card-desc">Simulate real interview conditions: 30 minutes, no hints, 2
+                        problems. Do this weekly from month 2. Pressure reveals your real weak spots, not relaxed
+                        practice.</div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-card-name">📈 Progress Dashboard</div>
+                    <div class="resource-card-desc">See exactly how many problems you've solved per topic. Instantly
+                        shows where you're neglecting. Use it like a heatmap — fill in the gaps.</div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="cta-block">
+                <div class="cta-title">The tutorial hell ends today. Not tomorrow. 🔥</div>
+                <div class="cta-sub">Open DSA Yatra. Pick your first problem. Set a 25-minute timer.<br>Fail. Learn.
+                    Repeat. That's the entire plan.</div>
+                <a href="https://dsayatra.theboringeducation.com" class="cta-link" target="_blank">→ Start on DSA
+                    Yatra</a>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section-label">Find Us Everywhere</div>
+            <div class="socials-grid">
+                <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                        alt="Instagram">
+                    <span class="social-name">Instagram</span>
+                    <div class="social-handle">@theboringeducation</div>
+                </a>
+                <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                    <span class="social-name">LinkedIn</span>
+                    <div class="social-handle">The Boring Education</div>
+                </a>
+                <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+                    <span class="social-name">GitHub</span>
+                    <div class="social-handle">The-Boring-Education</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+            <span class="page-num">06 / 06</span>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>
