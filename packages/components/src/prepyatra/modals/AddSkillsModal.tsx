@@ -20,7 +20,7 @@ interface AddSkillsModalProps {
   userId: string;
   userSkills: string[];
   lastUpdated?: string;
-  onSkillsUpdated?: () => void;
+  onSkillsUpdated?: (updatedSkills: string[]) => void;
 }
 
 function isOlderThan60Days(dateString: string | undefined) {
@@ -72,7 +72,8 @@ const AddSkillsModal = ({
       });
       const result = await res.json();
       if (result.status) {
-        setSkills((prev) => [...prev, skill]);
+        const updatedSkills = [...skills, skill];
+        setSkills(updatedSkills);
         setInputValue("");
         toast({
           title: "Skill added!",
@@ -82,7 +83,7 @@ const AddSkillsModal = ({
           trackEvent("skill_add", { category: "skills", skill });
         } catch {}
         if (onSkillsUpdated) {
-          onSkillsUpdated();
+          onSkillsUpdated(updatedSkills);
         }
       } else {
         toast({
@@ -114,7 +115,8 @@ const AddSkillsModal = ({
       });
       const result = await res.json();
       if (result.status) {
-        setSkills((prev) => prev.filter((s) => s !== skill));
+        const updatedSkills = skills.filter((s) => s !== skill);
+        setSkills(updatedSkills);
         toast({
           title: "Skill removed",
           description: `${skill} removed from your stack.`,
@@ -123,7 +125,7 @@ const AddSkillsModal = ({
           trackEvent("skill_remove", { category: "skills", skill });
         } catch {}
         if (onSkillsUpdated) {
-          onSkillsUpdated();
+          onSkillsUpdated(updatedSkills);
         }
       } else {
         toast({

@@ -1,0 +1,80 @@
+---
+description: Master identity and stack rules — always apply to all files in TBE-Web monorepo
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# TBE-Web Master Agent
+
+## Identity
+You are a senior engineer on the TBE (The Boring Education) platform. This is a production TypeScript monorepo serving a multi-app EdTech platform. You must follow every rule in every skill file. When in doubt, ask what domain you're working in and apply the matching skill.
+
+## Tech Stack (Exact)
+- **Monorepo**: Turborepo + pnpm workspaces
+- **Framework**: Next.js 14 (Pages Router) across all apps EXCEPT `vidya-pod` (Next.js 15 App Router)
+- **Language**: TypeScript 5 (strict mode) throughout
+- **UI Library**: Custom `@tbe/components` — built with Tailwind CSS + Framer Motion. Do NOT use shadcn/ui or MUI in `TBE-Web`.
+- **Tailwind**: Used in all apps. No inline `style={{}}` props unless animating with Framer Motion.
+- **Auth**: `@tbe/auth` package — JWT-based, Google OAuth. Do NOT re-implement auth logic.
+- **Database**: MongoDB via Mongoose — lives exclusively in `apps/api`
+- **API Layer**: `apps/api` — Next.js API routes under `/api/v1/`
+- **State**: Custom hooks in `@tbe/hooks`. No external state manager (no Zustand, no Redux) in `TBE-Web`.
+- **Data Fetching**: `@tbe/query` (TanStack Query wrapper). `useApi` from `@tbe/hooks` is **deprecated** — migrate to `createQuery`/`useQuery`.
+- **Testing**: Vitest (unit + integration) + Playwright (E2E) — all in `apps/testing`
+- **Monitoring**: Sentry (`@sentry/nextjs`) — always use `captureAPIError`, `captureAuthError` helpers, never `Sentry.captureException` directly.
+- **CI/CD**: Google Cloud Build + Vercel
+- **Package manager**: pnpm 10 — never use npm or yarn
+
+## Monorepo Folder Map
+```
+TBE-Web/
+├── apps/
+│   ├── api/          ← Next.js API backend (MongoDB, Mongoose, all /api/v1/ routes)
+│   ├── platform/     ← Main marketing + dashboard frontend (port 3000)
+│   ├── prep-yatra/   ← Interview prep app (port 3001)
+│   ├── quizes/       ← Quiz app (port 3002)
+│   ├── techyatra/    ← Tech yatra app (port 3003)
+│   ├── onboarding/   ← Onboarding flow (Vite/React, port 5173)
+│   ├── dsayatra/     ← DSA learning app (port 3005)
+│   ├── resume-yatra/ ← Resume builder (port 3006)
+│   ├── oncampus/     ← On-campus program (port 3007)
+│   └── testing/      ← ALL tests live here (unit, integration, e2e)
+├── packages/
+│   ├── components/   ← Shared UI components (@tbe/components)
+│   ├── hooks/        ← Shared React hooks (@tbe/hooks)
+│   ├── types/        ← Shared TS types (@tbe/types)
+│   ├── interface/    ← Shared TS interfaces for components/pages (@tbe/interface)
+│   ├── auth/         ← Auth logic (@tbe/auth)
+│   ├── constants/    ← App constants, routes, env config (@tbe/constants)
+│   ├── utils/        ← Shared utilities (@tbe/utils)
+│   ├── services/     ← API service functions (@tbe/services)
+│   ├── gamification/ ← Points/badges/leaderboard (@tbe/gamification)
+│   ├── query/        ← TanStack Query wrapper (@tbe/query)
+│   └── config/       ← Per-app config helpers (@tbe/config)
+```
+
+## Linked Skills
+Apply these skills based on what you are editing:
+
+| File Pattern | Skill to Apply |
+|---|---|
+| `packages/components/**/*.tsx` | ui-components |
+| `apps/*/src/pages/**/*.tsx` | nextjs-pages-router |
+| `apps/api/src/pages/api/**/*.ts` | api-routes |
+| `apps/api/src/lib/database/models/**` | mongodb-mongoose |
+| `apps/api/src/lib/database/queries/**` | mongodb-mongoose |
+| `packages/hooks/src/**` | hooks-data-fetching |
+| `packages/types/src/**`, `packages/interface/src/**` | typescript-types |
+| `packages/auth/**`, `apps/api/src/middleware/admin.ts` | authentication |
+| `apps/testing/src/**` | testing |
+| `packages/components/src/layout/SEO.tsx` | seo-metadata |
+| `apps/api/src/middleware/**` | error-handling |
+
+## Non-Negotiable Rules
+1. **Never bypass TypeScript** — no `any`, no `@ts-ignore` without a comment explaining why
+2. **Never write raw fetch calls** in frontend code — use `@tbe/query` or `@tbe/services`
+3. **Never connect to MongoDB from frontend apps** — only `apps/api` can import Mongoose models
+4. **Never use `console.log` in production code** — use the `logger` utility or Sentry
+5. **Never hardcode secrets** — all config goes through `envConfig` from `@tbe/constants`
+6. **Never create a new package** without a `package.json` declaring `name: "@tbe/[name]"` and updating `pnpm-workspace.yaml`
+7. **Always run `pnpm quality:check` before committing** — this runs lint + format + type-check

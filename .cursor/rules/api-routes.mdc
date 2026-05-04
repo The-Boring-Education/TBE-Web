@@ -1,0 +1,155 @@
+---
+description: Rules for creating and editing API routes in apps/api/src/pages/api/
+globs: ["apps/api/src/pages/api/**/*.ts", "apps/api/src/middleware/**/*.ts"]
+alwaysApply: false
+---
+
+# API Routes Skill
+
+## Purpose
+All backend API logic lives in `apps/api`. Routes follow REST conventions under `/api/v1/`. Every handler must be wrapped in `withApiHandler` — which composes CORS + DB connection + structured logging + Sentry error capture. This skill prevents bare handlers, unhandled errors, and inconsistent response shapes.
+
+## Rules
+1. **Every handler must be exported as `default withApiHandler(handler)`** — never export a bare handler.
+2. **Always use the `sendAPIResponse` utility** for all responses — never call `res.json()` with a raw object.
+3. **Use `apiStatusCodes` from `@/lib/constants`** — never hardcode HTTP status numbers.
+4. **All handler logic lives inside a `switch(method)` block** — one function per HTTP verb, delegated to a named `handle*` function.
+5. **Every error path must call `captureAPIError`** from `@/lib/utils/sentry` before responding.
+6. **Input validation must happen before any DB call** — validate query params and body at the top of each handle function.
+7. **DB calls must come from `@/lib/database` query functions** — never call Mongoose models directly inside route files.
+8. **Admin routes must be wrapped with `withAdminHandler`** from `@/middleware/admin` — not `withApiHandler`.
+9. **Use `firstQueryValue` from `@/lib/validation/queryParams`** to safely extract single query params.
+10. **Never `throw` inside a handler** — catch errors, call `captureAPIError`, then respond with the appropriate status code.
+11. **Rate limit sensitive endpoints** using `rateLimit` from `@/lib/utils/rateLimit`.
+
+## Patterns
+
+### Standard GET + POST handler
+```ts
+// apps/api/src/pages/api/v1/[resource]/index.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import { apiStatusCodes } from "@/lib/constants";
+import { getResourceFromDB, createResourceInDB } from "@/lib/database";
+import { sendAPIResponse } from "@/lib/utils";
+import { captureAPIError } from "@/lib/utils/sentry";
+import { firstQueryValue } from "@/lib/validation/queryParams";
+import { withApiHandler } from "@/middleware/requestLogger";
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { method } = req;
+
+  switch (method) {
+    case "GET":
+      return handleGetResource(req, res);
+    case "POST":
+      return handleCreateResource(req, res);
+    default:
+      return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
+        sendAPIResponse({ status: false, message: "Method not allowed" }),
+      );
+  }
+};
+
+const handleGetResource = async (req: NextApiRequest, res: NextApiResponse) => {
+  const id = firstQueryValue(req.query.id);
+
+  if (!id) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({ status: false, message: "id is required" }),
+    );
+  }
+
+  const { data, error } = await getResourceFromDB(id);
+
+  if (error) {
+    captureAPIError(error as Error, "/api/v1/resource", "GET", apiStatusCodes.INTERNAL_SERVER_ERROR, { id });
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({ status: false, error, message: "Error fetching resource" }),
+    );
+  }
+
+  return res.status(apiStatusCodes.OKAY).json(sendAPIResponse({ status: true, data }));
+};
+
+const handleCreateResource = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { name, description } = req.body;
+
+  if (!name) {
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({ status: false, message: "name is required" }),
+    );
+  }
+
+  const { data, error } = await createResourceInDB({ name, description });
+
+  if (error) {
+    captureAPIError(error as Error, "/api/v1/resource", "POST", apiStatusCodes.INTERNAL_SERVER_ERROR, { name });
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({ status: false, error, message: "Error creating resource" }),
+    );
+  }
+
+  return res.status(apiStatusCodes.CREATED).json(sendAPIResponse({ status: true, data }));
+};
+
+export default withApiHandler(handler);
+```
+
+### Admin-only route
+```ts
+// apps/api/src/pages/api/v1/admin/[resource].ts
+import { withAdminHandler } from "@/middleware/admin";
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => { /* ... */ };
+
+export default withAdminHandler(handler);
+```
+
+### Route with DB disabled (health check, etc.)
+```ts
+export default withApiHandler(handler, { db: false });
+```
+
+## Anti-Patterns
+
+### ❌ Bare handler export
+```ts
+// BAD
+export default async function handler(req, res) {
+  const data = await SomeModel.find();
+  res.json({ data });
+}
+```
+```ts
+// GOOD
+export default withApiHandler(async (req, res) => {
+  const { data, error } = await getResourceFromDB();
+  if (error) { captureAPIError(...); return res.status(500).json(...); }
+  return res.status(200).json(sendAPIResponse({ status: true, data }));
+});
+```
+
+### ❌ Direct Mongoose model import in route file
+```ts
+// BAD — models must not be used directly in route files
+import UserModel from "@/lib/database/models/User";
+const users = await UserModel.find();
+```
+```ts
+// GOOD — use query functions
+import { getUsersFromDB } from "@/lib/database";
+const { data: users, error } = await getUsersFromDB();
+```
+
+### ❌ Hardcoded status codes
+```ts
+// BAD
+res.status(200).json({ status: true });
+res.status(500).json({ status: false });
+```
+```ts
+// GOOD
+import { apiStatusCodes } from "@/lib/constants";
+res.status(apiStatusCodes.OKAY).json(sendAPIResponse({ status: true, data }));
+res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(sendAPIResponse({ status: false, error }));
+```

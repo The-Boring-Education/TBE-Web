@@ -1,6 +1,6 @@
 import { PopoverContainer } from "@tbe/components";
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@headlessui/react", async () => {
@@ -82,6 +82,44 @@ function NavbarLikePopovers() {
   );
 }
 
+function NavbarWithClickOutside() {
+  const [openPopover, setOpenPopover] = useState<string | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+
+  const handleSetOpen = (name: string) => {
+    setOpenPopover((prev) => (prev === name ? null : name));
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        openPopover &&
+        navRef.current &&
+        !navRef.current.contains(event.target as Node)
+      ) {
+        setOpenPopover(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [openPopover]);
+
+  return (
+    <div>
+      <div ref={navRef} data-testid="navbar">
+        <PopoverContainer
+          label="Learn"
+          isOpen={openPopover === "products"}
+          onToggle={() => handleSetOpen("products")}
+        >
+          <div>Learn Content</div>
+        </PopoverContainer>
+      </div>
+      <button data-testid="outside-button">Outside</button>
+    </div>
+  );
+}
+
 describe("PopoverContainer", () => {
   it("opens on hover by default", () => {
     render(<ControlledPopover />);
@@ -147,5 +185,29 @@ describe("PopoverContainer", () => {
     });
 
     expect(screen.getByText("Tools Content")).toBeInTheDocument();
+  });
+
+  it("closes open dropdown when clicking outside the navbar", () => {
+    render(<NavbarWithClickOutside />);
+
+    const learnButton = screen.getByRole("button", { name: /learn/i });
+    fireEvent.mouseEnter(learnButton);
+    expect(screen.getByText("Learn Content")).toBeInTheDocument();
+
+    fireEvent.mouseDown(screen.getByTestId("outside-button"));
+
+    expect(screen.queryByText("Learn Content")).not.toBeInTheDocument();
+  });
+
+  it("does not close dropdown when clicking inside the navbar", () => {
+    render(<NavbarWithClickOutside />);
+
+    const learnButton = screen.getByRole("button", { name: /learn/i });
+    fireEvent.mouseEnter(learnButton);
+    expect(screen.getByText("Learn Content")).toBeInTheDocument();
+
+    fireEvent.mouseDown(screen.getByTestId("navbar"));
+
+    expect(screen.getByText("Learn Content")).toBeInTheDocument();
   });
 });

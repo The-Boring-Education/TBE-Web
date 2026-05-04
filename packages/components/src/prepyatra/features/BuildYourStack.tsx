@@ -10,7 +10,7 @@ import { Badge } from "../ui/badge";
 interface BuildYourStackProps {
   userId: string;
   userSkills: string[];
-  onSkillsUpdated?: () => void;
+  onSkillsUpdated?: (updatedSkills: string[]) => void;
   lastUpdated?: string;
 }
 
@@ -68,12 +68,7 @@ const BuildYourStack = ({
       />
       <AddSkillsModal
         isOpen={modalOpen}
-        onClose={() => {
-          setModalOpen(false);
-          if (onSkillsUpdated) {
-            onSkillsUpdated();
-          }
-        }}
+        onClose={() => setModalOpen(false)}
         userId={userId}
         userSkills={userSkills}
         lastUpdated={lastUpdated}

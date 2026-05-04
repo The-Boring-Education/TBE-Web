@@ -1,0 +1,114 @@
+---
+description: Rules for authentication — @tbe/auth package, JWT tokens, Google OAuth, and API auth middleware
+globs: ["packages/auth/**/*.ts", "packages/auth/**/*.tsx", "apps/api/src/middleware/api.ts", "apps/api/src/middleware/admin.ts", "apps/api/src/lib/auth/**/*.ts"]
+alwaysApply: false
+---
+
+# Authentication & Authorization Skill
+
+## Purpose
+Auth is centralized in `@tbe/auth`. The API backend issues JWT access tokens + refresh tokens. The `withApiHandler` middleware handles DB connection; `withAdminHandler` additionally validates the admin secret. This skill prevents duplicated auth logic, token leaks, and insecure client-side auth checks.
+
+## Rules
+1. **Never implement custom auth** — always use `@tbe/auth`'s `useAuth()` hook on the frontend, and the JWT validation utilities from `packages/auth/src/token.ts` on the backend.
+2. **Access tokens use key `tbe_access_token`** — hardcoded in `AUTH_CONFIG` from `packages/auth/src/config.ts`. Never read/write this key manually.
+3. **Refresh tokens use key `tbe_refresh_token`** — same source. Never read/write manually.
+4. **Token max ages are defined in `AUTH_CONFIG`** — `ACCESS_TOKEN_MAX_AGE: 60 * 60 * 24` (24h), `REFRESH_TOKEN_MAX_AGE: 60 * 60 * 24 * 30` (30d). Never hardcode.
+5. **Admin routes validate via `ADMIN_SECRET` env var** — through `withAdminHandler`. Never expose the secret client-side.
+6. **Google OAuth credentials are server-only** — `GOOGLE_AUTH_CLIENT_ID` and `GOOGLE_AUTH_CLIENT_SECRET` must never be prefixed with `NEXT_PUBLIC_`.
+7. **`useAuth()` is the only frontend auth hook** — never call `useSession()` from NextAuth or roll custom session logic.
+8. **`captureAuthError` must be called for all auth failures** — before sending the error response.
+9. **Frontend components check `isAuth` from `useUser()`** — never check token existence or `localStorage` directly.
+10. **Never store tokens in `localStorage` in TBE-Web apps** — tokens are managed via the `@tbe/auth` package's cookie mechanism.
+
+## Patterns
+
+### Frontend auth check
+```ts
+// In any component or page
+import { useUser } from "@tbe/hooks";
+
+const { user, isAuth, loading } = useUser();
+// isAuth = boolean  ← only source of truth
+// user = AuthUser | null
+// loading = boolean (session being checked)
+```
+
+### API backend — reading the auth user in a route
+```ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import { getAuthenticatedUser } from "@/lib/auth";  // uses @tbe/auth token utils
+import { withApiHandler } from "@/middleware/requestLogger";
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const user = await getAuthenticatedUser(req);
+  if (!user) {
+    return res.status(401).json(sendAPIResponse({ status: false, message: "Unauthorized" }));
+  }
+  // proceed with authenticated logic
+};
+
+export default withApiHandler(handler);
+```
+
+### Capturing auth errors
+```ts
+import { captureAuthError } from "@/lib/utils/sentry";
+
+if (!user) {
+  captureAuthError(
+    new Error("Unauthorized access attempt"),
+    "/api/v1/protected-resource",
+    { userId: req.query.userId },
+  );
+  return res.status(apiStatusCodes.UNAUTHORIZED).json(
+    sendAPIResponse({ status: false, message: "Unauthorized" }),
+  );
+}
+```
+
+### AUTH_CONFIG usage
+```ts
+import { AUTH_CONFIG } from "@tbe/auth";
+
+// To reference token keys (e.g. in cookie operations)
+const tokenKey = AUTH_CONFIG.ACCESS_TOKEN_KEY; // "tbe_access_token"
+```
+
+## Anti-Patterns
+
+### ❌ Reading tokens directly from localStorage
+```ts
+// BAD
+const token = localStorage.getItem("tbe_access_token");
+const isLoggedIn = !!token;
+```
+```ts
+// GOOD
+const { isAuth } = useUser();
+```
+
+### ❌ Using NEXT_PUBLIC_ for server-only credentials
+```ts
+// BAD — exposes secret to the browser bundle
+NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_SECRET=abc123
+```
+```ts
+// GOOD — server-only (no NEXT_PUBLIC_ prefix)
+GOOGLE_AUTH_CLIENT_SECRET=abc123
+```
+
+### ❌ Rolling custom session logic
+```ts
+// BAD
+const [isLoggedIn, setIsLoggedIn] = useState(false);
+useEffect(() => {
+  const token = Cookies.get("token");
+  setIsLoggedIn(!!token);
+}, []);
+```
+```ts
+// GOOD
+import { useUser } from "@tbe/hooks";
+const { isAuth, loading } = useUser();
+```

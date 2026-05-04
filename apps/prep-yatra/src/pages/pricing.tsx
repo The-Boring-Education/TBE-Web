@@ -286,7 +286,7 @@ const PrepYatraPricingPage = () => {
           </div>
         </section>
 
-        <section className="max-w-4xl mx-auto px-4 py-8">
+        <section className="mx-auto max-w-7xl px-4 py-8">
           {loading && (
             <div className="flex justify-center py-20">
               <div className="flex flex-col items-center gap-3">
@@ -318,7 +318,7 @@ const PrepYatraPricingPage = () => {
           )}
 
           {showPricingContent && (
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+            <div className="grid w-full grid-cols-1 justify-items-center gap-6 md:grid-cols-2 lg:grid-cols-3">
               {plans.map((plan) => (
                 <SubscriptionPricingPlanCard
                   key={plan.planUuid ?? plan.planKey}

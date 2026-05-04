@@ -1,0 +1,154 @@
+---
+description: Rules for custom React hooks and data fetching patterns in packages/hooks/
+globs: ["packages/hooks/src/**/*.ts", "packages/hooks/src/**/*.tsx", "apps/*/src/**/*.ts", "apps/*/src/**/*.tsx"]
+alwaysApply: false
+---
+
+# Hooks & Data Fetching Skill
+
+## Purpose
+TBE-Web uses TanStack Query (via `@tbe/query`) as the primary data fetching layer. The old `useApi` hook is deprecated. This skill ensures all new data fetching uses the query pattern, hooks are composable and typed, and the `useUser` pattern is followed for auth state.
+
+## Rules
+1. **`useApi` from `@tbe/hooks` is deprecated** — never create new usages. Migrate existing ones to `useQuery`/`createQuery` from `@tbe/query`.
+2. **Every hook file is named `use[Feature].ts` or `use[Feature].tsx`** (PascalCase feature, `use` prefix).
+3. **Every hook must declare an explicit return type interface** — never rely on inferred return types for shared hooks.
+4. **`useUser()` is the single source of truth for auth state** — never read tokens/cookies directly in components.
+5. **Always destructure `{ data, error, isLoading }` from TanStack Query** — never access `.status === "loading"`.
+6. **Always pass a `staleTime`** to `useQuery` calls — never use the default (0). Common values: `5 * 60 * 1000` (5 min), `Infinity` for static data.
+7. **`queryKey` must be an array** — `[resource, id]` format. Never a plain string.
+8. **Use `queryClient.invalidateQueries({ queryKey: [key] })`** after mutations — never manually refetch.
+9. **Side effects (analytics, toast) belong in `onSuccess`/`onError` mutation callbacks** — not inside the `mutationFn`.
+10. **Hooks in `packages/hooks/` must not import from any specific app** — only from `@tbe/*` packages.
+
+## Patterns
+
+### Standard query hook
+```ts
+// packages/hooks/src/useResourceData.ts
+import { useQuery } from "@tbe/query";
+import { sendRequest } from "@tbe/utils";
+import type { ResourceData } from "@tbe/types";
+
+interface UseResourceDataReturn {
+  resource: ResourceData | null;
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => void;
+}
+
+const useResourceData = (resourceId: string): UseResourceDataReturn => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["resource", resourceId],
+    queryFn: () =>
+      sendRequest({
+        method: "GET",
+        url: `/api/v1/resource?id=${resourceId}`,
+      }),
+    staleTime: 5 * 60 * 1000,
+    enabled: !!resourceId,
+  });
+
+  return {
+    resource: data?.data ?? null,
+    isLoading,
+    error: error?.message ?? null,
+    refetch,
+  };
+};
+
+export default useResourceData;
+```
+
+### Mutation hook with cache invalidation
+```ts
+// packages/hooks/src/useUpdateResource.ts
+import { useMutation, useQueryClient } from "@tbe/query";
+import { sendRequest } from "@tbe/utils";
+
+const useUpdateResource = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: { id: string; name: string }) =>
+      sendRequest({
+        method: "PATCH",
+        url: `/api/v1/resource`,
+        body: payload,
+      }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["resource", variables.id] });
+    },
+  });
+};
+
+export default useUpdateResource;
+```
+
+### useUser pattern
+```ts
+import { useUser } from "@tbe/hooks";
+
+const MyComponent = () => {
+  const { user, isAuth, loading, isOnboarded } = useUser();
+
+  if (loading) return <LoadingSpinner />;
+  if (!isAuth) return null;
+
+  return <div>Hello, {user?.name}</div>;
+};
+```
+
+## Anti-Patterns
+
+### ❌ Using deprecated useApi
+```ts
+// BAD — useApi is deprecated
+import useApi from "@tbe/hooks/useApi";
+const { response, loading } = useApi("userData", { method: "GET", url: "/api/v1/user" });
+```
+```ts
+// GOOD
+import { useQuery } from "@tbe/query";
+const { data, isLoading } = useQuery({
+  queryKey: ["userData"],
+  queryFn: () => sendRequest({ method: "GET", url: "/api/v1/user" }),
+  staleTime: 5 * 60 * 1000,
+});
+```
+
+### ❌ Reading auth state directly from cookies/localStorage
+```ts
+// BAD
+const token = localStorage.getItem("tbe_access_token");
+const isLoggedIn = !!token;
+```
+```ts
+// GOOD
+const { isAuth } = useUser();
+```
+
+### ❌ Missing staleTime
+```ts
+// BAD — re-fetches on every mount
+const { data } = useQuery({ queryKey: ["users"], queryFn: fetchUsers });
+```
+```ts
+// GOOD
+const { data } = useQuery({
+  queryKey: ["users"],
+  queryFn: fetchUsers,
+  staleTime: 5 * 60 * 1000,
+});
+```
+
+### ❌ String queryKey
+```ts
+// BAD
+queryKey: "users"
+```
+```ts
+// GOOD
+queryKey: ["users"]
+queryKey: ["user", userId]
+```

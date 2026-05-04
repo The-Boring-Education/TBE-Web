@@ -1,31 +1,33 @@
 /* =============================================
-   INTERVIEW QUESTION CONTENT — GLASS UI
-   Premium dark theme with glassmorphism,
-   staggered slide animations, glowing borders,
-   SVG icons with glow, and hover transitions.
+   INTERVIEW SHEETS — PREMIUM DARK UI
+   Clean, minimal glassmorphism design.
+   No colorful boxes — unified card system.
    =============================================*/
 
-/* Wrapper */
+/* =============================================
+   CONTENT WRAPPER
+   =============================================*/
 .interview-content-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding-bottom: 40px;
+  gap: 0;
+  padding-bottom: 60px;
   position: relative;
 }
 
 /* =============================================
-   QUESTION HEADER CARD
+   QUESTION HEADER CARD — Refined gradient hero
    =============================================*/
 .question-header-card {
   position: relative;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(16px);
   transition:
-    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 28px;
 }
 
 .question-header-card[data-visible="true"] {
@@ -33,318 +35,283 @@
   transform: translateY(0);
 }
 
-.question-header-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  padding: 1px;
+.question-header-inner {
+  padding: 28px 32px 24px;
+  border-radius: 20px;
   background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.5),
-    rgba(168, 85, 247, 0.25),
-    rgba(236, 72, 153, 0.4)
+    145deg,
+    rgba(255, 255, 255, 0.035) 0%,
+    rgba(255, 255, 255, 0.015) 50%,
+    rgba(0, 0, 0, 0) 100%
   );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  position: relative;
+}
+
+.question-header-inner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+}
+
+.question-header-inner::after {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -40px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(99, 102, 241, 0.08) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
-.question-header-inner {
-  padding: 24px 28px;
-  border-radius: 16px;
-  background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.08),
-    rgba(168, 85, 247, 0.04),
-    rgba(10, 10, 10, 0.95)
-  );
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+/* Meta badges row */
+.question-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.question-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.question-badge--frequency {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.25);
+  color: #a5b4fc;
+}
+
+.question-badge--priority {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.2);
+  color: #fcd34d;
+}
+
+.question-badge--company {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(203, 213, 225, 0.7);
 }
 
 .question-main-title {
-  font-size: 1.65rem;
+  font-size: 1.55rem;
   font-weight: 800;
-  letter-spacing: -0.025em;
-  background: linear-gradient(
-    135deg,
-    #e0e7ff 0%,
-    #c7d2fe 30%,
-    #a5b4fc 60%,
-    #818cf8 100%
-  );
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1.3;
-  margin-bottom: 6px;
-  animation: titleGradient 8s ease-in-out infinite;
-}
-
-@keyframes titleGradient {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
+  letter-spacing: -0.03em;
+  color: #f1f5f9;
+  line-height: 1.25;
+  margin-bottom: 10px;
 }
 
 .question-subtitle {
   font-size: 0.92rem;
-  color: rgba(203, 213, 225, 0.7);
-  line-height: 1.5;
+  color: rgba(148, 163, 184, 0.85);
+  line-height: 1.65;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 12px;
+  margin-top: 4px;
 }
 
 /* =============================================
-   SECTION CARDS — GLASS MORPHISM + GLOW
+   SECTIONS CONTAINER
    =============================================*/
 .sections-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.interview-section-card {
-  position: relative;
-  border-radius: 14px;
-  overflow: visible;
-  opacity: 0;
-  transform: translateY(40px) scale(0.98);
-  cursor: default;
-  transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s ease;
-}
-
-.interview-section-card[data-visible="true"] {
-  animation: slideUpIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: var(--delay, 0s);
-}
-
-@keyframes slideUpIn {
-  0% {
-    opacity: 0;
-    transform: translateY(40px) scale(0.98);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* — Hover: lift + glow shadow — */
-.interview-section-card:hover {
-  transform: translateY(-2px) scale(1);
-  box-shadow:
-    0 8px 40px -8px var(--hover-glow, rgba(100, 100, 100, 0.1)),
-    0 0 60px -12px var(--hover-glow, rgba(100, 100, 100, 0.08));
-}
-
-/* — Background glow blob (behind card) — */
-.section-bg-glow {
-  position: absolute;
-  inset: -6px;
-  border-radius: 20px;
-  background: radial-gradient(
-    ellipse at 50% 0%,
-    var(--hover-glow, transparent),
-    transparent 70%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-  z-index: -1;
-  filter: blur(20px);
-}
-
-.interview-section-card:hover .section-bg-glow {
-  opacity: 1;
-}
-
-/* — Glowing border — */
-.section-glow-border {
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
-  pointer-events: none;
-  z-index: 2;
-  transition:
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
-}
-
-.interview-section-card:hover .section-glow-border {
-  border-color: var(--border-glow, rgba(100, 100, 100, 0.3));
-  box-shadow: inset 0 0 30px -10px var(--hover-glow, transparent);
-}
-
-/* — Glass inner — */
-.section-glass-inner {
-  position: relative;
-  padding: 20px 24px;
-  border-radius: 14px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  background-color: rgba(15, 15, 20, 0.65);
-  transition: background-color 0.35s ease;
-  z-index: 1;
-}
-
-.interview-section-card:hover .section-glass-inner {
-  background-color: rgba(18, 18, 26, 0.8);
+  gap: 2px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.015);
 }
 
 /* =============================================
-   SECTION HEADER — POPPING HEADINGS
+   SECTION CARD — Clean, unified look
+   =============================================*/
+.interview-section-card {
+  position: relative;
+  opacity: 0;
+  transform: translateY(16px);
+  cursor: default;
+  transition:
+    background 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.interview-section-card:last-child {
+  border-bottom: none;
+}
+
+.interview-section-card[data-visible="true"] {
+  animation: sectionFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes sectionFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.interview-section-card:hover {
+  background: rgba(255, 255, 255, 0.018);
+}
+
+/* Glass inner */
+.section-glass-inner {
+  position: relative;
+  padding: 22px 28px;
+  z-index: 1;
+}
+
+/* =============================================
+   SECTION HEADER
    =============================================*/
 .section-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  user-select: none;
 }
 
 /* =============================================
-   SVG ICON WITH GLOW
+   SECTION ICON — Minimal badge
    =============================================*/
 .section-icon-wrap {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition:
-    background 0.3s ease,
-    border-color 0.3s ease,
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.interview-section-card:hover .section-icon-wrap {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .section-icon-svg {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   color: var(--icon-color, #94a3b8);
   position: relative;
   z-index: 2;
-  transition:
-    color 0.3s ease,
-    filter 0.3s ease;
-  filter: drop-shadow(0 0 3px transparent);
+  transition: color 0.2s ease;
 }
 
-/* Glow layer behind icon */
+/* Hidden glow layer — keep for compat */
 .section-icon-glow {
-  position: absolute;
-  inset: -4px;
-  border-radius: 14px;
-  background: radial-gradient(
-    circle at center,
-    var(--icon-color, transparent),
-    transparent 70%
-  );
-  opacity: 0;
-  filter: blur(8px);
-  transition: opacity 0.3s ease;
-  z-index: 0;
+  display: none;
 }
 
-/* Hover states for icon */
-.interview-section-card:hover .section-icon-wrap {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: var(--border-glow, rgba(255, 255, 255, 0.15));
-  transform: scale(1.08);
-  box-shadow: 0 0 20px -4px var(--hover-glow, transparent);
+/* Section title badge */
+.section-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px 2px 4px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: border-color 0.2s ease;
 }
 
-.interview-section-card:hover .section-icon-svg {
-  filter: drop-shadow(0 0 6px var(--icon-color, transparent));
-}
-
-.interview-section-card:hover .section-icon-glow {
-  opacity: 0.35;
+.interview-section-card:hover .section-title-badge {
+  border-color: rgba(255, 255, 255, 0.11);
 }
 
 /* =============================================
-   SECTION TITLE — POP EFFECT
+   SECTION TITLE
    =============================================*/
 .section-title {
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  text-shadow: 0 0 20px transparent;
-  transition:
-    text-shadow 0.35s ease,
-    transform 0.35s ease,
-    letter-spacing 0.35s ease;
-}
-
-.interview-section-card:hover .section-title {
-  text-shadow:
-    0 0 14px var(--hover-glow, transparent),
-    0 0 30px var(--hover-glow, transparent);
-  transform: translateX(2px);
-  letter-spacing: 0.04em;
+  color: var(--title-color, #94a3b8);
+  transition: color 0.2s ease;
+  flex-shrink: 0;
 }
 
 .section-line {
   flex: 1;
   height: 1px;
   margin-left: 4px;
-  transition: opacity 0.3s ease;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
 }
 
 .interview-section-card:hover .section-line {
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
 /* =============================================
-   SECTION CONTENT
+   SECTION CONTENT — Clean typography
    =============================================*/
 .section-content {
-  color: rgba(203, 213, 225, 0.9);
-  font-size: 0.93rem;
-  line-height: 1.7;
+  color: rgba(203, 213, 225, 0.88);
+  font-size: 0.925rem;
+  line-height: 1.75;
 }
 
 .section-content .mdx-renderer h3 {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--title-color, #c4b5fd);
-  margin-top: 16px;
+  color: #e2e8f0;
+  margin-top: 20px;
   margin-bottom: 8px;
-  padding-left: 10px;
-  border-left: 3px solid var(--border-color, rgba(196, 181, 253, 0.3));
+  padding-left: 12px;
+  border-left: 2px solid var(--border-color, rgba(99, 102, 241, 0.5));
 }
 
 .section-content .mdx-renderer h4 {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #93c5fd;
-  margin-top: 12px;
+  color: #cbd5e1;
+  margin-top: 14px;
   margin-bottom: 6px;
 }
 
 .section-content .mdx-renderer p {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: rgba(203, 213, 225, 0.85);
 }
 
@@ -355,33 +322,27 @@
 
 .section-content .mdx-renderer ul,
 .section-content .mdx-renderer ol {
-  padding-left: 18px;
-  margin-bottom: 10px;
+  padding-left: 20px;
+  margin-bottom: 12px;
 }
 
 .section-content .mdx-renderer li {
-  margin-bottom: 4px;
+  margin-bottom: 5px;
   color: rgba(203, 213, 225, 0.85);
 }
 
 .section-content .mdx-renderer li::marker {
-  color: var(--title-color, rgba(139, 92, 246, 0.6));
+  color: var(--title-color, rgba(99, 102, 241, 0.6));
 }
 
 /* Code blocks */
 .section-content .mdx-renderer pre {
-  background: rgba(0, 0, 0, 0.5) !important;
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.06)) !important;
+  background: rgba(0, 0, 0, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
   border-radius: 10px !important;
   padding: 16px !important;
-  margin: 12px 0 !important;
+  margin: 14px 0 !important;
   overflow-x: auto;
-  position: relative;
-  transition: border-color 0.3s ease;
-}
-
-.interview-section-card:hover .section-content .mdx-renderer pre {
-  border-color: var(--border-glow, rgba(255, 255, 255, 0.12)) !important;
 }
 
 .section-content .mdx-renderer code {
@@ -391,12 +352,12 @@
 }
 
 .section-content .mdx-renderer p code {
-  background: rgba(139, 92, 246, 0.12);
+  background: rgba(99, 102, 241, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.82rem;
-  color: #c4b5fd;
-  border: 1px solid rgba(139, 92, 246, 0.15);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.15);
 }
 
 /* Tables */
@@ -406,23 +367,18 @@
   border-spacing: 0;
   border-radius: 10px;
   overflow: hidden;
-  margin: 12px 0;
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
-  transition: border-color 0.3s ease;
-}
-
-.interview-section-card:hover .section-content .mdx-renderer table {
-  border-color: var(--border-glow, rgba(255, 255, 255, 0.12));
+  margin: 14px 0;
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .section-content .mdx-renderer th {
-  background: rgba(99, 102, 241, 0.12);
+  background: rgba(255, 255, 255, 0.04);
   padding: 10px 14px;
   text-align: left;
   font-weight: 600;
-  font-size: 0.85rem;
-  color: #a5b4fc;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.82rem;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .section-content .mdx-renderer td {
@@ -442,16 +398,17 @@
 
 /* Blockquotes */
 .section-content .mdx-renderer blockquote {
-  border-left: 3px solid var(--border-glow, rgba(139, 92, 246, 0.4));
+  border-left: 2px solid rgba(99, 102, 241, 0.5);
   padding: 10px 16px;
-  margin: 12px 0;
-  background: rgba(139, 92, 246, 0.05);
+  margin: 14px 0;
+  background: rgba(99, 102, 241, 0.05);
   border-radius: 0 8px 8px 0;
 }
 
 .section-content .mdx-renderer blockquote p {
   color: rgba(196, 181, 253, 0.85);
   font-style: italic;
+  margin-bottom: 0;
 }
 
 /* =============================================
@@ -459,13 +416,13 @@
    =============================================*/
 .actions-card {
   opacity: 0;
-  transform: translateY(20px);
-  padding: 8px 0;
+  transform: translateY(12px);
+  padding: 20px 0 8px;
 }
 
 .actions-card[data-visible="true"] {
-  animation: slideUpIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: 0.6s;
+  animation: sectionFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.5s;
 }
 
 /* =============================================
@@ -473,74 +430,279 @@
    =============================================*/
 @media (max-width: 768px) {
   .question-header-inner {
-    padding: 18px 16px;
+    padding: 20px 18px;
   }
 
   .question-main-title {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
+  }
+
+  .question-subtitle {
+    font-size: 0.875rem;
   }
 
   .section-glass-inner {
-    padding: 16px;
-  }
-
-  .section-icon-wrap {
-    width: 32px;
-    height: 32px;
-  }
-
-  .section-icon-svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .section-title {
-    font-size: 0.9rem;
+    padding: 18px 16px;
   }
 
   .interview-content-wrapper {
-    gap: 14px;
+    gap: 0;
   }
 }
 
 /* =============================================
-   AMBIENT BACKGROUND GLOW
-   =============================================*/
-.interview-content-wrapper::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(
-      circle at 15% 25%,
-      rgba(99, 102, 241, 0.04) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 85% 75%,
-      rgba(168, 85, 247, 0.04) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(236, 72, 153, 0.02) 0%,
-      transparent 50%
-    );
-  pointer-events: none;
-  z-index: -1;
-  animation: subtleShift 20s ease-in-out infinite;
+   SHEET PAGE — WORKSPACE HEADER
+   ============================================= */
+
+.sheet-workspace-header {
+  min-height: 60px;
 }
 
-@keyframes subtleShift {
-  0%,
-  100% {
-    opacity: 0.5;
-  }
+/* Progress line at top of page */
+.sheet-header-progress-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(99, 102, 241, 0.8) 0%,
+    rgba(168, 85, 247, 0.6) 50%,
+    transparent 100%
+  );
+  border-radius: 0 2px 2px 0;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+}
 
-  50% {
-    opacity: 1;
+/* Back button */
+.sheet-back-btn {
+  border: 1px solid rgba(63, 63, 70, 0.5);
+  background: rgba(39, 39, 42, 0.4);
+  color: rgba(161, 161, 170, 0.9);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.sheet-back-btn:hover {
+  background: rgba(63, 63, 70, 0.65);
+  border-color: rgba(82, 82, 91, 0.7);
+  color: rgb(228, 228, 231);
+}
+
+/* Mini progress bar in header */
+.sheet-header-mini-track {
+  width: 100px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.sheet-header-mini-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.8), rgba(168, 85, 247, 0.6));
+  border-radius: 100px;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =============================================
+   SIDEBAR — QUESTION NAV
+   ============================================= */
+
+/* Sidebar progress panel at top */
+.sheet-sidebar-progress-panel {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.sidebar-progress-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.sidebar-progress-label-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.6);
+}
+
+.sidebar-progress-count {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(165, 180, 252, 0.8);
+}
+
+.sheet-sidebar-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.sheet-sidebar-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.8), rgba(168, 85, 247, 0.6));
+  border-radius: 100px;
+  transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.sheet-sidebar-progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 100px;
+  filter: blur(3px);
+}
+
+/* =============================================
+   MOBILE PROGRESS STRIP
+   ============================================= */
+
+.sheet-mobile-progress-track {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.sheet-mobile-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.7), rgba(168, 85, 247, 0.5));
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =============================================
+   QUESTION ITEM WRAPPER
+   ============================================= */
+
+.qs-item-wrap {
+  transition: transform 0.12s ease;
+}
+
+.qs-item-wrap:hover {
+  transform: translateX(1px);
+}
+
+/* =============================================
+   INDEX PAGE — CATEGORY SIDEBAR ITEMS
+   ============================================= */
+
+.sheets-cat-item {
+  position: relative;
+  transition:
+    background 0.15s ease,
+    transform 0.12s ease;
+}
+
+.sheets-cat-item:active {
+  transform: scale(0.98);
+}
+
+.sheets-cat-item--active {
+  background: rgba(99, 102, 241, 0.07);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.sheets-cat-item--active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 55%;
+  background: rgba(99, 102, 241, 0.7);
+  border-radius: 0 2px 2px 0;
+}
+
+/* =============================================
+   RESPONSIVE — mobile
+   ============================================= */
+
+@media (max-width: 768px) {
+  .sheet-workspace-header {
+    min-height: 56px;
   }
+}
+
+/* =============================================
+   SHEET CARD — INDEX PAGE
+   ============================================= */
+
+.sheet-card-item {
+  position: relative;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 18px 20px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.sheet-card-item:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.04);
+  transform: translateY(-1px);
+}
+
+.sheet-card-item:active {
+  transform: scale(0.99);
+}
+
+/* Premium lock overlay */
+.sheet-card-lock-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* =============================================
+   CATEGORY SECTION HEADING — INDEX PAGE
+   ============================================= */
+
+.category-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.category-section-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.category-section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.5);
+  white-space: nowrap;
+  padding: 3px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.02);
 }

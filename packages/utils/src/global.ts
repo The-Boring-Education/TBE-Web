@@ -287,9 +287,21 @@ const getCoursePageProps = async (context: any) => {
   };
 };
 
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 const getSheetPageProps = async (context: any) => {
   const { req, query } = context;
-  const { sheetSlug } = query;
+  const { sheetSlug: rawSheetSlug, topic, question: questionParams } = query;
+  const sheetSlug = (rawSheetSlug || topic) as string;
+  const urlQuestionSlug = Array.isArray(questionParams)
+    ? questionParams[0]
+    : questionParams;
 
   let slug = routes.home;
 
@@ -322,8 +334,22 @@ const getSheetPageProps = async (context: any) => {
       let currentQuestionId = "";
 
       const firstQuestion = sheet.questions?.[0];
-      if (firstQuestion && firstQuestion._id) {
+
+      // Resolve currentQuestionId based on URL slug or default to first question
+      if (urlQuestionSlug) {
+        const found = sheet.questions?.find(
+          (q) => slugify(q.title) === urlQuestionSlug,
+        );
+        if (found) {
+          currentQuestionId = found._id.toString();
+        } else if (firstQuestion && firstQuestion._id) {
+          currentQuestionId = firstQuestion._id.toString();
+        }
+      } else if (firstQuestion && firstQuestion._id) {
         currentQuestionId = firstQuestion._id.toString();
+      }
+
+      if (currentQuestionId) {
         const selectedQuestionMeta = getSelectedSheetQuestionMeta(
           sheet,
           currentQuestionId,
