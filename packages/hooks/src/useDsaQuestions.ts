@@ -1,8 +1,11 @@
 import { routes } from "@tbe/constants";
 import type { DsaQuestion } from "@tbe/interface";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
-import { sendRequest } from "@tbe/utils";
-import { transformDsaQuestion } from "@tbe/utils";
+import {
+  type APIResponseType,
+  sendRequest,
+  transformDsaQuestion,
+} from "@tbe/utils";
 import { useMemo } from "react";
 
 import useUser from "./useUser";
@@ -24,6 +27,8 @@ interface UseDsaQuestionsReturn {
   questions: DsaQuestion[];
   rawQuestions: any[];
   loading: boolean;
+  isError: boolean;
+  errorMessage: string | null;
 }
 
 const useDsaQuestions = (
@@ -38,7 +43,12 @@ const useDsaQuestions = (
   const { user } = useUser();
   const userId = user?.id;
 
-  const { data: response, isLoading } = useQuery<any>({
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<APIResponseType>({
     queryKey: options.queryKey
       ? [options.queryKey, userId, duration, offCampus, productType]
       : queryKeys.dsa.questions({
@@ -48,10 +58,17 @@ const useDsaQuestions = (
           offCampus,
           productType,
         }),
-    queryFn: () =>
-      sendRequest({
+    queryFn: async () => {
+      const result = await sendRequest({
         url: `${routes.api.base}${routes.api.dsaSheet}?limit=${limit}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}&productType=${productType}`,
-      }),
+      });
+
+      if (result.status !== true) {
+        throw new Error(result.message || "Failed to fetch DSA questions");
+      }
+
+      return result;
+    },
     enabled: !!userId,
     ...CACHE_TIMES.STABLE,
   });
@@ -66,7 +83,20 @@ const useDsaQuestions = (
     return rawQuestions.map(transformDsaQuestion);
   }, [rawQuestions]);
 
-  return { questions, rawQuestions, loading: isLoading };
+  const errorMessage =
+    error instanceof Error
+      ? error.message
+      : isError
+        ? "Failed to fetch DSA questions"
+        : null;
+
+  return {
+    questions,
+    rawQuestions,
+    loading: isLoading,
+    isError,
+    errorMessage,
+  };
 };
 
 export default useDsaQuestions;

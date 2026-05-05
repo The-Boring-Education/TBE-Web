@@ -50,8 +50,12 @@ const DSAPrepPage = () => {
     })();
   }, [user?.id]);
 
-  const { data: topicRows, isLoading: topicsLoading } =
-    useDsaTopicSummaries("ONCAMPUS");
+  const {
+    data: topicRows,
+    isLoading: topicsLoading,
+    isError: topicsError,
+    error: topicsErrorValue,
+  } = useDsaTopicSummaries("ONCAMPUS");
   const topicsWithCounts = useMemo(
     () =>
       (topicRows ?? []).map((t) => ({
@@ -75,10 +79,16 @@ const DSAPrepPage = () => {
     return Array.from(new Set([...pyTargets, ...dsaMapped]));
   }, [user]);
 
-  const { questions, loading: topicQuestionsLoading } = useDsaQuestionsForTopic(
-    selectedTopic,
-    { duration: selectedDuration, offCampus, productType: "ONCAMPUS" },
-  );
+  const {
+    questions,
+    loading: topicQuestionsLoading,
+    isError: topicQuestionsError,
+    errorMessage: topicQuestionsErrorMessage,
+  } = useDsaQuestionsForTopic(selectedTopic, {
+    duration: selectedDuration,
+    offCampus,
+    productType: "ONCAMPUS",
+  });
 
   const { completedIds, toggleComplete, localNotes, saveNote } =
     useDsaCompletedQuestions({ userId: user?.id });
@@ -114,6 +124,14 @@ const DSAPrepPage = () => {
 
   const pageLoading =
     userLoading || topicsLoading || (!!selectedTopic && topicQuestionsLoading);
+  const dsaErrorMessage = topicsError
+    ? topicsErrorValue instanceof Error
+      ? topicsErrorValue.message
+      : "Failed to load DSA topics"
+    : selectedTopic && topicQuestionsError
+      ? topicQuestionsErrorMessage ||
+        "Failed to load questions for the selected topic"
+      : null;
 
   const {
     handleTopicClick,
@@ -153,6 +171,28 @@ const DSAPrepPage = () => {
           <Text level="p" className="text-gray-400 ml-3">
             Loading...
           </Text>
+        </div>
+      </OnCampusLearningLayout>
+    );
+  }
+
+  if (dsaErrorMessage) {
+    return (
+      <OnCampusLearningLayout backHref={routes.oncampus.dashboard}>
+        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+          <Text level="h2" className="text-xl font-bold text-red-500 mb-2">
+            Failed to load DSA prep
+          </Text>
+          <Text level="p" className="text-gray-400 mb-6 max-w-xl">
+            {dsaErrorMessage}
+          </Text>
+          <button
+            type="button"
+            onClick={() => router.reload()}
+            className="rounded-md border border-red-500/40 px-4 py-2 text-sm font-semibold text-red-500 transition-colors hover:bg-red-500/10"
+          >
+            Try again
+          </button>
         </div>
       </OnCampusLearningLayout>
     );

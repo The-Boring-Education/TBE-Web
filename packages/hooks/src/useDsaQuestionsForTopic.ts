@@ -1,7 +1,11 @@
 import { routes } from "@tbe/constants";
 import type { DsaQuestion } from "@tbe/interface";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
-import { sendRequest, transformDsaQuestion } from "@tbe/utils";
+import {
+  type APIResponseType,
+  sendRequest,
+  transformDsaQuestion,
+} from "@tbe/utils";
 import { useMemo } from "react";
 
 import useUser from "./useUser";
@@ -23,6 +27,8 @@ interface UseDsaQuestionsForTopicReturn {
   questions: DsaQuestion[];
   rawQuestions: unknown[];
   loading: boolean;
+  isError: boolean;
+  errorMessage: string | null;
 }
 
 /**
@@ -37,7 +43,12 @@ export const useDsaQuestionsForTopic = (
   const userId = user?.id;
   const { duration, offCampus, realWorld, productType = "DSA_YATRA" } = options;
 
-  const { data: response, isLoading } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<APIResponseType>({
     queryKey: queryKeys.dsa.questions({
       topic: topic ?? "",
       userId,
@@ -46,11 +57,18 @@ export const useDsaQuestionsForTopic = (
       productType,
       realWorld,
     }),
-    queryFn: () =>
-      sendRequest({
+    queryFn: async () => {
+      const result = await sendRequest({
         url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}&productType=${productType}${realWorld ? `&realWorld=${realWorld}` : ""}`,
         method: "GET",
-      }),
+      });
+
+      if (result.status !== true) {
+        throw new Error(result.message || "Failed to fetch DSA questions");
+      }
+
+      return result;
+    },
     enabled: !!topic && !!userId,
     ...CACHE_TIMES.STABLE,
   });
@@ -65,5 +83,18 @@ export const useDsaQuestionsForTopic = (
     return rawQuestions.map((q) => transformDsaQuestion(q));
   }, [rawQuestions]);
 
-  return { questions, rawQuestions, loading: isLoading };
+  const errorMessage =
+    error instanceof Error
+      ? error.message
+      : isError
+        ? "Failed to fetch DSA questions"
+        : null;
+
+  return {
+    questions,
+    rawQuestions,
+    loading: isLoading,
+    isError,
+    errorMessage,
+  };
 };

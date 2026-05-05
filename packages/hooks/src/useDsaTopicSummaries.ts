@@ -33,6 +33,10 @@ export const useDsaTopicSummaries = (
         method: "GET",
       });
 
+      if (result.status !== true) {
+        throw new Error(result.message || "Failed to fetch DSA topics");
+      }
+
       const raw = result.data?.topics;
       if (!Array.isArray(raw)) {
         throw new Error(result.message || "Failed to fetch DSA topics");
