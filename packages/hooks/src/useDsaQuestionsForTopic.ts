@@ -6,11 +6,15 @@ import { useMemo } from "react";
 
 import useUser from "./useUser";
 
+type DsaProductContext = "DSA_YATRA" | "ONCAMPUS";
+
 interface UseDsaQuestionsForTopicOptions {
   /** Duration key e.g. "3Months", "6Months", "1Year" */
   duration?: string;
   /** Off-campus flag — if true, adds off-campus questions on top */
   offCampus?: boolean;
+  /** Product context for payment + personalization handling on the API. */
+  productType?: DsaProductContext;
   /** Filter real-world problems (include/exclude/only) */
   realWorld?: "include" | "exclude" | "only";
 }
@@ -31,7 +35,7 @@ export const useDsaQuestionsForTopic = (
 ): UseDsaQuestionsForTopicReturn => {
   const { user } = useUser();
   const userId = user?.id;
-  const { duration, offCampus, realWorld } = options;
+  const { duration, offCampus, realWorld, productType = "DSA_YATRA" } = options;
 
   const { data: response, isLoading } = useQuery({
     queryKey: queryKeys.dsa.questions({
@@ -39,11 +43,12 @@ export const useDsaQuestionsForTopic = (
       userId,
       duration,
       offCampus,
+      productType,
       realWorld,
     }),
     queryFn: () =>
       sendRequest({
-        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}${realWorld ? `&realWorld=${realWorld}` : ""}`,
+        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}&productType=${productType}${realWorld ? `&realWorld=${realWorld}` : ""}`,
         method: "GET",
       }),
     enabled: !!topic && !!userId,

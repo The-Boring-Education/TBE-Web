@@ -50,7 +50,8 @@ const DSAPrepPage = () => {
     })();
   }, [user?.id]);
 
-  const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
+  const { data: topicRows, isLoading: topicsLoading } =
+    useDsaTopicSummaries("ONCAMPUS");
   const topicsWithCounts = useMemo(
     () =>
       (topicRows ?? []).map((t) => ({
@@ -76,7 +77,7 @@ const DSAPrepPage = () => {
 
   const { questions, loading: topicQuestionsLoading } = useDsaQuestionsForTopic(
     selectedTopic,
-    { duration: selectedDuration, offCampus },
+    { duration: selectedDuration, offCampus, productType: "ONCAMPUS" },
   );
 
   const { completedIds, toggleComplete, localNotes, saveNote } =

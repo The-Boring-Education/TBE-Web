@@ -35,6 +35,7 @@ export interface BaseUser {
   };
   oncampus?: {
     onboardingCompleted?: boolean;
+    experienceLevel?: string;
     duration?: string;
     offCampus?: boolean;
   };

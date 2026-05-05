@@ -767,9 +767,17 @@ const getAllDSAQuestionsFromDB = async (
  */
 const getDSATopicSummariesFromDB = async (
   userId?: string,
+  productType: "DSA_YATRA" | "ONCAMPUS" = "DSA_YATRA",
+  experienceYears?: number,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const matchStages: PipelineStage[] = [];
+
+    if (productType === "ONCAMPUS" && experienceYears === 0) {
+      matchStages.push({
+        $match: { difficulty: { $in: ["EASY", "MEDIUM"] } },
+      });
+    }
 
     if (userId) {
       const targetCompanies = await getUserDSATargetCompanies(userId);

@@ -68,6 +68,7 @@ const SheetsPageClient = () => {
     useDsaQuestionsForTopic(selectedTopic, {
       duration: dsaTimeline,
       offCampus: true,
+      productType: "DSA_YATRA",
     });
 
   const [topicQuestionsCache, setTopicQuestionsCache] = useState<

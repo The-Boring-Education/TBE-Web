@@ -78,6 +78,8 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   if (parsed.value.mode === "topics") {
     const { data, error } = await getDSATopicSummariesFromDB(
       parsed.value.userId,
+      parsed.value.productType,
+      parsed.value.experienceYears,
     );
     if (error)
       return res
@@ -106,8 +108,8 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   // checkPaymentStatusFromDB runs; productId is the one-time-purchase SKU.
   const userId = filters.userId;
   const isPaidUser = userId
-    ? (await checkPaymentStatusFromDB(userId, "lifetime", "DSA_YATRA")).data
-        ?.purchased === true
+    ? (await checkPaymentStatusFromDB(userId, "lifetime", filters.productType))
+        .data?.purchased === true
     : false;
 
   const { data, error } = await getAllDSAQuestionsFromDB({
@@ -122,6 +124,10 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     ...(filters.userId ? { userId: filters.userId } : {}),
     ...(filters.duration ? { duration: filters.duration } : {}),
     offCampus: filters.offCampus,
+    productType: filters.productType,
+    ...(filters.experienceYears !== undefined
+      ? { experienceYears: filters.experienceYears }
+      : {}),
     ...(filters.realWorld ? { realWorld: filters.realWorld } : {}),
     isPaidUser,
   });

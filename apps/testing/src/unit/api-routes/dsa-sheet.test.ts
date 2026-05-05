@@ -256,6 +256,26 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       );
     });
 
+    it("should normalize companyType aliases before DB query", async () => {
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: {
+          companyType: "startup",
+        },
+      });
+
+      await handler(req, res);
+
+      expect(res._getStatusCode()).toBe(200);
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({
+          companyTypes: ["Startup"],
+        }),
+      );
+    });
+
     it("should cap list limit at DSA_SHEET_MAX_LIMIT (200)", async () => {
       mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
 
@@ -364,6 +384,33 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
         MOCK_USER_ID,
         "lifetime",
         "DSA_YATRA",
+      );
+    });
+
+    it("should pass ONCAMPUS productType to payment check when requested", async () => {
+      mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: {
+          userId: MOCK_USER_ID,
+          productType: "ONCAMPUS",
+        },
+      });
+
+      await handler(req, res);
+
+      expect(mockCheckPaymentStatus).toHaveBeenCalledWith(
+        MOCK_USER_ID,
+        "lifetime",
+        "ONCAMPUS",
+      );
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({
+          productType: "ONCAMPUS",
+          experienceYears: 0,
+        }),
       );
     });
 
@@ -496,6 +543,26 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       expect(res._getStatusCode()).toBe(400);
       expect(mockGetAllDSAQuestions).not.toHaveBeenCalled();
     });
+
+    it("should accept legacy duration aliases and normalize them", async () => {
+      mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
+      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: {
+          userId: MOCK_USER_ID,
+          duration: "4-6 months",
+        },
+      });
+
+      await handler(req, res);
+
+      expect(res._getStatusCode()).toBe(200);
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({ duration: "6Months" }),
+      );
+    });
   });
 
   // ── Topics summary query ────────────────────────────────────────────────────
@@ -514,8 +581,36 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       await handler(req, res);
 
       expect(res._getStatusCode()).toBe(200);
-      expect(mockGetDSATopicSummaries).toHaveBeenCalledWith(MOCK_USER_ID);
+      expect(mockGetDSATopicSummaries).toHaveBeenCalledWith(
+        MOCK_USER_ID,
+        "DSA_YATRA",
+        undefined,
+      );
       expect(mockGetAllDSAQuestions).not.toHaveBeenCalled();
+    });
+
+    it("should pass OnCampus product context to topic summaries", async () => {
+      mockGetDSATopicSummaries.mockResolvedValue({
+        data: [{ topic: "ARRAY", count: 22, completed: 3 }],
+      });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: {
+          query: "topics",
+          userId: MOCK_USER_ID,
+          productType: "ONCAMPUS",
+        },
+      });
+
+      await handler(req, res);
+
+      expect(res._getStatusCode()).toBe(200);
+      expect(mockGetDSATopicSummaries).toHaveBeenCalledWith(
+        MOCK_USER_ID,
+        "ONCAMPUS",
+        0,
+      );
     });
   });
 

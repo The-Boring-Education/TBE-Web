@@ -1,8 +1,4 @@
-import {
-  DSA_DIFFICULTY,
-  DSA_DURATION_DIFFICULTY_BUCKETS,
-  DSA_EXTRA_QUESTION_TOPICS,
-} from "@tbe/constants";
+import { DSA_DIFFICULTY, DSA_EXTRA_QUESTION_TOPICS } from "@tbe/constants";
 import { z } from "zod";
 
 import { COMPANY_TYPES, DSA_DOMAIN, DSA_TOPICS } from "@/lib/constants";
@@ -14,6 +10,13 @@ import type {
 
 import { isMongoObjectIdString } from "./mongodb";
 import {
+  type DsaProductContext,
+  normalizeCompanyTypeArray,
+  normalizeDsaDuration,
+  normalizeDsaProductContext,
+  ONCAMPUS_EXPERIENCE_YEARS,
+} from "./personalization";
+import {
   allQueryValues,
   firstQueryValue,
   type ParsedQuery,
@@ -22,7 +25,6 @@ import {
 /** Max page size for DSA sheet listing (prevents unbounded queries). */
 export const DSA_SHEET_MAX_LIMIT = 200;
 
-const DURATION_KEYS = new Set(Object.keys(DSA_DURATION_DIFFICULTY_BUCKETS));
 const REAL_WORLD_FILTERS = new Set(["include", "exclude", "only"] as const);
 
 type RealWorldFilterMode = "include" | "exclude" | "only";
@@ -136,11 +138,18 @@ export type DsaSheetListFilters = {
   userId?: string;
   duration?: string;
   offCampus: boolean;
+  productType: DsaProductContext;
+  experienceYears?: number;
   realWorld?: RealWorldFilterMode;
 };
 
 export type DsaSheetGetParsed =
-  | { mode: "topics"; userId?: string }
+  | {
+      mode: "topics";
+      userId?: string;
+      productType: DsaProductContext;
+      experienceYears?: number;
+    }
   | { mode: "metadata" }
   | {
       mode: "list";
@@ -167,16 +176,48 @@ function parseOptionalEnumArray(
   return { ok: true, value: out };
 }
 
+function parseOptionalCompanyTypeArray(
+  raw: string[] | undefined,
+): { ok: true; value: string[] } | { ok: false; message: string } {
+  if (!raw?.length) return { ok: true, value: [] };
+  const parsed = normalizeCompanyTypeArray(raw);
+  if (parsed.invalid.length > 0) {
+    return {
+      ok: false,
+      message: `Invalid companyType: ${parsed.invalid.join(", ")}. Allowed values are constrained to the DSA sheet schema.`,
+    };
+  }
+  return { ok: true, value: parsed.values };
+}
+
 export function parseDsaSheetGetQuery(
   query: ParsedQuery,
 ): { ok: true; value: DsaSheetGetParsed } | { ok: false; message: string } {
+  const productTypeRaw = firstQueryValue(query.productType)?.trim();
+  let productType = normalizeDsaProductContext(productTypeRaw);
+  if (productTypeRaw && !productType) {
+    return { ok: false, message: "Invalid productType" };
+  }
+  if (!productType) productType = "DSA_YATRA";
+
+  const experienceYears =
+    productType === "ONCAMPUS" ? ONCAMPUS_EXPERIENCE_YEARS : undefined;
+
   const queryFlag = firstQueryValue(query.query);
   if (queryFlag === "topics") {
     const userId = firstQueryValue(query.userId)?.trim();
     if (userId && !isMongoObjectIdString(userId)) {
       return { ok: false, message: "Invalid userId" };
     }
-    return { ok: true, value: { mode: "topics", userId } };
+    return {
+      ok: true,
+      value: {
+        mode: "topics",
+        userId,
+        productType,
+        ...(experienceYears !== undefined ? { experienceYears } : {}),
+      },
+    };
   }
 
   if (firstQueryValue(query.metadata) === "true") {
@@ -185,7 +226,6 @@ export function parseDsaSheetGetQuery(
 
   const domainSet = new Set(DSA_DOMAIN as readonly string[]);
   const difficultySet = new Set(DSA_DIFFICULTY as readonly string[]);
-  const companySet = new Set(COMPANY_TYPES as readonly string[]);
   const topicSet = new Set(ALL_DSA_TOPICS as readonly string[]);
 
   const domainRaw = allQueryValues(query.domain);
@@ -201,11 +241,7 @@ export function parseDsaSheetGetQuery(
     "difficulty",
   );
   if (!diff.ok) return diff;
-  const comp = parseOptionalEnumArray(
-    companyTypeRaw,
-    companySet,
-    "companyType",
-  );
+  const comp = parseOptionalCompanyTypeArray(companyTypeRaw);
   if (!comp.ok) return comp;
   const top = parseOptionalEnumArray(topicRaw, topicSet, "topic");
   if (!top.ok) return top;
@@ -237,8 +273,9 @@ export function parseDsaSheetGetQuery(
     return { ok: false, message: "Invalid userId" };
   }
 
-  const duration = firstQueryValue(query.duration)?.trim();
-  if (duration && !DURATION_KEYS.has(duration)) {
+  const durationRaw = firstQueryValue(query.duration)?.trim();
+  const duration = normalizeDsaDuration(durationRaw);
+  if (durationRaw && !duration) {
     return { ok: false, message: "Invalid duration" };
   }
 
@@ -272,6 +309,8 @@ export function parseDsaSheetGetQuery(
         ...(userId ? { userId } : {}),
         ...(duration ? { duration } : {}),
         offCampus,
+        productType,
+        ...(experienceYears !== undefined ? { experienceYears } : {}),
         ...(realWorld ? { realWorld } : {}),
       },
     },

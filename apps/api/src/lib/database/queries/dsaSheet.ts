@@ -31,6 +31,10 @@ export interface DSASheetFilters {
   duration?: string;
   /** Off-campus flag — scales bucket caps ×1.5 */
   offCampus?: boolean;
+  /** Product context for shared DSA endpoint callers. */
+  productType?: "DSA_YATRA" | "ONCAMPUS";
+  /** Baseline experience in years for ranking/filter defaults (OnCampus uses 0). */
+  experienceYears?: number;
   /** Filter real-world problems */
   realWorld?: RealWorldFilterMode;
   /** Whether the user has active paid subscription — determines freemium gating */
@@ -121,8 +125,15 @@ export const buildDsaMatchStage = (
   filters: DSASheetFilters,
   targetCompanies: string[],
 ): Record<string, any> => {
-  const { domain, difficulty, companyTypes, topics, realWorld, userId } =
-    filters;
+  const {
+    domain,
+    difficulty,
+    companyTypes,
+    topics,
+    realWorld,
+    userId,
+    experienceYears,
+  } = filters;
   const match: Record<string, any> = {};
 
   if (domain) {
@@ -133,6 +144,9 @@ export const buildDsaMatchStage = (
   if (difficulty) {
     const difficulties = Array.isArray(difficulty) ? difficulty : [difficulty];
     match.difficulty = { $in: difficulties };
+  } else if (experienceYears === 0) {
+    // OnCampus college profile: default to foundational questions.
+    match.difficulty = { $in: ["EASY", "MEDIUM"] };
   }
 
   if (companyTypes) {
@@ -294,7 +308,11 @@ const normalizeSeedValue = (value?: string | string[]) => {
 export const buildDsaBucketSeed = (filters: DSASheetFilters): string =>
   [
     filters.userId ?? "__no_user__",
+    filters.productType ?? "DSA_YATRA",
     filters.duration ?? "",
+    typeof filters.experienceYears === "number"
+      ? `exp-${filters.experienceYears}`
+      : "exp-na",
     filters.offCampus ? "off-campus" : "on-campus",
     filters.realWorld ?? "include",
     normalizeSeedValue(filters.domain as string | string[] | undefined),
