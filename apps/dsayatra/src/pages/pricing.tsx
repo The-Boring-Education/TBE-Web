@@ -53,10 +53,7 @@ const DsaYatraPricingPage = () => {
   );
 
   const showPricingContent = !loading && !error && plans.length > 0;
-  const freemiumPolicySummary = useMemo(
-    () => getDsaFreemiumPolicySummary(),
-    [],
-  );
+  const freemiumPolicySummary = useMemo(() => getDsaFreemiumPolicySummary(), []);
 
   useEffect(() => {
     const fetchPlans = async () => {
