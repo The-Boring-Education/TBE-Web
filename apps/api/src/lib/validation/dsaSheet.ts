@@ -12,9 +12,7 @@ import { isMongoObjectIdString } from "./mongodb";
 import {
   type DsaProductContext,
   normalizeCompanyTypeArray,
-  normalizeDsaDuration,
   normalizeDsaProductContext,
-  ONCAMPUS_EXPERIENCE_YEARS,
 } from "./personalization";
 import {
   allQueryValues,
@@ -136,10 +134,7 @@ export type DsaSheetListFilters = {
   page: number;
   limit?: number;
   userId?: string;
-  duration?: string;
-  offCampus: boolean;
   productType: DsaProductContext;
-  experienceYears?: number;
   realWorld?: RealWorldFilterMode;
 };
 
@@ -148,7 +143,6 @@ export type DsaSheetGetParsed =
       mode: "topics";
       userId?: string;
       productType: DsaProductContext;
-      experienceYears?: number;
     }
   | { mode: "metadata" }
   | {
@@ -200,9 +194,6 @@ export function parseDsaSheetGetQuery(
   }
   if (!productType) productType = "DSA_YATRA";
 
-  const experienceYears =
-    productType === "ONCAMPUS" ? ONCAMPUS_EXPERIENCE_YEARS : undefined;
-
   const queryFlag = firstQueryValue(query.query);
   if (queryFlag === "topics") {
     const userId = firstQueryValue(query.userId)?.trim();
@@ -215,7 +206,6 @@ export function parseDsaSheetGetQuery(
         mode: "topics",
         userId,
         productType,
-        ...(experienceYears !== undefined ? { experienceYears } : {}),
       },
     };
   }
@@ -273,12 +263,6 @@ export function parseDsaSheetGetQuery(
     return { ok: false, message: "Invalid userId" };
   }
 
-  const durationRaw = firstQueryValue(query.duration)?.trim();
-  const duration = normalizeDsaDuration(durationRaw);
-  if (durationRaw && !duration) {
-    return { ok: false, message: "Invalid duration" };
-  }
-
   const realWorldRaw = firstQueryValue(query.realWorld)?.trim().toLowerCase();
   let realWorld: RealWorldFilterMode | undefined;
   if (realWorldRaw) {
@@ -290,8 +274,6 @@ export function parseDsaSheetGetQuery(
     }
     realWorld = realWorldRaw as RealWorldFilterMode;
   }
-
-  const offCampus = firstQueryValue(query.offCampus) === "true";
 
   return {
     ok: true,
@@ -307,10 +289,7 @@ export function parseDsaSheetGetQuery(
         page,
         ...(limit !== undefined ? { limit } : {}),
         ...(userId ? { userId } : {}),
-        ...(duration ? { duration } : {}),
-        offCampus,
         productType,
-        ...(experienceYears !== undefined ? { experienceYears } : {}),
         ...(realWorld ? { realWorld } : {}),
       },
     },

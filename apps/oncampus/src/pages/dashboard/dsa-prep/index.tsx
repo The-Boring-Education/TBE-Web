@@ -17,7 +17,6 @@ import type { DsaQuestion } from "@tbe/interface";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
-import { getOncampusPreferences } from "@/components/Onboarding/oncampusPreferences";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const DSAPrepPage = () => {
@@ -27,28 +26,6 @@ const DSAPrepPage = () => {
     null,
   );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-  // Preferences loaded from external onboarding app via /user/oncampus/preferences
-  const [selectedDuration, setSelectedDuration] = useState<string>("6Months");
-  const [offCampus, setOffCampus] = useState(false);
-  const [prefsLoaded, setPrefsLoaded] = useState(false);
-
-  // Load saved oncampus preferences (set by external onboarding app)
-  useEffect(() => {
-    if (!user?.id) return;
-    (async () => {
-      try {
-        const prefs = await getOncampusPreferences(user.id);
-        if (prefs) {
-          setSelectedDuration(prefs.duration || "6Months");
-          setOffCampus(prefs.offCampus ?? false);
-        }
-      } catch {
-        // Preferences not set yet
-      } finally {
-        setPrefsLoaded(true);
-      }
-    })();
-  }, [user?.id]);
 
   const {
     data: topicRows,
@@ -85,8 +62,6 @@ const DSAPrepPage = () => {
     isError: topicQuestionsError,
     errorMessage: topicQuestionsErrorMessage,
   } = useDsaQuestionsForTopic(selectedTopic, {
-    duration: selectedDuration,
-    offCampus,
     productType: "ONCAMPUS",
   });
 
@@ -163,7 +138,7 @@ const DSAPrepPage = () => {
     }
   }, [userLoading, isAuth, router]);
 
-  if (pageLoading || !prefsLoaded) {
+  if (pageLoading) {
     return (
       <OnCampusLearningLayout backHref={routes.oncampus.dashboard} isLoading>
         <div className="flex-1 flex items-center justify-center">

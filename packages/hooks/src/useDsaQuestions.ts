@@ -15,10 +15,6 @@ type DsaProductContext = "DSA_YATRA" | "ONCAMPUS";
 interface UseDsaQuestionsOptions {
   queryKey?: string;
   limit?: number;
-  /** Duration key e.g. "3Months", "6Months", "1Year" */
-  duration?: string;
-  /** Off-campus flag — when combined with duration, scales bucket caps ×1.5 */
-  offCampus?: boolean;
   /** Product context for payment + personalization handling on the API. */
   productType?: DsaProductContext;
 }
@@ -34,12 +30,7 @@ interface UseDsaQuestionsReturn {
 const useDsaQuestions = (
   options: UseDsaQuestionsOptions = {},
 ): UseDsaQuestionsReturn => {
-  const {
-    limit = 1000,
-    duration,
-    offCampus,
-    productType = "DSA_YATRA",
-  } = options;
+  const { limit = 1000, productType = "DSA_YATRA" } = options;
   const { user } = useUser();
   const userId = user?.id;
 
@@ -50,17 +41,15 @@ const useDsaQuestions = (
     error,
   } = useQuery<APIResponseType>({
     queryKey: options.queryKey
-      ? [options.queryKey, userId, duration, offCampus, productType]
+      ? [options.queryKey, userId, productType]
       : queryKeys.dsa.questions({
           limit,
           userId,
-          duration,
-          offCampus,
           productType,
         }),
     queryFn: async () => {
       const result = await sendRequest({
-        url: `${routes.api.base}${routes.api.dsaSheet}?limit=${limit}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}&productType=${productType}`,
+        url: `${routes.api.base}${routes.api.dsaSheet}?limit=${limit}${userId ? `&userId=${userId}` : ""}&productType=${productType}`,
       });
 
       if (result.status !== true) {

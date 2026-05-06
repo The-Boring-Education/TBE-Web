@@ -19,23 +19,20 @@ const expectTopicsMode = (result: ReturnType<typeof parseDsaSheetGetQuery>) => {
 };
 
 describe("parseDsaSheetGetQuery", () => {
-  it("normalizes legacy duration and company aliases in list mode", () => {
+  it("normalizes company aliases in list mode", () => {
     const parsed = parseDsaSheetGetQuery({
-      duration: "4-6 months",
       companyType: "startup",
       topic: "array",
     });
 
     const filters = expectListFilters(parsed);
-    expect(filters.duration).toBe("6Months");
     expect(filters.companyTypes).toEqual(["Startup"]);
     expect(filters.topics).toEqual(["ARRAY"]);
     expect(filters.productType).toBe("DSA_YATRA");
-    expect(filters.offCampus).toBe(false);
     expect(filters.page).toBe(1);
   });
 
-  it("injects ONCAMPUS baseline context in list mode", () => {
+  it("injects ONCAMPUS product context in list mode", () => {
     const parsed = parseDsaSheetGetQuery({
       productType: "ONCAMPUS",
       topic: "array",
@@ -43,7 +40,6 @@ describe("parseDsaSheetGetQuery", () => {
 
     const filters = expectListFilters(parsed);
     expect(filters.productType).toBe("ONCAMPUS");
-    expect(filters.experienceYears).toBe(0);
   });
 
   it("returns DSA_YATRA defaults for topics mode without explicit productType", () => {
@@ -51,10 +47,9 @@ describe("parseDsaSheetGetQuery", () => {
     const topics = expectTopicsMode(parsed);
 
     expect(topics.productType).toBe("DSA_YATRA");
-    expect(topics.experienceYears).toBeUndefined();
   });
 
-  it("returns ONCAMPUS baseline for topics mode when requested", () => {
+  it("returns ONCAMPUS context for topics mode when requested", () => {
     const parsed = parseDsaSheetGetQuery({
       query: "topics",
       productType: "ONCAMPUS",
@@ -62,7 +57,6 @@ describe("parseDsaSheetGetQuery", () => {
     const topics = expectTopicsMode(parsed);
 
     expect(topics.productType).toBe("ONCAMPUS");
-    expect(topics.experienceYears).toBe(0);
   });
 
   it("rejects invalid productType", () => {

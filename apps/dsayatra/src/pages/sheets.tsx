@@ -66,17 +66,13 @@ const SheetsPageClient = () => {
     [topicRows],
   );
 
-  // DSA Yatra is off-campus prep: pass offCampus=true (×1.5 bucket caps)
-  // and the user-selected timeline so paid users get a study-plan-sized sheet.
-  const dsaTimeline = (user as any)?.dsaYatra?.timeline as string | undefined;
+  // Fetch questions for the selected topic
   const {
     questions: topicQuestions,
     loading: topicQuestionsLoading,
     isError: topicQuestionsError,
     errorMessage: topicQuestionsErrorMessage,
   } = useDsaQuestionsForTopic(selectedTopic, {
-    duration: dsaTimeline,
-    offCampus: true,
     productType: "DSA_YATRA",
   });
 

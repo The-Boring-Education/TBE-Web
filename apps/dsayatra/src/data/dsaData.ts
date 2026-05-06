@@ -1,8 +1,5 @@
 export type { DSADifficultyType } from "@tbe/constants";
-export {
-  DSA_DIFFICULTY,
-  DSA_DURATION_DIFFICULTY_BUCKETS,
-} from "@tbe/constants";
+export { DSA_DIFFICULTY } from "@tbe/constants";
 
 export interface Question {
   title: string;

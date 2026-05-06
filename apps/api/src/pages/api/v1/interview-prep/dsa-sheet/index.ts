@@ -79,7 +79,6 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, error } = await getDSATopicSummariesFromDB(
       parsed.value.userId,
       parsed.value.productType,
-      parsed.value.experienceYears,
     );
     if (error)
       return res
@@ -122,12 +121,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     page: filters.page,
     limit: filters.limit,
     ...(filters.userId ? { userId: filters.userId } : {}),
-    ...(filters.duration ? { duration: filters.duration } : {}),
-    offCampus: filters.offCampus,
     productType: filters.productType,
-    ...(filters.experienceYears !== undefined
-      ? { experienceYears: filters.experienceYears }
-      : {}),
     ...(filters.realWorld ? { realWorld: filters.realWorld } : {}),
     isPaidUser,
   });
