@@ -1,3 +1,4 @@
+import { getDsaFreemiumBannerMessage } from "@tbe/constants";
 import { FaLock } from "react-icons/fa";
 
 import Text from "../../common/Typography/Text";
@@ -23,7 +24,7 @@ const FreemiumLockBanner = ({
   ctaLabel = "View Plans",
   message,
 }: FreemiumLockBannerProps) => {
-  const defaultMessage = `Freemium preview — ${unlockedCount} questions unlocked. Subscribe to access all.`;
+  const defaultMessage = getDsaFreemiumBannerMessage(unlockedCount);
 
   return (
     <div className="w-full bg-orange-950/40 border-b border-orange-900/50 px-4 py-2.5 flex items-center justify-between shrink-0">

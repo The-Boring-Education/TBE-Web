@@ -36,25 +36,20 @@ const SheetsPageClient = () => {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [showPayment, setShowPayment] = useState(false);
 
+  // DSA Yatra is off-campus prep: pass offCampus=true (x1.5 bucket caps)
+  // and the user-selected timeline so paid users get a study-plan-sized sheet.
+  const dsaTimeline = (user as any)?.dsaYatra?.timeline as string | undefined;
+
   const {
     data: topicRows,
     isLoading: topicsLoading,
     isError: topicSummariesError,
     error: topicSummariesErrorValue,
-  } = useDsaTopicSummaries("DSA_YATRA");
-  const userTargetCompanies = useMemo(() => {
-    const pyTargets = (user as any)?.prepYatra?.targetCompanies || [];
-    const dsaTarget = (user as any)?.dsaYatra?.target;
-
-    let dsaMapped: string[] = [];
-    if (dsaTarget === "Product-based") {
-      dsaMapped = ["MNC", "FAANG"];
-    } else if (dsaTarget === "Startups") {
-      dsaMapped = ["Startup"];
-    }
-
-    return Array.from(new Set([...pyTargets, ...dsaMapped]));
-  }, [user]);
+    effectiveTargetCompanies: userTargetCompanies,
+  } = useDsaTopicSummaries("DSA_YATRA", {
+    duration: dsaTimeline,
+    offCampus: true,
+  });
 
   const topicsWithCounts = useMemo(
     () =>
@@ -66,9 +61,6 @@ const SheetsPageClient = () => {
     [topicRows],
   );
 
-  // DSA Yatra is off-campus prep: pass offCampus=true (×1.5 bucket caps)
-  // and the user-selected timeline so paid users get a study-plan-sized sheet.
-  const dsaTimeline = (user as any)?.dsaYatra?.timeline as string | undefined;
   const {
     questions: topicQuestions,
     loading: topicQuestionsLoading,

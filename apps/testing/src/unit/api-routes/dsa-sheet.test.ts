@@ -585,6 +585,9 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
         MOCK_USER_ID,
         "DSA_YATRA",
         undefined,
+        undefined,
+        false,
+        false,
       );
       expect(mockGetAllDSAQuestions).not.toHaveBeenCalled();
     });
@@ -610,6 +613,43 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
         MOCK_USER_ID,
         "ONCAMPUS",
         0,
+        undefined,
+        false,
+        false,
+      );
+    });
+
+    it("should apply duration-aware topics path when duration is provided", async () => {
+      mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
+      mockGetDSATopicSummaries.mockResolvedValue({
+        data: [{ topic: "ARRAY", count: 14, completed: 2 }],
+      });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        query: {
+          query: "topics",
+          userId: MOCK_USER_ID,
+          duration: "6Months",
+          offCampus: "true",
+        },
+      });
+
+      await handler(req, res);
+
+      expect(res._getStatusCode()).toBe(200);
+      expect(mockCheckPaymentStatus).toHaveBeenCalledWith(
+        MOCK_USER_ID,
+        "lifetime",
+        "DSA_YATRA",
+      );
+      expect(mockGetDSATopicSummaries).toHaveBeenCalledWith(
+        MOCK_USER_ID,
+        "DSA_YATRA",
+        undefined,
+        "6Months",
+        true,
+        true,
       );
     });
   });

@@ -149,6 +149,8 @@ export type DsaSheetGetParsed =
       userId?: string;
       productType: DsaProductContext;
       experienceYears?: number;
+      duration?: string;
+      offCampus: boolean;
     }
   | { mode: "metadata" }
   | {
@@ -209,12 +211,23 @@ export function parseDsaSheetGetQuery(
     if (userId && !isMongoObjectIdString(userId)) {
       return { ok: false, message: "Invalid userId" };
     }
+
+    const durationRaw = firstQueryValue(query.duration)?.trim();
+    const duration = normalizeDsaDuration(durationRaw);
+    if (durationRaw && !duration) {
+      return { ok: false, message: "Invalid duration" };
+    }
+
+    const offCampus = firstQueryValue(query.offCampus) === "true";
+
     return {
       ok: true,
       value: {
         mode: "topics",
         userId,
         productType,
+        offCampus,
+        ...(duration ? { duration } : {}),
         ...(experienceYears !== undefined ? { experienceYears } : {}),
       },
     };

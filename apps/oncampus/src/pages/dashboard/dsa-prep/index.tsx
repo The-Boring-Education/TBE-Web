@@ -55,7 +55,11 @@ const DSAPrepPage = () => {
     isLoading: topicsLoading,
     isError: topicsError,
     error: topicsErrorValue,
-  } = useDsaTopicSummaries("ONCAMPUS");
+    effectiveTargetCompanies: userTargetCompanies,
+  } = useDsaTopicSummaries("ONCAMPUS", {
+    duration: selectedDuration,
+    offCampus,
+  });
   const topicsWithCounts = useMemo(
     () =>
       (topicRows ?? []).map((t) => ({
@@ -65,19 +69,6 @@ const DSAPrepPage = () => {
       })),
     [topicRows],
   );
-
-  // Map user target companies from their profile for company-type filtering display
-  const userTargetCompanies = useMemo(() => {
-    const pyTargets = (user as any)?.prepYatra?.targetCompanies || [];
-    const dsaTarget = (user as any)?.dsaYatra?.target;
-    let dsaMapped: string[] = [];
-    if (dsaTarget === "Product-based") {
-      dsaMapped = ["MNC", "FAANG"];
-    } else if (dsaTarget === "Startups") {
-      dsaMapped = ["Startup"];
-    }
-    return Array.from(new Set([...pyTargets, ...dsaMapped]));
-  }, [user]);
 
   const {
     questions,

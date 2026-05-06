@@ -76,10 +76,24 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (parsed.value.mode === "topics") {
+    const isPaidUser =
+      parsed.value.userId && parsed.value.duration
+        ? (
+            await checkPaymentStatusFromDB(
+              parsed.value.userId,
+              "lifetime",
+              parsed.value.productType,
+            )
+          ).data?.purchased === true
+        : false;
+
     const { data, error } = await getDSATopicSummariesFromDB(
       parsed.value.userId,
       parsed.value.productType,
       parsed.value.experienceYears,
+      parsed.value.duration,
+      parsed.value.offCampus,
+      isPaidUser,
     );
     if (error)
       return res

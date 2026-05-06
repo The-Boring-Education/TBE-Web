@@ -16,8 +16,9 @@ vi.mock("@tbe/utils", () => ({
   sendRequest: vi.fn(),
 }));
 
-import { useDsaTopicSummaries } from "@tbe/hooks/useDsaTopicSummaries";
 import { sendRequest } from "@tbe/utils";
+
+import { useDsaTopicSummaries } from "../../../../../packages/hooks/src/useDsaTopicSummaries";
 
 const mockSendRequest = vi.mocked(sendRequest);
 
@@ -31,11 +32,15 @@ describe("useDsaTopicSummaries", () => {
       status: true,
       data: {
         topics: [{ topic: "ARRAY", count: 10, solved: 3 }],
+        effectiveTargetCompanies: ["MNC", "FAANG"],
       },
     });
 
     const { result } = renderHookWithQuery(() =>
-      useDsaTopicSummaries("ONCAMPUS"),
+      useDsaTopicSummaries("ONCAMPUS", {
+        duration: "6Months",
+        offCampus: true,
+      }),
     );
 
     await waitFor(() => {
@@ -46,11 +51,14 @@ describe("useDsaTopicSummaries", () => {
     expect(call?.url).toContain("query=topics");
     expect(call?.url).toContain("userId=test-user");
     expect(call?.url).toContain("productType=ONCAMPUS");
+    expect(call?.url).toContain("duration=6Months");
+    expect(call?.url).toContain("offCampus=true");
     expect(result.current.data?.[0]).toMatchObject({
       topic: "ARRAY",
       count: 10,
       solved: 3,
     });
+    expect(result.current.effectiveTargetCompanies).toEqual(["MNC", "FAANG"]);
   });
 
   it("should surface query error when status is false", async () => {
@@ -69,6 +77,7 @@ describe("useDsaTopicSummaries", () => {
     });
 
     expect((result.current.error as Error).message).toBe("Invalid productType");
-    expect(result.current.data).toBeUndefined();
+    expect(result.current.data).toEqual([]);
+    expect(result.current.effectiveTargetCompanies).toEqual([]);
   });
 });

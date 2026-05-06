@@ -9,6 +9,10 @@ import {
   applyDSAFreemiumGating,
   DSA_DIFFICULTY,
   DSA_DURATION_DIFFICULTY_BUCKETS,
+  DSA_FREEMIUM_LIMITS,
+  DSA_FREEMIUM_POLICY_LABEL,
+  DSA_FREEMIUM_POLICY_TYPE,
+  DSA_FREEMIUM_TOTAL_UNLOCKED,
   getDSAFreemiumBucket,
 } from "@tbe/constants";
 
@@ -390,6 +394,12 @@ export const applyDsaFreemiumGate = (
     questions: cleaned,
     pagination,
     isFreemiumUser: true,
+    freemiumPolicy: {
+      type: DSA_FREEMIUM_POLICY_TYPE,
+      label: DSA_FREEMIUM_POLICY_LABEL,
+      limits: DSA_FREEMIUM_LIMITS,
+      totalUnlocked: DSA_FREEMIUM_TOTAL_UNLOCKED,
+    },
   };
 };
 

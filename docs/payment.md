@@ -83,6 +83,8 @@ Uses the **`SubscriptionPlan`** collection with these fields:
 
 ## 2. Freemium Guardrail System (DSA Yatra)
 
+**Policy type:** `GLOBAL_FIXED_TRIAL_CAP` (`Global fixed trial cap`)
+
 ### Bucket Limits for Free Users
 
 | Bucket       | Free Limit | Description                            |
@@ -92,7 +94,7 @@ Uses the **`SubscriptionPlan`** collection with these fields:
 | `HARD`       | 1          | 1 hard question per topic              |
 | `REAL_WORLD` | 1          | 1 real-world problem (separate bucket) |
 
-**Total free access:** 7 questions per bucket cycle (3E + 2M + 1H + 1RW).
+**Total free access:** 7 questions per topic preview (3E + 2M + 1H + 1RW).
 
 ### How Gating Works
 

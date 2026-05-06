@@ -1,7 +1,12 @@
 import {
   applyDSAFreemiumGating,
   DSA_FREEMIUM_LIMITS,
+  DSA_FREEMIUM_POLICY_LABEL,
+  DSA_FREEMIUM_POLICY_TYPE,
+  DSA_FREEMIUM_TOTAL_UNLOCKED,
+  getDsaFreemiumBannerMessage,
   getDSAFreemiumBucket,
+  getDsaFreemiumPolicySummary,
 } from "@tbe/constants";
 import { describe, expect, it } from "vitest";
 
@@ -39,6 +44,30 @@ describe("DSA_FREEMIUM_LIMITS", () => {
       HARD: 1,
       REAL_WORLD: 1,
     });
+  });
+});
+
+describe("freemium policy metadata", () => {
+  it("exposes global fixed trial policy identifier", () => {
+    expect(DSA_FREEMIUM_POLICY_TYPE).toBe("GLOBAL_FIXED_TRIAL_CAP");
+    expect(DSA_FREEMIUM_POLICY_LABEL).toBe("Global fixed trial cap");
+  });
+
+  it("derives total unlocked count from configured limits", () => {
+    expect(DSA_FREEMIUM_TOTAL_UNLOCKED).toBe(7);
+  });
+
+  it("builds consistent policy summary and banner copy", () => {
+    expect(getDsaFreemiumPolicySummary()).toBe(
+      "3 Easy, 2 Medium, 1 Hard, 1 Real-World",
+    );
+    expect(getDsaFreemiumBannerMessage(4)).toContain("Global fixed trial cap");
+    expect(getDsaFreemiumBannerMessage(4)).toContain(
+      "3 Easy, 2 Medium, 1 Hard, 1 Real-World",
+    );
+    expect(getDsaFreemiumBannerMessage(4)).toContain(
+      "4 questions unlocked in this topic",
+    );
   });
 });
 

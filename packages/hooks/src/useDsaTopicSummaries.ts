@@ -14,20 +14,37 @@ import useUser from "./useUser";
 
 type DsaProductContext = "DSA_YATRA" | "ONCAMPUS";
 
+interface UseDsaTopicSummariesOptions {
+  duration?: string;
+  offCampus?: boolean;
+}
+
+interface UseDsaTopicSummariesData {
+  rows: TopicWithCount[];
+  effectiveTargetCompanies: string[];
+}
+
 /**
  * Fetches DSA topic ids + question counts only (no question bodies).
  * Use for sheet landing; pair with {@link useDsaQuestionsForTopic} on topic select.
  */
 export const useDsaTopicSummaries = (
   productType: DsaProductContext = "DSA_YATRA",
+  options: UseDsaTopicSummariesOptions = {},
 ) => {
   const { user } = useUser();
   const userId = user?.id;
+  const { duration, offCampus = false } = options;
 
-  return useQuery({
-    queryKey: [...queryKeys.dsa.topics(userId), productType],
+  const query = useQuery<UseDsaTopicSummariesData>({
+    queryKey: [
+      ...queryKeys.dsa.topics(userId),
+      productType,
+      duration ?? "",
+      offCampus,
+    ],
     queryFn: async () => {
-      const url = `${routes.api.base}${routes.api.dsaSheet}?query=topics${userId ? `&userId=${userId}` : ""}&productType=${productType}`;
+      const url = `${routes.api.base}${routes.api.dsaSheet}?query=topics${userId ? `&userId=${userId}` : ""}&productType=${productType}${duration ? `&duration=${duration}` : ""}${offCampus ? "&offCampus=true" : ""}`;
       const result = await sendRequest({
         url,
         method: "GET",
@@ -41,6 +58,18 @@ export const useDsaTopicSummaries = (
       if (!Array.isArray(raw)) {
         throw new Error(result.message || "Failed to fetch DSA topics");
       }
+
+      const effectiveTargetCompanies = Array.isArray(
+        result.data?.effectiveTargetCompanies,
+      )
+        ? result.data.effectiveTargetCompanies
+          .filter(
+            (entry: unknown): entry is string => typeof entry === "string",
+          )
+          .map((entry: any) => entry.trim())
+          .filter(Boolean)
+        : [];
+
       const rows: TopicWithCount[] = raw
         .map((item: any) => {
           const topic = typeof item === "string" ? item : item.topic;
@@ -64,9 +93,16 @@ export const useDsaTopicSummaries = (
           if (idxA !== -1 && idxB !== -1) return idxA - idxB;
           return a.label!.localeCompare(b.label!);
         }) as TopicWithCount[];
-      return rows;
+
+      return { rows, effectiveTargetCompanies };
     },
     enabled: !!userId,
     ...CACHE_TIMES.STABLE,
   });
+
+  return {
+    ...query,
+    data: query.data?.rows ?? [],
+    effectiveTargetCompanies: query.data?.effectiveTargetCompanies ?? [],
+  };
 };

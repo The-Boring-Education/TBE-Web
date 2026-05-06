@@ -1,5 +1,5 @@
 import { compareDsaTopicKeysForApi } from "@tbe/constants";
-import mongoose, { type PipelineStage } from "mongoose";
+import mongoose from "mongoose";
 
 import { modelSelectParams } from "@/lib/constants";
 import type {
@@ -769,50 +769,80 @@ const getDSATopicSummariesFromDB = async (
   userId?: string,
   productType: "DSA_YATRA" | "ONCAMPUS" = "DSA_YATRA",
   experienceYears?: number,
+  duration?: string,
+  offCampus = false,
+  isPaidUser = false,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const matchStages: PipelineStage[] = [];
+    const targetCompanies = userId
+      ? await getUserDSATargetCompanies(userId)
+      : [];
 
-    if (productType === "ONCAMPUS" && experienceYears === 0) {
-      matchStages.push({
-        $match: { difficulty: { $in: ["EASY", "MEDIUM"] } },
-      });
-    }
+    const baseFilters: DSASheetFilters = {
+      ...(userId ? { userId } : {}),
+      ...(duration ? { duration } : {}),
+      offCampus,
+      productType,
+      ...(experienceYears !== undefined ? { experienceYears } : {}),
+    };
 
-    if (userId) {
-      const targetCompanies = await getUserDSATargetCompanies(userId);
-      if (targetCompanies.length > 0) {
-        matchStages.push({
-          $match: { companyTypes: { $in: targetCompanies } },
-        });
-      }
-    }
-
-    const countPipeline: PipelineStage[] = [
-      ...matchStages,
+    const matchStage = buildDsaMatchStage(baseFilters, targetCompanies);
+    const aggregate: any[] = [
+      { $match: matchStage },
+      buildDsaSortFieldsStage(targetCompanies),
+      DSA_SORT_STAGE,
       {
-        $addFields: {
-          primaryTopic: { $toUpper: { $arrayElemAt: ["$topics", 0] } },
-        },
-      },
-      {
-        $match: {
-          primaryTopic: { $exists: true, $nin: [null, ""] },
-        },
-      },
-      {
-        $group: {
-          _id: "$primaryTopic",
-          count: { $sum: 1 },
+        $project: {
+          _id: 1,
+          topics: 1,
+          difficulty: 1,
+          isRealWorldProblem: 1,
+          _priorityScore: 1,
+          _topicOrder: 1,
+          _difficultyOrder: 1,
+          order: 1,
+          createdAt: 1,
         },
       },
     ];
+    const rows = await DSAQuestion.aggregate(aggregate);
 
-    const rows = await DSAQuestion.aggregate(countPipeline);
+    if (!rows || rows.length === 0) {
+      return {
+        data: {
+          topics: [],
+          effectiveTargetCompanies: targetCompanies,
+        },
+      };
+    }
+
+    const effectiveRows =
+      duration && isPaidUser
+        ? (applyDsaDurationBuckets(
+            rows as Record<string, unknown>[],
+            baseFilters,
+            1,
+            rows.length,
+          ).questions as Array<Record<string, unknown>>)
+        : (rows as Array<Record<string, unknown>>);
+
+    const topicCounts = new Map<string, number>();
+    for (const row of effectiveRows) {
+      const topics = Array.isArray(row.topics)
+        ? (row.topics as unknown[])
+        : ([] as unknown[]);
+      const rawPrimaryTopic = topics[0];
+      if (typeof rawPrimaryTopic !== "string") continue;
+
+      const primaryTopic = rawPrimaryTopic.toUpperCase();
+      if (!primaryTopic) continue;
+
+      topicCounts.set(primaryTopic, (topicCounts.get(primaryTopic) ?? 0) + 1);
+    }
 
     const solvedByTopic = new Map<string, number>();
 
-    if (userId) {
+    if (userId && topicCounts.size > 0) {
       const progressResult = await getDsaYatraProgressFromDB(userId);
       const completed =
         progressResult.data &&
@@ -825,59 +855,46 @@ const getDSATopicSummariesFromDB = async (
             ).completedQuestionIds
           : [];
 
-      const validIds = completed
-        .map((id) => String(id))
-        .filter((id) => mongoose.isValidObjectId(id))
-        .map((id) => new mongoose.Types.ObjectId(id));
+      const completedSet = new Set(
+        completed
+          .map((id) => String(id))
+          .filter((id) => mongoose.isValidObjectId(id)),
+      );
 
-      if (validIds.length > 0) {
-        const solvedPipeline: PipelineStage[] = [
-          ...matchStages,
-          { $match: { _id: { $in: validIds } } },
-          {
-            $addFields: {
-              primaryTopic: { $toUpper: { $arrayElemAt: ["$topics", 0] } },
-            },
-          },
-          {
-            $match: {
-              primaryTopic: { $exists: true, $nin: [null, ""] },
-            },
-          },
-          {
-            $group: {
-              _id: "$primaryTopic",
-              solved: { $sum: 1 },
-            },
-          },
-        ];
-        const solvedRows = await DSAQuestion.aggregate(solvedPipeline);
-        for (const row of solvedRows) {
-          solvedByTopic.set(
-            String(row._id).toUpperCase(),
-            row.solved as number,
-          );
-        }
+      for (const row of effectiveRows) {
+        const rowId = String(row._id ?? "");
+        if (!completedSet.has(rowId)) continue;
+
+        const topics = Array.isArray(row.topics)
+          ? (row.topics as unknown[])
+          : ([] as unknown[]);
+        const rawPrimaryTopic = topics[0];
+        if (typeof rawPrimaryTopic !== "string") continue;
+
+        const primaryTopic = rawPrimaryTopic.toUpperCase();
+        if (!primaryTopic) continue;
+
+        solvedByTopic.set(
+          primaryTopic,
+          (solvedByTopic.get(primaryTopic) ?? 0) + 1,
+        );
       }
     }
 
-    if (!rows || rows.length === 0) {
-      return { data: { topics: [] } };
-    }
-
-    const topics = rows
-      .map((row) => {
-        const topic = String(row._id).toUpperCase();
-        return {
-          topic,
-          count: row.count as number,
-          solved: solvedByTopic.get(topic) ?? 0,
-        };
-      })
-      .filter((t) => t.topic)
+    const topics = Array.from(topicCounts.entries())
+      .map(([topic, count]) => ({
+        topic,
+        count,
+        solved: solvedByTopic.get(topic) ?? 0,
+      }))
       .sort((a, b) => compareDsaTopicKeysForApi(a.topic, b.topic));
 
-    return { data: { topics } };
+    return {
+      data: {
+        topics,
+        effectiveTargetCompanies: targetCompanies,
+      },
+    };
   } catch (error) {
     logger.error("DB: getDSATopicSummariesFromDB failed", {
       error: error instanceof Error ? error.message : String(error),

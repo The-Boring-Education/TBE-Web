@@ -3,7 +3,12 @@ import {
   PricingFaqAccordion,
   SubscriptionPricingPlanCard,
 } from "@tbe/components";
-import { getProductConfig, routes } from "@tbe/constants";
+import {
+  DSA_FREEMIUM_POLICY_LABEL,
+  getDsaFreemiumPolicySummary,
+  getProductConfig,
+  routes,
+} from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import type { SubscriptionPlanCatalogRow } from "@tbe/types";
 import {
@@ -48,6 +53,10 @@ const DsaYatraPricingPage = () => {
   );
 
   const showPricingContent = !loading && !error && plans.length > 0;
+  const freemiumPolicySummary = useMemo(
+    () => getDsaFreemiumPolicySummary(),
+    [],
+  );
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -241,12 +250,8 @@ const DsaYatraPricingPage = () => {
                   </span>
                 </div>
                 <p className="text-[#b0b0b0] text-sm leading-relaxed max-w-lg mx-auto">
-                  Every user gets access to{" "}
-                  <strong className="text-white">3 Easy</strong>,{" "}
-                  <strong className="text-white">2 Medium</strong>,{" "}
-                  <strong className="text-white">1 Hard</strong>, and{" "}
-                  <strong className="text-white">1 Real-World</strong> problem
-                  per topic — completely free. Upgrade to unlock everything.
+                  {DSA_FREEMIUM_POLICY_LABEL}: {freemiumPolicySummary} per topic
+                  preview. Upgrade to unlock everything.
                 </p>
               </motion.div>
             </section>

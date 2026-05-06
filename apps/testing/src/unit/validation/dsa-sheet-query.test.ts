@@ -52,6 +52,8 @@ describe("parseDsaSheetGetQuery", () => {
 
     expect(topics.productType).toBe("DSA_YATRA");
     expect(topics.experienceYears).toBeUndefined();
+    expect(topics.offCampus).toBe(false);
+    expect(topics.duration).toBeUndefined();
   });
 
   it("returns ONCAMPUS baseline for topics mode when requested", () => {
@@ -63,6 +65,18 @@ describe("parseDsaSheetGetQuery", () => {
 
     expect(topics.productType).toBe("ONCAMPUS");
     expect(topics.experienceYears).toBe(0);
+  });
+
+  it("normalizes duration and offCampus in topics mode", () => {
+    const parsed = parseDsaSheetGetQuery({
+      query: "topics",
+      duration: "4-6 months",
+      offCampus: "true",
+    });
+    const topics = expectTopicsMode(parsed);
+
+    expect(topics.duration).toBe("6Months");
+    expect(topics.offCampus).toBe(true);
   });
 
   it("rejects invalid productType", () => {
@@ -80,6 +94,18 @@ describe("parseDsaSheetGetQuery", () => {
     expect(parsed.ok).toBe(false);
     if (!parsed.ok) {
       expect(parsed.message).toContain("Invalid companyType");
+    }
+  });
+
+  it("rejects invalid duration in topics mode", () => {
+    const parsed = parseDsaSheetGetQuery({
+      query: "topics",
+      duration: "9Months",
+    });
+
+    expect(parsed.ok).toBe(false);
+    if (!parsed.ok) {
+      expect(parsed.message).toBe("Invalid duration");
     }
   });
 });

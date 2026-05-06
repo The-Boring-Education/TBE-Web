@@ -1,4 +1,11 @@
 export type DSAFreemiumBucket = "EASY" | "MEDIUM" | "HARD" | "REAL_WORLD";
+export type DSAFreemiumPolicyType = "GLOBAL_FIXED_TRIAL_CAP";
+
+/** Explicit freemium policy used across API + UI. */
+export const DSA_FREEMIUM_POLICY_TYPE: DSAFreemiumPolicyType =
+  "GLOBAL_FIXED_TRIAL_CAP";
+
+export const DSA_FREEMIUM_POLICY_LABEL = "Global fixed trial cap";
 
 /**
  * How many questions each difficulty bucket allows for free-tier users.
@@ -12,6 +19,16 @@ export const DSA_FREEMIUM_LIMITS: Record<DSAFreemiumBucket, number> = {
   HARD: 1,
   REAL_WORLD: 1,
 };
+
+export const DSA_FREEMIUM_TOTAL_UNLOCKED = Object.values(
+  DSA_FREEMIUM_LIMITS,
+).reduce((acc, count) => acc + count, 0);
+
+export const getDsaFreemiumPolicySummary = () =>
+  `${DSA_FREEMIUM_LIMITS.EASY} Easy, ${DSA_FREEMIUM_LIMITS.MEDIUM} Medium, ${DSA_FREEMIUM_LIMITS.HARD} Hard, ${DSA_FREEMIUM_LIMITS.REAL_WORLD} Real-World`;
+
+export const getDsaFreemiumBannerMessage = (unlockedCount: number) =>
+  `${DSA_FREEMIUM_POLICY_LABEL} (${getDsaFreemiumPolicySummary()}). ${unlockedCount} questions unlocked in this topic.`;
 
 /**
  * Map a question's difficulty (+ real-world flag) to a freemium bucket.
