@@ -11,8 +11,8 @@ import {
   buildDsaBucketSeed,
   buildDsaMatchStage,
   DSA_TOPIC_SORT_ORDER,
+  getEffectiveBucketCaps,
   paginateDsaRows,
-  scaleDsaBuckets,
   stripInternalDsaFields,
   stripLockedAnswerFields,
 } from "@/lib/database/queries/dsaSheet";
@@ -93,10 +93,9 @@ describe("buildDsaMatchStage", () => {
 
   it("wraps scalar filters in $in arrays", () => {
     const match = buildDsaMatchStage(
-      { domain: "DSA", difficulty: "EASY", topics: "ARRAY" },
+      { difficulty: "EASY", topics: "ARRAY" },
       [],
     );
-    expect(match.domain).toEqual({ $in: ["DSA"] });
     expect(match.difficulty).toEqual({ $in: ["EASY"] });
     expect(match.topics).toEqual({ $in: ["ARRAY"] });
   });
@@ -207,44 +206,41 @@ describe("buildDsaBucketSeed", () => {
   });
 });
 
-// ── scaleDsaBuckets ──────────────────────────────────────────────────────────
+// ── getEffectiveBucketCaps ──────────────────────────────────────────────────
 
-describe("scaleDsaBuckets", () => {
+describe("getEffectiveBucketCaps", () => {
   it("returns null for unknown or missing duration", () => {
-    expect(scaleDsaBuckets(undefined, false)).toBeNull();
-    expect(scaleDsaBuckets("9Months", false)).toBeNull();
+    expect(getEffectiveBucketCaps(undefined, undefined, false)).toBeNull();
+    expect(getEffectiveBucketCaps("9Months", undefined, false)).toBeNull();
   });
 
-  it("returns base caps for on-campus (offCampus=false)", () => {
-    expect(scaleDsaBuckets("1Month", false)).toEqual({
-      EASY: 4,
-      MEDIUM: 2,
-      HARD: 1,
-    });
+  it("returns base caps for on-campus (offCampus=false) with default experience", () => {
+    const caps = getEffectiveBucketCaps("1Month", undefined, false)!;
+    // 1Month total=3, fresher: easy=1, medium=1, hard=1
+    expect(caps.EASY + caps.MEDIUM + caps.HARD).toBe(3);
   });
 
   it("scales caps by 1.5× (ceil) for off-campus", () => {
-    expect(scaleDsaBuckets("1Month", true)).toEqual({
-      EASY: 6, // 4 * 1.5 = 6
-      MEDIUM: 3, // 2 * 1.5 = 3
-      HARD: 2, // ceil(1 * 1.5) = 2
-    });
+    const caps = getEffectiveBucketCaps("3Months", undefined, true)!;
+    const base = getEffectiveBucketCaps("3Months", undefined, false)!;
+    expect(caps.EASY).toBe(Math.ceil(base.EASY * 1.5));
+    expect(caps.MEDIUM).toBe(Math.ceil(base.MEDIUM * 1.5));
+    expect(caps.HARD).toBe(Math.ceil(base.HARD * 1.5));
   });
 
-  it("scales 3Months correctly (8/4/2 → 12/6/3)", () => {
-    expect(scaleDsaBuckets("3Months", true)).toEqual({
-      EASY: 12,
-      MEDIUM: 6,
-      HARD: 3,
-    });
-  });
-
-  it("scales 1Year correctly (16/8/4 → 24/12/6)", () => {
-    expect(scaleDsaBuckets("1Year", true)).toEqual({
-      EASY: 24,
-      MEDIUM: 12,
-      HARD: 6,
-    });
+  it("produces different ratios for different experience levels", () => {
+    const fresher = getEffectiveBucketCaps(
+      "6Months",
+      "Fresher (0-1 yr)",
+      false,
+    )!;
+    const senior = getEffectiveBucketCaps("6Months", "Senior (5+ yrs)", false)!;
+    // Same total, different distribution
+    expect(fresher.EASY + fresher.MEDIUM + fresher.HARD).toBe(
+      senior.EASY + senior.MEDIUM + senior.HARD,
+    );
+    expect(fresher.EASY).toBeGreaterThan(senior.EASY);
+    expect(senior.HARD).toBeGreaterThan(fresher.HARD);
   });
 });
 
@@ -380,7 +376,7 @@ describe("applyDsaDurationBuckets", () => {
     _difficultyOrder: 0,
   });
 
-  it("caps per-difficulty according to duration (1Month: 4E/2M/1H)", () => {
+  it("caps per-difficulty according to duration and experience (1Month fresher: 1E/1M/1H)", () => {
     const rows = [
       ...Array.from({ length: 10 }, (_, i) => makeQ(`e${i}`, "EASY")),
       ...Array.from({ length: 10 }, (_, i) => makeQ(`m${i}`, "MEDIUM")),
@@ -401,12 +397,12 @@ describe("applyDsaDurationBuckets", () => {
       return acc;
     }, {});
 
-    expect(byDifficulty.EASY).toBe(4);
-    expect(byDifficulty.MEDIUM).toBe(2);
+    expect(byDifficulty.EASY).toBe(1);
+    expect(byDifficulty.MEDIUM).toBe(1);
     expect(byDifficulty.HARD).toBe(1);
   });
 
-  it("scales caps by 1.5× when offCampus=true (3Months: 12E/6M/3H)", () => {
+  it("scales caps by 1.5× when offCampus=true (3Months fresher: 5E/2M/2H)", () => {
     const rows = [
       ...Array.from({ length: 20 }, (_, i) => makeQ(`e${i}`, "EASY")),
       ...Array.from({ length: 20 }, (_, i) => makeQ(`m${i}`, "MEDIUM")),
@@ -427,9 +423,9 @@ describe("applyDsaDurationBuckets", () => {
       return acc;
     }, {});
 
-    expect(byDifficulty.EASY).toBe(12);
-    expect(byDifficulty.MEDIUM).toBe(6);
-    expect(byDifficulty.HARD).toBe(3);
+    expect(byDifficulty.EASY).toBe(5);
+    expect(byDifficulty.MEDIUM).toBe(2);
+    expect(byDifficulty.HARD).toBe(2);
   });
 
   it("prioritizes higher _priorityScore rows within each bucket", () => {
@@ -443,10 +439,10 @@ describe("applyDsaDurationBuckets", () => {
       makeQ("low4", "EASY", 0),
     ];
 
-    // 1Month EASY cap is 4 → should pick all 3 high-priority + 1 low
+    // 6Months fresher offCampus=false → EASY cap=4 (floor(8*0.6)=4)
     const result = applyDsaDurationBuckets(
       rows,
-      { duration: "1Month", offCampus: false, userId: "u1" },
+      { duration: "6Months", offCampus: false, userId: "u1" },
       1,
       100,
     );

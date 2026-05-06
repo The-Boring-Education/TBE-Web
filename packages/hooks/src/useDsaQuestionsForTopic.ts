@@ -21,6 +21,8 @@ interface UseDsaQuestionsForTopicOptions {
   productType?: DsaProductContext;
   /** Filter real-world problems (include/exclude/only) */
   realWorld?: "include" | "exclude" | "only";
+  /** Experience level for bucket personalization */
+  experienceLevel?: string;
 }
 
 interface UseDsaQuestionsForTopicReturn {
@@ -41,7 +43,13 @@ export const useDsaQuestionsForTopic = (
 ): UseDsaQuestionsForTopicReturn => {
   const { user } = useUser();
   const userId = user?.id;
-  const { duration, offCampus, realWorld, productType = "DSA_YATRA" } = options;
+  const {
+    duration,
+    offCampus,
+    realWorld,
+    productType = "DSA_YATRA",
+    experienceLevel,
+  } = options;
 
   const {
     data: response,
@@ -56,10 +64,11 @@ export const useDsaQuestionsForTopic = (
       offCampus,
       productType,
       realWorld,
+      experienceLevel,
     }),
     queryFn: async () => {
       const result = await sendRequest({
-        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}&productType=${productType}${realWorld ? `&realWorld=${realWorld}` : ""}`,
+        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}${duration ? `&duration=${duration}` : ""}${offCampus ? `&offCampus=true` : ""}&productType=${productType}${realWorld ? `&realWorld=${realWorld}` : ""}${experienceLevel ? `&experienceLevel=${experienceLevel}` : ""}`,
         method: "GET",
       });
 

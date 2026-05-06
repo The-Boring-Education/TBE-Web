@@ -39,6 +39,9 @@ const SheetsPageClient = () => {
   // DSA Yatra is off-campus prep: pass offCampus=true (x1.5 bucket caps)
   // and the user-selected timeline so paid users get a study-plan-sized sheet.
   const dsaTimeline = (user as any)?.dsaYatra?.timeline as string | undefined;
+  const dsaExperienceLevel = (user as any)?.dsaYatra?.experienceLevel as
+    | string
+    | undefined;
 
   const {
     data: topicRows,
@@ -49,6 +52,7 @@ const SheetsPageClient = () => {
   } = useDsaTopicSummaries("DSA_YATRA", {
     duration: dsaTimeline,
     offCampus: true,
+    experienceLevel: dsaExperienceLevel,
   });
 
   const topicsWithCounts = useMemo(
@@ -70,6 +74,7 @@ const SheetsPageClient = () => {
     duration: dsaTimeline,
     offCampus: true,
     productType: "DSA_YATRA",
+    experienceLevel: dsaExperienceLevel,
   });
 
   const [topicQuestionsCache, setTopicQuestionsCache] = useState<

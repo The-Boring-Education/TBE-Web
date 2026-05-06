@@ -173,7 +173,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, error } = await getDSATopicSummariesFromDB(
       parsed.value.userId,
       parsed.value.productType,
-      parsed.value.experienceYears,
+      parsed.value.experienceLevel,
       parsed.value.duration,
       parsed.value.offCampus,
       isPaidUser,
@@ -201,8 +201,6 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   const { filters } = parsed.value;
 
   // Check subscription status for freemium gating.
-  // Pass productType so the Subscription short-circuit in
-  // checkPaymentStatusFromDB runs; productId is the one-time-purchase SKU.
   const userId = filters.userId;
   const isPaidUser = userId
     ? (await checkPaymentStatusFromDB(userId, "lifetime", filters.productType))
@@ -210,7 +208,6 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     : false;
 
   const { data, error } = await getAllDSAQuestionsFromDB({
-    ...(filters.domain?.length ? { domain: filters.domain } : {}),
     ...(filters.difficulty?.length ? { difficulty: filters.difficulty } : {}),
     ...(filters.companyTypes?.length
       ? { companyTypes: filters.companyTypes }
@@ -222,8 +219,8 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     ...(filters.duration ? { duration: filters.duration } : {}),
     offCampus: filters.offCampus,
     productType: filters.productType,
-    ...(filters.experienceYears !== undefined
-      ? { experienceYears: filters.experienceYears }
+    ...(filters.experienceLevel
+      ? { experienceLevel: filters.experienceLevel }
       : {}),
     ...(filters.realWorld ? { realWorld: filters.realWorld } : {}),
     isPaidUser,

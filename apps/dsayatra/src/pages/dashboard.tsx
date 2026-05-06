@@ -25,7 +25,7 @@ import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
 const DsaClient = () => {
-  const { user } = useAuth();
+  const { user, refreshSession } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -369,10 +369,11 @@ const DsaClient = () => {
       <EditDsaOnboardingModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        onUpdate={() => {
+        onUpdate={async () => {
           if (user?.id) {
             userService.getProfile(user.id).then(setProfile);
           }
+          await refreshSession();
         }}
         currentData={profile}
         userId={user?.id || ""}

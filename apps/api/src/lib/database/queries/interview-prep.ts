@@ -1,4 +1,4 @@
-import { compareDsaTopicKeysForApi } from "@tbe/constants";
+import { compareDsaTopicKeysForApi, DSA_DIFFICULTY } from "@tbe/constants";
 import mongoose from "mongoose";
 
 import { modelSelectParams } from "@/lib/constants";
@@ -8,7 +8,6 @@ import type {
   BaseInterviewSheetResponseProps,
   DatabaseQueryResponseType,
   DSADifficultyType,
-  DSADomainType,
   DSATopicType,
   SheetEnrollmentRequestProps,
   UpdateDSAQuestionRequestPayloadProps,
@@ -16,6 +15,7 @@ import type {
 } from "@/lib/interfaces";
 import { generateYouTubeSearchLink } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { selectQuestionsByDifficultyBuckets } from "@/lib/utils/questionBuckets";
 
 import {
   DSAQuestion,
@@ -29,11 +29,13 @@ import {
   applyDsaDurationBuckets,
   applyDsaFreemiumGate,
   applyDsaPaidPagination,
+  buildDsaBucketSeed,
   buildDsaMatchStage,
   buildDsaSortFieldsStage,
   buildUserSheetLookupStages,
   DSA_SORT_STAGE,
   type DSASheetFilters,
+  getEffectiveBucketCaps,
 } from "./dsaSheet";
 import { getDsaYatraProgressFromDB } from "./dsayatra";
 import { updateUserPointsInDB } from "./gamification";
@@ -731,25 +733,32 @@ const getAllDSAQuestionsFromDB = async (
 
     aggregate.push(DSA_SORT_STAGE);
 
-    // Freemium path: return ALL matching rows, mark per-difficulty caps.
-    if (!isPaidUser) {
-      const allQuestions = await DSAQuestion.aggregate(aggregate);
-      return { data: applyDsaFreemiumGate(allQuestions, page, limit) };
-    }
+    const rows = await DSAQuestion.aggregate(aggregate);
 
-    // Paid + duration buckets path.
+    // Apply duration buckets first (for ALL users when timeline is set).
+    // This caps questions per difficulty based on timeline + experience.
     if (duration) {
-      const rows = await DSAQuestion.aggregate(aggregate);
-      return { data: applyDsaDurationBuckets(rows, filters, page, limit) };
+      const bucketed = applyDsaDurationBuckets(rows, filters, page, limit);
+      // For free users, apply freemium gating on top of bucketed results.
+      if (!isPaidUser) {
+        return {
+          data: applyDsaFreemiumGate(
+            bucketed.questions as Record<string, unknown>[],
+            page,
+            limit,
+          ),
+        };
+      }
+      return { data: bucketed };
     }
 
-    // Paid + simple pagination path (uses countDocuments for accurate total).
+    // No duration: freemium or plain pagination.
+    if (!isPaidUser) {
+      return { data: applyDsaFreemiumGate(rows, page, limit) };
+    }
+
+    // Paid + no duration: simple pagination.
     const totalCount = await DSAQuestion.countDocuments(matchStage);
-    const rows = await DSAQuestion.aggregate([
-      ...aggregate,
-      { $skip: (page - 1) * limit },
-      { $limit: limit },
-    ]);
     return { data: applyDsaPaidPagination(rows, page, limit, totalCount) };
   } catch (error) {
     logger.error("DB: getAllDSAQuestionsFromDB failed", {
@@ -768,7 +777,7 @@ const getAllDSAQuestionsFromDB = async (
 const getDSATopicSummariesFromDB = async (
   userId?: string,
   productType: "DSA_YATRA" | "ONCAMPUS" = "DSA_YATRA",
-  experienceYears?: number,
+  experienceLevel?: string,
   duration?: string,
   offCampus = false,
   isPaidUser = false,
@@ -783,7 +792,7 @@ const getDSATopicSummariesFromDB = async (
       ...(duration ? { duration } : {}),
       offCampus,
       productType,
-      ...(experienceYears !== undefined ? { experienceYears } : {}),
+      ...(experienceLevel ? { experienceLevel } : {}),
     };
 
     const matchStage = buildDsaMatchStage(baseFilters, targetCompanies);
@@ -816,28 +825,73 @@ const getDSATopicSummariesFromDB = async (
       };
     }
 
-    const effectiveRows =
-      duration && isPaidUser
-        ? (applyDsaDurationBuckets(
-            rows as Record<string, unknown>[],
-            baseFilters,
-            1,
-            rows.length,
-          ).questions as Array<Record<string, unknown>>)
-        : (rows as Array<Record<string, unknown>>);
+    // Group rows by primary topic, then apply per-topic difficulty caps.
+    const caps = getEffectiveBucketCaps(duration, experienceLevel, offCampus);
+    const rowsByTopic = new Map<string, Array<Record<string, unknown>>>();
 
-    const topicCounts = new Map<string, number>();
-    for (const row of effectiveRows) {
-      const topics = Array.isArray(row.topics)
-        ? (row.topics as unknown[])
+    for (const row of rows) {
+      const topics = Array.isArray((row as Record<string, unknown>).topics)
+        ? ((row as Record<string, unknown>).topics as unknown[])
         : ([] as unknown[]);
       const rawPrimaryTopic = topics[0];
       if (typeof rawPrimaryTopic !== "string") continue;
-
       const primaryTopic = rawPrimaryTopic.toUpperCase();
       if (!primaryTopic) continue;
+      if (!rowsByTopic.has(primaryTopic)) rowsByTopic.set(primaryTopic, []);
+      rowsByTopic.get(primaryTopic)!.push(row as Record<string, unknown>);
+    }
 
-      topicCounts.set(primaryTopic, (topicCounts.get(primaryTopic) ?? 0) + 1);
+    // Apply per-topic bucketing when caps are available
+    const effectiveRowsByTopic = new Map<
+      string,
+      Array<Record<string, unknown>>
+    >();
+    if (caps) {
+      for (const [topic, topicRows] of rowsByTopic) {
+        const { selected } = selectQuestionsByDifficultyBuckets(
+          topicRows as Array<Record<string, unknown> & { _id: unknown }>,
+          {
+            buckets: caps,
+            difficultyOrder:
+              DSA_DIFFICULTY as unknown as readonly DSADifficultyType[],
+            seed: buildDsaBucketSeed({ ...baseFilters, topics: [topic] }),
+            getDifficulty: (question) => {
+              const raw = String(
+                (question as { difficulty?: unknown }).difficulty || "",
+              )
+                .trim()
+                .toUpperCase();
+              return (DSA_DIFFICULTY as readonly string[]).includes(raw)
+                ? (raw as DSADifficultyType)
+                : null;
+            },
+            getPriorityScore: (question) => {
+              const score = (question as { _priorityScore?: unknown })
+                ._priorityScore;
+              return typeof score === "number" ? score : 0;
+            },
+          },
+        );
+        effectiveRowsByTopic.set(
+          topic,
+          selected as Array<Record<string, unknown>>,
+        );
+      }
+    } else {
+      for (const [topic, topicRows] of rowsByTopic) {
+        effectiveRowsByTopic.set(topic, topicRows);
+      }
+    }
+
+    const topicCounts = new Map<string, number>();
+    for (const [topic, topicRows] of effectiveRowsByTopic) {
+      topicCounts.set(topic, topicRows.length);
+    }
+
+    // Flatten effective rows for solved counting
+    const effectiveRows: Array<Record<string, unknown>> = [];
+    for (const topicRows of effectiveRowsByTopic.values()) {
+      effectiveRows.push(...topicRows);
     }
 
     const solvedByTopic = new Map<string, number>();
@@ -937,7 +991,6 @@ const getDSASheetMetadataFromDB =
 const addDSAQuestionToDB = async (questionPayload: {
   title: string;
   answer: string;
-  domain: DSADomainType[];
   difficulty: DSADifficultyType;
   companyTypes: string[];
   topics: DSATopicType[];
@@ -1034,16 +1087,13 @@ const getStudyGuideByTopicFromDB = async (
   }
 };
 const getDSAQuestionsGroupedByTopic = async (
-  domain: DSADomainType,
   difficulty?: DSADifficultyType,
   companyType?: string,
   userId?: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     // Build match stage for filtering
-    const matchStage: any = {
-      domain: { $in: [domain] },
-    };
+    const matchStage: any = {};
 
     if (difficulty) {
       matchStage.difficulty = difficulty;
@@ -1170,7 +1220,6 @@ const getDSAQuestionsGroupedByTopic = async (
               _id: "$_id",
               title: "$title",
               answer: "$answer",
-              domain: "$domain",
               difficulty: "$difficulty",
               companyTypes: "$companyTypes",
               topics: "$topics",
@@ -1192,7 +1241,6 @@ const getDSAQuestionsGroupedByTopic = async (
 
     // Transform to a more usable format
     const result = {
-      domain,
       filters: {
         difficulty,
         companyType,

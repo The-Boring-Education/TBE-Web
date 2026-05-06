@@ -332,7 +332,6 @@ export interface DSAQuestionModel extends Document {
   title: string;
   answer: string;
   resources: QuestionResourcesModel;
-  domain: DSADomainType[];
   difficulty: DSADifficultyType;
   companyTypes: CompanyType[];
   topics: DSATopicType[];
@@ -874,7 +873,6 @@ export interface UpdateDSAQuestionRequestPayloadProps {
   title?: string;
   answer?: string;
   resources?: QuestionResourcesModel;
-  domain?: DSADomainType[];
   difficulty?: DSADifficultyType;
   companyTypes?: CompanyType[];
   topics?: DSATopicType[];

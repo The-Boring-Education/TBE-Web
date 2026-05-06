@@ -59,7 +59,7 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
   // ── POST: create DSA question ───────────────────────────────────────────────
 
   describe("POST — create question", () => {
-    /** Matches `dsaQuestionCreateSchema` (DSA_DOMAIN / COMPANY_TYPES / DSA_TOPICS enums). */
+    /** Matches `dsaQuestionCreateSchema` (COMPANY_TYPES / DSA_TOPICS enums). */
     const validBody = {
       title: "Two Sum",
       answer: "Use a hash map to find complement in O(n)",
@@ -164,35 +164,6 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       expect(res._getStatusCode()).toBe(400);
     });
 
-    it("should wrap single-value domain into an array", async () => {
-      mockAddDSAQuestion.mockResolvedValue({ data: { _id: "q4" } });
-
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "POST",
-        body: validBody,
-      });
-
-      await handler(req, res);
-
-      const call = mockAddDSAQuestion.mock.calls[0][0];
-      expect(Array.isArray(call.domain)).toBe(true);
-      expect(call.domain).toEqual(["DSA"]);
-    });
-
-    it("should pass array domain as-is", async () => {
-      mockAddDSAQuestion.mockResolvedValue({ data: { _id: "q5" } });
-
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "POST",
-        body: { ...validBody, domain: ["DSA", "FRONTEND"] },
-      });
-
-      await handler(req, res);
-
-      const call = mockAddDSAQuestion.mock.calls[0][0];
-      expect(call.domain).toEqual(["DSA", "FRONTEND"]);
-    });
-
     it("should return 500 when DB insert fails", async () => {
       mockAddDSAQuestion.mockResolvedValue({
         data: null,
@@ -237,7 +208,6 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "GET",
         query: {
-          domain: "frontend",
           difficulty: "hard",
           topic: "binary_tree",
           page: "2",
@@ -249,7 +219,6 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
 
       expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
         expect.objectContaining({
-          domain: ["FRONTEND"],
           difficulty: ["HARD"],
           topics: ["BINARY_TREE"],
           page: 2,
@@ -415,7 +384,6 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
         expect.objectContaining({
           productType: "ONCAMPUS",
-          experienceYears: 0,
         }),
       );
     });
@@ -618,7 +586,7 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       expect(mockGetDSATopicSummaries).toHaveBeenCalledWith(
         MOCK_USER_ID,
         "ONCAMPUS",
-        0,
+        undefined,
         undefined,
         false,
         false,

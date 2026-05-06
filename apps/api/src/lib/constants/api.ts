@@ -8,7 +8,6 @@ import type {
   CertificateType,
   CompanyType,
   DifficultyType,
-  DSADomainType,
   DSATopicType,
   GoalType,
   InterviewCategoryType,
@@ -3077,14 +3076,6 @@ const APTITUDE_TOPICS: AptitudeTopicDefinition[] = [
 
 const APTITUDE_TOPIC_SLUGS: string[] = APTITUDE_TOPICS.map((t) => t.slug);
 
-const DSA_DOMAIN: DSADomainType[] = [
-  "FRONTEND",
-  "BACKEND",
-  "GENERAL",
-  "FULLSTACK",
-  "DSA",
-];
-
 const DSA_TOPICS: DSATopicType[] = [...DSA_CANONICAL_TOPICS];
 
 export {
@@ -3098,7 +3089,6 @@ export {
   CERTIFICATE_TYPE,
   COMPANY_TYPES,
   DIFFICULTY_LEVEL,
-  DSA_DOMAIN,
   DSA_TOPICS,
   GOAL_TYPES,
   INTERVIEW_CATEGORIES,

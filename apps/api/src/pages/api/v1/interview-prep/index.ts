@@ -6,7 +6,6 @@ import {
   APTITUDE_CATEGORIES,
   APTITUDE_SUB_CATEGORIES,
   COMPANY_TYPES,
-  DSA_DOMAIN,
 } from "@/lib/constants";
 import {
   addAInterviewSheetToDB,
@@ -24,7 +23,6 @@ import type {
   AptitudeSubCategoryType,
   CompanyType,
   DSADifficultyType,
-  DSADomainType,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
@@ -193,12 +191,12 @@ async function handleSheetsMode(req: NextApiRequest, res: NextApiResponse) {
 
 // ─── DSA Mode (?roadmap=DSA) ─────────────────────────────────────────────────
 // Query params:
-//   metadata=true          → available filters (domains, difficulties, companyTypes, topics)
-//   domain, difficulty, companyType → filter questions grouped by topic
+//   metadata=true          → available filters (difficulties, companyTypes, topics)
+//   difficulty, companyType → filter questions grouped by topic
 //   (default)              → all questions grouped by topic
 
 async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
-  const { metadata, domain, difficulty, companyType, userId } = req.query;
+  const { metadata, difficulty, companyType, userId } = req.query;
 
   if (metadata === "true") {
     const { data, error } = await getDSASheetMetadataFromDB();
@@ -216,11 +214,6 @@ async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
       .json(sendAPIResponse({ status: true, data }));
   }
 
-  let validDomain: DSADomainType = "GENERAL";
-  if (domain && DSA_DOMAIN.includes(domain as DSADomainType)) {
-    validDomain = domain as DSADomainType;
-  }
-
   let validDifficulty: DSADifficultyType | undefined;
   if (difficulty && DSA_DIFFICULTY.includes(difficulty as DSADifficultyType)) {
     validDifficulty = difficulty as DSADifficultyType;
@@ -232,7 +225,6 @@ async function handleDSAMode(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const { data, error } = await getDSAQuestionsGroupedByTopic(
-    validDomain,
     validDifficulty,
     validCompanyType,
     userId as string,

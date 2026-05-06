@@ -8,15 +8,16 @@
 import {
   applyDSAFreemiumGating,
   DSA_DIFFICULTY,
-  DSA_DURATION_DIFFICULTY_BUCKETS,
   DSA_FREEMIUM_LIMITS,
   DSA_FREEMIUM_POLICY_LABEL,
   DSA_FREEMIUM_POLICY_TYPE,
   DSA_FREEMIUM_TOTAL_UNLOCKED,
+  type DSAExperienceKey,
+  getDsaBucketCaps,
   getDSAFreemiumBucket,
 } from "@tbe/constants";
 
-import type { DSADifficultyType, DSADomainType } from "@/lib/interfaces";
+import type { DSADifficultyType } from "@/lib/interfaces";
 import { selectQuestionsByDifficultyBuckets } from "@/lib/utils";
 
 import { toObjectId } from "./common";
@@ -24,21 +25,20 @@ import { toObjectId } from "./common";
 export type RealWorldFilterMode = "include" | "exclude" | "only";
 
 export interface DSASheetFilters {
-  domain?: DSADomainType | DSADomainType[];
   difficulty?: DSADifficultyType | DSADifficultyType[];
   companyTypes?: string | string[];
   topics?: string | string[];
   page?: number;
   limit?: number;
   userId?: string;
-  /** Duration key e.g. "3Months", "6Months", "1Year" — enables difficulty buckets */
+  /** Duration key e.g. "1Month", "3Months", "6Months", "1Year" */
   duration?: string;
   /** Off-campus flag — scales bucket caps ×1.5 */
   offCampus?: boolean;
   /** Product context for shared DSA endpoint callers. */
   productType?: "DSA_YATRA" | "ONCAMPUS";
-  /** Baseline experience in years for ranking/filter defaults (OnCampus uses 0). */
-  experienceYears?: number;
+  /** Experience level string from user profile */
+  experienceLevel?: string;
   /** Filter real-world problems */
   realWorld?: RealWorldFilterMode;
   /** Whether the user has active paid subscription — determines freemium gating */
@@ -129,28 +129,12 @@ export const buildDsaMatchStage = (
   filters: DSASheetFilters,
   targetCompanies: string[],
 ): Record<string, any> => {
-  const {
-    domain,
-    difficulty,
-    companyTypes,
-    topics,
-    realWorld,
-    userId,
-    experienceYears,
-  } = filters;
+  const { difficulty, companyTypes, topics, realWorld, userId } = filters;
   const match: Record<string, any> = {};
-
-  if (domain) {
-    const domains = Array.isArray(domain) ? domain : [domain];
-    match.domain = { $in: domains };
-  }
 
   if (difficulty) {
     const difficulties = Array.isArray(difficulty) ? difficulty : [difficulty];
     match.difficulty = { $in: difficulties };
-  } else if (experienceYears === 0) {
-    // OnCampus college profile: default to foundational questions.
-    match.difficulty = { $in: ["EASY", "MEDIUM"] };
   }
 
   if (companyTypes) {
@@ -314,34 +298,49 @@ export const buildDsaBucketSeed = (filters: DSASheetFilters): string =>
     filters.userId ?? "__no_user__",
     filters.productType ?? "DSA_YATRA",
     filters.duration ?? "",
-    typeof filters.experienceYears === "number"
-      ? `exp-${filters.experienceYears}`
-      : "exp-na",
+    filters.experienceLevel ?? "fresher",
     filters.offCampus ? "off-campus" : "on-campus",
     filters.realWorld ?? "include",
-    normalizeSeedValue(filters.domain as string | string[] | undefined),
     normalizeSeedValue(filters.difficulty as string | string[] | undefined),
     normalizeSeedValue(filters.companyTypes as string | string[] | undefined),
     normalizeSeedValue(filters.topics as string | string[] | undefined),
   ].join("|");
 
 /**
- * Scale `DSA_DURATION_DIFFICULTY_BUCKETS` caps by 1.5× when `offCampus` is true.
- * Returns `null` when the `duration` key isn't recognized.
+ * Resolve experience level string from user profile to a bucket key.
  */
-export const scaleDsaBuckets = (
+export const resolveExperienceKey = (
+  experienceLevel?: string,
+): DSAExperienceKey => {
+  if (!experienceLevel) return "fresher";
+  const lower = experienceLevel.toLowerCase();
+  if (lower.includes("senior") || lower.includes("5+")) return "senior";
+  if (lower.includes("mid") || lower.includes("3-5")) return "mid";
+  if (lower.includes("junior") || lower.includes("1-3")) return "junior";
+  return "fresher";
+};
+
+/**
+ * Get bucket caps from timeline + experience. Scales ×1.5 for off-campus.
+ * Returns null when timeline isn't recognized.
+ */
+export const getEffectiveBucketCaps = (
   duration: string | undefined,
+  experienceLevel: string | undefined,
   offCampus: boolean | undefined,
 ): Record<DSADifficultyType, number> | null => {
   if (!duration) return null;
-  const config = DSA_DURATION_DIFFICULTY_BUCKETS[duration];
-  if (!config) return null;
-  return Object.fromEntries(
-    Object.entries(config).map(([key, count]) => [
-      key,
-      offCampus ? Math.ceil(count * 1.5) : count,
-    ]),
-  ) as Record<DSADifficultyType, number>;
+  const expKey = resolveExperienceKey(experienceLevel);
+  const caps = getDsaBucketCaps(duration, expKey);
+  if (!caps) return null;
+  if (offCampus) {
+    return {
+      EASY: Math.ceil(caps.EASY * 1.5),
+      MEDIUM: Math.ceil(caps.MEDIUM * 1.5),
+      HARD: Math.ceil(caps.HARD * 1.5),
+    };
+  }
+  return caps;
 };
 
 /** Slice rows for 1-based pagination and return a standard pagination envelope. */
@@ -404,9 +403,9 @@ export const applyDsaFreemiumGate = (
 };
 
 /**
- * Duration-bucket path for paid users. Selects a capped subset per difficulty
- * (scaled 1.5× for `offCampus`), paginates, and returns the response envelope.
- * Falls back to plain pagination when `duration` isn't a known bucket key.
+ * Duration-bucket path. Selects a capped subset per difficulty based on
+ * timeline + experience (scaled 1.5× for offCampus), paginates, and returns
+ * the response envelope. Falls back to plain pagination when timeline isn't recognized.
  */
 export const applyDsaDurationBuckets = (
   rows: Record<string, unknown>[],
@@ -414,10 +413,10 @@ export const applyDsaDurationBuckets = (
   page: number,
   limit: number,
 ) => {
-  const { duration, offCampus } = filters;
-  const scaledBuckets = scaleDsaBuckets(duration, offCampus);
+  const { duration, offCampus, experienceLevel } = filters;
+  const caps = getEffectiveBucketCaps(duration, experienceLevel, offCampus);
 
-  if (!scaledBuckets) {
+  if (!caps) {
     const { items, pagination } = paginateDsaRows(rows, page, limit);
     return {
       questions: items.map((r) =>
@@ -430,7 +429,7 @@ export const applyDsaDurationBuckets = (
   const { selected } = selectQuestionsByDifficultyBuckets(
     rows as Array<Record<string, unknown> & { _id: unknown }>,
     {
-      buckets: scaledBuckets,
+      buckets: caps,
       difficultyOrder: DSA_DIFFICULTY,
       seed: buildDsaBucketSeed(filters),
       getDifficulty: (question) => {

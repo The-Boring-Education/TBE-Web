@@ -17,6 +17,7 @@ type DsaProductContext = "DSA_YATRA" | "ONCAMPUS";
 interface UseDsaTopicSummariesOptions {
   duration?: string;
   offCampus?: boolean;
+  experienceLevel?: string;
 }
 
 interface UseDsaTopicSummariesData {
@@ -34,7 +35,7 @@ export const useDsaTopicSummaries = (
 ) => {
   const { user } = useUser();
   const userId = user?.id;
-  const { duration, offCampus = false } = options;
+  const { duration, offCampus = false, experienceLevel } = options;
 
   const query = useQuery<UseDsaTopicSummariesData>({
     queryKey: [
@@ -42,9 +43,10 @@ export const useDsaTopicSummaries = (
       productType,
       duration ?? "",
       offCampus,
+      experienceLevel ?? "",
     ],
     queryFn: async () => {
-      const url = `${routes.api.base}${routes.api.dsaSheet}?query=topics${userId ? `&userId=${userId}` : ""}&productType=${productType}${duration ? `&duration=${duration}` : ""}${offCampus ? "&offCampus=true" : ""}`;
+      const url = `${routes.api.base}${routes.api.dsaSheet}?query=topics${userId ? `&userId=${userId}` : ""}&productType=${productType}${duration ? `&duration=${duration}` : ""}${offCampus ? "&offCampus=true" : ""}${experienceLevel ? `&experienceLevel=${experienceLevel}` : ""}`;
       const result = await sendRequest({
         url,
         method: "GET",
@@ -63,11 +65,11 @@ export const useDsaTopicSummaries = (
         result.data?.effectiveTargetCompanies,
       )
         ? result.data.effectiveTargetCompanies
-          .filter(
-            (entry: unknown): entry is string => typeof entry === "string",
-          )
-          .map((entry: any) => entry.trim())
-          .filter(Boolean)
+            .filter(
+              (entry: unknown): entry is string => typeof entry === "string",
+            )
+            .map((entry: any) => entry.trim())
+            .filter(Boolean)
         : [];
 
       const rows: TopicWithCount[] = raw

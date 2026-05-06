@@ -1,12 +1,8 @@
 import { DSA_DIFFICULTY, DSA_EXTRA_QUESTION_TOPICS } from "@tbe/constants";
 import { z } from "zod";
 
-import { COMPANY_TYPES, DSA_DOMAIN, DSA_TOPICS } from "@/lib/constants";
-import type {
-  DSADifficultyType,
-  DSADomainType,
-  DSATopicType,
-} from "@/lib/interfaces";
+import { COMPANY_TYPES, DSA_TOPICS } from "@/lib/constants";
+import type { DSADifficultyType, DSATopicType } from "@/lib/interfaces";
 
 import { isMongoObjectIdString } from "./mongodb";
 import {
@@ -14,7 +10,6 @@ import {
   normalizeCompanyTypeArray,
   normalizeDsaDuration,
   normalizeDsaProductContext,
-  ONCAMPUS_EXPERIENCE_YEARS,
 } from "./personalization";
 import {
   allQueryValues,
@@ -33,11 +28,6 @@ const ALL_DSA_TOPICS = [
   ...DSA_TOPICS,
   ...DSA_EXTRA_QUESTION_TOPICS,
 ] as readonly string[];
-
-const domainEnum = z.enum([DSA_DOMAIN[0], ...DSA_DOMAIN.slice(1)] as [
-  string,
-  ...string[],
-]);
 const difficultyEnum = z.enum([
   DSA_DIFFICULTY[0],
   DSA_DIFFICULTY[1],
@@ -57,7 +47,6 @@ const dsaQuestionCreateSchema = z
     title: z.string().trim().min(1).max(5000),
     answer: z.string().optional(),
     content: z.string().optional(),
-    domain: z.union([z.array(domainEnum), domainEnum]),
     difficulty: z.preprocess(
       (v) => (typeof v === "string" ? v.trim().toUpperCase() : v),
       difficultyEnum,
@@ -80,7 +69,6 @@ const dsaQuestionCreateSchema = z
 export type DsaSheetCreateBody = {
   title: string;
   answer: string;
-  domain: DSADomainType[];
   difficulty: DSADifficultyType;
   companyTypes: string[];
   topics: DSATopicType[];
@@ -101,9 +89,6 @@ export function parseDsaSheetCreateBody(
 
   const d = parsed.data;
   const questionAnswer = (d.answer?.trim() || d.content?.trim()) as string;
-  const domains = (
-    Array.isArray(d.domain) ? d.domain : [d.domain]
-  ) as DSADomainType[];
   const companyTypes = (
     Array.isArray(d.companyTypes) ? d.companyTypes : [d.companyTypes]
   ) as string[];
@@ -116,7 +101,6 @@ export function parseDsaSheetCreateBody(
     value: {
       title: d.title.trim(),
       answer: questionAnswer,
-      domain: domains,
       difficulty: d.difficulty as DSADifficultyType,
       companyTypes,
       topics,
@@ -129,7 +113,6 @@ export function parseDsaSheetCreateBody(
 }
 
 export type DsaSheetListFilters = {
-  domain?: DSADomainType[];
   difficulty?: DSADifficultyType[];
   companyTypes?: string[];
   topics?: DSATopicType[];
@@ -139,7 +122,7 @@ export type DsaSheetListFilters = {
   duration?: string;
   offCampus: boolean;
   productType: DsaProductContext;
-  experienceYears?: number;
+  experienceLevel?: string;
   realWorld?: RealWorldFilterMode;
 };
 
@@ -148,7 +131,7 @@ export type DsaSheetGetParsed =
       mode: "topics";
       userId?: string;
       productType: DsaProductContext;
-      experienceYears?: number;
+      experienceLevel?: string;
       duration?: string;
       offCampus: boolean;
     }
@@ -202,8 +185,8 @@ export function parseDsaSheetGetQuery(
   }
   if (!productType) productType = "DSA_YATRA";
 
-  const experienceYears =
-    productType === "ONCAMPUS" ? ONCAMPUS_EXPERIENCE_YEARS : undefined;
+  const experienceLevel =
+    firstQueryValue(query.experienceLevel)?.trim() || undefined;
 
   const queryFlag = firstQueryValue(query.query);
   if (queryFlag === "topics") {
@@ -228,7 +211,7 @@ export function parseDsaSheetGetQuery(
         productType,
         offCampus,
         ...(duration ? { duration } : {}),
-        ...(experienceYears !== undefined ? { experienceYears } : {}),
+        ...(experienceLevel ? { experienceLevel } : {}),
       },
     };
   }
@@ -237,17 +220,13 @@ export function parseDsaSheetGetQuery(
     return { ok: true, value: { mode: "metadata" } };
   }
 
-  const domainSet = new Set(DSA_DOMAIN as readonly string[]);
   const difficultySet = new Set(DSA_DIFFICULTY as readonly string[]);
   const topicSet = new Set(ALL_DSA_TOPICS as readonly string[]);
 
-  const domainRaw = allQueryValues(query.domain);
   const difficultyRaw = allQueryValues(query.difficulty);
   const companyTypeRaw = allQueryValues(query.companyType);
   const topicRaw = allQueryValues(query.topic);
 
-  const d = parseOptionalEnumArray(domainRaw, domainSet, "domain");
-  if (!d.ok) return d;
   const diff = parseOptionalEnumArray(
     difficultyRaw,
     difficultySet,
@@ -311,7 +290,6 @@ export function parseDsaSheetGetQuery(
     value: {
       mode: "list",
       filters: {
-        ...(d.value.length ? { domain: d.value as DSADomainType[] } : {}),
         ...(diff.value.length
           ? { difficulty: diff.value as DSADifficultyType[] }
           : {}),
@@ -323,7 +301,7 @@ export function parseDsaSheetGetQuery(
         ...(duration ? { duration } : {}),
         offCampus,
         productType,
-        ...(experienceYears !== undefined ? { experienceYears } : {}),
+        ...(experienceLevel ? { experienceLevel } : {}),
         ...(realWorld ? { realWorld } : {}),
       },
     },

@@ -2,12 +2,7 @@ import { DSA_DIFFICULTY } from "@tbe/constants";
 import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
-import {
-  COMPANY_TYPES,
-  DATABASE_MODELS,
-  DSA_DOMAIN,
-  DSA_TOPICS,
-} from "@/lib/constants";
+import { COMPANY_TYPES, DATABASE_MODELS, DSA_TOPICS } from "@/lib/constants";
 import type { DSAQuestionModel } from "@/lib/interfaces";
 
 const DSAQuestionSchema = new Schema<DSAQuestionModel>(
@@ -39,11 +34,6 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
         type: String,
         default: null,
       },
-    },
-    domain: {
-      type: [String],
-      enum: DSA_DOMAIN,
-      required: [true, "Domain is required"],
     },
     difficulty: {
       type: String,
@@ -99,11 +89,10 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
 );
 
 // Create indexes for efficient querying
-DSAQuestionSchema.index({ domain: 1 });
 DSAQuestionSchema.index({ difficulty: 1 });
 DSAQuestionSchema.index({ topics: 1 });
 DSAQuestionSchema.index({ companyTypes: 1 });
-DSAQuestionSchema.index({ order: 1 }); // For sorting by custom order
+DSAQuestionSchema.index({ order: 1 });
 
 applyContentIdOnCreate(DSAQuestionSchema);
 

@@ -43,7 +43,6 @@ describe("parseDsaSheetGetQuery", () => {
 
     const filters = expectListFilters(parsed);
     expect(filters.productType).toBe("ONCAMPUS");
-    expect(filters.experienceYears).toBe(0);
   });
 
   it("returns DSA_YATRA defaults for topics mode without explicit productType", () => {
@@ -51,7 +50,7 @@ describe("parseDsaSheetGetQuery", () => {
     const topics = expectTopicsMode(parsed);
 
     expect(topics.productType).toBe("DSA_YATRA");
-    expect(topics.experienceYears).toBeUndefined();
+    expect(topics.experienceLevel).toBeUndefined();
     expect(topics.offCampus).toBe(false);
     expect(topics.duration).toBeUndefined();
   });
@@ -64,7 +63,6 @@ describe("parseDsaSheetGetQuery", () => {
     const topics = expectTopicsMode(parsed);
 
     expect(topics.productType).toBe("ONCAMPUS");
-    expect(topics.experienceYears).toBe(0);
   });
 
   it("normalizes duration and offCampus in topics mode", () => {
