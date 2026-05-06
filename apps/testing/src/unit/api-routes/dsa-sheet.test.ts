@@ -7,6 +7,8 @@ const mockGetAllDSAQuestions = vi.fn();
 const mockGetDSASheetMetadata = vi.fn();
 const mockGetDSATopicSummaries = vi.fn();
 const mockCheckPaymentStatus = vi.fn();
+const mockTrackPersonalizationInvalidInput = vi.fn();
+const mockTrackPersonalizationNormalizationFallback = vi.fn();
 
 vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (handler: any) => handler,
@@ -24,6 +26,10 @@ vi.mock("../../../../api/src/lib/database", () => ({
 
 vi.mock("../../../../api/src/lib/utils", () => ({
   sendAPIResponse: (data: any) => data,
+  trackPersonalizationInvalidInput: (...args: any[]) =>
+    mockTrackPersonalizationInvalidInput(...args),
+  trackPersonalizationNormalizationFallback: (...args: any[]) =>
+    mockTrackPersonalizationNormalizationFallback(...args),
 }));
 
 vi.mock("../../../../api/src/lib/constants", async (importOriginal) => {
