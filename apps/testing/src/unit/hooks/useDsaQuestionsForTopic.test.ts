@@ -55,8 +55,6 @@ describe("useDsaQuestionsForTopic", () => {
   it("should include topic and product context in request params", async () => {
     renderHookWithQuery(() =>
       useDsaQuestionsForTopic("ARRAY", {
-        duration: "6Months",
-        offCampus: true,
         productType: "ONCAMPUS",
         realWorld: "only",
       }),
@@ -68,8 +66,6 @@ describe("useDsaQuestionsForTopic", () => {
 
     const call = mockSendRequest.mock.calls[0]?.[0];
     expect(call?.url).toContain("topic=ARRAY");
-    expect(call?.url).toContain("duration=6Months");
-    expect(call?.url).toContain("offCampus=true");
     expect(call?.url).toContain("productType=ONCAMPUS");
     expect(call?.url).toContain("realWorld=only");
   });

@@ -248,7 +248,6 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
           topics: ["BINARY_TREE"],
           page: 2,
           limit: 10,
-          offCampus: false,
         }),
       );
       expect(mockGetAllDSAQuestions.mock.calls[0][0]).not.toHaveProperty(
@@ -409,7 +408,6 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
         expect.objectContaining({
           productType: "ONCAMPUS",
-          experienceYears: 0,
         }),
       );
     });
@@ -471,10 +469,10 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
     });
   });
 
-  // ── Duration bucketing params passthrough ───────────────────────────────────
+  // ── Duration/offCampus params removed (backward compat: silently ignored) ──
 
   describe("Duration bucket parameters", () => {
-    it("should forward duration + offCampus flags to the DB query", async () => {
+    it("should silently ignore duration + offCampus params (backward compat)", async () => {
       mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
       mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
 
@@ -490,29 +488,20 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
 
       await handler(req, res);
 
+      // Should still succeed — params are silently ignored
+      expect(res._getStatusCode()).toBe(200);
       expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
         expect.objectContaining({
-          duration: "3Months",
-          offCampus: true,
           topics: ["ARRAY"],
           isPaidUser: true,
         }),
       );
-    });
-
-    it("should default offCampus=false when not provided", async () => {
-      mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
-      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
-
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "GET",
-        query: { userId: MOCK_USER_ID, duration: "1Month" },
-      });
-
-      await handler(req, res);
-
-      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
-        expect.objectContaining({ duration: "1Month", offCampus: false }),
+      // duration and offCampus should NOT be forwarded
+      expect(mockGetAllDSAQuestions.mock.calls[0][0]).not.toHaveProperty(
+        "duration",
+      );
+      expect(mockGetAllDSAQuestions.mock.calls[0][0]).not.toHaveProperty(
+        "offCampus",
       );
     });
 
@@ -529,38 +518,6 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
 
       expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
         expect.objectContaining({ realWorld: "only" }),
-      );
-    });
-
-    it("should reject unknown duration keys (validation guard)", async () => {
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "GET",
-        query: { userId: MOCK_USER_ID, duration: "9Months" },
-      });
-
-      await handler(req, res);
-
-      expect(res._getStatusCode()).toBe(400);
-      expect(mockGetAllDSAQuestions).not.toHaveBeenCalled();
-    });
-
-    it("should accept legacy duration aliases and normalize them", async () => {
-      mockCheckPaymentStatus.mockResolvedValue({ data: { purchased: true } });
-      mockGetAllDSAQuestions.mockResolvedValue({ data: { questions: [] } });
-
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "GET",
-        query: {
-          userId: MOCK_USER_ID,
-          duration: "4-6 months",
-        },
-      });
-
-      await handler(req, res);
-
-      expect(res._getStatusCode()).toBe(200);
-      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
-        expect.objectContaining({ duration: "6Months" }),
       );
     });
   });
@@ -584,7 +541,6 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       expect(mockGetDSATopicSummaries).toHaveBeenCalledWith(
         MOCK_USER_ID,
         "DSA_YATRA",
-        undefined,
       );
       expect(mockGetAllDSAQuestions).not.toHaveBeenCalled();
     });
@@ -609,7 +565,6 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       expect(mockGetDSATopicSummaries).toHaveBeenCalledWith(
         MOCK_USER_ID,
         "ONCAMPUS",
-        0,
       );
     });
   });

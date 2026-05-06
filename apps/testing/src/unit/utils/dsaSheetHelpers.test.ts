@@ -5,14 +5,11 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  applyDsaDurationBuckets,
   applyDsaFreemiumGate,
   applyDsaPaidPagination,
-  buildDsaBucketSeed,
   buildDsaMatchStage,
   DSA_TOPIC_SORT_ORDER,
   paginateDsaRows,
-  scaleDsaBuckets,
   stripInternalDsaFields,
   stripLockedAnswerFields,
 } from "@/lib/database/queries/dsaSheet";
@@ -167,87 +164,6 @@ describe("DSA_TOPIC_SORT_ORDER", () => {
   });
 });
 
-// ── buildDsaBucketSeed ───────────────────────────────────────────────────────
-
-describe("buildDsaBucketSeed", () => {
-  it("includes userId, duration, offCampus, realWorld in the seed", () => {
-    const seed = buildDsaBucketSeed({
-      userId: "u1",
-      duration: "3Months",
-      offCampus: true,
-      realWorld: "include",
-    });
-    expect(seed).toContain("u1");
-    expect(seed).toContain("3Months");
-    expect(seed).toContain("off-campus");
-    expect(seed).toContain("include");
-  });
-
-  it("uses __no_user__ placeholder when userId is absent", () => {
-    const seed = buildDsaBucketSeed({ duration: "1Year" });
-    expect(seed).toContain("__no_user__");
-  });
-
-  it("is deterministic for the same inputs", () => {
-    const input = { userId: "u1", duration: "3Months", offCampus: false };
-    expect(buildDsaBucketSeed(input)).toBe(buildDsaBucketSeed(input));
-  });
-
-  it("differs when offCampus toggles", () => {
-    const base = { userId: "u1", duration: "3Months" };
-    expect(buildDsaBucketSeed({ ...base, offCampus: false })).not.toBe(
-      buildDsaBucketSeed({ ...base, offCampus: true }),
-    );
-  });
-
-  it("normalizes array filter values (uppercase + sorted)", () => {
-    const a = buildDsaBucketSeed({ topics: ["array", "string"] });
-    const b = buildDsaBucketSeed({ topics: ["STRING", "ARRAY"] });
-    expect(a).toBe(b);
-  });
-});
-
-// ── scaleDsaBuckets ──────────────────────────────────────────────────────────
-
-describe("scaleDsaBuckets", () => {
-  it("returns null for unknown or missing duration", () => {
-    expect(scaleDsaBuckets(undefined, false)).toBeNull();
-    expect(scaleDsaBuckets("9Months", false)).toBeNull();
-  });
-
-  it("returns base caps for on-campus (offCampus=false)", () => {
-    expect(scaleDsaBuckets("1Month", false)).toEqual({
-      EASY: 4,
-      MEDIUM: 2,
-      HARD: 1,
-    });
-  });
-
-  it("scales caps by 1.5× (ceil) for off-campus", () => {
-    expect(scaleDsaBuckets("1Month", true)).toEqual({
-      EASY: 6, // 4 * 1.5 = 6
-      MEDIUM: 3, // 2 * 1.5 = 3
-      HARD: 2, // ceil(1 * 1.5) = 2
-    });
-  });
-
-  it("scales 3Months correctly (8/4/2 → 12/6/3)", () => {
-    expect(scaleDsaBuckets("3Months", true)).toEqual({
-      EASY: 12,
-      MEDIUM: 6,
-      HARD: 3,
-    });
-  });
-
-  it("scales 1Year correctly (16/8/4 → 24/12/6)", () => {
-    expect(scaleDsaBuckets("1Year", true)).toEqual({
-      EASY: 24,
-      MEDIUM: 12,
-      HARD: 6,
-    });
-  });
-});
-
 // ── paginateDsaRows ──────────────────────────────────────────────────────────
 
 describe("paginateDsaRows", () => {
@@ -365,129 +281,6 @@ describe("applyDsaFreemiumGate", () => {
       expect(q).not.toHaveProperty("_difficultyOrder");
       expect(q).not.toHaveProperty("_priorityScore");
     }
-  });
-});
-
-// ── applyDsaDurationBuckets ──────────────────────────────────────────────────
-
-describe("applyDsaDurationBuckets", () => {
-  const makeQ = (id: string, difficulty: string, priority = 0) => ({
-    _id: id,
-    title: `Q-${id}`,
-    difficulty,
-    _priorityScore: priority,
-    _topicOrder: 0,
-    _difficultyOrder: 0,
-  });
-
-  it("caps per-difficulty according to duration (1Month: 4E/2M/1H)", () => {
-    const rows = [
-      ...Array.from({ length: 10 }, (_, i) => makeQ(`e${i}`, "EASY")),
-      ...Array.from({ length: 10 }, (_, i) => makeQ(`m${i}`, "MEDIUM")),
-      ...Array.from({ length: 10 }, (_, i) => makeQ(`h${i}`, "HARD")),
-    ];
-
-    const result = applyDsaDurationBuckets(
-      rows,
-      { duration: "1Month", offCampus: false, userId: "u1" },
-      1,
-      100,
-    );
-
-    const byDifficulty = (result.questions as any[]).reduce<
-      Record<string, number>
-    >((acc, q) => {
-      acc[q.difficulty] = (acc[q.difficulty] || 0) + 1;
-      return acc;
-    }, {});
-
-    expect(byDifficulty.EASY).toBe(4);
-    expect(byDifficulty.MEDIUM).toBe(2);
-    expect(byDifficulty.HARD).toBe(1);
-  });
-
-  it("scales caps by 1.5× when offCampus=true (3Months: 12E/6M/3H)", () => {
-    const rows = [
-      ...Array.from({ length: 20 }, (_, i) => makeQ(`e${i}`, "EASY")),
-      ...Array.from({ length: 20 }, (_, i) => makeQ(`m${i}`, "MEDIUM")),
-      ...Array.from({ length: 20 }, (_, i) => makeQ(`h${i}`, "HARD")),
-    ];
-
-    const result = applyDsaDurationBuckets(
-      rows,
-      { duration: "3Months", offCampus: true, userId: "u1" },
-      1,
-      100,
-    );
-
-    const byDifficulty = (result.questions as any[]).reduce<
-      Record<string, number>
-    >((acc, q) => {
-      acc[q.difficulty] = (acc[q.difficulty] || 0) + 1;
-      return acc;
-    }, {});
-
-    expect(byDifficulty.EASY).toBe(12);
-    expect(byDifficulty.MEDIUM).toBe(6);
-    expect(byDifficulty.HARD).toBe(3);
-  });
-
-  it("prioritizes higher _priorityScore rows within each bucket", () => {
-    const rows = [
-      makeQ("low1", "EASY", 0),
-      makeQ("high1", "EASY", 1),
-      makeQ("low2", "EASY", 0),
-      makeQ("high2", "EASY", 1),
-      makeQ("low3", "EASY", 0),
-      makeQ("high3", "EASY", 1),
-      makeQ("low4", "EASY", 0),
-    ];
-
-    // 1Month EASY cap is 4 → should pick all 3 high-priority + 1 low
-    const result = applyDsaDurationBuckets(
-      rows,
-      { duration: "1Month", offCampus: false, userId: "u1" },
-      1,
-      100,
-    );
-
-    const picked = (result.questions as any[]).map((q) => q._id);
-    expect(picked).toContain("high1");
-    expect(picked).toContain("high2");
-    expect(picked).toContain("high3");
-    expect(picked).toHaveLength(4);
-  });
-
-  it("falls back to plain pagination when duration is not a known key", () => {
-    const rows = Array.from({ length: 15 }, (_, i) => makeQ(String(i), "EASY"));
-
-    const result = applyDsaDurationBuckets(
-      rows,
-      { duration: "unknown-key", userId: "u1" },
-      1,
-      10,
-    );
-
-    expect(result.questions).toHaveLength(10);
-    expect(result.pagination.total).toBe(15);
-  });
-
-  it("is deterministic across calls for the same filters", () => {
-    const rows = Array.from({ length: 20 }, (_, i) =>
-      makeQ(`q${i}`, "EASY", 0),
-    );
-    const filters = {
-      duration: "1Month",
-      offCampus: false,
-      userId: "u1",
-    };
-
-    const first = applyDsaDurationBuckets(rows, filters, 1, 100);
-    const second = applyDsaDurationBuckets(rows, filters, 1, 100);
-
-    expect((first.questions as any[]).map((q) => q._id)).toEqual(
-      (second.questions as any[]).map((q) => q._id),
-    );
   });
 });
 
