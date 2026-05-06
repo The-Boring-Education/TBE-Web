@@ -8,12 +8,8 @@ import {
   routes,
   TOPIC_LABELS,
 } from "@tbe/constants";
-import {
-  useDsaCompletedQuestions,
-  useDsaQuestions,
-  usePaymentStatus,
-} from "@tbe/hooks";
-import type { PageProps, RoadmapNode } from "@tbe/interface";
+import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
+import type { DsaQuestion, PageProps, RoadmapNode } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import { Code } from "lucide-react";
 import Head from "next/head";
@@ -65,23 +61,22 @@ function TopicsClient() {
     userId: user?.id,
   });
 
-  const { isLocked } = usePaymentStatus({
-    userId: user?.id,
-    productId: "lifetime",
-    productType: "DSA_YATRA",
-    isPremium: true,
-  });
-
   const nodes: RoadmapNode[] = useMemo(() => {
-    const topicMap = new Map<string, { total: number; solved: number }>();
-    allQuestions.forEach((q: any) => {
+    const topicMap = new Map<
+      string,
+      { total: number; solved: number; unlocked: number }
+    >();
+    allQuestions.forEach((q: DsaQuestion) => {
       const primaryTopic = q.topics?.[0];
       if (primaryTopic) {
         if (!topicMap.has(primaryTopic)) {
-          topicMap.set(primaryTopic, { total: 0, solved: 0 });
+          topicMap.set(primaryTopic, { total: 0, solved: 0, unlocked: 0 });
         }
         const entry = topicMap.get(primaryTopic)!;
         entry.total += 1;
+        if (!q.isLocked) {
+          entry.unlocked += 1;
+        }
         const qId = q._id || q.id;
         if (qId && completedQuestions.includes(String(qId))) {
           entry.solved += 1;
@@ -93,11 +88,13 @@ function TopicsClient() {
 
     return sortedKeys
       .map((topicKey, idx) => {
-        const data = topicMap.get(topicKey) || { total: 0, solved: 0 };
+        const data = topicMap.get(topicKey) || {
+          total: 0,
+          solved: 0,
+          unlocked: 0,
+        };
         const name = TOPIC_LABELS[topicKey] || topicKey;
-        const isActuallyLocked = data.total === 0;
-        // If user is not subscribed, mark topic as locked (shows blur + lock icon in roadmap)
-        const topicIsLocked = isActuallyLocked || !!isLocked;
+        const topicIsLocked = data.total === 0 || data.unlocked === 0;
 
         return {
           id: topicKey,
@@ -113,7 +110,7 @@ function TopicsClient() {
       .filter(
         (node) => node.total > 0 || node.id === "RECURSION" || node.isLocked,
       );
-  }, [allQuestions, completedQuestions, isLocked]);
+  }, [allQuestions, completedQuestions]);
 
   const stats: RoadmapStatItem[] = useMemo(() => {
     const topicsTotal = nodes.filter((n) => !n.isLocked).length;
@@ -142,7 +139,7 @@ function TopicsClient() {
   }, [nodes]);
 
   const handleNodeClick = (node: RoadmapNode) => {
-    if (isLocked) {
+    if (node.isLocked) {
       void router.push(routes.dsayatra.pricing);
       return;
     }

@@ -165,12 +165,12 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
         if (!open) onClose();
       }}
     >
-      <DialogContent className="sm:max-w-[760px] max-h-[90vh] overflow-y-auto glass border-greyLight bg-gradient-to-br from-white to-red-50/30 p-4">
+      <DialogContent className="sm:max-w-[760px] max-h-[90vh] overflow-y-auto border-[#2a2a2a] bg-[#0f0f0f] text-[#e0e0e0] p-4">
         <DialogHeader className="pb-2">
-          <DialogTitle className="text-center text-contentLight text-[#FF5757] text-xl font-semibold">
+          <DialogTitle className="text-center text-[#ff5757] text-xl font-semibold">
             Edit Goal & DSA Preferences
           </DialogTitle>
-          <DialogDescription className="text-center text-greyDark text-sm">
+          <DialogDescription className="text-center text-[#8a8a8a] text-sm">
             Update your profile details and roadmap so your prep stays aligned.
           </DialogDescription>
           <div className="flex justify-center gap-1 mt-2">
@@ -181,24 +181,24 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="rounded-lg border border-greyLight bg-white/70 p-3">
-            <h3 className="text-sm font-semibold text-contentLight mb-2">
+          <div className="rounded-lg border border-[#2a2a2a] bg-[#141414] p-3">
+            <h3 className="text-sm font-semibold text-[#f0f0f0] mb-2">
               Basic Details
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div className="space-y-1">
-                <label className="block text-[11px] font-medium text-greyDark">
+                <label className="block text-[11px] font-medium text-[#8a8a8a]">
                   Full Name
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
+                  className="w-full px-2.5 py-2 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#f0f0f0] text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
                 />
               </div>
               <div className="space-y-1">
-                <label className="block text-[11px] font-medium text-greyDark">
+                <label className="block text-[11px] font-medium text-[#8a8a8a]">
                   Username
                 </label>
                 <input
@@ -207,19 +207,19 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
                   onChange={(e) =>
                     handleInputChange("username", e.target.value)
                   }
-                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
+                  className="w-full px-2.5 py-2 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#f0f0f0] text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
                 />
               </div>
             </div>
           </div>
 
-          <div className="rounded-lg border border-greyLight bg-white/70 p-3">
-            <h3 className="text-sm font-semibold text-contentLight mb-2">
+          <div className="rounded-lg border border-[#2a2a2a] bg-[#141414] p-3">
+            <h3 className="text-sm font-semibold text-[#f0f0f0] mb-2">
               Social Profiles
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <div className="space-y-1">
-                <label className="text-[11px] font-medium text-greyDark flex items-center gap-1.5">
+                <label className="text-[11px] font-medium text-[#8a8a8a] flex items-center gap-1.5">
                   <Linkedin className="w-3.5 h-3.5 text-[#FF5757]" /> LinkedIn
                 </label>
                 <input
@@ -229,11 +229,11 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
                   onChange={(e) =>
                     handleInputChange("linkedInUrl", e.target.value)
                   }
-                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
+                  className="w-full px-2.5 py-2 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#f0f0f0] text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[11px] font-medium text-greyDark flex items-center gap-1.5">
+                <label className="text-[11px] font-medium text-[#8a8a8a] flex items-center gap-1.5">
                   <Github className="w-3.5 h-3.5 text-[#FF5757]" /> GitHub
                 </label>
                 <input
@@ -243,11 +243,11 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
                   onChange={(e) =>
                     handleInputChange("githubUrl", e.target.value)
                   }
-                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
+                  className="w-full px-2.5 py-2 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#f0f0f0] text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[11px] font-medium text-greyDark flex items-center gap-1.5">
+                <label className="text-[11px] font-medium text-[#8a8a8a] flex items-center gap-1.5">
                   <ExternalLink className="w-3.5 h-3.5 text-[#FF5757]" />{" "}
                   LeetCode
                 </label>
@@ -258,16 +258,14 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
                   onChange={(e) =>
                     handleInputChange("leetCodeUrl", e.target.value)
                   }
-                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
+                  className="w-full px-2.5 py-2 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#f0f0f0] text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
                 />
               </div>
             </div>
           </div>
 
-          <div className="rounded-lg border border-greyLight bg-white/70 p-3">
-            <h3 className="text-sm font-semibold text-contentLight mb-2">
-              Goal
-            </h3>
+          <div className="rounded-lg border border-[#2a2a2a] bg-[#141414] p-3">
+            <h3 className="text-sm font-semibold text-[#f0f0f0] mb-2">Goal</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {DSA_GOALS.map((goal) => {
                 const isSelected = formData.goal === goal.value;
@@ -282,7 +280,7 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
                       "w-full rounded-lg border p-3 text-left transition-all",
                       isSelected
                         ? "border-[#FF5757] bg-[#FF5757] text-white shadow-[0_8px_24px_rgba(255,87,87,0.22)]"
-                        : "border-greyLight bg-white text-contentLight hover:border-[#FF5757]/50",
+                        : "border-[#2a2a2a] bg-[#0a0a0a] text-[#f0f0f0] hover:border-[#FF5757]/50",
                     )}
                   >
                     <div className="flex items-start gap-2">
@@ -294,7 +292,7 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
                         <p
                           className={cn(
                             "text-xs mt-1",
-                            isSelected ? "text-white/90" : "text-greyDark",
+                            isSelected ? "text-white/90" : "text-[#8a8a8a]",
                           )}
                         >
                           {goal.description}
@@ -308,8 +306,8 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-greyLight bg-white/70 p-3">
-              <h3 className="text-sm font-semibold text-contentLight mb-2">
+            <div className="rounded-lg border border-[#2a2a2a] bg-[#141414] p-3">
+              <h3 className="text-sm font-semibold text-[#f0f0f0] mb-2">
                 Timeline
               </h3>
               <div className="grid grid-cols-2 gap-2">
@@ -326,7 +324,7 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
                         "rounded-lg border p-2 text-center transition-all",
                         isSelected
                           ? "border-[#FF5757] bg-[#FF5757] text-white shadow-[0_8px_24px_rgba(255,87,87,0.22)]"
-                          : "border-greyLight bg-white text-contentLight hover:border-[#FF5757]/50",
+                          : "border-[#2a2a2a] bg-[#0a0a0a] text-[#f0f0f0] hover:border-[#FF5757]/50",
                       )}
                     >
                       <p className="text-lg leading-none">{tm.icon}</p>
@@ -337,8 +335,8 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
               </div>
             </div>
 
-            <div className="rounded-lg border border-greyLight bg-white/70 p-3">
-              <h3 className="text-sm font-semibold text-contentLight mb-2">
+            <div className="rounded-lg border border-[#2a2a2a] bg-[#141414] p-3">
+              <h3 className="text-sm font-semibold text-[#f0f0f0] mb-2">
                 Experience
               </h3>
               <div className="grid grid-cols-2 gap-2">
@@ -358,7 +356,7 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
                         "rounded-lg border p-2 text-center transition-all",
                         isSelected
                           ? "border-[#FF5757] bg-[#FF5757] text-white shadow-[0_8px_24px_rgba(255,87,87,0.22)]"
-                          : "border-greyLight bg-white text-contentLight hover:border-[#FF5757]/50",
+                          : "border-[#2a2a2a] bg-[#0a0a0a] text-[#f0f0f0] hover:border-[#FF5757]/50",
                       )}
                     >
                       <p className="text-base leading-none">{exp.icon}</p>
@@ -377,7 +375,7 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
               type="button"
               variant="outline"
               onClick={onClose}
-              className="border-greyLight bg-white text-contentLight hover:bg-gray-50"
+              className="border-[#2a2a2a] bg-[#141414] text-[#c0c0c0] hover:bg-[#1a1a1a] hover:text-white"
             >
               Cancel
             </Button>
