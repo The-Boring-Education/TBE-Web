@@ -3,9 +3,16 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { getPYUserByIdFromDB, updatePYUserByIdInDB } from "@/lib/database";
 import type { PrepYatraOnboardingPayload } from "@/lib/interfaces";
-import { sendAPIResponse } from "@/lib/utils";
+import {
+  sendAPIResponse,
+  trackPersonalizationInvalidInput,
+  trackPersonalizationNormalizationFallback,
+} from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { normalizeCompanyTypeArray } from "@/lib/validation";
+import {
+  isCanonicalCompanyTypeInput,
+  normalizeCompanyTypeArray,
+} from "@/lib/validation";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -49,16 +56,44 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    const rawTargetCompanies = Array.isArray(targetCompanies)
+      ? targetCompanies.map((entry) => String(entry))
+      : [];
+
     const {
       values: normalizedTargetCompanies,
       invalid: invalidTargetCompanies,
-    } = normalizeCompanyTypeArray(
-      Array.isArray(targetCompanies)
-        ? targetCompanies.map((entry) => String(entry))
-        : [],
-    );
+    } = normalizeCompanyTypeArray(rawTargetCompanies);
+
+    const canonicalCompanyInputCount = rawTargetCompanies.filter((entry) =>
+      isCanonicalCompanyTypeInput(entry),
+    ).length;
+    const fallbackCount =
+      rawTargetCompanies.length -
+      canonicalCompanyInputCount -
+      invalidTargetCompanies.length;
+
+    if (fallbackCount > 0) {
+      trackPersonalizationNormalizationFallback({
+        route: "POST /api/v1/prepyatra/onboarding",
+        field: "companyType",
+        fallbackCount,
+        rawValue: rawTargetCompanies
+          .filter((entry) => !isCanonicalCompanyTypeInput(entry))
+          .slice(0, 3)
+          .join(", "),
+        normalizedValue: normalizedTargetCompanies.join(", "),
+      });
+    }
 
     if (invalidTargetCompanies.length > 0) {
+      trackPersonalizationInvalidInput({
+        route: "POST /api/v1/prepyatra/onboarding",
+        field: "companyType",
+        reason: "Invalid targetCompanies in onboarding payload",
+        value: invalidTargetCompanies,
+      });
+
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  isCanonicalCompanyTypeInput,
+  isCanonicalDsaDurationInput,
   normalizeCompanyType,
   normalizeCompanyTypeArray,
   normalizeDsaDuration,
@@ -44,6 +46,13 @@ describe("personalization normalization helpers", () => {
     expect(normalizeDsaProductContext("dsa_yatra")).toBe("DSA_YATRA");
     expect(normalizeDsaProductContext("ON-CAMPUS")).toBe("ONCAMPUS");
     expect(normalizeDsaProductContext("prep-yatra")).toBeNull();
+  });
+
+  it("detects canonical duration and company inputs", () => {
+    expect(isCanonicalDsaDurationInput("6Months")).toBe(true);
+    expect(isCanonicalDsaDurationInput("4-6 months")).toBe(false);
+    expect(isCanonicalCompanyTypeInput("MNC")).toBe(true);
+    expect(isCanonicalCompanyTypeInput("mnc")).toBe(false);
   });
 
   it("exposes fixed oncampus baseline constants", () => {

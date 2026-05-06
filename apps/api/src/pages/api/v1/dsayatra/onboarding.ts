@@ -3,8 +3,15 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { getDYUserByIdFromDB, updateDYUserByIdInDB } from "@/lib/database";
 import type { DSAYatraOnboardingPayload } from "@/lib/interfaces";
-import { sendAPIResponse } from "@/lib/utils";
-import { normalizeDsaDuration } from "@/lib/validation";
+import {
+  sendAPIResponse,
+  trackPersonalizationInvalidInput,
+  trackPersonalizationNormalizationFallback,
+} from "@/lib/utils";
+import {
+  isCanonicalDsaDurationInput,
+  normalizeDsaDuration,
+} from "@/lib/validation";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -45,14 +52,31 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const normalizedTimeline = normalizeDsaDuration(timeline);
+    const rawTimeline = String(timeline);
+    const normalizedTimeline = normalizeDsaDuration(rawTimeline);
     if (!normalizedTimeline) {
+      trackPersonalizationInvalidInput({
+        route: "POST /api/v1/dsayatra/onboarding",
+        field: "timeline",
+        reason: "Invalid timeline in DSA Yatra onboarding payload",
+        value: rawTimeline,
+      });
+
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
           message: "Invalid timeline. Use 1Month, 3Months, 6Months, or 1Year",
         }),
       );
+    }
+
+    if (!isCanonicalDsaDurationInput(rawTimeline)) {
+      trackPersonalizationNormalizationFallback({
+        route: "POST /api/v1/dsayatra/onboarding",
+        field: "timeline",
+        rawValue: rawTimeline,
+        normalizedValue: normalizedTimeline,
+      });
     }
 
     const userResult = await getDYUserByIdFromDB(userId);

@@ -374,7 +374,7 @@ const DsaClient = () => {
             userService.getProfile(user.id).then(setProfile);
           }
         }}
-        currentData={profile as any}
+        currentData={profile}
         userId={user?.id || ""}
       />
     </div>

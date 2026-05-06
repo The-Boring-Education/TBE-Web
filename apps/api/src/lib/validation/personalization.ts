@@ -3,6 +3,20 @@ import type { CompanyType } from "@/lib/interfaces";
 export type DsaDurationKey = "1Month" | "3Months" | "6Months" | "1Year";
 export type DsaProductContext = "DSA_YATRA" | "ONCAMPUS";
 
+export const DSA_DURATION_KEYS: readonly DsaDurationKey[] = [
+  "1Month",
+  "3Months",
+  "6Months",
+  "1Year",
+];
+
+export const COMPANY_TYPE_KEYS: readonly CompanyType[] = [
+  "Startup",
+  "MidSize",
+  "MNC",
+  "FAANG",
+];
+
 export const ONCAMPUS_EXPERIENCE_LEVEL = "Fresher (0-1 yr)" as const;
 export const ONCAMPUS_EXPERIENCE_YEARS = 0 as const;
 
@@ -90,4 +104,18 @@ export const normalizeDsaProductContext = (
   if (!value) return null;
   const key = normalizeLooseKey(value);
   return DSA_PRODUCT_CONTEXT_ALIAS_MAP[key] || null;
+};
+
+export const isCanonicalDsaDurationInput = (
+  value: string | undefined | null,
+): value is DsaDurationKey => {
+  if (!value) return false;
+  return DSA_DURATION_KEYS.includes(value.trim() as DsaDurationKey);
+};
+
+export const isCanonicalCompanyTypeInput = (
+  value: string | undefined | null,
+): value is CompanyType => {
+  if (!value) return false;
+  return COMPANY_TYPE_KEYS.includes(value.trim() as CompanyType);
 };

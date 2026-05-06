@@ -8,8 +8,12 @@ export {
 } from "./dsaSheet";
 export { isMongoObjectIdString } from "./mongodb";
 export {
+  COMPANY_TYPE_KEYS,
+  DSA_DURATION_KEYS,
   type DsaDurationKey,
   type DsaProductContext,
+  isCanonicalCompanyTypeInput,
+  isCanonicalDsaDurationInput,
   normalizeCompanyType,
   normalizeCompanyTypeArray,
   normalizeDsaDuration,

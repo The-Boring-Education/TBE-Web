@@ -9,14 +9,51 @@ import { useEffect, useState } from "react";
 
 import { useAuth } from "../contexts/useAuth";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import { useToast } from "../ui/use-toast";
+
+type DsaGoal = (typeof DSA_GOALS)[number]["value"];
+type DsaTimeline = (typeof DSA_TIMELINES)[number]["value"];
+type DsaExperience = (typeof DSA_EXPERIENCE_LEVELS)[number]["value"];
+
+interface DsaFormData {
+  name: string;
+  username: string;
+  linkedInUrl: string;
+  githubUrl: string;
+  leetCodeUrl: string;
+  goal: DsaGoal;
+  timeline: DsaTimeline;
+  experienceLevel: DsaExperience;
+  preferredLanguage: string;
+}
+
+interface CurrentDsaProfileData {
+  name?: string;
+  userName?: string;
+  linkedInUrl?: string;
+  githubUrl?: string;
+  leetCodeUrl?: string;
+  dsaYatra?: {
+    target?: DsaGoal;
+    timeline?: DsaTimeline;
+    experienceLevel?: DsaExperience;
+    preferredLanguage?: string;
+  };
+}
 
 interface EditDsaOnboardingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpdate: (data: any) => void;
-  currentData?: any;
+  onUpdate: () => void;
+  currentData?: CurrentDsaProfileData | null;
   userId: string;
 }
 
@@ -29,19 +66,18 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
 }) => {
   const { toast } = useToast();
   const { user } = useAuth();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<DsaFormData>({
     name: "",
     username: "",
     linkedInUrl: "",
     githubUrl: "",
     leetCodeUrl: "",
-    goal: "Product-based",
-    timeline: "6Months",
-    experienceLevel: "Fresher (0-1 yr)",
+    goal: "Product-based" as DsaGoal,
+    timeline: "6Months" as DsaTimeline,
+    experienceLevel: "Fresher (0-1 yr)" as DsaExperience,
     preferredLanguage: "C++",
   });
   const [loading, setLoading] = useState(false);
-  const [activeBtn, setActiveBtn] = useState("");
 
   useEffect(() => {
     if (currentData) {
@@ -51,16 +87,19 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
         linkedInUrl: currentData.linkedInUrl || "",
         githubUrl: currentData.githubUrl || "",
         leetCodeUrl: currentData.leetCodeUrl || "",
-        goal: currentData.dsaYatra?.target || "Product-based",
-        timeline: currentData.dsaYatra?.timeline || "6Months",
-        experienceLevel:
-          currentData.dsaYatra?.experienceLevel || "Fresher (0-1 yr)",
+        goal: (currentData.dsaYatra?.target || "Product-based") as DsaGoal,
+        timeline: (currentData.dsaYatra?.timeline || "6Months") as DsaTimeline,
+        experienceLevel: (currentData.dsaYatra?.experienceLevel ||
+          "Fresher (0-1 yr)") as DsaExperience,
         preferredLanguage: currentData.dsaYatra?.preferredLanguage || "C++",
       });
     }
   }, [currentData, user]);
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = <K extends keyof DsaFormData>(
+    field: K,
+    value: DsaFormData[K],
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -100,17 +139,18 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
           title: "Success!",
           description: "DSA journey preferences updated successfully.",
         });
-        onUpdate(result.data.user);
+        onUpdate();
         onClose();
       } else {
         throw new Error(result.message || "Failed to update details");
       }
-    } catch (error: any) {
-      console.error("Error updating DSA details:", error);
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description:
-          error.message || "Failed to update details. Please try again.",
+          error instanceof Error
+            ? error.message
+            : "Failed to update details. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -119,157 +159,146 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg max-h-[98vh] overflow-y-auto p-[2px] backdrop-blur-3xl bg-black/95 border-[#2a2a2a] shadow-[0_0_80px_-15px_rgba(255,87,87,0.15)] text-[#e0e0e0] border-2 rounded-2xl [&::-webkit-scrollbar]:w-[2px] [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-track]:bg-transparent [&>button]:right-2 [&>button]:top-2 [&>button]:text-[#ff5757] [&>button]:opacity-100 font-primary">
-        <DialogHeader className="relative pb-0.5 border-b border-[#2a2a2a]/30">
-          <DialogTitle className="text-center text-[#ff5757] text-lg font-black uppercase tracking-tighter">
-            Tailor Your DSA Journey
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
+      <DialogContent className="sm:max-w-[760px] max-h-[90vh] overflow-y-auto glass border-greyLight bg-gradient-to-br from-white to-red-50/30 p-4">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-center text-contentLight text-[#FF5757] text-xl font-semibold">
+            Edit Goal & DSA Preferences
           </DialogTitle>
-          <div className="flex justify-center gap-0.5 mt-0.5">
-            <div className="w-1 h-1 rounded-full bg-[#ff5757] animate-pulse" />
-            <div className="w-1 h-1 rounded-full bg-[#ff5757]/40" />
-            <div className="w-1 h-1 rounded-full bg-[#ff5757]/20" />
+          <DialogDescription className="text-center text-greyDark text-sm">
+            Update your profile details and roadmap so your prep stays aligned.
+          </DialogDescription>
+          <div className="flex justify-center gap-1 mt-2">
+            <div className="w-1 h-1 rounded-full bg-[#FF5757]" />
+            <div className="w-1 h-1 rounded-full bg-[#FF5757]/70" />
+            <div className="w-1 h-1 rounded-full bg-[#FF5757]/40" />
           </div>
         </DialogHeader>
 
-        <div className="space-y-2 mt-0.5 px-1.5 pb-3">
-          {/* Basic Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div className="space-y-0.5">
-              <label className="block text-[9px] font-black text-[#606060] uppercase tracking-[0.2em]">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="w-full px-2 py-1.5 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#e0e0e0] text-xs font-bold focus:border-[#ff5757] outline-none transition-all"
-              />
-            </div>
-            <div className="space-y-0.5">
-              <label className="block text-[9px] font-black text-[#606060] uppercase tracking-[0.2em]">
-                Username
-              </label>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => handleInputChange("username", e.target.value)}
-                className="w-full px-2 py-1.5 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#e0e0e0] text-xs font-bold focus:border-[#ff5757] outline-none transition-all"
-              />
+        <div className="space-y-4">
+          <div className="rounded-lg border border-greyLight bg-white/70 p-3">
+            <h3 className="text-sm font-semibold text-contentLight mb-2">
+              Basic Details
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <label className="block text-[11px] font-medium text-greyDark">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
+                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="block text-[11px] font-medium text-greyDark">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) =>
+                    handleInputChange("username", e.target.value)
+                  }
+                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Social Links */}
-          <div className="space-y-0.5">
-            <h3 className="text-[9px] font-black text-[#606060] uppercase tracking-[0.2em] flex items-center gap-1">
+          <div className="rounded-lg border border-greyLight bg-white/70 p-3">
+            <h3 className="text-sm font-semibold text-contentLight mb-2">
               Social Profiles
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-1">
-              <div className="space-y-0.5">
-                <label className="text-[9px] text-[#ff5757] flex items-center gap-1 uppercase font-black tracking-widest">
-                  <Linkedin className="w-2.5 h-2.5" /> LinkedIn
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="space-y-1">
+                <label className="text-[11px] font-medium text-greyDark flex items-center gap-1.5">
+                  <Linkedin className="w-3.5 h-3.5 text-[#FF5757]" /> LinkedIn
                 </label>
                 <input
                   type="url"
-                  placeholder="URL"
+                  placeholder="https://linkedin.com/in/username"
                   value={formData.linkedInUrl}
                   onChange={(e) =>
                     handleInputChange("linkedInUrl", e.target.value)
                   }
-                  className="w-full px-2 py-1 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#e0e0e0] text-[9px] font-bold focus:border-[#ff5757] outline-none"
+                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
                 />
               </div>
-              <div className="space-y-0.5">
-                <label className="text-[9px] text-[#ff5757] flex items-center gap-1 uppercase font-black tracking-widest">
-                  <Github className="w-2.5 h-2.5" /> GitHub
+              <div className="space-y-1">
+                <label className="text-[11px] font-medium text-greyDark flex items-center gap-1.5">
+                  <Github className="w-3.5 h-3.5 text-[#FF5757]" /> GitHub
                 </label>
                 <input
                   type="url"
-                  placeholder="URL"
+                  placeholder="https://github.com/username"
                   value={formData.githubUrl}
                   onChange={(e) =>
                     handleInputChange("githubUrl", e.target.value)
                   }
-                  className="w-full px-2 py-1 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#e0e0e0] text-[9px] font-bold focus:border-[#ff5757] outline-none"
+                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
                 />
               </div>
-              <div className="space-y-0.5">
-                <label className="text-[9px] text-[#ff5757] flex items-center gap-1 uppercase font-black tracking-widest">
-                  <ExternalLink className="w-2.5 h-2.5" /> LeetCode
+              <div className="space-y-1">
+                <label className="text-[11px] font-medium text-greyDark flex items-center gap-1.5">
+                  <ExternalLink className="w-3.5 h-3.5 text-[#FF5757]" />{" "}
+                  LeetCode
                 </label>
                 <input
                   type="url"
-                  placeholder="URL"
+                  placeholder="https://leetcode.com/username"
                   value={formData.leetCodeUrl}
                   onChange={(e) =>
                     handleInputChange("leetCodeUrl", e.target.value)
                   }
-                  className="w-full px-2 py-1 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#e0e0e0] text-[9px] font-bold focus:border-[#ff5757] outline-none"
+                  className="w-full px-2.5 py-2 rounded-lg bg-white border border-greyLight text-contentLight text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
                 />
               </div>
             </div>
           </div>
 
-          <div className="h-px bg-gradient-to-r from-transparent via-[#2a2a2a] to-transparent" />
-
-          {/* Goal Selection */}
-          <div className="space-y-0.5">
-            <h3 className="text-[9px] font-black text-[#e0e0e0] uppercase tracking-widest">
-              Goal 🎯
+          <div className="rounded-lg border border-greyLight bg-white/70 p-3">
+            <h3 className="text-sm font-semibold text-contentLight mb-2">
+              Goal
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {DSA_GOALS.map((goal) => {
                 const isSelected = formData.goal === goal.value;
                 return (
                   <button
                     key={goal.value}
-                    onClick={() => handleInputChange("goal", goal.value)}
+                    type="button"
+                    onClick={() =>
+                      handleInputChange("goal", goal.value as DsaGoal)
+                    }
                     className={cn(
-                      "relative overflow-hidden p-2 rounded-lg border transition-all duration-300 group hover:scale-[1.01] active:scale-[0.98] flex items-center text-left min-h-[85px]",
+                      "w-full rounded-lg border p-3 text-left transition-all",
                       isSelected
-                        ? "border-[#ff5757] text-white shadow-[0_0_15px_rgba(255,87,87,0.15)]"
-                        : "bg-black/20 border-[#2a2a2a] text-[#a0a0a0] hover:border-[#ff5757]/20",
+                        ? "border-[#FF5757] bg-[#FF5757] text-white shadow-[0_8px_24px_rgba(255,87,87,0.22)]"
+                        : "border-greyLight bg-white text-contentLight hover:border-[#FF5757]/50",
                     )}
                   >
-                    {/* Top-Right Decorative Cut/Glint - Softer */}
-                    <div
-                      className={cn(
-                        "absolute top-0 right-0 w-12 h-12 bg-white/10 transition-transform duration-1000 -rotate-45 translate-x-6 -translate-y-6 blur-xl group-hover:bg-white/20",
-                        isSelected ? "bg-white/30 scale-150" : "",
-                      )}
-                    />
-
-                    {/* Blurry Silver Background Transition */}
-                    <div
-                      className={cn(
-                        "absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.12),transparent_70%)] transition-all duration-1000 blur-2xl",
-                        isSelected
-                          ? "opacity-100 scale-110"
-                          : "opacity-0 scale-75",
-                      )}
-                    />
-
-                    <div className="relative z-10 flex items-center gap-3">
-                      <span
-                        className={cn(
-                          "text-xl p-1.5 rounded-lg transition-colors",
-                          isSelected ? "bg-white/10" : "bg-black/40",
-                        )}
-                      >
-                        {goal.icon}
-                      </span>
+                    <div className="flex items-start gap-2">
+                      <span className="text-xl leading-none">{goal.icon}</span>
                       <div>
-                        <div className="font-black text-[12px] uppercase tracking-tighter leading-none">
+                        <p className="text-sm font-semibold leading-tight">
                           {goal.label}
-                        </div>
-                        <div
+                        </p>
+                        <p
                           className={cn(
-                            "text-[8px] font-bold mt-1 line-clamp-2",
-                            isSelected ? "text-white/80" : "text-[#606060]",
+                            "text-xs mt-1",
+                            isSelected ? "text-white/90" : "text-greyDark",
                           )}
                         >
                           {goal.description}
-                        </div>
+                        </p>
                       </div>
                     </div>
                   </button>
@@ -278,128 +307,89 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
             </div>
           </div>
 
-          {/* Timeline Selection */}
-          <div className="space-y-0.5">
-            <h3 className="text-[9px] font-black text-[#e0e0e0] uppercase tracking-widest">
-              Timeline ⏳
-            </h3>
-            <div className="grid grid-cols-3 gap-1">
-              {DSA_TIMELINES.map((tm) => {
-                const isSelected = formData.timeline === tm.value;
-                return (
-                  <button
-                    key={tm.value}
-                    onClick={() => handleInputChange("timeline", tm.value)}
-                    className={cn(
-                      "relative overflow-hidden p-2 rounded-lg border transition-all duration-300 group hover:scale-[1.05] active:scale-[0.98] flex flex-col items-center justify-center min-h-[60px]",
-                      isSelected
-                        ? "border-[#ff5757] text-white shadow-[0_0_10px_rgba(255,87,87,0.2)]"
-                        : "bg-black/20 border-[#2a2a2a] text-[#a0a0a0] hover:border-[#ff5757]/30",
-                    )}
-                  >
-                    {/* Top-Right Decorative Cut/Glint - Softer */}
-                    <div
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-greyLight bg-white/70 p-3">
+              <h3 className="text-sm font-semibold text-contentLight mb-2">
+                Timeline
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                {DSA_TIMELINES.map((tm) => {
+                  const isSelected = formData.timeline === tm.value;
+                  return (
+                    <button
+                      key={tm.value}
+                      type="button"
+                      onClick={() =>
+                        handleInputChange("timeline", tm.value as DsaTimeline)
+                      }
                       className={cn(
-                        "absolute top-0 right-0 w-8 h-8 bg-white/10 transition-transform duration-1000 -rotate-45 translate-x-4 -translate-y-4 blur-lg group-hover:bg-white/20",
-                        isSelected ? "bg-white/30 scale-125" : "",
-                      )}
-                    />
-
-                    <div
-                      className={cn(
-                        "absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_60%)] transition-all duration-1000 blur-xl",
+                        "rounded-lg border p-2 text-center transition-all",
                         isSelected
-                          ? "opacity-100 scale-110"
-                          : "opacity-0 scale-75",
+                          ? "border-[#FF5757] bg-[#FF5757] text-white shadow-[0_8px_24px_rgba(255,87,87,0.22)]"
+                          : "border-greyLight bg-white text-contentLight hover:border-[#FF5757]/50",
                       )}
-                    />
-                    <div className="relative z-10 flex flex-col items-center gap-1">
-                      <span className="text-xl">{tm.icon}</span>
-                      <span className="text-[9px] font-black uppercase tracking-tighter leading-none">
-                        {tm.label}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
+                    >
+                      <p className="text-lg leading-none">{tm.icon}</p>
+                      <p className="text-xs font-semibold mt-1">{tm.label}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-greyLight bg-white/70 p-3">
+              <h3 className="text-sm font-semibold text-contentLight mb-2">
+                Experience
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                {DSA_EXPERIENCE_LEVELS.map((exp) => {
+                  const isSelected = formData.experienceLevel === exp.value;
+                  return (
+                    <button
+                      key={exp.value}
+                      type="button"
+                      onClick={() =>
+                        handleInputChange(
+                          "experienceLevel",
+                          exp.value as DsaExperience,
+                        )
+                      }
+                      className={cn(
+                        "rounded-lg border p-2 text-center transition-all",
+                        isSelected
+                          ? "border-[#FF5757] bg-[#FF5757] text-white shadow-[0_8px_24px_rgba(255,87,87,0.22)]"
+                          : "border-greyLight bg-white text-contentLight hover:border-[#FF5757]/50",
+                      )}
+                    >
+                      <p className="text-base leading-none">{exp.icon}</p>
+                      <p className="text-[11px] font-semibold mt-1 leading-tight">
+                        {exp.label}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
-          {/* Experience Selection */}
-          <div className="space-y-0.5">
-            <h3 className="text-[9px] font-black text-[#e0e0e0] uppercase tracking-widest">
-              Experience 🚀
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1">
-              {DSA_EXPERIENCE_LEVELS.map((exp) => {
-                const isSelected = formData.experienceLevel === exp.value;
-                return (
-                  <button
-                    key={exp.value}
-                    onClick={() =>
-                      handleInputChange("experienceLevel", exp.value)
-                    }
-                    className={cn(
-                      "relative overflow-hidden p-1.5 rounded-lg border transition-all duration-300 group hover:scale-[1.05] active:scale-[0.98]",
-                      isSelected
-                        ? "border-[#ff5757] text-white shadow-[0_0_8px_rgba(255,87,87,0.2)]"
-                        : "bg-black/20 border-[#2a2a2a] text-[#a0a0a0] hover:border-[#ff5757]/30",
-                    )}
-                  >
-                    {/* Top-Right Decorative Cut/Glint - Softer */}
-                    <div
-                      className={cn(
-                        "absolute top-0 right-0 w-8 h-8 bg-white/10 transition-transform duration-1000 -rotate-45 translate-x-4 -translate-y-4 blur-lg group-hover:bg-white/20",
-                        isSelected ? "bg-white/30 scale-125" : "",
-                      )}
-                    />
-
-                    <div
-                      className={cn(
-                        "absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_60%)] transition-all duration-1000 blur-xl",
-                        isSelected
-                          ? "opacity-100 scale-110"
-                          : "opacity-0 scale-75",
-                      )}
-                    />
-                    <span className="relative z-10 text-[8px] font-black uppercase tracking-tight">
-                      {exp.label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="pt-1 flex flex-col sm:flex-row gap-1">
+          <DialogFooter className="flex flex-col-reverse md:flex-row gap-2 pt-1">
             <Button
-              onClick={() => {
-                setActiveBtn("update");
-                handleSubmit();
-              }}
-              disabled={loading}
-              className={cn(
-                "flex-1 py-1.5 h-auto font-black text-[11px] uppercase tracking-widest transition-all rounded-lg",
-                "bg-[#ff5757] text-white hover:bg-[#ff5252] shadow-[0_2px_10px_rgba(255,87,87,0.2)]",
-              )}
-            >
-              {loading ? "Updating..." : "Update Preferences"}
-            </Button>
-            <Button
-              onClick={() => {
-                setActiveBtn("cancel");
-                onClose();
-              }}
+              type="button"
               variant="outline"
-              className={cn(
-                "flex-1 py-1.5 h-auto font-black text-[11px] uppercase tracking-widest border border-[#2a2a2a] bg-transparent text-[#a0a0a0] rounded-lg transition-all",
-                "hover:bg-white/5 hover:text-[#606060]",
-                "active:bg-black active:text-white active:border-black focus:bg-black focus:text-white focus:border-black",
-              )}
+              onClick={onClose}
+              className="border-greyLight bg-white text-contentLight hover:bg-gray-50"
             >
               Cancel
             </Button>
-          </div>
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="bg-[#FF5757] text-white hover:bg-[#ff4a4a]"
+            >
+              {loading ? "Updating..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
         </div>
       </DialogContent>
     </Dialog>

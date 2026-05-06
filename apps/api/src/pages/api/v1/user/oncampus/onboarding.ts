@@ -3,9 +3,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { User } from "@/lib/database/models";
 import { toObjectId } from "@/lib/database/queries/common";
-import { sendAPIResponse } from "@/lib/utils";
+import {
+  sendAPIResponse,
+  trackPersonalizationInvalidInput,
+  trackPersonalizationNormalizationFallback,
+} from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import {
+  isCanonicalDsaDurationInput,
   normalizeDsaDuration,
   ONCAMPUS_EXPERIENCE_LEVEL,
 } from "@/lib/validation";
@@ -49,14 +54,31 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const normalizedDuration = normalizeDsaDuration(String(duration));
+    const rawDuration = String(duration);
+    const normalizedDuration = normalizeDsaDuration(rawDuration);
     if (!normalizedDuration) {
+      trackPersonalizationInvalidInput({
+        route: "POST /api/v1/user/oncampus/onboarding",
+        field: "duration",
+        reason: "Invalid duration in OnCampus onboarding payload",
+        value: rawDuration,
+      });
+
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
           message: "Invalid duration. Use 1Month, 3Months, 6Months, or 1Year",
         }),
       );
+    }
+
+    if (!isCanonicalDsaDurationInput(rawDuration)) {
+      trackPersonalizationNormalizationFallback({
+        route: "POST /api/v1/user/oncampus/onboarding",
+        field: "duration",
+        rawValue: rawDuration,
+        normalizedValue: normalizedDuration,
+      });
     }
 
     const updatePayload: Record<string, unknown> = {

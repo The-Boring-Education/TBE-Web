@@ -3,9 +3,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { User } from "@/lib/database/models";
 import { toObjectId } from "@/lib/database/queries/common";
-import { sendAPIResponse } from "@/lib/utils";
+import {
+  sendAPIResponse,
+  trackPersonalizationInvalidInput,
+  trackPersonalizationNormalizationFallback,
+} from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import {
+  isCanonicalDsaDurationInput,
   normalizeDsaDuration,
   ONCAMPUS_EXPERIENCE_LEVEL,
 } from "@/lib/validation";
@@ -34,6 +39,13 @@ const handleGetPreferences = async (
   try {
     const { userId } = req.query;
     if (!userId || typeof userId !== "string") {
+      trackPersonalizationInvalidInput({
+        route: "GET /api/v1/user/oncampus/preferences",
+        field: "userId",
+        reason: "Missing or invalid userId in query",
+        value: userId,
+      });
+
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
@@ -81,6 +93,13 @@ const handlePatchPreferences = async (
   try {
     const { userId, duration, offCampus } = req.body;
     if (!userId || typeof userId !== "string") {
+      trackPersonalizationInvalidInput({
+        route: "PATCH /api/v1/user/oncampus/preferences",
+        field: "userId",
+        reason: "Missing or invalid userId in payload",
+        value: userId,
+      });
+
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
@@ -103,8 +122,16 @@ const handlePatchPreferences = async (
     };
 
     if (duration !== undefined) {
-      const normalizedDuration = normalizeDsaDuration(String(duration));
+      const rawDuration = String(duration);
+      const normalizedDuration = normalizeDsaDuration(rawDuration);
       if (!normalizedDuration) {
+        trackPersonalizationInvalidInput({
+          route: "PATCH /api/v1/user/oncampus/preferences",
+          field: "duration",
+          reason: "Invalid duration in payload",
+          value: rawDuration,
+        });
+
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
             status: false,
@@ -112,6 +139,16 @@ const handlePatchPreferences = async (
           }),
         );
       }
+
+      if (!isCanonicalDsaDurationInput(rawDuration)) {
+        trackPersonalizationNormalizationFallback({
+          route: "PATCH /api/v1/user/oncampus/preferences",
+          field: "duration",
+          rawValue: rawDuration,
+          normalizedValue: normalizedDuration,
+        });
+      }
+
       update["oncampus.duration"] = normalizedDuration;
     }
 
