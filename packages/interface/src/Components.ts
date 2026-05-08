@@ -499,6 +499,8 @@ export interface LearningSidebarPanelProps {
   children?: ReactNode;
   theme?: "dark" | "light";
   onClose?: () => void;
+  /** GA delegated `surface` for chapter/question lists inside the panel (default `learning_sidebar`). */
+  analyticsSurface?: string;
 }
 
 export interface LearningSidebarListProps<T = any> {
