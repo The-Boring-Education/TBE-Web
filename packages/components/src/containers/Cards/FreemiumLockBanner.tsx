@@ -1,6 +1,8 @@
 import { FaLock } from "react-icons/fa";
 
+import Button from "../../common/Buttons/Button";
 import Text from "../../common/Typography/Text";
+import FlexContainer from "../Page/common/FlexContainer";
 
 export interface FreemiumLockBannerProps {
   /** Number of questions the free user can currently access. */
@@ -26,20 +28,29 @@ const FreemiumLockBanner = ({
   const defaultMessage = `Freemium preview — ${unlockedCount} questions unlocked. Subscribe to access all.`;
 
   return (
-    <div className="w-full bg-orange-950/40 border-b border-orange-900/50 px-4 py-2.5 flex items-center justify-between shrink-0">
-      <div className="flex items-center gap-2">
-        <FaLock className="text-orange-400 text-xs" />
-        <Text level="p" className="text-orange-300 text-[11px] font-medium">
+    <FlexContainer
+      fullWidth
+      justifyCenter={false}
+      wrap={false}
+      className="shrink-0 justify-start gap-3 bg-orange-950/40 border-b border-orange-900/50 px-4 py-2.5"
+    >
+      <FlexContainer
+        justifyCenter={false}
+        wrap={false}
+        className="min-w-0 gap-2"
+      >
+        <FaLock className="shrink-0 text-orange-400 text-xs" />
+        <Text level="p" className="text-orange-300 text-sm">
           {message ?? defaultMessage}
         </Text>
-      </div>
-      <button
+      </FlexContainer>
+      <Button
+        variant="GHOST"
+        size="SMALL"
+        text={ctaLabel}
         onClick={onUpgradeClick}
-        className="text-[11px] font-bold text-orange-300 hover:text-orange-200 underline underline-offset-2 transition-colors"
-      >
-        {ctaLabel}
-      </button>
-    </div>
+      />
+    </FlexContainer>
   );
 };
 

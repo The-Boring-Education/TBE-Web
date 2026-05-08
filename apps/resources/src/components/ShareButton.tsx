@@ -1,5 +1,7 @@
 "use client";
 
+import { CopyButton } from "@tbe/components";
+import { useCopyLink } from "@tbe/hooks";
 import { trackEvent } from "@tbe/utils";
 import { useCallback, useState } from "react";
 
@@ -9,31 +11,20 @@ type Props = {
 };
 
 export function ShareButton({ pageUrl, title }: Props) {
-  const [copied, setCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  const copyLink = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(pageUrl);
-      setCopied(true);
+  const { copied, copyLink } = useCopyLink({
+    onCopySuccess: () => {
       trackEvent("share_resource", {
         method: "copy_link",
         resource_url: pageUrl,
         resource_title: title,
       });
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback for older browsers
-      const textarea = document.createElement("textarea");
-      textarea.value = pageUrl;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  }, [pageUrl, title]);
+    },
+  });
+
+  const handleCopyLink = useCallback(() => {
+    void copyLink(pageUrl);
+  }, [copyLink, pageUrl]);
 
   const shareToTwitter = useCallback(() => {
     const text = encodeURIComponent(`${title}\n\n${pageUrl}`);
@@ -127,30 +118,7 @@ export function ShareButton({ pageUrl, title }: Props) {
             aria-hidden
           />
           <div className="absolute right-0 top-full z-50 mt-2 w-48 rounded-lg border border-zinc-700 bg-zinc-900 py-1 shadow-xl">
-            <button
-              type="button"
-              onClick={() => {
-                copyLink();
-                setIsOpen(false);
-              }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-              </svg>
-              {copied ? "Copied!" : "Copy Link"}
-            </button>
+            <CopyButton />
             <button
               type="button"
               onClick={() => {

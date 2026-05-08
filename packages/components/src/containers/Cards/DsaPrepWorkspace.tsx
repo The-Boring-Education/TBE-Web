@@ -6,10 +6,11 @@ import type {
   StudyGuideModel,
 } from "@tbe/interface";
 import { cn } from "@tbe/utils";
-import { ArrowRight, BookOpen, Lightbulb, Link2, Sparkles } from "lucide-react";
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import { ArrowRight, BookOpen, Lightbulb, Sparkles } from "lucide-react";
+import { type ReactNode, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
+import CopyButton from "../../common/Buttons/CopyButton";
 import {
   STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED,
   STANDARD_DIFFICULTY_LABELS,
@@ -74,23 +75,6 @@ const DsaPrepWorkspace = ({
   const [isStudyGuideOpen, setIsStudyGuideOpen] = useState(false);
   const [activeGuideSection, setActiveGuideSection] =
     useState("before-you-start");
-  const [shareCopied, setShareCopied] = useState(false);
-
-  const handleCopyShareLink = useCallback(async () => {
-    if (typeof window === "undefined") return;
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setShareCopied(true);
-    } catch {
-      /* clipboard unavailable */
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!shareCopied) return;
-    const id = window.setTimeout(() => setShareCopied(false), 2000);
-    return () => window.clearTimeout(id);
-  }, [shareCopied]);
 
   const filteredQuestions = selectedTopic
     ? questions.filter((q) => q.topics?.[0] === selectedTopic)
@@ -253,24 +237,7 @@ const DsaPrepWorkspace = ({
           )}
           {selectedTopic && (
             <div className="flex items-center gap-2 shrink-0">
-              {selectedQuestion && !isStudyGuideOpen && (
-                <button
-                  type="button"
-                  onClick={() => void handleCopyShareLink()}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-gray-700 bg-transparent px-[10px] py-[4px] text-[11px] font-medium text-gray-300 hover:border-red-500 hover:bg-red-500/10 hover:text-white whitespace-nowrap transition-colors"
-                  aria-label="Copy link to this question"
-                >
-                  <Link2 className="h-3.5 w-3.5 opacity-80" aria-hidden />
-                  {shareCopied ? "Copied" : "Copy link"}
-                </button>
-              )}
-              <Button
-                onClick={handleBackToTopics}
-                variant="OUTLINE"
-                size="SMALL"
-                text="View All Topics"
-                className="border-gray-700 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap"
-              />
+              {selectedQuestion && !isStudyGuideOpen && <CopyButton />}
             </div>
           )}
         </div>
