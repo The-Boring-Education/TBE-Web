@@ -130,10 +130,13 @@ const sanitizePathOrHref = (fullUrl: string, maxLen = 200): string => {
 
 const anchorIsOutbound = (el: HTMLAnchorElement): boolean => {
   const href = el.getAttribute("href");
+  const lower = href?.toLowerCase() ?? "";
   if (
     !href ||
     href.startsWith("#") ||
-    href.toLowerCase().startsWith("javascript:")
+    lower.startsWith("javascript:") ||
+    lower.startsWith("data:") ||
+    lower.startsWith("vbscript:")
   ) {
     return false;
   }
