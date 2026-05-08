@@ -35,6 +35,9 @@ out/
 build
 dist
 
+# next-sitemap runs as postbuild after `next build`; CI/production include these in deploy artifacts.
+apps/*/public/sitemap.xml
+apps/*/public/robots.txt
 
 # Debug
 npm-debug.log*

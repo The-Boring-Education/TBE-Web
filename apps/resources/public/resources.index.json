@@ -46,6 +46,34 @@
     "tags": ["roadmap", "blockchain"]
   },
   {
+    "slug": "cold-email-guide",
+    "title": "Cold Mail Masterclass 2026",
+    "description": "Learn the exact subject lines, body formulas, and follow-up tricks that hiring managers actually respond to. One email. One job. No resume needed.",
+    "keywords": [
+      "cold email",
+      "job search",
+      "hiring",
+      "networking",
+      "career advice"
+    ],
+    "tags": []
+  },
+  {
+    "slug": "dsa-escape-plan-2026",
+    "title": "DSA Escape Plan 2026",
+    "description": "A practical, no-fluff guide to escaping tutorial hell with a structured DSA roadmap, daily problem-solving strategy, pattern recognition techniques, and a 90-day plan to become interview-ready.",
+    "keywords": [
+      "dsa",
+      "data structures",
+      "algorithms",
+      "leetcode",
+      "coding interview",
+      "problem solving",
+      "roadmap"
+    ],
+    "tags": ["dsa", "roadmap", "interview-prep"]
+  },
+  {
     "slug": "frontend-engineer-roadmap",
     "title": "Frontend Developer Roadmap 2026",
     "description": "A comprehensive, step-by-step guide to becoming a professional frontend developer, covering HTML, CSS, JavaScript, React, and modern CSS frameworks.",
