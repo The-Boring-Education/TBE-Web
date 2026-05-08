@@ -209,12 +209,18 @@ const PaymentStatusPage = () => {
                   >
                     You&apos;re all set! 🎉
                   </Text>
-                  <Text level='p' className='text-slate-600 mb-4 leading-relaxed'>
+                  <Text
+                    level='p'
+                    className='text-slate-600 mb-4 leading-relaxed'
+                  >
                     Your purchase is confirmed and access has been unlocked.
                   </Text>
 
                   <div className='text-left rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 mb-4'>
-                    <Text level='p' className='text-sm font-semibold text-slate-800'>
+                    <Text
+                      level='p'
+                      className='text-sm font-semibold text-slate-800'
+                    >
                       What&apos;s coming next
                     </Text>
                     <ul className='mt-2 space-y-1 text-xs text-slate-600 list-disc list-inside'>
@@ -308,7 +314,6 @@ const PaymentStatusPage = () => {
               </Link>
             </div>
           )}
-
         </div>
       </div>
     </>

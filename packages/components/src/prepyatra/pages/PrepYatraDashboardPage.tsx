@@ -9,10 +9,10 @@ import { useRouter } from "next/router";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import LoadingSpinner from "../../common/LoadingSpinner";
 import Footer from "../../layout/Footer";
 import Navbar from "../../layout/Navbar";
 import DashboardTabs from "../dashboard/DashboardTabs";
-import LoadingSpinner from "../../common/LoadingSpinner";
 import ProfileSection from "../dashboard/ProfileSection";
 import BuildYourStack from "../features/BuildYourStack";
 import DailyPrepEncouragement from "../features/DailyPrepEncouragement";

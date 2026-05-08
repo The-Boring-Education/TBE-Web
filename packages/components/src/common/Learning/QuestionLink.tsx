@@ -28,7 +28,7 @@ const QuestionLink = ({
     ? "hover:text-contentDark"
     : "hover:text-contentLight";
 
-  let additionalClasses =
+  const additionalClasses =
     currentQuestionId === questionId
       ? isDark
         ? "bg-[#111] border-gray-700/60 shadow-[0_0_12px_rgba(0,0,0,0.25)] text-white font-medium"
@@ -46,7 +46,6 @@ const QuestionLink = ({
       : "text-greyDark";
 
   // Frequency borders removed as per UI request
-
 
   return (
     <Link

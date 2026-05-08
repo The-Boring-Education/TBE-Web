@@ -240,7 +240,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
             const questionId = next._id.toString();
             setCurrentQuestionId(questionId);
             setSheetMeta(`${next.question}\n\n${next.answer}`);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }
         }
       } else {
