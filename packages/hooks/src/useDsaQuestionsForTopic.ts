@@ -53,7 +53,7 @@ export const useDsaQuestionsForTopic = (
     }),
     queryFn: async () => {
       const result = await sendRequest({
-        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}&productType=${productType}${realWorld ? `&realWorld=${realWorld}` : ""}`,
+        url: `${routes.api.base}${routes.api.dsaSheet}?topic=${encodeURIComponent(topic!)}${userId ? `&userId=${userId}` : ""}&productType=${productType}${realWorld ? `&realWorld=${realWorld}` : ""}&limit=1000`,
         method: "GET",
       });
 
