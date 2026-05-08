@@ -89,7 +89,7 @@ const routes = {
   contribute: "/contribute",
   user: {
     profile: "/user/profile",
-    dashboard: "/user/dashboard",
+    dashboard: "/dashboard",
     courses: "/shiksha/my-courses",
     projects: "/projects/my-projects",
     sheets: "/interview-prep/my-sheets",
