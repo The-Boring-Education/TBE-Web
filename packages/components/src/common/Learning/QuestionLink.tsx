@@ -1,9 +1,10 @@
 import { useAnalytics } from "@tbe/hooks";
 import type { QuestionLinkProps } from "@tbe/interface";
 import { trackEvent as sendEvent } from "@tbe/utils";
-import Link from "next/link";
 import { FaLock, FaRegCircle, FaStar } from "react-icons/fa";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+
+import LinkText from "../Typography/Link";
 
 const QuestionLink = ({
   href,
@@ -45,10 +46,11 @@ const QuestionLink = ({
       ? "text-gray-400"
       : "text-greyDark";
 
-  // Frequency borders removed as per UI request
-
   return (
-    <Link
+    <LinkText
+      suppressGlobalUiClick
+      analyticsId={`learning_question_${questionId}`}
+      analyticsLabel={`question:${title}`}
       key={questionId}
       className={`flex items-center gap-1 w-full p-2 mb-1 rounded border text-left pre-title ${
         isLocked
@@ -58,8 +60,6 @@ const QuestionLink = ({
           : `${defaultTextColor} ${hoverBgClass} ${hoverTextClass} ${additionalClasses}`
       }`}
       href={href}
-      data-analytics
-      data-analytics-label={`question:${title}`}
       onClick={(e) => {
         if (isLocked) {
           e.preventDefault();
@@ -68,7 +68,6 @@ const QuestionLink = ({
 
         e.preventDefault(); // Prevent full page navigation to support shallow routing
 
-        // Track question start
         trackEvent({
           action: "QUESTION_START",
           category: "Learning",
@@ -115,7 +114,7 @@ const QuestionLink = ({
         )}
       </div>
       {title}
-    </Link>
+    </LinkText>
   );
 };
 

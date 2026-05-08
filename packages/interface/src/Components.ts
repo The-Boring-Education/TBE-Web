@@ -34,7 +34,23 @@ export interface SectionProps {
   isDev?: boolean;
 }
 
-export interface LinkProps {
+export interface DelegatedInteractiveAnalyticsProps {
+  /** Stable delegated id (`data-tbe-analytics-id`); surfaced as GA param `element_id`. */
+  analyticsId?: string;
+  /** Overrides inner-text label for delegated clicks (`data-tbe-analytics-label`). */
+  analyticsLabel?: string;
+  /** Attribute `data-tbe-surface` on this element so nearest ancestor wins in GA. */
+  analyticsSurface?: string;
+  /** When true, delegated `ui_click` is not emitted for this element. */
+  suppressGlobalUiClick?: boolean;
+  /**
+   * When true, emits `data-tbe-analytics` so the delegated listener targets this element
+   * (e.g. `div[role="button"]`). Ignore for native `button`, `input`, `a[href]`.
+   */
+  analyticsMarker?: boolean;
+}
+
+export interface LinkProps extends DelegatedInteractiveAnalyticsProps {
   children?: ReactNode;
   className?: string;
   href: string;
@@ -82,7 +98,7 @@ type ButtonVariant =
   | "SUCCESS"
   | "NEUTRAL";
 
-export interface ButtonProps {
+export interface ButtonProps extends DelegatedInteractiveAnalyticsProps {
   variant: ButtonVariant;
   className?: string;
   text?: string;
@@ -483,6 +499,8 @@ export interface LearningSidebarPanelProps {
   children?: ReactNode;
   theme?: "dark" | "light";
   onClose?: () => void;
+  /** GA delegated `surface` for chapter/question lists inside the panel (default `learning_sidebar`). */
+  analyticsSurface?: string;
 }
 
 export interface LearningSidebarListProps<T = any> {

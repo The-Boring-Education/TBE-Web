@@ -77,7 +77,7 @@ const DsaPrepWorkspace = ({
     useState("before-you-start");
 
   const filteredQuestions = selectedTopic
-    ? questions.filter((q) => q.topics?.[0] === selectedTopic)
+    ? questions.filter((q) => q.topics?.includes(selectedTopic))
     : [];
 
   const lockedItemKeys = freemiumLockedQuestionIds

@@ -1,5 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@tbe/utils";
+import type { DelegatedInteractiveAnalyticsProps } from "@tbe/interface";
+import { buildDelegatedInteractiveAnalyticsDOMProps, cn } from "@tbe/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
@@ -35,18 +36,41 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends
     React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants>,
+    DelegatedInteractiveAnalyticsProps {
   asChild?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      analyticsId,
+      analyticsLabel,
+      analyticsSurface,
+      suppressGlobalUiClick,
+      analyticsMarker,
+      ...props
+    },
+    ref,
+  ) => {
+    const delegated = buildDelegatedInteractiveAnalyticsDOMProps({
+      analyticsId,
+      analyticsLabel,
+      analyticsSurface,
+      suppressGlobalUiClick,
+      analyticsMarker,
+    });
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        {...(props as any)}
+        {...props}
+        {...delegated}
       />
     );
   },

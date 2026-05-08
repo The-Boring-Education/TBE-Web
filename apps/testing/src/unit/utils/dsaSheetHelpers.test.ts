@@ -118,26 +118,26 @@ describe("buildDsaMatchStage", () => {
     });
   });
 
-  it("intersects explicit companyTypes with user's target companies", () => {
+  it("uses explicit companyTypes filter without intersecting with target companies", () => {
     const match = buildDsaMatchStage(
       { userId: "u1", companyTypes: ["FAANG", "MNC"] },
       ["FAANG", "Startup"],
     );
-    // Intersection = ["FAANG"]
-    expect(match.companyTypes).toEqual({ $in: ["FAANG"] });
+    // companyTypes comes only from the explicit filter, not intersected with targets
+    expect(match.companyTypes).toEqual({ $in: ["FAANG", "MNC"] });
   });
 
-  it("falls back to target companies when intersection is empty", () => {
+  it("uses explicit companyTypes filter even when no overlap with target companies", () => {
     const match = buildDsaMatchStage(
       { userId: "u1", companyTypes: ["FAANG"] },
       ["Startup"],
     );
-    expect(match.companyTypes).toEqual({ $in: ["Startup"] });
+    expect(match.companyTypes).toEqual({ $in: ["FAANG"] });
   });
 
-  it("sets companyTypes from target companies when filter is absent", () => {
+  it("does not set companyTypes when filter is absent even with target companies", () => {
     const match = buildDsaMatchStage({ userId: "u1" }, ["MNC", "FAANG"]);
-    expect(match.companyTypes).toEqual({ $in: ["MNC", "FAANG"] });
+    expect(match.companyTypes).toBeUndefined();
   });
 
   it("does not set companyTypes when userId is absent", () => {

@@ -28,8 +28,12 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
     await expect(page).not.toHaveURL(onboardingAppUrlPattern, {
       timeout: 15_000,
     });
-    await expect(
-      page.getByRole("heading", { name: "Tech Yatra", exact: true }),
-    ).toBeVisible({ timeout: 15_000 });
+    await expect(page).toHaveURL(
+      (url) => new URL(url).pathname === "/dashboard",
+      {
+        timeout: 15_000,
+      },
+    );
+    await expect(page.getByRole("main")).toBeVisible({ timeout: 15_000 });
   });
 });

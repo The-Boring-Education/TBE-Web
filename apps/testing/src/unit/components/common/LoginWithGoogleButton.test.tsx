@@ -21,23 +21,24 @@ vi.mock("@tbe/auth", () => ({
   }),
 }));
 
-vi.mock("@tbe/hooks", async (importOriginal) => {
-  const mod = await importOriginal<typeof import("@tbe/hooks")>();
-  return {
-    ...mod,
-    useAnalytics: () => ({ trackEvent: mockTrackEvent }),
-  };
-});
+vi.mock("@tbe/hooks", () => ({
+  useAnalytics: () => ({ trackEvent: mockTrackEvent }),
+}));
 
 vi.mock("@tbe/utils", async (importOriginal) => {
-  const mod = await importOriginal<typeof import("@tbe/utils")>();
+  const mod = (await importOriginal()) as Record<string, unknown>;
   return { ...mod, trackEvent: vi.fn() };
 });
 
 vi.mock("framer-motion", () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, whileHover, whileTap, ...props }: any) => (
+    button: ({
+      children,
+      whileHover: _whileHover,
+      whileTap: _whileTap,
+      ...props
+    }: any) => (
       <button type="button" {...props}>
         {children}
       </button>
@@ -56,6 +57,7 @@ describe("LoginWithGoogleButton", () => {
     render(<LoginWithGoogleButton text="Continue with Google" />);
 
     const btn = screen.getByRole("button", { name: "Continue with Google" });
+    expect(btn).toHaveAttribute("data-tbe-analytics-skip-global");
     fireEvent.click(btn);
 
     expect(mockTrackEvent).toHaveBeenCalledWith({

@@ -143,17 +143,9 @@ export const buildDsaMatchStage = (
     match.isRealWorldProblem = { $ne: true };
   }
 
-  if (userId && targetCompanies.length > 0) {
-    if (match.companyTypes) {
-      const currentIn: string[] = match.companyTypes.$in || [];
-      const intersection = currentIn.filter((t) => targetCompanies.includes(t));
-      match.companyTypes = {
-        $in: intersection.length > 0 ? intersection : targetCompanies,
-      };
-    } else {
-      match.companyTypes = { $in: targetCompanies };
-    }
-  }
+  // We still allow manual companyTypes filtering via the filters object (handled above),
+  // but we no longer restrict the overall result set to only targetCompanies.
+  // The targetCompanies array is still used to calculate _priorityScore for sorting.
 
   return match;
 };

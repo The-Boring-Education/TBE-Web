@@ -4,9 +4,13 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockTrackEvent = vi.fn();
-vi.mock("@tbe/utils", () => ({
-  trackEvent: (...a: unknown[]) => mockTrackEvent(...a),
-}));
+vi.mock("@tbe/utils", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@tbe/utils")>();
+  return {
+    ...actual,
+    trackEvent: (...args: unknown[]) => mockTrackEvent(...args),
+  };
+});
 
 vi.mock("next/link", () => ({
   default: ({
@@ -56,7 +60,13 @@ describe("ChapterLink", () => {
     render(<ChapterLink {...baseProps} isLocked={false} />);
     expect(screen.getByText("Intro")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("link", { name: "Intro" }));
+    const anchor = screen.getByRole("link", { name: "Intro" });
+    expect(anchor).toHaveAttribute("data-tbe-analytics-skip-global");
+    expect(anchor).toHaveAttribute(
+      "data-tbe-analytics-id",
+      `course_chapter_${baseProps.chapterId}`,
+    );
+    await user.click(anchor);
     expect(baseProps.handleChapterClick).toHaveBeenCalledWith("mdx", "ch-1");
     expect(mockTrackEvent).toHaveBeenCalledWith(
       "COURSE_CHAPTER_START",

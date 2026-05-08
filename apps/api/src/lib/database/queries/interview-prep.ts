@@ -764,20 +764,17 @@ const getDSATopicSummariesFromDB = async (
   try {
     const matchStages: PipelineStage[] = [];
 
-    if (userId) {
-      const targetCompanies = await getUserDSATargetCompanies(userId);
-      if (targetCompanies.length > 0) {
-        matchStages.push({
-          $match: { companyTypes: { $in: targetCompanies } },
-        });
-      }
-    }
+    // targetCompanies is no longer used to filter topics. We want to show all topics
+    // and questions regardless of user preferences.
 
     const countPipeline: PipelineStage[] = [
       ...matchStages,
       {
+        $unwind: "$topics",
+      },
+      {
         $addFields: {
-          primaryTopic: { $toUpper: { $arrayElemAt: ["$topics", 0] } },
+          primaryTopic: { $toUpper: "$topics" },
         },
       },
       {

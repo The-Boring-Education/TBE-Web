@@ -1,8 +1,9 @@
 import type { ChapterLinkProps } from "@tbe/interface";
 import { trackEvent } from "@tbe/utils";
-import Link from "next/link";
 import { FaLock, FaRegCircle } from "react-icons/fa";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+
+import LinkText from "../Typography/Link";
 
 const ChapterLink = ({
   href,
@@ -24,7 +25,10 @@ const ChapterLink = ({
   const iconColor = isCompleted ? "text-green-500" : "text-greyDark";
 
   return (
-    <Link
+    <LinkText
+      suppressGlobalUiClick
+      analyticsId={`course_chapter_${chapterId}`}
+      analyticsLabel={`chapter:${name}`}
       key={chapterId}
       className={`flex items-center gap-1 w-full p-2 rounded text-left pre-title ${
         isLocked
@@ -32,8 +36,6 @@ const ChapterLink = ({
           : `hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`
       }`}
       href={href}
-      data-analytics
-      data-analytics-label={`chapter:${name}`}
       onClick={(e) => {
         if (isLocked) {
           e.preventDefault();
@@ -59,7 +61,7 @@ const ChapterLink = ({
         <FaRegCircle className={iconColor} size={24} />
       )}
       {name}
-    </Link>
+    </LinkText>
   );
 };
 

@@ -9,6 +9,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./analytics": "./src/analytics.ts",
+    "./delegatedInteractiveAnalyticsAttrs": "./src/delegatedInteractiveAnalyticsAttrs.ts",
     "./api": "./src/api.ts",
     "./auth": "./src/auth.ts",
     "./mongodb": "./src/mongodb.ts",

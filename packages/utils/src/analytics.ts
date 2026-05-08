@@ -1,15 +1,205 @@
+/**
+ * GA4 instrumentation for TBE products.
+ *
+ * Data attributes for richer `ui_click` payloads (recommended on CTAs):
+ * - data-tbe-analytics — mark any element as the analytics target when it is not a native button/link
+ * - data-tbe-analytics-id — stable id for reporting (prefer over transient copy)
+ * - data-tbe-analytics-label — human-readable label when inner text is poor
+ * - data-tbe-surface — optional; set on container to attribute clicks to a feature/page slice
+ *
+ * Omit automatic delegation for an element when you already fire precise `trackEvent` calls:
+ * - data-tbe-analytics-skip-global
+ */
+
+export const TBE_ANALYTICS_ATTR_MARKER = "data-tbe-analytics";
+export const TBE_ANALYTICS_ATTR_ID = "data-tbe-analytics-id";
+export const TBE_ANALYTICS_ATTR_LABEL = "data-tbe-analytics-label";
+export const TBE_ANALYTICS_ATTR_SURFACE = "data-tbe-surface";
+export const TBE_ANALYTICS_ATTR_SKIP_GLOBAL = "data-tbe-analytics-skip-global";
+
+export const LEGACY_ANALYTICS_ATTR_MARKER = "data-analytics";
+export const LEGACY_ANALYTICS_ATTR_LABEL = "data-analytics-label";
+
+const CAPTURE_CLICK_GUARD_KEY = "__tbeAnalyticsCaptureClickInstalled";
+
+let delegatedClickCaptureHandler: ((e: MouseEvent) => void) | undefined;
+
+let delegatedSubmitCaptureHandler: EventListener | undefined;
+
+const INTERACTIVE_CLICK_SELECTOR = [
+  "button:not([disabled])",
+  "a[href]",
+  '[role="button"]:not([aria-disabled="true"])',
+  `[${TBE_ANALYTICS_ATTR_MARKER}]`,
+  `[${LEGACY_ANALYTICS_ATTR_MARKER}]`,
+  'input[type="submit"]:not(:disabled)',
+  'input[type="button"]:not(:disabled)',
+].join(",");
+
+declare global {
+  interface Window {
+    gtag?: GtagFn;
+    dataLayer?: unknown[];
+    [CAPTURE_CLICK_GUARD_KEY]?: boolean;
+  }
+}
+
+type GtagFn = (...args: unknown[]) => void;
+
+export interface AnalyticsTrackParams {
+  omit_auto_context?: boolean;
+  app_id?: string;
+  page_path?: string | null;
+  [key: string]: unknown;
+}
+
+/** Build-time ID for the current SPA (set per deployed app). */
 export const GA_TRACKING_ID =
   process.env.NEXT_PUBLIC_ANALYTICS_ID ||
   process.env.NEXT_PUBLIC_GA_TRACKING_ID ||
-  process.env.NEXT_PUBLIC_ANALYTICS_ID ||
   process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ||
   "";
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
+
+/** Stable product slug for GA custom dimension `app_id` (NEXT_PUBLIC_* or VITE_* at build time). */
+export const readTbeAppIdFromEnv = (): string => {
+  if (typeof process === "undefined") return "";
+  return (process.env.NEXT_PUBLIC_TBE_APP_ID ??
+    process.env.VITE_TBE_APP_ID ??
+    "") as string;
+};
+
+export type InstallGlobalAnalyticsListenersOptions = {
+  /**
+   * Use when compile-time env is unavailable (e.g. Vite stubbing `process.env`).
+   * Passed-through to `trackEvent` as `app_id` when callers do not override it.
+   */
+  appId?: string;
+  /** Capture delegated form submits (`ui_form_submit`). Default true. */
+  trackFormSubmits?: boolean;
+};
+
+type ResolvedInstallOptions = {
+  appId?: string;
+  trackFormSubmits: boolean;
+};
+
+let lastInstallOptions: ResolvedInstallOptions = {
+  trackFormSubmits: true,
+};
+
+const mergeInstallOptions = (
+  opts?: InstallGlobalAnalyticsListenersOptions,
+): void => {
+  if (!opts) return;
+  lastInstallOptions = {
+    appId: opts.appId !== undefined ? opts.appId : lastInstallOptions.appId,
+    trackFormSubmits:
+      opts.trackFormSubmits ?? lastInstallOptions.trackFormSubmits,
+  };
+};
+
+const resolveAnalyticsAppId = (
+  explicit?: string | null | undefined,
+): string | undefined => {
+  if (typeof explicit === "string" && explicit.trim() !== "") {
+    return explicit;
   }
-}
-export {};
+  if (lastInstallOptions.appId && lastInstallOptions.appId.trim() !== "") {
+    return lastInstallOptions.appId;
+  }
+  const envId = readTbeAppIdFromEnv();
+  return envId.trim() !== "" ? envId : undefined;
+};
+
+const currentPagePath = (): string => {
+  if (typeof window === "undefined") return "";
+  return `${window.location.pathname}${window.location.search}`;
+};
+
+const sanitizePathOrHref = (fullUrl: string, maxLen = 200): string => {
+  try {
+    const u = new URL(fullUrl, window.location.origin);
+    const normalized = `${u.pathname}${u.search}`;
+    return normalized.length <= maxLen
+      ? normalized
+      : `${normalized.slice(0, maxLen)}…`;
+  } catch {
+    return fullUrl.slice(0, maxLen);
+  }
+};
+
+const anchorIsOutbound = (el: HTMLAnchorElement): boolean => {
+  const href = el.getAttribute("href");
+  const lower = href?.toLowerCase() ?? "";
+  if (
+    !href ||
+    href.startsWith("#") ||
+    lower.startsWith("javascript:") ||
+    lower.startsWith("data:") ||
+    lower.startsWith("vbscript:")
+  ) {
+    return false;
+  }
+  try {
+    const u = new URL(el.href, window.location.href);
+    return u.host !== window.location.host;
+  } catch {
+    return false;
+  }
+};
+
+const readSurfaceFromAncestors = (
+  el: HTMLElement | null,
+): string | undefined => {
+  let node: HTMLElement | null = el;
+  while (node) {
+    const s = node.getAttribute(TBE_ANALYTICS_ATTR_SURFACE);
+    if (s && s.trim() !== "") return s.trim().slice(0, 120);
+    node = node.parentElement;
+  }
+  return undefined;
+};
+
+const readClickLabel = (interactive: HTMLElement): string => {
+  const explicit =
+    interactive.getAttribute(TBE_ANALYTICS_ATTR_LABEL)?.trim() ||
+    interactive.getAttribute(LEGACY_ANALYTICS_ATTR_LABEL)?.trim();
+  if (explicit) return explicit.slice(0, 120);
+  const text = interactive.textContent?.trim() || "";
+  return text.slice(0, 120);
+};
+
+const readElementAnalyticsId = (interactive: HTMLElement): string | null => {
+  const dataId =
+    interactive.getAttribute(TBE_ANALYTICS_ATTR_ID)?.trim() ||
+    interactive.id?.trim();
+  return dataId && dataId.length > 0 ? dataId.slice(0, 120) : null;
+};
+
+const enrichEventParams = (
+  params: AnalyticsTrackParams,
+): AnalyticsTrackParams => {
+  if (params.omit_auto_context) {
+    const { omit_auto_context: omitted, ...rest } = params;
+    void omitted;
+    return rest;
+  }
+  const enriched: AnalyticsTrackParams = { ...params };
+  if (
+    enriched.page_path === undefined &&
+    typeof window !== "undefined" &&
+    window.location
+  ) {
+    enriched.page_path = currentPagePath();
+  }
+  const appId = resolveAnalyticsAppId(
+    typeof enriched.app_id === "string" ? enriched.app_id : undefined,
+  );
+  if (appId) {
+    enriched.app_id = appId;
+  }
+  return enriched;
+};
 
 /* -----------------------------
     LOAD GA
@@ -18,11 +208,10 @@ export const initGA = () => {
   if (typeof window === "undefined") return;
   if (!GA_TRACKING_ID) return;
 
-  // Prevent double-initialization
-  if ((window as any).__ga_initialized) return;
-  (window as any).__ga_initialized = true;
+  if ((window as Window & { __ga_initialized?: boolean }).__ga_initialized)
+    return;
+  (window as Window & { __ga_initialized?: boolean }).__ga_initialized = true;
 
-  // gtag script
   const s1 = document.createElement("script");
   s1.async = true;
   s1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
@@ -42,42 +231,132 @@ export const initGA = () => {
     PAGE VIEW
 ------------------------------ */
 export const trackPageView = (url: string) => {
-  if (typeof window !== "undefined" && (window as any).gtag) {
-    (window as any).gtag("config", GA_TRACKING_ID, {
+  if (typeof window !== "undefined" && window.gtag && GA_TRACKING_ID) {
+    window.gtag("config", GA_TRACKING_ID, {
       page_path: url,
     });
   }
 };
 
-// backward compatibility
 export const trackPageview = trackPageView;
 
 /* -----------------------------
     GENERAL EVENT
 ------------------------------ */
-export const trackEvent = (name: string, params: Record<string, any> = {}) => {
-  if (typeof window !== "undefined" && (window as any).gtag) {
-    (window as any).gtag("event", name, params);
+export const trackEvent = (name: string, params: AnalyticsTrackParams = {}) => {
+  if (typeof window === "undefined" || typeof window.gtag !== "function")
+    return;
+  window.gtag("event", name, enrichEventParams(params));
+};
+
+/**
+ * Removes delegated listeners registered by {@link installGlobalAnalyticsListeners}.
+ * **Only call from Vitest teardown** — not from runtime application code.
+ * @internal
+ */
+export const resetDelegatedAnalyticsListenersForTesting = (): void => {
+  if (typeof document === "undefined") return;
+
+  if (delegatedClickCaptureHandler) {
+    document.removeEventListener("click", delegatedClickCaptureHandler, true);
+    delegatedClickCaptureHandler = undefined;
   }
+
+  if (delegatedSubmitCaptureHandler) {
+    document.removeEventListener("submit", delegatedSubmitCaptureHandler, true);
+    delegatedSubmitCaptureHandler = undefined;
+  }
+
+  if (typeof window !== "undefined") {
+    delete window[CAPTURE_CLICK_GUARD_KEY];
+  }
+
+  lastInstallOptions = { trackFormSubmits: true };
+};
+
+const delegatedClickCaptureHandlerBody = (e: MouseEvent): void => {
+  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey) return;
+  const target = e.target;
+  if (!target || !(target instanceof HTMLElement)) return;
+
+  const interactive = target.closest(
+    INTERACTIVE_CLICK_SELECTOR,
+  ) as HTMLElement | null;
+  if (!interactive || interactive.closest("[data-ignore-tbe-analytics]")) {
+    return;
+  }
+  if (
+    interactive.hasAttribute(TBE_ANALYTICS_ATTR_SKIP_GLOBAL) ||
+    interactive.getAttribute(TBE_ANALYTICS_ATTR_SKIP_GLOBAL) === ""
+  ) {
+    return;
+  }
+
+  const tagName = interactive.tagName.toLowerCase();
+  const elementIdRaw = readElementAnalyticsId(interactive);
+  let hrefSanitized: string | undefined;
+  let isOutbound = false;
+
+  if (interactive instanceof HTMLAnchorElement) {
+    const rawHref = interactive.href;
+    if (rawHref) {
+      hrefSanitized = sanitizePathOrHref(rawHref);
+      isOutbound = anchorIsOutbound(interactive);
+    }
+  }
+
+  trackEvent("ui_click", {
+    interaction_type: "click",
+    element_tag: tagName,
+    ...(elementIdRaw ? { element_id: elementIdRaw } : {}),
+    click_label: readClickLabel(interactive),
+    surface: readSurfaceFromAncestors(interactive),
+    ...(hrefSanitized !== undefined
+      ? { link_href: hrefSanitized, is_outbound: isOutbound }
+      : {}),
+  });
+};
+
+const delegatedSubmitCaptureHandlerBody = (e: Event): void => {
+  const form = e.target instanceof HTMLFormElement ? e.target : null;
+  if (!form || form.closest("[data-ignore-tbe-analytics]")) return;
+  if (
+    form.hasAttribute(TBE_ANALYTICS_ATTR_SKIP_GLOBAL) ||
+    form.getAttribute(TBE_ANALYTICS_ATTR_SKIP_GLOBAL) === ""
+  ) {
+    return;
+  }
+  const formName =
+    form.getAttribute("name")?.trim() || form.id?.trim() || undefined;
+  trackEvent("ui_form_submit", {
+    interaction_type: "form_submit",
+    form_name: formName ?? "anonymous_form",
+    surface: readSurfaceFromAncestors(form),
+  });
 };
 
 /* -----------------------------
-    GLOBAL LISTENERS
+    GLOBAL DELEGATED LISTENERS
 ------------------------------ */
-export function installGlobalAnalyticsListeners() {
-  if (typeof window === "undefined") return;
+export const installGlobalAnalyticsListeners = (
+  options?: InstallGlobalAnalyticsListenersOptions,
+): void => {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  // Auto track ALL button clicks
-  window.addEventListener("click", (e) => {
-    const target = e.target as HTMLElement;
-    if (target.tagName === "BUTTON") {
-      trackEvent("button_click", {
-        button_text: target.innerText,
-        button_id: target.id || null,
-      });
-    }
-  });
-}
+  mergeInstallOptions(options);
+
+  if (window[CAPTURE_CLICK_GUARD_KEY]) return;
+  window[CAPTURE_CLICK_GUARD_KEY] = true;
+
+  delegatedClickCaptureHandler = delegatedClickCaptureHandlerBody;
+  document.addEventListener("click", delegatedClickCaptureHandler, true);
+
+  if (lastInstallOptions.trackFormSubmits) {
+    delegatedSubmitCaptureHandler =
+      delegatedSubmitCaptureHandlerBody as EventListener;
+    document.addEventListener("submit", delegatedSubmitCaptureHandler, true);
+  }
+};
 
 /* -----------------------------
    QUIZ EVENTS
