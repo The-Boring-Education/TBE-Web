@@ -1,5 +1,5 @@
 import { compareDsaTopicKeysForApi } from "@tbe/constants";
-import mongoose, { type PipelineStage } from "mongoose";
+import mongoose, { type PipelineStage, Types } from "mongoose";
 
 import { modelSelectParams } from "@/lib/constants";
 import type {
@@ -10,6 +10,7 @@ import type {
   DSADifficultyType,
   DSADomainType,
   DSATopicType,
+  InterviewSheetQuestionModel,
   SheetEnrollmentRequestProps,
   UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
@@ -297,6 +298,53 @@ const addQuestionToInterviewSheetInDB = async (
     });
     return {
       error: "Failed to add question to interview sheet",
+      details: error,
+    };
+  }
+};
+
+const appendQuestionsToInterviewSheetInDB = async (
+  sheetId: string,
+  rawQuestions: unknown[],
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    if (!Types.ObjectId.isValid(sheetId)) {
+      return { error: "Invalid interview sheet id" };
+    }
+
+    if (!Array.isArray(rawQuestions) || rawQuestions.length === 0) {
+      return { error: "Questions must be a non-empty array" };
+    }
+
+    const questions = rawQuestions.map((questionItem: any) => ({
+      _id: new Types.ObjectId(),
+      title: questionItem.title,
+      question: questionItem.question,
+      answer: questionItem.answer,
+      frequency: questionItem.frequency,
+      priority: questionItem.priority,
+      companyTypes: questionItem.companyTypes,
+      resources: questionItem.resources,
+    })) as unknown as InterviewSheetQuestionModel[];
+
+    const updatedSheet = await InterviewSheet.findOneAndUpdate(
+      { _id: sheetId },
+      { $push: { questions: { $each: questions } } },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedSheet) {
+      return { error: "Interview sheet not found" };
+    }
+
+    return { data: updatedSheet };
+  } catch (error) {
+    logger.error("DB: appendQuestionsToInterviewSheetInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to append questions to interview sheet",
       details: error,
     };
   }
@@ -981,6 +1029,28 @@ const getDSAQuestionByIDFromDB = async (
   }
 };
 
+const deleteDSAQuestionFromDB = async (
+  questionId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const deletedQuestion = await DSAQuestion.findByIdAndDelete(questionId);
+
+    if (!deletedQuestion) {
+      return { error: "DSA question not found" };
+    }
+
+    return {
+      data: { message: "DSA question deleted successfully", _id: questionId },
+    };
+  } catch (error) {
+    logger.error("DB: deleteDSAQuestionFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to delete DSA question", details: error };
+  }
+};
+
 const getStudyGuideByTopicFromDB = async (
   topicId: string,
 ): Promise<DatabaseQueryResponseType> => {
@@ -1303,6 +1373,8 @@ export {
   // DSA Question functions
   addDSAQuestionToDB,
   addQuestionToInterviewSheetInDB,
+  appendQuestionsToInterviewSheetInDB,
+  deleteDSAQuestionFromDB,
   deleteInterviewSheetFromDB,
   deleteQuestionFromSheetInDB,
   enrollInASheet,

@@ -102,7 +102,7 @@ const DsaPrepWorkspace = ({
   };
 
   return (
-    <div className={cn("flex flex-col h-full w-full", className)}>
+    <div className={cn("flex flex-col w-full flex-1 min-h-0", className)}>
       {/* Header Banner — sidebar border extends through here */}
       <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
         {/* Left column — aligns with sidebar width */}

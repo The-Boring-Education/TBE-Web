@@ -1,7 +1,10 @@
 import { Types } from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { addAInterviewSheetToDB } from "@/lib/database";
+import {
+  addAInterviewSheetToDB,
+  appendQuestionsToInterviewSheetInDB,
+} from "@/lib/database";
 import type {
   AddInterviewSheetRequestPayloadProps,
   InterviewSheetQuestionModel,
@@ -25,7 +28,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const { sessionId, metadata: frontendMetadata, sheetData } = req.body;
+    const {
+      sessionId,
+      sheetId: targetSheetId,
+      metadata: frontendMetadata,
+      sheetData,
+    } = req.body;
 
     if (!sessionId || !sheetData) {
       return res.status(400).json(
@@ -37,7 +45,74 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    // 2. Format Payload
+    const appendToSheetId =
+      typeof targetSheetId === "string" && targetSheetId.trim().length > 0
+        ? targetSheetId.trim()
+        : undefined;
+
+    // Append questions to an existing interview sheet (admin flow; questions only)
+    if (appendToSheetId) {
+      if (!Array.isArray(sheetData.questions)) {
+        return res.status(400).json(
+          sendAPIResponse({
+            status: false,
+            message: "Invalid sheetData: questions must be an array.",
+            success: false,
+          }),
+        );
+      }
+
+      if (sheetData.questions.length === 0) {
+        return res.status(400).json(
+          sendAPIResponse({
+            status: false,
+            message:
+              "Missing required fields for append: non-empty questions array",
+            success: false,
+          }),
+        );
+      }
+
+      const { data: updatedSheet, error: appendError } =
+        await appendQuestionsToInterviewSheetInDB(
+          appendToSheetId,
+          sheetData.questions,
+        );
+
+      if (appendError) {
+        const errMsg =
+          typeof appendError === "string" ? appendError : String(appendError);
+        const clientError =
+          errMsg === "Interview sheet not found" ||
+          errMsg === "Invalid interview sheet id" ||
+          errMsg === "Questions must be a non-empty array";
+        logger.error("Interview sheet append failed", {
+          appendToSheetId,
+          error: errMsg,
+        });
+        return res.status(clientError ? 400 : 500).json(
+          sendAPIResponse({
+            status: false,
+            message: clientError
+              ? errMsg
+              : "Failed to append questions to interview sheet",
+            success: false,
+            ...(clientError ? {} : { error: appendError }),
+          }),
+        );
+      }
+
+      return res.status(200).json(
+        sendAPIResponse({
+          status: true,
+          message: `Successfully appended ${sheetData.questions.length} questions to interview sheet`,
+          data: updatedSheet,
+          success: true,
+        }),
+      );
+    }
+
+    // Create new sheet: require name + questions array
     if (!sheetData.name || !Array.isArray(sheetData.questions)) {
       return res.status(400).json(
         sendAPIResponse({

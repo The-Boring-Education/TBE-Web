@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import {
+  deleteDSAQuestionFromDB,
   getDSAQuestionByIDFromDB,
   updateDSAQuestionInDB,
 } from "@/lib/database";
@@ -32,6 +33,38 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res
         .status(apiStatusCodes.OKAY)
         .json(sendAPIResponse({ status: true, data }));
+    } catch (error: any) {
+      return res
+        .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(sendAPIResponse({ status: false, message: error.message }));
+    }
+  }
+
+  if (method === "DELETE") {
+    // Admin access required for deletions
+    const isAdmin = await adminMiddleware(req, res);
+    if (!isAdmin) return;
+
+    try {
+      const { data, error } = await deleteDSAQuestionFromDB(questionId);
+
+      if (error) {
+        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+          sendAPIResponse({
+            status: false,
+            message: "Failed to delete DSA question",
+            error,
+          }),
+        );
+      }
+
+      return res.status(apiStatusCodes.OKAY).json(
+        sendAPIResponse({
+          status: true,
+          data,
+          message: "DSA question deleted successfully",
+        }),
+      );
     } catch (error: any) {
       return res
         .status(apiStatusCodes.INTERNAL_SERVER_ERROR)
