@@ -99,11 +99,10 @@ const Button = ({
   size = "MEDIUM",
   type = "button",
 }: ButtonProps) => {
-  // Size classes mapping
   const sizeClasses = {
-    SMALL: "px-2 py-1 text-xs",
-    MEDIUM: "px-3 py-2 text-sm",
-    LARGE: "px-4 py-3 text-base",
+    SMALL: "px-1 py-1 text-xs",
+    MEDIUM: "px-1.5 py-1.5 text-sm",
+    LARGE: "px-2 py-2 text-base",
   };
 
   let baseClasses = `button rounded-1 ${sizeClasses[size]}`;

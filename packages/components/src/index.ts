@@ -26,6 +26,7 @@ export {
   BannerVariantC,
 } from "./common/Banner";
 export { default as Button } from "./common/Buttons/Button";
+export { default as CopyButton } from "./common/Buttons/CopyButton";
 export { default as FloatingActionButton } from "./common/Buttons/FloatingActionButton";
 export { default as LinkButton } from "./common/Buttons/LinkButton";
 export { default as LoginRedirectButton } from "./common/Buttons/LoginRedirectButton";

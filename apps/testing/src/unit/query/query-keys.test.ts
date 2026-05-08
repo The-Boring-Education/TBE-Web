@@ -98,6 +98,21 @@ describe("queryKeys", () => {
         "u1",
       ]);
     });
+
+    it("questions keys differ across productType contexts", () => {
+      const dyKey = queryKeys.dsa.questions({
+        userId: "u1",
+        topic: "ARRAY",
+        productType: "DSA_YATRA",
+      });
+      const onCampusKey = queryKeys.dsa.questions({
+        userId: "u1",
+        topic: "ARRAY",
+        productType: "ONCAMPUS",
+      });
+
+      expect(dyKey).not.toEqual(onCampusKey);
+    });
   });
 
   describe("shiksha", () => {

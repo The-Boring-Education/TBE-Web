@@ -72,7 +72,6 @@ export function PointsDisplay({
     );
   }
 
-  // Dashboard variant - simple red circle
   return (
     <>
       <div className="relative" ref={containerRef}>

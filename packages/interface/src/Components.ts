@@ -74,14 +74,16 @@ export interface LinkButtonProps extends LinkProps {
   noLoader?: boolean;
 }
 
+type ButtonVariant =
+  | "OUTLINE"
+  | "PRIMARY"
+  | "SECONDARY"
+  | "GHOST"
+  | "SUCCESS"
+  | "NEUTRAL";
+
 export interface ButtonProps {
-  variant:
-    | "PRIMARY"
-    | "OUTLINE"
-    | "GHOST"
-    | "SUCCESS"
-    | "SECONDARY"
-    | "NEUTRAL";
+  variant: ButtonVariant;
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -95,6 +97,21 @@ export interface ButtonProps {
   animationType?: "DEFAULT" | "BOUNCE" | "GLOW";
   size?: "SMALL" | "MEDIUM" | "LARGE";
   type?: "button" | "submit" | "reset";
+}
+
+export interface CopyButtonProps extends Omit<
+  ButtonProps,
+  "text" | "onClick" | "icon" | "variant"
+> {
+  /** Optional explicit value to copy. Defaults to the current page URL. */
+  value?: string;
+  text?: string;
+  copiedText?: string;
+  variant?: ButtonVariant;
+  copiedClassName?: string;
+  resetAfterMs?: number;
+  onCopySuccess?: () => void;
+  onCopyError?: (error: unknown) => void;
 }
 
 export interface PageLayoutProps {

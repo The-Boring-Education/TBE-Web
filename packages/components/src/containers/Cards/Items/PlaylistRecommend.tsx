@@ -1,5 +1,6 @@
 import {
   Button,
+  CopyButton,
   FlexContainer,
   SectionHeaderContainer,
   Toast,
@@ -20,15 +21,9 @@ const PlaylistRecommend = ({
 
   const { makeRequest, loading } = useApi("updateRecommendation");
 
-  const copyCurrentPageUrl = () => {
-    const currentUrl = window.location.href;
-    navigator.clipboard
-      .writeText(currentUrl)
-      .then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      })
-      .catch((err) => console.error("Failed to copy URL:", err));
+  const handleCopySuccess = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleRecommendPlaylist = async () => {
@@ -80,12 +75,7 @@ const PlaylistRecommend = ({
           onClick={handleRecommendPlaylist}
         />
 
-        <Button
-          className="text-nowrap rounded-s-md"
-          text="Copy Link"
-          variant="OUTLINE"
-          onClick={copyCurrentPageUrl}
-        />
+        <CopyButton variant="OUTLINE" />
       </div>
 
       {thankYouMessage && (

@@ -156,8 +156,7 @@
   opacity: 0;
   transform: translateY(16px);
   cursor: default;
-  transition:
-    background 0.2s ease;
+  transition: background 0.2s ease;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -503,7 +502,11 @@
 
 .sheet-header-mini-fill {
   height: 100%;
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.8), rgba(168, 85, 247, 0.6));
+  background: linear-gradient(
+    90deg,
+    rgba(99, 102, 241, 0.8),
+    rgba(168, 85, 247, 0.6)
+  );
   border-radius: 100px;
   transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -549,7 +552,11 @@
 
 .sheet-sidebar-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.8), rgba(168, 85, 247, 0.6));
+  background: linear-gradient(
+    90deg,
+    rgba(99, 102, 241, 0.8),
+    rgba(168, 85, 247, 0.6)
+  );
   border-radius: 100px;
   transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
@@ -579,7 +586,11 @@
 
 .sheet-mobile-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.7), rgba(168, 85, 247, 0.5));
+  background: linear-gradient(
+    90deg,
+    rgba(99, 102, 241, 0.7),
+    rgba(168, 85, 247, 0.5)
+  );
   transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

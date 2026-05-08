@@ -167,15 +167,13 @@ const handleGetUser = async (req, res) => {
   const { data, error } = await getUserByIdFromDB(userId);
   if (error) {
     captureAPIError(error, "/api/v1/user", "GET", 500, { userId });
-    return res
-      .status(500)
-      .json(
-        sendAPIResponse({
-          status: false,
-          error,
-          message: "Error fetching user",
-        }),
-      );
+    return res.status(500).json(
+      sendAPIResponse({
+        status: false,
+        error,
+        message: "Error fetching user",
+      }),
+    );
   }
   return res.status(200).json(sendAPIResponse({ status: true, data }));
 };

@@ -8,11 +8,7 @@ import {
   routes,
   TOPIC_LABELS,
 } from "@tbe/constants";
-import {
-  useDsaCompletedQuestions,
-  useDsaQuestions,
-  usePaymentStatus,
-} from "@tbe/hooks";
+import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
 import type { PageProps, RoadmapNode } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import { Code } from "lucide-react";
@@ -65,16 +61,11 @@ function TopicsClient() {
     userId: user?.id,
   });
 
-  const { isLocked } = usePaymentStatus({
-    userId: user?.id,
-    productId: "lifetime",
-    productType: "DSA_YATRA",
-    isPremium: true,
-  });
-
   const nodes: RoadmapNode[] = useMemo(() => {
     const topicMap = new Map<string, { total: number; solved: number }>();
     allQuestions.forEach((q: any) => {
+      // Only count unlocked questions so locked-only topics don't appear
+      if (q.isLocked) return;
       const primaryTopic = q.topics?.[0];
       if (primaryTopic) {
         if (!topicMap.has(primaryTopic)) {
@@ -91,29 +82,23 @@ function TopicsClient() {
 
     const sortedKeys = Object.keys(TOPIC_LABELS).sort(compareDsaTopicKeys);
 
-    return sortedKeys
-      .map((topicKey, idx) => {
-        const data = topicMap.get(topicKey) || { total: 0, solved: 0 };
-        const name = TOPIC_LABELS[topicKey] || topicKey;
-        const isActuallyLocked = data.total === 0;
-        // If user is not subscribed, mark topic as locked (shows blur + lock icon in roadmap)
-        const topicIsLocked = isActuallyLocked || !!isLocked;
+    return sortedKeys.map((topicKey, idx) => {
+      const data = topicMap.get(topicKey) || { total: 0, solved: 0 };
+      const name = TOPIC_LABELS[topicKey] || topicKey;
+      const topicIsLocked = data.total === 0;
 
-        return {
-          id: topicKey,
-          name,
-          total: data.total,
-          solved: data.solved,
-          isLocked: topicIsLocked,
-          explanation:
-            EXPLANATIONS[name] || `Master the fundamentals of ${name}.`,
-          difficulty: 1 + (idx % 5),
-        };
-      })
-      .filter(
-        (node) => node.total > 0 || node.id === "RECURSION" || node.isLocked,
-      );
-  }, [allQuestions, completedQuestions, isLocked]);
+      return {
+        id: topicKey,
+        name,
+        total: data.total,
+        solved: data.solved,
+        isLocked: topicIsLocked,
+        explanation:
+          EXPLANATIONS[name] || `Master the fundamentals of ${name}.`,
+        difficulty: 1 + (idx % 5),
+      };
+    });
+  }, [allQuestions, completedQuestions]);
 
   const stats: RoadmapStatItem[] = useMemo(() => {
     const topicsTotal = nodes.filter((n) => !n.isLocked).length;
@@ -142,10 +127,6 @@ function TopicsClient() {
   }, [nodes]);
 
   const handleNodeClick = (node: RoadmapNode) => {
-    if (isLocked) {
-      void router.push(routes.dsayatra.pricing);
-      return;
-    }
     router.push(`/sheets?topic=${node.id}`);
   };
 

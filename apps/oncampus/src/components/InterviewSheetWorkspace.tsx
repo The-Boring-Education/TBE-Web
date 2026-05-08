@@ -1,5 +1,6 @@
 import {
   Button,
+  CopyButton,
   DifficultyGroupedList,
   FeedbackPopup,
   FlexContainer,
@@ -25,7 +26,6 @@ import type { SheetPageProps } from "@tbe/interface";
 import { queryKeys, useMutation, useQueryClient } from "@tbe/query";
 import { cn, sendRequest } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   Fragment,
@@ -36,8 +36,6 @@ import {
   useState,
 } from "react";
 import { FaLock } from "react-icons/fa";
-import { FiCheck, FiCopy } from "react-icons/fi";
-import { toast } from "sonner";
 
 import InterviewQuestionContent from "@/components/InterviewQuestionContent";
 import { MobileNav } from "@/components/MobileNav";
@@ -51,6 +49,23 @@ const slugify = (text: string) =>
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
+/** Serializes `href` for `next/link` — `QuestionLink` only accepts `string`, not a UrlObject. */
+const buildPathWithQuery = (
+  pathWithoutQuery: string,
+  query: Record<string, string | string[] | undefined>,
+): string => {
+  const params = new URLSearchParams();
+  for (const [key, raw] of Object.entries(query)) {
+    if (raw === undefined) continue;
+    const values = Array.isArray(raw) ? raw : [raw];
+    for (const v of values) {
+      params.append(key, v);
+    }
+  }
+  const qs = params.toString();
+  return qs ? `${pathWithoutQuery}?${qs}` : pathWithoutQuery;
+};
+
 export const InterviewSheetWorkspace = ({
   sheet,
   meta,
@@ -61,8 +76,6 @@ export const InterviewSheetWorkspace = ({
   const router = useRouter();
   const [, setSheetMeta] = useState<string>(meta || "");
   const [questions, setQuestions] = useState(sheet?.questions || []);
-
-  const [copied, setCopied] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
 
   const [showPayment, setShowPayment] = useState(false);
@@ -209,18 +222,6 @@ export const InterviewSheetWorkspace = ({
     [isLocked, questions, router, sheet.slug],
   );
 
-  const handleCopyLink = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    toast.success("Link copied to clipboard!", {
-      duration: 2000,
-      className:
-        "bg-[#0A0A0A] border border-white/10 text-white text-xs rounded-lg",
-    });
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   const handleShowPayment = () => {
     setShowPayment(true);
     setTimeout(() => {
@@ -242,7 +243,6 @@ export const InterviewSheetWorkspace = ({
       ),
     );
 
-    setIsStarLoading(true);
     try {
       const response = await makeRequest({
         method: "POST",
@@ -271,8 +271,6 @@ export const InterviewSheetWorkspace = ({
       }
     } catch {
       setQuestions(oldQuestions);
-    } finally {
-      setIsStarLoading(false);
     }
   };
 
@@ -412,11 +410,10 @@ export const InterviewSheetWorkspace = ({
           const questionId = _id?.toString() ?? "";
           const questionSlug = slugify(title);
 
-          const newQuery = { ...router.query, question: questionSlug };
-          const questionHref = {
-            pathname: router.pathname,
-            query: newQuery,
-          };
+          const questionHref = buildPathWithQuery(router.asPath.split("?")[0], {
+            ...router.query,
+            question: questionSlug,
+          });
 
           return (
             <div key={questionId} className="flex items-center w-full">
@@ -446,7 +443,7 @@ export const InterviewSheetWorkspace = ({
       isLocked,
       handleQuestionClick,
       router.query,
-      router.pathname,
+      router.asPath,
     ],
   );
 
@@ -535,33 +532,7 @@ export const InterviewSheetWorkspace = ({
                 </Text>
               </FlexContainer>
               <div className="flex items-center gap-2 shrink-0">
-                <Button
-                  onClick={handleCopyLink}
-                  variant="OUTLINE"
-                  size="SMALL"
-                  text={copied ? "Copied!" : "Copy Link"}
-                  className={cn(
-                    "border-gray-700 bg-transparent transition-all duration-300 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap gap-1.5",
-                    copied
-                      ? "border-green-500/50 text-green-400"
-                      : "hover:border-red-500 hover:bg-red-500/10",
-                  )}
-                  icon={
-                    copied ? (
-                      <FiCheck className="text-[10px]" />
-                    ) : (
-                      <FiCopy className="text-[10px]" />
-                    )
-                  }
-                />
-                <Link href="/interview-sheets">
-                  <Button
-                    variant="OUTLINE"
-                    size="SMALL"
-                    text="View All Sheets"
-                    className="border-gray-700 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[4px] px-[8px] h-auto text-[11px] font-medium whitespace-nowrap"
-                  />
-                </Link>
+                <CopyButton />
               </div>
             </div>
           </div>

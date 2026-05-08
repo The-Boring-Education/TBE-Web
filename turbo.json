@@ -3,6 +3,7 @@
   "ui": "tui",
   "tasks": {
     "build": {
+      "cache": true,
       "dependsOn": ["^build"],
       "env": [
         "GOOGLE_AUTH_CLIENT_ID",
@@ -52,6 +53,7 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "build:cloud-run": {
+      "cache": true,
       "dependsOn": ["^build"],
       "env": [
         "GOOGLE_AUTH_CLIENT_ID",

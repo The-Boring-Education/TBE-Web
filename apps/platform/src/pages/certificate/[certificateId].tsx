@@ -2,6 +2,7 @@ import {
   Banner,
   Button,
   CertificateContent,
+  CopyButton,
   FeedbackPopup,
   FlexContainer,
   Section,
@@ -61,14 +62,7 @@ const Home = ({
                 variant='PRIMARY'
                 onClick={handleDownloadClick}
               />
-              <Button
-                animationClasses='w-fit'
-                text='Copy Link'
-                variant='OUTLINE'
-                onClick={() =>
-                  navigator.clipboard.writeText(window.location.href)
-                }
-              />
+              <CopyButton />
             </FlexContainer>
             <FlexContainer
               className='gap-2 mt-4 md:w-1/2 w-full m-auto'
@@ -81,13 +75,12 @@ const Home = ({
                 <pre className='bg-gray-100 border p-2 rounded w-full overflow-x-auto'>
                   {socialShareContent}
                 </pre>
-                <Button
+                <CopyButton
                   animationClasses='w-fit'
                   text='Copy'
+                  copiedText='Copied!'
+                  value={socialShareContent}
                   variant='SUCCESS'
-                  onClick={() =>
-                    navigator.clipboard.writeText(socialShareContent)
-                  }
                 />
               </FlexContainer>
             </FlexContainer>

@@ -24,9 +24,7 @@ const LoadingSpinner = ({
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center">
           {spinner}
-          {label && (
-            <p className="mt-4 text-sm text-gray-500">{label}</p>
-          )}
+          {label && <p className="mt-4 text-sm text-gray-500">{label}</p>}
         </div>
       </div>
     );
@@ -35,9 +33,7 @@ const LoadingSpinner = ({
   return (
     <div className="flex items-center justify-center">
       {spinner}
-      {label && (
-        <p className="mt-2 text-sm text-gray-500">{label}</p>
-      )}
+      {label && <p className="mt-2 text-sm text-gray-500">{label}</p>}
     </div>
   );
 };

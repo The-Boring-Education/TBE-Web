@@ -4,6 +4,7 @@ import { apiStatusCodes } from "@/lib/constants";
 import { getDYUserByIdFromDB, updateDYUserByIdInDB } from "@/lib/database";
 import type { DSAYatraOnboardingPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { normalizeDsaDuration } from "@/lib/validation";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -44,6 +45,16 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    const normalizedTimeline = normalizeDsaDuration(timeline);
+    if (!normalizedTimeline) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Invalid timeline. Use 1Month, 3Months, 6Months, or 1Year",
+        }),
+      );
+    }
+
     const userResult = await getDYUserByIdFromDB(userId);
     if (userResult.error || !userResult.data) {
       return res.status(apiStatusCodes.NOT_FOUND).json(
@@ -59,7 +70,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       name,
       userName: username,
       "dsaYatra.dyOnboarded": true,
-      "dsaYatra.timeline": timeline,
+      "dsaYatra.timeline": normalizedTimeline,
       "dsaYatra.target": target,
       "dsaYatra.preferredLanguage": preferredLanguage,
       "dsaYatra.experienceLevel": experienceLevel,

@@ -10,7 +10,6 @@ import {
   sendRequest,
 } from "@tbe/utils";
 import {
-  ArrowLeft,
   BookOpen,
   ChevronRight,
   Folder,
@@ -209,22 +208,13 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                 {totalSheets} sheet{totalSheets !== 1 ? "s" : ""} available
               </p>
             </div>
-            {selectedRoadmap !== "all" && (
-              <button
-                onClick={() => handleRoadmapClick("all")}
-                className="flex items-center justify-center w-7 h-7 rounded-lg border border-white/[0.07] bg-white/[0.03] text-zinc-400 hover:text-white hover:border-white/[0.14] transition-all shrink-0"
-                title="Show all"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-              </button>
-            )}
           </div>
 
           {/* Right: active label */}
           <div className="hidden lg:flex flex-1 items-center px-6">
             <div>
               <p className="text-sm font-bold text-white leading-tight">
-                {activeRoadmapLabel}
+                {activeRoadmapLabel} Interview Sheets
               </p>
               <p className="text-[10px] text-white/30 font-medium mt-0.5 uppercase tracking-wider">
                 {selectedRoadmap === "all"
@@ -295,7 +285,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                 <button
                   onClick={() => handleRoadmapClick("all")}
                   className={cn(
-                    "w-full group flex items-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 cursor-pointer text-left",
+                    "w-full group flex items-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 cursor-pointer text-left sheets-cat-item",
                     selectedRoadmap === "all"
                       ? "bg-indigo-500/8 border-indigo-500/20 text-white sheets-cat-item--active"
                       : "border-transparent bg-transparent hover:bg-white/[0.03] hover:border-white/[0.05] text-white/40 hover:text-white/70",
@@ -320,9 +310,6 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                     {totalSheets}
                   </span>
                 </button>
-
-                {/* Divider */}
-                <div className="my-2 border-t border-white/[0.04]" />
 
                 {/* Category options */}
                 {roadmapKeys.map((roadmap) => {
@@ -436,7 +423,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                               {/* Footer */}
                               <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/[0.05]">
                                 <span className="text-[10px] font-semibold text-white/25 uppercase tracking-wider">
-                                  {roadmap}
+                                  {roadmap}ss
                                 </span>
                                 <ChevronRight className="w-3.5 h-3.5 text-white/20 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all" />
                               </div>

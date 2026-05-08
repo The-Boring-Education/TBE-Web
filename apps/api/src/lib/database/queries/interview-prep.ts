@@ -26,7 +26,6 @@ import {
 } from "../models";
 import { toObjectId } from "./common";
 import {
-  applyDsaDurationBuckets,
   applyDsaFreemiumGate,
   applyDsaPaidPagination,
   buildDsaMatchStage,
@@ -699,9 +698,8 @@ const deleteInterviewSheetFromDB = async (
  * Orchestrates the DSA sheet query pipeline:
  *  1. Resolve the user's target companies and build a match stage.
  *  2. Build the base aggregation (match + sort fields + optional user progress).
- *  3. Branch to one of three response paths:
- *     - Freemium gate (no paid access)
- *     - Paid + duration buckets
+ *  3. Branch to one of two response paths:
+ *     - Freemium gate (no paid access) — 3 Easy, 2 Medium, 1 Hard, 1 Real World unlocked
  *     - Paid + simple pagination
  *
  * All non-trivial logic lives in `./dsaSheet.ts` as pure, testable helpers.
@@ -710,7 +708,7 @@ const getAllDSAQuestionsFromDB = async (
   filters: DSASheetFilters = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const { userId, duration, page = 1, limit = 50, isPaidUser } = filters;
+    const { userId, page = 1, limit = 50, isPaidUser } = filters;
 
     const targetCompanies = userId
       ? await getUserDSATargetCompanies(userId)
@@ -737,12 +735,6 @@ const getAllDSAQuestionsFromDB = async (
       return { data: applyDsaFreemiumGate(allQuestions, page, limit) };
     }
 
-    // Paid + duration buckets path.
-    if (duration) {
-      const rows = await DSAQuestion.aggregate(aggregate);
-      return { data: applyDsaDurationBuckets(rows, filters, page, limit) };
-    }
-
     // Paid + simple pagination path (uses countDocuments for accurate total).
     const totalCount = await DSAQuestion.countDocuments(matchStage);
     const rows = await DSAQuestion.aggregate([
@@ -767,6 +759,7 @@ const getAllDSAQuestionsFromDB = async (
  */
 const getDSATopicSummariesFromDB = async (
   userId?: string,
+  productType: "DSA_YATRA" | "ONCAMPUS" = "DSA_YATRA",
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const matchStages: PipelineStage[] = [];

@@ -69,11 +69,13 @@ Here is an interactive example:
 ```
 
 **Pros:**
+
 - Already supported by `markdown-it` with `html: true`.
 - No schema changes needed—content is a single string field.
 - LLMs naturally produce Markdown with HTML.
 
 **Cons:**
+
 - XSS risk from `dangerouslySetInnerHTML`—requires sanitization.
 - Complex interactive widgets need custom rendering logic.
 
@@ -91,11 +93,13 @@ section.content.blocks = [
 ```
 
 **Pros:**
+
 - Fine-grained control over each block's rendering and styling.
 - Easier to validate, version, and selectively update blocks.
 - Can enforce image optimization (srcset, lazy loading) at the component level.
 
 **Cons:**
+
 - Requires schema migration and new renderer components.
 - More complex for LLMs to produce (need strict JSON output format).
 
@@ -109,11 +113,11 @@ Use Markdown with inline HTML as the **authoring format** (what the LLM produces
 
 ### 3.1 Image Storage Options
 
-| Approach | Description | Pros | Cons |
-|---|---|---|---|
-| **External CDN URLs** | Store image URLs pointing to a CDN (e.g., Cloudflare R2, AWS S3 + CloudFront, Cloudinary) | Fast delivery, no DB bloat, easy cache invalidation | Requires separate upload pipeline, URL management |
-| **Base64 inline** | Embed images as `data:image/png;base64,...` in the content string | No external dependencies, single document | Massively inflates document size, no caching, slow rendering |
-| **Asset references** | Store asset IDs in content, resolve to CDN URLs at render time | Decoupled, supports image versioning | Extra lookup step, more complex |
+| Approach              | Description                                                                               | Pros                                                | Cons                                                         |
+| --------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------ |
+| **External CDN URLs** | Store image URLs pointing to a CDN (e.g., Cloudflare R2, AWS S3 + CloudFront, Cloudinary) | Fast delivery, no DB bloat, easy cache invalidation | Requires separate upload pipeline, URL management            |
+| **Base64 inline**     | Embed images as `data:image/png;base64,...` in the content string                         | No external dependencies, single document           | Massively inflates document size, no caching, slow rendering |
+| **Asset references**  | Store asset IDs in content, resolve to CDN URLs at render time                            | Decoupled, supports image versioning                | Extra lookup step, more complex                              |
 
 **Recommendation:** Use **External CDN URLs** (e.g., Cloudinary or S3+CloudFront). Store the full URL in the content field. This is how most content platforms (Notion, Medium, Hashnode) handle it.
 
@@ -134,10 +138,12 @@ Final content string saved to MongoDB
 ### 3.3 Database Storage
 
 **For MDXRenderer content (Markdown string):**
+
 - No schema change needed. Images are simply `![alt](cdn-url)` or `<img src="cdn-url" />` in the Markdown.
 - Store the entire Markdown string as-is in the existing field.
 
 **For StudyGuide structured content (JSON):**
+
 - Add an `images` array or support an `image` block type in sections:
 
 ```
@@ -241,16 +247,16 @@ This ensures all Markdown images (`![alt](url)`) are rendered with consistent st
 
 ## 6. Summary of Recommendations
 
-| Concern | Recommendation |
-|---|---|
-| **Authoring format** | Markdown with inline HTML (natural LLM output) |
-| **Image storage** | External CDN (Cloudinary/S3+CloudFront) with URLs in content |
-| **Content storage** | Markdown string for MDXRenderer; extend StudyGuide schema with block types for structured content |
-| **Rendering** | Enhance MDXRenderer with custom image rules; sanitize HTML with DOMPurify |
-| **Updating** | Section-level replacement by ID for StudyGuide; full string replacement for Markdown content |
-| **Versioning** | Add `version` field and optional history collection for rollback |
-| **Security** | Sanitize all HTML before `dangerouslySetInnerHTML`; allow-list safe tags |
-| **Performance** | Lazy loading, CDN auto-format (WebP/AVIF), responsive image sizes |
+| Concern              | Recommendation                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| **Authoring format** | Markdown with inline HTML (natural LLM output)                                                    |
+| **Image storage**    | External CDN (Cloudinary/S3+CloudFront) with URLs in content                                      |
+| **Content storage**  | Markdown string for MDXRenderer; extend StudyGuide schema with block types for structured content |
+| **Rendering**        | Enhance MDXRenderer with custom image rules; sanitize HTML with DOMPurify                         |
+| **Updating**         | Section-level replacement by ID for StudyGuide; full string replacement for Markdown content      |
+| **Versioning**       | Add `version` field and optional history collection for rollback                                  |
+| **Security**         | Sanitize all HTML before `dangerouslySetInnerHTML`; allow-list safe tags                          |
+| **Performance**      | Lazy loading, CDN auto-format (WebP/AVIF), responsive image sizes                                 |
 
 ---
 

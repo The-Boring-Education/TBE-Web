@@ -5,6 +5,7 @@ import { getPYUserByIdFromDB, updatePYUserByIdInDB } from "@/lib/database";
 import type { PrepYatraOnboardingPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { normalizeCompanyTypeArray } from "@/lib/validation";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -48,6 +49,24 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    const {
+      values: normalizedTargetCompanies,
+      invalid: invalidTargetCompanies,
+    } = normalizeCompanyTypeArray(
+      Array.isArray(targetCompanies)
+        ? targetCompanies.map((entry) => String(entry))
+        : [],
+    );
+
+    if (invalidTargetCompanies.length > 0) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: `Invalid targetCompanies: ${invalidTargetCompanies.join(", ")}`,
+        }),
+      );
+    }
+
     logger.info("Onboarding request body", { body: req.body });
 
     const userResult = await getPYUserByIdFromDB(userId);
@@ -69,9 +88,9 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
         githubUrl,
         leetCodeUrl,
         "prepYatra.goal": goal,
-        "prepYatra.targetCompanies": targetCompanies,
+        "prepYatra.targetCompanies": normalizedTargetCompanies,
         "prepYatra.preferences.interviewCategories": preferredCategories,
-        "prepYatra.preferences.focusAreas": targetCompanies,
+        "prepYatra.preferences.focusAreas": normalizedTargetCompanies,
         "prepYatra.experienceLevel": experienceLevel,
         "prepYatra.workDomain": workDomain,
       });
@@ -94,9 +113,9 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       leetCodeUrl,
       "prepYatra.pyOnboarded": true,
       "prepYatra.goal": goal,
-      "prepYatra.targetCompanies": targetCompanies,
+      "prepYatra.targetCompanies": normalizedTargetCompanies,
       "prepYatra.preferences.interviewCategories": preferredCategories,
-      "prepYatra.preferences.focusAreas": targetCompanies,
+      "prepYatra.preferences.focusAreas": normalizedTargetCompanies,
       "prepYatra.experienceLevel": experienceLevel,
       "prepYatra.workDomain": workDomain,
     });

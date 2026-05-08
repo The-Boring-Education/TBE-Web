@@ -3,12 +3,11 @@ import {
   FlexContainer,
   InputFieldContainer,
   LoadingSpinner,
-  OnboardingLayout,
   RadioButtonContainer,
   Section,
   SectionHeaderContainer,
-  SEO,
   SelectInput,
+  SEO,
   Text,
   Toast,
 } from '@tbe/components';
@@ -198,10 +197,7 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
           {isEditing ? (
             <FlexContainer className='gap-6' direction='col' fullWidth>
               {/* Username */}
-              <FlexContainer
-                className='gap-2 md:w-2/3 w-full'
-                direction='col'
-              >
+              <FlexContainer className='gap-2 md:w-2/3 w-full' direction='col'>
                 <Text className='paragraph font-medium' level='p'>
                   Username
                 </Text>
@@ -271,7 +267,9 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
                     labelClass='sr-only'
                     type='tel'
                     value={number}
-                    onChange={(val) => updateForm('contactNo', `${code} ${val}`)}
+                    onChange={(val) =>
+                      updateForm('contactNo', `${code} ${val}`)
+                    }
                   />
                 </FlexContainer>
               </FlexContainer>
