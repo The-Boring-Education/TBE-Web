@@ -1,4 +1,5 @@
 import type { ButtonProps } from "@tbe/interface";
+import { buildDelegatedInteractiveAnalyticsDOMProps } from "@tbe/utils";
 import { motion } from "framer-motion";
 
 import LoadingSpinner from "../LoadingSpinner";
@@ -98,7 +99,20 @@ const Button = ({
   animationType = "DEFAULT",
   size = "MEDIUM",
   type = "button",
+  analyticsId,
+  analyticsLabel,
+  analyticsSurface,
+  suppressGlobalUiClick,
+  analyticsMarker,
 }: ButtonProps) => {
+  const delegated = buildDelegatedInteractiveAnalyticsDOMProps({
+    analyticsId,
+    analyticsLabel,
+    analyticsSurface,
+    suppressGlobalUiClick,
+    analyticsMarker,
+  });
+
   const sizeClasses = {
     SMALL: "px-1 py-1 text-xs",
     MEDIUM: "px-1.5 py-1.5 text-sm",
@@ -163,6 +177,7 @@ const Button = ({
         disabled={!active || isLoading}
         onClick={handleClick}
         type={type}
+        {...delegated}
         {...getAnimationVariant()}
       >
         {loadingContainer}

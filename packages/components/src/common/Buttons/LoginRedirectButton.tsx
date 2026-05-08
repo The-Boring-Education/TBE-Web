@@ -63,6 +63,7 @@ const LoginRedirectButton = ({
       className={className}
       text={text}
       variant="PRIMARY"
+      suppressGlobalUiClick
       onClick={handleLoginRedirect}
     />
   );

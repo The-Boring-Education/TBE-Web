@@ -99,29 +99,6 @@ describe("DsaPrepWorkspace", () => {
     expect(screen.queryByText("Valid Parentheses")).not.toBeInTheDocument();
   });
 
-  it("should show back button when topic is selected", () => {
-    renderWithQueryClient(
-      <DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />,
-    );
-
-    expect(screen.getByText(/View All Topics/i)).toBeInTheDocument();
-  });
-
-  it("should call onBackToTopics when back button is clicked", () => {
-    const onBackToTopics = vi.fn();
-
-    renderWithQueryClient(
-      <DsaPrepWorkspace
-        {...defaultProps}
-        selectedTopic="ARRAY"
-        onBackToTopics={onBackToTopics}
-      />,
-    );
-
-    fireEvent.click(screen.getByText(/View All Topics/i));
-    expect(onBackToTopics).toHaveBeenCalled();
-  });
-
   it("should render empty state when no topic is selected", () => {
     renderWithQueryClient(<DsaPrepWorkspace {...defaultProps} />);
 

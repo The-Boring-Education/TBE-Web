@@ -17,6 +17,7 @@ export { default as AccordionLinkItem } from "./common/Accordion/AccordionLinkIt
 export type { AccordionListItem } from "./common/Accordion/AccordionList";
 export { default as AccordionList } from "./common/Accordion/AccordionList";
 export { default as Alert } from "./common/Alert";
+export { default as AnalyticsSurface } from "./common/Analytics/AnalyticsSurface";
 export { default as AnalyticsWrapper } from "./common/Analytics/AnalyticsWrapper";
 export { default as Banner } from "./common/Banner";
 export {
