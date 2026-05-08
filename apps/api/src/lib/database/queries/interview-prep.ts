@@ -1029,6 +1029,28 @@ const getDSAQuestionByIDFromDB = async (
   }
 };
 
+const deleteDSAQuestionFromDB = async (
+  questionId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const deletedQuestion = await DSAQuestion.findByIdAndDelete(questionId);
+
+    if (!deletedQuestion) {
+      return { error: "DSA question not found" };
+    }
+
+    return {
+      data: { message: "DSA question deleted successfully", _id: questionId },
+    };
+  } catch (error) {
+    logger.error("DB: deleteDSAQuestionFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to delete DSA question", details: error };
+  }
+};
+
 const getStudyGuideByTopicFromDB = async (
   topicId: string,
 ): Promise<DatabaseQueryResponseType> => {
@@ -1352,6 +1374,7 @@ export {
   addDSAQuestionToDB,
   addQuestionToInterviewSheetInDB,
   appendQuestionsToInterviewSheetInDB,
+  deleteDSAQuestionFromDB,
   deleteInterviewSheetFromDB,
   deleteQuestionFromSheetInDB,
   enrollInASheet,
