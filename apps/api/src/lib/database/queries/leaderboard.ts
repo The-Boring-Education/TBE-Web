@@ -78,19 +78,22 @@ const saveLeaderboardToDB = async (
   app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    if (!isSafeLeaderboardType(type)) {
+    // Look up from allow-list so only constant values reach the query (breaks taint chain)
+    const safeType = VALID_LEADERBOARD_TYPES.find((t) => t === type);
+    if (!safeType) {
       return { error: `Invalid leaderboard type: ${String(type)}` };
     }
-    if (app !== undefined && !isSafeTBEApp(app)) {
+    const safeAppLookup = app ? VALID_TBE_APPS.find((a) => a === app) : null;
+    if (app !== undefined && !safeAppLookup) {
       return { error: `Invalid app: ${String(app)}` };
     }
+    // null represents the global (no-app) leaderboard – the compound index handles it uniformly
+    const safeApp = safeAppLookup ?? null;
 
-    // Use null for the global (no-app) leaderboard so the compound index works uniformly
-    const safeApp = app ?? null;
-    const filter = { type, app: safeApp };
+    const filter = { type: safeType, app: safeApp };
     const result = await Leaderboard.findOneAndUpdate(
       filter,
-      { type, app: safeApp, entries, date: new Date() },
+      { type: safeType, app: safeApp, entries, date: new Date() },
       { upsert: true, new: true },
     );
     return { data: result };
@@ -108,14 +111,18 @@ const getLeaderboardWithUsersFromDB = async (
   app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    if (!isSafeLeaderboardType(type)) {
+    // Look up from allow-list so only constant values reach the query (breaks taint chain)
+    const safeType = VALID_LEADERBOARD_TYPES.find((t) => t === type);
+    if (!safeType) {
       return { error: `Invalid leaderboard type: ${String(type)}` };
     }
-    if (app !== undefined && !isSafeTBEApp(app)) {
+    const safeAppLookup = app ? VALID_TBE_APPS.find((a) => a === app) : null;
+    if (app !== undefined && !safeAppLookup) {
       return { error: `Invalid app: ${String(app)}` };
     }
+    const safeApp = safeAppLookup ?? null;
 
-    const filter = { type, app: app ?? null };
+    const filter = { type: safeType, app: safeApp };
     const data = await Leaderboard.findOne(filter)
       .sort({ date: -1 })
       .populate("entries.userId", "name image");
@@ -147,19 +154,38 @@ const getStartDateByType = (type: LeaderboardType) => {
   return now;
 };
 
+/** Static filename mapping for leaderboard types – ensures only safe strings reach the filesystem */
+const LEADERBOARD_TYPE_FILENAMES: Record<LeaderboardType, string> = {
+  DAILY: "daily",
+  WEEKLY: "weekly",
+  MONTHLY: "monthly",
+};
+
+/** Static filename mapping for TBE apps – ensures only safe strings reach the filesystem */
+const TBE_APP_FILENAMES: Record<TBEAppType, string> = {
+  PLATFORM: "platform",
+  PREPYATRA: "prepyatra",
+  DSA_YATRA: "dsa_yatra",
+  ONCAMPUS: "oncampus",
+  QUIZ: "quiz",
+};
+
 const generateLeaderboard = async (
   type: LeaderboardType,
   app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    if (!isSafeLeaderboardType(type)) {
+    // Look up from allow-list so only constant values reach the filesystem/query (breaks taint chain)
+    const safeType = VALID_LEADERBOARD_TYPES.find((t) => t === type);
+    if (!safeType) {
       return { error: `Invalid leaderboard type: ${String(type)}` };
     }
-    if (app !== undefined && !isSafeTBEApp(app)) {
+    const safeAppLookup = app ? VALID_TBE_APPS.find((a) => a === app) : null;
+    if (app !== undefined && !safeAppLookup) {
       return { error: `Invalid app: ${String(app)}` };
     }
 
-    const startDate = getStartDateByType(type);
+    const startDate = getStartDateByType(safeType);
     const endDate = new Date();
 
     const gamificationData = await Gamification.find();
@@ -173,7 +199,7 @@ const generateLeaderboard = async (
           a.createdAt >= startDate &&
           a.createdAt <= endDate;
         // Filter by app when provided; otherwise include all actions
-        const matchesApp = app ? a.app === app : true;
+        const matchesApp = safeAppLookup ? a.app === safeAppLookup : true;
         return withinRange && matchesApp;
       });
 
@@ -188,10 +214,10 @@ const generateLeaderboard = async (
       .sort((a, b) => b[1] - a[1])
       .map(([userId, points]) => ({ userId, points }));
 
-    // Build a filename from validated allow-listed values only (no user input reaches the path)
-    const safeTypePart = type.toLowerCase().replace(/[^a-z]/g, "");
-    const safeAppPart = app
-      ? `_${app.toLowerCase().replace(/[^a-z_]/g, "")}`
+    // Derive filename exclusively from static lookup maps – no user input reaches the path
+    const typeFilename = LEADERBOARD_TYPE_FILENAMES[safeType];
+    const appSuffix = safeAppLookup
+      ? `_${TBE_APP_FILENAMES[safeAppLookup]}`
       : "";
     const publicDir = path.join(process.cwd(), "public", "leaderboards");
     if (!fs.existsSync(publicDir)) {
@@ -199,7 +225,7 @@ const generateLeaderboard = async (
     }
 
     fs.writeFileSync(
-      path.join(publicDir, `${safeTypePart}${safeAppPart}.json`),
+      path.join(publicDir, `${typeFilename}${appSuffix}.json`),
       JSON.stringify(sorted, null, 2),
     );
 

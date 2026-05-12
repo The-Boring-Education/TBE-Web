@@ -107,7 +107,11 @@ const getUserStreakFromDB = async (
     }
 
     // Get per-day app breakdowns for the last 30 days
-    const thirtyDaysAgo = last30Days[0]!.date;
+    // last30Days always has exactly 30 entries (loop above), so index 0 is safe
+    const thirtyDaysAgo =
+      last30Days.length > 0
+        ? last30Days[0]!.date
+        : today.toISOString().slice(0, 10);
     const activityInWindow = await UserActivityLog.aggregate([
       {
         $match: {

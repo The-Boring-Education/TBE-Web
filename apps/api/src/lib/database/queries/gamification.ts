@@ -76,9 +76,9 @@ const updateUserPointsInDB = async (
       return { error: "User not found" };
     }
 
-    // Log activity for streak tracking (fire-and-forget, best-effort)
+    // Log activity for streak tracking (intentionally unawaited, best-effort)
     if (app) {
-      logUserActivityForStreak(userId, app, actionType).catch((err) => {
+      void logUserActivityForStreak(userId, app, actionType).catch((err) => {
         logger.error("DB: logUserActivityForStreak failed silently", {
           error: err instanceof Error ? err.message : String(err),
         });
@@ -110,15 +110,14 @@ const logUserActivityForStreak = async (
     await UserActivityLog.create({ userId, app, actionType, date, metadata });
     return { data: { logged: true } };
   } catch (error: unknown) {
-    // Ignore duplicate key errors (11000) - already logged today for this action
-    if (
-      !(
-        typeof error === "object" &&
-        error !== null &&
-        "code" in error &&
-        (error as { code: unknown }).code === 11000
-      )
-    ) {
+    const isDuplicateKey =
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      (error as { code: unknown }).code === 11000;
+
+    // Ignore duplicate key errors (11000) – this entry was already logged today
+    if (!isDuplicateKey) {
       logger.error("DB: logUserActivityForStreak failed", {
         error: error instanceof Error ? error.message : String(error),
       });

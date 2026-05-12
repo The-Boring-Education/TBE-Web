@@ -29,6 +29,12 @@ const LeaderboardSchema = new Schema(
       type: String,
       enum: TBE_APP,
       required: false,
+      /**
+       * null → global leaderboard (all apps combined).
+       * A specific TBEAppType value → app-scoped leaderboard.
+       * The compound index on { type, app } treats null as a distinct value,
+       * so each (type, null) pair maps to exactly one global document.
+       */
       default: null,
     },
     date: {
