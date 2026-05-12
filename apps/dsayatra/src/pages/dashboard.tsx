@@ -64,27 +64,27 @@ const DsaClient = () => {
   const expLabel = profile?.dsaYatra?.experienceLevel || "Fresher (0-1 yr)";
 
   return (
-    <div className="w-full min-w-0 font-sans selection:bg-[#ff5757]/30 selection:text-white">
-      <div className="w-full min-w-0 space-y-5 overflow-x-hidden pb-2 sm:space-y-6 sm:pb-4 lg:pb-6">
+    <div className="w-full min-w-0 max-w-full font-sans selection:bg-[#ff5757]/30 selection:text-white">
+      <div className="w-full min-w-0 max-w-full space-y-5 pb-2 sm:space-y-6 sm:pb-4 lg:pb-6">
         {/* Header Section */}
-        <header className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
+        <header className="flex w-full min-w-0 flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <h2 className="break-words text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
               Welcome back, {user?.name}! 👋
             </h2>
             <p className="text-[#808080] text-sm font-medium mt-1">
               Ready to master DSA today?
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/sheets" className="flex-1 sm:flex-none">
+          <div className="flex w-full min-w-0 shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <Link href="/sheets" className="min-w-0 flex-1 sm:flex-none">
               <Button className="w-full sm:w-auto bg-[#ff5757] hover:bg-[#ff4040] text-white px-6 py-2.5 h-auto font-bold text-xs rounded-xl transition-all hover:shadow-[0_4px_20px_rgba(255,87,87,0.25)] hover:scale-[1.02]">
                 Continue Learning
               </Button>
             </Link>
             <Button
               onClick={() => setIsEditModalOpen(true)}
-              className="flex-1 sm:flex-none bg-[#1a1a1a] border border-[#2a2a2a] text-[#f0f0f0] hover:bg-[#222] hover:border-[#ff5757]/30 h-auto px-6 py-2.5 font-bold text-xs rounded-xl"
+              className="w-full flex-1 sm:w-auto sm:flex-none bg-[#1a1a1a] border border-[#2a2a2a] text-[#f0f0f0] hover:bg-[#222] hover:border-[#ff5757]/30 h-auto px-6 py-2.5 font-bold text-xs rounded-xl"
             >
               Edit Goal
             </Button>
@@ -92,10 +92,10 @@ const DsaClient = () => {
         </header>
 
         {/* Profile Card Section - Redesigned to be more compact and legible */}
-        <Card className="w-full bg-[#111] border-[#222] rounded-2xl p-5 sm:p-6 lg:p-8 relative overflow-hidden group">
+        <Card className="w-full min-w-0 max-w-full bg-[#111] border-[#222] rounded-2xl p-5 sm:p-6 lg:p-8 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5757]/5 blur-[100px] pointer-events-none" />
 
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-12 relative z-10">
+          <div className="flex min-w-0 flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-12 relative z-10">
             {/* Left: Identity Section */}
             <div className="flex flex-col items-center lg:items-start shrink-0">
               <div className="relative group">
@@ -121,7 +121,7 @@ const DsaClient = () => {
               </div>
 
               <div className="mt-4 text-center lg:text-left">
-                <h3 className="text-xl lg:text-2xl font-black text-[#f0f0f0] tracking-tight leading-none">
+                <h3 className="max-w-full break-words text-xl lg:text-2xl font-black text-[#f0f0f0] tracking-tight leading-none">
                   {user?.name}
                 </h3>
                 <p className="text-[#606060] text-[10px] lg:text-xs font-bold uppercase tracking-widest mt-2">
@@ -168,8 +168,8 @@ const DsaClient = () => {
             </div>
 
             {/* Right: Stats & Actions Section */}
-            <div className="flex-1 w-full space-y-6">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="min-w-0 flex-1 w-full space-y-6">
+              <div className="grid min-w-0 grid-cols-2 gap-3 md:grid-cols-4">
                 {[
                   { label: "Goal Timeline", value: timelineLabel },
                   {
@@ -190,7 +190,7 @@ const DsaClient = () => {
                 ].map((stat, i) => (
                   <div
                     key={i}
-                    className="bg-[#1a1a1a]/50 p-3 lg:p-4 rounded-xl border border-[#222] transition-colors hover:border-[#333]"
+                    className="min-w-0 bg-[#1a1a1a]/50 p-3 lg:p-4 rounded-xl border border-[#222] transition-colors hover:border-[#333]"
                   >
                     <p className="text-[9px] lg:text-[10px] text-[#606060] uppercase mb-1 font-black tracking-widest">
                       {stat.label}
@@ -227,13 +227,13 @@ const DsaClient = () => {
         </Card>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
           {/* Overall Progress Card */}
           <Card
             id="overall-progress"
-            className="md:col-span-2 lg:row-span-2 bg-[#1a1a1a] border-[#2a2a2a] p-6 lg:p-8 flex flex-col items-center justify-center rounded-2xl hover:border-[#ff5757]/40 hover:shadow-[0_0_30px_rgba(255,87,87,0.1)] transition-all duration-500 group"
+            className="flex min-w-0 max-w-full flex-col items-center justify-center rounded-2xl border-[#2a2a2a] bg-[#1a1a1a] p-6 transition-all duration-500 hover:border-[#ff5757]/40 hover:shadow-[0_0_30px_rgba(255,87,87,0.1)] md:col-span-2 lg:row-span-2 lg:p-8 group"
           >
-            <div className="flex items-center justify-between w-full mb-6 lg:mb-8">
+            <div className="flex w-full min-w-0 items-center justify-between mb-6 lg:mb-8">
               <p className="text-[10px] lg:text-[11px] font-black text-[#a0a0a0] uppercase tracking-widest">
                 Overall Progress
               </p>
@@ -260,7 +260,7 @@ const DsaClient = () => {
               </div>
             </div>
 
-            <div className="w-full space-y-3 lg:space-y-4">
+            <div className="w-full min-w-0 space-y-3 lg:space-y-4">
               <div className="flex justify-between items-end">
                 <span className="text-[11px] lg:text-[11px] font-bold text-[#808080] uppercase tracking-wider">
                   Pace Analysis
@@ -313,8 +313,8 @@ const DsaClient = () => {
         </div>
 
         {/* Topic-wise Progress Section */}
-        <Card className="bg-[#111] border-[#222] p-6 sm:p-8 rounded-2xl">
-          <div className="flex items-center gap-3 mb-8">
+        <Card className="min-w-0 max-w-full rounded-2xl border-[#222] bg-[#111] p-6 sm:p-8">
+          <div className="mb-8 flex min-w-0 items-center gap-3">
             <div className="p-2.5 bg-[#ff5757]/10 rounded-xl">
               <PieChart className="w-5 h-5 text-[#ff5757]" />
             </div>
@@ -323,7 +323,7 @@ const DsaClient = () => {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {topicProgress.length > 0 ? (
               topicProgress.map((topic) => (
                 <Link
@@ -331,12 +331,12 @@ const DsaClient = () => {
                   href={`/sheets?topic=${encodeDsaTopicForUrl(topic.key)}`}
                   className="block group"
                 >
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] p-5 rounded-2xl cursor-pointer hover:border-[#ff5757]/50 transition-all group-hover:bg-[#1f1f1f] group-hover:-translate-y-1">
-                    <div className="flex justify-between items-start mb-4">
-                      <p className="text-xs lg:text-sm font-black text-[#f0f0f0] uppercase tracking-widest leading-tight pr-4">
+                  <div className="min-w-0 cursor-pointer rounded-2xl border border-[#2a2a2a] bg-[#1a1a1a] p-5 transition-all group-hover:-translate-y-1 group-hover:bg-[#1f1f1f] hover:border-[#ff5757]/50">
+                    <div className="mb-4 flex min-w-0 items-start justify-between gap-2">
+                      <p className="min-w-0 flex-1 break-words text-xs font-black uppercase leading-tight tracking-widest text-[#f0f0f0] lg:text-sm">
                         {topic.name}
                       </p>
-                      <span className="text-[11px] lg:text-xs font-black text-[#ff5757]">
+                      <span className="shrink-0 text-[11px] font-black text-[#ff5757] lg:text-xs">
                         {Math.round((topic.solved / (topic.total || 1)) * 100)}%
                       </span>
                     </div>
