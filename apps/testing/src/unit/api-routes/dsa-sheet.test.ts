@@ -366,6 +366,26 @@ describe("DSA Sheet API — /api/v1/interview-prep/dsa-sheet", () => {
       );
     });
 
+    it("should treat matching x-admin-secret as paid listing (skip freemium gate)", async () => {
+      vi.stubEnv("ADMIN_SECRET", "test-admin-secret");
+      mockGetAllDSAQuestions.mockResolvedValue({
+        data: { questions: [{ _id: "q1" }], pagination: { total: 1 } },
+      });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+        headers: { "x-admin-secret": "test-admin-secret" },
+      });
+
+      await handler(req, res);
+
+      expect(mockCheckPaymentStatus).not.toHaveBeenCalled();
+      expect(mockGetAllDSAQuestions).toHaveBeenCalledWith(
+        expect.objectContaining({ isPaidUser: true }),
+      );
+      vi.unstubAllEnvs();
+    });
+
     it("should pass productId='lifetime' + productType='DSA_YATRA' to the payment check", async () => {
       mockCheckPaymentStatus.mockResolvedValue({
         data: { purchased: true, accessType: "DIRECT_PAYMENT" },

@@ -326,9 +326,17 @@ export const applyDsaPaidPagination = (
   limit: number,
   totalCount: number,
 ) => {
-  const { items, pagination } = paginateDsaRows(rows, page, limit, totalCount);
+  // Rows are already paginated by Mongo ($skip/$limit) in getAllDSAQuestionsFromDB.
+  // Only compute pagination metadata here to avoid slicing the page twice.
+  const pagination = {
+    total: totalCount,
+    page,
+    limit,
+    totalPages: limit > 0 ? Math.ceil(totalCount / limit) : 0,
+    hasMore: limit > 0 ? page * limit < totalCount : false,
+  };
   return {
-    questions: items.map((r) =>
+    questions: rows.map((r) =>
       stripInternalDsaFields(r as Record<string, unknown>),
     ),
     pagination,

@@ -102,14 +102,29 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { filters } = parsed.value;
 
+  // Admin dashboard (tbe-admin) lists the full DSA sheet via platform API with
+  // x-admin-secret — bypass freemium caps so answers and pagination match DB.
+  const adminHeader = req.headers["x-admin-secret"];
+  const isAdminListRequest =
+    typeof adminHeader === "string" &&
+    Boolean(process.env.ADMIN_SECRET) &&
+    adminHeader === process.env.ADMIN_SECRET;
+
   // Check subscription status for freemium gating.
   // Pass productType so the Subscription short-circuit in
   // checkPaymentStatusFromDB runs; productId is the one-time-purchase SKU.
   const userId = filters.userId;
-  const isPaidUser = userId
-    ? (await checkPaymentStatusFromDB(userId, "lifetime", filters.productType))
-        .data?.purchased === true
-    : false;
+  const isPaidUser = isAdminListRequest
+    ? true
+    : userId
+      ? (
+          await checkPaymentStatusFromDB(
+            userId,
+            "lifetime",
+            filters.productType,
+          )
+        ).data?.purchased === true
+      : false;
 
   const { data, error } = await getAllDSAQuestionsFromDB({
     ...(filters.domain?.length ? { domain: filters.domain } : {}),
