@@ -144,9 +144,7 @@ describe("EditDsaOnboardingModal URL fields", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(
-          /Enter a full URL including a domain \(e.g. https:\/\/github.com\/you\)\./,
-        ),
+        screen.getByText(/Enter a full URL including a domain\./),
       ).toBeInTheDocument();
     });
     expect(sendRequest).not.toHaveBeenCalled();

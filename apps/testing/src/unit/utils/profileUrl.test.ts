@@ -54,13 +54,13 @@ describe("getOptionalProfileUrlError", () => {
 
   it("rejects bare words that parse as single-label hosts", () => {
     expect(getOptionalProfileUrlError("hello")).toBe(
-      "Enter a full URL including a domain (e.g. https://github.com/you).",
+      "Enter a full URL including a domain.",
     );
     expect(getOptionalProfileUrlError("anything")).toBe(
-      "Enter a full URL including a domain (e.g. https://github.com/you).",
+      "Enter a full URL including a domain.",
     );
     expect(getOptionalProfileUrlError("https://nope")).toBe(
-      "Enter a full URL including a domain (e.g. https://github.com/you).",
+      "Enter a full URL including a domain.",
     );
   });
 });

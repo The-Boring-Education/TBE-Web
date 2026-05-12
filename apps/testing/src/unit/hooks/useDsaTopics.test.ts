@@ -51,7 +51,7 @@ describe("useDsaTopics", () => {
       (t) => t.topic === "ARRAY",
     );
     expect(arrayTopic?.count).toBe(2);
-    expect(arrayTopic?.label).toBe("Array");
+    expect(arrayTopic?.label).toBe("Arrays");
 
     const stackTopic = result.current.topicsWithCounts.find(
       (t) => t.topic === "STACK",
