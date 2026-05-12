@@ -10,12 +10,12 @@ import { cn, encodeDsaTopicForUrl, getPreFetchProps } from "@tbe/utils";
 import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Progress } from "@ui/progress";
-import { toast } from "@ui/sonner";
 import {
   Code2,
   Github,
   Linkedin,
   Monitor,
+  PenLine,
   PieChart,
   Target,
   TrendingUp,
@@ -66,161 +66,156 @@ const DsaClient = () => {
   return (
     <div className="w-full min-w-0 max-w-full font-sans selection:bg-[#ff5757]/30 selection:text-white">
       <div className="w-full min-w-0 max-w-full space-y-5 pb-2 sm:space-y-6 sm:pb-4 lg:pb-6">
-        {/* Header Section */}
-        <header className="flex w-full min-w-0 flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <h2 className="break-words text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
-              Welcome back, {user?.name}! 👋
-            </h2>
-            <p className="text-[#808080] text-sm font-medium mt-1">
-              Ready to master DSA today?
-            </p>
-          </div>
-          <div className="flex w-full min-w-0 shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
-            <Link href="/sheets" className="min-w-0 flex-1 sm:flex-none">
-              <Button className="w-full sm:w-auto bg-[#ff5757] hover:bg-[#ff4040] text-white px-6 py-2.5 h-auto font-bold text-xs rounded-xl transition-all hover:shadow-[0_4px_20px_rgba(255,87,87,0.25)] hover:scale-[1.02]">
-                Continue Learning
+        {/* Profile + goals — single scan-friendly panel */}
+        <Card className="w-full min-w-0 max-w-full border-[#252525] bg-gradient-to-b from-[#151515] to-[#111] shadow-[0_0_0_1px_rgba(255,87,87,0.06)] rounded-2xl p-5 sm:p-6 lg:p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 size-[min(380px,100%)] rounded-full bg-[#ff5757]/[0.06] blur-[90px] pointer-events-none translate-x-1/4 -translate-y-1/4" />
+          <div className="relative z-10 flex min-w-0 flex-col gap-6 lg:gap-8">
+            <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+              <div className="min-w-0 space-y-1">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#707070]">
+                  DSA Yatra
+                </p>
+                <h2 className="break-words text-xl font-black leading-snug tracking-tight text-[#f5f5f5] sm:text-2xl md:text-[1.65rem]">
+                  Welcome back, {user?.name}!{" "}
+                  <span aria-hidden className="inline-block">
+                    👋
+                  </span>
+                </h2>
+                <p className="max-w-xl text-[0.9375rem] leading-relaxed text-[#989898]">
+                  Here’s where you’re headed—tweak your goals anytime when your
+                  plan changes.
+                </p>
+              </div>
+              <Button
+                type="button"
+                onClick={() => setIsEditModalOpen(true)}
+                className="h-auto shrink-0 gap-2 self-stretch px-5 py-3 text-[13px] font-bold rounded-xl border border-[#333] bg-[#1c1c1c] text-[#f0f0f0] hover:border-[#ff5757]/40 hover:bg-[#222] sm:self-auto sm:w-auto sm:self-start"
+              >
+                <PenLine
+                  className="size-4 shrink-0 text-[#ff5757]"
+                  aria-hidden
+                />
+                Edit goal
               </Button>
-            </Link>
-            <Button
-              onClick={() => setIsEditModalOpen(true)}
-              className="w-full flex-1 sm:w-auto sm:flex-none bg-[#1a1a1a] border border-[#2a2a2a] text-[#f0f0f0] hover:bg-[#222] hover:border-[#ff5757]/30 h-auto px-6 py-2.5 font-bold text-xs rounded-xl"
-            >
-              Edit Goal
-            </Button>
-          </div>
-        </header>
+            </div>
 
-        {/* Profile Card Section - Redesigned to be more compact and legible */}
-        <Card className="w-full min-w-0 max-w-full bg-[#111] border-[#222] rounded-2xl p-5 sm:p-6 lg:p-8 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5757]/5 blur-[100px] pointer-events-none" />
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-[#2a2a2a] to-transparent" />
 
-          <div className="flex min-w-0 flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-12 relative z-10">
-            {/* Left: Identity Section */}
-            <div className="flex flex-col items-center lg:items-start shrink-0">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#ff5757] to-[#ff9b9b] rounded-full blur-md opacity-20 group-hover:opacity-40 transition-opacity" />
-                <div className="relative w-20 h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden border-4 border-[#1a1a1a] shadow-2xl flex items-center justify-center bg-[#1a1a1a]">
-                  {user?.image ? (
-                    <Image
-                      src={user.image}
-                      alt={user.name || "Profile"}
-                      width={96}
-                      height={96}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#ff5757] to-[#ff8888] flex items-center justify-center text-white text-2xl lg:text-3xl font-black">
-                      {user?.name
-                        ?.split(" ")
-                        .map((n) => n[0])
-                        .join("") || "SJ"}
-                    </div>
-                  )}
+            <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-[minmax(0,17rem)_1fr] lg:gap-10 xl:grid-cols-[minmax(0,19rem)_1fr]">
+              {/* Identity */}
+              <div className="flex min-w-0 flex-col items-center gap-5 sm:flex-row sm:items-center lg:flex-col lg:items-center xl:items-start">
+                <div className="relative shrink-0">
+                  <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#ff5757]/50 to-transparent opacity-60 blur-[2px]" />
+                  <div className="relative size-24 overflow-hidden rounded-full border-[3px] border-[#252525] bg-[#1a1a1a] shadow-inner sm:size-[5.75rem]">
+                    {user?.image ? (
+                      <Image
+                        src={user.image}
+                        alt={user.name || "Profile"}
+                        width={112}
+                        height={112}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex size-full items-center justify-center bg-gradient-to-br from-[#ff5757] to-[#cc4444] text-2xl font-black text-white sm:text-3xl">
+                        {user?.name
+                          ?.split(" ")
+                          .map((n) => n[0])
+                          .join("") || "SJ"}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="min-w-0 text-center lg:max-w-none lg:text-center xl:text-left xl:w-full">
+                  <h3 className="truncate text-lg font-black tracking-tight text-[#fafafa] sm:text-xl lg:max-w-[16rem] lg:truncate xl:max-w-none">
+                    {user?.name}
+                  </h3>
+                  <p className="mt-2 text-[11px] font-bold uppercase leading-snug tracking-widest text-[#757575]">
+                    {expLabel}
+                  </p>
+                  <div className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-center xl:justify-start">
+                    {(
+                      [
+                        {
+                          icon: Linkedin,
+                          url: profile?.linkedInUrl,
+                          label: "LinkedIn profile",
+                        },
+                        {
+                          icon: Github,
+                          url: profile?.githubUrl,
+                          label: "GitHub profile",
+                        },
+                        {
+                          icon: Monitor,
+                          url: profile?.portfolioUrl,
+                          label: "Portfolio website",
+                        },
+                      ] as const
+                    ).map((social, i) => (
+                      <a
+                        key={i}
+                        href={
+                          social.url
+                            ? social.url.startsWith("http")
+                              ? social.url
+                              : `https://${social.url}`
+                            : "#"
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                          "rounded-lg border border-[#2e2e2e] bg-[#191919] p-2.5 text-[#9a9a9a] transition-colors hover:border-[#ff5757]/45 hover:bg-[#ff5757]/08 hover:text-[#f0f0f0]",
+                          !social.url && "opacity-25 cursor-not-allowed",
+                        )}
+                        onClick={(e) => !social.url && e.preventDefault()}
+                        aria-label={social.label}
+                      >
+                        <social.icon className="size-4" aria-hidden />
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-4 text-center lg:text-left">
-                <h3 className="max-w-full break-words text-xl lg:text-2xl font-black text-[#f0f0f0] tracking-tight leading-none">
-                  {user?.name}
-                </h3>
-                <p className="text-[#606060] text-[10px] lg:text-xs font-bold uppercase tracking-widest mt-2">
-                  {expLabel}
-                </p>
-              </div>
-
-              {/* Social Links - More compact row */}
-              <div className="flex items-center justify-center lg:justify-start gap-2 mt-5">
-                {[
-                  {
-                    icon: Linkedin,
-                    url: profile?.linkedInUrl,
-                    color: "#0077b5",
-                  },
-                  { icon: Github, url: profile?.githubUrl, color: "#ffffff" },
-                  {
-                    icon: Monitor,
-                    url: profile?.portfolioUrl,
-                    color: "#ff5757",
-                  },
-                ].map((social, i) => (
-                  <a
-                    key={i}
-                    href={
-                      social.url
-                        ? social.url.startsWith("http")
-                          ? social.url
-                          : `https://${social.url}`
-                        : "#"
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      "p-2.5 rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] text-[#a0a0a0] hover:text-white hover:border-[#ff5757]/50 hover:bg-[#ff5757]/10 transition-all",
-                      !social.url && "opacity-20 cursor-not-allowed",
-                    )}
-                    onClick={(e) => !social.url && e.preventDefault()}
-                  >
-                    <social.icon className="w-4 h-4" />
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Stats & Actions Section */}
-            <div className="min-w-0 flex-1 w-full space-y-6">
-              <div className="grid min-w-0 grid-cols-2 gap-3 md:grid-cols-4">
-                {[
-                  { label: "Goal Timeline", value: timelineLabel },
-                  {
-                    label: "Experience",
-                    value:
-                      profile?.dsaYatra?.experienceLevel ||
-                      user?.occupation ||
-                      "Tech Student",
-                  },
-                  {
-                    label: "Current Focus",
-                    value: targetLabel,
-                  },
-                  {
-                    label: "Primary Target",
-                    value: profile?.dsaYatra?.companies?.[0] || "Top Tech",
-                  },
-                ].map((stat, i) => (
-                  <div
-                    key={i}
-                    className="min-w-0 bg-[#1a1a1a]/50 p-3 lg:p-4 rounded-xl border border-[#222] transition-colors hover:border-[#333]"
-                  >
-                    <p className="text-[9px] lg:text-[10px] text-[#606060] uppercase mb-1 font-black tracking-widest">
-                      {stat.label}
-                    </p>
-                    <p className="text-xs lg:text-sm font-black text-[#ff5757] truncate">
-                      {stat.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button
-                  onClick={() => setIsEditModalOpen(true)}
-                  className="flex-1 bg-[#1a1a1a] border border-[#2a2a2a] text-[#f0f0f0] hover:bg-[#222] font-bold text-xs lg:text-sm rounded-xl py-3 lg:py-4 h-auto shadow-sm"
-                >
-                  Edit Profile
-                </Button>
-                <Button
-                  onClick={() => {
-                    if (profile?.userName) {
-                      const url = `${window.location.origin}/journey/${profile.userName}`;
-                      navigator.clipboard.writeText(url);
-                      toast.success("Journey link copied!");
-                    }
-                  }}
-                  className="flex-1 bg-[#ff5757] text-white hover:bg-[#ff4040] font-bold text-xs lg:text-sm rounded-xl py-3 lg:py-4 h-auto px-6 shadow-[0_4px_20px_rgba(255,87,87,0.2)] hover:shadow-[0_4px_25px_rgba(255,87,87,0.3)]"
-                >
-                  Share Journey
-                </Button>
+              {/* Goal metrics — 2×2 for readability */}
+              <div className="min-w-0 space-y-4">
+                <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                  <h4 className="text-xs font-black uppercase tracking-[0.18em] text-[#858585]">
+                    Interview plan
+                  </h4>
+                  <span className="hidden text-[11px] text-[#5c5c5c] sm:inline">
+                    Updated from onboarding
+                  </span>
+                </div>
+                <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2">
+                  {[
+                    { label: "Goal timeline", value: timelineLabel },
+                    {
+                      label: "Experience",
+                      value:
+                        profile?.dsaYatra?.experienceLevel ||
+                        user?.occupation ||
+                        "Tech student",
+                    },
+                    { label: "Current focus", value: targetLabel },
+                    {
+                      label: "Primary target",
+                      value: profile?.dsaYatra?.companies?.[0] || "Top tech",
+                    },
+                  ].map((stat, i) => (
+                    <div
+                      key={i}
+                      className="flex min-h-[5.25rem] min-w-0 flex-col justify-center rounded-xl border border-[#2a2a2a] bg-[#161616]/90 px-4 py-4 transition-colors hover:border-[#393939]"
+                    >
+                      <p className="text-[10px] font-black uppercase tracking-wider text-[#6e6e6e]">
+                        {stat.label}
+                      </p>
+                      <p className="mt-2 break-words text-sm font-black leading-snug text-[#ff6b6b] sm:text-[0.9375rem]">
+                        {stat.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

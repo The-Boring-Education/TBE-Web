@@ -34,5 +34,19 @@ test.describe("DSA Yatra auth and onboarding gate", () => {
     await expect(
       page.getByRole("heading", { name: /Welcome back,/ }),
     ).toBeVisible({ timeout: 25_000 });
+
+    await expect(
+      page.getByRole("button", { name: /edit goal/i }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole("link", { name: "Continue Learning" }),
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Edit Profile" }),
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Share Journey" }),
+    ).toHaveCount(0);
   });
 });
