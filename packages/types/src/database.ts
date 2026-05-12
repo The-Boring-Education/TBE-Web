@@ -247,6 +247,33 @@ export interface WebinarEnrolledUsersProps {
 // USER POINTS ACTION TYPES
 // ================================
 
+// ================================
+// TBE APP IDENTIFIERS
+// ================================
+
+export const TBE_APP = [
+  "PLATFORM",
+  "PREPYATRA",
+  "DSA_YATRA",
+  "ONCAMPUS",
+  "QUIZ",
+] as const;
+
+export type TBEAppType = (typeof TBE_APP)[number];
+
+// ================================
+// USER ACTIVITY LOG
+// ================================
+
+export interface UserActivityLogModel {
+  userId: string;
+  app: TBEAppType;
+  actionType: string;
+  /** ISO date string YYYY-MM-DD representing the calendar day of the activity */
+  date: string;
+  metadata?: Record<string, unknown>;
+}
+
 const UserPointsActionType = [
   "ENROLL_COURSE",
   "ENROLL_SHEET",

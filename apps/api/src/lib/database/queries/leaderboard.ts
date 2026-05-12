@@ -5,6 +5,7 @@ import type {
   DatabaseQueryResponseType,
   LeaderboardModel,
   LeaderboardType,
+  TBEAppType,
 } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
 
@@ -30,9 +31,12 @@ const addLeaderboardTopperToDB = async (
 
 const getLeaderboardEntriesFromDB = async (
   type?: LeaderboardType,
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const query = type ? { type } : {};
+    const query: Record<string, unknown> = {};
+    if (type) query.type = type;
+    if (app) query.app = app;
     const data = await Leaderboard.find(query).sort({ date: -1 });
     return { data };
   } catch (error) {
@@ -50,11 +54,13 @@ const getLeaderboardEntriesFromDB = async (
 const saveLeaderboardToDB = async (
   type: LeaderboardType,
   entries: { userId: string; points: number }[],
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
+    const filter: Record<string, unknown> = { type, app: app ?? null };
     const result = await Leaderboard.findOneAndUpdate(
-      { type },
-      { type, entries, date: new Date() },
+      filter,
+      { type, app: app ?? null, entries, date: new Date() },
       { upsert: true, new: true },
     );
     return { data: result };
@@ -69,9 +75,11 @@ const saveLeaderboardToDB = async (
 
 const getLeaderboardWithUsersFromDB = async (
   type: LeaderboardType,
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const data = await Leaderboard.findOne({ type })
+    const filter: Record<string, unknown> = { type, app: app ?? null };
+    const data = await Leaderboard.findOne(filter)
       .sort({ date: -1 })
       .populate("entries.userId", "name image");
     return { data };
@@ -104,6 +112,7 @@ const getStartDateByType = (type: LeaderboardType) => {
 
 const generateLeaderboard = async (
   type: LeaderboardType,
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const startDate = getStartDateByType(type);
@@ -114,12 +123,15 @@ const generateLeaderboard = async (
     const userScores: Record<string, number> = {};
 
     gamificationData.forEach((user) => {
-      const actions = user.actions.filter(
-        (a) =>
+      const actions = user.actions.filter((a) => {
+        const withinRange =
           a.createdAt !== undefined &&
           a.createdAt >= startDate &&
-          a.createdAt <= endDate,
-      );
+          a.createdAt <= endDate;
+        // Filter by app when provided; otherwise include all actions
+        const matchesApp = app ? a.app === app : true;
+        return withinRange && matchesApp;
+      });
 
       const total = actions.reduce((sum, a) => sum + (a.pointsEarned || 0), 0);
       if (total > 0) {
@@ -132,13 +144,14 @@ const generateLeaderboard = async (
       .sort((a, b) => b[1] - a[1])
       .map(([userId, points]) => ({ userId, points }));
 
+    const suffix = app ? `_${app.toLowerCase()}` : "";
     const publicDir = path.join(process.cwd(), "public", "leaderboards");
     if (!fs.existsSync(publicDir)) {
       fs.mkdirSync(publicDir, { recursive: true });
     }
 
     fs.writeFileSync(
-      path.join(publicDir, `${type.toLowerCase()}.json`),
+      path.join(publicDir, `${type.toLowerCase()}${suffix}.json`),
       JSON.stringify(sorted, null, 2),
     );
 
@@ -146,6 +159,7 @@ const generateLeaderboard = async (
   } catch (error) {
     logger.error("DB: generateLeaderboard failed", {
       type,
+      app,
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
     });
