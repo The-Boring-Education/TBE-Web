@@ -11,6 +11,27 @@ import { logger } from "@/lib/utils/logger";
 
 import { Gamification, Leaderboard } from "../models";
 
+/** Allow-list of valid leaderboard time-window values */
+const VALID_LEADERBOARD_TYPES: LeaderboardType[] = [
+  "DAILY",
+  "WEEKLY",
+  "MONTHLY",
+];
+/** Allow-list of valid TBE app identifiers */
+const VALID_TBE_APPS: TBEAppType[] = [
+  "PLATFORM",
+  "PREPYATRA",
+  "DSA_YATRA",
+  "ONCAMPUS",
+  "QUIZ",
+];
+
+const isSafeLeaderboardType = (v: unknown): v is LeaderboardType =>
+  VALID_LEADERBOARD_TYPES.includes(v as LeaderboardType);
+
+const isSafeTBEApp = (v: unknown): v is TBEAppType =>
+  VALID_TBE_APPS.includes(v as TBEAppType);
+
 const addLeaderboardTopperToDB = async (
   payload: Omit<LeaderboardModel, "createdAt" | "updatedAt">,
 ): Promise<DatabaseQueryResponseType> => {
@@ -57,10 +78,19 @@ const saveLeaderboardToDB = async (
   app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const filter: Record<string, unknown> = { type, app: app ?? null };
+    if (!isSafeLeaderboardType(type)) {
+      return { error: `Invalid leaderboard type: ${String(type)}` };
+    }
+    if (app !== undefined && !isSafeTBEApp(app)) {
+      return { error: `Invalid app: ${String(app)}` };
+    }
+
+    // Use null for the global (no-app) leaderboard so the compound index works uniformly
+    const safeApp = app ?? null;
+    const filter = { type, app: safeApp };
     const result = await Leaderboard.findOneAndUpdate(
       filter,
-      { type, app: app ?? null, entries, date: new Date() },
+      { type, app: safeApp, entries, date: new Date() },
       { upsert: true, new: true },
     );
     return { data: result };
@@ -78,7 +108,14 @@ const getLeaderboardWithUsersFromDB = async (
   app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const filter: Record<string, unknown> = { type, app: app ?? null };
+    if (!isSafeLeaderboardType(type)) {
+      return { error: `Invalid leaderboard type: ${String(type)}` };
+    }
+    if (app !== undefined && !isSafeTBEApp(app)) {
+      return { error: `Invalid app: ${String(app)}` };
+    }
+
+    const filter = { type, app: app ?? null };
     const data = await Leaderboard.findOne(filter)
       .sort({ date: -1 })
       .populate("entries.userId", "name image");
@@ -115,6 +152,13 @@ const generateLeaderboard = async (
   app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
+    if (!isSafeLeaderboardType(type)) {
+      return { error: `Invalid leaderboard type: ${String(type)}` };
+    }
+    if (app !== undefined && !isSafeTBEApp(app)) {
+      return { error: `Invalid app: ${String(app)}` };
+    }
+
     const startDate = getStartDateByType(type);
     const endDate = new Date();
 
@@ -144,14 +188,18 @@ const generateLeaderboard = async (
       .sort((a, b) => b[1] - a[1])
       .map(([userId, points]) => ({ userId, points }));
 
-    const suffix = app ? `_${app.toLowerCase()}` : "";
+    // Build a filename from validated allow-listed values only (no user input reaches the path)
+    const safeTypePart = type.toLowerCase().replace(/[^a-z]/g, "");
+    const safeAppPart = app
+      ? `_${app.toLowerCase().replace(/[^a-z_]/g, "")}`
+      : "";
     const publicDir = path.join(process.cwd(), "public", "leaderboards");
     if (!fs.existsSync(publicDir)) {
       fs.mkdirSync(publicDir, { recursive: true });
     }
 
     fs.writeFileSync(
-      path.join(publicDir, `${type.toLowerCase()}${suffix}.json`),
+      path.join(publicDir, `${safeTypePart}${safeAppPart}.json`),
       JSON.stringify(sorted, null, 2),
     );
 

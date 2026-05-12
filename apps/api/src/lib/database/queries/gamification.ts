@@ -109,9 +109,16 @@ const logUserActivityForStreak = async (
     const date = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
     await UserActivityLog.create({ userId, app, actionType, date, metadata });
     return { data: { logged: true } };
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Ignore duplicate key errors (11000) - already logged today for this action
-    if (error?.code !== 11000) {
+    if (
+      !(
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        (error as { code: unknown }).code === 11000
+      )
+    ) {
       logger.error("DB: logUserActivityForStreak failed", {
         error: error instanceof Error ? error.message : String(error),
       });
