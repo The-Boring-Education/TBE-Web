@@ -248,7 +248,7 @@ const DsaPrepWorkspace = ({
             <div className="flex items-center gap-2 shrink-0">
               {selectedQuestion && !isStudyGuideOpen && (
                 <>
-                  <CopyButton />
+                  <CopyButton showIcon={false} />
                   {onToggleComplete ? (
                     <Button
                       variant="OUTLINE"
