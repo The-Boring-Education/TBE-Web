@@ -10,6 +10,7 @@ const CopyButton = ({
   text = "Copy Link",
   copiedText = "Copied!",
   copiedClassName = "",
+  showIcon = true,
   resetAfterMs = 2000,
   onCopySuccess,
   onCopyError,
@@ -42,7 +43,11 @@ const CopyButton = ({
       isLoading={isLoading}
       onClick={handleCopy}
       animationClasses={animationClasses}
-      icon={<Copy className="h-2 w-2 ml-1 opacity-80" aria-hidden />}
+      icon={
+        showIcon ? (
+          <Copy className="h-2 w-2 ml-1 opacity-80" aria-hidden />
+        ) : undefined
+      }
       isFullWidth={isFullWidth}
       animationType={animationType}
       size={size}

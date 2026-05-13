@@ -3,7 +3,12 @@ import {
   DSA_GOALS,
   DSA_TIMELINES,
 } from "@tbe/constants";
-import { cn, sendRequest } from "@tbe/utils";
+import {
+  cn,
+  getOptionalProfileUrlError,
+  normalizeOptionalProfileUrl,
+  sendRequest,
+} from "@tbe/utils";
 import { ExternalLink, Github, Linkedin } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -17,11 +22,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { InputField } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 
 type DsaGoal = (typeof DSA_GOALS)[number]["value"];
 type DsaTimeline = (typeof DSA_TIMELINES)[number]["value"];
 type DsaExperience = (typeof DSA_EXPERIENCE_LEVELS)[number]["value"];
+
+type SocialUrlFieldKey = "linkedInUrl" | "githubUrl" | "leetCodeUrl";
 
 interface DsaFormData {
   name: string;
@@ -78,6 +86,9 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
     preferredLanguage: "C++",
   });
   const [loading, setLoading] = useState(false);
+  const [socialUrlErrors, setSocialUrlErrors] = useState<
+    Partial<Record<SocialUrlFieldKey, string>>
+  >({});
 
   useEffect(() => {
     if (currentData) {
@@ -93,6 +104,7 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
           "Fresher (0-1 yr)") as DsaExperience,
         preferredLanguage: currentData.dsaYatra?.preferredLanguage || "C++",
       });
+      setSocialUrlErrors({});
     }
   }, [currentData, user]);
 
@@ -103,8 +115,31 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleSocialUrlChange = (field: string, value: string) => {
+    const key = field as SocialUrlFieldKey;
+    handleInputChange(key, value);
+    setSocialUrlErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  };
+
+  const handleSocialUrlBlur = (field: SocialUrlFieldKey, value: string) => {
+    const err = getOptionalProfileUrlError(value);
+    setSocialUrlErrors((prev) => {
+      const next = { ...prev };
+      if (err) next[field] = err;
+      else delete next[field];
+      return next;
+    });
+  };
+
   const handleSubmit = async () => {
-    if (!formData.name || !formData.username) {
+    const name = formData.name.trim();
+    const username = formData.username.trim();
+    if (!name || !username) {
       toast({
         title: "Validation Error",
         description: "Name and Username are required.",
@@ -113,19 +148,31 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
       return;
     }
 
+    const nextSocialErrors: Partial<Record<SocialUrlFieldKey, string>> = {};
+    (
+      ["linkedInUrl", "githubUrl", "leetCodeUrl"] as SocialUrlFieldKey[]
+    ).forEach((key) => {
+      const err = getOptionalProfileUrlError(formData[key]);
+      if (err) nextSocialErrors[key] = err;
+    });
+    if (Object.keys(nextSocialErrors).length > 0) {
+      setSocialUrlErrors(nextSocialErrors);
+      return;
+    }
+
     setLoading(true);
     try {
       const requestBody = {
         userId,
-        name: formData.name,
-        username: formData.username,
+        name,
+        username,
         target: formData.goal,
         timeline: formData.timeline,
         experienceLevel: formData.experienceLevel,
         preferredLanguage: formData.preferredLanguage,
-        linkedInUrl: formData.linkedInUrl,
-        githubUrl: formData.githubUrl,
-        leetCodeUrl: formData.leetCodeUrl,
+        linkedInUrl: normalizeOptionalProfileUrl(formData.linkedInUrl),
+        githubUrl: normalizeOptionalProfileUrl(formData.githubUrl),
+        leetCodeUrl: normalizeOptionalProfileUrl(formData.leetCodeUrl),
       };
 
       const result = await sendRequest({
@@ -217,50 +264,74 @@ const EditDsaOnboardingModal: React.FC<EditDsaOnboardingModalProps> = ({
             <h3 className="text-sm font-semibold text-[#f0f0f0] mb-2">
               Social Profiles
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <div className="space-y-1">
-                <label className="text-[11px] font-medium text-[#8a8a8a] flex items-center gap-1.5">
-                  <Linkedin className="w-3.5 h-3.5 text-[#FF5757]" /> LinkedIn
-                </label>
-                <input
-                  type="url"
-                  placeholder="https://linkedin.com/in/username"
-                  value={formData.linkedInUrl}
-                  onChange={(e) =>
-                    handleInputChange("linkedInUrl", e.target.value)
-                  }
-                  className="w-full px-2.5 py-2 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#f0f0f0] text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[11px] font-medium text-[#8a8a8a] flex items-center gap-1.5">
-                  <Github className="w-3.5 h-3.5 text-[#FF5757]" /> GitHub
-                </label>
-                <input
-                  type="url"
-                  placeholder="https://github.com/username"
-                  value={formData.githubUrl}
-                  onChange={(e) =>
-                    handleInputChange("githubUrl", e.target.value)
-                  }
-                  className="w-full px-2.5 py-2 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#f0f0f0] text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[11px] font-medium text-[#8a8a8a] flex items-center gap-1.5">
-                  <ExternalLink className="w-3.5 h-3.5 text-[#FF5757]" />{" "}
-                  LeetCode
-                </label>
-                <input
-                  type="url"
-                  placeholder="https://leetcode.com/username"
-                  value={formData.leetCodeUrl}
-                  onChange={(e) =>
-                    handleInputChange("leetCodeUrl", e.target.value)
-                  }
-                  className="w-full px-2.5 py-2 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] text-[#f0f0f0] text-sm focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none transition-all"
-                />
-              </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <InputField
+                label={
+                  <span className="flex items-center gap-1.5">
+                    <Linkedin
+                      className="size-3.5 shrink-0 text-[#FF5757]"
+                      aria-hidden
+                    />
+                    LinkedIn
+                  </span>
+                }
+                field="linkedInUrl"
+                value={formData.linkedInUrl}
+                onChange={handleSocialUrlChange}
+                type="url"
+                autoComplete="url"
+                error={socialUrlErrors.linkedInUrl}
+                labelClassName="inline-flex gap-1.5 text-[11px] font-medium leading-tight text-[#8a8a8a]"
+                inputClassName="rounded-lg border border-[#2a2a2a] bg-[#0a0a0a] px-2.5 py-2 text-sm text-[#f0f0f0] ring-offset-[#0f0f0f] transition-all focus-visible:border-[#FF5757] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5757]/20"
+                inputId="dsa-edit-linkedInUrl"
+                onBlur={(e) =>
+                  handleSocialUrlBlur("linkedInUrl", e.target.value)
+                }
+              />
+              <InputField
+                label={
+                  <span className="flex items-center gap-1.5">
+                    <Github
+                      className="size-3.5 shrink-0 text-[#FF5757]"
+                      aria-hidden
+                    />
+                    GitHub
+                  </span>
+                }
+                field="githubUrl"
+                value={formData.githubUrl}
+                onChange={handleSocialUrlChange}
+                type="url"
+                autoComplete="url"
+                error={socialUrlErrors.githubUrl}
+                labelClassName="inline-flex gap-1.5 text-[11px] font-medium leading-tight text-[#8a8a8a]"
+                inputClassName="rounded-lg border border-[#2a2a2a] bg-[#0a0a0a] px-2.5 py-2 text-sm text-[#f0f0f0] ring-offset-[#0f0f0f] transition-all focus-visible:border-[#FF5757] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5757]/20"
+                inputId="dsa-edit-githubUrl"
+                onBlur={(e) => handleSocialUrlBlur("githubUrl", e.target.value)}
+              />
+              <InputField
+                label={
+                  <span className="flex items-center gap-1.5">
+                    <ExternalLink
+                      className="size-3.5 shrink-0 text-[#FF5757]"
+                      aria-hidden
+                    />
+                    LeetCode
+                  </span>
+                }
+                field="leetCodeUrl"
+                value={formData.leetCodeUrl}
+                onChange={handleSocialUrlChange}
+                type="url"
+                autoComplete="url"
+                error={socialUrlErrors.leetCodeUrl}
+                labelClassName="inline-flex gap-1.5 text-[11px] font-medium leading-tight text-[#8a8a8a]"
+                inputClassName="rounded-lg border border-[#2a2a2a] bg-[#0a0a0a] px-2.5 py-2 text-sm text-[#f0f0f0] ring-offset-[#0f0f0f] transition-all focus-visible:border-[#FF5757] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5757]/20"
+                inputId="dsa-edit-leetCodeUrl"
+                onBlur={(e) =>
+                  handleSocialUrlBlur("leetCodeUrl", e.target.value)
+                }
+              />
             </div>
           </div>
 

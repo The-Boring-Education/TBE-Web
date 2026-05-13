@@ -310,4 +310,19 @@ describe("applyDsaPaidPagination", () => {
     expect(q).not.toHaveProperty("_priorityScore");
     expect(q.title).toBe("Q-1");
   });
+
+  it("does not re-slice rows when DB already returned page-2 data", () => {
+    const rows = Array.from({ length: 10 }, (_, i) => makeQ(String(i + 11)));
+    const result = applyDsaPaidPagination(rows, 2, 10, 25);
+
+    expect(result.questions).toHaveLength(10);
+    expect((result.questions as any[])[0]._id).toBe("11");
+    expect(result.pagination).toEqual({
+      total: 25,
+      page: 2,
+      limit: 10,
+      totalPages: 3,
+      hasMore: true,
+    });
+  });
 });

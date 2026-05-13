@@ -6,7 +6,7 @@ import type {
   StudyGuideModel,
 } from "@tbe/interface";
 import { cn } from "@tbe/utils";
-import { ArrowRight, BookOpen, Lightbulb, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Check, Lightbulb, Sparkles } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import Button from "../../common/Buttons/Button";
@@ -83,6 +83,15 @@ const DsaPrepWorkspace = ({
   const lockedItemKeys = freemiumLockedQuestionIds
     ? new Set(Array.from(freemiumLockedQuestionIds).map(String))
     : undefined;
+
+  const selectedQuestionKey = selectedQuestion
+    ? String(selectedQuestion.id ?? selectedQuestion.name)
+    : "";
+
+  const isSelectedQuestionCompleted =
+    !!selectedQuestion &&
+    (completedQuestionIds?.some((cid) => String(cid) === selectedQuestionKey) ??
+      false);
 
   const currentTopicConfig =
     selectedTopic && studyGuideConfigs
@@ -237,7 +246,33 @@ const DsaPrepWorkspace = ({
           )}
           {selectedTopic && (
             <div className="flex items-center gap-2 shrink-0">
-              {selectedQuestion && !isStudyGuideOpen && <CopyButton />}
+              {selectedQuestion && !isStudyGuideOpen && (
+                <>
+                  <CopyButton showIcon={false} />
+                  {onToggleComplete ? (
+                    <Button
+                      variant="OUTLINE"
+                      size="SMALL"
+                      type="button"
+                      text="Completed"
+                      icon={
+                        isSelectedQuestionCompleted ? (
+                          <Check
+                            className="h-2 w-2 ml-1 opacity-90"
+                            aria-hidden
+                          />
+                        ) : undefined
+                      }
+                      onClick={() =>
+                        onToggleComplete(
+                          selectedQuestion.id ?? selectedQuestion.name,
+                        )
+                      }
+                      analyticsLabel="dsa_question_complete_toggle"
+                    />
+                  ) : null}
+                </>
+              )}
             </div>
           )}
         </div>

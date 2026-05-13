@@ -125,6 +125,7 @@ export interface CopyButtonProps extends Omit<
   copiedText?: string;
   variant?: ButtonVariant;
   copiedClassName?: string;
+  showIcon?: boolean;
   resetAfterMs?: number;
   onCopySuccess?: () => void;
   onCopyError?: (error: unknown) => void;
