@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  BookOpen,
   BrainCircuit,
   ClipboardList,
   FileText,
@@ -29,4 +30,10 @@ export const ONCAMPUS_DASHBOARD_NAV_ITEMS: OncampusDashboardNavItem[] = [
   { name: "DSA", href: "/sheets", icon: FileText },
   { name: "Quizzes", href: "/dashboard/quizzes", icon: ClipboardList },
   { name: "Aptitude", href: "/dashboard/aptitude", icon: BrainCircuit },
+  {
+    name: "Core Subjects",
+    shortLabel: "Subjects",
+    href: "/dashboard/coresubjects",
+    icon: BookOpen,
+  },
 ];

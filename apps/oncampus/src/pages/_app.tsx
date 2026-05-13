@@ -39,6 +39,10 @@ const AppContent = ({
   const isInterviewPrepMainRoute = router.pathname === "/interview-sheets";
   // Exclude the Quizzes page for fullscreen workspace experience
   const isQuizzesRoute = router.pathname === "/dashboard/quizzes";
+  // Exclude the Core Subjects page for fullscreen workspace experience
+  const isCoreSubjectsRoute = router.pathname.startsWith(
+    "/dashboard/coresubjects",
+  );
 
   const shouldUseDashboardLayout =
     (isDashboardRoute || isDSAPrepRoute) &&
@@ -46,7 +50,8 @@ const AppContent = ({
     !isDSAMainRoute &&
     !isAptitudeRoute &&
     !isInterviewPrepMainRoute &&
-    !isQuizzesRoute;
+    !isQuizzesRoute &&
+    !isCoreSubjectsRoute;
 
   /** Same idea as DSA Yatra: /pricing is full-screen only (no shell, no app chrome wrapper). */
   const isPricingRoute = router.pathname === "/pricing";
