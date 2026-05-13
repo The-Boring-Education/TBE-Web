@@ -80,6 +80,21 @@ export const DSA_STUDY_GUIDE_CONFIGS: Record<string, StudyGuideConfig> = {
       { id: "cheat-sheet", label: "Cheat sheet" },
     ],
   },
+  STACK: {
+  topic: "Stack",
+  hasStudyGuide: true,
+  sections: [
+    { id: "before-you-start", label: "Before you start" },
+    { id: "how-stacks-work", label: "How Stacks work" },
+    { divider: "Patterns" },
+    { id: "matching-brackets", label: "Matching brackets" },
+    { id: "monotonic-stack", label: "Monotonic stack" },
+    { id: "stack-with-evaluation", label: "Expression evaluation" },
+    { id: "stack-design", label: "Stack design" },
+    { divider: null },
+    { id: "cheat-sheet", label: "Cheat sheet" },
+  ],
+},
   SORTING: {
     topic: "Sorting",
     hasStudyGuide: true,
