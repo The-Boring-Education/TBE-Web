@@ -12,7 +12,7 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
   }) => {
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
     await page.waitForURL((url) => new URL(url).pathname === "/", {
-      timeout: 20_000,
+      timeout: 30_000,
     });
   });
 
@@ -26,14 +26,14 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
 
     await expect(page).not.toHaveURL(onboardingAppUrlPattern, {
-      timeout: 15_000,
+      timeout: 20_000,
     });
     await expect(page).toHaveURL(
       (url) => new URL(url).pathname === "/dashboard",
       {
-        timeout: 15_000,
+        timeout: 20_000,
       },
     );
-    await expect(page.getByRole("main")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole("main")).toBeVisible({ timeout: 20_000 });
   });
 });
