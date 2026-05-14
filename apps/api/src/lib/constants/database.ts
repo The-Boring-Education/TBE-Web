@@ -38,6 +38,7 @@ const DATABASE_MODELS = {
   STUDY_GUIDE: "StudyGuide",
   /** Admin-configured INR prices for subscription SKUs (productType + planKey) */
   SUBSCRIPTION_PLAN: "SubscriptionPlan",
+  CORE_SUBJECT: "CoreSubject",
 };
 
 export const FEEDBACK_TYPES = [

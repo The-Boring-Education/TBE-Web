@@ -1402,3 +1402,32 @@ export interface StudyGuideModel extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CoreSubjectInterviewQuestion {
+  q: string;
+  a: string;
+}
+
+export interface CoreSubjectChapterContent {
+  overview: string;
+  notes: string[];
+  importantPoints: string[];
+  interviewQuestions: CoreSubjectInterviewQuestion[];
+  codeBlock?: string;
+}
+
+export interface CoreSubjectChapterModel {
+  _id: typeof Schema.Types.ObjectId;
+  title: string;
+  description: string;
+  content: CoreSubjectChapterContent;
+}
+
+export interface CoreSubjectModel extends Document {
+  contentId?: string;
+  subjectId: string;
+  label: string;
+  chapters: CoreSubjectChapterModel[];
+  isActive: boolean;
+  order: number;
+}

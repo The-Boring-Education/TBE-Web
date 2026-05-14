@@ -1,6 +1,7 @@
 import { FlexContainer, Text } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import { cn } from "@tbe/utils";
+import { useQuery } from "@tbe/query";
+import { cn, sendRequest } from "@tbe/utils";
 import {
   ArrowLeft,
   BookOpen,
@@ -10,11 +11,10 @@ import {
   ListFilter,
   Play,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 import type { Chapter, Subject } from "@/config/coreSubjectsData";
-import { CORE_SUBJECTS } from "@/config/coreSubjectsData";
 
 /* ─────────────────────────────────────────────
    Sub-components
@@ -276,6 +276,18 @@ function ChapterContent({
 ───────────────────────────────────────────── */
 
 const CoreSubjectsPage = () => {
+  const { data: response, isLoading } = useQuery<any>({
+    queryKey: ["coreSubjects"],
+    queryFn: () =>
+      sendRequest({
+        url: `${routes.api.base}${routes.api.interviewPrep}/core-subjects`,
+      }),
+  });
+
+  const coreSubjects: Subject[] = useMemo(() => {
+    return response?.data || [];
+  }, [response]);
+
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(
     null,
   );
@@ -287,7 +299,7 @@ const CoreSubjectsPage = () => {
     setSelectedChapter(null);
   }, [selectedSubjectId]);
 
-  const selectedSubject: Subject | undefined = CORE_SUBJECTS.find(
+  const selectedSubject: Subject | undefined = coreSubjects.find(
     (s) => s.id === selectedSubjectId,
   );
 
@@ -305,6 +317,14 @@ const CoreSubjectsPage = () => {
   const handleBackToChapters = () => {
     setSelectedChapter(null);
   };
+
+  if (isLoading) {
+    return (
+      <OnCampusLearningLayout backHref={routes.oncampus.dashboard} isLoading>
+        <div />
+      </OnCampusLearningLayout>
+    );
+  }
 
   return (
     <OnCampusLearningLayout
@@ -386,7 +406,7 @@ const CoreSubjectsPage = () => {
               title="Toggle subjects list"
             >
               <ListFilter className="w-3.5 h-3.5" />
-              <span>{CORE_SUBJECTS.length} Subjects</span>
+              <span>{coreSubjects.length} Subjects</span>
             </button>
           </div>
         </div>
@@ -399,7 +419,7 @@ const CoreSubjectsPage = () => {
           )}
         >
           <div className="px-3 py-2 space-y-1">
-            {CORE_SUBJECTS.map((subject) => (
+            {coreSubjects.map((subject) => (
               <SubjectItem
                 key={subject.id}
                 subject={subject}
@@ -430,7 +450,7 @@ const CoreSubjectsPage = () => {
                   wrap={false}
                   className="gap-1"
                 >
-                  {CORE_SUBJECTS.map((subject) => (
+                  {coreSubjects.map((subject) => (
                     <SubjectItem
                       key={subject.id}
                       subject={subject}

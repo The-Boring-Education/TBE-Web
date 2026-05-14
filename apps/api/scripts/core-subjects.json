@@ -1,0 +1,120 @@
+[
+  {
+    "subjectId": "oops",
+    "label": "OOPS",
+    "order": 1,
+    "chapters": [
+      {
+        "title": "Classes & Objects",
+        "description": "Understand the blueprint (class) and instances (objects) that form the foundation of OOP.",
+        "content": {
+          "overview": "A class is a user-defined blueprint from which objects are created. An object is an instance of a class that holds actual data and can perform actions via methods.",
+          "notes": [
+            "A class defines attributes (fields) and behaviours (methods).",
+            "Objects are created using the `new` keyword in most OOP languages.",
+            "Each object has its own copy of instance variables.",
+            "Static members belong to the class, not individual objects."
+          ],
+          "importantPoints": [
+            "Class is a logical entity; object is a physical entity.",
+            "Constructor initialises an object when it is created.",
+            "Destructor (or garbage collector) cleans up when an object is no longer needed."
+          ],
+          "interviewQuestions": [
+            {
+              "q": "What is the difference between a class and an object?",
+              "a": "A class is a template/blueprint; an object is an instance created from that blueprint with actual values."
+            },
+            {
+              "q": "Can a class exist without any object?",
+              "a": "Yes – static classes or utility classes can be used without instantiation."
+            }
+          ],
+          "codeBlock": "// Java example\nclass Car {\n  String brand;\n  int speed;\n  Car(String b, int s) { brand = b; speed = s; }\n  void display() { System.out.println(brand + \" @ \" + speed + \"kmph\"); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Car c = new Car(\"Tesla\", 200);\n    c.display();\n  }\n}"
+        }
+      },
+      {
+        "title": "Inheritance",
+        "description": "Reuse and extend existing class behaviour through parent-child relationships.",
+        "content": {
+          "overview": "Inheritance allows a child class to acquire the properties and behaviours of a parent class, promoting code reuse and establishing an IS-A relationship.",
+          "notes": [
+            "Single, multilevel, hierarchical, multiple (via interfaces) inheritance types exist.",
+            "The `extends` keyword is used in Java; `:` in C++/C#.",
+            "Method overriding enables runtime polymorphism.",
+            "`super` keyword accesses the parent class constructor or method."
+          ],
+          "importantPoints": [
+            "Inheritance models IS-A relationship.",
+            "Java does not support multiple inheritance through classes to avoid the diamond problem.",
+            "Abstract classes can be partially implemented and inherited."
+          ],
+          "interviewQuestions": [
+            {
+              "q": "What is the diamond problem?",
+              "a": "When a class inherits from two classes that both inherit from the same base, ambiguity arises. Java avoids this by not allowing multiple class inheritance."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "subjectId": "dbms",
+    "label": "DBMS",
+    "order": 2,
+    "chapters": [
+      {
+        "title": "Introduction to DBMS",
+        "description": "Core concepts of database management systems and why they exist.",
+        "content": {
+          "overview": "A Database Management System (DBMS) is software that interacts with users, applications, and the database itself to capture and analyse data.",
+          "notes": [
+            "DBMS provides data abstraction through three schema levels: external, conceptual, internal.",
+            "It ensures data independence — logical and physical.",
+            "Common DBMS: MySQL, PostgreSQL, Oracle, MongoDB."
+          ],
+          "importantPoints": [
+            "DBMS eliminates data redundancy and ensures consistency.",
+            "It provides concurrent access and crash recovery."
+          ],
+          "interviewQuestions": [
+            {
+              "q": "What is the difference between DBMS and RDBMS?",
+              "a": "RDBMS stores data in relational tables with defined relationships; DBMS can store data in any form (hierarchical, network, etc.)."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "subjectId": "os",
+    "label": "Operating System",
+    "order": 3,
+    "chapters": [
+      {
+        "title": "Introduction to OS",
+        "description": "Role of OS as resource manager and interface between hardware and software.",
+        "content": {
+          "overview": "An Operating System is system software that manages hardware resources and provides common services for computer programs.",
+          "notes": [
+            "Functions: process management, memory management, file system, I/O management.",
+            "Types: batch, time-sharing, real-time, distributed, embedded.",
+            "Kernel is the core of the OS; it runs in privileged mode."
+          ],
+          "importantPoints": [
+            "System calls are the API between user programs and the OS.",
+            "Monolithic vs microkernel architecture trade-offs."
+          ],
+          "interviewQuestions": [
+            {
+              "q": "What is the difference between a process and a thread?",
+              "a": "A process is an independent program in execution with its own memory; a thread is a lightweight unit within a process sharing the same memory space."
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
