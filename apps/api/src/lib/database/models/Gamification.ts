@@ -1,6 +1,6 @@
 import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, USER_POINTS_ACTION } from "@/lib/constants";
+import { DATABASE_MODELS, TBE_APP, USER_POINTS_ACTION } from "@/lib/constants";
 import type { GamificationModel, UserPointsAction } from "@/lib/interfaces";
 
 const ActionSchema = new Schema<UserPointsAction>(
@@ -11,6 +11,7 @@ const ActionSchema = new Schema<UserPointsAction>(
       required: true,
     },
     pointsEarned: { type: Number, required: true },
+    app: { type: String, enum: TBE_APP, required: false },
   },
   { timestamps: true },
 );

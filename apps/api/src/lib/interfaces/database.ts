@@ -25,6 +25,7 @@ import type {
   SubscriptionFeature,
   SubscriptionStatus,
   SubscriptionType,
+  TBEAppType,
   UserPointsActionType,
   UserRoleType,
   WorkDomainType,
@@ -577,6 +578,7 @@ export interface JobAggregateModel extends Document {
 export interface UserPointsAction {
   actionType: UserPointsActionType;
   pointsEarned: number;
+  app?: TBEAppType;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -589,11 +591,21 @@ export interface GamificationModel {
 
 export interface LeaderboardModel extends Document {
   type: LeaderboardEnum;
+  app?: TBEAppType;
   date: Date;
   entries: {
     userId: Types.ObjectId;
     points: number;
   }[];
+}
+
+export interface UserActivityLogModel extends Document {
+  userId: Types.ObjectId;
+  app: TBEAppType;
+  actionType: UserPointsActionType;
+  /** YYYY-MM-DD calendar day of the activity for fast streak lookups */
+  date: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface FeedbackModel extends Document {

@@ -168,6 +168,33 @@ describe("Leaderboard API Route", () => {
     expect(data.data).toEqual(leaderboard);
   });
 
+  it("GET - no leaderboard snapshot returns 200 with empty entries shape", async () => {
+    mockGetLeaderboardWithUsersFromDB.mockResolvedValue({
+      data: {
+        type: "DAILY",
+        app: null,
+        entries: [],
+      },
+      error: null,
+    });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: { type: "DAILY" },
+    });
+
+    await handler(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+    const parsed = JSON.parse(res._getData());
+    expect(parsed.status).toBe(true);
+    expect(parsed.data).toEqual({
+      type: "DAILY",
+      app: null,
+      entries: [],
+    });
+  });
+
   it("GET - fetch error returns 500", async () => {
     mockGetLeaderboardWithUsersFromDB.mockResolvedValue({
       data: null,

@@ -22,6 +22,7 @@ import type {
   SubscriptionFeature,
   SubscriptionStatus,
   SubscriptionType,
+  TBEAppType,
   UserPointsActionType,
   UserRoleType,
   WorkDomainType,
@@ -2688,6 +2689,14 @@ const POINTS_RULES: Record<UserPointsActionType, number> = {
 
 const LEADERBOARD_TYPES: LeaderboardType[] = ["DAILY", "WEEKLY", "MONTHLY"];
 
+const TBE_APP: TBEAppType[] = [
+  "PLATFORM",
+  "PREPYATRA",
+  "DSA_YATRA",
+  "ONCAMPUS",
+  "QUIZ",
+];
+
 const APTITUDE_CATEGORIES: AptitudeCategoryType[] = [
   "QUANTITATIVE",
   "VERBAL",
@@ -3120,6 +3129,7 @@ export {
   SUBSCRIPTION_FEATURES,
   SUBSCRIPTION_STATUS,
   SUBSCRIPTION_TYPES,
+  TBE_APP,
   USER_POINTS_ACTION,
   USER_ROLE,
   WORK_DOMAIN,

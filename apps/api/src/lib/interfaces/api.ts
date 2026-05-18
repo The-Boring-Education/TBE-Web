@@ -97,6 +97,13 @@ export type SubscriptionFeature =
   | "ColdEmailAutomation"
   | "LinkedInAutomation";
 
+export type TBEAppType =
+  | "PLATFORM"
+  | "PREPYATRA"
+  | "DSA_YATRA"
+  | "ONCAMPUS"
+  | "QUIZ";
+
 export type UserPointsActionType =
   | "ENROLL_COURSE"
   | "ENROLL_SHEET"
