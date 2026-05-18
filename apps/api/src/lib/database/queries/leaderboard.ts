@@ -120,10 +120,23 @@ const getLeaderboardWithUsersFromDB = async (
     const safeApp = safeAppLookup ?? null;
 
     const filter = { type: safeType, app: safeApp };
-    const data = await Leaderboard.findOne(filter)
+    const doc = await Leaderboard.findOne(filter)
       .sort({ date: -1 })
       .populate("entries.userId", "name image");
-    return { data };
+
+    // No persisted snapshot yet (POST /api/v1/leaderboard never ran / cron lag).
+    // Return the same JSON shape clients expect instead of null.
+    if (!doc) {
+      return {
+        data: {
+          type: safeType,
+          app: safeApp,
+          entries: [],
+        },
+      };
+    }
+
+    return { data: doc };
   } catch (error) {
     logger.error("DB: getLeaderboardWithUsersFromDB failed", {
       error: error instanceof Error ? error.message : String(error),
