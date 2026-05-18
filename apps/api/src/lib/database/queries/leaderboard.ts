@@ -29,6 +29,9 @@ const VALID_TBE_APPS: TBEAppType[] = [
 const isSafeLeaderboardType = (v: unknown): v is LeaderboardType =>
   VALID_LEADERBOARD_TYPES.includes(v as LeaderboardType);
 
+const isSafeTBEApp = (v: unknown): v is TBEAppType =>
+  VALID_TBE_APPS.includes(v as TBEAppType);
+
 const addLeaderboardTopperToDB = async (
   payload: Omit<LeaderboardModel, "createdAt" | "updatedAt">,
 ): Promise<DatabaseQueryResponseType> => {
