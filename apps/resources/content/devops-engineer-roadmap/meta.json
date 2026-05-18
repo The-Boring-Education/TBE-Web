@@ -1,0 +1,15 @@
+{
+  "title": "DevOps Engineer Roadmap 2026",
+  "description": "A structured, step-by-step roadmap to becoming a DevOps Engineer, covering Linux, networking, CI/CD, cloud platforms, containers, Kubernetes, infrastructure as code, monitoring, and deployment automation.",
+  "keywords": [
+    "devops",
+    "cloud",
+    "docker",
+    "kubernetes",
+    "ci cd",
+    "linux",
+    "automation"
+  ],
+  "tags": ["roadmap", "devops"],
+  "ogImage": "https://theboringeducation.com/images/devops-roadmap-og.png"
+}
