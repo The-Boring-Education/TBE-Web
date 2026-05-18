@@ -17,45 +17,117 @@ import {
   USER_ROLE_OPTIONS,
   USER_USAGE_OPTIONS,
 } from '@tbe/constants';
-import { useApi, useUser, useUsername } from '@tbe/hooks';
+import { useUser, useUsername } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
-import { getPreFetchProps } from '@tbe/utils';
+import {
+  CACHE_TIMES,
+  queryKeys,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tbe/query';
+import {
+  getPreFetchProps,
+  mergeApiAndSessionProfileForm,
+  sendRequest,
+  type UserProfileFormFields,
+  type UserProfileFormSource,
+} from '@tbe/utils';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
+
+/** Fields returned by GET /user that we show on this page (Mongoose user doc). */
+interface ProfilePageApiUser extends UserProfileFormSource {
+  name?: string;
+  email?: string;
+  image?: string;
+}
 
 const ProfilePage = ({ seoMeta }: PageProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { user, isAuth, loading: loadingUser, updateSession } = useUser();
-  const { makeRequest } = useApi('profile');
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<UserProfileFormFields>({
     userName: '',
     occupation: '',
-    purpose: [] as string[],
+    purpose: [],
     contactNo: '+91',
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
     type?: 'success' | 'error';
   } | null>(null);
 
+  const { data: profileResponse, isLoading: loadingProfile } = useQuery({
+    queryKey: queryKeys.user.profile(user?.id ?? '__no_user__'),
+    queryFn: () => {
+      if (!user?.id) {
+        throw new Error('User id required');
+      }
+      return sendRequest({
+        url: `${routes.api.user}?userId=${encodeURIComponent(user.id)}`,
+      });
+    },
+    ...CACHE_TIMES.STANDARD,
+    enabled: Boolean(user?.id),
+  });
+
+  const profileRecord = profileResponse?.data as ProfilePageApiUser | undefined;
+
+  const savedUserName = profileRecord?.userName ?? user?.userName ?? '';
+
+  const displayName = profileRecord?.name ?? user?.name ?? 'User';
+  const displayEmail = profileRecord?.email ?? user?.email ?? '';
+  const displayImage = profileRecord?.image ?? user?.image;
+
+  const resetFormFromSources = () => {
+    if (!user?.id) return;
+    setForm(mergeApiAndSessionProfileForm(profileRecord, user));
+  };
+
+  useEffect(() => {
+    if (!user?.id) return;
+    setForm(mergeApiAndSessionProfileForm(profileRecord, user));
+  }, [user, profileRecord]);
+
+  const saveMutation = useMutation({
+    mutationFn: async (payload: UserProfileFormFields) => {
+      const res = await sendRequest({
+        url: `${routes.api.onboard}?userId=${encodeURIComponent(user!.id)}`,
+        method: 'POST',
+        body: payload,
+      });
+      if (!res.status) {
+        throw new Error(
+          typeof res.message === 'string' ? res.message : 'Update failed',
+        );
+      }
+      return res;
+    },
+    onSuccess: async () => {
+      if (user?.id) {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.user.profile(user.id),
+        });
+      }
+      await updateSession();
+    },
+  });
+
   const { message: usernameMessage, isUsernameAvailable } = useUsername(
     isEditing ? form.userName : '',
   );
 
-  // Prefill form from user session data
-  useEffect(() => {
-    if (user) {
-      setForm({
-        userName: user.userName || '',
-        occupation: user.occupation || '',
-        purpose: user.purpose || [],
-        contactNo: user.contactNo || '+91',
-      });
-    }
-  }, [user]);
+  const contactParts = useMemo(() => {
+    const raw = form.contactNo.trim();
+    const [first = '+91', ...rest] = raw.split(/\s+/);
+    const number = rest.join(' ');
+    return { code: first, number };
+  }, [form.contactNo]);
+
+  const { code, number } = contactParts;
 
   if (loadingUser) return <LoadingSpinner />;
   if (!isAuth) {
@@ -63,49 +135,41 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
     return null;
   }
 
-  const updateForm = (key: keyof typeof form, value: any) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  if (loadingProfile) return <LoadingSpinner />;
+
+  const updateForm = <K extends keyof UserProfileFormFields>(
+    key: K,
+    value: UserProfileFormFields[K],
+  ) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
-    if (!user?.id || isSubmitting) return;
+    if (!user?.id || saveMutation.isPending) return;
 
-    setIsSubmitting(true);
     try {
-      const payload = { ...form };
-      const { status } = await makeRequest({
-        url: `${routes.api.onboard}?userId=${user.id}`,
-        method: 'POST',
-        body: payload,
+      await saveMutation.mutateAsync({ ...form });
+      setToast({
+        message: 'Profile updated successfully!',
+        type: 'success',
       });
-
-      if (status) {
-        setToast({
-          message: 'Profile updated successfully!',
-          type: 'success',
-        });
-        await updateSession();
-        setIsEditing(false);
-      }
+      setIsEditing(false);
     } catch {
       setToast({
         message: 'Something went wrong. Please try again.',
         type: 'error',
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   const isFormValid = (): boolean => {
     if (!form.userName || form.userName.length < 3) return false;
-    if (isEditing && form.userName !== user?.userName && !isUsernameAvailable)
+    if (isEditing && form.userName !== savedUserName && !isUsernameAvailable)
       return false;
     if (!form.occupation) return false;
     if (!form.purpose.length) return false;
     return true;
   };
 
-  const [code = '+91', number = ''] = form.contactNo.split(' ');
+  const hasContactDigits = /\d/.test(form.contactNo);
   const codeList = COUNTRY_CODES.map((c) => c.code);
 
   const occupationLabel =
@@ -144,25 +208,17 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
                   className='px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition'
                   onClick={() => {
                     setIsEditing(false);
-                    // Reset form to user data
-                    if (user) {
-                      setForm({
-                        userName: user.userName || '',
-                        occupation: user.occupation || '',
-                        purpose: user.purpose || [],
-                        contactNo: user.contactNo || '+91',
-                      });
-                    }
+                    resetFormFromSources();
                   }}
                 >
                   Cancel
                 </button>
                 <button
                   className='px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:opacity-90 transition disabled:opacity-50'
-                  disabled={!isFormValid() || isSubmitting}
+                  disabled={!isFormValid() || saveMutation.isPending}
                   onClick={handleSave}
                 >
-                  {isSubmitting ? 'Saving...' : 'Save'}
+                  {saveMutation.isPending ? 'Saving...' : 'Save'}
                 </button>
               </FlexContainer>
             )}
@@ -170,23 +226,23 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
 
           {/* User Info Header */}
           <FlexContainer className='gap-3 items-center'>
-            {user?.image ? (
+            {displayImage ? (
               <img
-                alt={user?.name || 'User'}
+                alt={displayName}
                 className='w-16 h-16 rounded-full object-cover border-2 border-gray-200'
-                src={user.image}
+                src={displayImage}
               />
             ) : (
               <div className='w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-semibold'>
-                {user?.name?.[0]?.toUpperCase() || 'U'}
+                {displayName[0]?.toUpperCase() || 'U'}
               </div>
             )}
             <FlexContainer direction='col' className='gap-0.5'>
               <Text className='heading-5 font-semibold' level='h5'>
-                {user?.name || 'User'}
+                {displayName}
               </Text>
               <Text className='text-sm text-gray-500' level='p'>
-                {user?.email || ''}
+                {displayEmail}
               </Text>
             </FlexContainer>
           </FlexContainer>
@@ -207,7 +263,7 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
                   value={form.userName}
                   onChange={(val) => updateForm('userName', val)}
                 />
-                {form.userName && form.userName !== user?.userName && (
+                {form.userName && form.userName !== savedUserName && (
                   <Text
                     className={`span text-sm ${
                       isUsernameAvailable ? 'text-success' : 'text-primary'
@@ -315,9 +371,7 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
                   Contact Number
                 </Text>
                 <Text className='paragraph font-medium' level='p'>
-                  {form.contactNo && form.contactNo !== '+91'
-                    ? form.contactNo
-                    : 'Not set'}
+                  {hasContactDigits ? form.contactNo : 'Not set'}
                 </Text>
               </FlexContainer>
             </FlexContainer>

@@ -29,3 +29,4 @@ export * from "./paymentRedirect";
 export * from "./profileUrl";
 export * from "./socialMediaTemplates";
 export * from "./subscriptionPlanCatalog";
+export * from "./userProfileForm";
