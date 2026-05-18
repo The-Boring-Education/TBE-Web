@@ -115,8 +115,8 @@ const Button = ({
 
   const sizeClasses = {
     SMALL: "px-1 py-1 text-xs",
-    MEDIUM: "px-1.5 py-1.5 text-sm",
-    LARGE: "px-2 py-2 text-base",
+    MEDIUM: "px-2 py-2 text-sm",
+    LARGE: "px-3 py-3 text-base",
   };
 
   let baseClasses = `button rounded-1 ${sizeClasses[size]}`;

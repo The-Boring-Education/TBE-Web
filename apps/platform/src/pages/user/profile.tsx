@@ -1,3 +1,4 @@
+import { useAuth } from '@tbe/auth';
 import {
   CheckboxButtonContainer,
   FlexContainer,
@@ -17,45 +18,119 @@ import {
   USER_ROLE_OPTIONS,
   USER_USAGE_OPTIONS,
 } from '@tbe/constants';
-import { useApi, useUser, useUsername } from '@tbe/hooks';
+import { useUser, useUsername } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
-import { getPreFetchProps } from '@tbe/utils';
+import {
+  CACHE_TIMES,
+  queryKeys,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tbe/query';
+import {
+  getPreFetchProps,
+  mergeApiAndSessionProfileForm,
+  sendRequest,
+  type UserProfileFormFields,
+  type UserProfileFormSource,
+} from '@tbe/utils';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
+
+/** Fields returned by GET /user that we show on this page (Mongoose user doc). */
+interface ProfilePageApiUser extends UserProfileFormSource {
+  name?: string;
+  email?: string;
+  image?: string;
+}
 
 const ProfilePage = ({ seoMeta }: PageProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const { signOut } = useAuth();
   const { user, isAuth, loading: loadingUser, updateSession } = useUser();
-  const { makeRequest } = useApi('profile');
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<UserProfileFormFields>({
     userName: '',
     occupation: '',
-    purpose: [] as string[],
+    purpose: [],
     contactNo: '+91',
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
     type?: 'success' | 'error';
   } | null>(null);
 
+  const { data: profileResponse, isLoading: loadingProfile } = useQuery({
+    queryKey: queryKeys.user.profile(user?.id ?? '__no_user__'),
+    queryFn: () => {
+      if (!user?.id) {
+        throw new Error('User id required');
+      }
+      return sendRequest({
+        url: `${routes.api.user}?userId=${encodeURIComponent(user.id)}`,
+      });
+    },
+    ...CACHE_TIMES.STANDARD,
+    enabled: Boolean(user?.id),
+  });
+
+  const profileRecord = profileResponse?.data as ProfilePageApiUser | undefined;
+
+  const savedUserName = profileRecord?.userName ?? user?.userName ?? '';
+
+  const displayName = profileRecord?.name ?? user?.name ?? 'User';
+  const displayEmail = profileRecord?.email ?? user?.email ?? '';
+  const displayImage = profileRecord?.image ?? user?.image;
+
+  const resetFormFromSources = () => {
+    if (!user?.id) return;
+    setForm(mergeApiAndSessionProfileForm(profileRecord, user));
+  };
+
+  useEffect(() => {
+    if (!user?.id || isEditing) return;
+    setForm(mergeApiAndSessionProfileForm(profileRecord, user));
+  }, [user, profileRecord, isEditing]);
+
+  const saveMutation = useMutation({
+    mutationFn: async (payload: UserProfileFormFields) => {
+      const res = await sendRequest({
+        url: `${routes.api.onboard}?userId=${encodeURIComponent(user!.id)}`,
+        method: 'POST',
+        body: payload,
+      });
+      if (!res.status) {
+        throw new Error(
+          typeof res.message === 'string' ? res.message : 'Update failed',
+        );
+      }
+      return res;
+    },
+    onSuccess: async () => {
+      if (user?.id) {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.user.profile(user.id),
+        });
+      }
+      await updateSession();
+    },
+  });
+
   const { message: usernameMessage, isUsernameAvailable } = useUsername(
     isEditing ? form.userName : '',
   );
 
-  // Prefill form from user session data
-  useEffect(() => {
-    if (user) {
-      setForm({
-        userName: user.userName || '',
-        occupation: user.occupation || '',
-        purpose: user.purpose || [],
-        contactNo: user.contactNo || '+91',
-      });
-    }
-  }, [user]);
+  const contactParts = useMemo(() => {
+    const raw = form.contactNo.trim();
+    const [first = '+91', ...rest] = raw.split(/\s+/);
+    const number = rest.join(' ');
+    return { code: first, number };
+  }, [form.contactNo]);
+
+  const { code, number } = contactParts;
 
   if (loadingUser) return <LoadingSpinner />;
   if (!isAuth) {
@@ -63,49 +138,41 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
     return null;
   }
 
-  const updateForm = (key: keyof typeof form, value: any) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  if (loadingProfile) return <LoadingSpinner />;
+
+  const updateForm = <K extends keyof UserProfileFormFields>(
+    key: K,
+    value: UserProfileFormFields[K],
+  ) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
-    if (!user?.id || isSubmitting) return;
+    if (!user?.id || saveMutation.isPending) return;
 
-    setIsSubmitting(true);
     try {
-      const payload = { ...form };
-      const { status } = await makeRequest({
-        url: `${routes.api.onboard}?userId=${user.id}`,
-        method: 'POST',
-        body: payload,
+      await saveMutation.mutateAsync({ ...form });
+      setToast({
+        message: 'Profile updated successfully!',
+        type: 'success',
       });
-
-      if (status) {
-        setToast({
-          message: 'Profile updated successfully!',
-          type: 'success',
-        });
-        await updateSession();
-        setIsEditing(false);
-      }
+      setIsEditing(false);
     } catch {
       setToast({
         message: 'Something went wrong. Please try again.',
         type: 'error',
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   const isFormValid = (): boolean => {
     if (!form.userName || form.userName.length < 3) return false;
-    if (isEditing && form.userName !== user?.userName && !isUsernameAvailable)
+    if (isEditing && form.userName !== savedUserName && !isUsernameAvailable)
       return false;
     if (!form.occupation) return false;
     if (!form.purpose.length) return false;
     return true;
   };
 
-  const [code = '+91', number = ''] = form.contactNo.split(' ');
+  const hasContactDigits = /\d/.test(form.contactNo);
   const codeList = COUNTRY_CODES.map((c) => c.code);
 
   const occupationLabel =
@@ -119,210 +186,240 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <Section className='md:py-4 px-2 py-2'>
-        <FlexContainer
-          className='max-w-3xl mx-auto bg-white rounded-2 border shadow-sm px-4 py-6 gap-6'
-          direction='col'
-        >
-          <FlexContainer className='w-full justify-between items-center'>
-            <SectionHeaderContainer
-              heading='Your '
-              focusText='Profile'
-              headingLevel={4}
-              subtext='View and update your preferences'
-            />
-            {!isEditing ? (
-              <button
-                className='px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:opacity-90 transition'
-                onClick={() => setIsEditing(true)}
+      <Section className='md:py-6 px-3 py-4 bg-gray-50'>
+        <div className='max-w-6xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-start'>
+          <aside className='w-full lg:w-56 shrink-0 lg:sticky lg:top-20'>
+            <div className='rounded-xl border border-gray-200 bg-white px-3 py-3 shadow-sm'>
+              <Text
+                className='text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-2 mb-2'
+                level='p'
               >
-                Edit
-              </button>
-            ) : (
-              <FlexContainer className='gap-2'>
-                <button
-                  className='px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition'
-                  onClick={() => {
-                    setIsEditing(false);
-                    // Reset form to user data
-                    if (user) {
-                      setForm({
-                        userName: user.userName || '',
-                        occupation: user.occupation || '',
-                        purpose: user.purpose || [],
-                        contactNo: user.contactNo || '+91',
-                      });
-                    }
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  className='px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:opacity-90 transition disabled:opacity-50'
-                  disabled={!isFormValid() || isSubmitting}
-                  onClick={handleSave}
-                >
-                  {isSubmitting ? 'Saving...' : 'Save'}
-                </button>
-              </FlexContainer>
-            )}
-          </FlexContainer>
-
-          {/* User Info Header */}
-          <FlexContainer className='gap-3 items-center'>
-            {user?.image ? (
-              <img
-                alt={user?.name || 'User'}
-                className='w-16 h-16 rounded-full object-cover border-2 border-gray-200'
-                src={user.image}
-              />
-            ) : (
-              <div className='w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-semibold'>
-                {user?.name?.[0]?.toUpperCase() || 'U'}
-              </div>
-            )}
-            <FlexContainer direction='col' className='gap-0.5'>
-              <Text className='heading-5 font-semibold' level='h5'>
-                {user?.name || 'User'}
+                Account
               </Text>
-              <Text className='text-sm text-gray-500' level='p'>
-                {user?.email || ''}
-              </Text>
-            </FlexContainer>
-          </FlexContainer>
+              <nav
+                aria-label='Account navigation'
+                className='flex flex-row lg:flex-col gap-1'
+              >
+                <Link
+                  href={routes.user.profile}
+                  className={`shrink-0 rounded-lg px-3 py-2 text-sm transition-colors ${
+                    router.pathname === routes.user.profile
+                      ? 'bg-gray-100 font-medium text-gray-900'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+                >
+                  Profile
+                </Link>
+                <button
+                  type='button'
+                  className='shrink-0 rounded-lg px-3 py-2 text-sm text-left text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900'
+                  onClick={() => signOut(routes.home)}
+                >
+                  Logout
+                </button>
+              </nav>
+            </div>
+          </aside>
 
-          <div className='h-px w-full bg-gray-200' />
-
-          {/* Preferences Section */}
-          {isEditing ? (
-            <FlexContainer className='gap-6' direction='col' fullWidth>
-              {/* Username */}
-              <FlexContainer className='gap-2 md:w-2/3 w-full' direction='col'>
-                <Text className='paragraph font-medium' level='p'>
-                  Username
-                </Text>
-                <InputFieldContainer
-                  label='Username'
-                  type='text'
-                  value={form.userName}
-                  onChange={(val) => updateForm('userName', val)}
+          <main className='flex-1 min-w-0'>
+            <FlexContainer
+              className='w-full bg-white rounded-2 border border-gray-200 shadow-sm px-4 py-6 gap-6'
+              direction='col'
+            >
+              <FlexContainer className='w-full justify-between items-center'>
+                <SectionHeaderContainer
+                  heading='Your '
+                  focusText='Profile'
+                  headingLevel={4}
+                  subtext='View and update your preferences'
                 />
-                {form.userName && form.userName !== user?.userName && (
-                  <Text
-                    className={`span text-sm ${
-                      isUsernameAvailable ? 'text-success' : 'text-primary'
-                    }`}
-                    level='span'
+                {!isEditing ? (
+                  <button
+                    className='px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:opacity-90 transition'
+                    onClick={() => setIsEditing(true)}
                   >
-                    {usernameMessage}
-                  </Text>
+                    Edit
+                  </button>
+                ) : (
+                  <FlexContainer className='gap-2'>
+                    <button
+                      className='px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition'
+                      onClick={() => {
+                        setIsEditing(false);
+                        resetFormFromSources();
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className='px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:opacity-90 transition disabled:opacity-50'
+                      disabled={!isFormValid() || saveMutation.isPending}
+                      onClick={handleSave}
+                    >
+                      {saveMutation.isPending ? 'Saving...' : 'Save'}
+                    </button>
+                  </FlexContainer>
                 )}
               </FlexContainer>
 
-              {/* Occupation */}
-              <FlexContainer className='gap-2' direction='col'>
-                <Text className='paragraph font-medium' level='p'>
-                  What do you do?
-                </Text>
-                <RadioButtonContainer
-                  options={USER_ROLE_OPTIONS}
-                  selectedValue={form.occupation}
-                  onChange={(val) => updateForm('occupation', val)}
-                />
-              </FlexContainer>
-
-              {/* Purpose */}
-              <FlexContainer className='gap-2' direction='col'>
-                <Text className='paragraph font-medium' level='p'>
-                  How do you use the Platform?
-                </Text>
-                <CheckboxButtonContainer
-                  options={USER_USAGE_OPTIONS.map(({ label, value }) => ({
-                    label,
-                    value,
-                  }))}
-                  selectedValues={form.purpose}
-                  onChange={(val) => updateForm('purpose', val)}
-                />
-              </FlexContainer>
-
-              {/* Phone Number */}
-              <FlexContainer className='gap-2' direction='col'>
-                <Text className='paragraph font-medium' level='p'>
-                  Contact Number
-                </Text>
-                <FlexContainer className='gap-2 w-full items-center flex-nowrap'>
-                  <SelectInput
-                    aria-label='Country Code'
-                    list={codeList}
-                    selectedItem={code}
-                    onChange={(val) =>
-                      updateForm('contactNo', `${val} ${number}`)
-                    }
+              {/* User Info Header */}
+              <FlexContainer className='gap-3 items-center'>
+                {displayImage ? (
+                  <img
+                    alt={displayName}
+                    className='w-16 h-16 rounded-full object-cover border-2 border-gray-200'
+                    src={displayImage}
                   />
-                  <InputFieldContainer
-                    className='w-full'
-                    isOptional
-                    label='Phone Number'
-                    labelClass='sr-only'
-                    type='tel'
-                    value={number}
-                    onChange={(val) =>
-                      updateForm('contactNo', `${code} ${val}`)
-                    }
-                  />
+                ) : (
+                  <div className='w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-semibold'>
+                    {displayName[0]?.toUpperCase() || 'U'}
+                  </div>
+                )}
+                <FlexContainer direction='col' className='gap-0.5'>
+                  <Text className='heading-5 font-semibold' level='h5'>
+                    {displayName}
+                  </Text>
+                  <Text className='text-sm text-gray-500' level='p'>
+                    {displayEmail}
+                  </Text>
                 </FlexContainer>
               </FlexContainer>
+
+              <div className='h-px w-full bg-gray-200' />
+
+              {/* Preferences Section */}
+              {isEditing ? (
+                <FlexContainer className='gap-6' direction='col' fullWidth>
+                  {/* Username */}
+                  <FlexContainer
+                    className='gap-2 md:w-2/3 w-full'
+                    direction='col'
+                  >
+                    <Text className='paragraph font-medium' level='p'>
+                      Username
+                    </Text>
+                    <InputFieldContainer
+                      label='Username'
+                      type='text'
+                      value={form.userName}
+                      onChange={(val) => updateForm('userName', val)}
+                    />
+                    {form.userName && form.userName !== savedUserName && (
+                      <Text
+                        className={`span text-sm ${
+                          isUsernameAvailable ? 'text-success' : 'text-primary'
+                        }`}
+                        level='span'
+                      >
+                        {usernameMessage}
+                      </Text>
+                    )}
+                  </FlexContainer>
+
+                  {/* Occupation */}
+                  <FlexContainer className='gap-2' direction='col'>
+                    <Text className='paragraph font-medium' level='p'>
+                      What do you do?
+                    </Text>
+                    <RadioButtonContainer
+                      options={USER_ROLE_OPTIONS}
+                      selectedValue={form.occupation}
+                      onChange={(val) => updateForm('occupation', val)}
+                    />
+                  </FlexContainer>
+
+                  {/* Purpose */}
+                  <FlexContainer className='gap-2' direction='col'>
+                    <Text className='paragraph font-medium' level='p'>
+                      How do you use the Platform?
+                    </Text>
+                    <CheckboxButtonContainer
+                      options={USER_USAGE_OPTIONS.map(({ label, value }) => ({
+                        label,
+                        value,
+                      }))}
+                      selectedValues={form.purpose}
+                      onChange={(val) => updateForm('purpose', val)}
+                    />
+                  </FlexContainer>
+
+                  {/* Phone Number */}
+                  <FlexContainer className='gap-2' direction='col'>
+                    <Text className='paragraph font-medium' level='p'>
+                      Contact Number
+                    </Text>
+                    <FlexContainer className='gap-2 w-full items-center flex-nowrap'>
+                      <SelectInput
+                        aria-label='Country Code'
+                        list={codeList}
+                        selectedItem={code}
+                        onChange={(val) =>
+                          updateForm('contactNo', `${val} ${number}`)
+                        }
+                      />
+                      <InputFieldContainer
+                        className='w-full'
+                        isOptional
+                        label='Phone Number'
+                        labelClass='sr-only'
+                        type='tel'
+                        value={number}
+                        onChange={(val) =>
+                          updateForm('contactNo', `${code} ${val}`)
+                        }
+                      />
+                    </FlexContainer>
+                  </FlexContainer>
+                </FlexContainer>
+              ) : (
+                <FlexContainer className='gap-4' direction='col' fullWidth>
+                  {/* Read-only display */}
+                  <FlexContainer className='gap-1' direction='col'>
+                    <Text className='text-sm text-gray-500' level='p'>
+                      Username
+                    </Text>
+                    <Text className='paragraph font-medium' level='p'>
+                      {form.userName || 'Not set'}
+                    </Text>
+                  </FlexContainer>
+
+                  <div className='h-px w-full bg-gray-100' />
+
+                  <FlexContainer className='gap-1' direction='col'>
+                    <Text className='text-sm text-gray-500' level='p'>
+                      Occupation
+                    </Text>
+                    <Text className='paragraph font-medium' level='p'>
+                      {occupationLabel || 'Not set'}
+                    </Text>
+                  </FlexContainer>
+
+                  <div className='h-px w-full bg-gray-100' />
+
+                  <FlexContainer className='gap-1' direction='col'>
+                    <Text className='text-sm text-gray-500' level='p'>
+                      Platform Usage
+                    </Text>
+                    <Text className='paragraph font-medium' level='p'>
+                      {purposeLabels || 'Not set'}
+                    </Text>
+                  </FlexContainer>
+
+                  <div className='h-px w-full bg-gray-100' />
+
+                  <FlexContainer className='gap-1' direction='col'>
+                    <Text className='text-sm text-gray-500' level='p'>
+                      Contact Number
+                    </Text>
+                    <Text className='paragraph font-medium' level='p'>
+                      {hasContactDigits ? form.contactNo : 'Not set'}
+                    </Text>
+                  </FlexContainer>
+                </FlexContainer>
+              )}
             </FlexContainer>
-          ) : (
-            <FlexContainer className='gap-4' direction='col' fullWidth>
-              {/* Read-only display */}
-              <FlexContainer className='gap-1' direction='col'>
-                <Text className='text-sm text-gray-500' level='p'>
-                  Username
-                </Text>
-                <Text className='paragraph font-medium' level='p'>
-                  {form.userName || 'Not set'}
-                </Text>
-              </FlexContainer>
-
-              <div className='h-px w-full bg-gray-100' />
-
-              <FlexContainer className='gap-1' direction='col'>
-                <Text className='text-sm text-gray-500' level='p'>
-                  Occupation
-                </Text>
-                <Text className='paragraph font-medium' level='p'>
-                  {occupationLabel || 'Not set'}
-                </Text>
-              </FlexContainer>
-
-              <div className='h-px w-full bg-gray-100' />
-
-              <FlexContainer className='gap-1' direction='col'>
-                <Text className='text-sm text-gray-500' level='p'>
-                  Platform Usage
-                </Text>
-                <Text className='paragraph font-medium' level='p'>
-                  {purposeLabels || 'Not set'}
-                </Text>
-              </FlexContainer>
-
-              <div className='h-px w-full bg-gray-100' />
-
-              <FlexContainer className='gap-1' direction='col'>
-                <Text className='text-sm text-gray-500' level='p'>
-                  Contact Number
-                </Text>
-                <Text className='paragraph font-medium' level='p'>
-                  {form.contactNo && form.contactNo !== '+91'
-                    ? form.contactNo
-                    : 'Not set'}
-                </Text>
-              </FlexContainer>
-            </FlexContainer>
-          )}
-        </FlexContainer>
+          </main>
+        </div>
       </Section>
 
       {toast && (

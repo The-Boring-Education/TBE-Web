@@ -32,6 +32,7 @@ const DATABASE_MODELS = {
   LEADERBOARD: "Leaderboard",
   USER_INTEREST: "UserInterest",
   COUPON: "Coupon",
+  USER_ACTIVITY_LOG: "UserActivityLog",
 };
 
 export const FEEDBACK_TYPES = [

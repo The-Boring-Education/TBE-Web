@@ -966,6 +966,8 @@ export interface UserProfile {
   userSkills?: string[];
   userSkillsLastUpdated?: string;
   occupation?: string;
+  /** Stored from platform onboarding / profile */
+  contactNo?: string;
   portfolioUrl?: string;
   purpose?: string[];
   prepYatra: {

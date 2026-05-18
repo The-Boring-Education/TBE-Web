@@ -5,10 +5,32 @@ import type {
   DatabaseQueryResponseType,
   LeaderboardModel,
   LeaderboardType,
+  TBEAppType,
 } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
 
 import { Gamification, Leaderboard } from "../models";
+
+/** Allow-list of valid leaderboard time-window values */
+const VALID_LEADERBOARD_TYPES: LeaderboardType[] = [
+  "DAILY",
+  "WEEKLY",
+  "MONTHLY",
+];
+/** Allow-list of valid TBE app identifiers */
+const VALID_TBE_APPS: TBEAppType[] = [
+  "PLATFORM",
+  "PREPYATRA",
+  "DSA_YATRA",
+  "ONCAMPUS",
+  "QUIZ",
+];
+
+const isSafeLeaderboardType = (v: unknown): v is LeaderboardType =>
+  VALID_LEADERBOARD_TYPES.includes(v as LeaderboardType);
+
+const isSafeTBEApp = (v: unknown): v is TBEAppType =>
+  VALID_TBE_APPS.includes(v as TBEAppType);
 
 const addLeaderboardTopperToDB = async (
   payload: Omit<LeaderboardModel, "createdAt" | "updatedAt">,
@@ -30,9 +52,12 @@ const addLeaderboardTopperToDB = async (
 
 const getLeaderboardEntriesFromDB = async (
   type?: LeaderboardType,
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const query = type ? { type } : {};
+    const query: Record<string, unknown> = {};
+    if (isSafeLeaderboardType(type)) query.type = type;
+    if (isSafeTBEApp(app)) query.app = app;
     const data = await Leaderboard.find(query).sort({ date: -1 });
     return { data };
   } catch (error) {
@@ -50,11 +75,25 @@ const getLeaderboardEntriesFromDB = async (
 const saveLeaderboardToDB = async (
   type: LeaderboardType,
   entries: { userId: string; points: number }[],
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
+    // Look up from allow-list so only constant values reach the query (breaks taint chain)
+    const safeType = VALID_LEADERBOARD_TYPES.find((t) => t === type);
+    if (!safeType) {
+      return { error: `Invalid leaderboard type: ${String(type)}` };
+    }
+    const safeAppLookup = app ? VALID_TBE_APPS.find((a) => a === app) : null;
+    if (app !== undefined && !safeAppLookup) {
+      return { error: `Invalid app: ${String(app)}` };
+    }
+    // null represents the global (no-app) leaderboard – the compound index handles it uniformly
+    const safeApp = safeAppLookup ?? null;
+
+    const filter = { type: safeType, app: safeApp };
     const result = await Leaderboard.findOneAndUpdate(
-      { type },
-      { type, entries, date: new Date() },
+      filter,
+      { type: safeType, app: safeApp, entries, date: new Date() },
       { upsert: true, new: true },
     );
     return { data: result };
@@ -69,12 +108,38 @@ const saveLeaderboardToDB = async (
 
 const getLeaderboardWithUsersFromDB = async (
   type: LeaderboardType,
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const data = await Leaderboard.findOne({ type })
+    // Look up from allow-list so only constant values reach the query (breaks taint chain)
+    const safeType = VALID_LEADERBOARD_TYPES.find((t) => t === type);
+    if (!safeType) {
+      return { error: `Invalid leaderboard type: ${String(type)}` };
+    }
+    const safeAppLookup = app ? VALID_TBE_APPS.find((a) => a === app) : null;
+    if (app !== undefined && !safeAppLookup) {
+      return { error: `Invalid app: ${String(app)}` };
+    }
+    const safeApp = safeAppLookup ?? null;
+
+    const filter = { type: safeType, app: safeApp };
+    const doc = await Leaderboard.findOne(filter)
       .sort({ date: -1 })
       .populate("entries.userId", "name image");
-    return { data };
+
+    // No persisted snapshot yet (POST /api/v1/leaderboard never ran / cron lag).
+    // Return the same JSON shape clients expect instead of null.
+    if (!doc) {
+      return {
+        data: {
+          type: safeType,
+          app: safeApp,
+          entries: [],
+        },
+      };
+    }
+
+    return { data: doc };
   } catch (error) {
     logger.error("DB: getLeaderboardWithUsersFromDB failed", {
       error: error instanceof Error ? error.message : String(error),
@@ -102,11 +167,38 @@ const getStartDateByType = (type: LeaderboardType) => {
   return now;
 };
 
+/** Static filename mapping for leaderboard types – ensures only safe strings reach the filesystem */
+const LEADERBOARD_TYPE_FILENAMES: Record<LeaderboardType, string> = {
+  DAILY: "daily",
+  WEEKLY: "weekly",
+  MONTHLY: "monthly",
+};
+
+/** Static filename mapping for TBE apps – ensures only safe strings reach the filesystem */
+const TBE_APP_FILENAMES: Record<TBEAppType, string> = {
+  PLATFORM: "platform",
+  PREPYATRA: "prepyatra",
+  DSA_YATRA: "dsa_yatra",
+  ONCAMPUS: "oncampus",
+  QUIZ: "quiz",
+};
+
 const generateLeaderboard = async (
   type: LeaderboardType,
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const startDate = getStartDateByType(type);
+    // Look up from allow-list so only constant values reach the filesystem/query (breaks taint chain)
+    const safeType = VALID_LEADERBOARD_TYPES.find((t) => t === type);
+    if (!safeType) {
+      return { error: `Invalid leaderboard type: ${String(type)}` };
+    }
+    const safeAppLookup = app ? VALID_TBE_APPS.find((a) => a === app) : null;
+    if (app !== undefined && !safeAppLookup) {
+      return { error: `Invalid app: ${String(app)}` };
+    }
+
+    const startDate = getStartDateByType(safeType);
     const endDate = new Date();
 
     const gamificationData = await Gamification.find();
@@ -114,12 +206,15 @@ const generateLeaderboard = async (
     const userScores: Record<string, number> = {};
 
     gamificationData.forEach((user) => {
-      const actions = user.actions.filter(
-        (a) =>
+      const actions = user.actions.filter((a) => {
+        const withinRange =
           a.createdAt !== undefined &&
           a.createdAt >= startDate &&
-          a.createdAt <= endDate,
-      );
+          a.createdAt <= endDate;
+        // Filter by app when provided; otherwise include all actions
+        const matchesApp = safeAppLookup ? a.app === safeAppLookup : true;
+        return withinRange && matchesApp;
+      });
 
       const total = actions.reduce((sum, a) => sum + (a.pointsEarned || 0), 0);
       if (total > 0) {
@@ -132,13 +227,18 @@ const generateLeaderboard = async (
       .sort((a, b) => b[1] - a[1])
       .map(([userId, points]) => ({ userId, points }));
 
+    // Derive filename exclusively from static lookup maps – no user input reaches the path
+    const typeFilename = LEADERBOARD_TYPE_FILENAMES[safeType];
+    const appSuffix = safeAppLookup
+      ? `_${TBE_APP_FILENAMES[safeAppLookup]}`
+      : "";
     const publicDir = path.join(process.cwd(), "public", "leaderboards");
     if (!fs.existsSync(publicDir)) {
       fs.mkdirSync(publicDir, { recursive: true });
     }
 
     fs.writeFileSync(
-      path.join(publicDir, `${type.toLowerCase()}.json`),
+      path.join(publicDir, `${typeFilename}${appSuffix}.json`),
       JSON.stringify(sorted, null, 2),
     );
 
@@ -146,6 +246,7 @@ const generateLeaderboard = async (
   } catch (error) {
     logger.error("DB: generateLeaderboard failed", {
       type,
+      app,
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
     });
