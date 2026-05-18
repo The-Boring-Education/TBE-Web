@@ -10,6 +10,9 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
   test("unauthenticated user cannot stay on dashboard (redirected to home)", async ({
     page,
   }) => {
+    // Ensure cookies are cleared to simulate unauthenticated state
+    await page.context().clearCookies();
+    
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
     await page.waitForURL((url) => new URL(url).pathname === "/", {
       timeout: 30_000,
