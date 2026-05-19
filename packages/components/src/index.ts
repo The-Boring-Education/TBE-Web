@@ -310,3 +310,4 @@ export { default as QuestionDetails } from "./layout/QuestionDetails";
 export { default as QuestionSidebar } from "./layout/QuestionSidebar";
 export * from "./techyatra";
 export * from "./ui";
+export { PatternQuizPanel, PatternQuizBanner } from "./common/PatternQuiz";

@@ -83,6 +83,9 @@ export * from "./prepyatra";
 // Quiz domain
 export * from "./quiz";
 
+// Pattern Quiz types (DSA Yatra pattern recognition quiz)
+export * from "./pattern-quiz";
+
 // Subscription catalog (pricing pages, checkout product SKUs)
 export * from "./subscriptionPlanCatalog";
 // ================================

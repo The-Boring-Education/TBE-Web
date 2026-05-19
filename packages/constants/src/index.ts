@@ -50,3 +50,4 @@ export * from "./prepYatra";
 export * from "./productConfigs";
 export * from "./routes";
 export * from "./seo";
+export * from "./patternQuizData";
