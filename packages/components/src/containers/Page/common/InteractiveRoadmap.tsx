@@ -102,7 +102,9 @@ export interface InteractiveRoadmapProps {
 /* ---------- Geometry helpers ---------- */
 
 const NODE_SPACING_X = 220;
-const START_X = 120;
+/** Extra inset so the first node clears the DSA Yatra dashboard sidebar on lg+ */
+const CANVAS_LEFT_INSET = 48;
+const START_X = 120 + CANVAS_LEFT_INSET;
 const BASE_Y = 220;
 const CANVAS_HEIGHT = 420;
 
@@ -299,10 +301,16 @@ const InteractiveRoadmap = ({
         ► scroll horizontally ►
       </motion.div>
 
-      {/* Roadmap Canvas */}
-      <div className="relative w-[100vw] overflow-x-auto z-10 roadmap-custom-scrollbar pt-6 pb-0 -mt-14 flex-1">
+      {/* Roadmap Canvas — w-full (not 100vw) so content stays beside the dashboard sidebar */}
+      <motion.div
+        className="relative z-10 w-full min-w-0 overflow-x-auto roadmap-custom-scrollbar scroll-pl-6 pt-6 pb-0 -mt-14 flex-1 lg:scroll-pl-12"
+        data-testid="roadmap-canvas-scroll"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1 }}
+      >
         <div
-          className="relative mx-auto mt-16"
+          className="relative mx-auto mt-16 pl-6 lg:pl-12"
           style={{ width: TOTAL_WIDTH, height: CANVAS_HEIGHT }}
         >
           {/* SVG Paths */}
@@ -546,7 +554,7 @@ const InteractiveRoadmap = ({
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
       {/* Keyframes & scrollbar */}
       <style
