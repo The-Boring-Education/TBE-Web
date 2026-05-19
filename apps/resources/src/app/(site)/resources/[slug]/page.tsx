@@ -6,6 +6,7 @@ import {
   listResourceSlugs,
   readResourceHtml,
   readResourceMeta,
+  readResourceQuiz,
 } from "@/lib/content";
 import { extractEmbedParts } from "@/lib/html-embed";
 import { getSiteBaseUrl } from "@/lib/site";
@@ -52,9 +53,10 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function ResourcePage(props: Props) {
   const { slug } = props.params;
-  const [meta, rawHtml] = await Promise.all([
+  const [meta, rawHtml, quiz] = await Promise.all([
     readResourceMeta(slug),
     readResourceHtml(slug),
+    readResourceQuiz(slug),
   ]);
   if (!meta || !rawHtml) notFound();
 
@@ -92,6 +94,7 @@ export default async function ResourcePage(props: Props) {
         pageUrl={url}
         styleTags={styleTags}
         bodyHtml={bodyHtml}
+        quiz={quiz ?? undefined}
       />
     </div>
   );

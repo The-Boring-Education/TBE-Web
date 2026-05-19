@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 
-import type { ResourceIndexEntry, ResourceMeta } from "./types";
+import type { ResourceIndexEntry, ResourceMeta, ResourceQuiz } from "./types";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 
@@ -55,6 +55,26 @@ export async function readResourceHtml(slug: string): Promise<string | null> {
   const htmlPath = path.join(CONTENT_DIR, slug, "index.html");
   try {
     return await fs.readFile(htmlPath, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+export async function readResourceQuiz(
+  slug: string,
+): Promise<ResourceQuiz | null> {
+  const quizPath = path.join(CONTENT_DIR, slug, "quiz.json");
+  try {
+    const raw = await fs.readFile(quizPath, "utf8");
+    const data = JSON.parse(raw) as ResourceQuiz;
+    if (
+      !data.questions ||
+      !Array.isArray(data.questions) ||
+      data.questions.length === 0
+    ) {
+      return null;
+    }
+    return data;
   } catch {
     return null;
   }
