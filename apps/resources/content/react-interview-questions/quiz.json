@@ -11,13 +11,15 @@
         "A server-side rendered version of the DOM",
         "A browser API provided by modern browsers"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "The virtual DOM is React's lightweight in-memory representation used to efficiently diff and update the real DOM."
     },
     {
       "id": 2,
       "question": "Which hook is used to perform side effects in a functional component?",
       "options": ["useState", "useContext", "useEffect", "useReducer"],
-      "correct": 2
+      "correct": 2,
+      "explanation": "useEffect lets you run side effects (data fetching, subscriptions, DOM mutations) after render and optionally clean them up."
     },
     {
       "id": 3,
@@ -28,7 +30,8 @@
         "Defines cleanup logic for the effect",
         "Provides a callback after the component mounts"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "The second argument is the dependency array; the effect runs when those dependencies change (or once if empty)."
     },
     {
       "id": 4,
@@ -39,13 +42,15 @@
         "A component that controls other components via context",
         "A component that uses the ref API"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "A controlled component stores its input values in React state and updates via callbacks, giving React control over the data."
     },
     {
       "id": 5,
       "question": "What hook would you use to access a value from React Context?",
       "options": ["useRef", "useContext", "useReducer", "useMemo"],
-      "correct": 1
+      "correct": 1,
+      "explanation": "useContext allows you to read the current value of a context created with createContext."
     },
     {
       "id": 6,
@@ -56,13 +61,15 @@
         "Wraps a component to prevent re-renders if props have not changed",
         "Provides a cache for asynchronous data"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "React.memo wraps a component and shallowly compares props to skip re-rendering when props are unchanged."
     },
     {
       "id": 7,
       "question": "Which hook returns a memoized callback function?",
       "options": ["useMemo", "useCallback", "useEffect", "useRef"],
-      "correct": 1
+      "correct": 1,
+      "explanation": "useCallback returns a memoized function reference that only changes when its dependencies change."
     },
     {
       "id": 8,
@@ -73,7 +80,8 @@
         "To pass unique data between sibling components",
         "To define the tab order of elements"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "The key prop helps React match elements between renders for efficient updates; it should be stable and unique."
     },
     {
       "id": 9,
@@ -84,7 +92,8 @@
         "A context object",
         "A callback function"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "useRef returns a mutable object with a .current property that persists between renders and can hold DOM nodes or values."
     },
     {
       "id": 10,
@@ -95,7 +104,8 @@
         "componentDidMount",
         "shouldComponentUpdate"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "useEffect with an empty array runs after the first render, similar to componentDidMount in class components."
     },
     {
       "id": 11,
@@ -106,7 +116,8 @@
         "Passing props through multiple nested components to reach a deeply nested child",
         "An anti-pattern for using context"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "Prop drilling refers to passing props through many levels of components just to reach a deep child; context or state managers avoid this."
     },
     {
       "id": 12,
@@ -117,7 +128,8 @@
         "State is managed internally by a component, props are passed from a parent",
         "There is no difference"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "State is internal and mutable within a component; props are passed in from a parent and should be treated as read-only."
     },
     {
       "id": 13,
@@ -128,7 +140,8 @@
         "Creates a lazy-evaluated context value",
         "Memoizes expensive computations"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "React.lazy enables code-splitting by loading components via dynamic import and rendering them like normal components."
     },
     {
       "id": 14,
@@ -139,7 +152,8 @@
         "To delay side effects until after the paint",
         "To create deferred state updates"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Suspense shows a fallback UI while waiting for lazy-loaded components or asynchronous data to be ready."
     },
     {
       "id": 15,
@@ -150,7 +164,8 @@
         "state = state + 1",
         "setState(this.state + 1)"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Use the updater function form (prev => ...) to reliably compute new state from previous state, avoiding stale closures."
     },
     {
       "id": 16,
@@ -161,7 +176,8 @@
         "Converting JSX to JavaScript",
         "Merging multiple context providers"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Reconciliation is React's diffing process that determines minimal DOM updates by comparing previous and next VDOM trees."
     },
     {
       "id": 17,
@@ -172,7 +188,8 @@
         "The current state and a dispatch function",
         "A context and a provider"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "useReducer returns the current state and a dispatch function to send actions to the reducer (similar to Redux patterns)."
     },
     {
       "id": 18,
@@ -183,7 +200,8 @@
         "When you need to access the DOM",
         "When sharing state across multiple components"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "useReducer is preferable for complex state transitions or when multiple related values must be updated together."
     },
     {
       "id": 19,
@@ -194,7 +212,8 @@
         "A component lifecycle hook",
         "A memoized version of a child component"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Fragments let you return multiple children from a component without creating an extra wrapper DOM element."
     },
     {
       "id": 20,
@@ -205,7 +224,8 @@
         "To create global context",
         "To lazy-load components"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Portals render children into a different part of the DOM tree (useful for modals, tooltips where DOM hierarchy shouldn't constrain styling)."
     },
     {
       "id": 21,
@@ -216,7 +236,8 @@
         "A try-catch block for functional components",
         "A context that propagates error states"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Error boundaries are class components that catch runtime errors in their descendant tree and render a fallback UI instead of crashing the app."
     },
     {
       "id": 22,
@@ -227,7 +248,8 @@
         "JavaScript Extra",
         "JSON Syntax for XML"
       ],
-      "correct": 0
+      "correct": 0,
+      "explanation": "JSX stands for JavaScript XML — a syntax extension that looks like HTML and compiles to React.createElement calls."
     },
     {
       "id": 23,
@@ -238,7 +260,8 @@
         "componentWillUnmount",
         "componentWillReceiveProps"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "componentWillUnmount is invoked just before a component is removed and is used for cleanup like removing listeners or timers."
     },
     {
       "id": 24,
@@ -249,7 +272,8 @@
         "The value passed to createContext()",
         "An empty object {}"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "createContext accepts a default value which is used when no matching Provider is present higher in the tree."
     },
     {
       "id": 25,
@@ -260,7 +284,8 @@
         "Creates a ref that persists in a forward cache",
         "Forwards context to nested consumers"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "forwardRef lets a parent pass a ref through a component to one of its children, commonly used to expose DOM nodes."
     },
     {
       "id": 26,
@@ -271,7 +296,8 @@
         "To memoize the result of an expensive computation so it only re-runs when dependencies change",
         "To memo-ize component trees"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "useMemo caches the result of an expensive computation and recomputes it only when dependencies change, improving performance."
     },
     {
       "id": 27,
@@ -282,7 +308,8 @@
         "A server-side rendering framework",
         "A file bundler optimized for React"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "React Fiber is the reimplementation of React's reconciliation algorithm that enables interruptible and incremental rendering."
     },
     {
       "id": 28,
@@ -293,7 +320,8 @@
         "To highlight potential problems in an application by activating extra checks and warnings",
         "To restrict component re-renders"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "StrictMode activates additional checks and warnings (e.g., deprecated APIs, unsafe lifecycles) to help find issues during development."
     },
     {
       "id": 29,
@@ -304,7 +332,8 @@
         "Use useRef instead of useState",
         "Use dangerouslySetInnerHTML"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Wrapping a component with React.memo prevents unnecessary re-renders by shallowly comparing props and skipping updates when unchanged."
     },
     {
       "id": 30,
@@ -315,7 +344,8 @@
         "To list sub-components in a parent",
         "To define default props"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "The children prop contains any elements placed between a component's opening and closing tags, enabling composition."
     },
     {
       "id": 31,
@@ -326,7 +356,8 @@
         "It causes an infinite loop of re-renders",
         "It throws a compile-time error"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "Calling setState in render triggers repeated renders leading to an infinite loop; state updates should occur in effects or event handlers."
     },
     {
       "id": 32,
@@ -337,7 +368,8 @@
         "It runs asynchronously after the browser paints",
         "It is used for CSS layout calculations only"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "useLayoutEffect runs synchronously after DOM updates but before the browser paints, useful for measurements and synchronously applying changes."
     },
     {
       "id": 33,
@@ -348,7 +380,8 @@
         "Pre-fetching API data before mounting components",
         "Rendering only the server components and skipping the client bundle"
       ],
-      "correct": 0
+      "correct": 0,
+      "explanation": "SSR renders components to HTML on the server, sending fully-formed HTML to the client for faster first paint and SEO."
     },
     {
       "id": 34,
@@ -359,13 +392,15 @@
         "The process of attaching event listeners to server-rendered HTML on the client",
         "Converting static HTML to a React component tree"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "Hydration is when React attaches event listeners and makes server-rendered HTML interactive on the client."
     },
     {
       "id": 35,
       "question": "Which prop is used to conditionally apply CSS classes in React?",
       "options": ["style", "className", "class", "cssClass"],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Use the className prop to assign CSS classes to elements in JSX; 'class' is reserved in JavaScript."
     },
     {
       "id": 36,
@@ -376,7 +411,8 @@
         "To override React's reconciliation algorithm",
         "To bypass prop validation"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "useImperativeHandle customizes the ref value exposed to parent components when using forwardRef, limiting what is accessible."
     },
     {
       "id": 37,
@@ -387,7 +423,8 @@
         "Uncontrolled inputs are read-only; controlled inputs accept user input",
         "There is no functional difference"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Controlled inputs keep their value in React state and sync on change; uncontrolled inputs rely on the DOM and refs for value access."
     },
     {
       "id": 38,
@@ -398,7 +435,8 @@
         "It merges the component's default props with the passed props",
         "It converts props to a string"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "The spread syntax spreads the object's key/value pairs as individual props on the component."
     },
     {
       "id": 39,
@@ -409,7 +447,8 @@
         "To display a label above the rendered component",
         "To set the component's accessible name"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "displayName helps identify components in React DevTools and error messages for easier debugging."
     },
     {
       "id": 40,
@@ -420,7 +459,8 @@
         "useSyncExternalStore",
         "useReducer"
       ],
-      "correct": 2
+      "correct": 2,
+      "explanation": "useSyncExternalStore is designed for safely subscribing to external stores in a way that works with concurrent rendering."
     }
   ]
 }

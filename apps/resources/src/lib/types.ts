@@ -20,6 +20,7 @@ export interface QuizQuestion {
   question: string;
   options: string[];
   correct: number; // index of the correct option
+  explanation?: string;
 }
 
 export interface ResourceQuiz {
