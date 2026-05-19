@@ -24,6 +24,9 @@ export interface BaseUser {
   occupation?: string;
   purpose?: string[];
   userName?: string;
+  linkedInUrl?: string;
+  githubUrl?: string;
+  leetCodeUrl?: string;
   prepYatra?: any;
   dsaYatra?: {
     dyOnboarded?: boolean;

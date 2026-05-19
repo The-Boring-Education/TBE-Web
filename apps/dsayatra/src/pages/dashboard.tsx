@@ -12,9 +12,9 @@ import { Card } from "@ui/card";
 import { Progress } from "@ui/progress";
 import {
   Code2,
+  ExternalLink,
   Github,
   Linkedin,
-  Monitor,
   PenLine,
   PieChart,
   Target,
@@ -146,9 +146,9 @@ const DsaClient = () => {
                           label: "GitHub profile",
                         },
                         {
-                          icon: Monitor,
-                          url: profile?.portfolioUrl,
-                          label: "Portfolio website",
+                          icon: ExternalLink,
+                          url: profile?.leetCodeUrl,
+                          label: "LeetCode profile",
                         },
                       ] as const
                     ).map((social, i) => (

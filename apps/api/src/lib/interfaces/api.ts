@@ -209,6 +209,9 @@ export interface DSAYatraOnboardingPayload {
   target: string;
   preferredLanguage: string;
   targetTopics: DSATopicType[];
+  linkedInUrl?: string;
+  githubUrl?: string;
+  leetCodeUrl?: string;
 }
 
 export interface DsaYatraTodayStatsPayload {

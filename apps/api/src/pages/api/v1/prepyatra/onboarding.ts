@@ -1,7 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import { getPYUserByIdFromDB, updatePYUserByIdInDB } from "@/lib/database";
+import {
+  buildUserSocialProfileUpdate,
+  getPYUserByIdFromDB,
+  updatePYUserByIdInDB,
+} from "@/lib/database";
 import type { PrepYatraOnboardingPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
@@ -82,11 +86,13 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (existingUser.prepYatra?.pyOnboarded) {
       const updateResult = await updatePYUserByIdInDB(userId, {
-        name,
-        userName: username,
-        linkedInUrl,
-        githubUrl,
-        leetCodeUrl,
+        ...buildUserSocialProfileUpdate({
+          name,
+          userName: username,
+          linkedInUrl,
+          githubUrl,
+          leetCodeUrl,
+        }),
         "prepYatra.goal": goal,
         "prepYatra.targetCompanies": normalizedTargetCompanies,
         "prepYatra.preferences.interviewCategories": preferredCategories,
@@ -106,11 +112,13 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const updateResult = await updatePYUserByIdInDB(userId, {
-      name,
-      userName: username,
-      linkedInUrl,
-      githubUrl,
-      leetCodeUrl,
+      ...buildUserSocialProfileUpdate({
+        name,
+        userName: username,
+        linkedInUrl,
+        githubUrl,
+        leetCodeUrl,
+      }),
       "prepYatra.pyOnboarded": true,
       "prepYatra.goal": goal,
       "prepYatra.targetCompanies": normalizedTargetCompanies,
