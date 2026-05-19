@@ -1,6 +1,7 @@
 import type { PatternQuizPanelProps } from "@tbe/interface";
 import { usePatternQuiz } from "@tbe/hooks";
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 
 import Text from "../../common/Typography/Text";
 import Button from "../../common/Buttons/Button";
@@ -29,10 +30,13 @@ const PatternQuizPanel = ({
 
   const handleSubmit = () => {
     submitQuiz();
-    if (onComplete && result) {
+  };
+
+  useEffect(() => {
+    if (quizState === "completed" && result && onComplete) {
       onComplete(result);
     }
-  };
+  }, [quizState, result, onComplete]);
 
   // Idle State
   if (quizState === "idle") {
@@ -188,7 +192,7 @@ const PatternQuizPanel = ({
     >
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <Text level="span" className="text-xs font-bold text-[#808080] uppercase tracking-wider">
+        <Text level="p" className="text-xs font-bold text-[#808080] uppercase tracking-wider">
           Question {currentIndex + 1} of {totalQuestions}
         </Text>
         {currentQuestion && (
