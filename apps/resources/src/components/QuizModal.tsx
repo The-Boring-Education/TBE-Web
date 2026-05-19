@@ -23,7 +23,10 @@ function pickQuestions(all: QuizQuestion[]): QuizQuestion[] {
   const pool = [...all];
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
+    const itemI = pool[i];
+    const itemJ = pool[j];
+    if (!itemI || !itemJ) continue;
+    [pool[i], pool[j]] = [itemJ, itemI];
   }
   return pool.slice(0, MAX_QUESTIONS);
 }
@@ -76,7 +79,8 @@ export function QuizModal({ quiz, isOpen, onClose }: Props) {
   const [showAnswer, setShowAnswer] = useState(false);
 
   const total = activeQuestions.length;
-  const question: QuizQuestion = activeQuestions[current];
+  if (total === 0) return null;
+  const question: QuizQuestion = activeQuestions[current]!;
   const progress = ((current + 1) / total) * 100;
   const pct = Math.round((score / total) * 100);
 
@@ -133,13 +137,12 @@ export function QuizModal({ quiz, isOpen, onClose }: Props) {
   const handlePrev = useCallback(() => {
     if (current === 0) return;
     const prevIdx = current - 1;
+    const prevQuestion = activeQuestions[prevIdx];
     setCurrent(prevIdx);
-    setSelected(answers[prevIdx]);
+    setSelected(answers[prevIdx] ?? null);
     const prevAnswer = answers[prevIdx];
-    if (prevAnswer !== null) {
-      setAnswerState(
-        prevAnswer === activeQuestions[prevIdx].correct ? "correct" : "wrong",
-      );
+    if (prevAnswer !== null && prevQuestion) {
+      setAnswerState(prevAnswer === prevQuestion.correct ? "correct" : "wrong");
       setShowAnswer(true);
     } else {
       setAnswerState("idle");
