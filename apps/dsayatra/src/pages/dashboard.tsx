@@ -1,7 +1,13 @@
 "use client";
 
 import { ProtectedRoute, useAuth } from "@tbe/auth";
-import { EditDsaOnboardingModal, SEO, StatCard } from "@tbe/components";
+import {
+  EditDsaOnboardingModal,
+  PatternQuizBanner,
+  PatternQuizPanel,
+  SEO,
+  StatCard,
+} from "@tbe/components";
 import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useDsaCompletedQuestions, useDsaTopicSummaries } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
@@ -28,6 +34,7 @@ const DsaClient = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showPatternQuiz, setShowPatternQuiz] = useState(false);
 
   const { data: topicRows } = useDsaTopicSummaries();
   const { solvedToday } = useDsaCompletedQuestions({ userId: user?.id });
@@ -306,6 +313,16 @@ const DsaClient = () => {
             className="md:col-span-1 lg:col-span-2"
           />
         </div>
+
+        {/* Pattern Quiz Section */}
+        {!showPatternQuiz && (
+          <PatternQuizBanner onStart={() => setShowPatternQuiz(true)} />
+        )}
+        {showPatternQuiz && (
+          <Card className="min-w-0 max-w-full rounded-2xl border-[#222] bg-[#111] p-0 overflow-hidden">
+            <PatternQuizPanel questionsPerRound={5} />
+          </Card>
+        )}
 
         {/* Topic-wise Progress Section */}
         <Card className="min-w-0 max-w-full rounded-2xl border-[#222] bg-[#111] p-6 sm:p-8">
