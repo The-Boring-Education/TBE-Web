@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ResourceView } from "@/components/ResourceView";
 import {
   listResourceSlugs,
+  readResourceGame,
   readResourceHtml,
   readResourceMeta,
   readResourceQuiz,
@@ -53,10 +54,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function ResourcePage(props: Props) {
   const { slug } = props.params;
-  const [meta, rawHtml, quiz] = await Promise.all([
+  const [meta, rawHtml, quiz, game] = await Promise.all([
     readResourceMeta(slug),
     readResourceHtml(slug),
     readResourceQuiz(slug),
+    readResourceGame(slug),
   ]);
   if (!meta || !rawHtml) notFound();
 
@@ -95,6 +97,7 @@ export default async function ResourcePage(props: Props) {
         styleTags={styleTags}
         bodyHtml={bodyHtml}
         quiz={quiz ?? undefined}
+        game={game ?? undefined}
       />
     </div>
   );
