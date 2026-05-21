@@ -14,3 +14,32 @@ export interface ResourceIndexEntry {
   keywords: string[];
   tags: string[];
 }
+
+export interface QuizQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correct: number; // index of the correct option
+  explanation?: string;
+}
+
+export interface ResourceQuiz {
+  title: string;
+  description: string;
+  questions: QuizQuestion[];
+}
+
+export interface GameQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correct: number; // index of the correct option
+  explanation?: string;
+  timer?: number; // custom duration in seconds
+}
+
+export interface ResourceGame {
+  title: string;
+  description: string;
+  questions: GameQuestion[];
+}
