@@ -233,7 +233,16 @@ export function GameModal({
   }, []);
 
   const [activeQuestions, setActiveQuestions] = useState<GameQuestion[]>(() => {
-    const shuffled = [...game.questions].sort(() => Math.random() - 0.5);
+    const shuffled = [...game.questions];
+
+    // Fisher-Yates shuffle with proper typing
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = shuffled[i]!;
+      shuffled[i] = shuffled[j]!;
+      shuffled[j] = temp;
+    }
+
     return shuffled.slice(0, 5);
   });
 
@@ -256,7 +265,16 @@ export function GameModal({
 
   // Restart handler
   const handleRestart = () => {
-    const shuffled = [...game.questions].sort(() => Math.random() - 0.5);
+    const shuffled = [...game.questions];
+
+    // Fisher-Yates shuffle with proper typing
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = shuffled[i]!;
+      shuffled[i] = shuffled[j]!;
+      shuffled[j] = temp;
+    }
+
     const selected = shuffled.slice(0, 5);
     setActiveQuestions(selected);
     setCurrent(0);
