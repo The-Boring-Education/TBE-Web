@@ -1,7 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import { getDYUserByIdFromDB, updateDYUserByIdInDB } from "@/lib/database";
+import {
+  buildUserSocialProfileUpdate,
+  getDYUserByIdFromDB,
+  updateDYUserByIdInDB,
+} from "@/lib/database";
 import type { DSAYatraOnboardingPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { normalizeDsaDuration } from "@/lib/validation";
@@ -34,6 +38,9 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       preferredLanguage,
       experienceLevel,
       targetTopics,
+      linkedInUrl,
+      githubUrl,
+      leetCodeUrl,
     }: DSAYatraOnboardingPayload = req.body;
 
     if (!userId || !name || !username || !timeline || !target) {
@@ -67,8 +74,13 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
     const existingUser = userResult.data;
 
     const updatePayload = {
-      name,
-      userName: username,
+      ...buildUserSocialProfileUpdate({
+        name,
+        userName: username,
+        linkedInUrl,
+        githubUrl,
+        leetCodeUrl,
+      }),
       "dsaYatra.dyOnboarded": true,
       "dsaYatra.timeline": normalizedTimeline,
       "dsaYatra.target": target,

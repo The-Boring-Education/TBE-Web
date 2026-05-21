@@ -1212,6 +1212,7 @@ import type {
   StudyGuideNavProps,
   StudyGuideReaderProps,
   StudyGuideSection,
+  PatternQuizResult,
 } from "@tbe/types";
 
 export type {
@@ -1238,4 +1239,15 @@ export interface TailorYourJourneyProps {
   imageVariant?: "src" | "placeholder";
   imageSrc: string;
   imageAlt: string;
+}
+
+export interface PatternQuizPanelProps {
+  questionsPerRound?: number;
+  className?: string;
+  onComplete?: (result: PatternQuizResult) => void;
+}
+
+export interface PatternQuizBannerProps {
+  onStart?: () => void;
+  className?: string;
 }

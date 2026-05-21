@@ -55,4 +55,38 @@ describe("onboarding config helpers (@tbe/config)", () => {
       expect(config?.api?.method, id).toMatch(/POST|PUT|PATCH/);
     }
   });
+
+  it("dsayatra config includes social profile URL fields", () => {
+    const config = getOnboardingConfig("dsayatra");
+    const fieldNames = config?.fields?.map((field) => field.name) ?? [];
+    expect(fieldNames).toContain("linkedInUrl");
+    expect(fieldNames).toContain("githubUrl");
+    expect(fieldNames).toContain("leetCodeUrl");
+  });
+
+  it("dsayatra transformPayload includes social URLs when provided in form", () => {
+    const config = getOnboardingConfig("dsayatra");
+    const payload = config?.api?.transformPayload?.(
+      {
+        name: "Ada",
+        username: "ada",
+        preferredLanguage: "C++",
+        timeline: "6Months",
+        experienceLevel: "Fresher (0-1 yr)",
+        target: "Startups",
+        targetTopics: [],
+        linkedInUrl: "https://linkedin.com/in/ada",
+        githubUrl: "https://github.com/ada",
+        leetCodeUrl: "https://leetcode.com/ada",
+      },
+      "user-1",
+    );
+
+    expect(payload).toMatchObject({
+      userId: "user-1",
+      linkedInUrl: "https://linkedin.com/in/ada",
+      githubUrl: "https://github.com/ada",
+      leetCodeUrl: "https://leetcode.com/ada",
+    });
+  });
 });

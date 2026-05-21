@@ -1,0 +1,41 @@
+{
+  "title": "React Interview Bomb Challenge",
+  "description": "Beat the clock! You have only 5 seconds per question to answer these high-pressure React interview questions. Avoid the explosion!",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which hook is used for component side effects?",
+      "options": ["useEffect", "useState", "useRef"],
+      "correct": 0,
+      "explanation": "useEffect is designed specifically to run side effects (fetching data, subscriptions, manually changing the DOM) in functional components after rendering."
+    },
+    {
+      "id": 2,
+      "question": "What memoizes a computed value between renders?",
+      "options": ["useCallback", "useMemo", "useRef"],
+      "correct": 1,
+      "explanation": "useMemo memoizes the computed RESULT of a function, whereas useCallback memoizes the FUNCTION itself to prevent recreation."
+    },
+    {
+      "id": 3,
+      "question": "What triggers a component re-render in React?",
+      "options": ["State changes", "Ref changes", "DOM events"],
+      "correct": 0,
+      "explanation": "State modifications (via updater functions) tell React to re-render the component. Changing useRef values does NOT trigger re-renders."
+    },
+    {
+      "id": 4,
+      "question": "Where are Next.js static files stored?",
+      "options": ["static", "assets", "public"],
+      "correct": 2,
+      "explanation": "In Next.js, static files like images or fonts are served out of a folder named public in the root directory."
+    },
+    {
+      "id": 5,
+      "question": "Can React components return multiple root elements directly?",
+      "options": ["Yes", "No", "Maybe"],
+      "correct": 1,
+      "explanation": "React components must return a single root element. To return multiple sibling elements, you must wrap them in a Fragment (<>...</>) or array."
+    }
+  ]
+}

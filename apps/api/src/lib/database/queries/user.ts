@@ -6,8 +6,11 @@ import type {
   WorkDomainType,
 } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
+import { buildUserSocialProfileUpdate } from "@/lib/utils/userSocialProfile";
 
 import { User } from "../models";
+
+export { buildUserSocialProfileUpdate } from "@/lib/utils/userSocialProfile";
 
 const getUserByIdFromDB = async (
   id: string,
@@ -135,10 +138,10 @@ const onboardPrepYatraUserTODB = async (
   from?: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
+      ...buildUserSocialProfileUpdate({ linkedInUrl }),
       prepYatra: {
         workDomain,
-        linkedInUrl,
         pyOnboarded: true,
       },
     };

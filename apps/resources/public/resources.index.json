@@ -1,5 +1,23 @@
 [
   {
+    "slug": "agentic-ai-engineer-roadmap",
+    "title": "Agentic AI Engineer Roadmap 2026",
+    "description": "A complete step-by-step roadmap to becoming an Agentic AI Engineer, covering LLMs, AI agents, RAG systems, workflows, tool calling, memory, multi-agent systems, deployment, and real-world AI applications.",
+    "keywords": [
+      "agentic ai",
+      "ai agents",
+      "llm",
+      "rag",
+      "multi agent systems",
+      "openai",
+      "langchain",
+      "autonomous ai",
+      "python",
+      "generative ai"
+    ],
+    "tags": ["roadmap", "agenticai"]
+  },
+  {
     "slug": "aiml-engineer-roadmap",
     "title": "AI/ML Engineer Roadmap 2026",
     "description": "A structured, step-by-step roadmap to becoming an AI/ML engineer, covering mathematics, machine learning algorithms, deep learning, model deployment, and real-world applications.",
@@ -46,6 +64,24 @@
     "tags": ["roadmap", "blockchain"]
   },
   {
+    "slug": "cloud-engineer-roadmap",
+    "title": "Cloud Engineer Roadmap 2026",
+    "description": "A complete step-by-step roadmap to becoming a Cloud Engineer, covering cloud computing fundamentals, AWS, Azure, Google Cloud, DevOps, networking, containers, Kubernetes, CI/CD, security, and real-world deployment practices.",
+    "keywords": [
+      "cloud engineer",
+      "cloud computing",
+      "aws",
+      "azure",
+      "google cloud",
+      "devops",
+      "kubernetes",
+      "docker",
+      "ci cd",
+      "networking"
+    ],
+    "tags": ["roadmap", "cloud"]
+  },
+  {
     "slug": "cold-email-guide",
     "title": "Cold Mail Masterclass 2026",
     "description": "Learn the exact subject lines, body formulas, and follow-up tricks that hiring managers actually respond to. One email. One job. No resume needed.",
@@ -57,6 +93,36 @@
       "career advice"
     ],
     "tags": []
+  },
+  {
+    "slug": "cyber-security-engineer-roadmap",
+    "title": "Cyber Security Engineer Roadmap 2026",
+    "description": "A structured, step-by-step roadmap to becoming a Cyber Security Engineer, covering networking, operating systems, ethical hacking, security tools, cloud security, incident response, and real-world security practices.",
+    "keywords": [
+      "cyber security",
+      "ethical hacking",
+      "network security",
+      "security",
+      "penetration testing",
+      "linux",
+      "cloud security"
+    ],
+    "tags": ["roadmap", "cybersecurity"]
+  },
+  {
+    "slug": "devops-engineer-roadmap",
+    "title": "DevOps Engineer Roadmap 2026",
+    "description": "A structured, step-by-step roadmap to becoming a DevOps Engineer, covering Linux, networking, CI/CD, cloud platforms, containers, Kubernetes, infrastructure as code, monitoring, and deployment automation.",
+    "keywords": [
+      "devops",
+      "cloud",
+      "docker",
+      "kubernetes",
+      "ci cd",
+      "linux",
+      "automation"
+    ],
+    "tags": ["roadmap", "devops"]
   },
   {
     "slug": "dsa-escape-plan-2026",
