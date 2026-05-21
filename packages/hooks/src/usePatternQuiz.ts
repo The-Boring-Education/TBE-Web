@@ -1,5 +1,3 @@
-import { useCallback, useMemo, useState } from "react";
-
 import { PATTERN_QUIZ_QUESTIONS } from "@tbe/constants";
 import type {
   PatternQuizAnswer,
@@ -7,14 +5,37 @@ import type {
   PatternQuizResult,
   PatternQuizState,
 } from "@tbe/types";
+import { pickRandomSubset } from "@tbe/utils/array";
+import { useCallback, useMemo, useState } from "react";
 
-const shuffleArray = <T>(array: T[]): T[] => {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
+const buildPatternQuizResult = (
+  questions: PatternQuizQuestion[],
+  selectedAnswers: Map<string, number>,
+): PatternQuizResult => {
+  const answers: PatternQuizAnswer[] = questions.map((question) => {
+    const selected = selectedAnswers.get(question.id) ?? -1;
+    return {
+      questionId: question.id,
+      selectedAnswer: selected,
+      isCorrect: selected === question.correctAnswer,
+    };
+  });
+
+  const totalQuestions = questions.length;
+  const correctAnswers = answers.filter((answer) => answer.isCorrect).length;
+  const incorrectAnswers = totalQuestions - correctAnswers;
+  const score =
+    totalQuestions > 0
+      ? Math.round((correctAnswers / totalQuestions) * 100)
+      : 0;
+
+  return {
+    totalQuestions,
+    correctAnswers,
+    incorrectAnswers,
+    score,
+    answers,
+  };
 };
 
 const usePatternQuiz = (questionsPerRound = 5) => {
@@ -22,23 +43,20 @@ const usePatternQuiz = (questionsPerRound = 5) => {
   const [questions, setQuestions] = useState<PatternQuizQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Map<string, number>>(
-    new Map(),
+    () => new Map(),
   );
   const [result, setResult] = useState<PatternQuizResult | null>(null);
 
+  const totalQuestions = questions.length;
+  const lastIndex = Math.max(totalQuestions - 1, 0);
+
   const currentQuestion = useMemo(
-    () => questions[currentIndex] || null,
+    () => questions.at(currentIndex) ?? null,
     [questions, currentIndex],
   );
 
-  const totalQuestions = questions.length;
-
   const startQuiz = useCallback(() => {
-    const selected = shuffleArray(PATTERN_QUIZ_QUESTIONS).slice(
-      0,
-      questionsPerRound,
-    );
-    setQuestions(selected);
+    setQuestions(pickRandomSubset(PATTERN_QUIZ_QUESTIONS, questionsPerRound));
     setCurrentIndex(0);
     setSelectedAnswers(new Map());
     setResult(null);
@@ -48,48 +66,26 @@ const usePatternQuiz = (questionsPerRound = 5) => {
   const selectAnswer = useCallback(
     (questionId: string, answerIndex: number) => {
       setSelectedAnswers((prev) => {
-        const updated = new Map(prev);
-        updated.set(questionId, answerIndex);
-        return updated;
+        const next = new Map(prev);
+        next.set(questionId, answerIndex);
+        return next;
       });
     },
     [],
   );
 
   const nextQuestion = useCallback(() => {
-    setCurrentIndex((prev) => Math.min(prev + 1, totalQuestions - 1));
-  }, [totalQuestions]);
+    setCurrentIndex((prev) => Math.min(prev + 1, lastIndex));
+  }, [lastIndex]);
 
   const prevQuestion = useCallback(() => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   }, []);
 
   const submitQuiz = useCallback(() => {
-    const answers: PatternQuizAnswer[] = questions.map((q) => {
-      const selected = selectedAnswers.get(q.id) ?? -1;
-      return {
-        questionId: q.id,
-        selectedAnswer: selected,
-        isCorrect: selected === q.correctAnswer,
-      };
-    });
-
-    const correctAnswers = answers.filter((a) => a.isCorrect).length;
-    const incorrectAnswers = totalQuestions - correctAnswers;
-    const score =
-      totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
-
-    const quizResult: PatternQuizResult = {
-      totalQuestions,
-      correctAnswers,
-      incorrectAnswers,
-      score,
-      answers,
-    };
-
-    setResult(quizResult);
+    setResult(buildPatternQuizResult(questions, selectedAnswers));
     setQuizState("completed");
-  }, [questions, selectedAnswers, totalQuestions]);
+  }, [questions, selectedAnswers]);
 
   const resetQuiz = useCallback(() => {
     setQuizState("idle");

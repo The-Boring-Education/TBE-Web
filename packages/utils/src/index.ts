@@ -1,6 +1,7 @@
 // Export all utilities
 export * from "./analytics";
 export * from "./api";
+export * from "./array";
 export * from "./delegatedInteractiveAnalyticsAttrs";
 // NOTE: auth.ts is NOT exported here because it imports next-auth/react
 // which uses Babel regenerator runtime and breaks Edge Runtime (middleware)
