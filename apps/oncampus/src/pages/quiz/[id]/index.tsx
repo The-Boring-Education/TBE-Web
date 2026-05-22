@@ -6,7 +6,8 @@ import { queryKeys, useQueryClient } from "@tbe/query";
 import { gamificationApi, quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
 import { cleanOptionText, cn, sendRequest } from "@tbe/utils";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, Brain, Zap } from "lucide-react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -65,19 +66,23 @@ export default function QuizPage() {
 
   const [quiz, setQuiz] = useState<QuizQuestionsData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  // Per-question: which option index was chosen
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, number>
   >({});
-  const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+  // Per-question: time taken
   const [questionTimes, setQuestionTimes] = useState<Record<number, number>>(
     {},
   );
+  const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+
   const [gameState, setGameState] = useState<GameState>("loading");
   const [quizStartTime] = useState(Date.now());
   const hasSubmittedRef = useRef(false);
   const mongoUserIdRef = useRef<string | null>(null);
 
-  // Auth guard (non-dashboard route)
+  // Auth guard
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push("/login");
@@ -126,97 +131,121 @@ export default function QuizPage() {
   const questions = useMemo(() => quiz?.questions || [], [quiz?.questions]);
   const currentQuestion: QuizQuestion | undefined =
     questions[currentQuestionIndex];
-  const progress =
-    questions.length > 0
-      ? ((currentQuestionIndex + 1) / questions.length) * 100
-      : 0;
+  const total = questions.length;
+  const progress = total > 0 ? ((currentQuestionIndex + 1) / total) * 100 : 0;
 
-  const submitQuiz = useCallback(async () => {
-    if (!quizId || !quiz || hasSubmittedRef.current) return;
-    hasSubmittedRef.current = true;
-    setGameState("submitting");
+  const submitQuiz = useCallback(
+    async (currentSelectedAnswers = selectedAnswers) => {
+      if (!quizId || !quiz || hasSubmittedRef.current) return;
+      hasSubmittedRef.current = true;
+      setGameState("submitting");
 
-    const mongoUserId =
-      mongoUserIdRef.current ?? (await resolveUserIdToMongoId(user));
-    if (mongoUserId) mongoUserIdRef.current = mongoUserId;
+      const mongoUserId =
+        mongoUserIdRef.current ?? (await resolveUserIdToMongoId(user));
+      if (mongoUserId) mongoUserIdRef.current = mongoUserId;
 
-    const totalTimeSpent = Math.floor((Date.now() - quizStartTime) / 1000);
-    const answersPayload = questions.map((q, index) => {
-      const selectedAnswer = selectedAnswers[index] ?? -1;
-      const isCorrect = selectedAnswer === q.correctAnswer;
-      const timeSpent = questionTimes[index] || 0;
-      return { questionIndex: index, selectedAnswer, isCorrect, timeSpent };
-    });
+      const totalTimeSpent = Math.floor((Date.now() - quizStartTime) / 1000);
+      const answersPayload = questions.map((q, index) => {
+        const selAns = currentSelectedAnswers[index] ?? -1;
+        const correctIdx = (q as any).correctAnswer ?? (q as any).correct ?? -1;
+        const isCorrect = selAns === correctIdx;
+        const timeSpent = questionTimes[index] || 0;
+        return {
+          questionIndex: index,
+          selectedAnswer: selAns,
+          isCorrect,
+          timeSpent,
+        };
+      });
 
-    try {
-      if (mongoUserId) {
-        await quizApi.submitQuiz(quizId, {
-          userId: mongoUserId,
-          answers: answersPayload,
-          totalTimeSpent,
-        });
-
-        // gamification: best-effort
-        gamificationApi
-          .updateuserGamificationPoints({
+      try {
+        if (mongoUserId) {
+          await quizApi.submitQuiz(quizId, {
             userId: mongoUserId,
-            actionType: "COMPLETE_QUIZ",
-          } as any)
-          .then(() => {
-            void queryClient.invalidateQueries({
-              queryKey: queryKeys.gamification.points(mongoUserId),
-            });
-          })
-          .catch(() => {});
-      }
-    } catch {
-      // ignore submit errors, still show local results
-    } finally {
-      const answersParam = encodeURIComponent(
-        JSON.stringify(answersPayload.map((a) => a.selectedAnswer)),
-      );
-      router.replace(
-        `/results/${quizId}?answers=${answersParam}&timeTaken=${totalTimeSpent}`,
-      );
-    }
-  }, [
-    quizId,
-    quiz,
-    user,
-    quizStartTime,
-    questions,
-    selectedAnswers,
-    questionTimes,
-    router,
-    queryClient,
-  ]);
+            answers: answersPayload,
+            totalTimeSpent,
+          });
 
-  const selectAnswer = (answerIndex: number) => {
-    if (!quiz || !currentQuestion) return;
-    if (gameState !== "playing") return;
+          gamificationApi
+            .updateuserGamificationPoints({
+              userId: mongoUserId,
+              actionType: "COMPLETE_QUIZ",
+            } as any)
+            .then(() => {
+              void queryClient.invalidateQueries({
+                queryKey: queryKeys.gamification.points(mongoUserId),
+              });
+            })
+            .catch(() => {});
+        }
+      } catch {
+        // ignore submit errors
+      } finally {
+        const answersParam = encodeURIComponent(
+          JSON.stringify(answersPayload.map((a) => a.selectedAnswer)),
+        );
+        router.replace(
+          `/results/${quizId}?answers=${answersParam}&timeTaken=${totalTimeSpent}`,
+        );
+      }
+    },
+    [
+      quizId,
+      quiz,
+      user,
+      quizStartTime,
+      questions,
+      selectedAnswers,
+      questionTimes,
+      router,
+      queryClient,
+    ],
+  );
+
+  const selectAnswer = (idx: number) => {
+    if (!quiz || !currentQuestion || gameState !== "playing") return;
 
     const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
     setQuestionTimes((prev) => ({
       ...prev,
       [currentQuestionIndex]: timeSpent,
     }));
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [currentQuestionIndex]: answerIndex,
-    }));
 
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+    const updatedAnswers = { ...selectedAnswers, [currentQuestionIndex]: idx };
+    setSelectedAnswers(updatedAnswers);
+
+    if (currentQuestionIndex < total - 1) {
+      // Small visual transition delay so the user feels the selection click
+      setTimeout(() => {
+        setCurrentQuestionIndex((prev) => prev + 1);
+      }, 180);
     } else {
-      void submitQuiz();
+      setTimeout(() => {
+        void submitQuiz(updatedAnswers);
+      }, 180);
     }
   };
+
+  const handleNext = useCallback(() => {
+    if (currentQuestionIndex + 1 >= total) {
+      void submitQuiz();
+    } else {
+      setCurrentQuestionIndex((c) => c + 1);
+    }
+  }, [currentQuestionIndex, total, submitQuiz]);
+
+  const handlePrev = useCallback(() => {
+    if (currentQuestionIndex === 0) return;
+    setCurrentQuestionIndex((c) => c - 1);
+  }, [currentQuestionIndex]);
+
+  // ── Loading / Submitting screens ──────────────────────────────────────────
 
   if (gameState === "loading") {
     return (
       <OnCampusLearningLayout backHref="/dashboard/quizzes" isLoading>
         <div className="flex-1 flex items-center justify-center">
-          <Text level="p" className="text-gray-400">
+          <Text level="p" className="text-zinc-400">
             Loading quiz...
           </Text>
         </div>
@@ -232,10 +261,10 @@ export default function QuizPage() {
             <div className="flex justify-center mb-6">
               <LoadingSpinner height={10} width={10} />
             </div>
-            <Text level="h1" className="text-white font-bold text-lg">
+            <Text level="h1" className="text-zinc-100 font-bold text-lg">
               Submitting quiz...
             </Text>
-            <Text level="p" className="text-gray-400 text-sm mt-2">
+            <Text level="p" className="text-zinc-500 text-sm mt-2">
               Please wait while we process your results
             </Text>
           </div>
@@ -244,159 +273,132 @@ export default function QuizPage() {
     );
   }
 
+  if (!currentQuestion) return null;
+
   const selectedAnswer = selectedAnswers[currentQuestionIndex];
+
+  // ── Main quiz UI ──────────────────────────────────────────────────────────
 
   return (
     <OnCampusLearningLayout backHref="/dashboard" layoutMode="workspace">
       <div className="flex flex-col h-full w-full">
-        {/* Workspace Header Section — Centered Title Mode */}
-        <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0 sticky top-0 z-20">
-          <div className="relative w-full h-full flex items-center px-6">
-            {/* Left Back Navigation */}
-            <div className="flex-1 flex items-center">
-              <button
-                onClick={() => router.push("/dashboard/quizzes")}
-                className="flex items-center justify-center w-[28px] h-[28px] rounded-[6px] border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
-                title="Back to Quizzes"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-              </button>
-            </div>
+        {/* ── Scrollable content ── */}
+        <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-4 sm:py-0 overflow-y-auto scrollbar-hide flex flex-col justify-center">
+          <div className="relative">
+            {/* gradient border */}
+            <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-zinc-700/70 via-zinc-800/30 to-transparent pointer-events-none" />
 
-            {/* Absolute Centered Header Info */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-              <Text
-                level="h1"
-                className="text-[13px] font-bold text-white tracking-tight leading-none mb-1"
-              >
-                {quiz?.categoryName || "Quiz"}
-              </Text>
-              <Text
-                level="p"
-                className="text-[8px] font-bold text-gray-500 uppercase tracking-widest leading-none bg-gray-900/50 px-2 py-0.5 rounded border border-gray-800"
-              >
-                Question {currentQuestionIndex + 1} of {questions.length}
-              </Text>
-            </div>
+            <div className="relative flex flex-col rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden">
+              {/* Header inside the panel exactly like QuizModal */}
+              <div className="flex items-center justify-between px-4 sm:px-6 pt-3 pb-2 border-b border-zinc-800/60">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-primary/30">
+                    <Brain className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-semibold text-zinc-100 tracking-tight leading-none block">
+                      {quiz?.categoryName || "Quiz"}
+                    </span>
+                    <span className="text-xs font-medium text-zinc-500 mt-0.5 block">
+                      Showing {total} Questions
+                    </span>
+                  </div>
+                </div>
 
-            {/* Right-aligned Progress Tracker */}
-            <div className="flex-1 flex justify-end items-center gap-6">
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col items-end mr-1">
-                  <Text
-                    level="p"
-                    className="text-[8px] font-bold text-gray-500 uppercase tracking-wider"
+                {/* Back to quizzes button inside header like close button in QuizModal */}
+                <button
+                  onClick={() => router.push("/dashboard/quizzes")}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-500 ring-1 ring-zinc-800 hover:bg-zinc-800 hover:text-zinc-300 transition-all active:scale-95"
+                  title="Back to Quizzes"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Progress inside the panel exactly like QuizModal but only one text line */}
+              <div className="px-4 sm:px-6 pt-2.5 pb-0">
+                <span className="text-xs font-semibold text-zinc-500">
+                  Question {currentQuestionIndex + 1} of {total}
+                </span>
+              </div>
+
+              {/* Question and Options Content exactly like QuizModal */}
+              <div className="px-4 sm:px-6 py-3 flex-1">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentQuestionIndex}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
                   >
-                    Progress
-                  </Text>
-                  <Text
-                    level="p"
-                    className="text-[13px] font-black text-white leading-none mt-0.5"
-                  >
-                    {Math.round(
-                      ((currentQuestionIndex + 1) / questions.length) * 100,
-                    )}
-                    %
-                  </Text>
-                </div>
-                <div className="w-20 h-1 bg-gray-900 border border-gray-800 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] transition-all duration-500"
-                    style={{
-                      width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
-                    }}
-                  />
+                    {/* Question text */}
+                    <div className="mb-2.5 text-sm font-medium text-zinc-100 leading-relaxed">
+                      <CodeRenderer
+                        content={currentQuestion.question}
+                        theme="dark"
+                        className="max-w-none text-zinc-100 selection:bg-primary/30 [&_p]:m-0 [&_p]:leading-relaxed"
+                      />
+                    </div>
+
+                    {/* Options */}
+                    <div className="space-y-1.5">
+                      {currentQuestion.options.map((opt, idx) => {
+                        const isSelected = selectedAnswer === idx;
+
+                        let rowClass =
+                          "w-full flex items-center gap-3 rounded-xl px-4 py-1.5 text-xs text-left ring-1 transition-all duration-200 cursor-pointer ";
+
+                        if (isSelected) {
+                          rowClass +=
+                            "bg-primary/10 ring-primary/40 text-primary";
+                        } else {
+                          rowClass +=
+                            "bg-zinc-900 ring-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:ring-zinc-700 hover:text-zinc-100";
+                        }
+
+                        return (
+                          <button
+                            key={idx}
+                            id={`quiz-option-${currentQuestionIndex}-${idx}`}
+                            className={rowClass}
+                            onClick={() => selectAnswer(idx)}
+                          >
+                            {/* Letter badge */}
+                            <span
+                              className={cn(
+                                "flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-bold ring-1 transition-all",
+                                isSelected
+                                  ? "bg-primary/20 ring-primary/50 text-primary"
+                                  : "bg-zinc-800 ring-zinc-700 text-zinc-400",
+                              )}
+                            >
+                              {String.fromCharCode(65 + idx)}
+                            </span>
+
+                            {/* Option text */}
+                            <span className="flex-1 text-zinc-300 [&_p]:m-0 [&_p]:leading-normal leading-normal text-xs font-normal">
+                              <CodeRenderer
+                                content={cleanOptionText(opt)}
+                                theme="dark"
+                                className="max-w-none transition-transform text-xs font-normal [&_p]:m-0 [&_p]:leading-normal"
+                              />
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* ── Footer ── */}
+              <div className="flex items-center justify-center px-4 sm:px-6 py-2 border-t border-zinc-800/60 bg-zinc-950/20">
+                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-semibold tracking-wide">
+                  <Zap className="h-3 w-3 text-primary/80 shrink-0 animate-pulse" />
+                  AUTO-ADVANCING ON SELECTION
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex-1 w-full max-w-6xl mx-auto px-4 py-8 md:py-12 overflow-y-auto scrollbar-hide">
-          <div className="flex flex-col gap-3">
-            {/* Question Card */}
-            <div className="bg-[#0A0A0A] border border-gray-800 rounded-xl overflow-hidden shadow-2xl transition-all duration-300">
-              <div className="p-4 md:p-5 border-b border-gray-800/50">
-                <div className="text-white text-[15px] leading-relaxed font-semibold">
-                  <CodeRenderer
-                    content={currentQuestion.question}
-                    theme="dark"
-                    className="max-w-none text-white selection:bg-red-500/30"
-                  />
-                </div>
-              </div>
-
-              {/* Options List */}
-              <div className="p-3 md:p-4 bg-black/10">
-                <div className="grid grid-cols-1 gap-1.5">
-                  {currentQuestion.options.map((option, index) => {
-                    const isSelected = selectedAnswer === index;
-                    return (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => selectAnswer(index)}
-                        className={cn(
-                          "group w-full text-left py-2 px-3 rounded-lg border transition-all duration-300 flex items-center relative overflow-hidden",
-                          isSelected
-                            ? "border-red-500/50 bg-red-500/5 shadow-[0_0_10px_rgba(239,68,68,0.02)]"
-                            : "border-gray-800/60 bg-transparent hover:border-gray-700 hover:bg-white/[0.02]",
-                        )}
-                      >
-                        <div className="flex items-center gap-3 w-full">
-                          <div
-                            className={cn(
-                              "w-6 h-6 rounded-md border flex items-center justify-center text-[10px] font-black shrink-0 transition-all duration-300",
-                              isSelected
-                                ? "border-red-500 bg-red-500 text-white shadow-[0_0_10px_rgba(239,68,68,0.4)]"
-                                : "border-gray-700 bg-[#111] text-gray-500 group-hover:border-gray-500 group-hover:text-gray-200",
-                            )}
-                          >
-                            {String.fromCharCode(65 + index)}
-                          </div>
-
-                          <div
-                            className={cn(
-                              "flex-1 text-[14px] font-medium leading-tight",
-                              isSelected
-                                ? "text-white font-bold"
-                                : "text-gray-400",
-                            )}
-                          >
-                            <CodeRenderer
-                              content={cleanOptionText(option)}
-                              theme="dark"
-                              className="max-w-none transition-transform"
-                            />
-                          </div>
-
-                          <div
-                            className={cn(
-                              "shrink-0 transition-all duration-300 transform",
-                              isSelected
-                                ? "opacity-100 scale-100"
-                                : "opacity-0 scale-50",
-                            )}
-                          >
-                            <CheckCircle2 className="w-4 h-4 text-red-500" />
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-2 text-gray-500">
-              <div className="h-px w-8 bg-gray-800" />
-              <Text
-                level="p"
-                className="text-[11px] font-bold uppercase tracking-widest text-gray-600"
-              >
-                Auto-advancing on selection
-              </Text>
-              <div className="h-px w-8 bg-gray-800" />
             </div>
           </div>
         </div>
