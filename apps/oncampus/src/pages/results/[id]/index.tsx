@@ -131,7 +131,7 @@ export default function ResultsPage() {
       <div className="flex flex-col h-full w-full">
         {/* Workspace Header Section — Styled like the Quiz Header */}
         <div className="w-full min-h-[72px] border-b border-zinc-800 bg-zinc-950/40 flex shrink-0 sticky top-0 z-20 backdrop-blur-md">
-          <div className="relative w-full h-full flex items-center px-4 sm:px-6 justify-between">
+          <div className="relative w-full h-full flex items-center px-4 sm:px-6">
             {/* Left aligned: Back Navigation + Brain Icon + Stacked Header Titles */}
             <div className="flex items-center gap-3 sm:gap-4">
               <button
@@ -151,26 +151,6 @@ export default function ResultsPage() {
                   <span className="text-xs font-medium text-zinc-500 mt-0.5 block">
                     Quiz Results
                   </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right-aligned Result Badge */}
-            <div className="flex items-center gap-6">
-              <div className="flex items-center bg-primary/10 border border-primary/20 rounded-xl px-2.5 py-1.5">
-                <div className="flex flex-col items-end">
-                  <Text
-                    level="p"
-                    className="text-[8px] font-bold text-primary/70 uppercase tracking-wider leading-none"
-                  >
-                    Result
-                  </Text>
-                  <Text
-                    level="p"
-                    className="text-[14px] font-black text-primary leading-none mt-1"
-                  >
-                    {percentage}%
-                  </Text>
                 </div>
               </div>
             </div>
