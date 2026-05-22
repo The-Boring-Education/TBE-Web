@@ -298,7 +298,7 @@ const getResumeEvaluationResultsFromDB = async ({
         );
         return {
           skill,
-          frequency: count,
+          jobCount: count,
           percentage,
         };
       });
@@ -386,8 +386,8 @@ const getResumeEvaluationResultsFromDB = async ({
     );
 
     const companyTypeDistribution = companyTypesAgg.map((type) => ({
-      name: type.name,
-      count: type.count,
+      type: type.name,
+      jobCount: type.count,
       percentage: constrainNumberToRange(
         Math.round((type.count / totalCompanies) * 100),
         0,
@@ -396,10 +396,12 @@ const getResumeEvaluationResultsFromDB = async ({
     }));
 
     const response = {
-      matchedSkills,
+      matchingSkills: matchedSkills,
       missingSkills,
+      skillsMatched: matchedSkills.length,
+      skillsMissing: missingSkills.length,
       resumeScore,
-      totalJobsAnalyzed: totalJobs,
+      jobsAnalyzed: totalJobs,
       companyTypeDistribution,
       remoteJobs: remoteJobCount,
     };
