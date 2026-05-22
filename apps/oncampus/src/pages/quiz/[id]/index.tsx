@@ -7,7 +7,7 @@ import { gamificationApi, quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
 import { cleanOptionText, cn, sendRequest } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Brain, Zap } from "lucide-react";
+import { Brain, X, Zap } from "lucide-react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -283,7 +283,7 @@ export default function QuizPage() {
     <OnCampusLearningLayout backHref="/dashboard" layoutMode="workspace">
       <div className="flex flex-col h-full w-full">
         {/* ── Scrollable content ── */}
-        <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-4 sm:py-0 overflow-y-auto scrollbar-hide flex flex-col justify-center">
+        <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-4 sm:pt-8 sm:pb-4 overflow-y-auto scrollbar-hide flex flex-col justify-start">
           <div className="relative">
             {/* gradient border */}
             <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-zinc-700/70 via-zinc-800/30 to-transparent pointer-events-none" />
@@ -292,9 +292,7 @@ export default function QuizPage() {
               {/* Header inside the panel exactly like QuizModal */}
               <div className="flex items-center justify-between px-4 sm:px-6 pt-3 pb-2 border-b border-zinc-800/60">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-primary/30">
-                    <Brain className="h-4 w-4 text-primary" />
-                  </div>
+                  <Brain className="h-5 w-5 text-primary shrink-0" />
                   <div>
                     <span className="text-sm font-semibold text-zinc-100 tracking-tight leading-none block">
                       {quiz?.categoryName || "Quiz"}
@@ -308,10 +306,10 @@ export default function QuizPage() {
                 {/* Back to quizzes button inside header like close button in QuizModal */}
                 <button
                   onClick={() => router.push("/dashboard/quizzes")}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-500 ring-1 ring-zinc-800 hover:bg-zinc-800 hover:text-zinc-300 transition-all active:scale-95"
+                  className="flex h-6 w-6 items-center justify-center rounded-lg text-zinc-500 ring-1 ring-zinc-800 hover:bg-zinc-800 hover:text-zinc-300 transition-all active:scale-95 shrink-0"
                   title="Back to Quizzes"
                 >
-                  <ArrowLeft className="h-4 w-4" />
+                  <X className="h-3 w-3" />
                 </button>
               </div>
 
